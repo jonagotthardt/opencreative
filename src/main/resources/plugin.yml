@@ -1,0 +1,45 @@
+name: 'Creative'
+version: '1.5'
+main: mcchickenstudio.creative.Main
+api-version: 1.20
+authors: [McChicken Studio]
+description: 'Let players create the worlds'
+prefix: "OpenCreative+"
+softdepend: [PlaceholderAPI]
+commands:
+  creative:
+    usage: /creativecoding
+    aliases: [coding,creative]
+  chat:
+    usage: /creativechat
+    aliases: [cc,сс]
+  build:
+    usage: /build
+    aliases: [игшдв]
+  dev:
+    usage: /dev
+    aliases: [develop,code,вум,d]
+  play:
+    usage: /play
+    aliases: [start,здфн,ыефке,run,кгт]
+  join:
+    usage: /join
+    aliases: [ощшт,id,j,о]
+  ad:
+    usage: /ad
+    aliases: [фв]
+  like:
+    usage: /like
+    aliases: [дшлу, vote, v, l]
+  dislike:
+    usage: /dislike
+    aliases: [вшыдшлу, вшідшлу, dis]
+  spawn:
+    usage: /spawn
+    aliases: [спавн, ізфцт, ызфцт, hub, lobby, s, ы]
+  menu:
+    usage: /menu
+    aliases: [меню, games, worlds, ьутг, minigames, g, п]
+  world:
+    usage: /world
+    aliases: [settings, game, іуеештпі, ыуеештпы, setting, цщкдв]
