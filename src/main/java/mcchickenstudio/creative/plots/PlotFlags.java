@@ -1,0 +1,172 @@
+/*
+Creative+, Minecraft plugin.
+(C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+
+Creative+ is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Creative+ is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+package mcchickenstudio.creative.plots;
+
+import mcchickenstudio.creative.menu.buttons.RadioButton;
+import mcchickenstudio.creative.utils.FileUtils;
+import org.bukkit.GameRule;
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemDescription;
+import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemName;
+
+public class PlotFlags {
+
+    private final Plot plot;
+    private final Map<PlotFlag,Byte> flags = new HashMap<>();
+
+    public PlotFlags(Plot plot) {
+        this.plot = plot;
+        loadFlags();
+    }
+
+    public enum PlotFlag {
+
+        PLAYER_DAMAGE("player-damage", Material.TOTEM_OF_UNDYING, (byte) 1,(byte) 5),
+        DAY_CYCLE("day-cycle", Material.CLOCK, (byte) 1, (byte) 4, GameRule.DO_DAYLIGHT_CYCLE),
+        JOIN_MESSAGES("join-messages", Material.OAK_SIGN, (byte) 1,(byte) 2),
+        FIRE_SPREAD("fire-spread", Material.CAMPFIRE, (byte) 1,(byte) 2, GameRule.DO_FIRE_TICK),
+        WEATHER("weather", Material.WATER_BUCKET, (byte) 1,(byte) 3,GameRule.DO_WEATHER_CYCLE),
+        BLOCK_INTERACT("block-interact", Material.CHEST, (byte) 1,(byte) 5),
+        MOB_INTERACT("mob-interact", Material.VILLAGER_SPAWN_EGG, (byte) 1,(byte) 3),
+        MOB_LOOT("mob-loot", Material.FEATHER, (byte) 1,(byte) 2, GameRule.DO_MOB_LOOT),
+        MOB_SPAWN("mob-spawn", Material.PIG_SPAWN_EGG, (byte) 1,(byte) 5, GameRule.DO_MOB_SPAWNING),
+        NATURAL_REGENERATION("natural-regeneration", Material.POTION, (byte) 1,(byte) 2, GameRule.NATURAL_REGENERATION),
+        BLOCK_CHANGING("block-changing",  Material.ICE, (byte) 1,(byte) 2),
+        BLOCK_EXPLOSION("block-explosion", Material.TNT, (byte) 1,(byte) 2, GameRule.MOB_GRIEFING),
+        LIKE_MESSAGES("like-messages", Material.KNOWLEDGE_BOOK, (byte) 1,(byte) 2),
+        DEATH_MESSAGES("death-messages", Material.WITHER_SKELETON_SKULL, (byte) 1,(byte) 2),
+        KEEP_INVENTORY("keep-inventory", Material.CHEST_MINECART, (byte) 1,(byte) 2, GameRule.KEEP_INVENTORY),
+        IMMEDIATE_RESPAWN("immediate-respawn", Material.SKELETON_SKULL, (byte) 1,(byte) 2, GameRule.DO_IMMEDIATE_RESPAWN);
+
+        private final String configPath;
+        private final byte defaultValue;
+        private final byte maxChoices;
+        private final GameRule gameRule;
+        private final Material material;
+
+        PlotFlag(String configPath, Material icon, byte defaultValue, byte maxChoices) {
+            this.configPath = configPath;
+            this.defaultValue = defaultValue;
+            this.maxChoices = maxChoices;
+            this.gameRule = null;
+            this.material = icon;
+
+        }
+
+        PlotFlag(String configPath, Material icon, byte defaultValue, byte maxChoices, GameRule gameRule) {
+            this.configPath = configPath;
+            this.defaultValue = defaultValue;
+            this.maxChoices = maxChoices;
+            this.gameRule = gameRule;
+            this.material = icon;
+        }
+
+        public String getConfigPath() {
+            return "flags." + configPath;
+        }
+
+        public byte getDefaultValue() {
+            return defaultValue;
+        }
+
+        public byte getMaxChoices() {
+            return maxChoices;
+        }
+
+        public GameRule getGameRule() { return gameRule; }
+
+        public Material getMaterial() {
+            return material;
+        }
+
+    }
+
+    public void setFlag(PlotFlag plotFlag, byte value) {
+        flags.put(plotFlag,value);
+        FileUtils.setPlotConfigParameter(plot,plotFlag.getConfigPath(),value);
+    }
+
+    public void loadFlags() {
+
+        final FileConfiguration configuration = FileUtils.getPlotConfig(plot);
+        for (PlotFlag flag : PlotFlag.values()) {
+            if (configuration == null) {
+                flags.put(flag,flag.getDefaultValue());
+            } else {
+                String configValue = configuration.getString(flag.getConfigPath());
+                if (configValue == null || configValue.isEmpty()) {
+                    flags.put(flag,flag.getDefaultValue());
+                } else {
+                    byte value = Byte.parseByte(configValue);
+                    if (value < 1 || value > 10) value = 1;
+                    flags.put(flag, value);
+                }
+            }
+        }
+
+    }
+
+    public byte getFlagValue(PlotFlag flag) {
+        if (flags.containsKey(flag)) {
+            return (flags.get(flag));
+        } else {
+            setFlag(flag,flag.getDefaultValue());
+            return flag.getDefaultValue();
+        }
+    }
+
+    public Map<PlotFlag, Byte> getFlags() {
+        return flags;
+    }
+
+    public List<RadioButton> getIcons() {
+        List<RadioButton> icons = new ArrayList<>();
+        for (PlotFlag plotFlag : PlotFlag.values()) {
+            if (plotFlag != PlotFlag.DAY_CYCLE) {
+                int value = flags.get(plotFlag);
+                RadioButton radioButton = new RadioButton(plotFlag.getMaterial(),getLocaleItemName("menus.world-settings-flags.items." + plotFlag.getConfigPath() + ".name"),
+                        getLocaleItemDescription("menus.world-settings-flags.items." + plotFlag.getConfigPath() + ".lore"),
+                        value,plotFlag.getMaxChoices(),getDefaultActions(plot,plotFlag,plotFlag.getMaxChoices()),"menus.world-settings-flags.items." + plotFlag.getConfigPath() + ".choices",
+                        "menus.world-settings-flags");
+            }
+        }
+        return icons;
+    }
+
+    public static List<Runnable> getDefaultActions(Plot plot, PlotFlag flag, int maxActions) {
+        List<Runnable> choicesActions = new ArrayList<>();
+
+        for (int value = 1; value <= maxActions; value++) {
+            int finalValue = value;
+            choicesActions.add(() -> {
+                FileUtils.setPlotConfigParameter(plot,flag.getConfigPath(),finalValue);
+            });
+        }
+
+        return choicesActions;
+    }
+
+}

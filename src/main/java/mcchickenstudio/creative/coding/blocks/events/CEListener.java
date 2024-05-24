@@ -1,0 +1,240 @@
+package mcchickenstudio.creative.coding.blocks.events;
+
+import mcchickenstudio.creative.coding.blocks.events.player.fighting.*;
+import mcchickenstudio.creative.coding.blocks.events.player.interaction.*;
+import mcchickenstudio.creative.coding.blocks.events.player.inventory.*;
+import mcchickenstudio.creative.coding.blocks.events.player.movement.*;
+import mcchickenstudio.creative.coding.blocks.events.player.world.*;
+import mcchickenstudio.creative.coding.blocks.executors.Executors;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+
+/**
+ * <h1>CEListener</h1>
+ * This class represents listener of all Creative events in plot.
+ * It activates executors on events listening.
+ */
+public class CEListener implements Listener {
+
+    // Player Events
+    // World
+
+    @EventHandler
+    public void onJoin(JoinEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onQuit(QuitEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onLike(LikeEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onAdvertise(AdvertisedEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onPlay(PlayEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onChat(ChatEvent event) {
+        Executors.activate(event);
+    }
+
+    // Movement
+
+    @EventHandler
+    public void onJump(JumpEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onMove(PlayerMoveEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onFlying(StartFlyingEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onRunning(StartRunningEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onSneaking(StartSneakingEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onStopFlying(StopFlyingEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onStopRunning(StopRunningEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onStopSneaking(StopSneakingEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onTeleport(TeleportEvent event) {
+        Executors.activate(event);
+    }
+
+    // Inventory
+
+    @EventHandler
+    public void onBookWrite(BookWriteEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onCloseInventory(CloseInventoryEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onItemChange(ItemChangeEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onItemClick(ItemClickEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onItemDrop(ItemDropEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onItemMove(ItemMoveEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onItemPickup(ItemPickupEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onOpenInventory(OpenInventoryEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onSlotChange(SlotChangeEvent event) {
+        Executors.activate(event);
+    }
+
+    // Interaction
+
+    @EventHandler
+    public void onBlockInteract(BlockInteractionEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onDamageBlock(DamageBlockEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onDestroyBlock(DestroyBlockEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onFishing(FishEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onLeftClick(LeftClickEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onMobInteract(MobInteractionEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onPlaceBlock(PlaceBlockEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onRightClick(RightClickEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onSpectating(StartSpectatingEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onStopSpectating(StopSpectatingEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onWorldInteract(WorldInteractEvent event) {
+        Executors.activate(event);
+    }
+
+    // Fighting
+
+    @EventHandler
+    public void onHungerChange(HungerChangeEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onMobDamagePlayer(MobDamagesPlayerEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onDamage(PlayerDamagedEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onPlayerDamagedMob(PlayerDamagesMobEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onDeath(PlayerDeathEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onTotemRespawn(PlayerTotemRespawnEvent event) {
+        Executors.activate(event);
+    }
+
+}

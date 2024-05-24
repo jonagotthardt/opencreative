@@ -1,0 +1,302 @@
+/*
+Creative+, Minecraft plugin.
+(C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+
+Creative+ is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Creative+ is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+package mcchickenstudio.creative.utils;
+
+import mcchickenstudio.creative.plots.Plot;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
+import mcchickenstudio.creative.Main;
+
+import java.io.File;
+import java.util.*;
+
+public class MessageUtils {
+
+
+    @NotNull private static final Plugin plugin = Main.getPlugin();
+
+    private static File localizationFile;
+    private static FileConfiguration localizationConfig;
+
+    /**
+     Loads localization file (.yml) from Creative/locales/ folder. If localization file is not found, then it creates a new one.
+     **/
+    public static void loadLocalizationFile() {
+
+        File localeFile = new File((plugin.getDataFolder() + File.separator + "locales" + File.separator), getLanguage() + ".yml");
+        if (localeFile.exists()) {
+            localizationFile = localeFile;
+        } else {
+            String defaultLanguage = getLanguage().equalsIgnoreCase("ru") ? "ru" : "en";
+            plugin.getConfig().set("messages.locale",defaultLanguage);
+            plugin.saveResource("locales" + File.separator + "en.yml",false);
+            plugin.saveResource("locales" + File.separator + "ru.yml",false);
+            plugin.reloadConfig();
+            localeFile = new File((plugin.getDataFolder() + File.separator + "locales" + File.separator),  defaultLanguage + ".yml");
+        }
+
+        localizationConfig = YamlConfiguration.loadConfiguration(localeFile);
+    }
+
+    private static String getPrefix() {
+        String prefix = plugin.getConfig().getString("messages.prefix");
+        if (prefix == null || prefix.equalsIgnoreCase("null")) {
+            prefix = ChatColor.translateAlternateColorCodes('&',"&6 Worlds &8| &f");
+            plugin.getConfig().set("messages.prefix","&6 Worlds &8| &f");
+            plugin.saveConfig();
+            return prefix;
+        } else {
+            return ChatColor.translateAlternateColorCodes('&',prefix);
+        }
+    }
+
+    private static String getCreativeChatPrefix() {
+        String prefix = plugin.getConfig().getString("messages.cc-prefix");
+        if (prefix == null || prefix.equalsIgnoreCase("null")) {
+            prefix = ChatColor.translateAlternateColorCodes('&',"&6 Creative Chat &8| &7");
+            plugin.getConfig().set("messages.cc-prefix","&6 Creative Chat &8| &7");
+            plugin.reloadConfig();
+            return prefix;
+        } else {
+            return ChatColor.translateAlternateColorCodes('&',prefix);
+        }
+    }
+
+    private static String getLanguage() {
+        Object language = plugin.getConfig().get("messages.locale");
+        if (language != null) {
+            return String.valueOf(language);
+        } else {
+            Object defaultLanguage = "en";
+            plugin.getConfig().set("messages.locale",defaultLanguage);
+            plugin.saveResource("locales" + File.separator + "en.yml",false);
+            plugin.saveResource("locales" + File.separator + "ru.yml",false);
+            plugin.reloadConfig();
+            return "en";
+        }
+    }
+
+    private static File getLocalizationFile() {
+        return localizationFile;
+    }
+
+    private static FileConfiguration getLocalization() {
+        return localizationConfig;
+        //return YamlConfiguration.loadConfiguration(getLocalizationFile());
+    }
+
+    /**
+     Returns a path, that has specified message. May work wrong, if some messages will be same.
+     **/
+    public static String getPathFromMessage(String partOfPath, String message) {
+        for (String line : getLocalization().getKeys(true)) {
+            if (line.startsWith(partOfPath)) {
+                if (getLocaleMessage(line).equalsIgnoreCase(message)) {
+                    return line;
+                }
+            }
+        }
+        if (message.startsWith("§fNot found: ")) {
+            return ChatColor.stripColor(message).replace("Not found: ","");
+        }
+        return null;
+    }
+
+    /**
+     Returns message from localization file. If message is not found, then returns a detailed error message, that message is not found.
+     **/
+    public static String getLocaleMessage(String messageID) {
+        String originalMessage = getLocalization().getString(messageID);
+        if (originalMessage == null || originalMessage.equalsIgnoreCase("null")) {
+            ErrorUtils.sendWarningErrorMessage("Not found " + messageID + " in localization file!");
+            return "§6 Error §8| §fNot found §6" + messageID + "§f! Administration of server needs to fill that line in §6locales"+File.separator+getLanguage()+".yml";
+        } else {
+            return ChatColor.translateAlternateColorCodes('&',originalMessage.replace("%prefix%",getPrefix()).replace("%cc-prefix%",getCreativeChatPrefix()));
+        }
+    }
+
+    /**
+     Returns message from localization file, that parsed player's placeholders with PlaceholderAPI. If message is not found, then returns a detailed error message, that message is not found.
+     **/
+    public static String getLocaleMessage(String messageID, Player player) {
+        String originalMessage = getLocalization().getString(messageID);
+        if (originalMessage == null || originalMessage.equalsIgnoreCase("null")) {
+            ErrorUtils.sendWarningErrorMessage("Not found " + messageID + " in localization file!");
+            return "§6 Error §8| §fNot found §6" + messageID + "§f! Administration of server needs to fill that line in §6locales"+File.separator+getLanguage()+".yml";
+        } else {
+            return ChatColor.translateAlternateColorCodes('&',parsePAPI(Bukkit.getOfflinePlayer(player.getName()),originalMessage.replace("%prefix%",getPrefix()).replace("%cc-prefix%",getCreativeChatPrefix()).replace("%player%",player.getName())));
+        }
+    }
+
+    /**
+     Returns message from localization file. If message is not found and "returnDetailedError" is true, then returns a detailed error message, that message is not found, or else will return only path to message.
+     **/
+    public static String getLocaleMessage(String messageID, boolean returnDetailedError) {
+        String originalMessage = getLocalization().getString(messageID);
+        if (originalMessage == null || originalMessage.equalsIgnoreCase("null")) {
+            ErrorUtils.sendWarningErrorMessage("Not found " + messageID + " in localization file!");
+            if (returnDetailedError) {
+                return "§6 Error §8| §fNot found §6" + messageID + "§f! Administration of server needs to fill that line in §6locales"+File.separator+getLanguage()+".yml";
+            } else {
+                return messageID;
+            }
+        } else {
+            return ChatColor.translateAlternateColorCodes('&',originalMessage.replace("%prefix%",getPrefix()).replace("%cc-prefix%",getCreativeChatPrefix()));
+        }
+    }
+
+    /**
+     Returns item's name from localization file. If message is not found, then returns a detailed error message, that message is not found.
+     **/
+    public static String getLocaleItemName(String nameID) {
+        String originalName = getLocalization().getString(nameID);
+        if (originalName == null || originalName.equalsIgnoreCase("null")) {
+            ErrorUtils.sendWarningErrorMessage("Not found item name " + nameID + " in localization file!");
+            return "§fNot found: " + nameID;
+        } else {
+            if (originalName.length() > 50) originalName = originalName.substring(0,50);
+            return ChatColor.translateAlternateColorCodes('&',originalName.replace("%prefix%",getPrefix()).replace("%cc-prefix%",getCreativeChatPrefix()));
+        }
+    }
+
+    /**
+     Returns item's description from localization file. If message is not found, then returns a detailed error message, that message is not found.
+     **/
+    public static List<String> getLocaleItemDescription(String descriptionID) {
+        List<String> originalDescription = getLocalization().getStringList(descriptionID);
+        List<String> parsedDescription = new ArrayList<>();
+        if (originalDescription.size() < 1) {
+            ErrorUtils.sendWarningErrorMessage("Not found item description " + descriptionID);
+            parsedDescription.add("§6Not found item description");
+            parsedDescription.add("§6" + descriptionID);
+            parsedDescription.add("§fPlease send this to server administration!");
+            parsedDescription.add("§f They need to fill this line in ");
+            parsedDescription.add("§f localization file: locales" + File.separator + getLanguage() + ".yml");
+        } else {
+            for (String descriptionLine : originalDescription) {
+                parsedDescription.add(ChatColor.translateAlternateColorCodes('&',descriptionLine.replace("%prefix%",getPrefix()).replace("%cc-prefix%",getCreativeChatPrefix())));
+            }
+        }
+        return parsedDescription;
+    }
+
+    /**
+     Returns elapsed time from old time to current with localized message. For example: if elapsed time is 2 seconds, it will return "2 sec ago".
+     **/
+    public static String getElapsedTime(long currentTime, long oldTime) {
+
+        String elapsedTime = "";
+
+        long elapsedTimeInSeconds = (currentTime - oldTime) / 1000;
+        long elapsedTimeInMinutes = elapsedTimeInSeconds / 60;
+        long elapsedTimeInHours = elapsedTimeInMinutes / 60;
+        long elapsedTimeInDays = elapsedTimeInHours / 24;
+
+        elapsedTimeInSeconds %= 60;
+        elapsedTimeInMinutes %= 60;
+        elapsedTimeInHours %= 24;
+
+        if (elapsedTimeInDays > 0) elapsedTime = elapsedTime.concat(elapsedTimeInDays + " " + getLocaleMessage("time.days",false) + " ");
+        if (elapsedTimeInHours > 0) elapsedTime = elapsedTime.concat(elapsedTimeInHours + " "+ getLocaleMessage("time.hours",false) +" ");
+        if (elapsedTimeInMinutes > 0) elapsedTime = elapsedTime.concat(elapsedTimeInMinutes + " "+ getLocaleMessage("time.minutes",false) +" ");
+        if (elapsedTimeInSeconds > 0) elapsedTime = elapsedTime.concat(elapsedTimeInSeconds + " "+ getLocaleMessage("time.seconds",false) +" ");
+        if ((currentTime - oldTime) < 1000) elapsedTime = getLocaleMessage("time.less-second",false) + " ";
+
+        return elapsedTime + getLocaleMessage("time.ago",false);
+
+    }
+
+
+    static Map<Plot,Long> messagesOnce = new HashMap<>();
+    /**
+     Sends message to plot players once. If cool down is not ended, it will not send message.
+     **/
+    public static void sendMessageOnce(Plot plot, String message, int onceInSeconds) {
+
+        long currentTime = System.currentTimeMillis();
+
+        if (messagesOnce.get(plot) != null) {
+            long timeInMap = messagesOnce.get(plot);
+            long elapsedTime = currentTime-timeInMap;
+            long elapsedSeconds = elapsedTime/1000;
+            if (elapsedSeconds < onceInSeconds) return;
+        }
+
+        for (Player player : plot.getPlayers()) {
+            player.sendMessage(message);
+        }
+        messagesOnce.put(plot,currentTime);
+
+    }
+
+    /**
+     Sends TextComponent message to plot players once. If cool down is not ended, it will not send message.
+     **/
+    public static void sendMessageOnce(Plot plot, TextComponent message, int onceInSeconds) {
+
+        long currentTime = System.currentTimeMillis();
+
+        if (messagesOnce.get(plot) != null) {
+            long timeInMap = messagesOnce.get(plot);
+            long elapsedTime = currentTime-timeInMap;
+            long elapsedSeconds = elapsedTime/1000;
+            if (elapsedSeconds < onceInSeconds) return;
+        }
+
+        for (Player player : plot.getPlayers()) {
+            player.sendMessage(message);
+        }
+        messagesOnce.put(plot,currentTime);
+
+    }
+
+    /**
+     Returns string, that parsed plot lines: plot name, description, online, reputation, owner, id, category, uniques, last activity time, creation time.
+     **/
+    public static String parsePlotLines(Plot plot, String string) {
+        String plotReputation = String.valueOf(plot.plotReputation);
+        if (plot.plotReputation >= 1) plotReputation = "§a+" + plotReputation;
+        else if (plot.plotReputation <= -1) plotReputation = "§c" + plotReputation;
+        else plotReputation = "§e" + plotReputation;
+        return parsePAPI(Bukkit.getOfflinePlayer(plot.owner),string.replace("%plotName%",plot.plotName).replace("%plotOnline%",String.valueOf(plot.getOnline())).replace("%plotOwner%",plot.owner).replace("%plotID%",plot.worldID).replace("%plotCategory%",plot.plotCategory.getName()).replace("%plotUniques%",String.valueOf(plot.getUniques())).replace("%plotReputation%",plotReputation).replace("%plotLastTime%",getElapsedTime(System.currentTimeMillis(),plot.getLastActivityTime())).replace("%plotCreationTime%",getElapsedTime(System.currentTimeMillis(), plot.getCreationTime())));
+    }
+
+    /**
+     Returns string, that parsed player's placeholders if PlaceholderAPI is working.
+     **/
+    public static String parsePAPI(OfflinePlayer player, String string) {
+        if (HookUtils.isPlaceholderAPIEnabled) {
+            return PAPIUtils.parsePlaceholdersAPI(player,string);
+        } else {
+            return string;
+        }
+    }
+
+    public static boolean messageExists(String messageID) {
+        String originalMessage = getLocalization().getString(messageID);
+        return originalMessage != null && !originalMessage.equalsIgnoreCase("null");
+    }
+}

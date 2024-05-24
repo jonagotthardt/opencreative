@@ -1,0 +1,104 @@
+package mcchickenstudio.creative.menu;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.*;
+
+import static mcchickenstudio.creative.utils.ItemUtils.createItem;
+
+public abstract class AbstractMenu implements InventoryHolder {
+
+    private byte rows = 6;
+    private String title = "Unknown menu";
+    private Map<Byte, ItemStack> items = new HashMap<>();
+
+    protected final byte[] defaultIgnoredSlots = new byte[]{0,1,2,3,4,5,6,7,8,9,17,18,26,27,35,36,44,45,46,47,48,49,50,51,52,53};
+    protected final byte[] allowedSlots = new byte[]{10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34,37,38,39,40,41,42,43};
+    protected final ItemStack NO_PERMS_ITEM = createItem(Material.RED_STAINED_GLASS,1);
+    protected final ItemStack DECORATION_ITEM = createItem(Material.LIGHT_GRAY_STAINED_GLASS,1);
+    protected final ItemStack DECORATION_PANE_ITEM = createItem(Material.GRAY_STAINED_GLASS_PANE,1);
+
+    public AbstractMenu(byte rows, String title) {
+        this.rows = rows;
+        this.title = title;
+    }
+
+    public boolean addItem(ItemStack item) {
+        for (byte i = 0; i < rows*9; i++) {
+            if (items.get(i) == null) {
+                items.put(i,item);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void setItem(byte slot, ItemStack item) {
+        if (!(slot >= rows*9) && !(slot<0)) {
+            items.put(slot,item);
+        }
+    }
+
+    public ItemStack getItem(byte slot) {
+        if (slot < 0 || slot >= getItems().size()) return new ItemStack(Material.AIR);
+        return getItems().get(slot);
+    }
+
+    public void setItems(Map<Byte, ItemStack> items) {
+        this.items = items;
+    }
+
+    public List<ItemStack> getItems() {
+        return new ArrayList<>(items.values());
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public @NotNull Inventory getInventory() {
+        if (rows > 6 || rows < 1) rows = 6;
+        Inventory inventory = Bukkit.createInventory(this, this.rows * 9, this.title);
+        for (Map.Entry<Byte,ItemStack> item : items.entrySet()) {
+            inventory.setItem(item.getKey(),item.getValue());
+        }
+        return inventory;
+    }
+
+    public void open(Player player) {
+        Menus.addMenu(this);
+        fillItems(player);
+        player.openInventory(getInventory());
+    }
+
+    public abstract void fillItems(Player player);
+    public abstract void onClick(InventoryClickEvent event);
+    public abstract void onOpen(InventoryOpenEvent event);
+    public abstract void onClose(InventoryCloseEvent event);
+
+    protected final boolean isClickedInMenuSlots(InventoryClickEvent event) {
+        if (event.getClickedInventory() == null) return false;
+        return event.getInventory().getHolder().equals(event.getClickedInventory().getHolder());
+    }
+
+    protected final boolean isPlayerClicked(InventoryClickEvent event) {
+        return (event.getWhoClicked() instanceof Player);
+    }
+
+    public byte getRows() {
+        return rows;
+    }
+
+    protected void setRows(byte rows) {
+        this.rows = rows;
+    }
+}

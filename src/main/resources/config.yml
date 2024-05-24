@@ -1,0 +1,59 @@
+#
+# Creative+ 1.5
+#
+#  Things will be different - Development build
+#  Made by McChicken Studio 2022-2024.
+#
+# Config can be changed in next updates,
+# please always check update notes before
+# updating a plugin to next version.
+#
+# Development builds can be not stable.
+# Notice: This plugin in development.
+#
+
+version: 1.5
+last-world-id: 0
+debug: true
+
+messages:
+  locale: en # Supported: en, ru - Для русского языка: ru
+  prefix: "&6 Worlds &8| &f"
+  cc-prefix: "&6 Creative Chat &8| &7"
+  cc-chat: "%cc-prefix%&7%player%&7: %message%" # You can use PAPI placeholders here
+  world-chat: "&7 %player% &8» &f%message%" # and here
+  version: "\n&f This server uses &f&lCreative&b&l+ &b%version%&f: %codename%&f.\n &7Contributors: TimePlay. Translators: initzero, Nagibator6000LoL.\n &cMcChicken 2017-2024\n &f"
+
+cooldowns:
+  generic-command: 5 # /play, /build, /games
+  advertisement: 120 # /ad
+  creative-chat: 10 # /cc
+  world-chat: 2 # chat in world
+
+groups:
+  default: # default - by default for any player, no permissions required
+    creating-world:
+      limit: 2
+    world:
+      size: 25
+      code-operations-limit: 100
+      entities-limit: 50 # limit for spawned entities in world
+      redstone-operations-limit: 20 # limit for redstone operations in world
+      build-permissions: # Permissions will be given when player types /build command
+        - "worldedit.wand"
+        # If you want to add WorldEdit permissions please turn off
+        # region-restrictions in WorldEdit/config.yml to make //set working
+        #- "worldedit.region.set"
+  premium:
+    permission: "creative.group.premium"
+    creating-world:
+      limit: 4
+    world:
+      size: 50
+      code-operations-limit: 200
+      entities-limit: 200
+      redstone-operations-limit: 50
+      build-permissions:
+        - "worldedit.wand"
+        #- "worldedit.region.set"
+        #- "worldedit.region.replace"
