@@ -1,20 +1,22 @@
+
 /*
-Creative+, Minecraft plugin.
-(C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
-Creative+ is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Creative+ is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-*/
 package mcchickenstudio.creative.events;
 
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
@@ -22,9 +24,11 @@ import mcchickenstudio.creative.plots.PlotFlags;
 import mcchickenstudio.creative.utils.PlayerUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import mcchickenstudio.creative.plots.Plot;
@@ -66,9 +70,14 @@ public class PlayerDeath implements Listener {
         player.sendTitle(getLocaleMessage("deaths.title",false),"§7 " + player.getName() + "§f " + translateDeathMessage(player));
     }
 
-    private String translateDeathMessage(Player player) {
+    private String translateDeathMessage(Player player ) {
         EntityDamageEvent damageEvent = player.getLastDamageCause();
         if (damageEvent == null) return getLocaleMessage("deaths.custom");
+        Entity damager = player.getKiller();
+        if (damageEvent instanceof EntityDamageByEntityEvent) {
+            EntityDamageByEntityEvent damageByEntityEvent = (EntityDamageByEntityEvent) damageEvent;
+            damager = damageByEntityEvent.getDamager();
+        }
         switch (damageEvent.getCause()) {
             case BLOCK_EXPLOSION:
                 return getLocaleMessage("deaths.block-explosion");
@@ -83,11 +92,11 @@ public class PlayerDeath implements Listener {
             case DRYOUT:
                 return getLocaleMessage("deaths.dryout");
             case ENTITY_ATTACK:
-                return getLocaleMessage("deaths.entity-attack").replace("%entity%",player.getLastDamageCause().getEntity().getName());
+                return getLocaleMessage("deaths.entity-attack").replace("%entity%",(damager== null ? "" : damager.getName().substring(0,30)));
             case ENTITY_EXPLOSION:
-                return getLocaleMessage("deaths.entity-explosion").replace("%entity%",player.getLastDamageCause().getEntity().getName());
+                return getLocaleMessage("deaths.entity-explosion").replace("%entity%",(damager == null ? "" : damager.getName()));
             case ENTITY_SWEEP_ATTACK:
-                return getLocaleMessage("deaths.entity-sweep-attack").replace("%entity%",player.getLastDamageCause().getEntity().getName());
+                return getLocaleMessage("deaths.entity-sweep-attack").replace("%entity%",(damager == null ? "" : damager.getName()));
             case FALL:
                 return getLocaleMessage("deaths.fall");
             case FALLING_BLOCK:

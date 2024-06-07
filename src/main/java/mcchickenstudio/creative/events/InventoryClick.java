@@ -1,20 +1,20 @@
 /*
-Creative+, Minecraft plugin.
-(C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
-
-Creative+ is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Creative+ is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-*/
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 package mcchickenstudio.creative.events;
 
@@ -40,11 +40,8 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import mcchickenstudio.creative.coding.menus.actions.PlayerActionSubtype;
 import mcchickenstudio.creative.coding.menus.conditions.PlayerConditionSubtype;
-import mcchickenstudio.creative.coding.menus.PlayerActionsMenu;
 import mcchickenstudio.creative.coding.menus.PlayerConditionsMenu;
-import mcchickenstudio.creative.coding.menus.PlayerEventsMenu;
 import mcchickenstudio.creative.menu.*;
 import mcchickenstudio.creative.menu.buttons.RadioButton;
 import mcchickenstudio.creative.plots.*;
@@ -209,8 +206,8 @@ public class InventoryClick implements Listener {
                     if (worldClicked) {
                         List<String> lore = meta.getLore();
                         for (String loreLine : lore) {
-                            if (loreLine.startsWith(getLocaleMessage("menus.all-worlds.items.world.id"))) {
-                                String worldID = loreLine.replace(getLocaleMessage("menus.all-worlds.items.world.id"),"");
+                            if (loreLine.startsWith(getLocaleMessage("menus.own-worlds.items.world.id"))) {
+                                String worldID = loreLine.replace(getLocaleMessage("menus.own-worlds.items.world.id"),"");
                                 player.closeInventory();
                                 if (PlotManager.getInstance().getPlotByCustomID(worldID) != null) {
                                     if (!(event.getClick() == ClickType.SHIFT_RIGHT)) {
@@ -318,102 +315,6 @@ public class InventoryClick implements Listener {
                 } catch (Exception error) {
                     sendPlayerErrorMessage(player,"Произошла ошибка при обработке клика инвентаря. " + error.getMessage());
                     error.printStackTrace();
-                }
-            } else if (event.getInventory().getHolder() instanceof PlayerEventsMenu) {
-
-                event.setCancelled(true);
-                DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-                if (devPlot == null) return;
-                if (player.getGameMode() == GameMode.ADVENTURE) {
-                    cantDev(player);
-                    return;
-                }
-                boolean eventClicked = false;
-                    for (int slot : AllWorldsMenu.worldSlots) {
-                        if (event.getSlot() == slot) {
-                            eventClicked = true;
-                            break;
-                        }
-                }
-                if (!eventClicked) {
-                    if (PlayerEventsMenu.getCategoryClicked(item.getType()) == null) return;
-                    PlayerEventsMenu.openInventory(player,PlayerEventsMenu.getCategoryClicked(item.getType()),PlayerEventsMenu.signLocation.get(player));
-                    player.playSound(player.getLocation(),Sound.UI_LOOM_SELECT_PATTERN,100,1);
-                    return;
-                }
-                String path = getPathFromMessage("items.developer.events.",item.getItemMeta().getDisplayName());
-
-                if (path != null && path.endsWith(".name")) {
-
-                    String subtype = path.replace("items.developer.events.","").replace(".name","").replace("-","_");
-                    Location signLocation = PlayerEventsMenu.signLocation.get(player);
-                    Block eventBlock = signLocation.getBlock().getRelative(BlockFace.NORTH);
-
-                    if (eventBlock.getType() == Material.DIAMOND_BLOCK && signLocation.getWorld().getName().contains("dev")) {
-
-                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                        plot.script.setSignLineSubtype(signLocation,subtype);
-                        player.closeInventory();
-                        player.sendTitle(getLocaleMessage("world.dev-mode.set-event"),item.getItemMeta().getDisplayName(),15,20,15);
-                        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 100, 1.7f);
-
-                    }
-
-                }
-
-            } else if (event.getInventory().getHolder() instanceof PlayerActionsMenu) {
-                event.setCancelled(true);
-
-                DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-                if (devPlot == null) return;
-                if (player.getGameMode() == GameMode.ADVENTURE) {
-                    cantDev(player);
-                    return;
-                }
-                boolean actionClicked = false;
-                for (int slot : AllWorldsMenu.worldSlots) {
-                    if (event.getSlot() == slot) {
-                        actionClicked = true;
-                        break;
-                    }
-                }
-                if (!actionClicked) {
-                    if (PlayerActionsMenu.getCategoryClicked(item.getType()) == null) return;
-                    player.playSound(player.getLocation(),Sound.UI_LOOM_SELECT_PATTERN,100,1);
-                    PlayerActionsMenu.openInventory(player,1,PlayerActionsMenu.getCategoryClicked(item.getType()),PlayerActionsMenu.signLocation.get(player));
-                    return;
-                }
-
-                String path = getPathFromMessage("items.developer.actions.",item.getItemMeta().getDisplayName());
-                if (path != null && path.endsWith(".name")) {
-
-                    String subtype = path.replace("items.developer.actions.","").replace(".name","").replace("-","_");
-                    Location signLocation = PlayerActionsMenu.signLocation.get(player);
-                    Block actionBlock = signLocation.getBlock().getRelative(BlockFace.NORTH);
-
-                    if (actionBlock.getType() == Material.COBBLESTONE && signLocation.getWorld().getName().contains("dev")) {
-
-                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                        plot.script.setSignLineSubtype(signLocation,subtype);
-                        player.closeInventory();
-                        player.sendTitle(getLocaleMessage("world.dev-mode.set-action"),item.getItemMeta().getDisplayName(),15,20,15);
-                        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 100, 1.7f);
-
-                        Block chestBlock = actionBlock.getRelative(BlockFace.UP);
-                        if (PlayerActionSubtype.valueOf(subtype.toUpperCase()).isChestRequired()) {
-                            chestBlock.setType(Material.CHEST);
-                            BlockData blockData = chestBlock.getBlockData();
-                            Chest chestState = (Chest) chestBlock.getState();
-                            chestState.setCustomName(subtype);
-                            chestState.update();
-                            ((Directional) blockData).setFacing(BlockFace.SOUTH);
-                            chestBlock.setBlockData(blockData);
-                        } else {
-                            chestBlock.setType(Material.AIR);
-                        }
-
-                    }
-
                 }
             } else if (event.getInventory().getHolder() instanceof PlayerConditionsMenu) {
                 event.setCancelled(true);
@@ -573,7 +474,7 @@ public class InventoryClick implements Listener {
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent event) {
         Plot plot = PlotManager.getInstance().getPlotByPlayer((Player) event.getPlayer());
-        if (plot != null) EventRaiser.raiseOpenInventoryEvent((Player) event.getPlayer(),event);;
+        if (plot != null) EventRaiser.raiseOpenInventoryEvent((Player) event.getPlayer(),event);
     }
 
     @EventHandler

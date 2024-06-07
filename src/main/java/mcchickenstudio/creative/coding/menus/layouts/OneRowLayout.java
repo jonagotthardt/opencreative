@@ -1,3 +1,21 @@
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package mcchickenstudio.creative.coding.menus.layouts;
 
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
@@ -11,53 +29,119 @@ public class OneRowLayout extends Layout {
 
     @Override
     protected void fillVarsItems() {
-        if (actionType.getArgumentsSlots().length > 0 && actionType.getArgumentsSlots()[0].getListSize() > 1) {
+        if (actionType.getArgumentsSlots().length > 0 && actionType.getArgumentsSlots()[0].isList()) {
             switch (actionType.getArgumentsSlots()[0].getListSize()) {
                 case 9: {
                     setRows((byte) 4);
                     byte number = 1;
                     for (byte slot = 9; slot < 17; slot++) {
-                        setArgSlotWithFrame(number++,slot);
+                        setArgSlotVertical(number++,slot);
+                    }
+                    break;
+                }
+                case 18: {
+                    setRows((byte) 3);
+                    for (byte slot = 0; slot < 18; slot++) {
+                        setArgSlot((byte) 1,slot);
+                    }
+                    for (byte slot = 18; slot < 27; slot++) {
+                        setGlass((byte) 1,slot);
+                    }
+                    if (actionType.getArgumentsSlots().length > 1 && !actionType.getArgumentsSlots()[1].isList()) {
+                        setArgSlotHorizontal((byte) 2,(byte) 22);
+                    }
+                    break;
+                }
+                case 27: {
+                    setRows((byte) 4);
+                    for (byte slot = 0; slot < 27; slot++) {
+                        setArgSlot((byte) 1,slot);
+                    }
+                    for (byte slot = 27; slot < 36; slot++) {
+                        setGlass((byte) 1,slot);
+                    }
+                    if (actionType.getArgumentsSlots().length > 1 && !actionType.getArgumentsSlots()[1].isList()) {
+                        setArgSlotHorizontal((byte) 2,(byte) 22);
                     }
                     break;
                 }
                 case 45: {
-                    setRows((byte) 4);
+                    setRows((byte) 6);
                     byte number = 1;
                     for (byte slot = 9; slot < 45; slot++) {
-                        setArgSlotWithFrame(number++,slot);
+                        setArgSlot(number++,slot);
                     }
-                    for (byte slot = 9; slot < 45; slot++) {
-                        setArgSlotWithFrame(number++,slot);
+                    for (byte slot = 45; slot < 54; slot++) {
+                        setGlass((byte) 1,slot);
                     }
                 }
             }
+
+            return;
         }
         switch (getRequiredSlots().length) {
             case 1:
-                setArgSlotWithFrame((byte) 1,(byte) 13);
+                setArgSlotVertical((byte) 1,(byte) 13);
                 break;
             case 2:
-                setArgSlotWithFrame((byte) 1,(byte) 12);
-                setArgSlotWithFrame((byte) 2,(byte) 14);
+                setArgSlotVertical((byte) 1,(byte) 12);
+                setArgSlotVertical((byte) 2,(byte) 14);
                 break;
             case 3:
-                setArgSlotWithFrame((byte) 1,(byte) 11);
-                setArgSlotWithFrame((byte) 2,(byte) 13);
-                setArgSlotWithFrame((byte) 3,(byte) 15);
+                setArgSlotVertical((byte) 1,(byte) 11);
+                setArgSlotVertical((byte) 2,(byte) 13);
+                setArgSlotVertical((byte) 3,(byte) 15);
                 break;
             case 4:
-                setArgSlotWithFrame((byte) 1,(byte) 10);
-                setArgSlotWithFrame((byte) 2,(byte) 12);
-                setArgSlotWithFrame((byte) 3,(byte) 14);
-                setArgSlotWithFrame((byte) 4,(byte) 16);
+                setArgSlotVertical((byte) 1,(byte) 10);
+                setArgSlotVertical((byte) 2,(byte) 12);
+                setArgSlotVertical((byte) 3,(byte) 14);
+                setArgSlotVertical((byte) 4,(byte) 16);
                 break;
             case 5:
-                setArgSlotWithFrame((byte) 1,(byte) 9);
-                setArgSlotWithFrame((byte) 2,(byte) 11);
-                setArgSlotWithFrame((byte) 3,(byte) 13);
-                setArgSlotWithFrame((byte) 4,(byte) 15);
-                setArgSlotWithFrame((byte) 5,(byte) 17);
+                setArgSlotVertical((byte) 1,(byte) 9);
+                setArgSlotVertical((byte) 2,(byte) 11);
+                setArgSlotVertical((byte) 3,(byte) 13);
+                setArgSlotVertical((byte) 4,(byte) 15);
+                setArgSlotVertical((byte) 5,(byte) 17);
+                break;
+            case 6:
+                setArgSlotVertical((byte) 1,(byte) 10);
+                setArgSlotVertical((byte) 2,(byte) 11);
+                setArgSlotVertical((byte) 3,(byte) 12);
+                setArgSlotVertical((byte) 4,(byte) 14);
+                setArgSlotVertical((byte) 5,(byte) 15);
+                setArgSlotVertical((byte) 6,(byte) 16);
+                break;
+            case 7:
+                setArgSlotVertical((byte) 1,(byte) 10);
+                setArgSlotVertical((byte) 2,(byte) 11);
+                setArgSlotVertical((byte) 3,(byte) 12);
+                setArgSlotVertical((byte) 4,(byte) 13);
+                setArgSlotVertical((byte) 5,(byte) 14);
+                setArgSlotVertical((byte) 6,(byte) 15);
+                setArgSlotVertical((byte) 7,(byte) 16);
+                break;
+            case 8:
+                setArgSlotVertical((byte) 1,(byte) 9);
+                setArgSlotVertical((byte) 2,(byte) 10);
+                setArgSlotVertical((byte) 3,(byte) 11);
+                setArgSlotVertical((byte) 4,(byte) 12);
+                setArgSlotVertical((byte) 5,(byte) 14);
+                setArgSlotVertical((byte) 6,(byte) 15);
+                setArgSlotVertical((byte) 7,(byte) 16);
+                setArgSlotVertical((byte) 8,(byte) 17);
+                break;
+            case 9:
+                setArgSlotVertical((byte) 1,(byte) 9);
+                setArgSlotVertical((byte) 2,(byte) 10);
+                setArgSlotVertical((byte) 3,(byte) 11);
+                setArgSlotVertical((byte) 4,(byte) 12);
+                setArgSlotVertical((byte) 5,(byte) 13);
+                setArgSlotVertical((byte) 6,(byte) 14);
+                setArgSlotVertical((byte) 7,(byte) 15);
+                setArgSlotVertical((byte) 8,(byte) 16);
+                setArgSlotVertical((byte) 9,(byte) 17);
                 break;
         }
     }

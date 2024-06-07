@@ -1,20 +1,20 @@
 /*
-Creative+, Minecraft plugin.
-(C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
-
-Creative+ is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Creative+ is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-*/
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 package mcchickenstudio.creative;
 
@@ -33,7 +33,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 
@@ -43,6 +42,15 @@ public final class Main extends JavaPlugin {
     public static final String version = "1.5 Dev. Build 5";
     public static final String codename = "Things will be different";
     public static boolean debug = false;
+
+    /**
+     * Plugin load operations.
+     * @see #onEnable
+     */
+    @Override
+    public void onLoad() {
+        getLogger().info("This software was made by ukrainians, that are suffering from never-ending air alerts, explosions and people's deaths. We're AGAINST THE WAR. This software IS NOT DESIGNED for people, who support killing and robbing another country. Let us having fun, like players that create their worlds...");
+    }
 
     /**
      Plugin startup operations. It registers commands, events; loads config, worlds, localization file.
@@ -72,7 +80,7 @@ public final class Main extends JavaPlugin {
         long loadedTime = System.currentTimeMillis()-startTime;
         for (Player player : Bukkit.getOnlinePlayers()) {
             teleportToLobby(player);
-            player.sendActionBar(new TextComponent(ChatColor.translateAlternateColorCodes('&', "§f§l Creative§b+§f " + version + " is loaded for " + loadedTime + " ms.")));
+            player.sendActionBar(new TextComponent(ChatColor.translateAlternateColorCodes('&', "&7Open&fCreative&b+ &7" + version + "&f is loaded for " + loadedTime + " ms.")));
         }
 
         Main.getPlugin().getLogger().info("OpenCreative+ " + version + ": " + codename + " is loaded for " + loadedTime);
@@ -89,11 +97,11 @@ public final class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         for (Player player: Bukkit.getOnlinePlayers()) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',"§f§l Creative§b+§f is shutting down, please wait..."));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&f\n&f Shutting down &7Open&fCreative&b+ &7" + version + "&f, please wait...\n&f"));
             teleportToLobby(player);
         }
         FileUtils.unloadPlots();
-        this.getLogger().info("Creative is disabled.");
+        this.getLogger().info("OpenCreative+ is disabled.");
     }
 
 

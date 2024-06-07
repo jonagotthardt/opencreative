@@ -1,3 +1,21 @@
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package mcchickenstudio.creative.coding.menus.variables;
 
 import mcchickenstudio.creative.menu.AbstractMenu;
@@ -18,11 +36,13 @@ public class VariablesMenu extends AbstractMenu  {
     private final ItemStack TEXT_ITEM = createItem(Material.BOOK,1,"menus.developer.variables.items.text");
     private final ItemStack NUMBER_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.number");
     private final ItemStack BOOLEAN_ITEM = createItem(Material.CLOCK,1,"menus.developer.variables.items.boolean");
-    private final ItemStack LOCATION_ITEM = createItem(Material.PAPER,1,"menus.developer.variables.items.number");
+    private final ItemStack LOCATION_ITEM = createItem(Material.PAPER,1,"menus.developer.variables.items.location");
 
     private final ItemStack ARRAY_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.array");
     private final ItemStack VARIABLE_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.variable");
     private final ItemStack POTION_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.potion");
+    private final ItemStack PARTICLE_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.particle");
+    private final ItemStack ENTITY_TYPE_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.entity_type");
     private final ItemStack MAP_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.map");
 
 

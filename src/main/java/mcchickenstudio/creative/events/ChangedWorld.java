@@ -1,20 +1,20 @@
 /*
-Creative+, Minecraft plugin.
-(C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
-
-Creative+ is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Creative+ is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-*/
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 package mcchickenstudio.creative.events;
 
@@ -24,6 +24,7 @@ import mcchickenstudio.creative.commands.CreativeChat;
 
 import mcchickenstudio.creative.plots.PlotFlags;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,17 +33,35 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.FileUtils;
+import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.List;
+import java.util.*;
 
 import static mcchickenstudio.creative.events.PlayerMove.previousLocation;
 
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.PlayerUtils.clearBuildPermissions;
-import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
 
 public class ChangedWorld implements Listener {
+
+    private static final Map<UUID, Location> developerSetLocation = new HashMap<>();
+
+    public static void addPlayerWithLocation(Player player) {
+        developerSetLocation.put(player.getUniqueId(), player.getLocation());
+    }
+
+    public static void removePlayerWithLocation(Player player) {
+        developerSetLocation.remove(player.getUniqueId());
+    }
+
+    public static boolean isPlayerWithLocation(Player player) {
+        return developerSetLocation.containsKey(player.getUniqueId());
+    }
+
+    public static Location getOldLocationPlayerWithLocation(Player player) {
+        return developerSetLocation.get(player.getUniqueId());
+    }
 
     @EventHandler
     public void onPlayerWorldChanged(PlayerChangedWorldEvent event) {
@@ -64,16 +83,23 @@ public class ChangedWorld implements Listener {
 
         if (oldPlot != null && oldPlot == newPlot) {
             if (oldWorld.getName().endsWith("dev")) {
-                for (Player onlinePlayer : oldWorld.getPlayers()) {
-                    onlinePlayer.sendMessage(getLocaleMessage("world.dev-mode.left", player));
+                if (!isPlayerWithLocation(player)) {
+                    for (Player onlinePlayer : oldWorld.getPlayers()) {
+                        onlinePlayer.sendMessage(getLocaleMessage("world.dev-mode.left", player));
+                    }
                 }
             } else if (newWorld.getName().endsWith("dev")) {
-                for (Player onlinePlayer : newWorld.getPlayers()) {
-                   onlinePlayer.sendMessage(getLocaleMessage("world.dev-mode.joined", player));
+                if (!isPlayerWithLocation(player)) {
+                    for (Player onlinePlayer : newWorld.getPlayers()) {
+                        onlinePlayer.sendMessage(getLocaleMessage("world.dev-mode.joined", player));
+                    }
+                    EventRaiser.raiseQuitEvent(event.getPlayer());
+                } else {
+                    removePlayerWithLocation(player);
                 }
-                EventRaiser.raiseQuitEvent(event.getPlayer());
             }
         } else {
+            removePlayerWithLocation(player);
             if (oldPlot != null) {
                 if (oldPlot.getOnline() > 0) {
                     if (oldPlot.getFlagValue(PlotFlags.PlotFlag.JOIN_MESSAGES) == 1) {

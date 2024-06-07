@@ -1,5 +1,24 @@
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.communication;
 
+import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
@@ -9,32 +28,17 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class ShowTitleAction extends PlayerAction {
-    public ShowTitleAction(Executor executor, int x, List<String> arguments) {
-        super(executor, x, arguments);
+    public ShowTitleAction(Executor executor, int x, Arguments args) {
+        super(executor, x, args);
     }
 
     @Override
     public void execute(List<Entity> selection) {
-        String title = " ";
-        String subtitle = " ";
-        int fadeIn = 20;
-        int fadeOut = 10;
-        int stay = 60;
-        if (!getArguments().isEmpty()) {
-            title = getArguments().get(0);
-        }
-        if (getArguments().get(1) != null) {
-            subtitle = getArguments().get(1);
-        }
-        if (getArguments().get(2) != null) {
-            fadeIn = Math.round(Float.parseFloat(getArguments().get(2)));
-        }
-        if (getArguments().size() > 3) {
-            stay = Math.round(Float.parseFloat(getArguments().get(3)));
-        }
-        if (getArguments().size() > 4) {
-            fadeOut = Math.round(Float.parseFloat(getArguments().get(4)));
-        }
+        String title = getArguments().getValue("title", EMPTY_STRING);
+        String subtitle = getArguments().getValue("subtitle", EMPTY_STRING);
+        int fadeIn = getArguments().getValue("fade-in",20);
+        int fadeOut = getArguments().getValue("stay",60);
+        int stay = getArguments().getValue("fade-out",10);
         for (Entity entity : selection) {
             ((Player) entity).sendTitle(title,subtitle,fadeIn,stay,fadeOut);
         }
@@ -42,6 +46,6 @@ public class ShowTitleAction extends PlayerAction {
 
     @Override
     public ActionType getActionType() {
-        return ActionType.SHOW_TITLE;
+        return ActionType.PLAYER_SHOW_TITLE;
     }
 }

@@ -1,20 +1,20 @@
 /*
-Creative+, Minecraft plugin.
-(C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
-
-Creative+ is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Creative+ is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-*/
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 package mcchickenstudio.creative.utils;
 
@@ -141,7 +141,38 @@ public class FileUtils {
             worldFile.save(file);
             return true;
         } catch (IOException | IllegalArgumentException error) {
-            sendCriticalErrorMessage("Couldn't save world settings.yml for " + worldName + " because of " + error.getClass().getName() + " " + error.getMessage());
+            sendCriticalErrorMessage("Couldn't save world codeScript.yml for " + worldName + " because of " + error.getClass().getName() + " " + error.getMessage());
+            return false;
+        }
+
+    }
+
+    /**
+     Creates plot's codeScript.yml file.
+     **/
+    public static boolean createVariablesFile(final String path, final String worldName) {
+        final File file = new File(path, "variables.yml");
+        final FileConfiguration worldFile = YamlConfiguration.loadConfiguration(file);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException error) {
+                sendCriticalErrorMessage("Couldn't create a variables.yml for world " + worldName + " because of IOException. Maybe it is already exists? " + error.getMessage());
+                return false;
+            }
+        }
+        worldFile.createSection("world");
+        worldFile.set("world",worldName);
+        worldFile.createSection("creation-time");
+        worldFile.set("creation-time",System.currentTimeMillis());
+        worldFile.createSection("last-activity-time");
+        worldFile.set("last-activity-time",System.currentTimeMillis());
+        worldFile.createSection("variables");
+        try {
+            worldFile.save(file);
+            return true;
+        } catch (IOException | IllegalArgumentException error) {
+            sendCriticalErrorMessage("Couldn't save world variables.yml for " + worldName + " because of " + error.getClass().getName() + " " + error.getMessage());
             return false;
         }
 
@@ -356,6 +387,29 @@ public class FileUtils {
         }
     }
 
+    /**
+     Returns plot's codeScript.yml file.
+     **/
+    public static File getPlotVariablesFile(Plot plot) {
+        File scriptFile = new File((getPlotFolder(plot)),"variables.yml");
+        if (scriptFile.exists()) return scriptFile;
+        else {
+            createCodeScript(getPlotFolder(plot).getPath(), plot.worldName);
+            return getPlotVariablesFile(plot);
+        }
+    }
+
+    /**
+     Returns plot's codeScript.yml configuration.
+     **/
+    public static YamlConfiguration getPlotVariablesConfig(Plot plot) {
+        File scriptFile = new File((getPlotFolder(plot)),"variables.yml");
+        if (scriptFile.exists()) return YamlConfiguration.loadConfiguration(scriptFile);
+        else {
+            createCodeScript(getPlotFolder(plot).getPath(), plot.worldName);
+            return getPlotVariablesConfig(plot);
+        }
+    }
 
     /**
      Returns plots folders. If "includeUnloadedWorlds" is true, then it will include unloaded plots.

@@ -1,20 +1,20 @@
 /*
-Creative+, Minecraft plugin.
-(C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
-
-Creative+ is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Creative+ is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-*/
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 package mcchickenstudio.creative.plots;
 
@@ -48,6 +48,11 @@ import static mcchickenstudio.creative.utils.WorldUtils.generateWorld;
 
 public class Plot {
 
+    /*
+     This Plot class will be split in next updates
+     and this poorly "public" code will be replaced.
+     */
+
     public World world;
     public String worldName;
     public String worldID;
@@ -77,6 +82,7 @@ public class Plot {
     public int lastRedstoneOperationsAmount;
     public int codeOperationsLimit;
 
+    private final boolean debug = true;
     private final PlotFlags plotFlags;
 
     public CodeScript script;
@@ -312,6 +318,7 @@ public class Plot {
         Player player = Bukkit.getPlayer(plot.owner);
         String worldName = "plot" + WorldUtils.generateWorldID();
         player.sendTitle(getLocaleMessage("creating-world.title"),getLocaleMessage("creating-world.subtitle"),10,300,40);
+        Main.getPlugin().getLogger().info("Creating new " + worldName + " by " + player.getName() + "...");
         if (!generateWorld(plot,player,worldName,generator)) {
             player.clearTitle();
             sendPlayerErrorMessage(player,"§cПроизошла ошибка при создании мира... \n§cОбратитесь к администрации!");
@@ -531,6 +538,7 @@ public class Plot {
         }
         player.sendTitle(getLocaleMessage("teleporting-to-world.title"),getLocaleMessage("teleporting-to-world.subtitle"),15,9999,15);
         if (!this.isLoaded) {
+            Main.getPlugin().getLogger().info("Loading " + this.worldName + " and teleporting " + player.getName());
             PlotManager.getInstance().loadPlot(this);
         }
         clearPlayer(player);
@@ -570,6 +578,7 @@ public class Plot {
         devPlot.world.getSpawnLocation().getChunk().load(true);
         player.teleport(this.devPlot.world.getSpawnLocation());
         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE,100,2);
+        devPlot.translateCodingBlocks(player);
     }
 
     public void teleportToDevPlot(Player player, double x, double y, double z) {
@@ -581,6 +590,7 @@ public class Plot {
         if (x > 0 && y > 0 && z > 0 && x < 99 && y < 99 && z < 99) {
             player.teleport(new Location(this.devPlot.world, x+1,y,z+2,180,5));
         }
+        devPlot.translateCodingBlocks(player);
     }
 
     public void removeDeveloper(String nickname) {
@@ -720,5 +730,9 @@ public class Plot {
     public void setPlotCategory(Category category) {
         this.plotCategory = category;
         setPlotConfigParameter(this,"category",category.toString());
+    }
+
+    public boolean getDebug() {
+        return debug;
     }
 }

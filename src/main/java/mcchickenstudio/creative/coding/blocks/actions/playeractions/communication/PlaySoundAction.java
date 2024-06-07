@@ -1,5 +1,24 @@
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.communication;
 
+import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
@@ -10,24 +29,15 @@ import java.util.List;
 
 public class PlaySoundAction extends PlayerAction {
 
-    public PlaySoundAction(Executor executor, int x, List<String> arguments) {
-        super(executor, x, arguments);
+    public PlaySoundAction(Executor executor, int x, Arguments args) {
+        super(executor, x, args);
     }
 
     @Override
     public void execute(List<Entity> selection) {
-        String sound = "entity.player.levelup";
-        float volume = 100f;
-        float pitch = 1.0f;
-        if (!getArguments().isEmpty()) {
-             sound = getArguments().get(0);
-        }
-        if (getArguments().size() > 1) {
-            volume = Float.parseFloat(getArguments().get(1));
-        }
-        if (getArguments().size() > 2) {
-            pitch = Float.parseFloat(getArguments().get(2));
-        }
+        String sound = getArguments().getValue("sound","entity.player.levelup");
+        float volume = getArguments().getValue("volume",100f);
+        float pitch = getArguments().getValue("pitch",1f);
         for (Entity entity : selection) {
             ((Player) entity).playSound(entity.getLocation(),sound,volume,pitch);
         }
@@ -35,6 +45,6 @@ public class PlaySoundAction extends PlayerAction {
 
     @Override
     public ActionType getActionType() {
-        return ActionType.PLAY_SOUND;
+        return ActionType.PLAYER_PLAY_SOUND;
     }
 }

@@ -1,20 +1,20 @@
 /*
-Creative+, Minecraft plugin.
-(C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
-
-Creative+ is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Creative+ is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-*/
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 package mcchickenstudio.creative.commands;
 
@@ -24,7 +24,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.PlayerInventory;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.CooldownUtils;
 import mcchickenstudio.creative.plots.Plot;
@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
+import static mcchickenstudio.creative.utils.ItemUtils.itemEquals;
 import static mcchickenstudio.creative.utils.PlayerUtils.clearPlayer;
 import static mcchickenstudio.creative.commands.CommandAd.plugin;
 
@@ -47,16 +48,18 @@ public class CommandDev implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         if (sender instanceof Player) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(((Player) sender).getPlayer());
+            Player player = (Player) sender;
+
+            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
             if (plot == null) {
-                ((Player) sender).getPlayer().sendMessage(getLocaleMessage("only-in-world"));
+                player.sendMessage(getLocaleMessage("only-in-world"));
                 return true;
             }
-            if (getCooldown(((Player) sender).getPlayer(), CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-                ((Player) sender).getPlayer().sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(((Player) sender).getPlayer(), CooldownUtils.CooldownType.GENERIC_COMMAND))));
+            if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
+                player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
                 return true;
             }
-            setCooldown(((Player) sender).getPlayer(), plugin.getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
+            setCooldown(player, plugin.getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
 
             List<String> developers = new ArrayList<>();
             List<String> trustedDevelopers = FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_TRUSTED);
@@ -82,33 +85,41 @@ public class CommandDev implements CommandExecutor {
                             return true;
                         }
                     }
-                    clearPlayer(((Player) sender).getPlayer());
-                    sender.sendMessage(getLocaleMessage("world.dev-mode.help", ((Player) sender).getPlayer()));
 
+                    PlayerInventory playerInventory = player.getInventory();
+                    ItemStack[] playerInventoryItems = (PlotManager.getInstance().getDevPlot(player) == null ?  playerInventory.getContents() : new ItemStack[]{});
+                    clearPlayer(player);
+                    sender.sendMessage(getLocaleMessage("world.dev-mode.help", player));
                     if (args.length == 3) {
                         try {
                             double x = Double.parseDouble(args[0]);
                             double y = Double.parseDouble(args[1]);
                             double z = Double.parseDouble(args[2]);
-                            plot.teleportToDevPlot(((Player) sender).getPlayer(),x,y,z);
+                            plot.teleportToDevPlot(player,x,y,z);
                         } catch (Exception ignored) {
-                            plot.teleportToDevPlot(((Player) sender).getPlayer());
+                            plot.teleportToDevPlot(player);
                         }
                     } else {
-                        plot.teleportToDevPlot(((Player) sender).getPlayer());
+                        plot.teleportToDevPlot(player);
                     }
 
                     if (guestsDevelopers.contains(sender.getName())) {
-                        ((Player) sender).setGameMode(GameMode.ADVENTURE);
+                        player.setGameMode(GameMode.ADVENTURE);
                     } else {
-                        ((Player) sender).setGameMode(GameMode.CREATIVE);
+                        player.setGameMode(GameMode.CREATIVE);
                     }
-                    giveItems(((Player) sender).getPlayer());
-                    ((Player) sender).sendTitle(getLocaleMessage("world.dev-mode.title"), getLocaleMessage("world.dev-mode.subtitle"));
-                    ((Player) sender).playSound(((Player) sender).getLocation(), Sound.valueOf("BLOCK_BEACON_POWER_SELECT"), 100, 1.3f);
+                    giveItems(player);
+                    ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
+                    for (ItemStack playerItem : playerInventoryItems) {
+                        if (playerItem != null && !itemEquals(playerItem, worldSettingsItem)) {
+                            player.getInventory().addItem(playerItem);
+                        }
+                    }
+                    player.sendTitle(getLocaleMessage("world.dev-mode.title"), getLocaleMessage("world.dev-mode.subtitle"));
+                    player.playSound(player.getLocation(), Sound.valueOf("BLOCK_BEACON_POWER_SELECT"), 100, 1.3f);
 
                 } else {
-                    sender.sendMessage(getLocaleMessage("not-owner", ((Player) sender).getPlayer()));
+                    sender.sendMessage(getLocaleMessage("not-owner", player));
                 }
             } else {
                 if (!plot.owner.equalsIgnoreCase(sender.getName())) {
@@ -127,7 +138,7 @@ public class CommandDev implements CommandExecutor {
                     sender.sendMessage(getLocaleMessage("world.players.developers.removed").replace("%player%", args[0]));
                 } else {
                     Player addedPlayer = Bukkit.getPlayer(args[0]);
-                    if (addedPlayer != null && addedPlayer != ((Player) sender).getPlayer()) {
+                    if (addedPlayer != null && addedPlayer != player) {
                         Plot plot1 = PlotManager.getInstance().getPlotByPlayer(addedPlayer);
                         if (plot == plot1) {
                             sender.sendMessage(getLocaleMessage("world.players.developers.added").replace("%player%", addedPlayer.getName()));
@@ -155,36 +166,11 @@ public class CommandDev implements CommandExecutor {
         player.getInventory().setItem(2, conditionPlayerItem);
 
         ItemStack flySpeedChangerItem = createItem(Material.FEATHER,1,"items.developer.fly-speed-changer");
-        player.getInventory().setItem(5, flySpeedChangerItem);
-
-        /*ItemStack actionVarItem = new ItemStack(Material.IRON_BLOCK,1);
-        ItemMeta actionVarItemMeta = actionVarItem.getItemMeta();
-        actionVarItemMeta.setDisplayName(getLocaleItemName("items.developer.action-var.name"));
-        actionVarItemMeta.setLore(getLocaleItemDescription("items.developer.action-var.lore"));
-        actionVarItem.setItemMeta(actionVarItemMeta);
-        player.getInventory().setItem(2,actionVarItem);*/
+        player.getInventory().setItem(6, flySpeedChangerItem);
 
         player.getInventory().setItem(7, createItem(Material.IRON_INGOT,1,"items.developer.variables"));
 
-       /* ItemStack varTextItem = new ItemStack(Material.BOOK, 64);
-        ItemMeta varTextItemMeta = varTextItem.getItemMeta();
-        varTextItemMeta.setDisplayName(getLocaleItemName("items.developer.text.name"));
-        varTextItemMeta.setLore(getLocaleItemDescription("items.developer.text.lore"));
-        varTextItem.setItemMeta(varTextItemMeta);
-        player.getInventory().setItem(6, varTextItem);
-
-        ItemStack varNumberItem = new ItemStack(Material.SLIME_BALL,64);
-        ItemMeta varNumberItemMeta = varNumberItem.getItemMeta();
-        varNumberItemMeta.setDisplayName(getLocaleItemName("items.developer.number.name"));
-        varNumberItemMeta.setLore(getLocaleItemDescription("items.developer.number.lore"));
-        varNumberItem.setItemMeta(varNumberItemMeta);
-        player.getInventory().setItem(7,varNumberItem);*/
-
-        ItemStack worldSettingsItem = new ItemStack(Material.COMPASS, 1);
-        ItemMeta worldSettingsItemMeta = worldSettingsItem.getItemMeta();
-        worldSettingsItemMeta.setDisplayName(getLocaleItemName("items.developer.world-settings.name"));
-        worldSettingsItemMeta.setLore(getLocaleItemDescription("items.developer.world-settings.lore"));
-        worldSettingsItem.setItemMeta(worldSettingsItemMeta);
+        ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
         player.getInventory().setItem(8, worldSettingsItem);
     }
 }

@@ -1,6 +1,25 @@
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package mcchickenstudio.creative.coding.blocks.executors;
 
 import mcchickenstudio.creative.Main;
+import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
@@ -71,7 +90,7 @@ public class Executors {
 
             for (String key : keys) {
                 path = "code.blocks." + key;
-                if (config.getString(path + ".subtype") != null) {;
+                if (config.getString(path + ".type") != null) {
                     Executor executor = createExecutor(config,path);
                     if (executor != null) executors.add(executor);
                 }
@@ -92,7 +111,7 @@ public class Executors {
         Executor executor = null;
         try {
             int[] coords = getCoords(config,path);
-            executor = ExecutorType.valueOf(config.getString(path+".subtype").toUpperCase()).getExecutorClass().getConstructor(Plot.class,int.class,int.class,int.class).newInstance(plot,coords[0],coords[1],coords[2]);
+            executor = ExecutorType.valueOf(config.getString(path+".type")).getExecutorClass().getConstructor(Plot.class,int.class,int.class,int.class).newInstance(plot,coords[0],coords[1],coords[2]);
             List<Action> allActionsList = createActionList(executor, path + ".actions",config);
             if (!allActionsList.isEmpty()) {
                 executor.setActions(allActionsList);
@@ -121,12 +140,20 @@ public class Executors {
 
     private Action createAction(Executor executor, String path, YamlConfiguration config) {
 
-        String subtype = config.getString(path + ".subtype");
-        List<String> arguments = config.getStringList(path + ".arguments");
-        if (subtype == null) return null;
+        String type = config.getString(path + ".type");
+        if (type == null) return null;
+
         try {
-            ActionType actionType = ActionType.valueOf(subtype.toUpperCase());
-            return actionType.getActionClass().getConstructor(Executor.class,int.class,List.class).newInstance(executor,config.getInt(path+".location.x"),arguments);
+            ActionType actionType = ActionType.valueOf(type);
+            Arguments args = new Arguments(executor.getPlot());
+            ConfigurationSection section = config.getConfigurationSection(path + ".arguments");
+            if (section != null) {
+                args.load(section);
+            }
+            if (config.getConfigurationSection(path+".actions") != null) {
+                return actionType.getActionClass().getConstructor(Executor.class,int.class,Arguments.class,List.class).newInstance(executor,config.getInt(path+".location.x"),args,createActionList(executor,path+".actions",config));
+            }
+            return actionType.getActionClass().getConstructor(Executor.class,int.class,Arguments.class).newInstance(executor,config.getInt(path+".location.x"),args);
         } catch (Exception error) {
             return null;
         }

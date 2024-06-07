@@ -1,20 +1,20 @@
 /*
-Creative+, Minecraft plugin.
-(C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
-
-Creative+ is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Creative+ is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-*/
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 package mcchickenstudio.creative.events;
 
@@ -22,10 +22,13 @@ import com.destroystokyo.paper.event.player.PlayerStartSpectatingEntityEvent;
 import com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
+import mcchickenstudio.creative.coding.menus.*;
 import mcchickenstudio.creative.coding.menus.variables.VariablesMenu;
 import mcchickenstudio.creative.coding.menus.layouts.OneRowLayout;
 import mcchickenstudio.creative.plots.PlotFlags;
 import mcchickenstudio.creative.plots.PlotManager;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -42,17 +45,15 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import mcchickenstudio.creative.coding.BlockParser;
-import mcchickenstudio.creative.coding.menus.PlayerActionsMenu;
-import mcchickenstudio.creative.coding.menus.PlayerConditionsMenu;
-import mcchickenstudio.creative.coding.menus.PlayerEventsMenu;
 import mcchickenstudio.creative.menu.AllWorldsMenu;
 import mcchickenstudio.creative.menu.OwnWorldsMenu;
 import mcchickenstudio.creative.menu.WorldSettingsMenu;
 import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
-import static mcchickenstudio.creative.utils.ErrorUtils.sendPlayerErrorMessage;
+import static mcchickenstudio.creative.events.ChangedWorld.*;
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 import static mcchickenstudio.creative.utils.ItemUtils.itemEquals;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemName;
@@ -69,9 +70,9 @@ public class PlayerInteract implements Listener {
         }
 
         DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
+        ItemStack currentItem = player.getItemInHand();
         if (devPlot != null) {
             Block clickedBlock = event.getClickedBlock();
-            ItemStack currentItem = player.getItemInHand();
             if (currentItem.getItemMeta() != null) {
                 if (currentItem.getItemMeta().getDisplayName().equals(getLocaleItemName("items.developer.fly-speed-changer.name"))) {
                     currentItem.setAmount((currentItem.getAmount() > 3 ? 1 : currentItem.getAmount() + 1));
@@ -86,6 +87,16 @@ public class PlayerInteract implements Listener {
                     player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100, 1.9f);
                 } else if (itemEquals(currentItem,createItem(Material.IRON_INGOT,1,"items.developer.variables"))) {
                     new VariablesMenu().open(player);
+                } else if (currentItem.getType() == Material.PAPER) {
+                    if (event.getAction() == Action.LEFT_CLICK_AIR && !player.hasCooldown(currentItem.getType())) {
+                        Plot plot = devPlot.linkedPlot;
+                        if (plot != null && plot.world != null) {
+                            addPlayerWithLocation(player);
+                            player.teleport(plot.world.getSpawnLocation());
+                            player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
+                            player.setCooldown(currentItem.getType(),60);
+                        }
+                    }
                 }
             }
 
@@ -101,12 +112,15 @@ public class PlayerInteract implements Listener {
                 String actionBlockType = new BlockParser().getActionBlockType(mainBlock.getType());
 
                 if (mainBlockType.startsWith("event")) {
-                    PlayerEventsMenu.openInventory(player,1,event.getClickedBlock().getLocation());
+                    CodingBlockTypesMenu menu = new PlayerEventsMenu(player,event.getClickedBlock().getLocation());
+                    menu.open(player);
                 } else if (actionBlockType.startsWith("action")) {
-                    PlayerActionsMenu.openInventory(player,1,event.getClickedBlock().getLocation());
+                    CodingBlockTypesMenu menu = new PlayerActionsMenu(player,event.getClickedBlock().getLocation());
+                    menu.open(player);
                 } else if (actionBlockType.startsWith("if")) {
                     PlayerConditionsMenu.openInventory(player,1,event.getClickedBlock().getLocation());
                 }
+
             }
 
             if (clickedBlock.getType() == Material.CHEST && (!event.getPlayer().isSneaking())) {
@@ -121,12 +135,40 @@ public class PlayerInteract implements Listener {
                         new OneRowLayout(action,clickedBlock).open(player);
                         event.setCancelled(true);
                     } catch (IllegalArgumentException e) {
-                        sendPlayerErrorMessage(player,"This action is unknown, can't display a menu.");
+                        player.sendActionBar(getLocaleMessage("plot-code-error.unknown-layout"));
                     }
                 }
             }
 
 
+        } else {
+            if (currentItem.getType() == Material.PAPER && isPlayerWithLocation(player) && currentItem.hasItemMeta()) {
+                if (event.getAction().isRightClick()) {
+                    Block clickedBlock = event.getClickedBlock();
+                    Location location = player.getLocation();
+                    if (clickedBlock != null) {
+                        location = clickedBlock.getLocation();
+                    }
+                    ItemMeta meta = currentItem.getItemMeta();
+                    double x = Math.round(location.getX() * 100.0)/100.0;
+                    double y = Math.round(location.getY() * 100.0)/100.0;
+                    double z = Math.round(location.getZ() * 100.0)/100.0;
+                    float yaw = Math.round(location.getYaw() * 100.0f)/100.0f;
+                    float pitch = Math.round(location.getPitch() * 100.0f)/100.0f;
+                    String locationString = ChatColor.translateAlternateColorCodes('&',"&a" + x + " " + y + " " + z + " &7" + yaw + " " + pitch);
+                    meta.setDisplayName(locationString);
+                    currentItem.setItemMeta(meta);
+                    player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),locationString,5,40,5);
+                    player.playSound(player.getLocation(),Sound.ENTITY_EXPERIENCE_ORB_PICKUP,100,2);
+                } else if (event.getAction() == Action.LEFT_CLICK_AIR && !player.hasCooldown(currentItem.getType())) {
+                    Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                    if (plot != null && plot.devPlot != null && plot.devPlot.isLoaded) {
+                        player.teleport(getOldLocationPlayerWithLocation(player));
+                        player.setCooldown(currentItem.getType(),60);
+                        player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
+                    }
+                }
+            }
         }
     }
 
