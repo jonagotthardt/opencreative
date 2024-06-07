@@ -1,19 +1,56 @@
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package mcchickenstudio.creative.coding.blocks.actions;
 
+import mcchickenstudio.creative.utils.MessageUtils;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 
 public enum ActionCategory {
 
-    PLAYER_ACTION(Material.COBBLESTONE),
-    WORLD_ACTION(Material.NETHER_BRICKS),
-    VARIABLE_ACTION(Material.IRON_BLOCK),
-    EXEC_FUNCTION_ACTION(Material.LAPIS_ORE),
-    CONTROL_ACTION(Material.OBSIDIAN);
+    PLAYER_ACTION(Material.COBBLESTONE, ChatColor.GRAY),
+    WORLD_ACTION(Material.NETHER_BRICKS, ChatColor.RED),
+    VARIABLE_ACTION(Material.IRON_BLOCK, ChatColor.WHITE),
+    EXEC_FUNCTION_ACTION(Material.LAPIS_ORE, ChatColor.AQUA),
+    CONTROL_ACTION(Material.OBSIDIAN, ChatColor.DARK_GRAY),
+    PLAYER_CONDITION(Material.OAK_PLANKS, ChatColor.GOLD);
 
-    Material block;
+    private final Material block;
+    private final ChatColor color;
 
-    ActionCategory(Material block) {
+    ActionCategory(Material block, ChatColor color) {
         this.block = block;
+        this.color = color;
     }
 
+    public static ActionCategory getByMaterial(Material material) {
+        for (ActionCategory category : values()) {
+            if (category.block == material) return category;
+        }
+        return null;
+    }
+
+    public ChatColor getColor() {
+        return color;
+    }
+
+    public final String getLocaleName() {
+        return MessageUtils.getLocaleMessage("blocks." + this.name().toLowerCase(), false);
+    }
 }

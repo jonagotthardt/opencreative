@@ -1,26 +1,30 @@
 /*
-Creative+, Minecraft plugin.
-(C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
-
-Creative+ is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Creative+ is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-*/
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 package mcchickenstudio.creative.plots;
 
 import mcchickenstudio.creative.Main;
+import mcchickenstudio.creative.utils.PlayerUtils;
 import org.bukkit.*;
 
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
@@ -64,13 +68,21 @@ public class DevPlot {
                 Bukkit.createWorld(new WorldCreator(this.worldName));
                 this.world = Bukkit.getWorld(this.worldName);
                 this.isLoaded = true;
+                setupWorld();
             }
         } else {
             createDevPlot();
             Bukkit.createWorld(new WorldCreator(this.worldName));
             this.world = Bukkit.getWorld(this.worldName);
             this.isLoaded = true;
+            setupWorld();
         }
+    }
+
+    private void setupWorld() {
+        this.world.setTime(6000);
+        this.world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
+        this.world.getWorldBorder().setWarningDistance(0);
     }
 
     public void createDevPlot() {
@@ -105,6 +117,19 @@ public class DevPlot {
             }
         }
         return floors;
+    }
+
+    public void translateCodingBlocks(Player player) {
+        for (byte y = 1; y < getFloors() * 4; y = (byte) (y + 4)) {
+            for (byte z = 4; z < 96; z = (byte) (z + 4)) {
+                Block executorBlock = world.getBlockAt(4, y, z);
+                PlayerUtils.translateBlockSign(executorBlock.getRelative(BlockFace.SOUTH),player);
+                for (byte x = 6; x < 96; x = (byte) (x + 2)) {
+                    Block actionBlock = world.getBlockAt(x,y,z);
+                    PlayerUtils.translateBlockSign(actionBlock.getRelative(BlockFace.SOUTH),player);
+                }
+            }
+        }
     }
 
     public List<Material> getAllCodingBlocksForPlacing() {

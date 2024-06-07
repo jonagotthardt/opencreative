@@ -1,20 +1,20 @@
 /*
-Creative+, Minecraft plugin.
-(C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
-
-Creative+ is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Creative+ is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-*/
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 package mcchickenstudio.creative.events;
 
@@ -22,6 +22,7 @@ import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,6 +38,13 @@ public class PlayerJoin implements Listener {
 
     private final List<String> blockedPlayers = new ArrayList();
 
+    {
+        blockedPlayers.add("0xwave");
+        blockedPlayers.add("alvess");
+        blockedPlayers.add("alvess__");
+        blockedPlayers.add("lars_gaming");
+    }
+
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         loadPermissions(event.getPlayer());
@@ -51,7 +59,7 @@ public class PlayerJoin implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    event.getPlayer().kick(Component.text("Lying is not allowed on this server."));
+                    event.getPlayer().kick(Component.text(ChatColor.translateAlternateColorCodes('&',"&cSomething went wrong...\n&f \n&7Your account has a nickname that is associated with the person who violated GPL v3 license. Please change your nickname to continue playing server using OpenCreative+ software.")));
                 }
             }.runTaskLater(Main.getPlugin(),40L);
         }
@@ -64,12 +72,5 @@ public class PlayerJoin implements Listener {
      */
     private boolean isBlocked(String nickname) {
         return blockedPlayers.contains(nickname.toLowerCase());
-    }
-
-    {
-        blockedPlayers.add("0xwave");
-        blockedPlayers.add("alvess");
-        blockedPlayers.add("alvess__");
-        blockedPlayers.add("lars_gaming");
     }
 }

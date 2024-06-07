@@ -1,51 +1,68 @@
 /*
-Creative+, Minecraft plugin.
-(C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
-
-Creative+ is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Creative+ is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-*/
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 package mcchickenstudio.creative.menu.buttons;
 
 import mcchickenstudio.creative.utils.MessageUtils;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
+/**
+ * <h1>RadioButton</h1>
+ * This class represents RadioButton that has multiple choices
+ * and actions for changing current choice.
+ */
 public class RadioButton {
 
-    int currentChoice;
-    int maxChoicesAmount;
-    List<Runnable> choiceActions;
-    ItemStack buttonItem;
-    List<String> originalLore;
-    String turnedPath;
-    String itemLocalePath;
+    private byte currentChoice;
+    private byte maxChoicesAmount;
+
+    private List<Runnable> choiceActions;
+    private ItemStack buttonItem;
+    private List<String> originalLore;
+    private String turnedPath;
+    private String itemLocalePath;
+
     static Map<ItemStack,RadioButton> radioButtonList = new HashMap<>();
 
+    /**
+     * Creates RadioButton with specified parameters.
+     * @param material Item's material
+     * @param name Display name of item
+     * @param lore Lore of item
+     * @param currentChoice Current choice
+     * @param maxChoicesAmount Limit of choices
+     * @param choicesActions Runnables that are executing on choice change
+     * @param itemLocalePath Path of item in localization file
+     * @param turnedPath Path of 'turnedOn' 'turnedOff' messages
+     */
     public RadioButton(Material material, String name, List<String> lore, int currentChoice,
                        int maxChoicesAmount, List<Runnable> choicesActions, String itemLocalePath,
                        String turnedPath) {
-        setChoices(currentChoice, maxChoicesAmount, choicesActions);
+        setChoices((byte) currentChoice, (byte) maxChoicesAmount, choicesActions);
         setItemButton(material, name, lore, itemLocalePath, turnedPath);
         radioButtonList.put(getButtonItem(),this);
     }
 
-    private void setChoices(int currentChoice, int maxChoicesAmount, List<Runnable> choicesActions) {
+    private void setChoices(byte currentChoice, byte maxChoicesAmount, List<Runnable> choicesActions) {
         this.currentChoice = currentChoice;
         this.maxChoicesAmount = maxChoicesAmount;
         this.choiceActions = choicesActions;
@@ -60,14 +77,11 @@ public class RadioButton {
         ItemMeta buttonItemMeta = buttonItem.getItemMeta();
         buttonItemMeta.setDisplayName(name);
         buttonItem.setItemMeta(buttonItemMeta);
-        buttonItem.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        buttonItem.addItemFlags(ItemFlag.HIDE_DESTROYS);
-        buttonItem.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         this.buttonItem = buttonItem;
-        updateLore();
+        updateItem();
     }
 
-    private void updateLore() {
+    public void updateItem() {
 
         ItemMeta buttonItemMeta = buttonItem.getItemMeta();
         List<String> lore = new ArrayList<>();
@@ -90,11 +104,12 @@ public class RadioButton {
         buttonItem.setItemMeta(buttonItemMeta);
     }
 
-    public int getCurrentChoice() {
+    public byte getCurrentChoice() {
         return currentChoice;
     }
 
     public void onChoice() {
+
 
         if (this.currentChoice == 0) this.currentChoice = 1;
         int nextChoice = this.currentChoice+1;
@@ -108,10 +123,9 @@ public class RadioButton {
             actions.run();
         }
 
-        this.currentChoice = nextChoice;
-
+        this.currentChoice = (byte) nextChoice;
         radioButtonList.remove(buttonItem);
-        updateLore();
+        updateItem();
         radioButtonList.put(buttonItem,this);
     }
 

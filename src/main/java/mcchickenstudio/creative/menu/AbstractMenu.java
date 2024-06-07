@@ -1,5 +1,24 @@
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package mcchickenstudio.creative.menu;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,19 +32,28 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+import static mcchickenstudio.creative.utils.ErrorUtils.sendPlayerErrorMessage;
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 
+/**
+ * <h1>AbstractMenu</h1>
+ * This class represents a menu with set items. It has
+ * methods to check player's click, open and close inventory
+ * events.
+ */
 public abstract class AbstractMenu implements InventoryHolder {
 
-    private byte rows = 6;
-    private String title = "Unknown menu";
+    private byte rows;
+    private String title;
     private Map<Byte, ItemStack> items = new HashMap<>();
 
     protected final byte[] defaultIgnoredSlots = new byte[]{0,1,2,3,4,5,6,7,8,9,17,18,26,27,35,36,44,45,46,47,48,49,50,51,52,53};
     protected final byte[] allowedSlots = new byte[]{10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34,37,38,39,40,41,42,43};
+    protected final ItemStack AIR_ITEM = new ItemStack(Material.AIR);
     protected final ItemStack NO_PERMS_ITEM = createItem(Material.RED_STAINED_GLASS,1);
     protected final ItemStack DECORATION_ITEM = createItem(Material.LIGHT_GRAY_STAINED_GLASS,1);
     protected final ItemStack DECORATION_PANE_ITEM = createItem(Material.GRAY_STAINED_GLASS_PANE,1);
+    protected Inventory inventory;
 
     public AbstractMenu(byte rows, String title) {
         this.rows = rows;
@@ -48,6 +76,12 @@ public abstract class AbstractMenu implements InventoryHolder {
         }
     }
 
+    public void updateSlot(byte slot) {
+        if (inventory != null && slot < rows*9 && slot >= 0) {
+            inventory.setItem(slot,items.get(slot));
+        }
+    }
+
     public ItemStack getItem(byte slot) {
         if (slot < 0 || slot >= getItems().size()) return new ItemStack(Material.AIR);
         return getItems().get(slot);
@@ -67,7 +101,7 @@ public abstract class AbstractMenu implements InventoryHolder {
 
     public @NotNull Inventory getInventory() {
         if (rows > 6 || rows < 1) rows = 6;
-        Inventory inventory = Bukkit.createInventory(this, this.rows * 9, this.title);
+        Inventory inventory = Bukkit.createInventory(this, this.rows * 9, Component.text(this.title));
         for (Map.Entry<Byte,ItemStack> item : items.entrySet()) {
             inventory.setItem(item.getKey(),item.getValue());
         }
@@ -76,8 +110,14 @@ public abstract class AbstractMenu implements InventoryHolder {
 
     public void open(Player player) {
         Menus.addMenu(this);
-        fillItems(player);
-        player.openInventory(getInventory());
+        try {
+            fillItems(player);
+            inventory = getInventory();
+            player.openInventory(inventory);
+        } catch (Exception e) {
+            sendPlayerErrorMessage(player,"Failed to open AbstractMenu with title " + title + ". ",e);
+        }
+
     }
 
     public abstract void fillItems(Player player);
@@ -87,6 +127,7 @@ public abstract class AbstractMenu implements InventoryHolder {
 
     protected final boolean isClickedInMenuSlots(InventoryClickEvent event) {
         if (event.getClickedInventory() == null) return false;
+        if (event.getInventory().getHolder() == null) return false;
         return event.getInventory().getHolder().equals(event.getClickedInventory().getHolder());
     }
 
@@ -100,5 +141,9 @@ public abstract class AbstractMenu implements InventoryHolder {
 
     protected void setRows(byte rows) {
         this.rows = rows;
+    }
+
+    protected boolean isEmpty(ItemStack item) {
+        return (item == null || item.getType() == Material.AIR);
     }
 }

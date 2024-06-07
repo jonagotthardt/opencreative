@@ -1,3 +1,21 @@
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package mcchickenstudio.creative.coding.menus.layouts;
 
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
@@ -99,7 +117,7 @@ public abstract class Layout extends AbstractMenu {
                     if (argItem.getItemMeta() != null) {
                         argItem.setType(Material.SLIME_BALL);
                         ItemMeta itemMeta = argItem.getItemMeta();
-                        itemMeta.setDisplayName(String.valueOf((float) rb.getCurrentChoice()));
+                        itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&c")+ rb.getCurrentChoice()+".0");
                         itemMeta.setLore(new ArrayList<>());
                         argItem.setItemMeta(itemMeta);
                     }
@@ -118,35 +136,141 @@ public abstract class Layout extends AbstractMenu {
         return requiredSlots;
     }
 
-    protected void setArgSlotWithFrame(byte argNumber, byte slot) {
+    protected void setArgSlotVertical(byte argNumber, byte slot) {
         ArgumentSlot argumentSlot = getRequiredSlots()[argNumber-1];
         setItem((byte) (slot-9), argumentSlot.getVarType().getGlassItem(actionType,argNumber));
         setArgSlot(argNumber,slot);
         setItem((byte) (slot+9), argumentSlot.getVarType().getGlassItem(actionType,argNumber));
+    }
 
+    protected void setArgSlotHorizontal(byte argNumber, byte slot) {
+        ArgumentSlot argumentSlot = getRequiredSlots()[argNumber-1];
+        setItem((byte) (slot-1), argumentSlot.getVarType().getGlassItem(actionType,argNumber));
+        setArgSlot(argumentSlot,slot);
+        setItem((byte) (slot+1), argumentSlot.getVarType().getGlassItem(actionType,argNumber));
+    }
+
+    protected void setGlass(byte argNumber, byte slot) {
+        ArgumentSlot argumentSlot = getRequiredSlots()[argNumber-1];
+        setItem(slot, argumentSlot.getVarType().getGlassItem(actionType,argNumber));
     }
 
     protected void setArgSlot(byte argNumber, byte slot) {
         ArgumentSlot argumentSlot = getRequiredSlots()[argNumber-1];
-        if (argumentSlot.getMinParameter() != 0 && getRequiredSlots()[argNumber-1].getMaxParameter() != 0) {
-            ItemStack itemArg = getFromContent((byte) (argNumber-1));
-            int amount = argumentSlot.getMinParameter();
-            if (itemArg.getItemMeta() != null) {
-                try {
-                    amount = Math.round(Float.parseFloat(itemArg.getItemMeta().getDisplayName()));
-                } catch (Exception e) {}
+        setArgSlot(argumentSlot,slot);
+    }
+
+    private byte currentSlot = 0;
+    private void setArgSlot(ArgumentSlot argumentSlot, byte slot) {
+        ItemStack contentItem = getFromContent(currentSlot++);
+        if (argumentSlot.isParameter()) {
+            int choice = argumentSlot.getMinParameter();
+            if (contentItem != null && !contentItem.isEmpty() && contentItem.hasItemMeta() && contentItem.getType() == Material.SLIME_BALL) {
+                choice = Math.round(Float.parseFloat(ChatColor.stripColor(contentItem.getItemMeta().getDisplayName())));
             }
-            RadioButton rb = createParamButton(argumentSlot,amount);
+            RadioButton rb = createParamButton(argumentSlot,choice);
             setItem(slot,rb.getButtonItem());
             radioButtons.add(rb);
         } else {
-            setItem(slot,getFromContent((byte) (argNumber-1)));
+            setItem(slot,contentItem);
         }
         argsSlots.add(slot);
     }
+
+
     protected RadioButton createParamButton(ArgumentSlot argumentSlot, int amount) {
         String path = "items.developer.actions." + actionType.name().toLowerCase().replace("_","-") + ".arguments." + actionType.getArgumentSlotID(argumentSlot);
+        /*if (argumentSlot.getPath().equals("boolean")) {
+            return new RadioButton(VariableType.BOOLEAN,new Material[]{Material.RED_SHULKER_BOX, Material.LIME_SHULKER_BOX},getLocaleItemName(path+".name"),getLocaleItemDescription(path+".lore"),amount,
+                    new Object[]{false,true}, path+".choices","items.developer");
+        } else if (argumentSlot.getPath().equals("game-mode")) {
+            return new RadioButton(VariableType.TEXT, new Material[]{Material.CHAINMAIL_BOOTS, Material.IRON_AXE,Material.TOTEM_OF_UNDYING,Material.FEATHER},getLocaleItemName(path+".name"),getLocaleItemDescription(path+".lore"),amount,
+                    new Object[]{"adventure","survival","creative","spectator"}, path+".choices","items.developer");
+        }*/
         return new RadioButton(argumentSlot.getVarType().getItemMaterial(),getLocaleItemName(path+".name"),getLocaleItemDescription(path+".lore"),amount,argumentSlot.getMaxParameter(),
                 new ArrayList<>(),path+".choices","items.developer");
+    }
+
+    protected byte getRow(byte slot) {
+        if (slot < 9) return (byte) 1;
+        else if (slot < 18) return (byte) 2;
+
+        else if (slot < 27) return (byte) 3;
+        else if (slot < 36) return (byte) 4;
+        else if (slot < 45) return (byte) 5;
+        else if (slot < 54) return (byte) 6;
+        else return (byte) 0;
+    }
+
+    protected List<Byte> getRowSlots(byte row) {
+        byte lastSlot = (byte) (row * 9 - 1);
+        byte firstSlot = (byte) (lastSlot-8);
+        List<Byte> slots = new ArrayList<>();
+        for (byte slot = firstSlot; slot < lastSlot; slot++) {
+            slots.add(slot);
+        }
+        return slots;
+    }
+
+    protected List<Byte> getFreeSlots(byte row) {
+        List<Byte> slots = new ArrayList<>();
+        for (byte slot : getRowSlots(row)) {
+            if (getItem(slot) == DECORATION_PANE_ITEM) slots.add(slot);
+        }
+        return slots;
+    }
+
+    protected List<Byte> getCentredSlots(byte count, byte row) {
+        List<Byte> slots = new ArrayList<>();
+        switch (count) {
+            case 1:
+                slots.add((byte) (row*9-5));
+                break;
+            case 2:
+                slots.add((byte) (row*9-4));
+                slots.add((byte) (row*9-6));
+            case 3:
+                slots.add((byte) (row*9-3));
+                slots.add((byte) (row*9-5));
+                slots.add((byte) (row*9-7));
+            case 4:
+                slots.add((byte) (row*9-2));
+                slots.add((byte) (row*9-4));
+                slots.add((byte) (row*9-6));
+                slots.add((byte) (row*9-8));
+            case 5:
+                slots.add((byte) (row*9-1));
+                slots.add((byte) (row*9-3));
+                slots.add((byte) (row*9-5));
+                slots.add((byte) (row*9-7));
+                slots.add((byte) (row*9-9));
+            case 6:
+                slots.add((byte) (row*9-4));
+                slots.add((byte) (row*9-3));
+                slots.add((byte) (row*9-2));
+                slots.add((byte) (row*9-6));
+                slots.add((byte) (row*9-7));
+                slots.add((byte) (row*9-8));
+            default:
+                slots.add((byte) (row*9-1));
+                slots.add((byte) (row*9-2));
+                slots.add((byte) (row*9-3));
+                slots.add((byte) (row*9-4));
+                slots.add((byte) (row*9-5));
+                slots.add((byte) (row*9-6));
+                slots.add((byte) (row*9-7));
+                slots.add((byte) (row*9-8));
+                slots.add((byte) (row*9-9));
+
+        }
+        return slots;
+    }
+
+    protected byte getArgSlotsSize() {
+        byte count = 0;
+        for (ArgumentSlot slot : actionType.getArgumentsSlots()) {
+            count += slot.getListSize();
+        }
+        return count;
     }
 }

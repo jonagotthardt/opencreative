@@ -1,3 +1,21 @@
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package mcchickenstudio.creative.coding.blocks.executors;
 
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
@@ -11,9 +29,20 @@ import mcchickenstudio.creative.coding.blocks.executors.player.interaction.*;
 import mcchickenstudio.creative.coding.blocks.executors.player.inventory.*;
 import mcchickenstudio.creative.coding.blocks.executors.player.movement.*;
 import mcchickenstudio.creative.coding.blocks.executors.player.world.*;
+import mcchickenstudio.creative.coding.menus.MenusCategory;
 import mcchickenstudio.creative.utils.MessageUtils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 
@@ -30,61 +59,65 @@ public enum ExecutorType {
 
     // Player Executors
 
-    PLAYER_JOIN(JoinExecutor.class, JoinEvent.class, Material.POTATO, false),
-    PLAYER_QUIT(QuitExecutor.class, QuitEvent.class, Material.POISONOUS_POTATO, false),
-    PLAYER_LIKED(LikeExecutor.class, LikeEvent.class, Material.DIAMOND,false),
-    PLAYER_ADVERTISED(AdvertisedExecutor.class, AdvertisedEvent.class, Material.BEACON,false),
-    PLAYER_PLAY(PlayExecutor.class, PlayEvent.class, Material.COAL,true),
-    PLAYER_SEND_MESSAGE(ChatExecutor.class, ChatEvent.class, Material.BOOK,false),
+    PLAYER_JOIN(            ExecutorCategory.EVENT_PLAYER, MenusCategory.WORLD, JoinExecutor.class, JoinEvent.class, Material.POTATO, false),
+    PLAYER_QUIT(            ExecutorCategory.EVENT_PLAYER, MenusCategory.WORLD, QuitExecutor.class, QuitEvent.class, Material.POISONOUS_POTATO, false),
+    PLAYER_LIKED(           ExecutorCategory.EVENT_PLAYER, MenusCategory.WORLD, LikeExecutor.class, LikeEvent.class, Material.DIAMOND,false),
+    PLAYER_ADVERTISED(      ExecutorCategory.EVENT_PLAYER, MenusCategory.WORLD, AdvertisedExecutor.class, AdvertisedEvent.class, Material.BEACON,false),
+    PLAYER_PLAY(            ExecutorCategory.EVENT_PLAYER, MenusCategory.WORLD, PlayExecutor.class, PlayEvent.class, Material.COAL,true),
+    PLAYER_CHAT(            ExecutorCategory.EVENT_PLAYER, MenusCategory.WORLD, ChatExecutor.class, ChatEvent.class, Material.BOOK,false),
 
-    PLAYER_LEFT_CLICK(LeftClickExecutor.class, LeftClickEvent.class, Material.GOLDEN_PICKAXE,true),
-    PLAYER_RIGHT_CLICK(RightClickExecutor.class, RightClickEvent.class, Material.DIAMOND_PICKAXE,true),
-    PLAYER_INTERACT(WorldInteractExecutor.class, WorldInteractEvent.class, Material.GOLDEN_HOE,true),
-    PLAYER_PLACE_BLOCK(PlaceBlockExecutor.class, PlaceBlockEvent.class, Material.GRASS_BLOCK,true),
-    PLAYER_DESTROY_BLOCK(DestroyBlockExecutor.class, DestroyBlockEvent.class, Material.STONE,true),
-    PLAYER_DESTROYING_BLOCK(DamageBlockExecutor.class, DamageBlockEvent.class, Material.COBBLESTONE,true),
-    PLAYER_BLOCK_INTERACT(BlockInteractionExecutor.class, BlockInteractionEvent.class, Material.CHEST,true),
-    PLAYER_MOB_INTERACT(MobInteractionExecutor.class, MobInteractionEvent.class, Material.VILLAGER_SPAWN_EGG,true),
-    PLAYER_FISHING(FishExecutor.class, FishEvent.class, Material.FISHING_ROD,true),
-    PLAYER_SPECTATING(StartSpectatingExecutor.class, StartSpectatingEvent.class, Material.GLASS,true),
-    PLAYER_STOP_SPECTATING(StopSpectatingExecutor.class, StopSpectatingEvent.class, Material.GLASS_PANE,true),
+    PLAYER_LEFT_CLICK(      ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, LeftClickExecutor.class, LeftClickEvent.class, Material.GOLDEN_PICKAXE,true),
+    PLAYER_RIGHT_CLICK(     ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, RightClickExecutor.class, RightClickEvent.class, Material.DIAMOND_PICKAXE,true),
+    PLAYER_INTERACT(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, WorldInteractExecutor.class, WorldInteractEvent.class, Material.GOLDEN_HOE,true),
+    PLAYER_PLACE_BLOCK(     ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, PlaceBlockExecutor.class, PlaceBlockEvent.class, Material.GRASS_BLOCK,true),
+    PLAYER_DESTROY_BLOCK(   ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, DestroyBlockExecutor.class, DestroyBlockEvent.class, Material.STONE,true),
+    PLAYER_DESTROYING_BLOCK(ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, DamageBlockExecutor.class, DamageBlockEvent.class, Material.COBBLESTONE,true),
+    PLAYER_BLOCK_INTERACT(  ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, BlockInteractionExecutor.class, BlockInteractionEvent.class, Material.CHEST,true),
+    PLAYER_MOB_INTERACT(    ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, MobInteractionExecutor.class, MobInteractionEvent.class, Material.VILLAGER_SPAWN_EGG,true),
+    PLAYER_FISHING(         ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, FishExecutor.class, FishEvent.class, Material.FISHING_ROD,true),
+    PLAYER_SPECTATING(      ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, StartSpectatingExecutor.class, StartSpectatingEvent.class, Material.GLASS,true),
+    PLAYER_STOP_SPECTATING( ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, StopSpectatingExecutor.class, StopSpectatingEvent.class, Material.GLASS_PANE,true),
 
-    PLAYER_OPEN_INVENTORY(OpenInventoryExecutor.class, OpenInventoryEvent.class, Material.CHEST,true),
-    PLAYER_CLICK_INVENTORY(ItemClickExecutor.class, ItemClickEvent.class, Material.TRIPWIRE_HOOK,true),
-    PLAYER_DRAG_ITEM(ItemMoveExecutor.class, ItemClickEvent.class, Material.PAPER,true),
-    PLAYER_SWAP_HAND(ItemChangeExecutor.class, ItemChangeEvent.class, Material.SHIELD,true),
-    PLAYER_WRITE_BOOK(BookWriteExecutor.class, BookWriteEvent.class, Material.WRITABLE_BOOK,true),
-    PLAYER_CHANGE_SLOT(SlotChangeExecutor.class, SlotChangeEvent.class, Material.SLIME_BALL,true),
-    PLAYER_DROP_ITEM(ItemDropExecutor.class, ItemDropEvent.class, Material.HOPPER,true),
-    PLAYER_PICKUP_ITEM(ItemPickupExecutor.class, ItemPickupEvent.class, Material.GLOWSTONE_DUST,true),
-    PLAYER_CLOSE_INVENTORY(CloseInventoryExecutor.class, CloseInventoryEvent.class, Material.STRUCTURE_VOID,true),
+    PLAYER_OPEN_INVENTORY(  ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, OpenInventoryExecutor.class, OpenInventoryEvent.class, Material.CHEST,true),
+    PLAYER_CLICK_INVENTORY( ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, ItemClickExecutor.class, ItemClickEvent.class, Material.TRIPWIRE_HOOK,true),
+    PLAYER_DRAG_ITEM(       ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, ItemMoveExecutor.class, ItemClickEvent.class, Material.PAPER,true),
+    PLAYER_SWAP_HAND(       ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, ItemChangeExecutor.class, ItemChangeEvent.class, Material.SHIELD,true),
+    PLAYER_WRITE_BOOK(      ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, BookWriteExecutor.class, BookWriteEvent.class, Material.WRITABLE_BOOK,true),
+    PLAYER_CHANGE_SLOT(     ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, SlotChangeExecutor.class, SlotChangeEvent.class, Material.SLIME_BALL,true),
+    PLAYER_DROP_ITEM(       ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, ItemDropExecutor.class, ItemDropEvent.class, Material.HOPPER,true),
+    PLAYER_PICKUP_ITEM(     ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, ItemPickupExecutor.class, ItemPickupEvent.class, Material.GLOWSTONE_DUST,true),
+    PLAYER_CLOSE_INVENTORY( ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, CloseInventoryExecutor.class, CloseInventoryEvent.class, Material.STRUCTURE_VOID,true),
 
-    PLAYER_GET_DAMAGED(PlayerDamagedExecutor.class, PlayerDamagedEvent.class, Material.DEAD_BUSH,true),
-    MOB_DAMAGE_PLAYER(MobDamagesPlayerExecutor.class, MobDamagesPlayerEvent.class, Material.ZOMBIE_HEAD,true),
-    PLAYER_DAMAGE_MOB(PlayerDamagesMobExecutor.class, PlayerDamagesMobEvent.class, Material.SKELETON_SKULL,true),
-    PLAYER_HUNGER_CHANGE(HungerChangeExecutor.class, HungerChangeEvent.class, Material.COOKED_CHICKEN,true),
-    PLAYER_DEATH(PlayerDeathExecutor.class, PlayerDeathEvent.class,Material.REDSTONE,true),
-    PLAYER_RESPAWN(PlayerRespawnExecutor.class, PlayerRespawnEvent.class, Material.PLAYER_HEAD,false),
-    PLAYER_TOTEM_RESPAWN(PlayerTotemRespawnExecutor.class, PlayerTotemRespawnEvent.class, Material.TOTEM_OF_UNDYING,false),
+    PLAYER_GET_DAMAGED(     ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerDamagedExecutor.class, PlayerDamagedEvent.class, Material.DEAD_BUSH,true),
+    MOB_DAMAGE_PLAYER(      ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, MobDamagesPlayerExecutor.class, MobDamagesPlayerEvent.class, Material.ZOMBIE_HEAD,true),
+    PLAYER_DAMAGE_MOB(      ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerDamagesMobExecutor.class, PlayerDamagesMobEvent.class, Material.SKELETON_SKULL,true),
+    PLAYER_HUNGER_CHANGE(   ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, HungerChangeExecutor.class, HungerChangeEvent.class, Material.COOKED_CHICKEN,true),
+    PLAYER_DEATH(           ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerDeathExecutor.class, PlayerDeathEvent.class,Material.REDSTONE,true),
+    PLAYER_RESPAWN(         ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerRespawnExecutor.class, PlayerRespawnEvent.class, Material.PLAYER_HEAD,false),
+    PLAYER_TOTEM_RESPAWN(   ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerTotemRespawnExecutor.class, PlayerTotemRespawnEvent.class, Material.TOTEM_OF_UNDYING,false),
 
-    PLAYER_WALK(PlayerMoveExecutor.class, PlayerMoveEvent.class, Material.LEATHER_BOOTS,true),
-    PLAYER_JUMP(JumpExecutor.class, JumpEvent.class, Material.RABBIT_FOOT,true),
-    PLAYER_RUNNING(StartRunningExecutor.class, StartRunningEvent.class, Material.GOLDEN_BOOTS,true),
-    PLAYER_STOP_RUNNING(StopRunningExecutor.class, StopRunningEvent.class, Material.CHAINMAIL_BOOTS,true),
-    PLAYER_FLYING(StartFlyingExecutor.class, StartFlyingEvent.class, Material.FEATHER,true),
-    PLAYER_STOP_FLYING(StopFlyingExecutor.class, StopFlyingEvent.class, Material.FEATHER,true),
-    PLAYER_SNEAKING(StartSneakingExecutor.class, StartSneakingEvent.class, Material.CHAINMAIL_LEGGINGS,true),
-    PLAYER_STOP_SNEAKING(StopSneakingExecutor.class, StopSneakingEvent.class, Material.IRON_LEGGINGS,true),
-    PLAYER_TELEPORT(TeleportExecutor.class, TeleportEvent.class, Material.ENDER_PEARL,true);
+    PLAYER_WALK(            ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, PlayerMoveExecutor.class, PlayerMoveEvent.class, Material.LEATHER_BOOTS,true),
+    PLAYER_JUMP(            ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, JumpExecutor.class, JumpEvent.class, Material.RABBIT_FOOT,true),
+    PLAYER_RUNNING(         ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, StartRunningExecutor.class, StartRunningEvent.class, Material.GOLDEN_BOOTS,true),
+    PLAYER_STOP_RUNNING(    ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, StopRunningExecutor.class, StopRunningEvent.class, Material.CHAINMAIL_BOOTS,true),
+    PLAYER_FLYING(          ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, StartFlyingExecutor.class, StartFlyingEvent.class, Material.FEATHER,true),
+    PLAYER_STOP_FLYING(     ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, StopFlyingExecutor.class, StopFlyingEvent.class, Material.FEATHER,true),
+    PLAYER_SNEAKING(        ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, StartSneakingExecutor.class, StartSneakingEvent.class, Material.CHAINMAIL_LEGGINGS,true),
+    PLAYER_STOP_SNEAKING(   ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, StopSneakingExecutor.class, StopSneakingEvent.class, Material.IRON_LEGGINGS,true),
+    PLAYER_TELEPORT(        ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, TeleportExecutor.class, TeleportEvent.class, Material.ENDER_PEARL,true);
 
     private final Class<? extends Executor> executor;
     private final Class<? extends CreativeEvent> creativeEvent;
+    private final ExecutorCategory category;
+    private final MenusCategory menusCategory;
     private final Material material;
     private final boolean isCancellable;
 
-    ExecutorType(Class<? extends Executor> executor, Class<? extends CreativeEvent> event, Material material, boolean isCancellable) {
+    ExecutorType(ExecutorCategory category, MenusCategory menusCategory, Class<? extends Executor> executor, Class<? extends CreativeEvent> event, Material material, boolean isCancellable) {
         this.executor = executor;
+        this.menusCategory = menusCategory;
         this.creativeEvent = event;
+        this.category = category;
         this.material = material;
         this.isCancellable = isCancellable;
     }
@@ -103,6 +136,40 @@ public enum ExecutorType {
 
     public final Class<? extends Executor> getExecutorClass() {
         return this.executor;
+    }
+
+    public static ExecutorType getType(Block block) {
+        Block signBlock = block.getRelative(BlockFace.SOUTH);
+        if (signBlock.getType().toString().contains("WALL_SIGN")) {
+            Sign sign = (Sign) signBlock.getState();
+            if (sign.lines().size() >= 3) {
+                Component signText = sign.line(2);
+                for (ExecutorType executorType : values()) {
+                    if (executorType.name().equals(((TextComponent) signText).content().toUpperCase())) return executorType;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static Set<MenusCategory> getMenusCategories(ExecutorCategory executorCategory) {
+        Set<MenusCategory> set = new HashSet<>();
+        for (ExecutorType executorType : values()) {
+            if (executorType.category == executorCategory) {
+                set.add(executorType.menusCategory);
+            }
+        }
+        return set;
+    }
+
+    public static List<ExecutorType> getExecutorsByCategories(ExecutorCategory executorCategory, MenusCategory menusCategory) {
+        List<ExecutorType> list = new ArrayList<>();
+        for (ExecutorType executorType : values()) {
+            if (executorType.category == executorCategory && executorType.menusCategory == menusCategory) {
+                list.add(executorType);
+            }
+        }
+        return list;
     }
 
 }

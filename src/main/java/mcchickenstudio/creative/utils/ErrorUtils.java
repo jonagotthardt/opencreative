@@ -1,60 +1,93 @@
 /*
-Creative+, Minecraft plugin.
-(C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
-
-Creative+ is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Creative+ is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-*/
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 package mcchickenstudio.creative.utils;
 
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
+import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static mcchickenstudio.creative.utils.PlayerUtils.clearPlayer;
 
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.WorldUtils.getSignText;
 
 public class ErrorUtils {
+
+    private static String parseException(Exception error) {
+        List<String> lastStacks = new ArrayList<>();
+        byte i = 0;
+        for (StackTraceElement stackTraceElement : error.getStackTrace()) {
+            lastStacks.add(stackTraceElement.getClassName() + ":" + stackTraceElement.getMethodName() + ":" + stackTraceElement.getLineNumber());
+            i++;
+            if (i == 5) {
+                break;
+            }
+        }
+        return "\n" + error.getClass().getSimpleName() + ": " + error.getMessage() + "\n" + String.join("\n",lastStacks);
+    }
 
     /**
      Sends error message to player.
      **/
     public static void sendPlayerErrorMessage(Player player, String errorMessage) {
-        Main.getPlugin().getLogger().warning("An player error has occured for " + player.getName() + ": " + errorMessage);
+        Main.getPlugin().getLogger().warning("An player error has occurred for " + player.getName() + ": " + errorMessage);
         player.sendMessage(getLocaleMessage("player-error").replace("%error%",errorMessage));
-        player.playSound(player.getLocation(), Sound.valueOf("BLOCK_ANVIL_DESTROY"),100,2);
+        player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK,100f,0.1f);
+    }
+
+    /**
+     Sends error message to player.
+     **/
+    public static void sendPlayerErrorMessage(Player player, String errorMessage, Exception error) {
+        Main.getPlugin().getLogger().warning("An player error has occurred for " + player.getName() + ": " + errorMessage + " " + parseException(error));
+        TextComponent message = new TextComponent(getLocaleMessage("player-error").replace("%error%",errorMessage));
+        message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(parseException(error))));
+        player.sendMessage(message);
+        player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK,100f,0.1f);
     }
 
     /**
      Sends error message for plot's players.
      **/
     public static void sendPlotErrorMessage(Plot plot, String errorMessage) {
-        Main.getPlugin().getLogger().warning("An error has occured in plot " + plot.plotName + ": " + errorMessage);
+        Main.getPlugin().getLogger().warning("An error has occurred in plot " + plot.plotName + ": " + errorMessage);
         for (Player player : plot.getPlayers()) {
             player.sendMessage(getLocaleMessage("plot-error").replace("%error%",errorMessage));
-            player.playSound(player.getLocation(), Sound.valueOf("BLOCK_ANVIL_DESTROY"),100,2);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY,100f,2f);
         }
     }
 
@@ -115,6 +148,46 @@ public class ErrorUtils {
     }
 
     /**
+     Sends error message about plot's code exception on compiling unknown blocks
+     **/
+    public static void sendPlotCompileErrorMessage(Plot plot, List<Block> unknownBlocks) {
+        if (plot == null) return;
+        for (Player player : plot.getPlayers()) {
+            player.sendMessage(getLocaleMessage("plot-code-error.unknown-block-detected").replace("%error%",getLocaleMessage("plot-code-error.unknown-blocks",false)));
+            for (Block block : unknownBlocks) {
+                ChatColor color = ChatColor.GRAY;
+                String category = "???";
+                String type = getSignText(block.getRelative(BlockFace.SOUTH),(byte) 3);
+                if (type.isEmpty()) type = "???";
+                ExecutorCategory executorCategory = ExecutorCategory.getByMaterial(block.getType());
+                ActionCategory actionCategory = ActionCategory.getByMaterial(block.getType());
+
+                if (executorCategory != null) {
+                    color = executorCategory.getColor();
+                    category = executorCategory.getLocaleName();
+                } else if (actionCategory != null) {
+                    color = actionCategory.getColor();
+                    category = actionCategory.getLocaleName();
+                }
+
+                TextComponent blockCoordinatesMessage = new TextComponent(getLocaleMessage("plot-code-error.unknown-block-coords")
+                        .replace("%x%", String.valueOf(block.getLocation().getX()))
+                        .replace("%y%", String.valueOf(block.getLocation().getY()))
+                        .replace("%z%", String.valueOf(block.getLocation().getZ()))
+                        .replace("%category%",category)
+                        .replace("%type%",type));
+
+                blockCoordinatesMessage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(getLocaleMessage("plot-code-error.hover-message"))));
+                blockCoordinatesMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/dev " + block.getLocation().getX() + " " + block.getLocation().getY() + " " + block.getLocation().getZ()));
+                blockCoordinatesMessage.setColor(color);
+                player.sendMessage(blockCoordinatesMessage);
+            }
+            player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE,100,1.7f);
+            player.sendMessage(" ");
+        }
+    }
+
+    /**
      Stops plot's code execution and changes plot's mode to BUILD.
      **/
     public static void stopPlotCode(Plot plot) {
@@ -142,6 +215,43 @@ public class ErrorUtils {
      **/
     public static void sendCriticalErrorMessage(String errorMessage) {
         Main.getPlugin().getLogger().severe("CRITICAL ERROR has occured: " + errorMessage);
+    }
+
+    public static void sendDebug(String message) {
+        if (Main.debug) Main.getPlugin().getLogger().info("[DEBUG] " + message);
+    }
+
+    public static void sendCodingDebugNotFoundVariable(Plot plot, String name, Object value) {
+        if (!plot.getDebug()) return;
+        if (value == null) value = "null";
+        for (Player player : plot.getPlayers()) {
+            player.sendMessage(getLocaleMessage("plot-code-debug.variable-not-found",false).replace("%name%",name).replace("%value%",value.toString()));
+        }
+    }
+
+    public static void sendCodingDebugVariable(Plot plot, String name, Object value) {
+        if (!plot.getDebug()) return;
+        if (value == null) value = "null";
+        for (Player player : plot.getPlayers()) {
+            player.sendMessage(getLocaleMessage("plot-code-debug.variable-found",false).replace("%name%",name).replace("%value%",value.toString()));
+        }
+    }
+
+    public static void sendCodingDebugExecutor(Executor executor) {
+        Plot plot = executor.getPlot();
+        if (plot == null || !plot.getDebug()) return;
+        for (Player player : plot.getPlayers()) {
+            player.sendMessage(getLocaleMessage("plot-code-debug.executor-message",false).replace("%type%",executor.getExecutorType().getLocaleName()).replace("%x%",String.valueOf(executor.getX())).replace("%y%",String.valueOf(executor.getY())).replace("%z%",String.valueOf(executor.getZ())));
+        }
+    }
+
+    public static void sendCodingDebugAction(Action action) {
+        if (action.getExecutor() == null) return;
+        Plot plot = action.getExecutor().getPlot();
+        if (plot == null || !plot.getDebug()) return;
+        for (Player player : plot.getPlayers()) {
+            player.sendMessage(getLocaleMessage("plot-code-debug.action-message",false).replace("%type%",action.getActionType().getLocaleName()).replace("%x%",String.valueOf(action.getX())).replace("%y%",String.valueOf(action.getExecutor().getY())).replace("%z%",String.valueOf(action.getExecutor().getZ())));
+        }
     }
 
 }

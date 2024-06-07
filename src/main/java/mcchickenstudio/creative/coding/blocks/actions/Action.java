@@ -1,17 +1,38 @@
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package mcchickenstudio.creative.coding.blocks.actions;
 
+import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.events.EventVariables;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamagesMobEvent;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.blocks.executors.player.fighting.PlayerDamagesMobExecutor;
 import mcchickenstudio.creative.coding.blocks.executors.player.world.ChatExecutor;
-import mcchickenstudio.creative.coding.exceptions.TooFewArgsException;
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
+import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugAction;
 
 /**
  * <h1>Action</h1>
@@ -26,38 +47,32 @@ public abstract class Action {
     private final int X;
     private List<Entity> entities;
 
-    protected final List<String> ARGUMENTS = new ArrayList<>();
+    protected final Arguments ARGUMENTS;
+    protected final String EMPTY_STRING = ChatColor.translateAlternateColorCodes('&',"&f");
 
     /**
      * Creates an Action with linked executor and specified arguments.
      * @param executor Executor where this action will be added.
      * @param x X from Action's block location in developers plot.
-     * @param arguments List of arguments for action.
+     * @param args List of arguments for action.
      */
-    public Action(Executor executor, int x, List<String> arguments) {
+    public Action(Executor executor, int x, Arguments args) {
         this.EXECUTOR = executor;
         this.X = x;
-        setArguments(arguments);
+        this.ARGUMENTS = args;
     }
 
-    public abstract void execute(List<Entity> selection);
+    public void run(List<Entity> selection) {
+        this.entities = selection;
+        sendCodingDebugAction(this);
+        execute(selection);
+    }
+
+    protected abstract void execute(List<Entity> selection);
     public abstract ActionType getActionType();
     public abstract ActionCategory getActionCategory();
 
-    /**
-     * Sets arguments for actions.
-     * @param args List of arguments.
-     */
-    public final void setArguments(List<String> args) {
-        this.ARGUMENTS.clear();
-        args.forEach(this::addArgument);
-    }
-
-    private void addArgument(String arg) {
-        ARGUMENTS.add(arg);
-    }
-
-    protected final List<String> getArguments() {
+    protected final Arguments getArguments() {
         return ARGUMENTS;
     }
 
@@ -96,5 +111,39 @@ public abstract class Action {
         return parseColors(parseEntityPlaceholders(text,entity)).replace("\\n","\n");
     }
 
+    protected Set<Entity> getEntitiesByNameOrUUID(String text) {
+        Set<Entity> entities = new HashSet<>();
+        if (getWorld() == null) return entities;
+        for (Entity entity : EXECUTOR.getPlot().world.getEntities()) {
+            if (entity.getName().equalsIgnoreCase(text) || entity.getUniqueId().equals(text)) {
+                entities.add(entity);
+            }
+        }
+        return entities;
+    }
 
+    protected Set<Player> getPlayersByNameOrUUID(String text) {
+        Set<Player> players = new HashSet<>();
+        if (getWorld() == null) return players;
+        for (Player player : getWorld().getPlayers()) {
+            if (player.getName().equalsIgnoreCase(text) || player.getUniqueId().equals(text)) {
+                players.add(player);
+            }
+        }
+        return players;
+    }
+
+    protected Plot getPlot() {
+        if (EXECUTOR != null) {
+            return EXECUTOR.getPlot();
+        }
+        return null;
+    }
+
+    protected World getWorld() {
+        if (getPlot() != null) {
+            return getPlot().world;
+        }
+        return null;
+    }
 }

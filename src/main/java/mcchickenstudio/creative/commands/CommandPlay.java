@@ -1,20 +1,20 @@
 /*
-Creative+, Minecraft plugin.
-(C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
-
-Creative+ is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Creative+ is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-*/
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 package mcchickenstudio.creative.commands;
 
@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import static mcchickenstudio.creative.events.ChangedWorld.removePlayerWithLocation;
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 import static mcchickenstudio.creative.utils.PlayerUtils.clearPlayer;
 import static mcchickenstudio.creative.commands.CommandAd.plugin;
@@ -52,16 +53,17 @@ public class CommandPlay implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(((Player) sender).getPlayer());
+            Player player = (Player) sender;
+            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
             if (plot == null) {
-                ((Player) sender).getPlayer().sendMessage(getLocaleMessage("only-in-world"));
+                player.sendMessage(getLocaleMessage("only-in-world"));
                 return true;
             }
-            if (getCooldown(((Player) sender).getPlayer(), CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-                ((Player) sender).getPlayer().sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(((Player) sender).getPlayer(),CooldownUtils.CooldownType.GENERIC_COMMAND))));
+            if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
+                player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.GENERIC_COMMAND))));
                 return true;
             }
-            setCooldown(((Player) sender).getPlayer(),plugin.getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
+            setCooldown(player,plugin.getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
             // Проверка на владельца мира
 
             List<String> developers = new ArrayList<>();
@@ -71,6 +73,7 @@ public class CommandPlay implements CommandExecutor {
             developers.addAll(notTrustedDevelopers);
             developers.addAll(trustedDevelopers);
 
+            removePlayerWithLocation(player);
             if (plot.plotMode != Plot.Mode.PLAYING) {
                 if (plot.getOwner().equals(sender.getName()) || developers.contains(sender.getName())) {
                     plot.plotMode = Plot.Mode.PLAYING;
@@ -105,18 +108,18 @@ public class CommandPlay implements CommandExecutor {
                     }
                     setPlotConfigParameter(plot,"mode",plot.plotMode);
                 } else {
-                    sender.sendMessage(getLocaleMessage("not-owner", ((Player) sender).getPlayer()));
+                    sender.sendMessage(getLocaleMessage("not-owner", player));
                 }
             } else {
                 plot.world.getSpawnLocation().getChunk().load(true);
-                ((Player) sender).getPlayer().teleport(plot.world.getSpawnLocation());
+                player.teleport(plot.world.getSpawnLocation());
                 if (plot.isOwner(sender.getName()) || developers.contains(sender.getName())) {
-                    clearPlayer(((Player) sender).getPlayer());
+                    clearPlayer(player);
                     ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
                     if (plot.isOwner(sender.getName())) {
-                        ((Player) sender).getPlayer().getInventory().setItem(8,worldSettingsItem);
+                        player.getInventory().setItem(8,worldSettingsItem);
                     }
-                    ((Player) sender).getPlayer().sendMessage(getLocaleMessage("world.play-mode.message.owner"));
+                    player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
                     if (plot.script != null && plot.script.exists()) {
                         if (plot.devPlot.isLoaded) {
                             new BlockParser().parseCode(plot.devPlot);
@@ -125,7 +128,7 @@ public class CommandPlay implements CommandExecutor {
                         }
                     }
                 } else {
-                    ((Player) sender).getPlayer().sendMessage(getLocaleMessage("world.play-mode.message.players"));
+                    player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
                 }
                 EventRaiser.raiseQuitEvent((Player) sender);
                 EventRaiser.raiseJoinEvent((Player) sender);

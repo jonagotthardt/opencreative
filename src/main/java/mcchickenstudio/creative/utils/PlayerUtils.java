@@ -1,20 +1,20 @@
 /*
-Creative+, Minecraft plugin.
-(C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
-
-Creative+ is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Creative+ is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-*/
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 package mcchickenstudio.creative.utils;
 
@@ -25,6 +25,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.PermissionAttachment;
@@ -175,6 +176,10 @@ public class PlayerUtils {
             player.removePotionEffect(effect.getType());
         }
         player.setFireTicks(0);
+        player.setFreezeTicks(0);
+        player.setNoDamageTicks(20);
+        player.setMaximumNoDamageTicks(20);
+        player.setArrowsInBody(0);
         player.setExp(0);
         player.setMaxHealth(20);
         player.setHealth(20);
@@ -184,6 +189,19 @@ public class PlayerUtils {
         player.setGliding(false);
         player.setFlySpeed(0.1f);
         player.setWalkSpeed(0.2f);
+        player.setGlowing(false);
+        player.setPlayerTime(6000,true);
+        player.setPlayerWeather(WeatherType.CLEAR);
+        player.removeResourcePacks();
+
+        for (Entity entity : player.getWorld().getEntities()) {
+            player.showEntity(Main.getPlugin(),entity);
+        }
+
+        for (Player p : player.getWorld().getPlayers()) {
+            player.showEntity(Main.getPlugin(),p);
+        }
+
         for (Sound sound : Sound.values()) {
             player.stopSound(sound);
         }
@@ -201,7 +219,7 @@ public class PlayerUtils {
         player.sendTitle(getLocaleMessage("lobby.title"), getLocaleMessage("lobby.subtitle"),20,60,20);
         player.sendMessage(getLocaleMessage("lobby.message"));
         player.playSound(player.getLocation(),Sound.BLOCK_BEACON_DEACTIVATE,100,1.5f);
-        player.playSound(player.getLocation(),Sound.MUSIC_DISC_CHIRP,100,0.8f);
+        player.playSound(player.getLocation(),Sound.MUSIC_DISC_OTHERSIDE,100,0.7f);
 
         ItemStack gamesItem = createItem(Material.COMPASS,1,"items.lobby.games");
         player.getInventory().setItem(3, gamesItem);
@@ -235,6 +253,34 @@ public class PlayerUtils {
                 for (Player player : block.getLocation().getWorld().getPlayers()) {
                     player.sendSignChange(block.getLocation(), newLines);
                 }
+            }
+        }.runTaskLater(Main.getPlugin(),5L);
+    }
+
+    /**
+     * Translate sign text on code block.
+     * @param block Block with sign that will be translated.
+     */
+    public static void translateBlockSign(Block block, Player player) {
+        if (block == null) return;
+        if (!block.getType().toString().contains("SIGN")) return;
+        Sign sign = (Sign) block.getState();
+        List<Component> newLines = new ArrayList<>();
+        for (Component line : sign.lines()) {
+            String content = ((TextComponent) line).content();
+            String path = "blocks." + content;
+            if (content.isEmpty()) {
+                newLines.add(Component.text(""));
+            } else if (getLocaleMessage(path,false).equals(path)) {
+                newLines.add(Component.text(content));
+            } else {
+                newLines.add(Component.text(getLocaleMessage(path,false)));
+            }
+        }
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                player.sendSignChange(block.getLocation(), newLines);
             }
         }.runTaskLater(Main.getPlugin(),5L);
     }
