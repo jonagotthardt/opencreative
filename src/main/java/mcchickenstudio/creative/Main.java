@@ -25,6 +25,7 @@ import mcchickenstudio.creative.menu.Menus;
 import mcchickenstudio.creative.utils.FileUtils;
 import mcchickenstudio.creative.utils.HookUtils;
 import mcchickenstudio.creative.utils.PlayerUtils;
+import mcchickenstudio.creative.utils.hooks.Metrics;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
@@ -39,7 +40,7 @@ import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 public final class Main extends JavaPlugin {
 
     public static Main plugin;
-    public static final String version = "1.5 Dev. Build 5";
+    public static final String version = "1.5 Preview 1";
     public static final String codename = "Things will be different";
     public static boolean debug = false;
 
@@ -87,6 +88,7 @@ public final class Main extends JavaPlugin {
         Main.getPlugin().getLogger().info(" ");
         Main.getPlugin().getLogger().info(" Welcome to OpenCreative+ " + version + "!");
         Main.getPlugin().getLogger().info(" ");
+        Metrics metrics = new Metrics(this, 22001);
 
     }
 

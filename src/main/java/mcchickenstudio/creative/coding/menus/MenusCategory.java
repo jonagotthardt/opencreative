@@ -32,7 +32,9 @@ public enum MenusCategory {
     WORLD(Material.BEACON),
     COMMUNICATION(Material.OAK_SIGN),
     STATE(Material.NAME_TAG),
+    LINES(Material.REPEATING_COMMAND_BLOCK),
     APPEARANCE(Material.ARMOR_STAND),
+    EVENTS(Material.NETHER_BRICKS),
     PARAMS(Material.ITEM_FRAME);
 
     private final Material material;

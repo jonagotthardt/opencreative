@@ -44,30 +44,34 @@ public class CreativeChat implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
+            Player player = ((Player) sender);
             if (args.length > 0) {
                 if (args.length == 1 && (args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("on"))) {
-                    if (getCooldown(((Player) sender).getPlayer(), CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-                        sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(((Player) sender).getPlayer(), CooldownUtils.CooldownType.GENERIC_COMMAND))));
+                    if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
+                        sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
                         return true;
                     }
                     if (args[0].equalsIgnoreCase("off")) {
-                        creativeChatOff.add(((Player) sender).getPlayer());
+                        creativeChatOff.add(player);
                         sender.sendMessage(getLocaleMessage("creative-chat.turned-off"));
                     } else if (args[0].equalsIgnoreCase("on")) {
-                        creativeChatOff.remove(((Player) sender).getPlayer());
+                        creativeChatOff.remove(player);
                         sender.sendMessage(getLocaleMessage("creative-chat.turned-on"));
                     }
-                    setCooldown(((Player) sender).getPlayer(), plugin.getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
+                    setCooldown(player, plugin.getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
                 } else {
-                    if (creativeChatOff.contains(((Player) sender).getPlayer())) {
+                    if (creativeChatOff.contains(player)) {
                         sender.sendMessage(getLocaleMessage("creative-chat.on-usage"));
                     } else {
-                        if (getCooldown(((Player) sender).getPlayer(), CooldownUtils.CooldownType.CREATIVE_CHAT) > 0) {
-                            sender.sendMessage(getLocaleMessage("creative-chat.cooldown").replace("%cooldown%",String.valueOf(getCooldown(((Player) sender).getPlayer(), CooldownUtils.CooldownType.CREATIVE_CHAT))));
+                        if (getCooldown(player, CooldownUtils.CooldownType.CREATIVE_CHAT) > 0) {
+                            sender.sendMessage(getLocaleMessage("creative-chat.cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.CREATIVE_CHAT))));
                             return true;
                         }
-                        setCooldown(((Player) sender).getPlayer(), plugin.getConfig().getInt("cooldowns.creative-chat"), CooldownUtils.CooldownType.CREATIVE_CHAT);
+                        setCooldown(player, plugin.getConfig().getInt("cooldowns.creative-chat"), CooldownUtils.CooldownType.CREATIVE_CHAT);
                         Main.getPlugin().getLogger().info("[CREATIVE-CHAT] "+sender.getName()+": "+String.join(" ",args));
+                        for (String executeCommand : Main.getPlugin().getConfig().getStringList("execute-console-commands.creative-chat")) {
+                            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),parsePAPI(player,executeCommand.replace("%player%",player.getName()).replace("%message%",String.join(" ",args))));
+                        }
                         for (Player p : Bukkit.getOnlinePlayers()) {
                             if (!(creativeChatOff.contains(p))) {
                                 if (plugin.getConfig().getString("messages.cc-chat") != null)

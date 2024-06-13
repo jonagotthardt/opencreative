@@ -23,8 +23,15 @@ import org.bukkit.entity.Player;
 
 public class PlayerMoveEvent extends CreativeEvent {
 
-    public PlayerMoveEvent(Player player) {
+    private org.bukkit.event.player.PlayerMoveEvent event;
+
+    public PlayerMoveEvent(Player player, org.bukkit.event.player.PlayerMoveEvent event) {
         super(player);
+        this.event = event;
     }
 
+    @Override
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
+    }
 }

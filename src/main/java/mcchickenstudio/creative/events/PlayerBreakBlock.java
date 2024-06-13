@@ -35,6 +35,7 @@ import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.Plot;
 
 import static mcchickenstudio.creative.events.PlayerPlaceBlock.move;
+import static mcchickenstudio.creative.utils.BlockUtils.getClosingBracketX;
 
 public class PlayerBreakBlock implements Listener {
     @EventHandler
@@ -55,6 +56,13 @@ public class PlayerBreakBlock implements Listener {
                 Block additionalBlock = block.getRelative(BlockFace.EAST);
                 Block signBlock = block.getRelative(BlockFace.SOUTH);
 
+                if (additionalBlock.getType() == Material.PISTON) {
+                    int closingBracketX = getClosingBracketX(block);
+                    if (closingBracketX != -1) {
+                        block.getWorld().getBlockAt(closingBracketX,block.getY(),block.getZ()).setType(Material.AIR);
+                    }
+                }
+                block.setType(Material.AIR);
                 additionalBlock.setType(Material.AIR);
                 signBlock.setType(Material.AIR);
                 if (chestBlock.getType() == Material.CHEST) {
@@ -63,9 +71,9 @@ public class PlayerBreakBlock implements Listener {
                         if (item != null) chestBlock.getWorld().dropItem(chestBlock.getLocation(),item);
                     }
                 }
+                event.setCancelled(true);
                 chestBlock.setType(Material.AIR);
                 move(block.getLocation(),BlockFace.WEST);
-
             }
 
             if (block.getType() == Material.CHEST) {

@@ -19,12 +19,27 @@
 package mcchickenstudio.creative.coding.blocks.events.player.interaction;
 
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockPlaceEvent;
 
 public class PlaceBlockEvent extends CreativeEvent {
 
-    public PlaceBlockEvent(Player player) {
+    private final BlockPlaceEvent event;
+    private final Block placedBlock;
+
+    public PlaceBlockEvent(Player player, BlockPlaceEvent event) {
         super(player);
+        this.event = event;
+        this.placedBlock = event.getBlockPlaced();
     }
 
+    @Override
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
+    }
+
+    public Block getPlacedBlock() {
+        return placedBlock;
+    }
 }

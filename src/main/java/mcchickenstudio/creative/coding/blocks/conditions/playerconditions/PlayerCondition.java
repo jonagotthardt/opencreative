@@ -20,9 +20,13 @@ package mcchickenstudio.creative.coding.blocks.conditions.playerconditions;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
+import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.conditions.Condition;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class PlayerCondition extends Condition {
@@ -36,5 +40,19 @@ public abstract class PlayerCondition extends Condition {
      */
     public PlayerCondition(Executor executor, int x, Arguments args, List<Action> actions) {
         super(executor, x, args, actions);
+    }
+
+    public ActionCategory getActionCategory() {
+        return ActionCategory.PLAYER_CONDITION;
+    }
+
+    protected List<Player> getPlayers(List<Entity> selection) {
+        List<Player> players = new ArrayList<>();
+        for (Entity entity : selection) {
+            if (entity instanceof Player) {
+                players.add((Player) entity);
+            }
+        }
+        return players;
     }
 }

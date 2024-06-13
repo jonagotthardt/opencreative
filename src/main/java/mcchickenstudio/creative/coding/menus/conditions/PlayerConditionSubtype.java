@@ -20,7 +20,7 @@ package mcchickenstudio.creative.coding.menus.conditions;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import mcchickenstudio.creative.coding.menus.PlayerConditionsMenu;
+import mcchickenstudio.creative.coding.menus.LegacyPlayerConditionsMenu;
 
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 import static mcchickenstudio.creative.utils.MessageUtils.*;
@@ -29,28 +29,28 @@ public enum PlayerConditionSubtype {
 
     NONE("none",null,null,0,true),
 
-    NICKNAME_EQUALS("nickname-equals", Material.NAME_TAG, PlayerConditionsMenu.PlayerConditionCategory.PARAMETERS, 2),
+    NICKNAME_EQUALS("nickname-equals", Material.NAME_TAG, LegacyPlayerConditionsMenu.PlayerConditionCategory.PARAMETERS, 2),
 
-    INVENTORY_FULL("inventory-full", Material.PUFFERFISH_BUCKET, PlayerConditionsMenu.PlayerConditionCategory.INVENTORY, 0),
+    INVENTORY_FULL("inventory-full", Material.PUFFERFISH_BUCKET, LegacyPlayerConditionsMenu.PlayerConditionCategory.INVENTORY, 0),
 
-    NEAR_LOCATION("near-location", Material.COMPASS, PlayerConditionsMenu.PlayerConditionCategory.BLOCK, 4),
+    NEAR_LOCATION("near-location", Material.COMPASS, LegacyPlayerConditionsMenu.PlayerConditionCategory.BLOCK, 4),
 
-    IS_SNEAKING("is-sneaking",Material.LEATHER_BOOTS, PlayerConditionsMenu.PlayerConditionCategory.PARAMETERS,0);
+    IS_SNEAKING("is-sneaking",Material.LEATHER_BOOTS, LegacyPlayerConditionsMenu.PlayerConditionCategory.PARAMETERS,0);
 
 
-    private final PlayerConditionsMenu.PlayerConditionCategory conditionCategory;
+    private final LegacyPlayerConditionsMenu.PlayerConditionCategory conditionCategory;
     private final Material material;
     private final String messagePath;
     private final int maxParameters;
 
-    PlayerConditionSubtype(String messagePath, Material material, PlayerConditionsMenu.PlayerConditionCategory conditionCategory, int maxParameters) {
+    PlayerConditionSubtype(String messagePath, Material material, LegacyPlayerConditionsMenu.PlayerConditionCategory conditionCategory, int maxParameters) {
         this.messagePath = messagePath;
         this.material = material;
         this.conditionCategory = conditionCategory;
         this.maxParameters = maxParameters;
     }
 
-    PlayerConditionSubtype(String messagePath, Material material, PlayerConditionsMenu.PlayerConditionCategory conditionCategory, int maxParameters, boolean isRequiredPlayerToBeInWorld) {
+    PlayerConditionSubtype(String messagePath, Material material, LegacyPlayerConditionsMenu.PlayerConditionCategory conditionCategory, int maxParameters, boolean isRequiredPlayerToBeInWorld) {
         this.messagePath = messagePath;
         this.material = material;
         this.conditionCategory = conditionCategory;
@@ -65,7 +65,7 @@ public enum PlayerConditionSubtype {
         return createItem(this.material,1,"items.developer.conditions." + this.messagePath);
     }
 
-    public PlayerConditionsMenu.PlayerConditionCategory getConditionSubtype() {
+    public LegacyPlayerConditionsMenu.PlayerConditionCategory getConditionSubtype() {
         return conditionCategory;
     }
 

@@ -24,6 +24,9 @@ import mcchickenstudio.creative.coding.blocks.events.player.interaction.*;
 import mcchickenstudio.creative.coding.blocks.events.player.inventory.*;
 import mcchickenstudio.creative.coding.blocks.events.player.movement.*;
 import mcchickenstudio.creative.coding.blocks.events.player.world.*;
+import mcchickenstudio.creative.coding.blocks.executors.other.Cycle;
+import mcchickenstudio.creative.coding.blocks.executors.other.Function;
+import mcchickenstudio.creative.coding.blocks.executors.other.Method;
 import mcchickenstudio.creative.coding.blocks.executors.player.fighting.*;
 import mcchickenstudio.creative.coding.blocks.executors.player.interaction.*;
 import mcchickenstudio.creative.coding.blocks.executors.player.inventory.*;
@@ -56,6 +59,12 @@ import static mcchickenstudio.creative.utils.ItemUtils.createItem;
  * @author McChicken Studio
  */
 public enum ExecutorType {
+
+    // Other
+
+    FUNCTION(               ExecutorCategory.FUNCTION, Function.class),
+    METHOD(                 ExecutorCategory.METHOD, Method.class),
+    CYCLE(                 ExecutorCategory.CYCLE, Cycle.class),
 
     // Player Executors
 
@@ -113,6 +122,15 @@ public enum ExecutorType {
     private final Material material;
     private final boolean isCancellable;
 
+    ExecutorType(ExecutorCategory category, Class<? extends Executor> executor) {
+        this.executor = executor;
+        this.menusCategory = null;
+        this.creativeEvent = null;
+        this.category = category;
+        this.material = null;
+        this.isCancellable = false;
+    }
+
     ExecutorType(ExecutorCategory category, MenusCategory menusCategory, Class<? extends Executor> executor, Class<? extends CreativeEvent> event, Material material, boolean isCancellable) {
         this.executor = executor;
         this.menusCategory = menusCategory;
@@ -139,6 +157,11 @@ public enum ExecutorType {
     }
 
     public static ExecutorType getType(Block block) {
+        if (block.getType() == Material.LAPIS_ORE) {
+            return FUNCTION;
+        } else if (block.getType() == Material.OXIDIZED_COPPER) {
+            return CYCLE;
+        }
         Block signBlock = block.getRelative(BlockFace.SOUTH);
         if (signBlock.getType().toString().contains("WALL_SIGN")) {
             Sign sign = (Sign) signBlock.getState();

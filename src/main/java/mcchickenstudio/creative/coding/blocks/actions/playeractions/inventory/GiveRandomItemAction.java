@@ -38,9 +38,12 @@ public class GiveRandomItemAction extends PlayerAction {
     protected void execute(List<Entity> selection) {
         List<ItemStack> items = getArguments().getItemList("items");
         if (items.isEmpty()) return;
-        int i = new Random().nextInt(items.size()-1);
+        ItemStack randomItem = items.get(0);
+        if (items.size() > 1) {
+            randomItem = items.get(new Random().nextInt(items.size() - 1));
+        }
         for (Player player : getPlayers(selection)) {
-            player.getInventory().addItem(items.get(i));
+            player.getInventory().addItem(randomItem);
         }
     }
 

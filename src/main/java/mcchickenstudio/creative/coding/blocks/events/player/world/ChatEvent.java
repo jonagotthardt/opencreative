@@ -20,18 +20,26 @@ package mcchickenstudio.creative.coding.blocks.events.player.world;
 
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.player.PlayerChatEvent;
 
 public class ChatEvent extends CreativeEvent {
 
     private final String message;
+    private final PlayerChatEvent event;
 
     public ChatEvent(Player player, PlayerChatEvent event) {
         super(player);
-        message = event.getMessage();
+        this.message = event.getMessage();
+        this.event = event;
     }
 
     public String getMessage() {
         return message;
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
     }
 }

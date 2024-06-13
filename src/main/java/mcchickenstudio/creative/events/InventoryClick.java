@@ -41,7 +41,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import mcchickenstudio.creative.coding.menus.conditions.PlayerConditionSubtype;
-import mcchickenstudio.creative.coding.menus.PlayerConditionsMenu;
+import mcchickenstudio.creative.coding.menus.LegacyPlayerConditionsMenu;
 import mcchickenstudio.creative.menu.*;
 import mcchickenstudio.creative.menu.buttons.RadioButton;
 import mcchickenstudio.creative.plots.*;
@@ -316,7 +316,7 @@ public class InventoryClick implements Listener {
                     sendPlayerErrorMessage(player,"Произошла ошибка при обработке клика инвентаря. " + error.getMessage());
                     error.printStackTrace();
                 }
-            } else if (event.getInventory().getHolder() instanceof PlayerConditionsMenu) {
+            } else if (event.getInventory().getHolder() instanceof LegacyPlayerConditionsMenu) {
                 event.setCancelled(true);
 
                 DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
@@ -333,9 +333,9 @@ public class InventoryClick implements Listener {
                     }
                 }
                 if (!conditionClicked) {
-                    if (PlayerConditionsMenu.getCategoryClicked(item.getType()) == null) return;
+                    if (LegacyPlayerConditionsMenu.getCategoryClicked(item.getType()) == null) return;
                     player.playSound(player.getLocation(),Sound.UI_LOOM_SELECT_PATTERN,100,1);
-                    PlayerConditionsMenu.openInventory(player,1,PlayerConditionsMenu.getCategoryClicked(item.getType()),PlayerConditionsMenu.signLocation.get(player));
+                    LegacyPlayerConditionsMenu.openInventory(player,1, LegacyPlayerConditionsMenu.getCategoryClicked(item.getType()), LegacyPlayerConditionsMenu.signLocation.get(player));
                     return;
                 }
 
@@ -343,7 +343,7 @@ public class InventoryClick implements Listener {
                 if (path != null && path.endsWith(".name")) {
 
                 String subtype = path.replace("items.developer.conditions.","").replace(".name","").replace("-","_");
-                Location signLocation = PlayerConditionsMenu.signLocation.get(player);
+                Location signLocation = LegacyPlayerConditionsMenu.signLocation.get(player);
                 Block conditionBlock = signLocation.getBlock().getRelative(BlockFace.NORTH);
 
                 if (conditionBlock.getType() == Material.OAK_PLANKS && signLocation.getWorld().getName().contains("dev")) {

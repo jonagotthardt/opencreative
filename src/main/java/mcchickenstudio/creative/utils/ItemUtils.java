@@ -38,12 +38,10 @@ public class ItemUtils {
     public static ItemStack createItem(Material material, int amount, String localizationPath) {
 
         ItemStack itemStack = createItem(material,amount);
-
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(getLocaleItemName(localizationPath + ".name"));
         itemMeta.setLore(getLocaleItemDescription(localizationPath + ".lore"));
         itemStack.setItemMeta(itemMeta);
-
         return itemStack;
 
     }
@@ -53,24 +51,25 @@ public class ItemUtils {
         ItemStack itemStack = new ItemStack(material,amount);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(" ");
-
-        clearItemFlags(itemStack);
-
         itemStack.setItemMeta(itemMeta);
-
-        return itemStack;
+        return clearItemFlags(itemStack);
 
     }
 
     public static ItemStack clearItemFlags(ItemStack itemStack) {
-        itemStack.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        itemStack.addItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
-        itemStack.addItemFlags(ItemFlag.HIDE_DESTROYS);
-        itemStack.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        itemStack.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        itemStack.addItemFlags(ItemFlag.HIDE_DYE);
-        itemStack.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-        itemStack.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES,
+                //ItemFlag.HIDE_ADDITIONAL_TOOLTIP,
+                ItemFlag.HIDE_ARMOR_TRIM,
+                ItemFlag.HIDE_DESTROYS,
+                ItemFlag.HIDE_UNBREAKABLE,
+                ItemFlag.HIDE_ENCHANTS,
+                ItemFlag.HIDE_DYE,
+                ItemFlag.HIDE_PLACED_ON,
+                ItemFlag.HIDE_UNBREAKABLE);
+                //ItemFlag.HIDE_STORED_ENCHANTS,
+                //ItemFlag.HIDE_ITEM_SPECIFICS);
+        itemStack.setItemMeta(meta);
         return itemStack;
     }
 

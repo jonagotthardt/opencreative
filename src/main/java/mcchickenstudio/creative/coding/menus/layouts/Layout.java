@@ -21,6 +21,7 @@ package mcchickenstudio.creative.coding.menus.layouts;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.menu.AbstractMenu;
 import mcchickenstudio.creative.menu.buttons.RadioButton;
+import mcchickenstudio.creative.utils.ErrorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -34,12 +35,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import static mcchickenstudio.creative.utils.ItemUtils.itemEquals;
-import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemDescription;
-import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemName;
+import static mcchickenstudio.creative.utils.MessageUtils.*;
 
 public abstract class Layout extends AbstractMenu {
 
@@ -179,7 +180,19 @@ public abstract class Layout extends AbstractMenu {
 
 
     protected RadioButton createParamButton(ArgumentSlot argumentSlot, int amount) {
-        String path = "items.developer.actions." + actionType.name().toLowerCase().replace("_","-") + ".arguments." + actionType.getArgumentSlotID(argumentSlot);
+        String path = "items.developer." + (actionType.isCondition() ? "conditions" : "actions") + "." + actionType.name().toLowerCase().replace("_","-") + ".arguments." + actionType.getArgumentSlotID(argumentSlot);
+        List<String> lore = getLocaleItemDescription(path+".lore");
+        if (!messageExists(path+".lore")) {
+            lore.clear();
+            lore.add("§6Not found item description");
+            lore.add("§6for parameter. Path:");
+            lore.add("§6" + path);
+            lore.add(" ");
+            lore.add("§fValues:");
+            for (byte i = 1; i < argumentSlot.getMaxParameter()+1; i++) {
+                lore.add("%"+i+"%");
+            }
+        }
         /*if (argumentSlot.getPath().equals("boolean")) {
             return new RadioButton(VariableType.BOOLEAN,new Material[]{Material.RED_SHULKER_BOX, Material.LIME_SHULKER_BOX},getLocaleItemName(path+".name"),getLocaleItemDescription(path+".lore"),amount,
                     new Object[]{false,true}, path+".choices","items.developer");
@@ -187,7 +200,7 @@ public abstract class Layout extends AbstractMenu {
             return new RadioButton(VariableType.TEXT, new Material[]{Material.CHAINMAIL_BOOTS, Material.IRON_AXE,Material.TOTEM_OF_UNDYING,Material.FEATHER},getLocaleItemName(path+".name"),getLocaleItemDescription(path+".lore"),amount,
                     new Object[]{"adventure","survival","creative","spectator"}, path+".choices","items.developer");
         }*/
-        return new RadioButton(argumentSlot.getVarType().getItemMaterial(),getLocaleItemName(path+".name"),getLocaleItemDescription(path+".lore"),amount,argumentSlot.getMaxParameter(),
+        return new RadioButton(argumentSlot.getVarType().getItemMaterial(),getLocaleItemName(path+".name"),lore,amount,argumentSlot.getMaxParameter(),
                 new ArrayList<>(),path+".choices","items.developer");
     }
 

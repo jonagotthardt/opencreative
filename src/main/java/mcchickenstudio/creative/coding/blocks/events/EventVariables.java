@@ -26,6 +26,8 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashMap;
 import java.util.Map;
 
+import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+
 public class EventVariables {
 
     private final Map<Variable,Object> variables = new HashMap<>();
@@ -42,6 +44,7 @@ public class EventVariables {
         DAMAGER (Entity.class),
         KILLER (Entity.class),
         SHOOTER (Entity.class),
+        ITEM (ItemStack.class),
         CURRENT_ITEM (ItemStack.class),
         CLICKED_ITEM (ItemStack.class),
         ENTITY (Entity.class),
@@ -50,7 +53,7 @@ public class EventVariables {
         PLOT_DESCRIPTION (String.class),
         PLOT_ONLINE (Integer.class),
         MESSAGE(String.class),
-        BLOCK (Block.class);
+        BLOCK(Block.class);
 
         final Class<?> valueClass;
 
@@ -60,6 +63,10 @@ public class EventVariables {
 
         public Class<?> getValueClass() {
             return valueClass;
+        }
+
+        public String getLocaleName() {
+            return getLocaleMessage("items.developer.temp-vars." + this.name().toLowerCase() + ".name" ,false);
         }
     }
 

@@ -40,8 +40,6 @@ import java.util.UUID;
 
 public class PlayerMove implements Listener {
 
-    public static Map<UUID, Location> previousLocation = new HashMap<>();
-
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
@@ -66,14 +64,8 @@ public class PlayerMove implements Listener {
             player.teleport(player.getWorld().getSpawnLocation());
         }
 
-        if (!previousLocation.containsKey(player.getUniqueId())) previousLocation.put(player.getUniqueId(),event.getFrom());
-        if (event.getFrom() != event.getTo()) {
-            if (event.getFrom() != previousLocation.get(player.getUniqueId())) {
-                if (previousLocation.get(player.getUniqueId()).distance(player.getLocation()) >= 3) {
-                    Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                    if (plot != null)  EventRaiser.raiseMoveEvent(event.getPlayer(),event);
-                }
-            }
+        if (isBlockChanged(event.getFrom(),event.getTo())) {
+            EventRaiser.raiseMoveEvent(event.getPlayer(),event);
         }
     }
 
@@ -110,5 +102,9 @@ public class PlayerMove implements Listener {
             if (event.isSprinting())  EventRaiser.raiseStartRunningEvent(event.getPlayer(),event);
             else  EventRaiser.raiseStopRunningEvent(event.getPlayer(),event);
         }
+    }
+
+    private boolean isBlockChanged(Location from, Location to) {
+        return from.getBlockX() != to.getBlockX() || from.getBlockY() != to.getBlockY() || from.getBlockZ() != to.getBlockZ();
     }
 }

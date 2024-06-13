@@ -20,8 +20,10 @@ package mcchickenstudio.creative.events;
 
 import com.destroystokyo.paper.event.player.PlayerStartSpectatingEntityEvent;
 import com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent;
+import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
+import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.coding.menus.*;
 import mcchickenstudio.creative.coding.menus.variables.VariablesMenu;
 import mcchickenstudio.creative.coding.menus.layouts.OneRowLayout;
@@ -50,14 +52,18 @@ import mcchickenstudio.creative.menu.OwnWorldsMenu;
 import mcchickenstudio.creative.menu.WorldSettingsMenu;
 import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.Plot;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import static mcchickenstudio.creative.events.ChangedWorld.*;
+import static mcchickenstudio.creative.utils.BlockUtils.getSignLine;
+import static mcchickenstudio.creative.utils.BlockUtils.setSignLine;
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 import static mcchickenstudio.creative.utils.ItemUtils.itemEquals;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemName;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
 
 public class PlayerInteract implements Listener {
 
@@ -108,17 +114,62 @@ public class PlayerInteract implements Listener {
             Block mainBlock = clickedBlock.getRelative(BlockFace.NORTH);
 
             if (clickedBlock.getType() == Material.OAK_WALL_SIGN) {
-                String mainBlockType = new BlockParser().getMainTypeByMaterial(mainBlock.getType());
-                String actionBlockType = new BlockParser().getActionBlockType(mainBlock.getType());
+                ExecutorCategory mainBlockCategory = ExecutorCategory.getByMaterial(mainBlock.getType());
+                ActionCategory actionBlockCategory = ActionCategory.getByMaterial(mainBlock.getType());
 
-                if (mainBlockType.startsWith("event")) {
+                if (mainBlockCategory == ExecutorCategory.EVENT_PLAYER) {
                     CodingBlockTypesMenu menu = new PlayerEventsMenu(player,event.getClickedBlock().getLocation());
                     menu.open(player);
-                } else if (actionBlockType.startsWith("action")) {
+                } else if (actionBlockCategory == ActionCategory.PLAYER_ACTION) {
                     CodingBlockTypesMenu menu = new PlayerActionsMenu(player,event.getClickedBlock().getLocation());
                     menu.open(player);
-                } else if (actionBlockType.startsWith("if")) {
-                    PlayerConditionsMenu.openInventory(player,1,event.getClickedBlock().getLocation());
+                } else if (actionBlockCategory == ActionCategory.CONTROL_ACTION) {
+                    CodingBlockTypesMenu menu = new ControlActionsMenu(player,event.getClickedBlock().getLocation());
+                    menu.open(player);
+                } else if (actionBlockCategory == ActionCategory.PLAYER_CONDITION) {
+                    CodingBlockTypesMenu menu = new PlayerConditionsMenu(player,event.getClickedBlock().getLocation());
+                    menu.open(player);
+                } else if (mainBlockCategory == ExecutorCategory.CYCLE) {
+                    String cycleTicksString = getSignLine(clickedBlock.getLocation(),(byte) 3);
+                    if (cycleTicksString != null && !cycleTicksString.isEmpty()) {
+                        int cycleTicks = 20;
+                        try {
+                            cycleTicks = Integer.parseInt(cycleTicksString);
+                        } catch (NumberFormatException exception){
+                            setSignLine(clickedBlock.getLocation(),(byte) 3,"20");
+                        }
+                        if (event.getAction().isRightClick()) {
+                            if (event.getPlayer().isSneaking()) {
+                                cycleTicks -= 1;
+                                player.playSound(player.getLocation(),Sound.BLOCK_CHAIN_FALL,100f,0.1f);
+                            } else {
+                                ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
+                                if (!item.isEmpty() && item.hasItemMeta()) {
+                                    String displayName = ChatColor.stripColor(item.getItemMeta().getDisplayName());
+                                    if (item.getType() == Material.SLIME_BALL) {
+                                        try {
+                                            cycleTicks = Math.round(Float.parseFloat(displayName));
+                                        } catch (NumberFormatException exception){}
+                                        player.playSound(player.getLocation(),Sound.BLOCK_CHAIN_FALL,100f,0.5f);
+                                    } else if (displayName.length() < 15) {
+                                        setSignLine(clickedBlock.getLocation(),(byte) 1,displayName);
+                                        player.playSound(player.getLocation(),Sound.BLOCK_CHAIN_FALL,100f,0.7f);
+                                    }
+                                } else {
+                                    cycleTicks += 1;
+                                    player.playSound(player.getLocation(),Sound.BLOCK_CHAIN_FALL,100f,1f);
+                                }
+                            }
+                        }
+                        if (cycleTicks < 5) {
+                            cycleTicks = 5;
+                        }
+                        if (cycleTicks > 3600) {
+                            cycleTicks = 3600;
+                        }
+                        setSignLine(clickedBlock.getLocation(),(byte) 3,String.valueOf(cycleTicks));
+                        translateBlockSign(clickedBlock);
+                    }
                 }
 
             }
@@ -228,6 +279,9 @@ public class PlayerInteract implements Listener {
                 EventRaiser.raiseLeftClickEvent(event.getPlayer(),event);
             }
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                if (event.getHand() == EquipmentSlot.HAND) {
+                    return;
+                }
                 EventRaiser.raiseRightClickEvent(event.getPlayer(),event);
             }
             if (event.getAction() == Action.PHYSICAL) {

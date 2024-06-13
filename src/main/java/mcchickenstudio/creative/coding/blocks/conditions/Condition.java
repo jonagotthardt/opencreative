@@ -21,6 +21,7 @@ package mcchickenstudio.creative.coding.blocks.conditions;
 import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
+import mcchickenstudio.creative.coding.blocks.actions.ActionHandler;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
 
@@ -29,6 +30,7 @@ import java.util.List;
 public abstract class Condition extends Action {
 
     private final List<Action> actions;
+    private List<Action> reactions;
     private final boolean isOpposed = false;
 
     /**
@@ -48,14 +50,16 @@ public abstract class Condition extends Action {
     @Override
     public void execute(List<Entity> selection) {
         if (check(selection) && !isOpposed) {
-            for (Action action : actions) {
-                action.run(selection);
-            }
+            new ActionHandler(getExecutor()).executeActions(actions);
         }
     }
 
     @Override
     public ActionCategory getActionCategory() {
         return ActionCategory.PLAYER_CONDITION;
+    }
+
+    public List<Action> getActions() {
+        return actions;
     }
 }

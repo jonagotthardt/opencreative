@@ -33,16 +33,19 @@ import org.bukkit.Material;
  */
 public enum ExecutorCategory {
 
-    EVENT_PLAYER(Material.DIAMOND_BLOCK, ChatColor.AQUA),
-    EVENT_WORLD(Material.NETHER_BRICKS, ChatColor.DARK_RED),
-    CYCLE(Material.EMERALD_BLOCK, ChatColor.GREEN),
-    FUNCTION(Material.LAPIS_BLOCK, ChatColor.BLUE);
+    EVENT_PLAYER(Material.DIAMOND_BLOCK, Material.DIAMOND_ORE, ChatColor.AQUA),
+    EVENT_WORLD(Material.NETHER_BRICKS, Material.NETHERRACK, ChatColor.DARK_RED),
+    CYCLE(Material.OXIDIZED_COPPER, Material.COPPER_BLOCK, ChatColor.DARK_AQUA),
+    FUNCTION(Material.LAPIS_BLOCK, Material.LAPIS_ORE, ChatColor.BLUE),
+    METHOD(Material.EMERALD_BLOCK, Material.EMERALD_ORE, ChatColor.GREEN);
 
     private final Material block;
+    private final Material additionalBlock;
     private final ChatColor color;
 
-    ExecutorCategory(Material block, ChatColor color) {
+    ExecutorCategory(Material block, Material additionalBlock, ChatColor color) {
         this.block = block;
+        this.additionalBlock = additionalBlock;
         this.color = color;
     }
 
@@ -63,5 +66,9 @@ public enum ExecutorCategory {
 
     public final String getLocaleName() {
         return MessageUtils.getLocaleMessage("blocks." + this.name().toLowerCase(), false);
+    }
+
+    public Material getAdditionalBlock() {
+        return additionalBlock;
     }
 }

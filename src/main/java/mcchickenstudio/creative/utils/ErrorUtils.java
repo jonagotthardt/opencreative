@@ -21,6 +21,7 @@ package mcchickenstudio.creative.utils;
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
+import mcchickenstudio.creative.coding.blocks.events.EventVariables;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.plots.Plot;
@@ -88,6 +89,21 @@ public class ErrorUtils {
         for (Player player : plot.getPlayers()) {
             player.sendMessage(getLocaleMessage("plot-error").replace("%error%",errorMessage));
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY,100f,2f);
+        }
+    }
+
+    /**
+     Sends error message about plot's code exception on running Action for plot's players.
+     **/
+    public static void sendPlotCodeWarningMessage(Executor executor, Action action, String warningMessage) {
+        Plot plot = executor.getPlot();
+        if (plot == null) return;
+        for (Player player : plot.getPlayers()) {
+            TextComponent message = new TextComponent(getLocaleMessage("plot-code-warning.message").replace("%event%", executor.getExecutorType().getLocaleName()).replace("%action%",action.getActionType().getLocaleName()).replace("%warning%",warningMessage).replace("%x%",String.valueOf(action.getX())).replace("%y%",String.valueOf(executor.getY())).replace("%z%",String.valueOf(executor.getZ())));
+            message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(getLocaleMessage("plot-code-error.hover-message"))));
+            message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/dev " + action.getX() + " " + executor.getY() + " " + executor.getZ()));
+            player.sendMessage(message);
+            player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE,100,1.7f);
         }
     }
 
@@ -227,6 +243,11 @@ public class ErrorUtils {
         for (Player player : plot.getPlayers()) {
             player.sendMessage(getLocaleMessage("plot-code-debug.variable-not-found",false).replace("%name%",name).replace("%value%",value.toString()));
         }
+    }
+
+    public static void sendCodingNotFoundTempVar(Plot plot, Executor executor, EventVariables.Variable variable) {
+        if (plot == null) return;
+        sendPlotCodeErrorMessage(plot,executor,getLocaleMessage("plot-code-error.temp-var-not-exists",false).replace("%variable%", variable.getLocaleName()));
     }
 
     public static void sendCodingDebugVariable(Plot plot, String name, Object value) {

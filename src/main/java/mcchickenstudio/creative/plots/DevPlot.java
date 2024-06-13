@@ -146,6 +146,7 @@ public class DevPlot {
         eventsBlocks.add(Material.GOLD_BLOCK);
         eventsBlocks.add(Material.EMERALD_BLOCK);
         eventsBlocks.add(Material.LAPIS_BLOCK);
+        eventsBlocks.add(Material.OXIDIZED_COPPER);
         return eventsBlocks;
     }
 
@@ -153,6 +154,7 @@ public class DevPlot {
         List<Material> actionsBlocks = new ArrayList<>();
         actionsBlocks.add(Material.COBBLESTONE);
         actionsBlocks.add(Material.LAPIS_ORE);
+        actionsBlocks.add(Material.COAL_BLOCK);
         actionsBlocks.add(Material.IRON_BLOCK);
         actionsBlocks.add(Material.NETHER_BRICKS);
         return actionsBlocks;
@@ -161,6 +163,7 @@ public class DevPlot {
     public List<Material> getConditionBlocks() {
         List<Material> conditionsBlocks = new ArrayList<>();
         conditionsBlocks.add(Material.OAK_PLANKS);
+        conditionsBlocks.add(Material.END_STONE);
         conditionsBlocks.add(Material.OBSIDIAN);
         conditionsBlocks.add(Material.BRICKS);
         return conditionsBlocks;

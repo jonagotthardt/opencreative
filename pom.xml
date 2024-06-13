@@ -39,7 +39,16 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <relocations>
+                                <!-- Moves bstats into your package to avoid conflicts -->
+                                <relocation>
+                                    <pattern>org.bstats.bukkit</pattern>
+                                    <!-- TODO: Change this to your packages -->
+                                    <shadedPattern>mcchickenstudio.creative.utils.hooks</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <!-- This bit tells Maven to try to not include any classes that aren't used by your plugin. -->
+                            <minimizeJar>true</minimizeJar>
                         </configuration>
                     </execution>
                 </executions>
@@ -80,6 +89,12 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
             <version>22</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>3.0.2</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.papermc.paper</groupId>

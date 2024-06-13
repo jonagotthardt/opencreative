@@ -23,8 +23,10 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.blocks.variables.VariableType;
+import mcchickenstudio.creative.coding.config.ConfigExecutors;
 import mcchickenstudio.creative.coding.menus.layouts.ArgumentSlot;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -77,8 +79,12 @@ public class BlockParser {
                     ActionType actionType = ActionType.getType(actionBlock);
                     Block container = actionBlock.getRelative(BlockFace.UP);
 
+                    if (actionCategory == ActionCategory.PLAYER_CONDITION) {
+                        conditions.add("condition_block_" + script.getBlockActionNumber(actionBlock));
+                    }
+
                     if (actionCategory == null || actionType == null) {
-                        if ((actionCategory == null && !isSignEmpty(actionBlock,(byte) 2)) || (actionType == null && !isSignEmpty(actionBlock,(byte) 3))) {
+                        if (actionBlock.getType() != Material.END_STONE && ((actionCategory == null && !isSignEmpty(actionBlock,(byte) 2)) || (actionType == null && !isSignEmpty(actionBlock,(byte) 3)))) {
                             unknownBlocks.add(actionBlock);
                         }
                         if (world.getBlockAt(x+1,y,z).getType() == Material.PISTON) {
@@ -93,9 +99,6 @@ public class BlockParser {
                         continue;
                     }
 
-                    if (actionCategory == ActionCategory.PLAYER_CONDITION) {
-                        conditions.add("condition_block_" + script.getBlockActionNumber(actionBlock));
-                    }
 
                     script.saveActionBlock(conditions,actionBlock,actionCategory,actionType);
 
@@ -180,38 +183,109 @@ public class BlockParser {
         }
     }
 
-    public String getMainTypeByMaterial(Material material) {
-        switch(material) {
-            case DIAMOND_BLOCK:
-                return "event_player";
-            case GOLD_BLOCK:
-                return "event_world";
-            case LAPIS_BLOCK:
-                return "function";
-            case EMERALD_BLOCK:
-                return "cycle";
-            default:
-                return "unknown";
+    public int getClosingBracketX(Block firstBlock) {
+        Location location = firstBlock.getLocation();
+        World world = location.getWorld();
+
+        List<String> conditions = new ArrayList<>();
+        for (byte x = (byte) (location.getX()+2); x < 96; x= (byte) (x+2)) {
+            Block block = world.getBlockAt(new Location(world,x,location.getBlockY(),location.getBlockZ()));
+            if (block.getType() == Material.AIR) {
+                if (block.getRelative(BlockFace.EAST).getType() == Material.PISTON) {
+                    if (!conditions.isEmpty()) {
+                        String last = conditions.get(conditions.size()-1);
+                        conditions.remove(last);
+                    } else {
+                        return block.getRelative(BlockFace.EAST).getX();
+                    }
+                }
+            } else if (block.getType() == Material.OAK_PLANKS) {
+                if (block.getRelative(BlockFace.EAST).getType() == Material.PISTON) {
+                    conditions.add("cound" + block.getX());
+                }
+            }
         }
+        return -1;
     }
 
-    public String getActionBlockType(Material material) {
-        switch(material) {
-            case COBBLESTONE:
-                return "action_player";
-            case IRON_BLOCK:
-                return "action_var";
-            case NETHER_BRICKS:
-                return "action_world";
-            case LAPIS_ORE:
-                return "exec_function";
-            case OAK_PLANKS:
-                return "if_player";
-            default:
-                return "unknown";
-        }
-    }
+    /*public void parseCodeold(DevPlot devPlot) {
 
+        World world = devPlot.world;
+        CodeScript script = devPlot.linkedPlot.script;
+        script.clear();
+
+        // For floors
+        for (byte y = 1; y < devPlot.getFloors()*4; y=(byte)(y+4)) {
+
+            // For code lines
+            for (byte z = 4; z < 96; z = (byte)(z+4)) {
+
+                Block executorBlock = world.getBlockAt(4,y,z);
+                String executorType = "";
+                String executorSubtype = getSubtype(executorBlock);
+                switch(executorBlock.getType()) {
+                    case DIAMOND_BLOCK:
+                        executorType = "event_player";
+                        break;
+                }
+                if (!executorType.isEmpty() && !executorSubtype.isEmpty()) {
+                    script.setExecBlock(executorBlock,executorType,executorSubtype);
+                } else {
+                    continue;
+                }
+                List<String> conditions = new ArrayList<>();
+                for (byte x = 6; x < 96; x= (byte) (x+2)) {
+
+                    Block actionBlock = world.getBlockAt(x,y,z);
+                    String actionType = "";
+                    String actionSubtype = getSubtype(actionBlock);
+                    Block container = actionBlock.getRelative(BlockFace.UP);
+
+                    switch (actionBlock.getType()) {
+                        case COBBLESTONE: {
+                            actionType = "action_player";
+                            break;
+                        }
+                        case OAK_PLANKS: {
+                            actionType = "if_player";
+                            conditions.add("condition_block_" + script.getBlockActionNumber(actionBlock));
+                            break;
+                        }
+                        case AIR: {
+                            if (world.getBlockAt(x+1,y,z).getType() == Material.PISTON) {
+                                if (!conditions.isEmpty()) {
+                                    String last = conditions.get(conditions.size()-1);
+                                    conditions.remove(last);
+                                } else {
+                                    sendPlotCompileErrorMessage(devPlot.linkedPlot,actionBlock,getLocaleMessage("plot-code-error.bad-piston"));
+                                    return;
+                                }
+                            }
+                        }
+                    }
+
+                    if (!actionType.isEmpty() && !actionSubtype.isEmpty()) {
+
+                        List<String> arguments;
+                        if (actionSubtype.equalsIgnoreCase("give_items")) {
+                            arguments = new ArrayList<>(parseChestArguments(container, true));
+                        } else {
+                            arguments = new ArrayList<>(parseChestArguments(container, false));
+                        }
+
+                        if (!(actionBlock.getType() == Material.OAK_PLANKS)) {
+                            script.setActionBlock(conditions,executorBlock,actionBlock,actionType,actionSubtype,arguments);
+                        } else {
+                            script.setConditionBlock(conditions,executorBlock,actionBlock,actionType,actionSubtype,arguments);
+                        }
+
+                    }
+
+                }
+            }
+        }
+        devPlot.linkedPlot.script.loadCode();
+    }*/
     private boolean isSignEmpty(Block block, byte line) {
         Block signBlock = block.getRelative(BlockFace.SOUTH);
         if (signBlock.getType().name().contains("SIGN")) {

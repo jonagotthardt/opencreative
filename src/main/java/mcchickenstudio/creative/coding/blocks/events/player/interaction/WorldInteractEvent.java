@@ -19,12 +19,28 @@
 package mcchickenstudio.creative.coding.blocks.events.player.interaction;
 
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 public class WorldInteractEvent extends CreativeEvent {
 
-    public WorldInteractEvent(Player player) {
+    private final PlayerInteractEvent event;
+    private final Block clickedBlock;
+
+
+    public WorldInteractEvent(Player player, PlayerInteractEvent event) {
         super(player);
+        this.event = event;
+        this.clickedBlock = event.getClickedBlock();
     }
 
+    public Block getClickedBlock() {
+        return clickedBlock;
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
+    }
 }

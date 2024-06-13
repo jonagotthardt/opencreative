@@ -42,7 +42,6 @@ public abstract class CreativeRunnable {
 
     public CreativeRunnable(Plot plot) {
         this.plot = plot;
-
     }
 
     public abstract void execute(Player player);
@@ -84,6 +83,45 @@ public abstract class CreativeRunnable {
                 }
             }
         }.runTaskTimer(Main.getPlugin(),period,timer).getTaskId();
+    }
+
+    public synchronized void runTaskLater(List<Player> onlinePlayers, long delay) {
+        List<Player> currentPlayers = new ArrayList<>(onlinePlayers);
+        id = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (plot != null && plot.plotMode == Plot.Mode.PLAYING) {
+                    for (Player player : onlinePlayers) {
+                        if (currentPlayers.isEmpty()) {
+                            cancel();
+                        }
+                        if (plot.plotMode != Plot.Mode.PLAYING) {
+                            cancel();
+                        }
+                        if (player == null) {
+                            continue;
+                        }
+                        if (!player.isOnline()) {
+                            currentPlayers.remove(player);
+                            continue;
+                        }
+                        Plot playerPlot = PlotManager.getInstance().getPlotByPlayer(player);
+                        if (!plot.equals(playerPlot)) {
+                            currentPlayers.remove(player);
+                            continue;
+                        }
+                        DevPlot playerDevPlot = PlotManager.getInstance().getDevPlot(player);
+                        if (playerDevPlot != null) {
+                            currentPlayers.remove(player);
+                            continue;
+                        }
+                        execute(player);
+                    }
+                } else {
+                    cancel();
+                }
+            }
+        }.runTaskLater(Main.getPlugin(),delay).getTaskId();
     }
 
     public synchronized void cancel() {

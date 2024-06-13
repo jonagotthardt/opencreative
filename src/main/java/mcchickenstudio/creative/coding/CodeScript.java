@@ -27,6 +27,7 @@ import mcchickenstudio.creative.coding.blocks.variables.VariableType;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -36,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import static mcchickenstudio.creative.utils.BlockUtils.getSignLine;
 import static mcchickenstudio.creative.utils.ErrorUtils.*;
 import static mcchickenstudio.creative.utils.FileUtils.*;
 import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
@@ -166,6 +168,21 @@ public class CodeScript {
         String path = "code.blocks.exec_block_" + z + "_" + y;
         scriptConfig.set(path + ".category", category.name());
         scriptConfig.set(path + ".type", type.name());
+        String content = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
+        String content2 = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 1);
+
+        if (category == ExecutorCategory.FUNCTION || category == ExecutorCategory.METHOD) {
+            if (content != null && !content.isEmpty()) {
+                scriptConfig.set(path + ".type", content);
+            }
+        } else if (category == ExecutorCategory.CYCLE) {
+            if (content != null && !content.isEmpty()) {
+                scriptConfig.set(path + ".time", content);
+            }
+            if (content2 != null && !content2.isEmpty()) {
+                scriptConfig.set(path + ".type", content2);
+            }
+        }
         scriptConfig.set(path + ".location.x", x);
         scriptConfig.set(path + ".location.y", y);
         scriptConfig.set(path + ".location.z", z);
@@ -179,6 +196,7 @@ public class CodeScript {
         return true;
     }
 
+
     public void saveActionBlock(List<String> conditions, Block actionBlock, ActionCategory category, ActionType type) {
         int x = actionBlock.getX();
         int y = actionBlock.getY();
@@ -191,14 +209,7 @@ public class CodeScript {
             conditionsPath.append(condition).append(".actions.");
         }
 
-        String path = "";
-        if (category.name().contains("CONDITION")) {
-            path = ("code.blocks.exec_block_" + z + "_" + y + ".actions." + conditionsPath);
-            //TODO: не использовать этот костыль
-            path = path.substring(0,path.length()-9);
-        } else {
-            path = "code.blocks.exec_block_" + z + "_" + y + ".actions." + conditionsPath + "action_block" + getBlockActionNumber(actionBlock);
-        }
+        String path = getActionBlockPath(actionBlock,conditions);
 
         scriptConfig.set(path + ".category", category.name());
         scriptConfig.set(path + ".type", type.name());
@@ -234,7 +245,15 @@ public class CodeScript {
             conditionsPath.append(condition).append(".actions.");
         }
 
-        return "code.blocks.exec_block_" + z + "_" + y + ".actions." + conditionsPath + "action_block" + getBlockActionNumber(actionBlock);
+        String path;
+        if (actionBlock.getType() == Material.OAK_PLANKS) {
+            path = ("code.blocks.exec_block_" + z + "_" + y + ".actions." + conditionsPath);
+            path = path.substring(0, path.length() - 9);
+        } else {
+            path = "code.blocks.exec_block_" + z + "_" + y + ".actions." + conditionsPath + "action_block" + getBlockActionNumber(actionBlock);
+        }
+
+        return path;
     }
 
     /**
