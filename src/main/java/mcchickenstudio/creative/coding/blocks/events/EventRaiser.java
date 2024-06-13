@@ -18,6 +18,7 @@
 
 package mcchickenstudio.creative.coding.blocks.events;
 
+import com.destroystokyo.paper.event.block.BlockDestroyEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.*;
 import mcchickenstudio.creative.coding.blocks.events.player.interaction.*;
 import mcchickenstudio.creative.coding.blocks.events.player.inventory.*;
@@ -30,8 +31,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 public class EventRaiser {
 
@@ -111,11 +117,11 @@ public class EventRaiser {
         return true;
     }
 
-    public static boolean raiseMoveEvent(Player player, Event bukkitEvent) {
+    public static boolean raiseMoveEvent(Player player, org.bukkit.event.player.PlayerMoveEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
             return false;
         }
-        PlayerMoveEvent creativeEvent = new PlayerMoveEvent(player);
+        PlayerMoveEvent creativeEvent = new PlayerMoveEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
         return true;
     }
@@ -277,29 +283,29 @@ public class EventRaiser {
         return true;
     }
 
-    public static boolean raiseDamageBlockEvent(Player player, Event bukkitEvent) {
+    public static boolean raiseDamageBlockEvent(Player player, BlockDamageEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
             return false;
         }
-        DamageBlockEvent creativeEvent = new DamageBlockEvent(player);
+        DamageBlockEvent creativeEvent = new DamageBlockEvent(player,bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
         return true;
     }
 
-    public static boolean raiseDestroyEvent(Player player, Event bukkitEvent) {
+    public static boolean raiseDestroyEvent(Player player, BlockBreakEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
             return false;
         }
-        DestroyBlockEvent creativeEvent = new DestroyBlockEvent(player);
+        DestroyBlockEvent creativeEvent = new DestroyBlockEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
         return true;
     }
 
-    public static boolean raiseFishEvent(Player player, Event bukkitEvent) {
+    public static boolean raiseFishEvent(Player player, PlayerFishEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
             return false;
         }
-        FishEvent creativeEvent = new FishEvent(player);
+        FishEvent creativeEvent = new FishEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
         return true;
     }
@@ -340,20 +346,20 @@ public class EventRaiser {
         return true;
     }
 
-    public static boolean raiseWorldInteractEvent(Player player, Event bukkitEvent) {
+    public static boolean raiseWorldInteractEvent(Player player, PlayerInteractEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
             return false;
         }
-        WorldInteractEvent creativeEvent = new WorldInteractEvent(player);
+        WorldInteractEvent creativeEvent = new WorldInteractEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
         return true;
     }
 
-    public static boolean raisePlaceBlockEvent(Player player, Event bukkitEvent) {
+    public static boolean raisePlaceBlockEvent(Player player, BlockPlaceEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
             return false;
         }
-        PlaceBlockEvent creativeEvent = new PlaceBlockEvent(player);
+        PlaceBlockEvent creativeEvent = new PlaceBlockEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
         return true;
     }

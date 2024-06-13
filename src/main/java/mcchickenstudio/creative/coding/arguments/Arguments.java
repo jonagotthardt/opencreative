@@ -71,7 +71,6 @@ public class Arguments {
             case LIST:
                 List<Argument> arguments = new ArrayList<>();
                 if (listSection == null) {
-                    System.out.println("null");
                     return arguments;
                 }
                 for (String key : listSection.getKeys(false)) {
@@ -157,6 +156,24 @@ public class Arguments {
                 List<Argument> args = (List<Argument>) arg.getValue();
                 for (Argument itemArg : args) {
                     list.add((ItemStack) itemArg.getValue());
+                }
+            } catch (ClassCastException e) {
+                return list;
+            }
+        }
+        sendCodingDebugVariable(plot,path,list);
+        return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    public final List<Location> getLocationList(String path) {
+        List<Location> list = new ArrayList<>();
+        Argument arg = getArg(path);
+        if (arg != null && arg.isList()) {
+            try {
+                List<Argument> args = (List<Argument>) arg.getValue();
+                for (Argument itemArg : args) {
+                    list.add((Location) itemArg.getValue());
                 }
             } catch (ClassCastException e) {
                 return list;

@@ -65,7 +65,11 @@ public abstract class Action {
     public void run(List<Entity> selection) {
         this.entities = selection;
         sendCodingDebugAction(this);
-        execute(selection);
+        for (Entity entity : selection) {
+            if (!getActionType().isSelectionMustBeInWorld() || entity.getWorld() == getPlot().world) {
+                execute(selection);
+            }
+        }
     }
 
     protected abstract void execute(List<Entity> selection);

@@ -80,9 +80,10 @@ public class Plot {
     public int entitiesLimit;
     public int redstoneOperationsLimit;
     public int lastRedstoneOperationsAmount;
+    private final List<BukkitRunnable> runningBukkitRunnables = new ArrayList<>();
     public int codeOperationsLimit;
 
-    private final boolean debug = true;
+    private final boolean debug = false;
     private final PlotFlags plotFlags;
 
     public CodeScript script;
@@ -211,7 +212,6 @@ public class Plot {
 
         devPlot = new DevPlot(this);
         script = new CodeScript(this,getPlotScriptFile(this));
-        PlotManager.getInstance().loadPlotFlags(this);
 
         new BukkitRunnable() {
             @Override
@@ -253,7 +253,6 @@ public class Plot {
 
         worldID = fileName.replace("plot","");
         plotCustomID = this.getPlotCustomID();
-        PlotManager.getInstance().loadPlotFlags(this);
 
         devPlot = new DevPlot(this);
         PlotManager.getInstance().addToPlots(this);
@@ -734,5 +733,20 @@ public class Plot {
 
     public boolean getDebug() {
         return debug;
+    }
+
+    public void addBukkitRunnable(BukkitRunnable runnable) {
+        runningBukkitRunnables.add(runnable);
+    }
+
+    public void removeBukkitRunnable(BukkitRunnable runnable) {
+        runningBukkitRunnables.remove(runnable);
+    }
+
+    public void stopBukkitRunnables() {
+        for (BukkitRunnable runnable : runningBukkitRunnables) {
+            runnable.cancel();
+        }
+        runningBukkitRunnables.clear();
     }
 }

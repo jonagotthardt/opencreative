@@ -32,16 +32,11 @@ public class OneRowLayout extends Layout {
         if (actionType.getArgumentsSlots().length > 0 && actionType.getArgumentsSlots()[0].isList()) {
             switch (actionType.getArgumentsSlots()[0].getListSize()) {
                 case 9: {
-                    setRows((byte) 4);
-                    byte number = 1;
-                    for (byte slot = 9; slot < 17; slot++) {
-                        setArgSlotVertical(number++,slot);
-                    }
-                    break;
-                }
-                case 18: {
                     setRows((byte) 3);
-                    for (byte slot = 0; slot < 18; slot++) {
+                    for (byte slot = 0; slot < 9; slot++) {
+                        setGlass((byte) 1,slot);
+                    }
+                    for (byte slot = 9; slot < 18; slot++) {
                         setArgSlot((byte) 1,slot);
                     }
                     for (byte slot = 18; slot < 27; slot++) {
@@ -52,16 +47,35 @@ public class OneRowLayout extends Layout {
                     }
                     break;
                 }
-                case 27: {
+                case 18: {
                     setRows((byte) 4);
-                    for (byte slot = 0; slot < 27; slot++) {
+                    for (byte slot = 0; slot < 9; slot++) {
+                        setGlass((byte) 1,slot);
+                    }
+                    for (byte slot = 9; slot < 27; slot++) {
                         setArgSlot((byte) 1,slot);
                     }
                     for (byte slot = 27; slot < 36; slot++) {
                         setGlass((byte) 1,slot);
                     }
                     if (actionType.getArgumentsSlots().length > 1 && !actionType.getArgumentsSlots()[1].isList()) {
-                        setArgSlotHorizontal((byte) 2,(byte) 22);
+                        setArgSlotHorizontal((byte) 2,(byte) 31);
+                    }
+                    break;
+                }
+                case 27: {
+                    setRows((byte) 5);
+                    for (byte slot = 0; slot < 9; slot++) {
+                        setGlass((byte) 1,slot);
+                    }
+                    for (byte slot = 9; slot < 36; slot++) {
+                        setArgSlot((byte) 1,slot);
+                    }
+                    for (byte slot = 36; slot < 45; slot++) {
+                        setGlass((byte) 1,slot);
+                    }
+                    if (actionType.getArgumentsSlots().length > 1 && !actionType.getArgumentsSlots()[1].isList()) {
+                        setArgSlotHorizontal((byte) 2,(byte) 40);
                     }
                     break;
                 }

@@ -165,6 +165,18 @@ public class CommandDev implements CommandExecutor {
         ItemStack conditionPlayerItem = createItem(Material.OAK_PLANKS,1,"items.developer.condition-player");
         player.getInventory().setItem(2, conditionPlayerItem);
 
+        ItemStack actionControl = createItem(Material.COAL_BLOCK,1,"items.developer.action-control");
+        player.getInventory().setItem(3, actionControl);
+
+        /*ItemStack functionItem = createItem(Material.LAPIS_BLOCK,1,"items.developer.function");
+        player.getInventory().setItem(3, functionItem);
+
+        ItemStack cycleItem = createItem(Material.OXIDIZED_COPPER,1,"items.developer.cycle");
+        player.getInventory().setItem(4, cycleItem);*/
+
+        //ItemStack elseItem = createItem(Material.END_STONE,1,"items.developer.else");
+        //player.getInventory().setItem(3, elseItem);
+
         ItemStack flySpeedChangerItem = createItem(Material.FEATHER,1,"items.developer.fly-speed-changer");
         player.getInventory().setItem(6, flySpeedChangerItem);
 

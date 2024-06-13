@@ -19,12 +19,30 @@
 package mcchickenstudio.creative.coding.blocks.events.player.interaction;
 
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class FishEvent extends CreativeEvent {
 
-    public FishEvent(Player player) {
+    private final PlayerFishEvent event;
+    private ItemStack caughtItem = null ;
+
+    public FishEvent(Player player, PlayerFishEvent event) {
         super(player);
+        this.event = event;
+        if (event.getCaught() instanceof Item) {
+            caughtItem = ((Item) event.getCaught()).getItemStack();
+        }
     }
 
+    @Override
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
+    }
+
+    public ItemStack getCaughtItem() {
+        return caughtItem;
+    }
 }

@@ -24,18 +24,23 @@ import org.bukkit.Material;
 
 public enum ActionCategory {
 
-    PLAYER_ACTION(Material.COBBLESTONE, ChatColor.GRAY),
-    WORLD_ACTION(Material.NETHER_BRICKS, ChatColor.RED),
-    VARIABLE_ACTION(Material.IRON_BLOCK, ChatColor.WHITE),
-    EXEC_FUNCTION_ACTION(Material.LAPIS_ORE, ChatColor.AQUA),
-    CONTROL_ACTION(Material.OBSIDIAN, ChatColor.DARK_GRAY),
-    PLAYER_CONDITION(Material.OAK_PLANKS, ChatColor.GOLD);
+    PLAYER_ACTION(Material.COBBLESTONE, Material.STONE, ChatColor.GRAY),
+    WORLD_ACTION(Material.NETHER_BRICKS, Material.NETHERRACK, ChatColor.RED),
+    VARIABLE_ACTION(Material.IRON_BLOCK, Material.STONE, ChatColor.WHITE),
+    EXEC_FUNCTION_ACTION(Material.LAPIS_ORE, Material.LAPIS_ORE, ChatColor.AQUA),
+    CONTROL_ACTION(Material.COAL_BLOCK, Material.COAL_ORE, ChatColor.DARK_GRAY),
+    PLAYER_CONDITION(Material.OAK_PLANKS, Material.PISTON, ChatColor.GOLD),
+    VARIABLE_CONDITION(Material.OBSIDIAN, Material.PISTON, ChatColor.BLUE);
+    //ELSE_CONDITION(Material.END_STONE, ChatColor.YELLOW);
+
 
     private final Material block;
+    private final Material additionalBlock;
     private final ChatColor color;
 
-    ActionCategory(Material block, ChatColor color) {
+    ActionCategory(Material block, Material additionalBlock, ChatColor color) {
         this.block = block;
+        this.additionalBlock = additionalBlock;
         this.color = color;
     }
 
@@ -52,5 +57,9 @@ public enum ActionCategory {
 
     public final String getLocaleName() {
         return MessageUtils.getLocaleMessage("blocks." + this.name().toLowerCase(), false);
+    }
+
+    public Material getAdditionalBlock() {
+        return additionalBlock;
     }
 }

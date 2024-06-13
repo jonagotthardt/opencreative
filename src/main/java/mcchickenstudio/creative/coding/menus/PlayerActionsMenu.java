@@ -30,7 +30,7 @@ import java.util.*;
 public class PlayerActionsMenu extends CodingBlockTypesMenu {
 
     public PlayerActionsMenu(Player player, Location location) {
-        super(player, location, "actions","action_player");
+        super(player, location, "actions","player_action");
     }
 
     @Override

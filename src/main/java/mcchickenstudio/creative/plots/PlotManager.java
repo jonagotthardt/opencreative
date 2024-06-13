@@ -79,55 +79,13 @@ public class PlotManager {
         plot.world.getWorldBorder().setSize(getPlayerPlotSize(plot.ownerGroup));
     }
 
-    /**
-     Load plot flags from plot settings.yml file.
-     **/
-    @Deprecated
-    public void loadPlotFlags(Plot plot) {
-
-        Map<String, Integer> flags = FileUtils.getPlotFlagsFromPlotConfig(plot);
-        int playerDamageFlag = (Integer)flags.getOrDefault("player-damage", 1);
-        int dayCycleFlag = (Integer)flags.getOrDefault("day-cycle", 1);
-        int joinMessagesFlag = (Integer)flags.getOrDefault("join-messages", 1);
-        int fireSpreadFlag = (Integer)flags.getOrDefault("fire-spread", 1);
-        int weatherFlag = (Integer)flags.getOrDefault("weather", 1);
-        int interactFlag = (Integer)flags.getOrDefault("block-interact", 1);
-        int mobInteractFlag = (Integer)flags.getOrDefault("mob-interact", 1);
-        int mobLootFlag = (Integer)flags.getOrDefault("mob-loot", 1);
-        int mobSpawnFlag = (Integer)flags.getOrDefault("mob-spawn", 1);
-        int naturalRegenerationFlag = (Integer)flags.getOrDefault("natural-regeneration", 1);
-        int blockChangingFlag = (Integer)flags.getOrDefault("block-changing", 1);
-        int blockExplosionFlag = (Integer)flags.getOrDefault("block-explosion", 1);
-        int likeMessagesFlag = (Integer)flags.getOrDefault("like-messages", 1);
-        int deathMessagesFlag = (Integer)flags.getOrDefault("death-messages", 1);
-        int keepInventoryFlag = (Integer)flags.getOrDefault("keep-inventory", 1);
-        int immediateRespawnFlag = (Integer)flags.getOrDefault("immediate-respawn", 1);
-
-      /*  plot.playerDamageFlag = playerDamageFlag;
-        plot.dayCycleFlag = dayCycleFlag;
-        plot.joinMesssagesFlag = joinMessagesFlag;
-        plot.fireSpreadFlag = fireSpreadFlag;
-        plot.weatherFlag = weatherFlag;
-        plot.blockInteractFlag = interactFlag;
-        plot.mobInteractFlag = mobInteractFlag;
-        plot.mobLootFlag = mobLootFlag;
-        plot.mobSpawnFlag = mobSpawnFlag;
-        plot.naturalRegenerationFlag = naturalRegenerationFlag;
-        plot.blockChangingFlag = blockChangingFlag;
-        plot.blockExplosionFlag = blockExplosionFlag;
-        plot.likeMessagesFlag = likeMessagesFlag;
-        plot.deathMessagesFlag = deathMessagesFlag;
-        plot.keepInventoryFlag = keepInventoryFlag;
-        plot.immediateRespawnFlag = immediateRespawnFlag;*/
-
-    }
-
 
     /**
     Unload plot, for example if no players playing in plot.
      **/
     public void unloadPlot(Plot plot) {
         plot.isLoaded = false;
+        plot.stopBukkitRunnables();
         FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
         FileUtils.setPlotConfigParameter(plot,"mode",plot.plotMode);
         if (Bukkit.unloadWorld(plot.worldName,true)) {

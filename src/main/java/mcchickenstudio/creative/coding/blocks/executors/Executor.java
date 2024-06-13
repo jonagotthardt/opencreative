@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.executors;
 
 import mcchickenstudio.creative.coding.blocks.actions.Action;
+import mcchickenstudio.creative.coding.blocks.actions.ActionHandler;
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import mcchickenstudio.creative.coding.blocks.events.EventVariables;
 import mcchickenstudio.creative.plots.Plot;
@@ -40,13 +41,14 @@ import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
  */
 public abstract class Executor {
 
-    private final Plot PLOT;
-    private final int X;
-    private final int Y;
-    private final int Z;
-    private final List<Action> ACTIONS = new ArrayList<>();
+    private final Plot plot;
+    private final int x;
+    private final int y;
+    private final int z;
+    private final List<Action> actions = new ArrayList<>();
     private final EventVariables variables = new EventVariables();
     private CreativeEvent event;
+    private ActionHandler handler;
 
     /**
      * Creates an Executor with specified plot and block's location in developers plot.
@@ -56,10 +58,10 @@ public abstract class Executor {
      * @param z Z from Executor's block location in developers plot.
      */
     public Executor(Plot plot, int x, int y, int z) {
-        this.PLOT = plot;
-        this.X = x;
-        this.Y = y;
-        this.Z = z;
+        this.plot = plot;
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     /**
@@ -75,19 +77,8 @@ public abstract class Executor {
     protected void setTempVars(CreativeEvent event) {}
     protected void executeActions(CreativeEvent event) {
         this.event = event;
-        for (Action action : ACTIONS) {
-            try {
-                action.run(event.getSelection());
-            } catch (IndexOutOfBoundsException e) {
-                sendPlotCodeErrorMessage(this, action, getLocaleMessage("plot-code-error.arguments"));
-            } catch (NumberFormatException e) {
-                sendPlotCodeErrorMessage(this, action, getLocaleMessage("plot-code-error.wrong-number"));
-            } catch (IllegalArgumentException e) {
-                sendPlotCodeErrorMessage(this, action, getLocaleMessage("plot-code-error.wrong-argument") + e.getMessage());
-            } catch (Exception e) {
-                sendPlotCodeErrorMessage(this, action, getLocaleMessage("plot-code-error.unknown") + e.getMessage());
-            }
-        }
+        handler = new ActionHandler(this);
+        handler.executeActions(actions);
     }
 
     protected void setVar(EventVariables.Variable var, Object value) {
@@ -98,17 +89,21 @@ public abstract class Executor {
         return variables.getVarValue(var);
     }
 
+    public boolean hasTempVariable(EventVariables.Variable var) {
+        return variables.getVarValue(var) != null;
+    }
+
     /**
      * Sets actions list for executor.
      * @param actions List of actions.
      */
     public final void setActions(List<Action> actions) {
-        this.ACTIONS.clear();
+        this.actions.clear();
         actions.forEach(this::addAction);
     }
 
     private void addAction(Action action) {
-        ACTIONS.add(action);
+        actions.add(action);
     }
 
     public abstract ExecutorType getExecutorType();
@@ -116,26 +111,30 @@ public abstract class Executor {
 
     @Override
     public String toString() {
-        return "Executor | Plot: " + getPlot().worldName + " Coords: " + X + " " + Y + " " + Z;
+        return "Executor | Plot: " + getPlot().worldName + " Coords: " + x + " " + y + " " + z;
     }
 
     public final int getX() {
-        return X;
+        return x;
     }
 
     public final int getY() {
-        return Y;
+        return y;
     }
 
     public final int getZ() {
-        return Z;
+        return z;
     }
 
     public final Plot getPlot() {
-        return PLOT;
+        return plot;
     }
 
     public CreativeEvent getEvent() {
         return event;
+    }
+
+    public ActionHandler getHandler() {
+        return handler;
     }
 }

@@ -19,12 +19,27 @@
 package mcchickenstudio.creative.coding.blocks.events.player.interaction;
 
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockDamageEvent;
 
 public class DamageBlockEvent extends CreativeEvent {
 
-    public DamageBlockEvent(Player player) {
+    private final BlockDamageEvent event;
+    private final Block block;
+
+    public DamageBlockEvent(Player player, BlockDamageEvent event) {
         super(player);
+        this.event = event;
+        this.block = event.getBlock();
     }
 
+    @Override
+    public void setCancelled(boolean cancelled) {
+        super.setCancelled(cancelled);
+    }
+
+    public Block getBlock() {
+        return block;
+    }
 }

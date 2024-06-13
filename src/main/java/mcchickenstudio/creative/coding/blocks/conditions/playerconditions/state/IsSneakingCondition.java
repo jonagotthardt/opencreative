@@ -51,6 +51,6 @@ public class IsSneakingCondition extends PlayerCondition {
 
     @Override
     public ActionType getActionType() {
-        return ActionType.PLAYER_IS_SNEAKING;
+        return ActionType.IF_PLAYER_IS_SNEAKING;
     }
 }

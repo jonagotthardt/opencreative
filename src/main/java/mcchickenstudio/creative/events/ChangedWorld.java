@@ -38,8 +38,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
-import static mcchickenstudio.creative.events.PlayerMove.previousLocation;
-
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.PlayerUtils.clearBuildPermissions;
 
@@ -52,6 +50,7 @@ public class ChangedWorld implements Listener {
     }
 
     public static void removePlayerWithLocation(Player player) {
+        if (!isPlayerWithLocation(player)) return;
         developerSetLocation.remove(player.getUniqueId());
     }
 
@@ -71,15 +70,21 @@ public class ChangedWorld implements Listener {
         clearBuildPermissions(player);
         World oldWorld = event.getFrom();
         World newWorld = player.getWorld();
-
-        previousLocation.remove(player.getUniqueId());
-
         PlayerChat.confirmation.remove(event.getPlayer());
         CreativeChat.creativeChatOff.remove(event.getPlayer());
         event.getPlayer().clearTitle();
 
         Plot oldPlot = PlotManager.getInstance().getPlotByWorld(oldWorld);
         Plot newPlot = PlotManager.getInstance().getPlotByWorld(newWorld);
+
+        for (Player onlinePlayer : oldWorld.getPlayers()) {
+            onlinePlayer.hidePlayer(player);
+            player.hidePlayer(onlinePlayer);
+        }
+        for (Player onlinePlayer : newWorld.getPlayers()) {
+            onlinePlayer.showPlayer(player);
+            player.showPlayer(onlinePlayer);
+        }
 
         if (oldPlot != null && oldPlot == newPlot) {
             if (oldWorld.getName().endsWith("dev")) {
@@ -97,6 +102,9 @@ public class ChangedWorld implements Listener {
                 } else {
                     removePlayerWithLocation(player);
                 }
+                for (Player onlinePlayer : newPlot.getPlayers()) {
+                    player.showPlayer(onlinePlayer);
+                }
             }
         } else {
             removePlayerWithLocation(player);
@@ -105,8 +113,6 @@ public class ChangedWorld implements Listener {
                     if (oldPlot.getFlagValue(PlotFlags.PlotFlag.JOIN_MESSAGES) == 1) {
                         for (Player onlinePlayer : oldPlot.getPlayers()) {
                             onlinePlayer.sendMessage(getLocaleMessage("world.left", player));
-                            onlinePlayer.hidePlayer(player);
-                            player.hidePlayer(onlinePlayer);
                         }
                     }
                     if (oldPlot.isOwner(player)) {
@@ -137,18 +143,11 @@ public class ChangedWorld implements Listener {
                         oldPlot.updatePlotIcon();
                     }
                 }.runTaskAsynchronously(Main.getPlugin());
-            } else {
-                for (Player onlinePlayer : oldWorld.getPlayers()) {
-                    onlinePlayer.hidePlayer(player);
-                    player.hidePlayer(onlinePlayer);
-                }
             }
             if (newPlot != null) {
                 if (newPlot.getFlagValue(PlotFlags.PlotFlag.JOIN_MESSAGES) == 1) {
                     for (Player onlinePlayer : newPlot.getPlayers()) {
                         onlinePlayer.sendMessage(getLocaleMessage("world.joined", player));
-                        onlinePlayer.showPlayer(player);
-                        player.showPlayer(onlinePlayer);
                     }
                 }
                 EventRaiser.raiseJoinEvent(event.getPlayer());
@@ -158,11 +157,6 @@ public class ChangedWorld implements Listener {
                         newPlot.updatePlotIcon();
                     }
                 }.runTaskAsynchronously(Main.getPlugin());
-            } else {
-                for (Player onlinePlayer : newWorld.getPlayers()) {
-                    onlinePlayer.showPlayer(player);
-                    player.showPlayer(onlinePlayer);
-                }
             }
         }
     }

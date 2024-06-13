@@ -38,7 +38,9 @@ public class KickPlayerAction extends PlayerAction {
         Plot plot = getPlot();
         if (plot == null) return;
         for (Player player : getPlayers(selection)) {
-            plot.kickPlayer(player);
+            if (!plot.isOwner(player)) {
+                plot.kickPlayer(player);
+            }
         }
     }
 

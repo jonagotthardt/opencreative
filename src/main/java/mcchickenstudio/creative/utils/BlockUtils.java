@@ -22,13 +22,17 @@ import mcchickenstudio.creative.Main;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
 import org.bukkit.block.sign.SignSide;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -86,6 +90,35 @@ public class BlockUtils {
             }
         }.runTaskLater(Main.getPlugin(),5L);
         return true;
+    }
+
+    public static int getClosingBracketX(Block conditionBlock) {
+        Location location = conditionBlock.getLocation();
+        World world = location.getWorld();
+
+        List<String> conditions = new ArrayList<>();
+        try {
+            for (byte x = (byte) (location.getX()+2); x < 96; x= (byte) (x+2)) {
+                Block block = world.getBlockAt(new Location(world,x,location.getBlockY(),location.getBlockZ()));
+                if (block.getType() == Material.AIR) {
+                    if (block.getRelative(BlockFace.EAST).getType() == Material.PISTON) {
+                        if (!conditions.isEmpty()) {
+                            String last = conditions.get(conditions.size()-1);
+                            conditions.remove(last);
+                        } else {
+                            return block.getRelative(BlockFace.EAST).getX();
+                        }
+                    }
+                } else if (block.getType() == Material.OAK_PLANKS) {
+                    if (block.getRelative(BlockFace.EAST).getType() == Material.PISTON) {
+                        conditions.add("cound" + block.getX());
+                    }
+                }
+            }
+        } catch (Exception exception) {
+            return -1;
+        }
+        return -1;
     }
 
 }

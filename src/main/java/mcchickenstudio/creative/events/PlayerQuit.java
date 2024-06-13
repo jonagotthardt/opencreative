@@ -24,7 +24,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import static mcchickenstudio.creative.events.PlayerMove.previousLocation;
 
 import static mcchickenstudio.creative.utils.PlayerUtils.*;
 
@@ -39,7 +38,6 @@ public class PlayerQuit implements Listener {
         CreativeChat.creativeChatOff.remove(player);
 
         removeFromPermissionsMap(player);
-        previousLocation.remove(player.getUniqueId());
     }
 
 
