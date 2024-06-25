@@ -34,10 +34,9 @@ public class SetTimeAction extends PlayerAction {
 
     @Override
     public void execute(List<Entity> selection) {
-        long time = getArguments().getValue("time",6000);
-        boolean relative = (getArguments().getValue("relative",false));
+        float time = getArguments().getValue("time",6f);
         for (Player player : getPlayers(selection)) {
-            player.setPlayerTime(time,relative);
+            player.setPlayerTime((long) (time*1000),false);
         }
     }
 

@@ -19,6 +19,8 @@
 package mcchickenstudio.creative.utils;
 
 import mcchickenstudio.creative.plots.Plot;
+import mcchickenstudio.creative.utils.hooks.HookUtils;
+import mcchickenstudio.creative.utils.hooks.PAPIUtils;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

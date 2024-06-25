@@ -54,7 +54,7 @@ public class ErrorUtils {
         for (StackTraceElement stackTraceElement : error.getStackTrace()) {
             lastStacks.add(stackTraceElement.getClassName() + ":" + stackTraceElement.getMethodName() + ":" + stackTraceElement.getLineNumber());
             i++;
-            if (i == 5) {
+            if (i == 15) {
                 break;
             }
         }

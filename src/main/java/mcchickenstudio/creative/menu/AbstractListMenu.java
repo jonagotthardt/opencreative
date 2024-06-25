@@ -42,13 +42,13 @@ public abstract class AbstractListMenu extends AbstractMenu {
 
     protected final List<Object> elements = getElements();
 
-    protected static byte previousPageButtonSlot = 47;
-    protected static byte nextPageButtonSlot = 53;
-    protected static byte noElementsPageButtonSlot = 23;
+    protected byte previousPageButtonSlot = 47;
+    protected byte nextPageButtonSlot = 53;
+    protected byte noElementsPageButtonSlot = 23;
 
-    protected static byte[] charmsBarSlots = {0,9,18,27,36,45};
-    protected static byte[] decorationSlots = {1,10,19,28,37,46};
-    protected static byte[] itemsSlots = {12,13,14,15,16,21,22,23,24,25,30,31,32,33,34,39,40,41,42,43};
+    protected byte[] charmsBarSlots = {0,9,18,27,36,45};
+    protected byte[] decorationSlots = {1,10,19,28,37,46};
+    protected byte[] itemsSlots = {12,13,14,15,16,21,22,23,24,25,30,31,32,33,34,39,40,41,42,43};
 
     public AbstractListMenu(String title, Player player) {
         super((byte) 6, title);
@@ -125,7 +125,7 @@ public abstract class AbstractListMenu extends AbstractMenu {
     protected abstract ItemStack getPreviousPageButton();
     protected abstract ItemStack getNoElementsButton();
 
-    protected static List<List<Object>> dividePagesByElements(List<Object> elements) {
+    protected List<List<Object>> dividePagesByElements(List<Object> elements) {
         List<List<Object>> pages = new ArrayList<>();
 
         byte pageSize = (byte) itemsSlots.length;
@@ -145,7 +145,7 @@ public abstract class AbstractListMenu extends AbstractMenu {
         return pages;
     }
 
-    private static byte countPages(List<Object> objects) {
+    private byte countPages(List<Object> objects) {
         return (byte) Math.ceil((double) objects.size() / itemsSlots.length);
     }
 
@@ -163,7 +163,7 @@ public abstract class AbstractListMenu extends AbstractMenu {
             ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ITEM_BOOK_PAGE_TURN,100f,1f);
             nextPage();
             event.setCancelled(true);
-        } else if (itemEquals(event.getCurrentItem(),getPreviousPageButton())) {
+        } else if (event.getSlot() == previousPageButtonSlot) {
             ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ITEM_BOOK_PAGE_TURN,100f,1f);
             previousPage();
             event.setCancelled(true);

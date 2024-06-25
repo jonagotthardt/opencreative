@@ -37,7 +37,7 @@ public class PlayerNameEqualsCondition extends PlayerCondition {
     @Override
     public boolean check(List<Entity> selection) {
         boolean check = false;
-        boolean requiredCaps = getArguments().getValue("boolean",false);
+        boolean requiredCaps = getArguments().getValue("require-caps",false);
         List<String> names = getArguments().getTextList("names");
         for (Player player : getPlayers(selection)) {
             boolean isNameEquals = false;

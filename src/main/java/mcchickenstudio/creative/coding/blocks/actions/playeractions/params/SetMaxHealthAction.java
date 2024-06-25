@@ -34,10 +34,10 @@ public class SetMaxHealthAction extends PlayerAction {
 
     @Override
     public void execute(List<Entity> selection) {
-        int param = getArguments().getValue("param",1);
+        boolean add = getArguments().getValue("add",false);
         double health = getArguments().getValue("health",30.0d);
         for (Player player : getPlayers(selection)) {
-            if (param == 2) {
+            if (add) {
                 health = health + player.getMaxHealth();
             }
             player.setMaxHealth(health);

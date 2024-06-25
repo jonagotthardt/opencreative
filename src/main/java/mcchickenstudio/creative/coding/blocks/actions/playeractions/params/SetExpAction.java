@@ -34,10 +34,10 @@ public class SetExpAction extends PlayerAction {
 
     @Override
     public void execute(List<Entity> selection) {
-        int param = getArguments().getValue("param",1);
+        boolean add = getArguments().getValue("add",false);
         float exp = getArguments().getValue("exp",0.0f);
         for (Player player : getPlayers(selection)) {
-            if (param == 1) {
+            if (!add) {
                 player.setExp(exp);
             } else {
                 player.setExp(player.getExp()+exp);

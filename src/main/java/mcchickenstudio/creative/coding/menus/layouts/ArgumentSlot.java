@@ -18,62 +18,38 @@
 
 package mcchickenstudio.creative.coding.menus.layouts;
 
-import mcchickenstudio.creative.coding.blocks.variables.VariableType;
+import mcchickenstudio.creative.coding.variables.ValueType;
 
 public class ArgumentSlot {
 
     private final String path;
-    private final VariableType varType;
-    private final byte minParameter;
-    private final byte maxParameter;
+    private final ValueType varType;
     private final byte listSize;
     private final boolean acceptEmptyItems;
 
-    public ArgumentSlot(String path, VariableType varType) {
+    public ArgumentSlot(String path, ValueType varType) {
         this.varType = varType;
-        this.minParameter = 0;
-        this.maxParameter = 0;
         this.listSize = 1;
         this.path = path;
         this.acceptEmptyItems = false;
     }
 
-    public ArgumentSlot(String path, VariableType varType, byte listSize) {
+    public ArgumentSlot(String path, ValueType varType, byte listSize) {
         this.varType = varType;
-        this.minParameter = 0;
-        this.maxParameter = 0;
         this.listSize = listSize;
         this.path = path;
         this.acceptEmptyItems = false;
     }
 
-    public ArgumentSlot(String path, VariableType varType, byte listSize, boolean acceptEmptyItems) {
+    public ArgumentSlot(String path, ValueType varType, byte listSize, boolean acceptEmptyItems) {
         this.varType = varType;
-        this.minParameter = 0;
-        this.maxParameter = 0;
         this.listSize = listSize;
         this.path = path;
         this.acceptEmptyItems = acceptEmptyItems;
     }
 
-    public ArgumentSlot(String path, byte minParam, byte maxParam) {
-        this.varType = VariableType.PARAMETER;
-        this.minParameter = minParam;
-        this.maxParameter = maxParam;
-        this.listSize = 1;
-        this.path = path;
-        this.acceptEmptyItems = false;
-    }
 
-    public byte getMinParameter() {
-        return minParameter;
-    }
-
-    public byte getMaxParameter() {
-        return maxParameter;
-    }
-
-    public VariableType getVarType() {
+    public ValueType getVarType() {
         return varType;
     }
 
@@ -81,9 +57,6 @@ public class ArgumentSlot {
         return getListSize() > 1;
     }
 
-    public boolean isParameter() {
-        return (getMinParameter() != 0 && getMaxParameter() != 0);
-    }
 
     public boolean acceptEmptyItems() {
         return acceptEmptyItems;
@@ -98,6 +71,10 @@ public class ArgumentSlot {
     }
 
     public final boolean isItemStack() {
-        return varType == VariableType.ITEM;
+        return varType == ValueType.ITEM || varType == ValueType.ANY;
+    }
+
+    public boolean isParameter() {
+        return varType == ValueType.PARAMETER;
     }
 }

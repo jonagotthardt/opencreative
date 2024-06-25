@@ -38,7 +38,16 @@ public class TeleportPlayerAction extends PlayerAction {
     @Override
     protected void execute(List<Entity> selection) {
         Location location = getArguments().getValue("location",getWorld().getSpawnLocation());
+        String consider = getArguments().getValue("consider","all");
         for (Player player : getPlayers(selection)) {
+            if (consider.equals("only-coordinates")) {
+                location.setYaw(player.getYaw());
+                location.setPitch(player.getPitch());
+            } else if (consider.equals("only-rotation")) {
+                location.setX(player.getX());
+                location.setY(player.getY());
+                location.setZ(player.getZ());
+            }
             player.teleport(location);
         }
     }

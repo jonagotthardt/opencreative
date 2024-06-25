@@ -18,13 +18,21 @@
 
 package mcchickenstudio.creative.coding.blocks.events.player.movement;
 
+import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import org.bukkit.entity.Player;
 
 public class JumpEvent extends CreativeEvent {
 
-    public JumpEvent(Player player) {
+    private final PlayerJumpEvent event;
+
+    public JumpEvent(Player player, PlayerJumpEvent event) {
         super(player);
+        this.event = event;
     }
 
+    @Override
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
+    }
 }

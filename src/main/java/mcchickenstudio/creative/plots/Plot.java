@@ -22,6 +22,7 @@ import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.BlockParser;
 import mcchickenstudio.creative.coding.CodeScript;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
+import mcchickenstudio.creative.coding.variables.WorldVariables;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemFlag;
@@ -76,13 +77,16 @@ public class Plot {
 
     public boolean currentlyTransferringOwnership;
 
-    public int worldSize;
-    public int entitiesLimit;
-    public int redstoneOperationsLimit;
+    public final int worldSize;
+    public final int entitiesLimit;
+    public final int redstoneOperationsLimit;
     public int lastRedstoneOperationsAmount;
+    private final int openingInventoriesLimit;
+    private final int variablesAmountLimit;
     private final List<BukkitRunnable> runningBukkitRunnables = new ArrayList<>();
     public int codeOperationsLimit;
 
+    private final WorldVariables worldVariables;
     private final boolean debug = false;
     private final PlotFlags plotFlags;
 
@@ -169,7 +173,6 @@ public class Plot {
         DEVELOPERS_NOT_TRUSTED("players.developers.not-trusted"),
         DEVELOPERS_GUESTS("players.developers.guests");
 
-
         private final String path;
 
         PlayersType(String path) {
@@ -200,10 +203,12 @@ public class Plot {
         plotReputation = 0;
 
         lastRedstoneOperationsAmount = 0;
-        redstoneOperationsLimit = PlayerUtils.getPlayerPlotRedstoneOperationsLimit(ownerGroup);
-        entitiesLimit = PlayerUtils.getPlayerPlotEntitiesLimit(ownerGroup);
-        codeOperationsLimit = PlayerUtils.getPlayerPlotCodeOperationsLimit(ownerGroup);
-        worldSize = PlayerUtils.getPlayerPlotSize(ownerGroup);
+        redstoneOperationsLimit = PlayerUtils.getPlayerLimitValue(ownerGroup, PlayerUtils.PlayerLimit.WORLD_REDSTONE_OPERATIONS_LIMIT);
+        entitiesLimit = PlayerUtils.getPlayerLimitValue(ownerGroup, PlayerUtils.PlayerLimit.WORLD_ENTITIES_LIMIT);
+        codeOperationsLimit = PlayerUtils.getPlayerLimitValue(ownerGroup, PlayerUtils.PlayerLimit.WORLD_CODE_OPERATIONS_LIMIT);
+        openingInventoriesLimit = PlayerUtils.getPlayerLimitValue(ownerGroup, PlayerUtils.PlayerLimit.WORLD_OPENING_INVENTORIES_LIMIT);
+        variablesAmountLimit = PlayerUtils.getPlayerLimitValue(ownerGroup, PlayerUtils.PlayerLimit.WORLD_VARIABLES_LIMIT);
+        worldSize = PlayerUtils.getPlayerLimitValue(ownerGroup, PlayerUtils.PlayerLimit.WORLD_SIZE);
         currentlyTransferringOwnership = false;
 
         PlotManager.getInstance().addToPlots(this);
@@ -212,6 +217,7 @@ public class Plot {
 
         devPlot = new DevPlot(this);
         script = new CodeScript(this,getPlotScriptFile(this));
+        worldVariables = new WorldVariables(this);
 
         new BukkitRunnable() {
             @Override
@@ -244,12 +250,15 @@ public class Plot {
         plotReputation = this.getReputation();
 
         lastRedstoneOperationsAmount = 0;
-        redstoneOperationsLimit = PlayerUtils.getPlayerPlotRedstoneOperationsLimit(ownerGroup);
-        entitiesLimit = PlayerUtils.getPlayerPlotEntitiesLimit(ownerGroup);
-        codeOperationsLimit = PlayerUtils.getPlayerPlotCodeOperationsLimit(ownerGroup);
-        worldSize = PlayerUtils.getPlayerPlotSize(ownerGroup);
+        redstoneOperationsLimit = PlayerUtils.getPlayerLimitValue(ownerGroup, PlayerUtils.PlayerLimit.WORLD_REDSTONE_OPERATIONS_LIMIT);
+        entitiesLimit = PlayerUtils.getPlayerLimitValue(ownerGroup, PlayerUtils.PlayerLimit.WORLD_ENTITIES_LIMIT);
+        codeOperationsLimit = PlayerUtils.getPlayerLimitValue(ownerGroup, PlayerUtils.PlayerLimit.WORLD_CODE_OPERATIONS_LIMIT);
+        openingInventoriesLimit = PlayerUtils.getPlayerLimitValue(ownerGroup, PlayerUtils.PlayerLimit.WORLD_OPENING_INVENTORIES_LIMIT);
+        variablesAmountLimit = PlayerUtils.getPlayerLimitValue(ownerGroup, PlayerUtils.PlayerLimit.WORLD_VARIABLES_LIMIT);
+        worldSize = PlayerUtils.getPlayerLimitValue(ownerGroup, PlayerUtils.PlayerLimit.WORLD_SIZE);
 
         currentlyTransferringOwnership = false;
+        worldVariables = new WorldVariables(this);
 
         worldID = fileName.replace("plot","");
         plotCustomID = this.getPlotCustomID();
@@ -575,7 +584,8 @@ public class Plot {
         devPlot.loadDevPlotWorld();
         clearPlayer(player);
         devPlot.world.getSpawnLocation().getChunk().load(true);
-        player.teleport(this.devPlot.world.getSpawnLocation());
+        Location lastLocation = this.devPlot.lastLocations.get(player);
+        player.teleport(lastLocation == null ? this.devPlot.world.getSpawnLocation() : lastLocation);
         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE,100,2);
         devPlot.translateCodingBlocks(player);
     }
@@ -748,5 +758,17 @@ public class Plot {
             runnable.cancel();
         }
         runningBukkitRunnables.clear();
+    }
+
+    public int getVariablesAmountLimit() {
+        return variablesAmountLimit;
+    }
+
+    public int getOpeningInventoriesLimit() {
+        return openingInventoriesLimit;
+    }
+
+    public WorldVariables getWorldVariables() {
+        return worldVariables;
     }
 }

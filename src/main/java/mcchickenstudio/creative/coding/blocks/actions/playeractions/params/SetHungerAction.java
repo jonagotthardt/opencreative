@@ -34,10 +34,10 @@ public class SetHungerAction extends PlayerAction {
 
     @Override
     public void execute(List<Entity> selection) {
-        int param = getArguments().getValue("param",1);
+        boolean add = getArguments().getValue("add",false);
         int hunger = getArguments().getValue("hunger",20);
         for (Player player : getPlayers(selection)) {
-            if (param == 2) {
+            if (add) {
                 hunger = hunger + player.getFoodLevel();
             }
             player.setFoodLevel(hunger);

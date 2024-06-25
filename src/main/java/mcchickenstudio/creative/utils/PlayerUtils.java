@@ -42,6 +42,27 @@ import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 
 public class PlayerUtils {
 
+    public enum PlayerLimit {
+
+        WORLD_SIZE("world.size"),
+        WORLD_ENTITIES_LIMIT("world.entities-limit"),
+        WORLD_CODE_OPERATIONS_LIMIT("world.code-operations-limit"),
+        WORLD_REDSTONE_OPERATIONS_LIMIT("world.redstone-operations-limit"),
+        WORLD_OPENING_INVENTORIES_LIMIT("world.opening-inventories-limit"),
+        WORLD_VARIABLES_LIMIT("world.variables-limit"),
+        PLAYER_WORLDS_AMOUNT_LIMIT("creating-world.limit");
+
+        private String path;
+
+        PlayerLimit(String path) {
+            this.path = path;
+        }
+
+        public String getPath() {
+            return path;
+        }
+    }
+
     @NotNull
     final static Plugin plugin = Main.getPlugin();
     final static Map<UUID, PermissionAttachment> permissionAttachmentMap = new HashMap<>();
@@ -69,6 +90,13 @@ public class PlayerUtils {
         }
     }
 
+    public static int getPlayerLimitValue(Player player, PlayerLimit type) {
+        return getIntFromGroups(player,type.getPath());
+    }
+
+    public static int getPlayerLimitValue(String group, PlayerLimit type) {
+        return getIntFromGroups(group,type.getPath());
+    }
 
     public static int getIntFromGroups(Player player, String intPath) {
         return plugin.getConfig().getInt("groups." + getGroup(player) + "." + intPath);
@@ -80,10 +108,6 @@ public class PlayerUtils {
 
     public static int getListFromGroups(String group, String listPath) {
         return plugin.getConfig().getInt("groups." + group + "." + listPath);
-    }
-
-    public static int getPlayerPlotsLimit(String group) {
-        return getIntFromGroups(group,"creating-world.limit");
     }
 
     public static int getPlayerPlotsLimit(Player player) {
@@ -105,6 +129,11 @@ public class PlayerUtils {
     public static int getPlayerPlotRedstoneOperationsLimit(String group) {
         return getIntFromGroups(group,"world.redstone-operations-limit");
     }
+
+    public static int getPlayerPlot(String group) {
+        return getIntFromGroups(group,"world.redstone-operations-limit");
+    }
+
 
     public static int getPlayerPermissionsList(String group) {
         return getListFromGroups(group,"permissions");
@@ -190,8 +219,8 @@ public class PlayerUtils {
         player.setFlySpeed(0.1f);
         player.setWalkSpeed(0.2f);
         player.setGlowing(false);
-        player.setPlayerTime(6000,true);
-        player.setPlayerWeather(WeatherType.CLEAR);
+        player.resetPlayerTime();
+        player.resetPlayerWeather();
         player.removeResourcePacks();
 
         for (Entity entity : player.getWorld().getEntities()) {

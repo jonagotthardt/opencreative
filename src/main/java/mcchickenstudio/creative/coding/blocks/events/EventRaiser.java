@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.events;
 
 import com.destroystokyo.paper.event.block.BlockDestroyEvent;
+import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.*;
 import mcchickenstudio.creative.coding.blocks.events.player.interaction.*;
 import mcchickenstudio.creative.coding.blocks.events.player.inventory.*;
@@ -35,7 +36,10 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -71,12 +75,9 @@ public class EventRaiser {
     }
 
     public static boolean raisePlayEvent(Player player) {
-        if (!canRaiseEvent(player)) {
-            return false;
-        }
         PlayEvent creativeEvent = new PlayEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
+        return !creativeEvent.isCancelled();
     }
 
     public static boolean raiseLikeEvent(Player player) {
@@ -108,11 +109,11 @@ public class EventRaiser {
 
     // Movement
 
-    public static boolean raiseJumpEvent(Player player, Event bukkitEvent) {
+    public static boolean raiseJumpEvent(Player player, PlayerJumpEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
             return false;
         }
-        JumpEvent creativeEvent = new JumpEvent(player);
+        JumpEvent creativeEvent = new JumpEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
         return true;
     }
@@ -218,20 +219,20 @@ public class EventRaiser {
         return true;
     }
 
-    public static boolean raiseItemClickEvent(Player player, Event bukkitEvent) {
+    public static boolean raiseItemClickEvent(Player player, InventoryClickEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
             return false;
         }
-        ItemClickEvent creativeEvent = new ItemClickEvent(player);
+        ItemClickEvent creativeEvent = new ItemClickEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
         return true;
     }
 
-    public static boolean raiseItemDropEvent(Player player, Event bukkitEvent) {
+    public static boolean raiseItemDropEvent(Player player, PlayerDropItemEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
             return false;
         }
-        ItemDropEvent creativeEvent = new ItemDropEvent(player);
+        ItemDropEvent creativeEvent = new ItemDropEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
         return true;
     }
@@ -245,20 +246,20 @@ public class EventRaiser {
         return true;
     }
 
-    public static boolean raiseItemMoveEvent(Player player, Event bukkitEvent) {
+    public static boolean raiseItemMoveEvent(Player player, InventoryClickEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
             return false;
         }
-        ItemMoveEvent creativeEvent = new ItemMoveEvent(player);
+        ItemMoveEvent creativeEvent = new ItemMoveEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
         return true;
     }
 
-    public static boolean raiseItemPickupEvent(Player player, Event bukkitEvent) {
+    public static boolean raiseItemPickupEvent(Player player, EntityPickupItemEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
             return false;
         }
-        ItemPickupEvent creativeEvent = new ItemPickupEvent(player);
+        ItemPickupEvent creativeEvent = new ItemPickupEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
         return true;
     }
@@ -274,11 +275,11 @@ public class EventRaiser {
 
     // Interaction
 
-    public static boolean raiseBlockInteractionEvent(Player player, Event bukkitEvent) {
+    public static boolean raiseBlockInteractionEvent(Player player, PlayerInteractEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
             return false;
         }
-        BlockInteractionEvent creativeEvent = new BlockInteractionEvent(player);
+        BlockInteractionEvent creativeEvent = new BlockInteractionEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
         return true;
     }

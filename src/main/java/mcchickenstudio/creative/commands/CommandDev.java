@@ -107,6 +107,7 @@ public class CommandDev implements CommandExecutor {
                         player.setGameMode(GameMode.ADVENTURE);
                     } else {
                         player.setGameMode(GameMode.CREATIVE);
+                        player.setFlying(true);
                     }
                     giveItems(player);
                     ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");

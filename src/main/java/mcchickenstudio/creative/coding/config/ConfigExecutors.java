@@ -23,7 +23,7 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
-import mcchickenstudio.creative.coding.blocks.variables.VariableType;
+import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.coding.menus.layouts.ArgumentSlot;
 import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.Plot;
@@ -34,10 +34,8 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -72,10 +70,8 @@ public class ConfigExecutors {
             // For code lines
             for (byte z = 4; z < 96; z = (byte) (z + 4)) {
                 Block executorBlock = world.getBlockAt(4,y,z);
-                System.out.println("Found executor block, creating " + executorBlock.getType());
                 ConfigExecutor executor = createExecutor(executorBlock);
                 if (executor != null) {
-                    System.out.println("Adding new executor");
                     executorList.add(executor);
                 }
             }
@@ -202,11 +198,11 @@ public class ConfigExecutors {
         return -1;
     }
 
-    private VariableType parseItemType(ItemStack item, boolean isItemStack) {
+    private ValueType parseItemType(ItemStack item, boolean isItemStack) {
         if (isItemStack) {
-            return VariableType.ITEM;
+            return ValueType.ITEM;
         }
-        return VariableType.getByMaterial(item.getType());
+        return ValueType.getByMaterial(item.getType());
     }
 
     private Object parseItemValue(ItemStack item, boolean isItemStack) {

@@ -85,8 +85,7 @@ public class PlayerChat implements Listener {
                 player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.4f);
                 player.setItemInHand(itemInHand);
                 player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),ChatColor.translateAlternateColorCodes('&',event.getMessage()));
-            }
-            if (itemInHand.getType() == Material.SLIME_BALL) {
+            } else if (itemInHand.getType() == Material.SLIME_BALL) {
                 try {
                     float floatNumber = Float.parseFloat(ChatColor.stripColor(event.getMessage()));
                     ItemMeta meta = itemInHand.getItemMeta();
@@ -98,7 +97,22 @@ public class PlayerChat implements Listener {
                 } catch (NumberFormatException exception) {
                     player.sendTitle("",getLocaleMessage("world.dev-mode.set-variable-number-error"));
                 }
-
+            } else if (itemInHand.getType() == Material.MAGMA_CREAM) {
+                StringBuilder newValue = new StringBuilder(ChatColor.stripColor(event.getMessage()));
+                ItemMeta meta = itemInHand.getItemMeta();
+                char insert = 'c';
+                if (itemInHand.hasItemMeta()) {
+                    String itemName = meta.getDisplayName();
+                    if (itemName.length() >= 2) {
+                        insert = itemName.charAt(1);
+                    }
+                }
+                newValue.insert(0,ChatColor.translateAlternateColorCodes('&',"&" + insert));
+                meta.setDisplayName(newValue.toString());
+                itemInHand.setItemMeta(meta);
+                player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.4f);
+                player.setItemInHand(itemInHand);
+                player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),ChatColor.translateAlternateColorCodes('&',event.getMessage()));
             }
         }
 

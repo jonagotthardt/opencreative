@@ -34,10 +34,10 @@ public class SetShieldBlockingDelay extends PlayerAction {
 
     @Override
     public void execute(List<Entity> selection) {
-        int param = getArguments().getValue("param",1);
+        boolean add = getArguments().getValue("add",false);
         int delay = getArguments().getValue("delay", 0);
         for (Player player : getPlayers(selection)) {
-            if (param == 2) {
+            if (add) {
                 delay = delay + player.getShieldBlockingDelay();
             }
             player.setShieldBlockingDelay(delay);

@@ -43,6 +43,8 @@ groups:
       code-operations-limit: 100
       entities-limit: 50 # limit for spawned entities in world
       redstone-operations-limit: 20 # limit for redstone operations in world
+      opening-inventories-limit: 5 # limit for opening inventories per 5 seconds for preventing anti-exit in world
+      variables-amount-limit: 50 # limit for amount of all variables in world (saved and not saved)
       build-permissions: # Permissions will be given when player types /build command
         - "worldedit.wand"
         # If you want to add WorldEdit permissions please turn off
@@ -57,6 +59,8 @@ groups:
       code-operations-limit: 200
       entities-limit: 200
       redstone-operations-limit: 50
+      opening-inventories-limit: 5
+      variables-amount-limit: 100
       build-permissions:
         - "worldedit.wand"
         #- "worldedit.region.set"

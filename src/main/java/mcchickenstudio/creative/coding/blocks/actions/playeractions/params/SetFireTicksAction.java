@@ -34,10 +34,10 @@ public class SetFireTicksAction extends PlayerAction {
 
     @Override
     public void execute(List<Entity> selection) {
-        int param = getArguments().getValue("param",1);
+        boolean add = getArguments().getValue("add",false);
         int ticks = getArguments().getValue("ticks",0);
         for (Player player : getPlayers(selection)) {
-            if (param == 1) {
+            if (!add) {
                 player.setFireTicks(ticks);
             } else {
                 player.setFireTicks(player.getFireTicks()+ticks);

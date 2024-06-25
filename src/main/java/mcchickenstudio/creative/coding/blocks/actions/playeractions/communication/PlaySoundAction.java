@@ -22,6 +22,8 @@ import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import org.bukkit.Location;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -38,8 +40,17 @@ public class PlaySoundAction extends PlayerAction {
         String sound = getArguments().getValue("sound","entity.player.levelup");
         float volume = getArguments().getValue("volume",100f);
         float pitch = getArguments().getValue("pitch",1f);
-        for (Entity entity : selection) {
-            ((Player) entity).playSound(entity.getLocation(),sound,volume,pitch);
+        String categoryString = getArguments().getValue("category","ambient");
+        Location location;
+        SoundCategory category;
+        try {
+            category = SoundCategory.valueOf(categoryString.toUpperCase());
+        } catch (Exception error) {
+            category = SoundCategory.AMBIENT;
+        }
+        for (Player player : getPlayers(selection)) {
+            location = getArguments().getValue("location",player.getLocation());
+            player.playSound(location,sound,category,volume,pitch);
         }
     }
 

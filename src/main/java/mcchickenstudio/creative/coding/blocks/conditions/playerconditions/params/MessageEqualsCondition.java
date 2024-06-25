@@ -24,9 +24,7 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import mcchickenstudio.creative.coding.blocks.events.EventVariables;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import mcchickenstudio.creative.coding.blocks.executors.player.world.ChatExecutor;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -46,7 +44,7 @@ public class MessageEqualsCondition extends PlayerCondition {
         boolean check = false;
         String originalMessage = getExecutor().getVarValue(EventVariables.Variable.MESSAGE).toString();
         List<String> messages = getArguments().getTextList("messages");
-        boolean caps = getArguments().getValue("boolean",false);
+        boolean caps = getArguments().getValue("require-caps",false);
         for (String message : messages) {
             if (caps) {
                 if (message.equals(originalMessage)) {

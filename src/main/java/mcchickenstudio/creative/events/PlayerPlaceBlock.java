@@ -54,7 +54,7 @@ public class PlayerPlaceBlock implements Listener {
             Block blockAgainst = event.getBlockAgainst();
 
             if (blockAgainst.getType() == devPlot.floorBlockMaterial) {
-                if ((!(block.getType() == Material.PISTON && (blockAgainst.getZ() % 4) == 0)) && (!devPlot.getAllowedBlocks().contains(block.getType()))) {
+                if ((!(block.getType() == Material.PISTON && (blockAgainst.getZ() % 4) == 0)) && (!(block.getType().name().contains("SIGN") &&  blockAgainst.getX() >= 4 && (blockAgainst.getX() % 2) == 0)) && (!devPlot.getAllowedBlocks().contains(block.getType()))) {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-on-floor"));
                     player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
                     event.setCancelled(true);
@@ -150,7 +150,7 @@ public class PlayerPlaceBlock implements Listener {
              Moves blocks to right
              */
             Set<Block> movedBlocks = new HashSet<>(); // Создаем множество для отслеживания уже перемещенных блоков
-            for (double x = 99; x > location.getX(); x--) { // уменьшил диапазон на 2, чтобы не выйти за пределы мира
+            for (double x = 97; x > location.getX(); x--) { // уменьшил диапазон на 2, чтобы не выйти за пределы мира
                 Block oldBlock = location.getWorld().getBlockAt((int) x, location.getBlockY(), location.getBlockZ());
                 if (oldBlock.getType() == Material.AIR) continue;
                 if (!movedBlocks.contains(oldBlock)) { // Проверяем, был ли этот блок уже перемещен
@@ -185,6 +185,7 @@ public class PlayerPlaceBlock implements Listener {
                         Chest oldChest = (Chest) chestBlock.getState();
                         Block newChestBlock = newBlock.getRelative(BlockFace.UP);
                         newChestBlock.setType(Material.CHEST);
+                        newChestBlock.setBlockData(chestBlock.getBlockData());
                         Chest newChest = (Chest) newChestBlock.getState();
                         newChest.getBlockInventory().setContents(oldChest.getBlockInventory().getContents());
                         chestBlock.setType(Material.AIR);
@@ -194,6 +195,7 @@ public class PlayerPlaceBlock implements Listener {
                     Block newEastBlock = newBlock.getRelative(BlockFace.EAST);
                     movedBlocks.add(newEastBlock);
                     newEastBlock.setType(eastBlock.getType());
+                    newEastBlock.setBlockData(eastBlock.getBlockData());
                 }
             }
         } else if (face == BlockFace.WEST) {

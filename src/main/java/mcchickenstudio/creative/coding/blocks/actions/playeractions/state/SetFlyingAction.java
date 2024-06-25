@@ -35,7 +35,8 @@ public class SetFlyingAction extends PlayerAction {
     @Override
     public void execute(List<Entity> selection) {
         for (Player player : getPlayers(selection)) {
-            player.setFlying(getArguments().getValue("boolean",false));
+            player.setFlying(getArguments().getValue("flying",false));
+            player.setAllowFlight(getArguments().getValue("allow-flight",false));
         }
     }
 

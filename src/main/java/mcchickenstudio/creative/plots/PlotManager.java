@@ -77,6 +77,7 @@ public class PlotManager {
         FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
         plot.world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS,false);
         plot.world.getWorldBorder().setSize(getPlayerPlotSize(plot.ownerGroup));
+        //plot.getWorldVariables().load();
     }
 
 
@@ -86,6 +87,7 @@ public class PlotManager {
     public void unloadPlot(Plot plot) {
         plot.isLoaded = false;
         plot.stopBukkitRunnables();
+        //plot.getWorldVariables().save();
         FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
         FileUtils.setPlotConfigParameter(plot,"mode",plot.plotMode);
         if (Bukkit.unloadWorld(plot.worldName,true)) {

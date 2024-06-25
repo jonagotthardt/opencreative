@@ -22,18 +22,12 @@ import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.PlayerCondition;
-import mcchickenstudio.creative.coding.blocks.events.EventVariables;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
-
-import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingNotFoundTempVar;
 
 public class HasItemCondition extends PlayerCondition {
 
@@ -46,16 +40,12 @@ public class HasItemCondition extends PlayerCondition {
         boolean check = false;
         List<ItemStack> items = getArguments().getItemList("items");
         for (Player player : getPlayers(selection)) {
-            boolean isInventoryContainsItem = false;
             for (ItemStack itemStack : items) {
-                if (player.getInventory().contains(itemStack,itemStack.getAmount())) {
-                    isInventoryContainsItem = true;
+                if (player.getInventory().containsAtLeast(itemStack,itemStack.getAmount())) {
+                    check = true;
+                } else {
+                    return false;
                 }
-            }
-            if (!isInventoryContainsItem) {
-                return false;
-            } else {
-                check = true;
             }
         }
         return check;

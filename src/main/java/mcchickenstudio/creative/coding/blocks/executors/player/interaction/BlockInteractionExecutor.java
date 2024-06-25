@@ -18,11 +18,23 @@
 
 package mcchickenstudio.creative.coding.blocks.executors.player.interaction;
 
+import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.EventVariables;
+import mcchickenstudio.creative.coding.blocks.events.player.interaction.BlockInteractionEvent;
+import mcchickenstudio.creative.coding.blocks.events.player.inventory.ItemPickupEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.blocks.executors.player.PlayerExecutor;
 import mcchickenstudio.creative.plots.Plot;
+import org.bukkit.event.Cancellable;
 
-public class BlockInteractionExecutor extends PlayerExecutor {
+public class BlockInteractionExecutor extends PlayerExecutor implements Cancellable {
+
+    @Override
+    protected void setTempVars(CreativeEvent event) {
+        if (event instanceof BlockInteractionEvent) {
+            setVar(EventVariables.Variable.BLOCK,((BlockInteractionEvent) event).getBlock());
+        }
+    }
 
     public BlockInteractionExecutor(Plot plot, int x, int y, int z) {
         super(plot, x, y, z);
@@ -31,5 +43,15 @@ public class BlockInteractionExecutor extends PlayerExecutor {
     @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_BLOCK_INTERACT;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return getEvent().isCancelled();
+    }
+
+    @Override
+    public void setCancelled(boolean b) {
+        getEvent().setCancelled(b);
     }
 }

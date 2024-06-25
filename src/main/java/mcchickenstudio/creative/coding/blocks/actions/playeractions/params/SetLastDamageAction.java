@@ -35,10 +35,10 @@ public class SetLastDamageAction extends PlayerAction {
 
     @Override
     public void execute(List<Entity> selection) {
-        int param = getArguments().getValue("param",1);
+        boolean add = getArguments().getValue("add",false);
         double damage = getArguments().getValue("damage",1.0d);
         for (Player player : getPlayers(selection)) {
-            if (param == 2) {
+            if (add) {
                 damage = damage + player.getLastDamage();
             }
             player.setLastDamage(damage);

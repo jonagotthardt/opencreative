@@ -20,6 +20,7 @@ package mcchickenstudio.creative.coding.menus.layouts;
 
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.menu.AbstractMenu;
+import mcchickenstudio.creative.menu.buttons.ParameterButton;
 import mcchickenstudio.creative.menu.buttons.RadioButton;
 import mcchickenstudio.creative.utils.ErrorUtils;
 import org.bukkit.ChatColor;
@@ -32,6 +33,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -42,11 +44,17 @@ import java.util.List;
 import static mcchickenstudio.creative.utils.ItemUtils.itemEquals;
 import static mcchickenstudio.creative.utils.MessageUtils.*;
 
+/**
+ * <h1>Layout</h1>
+ * This class represents an inventory menu, that opens
+ * if player clicks on coding block chest to fill arguments.
+ * @see LayoutMaker
+ */
 public abstract class Layout extends AbstractMenu {
 
     protected final ActionType actionType;
     protected final List<Byte> argsSlots = new ArrayList<>();
-    protected final List<RadioButton> radioButtons = new ArrayList<>();
+    protected final List<ParameterButton> radioButtons = new ArrayList<>();
     protected final ArgumentSlot[] requiredSlots;
     private final Block chestBlock;
 
@@ -83,12 +91,12 @@ public abstract class Layout extends AbstractMenu {
         if (!isClickedInMenuSlots(event) || !isPlayerClicked(event)) return;
         if (argsSlots.contains((byte) event.getRawSlot())) {
             ItemStack argItem = event.getClickedInventory().getItem(event.getRawSlot());
-            for (RadioButton rb : radioButtons) {
-                if (itemEquals(argItem,rb.getButtonItem())) {
+            for (ParameterButton rb : radioButtons) {
+                if (itemEquals(argItem,rb.getItem())) {
                     event.setCancelled(true);
-                    rb.onChoice();
+                    rb.next();
                     ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.BLOCK_AMETHYST_BLOCK_RESONATE,100f,1.7f);
-                    event.getClickedInventory().setItem(event.getRawSlot(),rb.getButtonItem());
+                    event.getClickedInventory().setItem(event.getRawSlot(),rb.getItem());
                 }
             }
         } else {
@@ -113,13 +121,30 @@ public abstract class Layout extends AbstractMenu {
         for (byte argSlot : argsSlots) {
             if (!(chestBlock.getState() instanceof Chest)) continue;
             ItemStack argItem = inventory.getItem(argSlot);
-            for (RadioButton rb : radioButtons) {
-                if (itemEquals(argItem,rb.getButtonItem())) {
-                    if (argItem.getItemMeta() != null) {
-                        argItem.setType(Material.SLIME_BALL);
-                        ItemMeta itemMeta = argItem.getItemMeta();
-                        itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&c")+ rb.getCurrentChoice()+".0");
-                        itemMeta.setLore(new ArrayList<>());
+            for (ParameterButton rb : radioButtons) {
+                if (argItem == null) continue;
+                ItemStack itemStack = argItem.clone();
+                for (ItemFlag flag : itemStack.getItemFlags()) {
+                    itemStack.removeItemFlags(flag);
+                }
+                if (itemStack.equals(rb.getItem(true))) {
+                    if (argItem.hasItemMeta()) {
+                        ItemMeta itemMeta;
+                        if (rb.getCurrentValue() instanceof Byte) {
+                            argItem.setType(Material.SLIME_BALL);
+                            itemMeta = argItem.getItemMeta();
+                            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&c")+ rb.getCurrentValue()+".0");
+                        } else if (rb.getCurrentValue() instanceof Boolean) {
+                            boolean value = (boolean) rb.getCurrentValue();
+                            argItem.setType(Material.CLOCK);
+                            itemMeta = argItem.getItemMeta();
+                            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&" + (value ? "a" : "c") + value));
+                        } else {
+                            argItem.setType(Material.BOOK);
+                            itemMeta = argItem.getItemMeta();
+                            itemMeta.setDisplayName(rb.getCurrentValue().toString());
+                        }
+                        itemMeta.lore(null);
                         argItem.setItemMeta(itemMeta);
                     }
                 }
@@ -129,31 +154,27 @@ public abstract class Layout extends AbstractMenu {
         }
     }
 
-    protected ItemStack getGlass(byte argCount) {
-        return actionType.getArgumentsSlots()[argCount].getVarType().getGlassItem(actionType,(byte) (argCount+1));
-    }
-
     public ArgumentSlot[] getRequiredSlots() {
         return requiredSlots;
     }
 
     protected void setArgSlotVertical(byte argNumber, byte slot) {
         ArgumentSlot argumentSlot = getRequiredSlots()[argNumber-1];
-        setItem((byte) (slot-9), argumentSlot.getVarType().getGlassItem(actionType,argNumber));
+        setItem((byte) (slot-9), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
         setArgSlot(argNumber,slot);
-        setItem((byte) (slot+9), argumentSlot.getVarType().getGlassItem(actionType,argNumber));
+        setItem((byte) (slot+9), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
     }
 
     protected void setArgSlotHorizontal(byte argNumber, byte slot) {
         ArgumentSlot argumentSlot = getRequiredSlots()[argNumber-1];
-        setItem((byte) (slot-1), argumentSlot.getVarType().getGlassItem(actionType,argNumber));
+        setItem((byte) (slot-1), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
         setArgSlot(argumentSlot,slot);
-        setItem((byte) (slot+1), argumentSlot.getVarType().getGlassItem(actionType,argNumber));
+        setItem((byte) (slot+1), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
     }
 
     protected void setGlass(byte argNumber, byte slot) {
         ArgumentSlot argumentSlot = getRequiredSlots()[argNumber-1];
-        setItem(slot, argumentSlot.getVarType().getGlassItem(actionType,argNumber));
+        setItem(slot, argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
     }
 
     protected void setArgSlot(byte argNumber, byte slot) {
@@ -165,12 +186,19 @@ public abstract class Layout extends AbstractMenu {
     private void setArgSlot(ArgumentSlot argumentSlot, byte slot) {
         ItemStack contentItem = getFromContent(currentSlot++);
         if (argumentSlot.isParameter()) {
-            int choice = argumentSlot.getMinParameter();
-            if (contentItem != null && !contentItem.isEmpty() && contentItem.hasItemMeta() && contentItem.getType() == Material.SLIME_BALL) {
-                choice = Math.round(Float.parseFloat(ChatColor.stripColor(contentItem.getItemMeta().getDisplayName())));
+            Object value = "";
+            if (contentItem != null && contentItem.hasItemMeta()) {
+                String display = ChatColor.stripColor(contentItem.getItemMeta().getDisplayName());
+                if (contentItem.getType() == Material.SLIME_BALL) {
+                    value = Byte.parseByte(display.replace(".0",""));
+                } else if (contentItem.getType() == Material.CLOCK) {
+                    value = Boolean.parseBoolean(display);
+                } else {
+                    value = display;
+                }
             }
-            RadioButton rb = createParamButton(argumentSlot,choice);
-            setItem(slot,rb.getButtonItem());
+            ParameterButton rb = createParamButton((ParameterSlot) argumentSlot,value);
+            setItem(slot,rb.getItem());
             radioButtons.add(rb);
         } else {
             setItem(slot,contentItem);
@@ -179,29 +207,9 @@ public abstract class Layout extends AbstractMenu {
     }
 
 
-    protected RadioButton createParamButton(ArgumentSlot argumentSlot, int amount) {
-        String path = "items.developer." + (actionType.isCondition() ? "conditions" : "actions") + "." + actionType.name().toLowerCase().replace("_","-") + ".arguments." + actionType.getArgumentSlotID(argumentSlot);
-        List<String> lore = getLocaleItemDescription(path+".lore");
-        if (!messageExists(path+".lore")) {
-            lore.clear();
-            lore.add("§6Not found item description");
-            lore.add("§6for parameter. Path:");
-            lore.add("§6" + path);
-            lore.add(" ");
-            lore.add("§fValues:");
-            for (byte i = 1; i < argumentSlot.getMaxParameter()+1; i++) {
-                lore.add("%"+i+"%");
-            }
-        }
-        /*if (argumentSlot.getPath().equals("boolean")) {
-            return new RadioButton(VariableType.BOOLEAN,new Material[]{Material.RED_SHULKER_BOX, Material.LIME_SHULKER_BOX},getLocaleItemName(path+".name"),getLocaleItemDescription(path+".lore"),amount,
-                    new Object[]{false,true}, path+".choices","items.developer");
-        } else if (argumentSlot.getPath().equals("game-mode")) {
-            return new RadioButton(VariableType.TEXT, new Material[]{Material.CHAINMAIL_BOOTS, Material.IRON_AXE,Material.TOTEM_OF_UNDYING,Material.FEATHER},getLocaleItemName(path+".name"),getLocaleItemDescription(path+".lore"),amount,
-                    new Object[]{"adventure","survival","creative","spectator"}, path+".choices","items.developer");
-        }*/
-        return new RadioButton(argumentSlot.getVarType().getItemMaterial(),getLocaleItemName(path+".name"),lore,amount,argumentSlot.getMaxParameter(),
-                new ArrayList<>(),path+".choices","items.developer");
+    protected ParameterButton createParamButton(ParameterSlot argumentSlot, Object value) {
+        String path = "items.developer." + (actionType.isCondition() ? "conditions" : "actions") + "." + actionType.name().toLowerCase().replace("_","-") + ".arguments." + argumentSlot.getPath();
+        return new ParameterButton(value, argumentSlot.getValues(),argumentSlot.getPath(),"items.developer",path,argumentSlot.getIcons());
     }
 
     protected byte getRow(byte slot) {
@@ -240,41 +248,55 @@ public abstract class Layout extends AbstractMenu {
                 slots.add((byte) (row*9-5));
                 break;
             case 2:
-                slots.add((byte) (row*9-4));
-                slots.add((byte) (row*9-6));
+                slots.add((byte) (row*9-7));
+                slots.add((byte) (row*9-3));
+                break;
             case 3:
-                slots.add((byte) (row*9-3));
-                slots.add((byte) (row*9-5));
                 slots.add((byte) (row*9-7));
+                slots.add((byte) (row*9-5));
+                slots.add((byte) (row*9-3));
+                break;
             case 4:
-                slots.add((byte) (row*9-2));
-                slots.add((byte) (row*9-4));
-                slots.add((byte) (row*9-6));
                 slots.add((byte) (row*9-8));
+                slots.add((byte) (row*9-6));
+                slots.add((byte) (row*9-4));
+                slots.add((byte) (row*9-2));
+                break;
             case 5:
-                slots.add((byte) (row*9-1));
-                slots.add((byte) (row*9-3));
-                slots.add((byte) (row*9-5));
-                slots.add((byte) (row*9-7));
                 slots.add((byte) (row*9-9));
+                slots.add((byte) (row*9-7));
+                slots.add((byte) (row*9-5));
+                slots.add((byte) (row*9-3));
+                slots.add((byte) (row*9-1));
+                break;
             case 6:
-                slots.add((byte) (row*9-4));
-                slots.add((byte) (row*9-3));
-                slots.add((byte) (row*9-2));
-                slots.add((byte) (row*9-6));
-                slots.add((byte) (row*9-7));
                 slots.add((byte) (row*9-8));
-            default:
-                slots.add((byte) (row*9-1));
-                slots.add((byte) (row*9-2));
-                slots.add((byte) (row*9-3));
+                slots.add((byte) (row*9-7));
+                slots.add((byte) (row*9-6));
                 slots.add((byte) (row*9-4));
+                slots.add((byte) (row*9-3));
+                slots.add((byte) (row*9-2));
+                break;
+            case 7:
+                slots.add((byte) (row*9-8));
+                slots.add((byte) (row*9-7));
+                slots.add((byte) (row*9-6));
                 slots.add((byte) (row*9-5));
-                slots.add((byte) (row*9-6));
-                slots.add((byte) (row*9-7));
-                slots.add((byte) (row*9-8));
+                slots.add((byte) (row*9-4));
+                slots.add((byte) (row*9-3));
+                slots.add((byte) (row*9-2));
+                break;
+            default:
                 slots.add((byte) (row*9-9));
-
+                slots.add((byte) (row*9-8));
+                slots.add((byte) (row*9-7));
+                slots.add((byte) (row*9-6));
+                slots.add((byte) (row*9-5));
+                slots.add((byte) (row*9-4));
+                slots.add((byte) (row*9-3));
+                slots.add((byte) (row*9-2));
+                slots.add((byte) (row*9-1));
+                break;
         }
         return slots;
     }

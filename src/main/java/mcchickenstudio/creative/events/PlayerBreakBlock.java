@@ -18,7 +18,9 @@
 
 package mcchickenstudio.creative.events;
 
+import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
+import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.plots.PlotManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -36,6 +38,7 @@ import mcchickenstudio.creative.plots.Plot;
 
 import static mcchickenstudio.creative.events.PlayerPlaceBlock.move;
 import static mcchickenstudio.creative.utils.BlockUtils.getClosingBracketX;
+import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
 
 public class PlayerBreakBlock implements Listener {
     @EventHandler
@@ -51,29 +54,23 @@ public class PlayerBreakBlock implements Listener {
             }
 
             if (devPlot.getAllCodingBlocksForPlacing().contains(block.getType())) {
-
-                Block chestBlock = block.getRelative(BlockFace.UP);
-                Block additionalBlock = block.getRelative(BlockFace.EAST);
-                Block signBlock = block.getRelative(BlockFace.SOUTH);
-
-                if (additionalBlock.getType() == Material.PISTON) {
-                    int closingBracketX = getClosingBracketX(block);
-                    if (closingBracketX != -1) {
-                        block.getWorld().getBlockAt(closingBracketX,block.getY(),block.getZ()).setType(Material.AIR);
-                    }
-                }
-                block.setType(Material.AIR);
-                additionalBlock.setType(Material.AIR);
-                signBlock.setType(Material.AIR);
-                if (chestBlock.getType() == Material.CHEST) {
-                    Chest chest = (Chest) chestBlock.getState();
-                    for (ItemStack item : chest.getBlockInventory().getContents()) {
-                        if (item != null) chestBlock.getWorld().dropItem(chestBlock.getLocation(),item);
-                    }
-                }
+                destroyAdditionalBlocks(block);
                 event.setCancelled(true);
-                chestBlock.setType(Material.AIR);
-                move(block.getLocation(),BlockFace.WEST);
+                if (ActionCategory.getByMaterial(block.getType()) != null) {
+                    block.setType(Material.AIR);
+                    move(block.getLocation(),BlockFace.WEST);
+                } else {
+                    if (ExecutorCategory.getByMaterial(block.getType()) != null) {
+                        if (event.getPlayer().isSneaking()) {
+                            for (byte x = (byte) block.getX(); x < 99; x = (byte) (x + 2)) {
+                                Block actionBlock = block.getWorld().getBlockAt(x, block.getY(), block.getZ());
+                                destroyAdditionalBlocks(actionBlock);
+                                actionBlock.setType(Material.AIR);
+                            }
+                        }
+                    }
+                    block.setType(Material.AIR);
+                }
             }
 
             if (block.getType() == Material.CHEST) {
@@ -85,12 +82,36 @@ public class PlayerBreakBlock implements Listener {
 
             if (block.getType() == Material.OAK_WALL_SIGN) {
                 event.setCancelled(true);
+                translateBlockSign(block,player);
+
             }
 
         }
 
         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
         if (plot != null) EventRaiser.raiseDestroyEvent(event.getPlayer(),event);
+    }
+
+    private void destroyAdditionalBlocks(Block block) {
+        Block chestBlock = block.getRelative(BlockFace.UP);
+        Block additionalBlock = block.getRelative(BlockFace.EAST);
+        Block signBlock = block.getRelative(BlockFace.SOUTH);
+
+        if (additionalBlock.getType() == Material.PISTON) {
+            int closingBracketX = getClosingBracketX(block);
+            if (closingBracketX != -1) {
+                block.getWorld().getBlockAt(closingBracketX,block.getY(),block.getZ()).setType(Material.AIR);
+            }
+        }
+        additionalBlock.setType(Material.AIR);
+        signBlock.setType(Material.AIR);
+        if (chestBlock.getType() == Material.CHEST) {
+            Chest chest = (Chest) chestBlock.getState();
+            for (ItemStack item : chest.getBlockInventory().getContents()) {
+                if (item != null) chestBlock.getWorld().dropItem(chestBlock.getLocation(),item);
+            }
+        }
+        chestBlock.setType(Material.AIR);
     }
 
     @EventHandler

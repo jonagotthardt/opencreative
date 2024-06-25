@@ -42,8 +42,8 @@ public class OpenSignAction extends PlayerAction {
         Block block = location.getBlock();
         if (!(block.getState() instanceof Sign)) return;
         Sign sign = (Sign) block.getState();
-        float sideInt = getArguments().getValue("side",1.0f);
-        Side side = (sideInt == 2.0f ? Side.BACK : Side.FRONT);
+        String sideString = getArguments().getValue("side","front");
+        Side side = (sideString.equals("back") ? Side.BACK : Side.FRONT);
         for (Player player : getPlayers(selection)) {
             player.openSign(sign,side);
         }

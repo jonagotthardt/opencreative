@@ -37,13 +37,12 @@ public class VariablesMenu extends AbstractMenu  {
     private final ItemStack NUMBER_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.number");
     private final ItemStack BOOLEAN_ITEM = createItem(Material.CLOCK,1,"menus.developer.variables.items.boolean");
     private final ItemStack LOCATION_ITEM = createItem(Material.PAPER,1,"menus.developer.variables.items.location");
-
-    private final ItemStack ARRAY_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.array");
-    private final ItemStack VARIABLE_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.variable");
-    private final ItemStack POTION_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.potion");
-    private final ItemStack PARTICLE_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.particle");
-    private final ItemStack ENTITY_TYPE_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.entity_type");
-    private final ItemStack MAP_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.map");
+    //private final ItemStack ARRAY_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.array");
+    //private final ItemStack VARIABLE_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.variable");
+    //private final ItemStack POTION_ITEM = createItem(Material.GLASS_BOTTLE,1,"menus.developer.variables.items.potion");
+    //private final ItemStack PARTICLE_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.particle");
+    //private final ItemStack ENTITY_TYPE_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.entity_type");
+    //private final ItemStack MAP_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.map");
 
 
     public VariablesMenu() {

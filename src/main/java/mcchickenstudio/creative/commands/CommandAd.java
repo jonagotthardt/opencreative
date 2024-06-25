@@ -46,9 +46,9 @@ public class CommandAd implements CommandExecutor {
     final static Plugin plugin = Main.getPlugin();
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player) {
-            Player player = ((Player) sender).getPlayer();
+            Player player = ((Player) sender);
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
             if (args.length == 1) {
                 if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {

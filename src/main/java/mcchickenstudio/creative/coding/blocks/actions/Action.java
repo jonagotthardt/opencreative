@@ -43,11 +43,11 @@ import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugAction;
  */
 public abstract class Action {
 
-    private final Executor EXECUTOR;
-    private final int X;
+    private final Executor executor;
+    private final int x;
     private List<Entity> entities;
 
-    protected final Arguments ARGUMENTS;
+    protected final Arguments arguments;
     protected final String EMPTY_STRING = ChatColor.translateAlternateColorCodes('&',"&f");
 
     /**
@@ -57,9 +57,9 @@ public abstract class Action {
      * @param args List of arguments for action.
      */
     public Action(Executor executor, int x, Arguments args) {
-        this.EXECUTOR = executor;
-        this.X = x;
-        this.ARGUMENTS = args;
+        this.executor = executor;
+        this.x = x;
+        this.arguments = args;
     }
 
     public void run(List<Entity> selection) {
@@ -77,15 +77,15 @@ public abstract class Action {
     public abstract ActionCategory getActionCategory();
 
     protected final Arguments getArguments() {
-        return ARGUMENTS;
+        return arguments;
     }
 
     public final Executor getExecutor() {
-        return EXECUTOR;
+        return executor;
     }
 
     public final int getX() {
-        return X;
+        return x;
     }
 
     //FIXME: Replace it
@@ -97,11 +97,11 @@ public abstract class Action {
                 .replace("%plot_online%",String.valueOf(plot.getOnline()))
                 .replace("%plot_name%",plot.getPlotName())
                 .replace("%plot_description%",plot.getPlotDescription());
-        if (EXECUTOR instanceof PlayerDamagesMobExecutor) {
-            PlayerDamagesMobEvent event = (PlayerDamagesMobEvent) EXECUTOR.getEvent();
+        if (executor instanceof PlayerDamagesMobExecutor) {
+            PlayerDamagesMobEvent event = (PlayerDamagesMobEvent) executor.getEvent();
             newText = newText.replace("%damager%",event.getDamager().getName())
                     .replace("%damage%",String.valueOf(event.getDamage()));
-        } else if (EXECUTOR instanceof ChatExecutor) {
+        } else if (executor instanceof ChatExecutor) {
             newText = newText.replace("%message%",(String) getExecutor().getVarValue(EventVariables.Variable.MESSAGE));
         }
         return newText;
@@ -118,7 +118,7 @@ public abstract class Action {
     protected Set<Entity> getEntitiesByNameOrUUID(String text) {
         Set<Entity> entities = new HashSet<>();
         if (getWorld() == null) return entities;
-        for (Entity entity : EXECUTOR.getPlot().world.getEntities()) {
+        for (Entity entity : executor.getPlot().world.getEntities()) {
             if (entity.getName().equalsIgnoreCase(text) || entity.getUniqueId().equals(text)) {
                 entities.add(entity);
             }
@@ -138,8 +138,8 @@ public abstract class Action {
     }
 
     protected Plot getPlot() {
-        if (EXECUTOR != null) {
-            return EXECUTOR.getPlot();
+        if (executor != null) {
+            return executor.getPlot();
         }
         return null;
     }

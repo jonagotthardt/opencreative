@@ -40,7 +40,7 @@ public class SetArmorAction extends PlayerAction {
         ItemStack chestplate = getArguments().getValue("chestplate",ItemStack.empty());
         ItemStack leggings = getArguments().getValue("leggings",ItemStack.empty());
         ItemStack boots = getArguments().getValue("boots",ItemStack.empty());
-        boolean replaceWithAir = getArguments().getValue("boolean",false);
+        boolean replaceWithAir = getArguments().getValue("replace-with-air",false);
         for (Player player : getPlayers(selection)) {
             if (replaceWithAir || !helmet.isEmpty()) {
                 player.getInventory().setHelmet(helmet);

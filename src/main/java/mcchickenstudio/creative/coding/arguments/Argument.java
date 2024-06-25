@@ -18,17 +18,21 @@
 
 package mcchickenstudio.creative.coding.arguments;
 
-import mcchickenstudio.creative.coding.blocks.variables.VariableType;
+import mcchickenstudio.creative.coding.variables.ValueType;
+import mcchickenstudio.creative.coding.variables.VariableLink;
+import mcchickenstudio.creative.plots.Plot;
 
 import java.util.List;
 
 public class Argument {
 
+    protected final Plot plot;
     protected final String path;
-    protected final VariableType type;
+    protected final ValueType type;
     protected final Object value;
 
-    public Argument(VariableType type, String path, Object value) {
+    public Argument(Plot plot, ValueType type, String path, Object value) {
+        this.plot = plot;
         this.path = path;
         this.value = value;
         this.type = type;
@@ -38,16 +42,23 @@ public class Argument {
         return path;
     }
 
-    public VariableType getType() {
+    public ValueType getType() {
         return type;
     }
 
     public Object getValue() {
+        if (value instanceof VariableLink) {
+            VariableLink link = (VariableLink) value;
+            Object variableValue = plot.getWorldVariables().getVarValue(link);
+            if (variableValue != null) {
+                return variableValue;
+            }
+        }
         return value;
     }
 
     public boolean isList() {
-        return (this.type == VariableType.LIST && getValue() instanceof List);
+        return (this.type == ValueType.LIST && getValue() instanceof List);
     }
 
     @Override
