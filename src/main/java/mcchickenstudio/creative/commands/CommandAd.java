@@ -39,6 +39,7 @@ import mcchickenstudio.creative.plots.Plot;
 import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.MessageUtils.parsePlotLines;
 
 public class CommandAd implements CommandExecutor {
 
@@ -50,6 +51,10 @@ public class CommandAd implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = ((Player) sender);
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+            if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
+                player.sendMessage(getLocaleMessage("maintenance"));
+                return true;
+            }
             if (args.length == 1) {
                 if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
                     player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.GENERIC_COMMAND))));
@@ -62,7 +67,7 @@ public class CommandAd implements CommandExecutor {
                         if (searchablePlot.worldID.equals(args[0])) {
                             foundPlot = searchablePlot;
                             break;
-                        } else if (searchablePlot.plotCustomID.equalsIgnoreCase(args[0])) {
+                        } else if (searchablePlot.getPlotCustomID().equalsIgnoreCase(args[0])) {
                             foundPlot = searchablePlot;
                             break;
                         }
@@ -88,7 +93,7 @@ public class CommandAd implements CommandExecutor {
                     player.sendMessage(getLocaleMessage("advertisement.cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND))));
                     return true;
                 }
-                if (!(plot.plotSharing == Plot.Sharing.PUBLIC)) {
+                if (!(plot.getPlotSharing() == Plot.Sharing.PUBLIC)) {
                     player.sendMessage(getLocaleMessage("advertisement.closed-world"));
                     return true;
                 }
@@ -97,8 +102,8 @@ public class CommandAd implements CommandExecutor {
                 EventRaiser.raiseAdvertisedEvent(player);
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     TextComponent advertisement = new TextComponent(getLocaleMessage("advertisement.message",player).replace("%world%",plot.getPlotName()));
-                    advertisement.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(getLocaleMessage("advertisement.hover"))));
-                    advertisement.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ad " + player.getWorld().getName().replace("plot","").replace("dev","")));
+                    advertisement.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(parsePlotLines(plot,getLocaleMessage("advertisement.hover")))));
+                    advertisement.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ad " + plot.worldID));
                         p.sendMessage(advertisement);
                 }
             }

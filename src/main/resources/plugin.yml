@@ -9,7 +9,10 @@ softdepend: [PlaceholderAPI]
 commands:
   creative:
     usage: /creativecoding
-    aliases: [coding,creative]
+    aliases: [coding,creative,скуфешму]
+  locate:
+    usage: /locate
+    aliases: [дщсфеу]
   chat:
     usage: /creativechat
     aliases: [cc,сс]

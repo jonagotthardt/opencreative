@@ -45,7 +45,6 @@ import static mcchickenstudio.creative.commands.CommandAd.plugin;
 
 import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
-import static mcchickenstudio.creative.utils.FileUtils.setPlotConfigParameter;
 import static mcchickenstudio.creative.utils.MessageUtils.*;
 
 
@@ -80,9 +79,9 @@ public class CommandPlay implements CommandExecutor {
             developers.addAll(trustedDevelopers);
 
             removePlayerWithLocation(player);
-            if (plot.plotMode != Plot.Mode.PLAYING) {
+            if (plot.getPlotMode() != Plot.Mode.PLAYING) {
                 if (plot.getOwner().equals(sender.getName()) || developers.contains(sender.getName())) {
-                    plot.plotMode = Plot.Mode.PLAYING;
+                    plot.setPlotMode(Plot.Mode.PLAYING);
                     for (Player p : plot.getPlayers()) {
                         if (PlotManager.getInstance().getDevPlot(p) == null || sender.getName().equals(p.getName())) {
                             clearPlayer(p);
@@ -112,7 +111,6 @@ public class CommandPlay implements CommandExecutor {
                             EventRaiser.raiseJoinEvent(p);
                         }
                     }
-                    setPlotConfigParameter(plot,"mode",plot.plotMode);
                 } else {
                     sender.sendMessage(getLocaleMessage("not-owner", player));
                 }

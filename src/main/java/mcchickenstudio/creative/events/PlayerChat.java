@@ -23,6 +23,7 @@ import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.menu.WorldSettingsPlayersMenu;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.PlayerUtils;
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -106,6 +107,9 @@ public class PlayerChat implements Listener {
                     if (itemName.length() >= 2) {
                         insert = itemName.charAt(1);
                     }
+                    if (meta.lore() == null || meta.lore().isEmpty()) {
+                        meta.lore(new ArrayList<>(Arrays.asList(Component.text("oc.lang.items.developer.variable.local"))));
+                    }
                 }
                 newValue.insert(0,ChatColor.translateAlternateColorCodes('&',"&" + insert));
                 meta.setDisplayName(newValue.toString());
@@ -124,10 +128,9 @@ public class PlayerChat implements Listener {
                 case "title":
                     plot = PlotManager.getInstance().getPlotByPlayer(player);
                     String newName = "§f" + ChatColor.translateAlternateColorCodes('&',event.getMessage());
-                    if (player.getName().equals(plot.owner)) {
+                    if (player.getName().equals(plot.getOwner())) {
                         if (!(ChatColor.stripColor(newName).length() > 30) && (ChatColor.stripColor(newName).length() > 4)) {
-                            plot.plotName = newName;
-                            setPlotConfigParameter(plot,"name",newName);
+                            plot.setPlotName(newName);
                             player.sendMessage(getLocaleMessage("settings.world-name.changed").replace("%name%",newName));
                             new BukkitRunnable() {
                                 @Override
@@ -143,19 +146,18 @@ public class PlayerChat implements Listener {
                 case "id":
                     plot = PlotManager.getInstance().getPlotByPlayer(player);
                     String newID = event.getMessage();
-                    if (player.getName().equals(plot.owner)) {
+                    if (player.getName().equals(plot.getOwner())) {
                         String pattern = "^[a-zA-Zа-яА-Я0-9]+$";
                         if (newID.length() > 2 && newID.length() < 16 && newID.matches(pattern) && !Character.isDigit(newID.charAt(0))) {
                             boolean existsID = false;
                             for (Plot searchablePlot : PlotManager.getInstance().getPlots()) {
-                                if (searchablePlot.plotCustomID.equalsIgnoreCase(newID)) {
+                                if (searchablePlot.getPlotCustomID().equalsIgnoreCase(newID)) {
                                     existsID = true;
                                     break;
                                 }
                             }
                             if (!existsID) {
-                                plot.plotCustomID = newID;
-                                setPlotConfigParameter(plot,"customID",newID);
+                                plot.setPlotCustomID(newID);
                                 player.sendMessage(getLocaleMessage("settings.world-id.changed").replace("%id%",newID));
                                 new BukkitRunnable() {
                                     @Override
@@ -174,11 +176,10 @@ public class PlayerChat implements Listener {
                 case "description":
                     plot = PlotManager.getInstance().getPlotByPlayer(player);
                     String newDescription = ChatColor.translateAlternateColorCodes('&',event.getMessage());
-                    if (player.getName().equals(plot.owner)) {
+                    if (player.getName().equals(plot.getOwner())) {
                         if (!(ChatColor.stripColor(newDescription).length() > 256) && (ChatColor.stripColor(newDescription).length() > 4))  {
                             newDescription = String.join("\\n",splitDescription(newDescription,39));
-                            plot.plotDescription = newDescription;
-                            setPlotConfigParameter(plot,"description",newDescription);
+                            plot.setPlotDescription(newDescription);
                             player.sendMessage(getLocaleMessage("settings.world-description.changed").replace("%description%",newDescription));
                             new BukkitRunnable() {
                                 @Override
@@ -209,7 +210,7 @@ public class PlayerChat implements Listener {
                     break;
                 case "transfer-ownership":
                     plot = PlotManager.getInstance().getPlotByPlayer(player);
-                    if (plot != null && WorldSettingsPlayersMenu.playersSelected.get(player) != null && plot.owner.equalsIgnoreCase(player.getName())) {
+                    if (plot != null && WorldSettingsPlayersMenu.playersSelected.get(player) != null && plot.getOwner().equalsIgnoreCase(player.getName())) {
                         if (event.getMessage().equals(plot.worldID)) {
                             String newOwner = WorldSettingsPlayersMenu.playersSelected.get(player);
                             Player newOwnerPlayer = Bukkit.getPlayer(newOwner);
@@ -237,7 +238,7 @@ public class PlayerChat implements Listener {
                 case "get-ownership":
                     plot = PlotManager.getInstance().getPlotByPlayer(player);
                     if (plot != null) {
-                        Player oldOwner = Bukkit.getPlayer(plot.owner);
+                        Player oldOwner = Bukkit.getPlayer(plot.getOwner());
                         if (event.getMessage().equals(plot.worldID)) {
                             if (oldOwner == null) {
                                 player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%",player.getName()));

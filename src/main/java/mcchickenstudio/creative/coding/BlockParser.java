@@ -24,6 +24,9 @@ import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.coding.menus.layouts.ArgumentSlot;
+import mcchickenstudio.creative.coding.variables.VariableLink;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -34,6 +37,7 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 import mcchickenstudio.creative.plots.DevPlot;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,7 +58,6 @@ public class BlockParser {
     public void parseCode(DevPlot devPlot) {
 
         World world = devPlot.world;
-        devPlot.linkedPlot.getWorldVariables().clear();
         CodeScript script = devPlot.linkedPlot.script;
         script.clear();
 
@@ -149,6 +152,15 @@ public class BlockParser {
     }
 
     private ValueType parseItemType(ItemStack item, boolean isItemStack) {
+        if (item.getType() == Material.MAGMA_CREAM) {
+            List<Component> lore = item.lore();
+            if (lore != null && !lore.isEmpty()) {
+                if (((TextComponent) lore.get(0)).content().startsWith("oc.lang.items.developer.variable")) {
+                    return ValueType.VARIABLE;
+                }
+            }
+            return ValueType.ITEM;
+        }
         if (isItemStack) {
             return ValueType.ITEM;
         }
@@ -156,6 +168,20 @@ public class BlockParser {
     }
 
     public static Object parseItemValue(ItemStack item, boolean isItemStack) {
+        if (item.getType() == Material.MAGMA_CREAM) {
+            String name = item.getItemMeta().getDisplayName();
+            List<Component> lore = item.lore();
+            if (lore != null && !lore.isEmpty()) {
+                if (((TextComponent) lore.get(0)).content().startsWith("oc.lang.items.developer.variable")) {
+                    Map<String, String> variableMap = new HashMap<>();
+                    String displayName = item.getItemMeta().getDisplayName();
+                    variableMap.put("name",ChatColor.stripColor(name));
+                    variableMap.put("type",displayName.startsWith("§a") ? "saved" : displayName.startsWith("§e") ? "global" : "local");
+                    return variableMap;
+                }
+            }
+            return item.serialize();
+        }
         if (isItemStack) {
             return item.serialize();
         }
@@ -169,10 +195,6 @@ public class BlockParser {
                 return name;
             case CLOCK:
                 return ChatColor.stripColor(name);
-            case MAGMA_CREAM:
-                Map<String, String> variableMap = new HashMap<>();
-                variableMap.put("name",ChatColor.stripColor(name));
-                return variableMap;
             case PAPER:
                 Map<String, Object> locationMap = new HashMap<>();
                 String locationString = ChatColor.stripColor(name);

@@ -18,7 +18,6 @@
 
 package mcchickenstudio.creative.coding.blocks.events;
 
-import com.destroystokyo.paper.event.block.BlockDestroyEvent;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.*;
 import mcchickenstudio.creative.coding.blocks.events.player.interaction.*;
@@ -51,7 +50,7 @@ public class EventRaiser {
     public static boolean canRaiseEvent(Player player) {
         if (PlotManager.getInstance().getPlotByPlayer(player) == null) return false;
         if (PlotManager.getInstance().getDevPlot(player) != null) return false;
-        if (PlotManager.getInstance().getPlotByPlayer(player).plotMode == Plot.Mode.BUILD) return false;
+        if (PlotManager.getInstance().getPlotByPlayer(player).getPlotMode() == Plot.Mode.BUILD) return false;
         if (ChangedWorld.isPlayerWithLocation(player)) return false;
         return true;
     }

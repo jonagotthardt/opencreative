@@ -24,15 +24,9 @@ import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.utils.PlayerUtils;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Chest;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerEditBookEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
@@ -53,7 +47,6 @@ import java.util.UUID;
 import static mcchickenstudio.creative.events.ChangedWorld.addPlayerWithLocation;
 import static mcchickenstudio.creative.events.ChangedWorld.isPlayerWithLocation;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendPlayerErrorMessage;
-import static mcchickenstudio.creative.utils.FileUtils.*;
 
 import static mcchickenstudio.creative.utils.MessageUtils.*;
 
@@ -100,9 +93,8 @@ public class InventoryClick implements Listener {
                                     player.getInventory().addItem(getHeadItem(internal));
                                 }
                             }*/
-                            plot.plotIconMaterial = material;
+                            plot.setPlotIconMaterial(material);
                             player.sendMessage(getLocaleMessage("settings.world-icon.changed"));
-                            setPlotConfigParameter(plot, "icon", String.valueOf(material));
                             new BukkitRunnable() {
                                 @Override
                                 public void run() {
@@ -154,14 +146,12 @@ public class InventoryClick implements Listener {
                     WorldSettingsPlayersMenu.openInventory(player);
                 } else if (item.getType() == Material.OAK_DOOR || item.getType() == Material.IRON_DOOR) {
                     Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                    if (plot.plotSharing == Plot.Sharing.PUBLIC) {
-                        plot.plotSharing = Plot.Sharing.PRIVATE;
-                        setPlotConfigParameter(plot, "sharing", String.valueOf(Plot.Sharing.PRIVATE));
+                    if (plot.getPlotSharing() == Plot.Sharing.PUBLIC) {
+                        plot.setPlotSharing(Plot.Sharing.PRIVATE);
                         player.sendMessage(getLocaleMessage("settings.world-sharing.disabled"));
                         player.playSound(player.getLocation(), Sound.BLOCK_IRON_DOOR_CLOSE, 100, 1);
                     } else {
-                        plot.plotSharing = Plot.Sharing.PUBLIC;
-                        setPlotConfigParameter(plot, "sharing", String.valueOf(Plot.Sharing.PUBLIC));
+                        plot.setPlotSharing(Plot.Sharing.PUBLIC);
                         player.sendMessage(getLocaleMessage("settings.world-sharing.enabled"));
                         player.playSound(player.getLocation(), Sound.BLOCK_IRON_DOOR_OPEN, 100, 1);
                     }

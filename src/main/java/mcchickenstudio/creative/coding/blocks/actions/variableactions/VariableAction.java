@@ -27,6 +27,9 @@ import mcchickenstudio.creative.coding.variables.VariableLink;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.List;
 
 public abstract class VariableAction extends Action {
 
@@ -45,14 +48,11 @@ public abstract class VariableAction extends Action {
             if (type == null) {
                 type = ValueType.TEXT;
             }
-            getPlot().getWorldVariables().setVarValue(link.getName(), type, value);
+            getPlot().getWorldVariables().setVariableValue(link, type, value, getExecutor());
         }
     }
 
-    protected Object parseItemValue(ItemStack item, boolean isItemStack) {
-        if (isItemStack) {
-            return item.serialize();
-        }
+    protected Object parseItemValue(ItemStack item) {
         if (!item.hasItemMeta()) return "";
         if (item.getItemMeta().displayName() == null) return "";
         String name = item.getItemMeta().getDisplayName();
@@ -64,8 +64,19 @@ public abstract class VariableAction extends Action {
             case CLOCK:
                 return ChatColor.stripColor(name);
             case MAGMA_CREAM:
-                VariableLink link = new VariableLink(ChatColor.stripColor(name));
-                Object variableValue = getPlot().getWorldVariables().getVarValue(link);
+                ItemMeta meta = item.getItemMeta();
+                List<String> lore = meta.getLore();
+                VariableLink.VariableType type = VariableLink.VariableType.LOCAL;
+                if (lore != null && !lore.isEmpty()) {
+                    String loreLine = lore.get(0);
+                    if (loreLine.equals("oc.lang.items.developer.variable.saved")) {
+                        type = VariableLink.VariableType.SAVED;
+                    } else if (loreLine.equals("oc.lang.items.developer.variable.global")) {
+                        type = VariableLink.VariableType.GLOBAL;
+                    }
+                }
+                VariableLink link = new VariableLink(ChatColor.stripColor(name),type,getExecutor());
+                Object variableValue = getPlot().getWorldVariables().getVariableValue(link);
                 if (variableValue != null) {
                     return variableValue;
                 }
@@ -88,7 +99,7 @@ public abstract class VariableAction extends Action {
                     }
                 }
             default:
-                return name;
+                return "";
         }
     }
 }

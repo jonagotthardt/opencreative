@@ -16,6 +16,9 @@ version: 1.5
 last-world-id: 0
 debug: true
 
+lobby:
+  world: "world"
+
 execute-console-commands: # These commands will be executed on some Creative events
   creative-chat: [] # Remove [] if there are some commands
     #- "discordsrv broadcast Creative Chat | %player%: %message%"

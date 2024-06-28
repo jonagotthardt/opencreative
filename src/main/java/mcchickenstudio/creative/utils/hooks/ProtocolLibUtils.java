@@ -18,14 +18,38 @@
 
 package mcchickenstudio.creative.utils.hooks;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.reflect.StructureModifier;
+import mcchickenstudio.creative.Main;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemName;
+import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+
 public class ProtocolLibUtils {
 
-   // private static ProtocolManager manager;
+    private static ProtocolManager manager;
 
     public static void init() {
-        // OpenCreative+ 1.6
-        /*manager = ProtocolLibrary.getProtocolManager();
-        manager.addPacketListener(new PacketAdapter(Main.getPlugin(),PacketType.Play.Server.SET_SLOT) {
+        manager = ProtocolLibrary.getProtocolManager();
+        registerEvents();
+    }
+    
+    private static void registerEvents() {
+        Main.getPlugin().getLogger().info("Registering ProtocolLib events...");
+        manager.addPacketListener(new PacketAdapter(Main.getPlugin(), PacketType.Play.Server.SET_SLOT) {
             @Override
             public void onPacketSending(PacketEvent event) {
                 PacketContainer container = event.getPacket();
@@ -35,21 +59,31 @@ public class ProtocolLibUtils {
                     if (itemStack != null) {
                         if (!itemStack.hasItemMeta()) continue;
                         ItemMeta itemMeta = itemStack.getItemMeta();
-                        itemMeta.setDisplayName("This is a test");
+                        if (itemMeta.getDisplayName().startsWith("oc.lang.")) {
+                            itemMeta.setDisplayName(getLocaleItemName(itemMeta.getDisplayName().replace("oc.lang.","")));
+                        }
+                        List<String> newLore = new ArrayList<>();
                         if (itemMeta.hasLore()) {
                             List<String> lore = itemMeta.getLore();
                             for (int i1 = 0; i1 < lore.size(); i1++) {
-                                lore.set(i1, "This is normal");
-                                itemMeta.setLore(lore);
+                                String loreLine = lore.get(i1);
+                                if (loreLine.startsWith("oc.lang.")) {
+                                    newLore.add(getLocaleMessage(loreLine.replace("oc.lang.",""),false));
+                                } else {
+                                    newLore.add(loreLine);
+                                }
+                                lore.set(i1, "T");
                             }
                         }
+                        itemMeta.setLore(newLore);
                         itemStack.setItemMeta(itemMeta);
                         itemStackStructureModifier.write(i, itemStack);
                     }
                     itemStackStructureModifier.write(i, itemStack);
                 }
             }
-        });*/
+        });
+        Main.getPlugin().getLogger().info("Registered all ProtocolLib events.");
     }
 
 }

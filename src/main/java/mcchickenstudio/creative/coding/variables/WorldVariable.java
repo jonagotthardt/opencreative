@@ -18,16 +18,28 @@
 
 package mcchickenstudio.creative.coding.variables;
 
+import mcchickenstudio.creative.coding.blocks.executors.Executor;
+
+import java.util.List;
+
 public class WorldVariable {
 
     private final String name;
     private Object value;
     private ValueType type;
+    private final VariableLink.VariableType varType;
+    private final Executor executor;
 
-    public WorldVariable(String name, ValueType type, Object value) {
+    public WorldVariable(String name, VariableLink.VariableType varType, ValueType type, Object value, Executor executor) {
         this.name = name;
         this.type = type;
+        this.varType = varType;
         this.value = value;
+        this.executor = executor;
+    }
+
+    public Executor getExecutor() {
+        return executor;
     }
 
     public final Object getValue() {
@@ -36,6 +48,10 @@ public class WorldVariable {
 
     public final ValueType getType() {
         return type;
+    }
+
+    public VariableLink.VariableType getVarType() {
+        return varType;
     }
 
     public String getName() {
@@ -48,5 +64,9 @@ public class WorldVariable {
 
     public void setValue(Object value) {
         this.value = value;
+    }
+
+    public int getSize() {
+        return (value instanceof List) ? ((List<?>) value).size() : 1;
     }
 }

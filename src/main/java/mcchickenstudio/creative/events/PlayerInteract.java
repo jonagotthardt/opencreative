@@ -20,6 +20,7 @@ package mcchickenstudio.creative.events;
 
 import com.destroystokyo.paper.event.player.PlayerStartSpectatingEntityEvent;
 import com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent;
+import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
@@ -30,6 +31,8 @@ import mcchickenstudio.creative.coding.menus.variables.VariablesMenu;
 import mcchickenstudio.creative.coding.menus.layouts.LayoutMaker;
 import mcchickenstudio.creative.plots.PlotFlags;
 import mcchickenstudio.creative.plots.PlotManager;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -56,6 +59,10 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static mcchickenstudio.creative.events.ChangedWorld.*;
 import static mcchickenstudio.creative.utils.BlockUtils.getSignLine;
 import static mcchickenstudio.creative.utils.BlockUtils.setSignLine;
@@ -71,6 +78,10 @@ public class PlayerInteract implements Listener {
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         if (event.getPlayer().getItemInHand().getType() == Material.NETHER_STAR && event.getPlayer().getWorld().getName().equals("world") && !(event.getPlayer().getCooldown(Material.NETHER_STAR) > 0)) {
+            if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
+                player.sendMessage(getLocaleMessage("maintenance"));
+                return;
+            }
             event.getPlayer().setCooldown(Material.NETHER_STAR,60);
             OwnWorldsMenu.openInventory(event.getPlayer(),1);
         }
@@ -117,10 +128,25 @@ public class PlayerInteract implements Listener {
                         }
                     }
                 } else if (currentItem.getType() == Material.MAGMA_CREAM) {
-                    if (event.getAction().isRightClick()) {
+                    if (event.getAction() == Action.RIGHT_CLICK_AIR) {
                         if (currentItem.hasItemMeta()) {
+                            event.setCancelled(true);
                             ItemMeta meta = currentItem.getItemMeta();
-                            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&" + (meta.getDisplayName().charAt(1) == 'c' ? "a" : "c") + ChatColor.stripColor(meta.getDisplayName())));
+                            List<Component> lore = meta.lore();
+                            String loreLine = "variable.local";
+                            if (lore != null && !lore.isEmpty()) {
+                                loreLine = ((TextComponent) lore.get(0)).content();
+                                if (loreLine.endsWith("variable.local")) {
+                                    loreLine = "variable.global";
+                                } else if (loreLine.endsWith("variable.global")) {
+                                    loreLine = "variable.saved";
+                                } else {
+                                    loreLine = "variable.local";
+                                }
+                            }
+                            loreLine = "oc.lang.items.developer." + loreLine;
+                            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&" + (loreLine.endsWith("saved") ? "a" : loreLine.endsWith("global") ? "e" : "c") + ChatColor.stripColor(meta.getDisplayName())));
+                            meta.lore(new ArrayList<>(Arrays.asList(Component.text(loreLine))));
                             currentItem.setItemMeta(meta);
                             player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.7f);
                             player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),meta.getDisplayName(),0,40,20);
@@ -253,6 +279,10 @@ public class PlayerInteract implements Listener {
                 && (event.getPlayer().getItemInHand().getType() == Material.COMPASS)
                 && event.getPlayer().getWorld().getName().equals("world")
                 && !(event.getPlayer().getCooldown(Material.COMPASS) > 0)) {
+            if (Main.maintenance && !event.getPlayer().hasPermission("creative.maintenance.bypass")) {
+                event.getPlayer().sendMessage(getLocaleMessage("maintenance"));
+                return;
+            }
             event.getPlayer().setCooldown(Material.COMPASS,60);
             AllWorldsMenu.openInventory(event.getPlayer(),1);
         }

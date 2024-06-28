@@ -18,26 +18,42 @@
 
 package mcchickenstudio.creative.commands;
 
+import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import mcchickenstudio.creative.plots.Plot;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandTabJoin implements TabCompleter {
+public class CommandTabCreative implements TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        List<String> tabCompleter = new ArrayList<>();
         if (args.length == 1) {
-            List<String> TabCompleter = new ArrayList<>();
-            for (Plot plot : PlotManager.getInstance().getPlots()) {
-                TabCompleter.add(plot.getPlotCustomID());
+            tabCompleter.add("reload");
+            tabCompleter.add("maintenance");
+            tabCompleter.add("load");
+            tabCompleter.add("unload");
+            tabCompleter.add("resetlocale");
+        } else if (args.length == 2) {
+            if ("maintenance".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("start");
+                tabCompleter.add("end");
+            } else if ("load".equalsIgnoreCase(args[0]) || "unload".equalsIgnoreCase(args[0])) {
+                tabCompleter.addAll(PlotManager.getInstance().getPlots().stream().map(plot -> plot.worldID).toList());
             }
-            return TabCompleter;
+        } else if (args.length == 3) {
+            if ("start".equalsIgnoreCase(args[1])) {
+                tabCompleter.add("120");
+                tabCompleter.add("60");
+                tabCompleter.add("30");
+                tabCompleter.add("15");
+            }
         }
-        return null;
+        return tabCompleter;
     }
+
 }

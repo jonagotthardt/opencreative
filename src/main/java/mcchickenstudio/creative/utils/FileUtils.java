@@ -402,13 +402,17 @@ public class FileUtils {
     /**
      Returns plot's variables.yml configuration.
      **/
-    public static YamlConfiguration getPlotVariablesConfig(Plot plot) {
-        File variablesFile = new File((getPlotFolder(plot)),"variables.yml");
+    public static File getPlotVariablesJson(Plot plot) {
+        File variablesFile = new File((getPlotFolder(plot)),"variables.json");
         if (variablesFile.exists()) {
-            return YamlConfiguration.loadConfiguration(variablesFile);
+            return variablesFile;
         } else {
-            createVariablesFile(getPlotFolder(plot).getPath(), plot.worldName);
-            return getPlotVariablesConfig(plot);
+            try {
+                variablesFile.createNewFile();
+                return variablesFile;
+            } catch (IOException error) {
+                return null;
+            }
         }
     }
 

@@ -72,7 +72,7 @@ public class ActionHandler {
             BukkitRunnable runnable = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (action == null || action.getPlot() == null || action.getPlot().plotMode != Plot.Mode.PLAYING || !action.getPlot().isLoaded) {
+                    if (action == null || action.getPlot() == null || action.getPlot().getPlotMode() != Plot.Mode.PLAYING || !action.getPlot().isLoaded) {
                         cancel();
                     }
                     runAction(action,selection);

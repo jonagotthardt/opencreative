@@ -18,6 +18,7 @@
 
 package mcchickenstudio.creative.coding.arguments;
 
+import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.coding.variables.VariableLink;
 import mcchickenstudio.creative.plots.Plot;
@@ -36,14 +37,16 @@ import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugVariable;
 public class Arguments {
 
     private final Plot plot;
+    private final Executor executor;
     private final List<Argument> argumentList = new ArrayList<>();
 
     private final static Pattern INT_PATTERN = Pattern.compile("^-?[0-9]*$");//"-?[1-9]+[0-9]*");
     private final static Pattern FLOAT_PATTERN = Pattern.compile("^-?[0-9]*\\.?[0-9]+$");//-?[0-9]+\\.?[0-9]*");
     private final static Pattern BOOLEAN_PATTERN = Pattern.compile("(?i)true|yes|t|y|1");
 
-    public Arguments(Plot plot) {
+    public Arguments(Plot plot, Executor executor) {
         this.plot = plot;
+        this.executor = executor;
     }
 
     public final void load(ConfigurationSection section) {
@@ -95,7 +98,12 @@ public class Arguments {
                     return null;
                 }
                 String varName = listSection.getString("name");
-                return new VariableLink(varName);
+                String typeString = listSection.getString("type");
+                VariableLink.VariableType varType = VariableLink.VariableType.getEnum(typeString);
+                if (varType == null) {
+                    varType = VariableLink.VariableType.GLOBAL;
+                }
+                return new VariableLink(varName,varType,executor);
             case NUMBER:
                 if (INT_PATTERN.matcher(stringValue).matches()) {
                     return Integer.parseInt(stringValue);
@@ -150,6 +158,26 @@ public class Arguments {
                     }
                 }
             } catch(ClassCastException e) {
+                return list;
+            }
+        }
+        sendCodingDebugVariable(plot,path,list);
+        return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    public final List<VariableLink> getVarLinksList(String path) {
+        List<VariableLink> list = new ArrayList<>();
+        Argument arg = getArg(path);
+        if (arg != null && arg.isList()) {
+            try {
+                List<Argument> args = (List<Argument>) arg.getValue();
+                for (Argument argument : args) {
+                    if (argument.value instanceof VariableLink) {
+                        list.add((VariableLink) argument.value);
+                    }
+                }
+            } catch (ClassCastException e) {
                 return list;
             }
         }
@@ -337,13 +365,15 @@ public class Arguments {
     }
 
     private Object getVariableValue(VariableLink link) {
-        return plot.getWorldVariables().getVarValue(link);
+        return plot.getWorldVariables().getVariableValue(link);
     }
 
     public float parseObject(Object object, float defaultValue) {
         float value = defaultValue;
-        if (object instanceof Integer || object instanceof Float || object instanceof Double) {
+        if (object instanceof Integer || object instanceof Float) {
             value = (float) object;
+        } else if (object instanceof Double) {
+            value = ((Double) object).floatValue();
         }
         return value;
     }

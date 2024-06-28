@@ -49,7 +49,7 @@ public class Argument {
     public Object getValue() {
         if (value instanceof VariableLink) {
             VariableLink link = (VariableLink) value;
-            Object variableValue = plot.getWorldVariables().getVarValue(link);
+            Object variableValue = plot.getWorldVariables().getVariableValue(link);
             if (variableValue != null) {
                 return variableValue;
             }

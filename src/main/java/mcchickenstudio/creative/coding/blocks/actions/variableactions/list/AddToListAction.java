@@ -26,7 +26,6 @@ import mcchickenstudio.creative.coding.variables.VariableLink;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AddToListAction extends VariableAction {
@@ -42,7 +41,10 @@ public class AddToListAction extends VariableAction {
         List<ItemStack> itemsList = getArguments().getItemList("elements");
         if (!saveAsItems) {
             for (ItemStack item : itemsList) {
-                elements.add(parseItemValue(item,false));
+                Object value = parseItemValue(item);
+                if (!(value instanceof List)) {
+                    elements.add(value);
+                }
             }
         } else {
             elements.addAll(itemsList);

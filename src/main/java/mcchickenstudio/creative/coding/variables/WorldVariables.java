@@ -18,115 +18,141 @@
 
 package mcchickenstudio.creative.coding.variables;
 
+import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.utils.FileUtils;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 
-import static mcchickenstudio.creative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.MessageUtils.sendMessageOnce;
 
+/**
+ * <h1>WorldVariables</h1>
+ * This class represents set of world variables. It includes
+ * methods for finding and editing variables value.
+ */
 public class WorldVariables {
 
     private final Plot plot;
-    private final Set<WorldVariable> worldVariables = new HashSet<>();
+    private final Set<WorldVariable> variables = new HashSet<>();
 
     public WorldVariables(Plot plot) {
         this.plot = plot;
     }
 
-    public void clear() {
-        worldVariables.clear();
+    public WorldVariable getVariable(VariableLink link) {
+        return variables.stream()
+                .filter(var -> var.getName().equalsIgnoreCase(link.getName()))
+                .filter(var -> link.getType() == var.getVarType())
+                .filter(var -> link.getType() != VariableLink.VariableType.LOCAL || link.getExecutor().equals(var.getExecutor()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public void setVariableValue(VariableLink link, ValueType type, Object value, Executor executor) {
+        WorldVariable variable = getVariable(link);
+        if (variable != null) {
+            if (variable.getSize() + getTotalVariablesAmount() > plot.getVariablesAmountLimit()) return;
+            variable.setType(type);
+            variable.setValue(value);
+        } else {
+            if (getTotalVariablesAmount() > plot.getVariablesAmountLimit()) return;
+            variables.add(new WorldVariable(link.getName(), link.getType(), type, value, executor));
+        }
+    }
+
+    public Object getVariableValue(VariableLink link) {
+        WorldVariable variable = getVariable(link);
+        return variable != null ? variable.getValue() : null;
+    }
+
+    public void removeVariable(VariableLink link) {
+        variables.removeIf(var -> var.equals(getVariable(link)));
+    }
+
+    public void clearVariables() {
+        variables.clear();
     }
 
     public void load() {
-        YamlConfiguration config = FileUtils.getPlotVariablesConfig(plot);
-        if (config == null) return;
-        ConfigurationSection section = FileUtils.getPlotVariablesConfig(plot).getConfigurationSection("variables");
-        if (section == null) return;
-        String path = section.getCurrentPath() ;
-        for (String key : section.getKeys(false)) {
-            String name = key.replace(path+".","");
-            String valueString = config.getString(key);
-            if (valueString == null) return;
-            String type = valueString.split(":",1)[0];
-            String value = valueString.split(":",1)[1];
-            worldVariables.add(new WorldVariable(name, ValueType.parseString(type),value));
+        clearVariables();
+        File variablesJson = FileUtils.getPlotVariablesJson(plot);
+        if (variablesJson == null || variablesJson.length() == 0) {
+            return;
+        }
+        try {
+            JSONParser jsonParser = new JSONParser();
+            JSONArray a = (JSONArray) jsonParser.parse(new FileReader(variablesJson));
+            for (Object object : a) {
+                JSONObject jsonObject = (JSONObject) object;
+                String name = (String) jsonObject.get("name");
+                ValueType type = ValueType.valueOf((String) jsonObject.get("type"));
+                Object value = jsonObject.get("value");
+                if (type == ValueType.ITEM) {
+                    final ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(Base64Coder.decodeLines((String) value));
+                    final BukkitObjectInputStream objectInputStream = new BukkitObjectInputStream(arrayInputStream);
+                    value = (ItemStack) objectInputStream.readObject();
+
+                }
+                variables.add(new WorldVariable(name,VariableLink.VariableType.SAVED,type,value,null));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     public void save() {
-        if (worldVariables.isEmpty()) {
+        if (variables.isEmpty()) {
             return;
         }
-        YamlConfiguration config = FileUtils.getPlotVariablesConfig(plot);
-        if (config == null) {
+        File variablesJson = FileUtils.getPlotVariablesJson(plot);
+        if (variablesJson == null) {
             return;
         }
-        ConfigurationSection section = config.getConfigurationSection("variables");
-        if (section == null) {
-            config.createSection("variables");
-            section = config.getConfigurationSection("variables");
-        }
-        for (WorldVariable worldVariable : worldVariables) {
-            if (section == null) return;
-            Map<String, Object> data = new HashMap<>();
-            data.put("type",worldVariable.getType().name());
-            data.put("value",(worldVariable.getValue() instanceof ItemStack ? ((ItemStack) worldVariable.getValue()).serialize() : worldVariable.getValue()));
-            section.set(worldVariable.getName().toLowerCase(),data);
-            System.out.println("saved " + worldVariable.getName() + " " + worldVariable.getType() + " " + worldVariable.getValue()) ;
-        }
-        try {
-            config.save(FileUtils.getPlotVariablesFile(plot));
-        } catch (IOException e) {
-            sendCriticalErrorMessage("Couldn't not save variables in plot " + plot.worldName);
-        }
-    }
-
-    public void setVarValue(String name, ValueType type, Object value) {
-        long size = (value instanceof List) ? ((List<?>) value).size() : 1;
-        if (size > plot.getVariablesAmountLimit()) return;
-        for (WorldVariable var : worldVariables) {
-            long varSize = (var.getValue() instanceof List) ? ((List<?>) var.getValue()).size() : 1;
-            size += varSize;
-            if (size > plot.getVariablesAmountLimit()) return;
-            if (var.getName().equalsIgnoreCase(name)) {
-                var.setType(type);
-                var.setValue(value);
-                return;
+        JSONArray jsonArray = new JSONArray();
+        try (FileWriter file = new FileWriter(variablesJson.getPath())) {
+            Files.newBufferedWriter(variablesJson.toPath() , StandardOpenOption.TRUNCATE_EXISTING);
+            for (WorldVariable worldVariable : variables) {
+                if (worldVariable.getVarType() != VariableLink.VariableType.SAVED) {
+                    continue;
+                }
+                JSONObject objItem = new JSONObject();
+                objItem.put("name", worldVariable.getName());
+                objItem.put("type", worldVariable.getType().name());
+                Object value = worldVariable.getValue();
+                if (value instanceof ItemStack) {
+                    final ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+                    final BukkitObjectOutputStream objectOutputStream = new BukkitObjectOutputStream(arrayOutputStream);
+                    objectOutputStream.writeObject((ItemStack) value);
+                    value = Base64Coder.encodeLines(arrayOutputStream.toByteArray());
+                }
+                objItem.put("value", value);
+                jsonArray.add(objItem);
             }
+            file.write(jsonArray.toString());
+        } catch (Exception e){
+            System.out.println(e);
         }
-        worldVariables.add(new WorldVariable(name, type, value));
     }
 
-    public Object getVarValue(VariableLink link) {
-        for (WorldVariable var : worldVariables) {
-            if (var.getName().equalsIgnoreCase(link.getName())) {
-                return var.getValue();
-            }
+    public int getTotalVariablesAmount() {
+        int size = 0;
+        for (WorldVariable var : variables) {
+            size += var.getValue() instanceof List ? ((List<?>) var.getValue()).size() : 1;
         }
-        return null;
-    }
-
-    public Object getVarValue(String name) {
-        for (WorldVariable var : worldVariables) {
-            if (var.getName().equalsIgnoreCase(name)) {
-                return var.getValue();
-            }
-        }
-        return null;
-    }
-
-    public boolean varExists(String name) {
-        for (WorldVariable var : worldVariables) {
-            if (var.getName().equalsIgnoreCase(name)) return true;
-        }
-        return false;
+        return size;
     }
 
     public Plot getPlot() {

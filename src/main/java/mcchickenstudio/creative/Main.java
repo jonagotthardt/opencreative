@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCriticalErrorMessage;
+import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 
 public final class Main extends JavaPlugin {
@@ -47,6 +48,7 @@ public final class Main extends JavaPlugin {
     public static Main plugin;
     public static final String version = "1.5 Preview 3";
     public static final String codename = "Things will be different";
+    public static boolean maintenance = false;
     public static boolean debug = false;
 
     /**
@@ -124,6 +126,10 @@ public final class Main extends JavaPlugin {
      * @return true - if debug mode is enabled, false - disabled.
      */
     private boolean checkDebug() {
+        maintenance = getConfig().getBoolean("maintenance",false);
+        if (maintenance) {
+            Main.getPlugin().getLogger().info("Maintenance mode is still enabled in config.yml, to disable: /maintenance end");
+        }
         if (getConfig().getBoolean("debug",false)) {
             new BukkitRunnable() {
                 @Override
@@ -153,11 +159,19 @@ public final class Main extends JavaPlugin {
         commands.put("dev",     CommandDev.class);
         commands.put("like",    CommandLike.class);
         commands.put("dislike", CommandDislike.class);
+        commands.put("locate",  CommandLocate.class);
         for (String commandName : commands.keySet()) {
             PluginCommand command = getCommand(commandName);
             if (command != null) {
                 try {
                     command.setExecutor(commands.get(commandName).newInstance());
+                    if (commandName.equals("join") || commandName.equals("ad")) {
+                        command.setTabCompleter(new CommandTabJoin());
+                    } else if (commandName.equals("locate")) {
+                        command.setTabCompleter(new CommandTabLocate());
+                    } else if (commandName.equals("creative")) {
+                        command.setTabCompleter(new CommandTabCreative());
+                    }
                 } catch (IllegalAccessException | InstantiationException ignored) {
                     sendCriticalErrorMessage("Couldn't register command " + commandName + ", because of " + ignored.getMessage());
                 }

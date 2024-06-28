@@ -18,13 +18,11 @@
 
 package mcchickenstudio.creative.coding.blocks.actions.variableactions.list;
 
-import mcchickenstudio.creative.coding.BlockParser;
 import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.VariableAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.variables.VariableLink;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
@@ -44,7 +42,7 @@ public class CreateListAction extends VariableAction {
         List<Object> elements = new ArrayList<>();
         if (!saveAsItems) {
             for (ItemStack item : itemsList) {
-                elements.add(parseItemValue(item,false));
+                elements.add(parseItemValue(item));
             }
         } else {
             elements.addAll(itemsList);

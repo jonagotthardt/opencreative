@@ -19,20 +19,65 @@
 package mcchickenstudio.creative.coding.variables;
 
 
+import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import org.bukkit.ChatColor;
+
 public class VariableLink {
 
     private final String name;
+    private final VariableType type;
+    private final Executor executor;
 
-    public VariableLink(String name) {
+    public VariableLink(String name, VariableType type, Executor executor) {
         this.name = name;
+        this.type = type;
+        this.executor = executor;
     }
 
     public String getName() {
         return name;
     }
 
+    public Executor getExecutor() {
+        return executor;
+    }
+
+    public enum VariableType {
+
+        LOCAL(ChatColor.RED),
+        GLOBAL(ChatColor.YELLOW),
+        SAVED(ChatColor.GREEN);
+
+        private final ChatColor color;
+
+        VariableType(ChatColor color) {
+            this.color = color;
+        }
+
+        public ChatColor getColor() {
+            return color;
+        }
+
+        public String getId() {
+            return "coding.variable." + this.name().toLowerCase();
+        }
+
+        public static VariableType getEnum(String string) {
+            for (VariableType type : VariableType.values()) {
+                if (type.name().equals(string.toUpperCase())) {
+                    return type;
+                }
+            }
+            return null;
+        }
+    }
+
     @Override
     public String toString() {
-        return "Variable Link | Name: " + name;
+        return "Variable: " + name + " Type: " + type.name();
+    }
+
+    public VariableType getType() {
+        return type;
     }
 }

@@ -24,28 +24,26 @@ import mcchickenstudio.creative.coding.blocks.actions.variableactions.VariableAc
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.variables.VariableLink;
 import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-public class SetVariableValueAction extends VariableAction {
-    public SetVariableValueAction(Executor executor, int x, Arguments args) {
+public class DeleteVariableAction extends VariableAction {
+
+    public DeleteVariableAction(Executor executor, int x, Arguments args) {
         super(executor, x, args);
     }
 
     @Override
     protected void execute(List<Entity> selection) {
-        VariableLink link = getArguments().getVariableLink("variable");
-        ItemStack item = getArguments().getValue("value", ItemStack.empty());
-        if (item == null || item.equals(ItemStack.empty())) {
-            return;
+        List<VariableLink> variableLinks = getArguments().getVarLinksList("variables");
+        for (VariableLink link : variableLinks) {
+            System.out.println("delete link " + link);
+            getPlot().getWorldVariables().removeVariable(link);
         }
-        Object value = parseItemValue(item);
-        setVarValue(link,value);
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.VAR_SET_VALUE;
+        return ActionType.VAR_DELETE_VARIABLE;
     }
 }

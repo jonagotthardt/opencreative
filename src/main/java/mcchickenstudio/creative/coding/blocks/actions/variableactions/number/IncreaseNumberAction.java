@@ -35,6 +35,9 @@ public class IncreaseNumberAction extends VariableAction {
     @Override
     protected void execute(List<Entity> selection) {
         VariableLink link = getArguments().getVariableLink("variable");
+        if (link == null) {
+            return;
+        }
         float variableValue = getArguments().getValue("variable",0.0f);
         float first = getArguments().getValue("first",variableValue);
         float second = getArguments().getValue("second",1.0f);

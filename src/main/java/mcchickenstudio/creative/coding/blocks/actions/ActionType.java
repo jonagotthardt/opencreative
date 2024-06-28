@@ -37,6 +37,9 @@ import mcchickenstudio.creative.coding.blocks.actions.variableactions.list.Creat
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.list.GetRandomFromListAction;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.number.IncreaseNumberAction;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.number.RandomNumberAction;
+import mcchickenstudio.creative.coding.blocks.actions.variableactions.other.DeleteVariableAction;
+import mcchickenstudio.creative.coding.blocks.actions.variableactions.other.SetVariableItemAction;
+import mcchickenstudio.creative.coding.blocks.actions.variableactions.other.SetVariableValueAction;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.blocks.IsBlockEqualsCondition;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.blocks.IsLookingAtBlockCondition;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.blocks.IsNearLocationCondition;
@@ -185,9 +188,10 @@ public enum ActionType {
     CONTROL_WAIT(                 ActionCategory.CONTROL_ACTION, MenusCategory.LINES, WaitAction.class, Material.CLOCK, new ArgumentSlot("time", ValueType.NUMBER)),
     CONTROL_CANCEL_EVENT(                 ActionCategory.CONTROL_ACTION, MenusCategory.EVENTS, CancelEventAction.class, Material.BARRIER),
 
-    VAR_SET_VALUE( ActionCategory.VARIABLE_ACTION, MenusCategory.OTHER, null, Material.IRON_INGOT, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("value", ValueType.ITEM)),
-    VAR_SET_ITEM( ActionCategory.VARIABLE_ACTION, MenusCategory.OTHER, null, Material.CRAFTING_TABLE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("value", ValueType.ITEM)),
+    VAR_SET_VALUE( ActionCategory.VARIABLE_ACTION, MenusCategory.OTHER, SetVariableValueAction.class, Material.IRON_INGOT, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("value", ValueType.ANY)),
+    VAR_SET_ITEM( ActionCategory.VARIABLE_ACTION, MenusCategory.OTHER, SetVariableItemAction.class, Material.CRAFTING_TABLE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM)),
     VAR_SET_RANDOM_VALUE( ActionCategory.VARIABLE_ACTION, MenusCategory.OTHER, null, Material.PUMPKIN_SEEDS, new ArgumentSlot("values", ValueType.ANY, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
+    VAR_DELETE_VARIABLE( ActionCategory.VARIABLE_ACTION, MenusCategory.OTHER, DeleteVariableAction.class, Material.BARRIER, new ArgumentSlot("variables", ValueType.VARIABLE, (byte) 18)),
 
     VAR_INCREASE_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, IncreaseNumberAction.class, Material.BRICK, new ArgumentSlot("first", ValueType.NUMBER), new ArgumentSlot("second", ValueType.NUMBER), new ArgumentSlot("variable", ValueType.VARIABLE)),
     VAR_DECREASE_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, null, Material.NETHER_BRICK, new ArgumentSlot("first", ValueType.NUMBER), new ArgumentSlot("second", ValueType.NUMBER), new ArgumentSlot("variable", ValueType.VARIABLE)),

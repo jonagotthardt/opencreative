@@ -18,5 +18,33 @@
 
 package mcchickenstudio.creative.coding.blocks.actions.variableactions.other;
 
-public class SetVariableItemAction {
+import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.ActionType;
+import mcchickenstudio.creative.coding.blocks.actions.variableactions.VariableAction;
+import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import mcchickenstudio.creative.coding.variables.VariableLink;
+import org.bukkit.entity.Entity;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
+
+public class SetVariableItemAction extends VariableAction {
+    public SetVariableItemAction(Executor executor, int x, Arguments args) {
+        super(executor, x, args);
+    }
+
+    @Override
+    protected void execute(List<Entity> selection) {
+        VariableLink link = getArguments().getVariableLink("variable");
+        ItemStack item = getArguments().getValue("item", ItemStack.empty());
+        if (item == null || item.equals(ItemStack.empty())) {
+            return;
+        }
+        setVarValue(link,item);
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return ActionType.VAR_SET_VALUE;
+    }
 }

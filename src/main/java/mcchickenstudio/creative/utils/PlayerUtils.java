@@ -19,6 +19,8 @@
 package mcchickenstudio.creative.utils;
 
 import mcchickenstudio.creative.Main;
+import mcchickenstudio.creative.utils.hooks.HookUtils;
+import mcchickenstudio.creative.utils.hooks.ProtocolLibUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.*;
@@ -242,8 +244,14 @@ public class PlayerUtils {
      **/
     public static void teleportToLobby(Player player) {
         clearPlayer(player);
-        World lobbyWorld = Bukkit.getWorld("world");
-        if (lobbyWorld != null) player.teleport(lobbyWorld.getSpawnLocation());
+        String spawnWorld = Main.getPlugin().getConfig().getString("spawn.world");
+        if (spawnWorld == null || spawnWorld.isEmpty()) {
+            spawnWorld = "world";
+        }
+        World lobbyWorld = Bukkit.getWorld(spawnWorld);
+        if (lobbyWorld != null) {
+            player.teleport(lobbyWorld.getSpawnLocation());
+        }
 
         player.sendTitle(getLocaleMessage("lobby.title"), getLocaleMessage("lobby.subtitle"),20,60,20);
         player.sendMessage(getLocaleMessage("lobby.message"));

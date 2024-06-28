@@ -26,6 +26,7 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -51,7 +52,7 @@ public class EntitySpawn implements Listener {
             int limit = plot.entitiesLimit;
             int count = plot.world.getEntityCount();
             if (world.getName().contains("dev")) {
-                if (!(event.getEntity().getType() == EntityType.ITEM)) {
+                if (!(event.getEntity() instanceof Item)) {
                     event.setCancelled(true);
                 }
             }

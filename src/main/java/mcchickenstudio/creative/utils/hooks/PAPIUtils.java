@@ -67,7 +67,7 @@ class Placeholder extends PlaceholderExpansion {
             if (plot != null) return plot.worldID;
         } else if (identifier.equals("plot_custom_id")) {
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null) return plot.plotCustomID;
+            if (plot != null) return plot.getPlotCustomID();
         } else if (identifier.equals("plot_online")) {
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
             if (plot != null) return String.valueOf(plot.getOnline());
@@ -82,22 +82,22 @@ class Placeholder extends PlaceholderExpansion {
             return String.valueOf((plot != null));
         } else if (identifier.equals("plot_name")) {
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null) return plot.plotName;
+            if (plot != null) return plot.getPlotName();
         } else if (identifier.equals("plot_description")) {
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null) return plot.plotDescription;
+            if (plot != null) return plot.getPlotDescription();
         } else if (identifier.equals("plot_owner")) {
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null) return plot.owner;
+            if (plot != null) return plot.getOwner();
         } else if (identifier.equals("plot_category")) {
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null) return String.valueOf(plot.plotCategory);
+            if (plot != null) return String.valueOf(plot.getPlotCategory());
         } else if (identifier.equals("plot_sharing")) {
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null) return String.valueOf(plot.plotSharing);
+            if (plot != null) return String.valueOf(plot.getPlotSharing());
         } else if (identifier.equals("plot_mode")) {
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null) return String.valueOf(plot.plotMode);
+            if (plot != null) return String.valueOf(plot.getPlotMode());
         } else if (identifier.equals("plot_is_dev_plot_loaded")) {
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
             if (plot != null) return String.valueOf(plot.devPlot != null && plot.devPlot.isLoaded);

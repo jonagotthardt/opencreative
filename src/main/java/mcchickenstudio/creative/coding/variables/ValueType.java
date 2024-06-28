@@ -139,6 +139,8 @@ public enum ValueType {
             return BOOLEAN;
         } else if (object instanceof List) {
             return LIST;
+        } else if (object instanceof ItemStack) {
+            return ITEM;
         }
         return null;
     }

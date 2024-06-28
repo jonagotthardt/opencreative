@@ -51,7 +51,7 @@ public class HookUtils {
         isPlaceholderAPIEnabled = isPluginEnabled("PlaceholderAPI");
         isProtocolLibEnabled = isPluginEnabled("ProtocolLib");
         Main.getPlugin().getLogger().info((isPlaceholderAPIEnabled ? "Creative+ hooked into PlaceholderAPI." : "Creative+ didn't detect PlaceholderAPI."));
-        Main.getPlugin().getLogger().info((isProtocolLibEnabled ? "Creative+ hooked into PlaceholderAPI." : "Creative+ didn't detect PlaceholderAPI."));
+        Main.getPlugin().getLogger().info((isProtocolLibEnabled ? "Creative+ hooked into ProtocolLib." : "Creative+ didn't detect PlaceholderAPI."));
         if (isPlaceholderAPIEnabled) {
             PAPIUtils.registerPlaceholder();
         }

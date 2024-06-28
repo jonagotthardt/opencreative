@@ -33,7 +33,6 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.FileUtils;
-import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -119,7 +118,7 @@ public class ChangedWorld implements Listener {
                         List<String> notTrustedDevelopers = FileUtils.getPlayersFromPlotConfig(oldPlot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED);
                         List<String> notTrustedBuilders = FileUtils.getPlayersFromPlotConfig(oldPlot, Plot.PlayersType.BUILDERS_NOT_TRUSTED);
                         for (Player p : oldPlot.getPlayers()) {
-                            if (oldPlot.plotMode == Plot.Mode.BUILD) {
+                            if (oldPlot.getPlotMode() == Plot.Mode.BUILD) {
                                 if (notTrustedBuilders.contains(p.getName())) {
                                     p.setGameMode(GameMode.ADVENTURE);
                                     p.sendMessage(getLocaleMessage("world.build-mode.cant-build-when-offline"));
@@ -135,7 +134,9 @@ public class ChangedWorld implements Listener {
                     }
                     EventRaiser.raiseQuitEvent(event.getPlayer());
                 } else {
-                    PlotManager.getInstance().unloadPlot(oldPlot);
+                    if (oldPlot.isLoaded) {
+                        PlotManager.getInstance().unloadPlot(oldPlot);
+                    }
                 }
                 new BukkitRunnable() {
                     @Override

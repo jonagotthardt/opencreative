@@ -18,26 +18,23 @@
 
 package mcchickenstudio.creative.commands;
 
-import mcchickenstudio.creative.plots.PlotManager;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import mcchickenstudio.creative.plots.Plot;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandTabJoin implements TabCompleter {
+public class CommandTabLocate implements TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            List<String> TabCompleter = new ArrayList<>();
-            for (Plot plot : PlotManager.getInstance().getPlots()) {
-                TabCompleter.add(plot.getPlotCustomID());
-            }
-            return TabCompleter;
+            return new ArrayList<>(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
         }
-        return null;
+        return new ArrayList<>();
     }
+
 }
