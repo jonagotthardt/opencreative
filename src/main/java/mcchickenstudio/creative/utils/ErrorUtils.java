@@ -38,7 +38,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static mcchickenstudio.creative.utils.PlayerUtils.clearPlayer;
@@ -54,7 +53,7 @@ public class ErrorUtils {
         for (StackTraceElement stackTraceElement : error.getStackTrace()) {
             lastStacks.add(stackTraceElement.getClassName() + ":" + stackTraceElement.getMethodName() + ":" + stackTraceElement.getLineNumber());
             i++;
-            if (i == 5) {
+            if (i == 15) {
                 break;
             }
         }
@@ -85,7 +84,7 @@ public class ErrorUtils {
      Sends error message for plot's players.
      **/
     public static void sendPlotErrorMessage(Plot plot, String errorMessage) {
-        Main.getPlugin().getLogger().warning("An error has occurred in plot " + plot.plotName + ": " + errorMessage);
+        Main.getPlugin().getLogger().warning("An error has occurred in plot " + plot.getPlotName() + ": " + errorMessage);
         for (Player player : plot.getPlayers()) {
             player.sendMessage(getLocaleMessage("plot-error").replace("%error%",errorMessage));
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY,100f,2f);
@@ -208,8 +207,8 @@ public class ErrorUtils {
      **/
     public static void stopPlotCode(Plot plot) {
         Main.getPlugin().getLogger().info("Plot code has been stopped in " + plot.worldName + " because of operations limit.");
-        if (plot.plotMode != Plot.Mode.BUILD) {
-            plot.plotMode = Plot.Mode.BUILD;
+        if (plot.getPlotMode() != Plot.Mode.BUILD) {
+            plot.setPlotMode(Plot.Mode.BUILD);
             for (Player p : plot.getPlayers()){
                 if (PlotManager.getInstance().getDevPlot(p) == null) {
                     clearPlayer(p);

@@ -34,10 +34,10 @@ public class SetTotalExpAction extends PlayerAction {
 
     @Override
     public void execute(List<Entity> selection) {
-        int param = getArguments().getValue("param",1);
+        boolean add = getArguments().getValue("add",false);
         int exp = getArguments().getValue("exp",100);
         for (Player player : getPlayers(selection)) {
-            if (param == 2) {
+            if (add) {
                 exp = exp + player.getTotalExperience();
             }
             player.setTotalExperience(exp);

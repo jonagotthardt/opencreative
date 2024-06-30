@@ -21,8 +21,9 @@ package mcchickenstudio.creative.coding.blocks.executors.player.movement;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.blocks.executors.player.PlayerExecutor;
 import mcchickenstudio.creative.plots.Plot;
+import org.bukkit.event.Cancellable;
 
-public class JumpExecutor extends PlayerExecutor {
+public class JumpExecutor extends PlayerExecutor implements Cancellable {
 
     public JumpExecutor(Plot plot, int x, int y, int z) {
         super(plot, x, y, z);
@@ -31,5 +32,15 @@ public class JumpExecutor extends PlayerExecutor {
     @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_JUMP;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return getEvent().isCancelled();
+    }
+
+    @Override
+    public void setCancelled(boolean b) {
+        getEvent().setCancelled(b);
     }
 }

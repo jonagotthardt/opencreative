@@ -18,6 +18,7 @@
 
 package mcchickenstudio.creative.utils;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -97,6 +98,7 @@ public class ItemUtils {
     }
 
     public static ItemStack addLoreAtEnd(ItemStack item, String loreLine) {
+        if (loreLine.isEmpty()) return item;
         if (item.hasItemMeta()) {
             ItemMeta meta = item.getItemMeta();
             List<String> lore = new ArrayList<>();
@@ -104,9 +106,39 @@ public class ItemUtils {
                 lore = meta.getLore();
             }
             lore.add(loreLine);
+            meta.setLore(lore);
             item.setItemMeta(meta);
         }
         return item;
+    }
+
+    public static ItemStack getItemWithIgnoreData(ItemStack item, boolean removeAmount, boolean removeName, boolean removeLore, boolean removeFlags, boolean removeEnchantments, boolean removeMaterial) {
+        ItemStack newItem = item.clone();
+        ItemMeta meta = newItem.getItemMeta();
+        if (removeAmount) {
+            newItem.setAmount(1);
+        }
+        if (meta != null) {
+            if (removeName) {
+                meta.displayName(Component.text(""));
+            }
+            if (removeLore) {
+                meta.lore(new ArrayList<>());
+            }
+            newItem.setItemMeta(meta);
+        }
+        if (removeMaterial) {
+            newItem.setType(Material.DIAMOND);
+        }
+        if (removeEnchantments) {
+            newItem.removeEnchantments();
+        }
+        if (removeFlags) {
+            for (ItemFlag flag : newItem.getItemFlags()) {
+                newItem.removeItemFlags(flag);
+            }
+        }
+        return newItem;
     }
 
 }

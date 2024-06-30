@@ -24,6 +24,7 @@ import mcchickenstudio.creative.utils.MessageUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -71,11 +72,19 @@ public class WorldDeleteMobsMenu extends AbstractMenu {
                     count++;
                 }
             }
+            if (plot.devPlot != null && plot.devPlot.world != null) {
+                for (Entity entity : plot.devPlot.world.getEntities()) {
+                    if (entity.getType() == EntityType.ITEM) {
+                        entity.remove();
+                        count++;
+                    }
+                }
+            }
             event.getWhoClicked().closeInventory();
             event.getWhoClicked().sendMessage(getLocaleMessage("world.delete-mobs.items").replace("%count%", String.valueOf(count)));
         } else if (itemEquals(event.getCurrentItem(),DELETE_ENTITIES_ITEM)) {
             for (Entity entity : plot.world.getEntities()) {
-                if (isEntityOther(entity.getType())) {
+                if (!(entity instanceof LivingEntity)) {
                     entity.remove();
                     count++;
                 }
@@ -84,7 +93,7 @@ public class WorldDeleteMobsMenu extends AbstractMenu {
             event.getWhoClicked().sendMessage(getLocaleMessage("world.delete-mobs.entities").replace("%count%", String.valueOf(count)));
         } else if (itemEquals(event.getCurrentItem(),DELETE_MOBS_ITEM)) {
             for (Entity entity : plot.world.getEntities()) {
-                if (isEntityMob(entity.getType())) {
+                if (entity instanceof LivingEntity && !(entity instanceof Player)) {
                     entity.remove();
                     count++;
                 }

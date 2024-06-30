@@ -22,7 +22,9 @@ import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.BlockParser;
 import mcchickenstudio.creative.coding.CodeScript;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
+import mcchickenstudio.creative.coding.variables.WorldVariables;
 import org.bukkit.*;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -39,61 +41,115 @@ import java.util.List;
 import java.util.Set;
 
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
-import static mcchickenstudio.creative.utils.PlayerUtils.clearPlayer;
-import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;import static mcchickenstudio.creative.utils.ErrorUtils.*;
+import static mcchickenstudio.creative.utils.ErrorUtils.*;
 import static mcchickenstudio.creative.utils.FileUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.*;
-import static mcchickenstudio.creative.utils.PlayerUtils.giveBuildPermissions;
+import static mcchickenstudio.creative.utils.PlayerUtils.*;
 import static mcchickenstudio.creative.utils.WorldUtils.generateWorld;
 
 public class Plot {
 
-    /*
-     This Plot class will be split in next updates
-     and this poorly "public" code will be replaced.
+    /**
+     * Some fields will be separated into different
+     * classes in next updates.
      */
 
     public World world;
     public String worldName;
     public String worldID;
 
-    public String owner;
-    public String ownerGroup;
+    private String owner;
+    private String ownerGroup;
 
     public boolean isLoaded;
     public DevPlot devPlot;
 
-    public String plotName;
-    public String plotDescription;
-    public Material plotIconMaterial;
-    public ItemStack plotIcon;
-    public String plotCustomID;
+    private String plotName;
+    private String plotDescription;
+    private Material plotIconMaterial;
+    private ItemStack plotIcon;
+    private String plotCustomID;
 
-    public int plotReputation;
-    public Mode plotMode;
-    public Sharing plotSharing;
-    public Category plotCategory;
+    private int plotReputation;
+    private Mode plotMode;
+    private Sharing plotSharing;
+    private Category plotCategory;
 
     public boolean currentlyTransferringOwnership;
 
-    public int worldSize;
-    public int entitiesLimit;
-    public int redstoneOperationsLimit;
+    public final int worldSize;
+    public final int entitiesLimit;
+    public final int redstoneOperationsLimit;
     public int lastRedstoneOperationsAmount;
+    private final int openingInventoriesLimit;
+    private final int variablesAmountLimit;
     private final List<BukkitRunnable> runningBukkitRunnables = new ArrayList<>();
     public int codeOperationsLimit;
 
+    private final WorldVariables worldVariables;
     private final boolean debug = false;
     private final PlotFlags plotFlags;
 
+    private boolean isCorrupted = false;
     public CodeScript script;
 
     public boolean isOwner(Player player) {
-        return owner.equalsIgnoreCase(player.getName());
+        return getOwner().equalsIgnoreCase(player.getName());
     }
 
     public boolean isOwner(String nickname) {
-        return owner.equalsIgnoreCase(nickname);
+        return getOwner().equalsIgnoreCase(nickname);
+    }
+
+    public void setPlotName(String name) {
+        this.plotName = name;
+        setPlotConfigParameter(this,"name",name);
+    }
+
+    public void setPlotDescription(String description) {
+        this.plotDescription = description;
+        setPlotConfigParameter(this,"description",description);
+    }
+
+    public void setPlotIconMaterial(Material material) {
+        this.plotIconMaterial = material;
+        setPlotConfigParameter(this,"icon",material.name());
+    }
+
+    public void setPlotIcon(ItemStack plotIcon) {
+        this.plotIcon = plotIcon;
+    }
+
+    public void setPlotCustomID(String customID) {
+        this.plotCustomID = customID;
+        setPlotConfigParameter(this,"customID",customID);
+    }
+
+    public int getPlotReputation() {
+        return plotReputation;
+    }
+
+    public void setPlotReputation(int plotReputation) {
+        this.plotReputation = plotReputation;
+    }
+
+    public void setPlotMode(Mode mode) {
+        this.plotMode = mode;
+        setPlotConfigParameter(this,"mode",mode);
+    }
+
+    public Sharing getPlotSharing() {
+        return plotSharing;
+    }
+
+    public void setPlotSharing(Sharing sharing) {
+        this.plotSharing = sharing;
+        setPlotConfigParameter(this,"sharing",sharing);
+    }
+
+    public void setOwnerGroup(String group) {
+        this.ownerGroup = group;
+        setPlotConfigParameter(this,"owner-group",group);
     }
 
     public enum Mode {
@@ -101,7 +157,7 @@ public class Plot {
             public void onPlayerJoin(Player player) {
                 player.setGameMode(GameMode.ADVENTURE);
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) player.setGameMode(plot.owner.equalsIgnoreCase(player.getName()) ? GameMode.CREATIVE : GameMode.ADVENTURE);
+                if (plot != null) player.setGameMode(plot.getOwner().equalsIgnoreCase(player.getName()) ? GameMode.CREATIVE : GameMode.ADVENTURE);
                 if (plot.script != null && plot.script.exists()) {
                     plot.script.loadCode();
                 }
@@ -169,7 +225,6 @@ public class Plot {
         DEVELOPERS_NOT_TRUSTED("players.developers.not-trusted"),
         DEVELOPERS_GUESTS("players.developers.guests");
 
-
         private final String path;
 
         PlayersType(String path) {
@@ -187,23 +242,25 @@ public class Plot {
     public Plot(Player player, WorldUtils.WorldGenerator generator) {
 
         player.closeInventory();
-        owner = player.getName();
-        ownerGroup = getOwnerGroup();
+        owner = (player.getName());
+        ownerGroup = getGroup(player);
 
-        plotName = getLocaleMessage("creating-world.default-world-name",false).replace("%player%",owner);
-        plotDescription = getLocaleMessage("creating-world.default-world-description",false).replace("%player%",owner);
-        plotIconMaterial = Material.DIAMOND;
+        plotName = (getLocaleMessage("creating-world.default-world-name",false).replace("%player%", getOwner()));
+        plotDescription = (getLocaleMessage("creating-world.default-world-description",false).replace("%player%", getOwner()));
+        plotIconMaterial = (Material.DIAMOND);
 
-        plotMode = Mode.BUILD;
-        plotCategory = Category.SANDBOX;
-        plotSharing = Sharing.PUBLIC;
-        plotReputation = 0;
+        plotMode = (Mode.BUILD);
+        plotCategory = (Category.SANDBOX);
+        plotSharing = (Sharing.PUBLIC);
+        setPlotReputation(0);
 
         lastRedstoneOperationsAmount = 0;
-        redstoneOperationsLimit = PlayerUtils.getPlayerPlotRedstoneOperationsLimit(ownerGroup);
-        entitiesLimit = PlayerUtils.getPlayerPlotEntitiesLimit(ownerGroup);
-        codeOperationsLimit = PlayerUtils.getPlayerPlotCodeOperationsLimit(ownerGroup);
-        worldSize = PlayerUtils.getPlayerPlotSize(ownerGroup);
+        redstoneOperationsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_REDSTONE_OPERATIONS_LIMIT);
+        entitiesLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_ENTITIES_LIMIT);
+        codeOperationsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_CODE_OPERATIONS_LIMIT);
+        openingInventoriesLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_OPENING_INVENTORIES_LIMIT);
+        variablesAmountLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_VARIABLES_LIMIT);
+        worldSize = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_SIZE);
         currentlyTransferringOwnership = false;
 
         PlotManager.getInstance().addToPlots(this);
@@ -212,6 +269,7 @@ public class Plot {
 
         devPlot = new DevPlot(this);
         script = new CodeScript(this,getPlotScriptFile(this));
+        worldVariables = new WorldVariables(this);
 
         new BukkitRunnable() {
             @Override
@@ -226,43 +284,113 @@ public class Plot {
      Loads a plot with world name.
      **/
     public Plot(String fileName) {
+
         worldName = fileName;
-        owner = this.getOwner();
-        ownerGroup = getOwnerGroup();
-
-        plotFlags = new PlotFlags(this);
-
-        plotName = this.getPlotName();
-        plotDescription = this.getPlotDescription();
-        plotIconMaterial = this.getPlotIconMaterial();
-
+        worldID = fileName.replace("plot","");
         isLoaded = false;
-
-        plotMode = this.getPlotMode();
-        plotCategory = this.getPlotCategory();
-        plotSharing = this.getWorldSharing();
-        plotReputation = this.getReputation();
-
-        lastRedstoneOperationsAmount = 0;
-        redstoneOperationsLimit = PlayerUtils.getPlayerPlotRedstoneOperationsLimit(ownerGroup);
-        entitiesLimit = PlayerUtils.getPlayerPlotEntitiesLimit(ownerGroup);
-        codeOperationsLimit = PlayerUtils.getPlayerPlotCodeOperationsLimit(ownerGroup);
-        worldSize = PlayerUtils.getPlayerPlotSize(ownerGroup);
-
         currentlyTransferringOwnership = false;
 
-        worldID = fileName.replace("plot","");
-        plotCustomID = this.getPlotCustomID();
+        loadInfo();
 
+        plotFlags = new PlotFlags(this);
+        worldVariables = new WorldVariables(this);
         devPlot = new DevPlot(this);
-        PlotManager.getInstance().addToPlots(this);
+        script = new CodeScript(this,getPlotScriptFile(this));
+
+        lastRedstoneOperationsAmount = 0;
+        redstoneOperationsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_REDSTONE_OPERATIONS_LIMIT);
+        entitiesLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_ENTITIES_LIMIT);
+        codeOperationsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_CODE_OPERATIONS_LIMIT);
+        openingInventoriesLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_OPENING_INVENTORIES_LIMIT);
+        variablesAmountLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_VARIABLES_LIMIT);
+        worldSize = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_SIZE);
+
+        if (!isCorrupted) {
+            PlotManager.getInstance().addToPlots(this);
+        }
         new BukkitRunnable() {
             @Override
             public void run() {
                 updatePlotIcon();
             }
         }.runTaskAsynchronously(Main.getPlugin());
-        script = new CodeScript(this,getPlotScriptFile(this));
+    }
+
+    private void loadInfo() {
+        FileConfiguration config = getPlotConfig(this);
+        String owner = "Unknown owner";
+        String ownerGroup = "default";
+        String name = "Unknown name";
+        String description = "World data is corrupted,\\nplease report server admin\\nabout this world.";
+        String customID = worldID;
+        Mode mode = Mode.BUILD;
+        Category category = Category.SANDBOX;
+        Material material = Material.REDSTONE;
+        Sharing sharing = Sharing.PRIVATE;
+        if (config != null) {
+            if (config.getString("owner") != null) {
+                owner = config.getString("owner");
+            } else {
+                isCorrupted = true;
+            }
+            if (config.getString("owner-group") != null) {
+                ownerGroup = config.getString("owner-group");
+            }
+            if (config.getString("name") != null) {
+                name = config.getString("name");
+            }
+            if (config.getString("description") != null) {
+                description = config.getString("description");
+            }
+            if (config.getString("customID") != null) {
+                customID = config.getString("customID");
+            }
+            if (config.getString("mode") != null) {
+                try {
+                    mode = Mode.valueOf(config.getString("mode"));
+                } catch (Exception error) {
+                    mode = Mode.BUILD;
+                }
+            }
+            if (config.getString("category") != null) {
+                try {
+                    category = Category.valueOf(config.getString("category"));
+                } catch (Exception error) {
+                    category = Category.SANDBOX;
+                }
+            }
+            if (config.getString("icon") != null) {
+                try {
+                    material = Material.valueOf(config.getString("icon"));
+                    if (material == Material.AIR) {
+                        material = Material.REDSTONE;
+                    }
+                } catch (Exception error) {
+                    material = Material.REDSTONE;
+                }
+            }
+            if (config.getString("sharing") != null) {
+                try {
+                    sharing = Sharing.valueOf(config.getString("sharing"));
+                } catch (Exception error) {
+                    sharing = Sharing.PRIVATE;
+                }
+            }
+        } else {
+            isCorrupted = true;
+        }
+        if (isCorrupted) {
+            sendCriticalErrorMessage("Plot " + worldName + " lost it's config file, please check plot files in /unloadedWorlds/" + worldName);
+        }
+        this.owner = owner;
+        this.ownerGroup = ownerGroup;
+        this.plotName = name;
+        this.plotDescription = description;
+        this.plotCustomID = customID;
+        this.plotCategory = category;
+        this.plotMode = mode;
+        this.plotIconMaterial = material;
+        this.plotSharing = sharing;
     }
 
     public byte getFlagValue(PlotFlags.PlotFlag flag) {
@@ -281,20 +409,20 @@ public class Plot {
      Updates plot's icon.
      **/
     public void updatePlotIcon() {
-        Material material = this.plotIconMaterial;
-        if (!(this.plotSharing == Plot.Sharing.PUBLIC)) material = Material.BARRIER;
+        Material material = this.getPlotIconMaterial();
+        if (!(this.getPlotSharing() == Plot.Sharing.PUBLIC)) material = Material.BARRIER;
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(getLocaleItemName("menus.all-worlds.items.world.name").replace("%plotName%",this.plotName));
+        meta.setDisplayName(getLocaleItemName("menus.all-worlds.items.world.name").replace("%plotName%", this.getPlotName()));
         List<String> lore = new ArrayList<>();
         for (String loreLine : getLocaleItemDescription("menus.all-worlds.items.world.lore")) {
             if (loreLine.contains("%plotDescription%")) {
-                String[] newLines = this.plotDescription.split("\\\\n");
+                String[] newLines = this.getPlotDescription().split("\\\\n");
                 for (String newLine : newLines) {
                     lore.add(loreLine.replace("%plotDescription%", ChatColor.translateAlternateColorCodes('&',newLine)));
                 }
             } else {
-                lore.add(parsePlotLines(this,loreLine.replace("%id%",getLocaleMessage("menus.all-worlds.items.world.id",false) + this.plotCustomID)));
+                lore.add(parsePlotLines(this,loreLine.replace("%id%",getLocaleMessage("menus.all-worlds.items.world.id",false) + this.getPlotCustomID())));
             }
         }
         item.setAmount((Math.max(this.getOnline(), 1)));
@@ -307,14 +435,14 @@ public class Plot {
         meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
         meta.setLore(lore);
         item.setItemMeta(meta);
-        this.plotIcon = item;
+        this.setPlotIcon(item);
     }
 
     /**
      Creates a world for plot.
      **/
     public void create(Plot plot, WorldUtils.WorldGenerator generator) {
-        Player player = Bukkit.getPlayer(plot.owner);
+        Player player = Bukkit.getPlayer(plot.getOwner());
         String worldName = "plot" + WorldUtils.generateWorldID();
         player.sendTitle(getLocaleMessage("creating-world.title"),getLocaleMessage("creating-world.subtitle"),10,300,40);
         Main.getPlugin().getLogger().info("Creating new " + worldName + " by " + player.getName() + "...");
@@ -325,76 +453,35 @@ public class Plot {
     }
 
     public Sharing getWorldSharing() {
-        if (getPlotConfig(this).get("sharing") != null) {
-            try {
-                return Sharing.valueOf(String.valueOf(getPlotConfig(this).get("sharing")));
-            } catch (Exception error) {
-                return Sharing.PRIVATE;
-            }
-        } else {
-            return Sharing.PRIVATE;
-        }
+        return getPlotSharing();
     }
 
     // Получить название плота
     public String getPlotName() {
-        if (getPlotConfig(this).get("name") != null) {
-            return String.valueOf(getPlotConfig(this).get("name"));
-        } else {
-            return "Unknown name";
-        }
+        return plotName;
     }
 
     // Получить описание плота
     public String getPlotDescription() {
-        if (getPlotConfig(this).get("description") != null) {
-            return String.valueOf(getPlotConfig(this).get("description"));
-        } else {
-            return "Unknown description";
-        }
+        return plotDescription;
     }
 
     // Получить описание плота
     public String getPlotCustomID() {
-        if (getPlotConfig(this).get("customID") != null) {
-            return String.valueOf(getPlotConfig(this).get("customID"));
-        } else {
-            return this.worldID;
-        }
+        return plotCustomID;
     }
 
     public Mode getPlotMode() {
-        if (getPlotConfig(this).get("mode") != null) {
-            try {
-                return Mode.valueOf(String.valueOf(getPlotConfig(this).get("mode")));
-            } catch (Exception error) {
-                return Mode.BUILD;
-            }
-        } else {
-            return Mode.BUILD;
-        }
+        return plotMode;
     }
 
     public Category getPlotCategory() {
-        if (getPlotConfig(this).get("category") != null) {
-            try {
-                return Category.valueOf(String.valueOf(getPlotConfig(this).get("category")));
-            } catch (Exception error) {
-                return Category.SANDBOX;
-            }
-        } else {
-            return Category.SANDBOX;
-        }
+        return plotCategory;
     }
 
     // Получить значок плота
     public Material getPlotIconMaterial() {
-        if (getPlotConfig(this).get("icon") != null) {
-            if (String.valueOf(getPlotConfig(this).get("icon")).contains("AIR")) return Material.DIAMOND;
-            return Material.valueOf(String.valueOf(getPlotConfig(this).get("icon")));
-        } else {
-            return Material.REDSTONE;
-        }
+        return plotIconMaterial;
     }
 
     public int getOnline() {
@@ -426,7 +513,7 @@ public class Plot {
             allPlayers.addAll(trustedDevelopers);
             allPlayers.addAll(notTrustedDevelopers);
             allPlayers.addAll(onlinePlayers);
-            allPlayers.remove(this.owner);
+            allPlayers.remove(this.getOwner());
 
             return allPlayers;
         } catch (Exception error) {
@@ -507,24 +594,16 @@ public class Plot {
     }
 
     public String getOwner() {
-        if (getPlotConfig(this).get("owner") != null) {
-            return String.valueOf(getPlotConfig(this).get("owner"));
-        } else {
-            return "Unknown";
-        }
+        return owner;
     }
 
     public String getOwnerGroup() {
-        if (getPlotConfig(this).get("owner-group") != null) {
-            return String.valueOf(getPlotConfig(this).get("owner-group"));
-        } else {
-            return "default";
-        }
+        return ownerGroup;
     }
 
     public void teleportPlayer(Player player) {
-        if (!(this.plotSharing == Sharing.PUBLIC)) {
-            if (!this.owner.equalsIgnoreCase(player.getName())) {
+        if (!(this.getPlotSharing() == Sharing.PUBLIC)) {
+            if (!this.getOwner().equalsIgnoreCase(player.getName())) {
                 if (!(player.hasPermission("creative.private.bypass"))) {
                     player.sendMessage(getLocaleMessage("private-plot", player));
                     return;
@@ -544,7 +623,7 @@ public class Plot {
         this.world.getSpawnLocation().getChunk().load(true);
         player.teleport(this.world.getSpawnLocation());
         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE,100,2);
-        (this.plotMode == Mode.PLAYING ? Mode.PLAYING : Mode.BUILD).onPlayerJoin(player);
+        (this.getPlotMode() == Mode.PLAYING ? Mode.PLAYING : Mode.BUILD).onPlayerJoin(player);
         clearPlayer(player);
         player.sendTitle("","");
         if (!getPlayersFromPlotConfig(this, PlayersType.UNIQUE).contains(player.getName())) {
@@ -554,7 +633,7 @@ public class Plot {
             setPlotConfigParameter(this,"owner-group",PlayerUtils.getGroup(player));
             ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
             player.getInventory().setItem(8,worldSettingsItem);
-            this.ownerGroup = PlayerUtils.getGroup(player);
+            this.setOwnerGroup(PlayerUtils.getGroup(player));
             if (this.script.exists() && this.devPlot.isLoaded) {
                 new BlockParser().parseCode(this.devPlot);
             }
@@ -575,7 +654,8 @@ public class Plot {
         devPlot.loadDevPlotWorld();
         clearPlayer(player);
         devPlot.world.getSpawnLocation().getChunk().load(true);
-        player.teleport(this.devPlot.world.getSpawnLocation());
+        Location lastLocation = this.devPlot.lastLocations.get(player);
+        player.teleport(lastLocation == null ? this.devPlot.world.getSpawnLocation() : lastLocation);
         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE,100,2);
         devPlot.translateCodingBlocks(player);
     }
@@ -748,5 +828,17 @@ public class Plot {
             runnable.cancel();
         }
         runningBukkitRunnables.clear();
+    }
+
+    public int getVariablesAmountLimit() {
+        return variablesAmountLimit;
+    }
+
+    public int getOpeningInventoriesLimit() {
+        return openingInventoriesLimit;
+    }
+
+    public WorldVariables getWorldVariables() {
+        return worldVariables;
     }
 }

@@ -34,9 +34,12 @@ public class SetSlotAction extends PlayerAction {
 
     @Override
     protected void execute(List<Entity> selection) {
-        int slot = getArguments().getValue("slot",0);
+        int slot = getArguments().getValue("slot",1);
+        if (slot > 9 || slot < 1) {
+            slot = 1;
+        }
         for (Player player : getPlayers(selection)) {
-            player.getInventory().setHeldItemSlot(slot);
+            player.getInventory().setHeldItemSlot(slot-1);
         }
     }
 

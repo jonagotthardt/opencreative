@@ -19,6 +19,8 @@
 package mcchickenstudio.creative.utils;
 
 import mcchickenstudio.creative.plots.Plot;
+import mcchickenstudio.creative.utils.hooks.HookUtils;
+import mcchickenstudio.creative.utils.hooks.PAPIUtils;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -277,11 +279,11 @@ public class MessageUtils {
      Returns string, that parsed plot lines: plot name, description, online, reputation, owner, id, category, uniques, last activity time, creation time.
      **/
     public static String parsePlotLines(Plot plot, String string) {
-        String plotReputation = String.valueOf(plot.plotReputation);
-        if (plot.plotReputation >= 1) plotReputation = "§a+" + plotReputation;
-        else if (plot.plotReputation <= -1) plotReputation = "§c" + plotReputation;
+        String plotReputation = String.valueOf(plot.getPlotReputation());
+        if (plot.getPlotReputation() >= 1) plotReputation = "§a+" + plotReputation;
+        else if (plot.getPlotReputation() <= -1) plotReputation = "§c" + plotReputation;
         else plotReputation = "§e" + plotReputation;
-        return parsePAPI(Bukkit.getOfflinePlayer(plot.owner),string.replace("%plotName%",plot.plotName).replace("%plotOnline%",String.valueOf(plot.getOnline())).replace("%plotOwner%",plot.owner).replace("%plotID%",plot.worldID).replace("%plotCategory%",plot.plotCategory.getName()).replace("%plotUniques%",String.valueOf(plot.getUniques())).replace("%plotReputation%",plotReputation).replace("%plotLastTime%",getElapsedTime(System.currentTimeMillis(),plot.getLastActivityTime())).replace("%plotCreationTime%",getElapsedTime(System.currentTimeMillis(), plot.getCreationTime())));
+        return parsePAPI(Bukkit.getOfflinePlayer(plot.getOwner()),string.replace("%plotName%", plot.getPlotName()).replace("%plotOnline%",String.valueOf(plot.getOnline())).replace("%plotOwner%", plot.getOwner()).replace("%plotID%",plot.worldID).replace("%plotCategory%", plot.getPlotCategory().getName()).replace("%plotUniques%",String.valueOf(plot.getUniques())).replace("%plotReputation%",plotReputation).replace("%plotLastTime%",getElapsedTime(System.currentTimeMillis(),plot.getLastActivityTime())).replace("%plotCreationTime%",getElapsedTime(System.currentTimeMillis(), plot.getCreationTime())));
     }
 
     /**

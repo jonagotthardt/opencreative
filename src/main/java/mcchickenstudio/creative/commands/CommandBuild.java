@@ -43,7 +43,6 @@ import static mcchickenstudio.creative.commands.CommandAd.plugin;
 
 import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
-import static mcchickenstudio.creative.utils.FileUtils.setPlotConfigParameter;
 import static mcchickenstudio.creative.utils.MessageUtils.*;
 import static mcchickenstudio.creative.utils.PlayerUtils.giveBuildPermissions;
 
@@ -69,9 +68,9 @@ public class CommandBuild implements CommandExecutor {
             builders.addAll(trustedBuilders);
             if (args.length == 0) {
                 removePlayerWithLocation(player);
-                if (plot.plotMode != Plot.Mode.BUILD) {
-                    if (plot.owner.equalsIgnoreCase(sender.getName()) || builders.contains(sender.getName())) {
-                        Player plotOwner = Bukkit.getPlayer(plot.owner);
+                if (plot.getPlotMode() != Plot.Mode.BUILD) {
+                    if (plot.getOwner().equalsIgnoreCase(sender.getName()) || builders.contains(sender.getName())) {
+                        Player plotOwner = Bukkit.getPlayer(plot.getOwner());
                         if (notTrustedBuilders.contains(sender.getName())) {
                             if (plotOwner == null) {
                                 sender.sendMessage(getLocaleMessage("world.build-mode.cant-build-when-offline"));
@@ -83,7 +82,7 @@ public class CommandBuild implements CommandExecutor {
                                 return true;
                             }
                         }
-                        plot.plotMode = Plot.Mode.BUILD;
+                        plot.setPlotMode(Plot.Mode.BUILD);
                         for (Player p : plot.getPlayers()){
                             p.sendMessage(getLocaleMessage("world.build-mode.message." + (sender == p ? "owner" : "players")));
                             if (PlotManager.getInstance().getDevPlot(p) == null || sender.getName().equals(p.getName())) {
@@ -113,15 +112,14 @@ public class CommandBuild implements CommandExecutor {
                             ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
                             player.getInventory().setItem(8,worldSettingsItem);
                         }
-                        setPlotConfigParameter(plot,"mode",plot.plotMode);
                     }
                 } else {
                     clearPlayer(((Player) sender));
                     ((Player) sender).sendTitle(getLocaleMessage("world.build-mode.title"),getLocaleMessage("world.build-mode.subtitle"));
                     ((Player) sender).teleport(plot.world.getSpawnLocation());
                     ((Player) sender).playSound(((Player) sender).getLocation(), Sound.valueOf("BLOCK_BEACON_POWER_SELECT"),100,1.7f);
-                    if (plot.owner.equalsIgnoreCase(sender.getName()) || builders.contains(sender.getName())) {
-                        Player plotOwner = Bukkit.getPlayer(plot.owner);
+                    if (plot.getOwner().equalsIgnoreCase(sender.getName()) || builders.contains(sender.getName())) {
+                        Player plotOwner = Bukkit.getPlayer(plot.getOwner());
                         if (notTrustedBuilders.contains(sender.getName())) {
                             if (plotOwner == null) {
                                 sender.sendMessage(getLocaleMessage("world.build-mode.cant-build-when-offline"));
@@ -145,11 +143,11 @@ public class CommandBuild implements CommandExecutor {
                     }
                 }
             } else {
-                if (!plot.owner.equalsIgnoreCase(sender.getName())) {
+                if (!plot.getOwner().equalsIgnoreCase(sender.getName())) {
                     sender.sendMessage(getLocaleMessage("not-owner"));
                     return true;
                 }
-                if (plot.owner.equalsIgnoreCase(args[0])) {
+                if (plot.getOwner().equalsIgnoreCase(args[0])) {
                     sender.sendMessage(getLocaleMessage("same-player"));
                     return true;
                 }

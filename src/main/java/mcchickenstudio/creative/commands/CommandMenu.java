@@ -37,12 +37,18 @@ public class CommandMenu implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (getCooldown((Player) sender, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-            sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(((Player) sender).getPlayer(), CooldownUtils.CooldownType.GENERIC_COMMAND))));
-            return true;
+        if (sender instanceof Player player) {
+            if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
+                player.sendMessage(getLocaleMessage("maintenance"));
+                return true;
+            }
+            if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
+                sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown((player).getPlayer(), CooldownUtils.CooldownType.GENERIC_COMMAND))));
+                return true;
+            }
+            setCooldown(player,plugin.getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
+            AllWorldsMenu.openInventory(player, 1);
         }
-        setCooldown((Player) sender,plugin.getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
-        AllWorldsMenu.openInventory((Player) sender, 1);
         return true;
     }
 }

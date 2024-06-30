@@ -23,25 +23,32 @@ import mcchickenstudio.creative.commands.*;
 import mcchickenstudio.creative.events.*;
 import mcchickenstudio.creative.menu.Menus;
 import mcchickenstudio.creative.utils.FileUtils;
-import mcchickenstudio.creative.utils.HookUtils;
+import mcchickenstudio.creative.utils.hooks.HookUtils;
 import mcchickenstudio.creative.utils.PlayerUtils;
 import mcchickenstudio.creative.utils.hooks.Metrics;
 import net.kyori.adventure.text.Component;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static mcchickenstudio.creative.utils.ErrorUtils.sendCriticalErrorMessage;
+import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 
 public final class Main extends JavaPlugin {
 
     public static Main plugin;
-    public static final String version = "1.5 Preview 1";
+    public static final String version = "1.5 Preview 3";
     public static final String codename = "Things will be different";
+    public static boolean maintenance = false;
     public static boolean debug = false;
 
     /**
@@ -60,12 +67,11 @@ public final class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
-
         long startTime = System.currentTimeMillis();
         this.getLogger().info("Loading OpenCreative+ " + version + ": " + codename + ", please wait...");
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,100,1));
-            player.sendTitle(ChatColor.translateAlternateColorCodes('&',"&f&lCREATIVE&b&l+" + version),
+            player.sendTitle(ChatColor.translateAlternateColorCodes('&',"&fOpen&7Creative&b+ &7" + version),
                     ChatColor.translateAlternateColorCodes('&',"&f" + codename + "..."),0,100,0);
         }
         registerCommands();
@@ -81,14 +87,14 @@ public final class Main extends JavaPlugin {
         long loadedTime = System.currentTimeMillis()-startTime;
         for (Player player : Bukkit.getOnlinePlayers()) {
             teleportToLobby(player);
-            player.sendActionBar(new TextComponent(ChatColor.translateAlternateColorCodes('&', "&7Open&fCreative&b+ &7" + version + "&f is loaded for " + loadedTime + " ms.")));
+            getServer().sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&', "&7Open&fCreative&b+ &7" + version + "&f is loaded for " + loadedTime + " ms.")));
         }
 
         Main.getPlugin().getLogger().info("OpenCreative+ " + version + ": " + codename + " is loaded for " + loadedTime);
         Main.getPlugin().getLogger().info(" ");
         Main.getPlugin().getLogger().info(" Welcome to OpenCreative+ " + version + "!");
         Main.getPlugin().getLogger().info(" ");
-        Metrics metrics = new Metrics(this, 22001);
+        new Metrics(this, 22001);
 
     }
 
@@ -115,40 +121,69 @@ public final class Main extends JavaPlugin {
         return plugin;
     }
 
-    private void checkDebug() {
+    /**
+     * Checks if debug mode is enabled in config.yml.
+     * @return true - if debug mode is enabled, false - disabled.
+     */
+    private boolean checkDebug() {
+        maintenance = getConfig().getBoolean("maintenance",false);
+        if (maintenance) {
+            Main.getPlugin().getLogger().info("Maintenance mode is still enabled in config.yml, to disable: /maintenance end");
+        }
         if (getConfig().getBoolean("debug",false)) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     for (Player p : Bukkit.getOnlinePlayers()) {
-                        p.sendActionBar(Component.text("§7OpenCreative+ " + version + " Debug Mode. §fShh.. let's not leak our hard work..."));
+                        p.sendActionBar(Component.text("§fOpen§7Creative§b+ §3" + version + "§7 Debug Mode. §fShh.. let's not leak our hard work..."));
                     }
                 }
             }.runTaskTimer(this,20L,20L);
         }
         debug = getConfig().getBoolean("debug",false);
+        return debug;
     }
 
     private void registerCommands() {
-        this.getLogger().info("Creative+ is registering commands...");
-        getCommand("creative").setExecutor(new CommandCreative());
-        getCommand("menu").setExecutor(new CommandMenu());
-        getCommand("spawn").setExecutor(new CommandSpawn());
-        getCommand("world").setExecutor(new CommandWorld());
-        getCommand("chat").setExecutor(new CreativeChat());
-        getCommand("join").setExecutor(new CommandJoin());
-        getCommand("ad").setExecutor(new CommandAd());
-        getCommand("join").setTabCompleter(new CommandTabJoin());
-        getCommand("play").setExecutor(new CommandPlay());
-        getCommand("build").setExecutor(new CommandBuild());
-        getCommand("dev").setExecutor(new CommandDev());
-        getCommand("like").setExecutor(new CommandLike());
-        getCommand("dislike").setExecutor(new CommandDislike());
-        this.getLogger().info("Creative+ registered all commands.");
+        this.getLogger().info("Registering OpenCreative+ commands...");
+        Map<String,Class<? extends CommandExecutor>> commands = new HashMap<>();
+        commands.put("creative",CommandCreative.class);
+        commands.put("spawn",   CommandSpawn.class);
+        commands.put("menu",    CommandMenu.class);
+        commands.put("world",   CommandWorld.class);
+        commands.put("chat",    CreativeChat.class);
+        commands.put("join",    CommandJoin.class);
+        commands.put("ad",      CommandAd.class);
+        commands.put("play",    CommandPlay.class);
+        commands.put("build",   CommandBuild.class);
+        commands.put("dev",     CommandDev.class);
+        commands.put("like",    CommandLike.class);
+        commands.put("dislike", CommandDislike.class);
+        commands.put("locate",  CommandLocate.class);
+        for (String commandName : commands.keySet()) {
+            PluginCommand command = getCommand(commandName);
+            if (command != null) {
+                try {
+                    command.setExecutor(commands.get(commandName).newInstance());
+                    if (commandName.equals("join") || commandName.equals("ad")) {
+                        command.setTabCompleter(new CommandTabJoin());
+                    } else if (commandName.equals("locate")) {
+                        command.setTabCompleter(new CommandTabLocate());
+                    } else if (commandName.equals("creative")) {
+                        command.setTabCompleter(new CommandTabCreative());
+                    }
+                } catch (IllegalAccessException | InstantiationException ignored) {
+                    sendCriticalErrorMessage("Couldn't register command " + commandName + ", because of " + ignored.getMessage());
+                }
+            } else {
+                sendCriticalErrorMessage("Couldn't get command with name " + commandName + ", it is null. Maybe it doesn't exist in plugins.yml?");
+            }
+        }
+        this.getLogger().info("OpenCreative+ registered all commands.");
     }
 
     private void registerEvents() {
-        this.getLogger().info("Creative+ is registering events...");
+        this.getLogger().info("Registering OpenCreative+ event listeners...");
         getServer().getPluginManager().registerEvents(new ChangedWorld(), this);
         getServer().getPluginManager().registerEvents(new EntitySpawn(), this);
         getServer().getPluginManager().registerEvents(new EntityDamage(), this);
@@ -169,7 +204,7 @@ public final class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new BlockChanged(), this);
         getServer().getPluginManager().registerEvents(new Menus(), this);
         getServer().getPluginManager().registerEvents(new CEListener(), this);
-        this.getLogger().info("Creative+ registered all events.");
+        this.getLogger().info("OpenCreative+ registered all event listeners.");
     }
 
 }

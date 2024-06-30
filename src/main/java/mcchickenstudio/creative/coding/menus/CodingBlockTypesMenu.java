@@ -21,6 +21,7 @@ package mcchickenstudio.creative.coding.menus;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.menu.AbstractListMenu;
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -108,18 +109,22 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
             if (ActionCategory.getByMaterial(codingBlock.getType()) != null)  {
                 ActionType type = ActionType.getType(codingBlock);
                 Block chestBlock = codingBlock.getRelative(BlockFace.UP);
+                if (chestBlock.getType() == Material.CHEST) {
+                    Chest chestState = (Chest) chestBlock.getState();
+                    for (ItemStack chestItem : chestState.getBlockInventory().getContents()) {
+                        if (chestItem != null) {
+                            chestBlock.getWorld().dropItemNaturally(chestBlock.getLocation(),chestItem);
+                        }
+                    }
+                    chestBlock.setType(Material.AIR);
+                }
                 if (type != null && type.isChestRequired()) {
                     chestBlock.setType(Material.CHEST);
                     BlockData blockData = chestBlock.getBlockData();
-                    Chest chestState = (Chest) chestBlock.getState();
-                    chestState.setCustomName(typeString);
-                    chestState.update();
                     ((Directional) blockData).setFacing(BlockFace.SOUTH);
                     chestBlock.setBlockData(blockData);
                     //player.spawnParticle(Particle.EXPLOSION,chestBlock.getLocation(),1);
                     player.playSound(player.getLocation(),Sound.BLOCK_ENDER_CHEST_CLOSE,100f,1.2f);
-                } else {
-                    chestBlock.setType(Material.AIR);
                 }
             }
         }

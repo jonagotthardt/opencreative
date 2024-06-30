@@ -4,12 +4,15 @@ main: mcchickenstudio.creative.Main
 api-version: 1.20
 authors: [McChicken Studio]
 description: 'Let players create the worlds'
-prefix: "OpenCreative+"
+prefix: "OC+"
 softdepend: [PlaceholderAPI]
 commands:
   creative:
     usage: /creativecoding
-    aliases: [coding,creative]
+    aliases: [coding,creative,скуфешму]
+  locate:
+    usage: /locate
+    aliases: [дщсфеу]
   chat:
     usage: /creativechat
     aliases: [cc,сс]

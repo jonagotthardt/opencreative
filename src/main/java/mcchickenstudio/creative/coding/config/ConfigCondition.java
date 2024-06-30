@@ -38,7 +38,6 @@ public class ConfigCondition extends ConfigMultiAction{
 
     public void setReactions(List<ConfigAction> actions) {
         reactions.clear();
-        System.out.println("Set Reactions " + actions);
         reactions.addAll(actions);
     }
 }

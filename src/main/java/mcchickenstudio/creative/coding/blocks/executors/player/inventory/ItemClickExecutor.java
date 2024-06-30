@@ -18,18 +18,40 @@
 
 package mcchickenstudio.creative.coding.blocks.executors.player.inventory;
 
+import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.EventVariables;
+import mcchickenstudio.creative.coding.blocks.events.player.interaction.FishEvent;
+import mcchickenstudio.creative.coding.blocks.events.player.inventory.ItemClickEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.blocks.executors.player.PlayerExecutor;
 import mcchickenstudio.creative.plots.Plot;
+import org.bukkit.event.Cancellable;
 
-public class ItemClickExecutor extends PlayerExecutor {
+public class ItemClickExecutor extends PlayerExecutor implements Cancellable {
 
     public ItemClickExecutor(Plot plot, int x, int y, int z) {
         super(plot, x, y, z);
     }
 
     @Override
+    protected void setTempVars(CreativeEvent event) {
+        if (event instanceof ItemClickEvent) {
+            setVar(EventVariables.Variable.ITEM,((ItemClickEvent) event).getItem());
+        }
+    }
+
+    @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_CLICK_INVENTORY;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return getEvent().isCancelled();
+    }
+
+    @Override
+    public void setCancelled(boolean b) {
+        getEvent().setCancelled(b);
     }
 }

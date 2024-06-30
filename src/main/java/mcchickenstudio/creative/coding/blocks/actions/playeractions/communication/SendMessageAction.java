@@ -34,14 +34,14 @@ public class SendMessageAction extends PlayerAction {
 
     @Override
     public void execute(List<Entity> selection) {
-        byte type = getArguments().getValue("type",(byte) 1);
+        String type = getArguments().getValue("type","new-line");
         List<String> messages = getArguments().getTextList("messages");
         for (Entity entity : selection) {
-            if (type == 1) {
+            if (type.equals("new-line")) {
                 for (String message : messages) {
                     entity.sendMessage(message);
                 }
-            } else if (type == 2) {
+            } else if (type.equals("join-spaces")) {
                 entity.sendMessage(String.join(" ",messages));
             } else {
                 entity.sendMessage(String.join("",messages));

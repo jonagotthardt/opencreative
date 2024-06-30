@@ -16,29 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mcchickenstudio.creative.coding.blocks.variables;
+package mcchickenstudio.creative.coding.blocks.actions.variableactions.other;
 
-public class Variable {
-
-    private final String name;
-    private final Object value;
-    private final VariableType type;
-
-    public Variable(String name, VariableType type, Object value) {
-        this.name = name;
-        this.type = type;
-        this.value = value;
-    }
-
-    public final Object getValue() {
-        return value;
-    }
-
-    public final VariableType getType() {
-        return type;
-    }
-
-    public String getName() {
-        return name;
-    }
+public class SetVariableRandomValueAction {
 }

@@ -34,13 +34,13 @@ public class SetFallDistanceAction extends PlayerAction {
 
     @Override
     public void execute(List<Entity> selection) {
-        int param = getArguments().getValue("param",1);
+        boolean add = getArguments().getValue("add",false);
         float distance = getArguments().getValue("distance",0.0f);
         for (Player player : getPlayers(selection)) {
-            if (param == 1) {
+            if (!add) {
                 player.setFallDistance(distance);
             } else {
-                player.setExp(player.getFallDistance()+distance);
+                player.setFallDistance(player.getFallDistance()+distance);
             }
         }
     }

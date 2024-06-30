@@ -73,18 +73,18 @@ public class WorldSettingsMenu extends LegacyMenu {
         player.openInventory(new WorldSettingsMenu(player).getInventory());    }
 
     public static ItemStack getPlotExampleButton(Plot plot) {
-        ItemStack item = new ItemStack(plot.plotIconMaterial);
+        ItemStack item = new ItemStack(plot.getPlotIconMaterial());
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(MessageUtils.getLocaleItemName("menus.world-settings.items.world.name").replace("%plotName%",plot.plotName));
+        meta.setDisplayName(MessageUtils.getLocaleItemName("menus.world-settings.items.world.name").replace("%plotName%", plot.getPlotName()));
         List<String> lore = new ArrayList<>();
         for (String loreLine : MessageUtils.getLocaleItemDescription("menus.world-settings.items.world.lore")) {
             if (loreLine.contains("%plotDescription%")) {
-                String[] newLines = plot.plotDescription.split("\\\\n");
+                String[] newLines = plot.getPlotDescription().split("\\\\n");
                 for (String newLine : newLines) {
                     lore.add(loreLine.replace("%plotDescription%",ChatColor.translateAlternateColorCodes('&',newLine)));
                 }
             } else {
-                lore.add(MessageUtils.parsePlotLines(plot,loreLine.replace("%id%", MessageUtils.getLocaleMessage("menus.world-settings.items.world.id",false) + plot.plotCustomID)));
+                lore.add(MessageUtils.parsePlotLines(plot,loreLine.replace("%id%", MessageUtils.getLocaleMessage("menus.world-settings.items.world.id",false) + plot.getPlotCustomID())));
             }
         }
         meta.setLore(lore);
@@ -147,7 +147,7 @@ public class WorldSettingsMenu extends LegacyMenu {
     }
 
     public static ItemStack getPlotSharingButton(Plot plot) {
-        boolean isPublic = plot.plotSharing == Plot.Sharing.PUBLIC;
+        boolean isPublic = plot.getPlotSharing() == Plot.Sharing.PUBLIC;
         Material material = Material.OAK_DOOR;
         if (!isPublic) material = Material.IRON_DOOR;
         ItemStack item = new ItemStack(material);

@@ -20,11 +20,26 @@ package mcchickenstudio.creative.coding.blocks.events.player.inventory;
 
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class ItemClickEvent extends CreativeEvent {
 
-    public ItemClickEvent(Player player) {
+    private final InventoryClickEvent event;
+    private final ItemStack item;
+
+    public ItemClickEvent(Player player, InventoryClickEvent event) {
         super(player);
+        this.event = event;
+        this.item = event.getCurrentItem();
     }
 
+    public ItemStack getItem() {
+        return item;
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
+    }
 }

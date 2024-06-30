@@ -145,7 +145,7 @@ public class Executors {
 
         try {
             ActionType actionType = ActionType.valueOf(type);
-            Arguments args = new Arguments(executor.getPlot());
+            Arguments args = new Arguments(executor.getPlot(),executor);
             ConfigurationSection section = config.getConfigurationSection(path + ".arguments");
             if (section != null) {
                 args.load(section);

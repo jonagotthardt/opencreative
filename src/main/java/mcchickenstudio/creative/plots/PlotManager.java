@@ -33,9 +33,9 @@ import mcchickenstudio.creative.Main;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static mcchickenstudio.creative.utils.PlayerUtils.getPlayerPlotSize;
+import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 
 public class PlotManager {
 
@@ -76,7 +76,8 @@ public class PlotManager {
         plot.script = new CodeScript(plot, FileUtils.getPlotScriptFile(plot));
         FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
         plot.world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS,false);
-        plot.world.getWorldBorder().setSize(getPlayerPlotSize(plot.ownerGroup));
+        plot.world.getWorldBorder().setSize(getPlayerPlotSize(plot.getOwnerGroup()));
+        plot.getWorldVariables().load();
     }
 
 
@@ -84,10 +85,15 @@ public class PlotManager {
     Unload plot, for example if no players playing in plot.
      **/
     public void unloadPlot(Plot plot) {
-        plot.isLoaded = false;
-        plot.stopBukkitRunnables();
+
+        plot.getWorldVariables().save();
         FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
-        FileUtils.setPlotConfigParameter(plot,"mode",plot.plotMode);
+        FileUtils.setPlotConfigParameter(plot,"mode", plot.getPlotMode());
+        plot.isLoaded = false;
+        for (Player player : plot.world.getPlayers()) {
+            teleportToLobby(player);
+        }
+        plot.stopBukkitRunnables();
         if (Bukkit.unloadWorld(plot.worldName,true)) {
             FileUtils.unloadWorldFolder(plot.worldName,true);
             if (plot.devPlot.isLoaded) {
@@ -105,7 +111,7 @@ public class PlotManager {
     public List<Plot> getPlayerPlots(Player player) {
         List<Plot> playerPlots = new ArrayList<>();
         for (Plot plot : PlotManager.getInstance().getPlots()) {
-            if (plot.owner.equalsIgnoreCase(player.getName())) {
+            if (plot.getOwner().equalsIgnoreCase(player.getName())) {
                 playerPlots.add(plot);
             }
         }
@@ -125,7 +131,7 @@ public class PlotManager {
                 FileUtils.deleteWorld(FileUtils.getDevPlotFolder(plot.devPlot));
             }
             // Удаляет папку мира
-            plot.plotSharing = Plot.Sharing.CLOSED;
+            plot.setPlotSharing(Plot.Sharing.CLOSED);
             plots.remove(plot);
             FileUtils.deleteWorld(FileUtils.getPlotFolder(plot));
 
@@ -149,7 +155,7 @@ public class PlotManager {
                 PlayerUtils.teleportToLobby(p);
             }
             // Удаляет папку мира
-            plot.plotSharing = Plot.Sharing.CLOSED;
+            plot.setPlotSharing(Plot.Sharing.CLOSED);
             plots.remove(plot);
             FileUtils.deleteWorld(FileUtils.getPlotFolder(plot));
             if (plot.devPlot != null) {
@@ -172,7 +178,7 @@ public class PlotManager {
     public List<Plot> getPlotsByPlotName(String worldName) {
         List<Plot> foundPlots = new ArrayList<>();
         for (Plot plot : plots) {
-            if (plot.plotName.toLowerCase().contains(worldName.toLowerCase())) {
+            if (plot.getPlotName().toLowerCase().contains(worldName.toLowerCase())) {
                 foundPlots.add(plot);
             }
         }
@@ -185,7 +191,7 @@ public class PlotManager {
     public List<Plot> getPlotsByID(String worldID) {
         List<Plot> foundPlots = new ArrayList<>();
         for (Plot plot : plots) {
-            if (plot.plotCustomID.toLowerCase().contains(worldID.toLowerCase())) {
+            if (plot.getPlotCustomID().toLowerCase().contains(worldID.toLowerCase())) {
                 foundPlots.add(plot);
             }
         }
@@ -198,7 +204,7 @@ public class PlotManager {
     public List<Plot> getPlotsByCategory(Plot.Category category) {
         List<Plot> foundPlots = new ArrayList<>();
         for (Plot plot : plots) {
-            if (plot.plotCategory == category) {
+            if (plot.getPlotCategory() == category) {
                 foundPlots.add(plot);
             }
         }
@@ -265,7 +271,7 @@ public class PlotManager {
      **/
     public Plot getPlotByCustomID(String customID) {
         for (Plot plot : plots) {
-            if (plot.plotCustomID.equalsIgnoreCase(customID)) {
+            if (plot.getPlotCustomID().equalsIgnoreCase(customID)) {
                 return plot;
             }
         }

@@ -42,7 +42,7 @@ public class EntityDamage implements Listener {
 
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(victim);
                 if (plot != null) {
-                    if (plot.plotMode == Plot.Mode.BUILD) event.setCancelled(true);
+                    if (plot.getPlotMode() == Plot.Mode.BUILD) event.setCancelled(true);
 
                     if (victim.getLocation().distance(victim.getWorld().getSpawnLocation()) < 5) event.setCancelled(true);
 

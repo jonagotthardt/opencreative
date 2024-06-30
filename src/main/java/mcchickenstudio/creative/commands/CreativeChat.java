@@ -45,6 +45,10 @@ public class CreativeChat implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = ((Player) sender);
+            if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
+                player.sendMessage(getLocaleMessage("maintenance"));
+                return true;
+            }
             if (args.length > 0) {
                 if (args.length == 1 && (args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("on"))) {
                     if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {

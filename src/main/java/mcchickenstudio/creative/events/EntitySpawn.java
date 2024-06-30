@@ -26,6 +26,7 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -49,7 +50,16 @@ public class EntitySpawn implements Listener {
         Plot plot = PlotManager.getInstance().getPlotByWorld(world);
         if (plot != null) {
             int limit = plot.entitiesLimit;
-            if (world.getEntityCount() > limit) {
+            int count = plot.world.getEntityCount();
+            if (world.getName().contains("dev")) {
+                if (!(event.getEntity() instanceof Item)) {
+                    event.setCancelled(true);
+                }
+            }
+            if (plot.devPlot != null && plot.devPlot.world != null) {
+                count += plot.devPlot.world.getEntityCount();
+            }
+            if (count > limit) {
                 event.setCancelled(true);
                 if (plot.getOnline() < 1) return;
                 TextComponent warning = new TextComponent(getLocaleMessage("world.entity-limit").replace("%count%",String.valueOf(limit)));
@@ -57,10 +67,6 @@ public class EntitySpawn implements Listener {
                 warning.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/world deletemobs"));
                 sendMessageOnce(plot,warning,3);
             }
-        }
-        String worldName = world.getName();
-        if (worldName.contains("dev")) {
-            event.setCancelled(true);
         }
     }
 

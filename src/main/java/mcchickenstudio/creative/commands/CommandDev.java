@@ -72,8 +72,8 @@ public class CommandDev implements CommandExecutor {
 
             if (args.length == 0 || args.length == 3) {
                 // Проверка на владельца мира
-                if (plot.owner.equalsIgnoreCase(sender.getName()) || developers.contains(sender.getName())) {
-                    Player plotOwner = Bukkit.getPlayer(plot.owner);
+                if (plot.getOwner().equalsIgnoreCase(sender.getName()) || developers.contains(sender.getName())) {
+                    Player plotOwner = Bukkit.getPlayer(plot.getOwner());
                     if (notTrustedDevelopers.contains(sender.getName())) {
                         if (plotOwner == null) {
                             sender.sendMessage(getLocaleMessage("world.dev-mode.cant-dev-when-offline"));
@@ -107,6 +107,7 @@ public class CommandDev implements CommandExecutor {
                         player.setGameMode(GameMode.ADVENTURE);
                     } else {
                         player.setGameMode(GameMode.CREATIVE);
+                        player.setFlying(true);
                     }
                     giveItems(player);
                     ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
@@ -122,11 +123,11 @@ public class CommandDev implements CommandExecutor {
                     sender.sendMessage(getLocaleMessage("not-owner", player));
                 }
             } else {
-                if (!plot.owner.equalsIgnoreCase(sender.getName())) {
+                if (!plot.getOwner().equalsIgnoreCase(sender.getName())) {
                     sender.sendMessage(getLocaleMessage("not-owner"));
                     return true;
                 }
-                if (plot.owner.equalsIgnoreCase(args[0])) {
+                if (plot.getOwner().equalsIgnoreCase(args[0])) {
                     sender.sendMessage(getLocaleMessage("same-player"));
                     return true;
                 }

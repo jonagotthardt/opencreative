@@ -18,7 +18,9 @@
 
 package mcchickenstudio.creative.coding.arguments;
 
-import mcchickenstudio.creative.coding.blocks.variables.VariableType;
+import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import mcchickenstudio.creative.coding.variables.ValueType;
+import mcchickenstudio.creative.coding.variables.VariableLink;
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -27,7 +29,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugNotFoundVariable;
@@ -36,14 +37,16 @@ import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugVariable;
 public class Arguments {
 
     private final Plot plot;
+    private final Executor executor;
     private final List<Argument> argumentList = new ArrayList<>();
 
     private final static Pattern INT_PATTERN = Pattern.compile("^-?[0-9]*$");//"-?[1-9]+[0-9]*");
     private final static Pattern FLOAT_PATTERN = Pattern.compile("^-?[0-9]*\\.?[0-9]+$");//-?[0-9]+\\.?[0-9]*");
     private final static Pattern BOOLEAN_PATTERN = Pattern.compile("(?i)true|yes|t|y|1");
 
-    public Arguments(Plot plot) {
+    public Arguments(Plot plot, Executor executor) {
         this.plot = plot;
+        this.executor = executor;
     }
 
     public final void load(ConfigurationSection section) {
@@ -59,12 +62,12 @@ public class Arguments {
         if (configType == null || configType.isEmpty() || configValue == null) {
             return null;
         }
-        VariableType type = VariableType.parseString(configType.toUpperCase());
+        ValueType type = ValueType.parseString(configType.toUpperCase());
         Object value = parseValue(section,name,type,configValue);
-        return new Argument(type,name,value);
+        return new Argument(plot,type,name,value);
     }
 
-    private Object parseValue(ConfigurationSection section, String name, VariableType type, Object configValue) {
+    private Object parseValue(ConfigurationSection section, String name, ValueType type, Object configValue) {
         String stringValue = configValue.toString();
         ConfigurationSection listSection = section.getConfigurationSection(name + ".value");
         switch (type) {
@@ -90,6 +93,17 @@ public class Arguments {
                 yaw = (float) listSection.getDouble("yaw");
                 pitch = (float) listSection.getDouble("pitch");
                 return new Location(plot.world,x,y,z,yaw,pitch);
+            case VARIABLE:
+                if (listSection == null) {
+                    return null;
+                }
+                String varName = listSection.getString("name");
+                String typeString = listSection.getString("type");
+                VariableLink.VariableType varType = VariableLink.VariableType.getEnum(typeString);
+                if (varType == null) {
+                    varType = VariableLink.VariableType.GLOBAL;
+                }
+                return new VariableLink(varName,varType,executor);
             case NUMBER:
                 if (INT_PATTERN.matcher(stringValue).matches()) {
                     return Integer.parseInt(stringValue);
@@ -130,6 +144,48 @@ public class Arguments {
     }
 
     @SuppressWarnings("unchecked")
+    public final <T> List<T> getList(String path) {
+        List<T> list = new ArrayList<>();
+        Argument arg = getArg(path);
+        if (arg != null) {
+            try {
+                if (arg.getType() == ValueType.VARIABLE) {
+                    return (List<T>) arg.getValue();
+                } else if (arg.isList()) {
+                    List<Argument> args = (List<Argument>) arg.getValue();
+                    for (Argument argument : args) {
+                        list.add((T) (argument.getValue()));
+                    }
+                }
+            } catch(ClassCastException e) {
+                return list;
+            }
+        }
+        sendCodingDebugVariable(plot,path,list);
+        return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    public final List<VariableLink> getVarLinksList(String path) {
+        List<VariableLink> list = new ArrayList<>();
+        Argument arg = getArg(path);
+        if (arg != null && arg.isList()) {
+            try {
+                List<Argument> args = (List<Argument>) arg.getValue();
+                for (Argument argument : args) {
+                    if (argument.value instanceof VariableLink) {
+                        list.add((VariableLink) argument.value);
+                    }
+                }
+            } catch (ClassCastException e) {
+                return list;
+            }
+        }
+        sendCodingDebugVariable(plot,path,list);
+        return list;
+    }
+
+    @SuppressWarnings("unchecked")
     public final List<String> getTextList(String path) {
         List<String> list = new ArrayList<>();
         Argument arg = getArg(path);
@@ -137,7 +193,7 @@ public class Arguments {
             try {
                 List<Argument> args = (List<Argument>) arg.getValue();
                 for (Argument textArg : args) {
-                    list.add(textArg.value.toString());
+                    list.add(textArg.getValue().toString());
                 }
             } catch (ClassCastException e) {
                 return list;
@@ -183,6 +239,20 @@ public class Arguments {
         return list;
     }
 
+    public VariableLink getVariableLink(String path) {
+        Argument arg = getArg(path);
+        if (arg == null) {
+            sendCodingDebugNotFoundVariable(plot,path,null);
+            return null;
+        }
+        if (arg.value instanceof VariableLink) {
+            sendCodingDebugVariable(plot,path,arg.getValue());
+            return (VariableLink) arg.value;
+        }
+        sendCodingDebugNotFoundVariable(plot,path,null);
+        return null;
+    }
+
     public ItemStack getValue(String path, ItemStack defaultValue) {
         Argument arg = getArg(path);
         if (arg == null) {
@@ -223,14 +293,8 @@ public class Arguments {
         byte value = defaultValue;
         if (arg == null) {
             sendCodingDebugNotFoundVariable(plot,path,defaultValue);
-        } else if (arg.getValue() instanceof Integer) {
-            value = (byte) arg.getValue();
-            sendCodingDebugVariable(plot,path,value);
-        } else if (arg.getValue() instanceof Float) {
-            value = (byte) Math.round((float) arg.getValue());
-            sendCodingDebugVariable(plot,path,value);
-        } else if (arg.getValue() instanceof Double) {
-            value = (byte) Math.round((Double) arg.getValue());
+        } else {
+            value = parseObject(arg.getValue(),defaultValue);
             sendCodingDebugVariable(plot,path,value);
         }
         return value;
@@ -259,8 +323,8 @@ public class Arguments {
         float value = defaultValue;
         if (arg == null) {
             sendCodingDebugNotFoundVariable(plot,path,defaultValue);
-        } else if (arg.getValue() instanceof Integer || arg.getValue() instanceof Float || arg.getValue() instanceof Double) {
-            value = (float) arg.getValue();
+        } else {
+            value = parseObject(arg.getValue(),defaultValue);
             sendCodingDebugVariable(plot,path,value);
         }
         return value;
@@ -290,12 +354,49 @@ public class Arguments {
 
     public Location getValue(String path, Location defaultValue) {
         Argument arg = getArg(path);
-        Location value = defaultValue;
+        Location locationValue = defaultValue;
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path,value.getX()+" "+value.getY()+" "+value.getZ()+" "+value.getYaw()+" "+value.getPitch());
-        } else if (arg.getType() == VariableType.LOCATION && arg.getValue() instanceof Location) {
-            value = (Location) arg.getValue();
-            sendCodingDebugVariable(plot,path,value.getX()+" "+value.getY()+" "+value.getZ()+" "+value.getYaw()+" "+value.getPitch());
+            sendCodingDebugNotFoundVariable(plot,path,locationValue.getX()+" "+locationValue.getY()+" "+locationValue.getZ()+" "+locationValue.getYaw()+" "+locationValue.getPitch());
+        } else if (arg.getType() == ValueType.LOCATION && arg.getValue() instanceof Location) {
+            locationValue = (Location) arg.getValue();
+            sendCodingDebugVariable(plot,path,locationValue.getX()+" "+locationValue.getY()+" "+locationValue.getZ()+" "+locationValue.getYaw()+" "+locationValue.getPitch());
+        }
+        return locationValue;
+    }
+
+    private Object getVariableValue(VariableLink link) {
+        return plot.getWorldVariables().getVariableValue(link);
+    }
+
+    public float parseObject(Object object, float defaultValue) {
+        float value = defaultValue;
+        if (object instanceof Integer || object instanceof Float) {
+            value = (float) object;
+        } else if (object instanceof Double) {
+            value = ((Double) object).floatValue();
+        }
+        return value;
+    }
+
+    public double parseObject(Object object, double defaultValue) {
+        double value = defaultValue;
+        if (object instanceof Integer || object instanceof Float || object instanceof Double) {
+            value = Double.parseDouble(String.valueOf(object));
+        }
+        return value;
+    }
+
+    public byte parseObject(Object object, byte defaultValue) {
+        byte value = defaultValue;
+        if (object instanceof VariableLink) {
+            VariableLink link = (VariableLink) object;
+            return parseObject(getVariableValue(link),defaultValue);
+        } else if (object instanceof Integer) {
+            value = (byte) object;
+        } else if (object instanceof Float) {
+            value = (byte) Math.round((float) object);
+        } else if (object instanceof Double) {
+            value = (byte) Math.round((Double) object);
         }
         return value;
     }

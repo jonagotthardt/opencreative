@@ -24,11 +24,6 @@ import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.utils.PlayerUtils;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Chest;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -40,8 +35,6 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import mcchickenstudio.creative.coding.menus.conditions.PlayerConditionSubtype;
-import mcchickenstudio.creative.coding.menus.LegacyPlayerConditionsMenu;
 import mcchickenstudio.creative.menu.*;
 import mcchickenstudio.creative.menu.buttons.RadioButton;
 import mcchickenstudio.creative.plots.*;
@@ -51,8 +44,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import static mcchickenstudio.creative.events.ChangedWorld.addPlayerWithLocation;
+import static mcchickenstudio.creative.events.ChangedWorld.isPlayerWithLocation;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendPlayerErrorMessage;
-import static mcchickenstudio.creative.utils.FileUtils.*;
 
 import static mcchickenstudio.creative.utils.MessageUtils.*;
 
@@ -63,17 +57,18 @@ public class InventoryClick implements Listener {
     @EventHandler
     public void click(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
+
+        Plot plot1 = PlotManager.getInstance().getPlotByPlayer(player);
+        if (plot1 != null) {
+            EventRaiser.raiseItemClickEvent((Player) event.getWhoClicked(), event);
+            if (event.getAction() == InventoryAction.PLACE_ALL) {
+                EventRaiser.raiseItemMoveEvent((Player) event.getWhoClicked(),event);
+            }
+        }
+
         if (event.getCurrentItem() != null) {
             ItemStack item = event.getCurrentItem();
             ItemMeta meta = item.getItemMeta();
-
-            Plot plot1 = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot1 != null) {
-                EventRaiser.raiseItemClickEvent((Player) event.getWhoClicked(),event);
-                if (event.getCursor() == null && event.getCurrentItem() != null) {
-                    //plot1.executeEvent(PlayerExecutorSubtype.PLAYER_DRAG_ITEM, player);
-                }
-            }
 
             if (event.getInventory().getHolder() instanceof WorldSettingsMenu) {
                 if (!(event.getClickedInventory().getHolder() instanceof WorldSettingsMenu)) return;
@@ -98,9 +93,8 @@ public class InventoryClick implements Listener {
                                     player.getInventory().addItem(getHeadItem(internal));
                                 }
                             }*/
-                            plot.plotIconMaterial = material;
+                            plot.setPlotIconMaterial(material);
                             player.sendMessage(getLocaleMessage("settings.world-icon.changed"));
-                            setPlotConfigParameter(plot,"icon", String.valueOf(material));
                             new BukkitRunnable() {
                                 @Override
                                 public void run() {
@@ -110,10 +104,10 @@ public class InventoryClick implements Listener {
                             WorldSettingsMenu.openInventory(player);
                         } else {
                             player.sendMessage(getLocaleMessage("settings.world-icon.error"));
-                            player.playSound(player.getLocation(),Sound.ENTITY_ITEM_BREAK,100,2);
+                            player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 2);
                         }
                     } catch (NullPointerException error) {
-                        sendPlayerErrorMessage(player,"Невозможно установить значок мира. " + error.getMessage());
+                        sendPlayerErrorMessage(player, "Невозможно установить значок мира. " + error.getMessage());
                     }
                 }
                 event.setCancelled(true);
@@ -127,14 +121,14 @@ public class InventoryClick implements Listener {
                     }
                 } else if (item.getType() == Material.NAME_TAG) {
                     player.sendTitle(getLocaleMessage("settings.world-name.title"), getLocaleMessage("settings.world-name.subtitle"));
-                    player.sendMessage(getLocaleMessage("settings.world-name.usage").replace("%player%",player.getName()));
+                    player.sendMessage(getLocaleMessage("settings.world-name.usage").replace("%player%", player.getName()));
                     player.closeInventory();
                     if (!(PlayerChat.confirmation.containsKey(player))) {
                         PlayerChat.confirmation.put(player, "title");
                     }
                 } else if (item.getType() == Material.LEAD) {
                     player.sendTitle(getLocaleMessage("settings.world-id.title"), getLocaleMessage("settings.world-id.subtitle"));
-                    player.sendMessage(getLocaleMessage("settings.world-id.usage").replace("%player%",player.getName()));
+                    player.sendMessage(getLocaleMessage("settings.world-id.usage").replace("%player%", player.getName()));
                     player.closeInventory();
                     if (!(PlayerChat.confirmation.containsKey(player))) {
                         PlayerChat.confirmation.put(player, "id");
@@ -152,16 +146,14 @@ public class InventoryClick implements Listener {
                     WorldSettingsPlayersMenu.openInventory(player);
                 } else if (item.getType() == Material.OAK_DOOR || item.getType() == Material.IRON_DOOR) {
                     Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                    if (plot.plotSharing == Plot.Sharing.PUBLIC) {
-                        plot.plotSharing = Plot.Sharing.PRIVATE;
-                        setPlotConfigParameter(plot,"sharing", String.valueOf(Plot.Sharing.PRIVATE));
+                    if (plot.getPlotSharing() == Plot.Sharing.PUBLIC) {
+                        plot.setPlotSharing(Plot.Sharing.PRIVATE);
                         player.sendMessage(getLocaleMessage("settings.world-sharing.disabled"));
-                        player.playSound(player.getLocation(),Sound.BLOCK_IRON_DOOR_CLOSE,100,1);
+                        player.playSound(player.getLocation(), Sound.BLOCK_IRON_DOOR_CLOSE, 100, 1);
                     } else {
-                        plot.plotSharing = Plot.Sharing.PUBLIC;
-                        setPlotConfigParameter(plot,"sharing", String.valueOf(Plot.Sharing.PUBLIC));
+                        plot.setPlotSharing(Plot.Sharing.PUBLIC);
                         player.sendMessage(getLocaleMessage("settings.world-sharing.enabled"));
-                        player.playSound(player.getLocation(),Sound.BLOCK_IRON_DOOR_OPEN,100,1);
+                        player.playSound(player.getLocation(), Sound.BLOCK_IRON_DOOR_OPEN, 100, 1);
                     }
                     new BukkitRunnable() {
                         @Override
@@ -184,7 +176,7 @@ public class InventoryClick implements Listener {
                 } else if (item.getType() == Material.CLOCK) {
                     RadioButton rd = RadioButton.getRadioButtonByItemStack(item);
                     rd.onChoice();
-                    player.playSound(player.getLocation(),Sound.AMBIENT_UNDERWATER_EXIT,100,1);
+                    player.playSound(player.getLocation(), Sound.AMBIENT_UNDERWATER_EXIT, 100, 1);
                     WorldSettingsMenu.openInventory(player);
                 }
             } else if (event.getInventory().getHolder() instanceof WorldSettingsFlagsMenu) {
@@ -207,18 +199,18 @@ public class InventoryClick implements Listener {
                         List<String> lore = meta.getLore();
                         for (String loreLine : lore) {
                             if (loreLine.startsWith(getLocaleMessage("menus.own-worlds.items.world.id"))) {
-                                String worldID = loreLine.replace(getLocaleMessage("menus.own-worlds.items.world.id"),"");
+                                String worldID = loreLine.replace(getLocaleMessage("menus.own-worlds.items.world.id"), "");
                                 player.closeInventory();
                                 if (PlotManager.getInstance().getPlotByCustomID(worldID) != null) {
                                     if (!(event.getClick() == ClickType.SHIFT_RIGHT)) {
                                         PlotManager.getInstance().getPlotByCustomID(worldID).teleportPlayer(player);
                                     } else {
-                                        PlotManager.getInstance().deletePlot(PlotManager.getInstance().getPlotByCustomID(worldID),player);
+                                        PlotManager.getInstance().deletePlot(PlotManager.getInstance().getPlotByCustomID(worldID), player);
                                     }
                                 } else {
-                                    player.playSound(player.getLocation(),Sound.valueOf("BLOCK_ANVIL_DESTROY"),100,2);
+                                    player.playSound(player.getLocation(), Sound.valueOf("BLOCK_ANVIL_DESTROY"), 100, 2);
                                     player.clearTitle();
-                                    player.sendMessage(getLocaleMessage("no-plot-found",player));
+                                    player.sendMessage(getLocaleMessage("no-plot-found", player));
                                 }
 
                             }
@@ -226,20 +218,20 @@ public class InventoryClick implements Listener {
                     } else {
                         if (item.getType() == Material.SPECTRAL_ARROW) {
                             if (item.getItemMeta().getDisplayName().equalsIgnoreCase(getLocaleItemName("menus.own-worlds.items.all-worlds.name"))) {
-                                AllWorldsMenu.openInventory(player,1);
+                                AllWorldsMenu.openInventory(player, 1);
                             } else {
-                                player.playSound(player.getLocation(),Sound.ITEM_BOOK_PAGE_TURN,100,1);
+                                player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 100, 1);
                                 OwnWorldsMenu.openInventory(player, OwnWorldsMenu.openedPage.get(player) + 1);
                             }
                         } else if (item.getType() == Material.ARROW) {
-                            player.playSound(player.getLocation(),Sound.ITEM_BOOK_PAGE_TURN,100,1);
+                            player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 100, 1);
                             OwnWorldsMenu.openInventory(player, OwnWorldsMenu.openedPage.get(player) - 1);
                         } else if (item.getType() == Material.WHITE_STAINED_GLASS) {
                             new WorldCreationMenu().open(player);
                         }
                     }
                 } catch (Exception error) {
-                    sendPlayerErrorMessage(player,"Произошла ошибка при обработке клика инвентаря. " + error.getMessage() + error.getCause());
+                    sendPlayerErrorMessage(player, "Произошла ошибка при обработке клика инвентаря. " + error.getMessage() + error.getCause());
                     error.printStackTrace();
                 }
             } else if (event.getInventory().getHolder() instanceof AllWorldsMenu) {
@@ -260,116 +252,63 @@ public class InventoryClick implements Listener {
                         List<String> lore = meta.getLore();
                         for (String loreLine : lore) {
                             if (loreLine.startsWith(getLocaleMessage("menus.all-worlds.items.world.id"))) {
-                                String worldID = loreLine.replace(getLocaleMessage("menus.all-worlds.items.world.id"),"");
+                                String worldID = loreLine.replace(getLocaleMessage("menus.all-worlds.items.world.id"), "");
                                 player.closeInventory();
                                 if (plotManager.getPlotByCustomID(worldID) != null) {
                                     plotManager.getPlotByCustomID(worldID).teleportPlayer(player);
                                 } else {
-                                    player.playSound(player.getLocation(),Sound.valueOf("BLOCK_ANVIL_DESTROY"),100,2);
+                                    player.playSound(player.getLocation(), Sound.valueOf("BLOCK_ANVIL_DESTROY"), 100, 2);
                                     player.clearTitle();
-                                    player.sendMessage(getLocaleMessage("no-plot-found",player));
+                                    player.sendMessage(getLocaleMessage("no-plot-found", player));
                                 }
                             }
                         }
                     } else {
                         if (item.getType() == Material.COMMAND_BLOCK) {
-                            OwnWorldsMenu.openInventory(player,1);
+                            OwnWorldsMenu.openInventory(player, 1);
                         } else if (item.getType() == Material.SPECTRAL_ARROW) {
-                            player.playSound(player.getLocation(),Sound.ITEM_BOOK_PAGE_TURN,100,1);
+                            player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 100, 1);
                             AllWorldsMenu.openInventory(player, AllWorldsMenu.openedPage.get(player) + 1);
                         } else if (item.getType() == Material.ARROW) {
-                            player.playSound(player.getLocation(),Sound.ITEM_BOOK_PAGE_TURN,100,1);
+                            player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 100, 1);
                             AllWorldsMenu.openInventory(player, AllWorldsMenu.openedPage.get(player) - 1);
                         } else if (item.getType() == Material.BEACON) {
                             if (event.getClick() == ClickType.LEFT) {
-                                player.sendTitle(getLocaleMessage("menus.all-worlds.items.search.title").replace("%search%",getLocaleMessage("menus.all-worlds.items.search.world-name")), getLocaleMessage("menus.all-worlds.items.search.subtitle").replace("%search%",getLocaleMessage("menus.all-worlds.items.search.world-name")));
-                                player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.usage",player).replace("%search%",getLocaleMessage("menus.all-worlds.items.search.world-name")));
+                                player.sendTitle(getLocaleMessage("menus.all-worlds.items.search.title").replace("%search%", getLocaleMessage("menus.all-worlds.items.search.world-name")), getLocaleMessage("menus.all-worlds.items.search.subtitle").replace("%search%", getLocaleMessage("menus.all-worlds.items.search.world-name")));
+                                player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.usage", player).replace("%search%", getLocaleMessage("menus.all-worlds.items.search.world-name")));
                                 player.closeInventory();
                                 if (!(PlayerChat.confirmation.containsKey(player))) {
                                     PlayerChat.confirmation.put(player, "searchPlotByPlotName");
                                 }
                             } else {
-                                player.sendTitle(getLocaleMessage("menus.all-worlds.items.search.title").replace("%search%",getLocaleMessage("menus.all-worlds.items.search.id")), getLocaleMessage("menus.all-worlds.items.search.subtitle").replace("%search%",getLocaleMessage("menus.all-worlds.items.search.id")));
-                                player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.usage",player).replace("%search%",getLocaleMessage("menus.all-worlds.items.search.id")));
+                                player.sendTitle(getLocaleMessage("menus.all-worlds.items.search.title").replace("%search%", getLocaleMessage("menus.all-worlds.items.search.id")), getLocaleMessage("menus.all-worlds.items.search.subtitle").replace("%search%", getLocaleMessage("menus.all-worlds.items.search.id")));
+                                player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.usage", player).replace("%search%", getLocaleMessage("menus.all-worlds.items.search.id")));
                                 player.closeInventory();
                                 if (!(PlayerChat.confirmation.containsKey(player))) {
                                     PlayerChat.confirmation.put(player, "searchPlotByID");
                                 }
                             }
                         } else if (item.getType() == Material.CHEST_MINECART) {
-                            int nextCategory = AllWorldsMenu.chosenCategories.get(player)+1;
+                            int nextCategory = AllWorldsMenu.chosenCategories.get(player) + 1;
                             if (nextCategory < 1 || nextCategory > 9) nextCategory = 1;
-                            AllWorldsMenu.chosenCategories.put(player,nextCategory);
+                            AllWorldsMenu.chosenCategories.put(player, nextCategory);
 
-                            if (nextCategory == 1) AllWorldsMenu.openInventory(player,1);
-                            else AllWorldsMenu.openInventory(player,1,plotManager.getPlotsByCategory(AllWorldsMenu.getPlayerCategory(player)));
+                            if (nextCategory == 1) AllWorldsMenu.openInventory(player, 1);
+                            else
+                                AllWorldsMenu.openInventory(player, 1, plotManager.getPlotsByCategory(AllWorldsMenu.getPlayerCategory(player)));
                         } else if (item.getType() == Material.HOPPER) {
-                            int nextSort = AllWorldsMenu.chosenSorts.get(player)+1;
+                            int nextSort = AllWorldsMenu.chosenSorts.get(player) + 1;
                             if (nextSort < 1 || nextSort > 3) nextSort = 1;
 
-                            AllWorldsMenu.chosenSorts.put(player,nextSort);
-                            AllWorldsMenu.openInventory(player,AllWorldsMenu.getCurrentPage(player),AllWorldsMenu.getCurrentPlotList(player));
+                            AllWorldsMenu.chosenSorts.put(player, nextSort);
+                            AllWorldsMenu.openInventory(player, AllWorldsMenu.getCurrentPage(player), AllWorldsMenu.getCurrentPlotList(player));
 
                         }
                     }
                 } catch (Exception error) {
-                    sendPlayerErrorMessage(player,"Произошла ошибка при обработке клика инвентаря. " + error.getMessage());
+                    sendPlayerErrorMessage(player, "Произошла ошибка при обработке клика инвентаря. " + error.getMessage());
                     error.printStackTrace();
                 }
-            } else if (event.getInventory().getHolder() instanceof LegacyPlayerConditionsMenu) {
-                event.setCancelled(true);
-
-                DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-                if (devPlot == null) return;
-                if (player.getGameMode() == GameMode.ADVENTURE) {
-                    cantDev(player);
-                    return;
-                }
-                boolean conditionClicked = false;
-                for (int slot : AllWorldsMenu.worldSlots) {
-                    if (event.getSlot() == slot) {
-                        conditionClicked = true;
-                        break;
-                    }
-                }
-                if (!conditionClicked) {
-                    if (LegacyPlayerConditionsMenu.getCategoryClicked(item.getType()) == null) return;
-                    player.playSound(player.getLocation(),Sound.UI_LOOM_SELECT_PATTERN,100,1);
-                    LegacyPlayerConditionsMenu.openInventory(player,1, LegacyPlayerConditionsMenu.getCategoryClicked(item.getType()), LegacyPlayerConditionsMenu.signLocation.get(player));
-                    return;
-                }
-
-                String path = getPathFromMessage("items.developer.conditions.",item.getItemMeta().getDisplayName());
-                if (path != null && path.endsWith(".name")) {
-
-                String subtype = path.replace("items.developer.conditions.","").replace(".name","").replace("-","_");
-                Location signLocation = LegacyPlayerConditionsMenu.signLocation.get(player);
-                Block conditionBlock = signLocation.getBlock().getRelative(BlockFace.NORTH);
-
-                if (conditionBlock.getType() == Material.OAK_PLANKS && signLocation.getWorld().getName().contains("dev")) {
-
-                    Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                    plot.script.setSignLineSubtype(signLocation,subtype);
-                    player.closeInventory();
-                    player.sendTitle(getLocaleMessage("world.dev-mode.set-condition"),item.getItemMeta().getDisplayName(),15,20,15);
-                    player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 100, 1.7f);
-
-                    Block chestBlock = conditionBlock.getRelative(BlockFace.UP);
-                    if (PlayerConditionSubtype.valueOf(subtype.toUpperCase()).isChestRequired()) {
-                        chestBlock.setType(Material.CHEST);
-                        BlockData blockData = chestBlock.getBlockData();
-                        Chest chestState = (Chest) chestBlock.getState();
-                        chestState.setCustomName(subtype);
-                        chestState.update();
-                        ((Directional) blockData).setFacing(BlockFace.SOUTH);
-                        chestBlock.setBlockData(blockData);
-                    } else {
-                        chestBlock.setType(Material.AIR);
-                    }
-
-                }
-
-            }
         } else if (event.getInventory().getHolder() instanceof WorldSettingsPlayersMenu) {
             event.setCancelled(true);
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
@@ -485,8 +424,76 @@ public class InventoryClick implements Listener {
 
     @EventHandler
     public void onSwap(PlayerSwapHandItemsEvent event) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
-        if (plot != null) EventRaiser.raiseItemChangeEvent(event.getPlayer(),event);
+        Player player = event.getPlayer();
+        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
+        ItemStack currentItem = event.getOffHandItem();
+        if (devPlot != null) {
+            if (currentItem.getType() == Material.PAPER) {
+                event.setCancelled(true);
+                if (!player.hasCooldown(currentItem.getType())) {
+                    if (plot != null && plot.world != null) {
+                        addPlayerWithLocation(player);
+                        if (currentItem.hasItemMeta()) {
+                            ItemMeta meta = currentItem.getItemMeta();
+                            String locationString = ChatColor.stripColor(meta.getDisplayName());
+                            String[] locCoords = locationString.split(" ");
+                            if (locCoords.length == 5) {
+                                try {
+                                    double x,y,z;
+                                    float yaw,pitch;
+                                    x = Double.parseDouble(locCoords[0]);
+                                    y = Double.parseDouble(locCoords[1]);
+                                    z = Double.parseDouble(locCoords[2]);
+                                    yaw = Float.parseFloat(locCoords[3]);
+                                    pitch = Float.parseFloat(locCoords[4]);
+                                    player.teleport(new Location(plot.world,x,y,z,yaw,pitch));
+                                } catch (Exception error) {
+                                    player.teleport(plot.world.getSpawnLocation());
+                                }
+                            }
+                        } else {
+                            player.teleport(plot.world.getSpawnLocation());
+                        }
+                        player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
+                        player.setCooldown(currentItem.getType(),60);
+                    }
+                }
+            }
+        } else {
+            if (plot != null) {
+                if (isPlayerWithLocation(player) && currentItem.getType() == Material.PAPER) {
+                    event.setCancelled(true);
+                    if (!player.hasCooldown(currentItem.getType())) {
+                        if (currentItem.hasItemMeta()) {
+                            ItemMeta meta = currentItem.getItemMeta();
+                            String locationString = ChatColor.stripColor(meta.getDisplayName());
+                            String[] locCoords = locationString.split(" ");
+                            if (locCoords.length == 5) {
+                                try {
+                                    double x,y,z;
+                                    float yaw,pitch;
+                                    x = Double.parseDouble(locCoords[0]);
+                                    y = Double.parseDouble(locCoords[1]);
+                                    z = Double.parseDouble(locCoords[2]);
+                                    yaw = Float.parseFloat(locCoords[3]);
+                                    pitch = Float.parseFloat(locCoords[4]);
+                                    player.teleport(new Location(plot.world,x,y,z,yaw,pitch));
+                                } catch (Exception error) {
+                                    player.teleport(plot.world.getSpawnLocation());
+                                }
+                            } else {
+                                player.teleport(plot.world.getSpawnLocation());
+                            }
+                        player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
+                        player.setCooldown(currentItem.getType(),60);
+                        }
+                    }
+                } else {
+                    EventRaiser.raiseItemChangeEvent(event.getPlayer(),event);
+                }
+            }
+        }
     }
 
     @EventHandler

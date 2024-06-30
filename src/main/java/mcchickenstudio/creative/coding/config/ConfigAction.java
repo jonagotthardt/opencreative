@@ -20,13 +20,11 @@ package mcchickenstudio.creative.coding.config;
 
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
-import mcchickenstudio.creative.coding.blocks.variables.VariableType;
+import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.coding.menus.layouts.ArgumentSlot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ConfigAction {
 
@@ -43,13 +41,11 @@ public class ConfigAction {
         return type;
     }
 
-    public void addArgument(String path, VariableType type, Object value) {
-        System.out.println("Adding argument " + path + " " + type + " " + value);
+    public void addArgument(String path, ValueType type, Object value) {
         arguments.add(new ConfigArgument(path,type,value));
     }
 
     public void addArgument(ArgumentSlot slot, Object value) {
-        System.out.println("Adding argument argslot " + slot.getPath() + " " + slot.getVarType() + " " + value);
         arguments.add(new ConfigArgument(slot.getPath(),slot.getVarType(),value));
     }
 

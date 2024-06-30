@@ -67,21 +67,21 @@ public class OwnWorldsMenu extends LegacyMenu {
 
             int slot = 0;
             for (Plot plot: allPages.get(pageToOpen-1)) {
-                if (plot.owner.equalsIgnoreCase(player.getName())) {
-                    Material material = plot.plotIconMaterial;
-                    if (!(plot.plotSharing == Plot.Sharing.PUBLIC)) material = Material.BARRIER;
+                if (plot.getOwner().equalsIgnoreCase(player.getName())) {
+                    Material material = plot.getPlotIconMaterial();
+                    if (!(plot.getPlotSharing() == Plot.Sharing.PUBLIC)) material = Material.BARRIER;
                     ItemStack item = new ItemStack(material);
                     ItemMeta meta = item.getItemMeta();
-                    meta.displayName(Component.text(plot.plotName));
+                    meta.displayName(Component.text(plot.getPlotName()));
                     List<String> lore = new ArrayList<>();
                     for (String loreLine : MessageUtils.getLocaleItemDescription("menus.own-worlds.items.world.lore")) {
                         if (loreLine.contains("%plotDescription%")) {
-                            String[] newLines = plot.plotDescription.split("\\\\n");
+                            String[] newLines = plot.getPlotDescription().split("\\\\n");
                             for (String newLine : newLines) {
                                 lore.add(loreLine.replace("%plotDescription%", ChatColor.translateAlternateColorCodes('&',newLine)));
                             }
                         } else {
-                            lore.add(MessageUtils.parsePlotLines(plot,loreLine.replace("%id%", MessageUtils.getLocaleMessage("menus.own-worlds.items.world.id",false) + plot.plotCustomID)));
+                            lore.add(MessageUtils.parsePlotLines(plot,loreLine.replace("%id%", MessageUtils.getLocaleMessage("menus.own-worlds.items.world.id",false) + plot.getPlotCustomID())));
                         }
                     }
                     meta.setLore(lore);
@@ -192,7 +192,7 @@ public class OwnWorldsMenu extends LegacyMenu {
         List<Plot> playerPlots = new ArrayList<>();
 
         for (Plot plot : PlotManager.getInstance().getPlots()) {
-            if (plot.owner.equalsIgnoreCase(player.getName())) playerPlots.add(plot);
+            if (plot.getOwner().equalsIgnoreCase(player.getName())) playerPlots.add(plot);
         }
 
         int pageSize = 24;

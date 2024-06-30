@@ -18,15 +18,15 @@
 
 package mcchickenstudio.creative.coding.config;
 
-import mcchickenstudio.creative.coding.blocks.variables.VariableType;
+import mcchickenstudio.creative.coding.variables.ValueType;
 
 public class ConfigArgument {
 
     private final String path;
-    private final VariableType type;
+    private final ValueType type;
     private final Object value;
 
-    public ConfigArgument(String path, VariableType type, Object value) {
+    public ConfigArgument(String path, ValueType type, Object value) {
         this.path = path;
         this.type = type;
         this.value = value;

@@ -58,7 +58,7 @@ public class CommandLike implements CommandExecutor {
             } else {
                 if (addPlayerToListInPlotConfig(plot,sender.getName(), Plot.PlayersType.LIKED)) {
                     ((Player) sender).playSound(((Player) sender).getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.3f);
-                    plot.plotReputation = plot.plotReputation+1;
+                    plot.setPlotReputation(plot.getPlotReputation() +1);
                     EventRaiser.raiseLikeEvent((Player) sender);
                     if (plot.getFlagValue(PlotFlags.PlotFlag.LIKE_MESSAGES) == 1) {
                         for (Player p : plot.getPlayers()) {

@@ -148,7 +148,7 @@ public class FileUtils {
     }
 
     /**
-     Creates plot's codeScript.yml file.
+     Creates plot's variables.yml file.
      **/
     public static boolean createVariablesFile(final String path, final String worldName) {
         final File file = new File(path, "variables.yml");
@@ -394,20 +394,25 @@ public class FileUtils {
         File scriptFile = new File((getPlotFolder(plot)),"variables.yml");
         if (scriptFile.exists()) return scriptFile;
         else {
-            createCodeScript(getPlotFolder(plot).getPath(), plot.worldName);
+            createVariablesFile(getPlotFolder(plot).getPath(), plot.worldName);
             return getPlotVariablesFile(plot);
         }
     }
 
     /**
-     Returns plot's codeScript.yml configuration.
+     Returns plot's variables.yml configuration.
      **/
-    public static YamlConfiguration getPlotVariablesConfig(Plot plot) {
-        File scriptFile = new File((getPlotFolder(plot)),"variables.yml");
-        if (scriptFile.exists()) return YamlConfiguration.loadConfiguration(scriptFile);
-        else {
-            createCodeScript(getPlotFolder(plot).getPath(), plot.worldName);
-            return getPlotVariablesConfig(plot);
+    public static File getPlotVariablesJson(Plot plot) {
+        File variablesFile = new File((getPlotFolder(plot)),"variables.json");
+        if (variablesFile.exists()) {
+            return variablesFile;
+        } else {
+            try {
+                variablesFile.createNewFile();
+                return variablesFile;
+            } catch (IOException error) {
+                return null;
+            }
         }
     }
 

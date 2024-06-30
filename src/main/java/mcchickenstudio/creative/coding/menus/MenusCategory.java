@@ -35,7 +35,13 @@ public enum MenusCategory {
     LINES(Material.REPEATING_COMMAND_BLOCK),
     APPEARANCE(Material.ARMOR_STAND),
     EVENTS(Material.NETHER_BRICKS),
-    PARAMS(Material.ITEM_FRAME);
+    PARAMS(Material.ITEM_FRAME),
+    OTHER(Material.HEART_OF_THE_SEA),
+    TEXT_OPERATIONS(Material.BOOK),
+    NUMBER_OPERATIONS(Material.SLIME_BALL),
+    ITEM_OPERATIONS(Material.ITEM_FRAME),
+    LIST_OPERATIONS(Material.PAPER);
+
 
     private final Material material;
 

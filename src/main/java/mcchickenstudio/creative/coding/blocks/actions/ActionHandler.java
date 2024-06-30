@@ -19,10 +19,8 @@
 package mcchickenstudio.creative.coding.blocks.actions;
 
 import mcchickenstudio.creative.Main;
-import mcchickenstudio.creative.coding.blocks.actions.controlactions.events.CancelEventAction;
 import mcchickenstudio.creative.coding.blocks.actions.controlactions.lines.StopCodeLineAction;
 import mcchickenstudio.creative.coding.blocks.actions.controlactions.lines.WaitAction;
-import mcchickenstudio.creative.coding.blocks.conditions.Condition;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.entity.Entity;
@@ -37,8 +35,8 @@ import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 
 public class ActionHandler {
 
-    private final Executor executor;
     private long waitDelay = 0;
+    private final Executor executor;
     private final Queue<Action> actionQueue = new LinkedList<>();
 
     private void clear() {
@@ -74,7 +72,7 @@ public class ActionHandler {
             BukkitRunnable runnable = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (action == null || action.getPlot() == null || action.getPlot().plotMode != Plot.Mode.PLAYING || !action.getPlot().isLoaded) {
+                    if (action == null || action.getPlot() == null || action.getPlot().getPlotMode() != Plot.Mode.PLAYING || !action.getPlot().isLoaded) {
                         cancel();
                     }
                     runAction(action,selection);

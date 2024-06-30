@@ -99,7 +99,7 @@ public class WorldUtils {
             plot.world = Bukkit.getWorld(worldName);
             plot.worldName = worldName;
             plot.worldID = worldName.replace("plot","");
-            plot.plotCustomID = plot.worldID;
+            plot.setPlotCustomID(plot.worldID);
             plot.isLoaded = true;
 
             // Для игрока сообщение и телепортация

@@ -34,7 +34,7 @@ public class ShowElderGuardianAction extends PlayerAction {
 
     @Override
     protected void execute(List<Entity> selection) {
-        boolean silent = getArguments().getValue("boolean",false);
+        boolean silent = getArguments().getValue("silent",false);
         for (Player player : getPlayers(selection)) {
             player.showElderGuardian(silent);
         }

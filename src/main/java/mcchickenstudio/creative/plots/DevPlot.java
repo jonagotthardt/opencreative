@@ -29,7 +29,9 @@ import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static mcchickenstudio.creative.utils.FileUtils.*;
 
@@ -45,6 +47,7 @@ public class DevPlot {
 
     static final Plugin plugin = Main.getPlugin();
 
+    public Map<Player, Location> lastLocations = new HashMap<>();
     public static List<DevPlot> devPlots = new ArrayList<>();
 
     public DevPlot(Plot plot) {
@@ -177,12 +180,26 @@ public class DevPlot {
         indestructibleBlocks.add(Material.DIAMOND_ORE);
         indestructibleBlocks.add(Material.IRON_ORE);
         indestructibleBlocks.add(Material.STONE);
+        indestructibleBlocks.add(Material.COAL_ORE);
+        indestructibleBlocks.add(Material.NETHER_BRICKS);
         indestructibleBlocks.add(Material.NETHERRACK);
         return indestructibleBlocks;
     }
 
     public List<Material> getAllowedBlocks() {
         List<Material> allowedBlocks = new ArrayList<>();
+        allowedBlocks.add(Material.BARREL);
+        allowedBlocks.add(Material.OAK_SIGN);
+        allowedBlocks.add(Material.SPRUCE_SIGN);
+        allowedBlocks.add(Material.ACACIA_SIGN);
+        allowedBlocks.add(Material.BAMBOO_SIGN);
+        allowedBlocks.add(Material.JUNGLE_SIGN);
+        allowedBlocks.add(Material.CHERRY_SIGN);
+        allowedBlocks.add(Material.WARPED_SIGN);
+        allowedBlocks.add(Material.CRIMSON_SIGN);
+        allowedBlocks.add(Material.MANGROVE_SIGN);
+        allowedBlocks.add(Material.DARK_OAK_SIGN);
+        allowedBlocks.add(Material.BIRCH_SIGN);
         allowedBlocks.add(Material.CHEST);
         allowedBlocks.add(Material.ANVIL);
         allowedBlocks.add(Material.CHIPPED_ANVIL);

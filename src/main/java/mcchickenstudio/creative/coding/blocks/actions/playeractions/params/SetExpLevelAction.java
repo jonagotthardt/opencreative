@@ -34,10 +34,10 @@ public class SetExpLevelAction extends PlayerAction {
 
     @Override
     public void execute(List<Entity> selection) {
-        int param = getArguments().getValue("param",1);
+        boolean add = getArguments().getValue("add",false);
         int level = getArguments().getValue("level",0);
         for (Player player : getPlayers(selection)) {
-            if (param == 1) {
+            if (!add) {
                 player.setLevel(level);
             } else {
                 player.setLevel(player.getLevel()+level);

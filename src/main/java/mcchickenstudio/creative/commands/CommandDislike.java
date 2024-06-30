@@ -50,7 +50,7 @@ public class CommandDislike implements CommandExecutor {
                 sender.sendMessage(MessageUtils.getLocaleMessage("world.already-rated"));
             } else {
                 if (FileUtils.addPlayerToListInPlotConfig(plot,sender.getName(), Plot.PlayersType.DISLIKED)) {
-                    plot.plotReputation = plot.plotReputation-1;
+                    plot.setPlotReputation(plot.getPlotReputation() -1);
                     ((Player) sender).playSound(((Player) sender).getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,0.7f);
                     sender.sendMessage(MessageUtils.getLocaleMessage("world.disliked",((Player) sender).getPlayer()));
                 }

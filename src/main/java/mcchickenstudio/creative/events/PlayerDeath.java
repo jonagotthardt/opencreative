@@ -40,6 +40,7 @@ import java.util.Map;
 
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.MessageUtils.sendMessageOnce;
 
 public class PlayerDeath implements Listener {
 
@@ -47,13 +48,10 @@ public class PlayerDeath implements Listener {
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
-
         Player player = event.getEntity().getPlayer();
-
         if (player == null) return;
         event.setDeathMessage(null);
         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-
         if (plot != null) {
             deathLocations.put(player, plot.world.getSpawnLocation());
             if (plot.getFlagValue(PlotFlags.PlotFlag.DEATH_MESSAGES) == 1) {

@@ -34,7 +34,7 @@ public class CommandTabJoin implements TabCompleter {
         if (args.length == 1) {
             List<String> TabCompleter = new ArrayList<>();
             for (Plot plot : PlotManager.getInstance().getPlots()) {
-                TabCompleter.add(plot.plotCustomID);
+                TabCompleter.add(plot.getPlotCustomID());
             }
             return TabCompleter;
         }

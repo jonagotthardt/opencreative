@@ -34,10 +34,10 @@ public class SetBeeStingerCooldownAction extends PlayerAction {
 
     @Override
     public void execute(List<Entity> selection) {
-        int param = getArguments().getValue("param",1);
+        boolean add = getArguments().getValue("add",false);
         int cooldown = getArguments().getValue("cooldown",20);
         for (Player player : getPlayers(selection)) {
-            if (param == 2) {
+            if (add) {
                 cooldown = cooldown + player.getBeeStingerCooldown();
             }
             player.setBeeStingerCooldown(cooldown);

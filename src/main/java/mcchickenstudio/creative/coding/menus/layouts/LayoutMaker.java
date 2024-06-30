@@ -21,9 +21,9 @@ package mcchickenstudio.creative.coding.menus.layouts;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import org.bukkit.block.Block;
 
-public class OneRowLayout extends Layout {
+public class LayoutMaker extends Layout {
 
-    public OneRowLayout(ActionType action, Block chestBlock) {
+    public LayoutMaker(ActionType action, Block chestBlock) {
         super((byte) 3, action, chestBlock);
     }
 
@@ -59,7 +59,16 @@ public class OneRowLayout extends Layout {
                         setGlass((byte) 1,slot);
                     }
                     if (actionType.getArgumentsSlots().length > 1 && !actionType.getArgumentsSlots()[1].isList()) {
-                        setArgSlotHorizontal((byte) 2,(byte) 31);
+                        int remainingSlots = actionType.getArgumentsSlots().length-1;
+                        byte i = 2;
+                        for (byte slot : getCentredSlots((byte) remainingSlots,(byte) 4)) {
+                            if (remainingSlots > 2) {
+                                setArgSlot(i,slot);
+                            } else {
+                                setArgSlotHorizontal(i,slot);
+                            }
+                            i++;
+                        }
                     }
                     break;
                 }

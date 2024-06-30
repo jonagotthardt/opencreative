@@ -18,6 +18,7 @@
 
 package mcchickenstudio.creative.commands;
 
+import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.plots.PlotManager;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
@@ -37,8 +38,11 @@ public class CommandJoin implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = ((Player) sender);
+        if (sender instanceof Player player) {
+            if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
+                player.sendMessage(getLocaleMessage("maintenance"));
+                return true;
+            }
             if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
                 player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.GENERIC_COMMAND))));
                 return true;
@@ -51,7 +55,7 @@ public class CommandJoin implements CommandExecutor {
                         if (searchablePlot.worldID.equals(args[0])) {
                             foundPlot = searchablePlot;
                             break;
-                        } else if (searchablePlot.plotCustomID.equalsIgnoreCase(args[0])) {
+                        } else if (searchablePlot.getPlotCustomID().equalsIgnoreCase(args[0])) {
                             foundPlot = searchablePlot;
                             break;
                         }

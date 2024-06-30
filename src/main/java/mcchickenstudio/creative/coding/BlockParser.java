@@ -22,9 +22,11 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
-import mcchickenstudio.creative.coding.blocks.variables.VariableType;
-import mcchickenstudio.creative.coding.config.ConfigExecutors;
+import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.coding.menus.layouts.ArgumentSlot;
+import mcchickenstudio.creative.coding.variables.VariableLink;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -35,6 +37,7 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 import mcchickenstudio.creative.plots.DevPlot;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +47,12 @@ import java.util.Map;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendPlotCompileErrorMessage;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 
+/**
+ * <h1>BlockParser</h1>
+ * This class represents parser of coding blocks. It has methods to
+ * read coding block information and save it into plot's code script.
+ * @see CodeScript
+ */
 public class BlockParser {
 
     public void parseCode(DevPlot devPlot) {
@@ -108,7 +117,7 @@ public class BlockParser {
                     for (ArgumentSlot argSlot : actionType.getArgumentsSlots()) {
                         ItemStack item = content[slot];
                         if (argSlot.isList()) {
-                            script.setArgs(conditions,actionBlock,argSlot.getPath(),null,VariableType.LIST);
+                            script.setArgs(conditions,actionBlock,argSlot.getPath(),null, ValueType.LIST);
                             for (byte i = 1; i < argSlot.getListSize(); i++) {
                                 if (slot < content.length) {
                                     item = content[slot];
@@ -136,17 +145,43 @@ public class BlockParser {
         if (!unknownBlocks.isEmpty()) {
             sendPlotCompileErrorMessage(devPlot.linkedPlot,unknownBlocks);
         }
-        devPlot.linkedPlot.script.loadCode();
-    }
-
-    private VariableType parseItemType(ItemStack item, boolean isItemStack) {
-        if (isItemStack) {
-            return VariableType.ITEM;
+        if (devPlot.linkedPlot.script.saveCode()) {
+            devPlot.linkedPlot.script.loadCode();
         }
-        return VariableType.getByMaterial(item.getType());
+
     }
 
-    private Object parseItemValue(ItemStack item, boolean isItemStack) {
+    private ValueType parseItemType(ItemStack item, boolean isItemStack) {
+        if (item.getType() == Material.MAGMA_CREAM) {
+            List<Component> lore = item.lore();
+            if (lore != null && !lore.isEmpty()) {
+                if (((TextComponent) lore.get(0)).content().startsWith("oc.lang.items.developer.variable")) {
+                    return ValueType.VARIABLE;
+                }
+            }
+            return ValueType.ITEM;
+        }
+        if (isItemStack) {
+            return ValueType.ITEM;
+        }
+        return ValueType.getByMaterial(item.getType());
+    }
+
+    public static Object parseItemValue(ItemStack item, boolean isItemStack) {
+        if (item.getType() == Material.MAGMA_CREAM) {
+            String name = item.getItemMeta().getDisplayName();
+            List<Component> lore = item.lore();
+            if (lore != null && !lore.isEmpty()) {
+                if (((TextComponent) lore.get(0)).content().startsWith("oc.lang.items.developer.variable")) {
+                    Map<String, String> variableMap = new HashMap<>();
+                    String displayName = item.getItemMeta().getDisplayName();
+                    variableMap.put("name",ChatColor.stripColor(name));
+                    variableMap.put("type",displayName.startsWith("§a") ? "saved" : displayName.startsWith("§e") ? "global" : "local");
+                    return variableMap;
+                }
+            }
+            return item.serialize();
+        }
         if (isItemStack) {
             return item.serialize();
         }
@@ -159,8 +194,6 @@ public class BlockParser {
             case BOOK:
                 return name;
             case CLOCK:
-                return ChatColor.stripColor(name);
-            case MAGMA_CREAM:
                 return ChatColor.stripColor(name);
             case PAPER:
                 Map<String, Object> locationMap = new HashMap<>();
@@ -208,84 +241,6 @@ public class BlockParser {
         return -1;
     }
 
-    /*public void parseCodeold(DevPlot devPlot) {
-
-        World world = devPlot.world;
-        CodeScript script = devPlot.linkedPlot.script;
-        script.clear();
-
-        // For floors
-        for (byte y = 1; y < devPlot.getFloors()*4; y=(byte)(y+4)) {
-
-            // For code lines
-            for (byte z = 4; z < 96; z = (byte)(z+4)) {
-
-                Block executorBlock = world.getBlockAt(4,y,z);
-                String executorType = "";
-                String executorSubtype = getSubtype(executorBlock);
-                switch(executorBlock.getType()) {
-                    case DIAMOND_BLOCK:
-                        executorType = "event_player";
-                        break;
-                }
-                if (!executorType.isEmpty() && !executorSubtype.isEmpty()) {
-                    script.setExecBlock(executorBlock,executorType,executorSubtype);
-                } else {
-                    continue;
-                }
-                List<String> conditions = new ArrayList<>();
-                for (byte x = 6; x < 96; x= (byte) (x+2)) {
-
-                    Block actionBlock = world.getBlockAt(x,y,z);
-                    String actionType = "";
-                    String actionSubtype = getSubtype(actionBlock);
-                    Block container = actionBlock.getRelative(BlockFace.UP);
-
-                    switch (actionBlock.getType()) {
-                        case COBBLESTONE: {
-                            actionType = "action_player";
-                            break;
-                        }
-                        case OAK_PLANKS: {
-                            actionType = "if_player";
-                            conditions.add("condition_block_" + script.getBlockActionNumber(actionBlock));
-                            break;
-                        }
-                        case AIR: {
-                            if (world.getBlockAt(x+1,y,z).getType() == Material.PISTON) {
-                                if (!conditions.isEmpty()) {
-                                    String last = conditions.get(conditions.size()-1);
-                                    conditions.remove(last);
-                                } else {
-                                    sendPlotCompileErrorMessage(devPlot.linkedPlot,actionBlock,getLocaleMessage("plot-code-error.bad-piston"));
-                                    return;
-                                }
-                            }
-                        }
-                    }
-
-                    if (!actionType.isEmpty() && !actionSubtype.isEmpty()) {
-
-                        List<String> arguments;
-                        if (actionSubtype.equalsIgnoreCase("give_items")) {
-                            arguments = new ArrayList<>(parseChestArguments(container, true));
-                        } else {
-                            arguments = new ArrayList<>(parseChestArguments(container, false));
-                        }
-
-                        if (!(actionBlock.getType() == Material.OAK_PLANKS)) {
-                            script.setActionBlock(conditions,executorBlock,actionBlock,actionType,actionSubtype,arguments);
-                        } else {
-                            script.setConditionBlock(conditions,executorBlock,actionBlock,actionType,actionSubtype,arguments);
-                        }
-
-                    }
-
-                }
-            }
-        }
-        devPlot.linkedPlot.script.loadCode();
-    }*/
     private boolean isSignEmpty(Block block, byte line) {
         Block signBlock = block.getRelative(BlockFace.SOUTH);
         if (signBlock.getType().name().contains("SIGN")) {

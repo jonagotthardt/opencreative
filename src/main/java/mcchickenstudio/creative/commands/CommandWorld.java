@@ -87,11 +87,11 @@ public class CommandWorld implements CommandExecutor {
                     Plot plot = PlotManager.getInstance().getPlotByPlayer(((Player) sender).getPlayer());
                     if (plot == null) return true;
                     long now = System.currentTimeMillis();
-                    sender.sendMessage(getLocaleMessage("world.info").replace("%name%",plot.plotName)
+                    sender.sendMessage(getLocaleMessage("world.info").replace("%name%", plot.getPlotName())
                             .replace("%id%", plot.worldID).replace("%creation-time%",getElapsedTime(now,plot.getCreationTime()))
                             .replace("%activity-time%",getElapsedTime(now,plot.getLastActivityTime())).replace("%online%",String.valueOf(plot.getOnline()))
                             .replace("%builders%",plot.getBuilders()).replace("%coders%",plot.getDevelopers()).replace("%owner%",plot.getOwner())
-                            .replace("%sharing%",plot.plotSharing.getName()).replace("%mode%",plot.plotMode.getName()).replace("%description%", plot.plotDescription));
+                            .replace("%sharing%", plot.getPlotSharing().getName()).replace("%mode%", plot.getPlotMode().getName()).replace("%description%", plot.getPlotDescription()));
                     break;
             }
         } else {
@@ -105,11 +105,11 @@ public class CommandWorld implements CommandExecutor {
                     WorldSettingsMenu.openInventory(((Player) sender).getPlayer());
                 } else {
                     long now = System.currentTimeMillis();
-                    sender.sendMessage(getLocaleMessage("world.info").replace("%name%",plot.plotName)
+                    sender.sendMessage(getLocaleMessage("world.info").replace("%name%", plot.getPlotName())
                             .replace("%id%", plot.worldID).replace("%creation-time%",getElapsedTime(now,plot.getCreationTime()))
                             .replace("%activity-time%",getElapsedTime(now,plot.getLastActivityTime())).replace("%online%",String.valueOf(plot.getOnline()))
                             .replace("%builders%",plot.getBuilders()).replace("%coders%",plot.getDevelopers()).replace("%owner%",plot.getOwner())
-                            .replace("%sharing%",plot.plotSharing.getName()).replace("%mode%",plot.plotMode.getName()).replace("%description%", plot.plotDescription));
+                            .replace("%sharing%", plot.getPlotSharing().getName()).replace("%mode%", plot.getPlotMode().getName()).replace("%description%", plot.getPlotDescription()));
                 }
             } else {
                 Main.getPlugin().getLogger().info("Управление мирами: ");

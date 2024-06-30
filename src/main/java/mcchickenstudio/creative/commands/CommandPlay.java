@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.commands;
 
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
+import mcchickenstudio.creative.plots.DevPlot;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -44,7 +45,6 @@ import static mcchickenstudio.creative.commands.CommandAd.plugin;
 
 import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
-import static mcchickenstudio.creative.utils.FileUtils.setPlotConfigParameter;
 import static mcchickenstudio.creative.utils.MessageUtils.*;
 
 
@@ -66,6 +66,11 @@ public class CommandPlay implements CommandExecutor {
             setCooldown(player,plugin.getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
             // Проверка на владельца мира
 
+            DevPlot playerDevPlot = PlotManager.getInstance().getDevPlot(player);
+            if (playerDevPlot != null) {
+                playerDevPlot.lastLocations.put(player,player.getLocation());
+            }
+
             List<String> developers = new ArrayList<>();
             List<String> trustedDevelopers = FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_TRUSTED);
             List<String> notTrustedDevelopers = FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED);
@@ -74,9 +79,9 @@ public class CommandPlay implements CommandExecutor {
             developers.addAll(trustedDevelopers);
 
             removePlayerWithLocation(player);
-            if (plot.plotMode != Plot.Mode.PLAYING) {
+            if (plot.getPlotMode() != Plot.Mode.PLAYING) {
                 if (plot.getOwner().equals(sender.getName()) || developers.contains(sender.getName())) {
-                    plot.plotMode = Plot.Mode.PLAYING;
+                    plot.setPlotMode(Plot.Mode.PLAYING);
                     for (Player p : plot.getPlayers()) {
                         if (PlotManager.getInstance().getDevPlot(p) == null || sender.getName().equals(p.getName())) {
                             clearPlayer(p);
@@ -98,7 +103,7 @@ public class CommandPlay implements CommandExecutor {
                         worldSettingsItemMeta.setDisplayName(getLocaleItemName("items.developer.world-settings.name"));
                         worldSettingsItemMeta.setLore(getLocaleItemDescription("items.developer.world-settings.lore"));
                         worldSettingsItem.setItemMeta(worldSettingsItemMeta);
-                        ((Player) sender).getInventory().setItem(8,worldSettingsItem);
+                        player.getInventory().setItem(8,worldSettingsItem);
                     }
                     for (Player p : plot.getPlayers()) {
                         if (PlotManager.getInstance().getDevPlot(p) == null || sender.getName().equals(p.getName())) {
@@ -106,33 +111,34 @@ public class CommandPlay implements CommandExecutor {
                             EventRaiser.raiseJoinEvent(p);
                         }
                     }
-                    setPlotConfigParameter(plot,"mode",plot.plotMode);
                 } else {
                     sender.sendMessage(getLocaleMessage("not-owner", player));
                 }
             } else {
-                plot.world.getSpawnLocation().getChunk().load(true);
-                player.teleport(plot.world.getSpawnLocation());
-                if (plot.isOwner(sender.getName()) || developers.contains(sender.getName())) {
-                    clearPlayer(player);
-                    ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
-                    if (plot.isOwner(sender.getName())) {
-                        player.getInventory().setItem(8,worldSettingsItem);
-                    }
-                    player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
-                    if (plot.script != null && plot.script.exists()) {
-                        if (plot.devPlot.isLoaded) {
-                            new BlockParser().parseCode(plot.devPlot);
-                        } else {
-                            plot.script.loadCode();
+                boolean isDeveloper = plot.isOwner(sender.getName()) || developers.contains(sender.getName()) || FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_GUESTS).contains(player.getName());
+                if (EventRaiser.raisePlayEvent(player) || isDeveloper) {
+                    plot.world.getSpawnLocation().getChunk().load(true);
+                    player.teleport(plot.world.getSpawnLocation());
+                    if (isDeveloper) {
+                        clearPlayer(player);
+                        ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
+                        if (plot.isOwner(sender.getName())) {
+                            player.getInventory().setItem(8,worldSettingsItem);
                         }
+                        player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
+                        if (plot.script != null && plot.script.exists()) {
+                            if (plot.devPlot.isLoaded) {
+                                new BlockParser().parseCode(plot.devPlot);
+                            } else {
+                                plot.script.loadCode();
+                            }
+                        }
+                    } else {
+                        player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
                     }
-                } else {
-                    player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
+                    EventRaiser.raiseQuitEvent(player);
+                    EventRaiser.raiseJoinEvent(player);
                 }
-                EventRaiser.raiseQuitEvent((Player) sender);
-                EventRaiser.raiseJoinEvent((Player) sender);
-                EventRaiser.raisePlayEvent((Player) sender);
             }
 
         }
