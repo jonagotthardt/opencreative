@@ -40,6 +40,36 @@ Every owner of world can change in his world:
 ### Coding
 Players can create code for their worlds with coding blocks and run it.
 
+Coding blocks will be parsed into codeScript.yml.
+Example: Send a message "Hello world!"
+
+```yaml
+code:
+  blocks:
+    exec_block_4_1:
+      category: EVENT_PLAYER
+      type: PLAYER_JOIN
+      actions:
+        action_block1:
+          category: PLAYER_ACTION
+          type: PLAYER_SEND_MESSAGE
+          arguments:
+            type:
+              type: TEXT
+              value: join-spaces
+            messages:
+              type: LIST
+              value:
+                '1':
+                  type: TEXT
+                  value:
+                    name: Hello
+                '2':
+                  type: TEXT
+                  value:
+                    name: World
+```
+
 ## License
 
 This plugin is licensed under GNU GPL v3, because it uses Paper API. When you use or edit source code of this plugin, please open your source code.
