@@ -2,6 +2,8 @@
 
 Minecraft plugin for PaperMC servers that allows players to create their worlds.
 
+![logo](https://media.discordapp.net/attachments/1203026811647303721/1254848334208831508/image.png?ex=66823c54&is=6680ead4&hm=0d812c0552f6cd2ce6d31f56f87d21e8c8480eda208a9a472986c11d8583247b&=&format=webp&quality=lossless&width=756&height=452)
+
 This plugin is:
 - **Fast.** It uses RAM more often than hard drive.
 - **Translatable.** You can change every single message.
