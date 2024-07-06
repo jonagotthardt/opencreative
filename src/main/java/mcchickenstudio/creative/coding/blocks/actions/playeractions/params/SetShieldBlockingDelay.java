@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.params;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
@@ -28,20 +29,18 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class SetShieldBlockingDelay extends PlayerAction {
-    public SetShieldBlockingDelay(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetShieldBlockingDelay(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        boolean add = getArguments().getValue("add",false);
-        int delay = getArguments().getValue("delay", 0);
-        for (Player player : getPlayers(selection)) {
-            if (add) {
-                delay = delay + player.getShieldBlockingDelay();
-            }
-            player.setShieldBlockingDelay(delay);
+    public void executePlayer(Player player) {
+        boolean add = getArguments().getValue("add",false,this);
+        int delay = getArguments().getValue("delay", 0,this);
+        if (add) {
+            delay = delay + player.getShieldBlockingDelay();
         }
+        player.setShieldBlockingDelay(delay);
     }
 
     @Override

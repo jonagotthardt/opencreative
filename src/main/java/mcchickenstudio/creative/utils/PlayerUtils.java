@@ -322,4 +322,10 @@ public class PlayerUtils {
         }.runTaskLater(Main.getPlugin(),5L);
     }
 
+    public static void spawnGlowingBlock(Player player, Location location) {
+        if (HookUtils.isProtocolLibEnabled) {
+            ProtocolLibUtils.spawnGlowingFallingBlock(player,location);
+        }
+    }
+
 }

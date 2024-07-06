@@ -64,6 +64,12 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
             setItem(charmsBarSlots[slot],category.getItem(codingBlockName));
             slot++;
         }
+        if (slot < charmsBarSlots.length) {
+            while (slot < charmsBarSlots.length) {
+                setItem(charmsBarSlots[slot],DECORATION_ITEM);
+                slot++;
+            }
+        }
     }
 
     protected abstract Set<MenusCategory> getMenusCategories();

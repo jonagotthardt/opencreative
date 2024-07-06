@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.movement;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
@@ -29,18 +30,16 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class KickPlayerAction extends PlayerAction {
-    public KickPlayerAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public KickPlayerAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
+    public void executePlayer(Player player) {
         Plot plot = getPlot();
         if (plot == null) return;
-        for (Player player : getPlayers(selection)) {
-            if (!plot.isOwner(player)) {
-                plot.kickPlayer(player);
-            }
+        if (!plot.isOwner(player)) {
+            plot.kickPlayer(player);
         }
     }
 

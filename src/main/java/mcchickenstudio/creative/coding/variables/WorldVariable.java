@@ -18,7 +18,8 @@
 
 package mcchickenstudio.creative.coding.variables;
 
-import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import mcchickenstudio.creative.coding.blocks.actions.ActionsHandler;
+import mcchickenstudio.creative.debug.values.VariableLink;
 
 import java.util.List;
 
@@ -26,20 +27,20 @@ public class WorldVariable {
 
     private final String name;
     private Object value;
-    private ValueType type;
+    private ValueType valueType;
     private final VariableLink.VariableType varType;
-    private final Executor executor;
+    private final ActionsHandler handler;
 
-    public WorldVariable(String name, VariableLink.VariableType varType, ValueType type, Object value, Executor executor) {
+    public WorldVariable(String name, VariableLink.VariableType varType, ValueType type, Object value, ActionsHandler handler) {
         this.name = name;
-        this.type = type;
+        this.valueType = type;
         this.varType = varType;
         this.value = value;
-        this.executor = executor;
+        this.handler = handler;
     }
 
-    public Executor getExecutor() {
-        return executor;
+    public ActionsHandler getHandler() {
+        return handler;
     }
 
     public final Object getValue() {
@@ -47,7 +48,7 @@ public class WorldVariable {
     }
 
     public final ValueType getType() {
-        return type;
+        return valueType;
     }
 
     public VariableLink.VariableType getVarType() {
@@ -59,7 +60,7 @@ public class WorldVariable {
     }
 
     public void setType(ValueType type) {
-        this.type = type;
+        this.valueType = type;
     }
 
     public void setValue(Object value) {

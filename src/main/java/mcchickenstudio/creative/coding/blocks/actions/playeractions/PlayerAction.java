@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
@@ -30,21 +31,20 @@ import java.util.List;
 
 public abstract class PlayerAction extends Action {
 
-    public PlayerAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public PlayerAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     public ActionCategory getActionCategory() {
         return ActionCategory.PLAYER_ACTION;
     }
-
-    protected List<Player> getPlayers(List<Entity> selection) {
-        List<Player> players = new ArrayList<>();
-        for (Entity entity : selection) {
-            if (entity instanceof Player) {
-                players.add((Player) entity);
-            }
+    
+    public final void execute(Entity entity) {
+        if (entity instanceof Player player) {
+            executePlayer(player);
         }
-        return players;
     }
+    
+    public abstract void executePlayer(Player player);
+
 }

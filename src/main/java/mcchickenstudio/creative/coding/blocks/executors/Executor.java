@@ -19,9 +19,9 @@
 package mcchickenstudio.creative.coding.blocks.executors;
 
 import mcchickenstudio.creative.coding.blocks.actions.Action;
-import mcchickenstudio.creative.coding.blocks.actions.ActionHandler;
+import mcchickenstudio.creative.coding.blocks.actions.ActionsHandler;
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
-import mcchickenstudio.creative.coding.blocks.events.EventVariables;
+import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.plots.Plot;
 
 import java.util.ArrayList;
@@ -46,9 +46,9 @@ public abstract class Executor {
     private final int y;
     private final int z;
     private final List<Action> actions = new ArrayList<>();
-    private final EventVariables variables = new EventVariables();
+    private final EventValues variables = new EventValues();
     private CreativeEvent event;
-    private ActionHandler handler;
+    private ActionsHandler handler;
 
     /**
      * Creates an Executor with specified plot and block's location in developers plot.
@@ -77,20 +77,17 @@ public abstract class Executor {
     protected void setTempVars(CreativeEvent event) {}
     protected void executeActions(CreativeEvent event) {
         this.event = event;
-        handler = new ActionHandler(this);
+        handler = new ActionsHandler(this);
         handler.executeActions(actions);
+        variables.clear();
     }
 
-    protected void setVar(EventVariables.Variable var, Object value) {
+    public void setTempVar(EventValues.Variable var, Object value) {
         variables.setVariable(var,value);
     }
 
-    public Object getVarValue(EventVariables.Variable var) {
+    public Object getVarValue(EventValues.Variable var) {
         return variables.getVarValue(var);
-    }
-
-    public boolean hasTempVariable(EventVariables.Variable var) {
-        return variables.getVarValue(var) != null;
     }
 
     /**
@@ -130,11 +127,15 @@ public abstract class Executor {
         return plot;
     }
 
+    public EventValues getVariables() {
+        return variables;
+    }
+
     public CreativeEvent getEvent() {
         return event;
     }
 
-    public ActionHandler getHandler() {
+    public ActionsHandler getHandler() {
         return handler;
     }
 }

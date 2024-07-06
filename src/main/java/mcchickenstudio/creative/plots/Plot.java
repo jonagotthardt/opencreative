@@ -19,7 +19,7 @@
 package mcchickenstudio.creative.plots;
 
 import mcchickenstudio.creative.Main;
-import mcchickenstudio.creative.coding.BlockParser;
+import mcchickenstudio.creative.coding.CodingBlockParser;
 import mcchickenstudio.creative.coding.CodeScript;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.coding.variables.WorldVariables;
@@ -87,7 +87,7 @@ public class Plot {
     public int codeOperationsLimit;
 
     private final WorldVariables worldVariables;
-    private final boolean debug = false;
+    private boolean debug = false;
     private final PlotFlags plotFlags;
 
     private boolean isCorrupted = false;
@@ -152,14 +152,20 @@ public class Plot {
         setPlotConfigParameter(this,"owner-group",group);
     }
 
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
     public enum Mode {
         PLAYING() {
             public void onPlayerJoin(Player player) {
                 player.setGameMode(GameMode.ADVENTURE);
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) player.setGameMode(plot.getOwner().equalsIgnoreCase(player.getName()) ? GameMode.CREATIVE : GameMode.ADVENTURE);
-                if (plot.script != null && plot.script.exists()) {
-                    plot.script.loadCode();
+                if (plot != null) {
+                    player.setGameMode(plot.getOwner().equalsIgnoreCase(player.getName()) ? GameMode.CREATIVE : GameMode.ADVENTURE);
+                    if (plot.script != null && plot.script.exists()) {
+                        plot.script.loadCode();
+                    }
                 }
             }
         }, BUILD() {
@@ -586,7 +592,7 @@ public class Plot {
         List<Player> playerList = new ArrayList<>();
         if (this.world != null) {
             playerList.addAll(this.world.getPlayers());
-            if (devPlot != null && devPlot.isLoaded) {
+            if (devPlot != null && devPlot.world != null && devPlot.isLoaded) {
                 playerList.addAll(devPlot.world.getPlayers());
             }
         }
@@ -614,7 +620,7 @@ public class Plot {
             player.sendMessage(getLocaleMessage("blacklisted-in-plot", player));
             return;
         }
-        player.sendTitle(getLocaleMessage("teleporting-to-world.title"),getLocaleMessage("teleporting-to-world.subtitle"),15,9999,15);
+        player.sendTitle(getLocaleMessage("world.connecting.title"),getLocaleMessage("world.connecting.subtitle"),15,9999,15);
         if (!this.isLoaded) {
             Main.getPlugin().getLogger().info("Loading " + this.worldName + " and teleporting " + player.getName());
             PlotManager.getInstance().loadPlot(this);
@@ -623,19 +629,21 @@ public class Plot {
         this.world.getSpawnLocation().getChunk().load(true);
         player.teleport(this.world.getSpawnLocation());
         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE,100,2);
-        (this.getPlotMode() == Mode.PLAYING ? Mode.PLAYING : Mode.BUILD).onPlayerJoin(player);
+        this.plotMode.onPlayerJoin(player);
         clearPlayer(player);
         player.sendTitle("","");
         if (!getPlayersFromPlotConfig(this, PlayersType.UNIQUE).contains(player.getName())) {
             addPlayerToListInPlotConfig(this,player.getName(), PlayersType.UNIQUE);
         }
         if (this.isOwner(player.getName())) {
-            setPlotConfigParameter(this,"owner-group",PlayerUtils.getGroup(player));
+            this.setOwnerGroup(PlayerUtils.getGroup(player));
             ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
             player.getInventory().setItem(8,worldSettingsItem);
-            this.setOwnerGroup(PlayerUtils.getGroup(player));
+            if (plotFlags.getFlagValue(PlotFlags.PlotFlag.JOIN_MESSAGES) == 1) {
+                player.sendMessage(getLocaleMessage("world.connecting.owner-help",player));
+            }
             if (this.script.exists() && this.devPlot.isLoaded) {
-                new BlockParser().parseCode(this.devPlot);
+                new CodingBlockParser().parseCode(this.devPlot);
             }
         }
         EventRaiser.raiseJoinEvent(player);
@@ -650,26 +658,27 @@ public class Plot {
 
     // Телепортировать игрока в мир разработки плота
     public void teleportToDevPlot(Player player) {
-        player.sendTitle(getLocaleMessage("teleporting-to-world.title"),getLocaleMessage("teleporting-to-world.subtitle"),15,9999,15);
+        player.sendTitle(getLocaleMessage("world.dev-mode.connecting.title"),getLocaleMessage("world.dev-mode.connecting.subtitle"),15,9999,15);
         devPlot.loadDevPlotWorld();
         clearPlayer(player);
         devPlot.world.getSpawnLocation().getChunk().load(true);
         Location lastLocation = this.devPlot.lastLocations.get(player);
         player.teleport(lastLocation == null ? this.devPlot.world.getSpawnLocation() : lastLocation);
         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE,100,2);
+        WorldBorder border = Bukkit.createWorldBorder();
+        border.setCenter(devPlot.world.getWorldBorder().getCenter());
+        border.setSize(devPlot.world.getWorldBorder().getSize()*5);
+        player.setWorldBorder(border);
         devPlot.translateCodingBlocks(player);
     }
 
     public void teleportToDevPlot(Player player, double x, double y, double z) {
-        player.sendTitle(getLocaleMessage("teleporting-to-world.title"),getLocaleMessage("teleporting-to-world.subtitle"),15,9999,15);
-        devPlot.loadDevPlotWorld();
-        clearPlayer(player);
-        player.teleport(this.devPlot.world.getSpawnLocation());
-        player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE,100,2);
+        teleportToDevPlot(player);
         if (x > 0 && y > 0 && z > 0 && x < 99 && y < 99 && z < 99) {
-            player.teleport(new Location(this.devPlot.world, x+1,y,z+2,180,5));
+            Location location = new Location(this.devPlot.world, x+1,y,z+2,180,5);
+            player.teleport(location);
+            spawnGlowingBlock(player,new Location(this.devPlot.world,x,y,z));
         }
-        devPlot.translateCodingBlocks(player);
     }
 
     public void removeDeveloper(String nickname) {
@@ -841,4 +850,27 @@ public class Plot {
     public WorldVariables getWorldVariables() {
         return worldVariables;
     }
+
+    public boolean isDeveloper(Player player) {
+        if (isOwner(player)) {
+            return true;
+        }
+        List<String> trustedList = FileUtils.getPlayersFromPlotConfig(this,PlayersType.DEVELOPERS_TRUSTED);
+        for (String nickname : trustedList) {
+            if (nickname.equalsIgnoreCase(player.getName())) {
+                return true;
+            }
+        }
+        if (Bukkit.getPlayer(owner) == null) {
+            return false;
+        }
+        List<String> notTrustedList = FileUtils.getPlayersFromPlotConfig(this,PlayersType.BUILDERS_TRUSTED);
+        for (String nickname : notTrustedList) {
+            if (nickname.equalsIgnoreCase(player.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

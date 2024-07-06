@@ -20,25 +20,26 @@ package mcchickenstudio.creative.coding.blocks.actions.playeractions.communicati
 
 import mcchickenstudio.creative.coding.CreativeRunnable;
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SendDialogAction extends PlayerAction {
-    public SendDialogAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SendDialogAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    protected void execute(List<Entity> selection) {
-        List<Player> players = getPlayers(selection);
-        if (players == null) return;
-        int cooldown = getArguments().getValue("cooldown",20);
-        List<String> text = getArguments().getTextList("messages");
+    public void executePlayer(Player player) {
+        List<Player> players = new ArrayList<>(List.of(player));
+        int cooldown = getArguments().getValue("cooldown",20,this);
+        List<String> text = getArguments().getTextList("messages",this);
         new CreativeRunnable(getPlot()) {
             byte current = 0;
             @Override
@@ -53,6 +54,7 @@ public class SendDialogAction extends PlayerAction {
             }
         }.runTaskTimer(players,0,cooldown);
     }
+
 
     @Override
     public ActionType getActionType() {

@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.appearance;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
@@ -31,18 +32,16 @@ import java.util.List;
 import static mcchickenstudio.creative.utils.BlockUtils.sendSignChange;
 
 public class SendSignChangeAction extends PlayerAction {
-    public SendSignChangeAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SendSignChangeAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        String text = getArguments().getValue("text","Hello world!");
-        byte numberOfLine = getArguments().getValue("number",(byte) 1);
-        Location location = getArguments().getValue("location",getWorld().getSpawnLocation());
-        for (Player player : getPlayers(selection)) {
-            sendSignChange(location,player,numberOfLine,text);
-        }
+    public void executePlayer(Player player) {
+        String text = getArguments().getValue("text","Hello world!",this);
+        byte numberOfLine = getArguments().getValue("number",(byte) 1,this);
+        Location location = getArguments().getValue("location",getWorld().getSpawnLocation(),this);
+        sendSignChange(location,player,numberOfLine,text);
     }
 
     @Override

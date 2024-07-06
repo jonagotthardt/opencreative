@@ -38,6 +38,7 @@ import mcchickenstudio.creative.plots.Plot;
 
 import static mcchickenstudio.creative.events.PlayerPlaceBlock.move;
 import static mcchickenstudio.creative.utils.BlockUtils.getClosingBracketX;
+import static mcchickenstudio.creative.utils.ItemUtils.getCodingDoNotDropMeKey;
 import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
 
 public class PlayerBreakBlock implements Listener {
@@ -108,7 +109,11 @@ public class PlayerBreakBlock implements Listener {
         if (chestBlock.getType() == Material.CHEST) {
             Chest chest = (Chest) chestBlock.getState();
             for (ItemStack item : chest.getBlockInventory().getContents()) {
-                if (item != null) chestBlock.getWorld().dropItem(chestBlock.getLocation(),item);
+                if (item != null) {
+                    if (item.getItemMeta() == null || !item.getItemMeta().getPersistentDataContainer().has(getCodingDoNotDropMeKey())) {
+                        chestBlock.getWorld().dropItem(chestBlock.getLocation(),item);
+                    }
+                }
             }
         }
         chestBlock.setType(Material.AIR);

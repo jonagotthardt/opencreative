@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.communication;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
@@ -28,22 +29,19 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class StopSoundsAction extends PlayerAction {
-    public StopSoundsAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public StopSoundsAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    protected void execute(List<Entity> selection) {
-        List<String> sounds = getArguments().getTextList("sounds");
-        for (Player player : getPlayers(selection)) {
-            if (sounds.isEmpty()) {
-                player.stopAllSounds();
-            } else {
-                for (String sound : sounds) {
-                    player.stopSound(sound);
-                }
+    public void executePlayer(Player player) {
+        List<String> sounds = getArguments().getTextList("sounds",this);
+        if (sounds.isEmpty()) {
+            player.stopAllSounds();
+        } else {
+            for (String sound : sounds) {
+                player.stopSound(sound);
             }
-
         }
     }
 

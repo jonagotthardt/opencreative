@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.params;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
@@ -29,20 +30,18 @@ import java.util.List;
 
 public class SetLastDamageAction extends PlayerAction {
 
-    public SetLastDamageAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetLastDamageAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        boolean add = getArguments().getValue("add",false);
-        double damage = getArguments().getValue("damage",1.0d);
-        for (Player player : getPlayers(selection)) {
-            if (add) {
-                damage = damage + player.getLastDamage();
-            }
-            player.setLastDamage(damage);
+    public void executePlayer(Player player) {
+        boolean add = getArguments().getValue("add",false,this);
+        double damage = getArguments().getValue("damage",1.0d,this);
+        if (add) {
+            damage = damage + player.getLastDamage();
         }
+        player.setLastDamage(damage);
     }
 
     @Override

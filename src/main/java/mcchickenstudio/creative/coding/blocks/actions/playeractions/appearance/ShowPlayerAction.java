@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.appearance;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
@@ -28,17 +29,15 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class ShowPlayerAction extends PlayerAction {
-    public ShowPlayerAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public ShowPlayerAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        String text = getArguments().getValue("player"," ");
-        for (Player player : getPlayers(selection)) {
-            for (Player p : getPlayersByNameOrUUID(text)) {
-                player.showPlayer(p);
-            }
+    public void executePlayer(Player player) {
+        String text = getArguments().getValue("player"," ",this);
+        for (Player p : getPlayersByNameOrUUID(text)) {
+            player.showPlayer(p);
         }
     }
 

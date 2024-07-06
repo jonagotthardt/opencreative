@@ -21,12 +21,13 @@ package mcchickenstudio.creative.coding.blocks.actions.controlactions;
 import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 
 public abstract class ControlAction extends Action {
 
-    public ControlAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public ControlAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override

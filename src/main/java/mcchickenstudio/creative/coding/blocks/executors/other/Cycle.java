@@ -18,15 +18,57 @@
 
 package mcchickenstudio.creative.coding.blocks.executors.other;
 
+import mcchickenstudio.creative.Main;
+import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.plots.Plot;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugExecutor;
 
 public class Cycle extends Executor {
 
-    public Cycle(Plot plot, int x, int y, int z) {
+    private final String name;
+    private final int repeatTime;
+    private boolean enabled = false;
+    private BukkitRunnable runnable = null;
+
+    public Cycle(Plot plot, int x, int y, int z, String name, int repeatTime) {
         super(plot, x, y, z);
+        this.name = name;
+        this.repeatTime = repeatTime;
+    }
+
+    @Override
+    public void run(CreativeEvent event) {
+        if (!enabled) {
+            enabled = true;
+            Executor executor = this;
+            runnable = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    System.out.println("cycle -> " + repeatTime + " " + name);
+                    sendCodingDebugExecutor(executor);
+                    executeActions(event);
+                }
+            };
+            getPlot().addBukkitRunnable(runnable);
+            runnable.runTaskTimer(Main.getPlugin(),0,repeatTime);
+        }
+    }
+
+    public void stop() {
+        if (runnable != null) {
+            runnable.cancel();
+            runnable = null;
+            enabled = false;
+        }
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override

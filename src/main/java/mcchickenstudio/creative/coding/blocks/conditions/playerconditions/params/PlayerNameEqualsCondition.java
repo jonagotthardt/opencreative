@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.conditions.playerconditions.params;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.PlayerCondition;
@@ -30,35 +31,26 @@ import java.util.List;
 
 public class PlayerNameEqualsCondition extends PlayerCondition {
 
-    public PlayerNameEqualsCondition(Executor executor, int x, Arguments args, List<Action> actions) {
-        super(executor, x, args, actions);
+    public PlayerNameEqualsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
+        super(executor, target, x, args, actions);
     }
 
     @Override
-    public boolean check(List<Entity> selection) {
-        boolean check = false;
-        boolean requiredCaps = getArguments().getValue("require-caps",false);
-        List<String> names = getArguments().getTextList("names");
-        for (Player player : getPlayers(selection)) {
-            boolean isNameEquals = false;
-            for (String name : names) {
-                if (requiredCaps) {
-                    if (player.getName().equals(name)) {
-                        isNameEquals = true;
-                    }
-                } else {
-                    if (player.getName().equalsIgnoreCase(name)) {
-                        isNameEquals = true;
-                    }
+    public boolean checkPlayer(Player player) {
+        boolean requiredCaps = getArguments().getValue("require-caps",false,this);
+        List<String> names = getArguments().getTextList("names",this);
+        for (String name : names) {
+            if (requiredCaps) {
+                if (player.getName().equals(name)) {
+                    return true;
+                }
+            } else {
+                if (player.getName().equalsIgnoreCase(name)) {
+                    return true;
                 }
             }
-            if (!isNameEquals) {
-                return false;
-            } else {
-                check = true;
-            }
         }
-        return check;
+        return false;
     }
 
     @Override

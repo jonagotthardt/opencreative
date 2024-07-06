@@ -20,12 +20,15 @@ package mcchickenstudio.creative.events;
 
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.plots.PlotManager;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import mcchickenstudio.creative.plots.Plot;
+import org.bukkit.inventory.ItemStack;
 
 
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemName;
@@ -36,15 +39,22 @@ public class PlayerDropItem implements Listener {
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
-        if (!player.getWorld().getName().startsWith("plot")) {
-            if (event.getItemDrop().getItemStack().getItemMeta().displayName().equals(getLocaleMessage("items.lobby.games.name")) || event.getItemDrop().getItemStack().getItemMeta().displayName().equals(getLocaleMessage("items.lobby.own.name"))) {
-                event.setCancelled(true);
+        ItemStack item = event.getItemDrop().getItemStack();
+        if (item.hasItemMeta() && item.getItemMeta() != null) {
+            Component name = item.getItemMeta().displayName();
+            if (name != null) {
+                String displayName = item.getItemMeta().getDisplayName();
+                if (!player.getWorld().getName().startsWith("plot")) {
+                    if (displayName.equals(getLocaleItemName("items.lobby.games.name")) || displayName.equals(getLocaleMessage("items.lobby.own.name"))) {
+                        event.setCancelled(true);
+                    }
+                } else {
+                    if (displayName.equals(getLocaleItemName("items.developer.world-settings.name"))) {
+                        event.setCancelled(true);
+                    }
+                }
             }
         }
-        if (event.getItemDrop().getItemStack().getItemMeta().getDisplayName().equals(getLocaleItemName("items.developer.world-settings.name"))) {
-            event.setCancelled(true);
-        }
-
         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
         if (plot != null) EventRaiser.raiseItemDropEvent(event.getPlayer(),event);
     }

@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.params;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
@@ -29,23 +30,22 @@ import java.util.List;
 
 public class SetFlySpeedAction extends PlayerAction  {
 
-    public SetFlySpeedAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetFlySpeedAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        boolean add = getArguments().getValue("add",false);
-        float speed = getArguments().getValue("speed",0.6f);
-        for (Player player : getPlayers(selection)) {
-            if (add) {
-                speed = player.getFlySpeed() + speed;
-            }
-            if (speed > 1 || speed < -1) {
-                speed = 0.6f;
-            }
-            player.setFlySpeed(speed);
+    public void executePlayer(Player player) {
+        boolean add = getArguments().getValue("add",false,this);
+        float speed = getArguments().getValue("speed",0.6f,this);
+        if (add) {
+            speed = player.getFlySpeed() + speed;
         }
+        if (speed > 1 || speed < -1) {
+            speed = 0.6f;
+        }
+        player.setFlySpeed(speed);
+
     }
 
     @Override

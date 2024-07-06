@@ -19,14 +19,13 @@
 package mcchickenstudio.creative.coding.blocks.conditions.playerconditions.blocks;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.PlayerCondition;
-import mcchickenstudio.creative.coding.blocks.events.EventVariables;
+import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -36,19 +35,19 @@ import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingNotFoundTempVa
 
 public class IsBlockEqualsCondition extends PlayerCondition {
 
-    public IsBlockEqualsCondition(Executor executor, int x, Arguments args, List<Action> actions) {
-        super(executor, x, args, actions);
+    public IsBlockEqualsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
+        super(executor, target, x, args, actions);
     }
 
     @Override
-    public boolean check(List<Entity> selection) {
-        if (!getExecutor().hasTempVariable(EventVariables.Variable.BLOCK)) {
-            sendCodingNotFoundTempVar(getPlot(),getExecutor(), EventVariables.Variable.BLOCK);
+    public boolean checkPlayer(Player player) {
+        if (!getHandler().hasTempVariable(EventValues.Variable.BLOCK)) {
+            sendCodingNotFoundTempVar(getPlot(),getExecutor(), EventValues.Variable.BLOCK);
             return false;
         }
         boolean check = false;
-        Block block = (Block) getExecutor().getVarValue(EventVariables.Variable.BLOCK);
-        List<ItemStack> blocks = getArguments().getItemList("blocks");
+        Block block = (Block) getHandler().getVarValue(EventValues.Variable.BLOCK);
+        List<ItemStack> blocks = getArguments().getItemList("blocks",this);
         if (blocks.isEmpty()) return false;
         for (ItemStack checkBlock : blocks) {
             if (block.getType() == checkBlock.getType()) {

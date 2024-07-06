@@ -20,6 +20,7 @@ package mcchickenstudio.creative.coding;
 
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.blocks.executors.Executors;
@@ -49,6 +50,7 @@ public class CodeScript {
     public final List<Integer> blockActionsX = new ArrayList<>();
     private final Executors executors;
     private YamlConfiguration scriptConfig;
+    private boolean isCodeRunning = false;
 
     public CodeScript(Plot linkedPlot, File file) {
         this.linkedPlot = linkedPlot;
@@ -61,12 +63,18 @@ public class CodeScript {
     }
 
     public boolean exists() {
-
         File linkedPlotFolder = getPlotFolder(linkedPlot);
         if (linkedPlotFolder == null) return false;
         return true;
     }
 
+    public void setCodeRunning(boolean codeRunning) {
+        isCodeRunning = codeRunning;
+    }
+
+    public boolean isCodeRunning() {
+        return isCodeRunning;
+    }
 
     public int getBlockActionNumber(Block block) {
         return blockActionsX.indexOf(block.getX()) + 1;
@@ -97,19 +105,20 @@ public class CodeScript {
         String path = "code.blocks.exec_block_" + z + "_" + y;
         scriptConfig.set(path + ".category", category.name());
         scriptConfig.set(path + ".type", type.name());
-        String content = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
-        String content2 = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 1);
+
+        String firstSignLine = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 1);
+        String lastSignLine = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
 
         if (category == ExecutorCategory.FUNCTION || category == ExecutorCategory.METHOD) {
-            if (content != null && !content.isEmpty()) {
-                scriptConfig.set(path + ".type", content);
+            if (lastSignLine != null && !lastSignLine.isEmpty()) {
+                scriptConfig.set(path + ".type", lastSignLine);
             }
         } else if (category == ExecutorCategory.CYCLE) {
-            if (content != null && !content.isEmpty()) {
-                scriptConfig.set(path + ".time", content);
+            if (lastSignLine != null && !lastSignLine.isEmpty()) {
+                scriptConfig.set(path + ".time", Integer.parseInt(lastSignLine));
             }
-            if (content2 != null && !content2.isEmpty()) {
-                scriptConfig.set(path + ".type", content2);
+            if (firstSignLine != null && !firstSignLine.isEmpty()) {
+                scriptConfig.set(path + ".name", firstSignLine);
             }
         }
         scriptConfig.set(path + ".location.x", x);
@@ -119,7 +128,7 @@ public class CodeScript {
     }
 
 
-    public void saveActionBlock(List<String> conditions, Block actionBlock, ActionCategory category, ActionType type) {
+    public void saveActionBlock(List<String> conditions, Block actionBlock, ActionCategory category, ActionType type, Target target) {
         int x = actionBlock.getX();
         int y = actionBlock.getY();
         int z = actionBlock.getZ();
@@ -133,6 +142,9 @@ public class CodeScript {
 
         scriptConfig.set(path + ".category", category.name());
         scriptConfig.set(path + ".type", type.name());
+        if (target != Target.DEFAULT) {
+            scriptConfig.set(path + ".target", target.name());
+        }
 
         scriptConfig.set(path + ".location.x", x);
         scriptConfig.createSection(path + ".arguments");
@@ -152,7 +164,8 @@ public class CodeScript {
         }
 
         String path;
-        if (actionBlock.getType() == Material.OAK_PLANKS) {
+        ActionCategory category = ActionCategory.getByMaterial(actionBlock.getType());
+        if (category.name().contains("CONDITION")) {
             path = ("code.blocks.exec_block_" + z + "_" + y + ".actions." + conditionsPath);
             path = path.substring(0, path.length() - 9);
         } else {

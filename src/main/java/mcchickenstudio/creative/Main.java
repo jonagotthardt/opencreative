@@ -36,6 +36,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,7 +49,7 @@ import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 public final class Main extends JavaPlugin {
 
     public static Main plugin;
-    public static final String version = "1.5 Preview 3";
+    public static final String version = "5.0 Preview 3";
     public static final String codename = "Things will be different";
     public static boolean maintenance = false;
     public static boolean debug = false;
@@ -57,7 +60,12 @@ public final class Main extends JavaPlugin {
      */
     @Override
     public void onLoad() {
-        getLogger().info("This software was made by ukrainians, that are suffering from never-ending air alerts, explosions and people's deaths. We're AGAINST THE WAR. This software IS NOT DESIGNED for people, who support killing and robbing another country. Let us having fun, like players that create their worlds...");
+        getLogger().info(" ");
+        getLogger().info("This software was made by ukrainians, that are suffering from never-ending air alerts, explosions and people's deaths.");
+        getLogger().info("We're AGAINST THE WAR. This software IS NOT DESIGNED for people, who support killing and robbing another country.");
+        getLogger().info(" ");
+        getLogger().info("Let us having fun, like players that create their worlds...");
+        getLogger().info(" ");
     }
 
     /**
@@ -89,11 +97,16 @@ public final class Main extends JavaPlugin {
             teleportToLobby(player);
             getServer().sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&', "&7Open&fCreative&b+ &7" + version + "&f is loaded for " + loadedTime + " ms.")));
         }
-
-        Main.getPlugin().getLogger().info("OpenCreative+ " + version + ": " + codename + " is loaded for " + loadedTime);
-        Main.getPlugin().getLogger().info(" ");
-        Main.getPlugin().getLogger().info(" Welcome to OpenCreative+ " + version + "!");
-        Main.getPlugin().getLogger().info(" ");
+        getLogger().info("OpenCreative+ " + version + ": " + codename + " is loaded for " + loadedTime + " ms.");
+        getLogger().info(" ");
+        getLogger().info(" Welcome to OpenCreative+ " + version + "!");
+        getLogger().info(" ");
+        getLogger().info("  Running on " + Bukkit.getMinecraftVersion() + " server");
+        getLogger().info("  Current time " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()));
+        getLogger().info(" ");
+        getLogger().info("  " + codename);
+        getLogger().info("  Made by McChicken Studio 2017-2024");
+        getLogger().info(" ");
         new Metrics(this, 22001);
 
     }
@@ -128,38 +141,40 @@ public final class Main extends JavaPlugin {
     private boolean checkDebug() {
         maintenance = getConfig().getBoolean("maintenance",false);
         if (maintenance) {
-            Main.getPlugin().getLogger().info("Maintenance mode is still enabled in config.yml, to disable: /maintenance end");
+            getLogger().warning("Maintenance mode is still enabled in config.yml, to disable: /maintenance end");
         }
-        if (getConfig().getBoolean("debug",false)) {
+        debug = getConfig().getBoolean("debug",false);
+        if (debug) {
+            getLogger().warning("Debug Mode is enabled in config.yml, some logs will appear in console.");
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     for (Player p : Bukkit.getOnlinePlayers()) {
-                        p.sendActionBar(Component.text("§fOpen§7Creative§b+ §3" + version + "§7 Debug Mode. §fShh.. let's not leak our hard work..."));
+                        p.sendActionBar(Component.text("§fOpen§7Creative§b+ §3" + version + "§7 Debug Mode. §fSay goodbye to Yotta powered servers!"));
                     }
                 }
             }.runTaskTimer(this,20L,20L);
         }
-        debug = getConfig().getBoolean("debug",false);
         return debug;
     }
 
     private void registerCommands() {
         this.getLogger().info("Registering OpenCreative+ commands...");
         Map<String,Class<? extends CommandExecutor>> commands = new HashMap<>();
-        commands.put("creative",CommandCreative.class);
-        commands.put("spawn",   CommandSpawn.class);
-        commands.put("menu",    CommandMenu.class);
-        commands.put("world",   CommandWorld.class);
-        commands.put("chat",    CreativeChat.class);
-        commands.put("join",    CommandJoin.class);
-        commands.put("ad",      CommandAd.class);
-        commands.put("play",    CommandPlay.class);
-        commands.put("build",   CommandBuild.class);
-        commands.put("dev",     CommandDev.class);
-        commands.put("like",    CommandLike.class);
-        commands.put("dislike", CommandDislike.class);
-        commands.put("locate",  CommandLocate.class);
+        commands.put("creative",    CommandCreative.class);
+        commands.put("spawn",       CommandSpawn.class);
+        commands.put("menu",        CommandMenu.class);
+        commands.put("world",       CommandWorld.class);
+        commands.put("chat",        CreativeChat.class);
+        commands.put("join",        CommandJoin.class);
+        commands.put("ad",          CommandAd.class);
+        commands.put("play",        CommandPlay.class);
+        commands.put("build",       CommandBuild.class);
+        commands.put("dev",         CommandDev.class);
+        commands.put("environment", CommandEnvironment.class);
+        commands.put("like",        CommandLike.class);
+        commands.put("dislike",     CommandDislike.class);
+        commands.put("locate",      CommandLocate.class);
         for (String commandName : commands.keySet()) {
             PluginCommand command = getCommand(commandName);
             if (command != null) {
@@ -171,6 +186,8 @@ public final class Main extends JavaPlugin {
                         command.setTabCompleter(new CommandTabLocate());
                     } else if (commandName.equals("creative")) {
                         command.setTabCompleter(new CommandTabCreative());
+                    } else if (commandName.equals("environment")) {
+                        command.setTabCompleter(new CommandTabEnvironment());
                     }
                 } catch (IllegalAccessException | InstantiationException ignored) {
                     sendCriticalErrorMessage("Couldn't register command " + commandName + ", because of " + ignored.getMessage());

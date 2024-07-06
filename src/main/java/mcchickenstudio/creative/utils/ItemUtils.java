@@ -18,11 +18,16 @@
 
 package mcchickenstudio.creative.utils;
 
+import mcchickenstudio.creative.Main;
+import mcchickenstudio.creative.coding.variables.ValueType;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +37,30 @@ import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemName;
 
 public class ItemUtils {
 
+    private final static NamespacedKey CODING_VALUE_KEY = new NamespacedKey(Main.getPlugin(), "oc_value_type");
+    private final static NamespacedKey CODING_VARIABLE_TYPE_KEY = new NamespacedKey(Main.getPlugin(), "oc_variable_type");
+    private final static NamespacedKey CODING_DO_NOT_DROP_ME_KEY = new NamespacedKey(Main.getPlugin(), "oc_do_not_drop_me");
+
+
+    public static NamespacedKey getCodingValueKey() {
+        return CODING_VALUE_KEY;
+    }
+
+    public static NamespacedKey getCodingVariableTypeKey() {
+        return CODING_VARIABLE_TYPE_KEY;
+    }
+
+    public static NamespacedKey getCodingDoNotDropMeKey() {
+        return CODING_DO_NOT_DROP_ME_KEY;
+    }
+
+    public static ItemStack setPersistentData(ItemStack item, NamespacedKey key, String value) {
+        ItemMeta meta = item.getItemMeta();
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        container.set(key, PersistentDataType.STRING, value);
+        item.setItemMeta(meta);
+        return item;
+    }
 
     /**
      Returns item stack with name and description found in localization file.
@@ -43,6 +72,21 @@ public class ItemUtils {
         itemMeta.setDisplayName(getLocaleItemName(localizationPath + ".name"));
         itemMeta.setLore(getLocaleItemDescription(localizationPath + ".lore"));
         itemStack.setItemMeta(itemMeta);
+        return itemStack;
+
+    }
+
+    /**
+     Returns item stack with name and description found in localization file.
+     **/
+    public static ItemStack createItem(Material material, int amount, String localizationPath, Object value) {
+
+        ItemStack itemStack = createItem(material,amount,localizationPath);
+        ItemMeta meta = itemStack.getItemMeta();
+        PersistentDataContainer container = itemStack.getItemMeta().getPersistentDataContainer();
+        container.set(CODING_VALUE_KEY, PersistentDataType.BYTE, (Byte) value);
+        itemStack.setItemMeta(meta);
+
         return itemStack;
 
     }
@@ -92,6 +136,30 @@ public class ItemUtils {
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             meta.setDisplayName(meta.getDisplayName().replace(placeholder,value.toString()));
+            item.setItemMeta(meta);
+        }
+        return item;
+    }
+
+    public static ItemStack setLore(ItemStack item, List<String> lore) {
+        if (item.hasItemMeta()) {
+            ItemMeta meta = item.getItemMeta();
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+        }
+        return item;
+    }
+
+    public static ItemStack addLoreAtBegin(ItemStack item, String loreLine) {
+        if (loreLine.isEmpty()) return item;
+        if (item.hasItemMeta()) {
+            ItemMeta meta = item.getItemMeta();
+            List<String> lore = new ArrayList<>();
+            lore.add(loreLine);
+            if (meta.hasLore()) {
+                lore.addAll(meta.getLore());
+            }
+            meta.setLore(lore);
             item.setItemMeta(meta);
         }
         return item;

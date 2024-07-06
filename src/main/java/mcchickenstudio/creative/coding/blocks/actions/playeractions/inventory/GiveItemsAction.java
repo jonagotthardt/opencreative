@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.inventory;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
@@ -29,16 +30,14 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 public class GiveItemsAction extends PlayerAction {
-    public GiveItemsAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public GiveItemsAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        for (Entity entity : selection) {
-            for (ItemStack item : getArguments().getItemList("items")) {
-                ((Player) entity).getInventory().addItem(item);
-            }
+    public void executePlayer(Player player) {
+        for (ItemStack item : getArguments().getItemList("items",this)) {
+            player.getInventory().addItem(item);
         }
     }
 

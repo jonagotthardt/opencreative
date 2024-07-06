@@ -291,15 +291,14 @@ public class InventoryClick implements Listener {
                         } else if (item.getType() == Material.CHEST_MINECART) {
                             int nextCategory = AllWorldsMenu.chosenCategories.get(player) + 1;
                             if (nextCategory < 1 || nextCategory > 9) nextCategory = 1;
+                            player.playSound(player.getLocation(), Sound.BLOCK_BARREL_OPEN, 100, 1.3f);
                             AllWorldsMenu.chosenCategories.put(player, nextCategory);
-
                             if (nextCategory == 1) AllWorldsMenu.openInventory(player, 1);
-                            else
-                                AllWorldsMenu.openInventory(player, 1, plotManager.getPlotsByCategory(AllWorldsMenu.getPlayerCategory(player)));
+                            else AllWorldsMenu.openInventory(player, 1, plotManager.getPlotsByCategory(AllWorldsMenu.getPlayerCategory(player)));
                         } else if (item.getType() == Material.HOPPER) {
                             int nextSort = AllWorldsMenu.chosenSorts.get(player) + 1;
                             if (nextSort < 1 || nextSort > 3) nextSort = 1;
-
+                            player.playSound(player.getLocation(), Sound.ITEM_SPYGLASS_USE, 100, 2);
                             AllWorldsMenu.chosenSorts.put(player, nextSort);
                             AllWorldsMenu.openInventory(player, AllWorldsMenu.getCurrentPage(player), AllWorldsMenu.getCurrentPlotList(player));
 
@@ -383,8 +382,12 @@ public class InventoryClick implements Listener {
                 }
             }
             if (!player.getWorld().getName().startsWith("plot")) {
-                if (item.getItemMeta().displayName().equals(getLocaleMessage("items.lobby.games.name")) || item.getItemMeta().displayName().equals(getLocaleMessage("items.lobby.own.name"))) {
-                    event.setCancelled(true);
+                if (item.hasItemMeta()) {
+                    if (item.getItemMeta().displayName() != null) {
+                        if (item.getItemMeta().getDisplayName().equals(getLocaleMessage("items.lobby.games.name")) || item.getItemMeta().displayName().equals(getLocaleMessage("items.lobby.own.name"))) {
+                            event.setCancelled(true);
+                        }
+                    }
                 }
             }
         }

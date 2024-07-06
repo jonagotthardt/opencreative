@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.appearance;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
@@ -28,16 +29,14 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class SendHurtAnimationAction extends PlayerAction {
-    public SendHurtAnimationAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SendHurtAnimationAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        for (Player player : getPlayers(selection)) {
-            float yaw = getArguments().getValue("yaw",player.getYaw());
-            player.sendHurtAnimation(yaw);
-        }
+    public void executePlayer(Player player) {
+        float yaw = getArguments().getValue("yaw",player.getYaw(),this);
+        player.sendHurtAnimation(yaw);
     }
 
     @Override

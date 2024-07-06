@@ -19,11 +19,14 @@
 package mcchickenstudio.creative.coding.blocks.actions.variableactions;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
+import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.variables.ValueType;
-import mcchickenstudio.creative.coding.variables.VariableLink;
+import mcchickenstudio.creative.debug.values.EventValueLink;
+import mcchickenstudio.creative.debug.values.VariableLink;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
@@ -31,10 +34,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
+import static mcchickenstudio.creative.coding.arguments.Argument.parseEntity;
+
 public abstract class VariableAction extends Action {
 
-    public VariableAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public VariableAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
@@ -44,11 +49,13 @@ public abstract class VariableAction extends Action {
 
     protected void setVarValue(VariableLink link, Object value) {
         if (link != null) {
+            link.setName(parseEntity(link.getName(),this));
+            link.setHandler(getHandler().getMainActionHandler());
             ValueType type = ValueType.getByObject(value);
             if (type == null) {
                 type = ValueType.TEXT;
             }
-            getPlot().getWorldVariables().setVariableValue(link, type, value, getExecutor());
+            getPlot().getWorldVariables().setVariableValue(link, type, value, getHandler().getMainActionHandler());
         }
     }
 
@@ -57,10 +64,28 @@ public abstract class VariableAction extends Action {
         if (item.getItemMeta().displayName() == null) return "";
         String name = item.getItemMeta().getDisplayName();
         switch(item.getType()) {
+            case NAME_TAG: {
+                List<String> lore = item.getItemMeta().getLore();
+                if (lore != null && !lore.isEmpty()) {
+                    if (lore.get(0).startsWith("oc.lang.menus.developer.variables.items.event-value")) {
+                        name = ChatColor.stripColor(name);
+                        EventValues.Variable varType;
+                        try {
+                            varType = EventValues.Variable.valueOf(name.toUpperCase());
+                        } catch (Exception e) {
+                            return null;
+                        }
+                        if (getHandler().hasTempVariable(varType)) {
+                            return getHandler().getVarValue(varType);
+                        }
+                        return new EventValueLink(varType, getExecutor());
+                    }
+                }
+            }
             case SLIME_BALL:
                 return ChatColor.stripColor(name);
             case BOOK:
-                return name;
+                return parseEntity(name,this);
             case CLOCK:
                 return ChatColor.stripColor(name);
             case MAGMA_CREAM:
@@ -75,7 +100,7 @@ public abstract class VariableAction extends Action {
                         type = VariableLink.VariableType.GLOBAL;
                     }
                 }
-                VariableLink link = new VariableLink(ChatColor.stripColor(name),type,getExecutor());
+                VariableLink link = new VariableLink(ChatColor.stripColor(name),type);
                 Object variableValue = getPlot().getWorldVariables().getVariableValue(link);
                 if (variableValue != null) {
                     return variableValue;

@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.conditions.playerconditions.state;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.PlayerCondition;
@@ -29,18 +30,13 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class IsFlyingCondition extends PlayerCondition {
-    public IsFlyingCondition(Executor executor, int x, Arguments args, List<Action> actions) {
-        super(executor, x, args, actions);
+    public IsFlyingCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
+        super(executor, target, x, args, actions);
     }
 
     @Override
-    public boolean check(List<Entity> selection) {
-        boolean check = false;
-        for (Player player : getPlayers(selection)) {
-            if (player.isFlying()) check = true;
-            else return false;
-        }
-        return check;
+    public boolean checkPlayer(Player player) {
+        return player.isFlying();
     }
 
     @Override

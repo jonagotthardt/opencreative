@@ -19,58 +19,45 @@
 package mcchickenstudio.creative.coding.blocks.conditions.playerconditions.inventory;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
-import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.PlayerCondition;
-import mcchickenstudio.creative.coding.blocks.events.EventVariables;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
-import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingNotFoundTempVar;
-
 public class IsInventoryNameEqualsCondition extends PlayerCondition {
 
-    public IsInventoryNameEqualsCondition(Executor executor, int x, Arguments args, List<Action> actions) {
-        super(executor, x, args, actions);
+    public IsInventoryNameEqualsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
+        super(executor, target, x, args, actions);
     }
 
     @Override
-    public boolean check(List<Entity> selection) {
-        boolean check = false;
-        boolean requiredColor = getArguments().getValue("color",false);
-        boolean requiredCaps = getArguments().getValue("caps",false);
-        List<String> names = getArguments().getTextList("names");
-        for (Player player : getPlayers(selection)) {
-            boolean isNameEquals = false;
-            for (String name : names) {
-                String title = ((TextComponent) player.getOpenInventory().title()).content();
-                if (!requiredColor) {
-                    name = ChatColor.stripColor(name);
-                    title = ChatColor.stripColor(title);
-                }
-                if (requiredCaps) {
-                    if (title.equals(name)) {
-                        isNameEquals = true;
-                    }
-                } else {
-                    if (title.equalsIgnoreCase(name)) {
-                        isNameEquals = true;
-                    }
-                }
+    public boolean checkPlayer(Player player) {
+        boolean requiredColor = getArguments().getValue("color",false,this);
+        boolean requiredCaps = getArguments().getValue("caps",false,this);
+        List<String> names = getArguments().getTextList("names",this);
+        for (String name : names) {
+            String title = ((TextComponent) player.getOpenInventory().title()).content();
+            if (!requiredColor) {
+                name = ChatColor.stripColor(name);
+                title = ChatColor.stripColor(title);
             }
-            if (!isNameEquals) {
-                return false;
+            if (requiredCaps) {
+                if (title.equals(name)) {
+                    return true;
+                }
             } else {
-                check = true;
+                if (title.equalsIgnoreCase(name)) {
+                    return true;
+                }
             }
         }
-        return check;
+        return false;
     }
 
     @Override

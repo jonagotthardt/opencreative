@@ -51,6 +51,10 @@ public enum ActionCategory {
         return null;
     }
 
+    public boolean isCondition() {
+        return this == PLAYER_CONDITION || this == VARIABLE_CONDITION;
+    }
+
     public ChatColor getColor() {
         return color;
     }

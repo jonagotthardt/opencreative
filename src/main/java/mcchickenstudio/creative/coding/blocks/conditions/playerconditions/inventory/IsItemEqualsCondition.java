@@ -19,14 +19,14 @@
 package mcchickenstudio.creative.coding.blocks.conditions.playerconditions.inventory;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.PlayerCondition;
-import mcchickenstudio.creative.coding.blocks.events.EventVariables;
+import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.utils.ItemUtils;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -35,28 +35,28 @@ import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingNotFoundTempVa
 
 public class IsItemEqualsCondition extends PlayerCondition {
 
-    public IsItemEqualsCondition(Executor executor, int x, Arguments args, List<Action> actions) {
-        super(executor, x, args, actions);
+    public IsItemEqualsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
+        super(executor, target, x, args, actions);
     }
 
     @Override
-    public boolean check(List<Entity> selection) {
-        if (!getExecutor().hasTempVariable(EventVariables.Variable.ITEM)) {
-            sendCodingNotFoundTempVar(getPlot(),getExecutor(), EventVariables.Variable.ITEM);
+    public boolean checkPlayer(Player player) {
+        if (!getHandler().hasTempVariable(EventValues.Variable.ITEM)) {
+            sendCodingNotFoundTempVar(getPlot(),getExecutor(), EventValues.Variable.ITEM);
             return false;
         }
-        boolean ignoreAmount = getArguments().getValue("ignore-amount",true);
-        boolean ignoreName = getArguments().getValue("ignore-name",false);
-        boolean ignoreLore = getArguments().getValue("ignore-lore",false);
-        boolean ignoreEnchantments = getArguments().getValue("ignore-enchantments",false);
-        boolean ignoreFlags = getArguments().getValue("ignore-flags",false);
-        boolean ignoreMaterial = getArguments().getValue("ignore-material",false);
+        boolean ignoreAmount = getArguments().getValue("ignore-amount",true,this);
+        boolean ignoreName = getArguments().getValue("ignore-name",false,this);
+        boolean ignoreLore = getArguments().getValue("ignore-lore",false,this);
+        boolean ignoreEnchantments = getArguments().getValue("ignore-enchantments",false,this);
+        boolean ignoreFlags = getArguments().getValue("ignore-flags",false,this);
+        boolean ignoreMaterial = getArguments().getValue("ignore-material",false,this);
 
         boolean check = false;
-        List<ItemStack> items = getArguments().getItemList("items");
+        List<ItemStack> items = getArguments().getItemList("items",this);
         if (items.isEmpty()) return false;
 
-        ItemStack eventItem = (ItemStack) getExecutor().getVarValue(EventVariables.Variable.ITEM);
+        ItemStack eventItem = (ItemStack) getHandler().getVarValue(EventValues.Variable.ITEM);
         eventItem = ItemUtils.getItemWithIgnoreData(eventItem,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial);
         for (ItemStack checkItem : items) {
             checkItem = ItemUtils.getItemWithIgnoreData(checkItem,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial);

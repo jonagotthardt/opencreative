@@ -64,6 +64,10 @@ public class PlayerMove implements Listener {
             player.teleport(player.getWorld().getSpawnLocation());
         }
 
+        if (player.getY() < 0 && player.getWorld().getName().endsWith("dev")) {
+            player.teleport(player.getWorld().getSpawnLocation());
+        }
+
         if (isBlockChanged(event.getFrom(),event.getTo())) {
             EventRaiser.raiseMoveEvent(event.getPlayer(),event);
         }

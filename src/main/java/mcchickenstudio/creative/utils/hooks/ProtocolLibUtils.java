@@ -21,22 +21,34 @@ package mcchickenstudio.creative.utils.hooks;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.reflect.StructureModifier;
+import com.comphenix.protocol.wrappers.WrappedBlockData;
+import com.comphenix.protocol.wrappers.WrappedDataValue;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import com.comphenix.protocol.wrappers.WrappedWatchableObject;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import mcchickenstudio.creative.Main;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemName;
-import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static com.comphenix.protocol.PacketType.Play.Server.*;
+import static mcchickenstudio.creative.utils.MessageUtils.*;
 
 public class ProtocolLibUtils {
 
@@ -48,42 +60,171 @@ public class ProtocolLibUtils {
     }
     
     private static void registerEvents() {
-        Main.getPlugin().getLogger().info("Registering ProtocolLib events...");
-        manager.addPacketListener(new PacketAdapter(Main.getPlugin(), PacketType.Play.Server.SET_SLOT) {
+        //Main.getPlugin().getLogger().info("Registering ProtocolLib events...");
+        /*PacketAdapter.AdapterParameteters params = PacketAdapter.params().plugin(Main.getPlugin())
+                .listenerPriority(ListenerPriority.HIGH)
+                .types(SET_SLOT, PacketType.Play.Server.WINDOW_ITEMS);*/
+        /*PacketAdapter.AdapterParameteters clientParams = PacketAdapter.params().plugin(Main.getPlugin())
+                .listenerPriority(ListenerPriority.HIGH)
+                .types(PacketType.Play.Client.SET_CREATIVE_SLOT, PacketType.Play.Client.HELD_ITEM_SLOT);*/
+        /*manager.addPacketListener(new PacketAdapter(params) {
             @Override
             public void onPacketSending(PacketEvent event) {
-                PacketContainer container = event.getPacket();
-                StructureModifier<ItemStack> itemStackStructureModifier = container.getItemModifier();
-                for (int i = 0; i < itemStackStructureModifier.size(); i++) {
-                    ItemStack itemStack = itemStackStructureModifier.read(i);
-                    if (itemStack != null) {
-                        if (!itemStack.hasItemMeta()) continue;
-                        ItemMeta itemMeta = itemStack.getItemMeta();
-                        if (itemMeta.getDisplayName().startsWith("oc.lang.")) {
-                            itemMeta.setDisplayName(getLocaleItemName(itemMeta.getDisplayName().replace("oc.lang.","")));
+                translateItemStack(event);
+            }
+        });*/
+        /*manager.addPacketListener(new PacketAdapter(clientParams) {
+            @Override
+            public void onPacketReceiving(PacketEvent event) {
+                translateItemStack(event);
+            }
+        });*/
+        //Main.getPlugin().getLogger().info("Registered all ProtocolLib events.");
+    }
+
+    public static void spawnGlowingFallingBlock(Player player, Location location) {
+        World world = player.getWorld();
+        PacketContainer spawnEntityPacket = manager.createPacket(SPAWN_ENTITY);
+        spawnEntityPacket.getIntegers().write(0, 83);
+        spawnEntityPacket.getUUIDs().write(0, UUID.randomUUID());
+        spawnEntityPacket.getEntityTypeModifier().write(0, EntityType.SHULKER);
+        spawnEntityPacket.getDoubles()
+                .write(0, location.getX())
+                .write(1, location.getY())
+                .write(2, location.getZ());
+
+        PacketContainer entityDataPacket = manager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
+        WrappedDataWatcher watcher = new WrappedDataWatcher();
+        watcher.setObject(0, WrappedDataWatcher.Registry.get(Byte.class), (byte) (0x40 | 0x20));
+        entityDataPacket.getIntegers().write(0, 83);
+        List<WrappedDataValue> wrappedDataValueList = new ArrayList<>();
+        for(final WrappedWatchableObject entry : watcher.getWatchableObjects()) {
+            if(entry == null) continue;
+            final WrappedDataWatcher.WrappedDataWatcherObject watcherObject = entry.getWatcherObject();
+            wrappedDataValueList.add(
+                    new WrappedDataValue(
+                            watcherObject.getIndex(),
+                            watcherObject.getSerializer(),
+                            entry.getRawValue()
+                    )
+            );
+        }
+        entityDataPacket.getDataValueCollectionModifier().write(0, wrappedDataValueList);
+        PacketContainer hideGlowingPacket = manager.createPacket(ENTITY_DESTROY);
+        hideGlowingPacket.getModifier().write(0, new IntArrayList(new int[]{83}));
+        manager.sendServerPacket(player,spawnEntityPacket);
+        manager.sendServerPacket(player,entityDataPacket);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (player.getWorld() == world) {
+                    manager.sendServerPacket(player,hideGlowingPacket);
+                }
+            }
+        }.runTaskLater(Main.getPlugin(),60L);
+    }
+
+    private static void translateItemStack(PacketEvent event) {
+        PacketContainer container = event.getPacket().deepClone();
+        PlainTextComponentSerializer plainSerializer = PlainTextComponentSerializer.plainText();
+        /*StructureModifier<ItemStack> sm = container.getItemModifier();
+        for (int j = 0; j < sm.size(); j++) {
+            if (sm.getValues().get(j) != null) {
+                ItemStack itemStack = sm.getValues().get(j);
+                ItemMeta itemMeta = itemStack.getItemMeta();
+                if (itemMeta != null) {
+                    Component displayName = itemMeta.displayName();
+                    if (displayName != null) {
+                        String displayNameString = plainSerializer.serialize(displayName);
+                        if (displayNameString.startsWith("oc.lang.")) {
+                            itemMeta.displayName(Component.text(getLocaleItemName(displayNameString.replace("oc.lang.",""))));
                         }
-                        List<String> newLore = new ArrayList<>();
-                        if (itemMeta.hasLore()) {
-                            List<String> lore = itemMeta.getLore();
-                            for (int i1 = 0; i1 < lore.size(); i1++) {
-                                String loreLine = lore.get(i1);
-                                if (loreLine.startsWith("oc.lang.")) {
-                                    newLore.add(getLocaleMessage(loreLine.replace("oc.lang.",""),false));
+                    }
+                    if (itemMeta.hasLore()) {
+                        List<Component> lore = itemMeta.lore();
+                        if (lore != null) {
+                            List<Component> newLore = new ArrayList<>();
+                            for (Component loreLine : lore) {
+                                String loreLineString = plainSerializer.serialize(loreLine);
+                                if (loreLineString.startsWith("oc.lang.")) {
+                                    if (loreLineString.endsWith(".lore")) {
+                                        newLore.addAll(getLocaleItemDescription(loreLineString.replace("oc.lang.","")).stream().map(Component::text).toList());
+                                    } else {
+                                        newLore.add(Component.text(getLocaleMessage(loreLineString.replace("oc.lang.", ""), false)));
+                                    }
                                 } else {
                                     newLore.add(loreLine);
                                 }
-                                lore.set(i1, "T");
                             }
+                            itemMeta.lore(newLore);
                         }
-                        itemMeta.setLore(newLore);
                         itemStack.setItemMeta(itemMeta);
-                        itemStackStructureModifier.write(i, itemStack);
+                        event.getPlayer().sendMessage("this is normal");
+                        NbtCompound tag = NbtFactory.asCompound(NbtFactory.fromItemTag(itemStack));
+                        if (!tag.containsKey("ench")) {
+                            event.getPlayer().sendMessage("not contains, adding");
+                            tag.put("ench", NbtFactory.ofList("ench"));
+                        } else {
+                            event.getPlayer().sendMessage("already added");
+                        }
+                        NbtFactory.setItemTag(itemStack, tag);
                     }
-                    itemStackStructureModifier.write(i, itemStack);
+
                 }
             }
-        });
-        Main.getPlugin().getLogger().info("Registered all ProtocolLib events.");
+        }
+        event.setPacket(container);
+
+
+        if (true) {
+            return;
+        }*/
+        int itemStacksSize = container.getItemModifier().size();
+        if (itemStacksSize > 0)  {
+            plainSerializer = PlainTextComponentSerializer.plainText();
+            for (int i = 0; i < itemStacksSize; i++) {
+                ItemStack itemStack = container.getItemModifier().readSafely(i);
+                if (itemStack == null) return;
+                ItemMeta itemMeta = itemStack.getItemMeta();
+                if (itemMeta != null) {
+                    Component displayName = itemMeta.displayName();
+                    if (displayName != null) {
+                        String displayNameString = plainSerializer.serialize(displayName);
+                        if (displayNameString.startsWith("oc.lang.")) {
+                            itemMeta.displayName(Component.text(getLocaleItemName(displayNameString.replace("oc.lang.",""))));
+                        }
+                    }
+                    if (itemMeta.hasLore()) {
+                        List<Component> lore = itemMeta.lore();
+                        if (lore != null) {
+                            List<Component> newLore = new ArrayList<>();
+                            for (Component loreLine : lore) {
+                                String loreLineString = plainSerializer.serialize(loreLine);
+                                if (loreLineString.startsWith("oc.lang.")) {
+                                    if (loreLineString.endsWith(".lore")) {
+                                        newLore.addAll(getLocaleItemDescription(loreLineString.replace("oc.lang.","")).stream().map(Component::text).toList());
+                                    } else {
+                                        newLore.add(Component.text(getLocaleMessage(loreLineString.replace("oc.lang.", ""), false)));
+                                    }
+                                } else {
+                                    newLore.add(loreLine);
+                                }
+                            }
+                            itemMeta.lore(newLore);
+                        }
+                        itemStack.setItemMeta(itemMeta);
+                    }
+                    container.getItemModifier().write(i,itemStack);
+                }
+            }
+        }
+        event.setPacket(container);
+        PacketContainer container1 = manager.createPacket(ENTITY_STATUS);
+        container1.getModifier().writeDefaults();
+        container1.getIntegers().write(0, event.getPlayer().getEntityId());
+        container1.getBytes().write(0, (byte) 9);
+
+        manager.sendServerPacket(event.getPlayer(),container1);
     }
 
 }

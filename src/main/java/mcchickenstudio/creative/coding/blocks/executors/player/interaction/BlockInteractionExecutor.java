@@ -19,9 +19,8 @@
 package mcchickenstudio.creative.coding.blocks.executors.player.interaction;
 
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
-import mcchickenstudio.creative.coding.blocks.events.EventVariables;
+import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.events.player.interaction.BlockInteractionEvent;
-import mcchickenstudio.creative.coding.blocks.events.player.inventory.ItemPickupEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.blocks.executors.player.PlayerExecutor;
 import mcchickenstudio.creative.plots.Plot;
@@ -32,7 +31,7 @@ public class BlockInteractionExecutor extends PlayerExecutor implements Cancella
     @Override
     protected void setTempVars(CreativeEvent event) {
         if (event instanceof BlockInteractionEvent) {
-            setVar(EventVariables.Variable.BLOCK,((BlockInteractionEvent) event).getBlock());
+            setTempVar(EventValues.Variable.BLOCK,((BlockInteractionEvent) event).getBlock());
         }
     }
 

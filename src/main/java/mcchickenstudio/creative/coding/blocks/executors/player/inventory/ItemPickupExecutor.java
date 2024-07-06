@@ -19,7 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.executors.player.inventory;
 
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
-import mcchickenstudio.creative.coding.blocks.events.EventVariables;
+import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.events.player.inventory.ItemPickupEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.blocks.executors.player.PlayerExecutor;
@@ -31,7 +31,7 @@ public class ItemPickupExecutor extends PlayerExecutor implements Cancellable {
     @Override
     protected void setTempVars(CreativeEvent event) {
         if (event instanceof ItemPickupEvent) {
-            setVar(EventVariables.Variable.ITEM,((ItemPickupEvent) event).getItem());
+            setTempVar(EventValues.Variable.ITEM,((ItemPickupEvent) event).getItem());
         }
     }
 

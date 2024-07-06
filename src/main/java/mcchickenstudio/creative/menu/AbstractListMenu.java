@@ -130,6 +130,7 @@ public abstract class AbstractListMenu extends AbstractMenu {
 
         byte pageSize = (byte) itemsSlots.length;
         byte pageCount = countPages(elements);
+
         // For pages
         for (int i = 0; i < pageCount; i++) {
 
@@ -155,7 +156,7 @@ public abstract class AbstractListMenu extends AbstractMenu {
             event.setCancelled(true);
             return;
         }
-        if (isCharmsBarClicked((byte) event.getSlot()) && !isEmpty(event.getCurrentItem())) {
+        if (isCharmsBarClicked((byte) event.getSlot()) && !isEmpty(event.getCurrentItem()) && !event.getCurrentItem().equals(DECORATION_ITEM)) {
             onCharmsBarClick(event);
         } else if (isElementClicked((byte) event.getSlot()) && !isEmpty(event.getCurrentItem())) {
             onElementClick(event);

@@ -19,35 +19,36 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.communication;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
 public class SendMessageAction extends PlayerAction {
 
-    public SendMessageAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SendMessageAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        String type = getArguments().getValue("type","new-line");
-        List<String> messages = getArguments().getTextList("messages");
-        for (Entity entity : selection) {
-            if (type.equals("new-line")) {
-                for (String message : messages) {
-                    entity.sendMessage(message);
-                }
-            } else if (type.equals("join-spaces")) {
-                entity.sendMessage(String.join(" ",messages));
-            } else {
-                entity.sendMessage(String.join("",messages));
+    public void executePlayer(Player player) {
+        String type = getArguments().getValue("type","new-line",this);
+        List<String> messages = getArguments().getTextList("messages",this);
+        if (type.equals("new-line")) {
+            for (String message : messages) {
+                player.sendMessage(message);
             }
+        } else if (type.equals("join-spaces")) {
+            player.sendMessage(String.join(" ",messages));
+        } else {
+            player.sendMessage(String.join("",messages));
         }
     }
+
 
     @Override
     public ActionType getActionType() {

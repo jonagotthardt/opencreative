@@ -106,6 +106,7 @@ public class ChangedWorld implements Listener {
                 }
             }
         } else {
+            player.setLastDeathLocation(null);
             removePlayerWithLocation(player);
             if (oldPlot != null) {
                 if (oldPlot.getOnline() > 0) {
@@ -151,7 +152,6 @@ public class ChangedWorld implements Listener {
                         onlinePlayer.sendMessage(getLocaleMessage("world.joined", player));
                     }
                 }
-                EventRaiser.raiseJoinEvent(event.getPlayer());
                 new BukkitRunnable() {
                     @Override
                     public void run() {

@@ -27,6 +27,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.*;
 import org.bukkit.block.data.Directional;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -165,12 +166,8 @@ public class PlayerPlaceBlock implements Listener {
                         newSignBlock.setType(Material.OAK_WALL_SIGN);
 
                         Sign sign = (Sign) newSignBlock.getState();
-
-                        if (!oldSign.lines().isEmpty()) {
-                            sign.setLine(1, oldSign.getLine(1));
-                        }
-                        if (oldSign.lines().size() > 1) {
-                            sign.setLine(2, oldSign.getLine(2));
+                        for (byte i = 0; i < oldSign.getSide(Side.FRONT).lines().size(); i++) {
+                            sign.getSide(Side.FRONT).line(i,oldSign.getSide(Side.FRONT).line(i));
                         }
 
                         translateBlockSign(newSignBlock);
@@ -223,12 +220,10 @@ public class PlayerPlaceBlock implements Listener {
                         newSignBlock.setType(Material.OAK_WALL_SIGN);
 
                         Sign sign = (Sign) newSignBlock.getState();
-                        if (!oldSign.lines().isEmpty()) {
-                            sign.setLine(1, oldSign.getLine(1));
+                        for (byte i = 0; i < oldSign.getSide(Side.FRONT).lines().size(); i++) {
+                            sign.getSide(Side.FRONT).line(i,oldSign.getSide(Side.FRONT).line(i));
                         }
-                        if (oldSign.lines().size() > 1) {
-                            sign.setLine(2, oldSign.getLine(2));
-                        }
+
                         sign.setBlockData(oldSign.getBlockData());
                         sign.update();
                         translateBlockSign(newSignBlock);

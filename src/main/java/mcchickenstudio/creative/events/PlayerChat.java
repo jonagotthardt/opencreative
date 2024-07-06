@@ -43,6 +43,7 @@ import java.util.*;
 import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
 import static mcchickenstudio.creative.utils.FileUtils.*;
+import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.MessageUtils.parsePAPI;
 
@@ -81,20 +82,26 @@ public class PlayerChat implements Listener {
             ItemStack itemInHand = player.getInventory().getItemInMainHand();
             if (itemInHand.getType() == Material.BOOK) {
                 ItemMeta meta = itemInHand.getItemMeta();
-                meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',event.getMessage()));
+                meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',event.getMessage().replace("%space%", " ").replace("%new-line%", "\n").replace("%empty%","").replace("&&","§")));
                 itemInHand.setItemMeta(meta);
                 player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.4f);
+                setPersistentData(itemInHand,getCodingValueKey(),"TEXT");
                 player.setItemInHand(itemInHand);
-                player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),ChatColor.translateAlternateColorCodes('&',event.getMessage()));
+                player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),ChatColor.translateAlternateColorCodes('&',meta.getDisplayName()));
             } else if (itemInHand.getType() == Material.SLIME_BALL) {
+                String numberString = ChatColor.stripColor(event.getMessage());
+                if (numberString.equalsIgnoreCase("p") || numberString.equalsIgnoreCase("pi")) {
+                    numberString = "3.1415926";
+                }
                 try {
-                    float floatNumber = Float.parseFloat(ChatColor.stripColor(event.getMessage()));
+                    double number = Double.parseDouble(numberString);
                     ItemMeta meta = itemInHand.getItemMeta();
-                    meta.setDisplayName("§c" + floatNumber);
+                    meta.setDisplayName("§c" + number);
                     itemInHand.setItemMeta(meta);
+                    setPersistentData(itemInHand,getCodingValueKey(),"NUMBER");
                     player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.7f);
                     player.setItemInHand(itemInHand);
-                    player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),ChatColor.translateAlternateColorCodes('&',"&c"  +event.getMessage()));
+                    player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),meta.getDisplayName());
                 } catch (NumberFormatException exception) {
                     player.sendTitle("",getLocaleMessage("world.dev-mode.set-variable-number-error"));
                 }
@@ -107,16 +114,15 @@ public class PlayerChat implements Listener {
                     if (itemName.length() >= 2) {
                         insert = itemName.charAt(1);
                     }
-                    if (meta.lore() == null || meta.lore().isEmpty()) {
-                        meta.lore(new ArrayList<>(Arrays.asList(Component.text("oc.lang.items.developer.variable.local"))));
-                    }
                 }
                 newValue.insert(0,ChatColor.translateAlternateColorCodes('&',"&" + insert));
                 meta.setDisplayName(newValue.toString());
                 itemInHand.setItemMeta(meta);
+                setPersistentData(itemInHand,getCodingValueKey(),"VARIABLE");
+                setPersistentData(itemInHand,getCodingVariableTypeKey(),insert == 'a' ? "SAVED" : insert == 'e' ? "GLOBAL" : "LOCAL");
                 player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.4f);
-                player.setItemInHand(itemInHand);
-                player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),ChatColor.translateAlternateColorCodes('&',event.getMessage()));
+                player.getInventory().setItemInMainHand(itemInHand);
+                player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),ChatColor.translateAlternateColorCodes('&',meta.getDisplayName()));
             }
         }
 

@@ -19,25 +19,25 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.movement;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
 public class SaddleEntityAction extends PlayerAction {
-    public SaddleEntityAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SaddleEntityAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        String text = getArguments().getValue("entity"," ");
+    public void executePlayer(Player player) {
+        String text = getArguments().getValue("entity"," ",this);
         for (Entity entity : getEntitiesByNameOrUUID(text)) {
-            for (Entity selected : selection) {
-                entity.addPassenger(selected);
-            }
+            entity.addPassenger(player);
         }
     }
 

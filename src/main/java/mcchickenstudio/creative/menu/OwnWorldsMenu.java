@@ -24,6 +24,7 @@ import mcchickenstudio.creative.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -143,6 +144,7 @@ public class OwnWorldsMenu extends LegacyMenu {
     }
 
     public static void openInventory(Player player, int page) {
+        player.playSound(player.getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, 100, 1.4f);
         player.openInventory(new OwnWorldsMenu(player,page).getInventory());
     }
 

@@ -18,6 +18,7 @@
 
 package mcchickenstudio.creative.coding.menus.variables;
 
+import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.menu.AbstractMenu;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -26,23 +27,27 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
-import static mcchickenstudio.creative.utils.ItemUtils.createItem;
-import static mcchickenstudio.creative.utils.ItemUtils.itemEquals;
+import java.util.ArrayList;
+import java.util.List;
+
+import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 
 public class VariablesMenu extends AbstractMenu  {
 
-    private final ItemStack TEXT_ITEM = createItem(Material.BOOK,1,"menus.developer.variables.items.text");
-    private final ItemStack NUMBER_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.number");
-    private final ItemStack BOOLEAN_ITEM = createItem(Material.CLOCK,1,"menus.developer.variables.items.boolean");
-    private final ItemStack LOCATION_ITEM = createItem(Material.PAPER,1,"menus.developer.variables.items.location");
-    //private final ItemStack ARRAY_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.array");
-    //private final ItemStack VARIABLE_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.variable");
+    private final ItemStack TEXT_ITEM = createItem(Material.BOOK,1,"menus.developer.variables.items.text",(byte)1);
+    private final ItemStack NUMBER_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.number",(byte) 2);
+    private final ItemStack BOOLEAN_ITEM = createItem(Material.CLOCK,1,"menus.developer.variables.items.boolean",(byte) 3);
+    private final ItemStack LOCATION_ITEM = createItem(Material.PAPER,1,"menus.developer.variables.items.location",(byte) 4);
+    private final ItemStack VARIABLE_ITEM = createItem(Material.MAGMA_CREAM,1,"menus.developer.variables.items.variable",(byte) 5);
+    private final ItemStack EVENT_VALUE_ITEM = createItem(Material.NAME_TAG,1,"menus.developer.variables.items.event-value",(byte) 6);
     //private final ItemStack POTION_ITEM = createItem(Material.GLASS_BOTTLE,1,"menus.developer.variables.items.potion");
     //private final ItemStack PARTICLE_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.particle");
     //private final ItemStack ENTITY_TYPE_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.entity_type");
-    //private final ItemStack MAP_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.map");
 
 
     public VariablesMenu() {
@@ -55,8 +60,8 @@ public class VariablesMenu extends AbstractMenu  {
         setItem((byte) 1,NUMBER_ITEM);
         setItem((byte) 2,BOOLEAN_ITEM);
         setItem((byte) 3,LOCATION_ITEM);
-        setItem((byte) 4,DECORATION_ITEM);
-        setItem((byte) 5,DECORATION_ITEM);
+        setItem((byte) 4,VARIABLE_ITEM);
+        setItem((byte) 5,EVENT_VALUE_ITEM);
         setItem((byte) 6,DECORATION_ITEM);
         setItem((byte) 7,DECORATION_ITEM);
         setItem((byte) 8,DECORATION_ITEM);
@@ -67,9 +72,14 @@ public class VariablesMenu extends AbstractMenu  {
         if (!isClickedInMenuSlots(event) || !isPlayerClicked(event)) return;
         event.setCancelled(true);
         if (event.getCurrentItem() == null || itemEquals(event.getCurrentItem(), DECORATION_ITEM)) return;
-        event.getWhoClicked().getInventory().addItem(event.getCurrentItem());
-        ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(),Sound.ENTITY_ALLAY_ITEM_THROWN,100f,2f);
+        ItemStack currentItem = event.getCurrentItem().clone();
+        if (currentItem.equals(VARIABLE_ITEM)) {
+            setPersistentData(currentItem,getCodingVariableTypeKey(),"LOCAL");
+        }
+        setPersistentData(currentItem,getCodingValueKey(),ValueType.getByMaterial(currentItem.getType()).name());
+        event.getWhoClicked().getInventory().addItem(currentItem);
         event.setCursor(null);
+        ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(),Sound.ENTITY_ALLAY_ITEM_THROWN,100f,2f);
     }
 
     @Override

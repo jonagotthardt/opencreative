@@ -19,18 +19,22 @@
 package mcchickenstudio.creative.coding.blocks.conditions;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
-import mcchickenstudio.creative.coding.blocks.actions.ActionHandler;
+import mcchickenstudio.creative.coding.blocks.actions.ActionsHandler;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugAction;
 
 public abstract class Condition extends Action {
 
-    private final List<Action> actions;
-    private List<Action> reactions;
+    private final List<Action> actions = new ArrayList<>();
+    private final List<Action> reactions = new ArrayList<>();
     private final boolean isOpposed = false;
 
     /**
@@ -40,24 +44,36 @@ public abstract class Condition extends Action {
      * @param x        X from Action's block location in developers plot.
      * @param args     List of arguments for action.
      */
-    public Condition(Executor executor, int x, Arguments args, List<Action> actions) {
-        super(executor, x, args);
-        this.actions = actions;
+    public Condition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
+        super(executor, target, x, args);
+        this.actions.addAll(actions);
     }
 
-    public abstract boolean check(List<Entity> selection);
+    public abstract boolean check(Entity entity);
 
     @Override
-    public void execute(List<Entity> selection) {
-        if (check(selection) && !isOpposed) {
-            new ActionHandler(getExecutor()).executeActions(actions);
+    public void prepareAndExecute(ActionsHandler handler) {
+        this.handler = handler;
+        this.event = getExecutor().getEvent();
+        sendCodingDebugAction(this);
+        boolean check = false;
+        for (Entity entity : getTargets()) {
+            this.entity = entity;
+            if (check(entity)) {
+                check = true;
+            }
+        }
+        if (check) {
+            new ActionsHandler(handler).executeActions(actions);
+        } else {
+            new ActionsHandler(handler).executeActions(reactions);
         }
     }
 
     @Override
-    public ActionCategory getActionCategory() {
-        return ActionCategory.PLAYER_CONDITION;
-    }
+    protected void execute(Entity entity) {}
+
+    public abstract ActionCategory getActionCategory();
 
     public List<Action> getActions() {
         return actions;

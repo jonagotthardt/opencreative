@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.conditions.playerconditions.inventory;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.PlayerCondition;
@@ -32,42 +33,39 @@ import java.util.List;
 
 public class HasItemInHandCondition extends PlayerCondition {
 
-    public HasItemInHandCondition(Executor executor, int x, Arguments args, List<Action> actions) {
-        super(executor, x, args, actions);
+    public HasItemInHandCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
+        super(executor, target, x, args, actions);
     }
 
     @Override
-    public boolean check(List<Entity> selection) {
-
-        boolean check = false;
-        List<ItemStack> items = getArguments().getItemList("items");
+    public boolean checkPlayer(Player player) {
+        List<ItemStack> items = getArguments().getItemList("items",this);
         if (items.isEmpty()) return false;
 
-        String hand = getArguments().getValue("hand","main-hand");
-        boolean ignoreAmount = getArguments().getValue("ignore-amount",true);
-        boolean ignoreName = getArguments().getValue("ignore-name",false);
-        boolean ignoreLore = getArguments().getValue("ignore-lore",false);
-        boolean ignoreEnchantments = getArguments().getValue("ignore-enchantments",false);
-        boolean ignoreFlags = getArguments().getValue("ignore-flags",false);
-        boolean ignoreMaterial = getArguments().getValue("ignore-material",false);
+        String hand = getArguments().getValue("hand","main-hand",this);
+        boolean ignoreAmount = getArguments().getValue("ignore-amount",true,this);
+        boolean ignoreName = getArguments().getValue("ignore-name",false,this);
+        boolean ignoreLore = getArguments().getValue("ignore-lore",false,this);
+        boolean ignoreEnchantments = getArguments().getValue("ignore-enchantments",false,this);
+        boolean ignoreFlags = getArguments().getValue("ignore-flags",false,this);
+        boolean ignoreMaterial = getArguments().getValue("ignore-material",false,this);
 
-        for (Player player : getPlayers(selection)) {
-            ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
-            itemInMainHand = ItemUtils.getItemWithIgnoreData(itemInMainHand,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial);
-            ItemStack itemInOffHand = player.getInventory().getItemInOffHand();
-            itemInOffHand = ItemUtils.getItemWithIgnoreData(itemInOffHand,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial);
-            for (ItemStack checkItem : items) {
-                checkItem = ItemUtils.getItemWithIgnoreData(checkItem,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial);
-                if (hand.equals("main-hand")) {
-                    check = itemInMainHand.equals(checkItem);
-                } else if (hand.equals("off-hand")) {
-                    check = itemInOffHand.equals(checkItem);
-                } else {
-                    check = (hand.equals("main-or-off-hands") ? itemInMainHand.equals(checkItem) || itemInOffHand.equals(checkItem) : itemInMainHand.equals(checkItem) && itemInOffHand.equals(checkItem));
-                }
+        ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
+        itemInMainHand = ItemUtils.getItemWithIgnoreData(itemInMainHand,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial);
+        ItemStack itemInOffHand = player.getInventory().getItemInOffHand();
+        itemInOffHand = ItemUtils.getItemWithIgnoreData(itemInOffHand,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial);
+        for (ItemStack checkItem : items) {
+            checkItem = ItemUtils.getItemWithIgnoreData(checkItem, ignoreAmount, ignoreName, ignoreLore, ignoreFlags, ignoreEnchantments, ignoreMaterial);
+            if (hand.equals("main-hand")) {
+                return itemInMainHand.equals(checkItem);
+            } else if (hand.equals("off-hand")) {
+                return itemInOffHand.equals(checkItem);
+            } else {
+                return (hand.equals("main-or-off-hands") ? itemInMainHand.equals(checkItem) || itemInOffHand.equals(checkItem) : itemInMainHand.equals(checkItem) && itemInOffHand.equals(checkItem));
             }
         }
-        return check;
+
+        return false;
     }
 
     @Override

@@ -40,7 +40,7 @@ public class DevPlot {
     public String worldName;
 
     public World world;
-    public boolean isLoaded;
+    public boolean isLoaded = false;
     public Material floorBlockMaterial;
     public Material eventBlockMaterial;
     public Material actionBlockMaterial;
@@ -54,7 +54,7 @@ public class DevPlot {
 
         this.linkedPlot = plot;
         this.worldName = plot.worldName + "dev";
-        this.isLoaded = !(Bukkit.getWorld(this.worldName) == null);
+        this.isLoaded = false;
 
         this.floorBlockMaterial = Material.WHITE_STAINED_GLASS;
         this.eventBlockMaterial = Material.LIGHT_BLUE_STAINED_GLASS;
@@ -83,8 +83,10 @@ public class DevPlot {
     }
 
     private void setupWorld() {
-        this.world.setTime(6000);
+        this.world.setTime(11750);
         this.world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
+        this.world.setGameRule(GameRule.DO_WEATHER_CYCLE,false);
+        this.world.getWorldBorder().setSize(120);
         this.world.getWorldBorder().setWarningDistance(0);
     }
 

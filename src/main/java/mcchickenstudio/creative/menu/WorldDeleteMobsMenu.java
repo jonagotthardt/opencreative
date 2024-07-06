@@ -22,10 +22,7 @@ import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.MessageUtils;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -34,8 +31,6 @@ import org.bukkit.inventory.ItemStack;
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 import static mcchickenstudio.creative.utils.ItemUtils.itemEquals;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
-import static mcchickenstudio.creative.utils.WorldUtils.isEntityMob;
-import static mcchickenstudio.creative.utils.WorldUtils.isEntityOther;
 
 public class WorldDeleteMobsMenu extends AbstractMenu {
 
@@ -67,14 +62,14 @@ public class WorldDeleteMobsMenu extends AbstractMenu {
         int count = 0;
         if (itemEquals(event.getCurrentItem(),DELETE_ITEMS_ITEM)) {
             for (Entity entity : plot.world.getEntities()) {
-                if (entity.getType() == EntityType.ITEM) {
+                if (entity instanceof Item) {
                     entity.remove();
                     count++;
                 }
             }
             if (plot.devPlot != null && plot.devPlot.world != null) {
                 for (Entity entity : plot.devPlot.world.getEntities()) {
-                    if (entity.getType() == EntityType.ITEM) {
+                    if (entity instanceof Item) {
                         entity.remove();
                         count++;
                     }

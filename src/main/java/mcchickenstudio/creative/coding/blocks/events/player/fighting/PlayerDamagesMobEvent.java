@@ -26,11 +26,13 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 public class PlayerDamagesMobEvent extends CreativeEvent {
 
     private final Entity damager;
+    private final Entity victim;
     private final double damage;
 
     public PlayerDamagesMobEvent(Player player, EntityDamageByEntityEvent event) {
         super(player);
         damager = event.getDamager();
+        victim = event.getEntity();
         damage = event.getDamage();
     }
 
@@ -40,5 +42,9 @@ public class PlayerDamagesMobEvent extends CreativeEvent {
 
     public Entity getDamager() {
         return damager;
+    }
+
+    public Entity getVictim() {
+        return victim;
     }
 }

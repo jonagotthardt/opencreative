@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.menus.variables;
 
 import mcchickenstudio.creative.menu.AbstractListMenu;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -52,8 +53,8 @@ public class PotionsMenu extends AbstractListMenu {
 
     static {
         potions.put(PotionEffectType.BLINDNESS,Material.BLACK_SHULKER_BOX);
-        potions.put(PotionEffectType.JUMP_BOOST,Material.RABBIT_FOOT);
-        potions.put(PotionEffectType.HEALTH_BOOST,Material.GOLDEN_APPLE);
+        //potions.put(PotionEffectType.JUMP_BOOST,Material.RABBIT_FOOT);
+        //potions.put(PotionEffectType.HEALTH_BOOST,Material.GOLDEN_APPLE);
     }
 
     private Material getMaterial(PotionEffectType type) {
@@ -73,7 +74,7 @@ public class PotionsMenu extends AbstractListMenu {
             if (potionType != null) {
                 meta.setBasePotionType(potionType);
             } else {
-                meta.setDisplayName(type.getName().toLowerCase().replace("minecraft:",""));
+                meta.displayName(Component.text(type.getName().toLowerCase().replace("minecraft:","")));
                 meta.setBasePotionType(PotionType.WATER);
             }
             meta.setColor(type.getColor());

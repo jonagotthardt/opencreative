@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.params;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
@@ -28,20 +29,18 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class SetNoDamageTicksAction extends PlayerAction {
-    public SetNoDamageTicksAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetNoDamageTicksAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        boolean add = getArguments().getValue("add",false);
-        int ticks = getArguments().getValue("ticks",0);
-        for (Player player : getPlayers(selection)) {
-            if (add) {
-                ticks = ticks + player.getNoDamageTicks();
-            }
-            player.setNoDamageTicks(ticks);
+    public void executePlayer(Player player) {
+        boolean add = getArguments().getValue("add",false,this);
+        int ticks = getArguments().getValue("ticks",0,this);
+        if (add) {
+            ticks = ticks + player.getNoDamageTicks();
         }
+        player.setNoDamageTicks(ticks);
     }
 
     @Override

@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.appearance;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
@@ -31,30 +32,29 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class SetWorldBorderAction extends PlayerAction {
-    public SetWorldBorderAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetWorldBorderAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        double radius = getArguments().getValue("radius",(getWorld() == null ? 10d : getWorld().getWorldBorder().getSize()));
-        int time = getArguments().getValue("time",0);
-        int warningDistance = getArguments().getValue("warning-distance",5);
-        int warningTime = getArguments().getValue("warning-time",15);
-        double damage = getArguments().getValue("damage",0.2d);
-        int safeDistance = getArguments().getValue("safe-distance",5);
+    public void executePlayer(Player player) {
+        double radius = getArguments().getValue("radius",(getWorld() == null ? 10d : getWorld().getWorldBorder().getSize()),this);
+        int time = getArguments().getValue("time",0,this);
+        int warningDistance = getArguments().getValue("warning-distance",5,this);
+        int warningTime = getArguments().getValue("warning-time",15,this);
+        double damage = getArguments().getValue("damage",0.2d,this);
+        int safeDistance = getArguments().getValue("safe-distance",5,this);
         WorldBorder border = Bukkit.createWorldBorder();
         border.setSize(radius,time);
         border.setWarningTime(warningTime);
         border.setWarningDistance(warningDistance);
         border.setDamageAmount(damage);
         border.setDamageBuffer(safeDistance);
-        for (Player player : getPlayers(selection)) {
-            Location center = getArguments().getValue("center",player.getLocation());
-            border.setCenter(center);
-            player.setWorldBorder(border);
-        }
+        Location center = getArguments().getValue("center",player.getLocation(),this);
+        border.setCenter(center);
+        player.setWorldBorder(border);
     }
+
 
     @Override
     public ActionType getActionType() {

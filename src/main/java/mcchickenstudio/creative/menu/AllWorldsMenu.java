@@ -22,6 +22,7 @@ import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.MessageUtils;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -138,10 +139,12 @@ public class AllWorldsMenu extends LegacyMenu {
 
     // Показать инвентарь игроку
     public static void openInventory(Player player, int page) {
+        player.playSound(player.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 100, 0.1f);
         player.openInventory(new AllWorldsMenu(player,page).getInventory());
     }
 
     public static void openInventory(Player player, int page, List<Plot> plotsList) {
+        player.playSound(player.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 100, 0.4f);
         player.openInventory(new AllWorldsMenu(player,page,plotsList).getInventory());
     }
 

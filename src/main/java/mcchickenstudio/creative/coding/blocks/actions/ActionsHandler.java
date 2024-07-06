@@ -1,0 +1,205 @@
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package mcchickenstudio.creative.coding.blocks.actions;
+
+import mcchickenstudio.creative.Main;
+import mcchickenstudio.creative.coding.blocks.actions.controlactions.lines.WaitAction;
+import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.EventValues;
+import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import mcchickenstudio.creative.plots.Plot;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.*;
+
+import static mcchickenstudio.creative.utils.ErrorUtils.sendPlotCodeErrorMessage;
+import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+
+/**
+ * <h1>ActionHandler</h1>
+ * This class represents actions handler that executes every action in list.
+ * Executors and code blocks with brackets use handlers to execute code inside
+ * brackets.
+ * @see Executor
+ * @see mcchickenstudio.creative.coding.blocks.conditions.Condition
+ */
+public class ActionsHandler {
+
+    private final Executor executor;
+    private final CreativeEvent event;
+    private final EventValues variables;
+
+    private final ActionsHandler parentActionsHandler;
+    private final Queue<Action> actionsQueue = new LinkedList<>();
+    private boolean stopped = false;
+    private long waitDelay = 0;
+
+    public ActionsHandler(Executor executor) {
+        this.executor = executor;
+        this.event = executor.getEvent();
+        this.variables = new EventValues();
+        Map<EventValues.Variable,Object> oldVars = executor.getVariables().getMap();
+        for (EventValues.Variable var : oldVars.keySet()) {
+            this.variables.setVariable(var,oldVars.get(var));
+        }
+        this.parentActionsHandler = null;
+    }
+
+    public ActionsHandler(ActionsHandler parentActionsHandler) {
+        this.parentActionsHandler = parentActionsHandler;
+        ActionsHandler mainHandler = getMainActionHandler();
+        this.executor = mainHandler.executor;
+        this.event = mainHandler.event;
+        this.variables = mainHandler.variables;
+    }
+
+    public final void executeActions(List<Action> actions) {
+        /*List<Action> newActions = new ArrayList<>();
+        for (Action action : actions) {
+            Action newAction = null;
+            try {
+                if (!(action instanceof Condition condition)) {
+                    newAction = action.getActionType().getActionClass().getConstructor(Executor.class, Target.class, int.class, Arguments.class).newInstance(executor,action.getTarget(),action.getX(),action.getArguments());
+                } else {
+                    newAction = action.getActionType().getActionClass().getConstructor(Executor.class, Target.class, int.class, Arguments.class, List.class).newInstance(executor,action.getTarget(),action.getX(),action.getArguments(),condition.getActions());
+                }
+            } catch (Exception ignored){}
+            if (newAction != null) {
+                newActions.add(newAction);
+            }
+        }*/
+        actionsQueue.addAll(actions);
+        executeNextAction();
+    }
+
+    private void executeNextAction() {
+        if (actionsQueue.isEmpty()) {
+            return;
+        }
+        Action nextAction = actionsQueue.poll();
+        if (nextAction != null) {
+            prepareAction(nextAction);
+        }
+    }
+
+    public void prepareAction(Action action) {
+        if (waitDelay < 1 ) {
+            executeAction(action);
+        } else {
+            BukkitRunnable executeActionLaterRunnable = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (action == null || action.getPlot() == null || action.getPlot().getPlotMode() != Plot.Mode.PLAYING || !action.getPlot().isLoaded) {
+                        cancel();
+                    }
+                    executeAction(action);
+                    action.getPlot().removeBukkitRunnable(this);
+                }
+            };
+            action.getPlot().addBukkitRunnable(executeActionLaterRunnable);
+            executeActionLaterRunnable.runTaskLater(Main.getPlugin(),waitDelay);
+        }
+    }
+
+    private void executeAction(Action action) {
+        try {
+            if (!stopped) {
+                action.prepareAndExecute(this);
+            }
+        } catch (IndexOutOfBoundsException e) {
+            sendPlotCodeErrorMessage(executor, action, getLocaleMessage("plot-code-error.arguments"));
+        } catch (NumberFormatException e) {
+            sendPlotCodeErrorMessage(executor, action, getLocaleMessage("plot-code-error.wrong-number"));
+        } catch (IllegalArgumentException e) {
+            sendPlotCodeErrorMessage(executor, action, getLocaleMessage("plot-code-error.wrong-argument") + e.getMessage());
+        } catch (Exception e) {
+            sendPlotCodeErrorMessage(executor, action, getLocaleMessage("plot-code-error.unknown") + e.getMessage());
+        } finally {
+            if (!(action instanceof WaitAction)) {
+                setWaitDelay(0);
+            } else {
+                setWaitDelay(((WaitAction) action).getTime());
+            }
+            executeNextAction();
+        }
+    }
+
+    public void removeAllActions() {
+        actionsQueue.clear();
+    }
+
+    public long getWaitDelay() {
+        return waitDelay;
+    }
+
+    public ActionsHandler getMainActionHandler() {
+        ActionsHandler handler = this.getParentActionHandler();
+        ActionsHandler lastHandler = this;
+        while (handler != null) {
+            lastHandler = handler;
+            handler = handler.getParentActionHandler();
+        }
+        return lastHandler;
+    }
+
+    public boolean isStopped() {
+        return stopped;
+    }
+
+    public void setStopped(boolean stopped) {
+        this.stopped = stopped;
+    }
+
+    public ActionsHandler getParentActionHandler() {
+        return parentActionsHandler;
+    }
+
+    public void setWaitDelay(long waitDelay) {
+        this.waitDelay = waitDelay;
+    }
+
+    public CreativeEvent getEvent() {
+        return event;
+    }
+
+    public EventValues getVariables() {
+        return getMainActionHandler().variables;
+    }
+
+    public Executor getExecutor() {
+        return executor;
+    }
+
+    public void setVarValue(EventValues.Variable var, Object value) {
+        getVariables().setVariable(var,value);
+    }
+
+    public Object getVarValue(EventValues.Variable var) {
+        return getVariables().getVarValue(var);
+    }
+
+    public boolean hasTempVariable(EventValues.Variable var) {
+        return getVariables().getVarValue(var) != null;
+    }
+
+    @Override
+    public String toString() {
+        return "ActionsHandler. Plot: " + executor.getPlot() + " WaitDelay: " + waitDelay + " Stopped: " + stopped + " Queue Size: " + actionsQueue.size();
+    }
+}

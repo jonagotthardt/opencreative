@@ -20,6 +20,7 @@ package mcchickenstudio.creative.coding.blocks.conditions.playerconditions.block
 
 import com.destroystokyo.paper.block.TargetBlockInfo;
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.PlayerCondition;
@@ -35,34 +36,32 @@ import java.util.List;
 
 public class IsLookingAtBlockCondition extends PlayerCondition {
 
-    public IsLookingAtBlockCondition(Executor executor, int x, Arguments args, List<Action> actions) {
-        super(executor, x, args, actions);
+    public IsLookingAtBlockCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
+        super(executor, target, x, args, actions);
     }
 
     @Override
-    public boolean check(List<Entity> selection) {
+    public boolean checkPlayer(Player player) {
         boolean check = false;
-        List<ItemStack> blocks = getArguments().getItemList("blocks");
+        List<ItemStack> blocks = getArguments().getItemList("blocks",this);
         if (blocks.isEmpty()) return false;
-        for (Player player : getPlayers(selection)) {
-            Block block = player.getTargetBlockExact(30);
-            if (block == null) {
-                return false;
-            }
-            boolean isPlayerLookingAt = false;
-            Material blockType = block.getType();
+        Block block = player.getTargetBlockExact(30);
+        if (block == null) {
+            return false;
+        }
+        boolean isPlayerLookingAt = false;
+        Material blockType = block.getType();
 
-            for (ItemStack checkBlock : blocks) {
-                if (blockType == checkBlock.getType()) {
-                    isPlayerLookingAt = true;
-                }
+        for (ItemStack checkBlock : blocks) {
+            if (blockType == checkBlock.getType()) {
+                isPlayerLookingAt = true;
             }
+        }
 
-            if (!isPlayerLookingAt) {
-                return false;
-            } else {
-                check = true;
-            }
+        if (!isPlayerLookingAt) {
+            return false;
+        } else {
+            check = true;
         }
         return check;
     }

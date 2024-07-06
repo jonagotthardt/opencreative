@@ -1,5 +1,5 @@
-name: 'Creative'
-version: '1.5'
+name: 'OpenCreative'
+version: '5.0 Preview 3'
 main: mcchickenstudio.creative.Main
 api-version: 1.20
 authors: [McChicken Studio]
@@ -46,3 +46,6 @@ commands:
   world:
     usage: /world
     aliases: [settings, game, іуеештпі, ыуеештпы, setting, цщкдв]
+  environment:
+    usage: /environment
+    aliases: [env, утм, утмшкщтьуте]

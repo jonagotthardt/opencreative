@@ -135,6 +135,10 @@ public abstract class AbstractMenu implements InventoryHolder {
         return (event.getWhoClicked() instanceof Player);
     }
 
+    public byte getSize() {
+        return (byte) (rows*9);
+    }
+
     public byte getRows() {
         return rows;
     }

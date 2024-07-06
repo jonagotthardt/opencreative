@@ -27,7 +27,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import mcchickenstudio.creative.coding.BlockParser;
+import mcchickenstudio.creative.coding.CodingBlockParser;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.CooldownUtils;
 import mcchickenstudio.creative.plots.Plot;
@@ -84,15 +84,15 @@ public class CommandPlay implements CommandExecutor {
                     plot.setPlotMode(Plot.Mode.PLAYING);
                     for (Player p : plot.getPlayers()) {
                         if (PlotManager.getInstance().getDevPlot(p) == null || sender.getName().equals(p.getName())) {
+                            p.sendMessage(getLocaleMessage("world.play-mode.message." + (sender == p ? "owner" : "players")));
                             clearPlayer(p);
                             plot.world.getSpawnLocation().getChunk().load(true);
                             p.teleport(plot.world.getSpawnLocation());
-                            p.sendMessage(getLocaleMessage("world.play-mode.message." + (sender == p ? "owner" : "players")));
                         }
                     }
                     if (plot.script != null && plot.script.exists()) {
                         if (plot.devPlot.isLoaded) {
-                            new BlockParser().parseCode(plot.devPlot);
+                            new CodingBlockParser().parseCode(plot.devPlot);
                         } else {
                             plot.script.loadCode();
                         }
@@ -121,14 +121,14 @@ public class CommandPlay implements CommandExecutor {
                     player.teleport(plot.world.getSpawnLocation());
                     if (isDeveloper) {
                         clearPlayer(player);
+                        player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
                         ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
                         if (plot.isOwner(sender.getName())) {
                             player.getInventory().setItem(8,worldSettingsItem);
                         }
-                        player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
                         if (plot.script != null && plot.script.exists()) {
                             if (plot.devPlot.isLoaded) {
-                                new BlockParser().parseCode(plot.devPlot);
+                                new CodingBlockParser().parseCode(plot.devPlot);
                             } else {
                                 plot.script.loadCode();
                             }

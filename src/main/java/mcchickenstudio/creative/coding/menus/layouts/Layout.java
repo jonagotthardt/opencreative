@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.menus.layouts;
 
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
+import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.menu.AbstractMenu;
 import mcchickenstudio.creative.menu.buttons.ParameterButton;
 import mcchickenstudio.creative.menu.buttons.RadioButton;
@@ -41,7 +42,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static mcchickenstudio.creative.utils.ItemUtils.itemEquals;
+import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.*;
 
 /**
@@ -146,6 +147,8 @@ public abstract class Layout extends AbstractMenu {
                         }
                         itemMeta.lore(null);
                         argItem.setItemMeta(itemMeta);
+                        setPersistentData(argItem,getCodingValueKey(), ValueType.getByMaterial(argItem.getType()).name());
+                        setPersistentData(argItem,getCodingDoNotDropMeKey(), "1");
                     }
                 }
             }

@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.conditions.playerconditions.blocks;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.PlayerCondition;
@@ -35,30 +36,26 @@ import java.util.List;
 
 public class IsNearLocationCondition extends PlayerCondition {
 
-    public IsNearLocationCondition(Executor executor, int x, Arguments args, List<Action> actions) {
-        super(executor, x, args, actions);
+    public IsNearLocationCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
+        super(executor, target, x, args, actions);
     }
 
     @Override
-    public boolean check(List<Entity> selection) {
+    public boolean checkPlayer(Player player) {
         boolean check = false;
-        List<Location> locations = getArguments().getLocationList("locations");
-        float radius = getArguments().getValue("distance",5.0f);
+        List<Location> locations = getArguments().getLocationList("locations",this);
+        float radius = getArguments().getValue("distance",5.0f,this);
         if (locations.isEmpty()) return false;
-        for (Player player : getPlayers(selection)) {
-            boolean isPlayerNear = false;
-
-            for (Location location : locations) {
-                if (player.getLocation().distance(location) <= radius) {
-                    isPlayerNear = true;
-                }
+        boolean isPlayerNear = false;
+        for (Location location : locations) {
+            if (player.getLocation().distance(location) <= radius) {
+                isPlayerNear = true;
             }
-
-            if (!isPlayerNear) {
-                return false;
-            } else {
-                check = true;
-            }
+        }
+        if (!isPlayerNear) {
+            return false;
+        } else {
+            check = true;
         }
         return check;
     }

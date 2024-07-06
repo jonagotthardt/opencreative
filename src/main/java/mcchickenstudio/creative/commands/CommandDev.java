@@ -18,6 +18,7 @@
 
 package mcchickenstudio.creative.commands;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -29,12 +30,12 @@ import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.CooldownUtils;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.utils.FileUtils;
+import org.bukkit.inventory.meta.BookMeta;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
-import static mcchickenstudio.creative.utils.ItemUtils.itemEquals;
 import static mcchickenstudio.creative.utils.PlayerUtils.clearPlayer;
 import static mcchickenstudio.creative.commands.CommandAd.plugin;
 
@@ -97,6 +98,7 @@ public class CommandDev implements CommandExecutor {
                             double z = Double.parseDouble(args[2]);
                             plot.teleportToDevPlot(player,x,y,z);
                         } catch (Exception ignored) {
+                            ignored.printStackTrace();
                             plot.teleportToDevPlot(player);
                         }
                     } else {
@@ -109,13 +111,11 @@ public class CommandDev implements CommandExecutor {
                         player.setGameMode(GameMode.CREATIVE);
                         player.setFlying(true);
                     }
-                    giveItems(player);
-                    ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
-                    for (ItemStack playerItem : playerInventoryItems) {
-                        if (playerItem != null && !itemEquals(playerItem, worldSettingsItem)) {
-                            player.getInventory().addItem(playerItem);
-                        }
+                    if (plot.isOwner(player)) {
+                        player.getInventory().setItem(8, createItem(Material.COMPASS,1,"items.developer.world-settings"));
                     }
+                    giveItems(player);
+
                     player.sendTitle(getLocaleMessage("world.dev-mode.title"), getLocaleMessage("world.dev-mode.subtitle"));
                     player.playSound(player.getLocation(), Sound.valueOf("BLOCK_BEACON_POWER_SELECT"), 100, 1.3f);
 
@@ -157,6 +157,9 @@ public class CommandDev implements CommandExecutor {
     }
 
     private void giveItems(Player player) {
+
+        player.getInventory().setHeldItemSlot(0);
+
         ItemStack eventPlayerItem = createItem(Material.DIAMOND_BLOCK,1,"items.developer.event-player");
         player.getInventory().setItem(0, eventPlayerItem);
 
@@ -166,24 +169,42 @@ public class CommandDev implements CommandExecutor {
         ItemStack conditionPlayerItem = createItem(Material.OAK_PLANKS,1,"items.developer.condition-player");
         player.getInventory().setItem(2, conditionPlayerItem);
 
-        ItemStack actionControl = createItem(Material.COAL_BLOCK,1,"items.developer.action-control");
-        player.getInventory().setItem(3, actionControl);
+        ItemStack actionVar = createItem(Material.IRON_BLOCK,1,"items.developer.action-var");
+        player.getInventory().setItem(3, actionVar);
 
-        /*ItemStack functionItem = createItem(Material.LAPIS_BLOCK,1,"items.developer.function");
-        player.getInventory().setItem(3, functionItem);
+        ItemStack conditionVarItem = createItem(Material.OBSIDIAN,1,"items.developer.condition-var");
+        player.getInventory().setItem(4, conditionVarItem);
+
+        ItemStack actionControl = createItem(Material.COAL_BLOCK,1,"items.developer.action-control");
+        player.getInventory().setItem(9, actionControl);
 
         ItemStack cycleItem = createItem(Material.OXIDIZED_COPPER,1,"items.developer.cycle");
-        player.getInventory().setItem(4, cycleItem);*/
+        player.getInventory().setItem(10, cycleItem);
 
-        //ItemStack elseItem = createItem(Material.END_STONE,1,"items.developer.else");
-        //player.getInventory().setItem(3, elseItem);
+        int slot = 8;
+        if (player.getInventory().getItem(8) != null) {
+            slot = 7;
+        }
+
+        try {
+            ItemStack bookHelperItem = createItem(Material.WRITTEN_BOOK,1,"items.developer.coding-book");
+            BookMeta bookMeta = (BookMeta) bookHelperItem.getItemMeta();
+            bookMeta.setTitle("Coding");
+            bookMeta.setAuthor("OpenCreative+");
+            bookMeta.setPages(getBookPages("items.developer.coding-book.pages"));
+            bookHelperItem.setItemMeta(bookMeta);
+            player.getInventory().setItem(slot == 8 ? slot-2 : 17, bookHelperItem);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         ItemStack flySpeedChangerItem = createItem(Material.FEATHER,1,"items.developer.fly-speed-changer");
-        player.getInventory().setItem(6, flySpeedChangerItem);
+        player.getInventory().setItem(slot-1, flySpeedChangerItem);
 
-        player.getInventory().setItem(7, createItem(Material.IRON_INGOT,1,"items.developer.variables"));
+        player.getInventory().setItem(slot, createItem(Material.IRON_INGOT,1,"items.developer.variables"));
 
-        ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
-        player.getInventory().setItem(8, worldSettingsItem);
+        /*ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
+        player.getInventory().setItem(8, worldSettingsItem);*/
     }
 }

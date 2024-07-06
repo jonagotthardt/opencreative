@@ -384,11 +384,14 @@ public class EventRaiser {
         return true;
     }
 
-    public static boolean raiseMobDamagesPlayerEvent(Player player, Event bukkitEvent) {
+    public static boolean raiseMobDamagesPlayerEvent(Player player, EntityDamageByEntityEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
             return false;
         }
-        MobDamagesPlayerEvent creativeEvent = new MobDamagesPlayerEvent(player);
+        if (!(bukkitEvent.getEntity() instanceof Player)) {
+            return false;
+        }
+        MobDamagesPlayerEvent creativeEvent = new MobDamagesPlayerEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
         return true;
     }

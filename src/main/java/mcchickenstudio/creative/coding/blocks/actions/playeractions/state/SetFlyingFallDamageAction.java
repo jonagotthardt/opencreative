@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.state;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
@@ -30,15 +31,13 @@ import java.util.List;
 
 public class SetFlyingFallDamageAction extends PlayerAction {
 
-    public SetFlyingFallDamageAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetFlyingFallDamageAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        for (Player player : getPlayers(selection)) {
-            player.setFlyingFallDamage((getArguments().getValue("boolean",false) ? TriState.TRUE : TriState.FALSE));
-        }
+    public void executePlayer(Player player) {
+        player.setFlyingFallDamage((getArguments().getValue("boolean",false,this) ? TriState.TRUE : TriState.FALSE));
     }
 
     @Override
