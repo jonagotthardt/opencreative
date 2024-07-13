@@ -23,7 +23,6 @@ import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.menu.WorldSettingsPlayersMenu;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.PlayerUtils;
-import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -42,14 +41,14 @@ import java.util.*;
 
 import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
-import static mcchickenstudio.creative.utils.FileUtils.*;
 import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.MessageUtils.parsePAPI;
 
 public class PlayerChat implements Listener {
 
-    public static Map<Player, String> confirmation = new HashMap<>();
+    public static final Map<Player, String> confirmation = new HashMap<>();
+
     final Plugin plugin = Main.getPlugin();
 
     @EventHandler
@@ -82,7 +81,7 @@ public class PlayerChat implements Listener {
             ItemStack itemInHand = player.getInventory().getItemInMainHand();
             if (itemInHand.getType() == Material.BOOK) {
                 ItemMeta meta = itemInHand.getItemMeta();
-                meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',event.getMessage().replace("%space%", " ").replace("%new-line%", "\n").replace("%empty%","").replace("&&","§")));
+                meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',event.getMessage().replace("%space%", " ").replace("%empty%","").replace("&&","§")));
                 itemInHand.setItemMeta(meta);
                 player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.4f);
                 setPersistentData(itemInHand,getCodingValueKey(),"TEXT");

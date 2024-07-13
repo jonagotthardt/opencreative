@@ -37,7 +37,6 @@ import java.util.*;
 import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.MessageUtils.getPathFromMessage;
-import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
 
 public class EventValuesMenu extends AbstractListMenu {
 

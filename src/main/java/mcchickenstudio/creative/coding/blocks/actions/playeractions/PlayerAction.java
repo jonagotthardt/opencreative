@@ -26,9 +26,6 @@ import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public abstract class PlayerAction extends Action {
 
     public PlayerAction(Executor executor, Target target, int x, Arguments args) {

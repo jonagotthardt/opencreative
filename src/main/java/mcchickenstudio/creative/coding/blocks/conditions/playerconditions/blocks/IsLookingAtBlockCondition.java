@@ -18,7 +18,6 @@
 
 package mcchickenstudio.creative.coding.blocks.conditions.playerconditions.blocks;
 
-import com.destroystokyo.paper.block.TargetBlockInfo;
 import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
@@ -27,8 +26,6 @@ import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.Player
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -57,7 +54,6 @@ public class IsLookingAtBlockCondition extends PlayerCondition {
                 isPlayerLookingAt = true;
             }
         }
-
         if (!isPlayerLookingAt) {
             return false;
         } else {

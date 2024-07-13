@@ -30,6 +30,7 @@ import java.util.*;
 
 import static mcchickenstudio.creative.utils.ErrorUtils.sendPlotCodeErrorMessage;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.MessageUtils.messageExists;
 
 /**
  * <h1>ActionHandler</h1>
@@ -44,9 +45,11 @@ public class ActionsHandler {
     private final Executor executor;
     private final CreativeEvent event;
     private final EventValues variables;
+    private final Action action;
 
     private final ActionsHandler parentActionsHandler;
     private final Queue<Action> actionsQueue = new LinkedList<>();
+    private final boolean doNotUseTryFlag;
     private boolean stopped = false;
     private long waitDelay = 0;
 
@@ -59,38 +62,56 @@ public class ActionsHandler {
             this.variables.setVariable(var,oldVars.get(var));
         }
         this.parentActionsHandler = null;
+        this.action = null;
+        this.doNotUseTryFlag = false;
     }
 
-    public ActionsHandler(ActionsHandler parentActionsHandler) {
-        this.parentActionsHandler = parentActionsHandler;
+    public ActionsHandler(Action action) {
+        this.parentActionsHandler = action.getHandler();
         ActionsHandler mainHandler = getMainActionHandler();
         this.executor = mainHandler.executor;
         this.event = mainHandler.event;
         this.variables = mainHandler.variables;
+        this.action = action;
+        /*if (action.getActionType() == ActionType.HANDLER_CATCH_ERROR) {
+            this.doNotUseTryFlag = true;
+        } else {*/
+            this.doNotUseTryFlag = false;
+        //}
     }
 
     public final void executeActions(List<Action> actions) {
-        /*List<Action> newActions = new ArrayList<>();
-        for (Action action : actions) {
-            Action newAction = null;
-            try {
-                if (!(action instanceof Condition condition)) {
-                    newAction = action.getActionType().getActionClass().getConstructor(Executor.class, Target.class, int.class, Arguments.class).newInstance(executor,action.getTarget(),action.getX(),action.getArguments());
-                } else {
-                    newAction = action.getActionType().getActionClass().getConstructor(Executor.class, Target.class, int.class, Arguments.class, List.class).newInstance(executor,action.getTarget(),action.getX(),action.getArguments(),condition.getActions());
-                }
-            } catch (Exception ignored){}
-            if (newAction != null) {
-                newActions.add(newAction);
-            }
-        }*/
         actionsQueue.addAll(actions);
         executeNextAction();
     }
 
     private void executeNextAction() {
         if (actionsQueue.isEmpty()) {
-            return;
+            /*if (action instanceof RepeatAction repeatAction) {
+                if (action instanceof RepeatForLoopAction forLoopAction) {
+                    VariableLink link = forLoopAction.getArguments().getVariableLink("variable",forLoopAction);
+                    double add = forLoopAction.getArguments().getValue("add",1.0d,forLoopAction);
+                    String type = forLoopAction.getArguments().getValue("value","less",forLoopAction);
+                    double untilValue = forLoopAction.getArguments().getValue("range",10.0d,forLoopAction);
+                    if (link == null) {
+                        return;
+                    }
+                    double currentValue = forLoopAction.getArguments().getValue("variable",0.0d,forLoopAction);
+                    boolean execute = switch (type.toLowerCase()) {
+                        case "less" -> currentValue < untilValue;
+                        case "less-equals" -> currentValue <= untilValue;
+                        case "greater" -> currentValue > untilValue;
+                        case "greater-equals" -> currentValue >= untilValue;
+                        default -> false;
+                    };
+                    forLoopAction.setVarValue(link,currentValue+add);
+                    if (execute) {
+                        forLoopAction.executeActions();
+                    }
+                }
+                repeatAction.prepareAndExecute(this);
+            }
+            return;*/
         }
         Action nextAction = actionsQueue.poll();
         if (nextAction != null) {
@@ -101,15 +122,18 @@ public class ActionsHandler {
     public void prepareAction(Action action) {
         if (waitDelay < 1 ) {
             executeAction(action);
+            if (action.getClass().isAnnotationPresent(BlocksManipulation.class)) {
+
+            }
         } else {
             BukkitRunnable executeActionLaterRunnable = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (action == null || action.getPlot() == null || action.getPlot().getPlotMode() != Plot.Mode.PLAYING || !action.getPlot().isLoaded) {
-                        cancel();
-                    }
-                    executeAction(action);
-                    action.getPlot().removeBukkitRunnable(this);
+                if (action == null || action.getPlot() == null || action.getPlot().getPlotMode() != Plot.Mode.PLAYING || !action.getPlot().isLoaded) {
+                    cancel();
+                }
+                executeAction(action);
+                action.getPlot().removeBukkitRunnable(this);
                 }
             };
             action.getPlot().addBukkitRunnable(executeActionLaterRunnable);
@@ -118,26 +142,24 @@ public class ActionsHandler {
     }
 
     private void executeAction(Action action) {
-        try {
-            if (!stopped) {
+        if (!stopped) {
+            if (doNotUseTryFlag) {
                 action.prepareAndExecute(this);
-            }
-        } catch (IndexOutOfBoundsException e) {
-            sendPlotCodeErrorMessage(executor, action, getLocaleMessage("plot-code-error.arguments"));
-        } catch (NumberFormatException e) {
-            sendPlotCodeErrorMessage(executor, action, getLocaleMessage("plot-code-error.wrong-number"));
-        } catch (IllegalArgumentException e) {
-            sendPlotCodeErrorMessage(executor, action, getLocaleMessage("plot-code-error.wrong-argument") + e.getMessage());
-        } catch (Exception e) {
-            sendPlotCodeErrorMessage(executor, action, getLocaleMessage("plot-code-error.unknown") + e.getMessage());
-        } finally {
-            if (!(action instanceof WaitAction)) {
-                setWaitDelay(0);
             } else {
-                setWaitDelay(((WaitAction) action).getTime());
+                try {
+                    action.prepareAndExecute(this);
+                } catch (Throwable error) {
+                    String id = error.getClass().getSimpleName().toLowerCase();
+                    sendPlotCodeErrorMessage(executor, action, getLocaleMessage("plot-code-error." + (messageExists("plot-code-error." + id) ? id : "unknown")) + (error.getMessage() == null ? error.getClass().getSimpleName() : error.getMessage()).replace("mcchickenstudio.creative.coding.",""));
+                }
             }
-            executeNextAction();
         }
+        if (!(action instanceof WaitAction)) {
+            setWaitDelay(0);
+        } else {
+            setWaitDelay(((WaitAction) action).getTime());
+        }
+        executeNextAction();
     }
 
     public void removeAllActions() {

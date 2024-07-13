@@ -19,10 +19,10 @@
 package mcchickenstudio.creative.events;
 
 import mcchickenstudio.creative.Main;
-import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.commands.CreativeChat;
 
 import mcchickenstudio.creative.plots.PlotFlags;
+import mcchickenstudio.creative.plots.PlotPlayer;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -97,7 +97,6 @@ public class ChangedWorld implements Listener {
                     for (Player onlinePlayer : newWorld.getPlayers()) {
                         onlinePlayer.sendMessage(getLocaleMessage("world.dev-mode.joined", player));
                     }
-                    EventRaiser.raiseQuitEvent(event.getPlayer());
                 } else {
                     removePlayerWithLocation(player);
                 }
@@ -109,6 +108,9 @@ public class ChangedWorld implements Listener {
             player.setLastDeathLocation(null);
             removePlayerWithLocation(player);
             if (oldPlot != null) {
+                PlotPlayer plotPlayer = oldPlot.getPlotPlayer(player);
+                plotPlayer.save();
+                oldPlot.removePlotPlayer(player);
                 if (oldPlot.getOnline() > 0) {
                     if (oldPlot.getFlagValue(PlotFlags.PlotFlag.JOIN_MESSAGES) == 1) {
                         for (Player onlinePlayer : oldPlot.getPlayers()) {
@@ -133,7 +135,6 @@ public class ChangedWorld implements Listener {
                             }
                         }
                     }
-                    EventRaiser.raiseQuitEvent(event.getPlayer());
                 } else {
                     if (oldPlot.isLoaded) {
                         PlotManager.getInstance().unloadPlot(oldPlot);

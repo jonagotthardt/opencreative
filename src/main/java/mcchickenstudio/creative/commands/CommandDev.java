@@ -18,7 +18,7 @@
 
 package mcchickenstudio.creative.commands;
 
-import net.kyori.adventure.text.Component;
+import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -48,9 +48,7 @@ public class CommandDev implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-
+        if (sender instanceof Player player) {
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
             if (plot == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
@@ -73,7 +71,7 @@ public class CommandDev implements CommandExecutor {
 
             if (args.length == 0 || args.length == 3) {
                 // Проверка на владельца мира
-                if (plot.getOwner().equalsIgnoreCase(sender.getName()) || developers.contains(sender.getName())) {
+                if (plot.isDeveloper(player)) {
                     Player plotOwner = Bukkit.getPlayer(plot.getOwner());
                     if (notTrustedDevelopers.contains(sender.getName())) {
                         if (plotOwner == null) {
@@ -86,7 +84,7 @@ public class CommandDev implements CommandExecutor {
                             return true;
                         }
                     }
-
+                    EventRaiser.raiseQuitEvent(player);
                     PlayerInventory playerInventory = player.getInventory();
                     ItemStack[] playerInventoryItems = (PlotManager.getInstance().getDevPlot(player) == null ?  playerInventory.getContents() : new ItemStack[]{});
                     clearPlayer(player);
@@ -97,8 +95,7 @@ public class CommandDev implements CommandExecutor {
                             double y = Double.parseDouble(args[1]);
                             double z = Double.parseDouble(args[2]);
                             plot.teleportToDevPlot(player,x,y,z);
-                        } catch (Exception ignored) {
-                            ignored.printStackTrace();
+                        } catch (Exception error) {
                             plot.teleportToDevPlot(player);
                         }
                     } else {
@@ -115,9 +112,13 @@ public class CommandDev implements CommandExecutor {
                         player.getInventory().setItem(8, createItem(Material.COMPASS,1,"items.developer.world-settings"));
                     }
                     giveItems(player);
-
+                    for (ItemStack item : playerInventoryItems) {
+                        if (item != null) {
+                            player.getInventory().addItem(item);
+                        }
+                    }
                     player.sendTitle(getLocaleMessage("world.dev-mode.title"), getLocaleMessage("world.dev-mode.subtitle"));
-                    player.playSound(player.getLocation(), Sound.valueOf("BLOCK_BEACON_POWER_SELECT"), 100, 1.3f);
+                    player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 100, 1.3f);
 
                 } else {
                     sender.sendMessage(getLocaleMessage("not-owner", player));
@@ -179,24 +180,23 @@ public class CommandDev implements CommandExecutor {
         player.getInventory().setItem(9, actionControl);
 
         ItemStack cycleItem = createItem(Material.OXIDIZED_COPPER,1,"items.developer.cycle");
-        player.getInventory().setItem(10, cycleItem);
+        player.getInventory().setItem(18, cycleItem);
+
+        ItemStack linesControllerItem = createItem(Material.COMPARATOR,1,"items.developer.lines-controller");
+        player.getInventory().setItem(26, linesControllerItem);
 
         int slot = 8;
         if (player.getInventory().getItem(8) != null) {
             slot = 7;
         }
 
-        try {
-            ItemStack bookHelperItem = createItem(Material.WRITTEN_BOOK,1,"items.developer.coding-book");
-            BookMeta bookMeta = (BookMeta) bookHelperItem.getItemMeta();
-            bookMeta.setTitle("Coding");
-            bookMeta.setAuthor("OpenCreative+");
-            bookMeta.setPages(getBookPages("items.developer.coding-book.pages"));
-            bookHelperItem.setItemMeta(bookMeta);
-            player.getInventory().setItem(slot == 8 ? slot-2 : 17, bookHelperItem);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ItemStack bookHelperItem = createItem(Material.WRITTEN_BOOK,1,"items.developer.coding-book");
+        BookMeta bookMeta = (BookMeta) bookHelperItem.getItemMeta();
+        bookMeta.setTitle("Coding");
+        bookMeta.setAuthor("OpenCreative+");
+        bookMeta.setPages(getBookPages("items.developer.coding-book.pages"));
+        bookHelperItem.setItemMeta(bookMeta);
+        player.getInventory().setItem(slot == 8 ? slot-2 : 17, bookHelperItem);
 
 
         ItemStack flySpeedChangerItem = createItem(Material.FEATHER,1,"items.developer.fly-speed-changer");

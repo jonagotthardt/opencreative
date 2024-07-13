@@ -41,8 +41,8 @@ public class Item implements CodingValue {
 
     @Override
     public void setValue(Object value) {
-        if (value instanceof ItemStack item) {
-            this.item = item;
+        if (value instanceof ItemStack itemStack) {
+            this.item = itemStack;
         }
     }
 

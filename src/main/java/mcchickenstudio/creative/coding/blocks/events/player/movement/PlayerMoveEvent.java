@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
 
 public class PlayerMoveEvent extends CreativeEvent {
 
-    private org.bukkit.event.player.PlayerMoveEvent event;
+    private final org.bukkit.event.player.PlayerMoveEvent event;
 
     public PlayerMoveEvent(Player player, org.bukkit.event.player.PlayerMoveEvent event) {
         super(player);

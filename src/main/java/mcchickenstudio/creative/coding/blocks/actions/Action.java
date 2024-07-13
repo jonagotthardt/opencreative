@@ -18,11 +18,14 @@
 
 package mcchickenstudio.creative.coding.blocks.actions;
 
+import mcchickenstudio.creative.coding.arguments.Argument;
 import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.MobDamagesPlayerEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamagesMobEvent;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import mcchickenstudio.creative.coding.variables.ValueType;
+import mcchickenstudio.creative.debug.values.VariableLink;
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -31,6 +34,7 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
+import static mcchickenstudio.creative.coding.arguments.Argument.parseEntity;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugAction;
 
 /**
@@ -162,10 +166,10 @@ public abstract class Action {
             }
             case KILLER -> {
                 Entity killer = null;
-                if (executor.getEvent() instanceof PlayerDamagesMobEvent event) {
-                    killer = event.getDamager();
-                } else if (executor.getEvent() instanceof MobDamagesPlayerEvent event) {
-                    killer = event.getDamager();
+                if (executor.getEvent() instanceof PlayerDamagesMobEvent mobEvent) {
+                    killer = mobEvent.getDamager();
+                } else if (executor.getEvent() instanceof MobDamagesPlayerEvent playerEvent) {
+                    killer = playerEvent.getDamager();
                 }
                 if (killer != null) {
                     entities.add(killer);
@@ -173,10 +177,10 @@ public abstract class Action {
             }
             case VICTIM -> {
                 Entity victim = null;
-                if (executor.getEvent() instanceof PlayerDamagesMobEvent event) {
-                    victim = event.getVictim();
-                } else if (executor.getEvent() instanceof MobDamagesPlayerEvent event) {
-                    victim = event.getVictim();
+                if (executor.getEvent() instanceof PlayerDamagesMobEvent mobEvent) {
+                    victim = mobEvent.getVictim();
+                } else if (executor.getEvent() instanceof MobDamagesPlayerEvent playerEvent) {
+                    victim = playerEvent.getVictim();
                 }
                 if (victim != null) {
                     entities.add(victim);
@@ -186,4 +190,21 @@ public abstract class Action {
         }
         return entities;
     }
+
+    protected void setVarValue(VariableLink link, Object value) {
+        if (link != null) {
+            link.setName(parseEntity(link.getName(),this));
+            link.setHandler(getHandler().getMainActionHandler());
+            ValueType type = ValueType.getByObject(value);
+            if (type == null) {
+                type = ValueType.TEXT;
+            }
+            getPlot().getWorldVariables().setVariableValue(link, type, value, getHandler().getMainActionHandler());
+        }
+    }
+
+    public List<Argument> getArgumentsList() {
+        return getArguments().getArgumentList();
+    }
+
 }

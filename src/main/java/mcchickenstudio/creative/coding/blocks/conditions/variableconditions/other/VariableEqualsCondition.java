@@ -25,7 +25,6 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.conditions.variableconditions.VariableCondition;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 

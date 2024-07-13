@@ -27,10 +27,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-
-import java.util.List;
 
 public class OpenSignAction extends PlayerAction {
     public OpenSignAction(Executor executor, Target target, int x, Arguments args) {
@@ -41,8 +38,7 @@ public class OpenSignAction extends PlayerAction {
     public void executePlayer(Player player) {
         Location location = getArguments().getValue("location",getWorld().getSpawnLocation(),this);
         Block block = location.getBlock();
-        if (!(block.getState() instanceof Sign)) return;
-        Sign sign = (Sign) block.getState();
+        if (!(block.getState() instanceof Sign sign)) return;
         String sideString = getArguments().getValue("side","front",this);
         Side side = (sideString.equals("back") ? Side.BACK : Side.FRONT);
         player.openSign(sign,side);

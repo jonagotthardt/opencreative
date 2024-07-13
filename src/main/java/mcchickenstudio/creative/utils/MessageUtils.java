@@ -249,7 +249,7 @@ public class MessageUtils {
     }
 
 
-    static Map<Plot,Long> messagesOnce = new HashMap<>();
+    static final Map<Plot,Long> messagesOnce = new HashMap<>();
     /**
      Sends message to plot players once. If cool down is not ended, it will not send message.
      **/

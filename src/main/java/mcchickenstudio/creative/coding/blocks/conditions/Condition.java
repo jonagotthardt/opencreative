@@ -64,9 +64,9 @@ public abstract class Condition extends Action {
             }
         }
         if (check) {
-            new ActionsHandler(handler).executeActions(actions);
+            new ActionsHandler(this).executeActions(actions);
         } else {
-            new ActionsHandler(handler).executeActions(reactions);
+            new ActionsHandler(this).executeActions(reactions);
         }
     }
 

@@ -26,13 +26,9 @@ import java.util.List;
 
 public class ConfigExecutor {
 
-    private final ExecutorCategory category;
-    private final ExecutorType type;
     private final List<ConfigAction> actions = new ArrayList<>();
 
     ConfigExecutor(ExecutorCategory category, ExecutorType type) {
-        this.category = category;
-        this.type = type;
     }
 
     public void addAction(ConfigAction action) {

@@ -33,6 +33,9 @@ import mcchickenstudio.creative.coding.menus.layouts.LayoutMaker;
 import mcchickenstudio.creative.debug.values.VariableLink;
 import mcchickenstudio.creative.plots.PlotFlags;
 import mcchickenstudio.creative.plots.PlotManager;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -61,10 +64,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import static mcchickenstudio.creative.events.ChangedWorld.*;
+import static mcchickenstudio.creative.events.PlayerPlaceBlock.move;
 import static mcchickenstudio.creative.utils.BlockUtils.getSignLine;
 import static mcchickenstudio.creative.utils.BlockUtils.setSignLine;
 import static mcchickenstudio.creative.utils.ItemUtils.*;
-import static mcchickenstudio.creative.utils.ItemUtils.getCodingVariableTypeKey;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemName;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
@@ -88,7 +91,24 @@ public class PlayerInteract implements Listener {
         if (devPlot != null) {
             Block clickedBlock = event.getClickedBlock();
             if (currentItem.getItemMeta() != null) {
-                if (currentItem.getType() == Material.FEATHER && currentItem.getItemMeta().getDisplayName().equals(getLocaleItemName("items.developer.fly-speed-changer.name"))) {
+                if (currentItem.getType() == Material.COMPARATOR && player.isSneaking() && clickedBlock != null) {
+                    if (ActionCategory.getByMaterial(clickedBlock.getType()) != null) {
+                        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                            if (clickedBlock.getX() < 96) {
+                                move(clickedBlock.getRelative(BlockFace.WEST).getLocation(),BlockFace.EAST);
+                                player.playSound(player.getLocation(), Sound.BLOCK_BARREL_CLOSE, 100, 1.3f);
+                            } else {
+                                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
+                            }
+                        } else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+                            if (clickedBlock.getX() > 6 && clickedBlock.getRelative(BlockFace.WEST).getType() == Material.AIR && clickedBlock.getRelative(BlockFace.WEST).getRelative(BlockFace.WEST).getType() == Material.AIR) {
+                                move(clickedBlock.getRelative(BlockFace.WEST).getLocation(),BlockFace.WEST);
+                                player.playSound(player.getLocation(), Sound.BLOCK_BARREL_CLOSE, 100, 1.3f);
+                            } else {
+                                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
+                            }                        }
+                    }
+                } else if (currentItem.getType() == Material.FEATHER && currentItem.getItemMeta().getDisplayName().equals(getLocaleItemName("items.developer.fly-speed-changer.name"))) {
                     currentItem.setAmount((currentItem.getAmount() > 3 ? 1 : currentItem.getAmount() + 1));
                     float currentSpead = currentItem.getAmount() + 1;
                     float speed = ((currentSpead - 1) / 9) * (1 - 0.1f);
@@ -109,7 +129,7 @@ public class PlayerInteract implements Listener {
                     event.setCancelled(true);
                 } else if (currentItem.getType() == Material.PAPER) {
                     if (event.getAction() == Action.LEFT_CLICK_AIR && !player.hasCooldown(currentItem.getType())) {
-                        Plot plot = devPlot.linkedPlot;
+                        Plot plot = devPlot.getLinkedPlot();
                         if (plot != null && plot.world != null) {
                             addPlayerWithLocation(player);
                             player.teleport(plot.world.getSpawnLocation());
@@ -153,7 +173,20 @@ public class PlayerInteract implements Listener {
                             setPersistentData(currentItem,getCodingValueKey(),"VARIABLE");
                             setPersistentData(currentItem,getCodingVariableTypeKey(),type.name());
                             player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.7f);
+                            player.sendMessage(Component.text(meta.getDisplayName()).clickEvent(ClickEvent.copyToClipboard(meta.getDisplayName())));
                         }
+                    }
+                } else if (currentItem.getType() == Material.BOOK && event.getAction() == Action.RIGHT_CLICK_AIR) {
+                    ItemMeta meta = currentItem.getItemMeta();
+                    if (meta != null) {
+                        player.sendMessage(Component.text(meta.getDisplayName()).hoverEvent(HoverEvent.showText(Component.text(getLocaleMessage("world.dev-mode.click-to-copy")))).clickEvent(ClickEvent.suggestCommand(meta.getDisplayName().replace("§","&"))));
+                        setPersistentData(currentItem,getCodingValueKey(),"TEXT");
+                    }
+                } else if (currentItem.getType() == Material.SLIME_BALL && event.getAction() == Action.RIGHT_CLICK_AIR) {
+                    ItemMeta meta = currentItem.getItemMeta();
+                    if (meta != null) {
+                        player.sendMessage(Component.text(meta.getDisplayName()).hoverEvent(HoverEvent.showText(Component.text(getLocaleMessage("world.dev-mode.click-to-copy")))).clickEvent(ClickEvent.suggestCommand(ChatColor.stripColor(meta.getDisplayName()))));
+                        setPersistentData(currentItem,getCodingValueKey(),"NUMBER");
                     }
                 }
             }
@@ -170,26 +203,29 @@ public class PlayerInteract implements Listener {
                 ActionCategory actionBlockCategory = ActionCategory.getByMaterial(mainBlock.getType());
 
                 if (player.isSneaking() && actionBlockCategory != null) {
-                    new TargetSelectionMenu(event.getClickedBlock().getLocation()).open(player);
+                    new TargetSelectionMenu(clickedBlock.getLocation()).open(player);
                 } else {
+                    CodingBlockTypesMenu menu = null;
                     if (mainBlockCategory == ExecutorCategory.EVENT_PLAYER) {
-                        CodingBlockTypesMenu menu = new PlayerEventsMenu(player,event.getClickedBlock().getLocation());
+                        menu = new PlayerEventsMenu(player,clickedBlock.getLocation());
+                    }
+                    if (actionBlockCategory != null) {
+                        menu = switch (actionBlockCategory) {
+                            case PLAYER_ACTION -> new PlayerActionsMenu(player,clickedBlock.getLocation());
+                            case CONTROL_ACTION -> new ControlActionsMenu(player,clickedBlock.getLocation());
+                            case PLAYER_CONDITION -> new PlayerConditionsMenu(player,clickedBlock.getLocation());
+                            case VARIABLE_CONDITION -> new VariableConditionsMenu(player,clickedBlock.getLocation());
+                            case VARIABLE_ACTION -> new VariableActionsMenu(player,clickedBlock.getLocation());
+                            case WORLD_ACTION -> new WorldActionsMenu(player,clickedBlock.getLocation());
+                            //case HANDLER_ACTION -> new HandlerActionsMenu(player,clickedBlock.getLocation());
+                            //case REPEAT_ACTION -> new RepeatActionsMenu(player,clickedBlock.getLocation());
+                            default -> null;
+                        };
+                    }
+                    if (menu != null) {
                         menu.open(player);
-                    } else if (actionBlockCategory == ActionCategory.PLAYER_ACTION) {
-                        CodingBlockTypesMenu menu = new PlayerActionsMenu(player,event.getClickedBlock().getLocation());
-                        menu.open(player);
-                    } else if (actionBlockCategory == ActionCategory.CONTROL_ACTION) {
-                        CodingBlockTypesMenu menu = new ControlActionsMenu(player,event.getClickedBlock().getLocation());
-                        menu.open(player);
-                    } else if (actionBlockCategory == ActionCategory.PLAYER_CONDITION) {
-                        CodingBlockTypesMenu menu = new PlayerConditionsMenu(player, event.getClickedBlock().getLocation());
-                        menu.open(player);
-                    } else if (actionBlockCategory == ActionCategory.VARIABLE_CONDITION) {
-                        CodingBlockTypesMenu menu = new VariableConditionsMenu(player,event.getClickedBlock().getLocation());
-                        menu.open(player);
-                    } else if (actionBlockCategory == ActionCategory.VARIABLE_ACTION) {
-                        CodingBlockTypesMenu menu = new VariableActionsMenu(player, event.getClickedBlock().getLocation());
-                        menu.open(player);
+                    } else if (actionBlockCategory == ActionCategory.LAUNCH_FUNCTION_ACTION) {
+                        new FunctionChooserMenu(player, devPlot,clickedBlock.getLocation()).open(player);
                     } else if (mainBlockCategory == ExecutorCategory.CYCLE) {
                         String cycleTicksString = getSignLine(clickedBlock.getLocation(),(byte) 3);
                         if (cycleTicksString != null && !cycleTicksString.isEmpty()) {
@@ -210,7 +246,7 @@ public class PlayerInteract implements Listener {
                                         if (item.getType() == Material.SLIME_BALL) {
                                             try {
                                                 cycleTicks = Math.round(Float.parseFloat(displayName));
-                                            } catch (NumberFormatException exception){}
+                                            } catch (NumberFormatException ignored) {}
                                             player.playSound(player.getLocation(),Sound.BLOCK_CHAIN_FALL,100f,0.5f);
                                         } else if (displayName.length() < 15) {
                                             setSignLine(clickedBlock.getLocation(),(byte) 1,displayName);
@@ -230,6 +266,16 @@ public class PlayerInteract implements Listener {
                             }
                             setSignLine(clickedBlock.getLocation(),(byte) 3,String.valueOf(cycleTicks));
                             translateBlockSign(clickedBlock);
+                        }
+                    } else if (mainBlockCategory == ExecutorCategory.FUNCTION) {
+                        ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
+                        if (!item.isEmpty() && item.hasItemMeta()) {
+                            String displayName = ChatColor.stripColor(item.getItemMeta().getDisplayName());
+                            if (displayName.length() < 15) {
+                                setSignLine(clickedBlock.getLocation(),(byte) 3,displayName);
+                                player.playSound(player.getLocation(),Sound.BLOCK_ENCHANTMENT_TABLE_USE,100f,0.7f);
+                                translateBlockSign(clickedBlock);
+                            }
                         }
                     }
                 }
@@ -403,8 +449,7 @@ public class PlayerInteract implements Listener {
 
     @EventHandler
     public void onHang(HangingBreakByEntityEvent event) {
-        if (!(event.getRemover() instanceof Player)) return;
-        Player player = (Player) event.getRemover();
+        if (!(event.getRemover() instanceof Player player)) return;
         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
         if (plot != null) {
             EventRaiser.raiseMobInteractionEvent(player,event);

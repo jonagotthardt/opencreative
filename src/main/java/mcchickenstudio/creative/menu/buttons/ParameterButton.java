@@ -19,8 +19,6 @@
 package mcchickenstudio.creative.menu.buttons;
 
 import mcchickenstudio.creative.utils.MessageUtils;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;

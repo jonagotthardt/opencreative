@@ -19,7 +19,6 @@
 package mcchickenstudio.creative.utils;
 
 import mcchickenstudio.creative.Main;
-import mcchickenstudio.creative.coding.variables.ValueType;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -40,6 +39,9 @@ public class ItemUtils {
     private final static NamespacedKey CODING_VALUE_KEY = new NamespacedKey(Main.getPlugin(), "oc_value_type");
     private final static NamespacedKey CODING_VARIABLE_TYPE_KEY = new NamespacedKey(Main.getPlugin(), "oc_variable_type");
     private final static NamespacedKey CODING_DO_NOT_DROP_ME_KEY = new NamespacedKey(Main.getPlugin(), "oc_do_not_drop_me");
+    private final static NamespacedKey CODING_LOCATION_X = new NamespacedKey(Main.getPlugin(), "oc_loc_x");
+    private final static NamespacedKey CODING_LOCATION_Y = new NamespacedKey(Main.getPlugin(), "oc_loc_y");
+    private final static NamespacedKey CODING_LOCATION_Z = new NamespacedKey(Main.getPlugin(), "oc_loc_z");
 
 
     public static NamespacedKey getCodingValueKey() {
@@ -54,12 +56,30 @@ public class ItemUtils {
         return CODING_DO_NOT_DROP_ME_KEY;
     }
 
-    public static ItemStack setPersistentData(ItemStack item, NamespacedKey key, String value) {
+    public static NamespacedKey getCodingLocationX() {
+        return CODING_LOCATION_X;
+    }
+
+    public static NamespacedKey getCodingLocationY() {
+        return CODING_LOCATION_Y;
+    }
+
+    public static NamespacedKey getCodingLocationZ() {
+        return CODING_LOCATION_Z;
+    }
+
+    public static void setPersistentData(ItemStack item, NamespacedKey key, String value) {
         ItemMeta meta = item.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
         container.set(key, PersistentDataType.STRING, value);
         item.setItemMeta(meta);
-        return item;
+    }
+
+    public static void setPersistentData(ItemStack item, NamespacedKey key, double value) {
+        ItemMeta meta = item.getItemMeta();
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        container.set(key, PersistentDataType.DOUBLE, value);
+        item.setItemMeta(meta);
     }
 
     /**
@@ -125,9 +145,7 @@ public class ItemUtils {
             if (!itemStack.getItemMeta().getDisplayName().equalsIgnoreCase(itemStack2.getItemMeta().getDisplayName())) {
                 return false;
             }
-            if ((itemStack.getItemMeta().hasLore() && itemStack2.getItemMeta().hasLore()) && (!(itemStack.getItemMeta().getLore().equals(itemStack2.getItemMeta().getLore())))) {
-                return false;
-            }
+            return (!itemStack.getItemMeta().hasLore() || !itemStack2.getItemMeta().hasLore()) || (itemStack.getItemMeta().getLore().equals(itemStack2.getItemMeta().getLore()));
         }
         return true;
     }
@@ -141,13 +159,33 @@ public class ItemUtils {
         return item;
     }
 
-    public static ItemStack setLore(ItemStack item, List<String> lore) {
+    public static void replacePlaceholderInLore(ItemStack item, String placeholder, Object value) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null && meta.getLore() != null) {
+            List<String> newLore = new ArrayList<>();
+            List<String> oldLore = meta.getLore();
+            for (String loreLine : oldLore) {
+                newLore.add(loreLine.replace(placeholder,value.toString()));
+            }
+            meta.setLore(newLore);
+            item.setItemMeta(meta);
+        }
+    }
+
+    public static void setDisplayName(ItemStack item, String displayName) {
+        if (item.hasItemMeta()) {
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(displayName);
+            item.setItemMeta(meta);
+        }
+    }
+
+    public static void setLore(ItemStack item, List<String> lore) {
         if (item.hasItemMeta()) {
             ItemMeta meta = item.getItemMeta();
             meta.setLore(lore);
             item.setItemMeta(meta);
         }
-        return item;
     }
 
     public static ItemStack addLoreAtBegin(ItemStack item, String loreLine) {

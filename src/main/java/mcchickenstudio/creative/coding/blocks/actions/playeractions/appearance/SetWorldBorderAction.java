@@ -26,10 +26,7 @@ import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.WorldBorder;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-
-import java.util.List;
 
 public class SetWorldBorderAction extends PlayerAction {
     public SetWorldBorderAction(Executor executor, Target target, int x, Arguments args) {

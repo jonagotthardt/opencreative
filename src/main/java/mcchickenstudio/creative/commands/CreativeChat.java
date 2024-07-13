@@ -39,14 +39,23 @@ import static mcchickenstudio.creative.utils.MessageUtils.parsePAPI;
 
 public class CreativeChat implements CommandExecutor {
 
-    public static List<Player> creativeChatOff = new ArrayList<>();
+    public static final List<Player> creativeChatOff = new ArrayList<>();
+
+    private static boolean chatEnabled = true;
+
+    public static void setChatEnabled(boolean chatEnabled) {
+        CreativeChat.chatEnabled = chatEnabled;
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = ((Player) sender);
+        if (sender instanceof Player player) {
             if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
                 player.sendMessage(getLocaleMessage("maintenance"));
+                return true;
+            }
+            if (!chatEnabled && !player.hasPermission("creative.creative-chat.bypass")) {
+                player.sendMessage(getLocaleMessage("creative.creative-chat.off"));
                 return true;
             }
             if (args.length > 0) {

@@ -24,6 +24,7 @@ import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -46,15 +47,16 @@ public class Executors {
 
     protected final Plot plot;
     private List<Executor> executorsList = new ArrayList<>();
+
     private final Map<Executor,Integer> lastExecutorsCallsAmount = new HashMap<>();
 
     public Executors(Plot plot) {
         this.plot = plot;
     }
 
-    public static boolean activate(CreativeEvent event) {
+    public static void activate(CreativeEvent event) {
         Plot plot = event.getPlot();
-        if (plot == null || plot.script == null || plot.script.getExecutors() == null) return false;
+        if (plot == null || plot.script == null || plot.script.getExecutors() == null) return;
         Executors executors = plot.script.getExecutors();
         for (Executor executor : executors.executorsList) {
             if (executor.getExecutorType().getEventClass() == event.getClass()) {
@@ -62,7 +64,7 @@ public class Executors {
                     executors.clearExecutionsAmount(executor);
                     stopPlotCode(plot);
                     sendPlotCodeCriticalErrorMessage(plot,executor,getLocaleMessage("plot-code-error.operations-limit",false).replace("%limit%",String.valueOf(plot.codeOperationsLimit)));
-                    return false;
+                    return;
                 } else {
                     executors.increaseCallsAmount(executor);
                     executor.run(event);
@@ -76,7 +78,6 @@ public class Executors {
 
             }
         }
-        return true;
     }
 
     public void load(File file) {
@@ -84,7 +85,6 @@ public class Executors {
         ConfigurationSection section = config.getConfigurationSection("code.blocks");
         if (section != null) {
             List<Executor> executors = new ArrayList<>();
-
             Set<String> keys = section.getKeys(false);
             String path = "";
 
@@ -120,6 +120,9 @@ public class Executors {
                 String name = config.getString(path+".name");
                 int time = config.getInt(path+".time");
                 executor = type.getExecutorClass().getConstructor(Plot.class,int.class,int.class,int.class,String.class,int.class).newInstance(plot,coords[0],coords[1],coords[2],name,(time >= 5 && time <= 3600 ? time : 20));
+            } else if (type == ExecutorType.FUNCTION) {
+                String name = config.getString(path+".name");
+                executor = type.getExecutorClass().getConstructor(Plot.class,int.class,int.class,int.class,String.class).newInstance(plot,coords[0],coords[1],coords[2],name);
             } else {
                 executor = type.getExecutorClass().getConstructor(Plot.class,int.class,int.class,int.class).newInstance(plot,coords[0],coords[1],coords[2]);
             }
@@ -129,7 +132,7 @@ public class Executors {
                 executor.setActions(allActionsList);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            sendCriticalErrorMessage("Failed to create an executor",e);
         }
         return executor;
     }
@@ -158,6 +161,11 @@ public class Executors {
         try {
             ActionType actionType = ActionType.valueOf(type);
             Arguments args = new Arguments(executor.getPlot(),executor);
+            if (actionType == ActionType.LAUNCH_FUNCTION) {
+                if (config.getString(path+".name") != null) {
+                    args.setArgumentValue("name", ValueType.TEXT,config.getString(path+".name"));
+                }
+            }
             Target target = Target.DEFAULT;
             String targetString = config.getString(path + ".target");
             if (targetString != null && !targetString.isEmpty()) {
@@ -167,12 +175,14 @@ public class Executors {
             if (section != null) {
                 args.load(section);
             }
-            if (config.getConfigurationSection(path+".actions") != null) {
-                return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class).newInstance(executor,target,config.getInt(path+".location.x"),args,createActionList(executor,path+".actions",config));
+            if (actionType.getCategory().isMultiAction()) {
+                if (config.getConfigurationSection(path+".actions") != null) {
+                    return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class).newInstance(executor,target,config.getInt(path+".location.x"),args,createActionList(executor,path+".actions",config));
+                }
             }
+
             return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class).newInstance(executor,target,config.getInt(path+".location.x"),args);
         } catch (Exception error) {
-            error.printStackTrace();
             return null;
         }
     }

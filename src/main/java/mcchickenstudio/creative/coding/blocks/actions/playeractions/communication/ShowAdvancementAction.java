@@ -25,11 +25,8 @@ import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.utils.Advancement;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
 
 public class ShowAdvancementAction extends PlayerAction {
     public ShowAdvancementAction(Executor executor, Target target, int x, Arguments args) {

@@ -25,11 +25,8 @@ import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.blocks.executors.Executors;
 import mcchickenstudio.creative.coding.variables.ValueType;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import mcchickenstudio.creative.plots.Plot;
@@ -41,7 +38,6 @@ import java.util.*;
 import static mcchickenstudio.creative.utils.BlockUtils.getSignLine;
 import static mcchickenstudio.creative.utils.ErrorUtils.*;
 import static mcchickenstudio.creative.utils.FileUtils.*;
-import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
 
 public class CodeScript {
 
@@ -49,7 +45,7 @@ public class CodeScript {
     private final File file;
     public final List<Integer> blockActionsX = new ArrayList<>();
     private final Executors executors;
-    private YamlConfiguration scriptConfig;
+    private final YamlConfiguration scriptConfig;
     private boolean isCodeRunning = false;
 
     public CodeScript(Plot linkedPlot, File file) {
@@ -64,8 +60,7 @@ public class CodeScript {
 
     public boolean exists() {
         File linkedPlotFolder = getPlotFolder(linkedPlot);
-        if (linkedPlotFolder == null) return false;
-        return true;
+        return linkedPlotFolder != null;
     }
 
     public void setCodeRunning(boolean codeRunning) {
@@ -97,7 +92,7 @@ public class CodeScript {
 
     }
 
-    public boolean saveExecutorBlock(Block block, ExecutorCategory category, ExecutorType type) {
+    public void saveExecutorBlock(Block block, ExecutorCategory category, ExecutorType type) {
         int x = block.getX();
         int y = block.getY();
         int z = block.getZ();
@@ -107,15 +102,15 @@ public class CodeScript {
         scriptConfig.set(path + ".type", type.name());
 
         String firstSignLine = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 1);
-        String lastSignLine = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
+        String thirdSignLine = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
 
         if (category == ExecutorCategory.FUNCTION || category == ExecutorCategory.METHOD) {
-            if (lastSignLine != null && !lastSignLine.isEmpty()) {
-                scriptConfig.set(path + ".type", lastSignLine);
+            if (thirdSignLine != null && !thirdSignLine.isEmpty()) {
+                scriptConfig.set(path + ".name", thirdSignLine);
             }
         } else if (category == ExecutorCategory.CYCLE) {
-            if (lastSignLine != null && !lastSignLine.isEmpty()) {
-                scriptConfig.set(path + ".time", Integer.parseInt(lastSignLine));
+            if (thirdSignLine != null && !thirdSignLine.isEmpty()) {
+                scriptConfig.set(path + ".time", Integer.parseInt(thirdSignLine));
             }
             if (firstSignLine != null && !firstSignLine.isEmpty()) {
                 scriptConfig.set(path + ".name", firstSignLine);
@@ -124,7 +119,6 @@ public class CodeScript {
         scriptConfig.set(path + ".location.x", x);
         scriptConfig.set(path + ".location.y", y);
         scriptConfig.set(path + ".location.z", z);
-        return true;
     }
 
 
@@ -139,9 +133,15 @@ public class CodeScript {
         }
 
         String path = getActionBlockPath(actionBlock,conditions);
-
         scriptConfig.set(path + ".category", category.name());
         scriptConfig.set(path + ".type", type.name());
+        if (type == ActionType.LAUNCH_FUNCTION) {
+            String thirdSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
+            if (thirdSignLine != null && !thirdSignLine.isEmpty()) {
+                scriptConfig.set(path + ".name",thirdSignLine);
+            }
+        }
+
         if (target != Target.DEFAULT) {
             scriptConfig.set(path + ".target", target.name());
         }
@@ -165,9 +165,9 @@ public class CodeScript {
 
         String path;
         ActionCategory category = ActionCategory.getByMaterial(actionBlock.getType());
-        if (category.name().contains("CONDITION")) {
+        if (category != null && category.isMultiAction()) {
             path = ("code.blocks.exec_block_" + z + "_" + y + ".actions." + conditionsPath);
-            path = path.substring(0, path.length() - 9);
+            path = path.substring(0, path.length() - 9); // Remove last ".actions".
         } else {
             path = "code.blocks.exec_block_" + z + "_" + y + ".actions." + conditionsPath + "action_block" + getBlockActionNumber(actionBlock);
         }

@@ -14,7 +14,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+ *//*
+
 
 package mcchickenstudio.creative.debug.config;
 
@@ -44,23 +45,27 @@ import java.util.Map;
 public class ConfigExecutors {
 
     private final Plot plot;
-  /*  private final YamlConfiguration config;
-    private final File file;*/
+  */
+/*  private final YamlConfiguration config;
+    private final File file;*//*
+
     private final List<ConfigExecutor> executorList = new ArrayList<>();
     private final World devPlotWorld;
 
     public ConfigExecutors(Plot plot) {
         this.plot = plot;
         this.devPlotWorld = plot.devPlot.world;
-    /*    this.config = config;
-        this.file = file;*/
+    */
+/*    this.config = config;
+        this.file = file;*//*
+
     }
 
     public ConfigExecutors create() {
 
         DevPlot devPlot = plot.devPlot;
         World world = devPlot.world;
-        CodeScript script = devPlot.linkedPlot.script;
+        CodeScript script = devPlot.getLinkedPlot().script;
         script.clear();
 
         List<Block> unknownBlocks = new ArrayList<>();
@@ -123,7 +128,7 @@ public class ConfigExecutors {
             ((ConfigCondition) configAction).setActions(createActionList(executorBlock,actionBlock.getX()+2,getClosingBracketX(actionBlock)));
             ((ConfigCondition) configAction).setReactions(createActionList(executorBlock, getClosingBracketX(actionBlock)+3, getClosingBracketX(devPlotWorld.getBlockAt(getClosingBracketX(actionBlock)+1,executorBlock.getY(),executorBlock.getZ()))));
 
-        } else if (actionType.isMultiAction()) {
+        } else if (actionType.getCategory().isMultiAction()) {
             System.out.println("Multiaction");
             configAction = new ConfigMultiAction(actionCategory,actionType);
         } else {
@@ -180,7 +185,7 @@ public class ConfigExecutors {
                 if (block.getRelative(BlockFace.EAST).getType() == Material.PISTON) {
                     System.out.println("AIR + PISTON");
                     if (!conditions.isEmpty()) {
-                        String last = conditions.get(conditions.size()-1);
+                        String last = conditions.getLast();
                         System.out.println("deleting last " + last);
                         conditions.remove(last);
                     } else {
@@ -205,42 +210,5 @@ public class ConfigExecutors {
         return ValueType.getByMaterial(item.getType());
     }
 
-    private Object parseItemValue(ItemStack item, boolean isItemStack) {
-        if (isItemStack) {
-            return item.serialize();
-        }
-        if (!item.hasItemMeta()) return "";
-        if (item.getItemMeta().displayName() == null) return "";
-        String name = item.getItemMeta().getDisplayName();
-        switch(item.getType()) {
-            case SLIME_BALL:
-                return ChatColor.stripColor(name);
-            case BOOK:
-                return name;
-            case CLOCK:
-                return ChatColor.stripColor(name);
-            case MAGMA_CREAM:
-                return ChatColor.stripColor(name);
-            case PAPER:
-                Map<String, Object> locationMap = new HashMap<>();
-                String locationString = ChatColor.stripColor(name);
-                String[] locCoords = locationString.split(" ");
-                if (locCoords.length == 5) {
-                    try {
-                        locationMap.put("x",Double.parseDouble(locCoords[0]));
-                        locationMap.put("y",Double.parseDouble(locCoords[1]));
-                        locationMap.put("z",Double.parseDouble(locCoords[2]));
-                        locationMap.put("yaw",Float.parseFloat(locCoords[3]));
-                        locationMap.put("pitch",Float.parseFloat(locCoords[4]));
-                    } catch (Exception error) {
-
-                    }
-                }
-                return locationMap;
-            default:
-                return name;
-        }
-    }
-
-
 }
+*/

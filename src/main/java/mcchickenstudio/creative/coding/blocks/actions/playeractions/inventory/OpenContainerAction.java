@@ -29,12 +29,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Container;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
 
 public class OpenContainerAction extends PlayerAction {
     public OpenContainerAction(Executor executor, Target target, int x, Arguments args) {

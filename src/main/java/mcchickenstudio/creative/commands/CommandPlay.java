@@ -25,8 +25,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import mcchickenstudio.creative.coding.CodingBlockParser;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.CooldownUtils;
@@ -52,8 +50,7 @@ public class CommandPlay implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
             if (plot == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
@@ -90,6 +87,9 @@ public class CommandPlay implements CommandExecutor {
                             p.teleport(plot.world.getSpawnLocation());
                         }
                     }
+                    if (plot.isOwner(sender.getName())) {
+                        player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
+                    }
                     if (plot.script != null && plot.script.exists()) {
                         if (plot.devPlot.isLoaded) {
                             new CodingBlockParser().parseCode(plot.devPlot);
@@ -97,17 +97,8 @@ public class CommandPlay implements CommandExecutor {
                             plot.script.loadCode();
                         }
                     }
-                    if (plot.getOwner().equalsIgnoreCase(sender.getName())) {
-                        ItemStack worldSettingsItem = new ItemStack(Material.COMPASS,1);
-                        ItemMeta worldSettingsItemMeta = worldSettingsItem.getItemMeta();
-                        worldSettingsItemMeta.setDisplayName(getLocaleItemName("items.developer.world-settings.name"));
-                        worldSettingsItemMeta.setLore(getLocaleItemDescription("items.developer.world-settings.lore"));
-                        worldSettingsItem.setItemMeta(worldSettingsItemMeta);
-                        player.getInventory().setItem(8,worldSettingsItem);
-                    }
                     for (Player p : plot.getPlayers()) {
                         if (PlotManager.getInstance().getDevPlot(p) == null || sender.getName().equals(p.getName())) {
-                            EventRaiser.raiseQuitEvent(p);
                             EventRaiser.raiseJoinEvent(p);
                         }
                     }
@@ -115,16 +106,15 @@ public class CommandPlay implements CommandExecutor {
                     sender.sendMessage(getLocaleMessage("not-owner", player));
                 }
             } else {
-                boolean isDeveloper = plot.isOwner(sender.getName()) || developers.contains(sender.getName()) || FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_GUESTS).contains(player.getName());
-                if (EventRaiser.raisePlayEvent(player) || isDeveloper) {
+                if (EventRaiser.raisePlayEvent(player) || plot.isDeveloper(player)) {
                     plot.world.getSpawnLocation().getChunk().load(true);
+                    DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
                     player.teleport(plot.world.getSpawnLocation());
-                    if (isDeveloper) {
+                    if (plot.isDeveloper(player)) {
                         clearPlayer(player);
                         player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
-                        ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
                         if (plot.isOwner(sender.getName())) {
-                            player.getInventory().setItem(8,worldSettingsItem);
+                            player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
                         }
                         if (plot.script != null && plot.script.exists()) {
                             if (plot.devPlot.isLoaded) {
@@ -136,7 +126,9 @@ public class CommandPlay implements CommandExecutor {
                     } else {
                         player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
                     }
-                    EventRaiser.raiseQuitEvent(player);
+                    if (devPlot == null) {
+                        EventRaiser.raiseQuitEvent(player);
+                    }
                     EventRaiser.raiseJoinEvent(player);
                 }
             }

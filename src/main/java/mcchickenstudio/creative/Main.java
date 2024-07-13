@@ -20,6 +20,7 @@ package mcchickenstudio.creative;
 
 import mcchickenstudio.creative.coding.blocks.events.CEListener;
 import mcchickenstudio.creative.commands.*;
+import mcchickenstudio.creative.commands.minecraft.*;
 import mcchickenstudio.creative.events.*;
 import mcchickenstudio.creative.menu.Menus;
 import mcchickenstudio.creative.utils.FileUtils;
@@ -36,14 +37,12 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCriticalErrorMessage;
-import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 
 public final class Main extends JavaPlugin {
@@ -136,9 +135,8 @@ public final class Main extends JavaPlugin {
 
     /**
      * Checks if debug mode is enabled in config.yml.
-     * @return true - if debug mode is enabled, false - disabled.
      */
-    private boolean checkDebug() {
+    private void checkDebug() {
         maintenance = getConfig().getBoolean("maintenance",false);
         if (maintenance) {
             getLogger().warning("Maintenance mode is still enabled in config.yml, to disable: /maintenance end");
@@ -155,7 +153,6 @@ public final class Main extends JavaPlugin {
                 }
             }.runTaskTimer(this,20L,20L);
         }
-        return debug;
     }
 
     private void registerCommands() {
@@ -175,22 +172,24 @@ public final class Main extends JavaPlugin {
         commands.put("like",        CommandLike.class);
         commands.put("dislike",     CommandDislike.class);
         commands.put("locate",      CommandLocate.class);
+        commands.put("gamemode",    CommandGamemode.class);
+        commands.put("give",        CommandGive.class);
+        commands.put("teleport",    CommandTeleport.class);
         for (String commandName : commands.keySet()) {
             PluginCommand command = getCommand(commandName);
             if (command != null) {
                 try {
                     command.setExecutor(commands.get(commandName).newInstance());
-                    if (commandName.equals("join") || commandName.equals("ad")) {
-                        command.setTabCompleter(new CommandTabJoin());
-                    } else if (commandName.equals("locate")) {
-                        command.setTabCompleter(new CommandTabLocate());
-                    } else if (commandName.equals("creative")) {
-                        command.setTabCompleter(new CommandTabCreative());
-                    } else if (commandName.equals("environment")) {
-                        command.setTabCompleter(new CommandTabEnvironment());
+                    switch (commandName) {
+                        case "join", "ad" -> command.setTabCompleter(new CommandTabJoin());
+                        case "locate" -> command.setTabCompleter(new CommandTabLocate());
+                        case "creative" -> command.setTabCompleter(new CommandTabCreative());
+                        case "environment" -> command.setTabCompleter(new CommandTabEnvironment());
+                        case "gamemode" -> command.setTabCompleter(new CommandTabGamemode());
+                        case "give" -> command.setTabCompleter(new CommandTabGive());
                     }
-                } catch (IllegalAccessException | InstantiationException ignored) {
-                    sendCriticalErrorMessage("Couldn't register command " + commandName + ", because of " + ignored.getMessage());
+                } catch (IllegalAccessException | InstantiationException error) {
+                    sendCriticalErrorMessage("Couldn't register command " + commandName,error);
                 }
             } else {
                 sendCriticalErrorMessage("Couldn't get command with name " + commandName + ", it is null. Maybe it doesn't exist in plugins.yml?");

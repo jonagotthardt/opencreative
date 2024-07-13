@@ -26,8 +26,6 @@ import mcchickenstudio.creative.coding.blocks.actions.controlactions.ControlActi
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
 
-import java.util.List;
-
 public class ThrowErrorAction extends ControlAction {
     public ThrowErrorAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);

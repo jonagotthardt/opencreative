@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.commands;
 
 import mcchickenstudio.creative.Main;
+import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -40,6 +41,7 @@ public class CommandSpawn implements CommandExecutor {
         if (args.length > 0) {
             if (!(sender instanceof Player) || sender.hasPermission("creative.spawnothers")) {
                 if (!(Bukkit.getPlayer(args[0]) == null)) {
+                    EventRaiser.raiseQuitEvent(Bukkit.getPlayer(args[0]));
                     teleportToLobby((Bukkit.getPlayer(args[0])));
                 } else {
                     sender.sendMessage(getLocaleMessage("not-found-player"));
@@ -48,13 +50,14 @@ public class CommandSpawn implements CommandExecutor {
                 sender.sendMessage(getLocaleMessage("no-perms"));
             }
         } else {
-            if (sender instanceof Player) {
-                if (getCooldown(((Player) sender).getPlayer(), CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-                    sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(((Player) sender).getPlayer(), CooldownUtils.CooldownType.GENERIC_COMMAND))));
+            if (sender instanceof Player player) {
+                if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
+                    sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
                     return true;
                 }
-                setCooldown(((Player) sender).getPlayer(),plugin.getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
-                teleportToLobby(((Player) sender).getPlayer());
+                setCooldown(player,plugin.getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
+                EventRaiser.raiseQuitEvent(player);
+                teleportToLobby(player);
             }
         }
         return true;

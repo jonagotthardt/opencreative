@@ -150,4 +150,8 @@ public enum ValueType {
         return null;
     }
 
+    public String getLocalized() {
+        return getLocaleMessage("environment.values." + name().toLowerCase().replace("_","-"),false);
+    }
+
 }

@@ -18,7 +18,6 @@
 
 package mcchickenstudio.creative.commands;
 
-import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -38,11 +37,22 @@ public class CommandTabCreative implements TabCompleter {
             tabCompleter.add("load");
             tabCompleter.add("unload");
             tabCompleter.add("resetlocale");
+            tabCompleter.add("creative-chat");
+            tabCompleter.add("kick-all");
         } else if (args.length == 2) {
             if ("maintenance".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("start");
                 tabCompleter.add("end");
-            } else if ("load".equalsIgnoreCase(args[0]) || "unload".equalsIgnoreCase(args[0])) {
+            } else if ("kick-all".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("starts");
+                tabCompleter.add("ends");
+                tabCompleter.add("contains");
+                tabCompleter.add("ignore");
+            } else if ("creative-chat".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("enable");
+                tabCompleter.add("disable");
+                tabCompleter.add("clear");
+            }  else if ("load".equalsIgnoreCase(args[0]) || "unload".equalsIgnoreCase(args[0])) {
                 tabCompleter.addAll(PlotManager.getInstance().getPlots().stream().map(plot -> plot.worldID).toList());
             }
         } else if (args.length == 3) {

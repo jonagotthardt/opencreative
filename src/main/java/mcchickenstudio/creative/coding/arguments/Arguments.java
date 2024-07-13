@@ -19,16 +19,15 @@
 package mcchickenstudio.creative.coding.arguments;
 
 import mcchickenstudio.creative.coding.blocks.actions.Action;
-import mcchickenstudio.creative.coding.blocks.actions.ActionsHandler;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.debug.values.EventValueLink;
 import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.debug.values.VariableLink;
 import mcchickenstudio.creative.plots.Plot;
-import mcchickenstudio.creative.utils.ErrorUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
@@ -314,6 +313,28 @@ public class Arguments {
         return null;
     }
 
+    public Material getValue(String path, Material defaultValue, Action action) {
+        Argument arg = getArg(path);
+        if (arg == null) {
+            sendCodingDebugNotFoundVariable(plot,path,defaultValue);
+            return defaultValue;
+        }
+        if (arg.getValue(action) instanceof ItemStack item) {
+            sendCodingDebugVariable(plot,path,item.getType());
+            return item.getType();
+        }
+        if (arg.getValue(action) instanceof Block block) {
+            sendCodingDebugVariable(plot,path,block.getType());
+            return block.getType();
+        }
+        if (arg.getValue(action) instanceof Location location) {
+            sendCodingDebugVariable(plot,path,location.getBlock().getType());
+            return location.getBlock().getType();
+        }
+        sendCodingDebugNotFoundVariable(plot,path,defaultValue);
+        return defaultValue;
+    }
+
     public ItemStack getValue(String path, ItemStack defaultValue, Action action) {
         Argument arg = getArg(path);
         if (arg == null) {
@@ -493,8 +514,7 @@ public class Arguments {
 
     public byte parseObject(Object object, byte defaultValue) {
         byte value = defaultValue;
-        if (object instanceof VariableLink) {
-            VariableLink link = (VariableLink) object;
+        if (object instanceof VariableLink link) {
             return parseObject(getVariableValue(link),defaultValue);
         } else if (object instanceof Integer) {
             value = (byte) object;
@@ -504,5 +524,13 @@ public class Arguments {
             value = (byte) Math.round((Double) object);
         }
         return value;
+    }
+
+    public void setArgumentValue(String path, ValueType type, Object value) {
+        argumentList.add(new Argument(plot,type,path,value));
+    }
+
+    public List<Argument> getArgumentList() {
+        return argumentList;
     }
 }

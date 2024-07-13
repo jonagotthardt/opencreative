@@ -49,7 +49,6 @@ public class Cycle extends Executor {
             runnable = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    System.out.println("cycle -> " + repeatTime + " " + name);
                     sendCodingDebugExecutor(executor);
                     executeActions(event);
                 }

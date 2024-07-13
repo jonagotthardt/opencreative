@@ -52,7 +52,7 @@ import static mcchickenstudio.creative.utils.MessageUtils.*;
 
 public class InventoryClick implements Listener {
 
-    PlotManager plotManager = PlotManager.getInstance();
+    final PlotManager plotManager = PlotManager.getInstance();
 
     @EventHandler
     public void click(InventoryClickEvent event) {
@@ -208,7 +208,7 @@ public class InventoryClick implements Listener {
                                         PlotManager.getInstance().deletePlot(PlotManager.getInstance().getPlotByCustomID(worldID), player);
                                     }
                                 } else {
-                                    player.playSound(player.getLocation(), Sound.valueOf("BLOCK_ANVIL_DESTROY"), 100, 2);
+                                    player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY, 100, 2);
                                     player.clearTitle();
                                     player.sendMessage(getLocaleMessage("no-plot-found", player));
                                 }
@@ -231,8 +231,7 @@ public class InventoryClick implements Listener {
                         }
                     }
                 } catch (Exception error) {
-                    sendPlayerErrorMessage(player, "Произошла ошибка при обработке клика инвентаря. " + error.getMessage() + error.getCause());
-                    error.printStackTrace();
+                    sendPlayerErrorMessage(player, "An error has occurred while clicking item in inventory",error);
                 }
             } else if (event.getInventory().getHolder() instanceof AllWorldsMenu) {
                 event.setCancelled(true);
@@ -257,7 +256,7 @@ public class InventoryClick implements Listener {
                                 if (plotManager.getPlotByCustomID(worldID) != null) {
                                     plotManager.getPlotByCustomID(worldID).teleportPlayer(player);
                                 } else {
-                                    player.playSound(player.getLocation(), Sound.valueOf("BLOCK_ANVIL_DESTROY"), 100, 2);
+                                    player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY, 100, 2);
                                     player.clearTitle();
                                     player.sendMessage(getLocaleMessage("no-plot-found", player));
                                 }
@@ -305,8 +304,7 @@ public class InventoryClick implements Listener {
                         }
                     }
                 } catch (Exception error) {
-                    sendPlayerErrorMessage(player, "Произошла ошибка при обработке клика инвентаря. " + error.getMessage());
-                    error.printStackTrace();
+                    sendPlayerErrorMessage(player, "An error has occurred while clicking item in inventory", error);
                 }
         } else if (event.getInventory().getHolder() instanceof WorldSettingsPlayersMenu) {
             event.setCancelled(true);
@@ -351,8 +349,7 @@ public class InventoryClick implements Listener {
                     }
                 }
                 } else if (item.getType() == Material.FEATHER || item.getType() == Material.BRICKS || item.getType() == Material.COMMAND_BLOCK) {
-                    if (plot == null) return;
-                    RadioButton rd = RadioButton.getRadioButtonByItemStack(item);
+                RadioButton rd = RadioButton.getRadioButtonByItemStack(item);
                     if (rd != null) {
                         rd.onChoice();
                         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 100, 1);

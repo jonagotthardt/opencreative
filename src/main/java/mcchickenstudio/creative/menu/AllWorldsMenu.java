@@ -33,11 +33,11 @@ import java.util.*;
 
 public class AllWorldsMenu extends LegacyMenu {
 
-    public static Map<Player,Integer> openedPage = new HashMap<>();
-    public static Map<Player,List<Plot>> currentPlotList = new HashMap<>();
-    public static Map<Player,Integer> chosenCategories = new HashMap<>();
-    public static Map<Player,Integer> chosenSorts = new HashMap<>();
-    public static int[] worldSlots = {12,13,14,15,16,21,22,23,24,25,30,31,32,33,34,39,40,41,42,43};
+    public static final Map<Player,Integer> openedPage = new HashMap<>();
+    public static final Map<Player,List<Plot>> currentPlotList = new HashMap<>();
+    public static final Map<Player,Integer> chosenCategories = new HashMap<>();
+    public static final Map<Player,Integer> chosenSorts = new HashMap<>();
+    public static final int[] worldSlots = {12,13,14,15,16,21,22,23,24,25,30,31,32,33,34,39,40,41,42,43};
 
     public AllWorldsMenu(Player player, int page) {
 
@@ -306,25 +306,16 @@ public class AllWorldsMenu extends LegacyMenu {
     }
 
     public static Plot.Category getPlayerCategory(Player player) {
-        switch (chosenCategories.get(player)) {
-            default:
-            case 2:
-                return Plot.Category.SANDBOX;
-            case 3:
-                return Plot.Category.ADVENTURE;
-            case 4:
-                return Plot.Category.STRATEGY;
-            case 5:
-                return Plot.Category.ARCADE;
-            case 6:
-                return Plot.Category.ROLEPLAY;
-            case 7:
-                return Plot.Category.STORY;
-            case 8:
-                return Plot.Category.EXPERIMENT;
-            case 9:
-                return Plot.Category.SIMULATOR;
-        }
+        return switch (chosenCategories.get(player)) {
+            default -> Plot.Category.SANDBOX;
+            case 3 -> Plot.Category.ADVENTURE;
+            case 4 -> Plot.Category.STRATEGY;
+            case 5 -> Plot.Category.ARCADE;
+            case 6 -> Plot.Category.ROLEPLAY;
+            case 7 -> Plot.Category.STORY;
+            case 8 -> Plot.Category.EXPERIMENT;
+            case 9 -> Plot.Category.SIMULATOR;
+        };
     }
 
     public static List<Plot> getCurrentPlotList(Player player) {
@@ -342,20 +333,11 @@ public class AllWorldsMenu extends LegacyMenu {
         int pageSize = 20;
         int pageCount = (int) Math.ceil((double) plotsList.size() / pageSize);
 
-        Comparator<Plot> plotComparator;
-
-        switch (sortType) {
-            default:
-            case 1:
-                plotComparator = (plot1, plot2) -> Integer.compare(plot2.getOnline(), plot1.getOnline());
-                break;
-            case 2:
-                plotComparator = (plot1, plot2) -> Integer.compare(plot2.getReputation(), plot1.getReputation());
-                break;
-            case 3:
-                plotComparator = (plot1, plot2) -> Long.compare(plot2.getCreationTime(), plot1.getCreationTime());
-                break;
-        }
+        Comparator<Plot> plotComparator = switch (sortType) {
+            default -> (plot1, plot2) -> Integer.compare(plot2.getOnline(), plot1.getOnline());
+            case 2 -> (plot1, plot2) -> Integer.compare(plot2.getReputation(), plot1.getReputation());
+            case 3 -> (plot1, plot2) -> Long.compare(plot2.getCreationTime(), plot1.getCreationTime());
+        };
 
         plotsList.sort(plotComparator);
 

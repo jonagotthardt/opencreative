@@ -34,8 +34,7 @@ public class DamageBlockExecutor extends PlayerExecutor implements Cancellable {
 
     @Override
     protected void setTempVars(CreativeEvent event) {
-        if (event instanceof DamageBlockEvent) {
-            DamageBlockEvent blockEvent = (DamageBlockEvent) event;
+        if (event instanceof DamageBlockEvent blockEvent) {
             setTempVar(EventValues.Variable.BLOCK, blockEvent.getBlock());
         }
     }

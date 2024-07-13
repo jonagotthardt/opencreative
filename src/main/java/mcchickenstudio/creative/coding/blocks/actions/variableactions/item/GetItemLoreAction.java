@@ -27,22 +27,26 @@ import mcchickenstudio.creative.debug.values.VariableLink;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
-public class CreateItemAction extends VariableAction {
-    public CreateItemAction(Executor executor, Target target, int x, Arguments args) {
+public class GetItemLoreAction extends VariableAction {
+    public GetItemLoreAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        ItemStack item = getArguments().getValue("item",new ItemStack(Material.WOODEN_SWORD,1),this);
-        ItemStack result = new ItemStack(item.getType(),getArguments().getValue("amount",item.getAmount(),this));
-        setVarValue(link,result);
+        ItemStack item = getArguments().getValue("item",getArguments().getValue("variable",new ItemStack(Material.APPLE),this),this);
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) {
+            return;
+        }
+        setVarValue(link,meta.getLore());
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.VAR_CREATE_ITEM;
+        return ActionType.VAR_GET_ITEM_LORE;
     }
 }

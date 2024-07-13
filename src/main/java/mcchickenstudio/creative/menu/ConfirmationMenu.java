@@ -1,0 +1,87 @@
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package mcchickenstudio.creative.menu;
+
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.List;
+
+import static mcchickenstudio.creative.utils.ItemUtils.*;
+
+public class ConfirmationMenu extends AbstractMenu{
+
+    private final Material infoMaterial;
+    private final String infoName;
+    private final List<String> infoLore;
+    private final BukkitRunnable yesRunnable;
+
+    public ConfirmationMenu(String title, Material infoMaterial, String infoName, List<String> infoLore, BukkitRunnable yesRunnable) {
+        super((byte) 6, title);
+        this.infoMaterial = infoMaterial;
+        this.infoName = infoName;
+        this.infoLore = infoLore;
+        this.yesRunnable = yesRunnable;
+    }
+
+    @Override
+    public void fillItems(Player player) {
+        ItemStack info = createItem(infoMaterial,1);
+        setDisplayName(info,infoName);
+        setLore(info,infoLore);
+        setItem((byte) 13,info);
+        setItem((byte) 37,createItem(Material.RED_STAINED_GLASS,1,"menus.confirmation.items.cancel"));
+        player.setCooldown(Material.LIME_SHULKER_BOX,60);
+        setItem((byte) 43,createItem(Material.LIME_SHULKER_BOX,1,"menus.confirmation.items.confirm"));
+
+    }
+
+    @Override
+    public void onClick(InventoryClickEvent event) {
+        event.setCancelled(true);
+        if (!isPlayerClicked(event) || !isClickedInMenuSlots(event)) {
+            return;
+        }
+        Player player = (Player) event.getWhoClicked();
+        if (event.getSlot() == 43) {
+            event.getClickedInventory().setItem(43,AIR_ITEM);
+            player.closeInventory();
+            yesRunnable.run();
+        } else if (event.getSlot() == 37) {
+            player.closeInventory();
+        }
+    }
+
+    @Override
+    public void onOpen(InventoryOpenEvent event) {
+        if (event.getPlayer() instanceof Player player) {
+            player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_RESONATE,100,0.5f);
+        }
+    }
+
+    @Override
+    public void onClose(InventoryCloseEvent event) {
+    }
+}

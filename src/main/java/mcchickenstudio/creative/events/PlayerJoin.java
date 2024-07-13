@@ -36,7 +36,7 @@ import static mcchickenstudio.creative.utils.PlayerUtils.loadPermissions;
 
 public class PlayerJoin implements Listener {
 
-    private final List<String> blockedPlayers = new ArrayList();
+    private final List<String> blockedPlayers = new ArrayList<>();
 
     {
         blockedPlayers.add("0xwave");

@@ -37,8 +37,6 @@ import mcchickenstudio.creative.plots.Plot;
 
 import java.util.*;
 
-import static mcchickenstudio.creative.utils.BlockUtils.getSignLine;
-import static mcchickenstudio.creative.utils.BlockUtils.setSignLine;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
 
@@ -80,7 +78,7 @@ public class PlayerPlaceBlock implements Listener {
                     event.setCancelled(true);
                 }
             } else if (blockAgainst.getType() == devPlot.actionBlockMaterial) {
-                if (devPlot.getActionsBlocks().contains(block.getType()) || devPlot.getConditionBlocks().contains(block.getType())) {
+                if (devPlot.getActionsBlocks().contains(block.getType())) {
                     Material additionalBlockMaterial = Material.REDSTONE_ORE;
                     String signText = "unknown";
                     ExecutorCategory executorCategory = ExecutorCategory.getByMaterial(block.getType());
@@ -102,7 +100,9 @@ public class PlayerPlaceBlock implements Listener {
                     event.setCancelled(true);
                 }
             } else {
-                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
+                if (block.getType() != Material.COMPARATOR) {
+                    player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
+                }
                 event.setCancelled(true);
             }
 
@@ -169,10 +169,9 @@ public class PlayerPlaceBlock implements Listener {
                         for (byte i = 0; i < oldSign.getSide(Side.FRONT).lines().size(); i++) {
                             sign.getSide(Side.FRONT).line(i,oldSign.getSide(Side.FRONT).line(i));
                         }
-
-                        translateBlockSign(newSignBlock);
                         sign.setBlockData(oldSign.getBlockData());
                         sign.update();
+                        translateBlockSign(newSignBlock);
                     }
                     signBlock.setType(Material.AIR);
                     oldBlock.setType(Material.AIR);
@@ -188,11 +187,11 @@ public class PlayerPlaceBlock implements Listener {
                         chestBlock.setType(Material.AIR);
                     }
 
-                    Block eastBlock = oldBlock.getRelative(BlockFace.EAST).getRelative(BlockFace.EAST).getRelative(BlockFace.EAST);
-                    Block newEastBlock = newBlock.getRelative(BlockFace.EAST);
-                    movedBlocks.add(newEastBlock);
-                    newEastBlock.setType(eastBlock.getType());
-                    newEastBlock.setBlockData(eastBlock.getBlockData());
+                    //Block eastBlock = oldBlock.getRelative(BlockFace.EAST).getRelative(BlockFace.EAST).getRelative(BlockFace.EAST);
+                    //Block newEastBlock = newBlock.getRelative(BlockFace.EAST);
+                    //movedBlocks.add(newEastBlock);
+                    //newEastBlock.setType(eastBlock.getType());
+                    //newEastBlock.setBlockData(eastBlock.getBlockData());
                 }
             }
         } else if (face == BlockFace.WEST) {
@@ -200,7 +199,7 @@ public class PlayerPlaceBlock implements Listener {
              Moves blocks to left.
              */
             Set<Block> movedBlocks = new HashSet<>(); // Создаем множество для отслеживания уже перемещенных блоков
-            for (double x = location.getX()+1; x < 99; x++) { // уменьшил диапазон на 2, чтобы не выйти за пределы мира
+            for (double x = location.getX()+1; x < 100; x++) { // уменьшил диапазон на 2, чтобы не выйти за пределы мира
                 Block oldBlock = location.getWorld().getBlockAt((int) x, location.getBlockY(), location.getBlockZ());
                 if (oldBlock.getType() == Material.AIR) continue;
                 if (!movedBlocks.contains(oldBlock)) { // Проверяем, был ли этот блок уже перемещен

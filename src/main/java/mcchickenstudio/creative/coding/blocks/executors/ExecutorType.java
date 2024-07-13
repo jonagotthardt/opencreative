@@ -33,7 +33,6 @@ import mcchickenstudio.creative.coding.blocks.executors.player.inventory.*;
 import mcchickenstudio.creative.coding.blocks.executors.player.movement.*;
 import mcchickenstudio.creative.coding.blocks.executors.player.world.*;
 import mcchickenstudio.creative.coding.menus.MenusCategory;
-import mcchickenstudio.creative.utils.MessageUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Material;
@@ -77,6 +76,7 @@ public enum ExecutorType {
     PLAYER_ADVERTISED(      ExecutorCategory.EVENT_PLAYER, MenusCategory.WORLD, AdvertisedExecutor.class, AdvertisedEvent.class, Material.BEACON),
     PLAYER_PLAY(            ExecutorCategory.EVENT_PLAYER, MenusCategory.WORLD, PlayExecutor.class, PlayEvent.class, Material.COAL),
     PLAYER_CHAT(            ExecutorCategory.EVENT_PLAYER, MenusCategory.WORLD, ChatExecutor.class, ChatEvent.class, Material.BOOK),
+    PLAYER_PURCHASE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.WORLD, PurchaseExecutor.class, PlayerPurchaseEvent.class, Material.GOLD_BLOCK),
 
     PLAYER_LEFT_CLICK(      ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, LeftClickExecutor.class, LeftClickEvent.class, Material.GOLDEN_PICKAXE),
     PLAYER_RIGHT_CLICK(     ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, RightClickExecutor.class, RightClickEvent.class, Material.DIAMOND_PICKAXE),
@@ -157,7 +157,7 @@ public enum ExecutorType {
     }
 
     public static ExecutorType getType(Block block) {
-        if (block.getType() == Material.LAPIS_ORE) {
+        if (block.getType() == Material.LAPIS_BLOCK) {
             return FUNCTION;
         } else if (block.getType() == Material.OXIDIZED_COPPER) {
             return CYCLE;

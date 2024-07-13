@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.utils;
 
 import mcchickenstudio.creative.Main;
+import mcchickenstudio.creative.coding.arguments.Argument;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
@@ -26,6 +27,7 @@ import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
+import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -245,6 +247,13 @@ public class ErrorUtils {
         Main.getPlugin().getLogger().severe("CRITICAL ERROR has occured: " + errorMessage);
     }
 
+    /**
+     Sends critical error message about problem with plugin.
+     **/
+    public static void sendCriticalErrorMessage(String errorMessage, Exception error) {
+        Main.getPlugin().getLogger().severe("CRITICAL ERROR has occured: " + errorMessage + " " + parseException(error));
+    }
+
     public static void sendDebug(String message) {
         if (Main.debug) {
             Main.getPlugin().getLogger().info("[DEBUG] " + message);
@@ -285,7 +294,13 @@ public class ErrorUtils {
         Plot plot = action.getExecutor().getPlot();
         if (plot == null || !plot.getDebug()) return;
         for (Player player : plot.getPlayers()) {
-            player.sendMessage(getLocaleMessage("plot-code-debug.action-message",false).replace("%type%",action.getActionType().getLocaleName()).replace("%x%",String.valueOf(action.getX())).replace("%y%",String.valueOf(action.getExecutor().getY())).replace("%z%",String.valueOf(action.getExecutor().getZ())));
+            List<Argument> arguments = action.getArgumentsList();
+            StringBuilder hoverMessage = new StringBuilder();
+            for (Argument arg : arguments) {
+                hoverMessage.append(getLocaleMessage("plot-code-debug.action-hover", false).replace("%type%", arg.getType().getLocalized()).replace("%name%", arg.getPath()).replace("%value%", arg.getValue(action).toString().substring(0, Math.min(30, arg.getValue(action).toString().length())))).append("\n");
+            }
+            String actionMessage = getLocaleMessage("plot-code-debug.action-message",false).replace("%type%",action.getActionType().getLocaleName()).replace("%x%",String.valueOf(action.getX())).replace("%y%",String.valueOf(action.getExecutor().getY())).replace("%z%",String.valueOf(action.getExecutor().getZ()));
+            player.sendMessage(Component.text(actionMessage).hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(Component.text(hoverMessage.toString()))));
         }
     }
 

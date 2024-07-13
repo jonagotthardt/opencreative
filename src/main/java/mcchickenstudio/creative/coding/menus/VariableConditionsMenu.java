@@ -43,8 +43,7 @@ public class VariableConditionsMenu extends CodingBlockTypesMenu {
 
     @Override
     protected ItemStack getElementIcon(Object object) {
-        if (object instanceof ActionType) {
-            ActionType type = (ActionType) object;
+        if (object instanceof ActionType type) {
             return type.getIcon();
         } else {
             return new ItemStack(Material.AIR);

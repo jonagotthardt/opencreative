@@ -63,12 +63,12 @@ public class CommandJoin implements CommandExecutor {
                     if (foundPlot != null) {
                         foundPlot.teleportPlayer(player);
                     } else {
-                        player.playSound(player.getLocation(),Sound.valueOf("BLOCK_ANVIL_DESTROY"),100,2);
+                        player.playSound(player.getLocation(),Sound.BLOCK_ANVIL_DESTROY,100,2);
                         player.clearTitle();
                         player.sendMessage(getLocaleMessage("no-plot-found",player));
                     }
                 } else {
-                    player.playSound(player.getLocation(),Sound.valueOf("BLOCK_ANVIL_DESTROY"),100,2);
+                    player.playSound(player.getLocation(),Sound.BLOCK_ANVIL_DESTROY,100,2);
                     player.clearTitle();
                     player.sendMessage(getLocaleMessage("no-plot-found",player));
                 }

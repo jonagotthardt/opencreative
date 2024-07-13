@@ -40,7 +40,7 @@ public abstract class AbstractListMenu extends AbstractMenu {
     protected Inventory inventory;
     protected byte currentPage;
 
-    protected final List<Object> elements = getElements();
+    protected final List<Object> elements = new ArrayList<>();
 
     protected byte previousPageButtonSlot = 47;
     protected byte nextPageButtonSlot = 53;
@@ -58,6 +58,7 @@ public abstract class AbstractListMenu extends AbstractMenu {
 
     @Override
     public void fillItems(Player player) {
+        elements.addAll(getElements());
         fillDecorationItems();
         fillElements(getCurrentPage());
         fillArrowsItems(getCurrentPage());
@@ -92,10 +93,14 @@ public abstract class AbstractListMenu extends AbstractMenu {
     protected void fillElements(byte page) {
         fillEmpty();
         byte slot = 0;
-        for (Object object : dividePagesByElements(elements).get(page-1)) {
-            setItem(itemsSlots[slot], getElementIcon(object));
-            updateSlot(itemsSlots[slot]);
-            slot++;
+        if (elements.isEmpty()) {
+            setItem(noElementsPageButtonSlot,getNoElementsButton());
+        } else {
+            for (Object object : dividePagesByElements(elements).get(page-1)) {
+                setItem(itemsSlots[slot], getElementIcon(object));
+                updateSlot(itemsSlots[slot]);
+                slot++;
+            }
         }
     }
 

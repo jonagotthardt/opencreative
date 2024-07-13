@@ -5,7 +5,7 @@ api-version: 1.20
 authors: [McChicken Studio]
 description: 'Let players create the worlds'
 prefix: "OC+"
-softdepend: [PlaceholderAPI]
+softdepend: [PlaceholderAPI, ProtocolLib, Vault]
 commands:
   creative:
     usage: /creativecoding
@@ -49,3 +49,12 @@ commands:
   environment:
     usage: /environment
     aliases: [env, утм, утмшкщтьуте]
+  gamemode:
+    usage: /gamemode
+    aliases: [gm, гм, пь, пфьуьщву]
+  give:
+    usage: /give
+    aliases: [пшму]
+  teleport:
+    usage: /teleport
+    aliases: [tp, еудузщке, ез]

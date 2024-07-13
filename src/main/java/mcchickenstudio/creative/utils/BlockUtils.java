@@ -24,6 +24,7 @@ import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.WorldBorder;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -53,8 +54,7 @@ public class BlockUtils {
     public static boolean setSignLine(Location location, byte line, String text) {
         Block block = location.getBlock();
         if (line < 1 || line > 4) return false;
-        if (!(block.getState() instanceof Sign)) return false;
-        Sign sign = (Sign) block.getState();
+        if (!(block.getState() instanceof Sign sign)) return false;
         SignSide side = sign.getSide(Side.FRONT);
         side.line(line-1,Component.text(text));
         sign.update();
@@ -70,17 +70,15 @@ public class BlockUtils {
     public static String getSignLine(Location location, byte line) {
         Block block = location.getBlock();
         if (line < 1 || line > 4) return null;
-        if (!(block.getState() instanceof Sign)) return null;
-        Sign sign = (Sign) block.getState();
+        if (!(block.getState() instanceof Sign sign)) return null;
         SignSide side = sign.getSide(Side.FRONT);
         TextComponent textComponent = (TextComponent) side.line(line-1);
         return textComponent.content();
     }
 
-    public static boolean sendSignChange(Location location, Player player, byte lineNumber, String newLine) {
+    public static void sendSignChange(Location location, Player player, byte lineNumber, String newLine) {
         Block block = location.getBlock();
-        if (!(block.getState() instanceof Sign)) return false;
-        Sign sign = (Sign) block.getState();
+        if (!(block.getState() instanceof Sign sign)) return;
         List<Component> newLines = sign.getSide(Side.FRONT).lines();
         newLines.set(lineNumber-1,Component.text(newLine));
         new BukkitRunnable() {
@@ -89,7 +87,6 @@ public class BlockUtils {
                 player.sendSignChange(block.getLocation(), newLines);
             }
         }.runTaskLater(Main.getPlugin(),5L);
-        return true;
     }
 
     public static int getClosingBracketX(Block conditionBlock) {
@@ -103,7 +100,7 @@ public class BlockUtils {
                 if (block.getType() == Material.AIR) {
                     if (block.getRelative(BlockFace.EAST).getType() == Material.PISTON) {
                         if (!conditions.isEmpty()) {
-                            String last = conditions.get(conditions.size()-1);
+                            String last = conditions.getLast();
                             conditions.remove(last);
                         } else {
                             return block.getRelative(BlockFace.EAST).getX();
@@ -119,6 +116,24 @@ public class BlockUtils {
             return -1;
         }
         return -1;
+    }
+
+    public static boolean isOutOfBorders(Location location) {
+        WorldBorder border = location.getWorld().getWorldBorder();
+        Location borderCenter = border.getCenter();
+
+        double radius = border.getSize()/2;
+        double borderCenterX1 = borderCenter.getX()+radius;
+        double borderCenterX2 = borderCenter.getX()-radius;
+        double borderCenterZ1 = borderCenter.getZ()+radius;
+        double borderCenterZ2 = borderCenter.getZ()-radius;
+
+        double playerX = location.getX();
+        double playerZ = location.getZ();
+
+        if (!(borderCenterX1 > playerX && playerX > borderCenterX2)) {
+            return true;
+        } else return !(borderCenterZ1 > playerZ && playerZ > borderCenterZ2);
     }
 
 }

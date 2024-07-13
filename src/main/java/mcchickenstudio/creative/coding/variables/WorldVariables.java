@@ -35,6 +35,8 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 
+import static mcchickenstudio.creative.utils.ErrorUtils.sendCriticalErrorMessage;
+
 /**
  * <h1>WorldVariables</h1>
  * This class represents set of world variables. It includes
@@ -110,7 +112,7 @@ public class WorldVariables {
                 variables.add(new WorldVariable(name,VariableLink.VariableType.SAVED,type,value,null));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            sendCriticalErrorMessage("Failed to parse JSON file " + variablesJson.getPath(),e);
         }
     }
 
@@ -144,7 +146,7 @@ public class WorldVariables {
             }
             file.write(jsonArray.toString());
         } catch (Exception e){
-            System.out.println(e);
+            sendCriticalErrorMessage("Failed to save variables",e);
         }
     }
 

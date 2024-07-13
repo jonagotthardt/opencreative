@@ -51,26 +51,23 @@ public class EventRaiser {
         if (PlotManager.getInstance().getPlotByPlayer(player) == null) return false;
         if (PlotManager.getInstance().getDevPlot(player) != null) return false;
         if (PlotManager.getInstance().getPlotByPlayer(player).getPlotMode() == Plot.Mode.BUILD) return false;
-        if (ChangedWorld.isPlayerWithLocation(player)) return false;
-        return true;
+        return !ChangedWorld.isPlayerWithLocation(player);
     }
 
-    public static boolean raiseJoinEvent(Player player) {
+    public static void raiseJoinEvent(Player player) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         JoinEvent creativeEvent = new JoinEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseQuitEvent(Player player) {
+    public static void raiseQuitEvent(Player player) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         QuitEvent creativeEvent = new QuitEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
     public static boolean raisePlayEvent(Player player) {
@@ -79,368 +76,336 @@ public class EventRaiser {
         return !creativeEvent.isCancelled();
     }
 
-    public static boolean raiseLikeEvent(Player player) {
+    public static void raiseLikeEvent(Player player) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         LikeEvent creativeEvent = new LikeEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseAdvertisedEvent(Player player) {
+    public static void raiseAdvertisedEvent(Player player) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         AdvertisedEvent creativeEvent = new AdvertisedEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseChatEvent(Player player, PlayerChatEvent bukkitEvent) {
+    public static void raiseChatEvent(Player player, PlayerChatEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         ChatEvent creativeEvent = new ChatEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
     // Movement
 
-    public static boolean raiseJumpEvent(Player player, PlayerJumpEvent bukkitEvent) {
+    public static void raiseJumpEvent(Player player, PlayerJumpEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         JumpEvent creativeEvent = new JumpEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseMoveEvent(Player player, org.bukkit.event.player.PlayerMoveEvent bukkitEvent) {
+    public static void raiseMoveEvent(Player player, org.bukkit.event.player.PlayerMoveEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         PlayerMoveEvent creativeEvent = new PlayerMoveEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseStartFlyingEvent(Player player, Event bukkitEvent) {
+    public static void raiseStartFlyingEvent(Player player, Event bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         StartFlyingEvent creativeEvent = new StartFlyingEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseStopFlyingEvent(Player player, Event bukkitEvent) {
+    public static void raiseStopFlyingEvent(Player player, Event bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         StopFlyingEvent creativeEvent = new StopFlyingEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseStartSneakingEvent(Player player, Event bukkitEvent) {
+    public static void raiseStartSneakingEvent(Player player, Event bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         StartSneakingEvent creativeEvent = new StartSneakingEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseStopSneakingEvent(Player player, Event bukkitEvent) {
+    public static void raiseStopSneakingEvent(Player player, Event bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         StopSneakingEvent creativeEvent = new StopSneakingEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseStartRunningEvent(Player player, Event bukkitEvent) {
+    public static void raiseStartRunningEvent(Player player, Event bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         StartRunningEvent creativeEvent = new StartRunningEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseStopRunningEvent(Player player, Event bukkitEvent) {
+    public static void raiseStopRunningEvent(Player player, Event bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         StopRunningEvent creativeEvent = new StopRunningEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseTeleportEvent(Player player, Event bukkitEvent) {
+    public static void raiseTeleportEvent(Player player, Event bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         TeleportEvent creativeEvent = new TeleportEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
     // Inventory
 
-    public static boolean raiseBookWriteEvent(Player player, Event bukkitEvent) {
+    public static void raiseBookWriteEvent(Player player, Event bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         BookWriteEvent creativeEvent = new BookWriteEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseCloseInventoryEvent(Player player, Event bukkitEvent) {
+    public static void raiseCloseInventoryEvent(Player player, Event bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         CloseInventoryEvent creativeEvent = new CloseInventoryEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseItemChangeEvent(Player player, Event bukkitEvent) {
+    public static void raiseItemChangeEvent(Player player, Event bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         ItemChangeEvent creativeEvent = new ItemChangeEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseItemClickEvent(Player player, InventoryClickEvent bukkitEvent) {
+    public static void raiseItemClickEvent(Player player, InventoryClickEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         ItemClickEvent creativeEvent = new ItemClickEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseItemDropEvent(Player player, PlayerDropItemEvent bukkitEvent) {
+    public static void raiseItemDropEvent(Player player, PlayerDropItemEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         ItemDropEvent creativeEvent = new ItemDropEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseSlotChangeEvent(Player player, Event bukkitEvent) {
+    public static void raiseSlotChangeEvent(Player player, Event bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         SlotChangeEvent creativeEvent = new SlotChangeEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseItemMoveEvent(Player player, InventoryClickEvent bukkitEvent) {
+    public static void raiseItemMoveEvent(Player player, InventoryClickEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         ItemMoveEvent creativeEvent = new ItemMoveEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseItemPickupEvent(Player player, EntityPickupItemEvent bukkitEvent) {
+    public static void raiseItemPickupEvent(Player player, EntityPickupItemEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         ItemPickupEvent creativeEvent = new ItemPickupEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseOpenInventoryEvent(Player player, Event bukkitEvent) {
+    public static void raiseOpenInventoryEvent(Player player, Event bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         OpenInventoryEvent creativeEvent = new OpenInventoryEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
     // Interaction
 
-    public static boolean raiseBlockInteractionEvent(Player player, PlayerInteractEvent bukkitEvent) {
+    public static void raiseBlockInteractionEvent(Player player, PlayerInteractEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         BlockInteractionEvent creativeEvent = new BlockInteractionEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseDamageBlockEvent(Player player, BlockDamageEvent bukkitEvent) {
+    public static void raiseDamageBlockEvent(Player player, BlockDamageEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         DamageBlockEvent creativeEvent = new DamageBlockEvent(player,bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseDestroyEvent(Player player, BlockBreakEvent bukkitEvent) {
+    public static void raiseDestroyEvent(Player player, BlockBreakEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         DestroyBlockEvent creativeEvent = new DestroyBlockEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseFishEvent(Player player, PlayerFishEvent bukkitEvent) {
+    public static void raiseFishEvent(Player player, PlayerFishEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         FishEvent creativeEvent = new FishEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseLeftClickEvent(Player player, Event bukkitEvent) {
+    public static void raiseLeftClickEvent(Player player, Event bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         LeftClickEvent creativeEvent = new LeftClickEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseRightClickEvent(Player player, Event bukkitEvent) {
+    public static void raiseRightClickEvent(Player player, Event bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         RightClickEvent creativeEvent = new RightClickEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseStartSpectatingEvent(Player player, Event bukkitEvent) {
+    public static void raiseStartSpectatingEvent(Player player, Event bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         StartSpectatingEvent creativeEvent = new StartSpectatingEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseStopSpectatingEvent(Player player, Event bukkitEvent) {
+    public static void raiseStopSpectatingEvent(Player player, Event bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         StopSpectatingEvent creativeEvent = new StopSpectatingEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseWorldInteractEvent(Player player, PlayerInteractEvent bukkitEvent) {
+    public static void raiseWorldInteractEvent(Player player, PlayerInteractEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         WorldInteractEvent creativeEvent = new WorldInteractEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raisePlaceBlockEvent(Player player, BlockPlaceEvent bukkitEvent) {
+    public static void raisePlaceBlockEvent(Player player, BlockPlaceEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         PlaceBlockEvent creativeEvent = new PlaceBlockEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseMobInteractionEvent(Player player, Event bukkitEvent) {
+    public static void raiseMobInteractionEvent(Player player, Event bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         MobInteractionEvent creativeEvent = new MobInteractionEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
     // Fighting
 
-    public static boolean raiseHungerChangeEvent(Player player, Event bukkitEvent) {
+    public static void raiseHungerChangeEvent(Player player, Event bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         HungerChangeEvent creativeEvent = new HungerChangeEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raiseMobDamagesPlayerEvent(Player player, EntityDamageByEntityEvent bukkitEvent) {
+    public static void raiseMobDamagesPlayerEvent(Player player, EntityDamageByEntityEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         if (!(bukkitEvent.getEntity() instanceof Player)) {
-            return false;
+            return;
         }
         MobDamagesPlayerEvent creativeEvent = new MobDamagesPlayerEvent(player, bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raisePlayerDamagedEvent(Player player, Event bukkitEvent) {
+    public static void raisePlayerDamagedEvent(Player player, Event bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         PlayerDamagedEvent creativeEvent = new PlayerDamagedEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raisePlayerDamagedMobEvent(Player player, EntityDamageByEntityEvent bukkitEvent) {
+    public static void raisePlayerDamagedMobEvent(Player player, EntityDamageByEntityEvent bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         PlayerDamagesMobEvent creativeEvent = new PlayerDamagesMobEvent(player,bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raisePlayerDeathEvent(Player player, Event bukkitEvent) {
+    public static void raisePlayerDeathEvent(Player player, Event bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         PlayerDeathEvent creativeEvent = new PlayerDeathEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raisePlayerRespawnEvent(Player player, Event bukkitEvent) {
+    public static void raisePlayerRespawnEvent(Player player, Event bukkitEvent) {
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         PlayerRespawnEvent creativeEvent = new PlayerRespawnEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
     }
 
-    public static boolean raisePlayerTotemRespawnEvent(Entity entity, Event bukkitEvent) {
-        if (!(entity instanceof Player)) return false;
-        Player player = (Player) entity;
+    public static void raisePlayerTotemRespawnEvent(Entity entity, Event bukkitEvent) {
+        if (!(entity instanceof Player player)) return;
         if (!canRaiseEvent(player)) {
-            return false;
+            return;
         }
         PlayerTotemRespawnEvent creativeEvent = new PlayerTotemRespawnEvent(player);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
-        return true;
+    }
+
+    public static void raisePlayerPurchaseEvent(Player player, String id, String name, int price, boolean save) {
+        if (!canRaiseEvent(player)) {
+            return;
+        }
+        CreativeEvent creativeEvent = new PlayerPurchaseEvent(player,id,name,price,save);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
 }

@@ -34,8 +34,7 @@ public class ChatExecutor extends PlayerExecutor implements Cancellable {
 
     @Override
     public void setTempVars(CreativeEvent event) {
-        if (event instanceof ChatEvent) {
-            ChatEvent chatEvent = (ChatEvent) event;
+        if (event instanceof ChatEvent chatEvent) {
             setTempVar(EventValues.Variable.MESSAGE, chatEvent.getMessage());
         }
     }

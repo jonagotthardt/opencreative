@@ -49,6 +49,11 @@ public class PlayerBreakBlock implements Listener {
         if (devPlot != null) {
             Block block = event.getBlock();
 
+            if (player.getInventory().getItemInMainHand().getType() == Material.COMPARATOR) {
+                event.setCancelled(true);
+                return;
+            }
+
             if (devPlot.getIndestructibleBlocks().contains(block.getType())) {
                 player.playSound(player.getLocation(),Sound.ENTITY_ITEM_BREAK,100,1.2f);
                 event.setCancelled(true);

@@ -48,8 +48,7 @@ public class CommandAd implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = ((Player) sender);
+        if (sender instanceof Player player) {
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
             if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
                 player.sendMessage(getLocaleMessage("maintenance"));
@@ -73,14 +72,18 @@ public class CommandAd implements CommandExecutor {
                         }
                     }
                     if (foundPlot != null) {
-                        foundPlot.teleportPlayer(player);
+                        if (foundPlot.equals(PlotManager.getInstance().getPlotByPlayer(player))) {
+                            player.sendMessage(getLocaleMessage("same-world",player));
+                        } else {
+                            foundPlot.teleportPlayer(player);
+                        }
                     } else {
-                        player.playSound(player.getLocation(),Sound.valueOf("BLOCK_ANVIL_DESTROY"),100,2);
+                        player.playSound(player.getLocation(),Sound.BLOCK_ANVIL_DESTROY,100,2);
                         player.clearTitle();
                         player.sendMessage(getLocaleMessage("no-plot-found",player));
                     }
                 } else {
-                    player.playSound(player.getLocation(),Sound.valueOf("BLOCK_ANVIL_DESTROY"),100,2);
+                    player.playSound(player.getLocation(),Sound.BLOCK_ANVIL_DESTROY,100,2);
                     player.clearTitle();
                     player.sendMessage(getLocaleMessage("no-plot-found",player));
                 }
@@ -98,7 +101,6 @@ public class CommandAd implements CommandExecutor {
                     return true;
                 }
                 setCooldown(player,plugin.getConfig().getInt("cooldowns.advertisement"), CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND);
-
                 EventRaiser.raiseAdvertisedEvent(player);
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     TextComponent advertisement = new TextComponent(getLocaleMessage("advertisement.message",player).replace("%world%",plot.getPlotName()));

@@ -70,9 +70,6 @@ public class EventValues {
         PLOT_VARIABLES_AMOUNT           (Material.MAGMA_CREAM,      MenusCategory.WORLD, String.class),
         PLOT_VARIABLES_AMOUNT_LIMIT     (Material.MAGMA_BLOCK,      MenusCategory.WORLD, String.class),
 
-
-
-
         WORLD_TIME              (Material.GRASS_BLOCK,              MenusCategory.WORLD,  Long.class),
         CLEAR_WEATHER_DURATION  (Material.SUNFLOWER,                MenusCategory.WORLD,  Integer.class),
         THUNDER_WEATHER_DURATION(Material.WATER_BUCKET,             MenusCategory.WORLD,  Integer.class),
@@ -85,6 +82,10 @@ public class EventValues {
         //CLICKED_ITEM            (Material.GLOW_ITEM_FRAME,          MenusCategory.EVENTS, ItemStack.class),
         MESSAGE                 (Material.BOOK,                     MenusCategory.EVENTS, String.class),
         BLOCK                   (Material.GRASS_BLOCK,              MenusCategory.EVENTS, Block.class),
+        PURCHASE_ID(Material.GOLDEN_APPLE,             MenusCategory.EVENTS, String.class),
+        PURCHASE_NAME(Material.GOLD_BLOCK,               MenusCategory.EVENTS, String.class),
+        PURCHASE_PRICE(Material.GOLD_INGOT,               MenusCategory.EVENTS, Integer.class),
+        PURCHASE_SAVE           (Material.YELLOW_SHULKER_BOX,       MenusCategory.EVENTS, Boolean.class),
 
         NICKNAME                (Material.NAME_TAG,                 MenusCategory.ENTITY, String.class),
         UUID                    (Material.KNOWLEDGE_BOOK,           MenusCategory.ENTITY, String.class),

@@ -49,8 +49,7 @@ import static mcchickenstudio.creative.utils.PlayerUtils.giveBuildPermissions;
 public class CommandBuild implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
             if (plot == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
@@ -82,6 +81,7 @@ public class CommandBuild implements CommandExecutor {
                                 return true;
                             }
                         }
+                        plot.stopBukkitRunnables();
                         plot.setPlotMode(Plot.Mode.BUILD);
                         for (Player p : plot.getPlayers()){
                             p.sendMessage(getLocaleMessage("world.build-mode.message." + (sender == p ? "owner" : "players")));
@@ -89,7 +89,7 @@ public class CommandBuild implements CommandExecutor {
                                 clearPlayer(p);
                                 p.sendTitle(getLocaleMessage("world.build-mode.title"),getLocaleMessage("world.build-mode.subtitle"));
                                 p.teleport(plot.world.getSpawnLocation());
-                                p.playSound(p.getLocation(), Sound.valueOf("BLOCK_BEACON_POWER_SELECT"),100,1.7f);
+                                p.playSound(p.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT,100,1.7f);
                                 if (builders.contains(p)) {
                                     if (notTrustedBuilders.contains(p.getName())) {
                                         if (plotOwner != null) {
@@ -117,7 +117,7 @@ public class CommandBuild implements CommandExecutor {
                     clearPlayer(((Player) sender));
                     ((Player) sender).sendTitle(getLocaleMessage("world.build-mode.title"),getLocaleMessage("world.build-mode.subtitle"));
                     ((Player) sender).teleport(plot.world.getSpawnLocation());
-                    ((Player) sender).playSound(((Player) sender).getLocation(), Sound.valueOf("BLOCK_BEACON_POWER_SELECT"),100,1.7f);
+                    ((Player) sender).playSound(((Player) sender).getLocation(), Sound.BLOCK_BEACON_POWER_SELECT,100,1.7f);
                     if (plot.getOwner().equalsIgnoreCase(sender.getName()) || builders.contains(sender.getName())) {
                         Player plotOwner = Bukkit.getPlayer(plot.getOwner());
                         if (notTrustedBuilders.contains(sender.getName())) {

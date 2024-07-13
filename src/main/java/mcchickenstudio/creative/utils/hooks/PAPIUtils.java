@@ -62,45 +62,59 @@ class Placeholder extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player player, String identifier) {
-        if (identifier.equals("plot_id")) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null) return plot.worldID;
-        } else if (identifier.equals("plot_custom_id")) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null) return plot.getPlotCustomID();
-        } else if (identifier.equals("plot_online")) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null) return String.valueOf(plot.getOnline());
-        } else if (identifier.equals("plot_uniques")) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null) return String.valueOf(plot.getUniques());
-        } else if (identifier.equals("plot_reputation")) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null) return String.valueOf(plot.getReputation());
-        } else if (identifier.equals("is_in_plot")) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            return String.valueOf((plot != null));
-        } else if (identifier.equals("plot_name")) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null) return plot.getPlotName();
-        } else if (identifier.equals("plot_description")) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null) return plot.getPlotDescription();
-        } else if (identifier.equals("plot_owner")) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null) return plot.getOwner();
-        } else if (identifier.equals("plot_category")) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null) return String.valueOf(plot.getPlotCategory());
-        } else if (identifier.equals("plot_sharing")) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null) return String.valueOf(plot.getPlotSharing());
-        } else if (identifier.equals("plot_mode")) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null) return String.valueOf(plot.getPlotMode());
-        } else if (identifier.equals("plot_is_dev_plot_loaded")) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null) return String.valueOf(plot.devPlot != null && plot.devPlot.isLoaded);
+        switch (identifier) {
+            case "plot_id" -> {
+                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                if (plot != null) return plot.worldID;
+            }
+            case "plot_custom_id" -> {
+                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                if (plot != null) return plot.getPlotCustomID();
+            }
+            case "plot_online" -> {
+                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                if (plot != null) return String.valueOf(plot.getOnline());
+            }
+            case "plot_uniques" -> {
+                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                if (plot != null) return String.valueOf(plot.getUniques());
+            }
+            case "plot_reputation" -> {
+                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                if (plot != null) return String.valueOf(plot.getReputation());
+            }
+            case "is_in_plot" -> {
+                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                return String.valueOf((plot != null));
+            }
+            case "plot_name" -> {
+                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                if (plot != null) return plot.getPlotName();
+            }
+            case "plot_description" -> {
+                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                if (plot != null) return plot.getPlotDescription();
+            }
+            case "plot_owner" -> {
+                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                if (plot != null) return plot.getOwner();
+            }
+            case "plot_category" -> {
+                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                if (plot != null) return String.valueOf(plot.getPlotCategory());
+            }
+            case "plot_sharing" -> {
+                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                if (plot != null) return String.valueOf(plot.getPlotSharing());
+            }
+            case "plot_mode" -> {
+                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                if (plot != null) return String.valueOf(plot.getPlotMode());
+            }
+            case "plot_is_dev_plot_loaded" -> {
+                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                if (plot != null) return String.valueOf(plot.devPlot != null && plot.devPlot.isLoaded);
+            }
         }
         return null;
     }

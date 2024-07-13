@@ -23,7 +23,6 @@ import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -39,7 +38,7 @@ public class GiveRandomItemAction extends PlayerAction {
     public void executePlayer(Player player) {
         List<ItemStack> items = getArguments().getItemList("items",this);
         if (items.isEmpty()) return;
-        ItemStack randomItem = items.get(0);
+        ItemStack randomItem = items.getFirst();
         if (items.size() > 1) {
             randomItem = items.get(new Random().nextInt(items.size() - 1));
         }

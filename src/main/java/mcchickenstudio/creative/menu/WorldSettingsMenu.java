@@ -179,7 +179,7 @@ public class WorldSettingsMenu extends LegacyMenu {
         return item;    }
 
     public static RadioButton getDayAndNightFlagButton(Plot plot) {
-        List<Runnable> choicesActions = new ArrayList();
+        ArrayList<Runnable> choicesActions = new ArrayList<>();
         choicesActions.add(() -> {
             plot.world.setTime(1000L);
             plot.world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);

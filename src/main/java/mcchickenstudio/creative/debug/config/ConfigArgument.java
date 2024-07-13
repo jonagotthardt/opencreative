@@ -22,14 +22,7 @@ import mcchickenstudio.creative.coding.variables.ValueType;
 
 public class ConfigArgument {
 
-    private final String path;
-    private final ValueType type;
-    private final Object value;
-
     public ConfigArgument(String path, ValueType type, Object value) {
-        this.path = path;
-        this.type = type;
-        this.value = value;
     }
 
 }

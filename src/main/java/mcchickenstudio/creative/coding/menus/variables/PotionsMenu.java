@@ -26,7 +26,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffectType;
@@ -66,8 +65,7 @@ public class PotionsMenu extends AbstractListMenu {
 
     @Override
     protected ItemStack getElementIcon(Object object) {
-        if (object instanceof PotionEffectType) {
-            PotionEffectType type = (PotionEffectType) object;
+        if (object instanceof PotionEffectType type) {
             ItemStack itemStack = new ItemStack(Material.POTION,1);
             PotionMeta meta = (PotionMeta) itemStack.getItemMeta();
             PotionType potionType = PotionType.getByEffect(type);

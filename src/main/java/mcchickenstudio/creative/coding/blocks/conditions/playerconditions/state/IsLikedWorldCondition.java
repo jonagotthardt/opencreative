@@ -26,7 +26,6 @@ import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.Player
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.utils.FileUtils;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.List;

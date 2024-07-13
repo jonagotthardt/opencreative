@@ -20,8 +20,6 @@ package mcchickenstudio.creative.utils;
 
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.ItemStack;
@@ -162,48 +160,14 @@ public class WorldUtils {
      Returns boolean if entity is hostile mob.
      **/
     public static boolean isEntityHostile(EntityType entityType) {
-        switch (entityType) {
-            case PIGLIN:
-            case PIGLIN_BRUTE:
-            case ZOMBIFIED_PIGLIN:
-            case ELDER_GUARDIAN:
-            case GUARDIAN:
-            case ZOGLIN:
-            case ZOMBIE_VILLAGER:
-            case ZOMBIE:
-            case ZOMBIE_HORSE:
-            case SKELETON:
-            case SKELETON_HORSE:
-            case WITHER_SKELETON:
-            case WITHER:
-            case SHULKER:
-            case SPIDER:
-            case CAVE_SPIDER:
-            case VINDICATOR:
-            case ENDER_DRAGON:
-            case ENDERMAN:
-            case ENDERMITE:
-            case SILVERFISH:
-            case VEX:
-            case RAVAGER:
-            case EVOKER:
-            case EVOKER_FANGS:
-            case BLAZE:
-            case HOGLIN:
-            case SLIME:
-            case STRAY:
-            case WITCH:
-            case DROWNED:
-            case PILLAGER:
-            case CREEPER:
-            case GHAST:
-            case GIANT:
-            case MAGMA_CUBE:
-            case PHANTOM:
-            case ILLUSIONER:
-                return true;
-        }
-        return false;
+        return switch (entityType) {
+            case PIGLIN, PIGLIN_BRUTE, ZOMBIFIED_PIGLIN, ELDER_GUARDIAN, GUARDIAN, ZOGLIN, ZOMBIE_VILLAGER, ZOMBIE,
+                 ZOMBIE_HORSE, SKELETON, SKELETON_HORSE, WITHER_SKELETON, WITHER, SHULKER, SPIDER, CAVE_SPIDER,
+                 VINDICATOR, ENDER_DRAGON, ENDERMAN, ENDERMITE, SILVERFISH, VEX, RAVAGER, EVOKER, EVOKER_FANGS, BLAZE,
+                 HOGLIN, SLIME, STRAY, WITCH, DROWNED, PILLAGER, CREEPER, GHAST, GIANT, MAGMA_CUBE, PHANTOM,
+                 ILLUSIONER -> true;
+            default -> false;
+        };
     }
 
 }

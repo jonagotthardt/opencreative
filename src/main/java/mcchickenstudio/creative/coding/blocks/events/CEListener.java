@@ -255,4 +255,9 @@ public class CEListener implements Listener {
         Executors.activate(event);
     }
 
+    @EventHandler
+    public void onPurchasse(PlayerPurchaseEvent event) {
+        Executors.activate(event);
+    }
+
 }

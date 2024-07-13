@@ -25,7 +25,6 @@ import mcchickenstudio.creative.coding.blocks.actions.variableactions.VariableAc
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.debug.values.VariableLink;
 import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
 
 public class SetVariableValueAction extends VariableAction {
     public SetVariableValueAction(Executor executor, Target target, int x, Arguments args) {

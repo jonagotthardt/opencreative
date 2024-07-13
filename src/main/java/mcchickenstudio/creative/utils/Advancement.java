@@ -49,9 +49,7 @@ public class Advancement {
     public void show(Player player) {
         load();
         player.getAdvancementProgress(Bukkit.getAdvancement(nameSpacedKey)).awardCriteria("trigger");
-        Bukkit.getScheduler().runTaskLater(Main.getPlugin(), () -> {
-            player.getAdvancementProgress(Bukkit.getAdvancement(nameSpacedKey)).revokeCriteria("trigger");
-        }, 10);
+        Bukkit.getScheduler().runTaskLater(Main.getPlugin(), () -> player.getAdvancementProgress(Bukkit.getAdvancement(nameSpacedKey)).revokeCriteria("trigger"), 10);
     }
 
     private void load() {

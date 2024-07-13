@@ -34,8 +34,7 @@ public class PlaceBlockExecutor extends PlayerExecutor implements Cancellable {
 
     @Override
     protected void setTempVars(CreativeEvent event) {
-        if (event instanceof PlaceBlockEvent) {
-            PlaceBlockEvent blockEvent = (PlaceBlockEvent) event;
+        if (event instanceof PlaceBlockEvent blockEvent) {
             setTempVar(EventValues.Variable.BLOCK, blockEvent.getPlacedBlock());
         }
     }

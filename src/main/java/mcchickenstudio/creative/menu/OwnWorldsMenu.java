@@ -36,9 +36,9 @@ import java.util.*;
 
 public class OwnWorldsMenu extends LegacyMenu {
 
-    public static Map<Player,Integer> openedPage = new HashMap<>();
-    public static int[] worldSlots = {10,11,12,13,14,15,16,21,22,23,24,25};
-    public static int[] worldCreationSlots = {37,38,39,40,41,42,43,44,45};
+    public static final Map<Player,Integer> openedPage = new HashMap<>();
+    public static final int[] worldSlots = {10,11,12,13,14,15,16,21,22,23,24,25};
+    public static final int[] worldCreationSlots = {37,38,39,40,41,42,43,44,45};
 
     public OwnWorldsMenu(Player player, int page) {
 

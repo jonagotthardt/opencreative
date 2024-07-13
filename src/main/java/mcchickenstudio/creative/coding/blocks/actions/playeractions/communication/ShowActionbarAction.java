@@ -24,10 +24,7 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import net.kyori.adventure.text.Component;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-
-import java.util.List;
 
 public class ShowActionbarAction extends PlayerAction {
     public ShowActionbarAction(Executor executor, Target target, int x, Arguments args) {

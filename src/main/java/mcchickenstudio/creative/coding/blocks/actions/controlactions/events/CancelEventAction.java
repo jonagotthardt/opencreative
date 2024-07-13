@@ -26,8 +26,6 @@ import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
 
-import java.util.List;
-
 public class CancelEventAction extends ControlAction {
     public CancelEventAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);

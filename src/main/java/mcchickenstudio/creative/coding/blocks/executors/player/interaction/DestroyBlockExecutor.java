@@ -34,8 +34,7 @@ public class DestroyBlockExecutor extends PlayerExecutor implements Cancellable 
 
     @Override
     protected void setTempVars(CreativeEvent event) {
-        if (event instanceof DestroyBlockEvent) {
-            DestroyBlockEvent blockEvent = (DestroyBlockEvent) event;
+        if (event instanceof DestroyBlockEvent blockEvent) {
             setTempVar(EventValues.Variable.BLOCK, blockEvent.getDestroyedBlock());
         }
     }

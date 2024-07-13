@@ -60,7 +60,6 @@ import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.debug.values.*;
 import mcchickenstudio.creative.debug.values.Boolean;
 import mcchickenstudio.creative.debug.values.Number;
-import mcchickenstudio.creative.debug.values.EventValueLink;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.ChatColor;

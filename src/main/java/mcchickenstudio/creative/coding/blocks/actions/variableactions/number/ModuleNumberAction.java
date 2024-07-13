@@ -44,8 +44,6 @@ import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.debug.values.VariableLink;
 import org.bukkit.entity.Entity;
 
-import java.util.Random;
-
 public class ModuleNumberAction extends VariableAction {
     public ModuleNumberAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);

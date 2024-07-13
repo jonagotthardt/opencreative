@@ -42,4 +42,8 @@ public class DamageBlockEvent extends CreativeEvent {
     public Block getBlock() {
         return block;
     }
+
+    public BlockDamageEvent getEvent() {
+        return event;
+    }
 }

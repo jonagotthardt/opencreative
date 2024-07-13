@@ -25,7 +25,6 @@ import mcchickenstudio.creative.coding.blocks.actions.variableactions.VariableAc
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.debug.values.VariableLink;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
@@ -59,6 +58,6 @@ public class AddItemLoreLineAction extends VariableAction {
 
     @Override
     public ActionType getActionType() {
-        return ActionType.VAR_ADD_LORE_LINE;
+        return ActionType.VAR_ADD_ITEM_LORE_LINE;
     }
 }

@@ -21,6 +21,7 @@ package mcchickenstudio.creative.debug;
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.inventory.ItemStack;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class PlotInfo {
 
     private final Plot plot;
@@ -33,14 +34,6 @@ public class PlotInfo {
 
     public PlotInfo(Plot plot) {
         this.plot = plot;
-    }
-
-    public void load() {
-
-    }
-
-    public void save() {
-
     }
 
     public void setName(String name) {

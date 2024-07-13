@@ -29,8 +29,14 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.NotNull;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -43,7 +49,6 @@ import static mcchickenstudio.creative.utils.ErrorUtils.sendCriticalErrorMessage
 import static mcchickenstudio.creative.utils.ErrorUtils.sendWarningErrorMessage;
 import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 
-
 public class FileUtils {
 
     @NotNull
@@ -51,10 +56,11 @@ public class FileUtils {
 
     /**
      * Creates plot's settings.yml file.
+     *
      * @param worldName Name of new world (plot31, plot103)
-     * @param player Owner of new world
+     * @param player    Owner of new world
      */
-    public static boolean createWorldSettings(final String worldName, final Player player) {
+    public static void createWorldSettings(final String worldName, final Player player) {
         final String worldFolderPath = Bukkit.getServer().getWorldContainer() + File.separator + worldName + File.separator;
         final File file = new File(worldFolderPath, "settings.yml");
         if (!file.exists()) {
@@ -62,7 +68,7 @@ public class FileUtils {
                 file.createNewFile();
             } catch (IOException error) {
                 sendCriticalErrorMessage("Couldn't create a settings.yml for world " + worldName + " because of IOException. Maybe it is already exists? " + error.getMessage());
-                return false;
+                return;
             }
         }
         final FileConfiguration worldFile = YamlConfiguration.loadConfiguration(file);
@@ -109,17 +115,15 @@ public class FileUtils {
         worldFile.set("flags",flags);
         try {
             worldFile.save(file);
-            return true;
         } catch (IOException | IllegalArgumentException error) {
             sendCriticalErrorMessage("Couldn't save world settings.yml for " + worldName + " because of " + error.getClass().getName() + " " + error.getMessage());
-            return false;
         }
     }
 
     /**
-     Creates plot's codeScript.yml file.
+     * Creates plot's codeScript.yml file.
      **/
-    public static boolean createCodeScript(final String path, final String worldName) {
+    public static void createCodeScript(final String path, final String worldName) {
         final File file = new File(path, "codeScript.yml");
         final FileConfiguration worldFile = YamlConfiguration.loadConfiguration(file);
         if (!file.exists()) {
@@ -127,7 +131,7 @@ public class FileUtils {
                 file.createNewFile();
             } catch (IOException error) {
                 sendCriticalErrorMessage("Couldn't create a codeScript.yml for world " + worldName + " because of IOException. Maybe it is already exists? " + error.getMessage());
-                return false;
+                return;
             }
         }
         worldFile.createSection("world");
@@ -139,10 +143,8 @@ public class FileUtils {
         worldFile.createSection("code");
         try {
             worldFile.save(file);
-            return true;
         } catch (IOException | IllegalArgumentException error) {
             sendCriticalErrorMessage("Couldn't save world codeScript.yml for " + worldName + " because of " + error.getClass().getName() + " " + error.getMessage());
-            return false;
         }
 
     }
@@ -333,7 +335,7 @@ public class FileUtils {
                 return new File(Bukkit.getServer().getWorldContainer() + File.separator + "unloadedWorlds" + File.separator + devPlot.worldName + File.separator);
             }
         } catch (NullPointerException error) {
-            ErrorUtils.sendPlotErrorMessage(devPlot.linkedPlot,"Папка плота разработчика не обнаружена. " + error.getMessage());
+            ErrorUtils.sendPlotErrorMessage(devPlot.getLinkedPlot(),"Папка плота разработчика не обнаружена. " + error.getMessage());
             return null;
         }
     }
@@ -376,30 +378,6 @@ public class FileUtils {
     }
 
     /**
-     Returns plot's codeScript.yml configuration.
-     **/
-    public static YamlConfiguration getPlotScriptFileConfig(Plot plot) {
-        File scriptFile = new File((getPlotFolder(plot)),"codeScript.yml");
-        if (scriptFile.exists()) return YamlConfiguration.loadConfiguration(scriptFile);
-        else {
-            createCodeScript(getPlotFolder(plot).getPath(), plot.worldName);
-            return getPlotScriptFileConfig(plot);
-        }
-    }
-
-    /**
-     Returns plot's codeScript.yml file.
-     **/
-    public static File getPlotVariablesFile(Plot plot) {
-        File scriptFile = new File((getPlotFolder(plot)),"variables.yml");
-        if (scriptFile.exists()) return scriptFile;
-        else {
-            createVariablesFile(getPlotFolder(plot).getPath(), plot.worldName);
-            return getPlotVariablesFile(plot);
-        }
-    }
-
-    /**
      Returns plot's variables.yml configuration.
      **/
     public static File getPlotVariablesJson(Plot plot) {
@@ -413,6 +391,123 @@ public class FileUtils {
             } catch (IOException error) {
                 return null;
             }
+        }
+    }
+
+    /**
+     Returns player's data json from plot folder.
+     **/
+    public static File getPlayerDataJson(Plot plot, Player player) {
+        File plotFolder = getPlotFolder(plot);
+        if (plotFolder == null) {
+            return null;
+        }
+        File folder = new File(plotFolder.getPath() + File.separator + "playersData");
+        try {
+            if (!folder.exists()) {
+                folder.mkdirs();
+            }
+            File dataFile = new File(folder,  player.getUniqueId()+ ".json");
+            if (dataFile.exists()) {
+                return dataFile;
+            } else {
+                dataFile.createNewFile();
+                return dataFile;
+            }
+        } catch (IOException error) {
+            return null;
+        }
+    }
+
+    /**
+     Sets value in player's data json file.
+     **/
+    public static boolean setPlayerData(Plot plot, Player player, String path, Object value) {
+        File playerDataJson = getPlayerDataJson(plot,player);
+        if (playerDataJson == null) {
+            return false;
+        }
+        try (FileWriter file = new FileWriter(playerDataJson.getPath())) {
+            JSONObject objItem = new JSONObject();
+            if (value instanceof ItemStack) {
+                final ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+                final BukkitObjectOutputStream objectOutputStream = new BukkitObjectOutputStream(arrayOutputStream);
+                objectOutputStream.writeObject(value);
+                value = Base64Coder.encodeLines(arrayOutputStream.toByteArray());
+            }
+            objItem.put(path, value);
+            file.write(objItem.toString());
+            return true;
+        } catch (Exception e){
+            sendCriticalErrorMessage("Couldn't not save player data " + plot.worldName + " " + player.getName() + " " + path + " " + value,e);
+            return false;
+        }
+   }
+
+    /**
+     Sets value in player's data json file.
+     **/
+    public static boolean addPlayerDataElement(Plot plot, Player player, String path, Object value) {
+        File playerDataJson = getPlayerDataJson(plot,player);
+        if (playerDataJson == null) {
+            return false;
+        }
+        try {
+            if (value instanceof ItemStack) {
+                final ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+                final BukkitObjectOutputStream objectOutputStream = new BukkitObjectOutputStream(arrayOutputStream);
+                objectOutputStream.writeObject(value);
+                value = Base64Coder.encodeLines(arrayOutputStream.toByteArray());
+            }
+            JSONObject jsonObject = new JSONObject();
+            JSONArray jsonArray = new JSONArray();
+            if (playerDataJson.length()  > 0) {
+                JSONParser jsonParser = new JSONParser();
+                jsonObject = (JSONObject) jsonParser.parse(new FileReader(playerDataJson));
+                Object object = jsonObject.get(path);
+                jsonArray = (JSONArray) object;
+            }
+            if (!jsonArray.contains(value)) {
+                jsonArray.add(value);
+            }
+            jsonObject.put(path,jsonArray);
+            FileWriter file = new FileWriter(playerDataJson.getPath());
+            file.write(jsonObject.toString());
+            file.close();
+            return true;
+        } catch (Exception e){
+            sendCriticalErrorMessage("Couldn't not save player data " + plot.worldName + " " + player.getName() + " " + path + " " + value,e);
+            return false;
+        }
+    }
+
+    /**
+     * Checks array from player data json contains value or not.
+     **/
+    public static boolean playerDataContainsElement(Plot plot, Player player, String path, Object value) {
+        File playerDataJson = getPlayerDataJson(plot,player);
+        if (playerDataJson == null) {
+            return false;
+        }
+        try {
+            if (value instanceof ItemStack) {
+                final ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+                final BukkitObjectOutputStream objectOutputStream = new BukkitObjectOutputStream(arrayOutputStream);
+                objectOutputStream.writeObject(value);
+                value = Base64Coder.encodeLines(arrayOutputStream.toByteArray());
+            }
+            if (playerDataJson.length()  > 0) {
+                JSONParser jsonParser = new JSONParser();
+                JSONObject jsonObject = (JSONObject) jsonParser.parse(new FileReader(playerDataJson));
+                Object object = jsonObject.get(path);
+                JSONArray jsonArray = (JSONArray) object;
+                return jsonArray.contains(value);
+            } else {
+                return false;
+            }
+        } catch (Exception e){
+            sendCriticalErrorMessage("Couldn't not get from player data " + plot.worldName + " " + player.getName() + " " + path + " " + value,e);
+            return false;
         }
     }
 

@@ -32,11 +32,6 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 import mcchickenstudio.creative.plots.Plot;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-
 
 public class PlayerMove implements Listener {
 
@@ -48,7 +43,6 @@ public class PlayerMove implements Listener {
         Location borderCenter = border.getCenter();
 
         double radius = border.getSize()/2;
-
         double borderCenterX1 = borderCenter.getX()+radius;
         double borderCenterX2 = borderCenter.getX()-radius;
         double borderCenterZ1 = borderCenter.getZ()+radius;
@@ -81,11 +75,10 @@ public class PlayerMove implements Listener {
 
     @EventHandler
     public void onSneaking(PlayerToggleSneakEvent event) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
-
-        if (plot != null) {
-            if (event.isSneaking())  EventRaiser.raiseStartSneakingEvent(event.getPlayer(),event);
-            else EventRaiser.raiseStopSneakingEvent(event.getPlayer(),event);
+        if (event.isSneaking()) {
+            EventRaiser.raiseStartSneakingEvent(event.getPlayer(),event);
+        } else {
+            EventRaiser.raiseStopSneakingEvent(event.getPlayer(),event);
         }
     }
 

@@ -22,8 +22,8 @@ import mcchickenstudio.creative.coding.variables.ValueType;
 
 public interface CodingValue {
 
-    public ValueType getType();
-    public void setValue(Object value);
-    public Object getValue(boolean deep);
-    public Object serialize();
+    ValueType getType();
+    void setValue(Object value);
+    Object getValue(boolean deep);
+    Object serialize();
 }

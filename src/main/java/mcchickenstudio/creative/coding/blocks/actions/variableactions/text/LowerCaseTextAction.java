@@ -24,7 +24,6 @@ import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.VariableAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.debug.values.VariableLink;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 
 public class LowerCaseTextAction extends VariableAction {

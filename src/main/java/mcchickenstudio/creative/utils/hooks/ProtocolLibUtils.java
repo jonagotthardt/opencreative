@@ -21,11 +21,8 @@ package mcchickenstudio.creative.utils.hooks;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.WrappedBlockData;
 import com.comphenix.protocol.wrappers.WrappedDataValue;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
@@ -33,9 +30,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import mcchickenstudio.creative.Main;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -79,7 +74,7 @@ public class ProtocolLibUtils {
                 translateItemStack(event);
             }
         });*/
-        //Main.getPlugin().getLogger().info("Registered all ProtocolLib events.");
+        Main.getPlugin().getLogger().info("Registered all ProtocolLib events.");
     }
 
     public static void spawnGlowingFallingBlock(Player player, Location location) {

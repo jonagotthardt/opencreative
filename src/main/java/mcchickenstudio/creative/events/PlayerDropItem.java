@@ -21,7 +21,6 @@ package mcchickenstudio.creative.events;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.plots.PlotManager;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -61,8 +60,7 @@ public class PlayerDropItem implements Listener {
 
     @EventHandler
     public void onPlayerPickupItem(EntityPickupItemEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
-        Player player = ((Player) event.getEntity());
+        if (!(event.getEntity() instanceof Player player)) return;
         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
         if (plot != null)  EventRaiser.raiseItemPickupEvent(player,event);
     }

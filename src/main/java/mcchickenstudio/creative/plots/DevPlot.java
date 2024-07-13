@@ -19,6 +19,8 @@
 package mcchickenstudio.creative.plots;
 
 import mcchickenstudio.creative.Main;
+import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
+import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.utils.PlayerUtils;
 import org.bukkit.*;
 
@@ -28,27 +30,24 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static mcchickenstudio.creative.utils.FileUtils.*;
 
 public class DevPlot {
-    public Plot linkedPlot;
-    public String worldName;
+    private final Plot linkedPlot;
+    public final String worldName;
 
     public World world;
     public boolean isLoaded = false;
-    public Material floorBlockMaterial;
-    public Material eventBlockMaterial;
-    public Material actionBlockMaterial;
+    public final Material floorBlockMaterial;
+    public final Material eventBlockMaterial;
+    public final Material actionBlockMaterial;
 
     static final Plugin plugin = Main.getPlugin();
 
-    public Map<Player, Location> lastLocations = new HashMap<>();
-    public static List<DevPlot> devPlots = new ArrayList<>();
+    public final Map<Player, Location> lastLocations = new HashMap<>();
+    public static final List<DevPlot> devPlots = new ArrayList<>();
 
     public DevPlot(Plot plot) {
 
@@ -141,7 +140,6 @@ public class DevPlot {
         List<Material> allBlocks = new ArrayList<>();
         allBlocks.addAll(getEventsBlocks());
         allBlocks.addAll(getActionsBlocks());
-        allBlocks.addAll(getConditionBlocks());
         return allBlocks;
     }
 
@@ -156,22 +154,7 @@ public class DevPlot {
     }
 
     public List<Material> getActionsBlocks() {
-        List<Material> actionsBlocks = new ArrayList<>();
-        actionsBlocks.add(Material.COBBLESTONE);
-        actionsBlocks.add(Material.LAPIS_ORE);
-        actionsBlocks.add(Material.COAL_BLOCK);
-        actionsBlocks.add(Material.IRON_BLOCK);
-        actionsBlocks.add(Material.NETHER_BRICKS);
-        return actionsBlocks;
-    }
-
-    public List<Material> getConditionBlocks() {
-        List<Material> conditionsBlocks = new ArrayList<>();
-        conditionsBlocks.add(Material.OAK_PLANKS);
-        conditionsBlocks.add(Material.END_STONE);
-        conditionsBlocks.add(Material.OBSIDIAN);
-        conditionsBlocks.add(Material.BRICKS);
-        return conditionsBlocks;
+        return new ArrayList<>(Arrays.stream(ActionCategory.values()).map(ActionCategory::getBlock).toList());
     }
 
     public List<Material> getIndestructibleBlocks() {
@@ -227,5 +210,22 @@ public class DevPlot {
         return allowedBlocks;
     }
 
+    public List<Location> getPlacedExecutors(ExecutorCategory category) {
+        List<Location> locations = new ArrayList<>();
+        byte x = 4;
+        for (byte y = 1; y < getFloors()*4; y=(byte)(y+4)) {
+            for (byte z = 4; z < 96; z = (byte) (z + 4)) {
+                ExecutorCategory blockCategory = ExecutorCategory.getByMaterial(world.getBlockAt(x,y,z).getType());
+                if (blockCategory == category) {
+                    locations.add(world.getBlockAt(x,y,z).getLocation());
+                }
+            }
+        }
+        return locations;
+    }
 
+
+    public Plot getLinkedPlot() {
+        return linkedPlot;
+    }
 }

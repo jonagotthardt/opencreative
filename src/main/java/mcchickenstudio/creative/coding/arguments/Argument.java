@@ -64,9 +64,9 @@ public class Argument {
             }
         } else if (value instanceof EventValueLink link) {
             setTempVars(action);
-            Object variableValue = action.getHandler().getVariables().getVarValue(link.type());
-            if (variableValue != null) {
-                return variableValue;
+            Object value = action.getHandler().getVariables().getVarValue(link.type());
+            if (value != null) {
+                return value;
             }
         } else if (value instanceof String string) {
             return parseEntity(string,action);

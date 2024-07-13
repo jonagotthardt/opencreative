@@ -58,8 +58,8 @@ public class CodingBlockParser {
     public void parseCode(DevPlot devPlot) {
 
         World world = devPlot.world;
-        devPlot.linkedPlot.stopBukkitRunnables();
-        CodeScript script = devPlot.linkedPlot.script;
+        devPlot.getLinkedPlot().stopBukkitRunnables();
+        CodeScript script = devPlot.getLinkedPlot().script;
         script.clear();
 
         List<Block> unknownBlocks = new ArrayList<>();
@@ -87,7 +87,7 @@ public class CodingBlockParser {
                 script.saveExecutorBlock(executorBlock,executorCategory,executorType);
 
                 // For coding actions
-                List<String> conditions = new ArrayList<>();
+                List<String> multiActions = new ArrayList<>();
                 for (byte x = 6; x < 96; x= (byte) (x+2)) {
 
                     Block actionBlock = world.getBlockAt(x,y,z);
@@ -96,8 +96,8 @@ public class CodingBlockParser {
                     Target actionTarget = Target.getBySign(actionBlock.getLocation());
                     Block containerBlock = actionBlock.getRelative(BlockFace.UP);
 
-                    if (actionCategory != null && actionCategory.isCondition()) {
-                        conditions.add("condition_block_" + script.getBlockActionNumber(actionBlock));
+                    if (actionCategory != null && actionCategory.isMultiAction()) {
+                        multiActions.add((actionCategory.isCondition() ? "condition_block_" : "multi_action_") + script.getBlockActionNumber(actionBlock));
                         if (actionType == null) {
                             continue;
                         }
@@ -116,18 +116,18 @@ public class CodingBlockParser {
                                 devPlot.world.sendMessage(Component.text("this is normal"));
                                 devPlot.world.sendMessage(Component.text(" first cond block -> "));
                             }
-                            if (!conditions.isEmpty()) {
-                                String last = conditions.getLast();
-                                conditions.remove(last);
+                            if (!multiActions.isEmpty()) {
+                                String last = multiActions.getLast();
+                                multiActions.remove(last);
                             } else {
-                                sendPlotCompileErrorMessage(devPlot.linkedPlot,world.getBlockAt(x+1,y,z),getLocaleMessage("plot-code-error.bad-piston"));
+                                sendPlotCompileErrorMessage(devPlot.getLinkedPlot(),world.getBlockAt(x+1,y,z),getLocaleMessage("plot-code-error.bad-piston"));
                                 continue;
                             }
                         }
                         continue;
                     }
 
-                    script.saveActionBlock(conditions,actionBlock,actionCategory,actionType,actionTarget);
+                    script.saveActionBlock(multiActions,actionBlock,actionCategory,actionType,actionTarget);
 
                     if (!(containerBlock.getState() instanceof InventoryHolder container)) continue;
                     byte slot = 0;
@@ -135,24 +135,24 @@ public class CodingBlockParser {
                     for (ArgumentSlot argSlot : actionType.getArgumentsSlots()) {
                         ItemStack item = content[slot];
                         if (argSlot.isList()) {
-                            script.setArgs(conditions,actionBlock,argSlot.getPath(),null, ValueType.LIST);
+                            script.setArgs(multiActions,actionBlock,argSlot.getPath(),null, ValueType.LIST);
                             for (byte i = 1; i < argSlot.getListSize(); i++) {
                                 if (slot < content.length) {
                                     item = content[slot];
                                     if (item == null) {
                                         if (argSlot.acceptEmptyItems()) {
                                             item = new ItemStack(Material.AIR);
-                                            script.setArgs(conditions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
+                                            script.setArgs(multiActions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
                                         }
                                     } else  {
-                                        script.setArgs(conditions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
+                                        script.setArgs(multiActions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
                                     }
                                 }
                                 slot++;
                             }
                         } else {
                             if (item != null) {
-                                script.setArgs(conditions,actionBlock,argSlot.getPath(),parseItemValue(item),parseItemType(item));
+                                script.setArgs(multiActions,actionBlock,argSlot.getPath(),parseItemValue(item),parseItemType(item));
                             }
                         }
                         slot++;
@@ -161,17 +161,17 @@ public class CodingBlockParser {
             }
         }
         if (!unknownBlocks.isEmpty()) {
-            sendPlotCompileErrorMessage(devPlot.linkedPlot,unknownBlocks);
+            sendPlotCompileErrorMessage(devPlot.getLinkedPlot(),unknownBlocks);
         }
-        if (devPlot.linkedPlot.script.saveCode()) {
-            devPlot.linkedPlot.script.loadCode();
+        if (devPlot.getLinkedPlot().script.saveCode()) {
+            devPlot.getLinkedPlot().script.loadCode();
         }
 
     }
 
     private static ValueType parseItemType(ItemStack item) {
         ValueType valueType = ValueType.ITEM;
-        if (item.getItemMeta() != null) {;
+        if (item.getItemMeta() != null) {
             PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
             String dataType = container.get(getCodingValueKey(), PersistentDataType.STRING);
             if (dataType != null) {
@@ -276,7 +276,7 @@ public class CodingBlockParser {
             if (block.getType() == Material.AIR) {
                 if (block.getRelative(BlockFace.EAST).getType() == Material.PISTON) {
                     if (!conditions.isEmpty()) {
-                        String last = conditions.get(conditions.size()-1);
+                        String last = conditions.getLast();
                         conditions.remove(last);
                     } else {
                         return block.getRelative(BlockFace.EAST).getX();
@@ -300,7 +300,7 @@ public class CodingBlockParser {
             if (block.getType() == Material.AIR) {
                 if (block.getRelative(BlockFace.WEST).getType() == Material.PISTON) {
                     if (!conditions.isEmpty()) {
-                        String last = conditions.get(conditions.size()-1);
+                        String last = conditions.getLast();
                         conditions.remove(last);
                     } else {
                         return block.getRelative(BlockFace.WEST).getX();

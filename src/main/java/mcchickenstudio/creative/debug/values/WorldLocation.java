@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class WorldLocation implements CodingValue {
 
-    private Plot plot;
+    private final Plot plot;
     private double x;
     private double y;
     private double z;
@@ -52,12 +52,12 @@ public class WorldLocation implements CodingValue {
 
     @Override
     public void setValue(Object value) {
-        if (value instanceof WorldLocation location) {
-            this.x = location.x;
-            this.y = location.y;
-            this.z = location.z;
-            this.yaw = location.yaw;
-            this.pitch = location.pitch;
+        if (value instanceof WorldLocation worldLocation) {
+            this.x = worldLocation.x;
+            this.y = worldLocation.y;
+            this.z = worldLocation.z;
+            this.yaw = worldLocation.yaw;
+            this.pitch = worldLocation.pitch;
         } else if (value instanceof Location loc) {
             this.x = loc.getX();
             this.y = loc.getY();

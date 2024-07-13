@@ -25,7 +25,6 @@ import mcchickenstudio.creative.coding.blocks.actions.variableactions.VariableAc
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.debug.values.VariableLink;
 import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 

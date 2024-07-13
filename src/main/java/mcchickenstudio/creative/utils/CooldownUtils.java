@@ -24,10 +24,10 @@ import java.util.HashMap;
 
 public class CooldownUtils {
 
-    static HashMap<Player, Long> genericCommandCooldown = new HashMap<>();
-    static HashMap<Player, Long> advertisementCommandCooldown = new HashMap<>();
-    static HashMap<Player, Long> creativeChatCooldown = new HashMap<>();
-    static HashMap<Player, Long> worldChatCooldown = new HashMap<>();
+    static final HashMap<Player, Long> genericCommandCooldown = new HashMap<>();
+    static final HashMap<Player, Long> advertisementCommandCooldown = new HashMap<>();
+    static final HashMap<Player, Long> creativeChatCooldown = new HashMap<>();
+    static final HashMap<Player, Long> worldChatCooldown = new HashMap<>();
 
     public enum CooldownType {
         GENERIC_COMMAND, ADVERTISEMENT_COMMAND, CREATIVE_CHAT, WORLD_CHAT
@@ -74,18 +74,13 @@ public class CooldownUtils {
     }
 
     private static HashMap<Player, Long> getCooldownMap(CooldownType type) {
-        switch (type) {
-            case GENERIC_COMMAND:
-                return genericCommandCooldown;
-            case ADVERTISEMENT_COMMAND:
-                return advertisementCommandCooldown;
-            case CREATIVE_CHAT:
-                return creativeChatCooldown;
-            case WORLD_CHAT:
-                return worldChatCooldown;
-            default:
-                throw new IllegalArgumentException("Невозможно получить задержку с типом: " + type);
-        }
+        return switch (type) {
+            case GENERIC_COMMAND -> genericCommandCooldown;
+            case ADVERTISEMENT_COMMAND -> advertisementCommandCooldown;
+            case CREATIVE_CHAT -> creativeChatCooldown;
+            case WORLD_CHAT -> worldChatCooldown;
+            default -> throw new IllegalArgumentException("Невозможно получить задержку с типом: " + type);
+        };
     }
 
 

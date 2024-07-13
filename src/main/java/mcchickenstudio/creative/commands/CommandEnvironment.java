@@ -19,8 +19,6 @@
 package mcchickenstudio.creative.commands;
 
 import mcchickenstudio.creative.Main;
-import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
-import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.variables.WorldVariable;
 import mcchickenstudio.creative.debug.values.VariableLink;
 import mcchickenstudio.creative.plots.DevPlot;
@@ -31,7 +29,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.*;
-import org.bukkit.block.Barrel;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Container;
@@ -98,7 +95,7 @@ public class CommandEnvironment implements CommandExecutor {
                                         page = 0;
                                     }
                                 } catch (NumberFormatException ignored) {
-                                };
+                                }
                             }
                             int current = Math.min(((page + 1) * 20), allVariables.size());
                             List<WorldVariable> variables = new ArrayList<>(allVariables.subList(page * 20, current));

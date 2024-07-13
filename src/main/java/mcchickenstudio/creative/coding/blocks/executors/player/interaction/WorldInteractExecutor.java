@@ -30,8 +30,7 @@ public class WorldInteractExecutor extends PlayerExecutor implements Cancellable
 
     @Override
     protected void setTempVars(CreativeEvent event) {
-        if (event instanceof WorldInteractEvent) {
-            WorldInteractEvent blockEvent = (WorldInteractEvent) event;
+        if (event instanceof WorldInteractEvent blockEvent) {
             setTempVar(EventValues.Variable.BLOCK, blockEvent.getClickedBlock());
         }
     }
