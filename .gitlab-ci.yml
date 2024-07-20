@@ -1,12 +1,36 @@
+image: maven:latest
+variables:
+  MAVEN_OPTS: -Dmaven.repo.local=.m2/repository
+
 stages:
-  - build
+    - build
+    - package
+    - deploy
+
+cache:
+  paths:
+    - .m2/repository
+    - target
 
 build_job:
   stage: build
-  image: maven:3.8.7-openjdk-21
-  script:
-    - mvn --batch-mode --update-snapshots verify
-    - mkdir staging && cp target/*.jar staging
-  artifacts:
-    paths:
-      - staging/
+  tags:
+    - docker 
+  script: 
+    - echo "Compiling OpenCreative+, please wait..."
+    - "mvn compile"
+
+package_job:
+  stage: package
+  tags:
+    - docker 
+  script: 
+    - echo "Saving OpenCreative+ into file, please wait..."
+    - "mvn package"
+
+Deploy_job:
+  stage: deploy
+  tags:
+    - docker 
+  script: 
+    - echo "Deploying..."
