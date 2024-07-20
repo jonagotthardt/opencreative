@@ -19,25 +19,21 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.state;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class SetFlyingAction extends PlayerAction {
-    public SetFlyingAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetFlyingAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        for (Player player : getPlayers(selection)) {
-            player.setFlying(getArguments().getValue("flying",false));
-            player.setAllowFlight(getArguments().getValue("allow-flight",false));
-        }
+    public void executePlayer(Player player) {
+        player.setFlying(getArguments().getValue("flying",false,this));
+        player.setAllowFlight(getArguments().getValue("allow-flight",false,this));
     }
 
     @Override

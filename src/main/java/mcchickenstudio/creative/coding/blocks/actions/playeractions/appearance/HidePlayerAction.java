@@ -19,31 +19,27 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.appearance;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class HidePlayerAction extends PlayerAction {
-    public HidePlayerAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public HidePlayerAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        String text = getArguments().getValue("player"," ");
-        for (Player player : getPlayers(selection)) {
-            for (Player p : getPlayersByNameOrUUID(text)) {
-                player.hidePlayer(p);
-            }
+    public void executePlayer(Player player) {
+        String text = getArguments().getValue("player"," ",this);
+        for (Player p : getPlayersByNameOrUUID(text)) {
+            player.hidePlayer(p);
         }
     }
 
     @Override
     public ActionType getActionType() {
-        return null;
+        return ActionType.PLAYER_HIDE_PLAYER;
     }
 }

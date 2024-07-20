@@ -23,9 +23,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import mcchickenstudio.creative.menu.AllWorldsMenu;
+import mcchickenstudio.creative.menu.world.browsers.AllWorldsMenu;
 import mcchickenstudio.creative.utils.CooldownUtils;
+import org.jetbrains.annotations.NotNull;
 
 import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
@@ -33,20 +33,18 @@ import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 
 public class CommandMenu implements CommandExecutor {
 
-    final static Plugin plugin = Main.getPlugin();
-
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
             if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
                 player.sendMessage(getLocaleMessage("maintenance"));
                 return true;
             }
             if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-                sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown((player).getPlayer(), CooldownUtils.CooldownType.GENERIC_COMMAND))));
+                sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
                 return true;
             }
-            setCooldown(player,plugin.getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
+            setCooldown(player,Main.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
             AllWorldsMenu.openInventory(player, 1);
         }
         return true;

@@ -24,8 +24,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>16</source>
-                    <target>16</target>
+                    <source>21</source>
+                    <target>21</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -40,14 +40,11 @@
                         </goals>
                         <configuration>
                             <relocations>
-                                <!-- Moves bstats into your package to avoid conflicts -->
                                 <relocation>
                                     <pattern>org.bstats.bukkit</pattern>
-                                    <!-- TODO: Change this to your packages -->
                                     <shadedPattern>mcchickenstudio.creative.utils.hooks</shadedPattern>
                                 </relocation>
                             </relocations>
-                            <!-- This bit tells Maven to try to not include any classes that aren't used by your plugin. -->
                             <minimizeJar>true</minimizeJar>
                         </configuration>
                     </execution>
@@ -83,6 +80,10 @@
             <id>dmulloy2-repo</id>
             <url>https://repo.dmulloy2.net/repository/public/</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -117,6 +118,12 @@
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
             <version>5.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.MilkBowl</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.7</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

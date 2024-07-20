@@ -18,5 +18,34 @@
 
 package mcchickenstudio.creative.coding.blocks.actions.variableactions.list;
 
-public class GetByIdFromListAction {
+import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.ActionType;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
+import mcchickenstudio.creative.coding.blocks.actions.variableactions.VariableAction;
+import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import mcchickenstudio.creative.coding.variables.VariableLink;
+import org.bukkit.entity.Entity;
+
+import java.util.List;
+
+public class GetByIdFromListAction extends VariableAction {
+    public GetByIdFromListAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
+    }
+
+    @Override
+    protected void execute(Entity entity) {
+        VariableLink variable = getArguments().getVariableLink("variable",this);
+        List<Object> elements = getArguments().getList("list",this);
+        if (elements.isEmpty()) {
+            return;
+        }
+        int index = getArguments().getValue("index",1,this);
+        setVarValue(variable, elements.get(index-1));
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return ActionType.VAR_GET_BY_ID_FROM_LIST;
+    }
 }

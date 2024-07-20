@@ -19,37 +19,27 @@
 package mcchickenstudio.creative.coding.blocks.actions.variableactions.list;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.VariableAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.variables.VariableLink;
 import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
 public class AddToListAction extends VariableAction {
-    public AddToListAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public AddToListAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    protected void execute(List<Entity> selection) {
-        VariableLink variable = getArguments().getVariableLink("variable");
-        List<Object> elements = getArguments().getList("variable");
-        boolean saveAsItems = getArguments().getValue("save-as-items",false);
-        List<ItemStack> itemsList = getArguments().getItemList("elements");
-        if (!saveAsItems) {
-            for (ItemStack item : itemsList) {
-                Object value = parseItemValue(item);
-                if (!(value instanceof List)) {
-                    elements.add(value);
-                }
-            }
-        } else {
-            elements.addAll(itemsList);
-        }
-        setVarValue(variable, elements);
+    protected void execute(Entity entity) {
+        VariableLink variable = getArguments().getVariableLink("variable",this);
+        List<Object> list = getArguments().getList("variable",this);
+        List<Object> elements = getArguments().getList("elements",this);
+        list.addAll(elements);
+        setVarValue(variable, list);
     }
 
     @Override

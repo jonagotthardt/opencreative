@@ -19,24 +19,23 @@
 package mcchickenstudio.creative.coding.blocks.actions.controlactions.lines;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.controlactions.ControlAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
 
-import java.util.List;
-
 public class WaitAction extends ControlAction {
 
     private long time = 20;
 
-    public WaitAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public WaitAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    protected void execute(List<Entity> selection) {
-        time = getArguments().getValue("time",20);
+    protected void execute(Entity entity) {
+        time = getArguments().getValue("time",20,this);
     }
 
     @Override

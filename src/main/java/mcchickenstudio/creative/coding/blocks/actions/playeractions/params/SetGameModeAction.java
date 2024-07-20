@@ -19,30 +19,28 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.params;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.GameMode;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class SetGameModeAction extends PlayerAction {
-    public SetGameModeAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetGameModeAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        for (Entity entity : selection) {
-            GameMode gameMode = GameMode.ADVENTURE;
-            float gm = getArguments().getValue("game-mode",1);
-            if (gm == 2) gameMode = GameMode.SURVIVAL;
-            else if (gm == 3) gameMode = GameMode.CREATIVE;
-            else if (gm == 4) gameMode = GameMode.SPECTATOR;
-            ((Player) entity).setGameMode(gameMode);
+    public void executePlayer(Player player) {
+        String gm = getArguments().getValue("game-mode","adventure",this);
+        GameMode gameMode;
+        try {
+            gameMode = GameMode.valueOf(gm.toUpperCase());
+        } catch (Exception e) {
+            gameMode = GameMode.ADVENTURE;
         }
+        player.setGameMode(gameMode);
     }
 
     @Override

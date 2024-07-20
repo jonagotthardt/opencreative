@@ -18,5 +18,34 @@
 
 package mcchickenstudio.creative.coding.blocks.actions.variableactions.number;
 
-public class MultiplyNumberAction {
+import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
+import mcchickenstudio.creative.coding.blocks.actions.ActionType;
+import mcchickenstudio.creative.coding.blocks.actions.variableactions.VariableAction;
+import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import mcchickenstudio.creative.coding.variables.VariableLink;
+import org.bukkit.entity.Entity;
+
+import java.util.List;
+
+public class MultiplyNumberAction extends VariableAction {
+    public MultiplyNumberAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
+    }
+
+    @Override
+    protected void execute(Entity entity) {
+        VariableLink link = getArguments().getVariableLink("variable",this);
+        List<Double> doubles = getArguments().getNumbersList("numbers",this);
+        double result = doubles.getFirst();
+        for (Double number : doubles.subList(1,doubles.size())) {
+            result *= number;
+        }
+        setVarValue(link,result);
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return ActionType.VAR_MULTIPLY_NUMBER;
+    }
 }

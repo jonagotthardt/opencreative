@@ -19,26 +19,22 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.inventory;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class SetCompassTarget extends PlayerAction {
-    public SetCompassTarget(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetCompassTarget(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    protected void execute(List<Entity> selection) {
-        for (Player player : getPlayers(selection)) {
-            Location location = getArguments().getValue("location",player.getLocation());
-            player.setCompassTarget(location);
-        }
+    public void executePlayer(Player player) {
+        Location location = getArguments().getValue("location",player.getLocation(),this);
+        player.setCompassTarget(location);
     }
 
     @Override

@@ -41,7 +41,7 @@ public class RadioButton {
     private String turnedPath;
     private String itemLocalePath;
 
-    static Map<ItemStack,RadioButton> radioButtonList = new HashMap<>();
+    static final Map<ItemStack,RadioButton> radioButtonList = new HashMap<>();
 
     /**
      * Creates RadioButton with specified parameters.

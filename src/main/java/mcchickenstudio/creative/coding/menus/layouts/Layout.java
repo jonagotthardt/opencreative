@@ -19,10 +19,9 @@
 package mcchickenstudio.creative.coding.menus.layouts;
 
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
+import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.menu.AbstractMenu;
 import mcchickenstudio.creative.menu.buttons.ParameterButton;
-import mcchickenstudio.creative.menu.buttons.RadioButton;
-import mcchickenstudio.creative.utils.ErrorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -37,12 +36,10 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static mcchickenstudio.creative.utils.ItemUtils.itemEquals;
-import static mcchickenstudio.creative.utils.MessageUtils.*;
+import static mcchickenstudio.creative.utils.ItemUtils.*;
 
 /**
  * <h1>Layout</h1>
@@ -80,8 +77,7 @@ public abstract class Layout extends AbstractMenu {
     protected abstract void fillVarsItems();
 
     protected ItemStack getFromContent(byte slot) {
-        if (!(chestBlock.getState() instanceof Chest)) return ItemStack.empty();
-        Chest chest = (Chest) chestBlock.getState();
+        if (!(chestBlock.getState() instanceof Chest chest)) return ItemStack.empty();
         if (slot < 0 || slot >= chest.getBlockInventory().getContents().length) return ItemStack.empty();
         return chest.getBlockInventory().getContents()[slot];
     }
@@ -146,6 +142,8 @@ public abstract class Layout extends AbstractMenu {
                         }
                         itemMeta.lore(null);
                         argItem.setItemMeta(itemMeta);
+                        setPersistentData(argItem,getCodingValueKey(), ValueType.getByMaterial(argItem.getType()).name());
+                        setPersistentData(argItem,getCodingDoNotDropMeKey(), "1");
                     }
                 }
             }
@@ -252,9 +250,9 @@ public abstract class Layout extends AbstractMenu {
                 slots.add((byte) (row*9-3));
                 break;
             case 3:
-                slots.add((byte) (row*9-7));
+                slots.add((byte) (row*9-8));
                 slots.add((byte) (row*9-5));
-                slots.add((byte) (row*9-3));
+                slots.add((byte) (row*9-2));
                 break;
             case 4:
                 slots.add((byte) (row*9-8));

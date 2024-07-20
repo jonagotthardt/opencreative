@@ -18,5 +18,36 @@
 
 package mcchickenstudio.creative.coding.blocks.actions.variableactions.other;
 
-public class SetVariableRandomValueAction {
+import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.ActionType;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
+import mcchickenstudio.creative.coding.blocks.actions.variableactions.VariableAction;
+import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import mcchickenstudio.creative.coding.variables.VariableLink;
+import org.bukkit.entity.Entity;
+
+import java.util.List;
+import java.util.Random;
+
+public class SetVariableRandomValueAction extends VariableAction {
+    public SetVariableRandomValueAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
+    }
+
+    @Override
+    protected void execute(Entity entity) {
+        VariableLink link = getArguments().getVariableLink("variable",this);
+        List<Object> values = getArguments().getList("values",this);
+        if (values.isEmpty()) return;
+        Object random = values.getFirst();
+        if (values.size() > 1) {
+            random = values.get(new Random().nextInt(values.size() - 1));
+        }
+        setVarValue(link,random);
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return ActionType.VAR_SET_RANDOM_VALUE;
+    }
 }

@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.inventory;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
@@ -28,59 +29,53 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Container;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
-
 public class OpenContainerAction extends PlayerAction {
-    public OpenContainerAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public OpenContainerAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    protected void execute(List<Entity> selection) {
-        Location location = getArguments().getValue("location", getWorld().getSpawnLocation());
-        boolean save = getArguments().getValue("save", true);
+    public void executePlayer(Player player) {
+        Location location = getArguments().getValue("location", getWorld().getSpawnLocation(),this);
+        boolean save = getArguments().getValue("save", true,this);
 
         Block block = location.getBlock();
-        Inventory inventory = null;
+        Inventory inventory;
 
-        for (Player player : getPlayers(selection)) {
-            if (block.getState() instanceof Container) {
-                Container container = (Container) block.getState();
-                if (save) {
-                    inventory = container.getInventory();
-                } else {
-                    inventory = copyInventory(container.getInventory(),container.customName());
-                }
-                player.openInventory(inventory);
-            } else if (block.getType() == Material.ENDER_CHEST) {
-                if (save) {
-                    inventory = player.getEnderChest();
-                } else {
-                    inventory = copyInventory(player.getEnderChest(),null);
-                }
-                player.openInventory(inventory);
-            } else if (block.getType() == Material.CRAFTING_TABLE) {
-                player.openWorkbench(location,false);
-            } else if (block.getType() == Material.ANVIL || block.getType() == Material.DAMAGED_ANVIL || block.getType() == Material.CHIPPED_ANVIL) {
-                player.openAnvil(location,false);
-            } else if (block.getType() == Material.CARTOGRAPHY_TABLE) {
-                player.openCartographyTable(location,false);
-            } else if (block.getType() == Material.ENCHANTING_TABLE) {
-                player.openEnchanting(location,false);
-            } else if (block.getType() == Material.LOOM) {
-                player.openLoom(location,false);
-            } else if (block.getType() == Material.GRINDSTONE) {
-                player.openGrindstone(location,false);
-            } else if (block.getType() == Material.SMITHING_TABLE) {
-                player.openSmithingTable(location, false);
-            } else if (block.getType() == Material.STONECUTTER) {
-                player.openStonecutter(location,false);
+        if (block.getState() instanceof Container container) {
+            if (save) {
+                inventory = container.getInventory();
+            } else {
+                inventory = copyInventory(container.getInventory(),container.customName());
             }
+            player.openInventory(inventory);
+        } else if (block.getType() == Material.ENDER_CHEST) {
+            if (save) {
+                inventory = player.getEnderChest();
+            } else {
+                inventory = copyInventory(player.getEnderChest(),null);
+            }
+            player.openInventory(inventory);
+        } else if (block.getType() == Material.CRAFTING_TABLE) {
+            player.openWorkbench(location,false);
+        } else if (block.getType() == Material.ANVIL || block.getType() == Material.DAMAGED_ANVIL || block.getType() == Material.CHIPPED_ANVIL) {
+            player.openAnvil(location,false);
+        } else if (block.getType() == Material.CARTOGRAPHY_TABLE) {
+            player.openCartographyTable(location,false);
+        } else if (block.getType() == Material.ENCHANTING_TABLE) {
+            player.openEnchanting(location,false);
+        } else if (block.getType() == Material.LOOM) {
+            player.openLoom(location,false);
+        } else if (block.getType() == Material.GRINDSTONE) {
+            player.openGrindstone(location,false);
+        } else if (block.getType() == Material.SMITHING_TABLE) {
+            player.openSmithingTable(location, false);
+        } else if (block.getType() == Material.STONECUTTER) {
+            player.openStonecutter(location,false);
         }
     }
 
@@ -101,9 +96,9 @@ public class OpenContainerAction extends PlayerAction {
             }
             ItemStack item = inventory.getItem(slot);
             if (item != null) {
-                inventory.setItem(slot,item);
+                copiedInventory.setItem(slot,item);
             }
         }
-        return inventory;
+        return copiedInventory;
     }
 }

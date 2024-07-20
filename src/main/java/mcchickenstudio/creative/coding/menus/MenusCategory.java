@@ -30,17 +30,21 @@ public enum MenusCategory {
     INVENTORY(Material.CHEST),
     MOVEMENT(Material.CHAINMAIL_BOOTS),
     WORLD(Material.BEACON),
+    ENTITY(Material.VILLAGER_SPAWN_EGG),
     COMMUNICATION(Material.OAK_SIGN),
     STATE(Material.NAME_TAG),
     LINES(Material.REPEATING_COMMAND_BLOCK),
     APPEARANCE(Material.ARMOR_STAND),
     EVENTS(Material.NETHER_BRICKS),
     PARAMS(Material.ITEM_FRAME),
-    OTHER(Material.HEART_OF_THE_SEA),
+    OTHER(Material.PUMPKIN_SEEDS),
+
     TEXT_OPERATIONS(Material.BOOK),
     NUMBER_OPERATIONS(Material.SLIME_BALL),
-    ITEM_OPERATIONS(Material.ITEM_FRAME),
-    LIST_OPERATIONS(Material.PAPER);
+    LOCATION_OPERATIONS(Material.PAPER),
+    ITEM_OPERATIONS(Material.GLOW_ITEM_FRAME),
+    LIST_OPERATIONS(Material.BOOKSHELF),
+    MAP_OPERATIONS(Material.CHEST_MINECART);
 
 
     private final Material material;

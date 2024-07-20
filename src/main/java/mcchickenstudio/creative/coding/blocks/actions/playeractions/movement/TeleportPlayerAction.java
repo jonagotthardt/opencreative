@@ -19,37 +19,31 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.movement;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
-import static org.bukkit.Bukkit.getPlayer;
-
 public class TeleportPlayerAction extends PlayerAction {
-    public TeleportPlayerAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public TeleportPlayerAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    protected void execute(List<Entity> selection) {
-        Location location = getArguments().getValue("location",getWorld().getSpawnLocation());
-        String consider = getArguments().getValue("consider","all");
-        for (Player player : getPlayers(selection)) {
-            if (consider.equals("only-coordinates")) {
-                location.setYaw(player.getYaw());
-                location.setPitch(player.getPitch());
-            } else if (consider.equals("only-rotation")) {
-                location.setX(player.getX());
-                location.setY(player.getY());
-                location.setZ(player.getZ());
-            }
-            player.teleport(location);
+    public void executePlayer(Player player) {
+        Location location = getArguments().getValue("location",getWorld().getSpawnLocation(),this);
+        String consider = getArguments().getValue("consider","all",this);
+        if (consider.equals("only-coordinates")) {
+            location.setYaw(player.getYaw());
+            location.setPitch(player.getPitch());
+        } else if (consider.equals("only-rotation")) {
+            location.setX(player.getX());
+            location.setY(player.getY());
+            location.setZ(player.getZ());
         }
+        player.teleport(location);
     }
 
     @Override

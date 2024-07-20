@@ -19,9 +19,8 @@
 package mcchickenstudio.creative.coding.blocks.executors.player.interaction;
 
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
-import mcchickenstudio.creative.coding.blocks.events.EventVariables;
+import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.events.player.interaction.DestroyBlockEvent;
-import mcchickenstudio.creative.coding.blocks.events.player.world.ChatEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.blocks.executors.player.PlayerExecutor;
 import mcchickenstudio.creative.plots.Plot;
@@ -35,9 +34,8 @@ public class DestroyBlockExecutor extends PlayerExecutor implements Cancellable 
 
     @Override
     protected void setTempVars(CreativeEvent event) {
-        if (event instanceof DestroyBlockEvent) {
-            DestroyBlockEvent blockEvent = (DestroyBlockEvent) event;
-            setVar(EventVariables.Variable.BLOCK, blockEvent.getDestroyedBlock());
+        if (event instanceof DestroyBlockEvent blockEvent) {
+            setTempVar(EventValues.Variable.BLOCK, blockEvent.getDestroyedBlock());
         }
     }
 

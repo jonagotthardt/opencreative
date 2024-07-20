@@ -16,41 +16,75 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package mcchickenstudio.creative.coding.variables;
 
 
-import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import mcchickenstudio.creative.coding.blocks.actions.ActionsHandler;
 import org.bukkit.ChatColor;
+
+import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 
 public class VariableLink {
 
-    private final String name;
+    private String name;
     private final VariableType type;
-    private final Executor executor;
+    private ActionsHandler handler;
 
-    public VariableLink(String name, VariableType type, Executor executor) {
+    public VariableLink(String name, VariableType type) {
         this.name = name;
         this.type = type;
-        this.executor = executor;
+        this.handler = null;
+    }
+
+    public void setHandler(ActionsHandler handler) {
+        this.handler = handler;
+    }
+
+    public VariableType getVariableType() {
+        return type;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getName() {
         return name;
     }
 
-    public Executor getExecutor() {
-        return executor;
+    public ActionsHandler getHandler() {
+        return handler;
     }
 
     public enum VariableType {
 
-        LOCAL(ChatColor.RED),
-        GLOBAL(ChatColor.YELLOW),
-        SAVED(ChatColor.GREEN);
+        LOCAL(1,ChatColor.RED),
+        GLOBAL(2,ChatColor.YELLOW),
+        SAVED(3,ChatColor.GREEN);
 
         private final ChatColor color;
+        private final int id;
 
-        VariableType(ChatColor color) {
+        VariableType(int id, ChatColor color) {
+            this.id = id;
             this.color = color;
         }
 
@@ -58,8 +92,17 @@ public class VariableLink {
             return color;
         }
 
-        public String getId() {
-            return "coding.variable." + this.name().toLowerCase();
+        public int getId() {
+            return id;
+        }
+
+        public static VariableType getById(int id) {
+            for (VariableType type : values()) {
+                if (type.getId() == id) {
+                    return type;
+                }
+            }
+            return LOCAL;
         }
 
         public static VariableType getEnum(String string) {
@@ -70,6 +113,10 @@ public class VariableLink {
             }
             return null;
         }
+
+        public String getLocalized() {
+            return getLocaleMessage("items.developer.variable." + name().toLowerCase());
+        }
     }
 
     @Override
@@ -77,7 +124,4 @@ public class VariableLink {
         return "Variable: " + name + " Type: " + type.name();
     }
 
-    public VariableType getType() {
-        return type;
-    }
 }

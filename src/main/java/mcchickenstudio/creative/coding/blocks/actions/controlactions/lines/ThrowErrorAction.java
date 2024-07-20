@@ -18,22 +18,22 @@
 
 package mcchickenstudio.creative.coding.blocks.actions.controlactions.lines;
 
+
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.controlactions.ControlAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
 
-import java.util.List;
-
 public class ThrowErrorAction extends ControlAction {
-    public ThrowErrorAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public ThrowErrorAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    protected void execute(List<Entity> selection) {
-        String message = getArguments().getValue("message","Thrown error from control action");
+    protected void execute(Entity entity) {
+        String message = getArguments().getValue("message","Thrown error from control action",this);
         throw new NullPointerException(message);
     }
 

@@ -19,26 +19,22 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.appearance;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class SetResourcePackAction extends PlayerAction {
-    public SetResourcePackAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetResourcePackAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        String url = getArguments().getValue("url","");
+    public void executePlayer(Player player) {
+        String url = getArguments().getValue("url","",this);
         if (url.isEmpty()) return;
-        for (Player player : getPlayers(selection)) {
-            player.setResourcePack(url);
-        }
+        player.setResourcePack(url);
     }
 
     @Override

@@ -5,7 +5,7 @@ public class Main {
 
     /**
      * Creates window with installation instruction when user executes this .jar file.
-     * @param args
+     * @param args Arguments to launch Java application
      */
     public static void main(String[] args) {
         String message = "This is OpenCreative+, a plugin for Minecraft servers.\nMade by McChicken Studio 2024. \n \nInstallation:\n To install plugin please download PaperMC server, then load it and accept EULA.\n After that put this .jar file into server's /plugins/ folder and launch a server.\n \nPress OK to close.";

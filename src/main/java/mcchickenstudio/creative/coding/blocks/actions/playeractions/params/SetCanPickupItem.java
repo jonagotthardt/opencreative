@@ -19,25 +19,21 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.params;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class SetCanPickupItem extends PlayerAction {
-    public SetCanPickupItem(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetCanPickupItem(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    protected void execute(List<Entity> selection) {
-        boolean can = getArguments().getValue("boolean",false);
-        for (Player player : getPlayers(selection)) {
-            player.setCanPickupItems(can);
-        }
+    public void executePlayer(Player player) {
+        boolean can = getArguments().getValue("boolean",false,this);
+        player.setCanPickupItems(can);
     }
 
     @Override

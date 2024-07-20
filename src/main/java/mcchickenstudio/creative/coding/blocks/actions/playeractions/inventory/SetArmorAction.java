@@ -19,41 +19,36 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.inventory;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
-
 public class SetArmorAction extends PlayerAction {
-    public SetArmorAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetArmorAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    protected void execute(List<Entity> selection) {
-        ItemStack helmet = getArguments().getValue("helmet", ItemStack.empty());
-        ItemStack chestplate = getArguments().getValue("chestplate",ItemStack.empty());
-        ItemStack leggings = getArguments().getValue("leggings",ItemStack.empty());
-        ItemStack boots = getArguments().getValue("boots",ItemStack.empty());
-        boolean replaceWithAir = getArguments().getValue("replace-with-air",false);
-        for (Player player : getPlayers(selection)) {
-            if (replaceWithAir || !helmet.isEmpty()) {
-                player.getInventory().setHelmet(helmet);
-            }
-            if (replaceWithAir || !chestplate.isEmpty()) {
-                player.getInventory().setChestplate(chestplate);
-            }
-            if (replaceWithAir || !leggings.isEmpty()) {
-                player.getInventory().setLeggings(leggings);
-            }
-            if (replaceWithAir || !boots.isEmpty()) {
-                player.getInventory().setBoots(boots);
-            }
+    public void executePlayer(Player player) {
+        ItemStack helmet = getArguments().getValue("helmet", ItemStack.empty(),this);
+        ItemStack chestplate = getArguments().getValue("chestplate",ItemStack.empty(),this);
+        ItemStack leggings = getArguments().getValue("leggings",ItemStack.empty(),this);
+        ItemStack boots = getArguments().getValue("boots",ItemStack.empty(),this);
+        boolean replaceWithAir = getArguments().getValue("replace-with-air",false,this);
+        if (replaceWithAir || !helmet.isEmpty()) {
+            player.getInventory().setHelmet(helmet);
+        }
+        if (replaceWithAir || !chestplate.isEmpty()) {
+            player.getInventory().setChestplate(chestplate);
+        }
+        if (replaceWithAir || !leggings.isEmpty()) {
+            player.getInventory().setLeggings(leggings);
+        }
+        if (replaceWithAir || !boots.isEmpty()) {
+            player.getInventory().setBoots(boots);
         }
     }
 

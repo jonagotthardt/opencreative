@@ -19,29 +19,25 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.params;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class SetArrowsInBodyAction extends PlayerAction {
-    public SetArrowsInBodyAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetArrowsInBodyAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        boolean add = getArguments().getValue("add",false);
-        int count = getArguments().getValue("count",0);
-        for (Player player : getPlayers(selection)) {
-            if (add) {
-                count = count + player.getArrowsInBody();
-            }
-            player.setArrowsInBody(count);
+    public void executePlayer(Player player) {
+        boolean add = getArguments().getValue("add",false,this);
+        int count = getArguments().getValue("count",0,this);
+        if (add) {
+            count = count + player.getArrowsInBody();
         }
+        player.setArrowsInBody(count);
     }
 
     @Override

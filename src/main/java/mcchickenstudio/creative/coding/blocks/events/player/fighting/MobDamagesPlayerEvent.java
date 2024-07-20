@@ -19,12 +19,33 @@
 package mcchickenstudio.creative.coding.blocks.events.player.fighting;
 
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class MobDamagesPlayerEvent extends CreativeEvent {
 
-    public MobDamagesPlayerEvent(Player player) {
+    private final EntityDamageByEntityEvent event;
+    private final Entity damager;
+    private final Player victim;
+
+    public MobDamagesPlayerEvent(Player player, EntityDamageByEntityEvent event) {
         super(player);
+        this.event = event;
+        this.damager = event.getDamager();
+        this.victim = (Player) event.getEntity();
     }
 
+    @Override
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
+    }
+
+    public Player getVictim() {
+        return victim;
+    }
+
+    public Entity getDamager() {
+        return damager;
+    }
 }

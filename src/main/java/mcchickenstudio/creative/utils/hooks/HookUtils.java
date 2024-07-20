@@ -44,19 +44,25 @@ public class HookUtils {
 
     public static boolean isPlaceholderAPIEnabled = false;
     public static boolean isProtocolLibEnabled = false;
+    public static boolean isVaultEnabled = false;
     /**
      Load hooks into other plugins for working with them. For example: Creative+ can hook into PlaceholderAPI.
      **/
     public static void loadHooks() {
         isPlaceholderAPIEnabled = isPluginEnabled("PlaceholderAPI");
         isProtocolLibEnabled = isPluginEnabled("ProtocolLib");
+        isVaultEnabled = isPluginEnabled("Vault");
         Main.getPlugin().getLogger().info((isPlaceholderAPIEnabled ? "Creative+ hooked into PlaceholderAPI." : "Creative+ didn't detect PlaceholderAPI."));
         Main.getPlugin().getLogger().info((isProtocolLibEnabled ? "Creative+ hooked into ProtocolLib." : "Creative+ didn't detect PlaceholderAPI."));
+        Main.getPlugin().getLogger().info((isVaultEnabled ? "Creative+ hooked into Vault." : "Creative+ didn't detect Vault."));
         if (isPlaceholderAPIEnabled) {
             PAPIUtils.registerPlaceholder();
         }
         if (isProtocolLibEnabled) {
             ProtocolLibUtils.init();
+        }
+        if (isVaultEnabled) {
+            VaultUtils.init();
         }
     }
 

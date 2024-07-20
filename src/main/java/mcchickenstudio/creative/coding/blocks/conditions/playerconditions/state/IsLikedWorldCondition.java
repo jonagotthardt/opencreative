@@ -19,38 +19,32 @@
 package mcchickenstudio.creative.coding.blocks.conditions.playerconditions.state;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.utils.FileUtils;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
 public class IsLikedWorldCondition extends PlayerCondition {
 
-    public IsLikedWorldCondition(Executor executor, int x, Arguments args, List<Action> actions) {
-        super(executor, x, args, actions);
+    public IsLikedWorldCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
+        super(executor, target, x, args, actions);
     }
 
     @Override
-    public boolean check(List<Entity> selection) {
-        boolean check = false;
+    public boolean checkPlayer(Player player) {
         List<String> likedPlayers = FileUtils.getPlayersFromPlotConfig(getPlot(), Plot.PlayersType.LIKED);
-        for (Player player : getPlayers(selection)) {
-            for (String likedPlayer : likedPlayers) {
-                if (player.getName().equalsIgnoreCase(likedPlayer)) {
-                    check = true;
-                }
-            }
-            if (!check) {
-                return false;
+        for (String nickname : likedPlayers) {
+            if (nickname.equalsIgnoreCase(player.getName())) {
+                return true;
             }
         }
-        return check;
+        return false;
     }
 
     @Override

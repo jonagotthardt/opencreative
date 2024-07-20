@@ -1,11 +1,11 @@
-name: 'Creative'
-version: '1.5'
+name: 'OpenCreative'
+version: '5.0 Preview 3'
 main: mcchickenstudio.creative.Main
 api-version: 1.20
 authors: [McChicken Studio]
 description: 'Let players create the worlds'
 prefix: "OC+"
-softdepend: [PlaceholderAPI]
+softdepend: [PlaceholderAPI, ProtocolLib, Vault]
 commands:
   creative:
     usage: /creativecoding
@@ -46,3 +46,15 @@ commands:
   world:
     usage: /world
     aliases: [settings, game, іуеештпі, ыуеештпы, setting, цщкдв]
+  environment:
+    usage: /environment
+    aliases: [env, утм, утмшкщтьуте]
+  gamemode:
+    usage: /gamemode
+    aliases: [gm, гм, пь, пфьуьщву]
+  give:
+    usage: /give
+    aliases: [пшму]
+  teleport:
+    usage: /teleport
+    aliases: [tp, еудузщке, ез]

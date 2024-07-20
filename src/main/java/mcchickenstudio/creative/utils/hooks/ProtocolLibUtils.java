@@ -21,22 +21,29 @@ package mcchickenstudio.creative.utils.hooks;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.reflect.StructureModifier;
+import com.comphenix.protocol.wrappers.WrappedDataValue;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import com.comphenix.protocol.wrappers.WrappedWatchableObject;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import mcchickenstudio.creative.Main;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemName;
-import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static com.comphenix.protocol.PacketType.Play.Server.*;
+import static mcchickenstudio.creative.utils.MessageUtils.*;
 
 public class ProtocolLibUtils {
 
@@ -48,42 +55,48 @@ public class ProtocolLibUtils {
     }
     
     private static void registerEvents() {
-        Main.getPlugin().getLogger().info("Registering ProtocolLib events...");
-        manager.addPacketListener(new PacketAdapter(Main.getPlugin(), PacketType.Play.Server.SET_SLOT) {
-            @Override
-            public void onPacketSending(PacketEvent event) {
-                PacketContainer container = event.getPacket();
-                StructureModifier<ItemStack> itemStackStructureModifier = container.getItemModifier();
-                for (int i = 0; i < itemStackStructureModifier.size(); i++) {
-                    ItemStack itemStack = itemStackStructureModifier.read(i);
-                    if (itemStack != null) {
-                        if (!itemStack.hasItemMeta()) continue;
-                        ItemMeta itemMeta = itemStack.getItemMeta();
-                        if (itemMeta.getDisplayName().startsWith("oc.lang.")) {
-                            itemMeta.setDisplayName(getLocaleItemName(itemMeta.getDisplayName().replace("oc.lang.","")));
-                        }
-                        List<String> newLore = new ArrayList<>();
-                        if (itemMeta.hasLore()) {
-                            List<String> lore = itemMeta.getLore();
-                            for (int i1 = 0; i1 < lore.size(); i1++) {
-                                String loreLine = lore.get(i1);
-                                if (loreLine.startsWith("oc.lang.")) {
-                                    newLore.add(getLocaleMessage(loreLine.replace("oc.lang.",""),false));
-                                } else {
-                                    newLore.add(loreLine);
-                                }
-                                lore.set(i1, "T");
-                            }
-                        }
-                        itemMeta.setLore(newLore);
-                        itemStack.setItemMeta(itemMeta);
-                        itemStackStructureModifier.write(i, itemStack);
-                    }
-                    itemStackStructureModifier.write(i, itemStack);
-                }
-            }
-        });
         Main.getPlugin().getLogger().info("Registered all ProtocolLib events.");
     }
 
+    public static void spawnGlowingFallingBlock(Player player, Location location) {
+        World world = player.getWorld();
+        PacketContainer spawnEntityPacket = manager.createPacket(SPAWN_ENTITY);
+        spawnEntityPacket.getIntegers().write(0, 83);
+        spawnEntityPacket.getUUIDs().write(0, UUID.randomUUID());
+        spawnEntityPacket.getEntityTypeModifier().write(0, EntityType.SHULKER);
+        spawnEntityPacket.getDoubles()
+                .write(0, location.getX())
+                .write(1, location.getY())
+                .write(2, location.getZ());
+
+        PacketContainer entityDataPacket = manager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
+        WrappedDataWatcher watcher = new WrappedDataWatcher();
+        watcher.setObject(0, WrappedDataWatcher.Registry.get(Byte.class), (byte) (0x40 | 0x20));
+        entityDataPacket.getIntegers().write(0, 83);
+        List<WrappedDataValue> wrappedDataValueList = new ArrayList<>();
+        for(final WrappedWatchableObject entry : watcher.getWatchableObjects()) {
+            if(entry == null) continue;
+            final WrappedDataWatcher.WrappedDataWatcherObject watcherObject = entry.getWatcherObject();
+            wrappedDataValueList.add(
+                    new WrappedDataValue(
+                            watcherObject.getIndex(),
+                            watcherObject.getSerializer(),
+                            entry.getRawValue()
+                    )
+            );
+        }
+        entityDataPacket.getDataValueCollectionModifier().write(0, wrappedDataValueList);
+        PacketContainer hideGlowingPacket = manager.createPacket(ENTITY_DESTROY);
+        hideGlowingPacket.getModifier().write(0, new IntArrayList(new int[]{83}));
+        manager.sendServerPacket(player,spawnEntityPacket);
+        manager.sendServerPacket(player,entityDataPacket);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (player.getWorld() == world) {
+                    manager.sendServerPacket(player,hideGlowingPacket);
+                }
+            }
+        }.runTaskLater(Main.getPlugin(),60L);
+    }
 }

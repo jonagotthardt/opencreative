@@ -35,14 +35,13 @@ public class ControlActionsMenu extends CodingBlockTypesMenu {
 
     @Override
     protected List<Object> getElements() {
-        if (currentCategory == null) currentCategory = MenusCategory.EVENTS;
+        if (currentCategory == null) currentCategory = MenusCategory.LINES;
         return new ArrayList<>(ActionType.getActionsByCategories(ActionCategory.CONTROL_ACTION,currentCategory));
     }
 
     @Override
     protected ItemStack getElementIcon(Object object) {
-        if (object instanceof ActionType) {
-            ActionType type = (ActionType) object;
+        if (object instanceof ActionType type) {
             return type.getIcon();
         } else {
             return new ItemStack(Material.AIR);

@@ -206,6 +206,23 @@ public class MessageUtils {
     }
 
     /**
+     Returns book's pages from localization file.
+     **/
+    public static List<String> getBookPages(String localizationID) {
+        List<String> foundPages = getLocalization().getStringList(localizationID);
+        List<String> pages = new ArrayList<>();
+        if (foundPages.isEmpty()) {
+            ErrorUtils.sendWarningErrorMessage("Not found book pages " + localizationID);
+            pages.add("§4Not found pages: §0" + localizationID + " \nPlease report server administration, they need to fill this line in locales" + File.separator + getLanguage() + ".yml");
+        } else {
+            for (String page : foundPages) {
+                pages.add(ChatColor.translateAlternateColorCodes('&',page.replace("%prefix%",getPrefix()).replace("%cc-prefix%",getCreativeChatPrefix())));
+            }
+        }
+        return pages;
+    }
+
+    /**
      Returns elapsed time from old time to current with localized message. For example: if elapsed time is 2 seconds, it will return "2 sec ago".
      **/
     public static String getElapsedTime(long currentTime, long oldTime) {
@@ -232,7 +249,7 @@ public class MessageUtils {
     }
 
 
-    static Map<Plot,Long> messagesOnce = new HashMap<>();
+    static final Map<Plot,Long> messagesOnce = new HashMap<>();
     /**
      Sends message to plot players once. If cool down is not ended, it will not send message.
      **/

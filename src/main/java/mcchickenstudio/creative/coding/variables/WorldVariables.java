@@ -18,10 +18,10 @@
 
 package mcchickenstudio.creative.coding.variables;
 
-import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import mcchickenstudio.creative.coding.blocks.actions.ActionsHandler;
+import mcchickenstudio.creative.coding.variables.VariableLink;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.utils.FileUtils;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
@@ -35,8 +35,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 
-import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
-import static mcchickenstudio.creative.utils.MessageUtils.sendMessageOnce;
+import static mcchickenstudio.creative.utils.ErrorUtils.sendCriticalErrorMessage;
 
 /**
  * <h1>WorldVariables</h1>
@@ -52,16 +51,21 @@ public class WorldVariables {
         this.plot = plot;
     }
 
+    public Set<WorldVariable> getSet() {
+        return variables;
+    }
+
     public WorldVariable getVariable(VariableLink link) {
         return variables.stream()
                 .filter(var -> var.getName().equalsIgnoreCase(link.getName()))
-                .filter(var -> link.getType() == var.getVarType())
-                .filter(var -> link.getType() != VariableLink.VariableType.LOCAL || link.getExecutor().equals(var.getExecutor()))
+                .filter(var -> link.getVariableType() == var.getVarType())
+                .filter(var -> link.getVariableType() != VariableLink.VariableType.LOCAL || link.getHandler().equals(var.getHandler()))
                 .findFirst()
                 .orElse(null);
     }
 
-    public void setVariableValue(VariableLink link, ValueType type, Object value, Executor executor) {
+    public void setVariableValue(VariableLink link, ValueType type, Object value, ActionsHandler handler) {
+        link.setHandler(handler.getMainActionHandler());
         WorldVariable variable = getVariable(link);
         if (variable != null) {
             if (variable.getSize() + getTotalVariablesAmount() > plot.getVariablesAmountLimit()) return;
@@ -69,7 +73,7 @@ public class WorldVariables {
             variable.setValue(value);
         } else {
             if (getTotalVariablesAmount() > plot.getVariablesAmountLimit()) return;
-            variables.add(new WorldVariable(link.getName(), link.getType(), type, value, executor));
+            variables.add(new WorldVariable(link.getName(), link.getVariableType(), type, value, handler));
         }
     }
 
@@ -103,13 +107,12 @@ public class WorldVariables {
                 if (type == ValueType.ITEM) {
                     final ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(Base64Coder.decodeLines((String) value));
                     final BukkitObjectInputStream objectInputStream = new BukkitObjectInputStream(arrayInputStream);
-                    value = (ItemStack) objectInputStream.readObject();
-
+                    value = objectInputStream.readObject();
                 }
                 variables.add(new WorldVariable(name,VariableLink.VariableType.SAVED,type,value,null));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            sendCriticalErrorMessage("Failed to parse JSON file " + variablesJson.getPath(),e);
         }
     }
 
@@ -135,7 +138,7 @@ public class WorldVariables {
                 if (value instanceof ItemStack) {
                     final ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
                     final BukkitObjectOutputStream objectOutputStream = new BukkitObjectOutputStream(arrayOutputStream);
-                    objectOutputStream.writeObject((ItemStack) value);
+                    objectOutputStream.writeObject(value);
                     value = Base64Coder.encodeLines(arrayOutputStream.toByteArray());
                 }
                 objItem.put("value", value);
@@ -143,7 +146,7 @@ public class WorldVariables {
             }
             file.write(jsonArray.toString());
         } catch (Exception e){
-            System.out.println(e);
+            sendCriticalErrorMessage("Failed to save variables",e);
         }
     }
 

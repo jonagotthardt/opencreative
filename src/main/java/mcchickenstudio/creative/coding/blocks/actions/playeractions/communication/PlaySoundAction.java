@@ -19,28 +19,26 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.communication;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
 import org.bukkit.SoundCategory;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-
-import java.util.List;
 
 public class PlaySoundAction extends PlayerAction {
 
-    public PlaySoundAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public PlaySoundAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        String sound = getArguments().getValue("sound","entity.player.levelup");
-        float volume = getArguments().getValue("volume",100f);
-        float pitch = getArguments().getValue("pitch",1f);
-        String categoryString = getArguments().getValue("category","ambient");
+    public void executePlayer(Player player) {
+        String sound = getArguments().getValue("sound","entity.player.levelup",this);
+        float volume = getArguments().getValue("volume",100f,this);
+        float pitch = getArguments().getValue("pitch",1f,this);
+        String categoryString = getArguments().getValue("category","ambient",this);
         Location location;
         SoundCategory category;
         try {
@@ -48,10 +46,8 @@ public class PlaySoundAction extends PlayerAction {
         } catch (Exception error) {
             category = SoundCategory.AMBIENT;
         }
-        for (Player player : getPlayers(selection)) {
-            location = getArguments().getValue("location",player.getLocation());
-            player.playSound(location,sound,category,volume,pitch);
-        }
+        location = getArguments().getValue("location",player.getLocation(),this);
+        player.playSound(location,sound,category,volume,pitch);
     }
 
     @Override

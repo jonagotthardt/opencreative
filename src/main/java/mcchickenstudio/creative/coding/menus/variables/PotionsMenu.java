@@ -19,13 +19,13 @@
 package mcchickenstudio.creative.coding.menus.variables;
 
 import mcchickenstudio.creative.menu.AbstractListMenu;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffectType;
@@ -52,8 +52,8 @@ public class PotionsMenu extends AbstractListMenu {
 
     static {
         potions.put(PotionEffectType.BLINDNESS,Material.BLACK_SHULKER_BOX);
-        potions.put(PotionEffectType.JUMP_BOOST,Material.RABBIT_FOOT);
-        potions.put(PotionEffectType.HEALTH_BOOST,Material.GOLDEN_APPLE);
+        //potions.put(PotionEffectType.JUMP_BOOST,Material.RABBIT_FOOT);
+        //potions.put(PotionEffectType.HEALTH_BOOST,Material.GOLDEN_APPLE);
     }
 
     private Material getMaterial(PotionEffectType type) {
@@ -65,15 +65,14 @@ public class PotionsMenu extends AbstractListMenu {
 
     @Override
     protected ItemStack getElementIcon(Object object) {
-        if (object instanceof PotionEffectType) {
-            PotionEffectType type = (PotionEffectType) object;
+        if (object instanceof PotionEffectType type) {
             ItemStack itemStack = new ItemStack(Material.POTION,1);
             PotionMeta meta = (PotionMeta) itemStack.getItemMeta();
             PotionType potionType = PotionType.getByEffect(type);
             if (potionType != null) {
                 meta.setBasePotionType(potionType);
             } else {
-                meta.setDisplayName(type.getName().toLowerCase().replace("minecraft:",""));
+                meta.displayName(Component.text(type.getName().toLowerCase().replace("minecraft:","")));
                 meta.setBasePotionType(PotionType.WATER);
             }
             meta.setColor(type.getColor());

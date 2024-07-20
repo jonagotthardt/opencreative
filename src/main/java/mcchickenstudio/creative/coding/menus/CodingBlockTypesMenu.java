@@ -21,7 +21,6 @@ package mcchickenstudio.creative.coding.menus;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.menu.AbstractListMenu;
-import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -47,7 +46,7 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
 
     private final String codingBlockName;
     private final Location signLocation;
-    protected MenusCategory currentCategory = MenusCategory.WORLD;
+    protected MenusCategory currentCategory;
 
     public CodingBlockTypesMenu(Player player, Location location, String codingBlockName, String titleName) {
         super(ChatColor.stripColor(getLocaleMessage("blocks." + titleName)),player);
@@ -63,6 +62,12 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
         for (MenusCategory category : getMenusCategories()) {
             setItem(charmsBarSlots[slot],category.getItem(codingBlockName));
             slot++;
+        }
+        if (slot < charmsBarSlots.length) {
+            while (slot < charmsBarSlots.length) {
+                setItem(charmsBarSlots[slot],DECORATION_ITEM);
+                slot++;
+            }
         }
     }
 

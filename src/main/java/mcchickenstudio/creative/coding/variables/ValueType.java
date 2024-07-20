@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.variables;
 
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
+import mcchickenstudio.creative.coding.variables.VariableLink;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -79,6 +80,10 @@ public enum ValueType {
      * Variable Link has name of real variable in plot. It stores value from real variable.
      */
     VARIABLE(Material.MAGMA_CREAM, Material.YELLOW_STAINED_GLASS_PANE),
+    /**
+     * Event Value Link stores type of EventVariable for getting value.
+     */
+    EVENT_VALUE(Material.NAME_TAG, Material.YELLOW_STAINED_GLASS_PANE),
     /**
      * Any stores ItemStack.
      */
@@ -143,6 +148,10 @@ public enum ValueType {
             return ITEM;
         }
         return null;
+    }
+
+    public String getLocalized() {
+        return getLocaleMessage("environment.values." + name().toLowerCase().replace("_","-"),false);
     }
 
 }

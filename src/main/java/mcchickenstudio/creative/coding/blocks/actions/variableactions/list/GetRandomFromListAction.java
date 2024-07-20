@@ -19,35 +19,32 @@
 package mcchickenstudio.creative.coding.blocks.actions.variableactions.list;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.VariableAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.variables.VariableLink;
 import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.Random;
 
 public class GetRandomFromListAction extends VariableAction {
-    public GetRandomFromListAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public GetRandomFromListAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    protected void execute(List<Entity> selection) {
-        VariableLink variable = getArguments().getVariableLink("variable");
-        System.out.println("get list");
-        List<Object> elements = getArguments().getList("list");
+    protected void execute(Entity entity) {
+        VariableLink variable = getArguments().getVariableLink("variable",this);
+        List<Object> elements = getArguments().getList("list",this);
         if (elements.isEmpty()) {
-            System.out.println("is empty");
             return;
         }
         int min = 0;
         int max = elements.size()-1;
         int randomId = new Random().nextInt(max + 1 - min) + min;
         Object result = elements.get(randomId);
-        System.out.println("result -> " + result);
         setVarValue(variable, result);
     }
 

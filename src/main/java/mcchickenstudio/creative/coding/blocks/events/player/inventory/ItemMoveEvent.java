@@ -21,7 +21,6 @@ package mcchickenstudio.creative.coding.blocks.events.player.inventory;
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class ItemMoveEvent extends CreativeEvent {

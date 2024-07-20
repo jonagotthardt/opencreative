@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.actions.variableactions.other;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.VariableAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
@@ -29,15 +30,14 @@ import java.util.List;
 
 public class DeleteVariableAction extends VariableAction {
 
-    public DeleteVariableAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public DeleteVariableAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    protected void execute(List<Entity> selection) {
-        List<VariableLink> variableLinks = getArguments().getVarLinksList("variables");
+    protected void execute(Entity entity) {
+        List<VariableLink> variableLinks = getArguments().getVarLinksList("variables",this);
         for (VariableLink link : variableLinks) {
-            System.out.println("delete link " + link);
             getPlot().getWorldVariables().removeVariable(link);
         }
     }

@@ -18,5 +18,32 @@
 
 package mcchickenstudio.creative.coding.blocks.actions.variableactions.list;
 
-public class RemoveByIdFromListAction {
+import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.ActionType;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
+import mcchickenstudio.creative.coding.blocks.actions.variableactions.VariableAction;
+import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import mcchickenstudio.creative.coding.variables.VariableLink;
+import org.bukkit.entity.Entity;
+
+import java.util.List;
+
+public class RemoveByIdFromListAction extends VariableAction {
+    public RemoveByIdFromListAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
+    }
+
+    @Override
+    protected void execute(Entity entity) {
+        VariableLink variable = getArguments().getVariableLink("variable",this);
+        List<Object> elements = getArguments().getList("variable",this);
+        int index = getArguments().getValue("index",1,this);
+        elements.remove(index-1);
+        setVarValue(variable,elements);
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return ActionType.VAR_REMOVE_BY_ID_FROM_LIST;
+    }
 }

@@ -19,87 +19,19 @@
 package mcchickenstudio.creative.coding.blocks.actions.variableactions;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import mcchickenstudio.creative.coding.variables.ValueType;
-import mcchickenstudio.creative.coding.variables.VariableLink;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.List;
 
 public abstract class VariableAction extends Action {
 
-    public VariableAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public VariableAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
     public ActionCategory getActionCategory() {
         return ActionCategory.VARIABLE_ACTION;
-    }
-
-    protected void setVarValue(VariableLink link, Object value) {
-        if (link != null) {
-            ValueType type = ValueType.getByObject(value);
-            if (type == null) {
-                type = ValueType.TEXT;
-            }
-            getPlot().getWorldVariables().setVariableValue(link, type, value, getExecutor());
-        }
-    }
-
-    protected Object parseItemValue(ItemStack item) {
-        if (!item.hasItemMeta()) return "";
-        if (item.getItemMeta().displayName() == null) return "";
-        String name = item.getItemMeta().getDisplayName();
-        switch(item.getType()) {
-            case SLIME_BALL:
-                return ChatColor.stripColor(name);
-            case BOOK:
-                return name;
-            case CLOCK:
-                return ChatColor.stripColor(name);
-            case MAGMA_CREAM:
-                ItemMeta meta = item.getItemMeta();
-                List<String> lore = meta.getLore();
-                VariableLink.VariableType type = VariableLink.VariableType.LOCAL;
-                if (lore != null && !lore.isEmpty()) {
-                    String loreLine = lore.get(0);
-                    if (loreLine.equals("oc.lang.items.developer.variable.saved")) {
-                        type = VariableLink.VariableType.SAVED;
-                    } else if (loreLine.equals("oc.lang.items.developer.variable.global")) {
-                        type = VariableLink.VariableType.GLOBAL;
-                    }
-                }
-                VariableLink link = new VariableLink(ChatColor.stripColor(name),type,getExecutor());
-                Object variableValue = getPlot().getWorldVariables().getVariableValue(link);
-                if (variableValue != null) {
-                    return variableValue;
-                }
-                return link;
-            case PAPER:
-                String locationString = ChatColor.stripColor(name);
-                String[] locCoords = locationString.split(" ");
-                double x,y,z;
-                float yaw,pitch;
-                if (locCoords.length == 5) {
-                    try {
-                        x = Double.parseDouble(locCoords[0]);
-                        y = Double.parseDouble(locCoords[1]);
-                        z = Double.parseDouble(locCoords[2]);
-                        yaw = Float.parseFloat(locCoords[3]);
-                        pitch = Float.parseFloat(locCoords[4]);
-                        return new Location(getExecutor().getPlot().world,x,y,z,yaw,pitch);
-                    } catch (Exception error) {
-                        return getExecutor().getPlot().world.getSpawnLocation();
-                    }
-                }
-            default:
-                return "";
-        }
     }
 }

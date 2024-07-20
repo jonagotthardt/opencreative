@@ -19,32 +19,30 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.inventory;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
 public class SetHotBarAction extends PlayerAction {
-    public SetHotBarAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetHotBarAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    protected void execute(List<Entity> selection) {
-        List<ItemStack> items = getArguments().getItemList("items");
-        boolean replaceWithAir = getArguments().getValue("replace-with-air",false);
-        for (Player player : getPlayers(selection)) {
-            for (byte slot = 0; slot < 9; slot++) {
-                if (slot == items.size()) {
-                    return;
-                }
-                if (replaceWithAir || !items.get(slot).isEmpty()) {
-                    player.getInventory().setItem(slot,items.get(slot));
-                }
+    public void executePlayer(Player player) {
+        List<ItemStack> items = getArguments().getItemList("items",this);
+        boolean replaceWithAir = getArguments().getValue("replace-with-air",false,this);
+        for (byte slot = 0; slot < 9; slot++) {
+            if (slot == items.size()) {
+                return;
+            }
+            if (replaceWithAir || !items.get(slot).isEmpty()) {
+                player.getInventory().setItem(slot,items.get(slot));
             }
         }
     }

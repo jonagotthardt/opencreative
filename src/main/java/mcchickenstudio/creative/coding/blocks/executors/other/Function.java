@@ -25,8 +25,15 @@ import mcchickenstudio.creative.plots.Plot;
 
 public class Function extends Executor {
 
-    public Function(Plot plot, int x, int y, int z) {
+    private final String name;
+
+    public Function(Plot plot, int x, int y, int z, String name) {
         super(plot, x, y, z);
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override

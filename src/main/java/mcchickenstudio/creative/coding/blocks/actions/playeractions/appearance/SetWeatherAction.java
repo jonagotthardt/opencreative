@@ -19,27 +19,23 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.appearance;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.WeatherType;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class SetWeatherAction extends PlayerAction {
-    public SetWeatherAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetWeatherAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        float weatherFloat = getArguments().getValue("weather",1.0f);
-        WeatherType weather = (weatherFloat == 2 ? WeatherType.DOWNFALL : WeatherType.CLEAR);
-        for (Player player : getPlayers(selection)) {
-            player.setPlayerWeather(weather);
-        }
+    public void executePlayer(Player player) {
+        String weatherString = getArguments().getValue("weather", "clean",this);
+        WeatherType weather = (weatherString.equals("storm") ? WeatherType.DOWNFALL : WeatherType.CLEAR);
+        player.setPlayerWeather(weather);
     }
 
     @Override

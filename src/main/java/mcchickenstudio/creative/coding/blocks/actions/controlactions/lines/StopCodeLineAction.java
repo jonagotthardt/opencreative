@@ -19,20 +19,21 @@
 package mcchickenstudio.creative.coding.blocks.actions.controlactions.lines;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
-import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
+import mcchickenstudio.creative.coding.blocks.actions.controlactions.ControlAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
 
-import java.util.List;
-
-public class StopCodeLineAction extends PlayerAction {
-    public StopCodeLineAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+public class StopCodeLineAction extends ControlAction {
+    public StopCodeLineAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    protected void execute(List<Entity> selection) {}
+    protected void execute(Entity entity) {
+        getHandler().getParentActionHandler().removeAllActions();
+    }
 
     @Override
     public ActionType getActionType() {

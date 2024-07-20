@@ -18,12 +18,14 @@
 
 package mcchickenstudio.creative.coding.blocks.actions;
 
+import mcchickenstudio.creative.coding.arguments.Argument;
 import mcchickenstudio.creative.coding.arguments.Arguments;
-import mcchickenstudio.creative.coding.blocks.events.EventVariables;
+import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.player.fighting.MobDamagesPlayerEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamagesMobEvent;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import mcchickenstudio.creative.coding.blocks.executors.player.fighting.PlayerDamagesMobExecutor;
-import mcchickenstudio.creative.coding.blocks.executors.player.world.ChatExecutor;
+import mcchickenstudio.creative.coding.variables.ValueType;
+import mcchickenstudio.creative.coding.variables.VariableLink;
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -32,6 +34,7 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
+import static mcchickenstudio.creative.coding.arguments.Argument.parseEntity;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugAction;
 
 /**
@@ -44,8 +47,12 @@ import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugAction;
 public abstract class Action {
 
     private final Executor executor;
+    private final Target target;
     private final int x;
-    private List<Entity> entities;
+    protected Entity entity;
+
+    protected CreativeEvent event;
+    protected ActionsHandler handler;
 
     protected final Arguments arguments;
     protected final String EMPTY_STRING = ChatColor.translateAlternateColorCodes('&',"&f");
@@ -56,23 +63,26 @@ public abstract class Action {
      * @param x X from Action's block location in developers plot.
      * @param args List of arguments for action.
      */
-    public Action(Executor executor, int x, Arguments args) {
+    public Action(Executor executor, Target target, int x, Arguments args) {
         this.executor = executor;
+        this.target = target;
         this.x = x;
         this.arguments = args;
     }
 
-    public void run(List<Entity> selection) {
-        this.entities = selection;
+    public void prepareAndExecute(ActionsHandler handler) {
+        this.handler = handler;
+        this.event = handler.getEvent();
         sendCodingDebugAction(this);
-        for (Entity entity : selection) {
+        for (Entity entity : getTargets()) {
             if (!getActionType().isSelectionMustBeInWorld() || entity.getWorld() == getPlot().world) {
-                execute(selection);
+                this.entity = entity;
+                execute(entity);
             }
         }
     }
 
-    protected abstract void execute(List<Entity> selection);
+    protected abstract void execute(Entity entity);
     public abstract ActionType getActionType();
     public abstract ActionCategory getActionCategory();
 
@@ -88,38 +98,11 @@ public abstract class Action {
         return x;
     }
 
-    //FIXME: Replace it
-    protected String parseEntityPlaceholders(String text, Entity entity) {
-        Plot plot = getExecutor().getPlot();
-        String newText = text;
-        newText = text.replace("%player%",entity.getName())
-                .replace("%entity%",entity.getName())
-                .replace("%plot_online%",String.valueOf(plot.getOnline()))
-                .replace("%plot_name%",plot.getPlotName())
-                .replace("%plot_description%",plot.getPlotDescription());
-        if (executor instanceof PlayerDamagesMobExecutor) {
-            PlayerDamagesMobEvent event = (PlayerDamagesMobEvent) executor.getEvent();
-            newText = newText.replace("%damager%",event.getDamager().getName())
-                    .replace("%damage%",String.valueOf(event.getDamage()));
-        } else if (executor instanceof ChatExecutor) {
-            newText = newText.replace("%message%",(String) getExecutor().getVarValue(EventVariables.Variable.MESSAGE));
-        }
-        return newText;
-    }
-
-    protected String parseColors(String text) {
-        return ChatColor.translateAlternateColorCodes('&',text);
-    }
-
-    protected String parseText(String text, Entity entity) {
-        return parseColors(parseEntityPlaceholders(text,entity)).replace("\\n","\n");
-    }
-
     protected Set<Entity> getEntitiesByNameOrUUID(String text) {
         Set<Entity> entities = new HashSet<>();
         if (getWorld() == null) return entities;
         for (Entity entity : executor.getPlot().world.getEntities()) {
-            if (entity.getName().equalsIgnoreCase(text) || entity.getUniqueId().equals(text)) {
+            if (entity.getName().equalsIgnoreCase(text) || entity.getUniqueId().equals(UUID.fromString(text))) {
                 entities.add(entity);
             }
         }
@@ -130,24 +113,98 @@ public abstract class Action {
         Set<Player> players = new HashSet<>();
         if (getWorld() == null) return players;
         for (Player player : getWorld().getPlayers()) {
-            if (player.getName().equalsIgnoreCase(text) || player.getUniqueId().equals(text)) {
+            if (player.getName().equalsIgnoreCase(text) || player.getUniqueId().equals(UUID.fromString(text))) {
                 players.add(player);
             }
         }
         return players;
     }
 
-    protected Plot getPlot() {
-        if (executor != null) {
-            return executor.getPlot();
-        }
-        return null;
+    protected World getWorld() {
+        return getPlot().world;
     }
 
-    protected World getWorld() {
-        if (getPlot() != null) {
-            return getPlot().world;
-        }
-        return null;
+    protected Plot getPlot() {
+        return executor.getPlot();
     }
+
+    public Entity getEntity() {
+        return entity;
+    }
+
+    public CreativeEvent getEvent() {
+        return event;
+    }
+
+    public ActionsHandler getHandler() {
+        return handler;
+    }
+
+    public Target getTarget() {
+        return target;
+    }
+
+    protected List<Entity> getTargets() {
+        List<Entity> entities = new ArrayList<>();
+        List<Entity> eventEntities = executor.getEvent().getSelection();
+        switch (target) {
+            case RANDOM_PLAYER -> {
+                Player randomPlayer = null;
+                List<Player> playerList = this.getExecutor().getPlot().getPlayers();
+                if (!playerList.isEmpty()) {
+                    Random r = new Random();
+                    int i = r.nextInt(playerList.size());
+                    randomPlayer = playerList.get(i);
+                }
+                entities.add(randomPlayer);
+            }
+            case ALL_PLAYERS -> {
+                List<Player> playerList = this.getExecutor().getPlot().getPlayers();
+                if (!playerList.isEmpty()) {
+                    entities.addAll(playerList);
+                }
+            }
+            case KILLER -> {
+                Entity killer = null;
+                if (executor.getEvent() instanceof PlayerDamagesMobEvent mobEvent) {
+                    killer = mobEvent.getDamager();
+                } else if (executor.getEvent() instanceof MobDamagesPlayerEvent playerEvent) {
+                    killer = playerEvent.getDamager();
+                }
+                if (killer != null) {
+                    entities.add(killer);
+                }
+            }
+            case VICTIM -> {
+                Entity victim = null;
+                if (executor.getEvent() instanceof PlayerDamagesMobEvent mobEvent) {
+                    victim = mobEvent.getVictim();
+                } else if (executor.getEvent() instanceof MobDamagesPlayerEvent playerEvent) {
+                    victim = playerEvent.getVictim();
+                }
+                if (victim != null) {
+                    entities.add(victim);
+                }
+            }
+            default -> entities.addAll(eventEntities);
+        }
+        return entities;
+    }
+
+    protected void setVarValue(VariableLink link, Object value) {
+        if (link != null) {
+            link.setName(parseEntity(link.getName(),this));
+            link.setHandler(getHandler().getMainActionHandler());
+            ValueType type = ValueType.getByObject(value);
+            if (type == null) {
+                type = ValueType.TEXT;
+            }
+            getPlot().getWorldVariables().setVariableValue(link, type, value, getHandler().getMainActionHandler());
+        }
+    }
+
+    public List<Argument> getArgumentsList() {
+        return getArguments().getArgumentList();
+    }
+
 }

@@ -20,11 +20,10 @@ package mcchickenstudio.creative.utils;
 
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.Random;
@@ -107,8 +106,8 @@ public class WorldUtils {
             player.teleport(world.getSpawnLocation());
             clearPlayer(player);
             player.sendTitle(getLocaleMessage("creating-world.welcome-title",player),getLocaleMessage("creating-world.welcome-subtitle",player),15,180,45);
-            player.playSound(player.getLocation(), Sound.valueOf("UI_TOAST_CHALLENGE_COMPLETE"),100,2);
-            player.sendMessage(getLocaleMessage("creating-world.welcome"));
+            player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE,100,0.1f);
+            player.sendMessage(getLocaleMessage("creating-world.welcome",player));
             player.setGameMode(GameMode.CREATIVE);
             ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
             player.getInventory().setItem(8,worldSettingsItem);
@@ -159,170 +158,17 @@ public class WorldUtils {
     }
 
     /**
-     Returns boolean if entity is in "Other" category. For example: armor stand, fireball, arrow.
-     **/
-    public static boolean isEntityOther(EntityType entityType) {
-        switch (entityType) {
-            case EGG:
-            case ENDER_PEARL:
-            case END_CRYSTAL:
-            case EXPERIENCE_ORB:
-            case EYE_OF_ENDER:
-            case ARROW:
-            case EXPERIENCE_BOTTLE:
-            case AREA_EFFECT_CLOUD:
-            case SPECTRAL_ARROW:
-            case BOAT:
-            case MINECART:
-            case COMMAND_BLOCK_MINECART:
-            case FIREBALL:
-            case WITHER_SKULL:
-            case CHEST_MINECART:
-            case CHEST_BOAT:
-            case FURNACE_MINECART:
-            case HOPPER_MINECART:
-            case SHULKER_BULLET:
-            case FIREWORK_ROCKET:
-            case FISHING_BOBBER:
-            case TNT_MINECART:
-            case SPAWNER_MINECART:
-            case FALLING_BLOCK:
-            case DRAGON_FIREBALL:
-            case ARMOR_STAND:
-            case TNT:
-                return true;
-        }
-        return false;
-    }
-
-    /**
-     Returns boolean if entity is in "Mob" category. It contains friendly and hostile mobs.
-     **/
-    public static boolean isEntityMob(EntityType entityType) {
-        switch (entityType) {
-            case PIG:
-            case PIGLIN:
-            case PIGLIN_BRUTE:
-            case ZOMBIFIED_PIGLIN:
-            case ELDER_GUARDIAN:
-            case GUARDIAN:
-            case ZOGLIN:
-            case ZOMBIE_VILLAGER:
-            case ZOMBIE:
-            case ZOMBIE_HORSE:
-            case SKELETON:
-            case SKELETON_HORSE:
-            case WITHER_SKELETON:
-            case WITHER:
-            case SHULKER:
-            case WANDERING_TRADER:
-            case WOLF:
-            case OCELOT:
-            case CAT:
-            case BAT:
-            case SPIDER:
-            case CAVE_SPIDER:
-            case VINDICATOR:
-            case ENDER_DRAGON:
-            case ENDERMAN:
-            case ENDERMITE:
-            case SILVERFISH:
-            case SNOW_GOLEM:
-            case IRON_GOLEM:
-            case PUFFERFISH:
-            case TROPICAL_FISH:
-            case FOX:
-            case VEX:
-            case VILLAGER:
-            case RAVAGER:
-            case EVOKER:
-            case EVOKER_FANGS:
-            case BLAZE:
-            case HOGLIN:
-            case HORSE:
-            case SLIME:
-            case STRAY:
-            case SQUID:
-            case SALMON:
-            case SHEEP:
-            case STRIDER:
-            case COW:
-            case MOOSHROOM:
-            case WITCH:
-            case DROWNED:
-            case PANDA:
-            case PARROT:
-            case PILLAGER:
-            case POLAR_BEAR:
-            case CHICKEN:
-            case CREEPER:
-            case GHAST:
-            case GIANT:
-            case MAGMA_CUBE:
-            case PHANTOM:
-            case DONKEY:
-            case DOLPHIN:
-            case TURTLE:
-            case ILLUSIONER:
-            case RABBIT:
-                return true;
-        }
-        return false;
-    }
-
-    /**
      Returns boolean if entity is hostile mob.
      **/
     public static boolean isEntityHostile(EntityType entityType) {
-        switch (entityType) {
-            case PIGLIN:
-            case PIGLIN_BRUTE:
-            case ZOMBIFIED_PIGLIN:
-            case ELDER_GUARDIAN:
-            case GUARDIAN:
-            case ZOGLIN:
-            case ZOMBIE_VILLAGER:
-            case ZOMBIE:
-            case ZOMBIE_HORSE:
-            case SKELETON:
-            case SKELETON_HORSE:
-            case WITHER_SKELETON:
-            case WITHER:
-            case SHULKER:
-            case SPIDER:
-            case CAVE_SPIDER:
-            case VINDICATOR:
-            case ENDER_DRAGON:
-            case ENDERMAN:
-            case ENDERMITE:
-            case SILVERFISH:
-            case VEX:
-            case RAVAGER:
-            case EVOKER:
-            case EVOKER_FANGS:
-            case BLAZE:
-            case HOGLIN:
-            case SLIME:
-            case STRAY:
-            case WITCH:
-            case DROWNED:
-            case PILLAGER:
-            case CREEPER:
-            case GHAST:
-            case GIANT:
-            case MAGMA_CUBE:
-            case PHANTOM:
-            case ILLUSIONER:
-                return true;
-        }
-        return false;
-    }
-
-    public static String getSignText(Block block, byte line) {
-        if (!block.getType().toString().contains("SIGN")) return "";
-        Sign sign = (Sign) block.getState();
-        if (line < 1 || line > sign.lines().size()) return "";
-        return sign.getLine(line-1);
+        return switch (entityType) {
+            case PIGLIN, PIGLIN_BRUTE, ZOMBIFIED_PIGLIN, ELDER_GUARDIAN, GUARDIAN, ZOGLIN, ZOMBIE_VILLAGER, ZOMBIE,
+                 ZOMBIE_HORSE, SKELETON, SKELETON_HORSE, WITHER_SKELETON, WITHER, SHULKER, SPIDER, CAVE_SPIDER,
+                 VINDICATOR, ENDER_DRAGON, ENDERMAN, ENDERMITE, SILVERFISH, VEX, RAVAGER, EVOKER, EVOKER_FANGS, BLAZE,
+                 HOGLIN, SLIME, STRAY, WITCH, DROWNED, PILLAGER, CREEPER, GHAST, GIANT, MAGMA_CUBE, PHANTOM,
+                 ILLUSIONER -> true;
+            default -> false;
+        };
     }
 
 }
@@ -330,7 +176,7 @@ public class WorldUtils {
 class EmptyChunkGenerator extends ChunkGenerator {
 
     @Override
-    public ChunkGenerator.ChunkData generateChunkData(World world, Random random, int x, int z, BiomeGrid biome) {
+    public ChunkGenerator.@NotNull ChunkData generateChunkData(@NotNull World world, @NotNull Random random, int x, int z, @NotNull BiomeGrid biome) {
         return createChunkData(world);
     }
 }
@@ -338,7 +184,7 @@ class EmptyChunkGenerator extends ChunkGenerator {
 class WaterChunkGenerator extends ChunkGenerator {
 
     @Override
-    public ChunkGenerator.ChunkData generateChunkData(World world, Random random, int x, int z, BiomeGrid biome) {
+    public ChunkGenerator.@NotNull ChunkData generateChunkData(@NotNull World world, @NotNull Random random, int x, int z, @NotNull BiomeGrid biome) {
         ChunkData chunkData = createChunkData(world);
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 16; j++) {

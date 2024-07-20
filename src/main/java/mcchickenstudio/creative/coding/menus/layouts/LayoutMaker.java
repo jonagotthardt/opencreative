@@ -62,7 +62,7 @@ public class LayoutMaker extends Layout {
                         int remainingSlots = actionType.getArgumentsSlots().length-1;
                         byte i = 2;
                         for (byte slot : getCentredSlots((byte) remainingSlots,(byte) 4)) {
-                            if (remainingSlots > 2) {
+                            if (remainingSlots > 3) {
                                 setArgSlot(i,slot);
                             } else {
                                 setArgSlotHorizontal(i,slot);

@@ -19,28 +19,24 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.inventory;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
-
 public class SetItemCooldownAction extends PlayerAction {
-    public SetItemCooldownAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetItemCooldownAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    protected void execute(List<Entity> selection) {
-        ItemStack item = getArguments().getValue("item",new ItemStack(Material.SHIELD));
-        int ticks = getArguments().getValue("cooldown",100);
-        for (Player player : getPlayers(selection)) {
-            player.setCooldown(item.getType(),ticks);
-        }
+    public void executePlayer(Player player) {
+        ItemStack item = getArguments().getValue("item",new ItemStack(Material.SHIELD),this);
+        int ticks = getArguments().getValue("cooldown",100,this);
+        player.setCooldown(item.getType(),ticks);
     }
 
     @Override

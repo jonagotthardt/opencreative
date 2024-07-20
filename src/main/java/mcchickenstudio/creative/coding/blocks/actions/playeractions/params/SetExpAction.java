@@ -19,29 +19,26 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.params;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class SetExpAction extends PlayerAction {
-    public SetExpAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetExpAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        boolean add = getArguments().getValue("add",false);
-        float exp = getArguments().getValue("exp",0.0f);
-        for (Player player : getPlayers(selection)) {
-            if (!add) {
-                player.setExp(exp);
-            } else {
-                player.setExp(player.getExp()+exp);
-            }
+    public void executePlayer(Player player) {
+        boolean add = getArguments().getValue("add",false,this);
+        float exp = getArguments().getValue("exp",0.0f,this);
+
+        if (!add) {
+            player.setExp(exp);
+        } else {
+            player.setExp(player.getExp()+exp);
         }
     }
 

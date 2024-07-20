@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.conditions.playerconditions;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.conditions.Condition;
@@ -38,9 +39,19 @@ public abstract class PlayerCondition extends Condition {
      * @param x        X from Action's block location in developers plot.
      * @param args     List of arguments for action.
      */
-    public PlayerCondition(Executor executor, int x, Arguments args, List<Action> actions) {
-        super(executor, x, args, actions);
+    public PlayerCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
+        super(executor, target, x, args, actions);
     }
+
+    @Override
+    public final boolean check(Entity entity) {
+        if (entity instanceof Player player) {
+            return checkPlayer(player);
+        }
+        return false;
+    }
+
+    public abstract boolean checkPlayer(Player player);
 
     public ActionCategory getActionCategory() {
         return ActionCategory.PLAYER_CONDITION;

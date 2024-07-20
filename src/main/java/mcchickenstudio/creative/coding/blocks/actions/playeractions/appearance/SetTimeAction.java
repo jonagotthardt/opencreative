@@ -19,25 +19,22 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.appearance;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class SetTimeAction extends PlayerAction {
-    public SetTimeAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetTimeAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        float time = getArguments().getValue("time",6f);
-        for (Player player : getPlayers(selection)) {
-            player.setPlayerTime((long) (time*1000),false);
-        }
+    public void executePlayer(Player player) {
+        float time = getArguments().getValue("time",6f,this);
+        player.setPlayerTime((long) (time*1000),false);
+
     }
 
     @Override

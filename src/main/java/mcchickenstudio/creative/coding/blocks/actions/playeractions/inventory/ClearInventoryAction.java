@@ -19,24 +19,20 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.inventory;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class ClearInventoryAction extends PlayerAction {
-    public ClearInventoryAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public ClearInventoryAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        for (Entity entity : selection) {
-            ((Player) entity).getInventory().clear();
-        }
+    public void executePlayer(Player player) {
+        player.getInventory().clear();
     }
 
     @Override

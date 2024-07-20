@@ -40,7 +40,7 @@ public abstract class AbstractListMenu extends AbstractMenu {
     protected Inventory inventory;
     protected byte currentPage;
 
-    protected final List<Object> elements = getElements();
+    protected final List<Object> elements = new ArrayList<>();
 
     protected byte previousPageButtonSlot = 47;
     protected byte nextPageButtonSlot = 53;
@@ -58,6 +58,7 @@ public abstract class AbstractListMenu extends AbstractMenu {
 
     @Override
     public void fillItems(Player player) {
+        elements.addAll(getElements());
         fillDecorationItems();
         fillElements(getCurrentPage());
         fillArrowsItems(getCurrentPage());
@@ -92,10 +93,14 @@ public abstract class AbstractListMenu extends AbstractMenu {
     protected void fillElements(byte page) {
         fillEmpty();
         byte slot = 0;
-        for (Object object : dividePagesByElements(elements).get(page-1)) {
-            setItem(itemsSlots[slot], getElementIcon(object));
-            updateSlot(itemsSlots[slot]);
-            slot++;
+        if (elements.isEmpty()) {
+            setItem(noElementsPageButtonSlot,getNoElementsButton());
+        } else {
+            for (Object object : dividePagesByElements(elements).get(page-1)) {
+                setItem(itemsSlots[slot], getElementIcon(object));
+                updateSlot(itemsSlots[slot]);
+                slot++;
+            }
         }
     }
 
@@ -130,6 +135,7 @@ public abstract class AbstractListMenu extends AbstractMenu {
 
         byte pageSize = (byte) itemsSlots.length;
         byte pageCount = countPages(elements);
+
         // For pages
         for (int i = 0; i < pageCount; i++) {
 
@@ -155,9 +161,9 @@ public abstract class AbstractListMenu extends AbstractMenu {
             event.setCancelled(true);
             return;
         }
-        if (isCharmsBarClicked((byte) event.getSlot()) && !isEmpty(event.getCurrentItem())) {
+        if (isCharmsBarClicked((byte) event.getSlot()) && isEmpty(event.getCurrentItem()) && !event.getCurrentItem().equals(DECORATION_ITEM)) {
             onCharmsBarClick(event);
-        } else if (isElementClicked((byte) event.getSlot()) && !isEmpty(event.getCurrentItem())) {
+        } else if (isElementClicked((byte) event.getSlot()) && isEmpty(event.getCurrentItem())) {
             onElementClick(event);
         } else if (itemEquals(event.getCurrentItem(),getNextPageButton())) {
             ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ITEM_BOOK_PAGE_TURN,100f,1f);

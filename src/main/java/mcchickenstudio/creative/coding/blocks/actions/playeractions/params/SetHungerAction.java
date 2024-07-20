@@ -19,29 +19,25 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.params;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class SetHungerAction extends PlayerAction {
-    public SetHungerAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetHungerAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        boolean add = getArguments().getValue("add",false);
-        int hunger = getArguments().getValue("hunger",20);
-        for (Player player : getPlayers(selection)) {
-            if (add) {
-                hunger = hunger + player.getFoodLevel();
-            }
-            player.setFoodLevel(hunger);
+    public void executePlayer(Player player) {
+        boolean add = getArguments().getValue("add",false,this);
+        int hunger = getArguments().getValue("hunger",20,this);
+        if (add) {
+            hunger = hunger + player.getFoodLevel();
         }
+        player.setFoodLevel(hunger);
     }
 
     @Override

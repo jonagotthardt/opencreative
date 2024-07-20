@@ -19,29 +19,25 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.params;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class SetExpLevelAction extends PlayerAction {
-    public SetExpLevelAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetExpLevelAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        boolean add = getArguments().getValue("add",false);
-        int level = getArguments().getValue("level",0);
-        for (Player player : getPlayers(selection)) {
-            if (!add) {
-                player.setLevel(level);
-            } else {
-                player.setLevel(player.getLevel()+level);
-            }
+    public void executePlayer(Player player) {
+        boolean add = getArguments().getValue("add",false,this);
+        int level = getArguments().getValue("level",0,this);
+        if (!add) {
+            player.setLevel(level);
+        } else {
+            player.setLevel(player.getLevel()+level);
         }
     }
 

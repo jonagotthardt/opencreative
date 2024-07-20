@@ -19,11 +19,11 @@
 package mcchickenstudio.creative.coding.blocks.conditions.playerconditions.inventory;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -31,21 +31,19 @@ import java.util.List;
 
 public class HasItemCooldownCondition extends PlayerCondition {
 
-    public HasItemCooldownCondition(Executor executor, int x, Arguments args, List<Action> actions) {
-        super(executor, x, args, actions);
+    public HasItemCooldownCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
+        super(executor, target, x, args, actions);
     }
 
     @Override
-    public boolean check(List<Entity> selection) {
+    public boolean checkPlayer(Player player) {
+        List<ItemStack> items = getArguments().getItemList("items",this);
         boolean check = false;
-        List<ItemStack> items = getArguments().getItemList("items");
-        for (Player player : getPlayers(selection)) {
-            for (ItemStack itemStack : items) {
-                if (player.hasCooldown(itemStack.getType())) {
-                    check = true;
-                } else {
-                    return false;
-                }
+        for (ItemStack itemStack : items) {
+            if (player.hasCooldown(itemStack.getType())) {
+                check = true;
+            } else {
+                return false;
             }
         }
         return check;

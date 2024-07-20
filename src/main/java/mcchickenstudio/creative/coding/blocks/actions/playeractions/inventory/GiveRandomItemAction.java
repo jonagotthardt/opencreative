@@ -19,10 +19,10 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.inventory;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -30,21 +30,19 @@ import java.util.List;
 import java.util.Random;
 
 public class GiveRandomItemAction extends PlayerAction {
-    public GiveRandomItemAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public GiveRandomItemAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    protected void execute(List<Entity> selection) {
-        List<ItemStack> items = getArguments().getItemList("items");
+    public void executePlayer(Player player) {
+        List<ItemStack> items = getArguments().getItemList("items",this);
         if (items.isEmpty()) return;
-        ItemStack randomItem = items.get(0);
+        ItemStack randomItem = items.getFirst();
         if (items.size() > 1) {
             randomItem = items.get(new Random().nextInt(items.size() - 1));
         }
-        for (Player player : getPlayers(selection)) {
-            player.getInventory().addItem(randomItem);
-        }
+        player.getInventory().addItem(randomItem);
     }
 
     @Override

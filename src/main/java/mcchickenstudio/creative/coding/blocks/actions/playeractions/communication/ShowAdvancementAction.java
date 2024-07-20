@@ -19,32 +19,28 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.communication;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.utils.Advancement;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
-
 public class ShowAdvancementAction extends PlayerAction {
-    public ShowAdvancementAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public ShowAdvancementAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        ItemStack itemStack = getArguments().getValue("icon",new ItemStack(Material.DIAMOND));
-        byte style = getArguments().getValue("style",(byte) 1);
-        String title = getArguments().getValue("title","You got Advancement!");
-        String message = getArguments().getValue("message","Good job.");
+    public void executePlayer(Player player) {
+        ItemStack itemStack = getArguments().getValue("icon",new ItemStack(Material.DIAMOND),this);
+        byte style = getArguments().getValue("style",(byte) 1,this);
+        String title = getArguments().getValue("title","You got Advancement!",this);
+        String message = getArguments().getValue("message","Good job.",this);
         Advancement advancement = Advancement.make(itemStack, Advancement.AdvancementStyle.getById(style),title,message);
-        for (Player player : getPlayers(selection)) {
-            advancement.show(player);
-        }
+        advancement.show(player);
     }
 
     @Override

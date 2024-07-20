@@ -35,14 +35,15 @@ public class PlayerActionsMenu extends CodingBlockTypesMenu {
 
     @Override
     protected List<Object> getElements() {
-        if (currentCategory == null) currentCategory = MenusCategory.COMMUNICATION;
+        if (currentCategory == null) {
+            currentCategory = MenusCategory.COMMUNICATION;
+        }
         return new ArrayList<>(ActionType.getActionsByCategories(ActionCategory.PLAYER_ACTION,currentCategory));
     }
 
     @Override
     protected ItemStack getElementIcon(Object object) {
-        if (object instanceof ActionType) {
-            ActionType type = (ActionType) object;
+        if (object instanceof ActionType type) {
             return type.getIcon();
         } else {
             return new ItemStack(Material.AIR);

@@ -19,8 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.executors.player.interaction;
 
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
-import mcchickenstudio.creative.coding.blocks.events.EventVariables;
-import mcchickenstudio.creative.coding.blocks.events.player.interaction.DamageBlockEvent;
+import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.events.player.interaction.WorldInteractEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.blocks.executors.player.PlayerExecutor;
@@ -31,9 +30,8 @@ public class WorldInteractExecutor extends PlayerExecutor implements Cancellable
 
     @Override
     protected void setTempVars(CreativeEvent event) {
-        if (event instanceof WorldInteractEvent) {
-            WorldInteractEvent blockEvent = (WorldInteractEvent) event;
-            setVar(EventVariables.Variable.BLOCK, blockEvent.getClickedBlock());
+        if (event instanceof WorldInteractEvent blockEvent) {
+            setTempVar(EventValues.Variable.BLOCK, blockEvent.getClickedBlock());
         }
     }
 

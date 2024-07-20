@@ -41,8 +41,7 @@ public class PlayerEventsMenu extends CodingBlockTypesMenu {
 
     @Override
     protected ItemStack getElementIcon(Object object) {
-        if (object instanceof ExecutorType) {
-            ExecutorType type = (ExecutorType) object;
+        if (object instanceof ExecutorType type) {
             return type.getIcon();
         } else {
             return new ItemStack(Material.AIR);

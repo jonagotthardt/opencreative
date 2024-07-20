@@ -64,7 +64,7 @@ public class PlotFlags {
         private final String configPath;
         private final byte defaultValue;
         private final byte maxChoices;
-        private final GameRule gameRule;
+        private final GameRule<?> gameRule;
         private final Material material;
 
         PlotFlag(String configPath, Material icon, byte defaultValue, byte maxChoices) {
@@ -73,10 +73,9 @@ public class PlotFlags {
             this.maxChoices = maxChoices;
             this.gameRule = null;
             this.material = icon;
-
         }
 
-        PlotFlag(String configPath, Material icon, byte defaultValue, byte maxChoices, GameRule gameRule) {
+        PlotFlag(String configPath, Material icon, byte defaultValue, byte maxChoices, GameRule<?> gameRule) {
             this.configPath = configPath;
             this.defaultValue = defaultValue;
             this.maxChoices = maxChoices;
@@ -96,7 +95,7 @@ public class PlotFlags {
             return maxChoices;
         }
 
-        public GameRule getGameRule() { return gameRule; }
+        public GameRule<?> getGameRule() { return gameRule; }
 
         public Material getMaterial() {
             return material;
@@ -161,9 +160,7 @@ public class PlotFlags {
 
         for (int value = 1; value <= maxActions; value++) {
             int finalValue = value;
-            choicesActions.add(() -> {
-                FileUtils.setPlotConfigParameter(plot,flag.getConfigPath(),finalValue);
-            });
+            choicesActions.add(() -> FileUtils.setPlotConfigParameter(plot,flag.getConfigPath(),finalValue));
         }
 
         return choicesActions;

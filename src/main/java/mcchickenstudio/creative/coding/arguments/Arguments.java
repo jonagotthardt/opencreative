@@ -18,17 +18,23 @@
 
 package mcchickenstudio.creative.coding.arguments;
 
+import mcchickenstudio.creative.coding.blocks.actions.Action;
+import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import mcchickenstudio.creative.coding.variables.EventValueLink;
 import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.coding.variables.VariableLink;
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugNotFoundVariable;
@@ -40,8 +46,8 @@ public class Arguments {
     private final Executor executor;
     private final List<Argument> argumentList = new ArrayList<>();
 
-    private final static Pattern INT_PATTERN = Pattern.compile("^-?[0-9]*$");//"-?[1-9]+[0-9]*");
-    private final static Pattern FLOAT_PATTERN = Pattern.compile("^-?[0-9]*\\.?[0-9]+$");//-?[0-9]+\\.?[0-9]*");
+    private final static Pattern INT_PATTERN = Pattern.compile("^-?[0-9]*$");
+    private final static Pattern FLOAT_PATTERN = Pattern.compile("^-?[0-9]*\\.?[0-9]+$");
     private final static Pattern BOOLEAN_PATTERN = Pattern.compile("(?i)true|yes|t|y|1");
 
     public Arguments(Plot plot, Executor executor) {
@@ -93,7 +99,7 @@ public class Arguments {
                 yaw = (float) listSection.getDouble("yaw");
                 pitch = (float) listSection.getDouble("pitch");
                 return new Location(plot.world,x,y,z,yaw,pitch);
-            case VARIABLE:
+            case VARIABLE: {
                 if (listSection == null) {
                     return null;
                 }
@@ -103,7 +109,22 @@ public class Arguments {
                 if (varType == null) {
                     varType = VariableLink.VariableType.GLOBAL;
                 }
-                return new VariableLink(varName,varType,executor);
+                return new VariableLink(varName,varType);
+            }
+            case EVENT_VALUE: {
+                    if (listSection == null) {
+                        return null;
+                    }
+                    String typeString = listSection.getString("name");
+                    EventValues.Variable varType;
+                    if (typeString.isEmpty()) return null;
+                    try {
+                        varType = EventValues.Variable.valueOf(typeString);
+                    } catch (Exception e) {
+                        return null;
+                    }
+                    return new EventValueLink(varType,executor);
+            }
             case NUMBER:
                 if (INT_PATTERN.matcher(stringValue).matches()) {
                     return Integer.parseInt(stringValue);
@@ -111,8 +132,6 @@ public class Arguments {
                     return Float.parseFloat(stringValue);
                 }
                 return 0;
-            case TEXT:
-                return stringValue;
             case BOOLEAN:
                 return Boolean.parseBoolean(stringValue);
             case PARAMETER:
@@ -144,17 +163,34 @@ public class Arguments {
     }
 
     @SuppressWarnings("unchecked")
-    public final <T> List<T> getList(String path) {
+    public final <T> Map<T,T> getMap(String path, Action action) {
+        Map<T,T> map = new HashMap<>();
+        Argument arg = getArg(path);
+        if (arg != null) {
+            try {
+                if (arg.getType() == ValueType.VARIABLE) {
+                    return (Map<T,T>) arg.getValue(action);
+                }
+            } catch(ClassCastException e) {
+                return map;
+            }
+        }
+        sendCodingDebugVariable(plot,path,map);
+        return map;
+    }
+
+    @SuppressWarnings("unchecked")
+    public final <T> List<T> getList(String path, Action action) {
         List<T> list = new ArrayList<>();
         Argument arg = getArg(path);
         if (arg != null) {
             try {
                 if (arg.getType() == ValueType.VARIABLE) {
-                    return (List<T>) arg.getValue();
+                    return (List<T>) arg.getValue(action);
                 } else if (arg.isList()) {
-                    List<Argument> args = (List<Argument>) arg.getValue();
+                    List<Argument> args = (List<Argument>) arg.getValue(action);
                     for (Argument argument : args) {
-                        list.add((T) (argument.getValue()));
+                        list.add((T) (argument.getValue(action)));
                     }
                 }
             } catch(ClassCastException e) {
@@ -166,12 +202,12 @@ public class Arguments {
     }
 
     @SuppressWarnings("unchecked")
-    public final List<VariableLink> getVarLinksList(String path) {
+    public final List<VariableLink> getVarLinksList(String path, Action action) {
         List<VariableLink> list = new ArrayList<>();
         Argument arg = getArg(path);
         if (arg != null && arg.isList()) {
             try {
-                List<Argument> args = (List<Argument>) arg.getValue();
+                List<Argument> args = (List<Argument>) arg.getValue(action);
                 for (Argument argument : args) {
                     if (argument.value instanceof VariableLink) {
                         list.add((VariableLink) argument.value);
@@ -186,14 +222,14 @@ public class Arguments {
     }
 
     @SuppressWarnings("unchecked")
-    public final List<String> getTextList(String path) {
+    public final List<String> getTextList(String path, Action action) {
         List<String> list = new ArrayList<>();
         Argument arg = getArg(path);
         if (arg != null && arg.isList()) {
             try {
-                List<Argument> args = (List<Argument>) arg.getValue();
+                List<Argument> args = (List<Argument>) arg.getValue(action);
                 for (Argument textArg : args) {
-                    list.add(textArg.getValue().toString());
+                    list.add(Argument.parseEntity(textArg.getValue(action).toString(),action));
                 }
             } catch (ClassCastException e) {
                 return list;
@@ -204,14 +240,33 @@ public class Arguments {
     }
 
     @SuppressWarnings("unchecked")
-    public final List<ItemStack> getItemList(String path) {
+    public final List<Double> getNumbersList(String path, Action action) {
+        List<Double> list = new ArrayList<>();
+        Argument arg = getArg(path);
+        if (arg != null && arg.isList()) {
+            try {
+                List<Argument> args = (List<Argument>) arg.getValue(action);
+                for (Argument numberArg : args) {
+                    Object object = numberArg.getValue(action);
+                    list.add(parseObject(object,0.0d));
+                }
+            } catch (ClassCastException e) {
+                return list;
+            }
+        }
+        sendCodingDebugVariable(plot,path,list);
+        return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    public final List<ItemStack> getItemList(String path, Action action) {
         List<ItemStack> list = new ArrayList<>();
         Argument arg = getArg(path);
         if (arg != null && arg.isList()) {
             try {
-                List<Argument> args = (List<Argument>) arg.getValue();
+                List<Argument> args = (List<Argument>) arg.getValue(action);
                 for (Argument itemArg : args) {
-                    list.add((ItemStack) itemArg.getValue());
+                    list.add((ItemStack) itemArg.getValue(action));
                 }
             } catch (ClassCastException e) {
                 return list;
@@ -222,14 +277,14 @@ public class Arguments {
     }
 
     @SuppressWarnings("unchecked")
-    public final List<Location> getLocationList(String path) {
+    public final List<Location> getLocationList(String path, Action action) {
         List<Location> list = new ArrayList<>();
         Argument arg = getArg(path);
         if (arg != null && arg.isList()) {
             try {
-                List<Argument> args = (List<Argument>) arg.getValue();
+                List<Argument> args = (List<Argument>) arg.getValue(action);
                 for (Argument itemArg : args) {
-                    list.add((Location) itemArg.getValue());
+                    list.add((Location) itemArg.getValue(action));
                 }
             } catch (ClassCastException e) {
                 return list;
@@ -239,128 +294,188 @@ public class Arguments {
         return list;
     }
 
-    public VariableLink getVariableLink(String path) {
+    public VariableLink getVariableLink(String path, Action action) {
         Argument arg = getArg(path);
         if (arg == null) {
             sendCodingDebugNotFoundVariable(plot,path,null);
             return null;
         }
-        if (arg.value instanceof VariableLink) {
-            sendCodingDebugVariable(plot,path,arg.getValue());
-            return (VariableLink) arg.value;
+        if (arg.value instanceof VariableLink link) {
+            if (link.getVariableType() == VariableLink.VariableType.LOCAL) {
+                link.setHandler(action.getHandler().getMainActionHandler());
+            }
+            sendCodingDebugVariable(plot,path,link);
+            return link;
         }
         sendCodingDebugNotFoundVariable(plot,path,null);
         return null;
     }
 
-    public ItemStack getValue(String path, ItemStack defaultValue) {
+    public Material getValue(String path, Material defaultValue, Action action) {
         Argument arg = getArg(path);
         if (arg == null) {
             sendCodingDebugNotFoundVariable(plot,path,defaultValue);
             return defaultValue;
         }
-        if (arg.getValue() instanceof ItemStack) {
-            sendCodingDebugVariable(plot,path,arg.getValue());
-            return (ItemStack) arg.getValue();
+        if (arg.getValue(action) instanceof ItemStack item) {
+            sendCodingDebugVariable(plot,path,item.getType());
+            return item.getType();
+        }
+        if (arg.getValue(action) instanceof Block block) {
+            sendCodingDebugVariable(plot,path,block.getType());
+            return block.getType();
+        }
+        if (arg.getValue(action) instanceof Location location) {
+            sendCodingDebugVariable(plot,path,location.getBlock().getType());
+            return location.getBlock().getType();
         }
         sendCodingDebugNotFoundVariable(plot,path,defaultValue);
         return defaultValue;
     }
 
-    public boolean getValue(String path, boolean defaultValue) {
-        Argument arg = getArg(path);
-        boolean value = defaultValue;
-        if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path,defaultValue);
-        } else if (arg.getValue() instanceof Boolean) {
-            value = (boolean) arg.getValue();
-            sendCodingDebugVariable(plot,path,value);
-        } else if (arg.getValue() instanceof Integer) {
-            value = (getValue(path,(defaultValue ? 2 : 1)) > 1);
-            sendCodingDebugVariable(plot,path,value);
-        } else if (arg.getValue() instanceof Float) {
-            value = (getValue(path,(defaultValue ? 2f : 1f)) > 1f);
-            sendCodingDebugVariable(plot,path,value);
-        } else if (arg.getValue() instanceof Double) {
-            value = (getValue(path,(defaultValue ? 2d : 1d)) > 1d);
-            sendCodingDebugVariable(plot,path,value);
-        }
-        return value;
-    }
-
-    public byte getValue(String path, byte defaultValue) {
-        Argument arg = getArg(path);
-        byte value = defaultValue;
-        if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path,defaultValue);
-        } else {
-            value = parseObject(arg.getValue(),defaultValue);
-            sendCodingDebugVariable(plot,path,value);
-        }
-        return value;
-    }
-
-    public int getValue(String path, int defaultValue) {
-        Argument arg = getArg(path);
-        int value = defaultValue;
-        if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path,defaultValue);
-        } else if (arg.getValue() instanceof Integer) {
-            value = (int) arg.getValue();
-            sendCodingDebugVariable(plot,path,value);
-        } else if (arg.getValue() instanceof Float) {
-            value = Math.round((float) arg.getValue());
-            sendCodingDebugVariable(plot,path,value);
-        } else if (arg.getValue() instanceof Double) {
-            value = (int) Math.round((Double) arg.getValue());
-            sendCodingDebugVariable(plot,path,value);
-        }
-        return value;
-    }
-
-    public float getValue(String path, float defaultValue) {
-        Argument arg = getArg(path);
-        float value = defaultValue;
-        if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path,defaultValue);
-        } else {
-            value = parseObject(arg.getValue(),defaultValue);
-            sendCodingDebugVariable(plot,path,value);
-        }
-        return value;
-    }
-
-    public double getValue(String path, double defaultValue) {
-        Argument arg = getArg(path);
-        double value = defaultValue;
-        if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path,defaultValue);
-        } else if (arg.getValue() instanceof Integer || arg.getValue() instanceof Float || arg.getValue() instanceof Double) {
-            value = Double.parseDouble(String.valueOf(arg.getValue()));
-            sendCodingDebugVariable(plot,path,defaultValue);
-        }
-        return value;
-    }
-
-    public String getValue(String path, String defaultValue) {
+    public ItemStack getValue(String path, ItemStack defaultValue, Action action) {
         Argument arg = getArg(path);
         if (arg == null) {
             sendCodingDebugNotFoundVariable(plot,path,defaultValue);
             return defaultValue;
         }
-        sendCodingDebugVariable(plot,path,arg.getValue());
-        return arg.getValue().toString();
+        if (arg.getValue(action) instanceof ItemStack) {
+            sendCodingDebugVariable(plot,path,arg.getValue(action));
+            return (ItemStack) arg.getValue(action);
+        }
+        sendCodingDebugNotFoundVariable(plot,path,defaultValue);
+        return defaultValue;
     }
 
-    public Location getValue(String path, Location defaultValue) {
+    public boolean getValue(String path, boolean defaultValue, Action action) {
+        Argument arg = getArg(path);
+        boolean value = defaultValue;
+        if (arg == null) {
+            sendCodingDebugNotFoundVariable(plot,path,defaultValue);
+        } else if (arg.getValue(action) instanceof Boolean) {
+            value = (boolean) arg.getValue(action);
+            sendCodingDebugVariable(plot,path,value);
+        } else if (arg.getValue(action) instanceof Integer) {
+            value = (getValue(path,(defaultValue ? 2 : 1), action) > 1);
+            sendCodingDebugVariable(plot,path,value);
+        } else if (arg.getValue(action) instanceof Float) {
+            value = (getValue(path,(defaultValue ? 2f : 1f), action) > 1f);
+            sendCodingDebugVariable(plot,path,value);
+        } else if (arg.getValue(action) instanceof Double) {
+            value = (getValue(path,(defaultValue ? 2d : 1d), action) > 1d);
+            sendCodingDebugVariable(plot,path,value);
+        }
+        return value;
+    }
+
+    public Object getValue(String path, Action action) {
+        Argument arg = getArg(path);
+        Object value = "";
+        if (arg == null) {
+            sendCodingDebugNotFoundVariable(plot,path,value);
+        } else {
+            value = arg.getValue(action);
+            sendCodingDebugVariable(plot,path,value);
+        }
+        return value;
+    }
+
+    public byte getValue(String path, byte defaultValue, Action action) {
+        Argument arg = getArg(path);
+        byte value = defaultValue;
+        if (arg == null) {
+            sendCodingDebugNotFoundVariable(plot,path,defaultValue);
+        } else {
+            value = parseObject(arg.getValue(action),defaultValue);
+            sendCodingDebugVariable(plot,path,value);
+        }
+        return value;
+    }
+
+    public int getValue(String path, int defaultValue, Action action) {
+        Argument arg = getArg(path);
+        int value = defaultValue;
+        if (arg == null) {
+            sendCodingDebugNotFoundVariable(plot, path, defaultValue);
+        } else if (arg.getValue(action) instanceof Long l) {
+            value = l.intValue();
+            sendCodingDebugVariable(plot,path,value);
+        } else if (arg.getValue(action) instanceof Integer) {
+            value = (int) arg.getValue(action);
+            sendCodingDebugVariable(plot,path,value);
+        } else if (arg.getValue(action) instanceof Float) {
+            value = Math.round((float) arg.getValue(action));
+            sendCodingDebugVariable(plot,path,value);
+        } else if (arg.getValue(action) instanceof Double) {
+            value = (int) Math.round((Double) arg.getValue(action));
+            sendCodingDebugVariable(plot,path,value);
+        }
+        return value;
+    }
+
+    public float getValue(String path, float defaultValue, Action action) {
+        Argument arg = getArg(path);
+        float value = defaultValue;
+        if (arg == null) {
+            sendCodingDebugNotFoundVariable(plot,path,defaultValue);
+        } else {
+            value = parseObject(arg.getValue(action),defaultValue);
+            sendCodingDebugVariable(plot,path,value);
+        }
+        return value;
+    }
+
+    public double getValue(String path, double defaultValue, Action action) {
+        Argument arg = getArg(path);
+        double value = defaultValue;
+        if (arg == null) {
+            sendCodingDebugNotFoundVariable(plot, path, defaultValue);
+        } else if (arg.getValue(action) instanceof Float) {
+            value = (float) arg.getValue(action);
+            sendCodingDebugVariable(plot,path,value);
+        } else if (arg.getValue(action) instanceof Long || arg.getValue(action) instanceof Double) {
+            value = (double) arg.getValue(action);
+            sendCodingDebugVariable(plot,path,value);
+        } else if (arg.getValue(action) instanceof Integer) {
+            value = Double.parseDouble(String.valueOf(arg.getValue(action)));
+            sendCodingDebugVariable(plot,path,value);
+        }
+        return value;
+    }
+
+    public String getValue(String path, String defaultValue, Action action) {
+        Argument arg = getArg(path);
+        if (arg == null) {
+            sendCodingDebugNotFoundVariable(plot,path,defaultValue);
+            return defaultValue;
+        }
+        sendCodingDebugVariable(plot,path,arg.getValue(action));
+        return arg.getValue(action).toString();
+    }
+
+    public char getValue(String path, char defaultValue, Action action) {
+        Argument arg = getArg(path);
+        if (arg != null && arg.getValue(action) != null) {
+            String value = arg.getValue(action).toString();
+            if (value != null && !value.isEmpty()) {
+                sendCodingDebugVariable(plot,path,value.charAt(0));
+                return value.charAt(0);
+            }
+        }
+        sendCodingDebugNotFoundVariable(plot,path,defaultValue);
+        return defaultValue;
+    }
+
+    public Location getValue(String path, Location defaultValue, Action action) {
         Argument arg = getArg(path);
         Location locationValue = defaultValue;
         if (arg == null) {
             sendCodingDebugNotFoundVariable(plot,path,locationValue.getX()+" "+locationValue.getY()+" "+locationValue.getZ()+" "+locationValue.getYaw()+" "+locationValue.getPitch());
-        } else if (arg.getType() == ValueType.LOCATION && arg.getValue() instanceof Location) {
-            locationValue = (Location) arg.getValue();
+        } else if (arg.getValue(action) instanceof Location) {
+            locationValue = (Location) arg.getValue(action);
             sendCodingDebugVariable(plot,path,locationValue.getX()+" "+locationValue.getY()+" "+locationValue.getZ()+" "+locationValue.getYaw()+" "+locationValue.getPitch());
         }
+        locationValue.setWorld(plot.world);
         return locationValue;
     }
 
@@ -383,13 +498,21 @@ public class Arguments {
         if (object instanceof Integer || object instanceof Float || object instanceof Double) {
             value = Double.parseDouble(String.valueOf(object));
         }
+        if (object == null) {
+            return defaultValue;
+        } else if (object instanceof Float f) {
+            value = f;
+        } else if (object instanceof Long || object instanceof Double) {
+            value = (double) object;
+        } else if (object instanceof Integer) {
+            value = Double.parseDouble(String.valueOf(object));
+        }
         return value;
     }
 
     public byte parseObject(Object object, byte defaultValue) {
         byte value = defaultValue;
-        if (object instanceof VariableLink) {
-            VariableLink link = (VariableLink) object;
+        if (object instanceof VariableLink link) {
             return parseObject(getVariableValue(link),defaultValue);
         } else if (object instanceof Integer) {
             value = (byte) object;
@@ -399,5 +522,13 @@ public class Arguments {
             value = (byte) Math.round((Double) object);
         }
         return value;
+    }
+
+    public void setArgumentValue(String path, ValueType type, Object value) {
+        argumentList.add(new Argument(plot,type,path,value));
+    }
+
+    public List<Argument> getArgumentList() {
+        return argumentList;
     }
 }

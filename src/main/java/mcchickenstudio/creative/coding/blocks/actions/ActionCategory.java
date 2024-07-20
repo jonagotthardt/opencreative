@@ -27,12 +27,15 @@ public enum ActionCategory {
     PLAYER_ACTION(Material.COBBLESTONE, Material.STONE, ChatColor.GRAY),
     WORLD_ACTION(Material.NETHER_BRICKS, Material.NETHERRACK, ChatColor.RED),
     VARIABLE_ACTION(Material.IRON_BLOCK, Material.STONE, ChatColor.WHITE),
-    EXEC_FUNCTION_ACTION(Material.LAPIS_ORE, Material.LAPIS_ORE, ChatColor.AQUA),
+    LAUNCH_FUNCTION_ACTION(Material.LAPIS_ORE, Material.STONE, ChatColor.AQUA),
     CONTROL_ACTION(Material.COAL_BLOCK, Material.COAL_ORE, ChatColor.DARK_GRAY),
     PLAYER_CONDITION(Material.OAK_PLANKS, Material.PISTON, ChatColor.GOLD),
     VARIABLE_CONDITION(Material.OBSIDIAN, Material.PISTON, ChatColor.BLUE);
-    //ELSE_CONDITION(Material.END_STONE, ChatColor.YELLOW);
+    //HANDLER_ACTION(Material.DARK_PRISMARINE, Material.PISTON, ChatColor.GREEN),
+    //REPEAT_ACTION(Material.PRISMARINE, Material.PISTON, ChatColor.AQUA);
 
+
+    //ELSE_CONDITION(Material.END_STONE, ChatColor.YELLOW);
 
     private final Material block;
     private final Material additionalBlock;
@@ -51,6 +54,14 @@ public enum ActionCategory {
         return null;
     }
 
+    public boolean isMultiAction() {
+        return this.additionalBlock == Material.PISTON;
+    }
+
+    public boolean isCondition() {
+        return this == PLAYER_CONDITION || this == VARIABLE_CONDITION;
+    }
+
     public ChatColor getColor() {
         return color;
     }
@@ -61,5 +72,9 @@ public enum ActionCategory {
 
     public Material getAdditionalBlock() {
         return additionalBlock;
+    }
+
+    public Material getBlock() {
+        return block;
     }
 }

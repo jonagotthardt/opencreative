@@ -26,11 +26,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import mcchickenstudio.creative.utils.CooldownUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static mcchickenstudio.creative.commands.CommandAd.plugin;
+
 import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendWarningErrorMessage;
@@ -39,14 +40,23 @@ import static mcchickenstudio.creative.utils.MessageUtils.parsePAPI;
 
 public class CreativeChat implements CommandExecutor {
 
-    public static List<Player> creativeChatOff = new ArrayList<>();
+    public static final List<Player> creativeChatOff = new ArrayList<>();
+
+    private static boolean chatEnabled = true;
+
+    public static void setChatEnabled(boolean chatEnabled) {
+        CreativeChat.chatEnabled = chatEnabled;
+    }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = ((Player) sender);
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        if (sender instanceof Player player) {
             if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
                 player.sendMessage(getLocaleMessage("maintenance"));
+                return true;
+            }
+            if (!chatEnabled && !player.hasPermission("creative.creative-chat.bypass")) {
+                player.sendMessage(getLocaleMessage("creative.creative-chat.off"));
                 return true;
             }
             if (args.length > 0) {
@@ -62,7 +72,7 @@ public class CreativeChat implements CommandExecutor {
                         creativeChatOff.remove(player);
                         sender.sendMessage(getLocaleMessage("creative-chat.turned-on"));
                     }
-                    setCooldown(player, plugin.getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
+                    setCooldown(player, Main.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
                 } else {
                     if (creativeChatOff.contains(player)) {
                         sender.sendMessage(getLocaleMessage("creative-chat.on-usage"));
@@ -71,15 +81,15 @@ public class CreativeChat implements CommandExecutor {
                             sender.sendMessage(getLocaleMessage("creative-chat.cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.CREATIVE_CHAT))));
                             return true;
                         }
-                        setCooldown(player, plugin.getConfig().getInt("cooldowns.creative-chat"), CooldownUtils.CooldownType.CREATIVE_CHAT);
+                        setCooldown(player, Main.getPlugin().getConfig().getInt("cooldowns.creative-chat"), CooldownUtils.CooldownType.CREATIVE_CHAT);
                         Main.getPlugin().getLogger().info("[CREATIVE-CHAT] "+sender.getName()+": "+String.join(" ",args));
                         for (String executeCommand : Main.getPlugin().getConfig().getStringList("execute-console-commands.creative-chat")) {
                             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),parsePAPI(player,executeCommand.replace("%player%",player.getName()).replace("%message%",String.join(" ",args))));
                         }
                         for (Player p : Bukkit.getOnlinePlayers()) {
                             if (!(creativeChatOff.contains(p))) {
-                                if (plugin.getConfig().getString("messages.cc-chat") != null)
-                                    p.sendMessage(ChatColor.translateAlternateColorCodes('&',parsePAPI(Bukkit.getPlayer(sender.getName()),plugin.getConfig().getString("messages.cc-chat")).replace("%player%",sender.getName()).replace("%cc-prefix%",plugin.getConfig().getString("messages.cc-prefix")).replace("%message%",String.join(" ",args))));
+                                if (Main.getPlugin().getConfig().getString("messages.cc-chat") != null)
+                                    p.sendMessage(ChatColor.translateAlternateColorCodes('&',parsePAPI(Bukkit.getPlayer(sender.getName()),Main.getPlugin().getConfig().getString("messages.cc-chat")).replace("%player%",sender.getName()).replace("%cc-prefix%",Main.getPlugin().getConfig().getString("messages.cc-prefix")).replace("%message%",String.join(" ",args))));
                                 } else {
                                     sendWarningErrorMessage("Не найдено в конфиге значение messages.cc-prefix messages.cc-chat");
                                     return true;

@@ -19,28 +19,22 @@
 package mcchickenstudio.creative.coding.blocks.actions.variableactions.other;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.VariableAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.variables.VariableLink;
 import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
 
 public class SetVariableValueAction extends VariableAction {
-    public SetVariableValueAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetVariableValueAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    protected void execute(List<Entity> selection) {
-        VariableLink link = getArguments().getVariableLink("variable");
-        ItemStack item = getArguments().getValue("value", ItemStack.empty());
-        if (item == null || item.equals(ItemStack.empty())) {
-            return;
-        }
-        Object value = parseItemValue(item);
+    protected void execute(Entity entity) {
+        VariableLink link = getArguments().getVariableLink("variable",this);
+        Object value = getArguments().getValue("value",this);
         setVarValue(link,value);
     }
 

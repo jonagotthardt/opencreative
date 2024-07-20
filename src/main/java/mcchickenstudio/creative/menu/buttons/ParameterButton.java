@@ -19,8 +19,6 @@
 package mcchickenstudio.creative.menu.buttons;
 
 import mcchickenstudio.creative.utils.MessageUtils;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
@@ -49,10 +47,10 @@ public class ParameterButton {
         this.localizationPath = itemPath;
         materialList.addAll(materials);
         valueList.addAll(values);
-        if (currentChoice >= materialList.size() || currentChoice >= valueList.size()) {
+        if (currentChoice == materialList.size() || currentChoice == valueList.size()) {
             currentChoice = (byte) 1;
         }
-        if (currentChoice <= 0) {
+        if (currentChoice == 0) {
             currentChoice = (byte) 1;
         }
         for (byte i = 0; i < valueList.size(); i++) {

@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.conditions.playerconditions.blocks;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.PlayerCondition;
@@ -26,7 +27,6 @@ import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -34,33 +34,23 @@ import java.util.List;
 
 public class IsStandingOnBlockCondition extends PlayerCondition {
 
-    public IsStandingOnBlockCondition(Executor executor, int x, Arguments args, List<Action> actions) {
-        super(executor, x, args, actions);
+    public IsStandingOnBlockCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
+        super(executor, target, x, args, actions);
     }
 
     @Override
-    public boolean check(List<Entity> selection) {
-        boolean check = false;
-        List<ItemStack> blocks = getArguments().getItemList("blocks");
+    public boolean checkPlayer(Player player) {
+        List<ItemStack> blocks = getArguments().getItemList("blocks",this);
         if (blocks.isEmpty()) return false;
-        for (Player player : getPlayers(selection)) {
-            boolean isPlayerOnBlock = false;
-            Block block = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-            Material blockType = block.getType();
-
-            for (ItemStack checkBlock : blocks) {
-                if (blockType == checkBlock.getType()) {
-                    isPlayerOnBlock = true;
-                }
-            }
-
-            if (!isPlayerOnBlock) {
-                return false;
-            } else {
-                check = true;
+        boolean isPlayerOnBlock = false;
+        Block block = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
+        Material blockType = block.getType();
+        for (ItemStack checkBlock : blocks) {
+            if (blockType == checkBlock.getType()) {
+                isPlayerOnBlock = true;
             }
         }
-        return check;
+        return isPlayerOnBlock;
     }
 
     @Override

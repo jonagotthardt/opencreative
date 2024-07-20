@@ -19,29 +19,26 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.inventory;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class SetSlotAction extends PlayerAction {
-    public SetSlotAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetSlotAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    protected void execute(List<Entity> selection) {
-        int slot = getArguments().getValue("slot",1);
+    public void executePlayer(Player player) {
+        int slot = getArguments().getValue("slot",1,this);
         if (slot > 9 || slot < 1) {
             slot = 1;
         }
-        for (Player player : getPlayers(selection)) {
-            player.getInventory().setHeldItemSlot(slot-1);
-        }
+        player.getInventory().setHeldItemSlot(slot-1);
     }
+
 
     @Override
     public ActionType getActionType() {

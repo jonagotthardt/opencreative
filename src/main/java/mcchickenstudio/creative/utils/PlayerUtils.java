@@ -41,6 +41,7 @@ import java.util.*;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.MessageUtils.messageExists;
 
 public class PlayerUtils {
 
@@ -54,7 +55,7 @@ public class PlayerUtils {
         WORLD_VARIABLES_LIMIT("world.variables-limit"),
         PLAYER_WORLDS_AMOUNT_LIMIT("creating-world.limit");
 
-        private String path;
+        private final String path;
 
         PlayerLimit(String path) {
             this.path = path;
@@ -185,10 +186,7 @@ public class PlayerUtils {
         Map<String, Boolean> permissions = permissionAttachment.getPermissions();
         Map<String, Boolean> permissions2 = new HashMap<>(permissions);
 
-        Iterator<Map.Entry<String, Boolean>> iterator = permissions2.entrySet().iterator();
-        while(iterator.hasNext()) {
-            Map.Entry<String, Boolean> entry = iterator.next();
-
+        for (Map.Entry<String, Boolean> entry : permissions2.entrySet()) {
             String key = entry.getKey();
             permissionAttachment.unsetPermission(key);
         }
@@ -199,7 +197,6 @@ public class PlayerUtils {
      Clears player's settings: inventory, health, fire ticks, game mode.
      **/
     public static void clearPlayer(Player player) {
-
         PlayerUtils.clearBuildPermissions(player);
         player.closeInventory();
         player.getInventory().clear();
@@ -243,7 +240,7 @@ public class PlayerUtils {
      @param player specified player to teleport.
      **/
     public static void teleportToLobby(Player player) {
-        clearPlayer(player);
+
         String spawnWorld = Main.getPlugin().getConfig().getString("spawn.world");
         if (spawnWorld == null || spawnWorld.isEmpty()) {
             spawnWorld = "world";
@@ -252,6 +249,7 @@ public class PlayerUtils {
         if (lobbyWorld != null) {
             player.teleport(lobbyWorld.getSpawnLocation());
         }
+        clearPlayer(player);
 
         player.sendTitle(getLocaleMessage("lobby.title"), getLocaleMessage("lobby.subtitle"),20,60,20);
         player.sendMessage(getLocaleMessage("lobby.message"));
@@ -278,7 +276,7 @@ public class PlayerUtils {
             String path = "blocks." + content;
             if (content.isEmpty()) {
                 newLines.add(Component.text(""));
-            } else if (getLocaleMessage(path,false).equals(path)) {
+            } else if (!messageExists(path)) {
                 newLines.add(Component.text(content));
             } else {
                 newLines.add(Component.text(getLocaleMessage(path,false)));
@@ -308,7 +306,7 @@ public class PlayerUtils {
             String path = "blocks." + content;
             if (content.isEmpty()) {
                 newLines.add(Component.text(""));
-            } else if (getLocaleMessage(path,false).equals(path)) {
+            } else if (!messageExists(path)) {
                 newLines.add(Component.text(content));
             } else {
                 newLines.add(Component.text(getLocaleMessage(path,false)));
@@ -320,6 +318,12 @@ public class PlayerUtils {
                 player.sendSignChange(block.getLocation(), newLines);
             }
         }.runTaskLater(Main.getPlugin(),5L);
+    }
+
+    public static void spawnGlowingBlock(Player player, Location location) {
+        if (HookUtils.isProtocolLibEnabled) {
+            ProtocolLibUtils.spawnGlowingFallingBlock(player,location);
+        }
     }
 
 }

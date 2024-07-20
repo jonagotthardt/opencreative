@@ -19,29 +19,25 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.communication;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class ShowTitleAction extends PlayerAction {
-    public ShowTitleAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public ShowTitleAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public void execute(List<Entity> selection) {
-        String title = getArguments().getValue("title", EMPTY_STRING);
-        String subtitle = getArguments().getValue("subtitle", EMPTY_STRING);
-        int fadeIn = getArguments().getValue("fade-in",20);
-        int fadeOut = getArguments().getValue("stay",60);
-        int stay = getArguments().getValue("fade-out",10);
-        for (Entity entity : selection) {
-            ((Player) entity).sendTitle(title,subtitle,fadeIn,stay,fadeOut);
-        }
+    public void executePlayer(Player player) {
+        String title = getArguments().getValue("title", EMPTY_STRING,this);
+        String subtitle = getArguments().getValue("subtitle", EMPTY_STRING,this);
+        int fadeIn = getArguments().getValue("fade-in",20,this);
+        int fadeOut = getArguments().getValue("stay",60,this);
+        int stay = getArguments().getValue("fade-out",10,this);
+        player.sendTitle(title,subtitle,fadeIn,stay,fadeOut);
     }
 
     @Override

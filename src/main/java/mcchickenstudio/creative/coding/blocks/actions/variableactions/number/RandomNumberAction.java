@@ -37,25 +37,25 @@
 package mcchickenstudio.creative.coding.blocks.actions.variableactions.number;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.VariableAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.variables.VariableLink;
 import org.bukkit.entity.Entity;
 
-import java.util.List;
 import java.util.Random;
 
 public class RandomNumberAction extends VariableAction {
-    public RandomNumberAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public RandomNumberAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    protected void execute(List<Entity> selection) {
-        VariableLink variable = getArguments().getVariableLink("variable");
-        int min = getArguments().getValue("min",0);
-        int max = getArguments().getValue("max",10);
+    protected void execute(Entity entity) {
+        VariableLink variable = getArguments().getVariableLink("variable",this);
+        int min = getArguments().getValue("min",0,this);
+        int max = getArguments().getValue("max",10,this);
         int result = new Random().nextInt(max + 1 - min) + min;
         setVarValue(variable, result);
     }

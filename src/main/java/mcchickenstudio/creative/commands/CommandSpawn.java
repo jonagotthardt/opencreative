@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.commands;
 
 import mcchickenstudio.creative.Main;
+import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,6 +27,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import mcchickenstudio.creative.utils.CooldownUtils;
+import org.jetbrains.annotations.NotNull;
 
 import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
@@ -36,10 +38,11 @@ public class CommandSpawn implements CommandExecutor {
     final static Plugin plugin = Main.getPlugin();
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length > 0) {
             if (!(sender instanceof Player) || sender.hasPermission("creative.spawnothers")) {
                 if (!(Bukkit.getPlayer(args[0]) == null)) {
+                    EventRaiser.raiseQuitEvent(Bukkit.getPlayer(args[0]));
                     teleportToLobby((Bukkit.getPlayer(args[0])));
                 } else {
                     sender.sendMessage(getLocaleMessage("not-found-player"));
@@ -48,13 +51,14 @@ public class CommandSpawn implements CommandExecutor {
                 sender.sendMessage(getLocaleMessage("no-perms"));
             }
         } else {
-            if (sender instanceof Player) {
-                if (getCooldown(((Player) sender).getPlayer(), CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-                    sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(((Player) sender).getPlayer(), CooldownUtils.CooldownType.GENERIC_COMMAND))));
+            if (sender instanceof Player player) {
+                if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
+                    sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
                     return true;
                 }
-                setCooldown(((Player) sender).getPlayer(),plugin.getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
-                teleportToLobby(((Player) sender).getPlayer());
+                setCooldown(player,plugin.getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
+                EventRaiser.raiseQuitEvent(player);
+                teleportToLobby(player);
             }
         }
         return true;

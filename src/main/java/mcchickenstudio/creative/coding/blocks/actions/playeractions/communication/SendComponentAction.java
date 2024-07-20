@@ -19,30 +19,23 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.communication;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Content;
-import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
 
 public class SendComponentAction extends PlayerAction {
 
-
-    public SendComponentAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SendComponentAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
+
     @Override
-    protected void execute(List<Entity> selection) {
-        String text = getArguments().getValue("message"," ");
+    public void executePlayer(Player player) {
+        String text = getArguments().getValue("message"," ",this);
         TextComponent component = new TextComponent(text);
     }
 

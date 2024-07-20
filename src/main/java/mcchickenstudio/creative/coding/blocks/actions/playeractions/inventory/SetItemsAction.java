@@ -19,30 +19,28 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.inventory;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
 public class SetItemsAction extends PlayerAction {
-    public SetItemsAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public SetItemsAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    protected void execute(List<Entity> selection) {
-        List<ItemStack> items = getArguments().getItemList("items");
-        for (Player player : getPlayers(selection)) {
-            for (byte slot = 9; slot < 36; slot++) {
-                if (slot-9 == items.size()) {
-                    return;
-                }
-                player.getInventory().setItem(slot,items.get(slot-9));
+    public void executePlayer(Player player) {
+        List<ItemStack> items = getArguments().getItemList("items",this);
+        for (byte slot = 9; slot < 36; slot++) {
+            if (slot-9 == items.size()) {
+                return;
             }
+            player.getInventory().setItem(slot,items.get(slot-9));
         }
     }
 

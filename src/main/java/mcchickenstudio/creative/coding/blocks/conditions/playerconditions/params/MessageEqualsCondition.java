@@ -19,32 +19,33 @@
 package mcchickenstudio.creative.coding.blocks.conditions.playerconditions.params;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.PlayerCondition;
-import mcchickenstudio.creative.coding.blocks.events.EventVariables;
+import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingNotFoundTempVar;
 
 public class MessageEqualsCondition extends PlayerCondition {
-    public MessageEqualsCondition(Executor executor, int x, Arguments args, List<Action> actions) {
-        super(executor, x, args, actions);
+    public MessageEqualsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
+        super(executor, target, x, args, actions);
     }
 
     @Override
-    public boolean check(List<Entity> selection) {
-        if (!getExecutor().hasTempVariable(EventVariables.Variable.MESSAGE)) {
-            sendCodingNotFoundTempVar(getPlot(),getExecutor(), EventVariables.Variable.MESSAGE);
+    public boolean checkPlayer(Player player) {
+        if (getHandler().hasTempVariable(EventValues.Variable.MESSAGE)) {
+            sendCodingNotFoundTempVar(getPlot(),getExecutor(), EventValues.Variable.MESSAGE);
             return false;
         }
         boolean check = false;
-        String originalMessage = getExecutor().getVarValue(EventVariables.Variable.MESSAGE).toString();
-        List<String> messages = getArguments().getTextList("messages");
-        boolean caps = getArguments().getValue("require-caps",false);
+        String originalMessage = getHandler().getVarValue(EventValues.Variable.MESSAGE).toString();
+        List<String> messages = getArguments().getTextList("messages",this);
+        boolean caps = getArguments().getValue("require-caps",false,this);
         for (String message : messages) {
             if (caps) {
                 if (message.equals(originalMessage)) {

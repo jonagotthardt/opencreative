@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.inventory;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
@@ -26,27 +27,21 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class OpenSignAction extends PlayerAction {
-    public OpenSignAction(Executor executor, int x, Arguments args) {
-        super(executor, x, args);
+    public OpenSignAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    protected void execute(List<Entity> selection) {
-        Location location = getArguments().getValue("location",getWorld().getSpawnLocation());
+    public void executePlayer(Player player) {
+        Location location = getArguments().getValue("location",getWorld().getSpawnLocation(),this);
         Block block = location.getBlock();
-        if (!(block.getState() instanceof Sign)) return;
-        Sign sign = (Sign) block.getState();
-        String sideString = getArguments().getValue("side","front");
+        if (!(block.getState() instanceof Sign sign)) return;
+        String sideString = getArguments().getValue("side","front",this);
         Side side = (sideString.equals("back") ? Side.BACK : Side.FRONT);
-        for (Player player : getPlayers(selection)) {
-            player.openSign(sign,side);
-        }
+        player.openSign(sign,side);
     }
 
     @Override
