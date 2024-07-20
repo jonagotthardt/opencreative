@@ -62,6 +62,7 @@ import mcchickenstudio.creative.coding.menus.layouts.ArgumentSlot;
 import mcchickenstudio.creative.coding.menus.layouts.ParameterSlot;
 import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.utils.hooks.HookUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -212,6 +213,12 @@ public enum ActionType {
     /**
      * <h1>World Actions.</h1>
      */
+
+    WORLD_SET_TIME(                 ActionCategory.WORLD_ACTION, MenusCategory.WORLD, null, Material.CLOCK, new ArgumentSlot("time", ValueType.NUMBER)),
+    WORLD_SET_WEATHER(                 ActionCategory.WORLD_ACTION, MenusCategory.WORLD, null, Material.WATER_BUCKET, new ParameterSlot("weather", Arrays.asList("clean","storm"), Material.SUNFLOWER, Material.WATER_BUCKET)),
+
+    WORLD_CREATE_EXPLOSION(                 ActionCategory.WORLD_ACTION, MenusCategory.MOVEMENT, null, Material.TNT, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ArgumentSlot("power", ValueType.NUMBER), new ParameterSlot("fire", Material.GUNPOWDER, Material.CAMPFIRE), new ParameterSlot("damage", Material.GRASS_BLOCK, Material.GLASS)),
+    WORLD_SPAWN_THUNDER(                 ActionCategory.WORLD_ACTION, MenusCategory.MOVEMENT, null, Material.TRIDENT, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 27)),
 
     WORLD_SET_BLOCK_TYPE(                 ActionCategory.WORLD_ACTION, MenusCategory.MOVEMENT, null, Material.STONE, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ArgumentSlot("type", ValueType.ITEM)),
 

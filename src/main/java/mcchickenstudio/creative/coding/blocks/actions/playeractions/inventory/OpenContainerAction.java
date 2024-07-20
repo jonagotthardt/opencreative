@@ -44,7 +44,7 @@ public class OpenContainerAction extends PlayerAction {
         boolean save = getArguments().getValue("save", true,this);
 
         Block block = location.getBlock();
-        Inventory inventory = null;
+        Inventory inventory;
 
         if (block.getState() instanceof Container container) {
             if (save) {

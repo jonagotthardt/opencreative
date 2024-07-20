@@ -40,7 +40,6 @@ public class IsStandingOnBlockCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
-        boolean check = false;
         List<ItemStack> blocks = getArguments().getItemList("blocks",this);
         if (blocks.isEmpty()) return false;
         boolean isPlayerOnBlock = false;
@@ -51,12 +50,7 @@ public class IsStandingOnBlockCondition extends PlayerCondition {
                 isPlayerOnBlock = true;
             }
         }
-        if (!isPlayerOnBlock) {
-            return false;
-        } else {
-            check = true;
-        }
-        return check;
+        return isPlayerOnBlock;
     }
 
     @Override

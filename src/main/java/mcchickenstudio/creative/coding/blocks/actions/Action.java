@@ -25,7 +25,7 @@ import mcchickenstudio.creative.coding.blocks.events.player.fighting.MobDamagesP
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamagesMobEvent;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.variables.ValueType;
-import mcchickenstudio.creative.debug.values.VariableLink;
+import mcchickenstudio.creative.coding.variables.VariableLink;
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.ChatColor;
 import org.bukkit.World;

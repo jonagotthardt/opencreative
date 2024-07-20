@@ -113,7 +113,7 @@ class Placeholder extends PlaceholderExpansion {
             }
             case "plot_is_dev_plot_loaded" -> {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return String.valueOf(plot.devPlot != null && plot.devPlot.isLoaded);
+                if (plot != null) return String.valueOf(plot.devPlot != null && plot.devPlot.isLoaded());
             }
         }
         return null;

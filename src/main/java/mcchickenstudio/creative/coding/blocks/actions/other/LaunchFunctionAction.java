@@ -37,7 +37,7 @@ public class LaunchFunctionAction extends Action {
     protected void execute(Entity entity) {
         String name = getArguments().getValue("name","",this);
         if (name.isEmpty()) return;
-        for (Executor executor : getPlot().script.getExecutors().getExecutorsList()) {
+        for (Executor executor : getPlot().getScript().getExecutors().getExecutorsList()) {
             if (executor instanceof Function function) {
                 if (function.getName().equalsIgnoreCase(name)) {
                     function.run(getEvent());

@@ -72,7 +72,7 @@ public class PlotManager {
         Bukkit.createWorld(new WorldCreator(plot.worldName));
         plot.world = Bukkit.getWorld(plot.worldName);
         plot.isLoaded = true;
-        plot.script = new CodeScript(plot, FileUtils.getPlotScriptFile(plot));
+        plot.setScript(new CodeScript(plot, FileUtils.getPlotScriptFile(plot)));
         FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
         plot.world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS,false);
         plot.world.getWorldBorder().setSize(getPlayerPlotSize(plot.getOwnerGroup()));
@@ -98,7 +98,7 @@ public class PlotManager {
                 for (Player player : plot.devPlot.world.getPlayers()) {
                     teleportToLobby(player);
                 }
-                plot.devPlot.isLoaded = false;
+                plot.devPlot.setLoaded(false);
                 if (Bukkit.unloadWorld(plot.devPlot.worldName,true)) {
                     FileUtils.unloadWorldFolder(plot.devPlot.worldName,true);
                 }
@@ -139,7 +139,7 @@ public class PlotManager {
             // После 3 секунд удаления мир отгружается полностью
             Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
                 Bukkit.unloadWorld(plot.worldName,false);
-                if (plot.devPlot.isLoaded) Bukkit.unloadWorld(plot.devPlot.worldName, false);
+                if (plot.devPlot.isLoaded()) Bukkit.unloadWorld(plot.devPlot.worldName, false);
             }, 60);
         } catch (NullPointerException error) {
             ErrorUtils.sendCriticalErrorMessage("При удалении мира возникла ошибка: " + error.getMessage());
@@ -248,7 +248,7 @@ public class PlotManager {
             if (plot.world == world) {
                 return plot;
             }
-            if (plot.devPlot != null && plot.devPlot.isLoaded && plot.devPlot.world == world) {
+            if (plot.devPlot != null && plot.devPlot.isLoaded() && plot.devPlot.world == world) {
                 return plot;
             }
         }

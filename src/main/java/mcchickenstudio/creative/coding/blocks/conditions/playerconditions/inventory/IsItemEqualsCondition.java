@@ -41,7 +41,7 @@ public class IsItemEqualsCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
-        if (!getHandler().hasTempVariable(EventValues.Variable.ITEM)) {
+        if (getHandler().hasTempVariable(EventValues.Variable.ITEM)) {
             sendCodingNotFoundTempVar(getPlot(),getExecutor(), EventValues.Variable.ITEM);
             return false;
         }

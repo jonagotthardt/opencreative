@@ -35,11 +35,11 @@ import java.util.*;
 import static mcchickenstudio.creative.utils.FileUtils.*;
 
 public class DevPlot {
+
     private final Plot linkedPlot;
     public final String worldName;
 
     public World world;
-    public boolean isLoaded = false;
     public final Material floorBlockMaterial;
     public final Material eventBlockMaterial;
     public final Material actionBlockMaterial;
@@ -48,17 +48,18 @@ public class DevPlot {
 
     public final Map<Player, Location> lastLocations = new HashMap<>();
     public static final List<DevPlot> devPlots = new ArrayList<>();
+    private boolean isLoaded;
 
     public DevPlot(Plot plot) {
 
         this.linkedPlot = plot;
         this.worldName = plot.worldName + "dev";
-        this.isLoaded = false;
 
         this.floorBlockMaterial = Material.WHITE_STAINED_GLASS;
         this.eventBlockMaterial = Material.LIGHT_BLUE_STAINED_GLASS;
         this.actionBlockMaterial = Material.LIGHT_GRAY_STAINED_GLASS;
 
+        this.isLoaded = false;
         plot.devPlot = this;
         devPlots.add(this);
 
@@ -69,16 +70,15 @@ public class DevPlot {
             if (loadWorldFolder(this.worldName, true)) {
                 Bukkit.createWorld(new WorldCreator(this.worldName));
                 this.world = Bukkit.getWorld(this.worldName);
-                this.isLoaded = true;
                 setupWorld();
             }
         } else {
             createDevPlot();
             Bukkit.createWorld(new WorldCreator(this.worldName));
             this.world = Bukkit.getWorld(this.worldName);
-            this.isLoaded = true;
             setupWorld();
         }
+        this.isLoaded = true;
     }
 
     private void setupWorld() {
@@ -224,6 +224,13 @@ public class DevPlot {
         return locations;
     }
 
+    public boolean isLoaded() {
+        return isLoaded;
+    }
+
+    public void setLoaded(boolean loaded) {
+        isLoaded = loaded;
+    }
 
     public Plot getLinkedPlot() {
         return linkedPlot;

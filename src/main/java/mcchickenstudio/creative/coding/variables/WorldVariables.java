@@ -19,7 +19,7 @@
 package mcchickenstudio.creative.coding.variables;
 
 import mcchickenstudio.creative.coding.blocks.actions.ActionsHandler;
-import mcchickenstudio.creative.debug.values.VariableLink;
+import mcchickenstudio.creative.coding.variables.VariableLink;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.utils.FileUtils;
 import org.bukkit.inventory.ItemStack;
@@ -138,7 +138,7 @@ public class WorldVariables {
                 if (value instanceof ItemStack) {
                     final ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
                     final BukkitObjectOutputStream objectOutputStream = new BukkitObjectOutputStream(arrayOutputStream);
-                    objectOutputStream.writeObject((ItemStack) value);
+                    objectOutputStream.writeObject(value);
                     value = Base64Coder.encodeLines(arrayOutputStream.toByteArray());
                 }
                 objItem.put("value", value);

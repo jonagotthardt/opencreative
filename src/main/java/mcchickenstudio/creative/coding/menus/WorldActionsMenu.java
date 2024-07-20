@@ -32,12 +32,12 @@ import java.util.Set;
 public class WorldActionsMenu extends CodingBlockTypesMenu {
 
     public WorldActionsMenu(Player player, Location location) {
-        super(player, location, "actions","control_action");
+        super(player, location, "actions","world_action");
     }
 
     @Override
     protected List<Object> getElements() {
-        if (currentCategory == null) currentCategory = MenusCategory.OTHER;
+        if (currentCategory == null) currentCategory = MenusCategory.WORLD;
         return new ArrayList<>(ActionType.getActionsByCategories(ActionCategory.WORLD_ACTION,currentCategory));
     }
 

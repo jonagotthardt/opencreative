@@ -250,9 +250,9 @@ public abstract class Layout extends AbstractMenu {
                 slots.add((byte) (row*9-3));
                 break;
             case 3:
-                slots.add((byte) (row*9-7));
+                slots.add((byte) (row*9-8));
                 slots.add((byte) (row*9-5));
-                slots.add((byte) (row*9-3));
+                slots.add((byte) (row*9-2));
                 break;
             case 4:
                 slots.add((byte) (row*9-8));

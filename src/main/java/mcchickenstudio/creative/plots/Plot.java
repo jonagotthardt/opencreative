@@ -91,7 +91,7 @@ public class Plot {
     private final PlotFlags plotFlags;
 
     private boolean isCorrupted = false;
-    public CodeScript script;
+    private CodeScript script;
 
     private final Set<PlotPlayer> plotPlayers = new HashSet<>();
 
@@ -240,6 +240,14 @@ public class Plot {
         this.debug = debug;
     }
 
+    public CodeScript getScript() {
+        return script;
+    }
+
+    public void setScript(CodeScript script) {
+        this.script = script;
+    }
+
     public enum Mode {
         PLAYING() {
             public void onPlayerJoin(Player player) {
@@ -247,9 +255,7 @@ public class Plot {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
                 if (plot != null) {
                     player.setGameMode(plot.getOwner().equalsIgnoreCase(player.getName()) ? GameMode.CREATIVE : GameMode.ADVENTURE);
-                    if (plot.script != null && plot.script.exists()) {
-                        plot.script.loadCode();
-                    }
+                    plot.getScript().loadCode();
                 }
             }
         }, BUILD() {
@@ -547,8 +553,7 @@ public class Plot {
             List<String> trustedBuilders = getPlayersFromPlotConfig(this, PlayersType.BUILDERS_TRUSTED);
             List<String> notTrustedBuilders = getPlayersFromPlotConfig(this, PlayersType.BUILDERS_NOT_TRUSTED);
             trustedBuilders.addAll(notTrustedBuilders);
-            String builders = String.join(", ",trustedBuilders);
-            return builders;
+            return String.join(", ",trustedBuilders);
         } catch (Exception error) {
             return "";
         }
@@ -561,8 +566,7 @@ public class Plot {
             List<String> guestDevelopers = getPlayersFromPlotConfig(this, PlayersType.DEVELOPERS_GUESTS);
             trustedDevelopers.addAll(notTrustedDevelopers);
             trustedDevelopers.addAll(guestDevelopers);
-            String developers = String.join(", ",trustedDevelopers);
-            return developers;
+            return String.join(", ",trustedDevelopers);
         } catch (Exception error) {
             return "";
         }
@@ -649,7 +653,7 @@ public class Plot {
             if (plotFlags.getFlagValue(PlotFlags.PlotFlag.JOIN_MESSAGES) == 1) {
                 player.sendMessage(getLocaleMessage("world.connecting.owner-help",player));
             }
-            if (this.script.exists() && this.devPlot.isLoaded) {
+            if (this.devPlot.isLoaded()) {
                 new CodingBlockParser().parseCode(this.devPlot);
             }
         }
@@ -669,8 +673,6 @@ public class Plot {
         devPlot.loadDevPlotWorld();
         devPlot.world.getSpawnLocation().getChunk().load(true);
         Location lastLocation = this.devPlot.lastLocations.get(player);
-        System.out.println(Bukkit.getWorld(devPlot.worldName) == null);
-        System.out.println(lastLocation);
         if (this.devPlot.world == null) {
             player.sendMessage(ChatColor.RED + " Failed to teleport to developer's environment.");
             return;

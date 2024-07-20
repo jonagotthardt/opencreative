@@ -161,9 +161,9 @@ public abstract class AbstractListMenu extends AbstractMenu {
             event.setCancelled(true);
             return;
         }
-        if (isCharmsBarClicked((byte) event.getSlot()) && !isEmpty(event.getCurrentItem()) && !event.getCurrentItem().equals(DECORATION_ITEM)) {
+        if (isCharmsBarClicked((byte) event.getSlot()) && isEmpty(event.getCurrentItem()) && !event.getCurrentItem().equals(DECORATION_ITEM)) {
             onCharmsBarClick(event);
-        } else if (isElementClicked((byte) event.getSlot()) && !isEmpty(event.getCurrentItem())) {
+        } else if (isElementClicked((byte) event.getSlot()) && isEmpty(event.getCurrentItem())) {
             onElementClick(event);
         } else if (itemEquals(event.getCurrentItem(),getNextPageButton())) {
             ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ITEM_BOOK_PAGE_TURN,100f,1f);

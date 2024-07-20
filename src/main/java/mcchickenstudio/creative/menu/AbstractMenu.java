@@ -148,6 +148,6 @@ public abstract class AbstractMenu implements InventoryHolder {
     }
 
     protected boolean isEmpty(ItemStack item) {
-        return (item == null || item.getType() == Material.AIR);
+        return (item != null && item.getType() != Material.AIR);
     }
 }

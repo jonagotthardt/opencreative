@@ -38,7 +38,7 @@ public class MessageEqualsCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
-        if (!getHandler().hasTempVariable(EventValues.Variable.MESSAGE)) {
+        if (getHandler().hasTempVariable(EventValues.Variable.MESSAGE)) {
             sendCodingNotFoundTempVar(getPlot(),getExecutor(), EventValues.Variable.MESSAGE);
             return false;
         }

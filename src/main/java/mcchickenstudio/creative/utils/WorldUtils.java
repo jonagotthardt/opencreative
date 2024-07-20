@@ -23,6 +23,7 @@ import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.Random;
@@ -175,7 +176,7 @@ public class WorldUtils {
 class EmptyChunkGenerator extends ChunkGenerator {
 
     @Override
-    public ChunkGenerator.ChunkData generateChunkData(World world, Random random, int x, int z, BiomeGrid biome) {
+    public ChunkGenerator.@NotNull ChunkData generateChunkData(@NotNull World world, @NotNull Random random, int x, int z, @NotNull BiomeGrid biome) {
         return createChunkData(world);
     }
 }
@@ -183,7 +184,7 @@ class EmptyChunkGenerator extends ChunkGenerator {
 class WaterChunkGenerator extends ChunkGenerator {
 
     @Override
-    public ChunkGenerator.ChunkData generateChunkData(World world, Random random, int x, int z, BiomeGrid biome) {
+    public ChunkGenerator.@NotNull ChunkData generateChunkData(@NotNull World world, @NotNull Random random, int x, int z, @NotNull BiomeGrid biome) {
         ChunkData chunkData = createChunkData(world);
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 16; j++) {

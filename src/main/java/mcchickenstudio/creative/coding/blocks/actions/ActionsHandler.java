@@ -111,7 +111,8 @@ public class ActionsHandler {
                 }
                 repeatAction.prepareAndExecute(this);
             }
-            return;*/
+            */
+            return;
         }
         Action nextAction = actionsQueue.poll();
         if (nextAction != null) {
@@ -122,9 +123,6 @@ public class ActionsHandler {
     public void prepareAction(Action action) {
         if (waitDelay < 1 ) {
             executeAction(action);
-            if (action.getClass().isAnnotationPresent(BlocksManipulation.class)) {
-
-            }
         } else {
             BukkitRunnable executeActionLaterRunnable = new BukkitRunnable() {
                 @Override
@@ -217,7 +215,7 @@ public class ActionsHandler {
     }
 
     public boolean hasTempVariable(EventValues.Variable var) {
-        return getVariables().getVarValue(var) != null;
+        return getVariables().getVarValue(var) == null;
     }
 
     @Override

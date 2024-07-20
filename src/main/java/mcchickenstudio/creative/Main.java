@@ -21,13 +21,29 @@ package mcchickenstudio.creative;
 import mcchickenstudio.creative.coding.blocks.events.CEListener;
 import mcchickenstudio.creative.commands.*;
 import mcchickenstudio.creative.commands.minecraft.*;
-import mcchickenstudio.creative.events.*;
+import mcchickenstudio.creative.commands.tabcompleters.*;
+import mcchickenstudio.creative.commands.world.CommandAd;
+import mcchickenstudio.creative.commands.world.CommandEnvironment;
+import mcchickenstudio.creative.commands.world.CommandJoin;
+import mcchickenstudio.creative.commands.world.modes.CommandBuild;
+import mcchickenstudio.creative.commands.world.modes.CommandDev;
+import mcchickenstudio.creative.commands.world.modes.CommandPlay;
+import mcchickenstudio.creative.commands.world.reputation.CommandDislike;
+import mcchickenstudio.creative.commands.world.reputation.CommandLike;
+import mcchickenstudio.creative.commands.world.CommandWorld;
+import mcchickenstudio.creative.events.entity.EntityDamage;
+import mcchickenstudio.creative.events.entity.EntitySpawn;
+import mcchickenstudio.creative.events.player.*;
+import mcchickenstudio.creative.events.world.BlockChanged;
+import mcchickenstudio.creative.events.world.BlockRedstone;
 import mcchickenstudio.creative.menu.Menus;
 import mcchickenstudio.creative.utils.FileUtils;
 import mcchickenstudio.creative.utils.hooks.HookUtils;
 import mcchickenstudio.creative.utils.PlayerUtils;
 import mcchickenstudio.creative.utils.hooks.Metrics;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -38,6 +54,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +64,7 @@ import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 
 public final class Main extends JavaPlugin {
 
-    public static Main plugin;
+    private static Main plugin;
     public static final String version = "5.0 Preview 3";
     public static final String codename = "Things will be different";
     public static boolean maintenance = false;

@@ -21,9 +21,9 @@ package mcchickenstudio.creative.coding.arguments;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import mcchickenstudio.creative.debug.values.EventValueLink;
+import mcchickenstudio.creative.coding.variables.EventValueLink;
 import mcchickenstudio.creative.coding.variables.ValueType;
-import mcchickenstudio.creative.debug.values.VariableLink;
+import mcchickenstudio.creative.coding.variables.VariableLink;
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -132,8 +132,6 @@ public class Arguments {
                     return Float.parseFloat(stringValue);
                 }
                 return 0;
-            case TEXT:
-                return stringValue;
             case BOOLEAN:
                 return Boolean.parseBoolean(stringValue);
             case PARAMETER:

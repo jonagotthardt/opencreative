@@ -79,9 +79,6 @@ public class CooldownUtils {
             case ADVERTISEMENT_COMMAND -> advertisementCommandCooldown;
             case CREATIVE_CHAT -> creativeChatCooldown;
             case WORLD_CHAT -> worldChatCooldown;
-            default -> throw new IllegalArgumentException("Невозможно получить задержку с типом: " + type);
         };
     }
-
-
 }

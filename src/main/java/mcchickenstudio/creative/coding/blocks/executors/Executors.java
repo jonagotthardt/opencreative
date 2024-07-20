@@ -56,8 +56,8 @@ public class Executors {
 
     public static void activate(CreativeEvent event) {
         Plot plot = event.getPlot();
-        if (plot == null || plot.script == null || plot.script.getExecutors() == null) return;
-        Executors executors = plot.script.getExecutors();
+        if (plot == null || plot.getScript() == null || plot.getScript().getExecutors() == null) return;
+        Executors executors = plot.getScript().getExecutors();
         for (Executor executor : executors.executorsList) {
             if (executor.getExecutorType().getEventClass() == event.getClass()) {
                 if (executors.getLastExecutorCallsAmount(executor) > plot.codeOperationsLimit) {
@@ -86,8 +86,7 @@ public class Executors {
         if (section != null) {
             List<Executor> executors = new ArrayList<>();
             Set<String> keys = section.getKeys(false);
-            String path = "";
-
+            String path;
             for (String key : keys) {
                 path = "code.blocks." + key;
                 if (config.getString(path + ".type") != null) {

@@ -26,7 +26,7 @@ import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.coding.menus.layouts.ArgumentSlot;
-import mcchickenstudio.creative.debug.values.VariableLink;
+import mcchickenstudio.creative.coding.variables.VariableLink;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.block.*;
@@ -59,7 +59,7 @@ public class CodingBlockParser {
 
         World world = devPlot.world;
         devPlot.getLinkedPlot().stopBukkitRunnables();
-        CodeScript script = devPlot.getLinkedPlot().script;
+        CodeScript script = devPlot.getLinkedPlot().getScript();
         script.clear();
 
         List<Block> unknownBlocks = new ArrayList<>();
@@ -79,7 +79,7 @@ public class CodingBlockParser {
                  * because we can't execute them without executor.
                  */
                 if (executorCategory == null || executorType == null) {
-                    if ((executorCategory == null && !isSignEmpty(executorBlock,(byte) 2)) || (executorType == null && !isSignEmpty(executorBlock,(byte) 3))) {
+                    if ((executorCategory == null && isSignEmpty(executorBlock, (byte) 2)) || (executorType == null && isSignEmpty(executorBlock, (byte) 3))) {
                         unknownBlocks.add(executorBlock);
                     }
                     continue;
@@ -97,14 +97,14 @@ public class CodingBlockParser {
                     Block containerBlock = actionBlock.getRelative(BlockFace.UP);
 
                     if (actionCategory != null && actionCategory.isMultiAction()) {
-                        multiActions.add((actionCategory.isCondition() ? "condition_block_" : "multi_action_") + script.getBlockActionNumber(actionBlock));
+                        multiActions.add((actionCategory.isCondition() ? "condition_block_" : "multi_action_") + script.getBlockNumber(actionBlock));
                         if (actionType == null) {
                             continue;
                         }
                     }
 
                     if (actionCategory == null || actionType == null) {
-                        if (actionBlock.getType() != Material.END_STONE && ((actionCategory == null && !isSignEmpty(actionBlock,(byte) 2)) || (actionType == null && !isSignEmpty(actionBlock,(byte) 3)))) {
+                        if (actionBlock.getType() != Material.END_STONE && ((actionCategory == null && isSignEmpty(actionBlock, (byte) 2)) || (actionType == null && isSignEmpty(actionBlock, (byte) 3)))) {
                             unknownBlocks.add(actionBlock);
                         }
                         /*
@@ -126,33 +126,39 @@ public class CodingBlockParser {
                         }
                         continue;
                     }
-
                     script.saveActionBlock(multiActions,actionBlock,actionCategory,actionType,actionTarget);
-
+                    /*
+                     * Checking items in container and saving
+                     * them as arguments for action.
+                     */
                     if (!(containerBlock.getState() instanceof InventoryHolder container)) continue;
                     byte slot = 0;
                     ItemStack[] content = container.getInventory().getContents();
                     for (ArgumentSlot argSlot : actionType.getArgumentsSlots()) {
                         ItemStack item = content[slot];
+                        /*
+                         * If argument slot is list, then we need
+                         * handle and save every item into list.
+                         */
                         if (argSlot.isList()) {
-                            script.setArgs(multiActions,actionBlock,argSlot.getPath(),null, ValueType.LIST);
-                            for (byte i = 1; i < argSlot.getListSize(); i++) {
+                            script.saveArguments(multiActions,actionBlock,argSlot.getPath(),null, ValueType.LIST);
+                            for (byte i = 1; i < argSlot.getListSize()+1; i++) {
                                 if (slot < content.length) {
                                     item = content[slot];
                                     if (item == null) {
                                         if (argSlot.acceptEmptyItems()) {
                                             item = new ItemStack(Material.AIR);
-                                            script.setArgs(multiActions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
+                                            script.saveArguments(multiActions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
                                         }
                                     } else  {
-                                        script.setArgs(multiActions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
+                                        script.saveArguments(multiActions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
                                     }
                                 }
                                 slot++;
                             }
                         } else {
                             if (item != null) {
-                                script.setArgs(multiActions,actionBlock,argSlot.getPath(),parseItemValue(item),parseItemType(item));
+                                script.saveArguments(multiActions,actionBlock,argSlot.getPath(),parseItemValue(item),parseItemType(item));
                             }
                         }
                         slot++;
@@ -161,10 +167,14 @@ public class CodingBlockParser {
             }
         }
         if (!unknownBlocks.isEmpty()) {
+            /*
+             * Warns world developer about old or unknown
+             * coding blocks that were found while parsing.
+             */
             sendPlotCompileErrorMessage(devPlot.getLinkedPlot(),unknownBlocks);
         }
-        if (devPlot.getLinkedPlot().script.saveCode()) {
-            devPlot.getLinkedPlot().script.loadCode();
+        if (devPlot.getLinkedPlot().getScript().saveCode()) {
+            devPlot.getLinkedPlot().getScript().loadCode();
         }
 
     }
@@ -194,7 +204,6 @@ public class CodingBlockParser {
         if (valueType == ValueType.ITEM) {
             return item.serialize();
         }
-
         ItemMeta itemMeta = item.getItemMeta();
         if (itemMeta == null) {
             return item.serialize();
@@ -320,10 +329,10 @@ public class CodingBlockParser {
         if (signBlock.getType().name().contains("SIGN")) {
             Sign sign = (Sign) signBlock.getState();
             if (line > 0 && line < sign.lines().size()) {
-                return (sign.getLine(line-1).isEmpty());
+                return (!sign.getLine(line - 1).isEmpty());
             }
-            return true;
+            return false;
         }
-        return true;
+        return false;
     }
 }

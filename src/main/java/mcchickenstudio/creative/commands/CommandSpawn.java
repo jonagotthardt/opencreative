@@ -27,6 +27,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import mcchickenstudio.creative.utils.CooldownUtils;
+import org.jetbrains.annotations.NotNull;
 
 import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
@@ -37,7 +38,7 @@ public class CommandSpawn implements CommandExecutor {
     final static Plugin plugin = Main.getPlugin();
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length > 0) {
             if (!(sender instanceof Player) || sender.hasPermission("creative.spawnothers")) {
                 if (!(Bukkit.getPlayer(args[0]) == null)) {

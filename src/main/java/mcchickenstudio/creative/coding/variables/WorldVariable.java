@@ -19,7 +19,7 @@
 package mcchickenstudio.creative.coding.variables;
 
 import mcchickenstudio.creative.coding.blocks.actions.ActionsHandler;
-import mcchickenstudio.creative.debug.values.VariableLink;
+import mcchickenstudio.creative.coding.variables.VariableLink;
 
 import java.util.List;
 

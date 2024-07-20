@@ -284,7 +284,6 @@ public class FileUtils {
                         // Отгруженные миры добавляются в базу
                         if (plotFolder.getPath().contains("unloadedWorlds")) {
                             Main.getPlugin().getLogger().info("Adding unloaded world " + worldName + " to base...");
-                            if (!worldName.endsWith("dev")) new Plot(worldName);
                             // Если мир находился в директории сервера, то его
                             // переносят в папку отгруженных миров и добавляют в базу
                         } else {
@@ -297,8 +296,8 @@ public class FileUtils {
                             }
                             unloadWorldFolder(worldName,true);
                             Main.getPlugin().getLogger().info("Adding unloaded world " + worldName + " to base...");
-                            if (!worldName.endsWith("dev")) new Plot(worldName);
                         }
+                        if (!worldName.endsWith("dev")) new Plot(worldName);
                 }
             } else {
                 Main.getPlugin().getLogger().info("No worlds have been detected.");
@@ -329,7 +328,7 @@ public class FileUtils {
      **/
     public static File getDevPlotFolder(DevPlot devPlot) {
         try {
-            if (devPlot.isLoaded) {
+            if (devPlot.isLoaded()) {
                 return new File(Bukkit.getServer().getWorldContainer() + File.separator + devPlot.worldName + File.separator);
             } else {
                 return new File(Bukkit.getServer().getWorldContainer() + File.separator + "unloadedWorlds" + File.separator + devPlot.worldName + File.separator);
@@ -781,30 +780,6 @@ public class FileUtils {
         } else {
             sendCriticalErrorMessage("При попытке получить список игроков из файла конфига плота " + plot.worldName + " произошла ошибка. Тип: " + type.toString() + " Конфиг плота оказался null.");
             return new ArrayList<>();
-        }
-    }
-
-    /**
-     Returns map with plot's flags from settings.yml
-     **/
-    public static Map<String, Integer> getPlotFlagsFromPlotConfig(Plot plot) {
-        FileConfiguration plotConfig = getPlotConfig(plot);
-        Map<String, Integer> flags = new HashMap<>();
-        if (plotConfig != null) {
-            ConfigurationSection plotConfigFlagKeys = plotConfig.getConfigurationSection("flags");
-            if (plotConfigFlagKeys != null) {
-                plotConfigFlagKeys.getKeys(false).forEach(flag -> {
-                    String configFlagValue = plotConfig.getString("flags." + flag);
-                    if (configFlagValue == null) return;
-                    int flagValue = Integer.parseInt(configFlagValue);
-                    flags.put(flag, flagValue);
-                });
-            }
-            return flags;
-        } else {
-            sendCriticalErrorMessage("При попытке получить список игроков из файла конфига плота " + plot.worldName + " произошла ошибка. Конфиг плота оказался null.");
-            flags.put("No flags detected", 0);
-            return flags;
         }
     }
 

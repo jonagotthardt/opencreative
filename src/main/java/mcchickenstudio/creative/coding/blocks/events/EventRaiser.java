@@ -24,7 +24,7 @@ import mcchickenstudio.creative.coding.blocks.events.player.interaction.*;
 import mcchickenstudio.creative.coding.blocks.events.player.inventory.*;
 import mcchickenstudio.creative.coding.blocks.events.player.movement.*;
 import mcchickenstudio.creative.coding.blocks.events.player.world.*;
-import mcchickenstudio.creative.events.ChangedWorld;
+import mcchickenstudio.creative.events.player.ChangedWorld;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
 import org.bukkit.Bukkit;
@@ -48,14 +48,14 @@ public class EventRaiser {
     // World
 
     public static boolean canRaiseEvent(Player player) {
-        if (PlotManager.getInstance().getPlotByPlayer(player) == null) return false;
-        if (PlotManager.getInstance().getDevPlot(player) != null) return false;
-        if (PlotManager.getInstance().getPlotByPlayer(player).getPlotMode() == Plot.Mode.BUILD) return false;
-        return !ChangedWorld.isPlayerWithLocation(player);
+        if (PlotManager.getInstance().getPlotByPlayer(player) == null) return true;
+        if (PlotManager.getInstance().getDevPlot(player) != null) return true;
+        if (PlotManager.getInstance().getPlotByPlayer(player).getPlotMode() == Plot.Mode.BUILD) return true;
+        return ChangedWorld.isPlayerWithLocation(player);
     }
 
     public static void raiseJoinEvent(Player player) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         JoinEvent creativeEvent = new JoinEvent(player);
@@ -63,7 +63,7 @@ public class EventRaiser {
     }
 
     public static void raiseQuitEvent(Player player) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         QuitEvent creativeEvent = new QuitEvent(player);
@@ -77,7 +77,7 @@ public class EventRaiser {
     }
 
     public static void raiseLikeEvent(Player player) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         LikeEvent creativeEvent = new LikeEvent(player);
@@ -85,7 +85,7 @@ public class EventRaiser {
     }
 
     public static void raiseAdvertisedEvent(Player player) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         AdvertisedEvent creativeEvent = new AdvertisedEvent(player);
@@ -93,7 +93,7 @@ public class EventRaiser {
     }
 
     public static void raiseChatEvent(Player player, PlayerChatEvent bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         ChatEvent creativeEvent = new ChatEvent(player, bukkitEvent);
@@ -103,7 +103,7 @@ public class EventRaiser {
     // Movement
 
     public static void raiseJumpEvent(Player player, PlayerJumpEvent bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         JumpEvent creativeEvent = new JumpEvent(player, bukkitEvent);
@@ -111,7 +111,7 @@ public class EventRaiser {
     }
 
     public static void raiseMoveEvent(Player player, org.bukkit.event.player.PlayerMoveEvent bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         PlayerMoveEvent creativeEvent = new PlayerMoveEvent(player, bukkitEvent);
@@ -119,7 +119,7 @@ public class EventRaiser {
     }
 
     public static void raiseStartFlyingEvent(Player player, Event bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         StartFlyingEvent creativeEvent = new StartFlyingEvent(player);
@@ -127,7 +127,7 @@ public class EventRaiser {
     }
 
     public static void raiseStopFlyingEvent(Player player, Event bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         StopFlyingEvent creativeEvent = new StopFlyingEvent(player);
@@ -135,7 +135,7 @@ public class EventRaiser {
     }
 
     public static void raiseStartSneakingEvent(Player player, Event bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         StartSneakingEvent creativeEvent = new StartSneakingEvent(player);
@@ -143,7 +143,7 @@ public class EventRaiser {
     }
 
     public static void raiseStopSneakingEvent(Player player, Event bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         StopSneakingEvent creativeEvent = new StopSneakingEvent(player);
@@ -151,7 +151,7 @@ public class EventRaiser {
     }
 
     public static void raiseStartRunningEvent(Player player, Event bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         StartRunningEvent creativeEvent = new StartRunningEvent(player);
@@ -159,7 +159,7 @@ public class EventRaiser {
     }
 
     public static void raiseStopRunningEvent(Player player, Event bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         StopRunningEvent creativeEvent = new StopRunningEvent(player);
@@ -167,7 +167,7 @@ public class EventRaiser {
     }
 
     public static void raiseTeleportEvent(Player player, Event bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         TeleportEvent creativeEvent = new TeleportEvent(player);
@@ -177,7 +177,7 @@ public class EventRaiser {
     // Inventory
 
     public static void raiseBookWriteEvent(Player player, Event bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         BookWriteEvent creativeEvent = new BookWriteEvent(player);
@@ -185,7 +185,7 @@ public class EventRaiser {
     }
 
     public static void raiseCloseInventoryEvent(Player player, Event bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         CloseInventoryEvent creativeEvent = new CloseInventoryEvent(player);
@@ -193,7 +193,7 @@ public class EventRaiser {
     }
 
     public static void raiseItemChangeEvent(Player player, Event bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         ItemChangeEvent creativeEvent = new ItemChangeEvent(player);
@@ -201,7 +201,7 @@ public class EventRaiser {
     }
 
     public static void raiseItemClickEvent(Player player, InventoryClickEvent bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         ItemClickEvent creativeEvent = new ItemClickEvent(player, bukkitEvent);
@@ -209,7 +209,7 @@ public class EventRaiser {
     }
 
     public static void raiseItemDropEvent(Player player, PlayerDropItemEvent bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         ItemDropEvent creativeEvent = new ItemDropEvent(player, bukkitEvent);
@@ -217,7 +217,7 @@ public class EventRaiser {
     }
 
     public static void raiseSlotChangeEvent(Player player, Event bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         SlotChangeEvent creativeEvent = new SlotChangeEvent(player);
@@ -225,7 +225,7 @@ public class EventRaiser {
     }
 
     public static void raiseItemMoveEvent(Player player, InventoryClickEvent bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         ItemMoveEvent creativeEvent = new ItemMoveEvent(player, bukkitEvent);
@@ -233,7 +233,7 @@ public class EventRaiser {
     }
 
     public static void raiseItemPickupEvent(Player player, EntityPickupItemEvent bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         ItemPickupEvent creativeEvent = new ItemPickupEvent(player, bukkitEvent);
@@ -241,7 +241,7 @@ public class EventRaiser {
     }
 
     public static void raiseOpenInventoryEvent(Player player, Event bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         OpenInventoryEvent creativeEvent = new OpenInventoryEvent(player);
@@ -251,7 +251,7 @@ public class EventRaiser {
     // Interaction
 
     public static void raiseBlockInteractionEvent(Player player, PlayerInteractEvent bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         BlockInteractionEvent creativeEvent = new BlockInteractionEvent(player, bukkitEvent);
@@ -259,7 +259,7 @@ public class EventRaiser {
     }
 
     public static void raiseDamageBlockEvent(Player player, BlockDamageEvent bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         DamageBlockEvent creativeEvent = new DamageBlockEvent(player,bukkitEvent);
@@ -267,7 +267,7 @@ public class EventRaiser {
     }
 
     public static void raiseDestroyEvent(Player player, BlockBreakEvent bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         DestroyBlockEvent creativeEvent = new DestroyBlockEvent(player, bukkitEvent);
@@ -275,7 +275,7 @@ public class EventRaiser {
     }
 
     public static void raiseFishEvent(Player player, PlayerFishEvent bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         FishEvent creativeEvent = new FishEvent(player, bukkitEvent);
@@ -283,7 +283,7 @@ public class EventRaiser {
     }
 
     public static void raiseLeftClickEvent(Player player, Event bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         LeftClickEvent creativeEvent = new LeftClickEvent(player);
@@ -291,7 +291,7 @@ public class EventRaiser {
     }
 
     public static void raiseRightClickEvent(Player player, Event bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         RightClickEvent creativeEvent = new RightClickEvent(player);
@@ -299,7 +299,7 @@ public class EventRaiser {
     }
 
     public static void raiseStartSpectatingEvent(Player player, Event bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         StartSpectatingEvent creativeEvent = new StartSpectatingEvent(player);
@@ -307,7 +307,7 @@ public class EventRaiser {
     }
 
     public static void raiseStopSpectatingEvent(Player player, Event bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         StopSpectatingEvent creativeEvent = new StopSpectatingEvent(player);
@@ -315,7 +315,7 @@ public class EventRaiser {
     }
 
     public static void raiseWorldInteractEvent(Player player, PlayerInteractEvent bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         WorldInteractEvent creativeEvent = new WorldInteractEvent(player, bukkitEvent);
@@ -323,7 +323,7 @@ public class EventRaiser {
     }
 
     public static void raisePlaceBlockEvent(Player player, BlockPlaceEvent bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         PlaceBlockEvent creativeEvent = new PlaceBlockEvent(player, bukkitEvent);
@@ -331,7 +331,7 @@ public class EventRaiser {
     }
 
     public static void raiseMobInteractionEvent(Player player, Event bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         MobInteractionEvent creativeEvent = new MobInteractionEvent(player);
@@ -341,7 +341,7 @@ public class EventRaiser {
     // Fighting
 
     public static void raiseHungerChangeEvent(Player player, Event bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         HungerChangeEvent creativeEvent = new HungerChangeEvent(player);
@@ -349,7 +349,7 @@ public class EventRaiser {
     }
 
     public static void raiseMobDamagesPlayerEvent(Player player, EntityDamageByEntityEvent bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         if (!(bukkitEvent.getEntity() instanceof Player)) {
@@ -360,7 +360,7 @@ public class EventRaiser {
     }
 
     public static void raisePlayerDamagedEvent(Player player, Event bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         PlayerDamagedEvent creativeEvent = new PlayerDamagedEvent(player);
@@ -368,7 +368,7 @@ public class EventRaiser {
     }
 
     public static void raisePlayerDamagedMobEvent(Player player, EntityDamageByEntityEvent bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         PlayerDamagesMobEvent creativeEvent = new PlayerDamagesMobEvent(player,bukkitEvent);
@@ -376,7 +376,7 @@ public class EventRaiser {
     }
 
     public static void raisePlayerDeathEvent(Player player, Event bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         PlayerDeathEvent creativeEvent = new PlayerDeathEvent(player);
@@ -384,7 +384,7 @@ public class EventRaiser {
     }
 
     public static void raisePlayerRespawnEvent(Player player, Event bukkitEvent) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         PlayerRespawnEvent creativeEvent = new PlayerRespawnEvent(player);
@@ -393,7 +393,7 @@ public class EventRaiser {
 
     public static void raisePlayerTotemRespawnEvent(Entity entity, Event bukkitEvent) {
         if (!(entity instanceof Player player)) return;
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         PlayerTotemRespawnEvent creativeEvent = new PlayerTotemRespawnEvent(player);
@@ -401,7 +401,7 @@ public class EventRaiser {
     }
 
     public static void raisePlayerPurchaseEvent(Player player, String id, String name, int price, boolean save) {
-        if (!canRaiseEvent(player)) {
+        if (canRaiseEvent(player)) {
             return;
         }
         CreativeEvent creativeEvent = new PlayerPurchaseEvent(player,id,name,price,save);

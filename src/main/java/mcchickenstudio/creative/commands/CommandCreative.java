@@ -33,6 +33,7 @@ import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.utils.CooldownUtils;
 import mcchickenstudio.creative.utils.FileUtils;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,7 @@ public class CommandCreative implements CommandExecutor {
     final FileConfiguration config = plugin.getConfig();
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length > 0) {
             Player player = null;
             if (sender instanceof Player) {
@@ -60,7 +61,7 @@ public class CommandCreative implements CommandExecutor {
                     sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(cooldown)));
                     return true;
                 }
-                setCooldown(player, plugin.getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
+                setCooldown(player, Main.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
             }
             switch (args[0].toLowerCase()) {
                 case "reload" -> {
@@ -188,7 +189,7 @@ public class CommandCreative implements CommandExecutor {
                             }
                         }
                     } else if ("ignore".equalsIgnoreCase(args[1])) {
-                        List<String> nicknames = new ArrayList<>(List.of(args)).subList(1,args.length+1);
+                        List<String> nicknames = new ArrayList<>(List.of(args)).subList(1,args.length);
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                             boolean ignore = false;
                             for (String nick : nicknames) {
@@ -269,7 +270,6 @@ public class CommandCreative implements CommandExecutor {
                             onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.ended"));
                         }
                     }
-                    break;
                 }
                 case "unload" -> {
                     if (!sender.hasPermission("creative.unload-world")) {
@@ -291,7 +291,6 @@ public class CommandCreative implements CommandExecutor {
                     } else {
                         sender.sendMessage(getLocaleMessage("world.already-unloaded").replace("%id%",args[1]));
                     }
-                    break;
                 }
                 case "list" -> {
                     if (!sender.hasPermission("creative.list")) {

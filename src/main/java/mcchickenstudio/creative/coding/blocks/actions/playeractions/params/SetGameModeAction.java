@@ -34,7 +34,7 @@ public class SetGameModeAction extends PlayerAction {
     @Override
     public void executePlayer(Player player) {
         String gm = getArguments().getValue("game-mode","adventure",this);
-        GameMode gameMode = GameMode.ADVENTURE;
+        GameMode gameMode;
         try {
             gameMode = GameMode.valueOf(gm.toUpperCase());
         } catch (Exception e) {

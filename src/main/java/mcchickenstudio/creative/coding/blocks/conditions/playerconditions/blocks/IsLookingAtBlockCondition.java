@@ -39,7 +39,6 @@ public class IsLookingAtBlockCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
-        boolean check = false;
         List<ItemStack> blocks = getArguments().getItemList("blocks",this);
         if (blocks.isEmpty()) return false;
         Block block = player.getTargetBlockExact(30);
@@ -48,18 +47,12 @@ public class IsLookingAtBlockCondition extends PlayerCondition {
         }
         boolean isPlayerLookingAt = false;
         Material blockType = block.getType();
-
         for (ItemStack checkBlock : blocks) {
             if (blockType == checkBlock.getType()) {
                 isPlayerLookingAt = true;
             }
         }
-        if (!isPlayerLookingAt) {
-            return false;
-        } else {
-            check = true;
-        }
-        return check;
+        return isPlayerLookingAt;
     }
 
     @Override
