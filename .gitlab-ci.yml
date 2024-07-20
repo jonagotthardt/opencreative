@@ -3,7 +3,7 @@ stages:
 
 build_job:
   stage: build
-  image: maven:3.8.1-openjdk-21
+  image: maven:3.8.7-openjdk-21
   script:
     - mvn --batch-mode --update-snapshots verify
     - mkdir staging && cp target/*.jar staging
