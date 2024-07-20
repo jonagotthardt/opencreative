@@ -2,7 +2,7 @@
 
 Minecraft plugin for PaperMC servers that allows players to create their worlds.
 
-![logo](https://media.discordapp.net/attachments/1203026811647303721/1254848334208831508/image.png?ex=66823c54&is=6680ead4&hm=0d812c0552f6cd2ce6d31f56f87d21e8c8480eda208a9a472986c11d8583247b&=&format=webp&quality=lossless&width=756&height=452)
+![logo](https://media.discordapp.net/attachments/1203026811647303721/1254848334208831508/image.png?ex=669c9a54&is=669b48d4&hm=f872bb68ed1cb64d2c077060178e2cbe29c52c0720494c1478662eb9a5d34d6e&=&format=webp&quality=lossless&width=756&height=452)
 
 This plugin is:
 - **Fast.** It uses RAM more often than hard drive.
@@ -69,6 +69,82 @@ code:
                   value:
                     name: World
 ```
+
+## Commands
+
+### `/creative`
+Without arguments opens a menu with information about OpenCreative+.
+- `reload` - reloads configuration and localization files.
+- `resetlocale` - resets localization file to default from plugin.
+- `load [world id]` - loads specified world.
+- `unload [world id]` - unloads specified world.
+- `list` - displays list of loaded worlds on server.
+- `maintenance start [seconds]` - start maintenance mode in next [seconds], that disallows players without permissions to create or join worlds.
+- `maintenance stop` - stop maintenance mode, players will be able to create and join worlds.
+- `creative-chat clear` - clears chat for every player. Useful to hide some inappropriate messages.
+- `creative-chat disable` - disables creative chat for players, that don't have bypass permission, they can't send messages in /cc chat.
+- `creative-chat enable` - enables creative chat for players, they will be able to speak in creative chat again.
+- `kick-all starts [nickname part]` - kicks players with nicknames that start with part. Useful for kicking bots.
+- `kick-all ends [nickname part]` - kicks players with nicknames that end with part. Useful for kicking bots.
+- `kick-all contains [nickname part]` - kicks players with nicknames that contain part. Useful for kicking bots.
+- `kick-all ignore [nickname] [nickname2]...` - kicks everyone except command sender and specified players.
+
+### `/cc` - Creative Chat
+Creative chat is global chat where players can send messages and speak with everyone.
+- `[message]` - send messages. It supports colors!
+- `off` - hides creative chat messages only for command sender.
+- `on` - shows creative chat messages for command sender.
+
+### `/world`
+- `info` - displays information about world, where command sender currently is in.
+- `delete` - deletes world.
+- `deletemobs` - opens a menu where owner can delete mobs from world.
+
+### `/ad`
+Without arguments advertises world, where command sender currently is in. World advertisement is a clickable message with world information that will be sent to every player.
+- `[world id]` - teleports command sender to world.
+
+### `/play`
+Changes world's mode to Play mode.
+
+### `/build`
+Changes world's mode to Build mode.
+
+### `/dev`
+Teleports command sender to developer world.
+
+### `/like`
+Increases reputation of world, where command sender currently is in.
+
+### `/dislike`
+Decreases reputation of world, where command sender currently is in.
+
+### `/join`
+- `[world id]` - teleports command sender to world.
+
+### `/locate`
+- `[player name]` - locates in which world player currently plays.
+
+### `/spawn`
+Without arguments teleports command sender to spawn world.
+- `[player name]` - teleports specified player to spawn world.
+
+### `/environment`
+- `variables list` - shows list of all variables in world.
+- `variables size` - outputs amount of all variables in world.
+- `variables clear` - clears all variables.
+- `debug enable` - enables debug mode for world. It sends messages about events and action arguments.
+- `debug disable` - disables debug mode for world.
+
+### Minecraft commands
+These commands overwrite minecraft and EssentialsX commands.
+They will work only if command sender is owner of world, or if he has bypass permission. Using commands from console will redirect to default /minecraft:command.
+
+- `/gamemode [player name] [game mode]` - changes player's game mode.
+- `/gamemode [game mode]` - changes player's game mode.
+- `/teleport [x] [y] [z] [yaw] [pitch]` - teleports sender to specified coordinates.
+- `/teleport [player name] [x] [y] [z] [yaw] [pitch]` - teleports specified player to specified coordinates.
+- `/give [player name] [item material] [amount]` - gives item to specified player.
 
 ## License
 
