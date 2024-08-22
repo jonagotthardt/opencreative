@@ -16,30 +16,28 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mcchickenstudio.creative.coding.blocks.actions.playeractions.appearance;
+package mcchickenstudio.creative.coding.blocks.actions.worldactions.world;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
-import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
-import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
+import mcchickenstudio.creative.coding.blocks.actions.worldactions.WorldAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.WeatherType;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.Entity;
 
-public class SetWeatherAction extends PlayerAction {
-    public SetWeatherAction(Executor executor, Target target, int x, Arguments args) {
+public class SetTimeAction extends WorldAction {
+    public SetTimeAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
-    public void executePlayer(Player player) {
-        String weatherString = getArguments().getValue("weather", "clean",this);
-        WeatherType weather = (weatherString.equals("storm") ? WeatherType.DOWNFALL : WeatherType.CLEAR);
-        player.setPlayerWeather(weather);
+    protected void execute(Entity entity) {
+        float time = getArguments().getValue("time",6f,this);
+        getPlot().world.setTime((long) (time*1000));
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.PLAYER_SET_WEATHER;
+        return ActionType.WORLD_SET_WEATHER;
     }
 }

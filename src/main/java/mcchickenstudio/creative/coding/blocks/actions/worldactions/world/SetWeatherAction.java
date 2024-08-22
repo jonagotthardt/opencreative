@@ -23,6 +23,7 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.worldactions.WorldAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import org.bukkit.WeatherType;
 import org.bukkit.entity.Entity;
 
 public class SetWeatherAction extends WorldAction {
@@ -32,11 +33,32 @@ public class SetWeatherAction extends WorldAction {
 
     @Override
     protected void execute(Entity entity) {
-
+        String weather = getArguments().getValue("weather", "clean",this);
+        int duration = getArguments().getValue("duration", -1,this);
+        switch (weather.toLowerCase()) {
+            case "storm": {
+                getPlot().world.setStorm(true);
+                if (duration >= 0) {
+                    getPlot().world.setWeatherDuration(duration);
+                }
+                break;
+            }
+            case "thunder": {
+                getPlot().world.setThundering(true);
+                if (duration >= 0) {
+                    getPlot().world.setThunderDuration(duration);
+                }
+                break;
+            }
+            default: {
+                getPlot().world.setClearWeatherDuration(Math.max(duration, 0));
+                break;
+            }
+        }
     }
 
     @Override
     public ActionType getActionType() {
-        return null;
+        return ActionType.WORLD_SET_WEATHER;
     }
 }

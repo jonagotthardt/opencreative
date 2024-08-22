@@ -45,6 +45,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -63,11 +64,10 @@ public class PlayerDeath implements Listener {
 
     public static final Map<Player, Location> deathLocations = new HashMap<>();
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onDeath(PlayerDeathEvent event) {
-        Player player = event.getEntity().getPlayer();
-        if (player == null) return;
-        event.setDeathMessage(null);
+        Player player = event.getPlayer();
+        event.deathMessage(null);
         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
         if (plot != null) {
             deathLocations.put(player, plot.world.getSpawnLocation());
@@ -100,11 +100,11 @@ public class PlayerDeath implements Listener {
             case DROWNING -> getLocaleMessage("deaths.drowning");
             case DRYOUT -> getLocaleMessage("deaths.dryout");
             case ENTITY_ATTACK ->
-                    getLocaleMessage("deaths.entity-attack").replace("%entity%", (damager == null ? "" : damager.getName().substring(0, 30)));
+                    getLocaleMessage("deaths.entity-attack").replace("%entity%", (damager == null ? "" : damager.getName().substring(0, Math.min(damager.getName().length(),30))));
             case ENTITY_EXPLOSION ->
-                    getLocaleMessage("deaths.entity-explosion").replace("%entity%", (damager == null ? "" : damager.getName()));
+                    getLocaleMessage("deaths.entity-explosion").replace("%entity%", (damager == null ? "" : damager.getName().substring(0, Math.min(damager.getName().length(),30))));
             case ENTITY_SWEEP_ATTACK ->
-                    getLocaleMessage("deaths.entity-sweep-attack").replace("%entity%", (damager == null ? "" : damager.getName()));
+                    getLocaleMessage("deaths.entity-sweep-attack").replace("%entity%", (damager == null ? "" : damager.getName().substring(0, Math.min(damager.getName().length(),30))));
             case FALL -> getLocaleMessage("deaths.fall");
             case FALLING_BLOCK -> getLocaleMessage("deaths.falling-block");
             case FIRE -> getLocaleMessage("deaths.fire");

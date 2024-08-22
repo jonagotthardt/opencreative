@@ -22,6 +22,7 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.menu.AbstractMenu;
 import mcchickenstudio.creative.menu.buttons.ParameterButton;
+import mcchickenstudio.creative.utils.ItemUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -51,7 +52,7 @@ public abstract class Layout extends AbstractMenu {
 
     protected final ActionType actionType;
     protected final List<Byte> argsSlots = new ArrayList<>();
-    protected final List<ParameterButton> radioButtons = new ArrayList<>();
+    protected final List<ParameterButton> parameterButtons = new ArrayList<>();
     protected final ArgumentSlot[] requiredSlots;
     private final Block chestBlock;
 
@@ -85,14 +86,20 @@ public abstract class Layout extends AbstractMenu {
     @Override
     public void onClick(InventoryClickEvent event) {
         if (!isClickedInMenuSlots(event) || !isPlayerClicked(event)) return;
+        ItemStack currentItem = event.getCursor();
         if (argsSlots.contains((byte) event.getRawSlot())) {
             ItemStack argItem = event.getClickedInventory().getItem(event.getRawSlot());
-            for (ParameterButton rb : radioButtons) {
-                if (itemEquals(argItem,rb.getItem())) {
+            for (ParameterButton parameter : parameterButtons) {
+                if (itemEquals(argItem,parameter.getItem())) {
                     event.setCancelled(true);
-                    rb.next();
-                    ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.BLOCK_AMETHYST_BLOCK_RESONATE,100f,1.7f);
-                    event.getClickedInventory().setItem(event.getRawSlot(),rb.getItem());
+                    if (getValueType(currentItem) == ValueType.VARIABLE) {
+                        event.getClickedInventory().setItem(event.getRawSlot(),currentItem);
+                        ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.BLOCK_VAULT_ACTIVATE,100f,0.7f);
+                    } else {
+                        parameter.next();
+                        ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.BLOCK_AMETHYST_BLOCK_RESONATE,100f,1.7f);
+                        event.getClickedInventory().setItem(event.getRawSlot(),parameter.getItem());
+                    }
                 }
             }
         } else {
@@ -117,7 +124,7 @@ public abstract class Layout extends AbstractMenu {
         for (byte argSlot : argsSlots) {
             if (!(chestBlock.getState() instanceof Chest)) continue;
             ItemStack argItem = inventory.getItem(argSlot);
-            for (ParameterButton rb : radioButtons) {
+            for (ParameterButton rb : parameterButtons) {
                 if (argItem == null) continue;
                 ItemStack itemStack = argItem.clone();
                 for (ItemFlag flag : itemStack.getItemFlags()) {
@@ -196,8 +203,12 @@ public abstract class Layout extends AbstractMenu {
                 }
             }
             ParameterButton rb = createParamButton((ParameterSlot) argumentSlot,value);
-            setItem(slot,rb.getItem());
-            radioButtons.add(rb);
+            if (contentItem != null && getValueType(contentItem) == ValueType.VARIABLE) {
+                setItem(slot,contentItem);
+            } else {
+                setItem(slot,rb.getItem());
+            }
+            parameterButtons.add(rb);
         } else {
             setItem(slot,contentItem);
         }

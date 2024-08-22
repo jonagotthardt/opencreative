@@ -75,16 +75,20 @@ public class Plot {
     private Sharing plotSharing;
     private Category plotCategory;
 
+    public final int worldSize;
+    public int lastModifiedBlocksAmount;
+    public int lastRedstoneOperationsAmount;
     public boolean currentlyTransferringOwnership;
 
-    public final int worldSize;
     public final int entitiesLimit;
+    public final int codeOperationsLimit;
     public final int redstoneOperationsLimit;
-    public int lastRedstoneOperationsAmount;
+    private final int modifyingBlocksLimit;
     private final int openingInventoriesLimit;
     private final int variablesAmountLimit;
+
+
     private final List<BukkitRunnable> runningBukkitRunnables = new ArrayList<>();
-    public final int codeOperationsLimit;
 
     private final WorldVariables worldVariables;
     private boolean debug = false;
@@ -115,12 +119,14 @@ public class Plot {
         plotSharing = (Sharing.PUBLIC);
         setPlotReputation(0);
 
+        lastModifiedBlocksAmount = 0;
         lastRedstoneOperationsAmount = 0;
         redstoneOperationsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_REDSTONE_OPERATIONS_LIMIT);
         entitiesLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_ENTITIES_LIMIT);
         codeOperationsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_CODE_OPERATIONS_LIMIT);
         openingInventoriesLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_OPENING_INVENTORIES_LIMIT);
         variablesAmountLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_VARIABLES_LIMIT);
+        modifyingBlocksLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerLimit.WORLD_MODIFYING_BLOCKS_LIMIT);
         worldSize = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_SIZE);
         currentlyTransferringOwnership = false;
 
@@ -158,12 +164,14 @@ public class Plot {
         devPlot = new DevPlot(this);
         script = new CodeScript(this,getPlotScriptFile(this));
 
+        lastModifiedBlocksAmount = 0;
         lastRedstoneOperationsAmount = 0;
         redstoneOperationsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_REDSTONE_OPERATIONS_LIMIT);
         entitiesLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_ENTITIES_LIMIT);
         codeOperationsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_CODE_OPERATIONS_LIMIT);
         openingInventoriesLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_OPENING_INVENTORIES_LIMIT);
         variablesAmountLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_VARIABLES_LIMIT);
+        modifyingBlocksLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerLimit.WORLD_MODIFYING_BLOCKS_LIMIT);
         worldSize = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_SIZE);
 
         if (!isCorrupted) {
@@ -680,10 +688,12 @@ public class Plot {
         player.teleport(lastLocation == null ? this.devPlot.world.getSpawnLocation() : lastLocation);
         clearPlayer(player);
         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE,100,2);
-        WorldBorder border = Bukkit.createWorldBorder();
-        border.setCenter(devPlot.world.getWorldBorder().getCenter());
-        border.setSize(devPlot.world.getWorldBorder().getSize()*5);
-        player.setWorldBorder(border);
+        for (Player developer : devPlot.world.getPlayers()) {
+            WorldBorder border = Bukkit.createWorldBorder();
+            border.setCenter(devPlot.world.getWorldBorder().getCenter());
+            border.setSize(devPlot.world.getWorldBorder().getSize()*5);
+            developer.setWorldBorder(border);
+        }
         devPlot.translateCodingBlocks(player);
     }
 
@@ -923,4 +933,7 @@ public class Plot {
         return null;
     }
 
+    public int getModifyingBlocksLimit() {
+        return modifyingBlocksLimit;
+    }
 }

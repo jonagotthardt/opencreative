@@ -164,6 +164,6 @@ public class Argument {
 
     @Override
     public String toString() {
-        return "Argument. Name: " + path + ", Type: " + type.name() + ", Value: " + value.toString();
+        return path + " - " + type.name() + ": " + value.toString();
     }
 }

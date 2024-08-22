@@ -45,6 +45,7 @@ import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.coding.menus.*;
 import mcchickenstudio.creative.coding.menus.variables.EventValuesMenu;
+import mcchickenstudio.creative.coding.menus.variables.ParticlesMenu;
 import mcchickenstudio.creative.coding.menus.variables.PotionsMenu;
 import mcchickenstudio.creative.coding.menus.variables.VariablesMenu;
 import mcchickenstudio.creative.coding.menus.layouts.LayoutMaker;
@@ -141,6 +142,9 @@ public class PlayerInteract implements Listener {
                     new VariablesMenu().open(player);
                 } else if (currentItem.getType() == Material.POTION || currentItem.getType() == Material.GLASS_BOTTLE) {
                     new PotionsMenu(player).open(player);
+                    event.setCancelled(true);
+                } else if (currentItem.getType() == Material.NETHER_STAR) {
+                    new ParticlesMenu(player).open(player);
                     event.setCancelled(true);
                 } else if (currentItem.getType() == Material.NAME_TAG) {
                     new EventValuesMenu(player).open(player);
@@ -411,13 +415,13 @@ public class PlayerInteract implements Listener {
                 }
             }
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                if (event.getHand() == EquipmentSlot.HAND) {
-                    return;
-                }
                 if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                     EventRaiser.raiseBlockInteractionEvent(event.getPlayer(),event);
                 }
-                EventRaiser.raiseRightClickEvent(event.getPlayer(),event);
+                if (event.getHand() == EquipmentSlot.HAND) {
+                    EventRaiser.raiseRightClickEvent(event.getPlayer(),event);
+                    return;
+                }
             }
             if (event.getAction() == Action.PHYSICAL) {
                 EventRaiser.raiseWorldInteractEvent(event.getPlayer(),event);

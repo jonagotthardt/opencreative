@@ -40,6 +40,13 @@ import mcchickenstudio.creative.coding.blocks.actions.variableactions.other.Dele
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.other.SetVariableRandomValueAction;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.other.SetVariableValueAction;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.text.*;
+import mcchickenstudio.creative.coding.blocks.actions.worldactions.blocks.SetBlockTypeAction;
+import mcchickenstudio.creative.coding.blocks.actions.worldactions.entity.CreateExplosionAction;
+import mcchickenstudio.creative.coding.blocks.actions.worldactions.entity.SpawnEntityAction;
+import mcchickenstudio.creative.coding.blocks.actions.worldactions.entity.SpawnParticleAction;
+import mcchickenstudio.creative.coding.blocks.actions.worldactions.entity.StrikeLightningAction;
+import mcchickenstudio.creative.coding.blocks.actions.worldactions.world.SetTimeAction;
+import mcchickenstudio.creative.coding.blocks.actions.worldactions.world.SetWeatherAction;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.blocks.IsBlockEqualsCondition;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.blocks.IsLookingAtBlockCondition;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.blocks.IsNearLocationCondition;
@@ -62,7 +69,6 @@ import mcchickenstudio.creative.coding.menus.layouts.ArgumentSlot;
 import mcchickenstudio.creative.coding.menus.layouts.ParameterSlot;
 import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.utils.hooks.HookUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -163,8 +169,8 @@ public enum ActionType {
     PLAYER_SET_SPRINTING(               ActionCategory.PLAYER_ACTION, MenusCategory.STATE, SetSprintingAction.class, Material.GOLDEN_BOOTS, new ParameterSlot("boolean", Material.LEATHER_BOOTS, Material.NETHERITE_BOOTS)),
 
     // Appearance
-    PLAYER_SET_TIME(                    ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, SetTimeAction.class, Material.CLOCK, new ArgumentSlot("time", ValueType.NUMBER)),
-    PLAYER_SET_WEATHER(                 ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, SetWeatherAction.class, Material.WATER_BUCKET, new ParameterSlot("weather", Arrays.asList("clean","storm"), Material.SUNFLOWER, Material.WATER_BUCKET)),
+    PLAYER_SET_TIME(                    ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, PlayerSetTimeAction.class, Material.CLOCK, new ArgumentSlot("time", ValueType.NUMBER)),
+    PLAYER_SET_WEATHER(                 ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, PlayerSetWeatherAction.class, Material.WATER_BUCKET, new ParameterSlot("weather", Arrays.asList("clean","storm"), Material.SUNFLOWER, Material.WATER_BUCKET)),
     //PLAYER_SPAWN_PARTICLE(              ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, null, Material.NETHER_STAR, new ArgumentSlot("particle",VariableType.PARTICLE,(byte) 18),new ArgumentSlot("location",VariableType.LOCATION),new ArgumentSlot("count",VariableType.NUMBER)),
     PLAYER_SET_RESOURCE_PACK(           ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, SetResourcePackAction.class, Material.SHROOMLIGHT, new ArgumentSlot("url", ValueType.TEXT)),
     PLAYER_SET_WORLD_BORDER(            ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, SetWorldBorderAction.class, Material.END_CRYSTAL, new ArgumentSlot("center", ValueType.LOCATION), new ArgumentSlot("radius", ValueType.NUMBER), new ArgumentSlot("time", ValueType.NUMBER), new ArgumentSlot("damage", ValueType.NUMBER), new ArgumentSlot("warning-distance", ValueType.NUMBER), new ArgumentSlot("warning-time", ValueType.NUMBER), new ArgumentSlot("safe-distance", ValueType.NUMBER)),
@@ -214,15 +220,15 @@ public enum ActionType {
      * <h1>World Actions.</h1>
      */
 
-    WORLD_SET_TIME(                 ActionCategory.WORLD_ACTION, MenusCategory.WORLD, null, Material.CLOCK, new ArgumentSlot("time", ValueType.NUMBER)),
-    WORLD_SET_WEATHER(                 ActionCategory.WORLD_ACTION, MenusCategory.WORLD, null, Material.WATER_BUCKET, new ParameterSlot("weather", Arrays.asList("clean","storm"), Material.SUNFLOWER, Material.WATER_BUCKET)),
+    WORLD_SET_TIME(                 ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SetTimeAction.class, Material.CLOCK, new ArgumentSlot("time", ValueType.NUMBER)),
+    WORLD_SET_WEATHER(                 ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SetWeatherAction.class, Material.WATER_BUCKET, new ParameterSlot("weather", Arrays.asList("clean","storm","thunder"), Material.SUNFLOWER, Material.WATER_BUCKET, Material.TRIDENT), new ArgumentSlot("duration", ValueType.NUMBER)),
 
-    WORLD_CREATE_EXPLOSION(                 ActionCategory.WORLD_ACTION, MenusCategory.MOVEMENT, null, Material.TNT, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ArgumentSlot("power", ValueType.NUMBER), new ParameterSlot("fire", Material.GUNPOWDER, Material.CAMPFIRE), new ParameterSlot("damage", Material.GRASS_BLOCK, Material.GLASS)),
-    WORLD_SPAWN_THUNDER(                 ActionCategory.WORLD_ACTION, MenusCategory.MOVEMENT, null, Material.TRIDENT, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 27)),
+    WORLD_SPAWN_ENTITY(                 ActionCategory.WORLD_ACTION, MenusCategory.ENTITY, SpawnEntityAction.class, Material.SPAWNER, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 9), new ArgumentSlot("type", ValueType.ITEM), new ArgumentSlot("name", ValueType.TEXT), new ParameterSlot("show-name", true, Material.NAME_TAG, Material.STRING), new ParameterSlot("gravity", true, Material.SAND, Material.COBWEB), new ParameterSlot("ai", true, Material.PLAYER_HEAD, Material.SKELETON_SKULL), new ParameterSlot("glowing", Material.GLASS, Material.WHITE_STAINED_GLASS), new ParameterSlot("invisible", Material.POTION, Material.GLASS_BOTTLE), new ParameterSlot("invulnerable", Material.REDSTONE, Material.TOTEM_OF_UNDYING), new ParameterSlot("visible-for-all", true, Material.GRASS_BLOCK, Material.GRAY_STAINED_GLASS)),
+    WORLD_CREATE_EXPLOSION(                 ActionCategory.WORLD_ACTION, MenusCategory.ENTITY, CreateExplosionAction.class, Material.TNT, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ArgumentSlot("power", ValueType.NUMBER), new ParameterSlot("fire", Material.GUNPOWDER, Material.CAMPFIRE), new ParameterSlot("damage", Material.GRASS_BLOCK, Material.MAGMA_BLOCK)),
+    WORLD_STRIKE_LIGHTNING(                 ActionCategory.WORLD_ACTION, MenusCategory.ENTITY, StrikeLightningAction.class, Material.TRIDENT, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ParameterSlot("damage", true, Material.REDSTONE, Material.GLOWSTONE_DUST)),
+    WORLD_SPAWN_PARTICLE(                 ActionCategory.WORLD_ACTION, MenusCategory.ENTITY, SpawnParticleAction.class, Material.NETHER_STAR, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ArgumentSlot("particle", ValueType.PARTICLE), new ArgumentSlot("count", ValueType.NUMBER), new ArgumentSlot("offset-x", ValueType.NUMBER), new ArgumentSlot("offset-y", ValueType.NUMBER), new ArgumentSlot("offset-z", ValueType.NUMBER)),
 
-    WORLD_SET_BLOCK_TYPE(                 ActionCategory.WORLD_ACTION, MenusCategory.MOVEMENT, null, Material.STONE, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ArgumentSlot("type", ValueType.ITEM)),
-
-
+    WORLD_SET_BLOCK_TYPE(                 ActionCategory.WORLD_ACTION, MenusCategory.MOVEMENT, SetBlockTypeAction.class, Material.STONE, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ArgumentSlot("type", ValueType.ITEM)),
 
     /**
      * <h1>Variable Actions.</h1>

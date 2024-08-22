@@ -161,4 +161,8 @@ public class WorldVariables {
     public Plot getPlot() {
         return plot;
     }
+
+    public void garbageCollector(ActionsHandler actionsHandler) {
+        variables.removeIf(var -> var.getHandler() != null && var.getHandler().equals(actionsHandler));
+    }
 }

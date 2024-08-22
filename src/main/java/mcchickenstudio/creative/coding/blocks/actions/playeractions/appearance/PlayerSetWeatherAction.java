@@ -23,22 +23,23 @@ import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
 
-public class SetTimeAction extends PlayerAction {
-    public SetTimeAction(Executor executor, Target target, int x, Arguments args) {
+public class PlayerSetWeatherAction extends PlayerAction {
+    public PlayerSetWeatherAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     public void executePlayer(Player player) {
-        float time = getArguments().getValue("time",6f,this);
-        player.setPlayerTime((long) (time*1000),false);
-
+        String weatherString = getArguments().getValue("weather", "clean",this);
+        WeatherType weather = (weatherString.equals("storm") ? WeatherType.DOWNFALL : WeatherType.CLEAR);
+        player.setPlayerWeather(weather);
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.PLAYER_SET_TIME;
+        return ActionType.PLAYER_SET_WEATHER;
     }
 }

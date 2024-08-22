@@ -27,6 +27,7 @@ import mcchickenstudio.creative.coding.variables.VariableLink;
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -112,18 +113,18 @@ public class Arguments {
                 return new VariableLink(varName,varType);
             }
             case EVENT_VALUE: {
-                    if (listSection == null) {
-                        return null;
-                    }
-                    String typeString = listSection.getString("name");
-                    EventValues.Variable varType;
-                    if (typeString.isEmpty()) return null;
-                    try {
-                        varType = EventValues.Variable.valueOf(typeString);
-                    } catch (Exception e) {
-                        return null;
-                    }
-                    return new EventValueLink(varType,executor);
+                if (listSection == null) {
+                    return null;
+                }
+                String typeString = listSection.getString("name");
+                EventValues.Variable varType;
+                if (typeString.isEmpty()) return null;
+                try {
+                    varType = EventValues.Variable.valueOf(typeString);
+                } catch (Exception e) {
+                    return null;
+                }
+                return new EventValueLink(varType,executor);
             }
             case NUMBER:
                 if (INT_PATTERN.matcher(stringValue).matches()) {
@@ -141,6 +142,17 @@ public class Arguments {
                     return new ItemStack(Material.AIR);
                 }
                 return ItemStack.deserialize(listSection.getValues(true));
+            case PARTICLE:
+                if (listSection == null) {
+                    return null;
+                }
+                String typeString = listSection.getString("type");
+                if (typeString == null || typeString.isEmpty()) return null;
+                try {
+                    return Particle.valueOf(typeString);
+                } catch (Exception e) {
+                    return typeString;
+                }
             default:
                 return stringValue;
         }
@@ -209,8 +221,11 @@ public class Arguments {
             try {
                 List<Argument> args = (List<Argument>) arg.getValue(action);
                 for (Argument argument : args) {
-                    if (argument.value instanceof VariableLink) {
-                        list.add((VariableLink) argument.value);
+                    if (argument.value instanceof VariableLink link) {
+                        if (link.getVariableType() == VariableLink.VariableType.LOCAL) {
+                            link.setHandler(action.getHandler().getMainActionHandler());
+                        }
+                        list.add(link);
                     }
                 }
             } catch (ClassCastException e) {
@@ -451,6 +466,16 @@ public class Arguments {
         }
         sendCodingDebugVariable(plot,path,arg.getValue(action));
         return arg.getValue(action).toString();
+    }
+
+    public Particle getValue(String path, Particle defaultValue, Action action) {
+        Argument arg = getArg(path);
+        if (arg != null && arg.getValue(action) instanceof Particle particle) {
+            sendCodingDebugVariable(plot,path,arg.getValue(action));
+            return particle;
+        }
+        sendCodingDebugNotFoundVariable(plot,path,defaultValue);
+        return defaultValue;
     }
 
     public char getValue(String path, char defaultValue, Action action) {

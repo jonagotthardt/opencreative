@@ -53,6 +53,7 @@ public class PlayerUtils {
         WORLD_REDSTONE_OPERATIONS_LIMIT("world.redstone-operations-limit"),
         WORLD_OPENING_INVENTORIES_LIMIT("world.opening-inventories-limit"),
         WORLD_VARIABLES_LIMIT("world.variables-limit"),
+        WORLD_MODIFYING_BLOCKS_LIMIT("world.modifying-blocks-limit"),
         PLAYER_WORLDS_AMOUNT_LIMIT("creating-world.limit");
 
         private final String path;
@@ -254,7 +255,7 @@ public class PlayerUtils {
         player.sendTitle(getLocaleMessage("lobby.title"), getLocaleMessage("lobby.subtitle"),20,60,20);
         player.sendMessage(getLocaleMessage("lobby.message"));
         player.playSound(player.getLocation(),Sound.BLOCK_BEACON_DEACTIVATE,100,1.5f);
-        player.playSound(player.getLocation(),Sound.MUSIC_DISC_OTHERSIDE,100,0.7f);
+        player.playSound(player.getLocation(),Sound.MUSIC_DISC_CREATOR ,100,0.7f);
 
         ItemStack gamesItem = createItem(Material.COMPASS,1,"items.lobby.games");
         player.getInventory().setItem(3, gamesItem);
@@ -318,6 +319,29 @@ public class PlayerUtils {
                 player.sendSignChange(block.getLocation(), newLines);
             }
         }.runTaskLater(Main.getPlugin(),5L);
+    }
+
+    /**
+     * Translate sign text on code block.
+     * @param block Block with sign that will be translated.
+     */
+    public static void translateSign(Block block, Player player) {
+        if (block == null) return;
+        if (!block.getType().toString().contains("SIGN")) return;
+        Sign sign = (Sign) block.getState();
+        List<Component> newLines = new ArrayList<>();
+        for (Component line : sign.lines()) {
+            String content = ((TextComponent) line).content();
+            String path = "blocks." + content;
+            if (content.isEmpty()) {
+                newLines.add(Component.text(""));
+            } else if (!messageExists(path)) {
+                newLines.add(Component.text(content));
+            } else {
+                newLines.add(Component.text(getLocaleMessage(path,false)));
+            }
+        }
+        player.sendSignChange(block.getLocation(), newLines);
     }
 
     public static void spawnGlowingBlock(Player player, Location location) {

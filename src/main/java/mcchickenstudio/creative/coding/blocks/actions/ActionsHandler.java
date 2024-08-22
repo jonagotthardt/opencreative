@@ -23,6 +23,7 @@ import mcchickenstudio.creative.coding.blocks.actions.controlactions.lines.WaitA
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import mcchickenstudio.creative.coding.variables.VariableLink;
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -87,6 +88,10 @@ public class ActionsHandler {
 
     private void executeNextAction() {
         if (actionsQueue.isEmpty()) {
+            if (getMainActionHandler() == this) {
+                executor.getPlot().getWorldVariables().garbageCollector(this);
+            }
+
             /*if (action instanceof RepeatAction repeatAction) {
                 if (action instanceof RepeatForLoopAction forLoopAction) {
                     VariableLink link = forLoopAction.getArguments().getVariableLink("variable",forLoopAction);

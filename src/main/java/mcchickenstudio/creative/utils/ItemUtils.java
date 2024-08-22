@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.utils;
 
 import mcchickenstudio.creative.Main;
+import mcchickenstudio.creative.coding.variables.ValueType;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -37,6 +38,10 @@ import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemName;
 public class ItemUtils {
 
     private final static NamespacedKey CODING_VALUE_KEY = new NamespacedKey(Main.getPlugin(), "oc_value_type");
+    private final static NamespacedKey CODING_POTION_EFFECT_KEY = new NamespacedKey(Main.getPlugin(), "oc_potion_effect");
+    private final static NamespacedKey CODING_POTION_DURATION_KEY = new NamespacedKey(Main.getPlugin(), "oc_potion_duration");
+    private final static NamespacedKey CODING_POTION_LEVEL_KEY = new NamespacedKey(Main.getPlugin(), "oc_potion_level");
+    private final static NamespacedKey CODING_PARTICLE_TYPE_KEY = new NamespacedKey(Main.getPlugin(), "oc_particle_type");
     private final static NamespacedKey CODING_VARIABLE_TYPE_KEY = new NamespacedKey(Main.getPlugin(), "oc_variable_type");
     private final static NamespacedKey CODING_DO_NOT_DROP_ME_KEY = new NamespacedKey(Main.getPlugin(), "oc_do_not_drop_me");
     private final static NamespacedKey CODING_LOCATION_X = new NamespacedKey(Main.getPlugin(), "oc_loc_x");
@@ -68,18 +73,36 @@ public class ItemUtils {
         return CODING_LOCATION_Z;
     }
 
-    public static void setPersistentData(ItemStack item, NamespacedKey key, String value) {
+    public static NamespacedKey getCodingParticleTypeKey() {
+        return CODING_PARTICLE_TYPE_KEY;
+    }
+
+    public static NamespacedKey getCodingPotionDurationKey() {
+        return CODING_POTION_DURATION_KEY;
+    }
+
+    public static NamespacedKey getCodingPotionEffectKey() {
+        return CODING_POTION_EFFECT_KEY;
+    }
+
+    public static NamespacedKey getCodingPotionLevelKey() {
+        return CODING_POTION_LEVEL_KEY;
+    }
+
+    public static ItemStack setPersistentData(ItemStack item, NamespacedKey key, String value) {
         ItemMeta meta = item.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
         container.set(key, PersistentDataType.STRING, value);
         item.setItemMeta(meta);
+        return item;
     }
 
-    public static void setPersistentData(ItemStack item, NamespacedKey key, double value) {
+    public static ItemStack setPersistentData(ItemStack item, NamespacedKey key, double value) {
         ItemMeta meta = item.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
         container.set(key, PersistentDataType.DOUBLE, value);
         item.setItemMeta(meta);
+        return item;
     }
 
     /**
@@ -172,20 +195,22 @@ public class ItemUtils {
         }
     }
 
-    public static void setDisplayName(ItemStack item, String displayName) {
+    public static ItemStack setDisplayName(ItemStack item, String displayName) {
         if (item.hasItemMeta()) {
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName(displayName);
             item.setItemMeta(meta);
         }
+        return item;
     }
 
-    public static void setLore(ItemStack item, List<String> lore) {
+    public static ItemStack setLore(ItemStack item, List<String> lore) {
         if (item.hasItemMeta()) {
             ItemMeta meta = item.getItemMeta();
             meta.setLore(lore);
             item.setItemMeta(meta);
         }
+        return item;
     }
 
     public static ItemStack addLoreAtBegin(ItemStack item, String loreLine) {
@@ -216,6 +241,30 @@ public class ItemUtils {
             item.setItemMeta(meta);
         }
         return item;
+    }
+
+    public static ValueType getValueType(ItemStack item) {
+        String typeString = getPersistentData(item,getCodingValueKey());
+        try {
+            return ValueType.valueOf(typeString);
+        } catch (IllegalArgumentException e) {
+            return ValueType.ITEM;
+        }
+    }
+
+    public static String getPersistentData(ItemStack item, NamespacedKey key) {
+        if (item.getItemMeta() == null) {
+            return "";
+        }
+        PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
+        if (!container.has(key)) {
+            return "";
+        }
+        String dataType = container.get(key, PersistentDataType.STRING);
+        if (dataType == null) {
+            return "";
+        }
+        return dataType;
     }
 
     public static ItemStack getItemWithIgnoreData(ItemStack item, boolean removeAmount, boolean removeName, boolean removeLore, boolean removeFlags, boolean removeEnchantments, boolean removeMaterial) {

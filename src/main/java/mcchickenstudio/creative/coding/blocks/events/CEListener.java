@@ -67,6 +67,16 @@ public class CEListener implements Listener {
         Executors.activate(event);
     }
 
+    @EventHandler
+    public void onChat(ChunkLoadEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onChat(ChunkUnloadEvent event) {
+        Executors.activate(event);
+    }
+
     // Movement
 
     @EventHandler

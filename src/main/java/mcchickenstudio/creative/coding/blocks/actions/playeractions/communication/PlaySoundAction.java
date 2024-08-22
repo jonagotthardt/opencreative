@@ -24,8 +24,10 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class PlaySoundAction extends PlayerAction {
 
@@ -36,6 +38,10 @@ public class PlaySoundAction extends PlayerAction {
     @Override
     public void executePlayer(Player player) {
         String sound = getArguments().getValue("sound","entity.player.levelup",this);
+        ItemStack musicDisc = getArguments().getValue("sound",new ItemStack(Material.AIR),this);
+        if (musicDisc.getType() != Material.AIR && musicDisc.getType().name().contains("MUSIC_DISC")) {
+            sound = musicDisc.getType().name().toLowerCase().replace("music_disc_","music_disc.");
+        }
         float volume = getArguments().getValue("volume",100f,this);
         float pitch = getArguments().getValue("pitch",1f,this);
         String categoryString = getArguments().getValue("category","ambient",this);

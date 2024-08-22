@@ -261,7 +261,7 @@ public class ErrorUtils {
     }
 
     public static void sendCodingDebugNotFoundVariable(Plot plot, String name, Object value) {
-        if (plot.getDebug()) return;
+        if (!plot.getDebug()) return;
         if (value == null) value = "null";
         for (Player player : plot.getPlayers()) {
             player.sendMessage(getLocaleMessage("plot-code-debug.variable-not-found",false).replace("%name%",name).replace("%value%",value.toString()));
@@ -274,7 +274,7 @@ public class ErrorUtils {
     }
 
     public static void sendCodingDebugVariable(Plot plot, String name, Object value) {
-        if (plot.getDebug()) return;
+        if (!plot.getDebug()) return;
         if (value == null) value = "null";
         for (Player player : plot.getPlayers()) {
             player.sendMessage(getLocaleMessage("plot-code-debug.variable-found",false).replace("%name%",name).replace("%value%",value.toString()));
@@ -283,7 +283,7 @@ public class ErrorUtils {
 
     public static void sendCodingDebugExecutor(Executor executor) {
         Plot plot = executor.getPlot();
-        if (plot == null || plot.getDebug()) return;
+        if (plot == null || !plot.getDebug()) return;
         for (Player player : plot.getPlayers()) {
             player.sendMessage(getLocaleMessage("plot-code-debug.executor-message",false).replace("%type%",executor.getExecutorType().getLocaleName()).replace("%x%",String.valueOf(executor.getX())).replace("%y%",String.valueOf(executor.getY())).replace("%z%",String.valueOf(executor.getZ())));
         }
@@ -292,7 +292,7 @@ public class ErrorUtils {
     public static void sendCodingDebugAction(Action action) {
         if (action.getExecutor() == null) return;
         Plot plot = action.getExecutor().getPlot();
-        if (plot == null || plot.getDebug()) return;
+        if (plot == null || !plot.getDebug()) return;
         for (Player player : plot.getPlayers()) {
             List<Argument> arguments = action.getArgumentsList();
             StringBuilder hoverMessage = new StringBuilder();

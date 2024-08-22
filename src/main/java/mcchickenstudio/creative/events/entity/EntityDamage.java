@@ -69,7 +69,6 @@ public class EntityDamage implements Listener {
                     if (playerDamageFlag == 3 && event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) event.setCancelled(true);
                     if (playerDamageFlag == 4 && event.getCause() == EntityDamageEvent.DamageCause.FALL) event.setCancelled(true);
                     if (playerDamageFlag == 5 && (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK || event.getCause() == EntityDamageEvent.DamageCause.FALL)) event.setCancelled(true);
-                    if (event.getCause() == EntityDamageEvent.DamageCause.VOID) ((Player) event.getEntity()).setHealth(0);
 
                     EventRaiser.raisePlayerDamagedEvent(victim,event);
 

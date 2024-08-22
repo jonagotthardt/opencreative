@@ -19,6 +19,8 @@
 package mcchickenstudio.creative.coding.blocks.events;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
+import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
+import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.*;
 import mcchickenstudio.creative.coding.blocks.events.player.interaction.*;
 import mcchickenstudio.creative.coding.blocks.events.player.inventory.*;
@@ -52,6 +54,22 @@ public class EventRaiser {
         if (PlotManager.getInstance().getDevPlot(player) != null) return true;
         if (PlotManager.getInstance().getPlotByPlayer(player).getPlotMode() == Plot.Mode.BUILD) return true;
         return ChangedWorld.isPlayerWithLocation(player);
+    }
+
+    public static void raiseChunkLoadEvent(PlayerChunkLoadEvent event) {
+        if (canRaiseEvent(event.getPlayer())) {
+            return;
+        }
+        CreativeEvent creativeEvent = new ChunkLoadEvent(event.getPlayer(),event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseChunkUnloadEvent(PlayerChunkUnloadEvent event) {
+        if (canRaiseEvent(event.getPlayer())) {
+            return;
+        }
+        CreativeEvent creativeEvent = new ChunkUnloadEvent(event.getPlayer(),event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
     public static void raiseJoinEvent(Player player) {

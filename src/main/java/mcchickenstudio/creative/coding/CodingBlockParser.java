@@ -43,8 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 import static mcchickenstudio.creative.utils.ErrorUtils.sendPlotCompileErrorMessage;
-import static mcchickenstudio.creative.utils.ItemUtils.getCodingValueKey;
-import static mcchickenstudio.creative.utils.ItemUtils.getCodingVariableTypeKey;
+import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 
 /**
@@ -150,7 +149,7 @@ public class CodingBlockParser {
                                             item = new ItemStack(Material.AIR);
                                             script.saveArguments(multiActions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
                                         }
-                                    } else  {
+                                    } else {
                                         script.saveArguments(multiActions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
                                     }
                                 }
@@ -160,8 +159,8 @@ public class CodingBlockParser {
                             if (item != null) {
                                 script.saveArguments(multiActions,actionBlock,argSlot.getPath(),parseItemValue(item),parseItemType(item));
                             }
+                            slot++;
                         }
-                        slot++;
                     }
                 }
             }
@@ -268,6 +267,18 @@ public class CodingBlockParser {
                 try {
                     type = EventValues.Variable.valueOf(variableType);
                     valueMap.put("name",type.name());
+                    return valueMap;
+                } catch (Exception ignored) {}
+            }
+            case PARTICLE -> {
+                PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+                String particleType = container.get(getCodingParticleTypeKey(), PersistentDataType.STRING);
+                if (particleType == null) break;
+                Particle type;
+                Map<String, String> valueMap = new HashMap<>();
+                try {
+                    type = Particle.valueOf(particleType);
+                    valueMap.put("type",type.name());
                     return valueMap;
                 } catch (Exception ignored) {}
             }

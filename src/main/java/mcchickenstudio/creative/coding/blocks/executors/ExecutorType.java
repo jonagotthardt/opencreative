@@ -33,6 +33,7 @@ import mcchickenstudio.creative.coding.blocks.executors.player.inventory.*;
 import mcchickenstudio.creative.coding.blocks.executors.player.movement.*;
 import mcchickenstudio.creative.coding.blocks.executors.player.world.*;
 import mcchickenstudio.creative.coding.menus.MenusCategory;
+import mcchickenstudio.creative.utils.hooks.HookUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Material;
@@ -77,15 +78,60 @@ public enum ExecutorType {
     PLAYER_PLAY(            ExecutorCategory.EVENT_PLAYER, MenusCategory.WORLD, PlayExecutor.class, PlayEvent.class, Material.COAL),
     PLAYER_CHAT(            ExecutorCategory.EVENT_PLAYER, MenusCategory.WORLD, ChatExecutor.class, ChatEvent.class, Material.BOOK),
     PLAYER_PURCHASE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.WORLD, PurchaseExecutor.class, PlayerPurchaseEvent.class, Material.GOLD_BLOCK),
+    PLAYER_CHUNK_LOAD(        ExecutorCategory.EVENT_PLAYER, MenusCategory.WORLD, ChunkLoadExecutor.class, ChunkLoadEvent.class, Material.DIRT_PATH),
+    PLAYER_CHUNK_UNLOAD(        ExecutorCategory.EVENT_PLAYER, MenusCategory.WORLD, ChunkUnloadExecutor.class, ChunkUnloadEvent.class, Material.RED_STAINED_GLASS),
 
     PLAYER_LEFT_CLICK(      ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, LeftClickExecutor.class, LeftClickEvent.class, Material.GOLDEN_PICKAXE),
     PLAYER_RIGHT_CLICK(     ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, RightClickExecutor.class, RightClickEvent.class, Material.DIAMOND_PICKAXE),
     PLAYER_INTERACT(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, WorldInteractExecutor.class, WorldInteractEvent.class, Material.GOLDEN_HOE),
+
+    // IN DEVELOPMENT
+    /*PLAYER_BUCKET_FILL(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_BUCKET_FISH(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_SHEAR_ENTITY(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_VELOCITY(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_TRADE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_EDIT_BOOK(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_ITEM_BREAK(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_SIGN_OPEN(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_PICKUP_ARROW(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_LOCALE_CHANGE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_RESOURCE_PACK_STATUS(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_RIPTIDE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_PORTAL(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_NAME_ENTITY(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_LEASH_ENTITY(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_UNLEASH_ENTITY(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_ITEM_HELD(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_ITEM_MEND(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_ITEM_CONSUME(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_EXP_CHANGE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_ARMOR_STAND_MANIPULATE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_EGG_THROW(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_FLOWER_POT_MANIPULATE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_PROJECTILE_LAUNCH(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_GAME_MODE_CHANGE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_CHANGE_BEACON(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+
+    PLAYER_ARMOR_CHANGE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_RECIPE_SETTINGS_CHANGE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_CLIENT_SETTINGS_CHANGE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_CARTOGRAPHY_ITEM(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_TAKE_LECTERN_BOOK(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_LOOM_PATTERN_SELECT(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_LECTERN_PAGE_CHANGE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_ELYTRA_BOOST(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_SHIELD_DISABLE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+    PLAYER_STONE_CUTTER_RECIPE_USE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),*/
+
+
     PLAYER_PLACE_BLOCK(     ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, PlaceBlockExecutor.class, PlaceBlockEvent.class, Material.GRASS_BLOCK),
     PLAYER_DESTROY_BLOCK(   ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, DestroyBlockExecutor.class, DestroyBlockEvent.class, Material.STONE),
     PLAYER_DESTROYING_BLOCK(ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, DamageBlockExecutor.class, DamageBlockEvent.class, Material.COBBLESTONE),
     PLAYER_BLOCK_INTERACT(  ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, BlockInteractionExecutor.class, BlockInteractionEvent.class, Material.CHEST),
     PLAYER_MOB_INTERACT(    ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, MobInteractionExecutor.class, MobInteractionEvent.class, Material.VILLAGER_SPAWN_EGG),
+    PLAYER_BED_ENTER(       ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, BedEnterExecutor.class, BedEnterEvent.class, Material.RED_BED),
+    PLAYER_BED_LEAVE(       ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, BedLeaveExecutor.class, BedLeaveEvent.class, Material.ORANGE_BED),
     PLAYER_FISHING(         ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, FishExecutor.class, FishEvent.class, Material.FISHING_ROD),
     PLAYER_SPECTATING(      ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, StartSpectatingExecutor.class, StartSpectatingEvent.class, Material.GLASS),
     PLAYER_STOP_SPECTATING( ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, StopSpectatingExecutor.class, StopSpectatingEvent.class, Material.GLASS_PANE),
@@ -107,6 +153,18 @@ public enum ExecutorType {
     PLAYER_DEATH(           ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerDeathExecutor.class, PlayerDeathEvent.class,Material.REDSTONE),
     PLAYER_RESPAWN(         ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerRespawnExecutor.class, PlayerRespawnEvent.class, Material.PLAYER_HEAD),
     PLAYER_TOTEM_RESPAWN(   ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerTotemRespawnExecutor.class, PlayerTotemRespawnEvent.class, Material.TOTEM_OF_UNDYING),
+
+    // in development
+    /*PLAYER_DAMAGES_PLAYER(        ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, null, null, Material.WATER_BUCKET),
+    PLAYER_KILLS_PLAYER(        ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, null, null, Material.WATER_BUCKET),
+    MOB_KILLS_PLAYER(        ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, null, null, Material.WATER_BUCKET),
+    PLAYER_KILLS_MOB(        ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, null, null, Material.WATER_BUCKET),
+    PROJECTILE_DAMAGES_PLAYER(        ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, null, null, Material.WATER_BUCKET),
+    PLAYER_FALL_DAMAGE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, null, null, Material.WATER_BUCKET),
+    PLAYER_SHOOTS_MOB(        ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, null, null, Material.WATER_BUCKET),
+    PLAYER_SHOT_MOB(        ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, null, null, Material.WATER_BUCKET),*/
+
+
 
     PLAYER_WALK(            ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, PlayerMoveExecutor.class, PlayerMoveEvent.class, Material.LEATHER_BOOTS),
     PLAYER_JUMP(            ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, JumpExecutor.class, JumpEvent.class, Material.RABBIT_FOOT),
@@ -140,8 +198,18 @@ public enum ExecutorType {
         this.material = material;
     }
 
+    public boolean isDisabled() {
+        return getExecutorClass() == null;
+    }
+
     public final ItemStack getIcon() {
-        return addLoreAtEnd(createItem(this.material, 1, "items.developer.events." + this.name().toLowerCase().replace("_","-")),(isCancellable() ? getLocaleMessage("items.developer.events.cancellable",false) : ""));
+        ItemStack icon = createItem(this.material, 1, "items.developer.events." + this.name().toLowerCase().replace("_","-"));
+        icon = addLoreAtEnd(icon,(isCancellable() ? getLocaleMessage("items.developer.events.cancellable",false) : ""));
+        if (isDisabled()) {
+            icon.setType(Material.LIGHT_GRAY_STAINED_GLASS);
+            icon = addLoreAtEnd(icon,getLocaleMessage("disabled"));
+        }
+        return icon;
     }
 
     public final String getLocaleName() {
