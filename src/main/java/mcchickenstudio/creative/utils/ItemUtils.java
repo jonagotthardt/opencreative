@@ -37,6 +37,7 @@ import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemName;
 
 public class ItemUtils {
 
+    private final static NamespacedKey WORLD_ID = new NamespacedKey(Main.getPlugin(), "oc_world_id");
     private final static NamespacedKey CODING_VALUE_KEY = new NamespacedKey(Main.getPlugin(), "oc_value_type");
     private final static NamespacedKey CODING_POTION_EFFECT_KEY = new NamespacedKey(Main.getPlugin(), "oc_potion_effect");
     private final static NamespacedKey CODING_POTION_DURATION_KEY = new NamespacedKey(Main.getPlugin(), "oc_potion_duration");
@@ -87,6 +88,10 @@ public class ItemUtils {
 
     public static NamespacedKey getCodingPotionLevelKey() {
         return CODING_POTION_LEVEL_KEY;
+    }
+
+    public static NamespacedKey getWorldIdKey() {
+        return WORLD_ID;
     }
 
     public static ItemStack setPersistentData(ItemStack item, NamespacedKey key, String value) {
@@ -147,16 +152,16 @@ public class ItemUtils {
     public static ItemStack clearItemFlags(ItemStack itemStack) {
         ItemMeta meta = itemStack.getItemMeta();
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES,
-                //ItemFlag.HIDE_ADDITIONAL_TOOLTIP,
+                ItemFlag.HIDE_ADDITIONAL_TOOLTIP,
                 ItemFlag.HIDE_ARMOR_TRIM,
                 ItemFlag.HIDE_DESTROYS,
                 ItemFlag.HIDE_UNBREAKABLE,
                 ItemFlag.HIDE_ENCHANTS,
                 ItemFlag.HIDE_DYE,
                 ItemFlag.HIDE_PLACED_ON,
-                ItemFlag.HIDE_UNBREAKABLE);
-                //ItemFlag.HIDE_STORED_ENCHANTS,
-                //ItemFlag.HIDE_ITEM_SPECIFICS);
+                ItemFlag.HIDE_STORED_ENCHANTS,
+                ItemFlag.HIDE_ITEM_SPECIFICS
+        );
         itemStack.setItemMeta(meta);
         return itemStack;
     }
@@ -182,7 +187,7 @@ public class ItemUtils {
         return item;
     }
 
-    public static void replacePlaceholderInLore(ItemStack item, String placeholder, Object value) {
+    public static ItemStack replacePlaceholderInLore(ItemStack item, String placeholder, Object value) {
         ItemMeta meta = item.getItemMeta();
         if (meta != null && meta.getLore() != null) {
             List<String> newLore = new ArrayList<>();
@@ -193,6 +198,7 @@ public class ItemUtils {
             meta.setLore(newLore);
             item.setItemMeta(meta);
         }
+        return item;
     }
 
     public static ItemStack setDisplayName(ItemStack item, String displayName) {

@@ -61,6 +61,15 @@ public class BlockUtils {
         return true;
     }
 
+    public static boolean isSignLineEmpty(Location location, byte line) {
+        Block block = location.getBlock();
+        if (line < 1 || line > 4) return true;
+        if (!(block.getState() instanceof Sign sign)) return true;
+        SignSide side = sign.getSide(Side.FRONT);
+        TextComponent textComponent = (TextComponent) side.line(line-1);
+        return textComponent.content().isEmpty();
+    }
+
     /**
      * Get text from line in sign block
      * @param location Location of sign block

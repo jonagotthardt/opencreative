@@ -24,6 +24,7 @@ import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -33,30 +34,39 @@ import java.util.List;
 
 public class IsLookingAtBlockCondition extends PlayerCondition {
 
-    public IsLookingAtBlockCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
-        super(executor, target, x, args, actions);
+    public IsLookingAtBlockCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, boolean isOpposed) {
+        super(executor, target, x, args, actions, isOpposed);
     }
 
     @Override
     public boolean checkPlayer(Player player) {
         List<ItemStack> blocks = getArguments().getItemList("blocks",this);
-        if (blocks.isEmpty()) return false;
+        List<Location> locations = getArguments().getLocationList("locations",this);
+        if (blocks.isEmpty() && locations.isEmpty()) {
+            return false;
+        }
         Block block = player.getTargetBlockExact(30);
         if (block == null) {
             return false;
         }
-        boolean isPlayerLookingAt = false;
         Material blockType = block.getType();
         for (ItemStack checkBlock : blocks) {
             if (blockType == checkBlock.getType()) {
-                isPlayerLookingAt = true;
+                return true;
             }
         }
-        return isPlayerLookingAt;
+        double radius = getArguments().getValue("radius",0.5,this);
+        Location location = block.getLocation();
+        for (Location checkLocation : locations) {
+            if (location.distance(checkLocation) <= radius) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.IF_PLAYER_STANDS_ON_BLOCK;
+        return ActionType.IF_PLAYER_LOOKS_AT_BLOCK;
     }
 }

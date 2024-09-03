@@ -83,7 +83,7 @@ public class CommandEnvironment implements CommandExecutor {
                 player.sendMessage(getLocaleMessage("only-in-world"));
                 return true;
             }
-            if (!plot.isDeveloper(player)) {
+            if (!plot.getWorldPlayers().canDevelop(player)) {
                 player.sendMessage(getLocaleMessage("not-developer"));
                 return true;
             }

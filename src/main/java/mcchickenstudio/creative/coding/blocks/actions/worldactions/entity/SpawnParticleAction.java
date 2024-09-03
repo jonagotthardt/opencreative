@@ -53,7 +53,7 @@ public class SpawnParticleAction extends WorldAction {
     @Override
     protected void execute(Entity entity) {
         Particle particle = getArguments().getValue("particle",Particle.HEART,this);
-        int count = getArguments().getValue("count",1,this);
+        int count = Math.min(30,getArguments().getValue("count",1,this));
         double offsetX = getArguments().getValue("offset-x",0.0d,this);
         double offsetY = getArguments().getValue("offset-y",0.0d,this);
         double offsetZ = getArguments().getValue("offset-z",0.0d,this);

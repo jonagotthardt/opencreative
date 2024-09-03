@@ -29,8 +29,8 @@ import org.bukkit.entity.Entity;
 import java.util.List;
 
 public class NumberInRangeCondition extends VariableCondition {
-    public NumberInRangeCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
-        super(executor, target, x, args, actions);
+    public NumberInRangeCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, boolean isOpposed) {
+        super(executor, target, x, args, actions, isOpposed);
     }
 
     @Override

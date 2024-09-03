@@ -19,12 +19,14 @@
 package mcchickenstudio.creative.coding.variables;
 
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
-import mcchickenstudio.creative.coding.variables.VariableLink;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
+import java.util.Map;
 
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 import static mcchickenstudio.creative.utils.MessageUtils.*;
@@ -52,6 +54,10 @@ public enum ValueType {
      * List can store any value with any type. From list, we can get value, or we can add value to list.
      */
     LIST(Material.PAINTING, Material.GREEN_STAINED_GLASS_PANE),
+    /**
+     * Map stores keys and values with any type.
+     */
+    MAP(Material.CHEST_MINECART, Material.BROWN_STAINED_GLASS_PANE),
     /**
      * Location stores Minecraft location in plot's world, for example: 31 4 10 -4.5 3.0. It contains X,Y,Z coordinates, yaw, pitch values.
      */
@@ -84,6 +90,10 @@ public enum ValueType {
      * Event Value Link stores type of EventVariable for getting value.
      */
     EVENT_VALUE(Material.NAME_TAG, Material.YELLOW_STAINED_GLASS_PANE),
+    /**
+     * Color stores RGB color.
+     */
+    COLOR(Material.BLACK_DYE, Material.LIGHT_BLUE_STAINED_GLASS),
     /**
      * Any stores ItemStack.
      */
@@ -140,17 +150,23 @@ public enum ValueType {
             return TEXT;
         } else if (object instanceof VariableLink) {
             return VARIABLE;
+        } else if (object instanceof EventValueLink) {
+            return EVENT_VALUE;
         } else if (object instanceof Boolean) {
             return BOOLEAN;
         } else if (object instanceof List) {
             return LIST;
+        } else if (object instanceof Map) {
+            return MAP;
         } else if (object instanceof ItemStack) {
             return ITEM;
+        } else if (object instanceof Location) {
+            return LOCATION;
         }
         return null;
     }
 
-    public String getLocalized() {
+    public String getLocaleName() {
         return getLocaleMessage("environment.values." + name().toLowerCase().replace("_","-"),false);
     }
 

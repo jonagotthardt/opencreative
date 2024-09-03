@@ -140,6 +140,11 @@ public class CodingBlockParser {
                          * handle and save every item into list.
                          */
                         if (argSlot.isList()) {
+                            // slot = 0,
+                            // with items = 0, 1, 2
+                            //
+                            // i = 1, i < 10
+                            //
                             script.saveArguments(multiActions,actionBlock,argSlot.getPath(),null, ValueType.LIST);
                             for (byte i = 1; i < argSlot.getListSize()+1; i++) {
                                 if (slot < content.length) {
@@ -242,6 +247,19 @@ public class CodingBlockParser {
                         locationMap.put("yaw",Float.parseFloat(locCoords[3]));
                         locationMap.put("pitch",Float.parseFloat(locCoords[4]));
                         return locationMap;
+                    } catch (Exception ignored) {}
+                }
+            }
+            case COLOR -> {
+                Map<String, Object> colorMap = new HashMap<>();
+                String colorString = ChatColor.stripColor(name);
+                String[] colors = colorString.split(" ");
+                if (colors.length == 3) {
+                    try {
+                        colorMap.put("red",Integer.parseInt(colors[0]));
+                        colorMap.put("green",Integer.parseInt(colors[1]));
+                        colorMap.put("blue",Integer.parseInt(colors[2]));
+                        return colorMap;
                     } catch (Exception ignored) {}
                 }
             }

@@ -61,7 +61,12 @@ public class BlockChanged implements Listener {
         World world = event.getLocation().getWorld();
         Plot plot = PlotManager.getInstance().getPlotByWorld(world);
         if (plot != null) {
-            if (plot.getFlagValue(PlotFlags.PlotFlag.BLOCK_EXPLOSION) == 2) event.blockList().clear();
+            if (plot.getFlagValue(PlotFlags.PlotFlag.BLOCK_EXPLOSION) == 2) {
+                event.blockList().clear();
+            }
+        }
+        if (world.getName().endsWith("dev")) {
+            event.blockList().clear();
         }
     }
 

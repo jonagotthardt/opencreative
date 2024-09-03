@@ -192,6 +192,9 @@ public final class Main extends JavaPlugin {
         commands.put("gamemode",    CommandGamemode.class);
         commands.put("give",        CommandGive.class);
         commands.put("teleport",    CommandTeleport.class);
+        commands.put("edit",        CommandEdit.class);
+        commands.put("playsound",   CommandPlaySound.class);
+        commands.put("stopsound",   CommandStopSound.class);
         for (String commandName : commands.keySet()) {
             PluginCommand command = getCommand(commandName);
             if (command != null) {
@@ -212,7 +215,7 @@ public final class Main extends JavaPlugin {
                 sendCriticalErrorMessage("Couldn't get command with name " + commandName + ", it is null. Maybe it doesn't exist in plugins.yml?");
             }
         }
-        this.getLogger().info("OpenCreative+ registered all commands.");
+        this.getLogger().info("OpenCreative+ registered all " + commands.size() + " commands.");
     }
 
     private void registerEvents() {

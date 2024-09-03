@@ -52,7 +52,6 @@ import mcchickenstudio.creative.utils.FileUtils;
 import org.bukkit.inventory.meta.BookMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
@@ -81,13 +80,11 @@ public class CommandDev implements CommandExecutor {
 
             List<String> trustedDevelopers = FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_TRUSTED);
             List<String> notTrustedDevelopers = FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED);
-            List<String> guestsDevelopers = FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_GUESTS);
 
             if (args.length == 0 || args.length == 3) {
-                // Проверка на владельца мира
-                if (plot.isDeveloper(player)) {
+                if (plot.getWorldPlayers().canDevelop(player) || plot.getWorldPlayers().isDeveloperGuest(player)) {
                     Player plotOwner = Bukkit.getPlayer(plot.getOwner());
-                    if (notTrustedDevelopers.contains(sender.getName())) {
+                    if (plot.getWorldPlayers().isDeveloperGuest(player)) {
                         if (plotOwner == null) {
                             sender.sendMessage(getLocaleMessage("world.dev-mode.cant-dev-when-offline"));
                             return true;
@@ -108,15 +105,15 @@ public class CommandDev implements CommandExecutor {
                             double x = Double.parseDouble(args[0]);
                             double y = Double.parseDouble(args[1]);
                             double z = Double.parseDouble(args[2]);
-                            plot.teleportToDevPlot(player,x,y,z);
+                            plot.connectToDevPlot(player,x,y,z);
                         } catch (Exception error) {
-                            plot.teleportToDevPlot(player);
+                            plot.connectToDevPlot(player);
                         }
                     } else {
-                        plot.teleportToDevPlot(player);
+                        plot.connectToDevPlot(player);
                     }
 
-                    if (guestsDevelopers.contains(sender.getName())) {
+                    if (plot.getWorldPlayers().isDeveloperGuest(player)) {
                         player.setGameMode(GameMode.ADVENTURE);
                     } else {
                         player.setGameMode(GameMode.CREATIVE);
@@ -147,10 +144,10 @@ public class CommandDev implements CommandExecutor {
                     return true;
                 }
                 if (notTrustedDevelopers.contains(args[0])) {
-                    plot.setBuilderTrusted(args[0], true);
+                    plot.getWorldPlayers().addBuilder(args[0], true);
                     sender.sendMessage(getLocaleMessage("world.players.developers.trusted").replace("%player%", args[0]));
                 } else if (trustedDevelopers.contains(args[0])) {
-                    plot.removeBuilder(args[0]);
+                    plot.getWorldPlayers().removeBuilder(args[0]);
                     sender.sendMessage(getLocaleMessage("world.players.developers.removed").replace("%player%", args[0]));
                 } else {
                     Player addedPlayer = Bukkit.getPlayer(args[0]);
@@ -158,7 +155,7 @@ public class CommandDev implements CommandExecutor {
                         Plot plot1 = PlotManager.getInstance().getPlotByPlayer(addedPlayer);
                         if (plot == plot1) {
                             sender.sendMessage(getLocaleMessage("world.players.developers.added").replace("%player%", addedPlayer.getName()));
-                            plot.setDeveloperTrusted(addedPlayer.getName(), false);
+                            plot.getWorldPlayers().addDeveloper(addedPlayer.getName(), false);
                         } else {
                             sender.sendMessage(getLocaleMessage("no-player-found"));
                         }
@@ -190,14 +187,26 @@ public class CommandDev implements CommandExecutor {
         ItemStack conditionVarItem = createItem(Material.OBSIDIAN,1,"items.developer.condition-var");
         player.getInventory().setItem(4, conditionVarItem);
 
+        ItemStack functionItem = createItem(Material.LAPIS_BLOCK,1,"items.developer.function");
+        player.getInventory().setItem(9, functionItem);
+
         ItemStack actionControl = createItem(Material.COAL_BLOCK,1,"items.developer.action-control");
-        player.getInventory().setItem(9, actionControl);
+        player.getInventory().setItem(10, actionControl);
+
+        ItemStack actionWorld = createItem(Material.NETHER_BRICKS,1,"items.developer.action-world");
+        player.getInventory().setItem(19, actionWorld);
+
+        ItemStack launchFunction = createItem(Material.LAPIS_ORE,1,"items.developer.launch-function");
+        player.getInventory().setItem(28, launchFunction);
 
         ItemStack cycleItem = createItem(Material.OXIDIZED_COPPER,1,"items.developer.cycle");
         player.getInventory().setItem(18, cycleItem);
 
         ItemStack linesControllerItem = createItem(Material.COMPARATOR,1,"items.developer.lines-controller");
         player.getInventory().setItem(26, linesControllerItem);
+
+        ItemStack arrowNotItem = createItem(Material.ARROW,1,"items.developer.arrow-not");
+        player.getInventory().setItem(35, arrowNotItem);
 
         int slot = 8;
         if (player.getInventory().getItem(8) != null) {

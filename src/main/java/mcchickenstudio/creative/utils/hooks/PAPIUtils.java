@@ -69,7 +69,7 @@ class Placeholder extends PlaceholderExpansion {
             }
             case "plot_custom_id" -> {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return plot.getPlotCustomID();
+                if (plot != null) return plot.getInformation().getCustomID();
             }
             case "plot_online" -> {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
@@ -89,11 +89,11 @@ class Placeholder extends PlaceholderExpansion {
             }
             case "plot_name" -> {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return plot.getPlotName();
+                if (plot != null) return plot.getInformation().getDisplayName();
             }
             case "plot_description" -> {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return plot.getPlotDescription();
+                if (plot != null) return plot.getInformation().getDescription();
             }
             case "plot_owner" -> {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
@@ -101,7 +101,7 @@ class Placeholder extends PlaceholderExpansion {
             }
             case "plot_category" -> {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return String.valueOf(plot.getPlotCategory());
+                if (plot != null) return String.valueOf(plot.getInformation().getCategory());
             }
             case "plot_sharing" -> {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);

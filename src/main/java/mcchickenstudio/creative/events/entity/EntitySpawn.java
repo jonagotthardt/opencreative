@@ -45,12 +45,14 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.Slime;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityPlaceEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import mcchickenstudio.creative.plots.Plot;
 
@@ -114,21 +116,42 @@ public class EntitySpawn implements Listener {
         World world = event.getEntity().getWorld();
         Entity entity = event.getEntity();
         Plot plot = PlotManager.getInstance().getPlotByWorld(world);
+        if (world.getName().endsWith("dev") && !(event.getEntity() instanceof Item)) {
+            event.setCancelled(true);
+        }
         if (plot != null) {
             if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL) {
-                if (plot.getFlagValue(PlotFlags.PlotFlag.MOB_SPAWN) == 3) {
-                    if (entity.getType() == EntityType.SLIME) event.setCancelled(true);
-                } else if (plot.getFlagValue(PlotFlags.PlotFlag.MOB_SPAWN) == 4) {
-                    if (isEntityHostile(entity.getType())) event.setCancelled(true);
-                } else if (plot.getFlagValue(PlotFlags.PlotFlag.MOB_SPAWN) == 5) {
-                    if (!isEntityHostile(entity.getType())) event.setCancelled(true);
+                switch (plot.getFlagValue(PlotFlags.PlotFlag.MOB_SPAWN)) {
+                    case 3:
+                        if (entity instanceof Slime) {
+                            event.setCancelled(true);
+                        }
+                        break;
+                    case 4:
+                        if (isEntityHostile(entity.getType())) {
+                            event.setCancelled(true);
+                        }
+                        break;
+                    case 5:
+                        if (!isEntityHostile(entity.getType())) {
+                            event.setCancelled(true);
+                        }
+                        break;
                 }
-
                 if (world.getEntityCount() >= plot.entitiesLimit/2) {
                     event.setCancelled(true);
                 }
             }
 
+        }
+    }
+
+    @EventHandler
+    public void onVehicleCreation(VehicleCreateEvent event) {
+        Entity entity = event.getVehicle();
+        World world = entity.getWorld();
+        if (world.getName().endsWith("dev")) {
+            event.setCancelled(true);
         }
     }
 

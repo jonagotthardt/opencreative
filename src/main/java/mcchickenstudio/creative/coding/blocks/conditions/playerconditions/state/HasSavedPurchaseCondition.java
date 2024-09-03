@@ -24,24 +24,24 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import mcchickenstudio.creative.plots.PlotPlayer;
+import mcchickenstudio.creative.plots.WorldPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
 public class HasSavedPurchaseCondition extends PlayerCondition {
 
-    public HasSavedPurchaseCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
-        super(executor, target, x, args, actions);
+    public HasSavedPurchaseCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, boolean isOpposed) {
+        super(executor, target, x, args, actions, isOpposed);
     }
 
     @Override
     public boolean checkPlayer(Player player) {
         List<String> names = getArguments().getTextList("names",this);
         boolean check = false;
-        PlotPlayer plotPlayer = getPlot().getPlotPlayer(player);
+        WorldPlayer worldPlayer = getPlot().getWorldPlayers().getPlotPlayer(player);
         for (String name : names) {
-            if (plotPlayer.getPurchases().contains(name)) {
+            if (worldPlayer.getPurchases().contains(name)) {
                 check = true;
             } else {
                 return false;

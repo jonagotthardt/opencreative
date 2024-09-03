@@ -34,6 +34,7 @@ import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.DisplaySlot;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -50,6 +51,8 @@ public class PlayerUtils {
         WORLD_SIZE("world.size"),
         WORLD_ENTITIES_LIMIT("world.entities-limit"),
         WORLD_CODE_OPERATIONS_LIMIT("world.code-operations-limit"),
+        WORLD_SCOREBOARDS_LIMIT("world.scoreboards-limit"),
+        WORLD_BOSSBARS_LIMIT("world.bossbars-limit"),
         WORLD_REDSTONE_OPERATIONS_LIMIT("world.redstone-operations-limit"),
         WORLD_OPENING_INVENTORIES_LIMIT("world.opening-inventories-limit"),
         WORLD_VARIABLES_LIMIT("world.variables-limit"),
@@ -222,7 +225,8 @@ public class PlayerUtils {
         player.resetPlayerTime();
         player.resetPlayerWeather();
         player.removeResourcePacks();
-
+        player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
+        player.activeBossBars().forEach(player::hideBossBar);
         for (Entity entity : player.getWorld().getEntities()) {
             player.showEntity(Main.getPlugin(),entity);
         }
@@ -290,7 +294,7 @@ public class PlayerUtils {
                     player.sendSignChange(block.getLocation(), newLines);
                 }
             }
-        }.runTaskLater(Main.getPlugin(),5L);
+        }.runTaskLater(Main.getPlugin(),2L);
     }
 
     /**

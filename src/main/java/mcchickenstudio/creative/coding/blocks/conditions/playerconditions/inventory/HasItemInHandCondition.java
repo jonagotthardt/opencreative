@@ -32,8 +32,8 @@ import java.util.List;
 
 public class HasItemInHandCondition extends PlayerCondition {
 
-    public HasItemInHandCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
-        super(executor, target, x, args, actions);
+    public HasItemInHandCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, boolean isOpposed) {
+        super(executor, target, x, args, actions, isOpposed);
     }
 
     @Override

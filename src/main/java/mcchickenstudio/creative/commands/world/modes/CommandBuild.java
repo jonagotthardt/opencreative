@@ -172,10 +172,10 @@ public class CommandBuild implements CommandExecutor {
                     return true;
                 }
                 if (notTrustedBuilders.contains(args[0])) {
-                    plot.setBuilderTrusted(args[0],true);
+                    plot.getWorldPlayers().addBuilder(args[0],true);
                     sender.sendMessage(getLocaleMessage("world.players.builders.trusted").replace("%player%", args[0]));
                 } else if (trustedBuilders.contains(args[0])) {
-                    plot.removeBuilder(args[0]);
+                    plot.getWorldPlayers().removeBuilder(args[0]);
                     sender.sendMessage(getLocaleMessage("world.players.builders.removed").replace("%player%", args[0]));
                 } else {
                     Player addedPlayer = Bukkit.getPlayer(args[0]);
@@ -183,7 +183,7 @@ public class CommandBuild implements CommandExecutor {
                         Plot plot1 = PlotManager.getInstance().getPlotByPlayer(addedPlayer);
                         if (plot == plot1) {
                             sender.sendMessage(getLocaleMessage("world.players.builders.added").replace("%player%", addedPlayer.getName()));
-                            plot.setBuilderTrusted(addedPlayer.getName(),true);
+                            plot.getWorldPlayers().addBuilder(addedPlayer.getName(),true);
                             addedPlayer.setGameMode(GameMode.CREATIVE);
                         } else {
                             sender.sendMessage(getLocaleMessage("no-player-found"));

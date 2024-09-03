@@ -32,6 +32,7 @@ import org.bukkit.plugin.Plugin;
 import java.io.File;
 import java.util.*;
 
+import static mcchickenstudio.creative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static mcchickenstudio.creative.utils.FileUtils.*;
 
 public class DevPlot {
@@ -73,7 +74,7 @@ public class DevPlot {
                 setupWorld();
             }
         } else {
-            createDevPlot();
+            create();
             Bukkit.createWorld(new WorldCreator(this.worldName));
             this.world = Bukkit.getWorld(this.worldName);
             setupWorld();
@@ -82,14 +83,14 @@ public class DevPlot {
     }
 
     private void setupWorld() {
-        this.world.setTime(11750);
+        this.world.setTime(12500);
         this.world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
         this.world.setGameRule(GameRule.DO_WEATHER_CYCLE,false);
         this.world.getWorldBorder().setSize(120);
         this.world.getWorldBorder().setWarningDistance(0);
     }
 
-    public void createDevPlot() {
+    public void create() {
 
         File template = new File(plugin.getDataFolder() + File.separator + "templates" + File.separator + "devWorld" + File.separator);
         File devWorldFolder = new File(Bukkit.getServer().getWorldContainer() + File.separator + this.worldName + File.separator);
@@ -136,43 +137,34 @@ public class DevPlot {
         }
     }
 
-    public List<Material> getAllCodingBlocksForPlacing() {
-        List<Material> allBlocks = new ArrayList<>();
+    public Set<Material> getAllCodingBlocksForPlacing() {
+        Set<Material> allBlocks = new HashSet<>();
         allBlocks.addAll(getEventsBlocks());
         allBlocks.addAll(getActionsBlocks());
         return allBlocks;
     }
 
-    public List<Material> getEventsBlocks() {
-        List<Material> eventsBlocks = new ArrayList<>();
-        eventsBlocks.add(Material.DIAMOND_BLOCK);
-        eventsBlocks.add(Material.GOLD_BLOCK);
-        eventsBlocks.add(Material.EMERALD_BLOCK);
-        eventsBlocks.add(Material.LAPIS_BLOCK);
-        eventsBlocks.add(Material.OXIDIZED_COPPER);
-        return eventsBlocks;
+    public Set<Material> getEventsBlocks() {
+        return new HashSet<>(Arrays.stream(ExecutorCategory.values()).map(ExecutorCategory::getBlock).toList());
     }
 
-    public List<Material> getActionsBlocks() {
-        return new ArrayList<>(Arrays.stream(ActionCategory.values()).map(ActionCategory::getBlock).toList());
+    public Set<Material> getActionsBlocks() {
+        return new HashSet<>(Arrays.stream(ActionCategory.values()).map(ActionCategory::getBlock).toList());
     }
 
-    public List<Material> getIndestructibleBlocks() {
-        List<Material> indestructibleBlocks = new ArrayList<>();
+    public Set<Material> getIndestructibleBlocks() {
+        Set<Material> indestructibleBlocks = new HashSet<>();
         indestructibleBlocks.add(floorBlockMaterial);
         indestructibleBlocks.add(actionBlockMaterial);
         indestructibleBlocks.add(eventBlockMaterial);
-        indestructibleBlocks.add(Material.DIAMOND_ORE);
-        indestructibleBlocks.add(Material.IRON_ORE);
-        indestructibleBlocks.add(Material.STONE);
-        indestructibleBlocks.add(Material.COAL_ORE);
-        indestructibleBlocks.add(Material.NETHER_BRICKS);
-        indestructibleBlocks.add(Material.NETHERRACK);
+        indestructibleBlocks.addAll(Arrays.stream(ExecutorCategory.values()).map(ExecutorCategory::getAdditionalBlock).toList());
+        indestructibleBlocks.addAll(Arrays.stream(ActionCategory.values()).map(ActionCategory::getAdditionalBlock).toList());
+        indestructibleBlocks.remove(Material.PISTON);
         return indestructibleBlocks;
     }
 
-    public List<Material> getAllowedBlocks() {
-        List<Material> allowedBlocks = new ArrayList<>();
+    public Set<Material> getAllowedBlocks() {
+        Set<Material> allowedBlocks = new HashSet<>();
         allowedBlocks.add(Material.BARREL);
         allowedBlocks.add(Material.OAK_SIGN);
         allowedBlocks.add(Material.SPRUCE_SIGN);

@@ -54,7 +54,7 @@ public class CommandGive implements CommandExecutor {
                     player.sendMessage(getLocaleMessage("only-in-world"));
                     return true;
                 }
-                if (!(plot.isOwner(player) || plot.isDeveloper(player) || plot.isBuilder(player))) {
+                if (!(plot.isOwner(player) || plot.getWorldPlayers().canDevelop(player) || plot.getWorldPlayers().canBuild(player))) {
                     player.sendMessage(getLocaleMessage("not-owner"));
                     return true;
                 }

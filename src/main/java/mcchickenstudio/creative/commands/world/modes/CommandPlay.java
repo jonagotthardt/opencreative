@@ -124,11 +124,11 @@ public class CommandPlay implements CommandExecutor {
                     sender.sendMessage(getLocaleMessage("not-owner", player));
                 }
             } else {
-                if (EventRaiser.raisePlayEvent(player) || plot.isDeveloper(player)) {
+                if (EventRaiser.raisePlayEvent(player) || plot.getWorldPlayers().canDevelop(player)) {
                     plot.world.getSpawnLocation().getChunk().load(true);
                     DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
                     player.teleport(plot.world.getSpawnLocation());
-                    if (plot.isDeveloper(player)) {
+                    if (plot.getWorldPlayers().canDevelop(player)) {
                         clearPlayer(player);
                         player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
                         if (plot.isOwner(sender.getName())) {

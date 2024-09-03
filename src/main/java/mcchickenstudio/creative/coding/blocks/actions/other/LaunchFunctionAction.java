@@ -24,6 +24,7 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import mcchickenstudio.creative.coding.blocks.executors.Executors;
 import mcchickenstudio.creative.coding.blocks.executors.other.Function;
 import org.bukkit.entity.Entity;
 
@@ -40,7 +41,7 @@ public class LaunchFunctionAction extends Action {
         for (Executor executor : getPlot().getScript().getExecutors().getExecutorsList()) {
             if (executor instanceof Function function) {
                 if (function.getName().equalsIgnoreCase(name)) {
-                    function.run(getEvent());
+                    Executors.activate(function, getEvent());
                 }
             }
         }

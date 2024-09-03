@@ -32,7 +32,7 @@ public class RestoreInventoryAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        player.getInventory().setContents(getPlot().getPlotPlayer(player).getSavedInventory());
+        player.getInventory().setContents(getPlot().getWorldPlayers().getPlotPlayer(player).getSavedInventory());
     }
 
     @Override

@@ -32,8 +32,8 @@ import java.util.List;
 
 public class IsInventoryNameEqualsCondition extends PlayerCondition {
 
-    public IsInventoryNameEqualsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
-        super(executor, target, x, args, actions);
+    public IsInventoryNameEqualsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, boolean isOpposed) {
+        super(executor, target, x, args, actions, isOpposed);
     }
 
     @Override
@@ -41,8 +41,8 @@ public class IsInventoryNameEqualsCondition extends PlayerCondition {
         boolean requiredColor = getArguments().getValue("color",false,this);
         boolean requiredCaps = getArguments().getValue("caps",false,this);
         List<String> names = getArguments().getTextList("names",this);
+        String title = player.getOpenInventory().getTitle();
         for (String name : names) {
-            String title = ((TextComponent) player.getOpenInventory().title()).content();
             if (!requiredColor) {
                 name = ChatColor.stripColor(name);
                 title = ChatColor.stripColor(title);

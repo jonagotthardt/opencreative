@@ -36,8 +36,8 @@ public class IsSneakingCondition extends PlayerCondition {
      * @param x        X from Action's block location in developers plot.
      * @param args     List of arguments for action.
      */
-    public IsSneakingCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
-        super(executor, target, x, args, actions);
+    public IsSneakingCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, boolean isOpposed) {
+        super(executor, target, x, args, actions, isOpposed);
     }
 
     @Override

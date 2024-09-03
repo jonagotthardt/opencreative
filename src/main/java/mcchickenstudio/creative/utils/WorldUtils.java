@@ -98,7 +98,6 @@ public class WorldUtils {
             plot.world = Bukkit.getWorld(worldName);
             plot.worldName = worldName;
             plot.worldID = worldName.replace("plot","");
-            plot.setPlotCustomID(plot.worldID);
             plot.isLoaded = true;
 
             // Для игрока сообщение и телепортация
@@ -130,17 +129,8 @@ public class WorldUtils {
      @return Unique ID for new world.
      **/
     public static int generateWorldID() {
-        int newWorldID;
-        try {
-            newWorldID = plugin.getConfig().getInt("last-world-id");
-        } catch (NullPointerException e) {
-            newWorldID = 1;
-            plugin.getConfig().set("last-world-id",newWorldID);
-            plugin.saveConfig();
-        }
-
+        int newWorldID = plugin.getConfig().getInt("last-world-id",1);
         while (true) {
-            // Будет добавлять по единице и проверять существует ли файл с таким названием
             newWorldID++;
             boolean exists = false;
             for (File folder : getWorldsFolders(true)) {
@@ -166,7 +156,7 @@ public class WorldUtils {
                  ZOMBIE_HORSE, SKELETON, SKELETON_HORSE, WITHER_SKELETON, WITHER, SHULKER, SPIDER, CAVE_SPIDER,
                  VINDICATOR, ENDER_DRAGON, ENDERMAN, ENDERMITE, SILVERFISH, VEX, RAVAGER, EVOKER, EVOKER_FANGS, BLAZE,
                  HOGLIN, SLIME, STRAY, WITCH, DROWNED, PILLAGER, CREEPER, GHAST, GIANT, MAGMA_CUBE, PHANTOM,
-                 ILLUSIONER -> true;
+                 ILLUSIONER, WARDEN, BREEZE, HUSK, BOGGED -> true;
             default -> false;
         };
     }

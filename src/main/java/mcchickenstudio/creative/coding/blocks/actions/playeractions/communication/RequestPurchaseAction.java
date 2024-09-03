@@ -69,10 +69,10 @@ public class RequestPurchaseAction extends PlayerAction {
                             player.sendMessage(getLocaleMessage("no-money").replace("%money%",String.valueOf(price)));
                         } else {
                             if (save) {
-                                if (plot.getPlotPlayer(player).getPurchases().contains(id.toLowerCase())) {
+                                if (plot.getWorldPlayers().getPlotPlayer(player).getPurchases().contains(id.toLowerCase())) {
                                     return;
                                 } else {
-                                    plot.getPlotPlayer(player).addPurchase(id.toLowerCase());
+                                    plot.getWorldPlayers().getPlotPlayer(player).addPurchase(id.toLowerCase());
                                 }
                             }
                             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP,100,1.2f);

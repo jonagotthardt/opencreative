@@ -50,6 +50,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
+import static mcchickenstudio.creative.utils.ItemUtils.createItem;
+
+@Deprecated(forRemoval = true)
 public class AllWorldsMenu extends LegacyMenu {
 
     public static final Map<Player,Integer> openedPage = new HashMap<>();
@@ -96,7 +99,7 @@ public class AllWorldsMenu extends LegacyMenu {
             }
             int slot = 0;
             for (Plot plot: allPages.get(pageToOpen-1)) {
-                items.put(worldSlots[slot],plot.getPlotIcon());
+                items.put(worldSlots[slot],plot.getInformation().getIcon());
                 slot++;
             }
 
@@ -145,7 +148,7 @@ public class AllWorldsMenu extends LegacyMenu {
             }
             int slot = 0;
             for (Plot plot: allPages.get(pageToOpen-1)) {
-                items.put(worldSlots[slot],plot.getPlotIcon());
+                items.put(worldSlots[slot],plot.getInformation().getIcon());
                 slot++;
             }
 
@@ -168,24 +171,13 @@ public class AllWorldsMenu extends LegacyMenu {
     }
 
     public static ItemStack getOwnWorldsButton() {
-        ItemStack item = new ItemStack(Material.COMMAND_BLOCK);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(MessageUtils.getLocaleItemName("menus.all-worlds.items.own-worlds.name"));
-        meta.setLore(MessageUtils.getLocaleItemDescription("menus.all-worlds.items.own-worlds.lore"));
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        item.setItemMeta(meta);
+        ItemStack item = createItem(Material.COMMAND_BLOCK,1,"menus.all-worlds.items.own-worlds");
         item.addUnsafeEnchantment(Enchantment.LURE, 1);
         return item;
     }
 
     public static ItemStack getNoWorldsButton() {
-        ItemStack item = new ItemStack(Material.BARRIER);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(MessageUtils.getLocaleItemName("menus.all-worlds.items.no-worlds.name"));
-        meta.setLore(MessageUtils.getLocaleItemDescription("menus.all-worlds.items.no-worlds.lore"));
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        item.setItemMeta(meta);
-        item.addUnsafeEnchantment(Enchantment.LURE, 1);
+        ItemStack item = createItem(Material.BARRIER,1,"menus.all-worlds.items.no-worlds");
         return item;
     }
 

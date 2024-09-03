@@ -26,6 +26,7 @@ import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.coding.variables.VariableLink;
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -80,8 +81,11 @@ public class Argument {
 
     private void setTempVars(Action action) {
         // FIXME: We need to separate these methods into different class.
-        setEventVariable(action, EventValues.Variable.NICKNAME,action.getEntity().getName());
-        setEventVariable(action, EventValues.Variable.UUID,action.getEntity().getUniqueId());setTempPlotVars(action);
+        if (action.getEntity() instanceof Entity entity) {
+            setEventVariable(action, EventValues.Variable.NICKNAME,entity.getName());
+            setEventVariable(action, EventValues.Variable.UUID,entity.getUniqueId());
+        }
+        setTempPlotVars(action);
         setTempPlayerVars(action);
     }
 
@@ -97,16 +101,16 @@ public class Argument {
         SimpleDateFormat secondsFormat = new SimpleDateFormat("ss");
         Date date = new Date(time);
 
-        setEventVariable(action, EventValues.Variable.PLOT_NAME,plot.getPlotName());
-        setEventVariable(action, EventValues.Variable.PLOT_DESCRIPTION,plot.getPlotDescription());
+        setEventVariable(action, EventValues.Variable.PLOT_NAME,plot.getInformation().getDisplayName());
+        setEventVariable(action, EventValues.Variable.PLOT_DESCRIPTION,plot.getInformation().getDescription());
         setEventVariable(action, EventValues.Variable.PLOT_ONLINE,plot.getOnline());
-        setEventVariable(action, EventValues.Variable.PLOT_ICON,new ItemStack(plot.getPlotIconMaterial(),1));
+        setEventVariable(action, EventValues.Variable.PLOT_ICON,new ItemStack(plot.getInformation().getMaterial(),1));
         setEventVariable(action, EventValues.Variable.PLOT_REPUTATION,plot.getReputation());
         setEventVariable(action, EventValues.Variable.PLOT_ENTITIES_AMOUNT,plot.world.getEntityCount() + ((plot.devPlot != null && plot.devPlot.world != null) ? plot.devPlot.world.getEntityCount() : 0));
         setEventVariable(action, EventValues.Variable.PLOT_ENTITIES_AMOUNT_LIMIT,plot.entitiesLimit);
         setEventVariable(action, EventValues.Variable.PLOT_LAST_REDSTONE_OPERATIONS,plot.lastRedstoneOperationsAmount);
         setEventVariable(action, EventValues.Variable.PLOT_REDSTONE_OPERATIONS_LIMIT,plot.redstoneOperationsLimit);
-        setEventVariable(action, EventValues.Variable.PLOT_CUSTOM_ID,plot.getPlotCustomID());
+        setEventVariable(action, EventValues.Variable.PLOT_CUSTOM_ID,plot.getInformation().getCustomID());
         setEventVariable(action, EventValues.Variable.PLOT_ID,plot.worldID);
         setEventVariable(action, EventValues.Variable.PLOT_VARIABLES_AMOUNT,plot.getWorldVariables().getTotalVariablesAmount());
         setEventVariable(action, EventValues.Variable.PLOT_VARIABLES_AMOUNT_LIMIT,plot.getVariablesAmountLimit());

@@ -151,9 +151,9 @@ public class ActionsHandler {
             } else {
                 try {
                     action.prepareAndExecute(this);
-                } catch (Throwable error) {
+                } catch (Exception error) {
                     String id = error.getClass().getSimpleName().toLowerCase();
-                    sendPlotCodeErrorMessage(executor, action, getLocaleMessage("plot-code-error." + (messageExists("plot-code-error." + id) ? id : "unknown")) + (error.getMessage() == null ? error.getClass().getSimpleName() : error.getMessage()).replace("mcchickenstudio.creative.coding.",""));
+                    sendPlotCodeErrorMessage(executor, action, getLocaleMessage("plot-code-error." + (messageExists("plot-code-error." + id) ? id : "unknown")) + (error.getMessage() == null ? error.getClass().getSimpleName() : error.getMessage()).replace("mcchickenstudio.creative.coding.",""), error);
                 }
             }
         }

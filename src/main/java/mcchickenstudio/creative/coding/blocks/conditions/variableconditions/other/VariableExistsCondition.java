@@ -30,8 +30,8 @@ import org.bukkit.entity.Entity;
 import java.util.List;
 
 public class VariableExistsCondition extends VariableCondition {
-    public VariableExistsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
-        super(executor, target, x, args, actions);
+    public VariableExistsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, boolean isOpposed) {
+        super(executor, target, x, args, actions, isOpposed);
     }
 
     @Override

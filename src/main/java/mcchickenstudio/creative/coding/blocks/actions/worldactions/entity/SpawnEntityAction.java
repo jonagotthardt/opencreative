@@ -83,7 +83,9 @@ public class SpawnEntityAction extends WorldAction {
             Entity spawnedEntity = getPlot().world.spawnEntity(location,type);
 
             spawnedEntity.setGravity(gravity);
-            spawnedEntity.setCustomName(customName);
+            if (!customName.isEmpty()) {
+                spawnedEntity.setCustomName(customName);
+            }
             spawnedEntity.setGlowing(glowing);
             spawnedEntity.setInvisible(invisible);
             spawnedEntity.setInvulnerable(invulnerable);

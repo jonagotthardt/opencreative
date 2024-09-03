@@ -32,8 +32,8 @@ import java.util.List;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingNotFoundTempVar;
 
 public class MessageEqualsCondition extends PlayerCondition {
-    public MessageEqualsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
-        super(executor, target, x, args, actions);
+    public MessageEqualsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, boolean isOpposed) {
+        super(executor, target, x, args, actions, isOpposed);
     }
 
     @Override

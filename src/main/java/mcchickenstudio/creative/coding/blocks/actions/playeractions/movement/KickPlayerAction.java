@@ -36,7 +36,7 @@ public class KickPlayerAction extends PlayerAction {
         Plot plot = getPlot();
         if (plot == null) return;
         if (!plot.isOwner(player)) {
-            plot.kickPlayer(player);
+            plot.getWorldPlayers().kickPlayer(player);
         }
     }
 

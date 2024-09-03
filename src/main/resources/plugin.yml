@@ -1,15 +1,22 @@
 name: 'OpenCreative'
 version: '5.0 Preview 4'
 main: mcchickenstudio.creative.Main
-api-version: 1.20
+api-version: 1.21
 authors: [McChicken Studio]
 description: 'Let players create the worlds'
 prefix: "OC+"
 softdepend: [PlaceholderAPI, ProtocolLib, Vault]
+loadbefore:
+  - FastAsyncWorldEdit
+  - WorldEdit
+  - Essentials
 commands:
   creative:
     usage: /creativecoding
     aliases: [coding,creative,скуфешму]
+  edit:
+    usage: /edit
+    aliases: [увше, itemedit, edititem]
   locate:
     usage: /locate
     aliases: [дщсфеу]
@@ -58,3 +65,9 @@ commands:
   teleport:
     usage: /teleport
     aliases: [tp, еудузщке, ез]
+  playsound:
+    usage: /playsound
+    aliases: [здфніщгтв, здфныщгтв]
+  stopsound:
+    usage: /stopsound
+    aliases: [ыещзыщгтв, іещзіщгтв]

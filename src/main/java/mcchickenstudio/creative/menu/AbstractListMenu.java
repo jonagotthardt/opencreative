@@ -75,7 +75,7 @@ public abstract class AbstractListMenu extends AbstractMenu {
         if (elements.isEmpty()) {
             setItem(noElementsPageButtonSlot,getNoElementsButton());
         } else {
-            byte maxPagesAmount = (byte) dividePagesByElements(elements).size();
+            int maxPagesAmount = getPages();
             if (currentPage > maxPagesAmount || currentPage < 1) {
                 currentPage = 1;
             }
@@ -92,11 +92,12 @@ public abstract class AbstractListMenu extends AbstractMenu {
 
     protected void fillElements(byte page) {
         fillEmpty();
-        byte slot = 0;
         if (elements.isEmpty()) {
             setItem(noElementsPageButtonSlot,getNoElementsButton());
         } else {
-            for (Object object : dividePagesByElements(elements).get(page-1)) {
+            List<Object> content = getElementsFromPage(page);
+            byte slot = 0;
+            for (Object object : content) {
                 setItem(itemsSlots[slot], getElementIcon(object));
                 updateSlot(itemsSlots[slot]);
                 slot++;
@@ -130,7 +131,20 @@ public abstract class AbstractListMenu extends AbstractMenu {
     protected abstract ItemStack getPreviousPageButton();
     protected abstract ItemStack getNoElementsButton();
 
-    protected List<List<Object>> dividePagesByElements(List<Object> elements) {
+    protected List<Object> getElementsFromPage(byte page) {
+        if (page < 1 || page > getPages()) {
+            page = 1;
+        }
+        int fromIndex = (page-1)*itemsSlots.length;
+        int toIndex = Math.min(elements.size(),(page)*itemsSlots.length);
+        return elements.subList(fromIndex,toIndex);
+    }
+
+    protected int getPages() {
+        return (elements.size() + itemsSlots.length - 1) / itemsSlots.length;
+    }
+
+    /*protected List<List<Object>> dividePagesByElements(List<Object> elements) {
         List<List<Object>> pages = new ArrayList<>();
 
         byte pageSize = (byte) itemsSlots.length;
@@ -149,11 +163,11 @@ public abstract class AbstractListMenu extends AbstractMenu {
         }
 
         return pages;
-    }
+    }*/
 
-    private byte countPages(List<Object> objects) {
+    /*private byte countPages(List<Object> objects) {
         return (byte) Math.ceil((double) objects.size() / itemsSlots.length);
-    }
+    }*/
 
     @Override
     public void onClick(InventoryClickEvent event) {
@@ -161,18 +175,20 @@ public abstract class AbstractListMenu extends AbstractMenu {
             event.setCancelled(true);
             return;
         }
-        if (isCharmsBarClicked((byte) event.getSlot()) && isEmpty(event.getCurrentItem()) && !event.getCurrentItem().equals(DECORATION_ITEM)) {
-            onCharmsBarClick(event);
-        } else if (isElementClicked((byte) event.getSlot()) && isEmpty(event.getCurrentItem())) {
+        if (isElementClicked((byte) event.getSlot()) && isEmpty(event.getCurrentItem())) {
             onElementClick(event);
+        } else if (itemEquals(event.getCurrentItem(),DECORATION_ITEM)) {
+            event.setCancelled(true);
         } else if (itemEquals(event.getCurrentItem(),getNextPageButton())) {
             ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ITEM_BOOK_PAGE_TURN,100f,1f);
             nextPage();
             event.setCancelled(true);
-        } else if (event.getSlot() == previousPageButtonSlot) {
-            ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ITEM_BOOK_PAGE_TURN,100f,1f);
+        } else if (itemEquals(event.getCurrentItem(),getPreviousPageButton())) {
+            ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 100f, 1f);
             previousPage();
             event.setCancelled(true);
+        } else if (isCharmsBarClicked((byte) event.getSlot()) && isEmpty(event.getCurrentItem()) && !event.getCurrentItem().equals(DECORATION_ITEM)) {
+            onCharmsBarClick(event);
         } else {
             event.setCancelled(true);
         }
@@ -192,7 +208,7 @@ public abstract class AbstractListMenu extends AbstractMenu {
 
     private byte getPreviousPage() {
         byte previousPage = (byte) (currentPage-1);
-        byte maxPagesAmount = (byte) dividePagesByElements(elements).size();
+        int maxPagesAmount = getPages();
         if (previousPage > maxPagesAmount || previousPage < 1) {
             previousPage = 1;
         }
@@ -201,7 +217,7 @@ public abstract class AbstractListMenu extends AbstractMenu {
 
     private byte getNextPage() {
         byte nextPage = (byte) (currentPage+1);
-        byte maxPagesAmount = (byte) dividePagesByElements(elements).size();
+        int maxPagesAmount = getPages();
         if (nextPage > maxPagesAmount || nextPage < 1) {
             nextPage = 1;
         }

@@ -67,30 +67,28 @@ public class CommandWorld implements CommandExecutor {
                 }
                 setCooldown(player,Main.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
             }
-            // Delete
             switch(args[0]) {
                 case "delete":
-                    // Игрок
                     if (sender instanceof Player player) {
                         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
                         if (sender.hasPermission("creative.delete")) {
-                            if (plot.getOwner().equalsIgnoreCase(sender.getName())) {
+                            if (plot.isOwner(player) || sender.hasPermission("creative.delete.bypass")) {
                                 PlotManager.getInstance().deletePlot(plot, player);
-                            } else {
-                                // Обход на удаление для тех, у кого есть право
-                                if (sender.hasPermission("creative.deletebypass")) PlotManager.getInstance().deletePlot(plot, player);
                             }
                         } else {
                             sender.sendMessage(getLocaleMessage("no-perms"));
                         }
-                    // Консоль
                     } else {
-                        if (args.length == 1) return true;
-                        Main.getPlugin().getLogger().info("Удаляем мир: " + args[1]);
-                        if (Bukkit.getWorld(args[1]) != null) {
-                            PlotManager.getInstance().deletePlot(PlotManager.getInstance().getPlotByWorld(Bukkit.getWorld(args[1])),null);
+                        if (args.length == 1) {
+                            sender.sendMessage(getLocaleMessage("too-few-args"));
+                            return true;
+                        }
+                        Plot plot = PlotManager.getInstance().getPlotByWorldName(args[1]);
+                        if (plot != null) {
+                            Main.getPlugin().getLogger().info("Deleting a world " + args[1] + ", please wait...");
+                            PlotManager.getInstance().deletePlot(plot,null);
                         } else {
-                            Main.getPlugin().getLogger().warning("Такой мир не существует " + args[1]);
+                            Main.getPlugin().getLogger().warning("This world doesn't exists" + args[1]);
                         }
                     }
                     break;
@@ -107,11 +105,11 @@ public class CommandWorld implements CommandExecutor {
                         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
                         if (plot == null) return true;
                         long now = System.currentTimeMillis();
-                        sender.sendMessage(getLocaleMessage("world.info").replace("%name%", plot.getPlotName())
+                        sender.sendMessage(getLocaleMessage("world.info").replace("%name%", plot.getInformation().getDisplayName())
                                 .replace("%id%", plot.worldID).replace("%creation-time%", getElapsedTime(now, plot.getCreationTime()))
                                 .replace("%activity-time%", getElapsedTime(now, plot.getLastActivityTime())).replace("%online%", String.valueOf(plot.getOnline()))
                                 .replace("%builders%", plot.getBuilders()).replace("%coders%", plot.getDevelopers()).replace("%owner%", plot.getOwner())
-                                .replace("%sharing%", plot.getPlotSharing().getName()).replace("%mode%", plot.getPlotMode().getName()).replace("%description%", plot.getPlotDescription()));
+                                .replace("%sharing%", plot.getPlotSharing().getName()).replace("%mode%", plot.getPlotMode().getName()).replace("%description%", plot.getInformation().getDescription()));
                         break;
                     }
             }
@@ -126,15 +124,15 @@ public class CommandWorld implements CommandExecutor {
                     WorldSettingsMenu.openInventory(player);
                 } else {
                     long now = System.currentTimeMillis();
-                    sender.sendMessage(getLocaleMessage("world.info").replace("%name%", plot.getPlotName())
+                    sender.sendMessage(getLocaleMessage("world.info").replace("%name%", plot.getInformation().getDisplayName())
                             .replace("%id%", plot.worldID).replace("%creation-time%",getElapsedTime(now,plot.getCreationTime()))
                             .replace("%activity-time%",getElapsedTime(now,plot.getLastActivityTime())).replace("%online%",String.valueOf(plot.getOnline()))
                             .replace("%builders%",plot.getBuilders()).replace("%coders%",plot.getDevelopers()).replace("%owner%",plot.getOwner())
-                            .replace("%sharing%", plot.getPlotSharing().getName()).replace("%mode%", plot.getPlotMode().getName()).replace("%description%", plot.getPlotDescription()));
+                            .replace("%sharing%", plot.getPlotSharing().getName()).replace("%mode%", plot.getPlotMode().getName()).replace("%description%", plot.getInformation().getDescription()));
                 }
             } else {
-                Main.getPlugin().getLogger().info("Управление мирами: ");
-                Main.getPlugin().getLogger().info(" Удалить мир: /world delete НАЗВАНИЕМИРА ");
+                Main.getPlugin().getLogger().info("Worlds Commands: ");
+                Main.getPlugin().getLogger().info(" Delete a world: /world delete WorldID ");
             }
         }
         return true;

@@ -33,12 +33,13 @@ import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 
 public class VariablesMenu extends AbstractMenu  {
 
-    private final ItemStack TEXT_ITEM = createItem(Material.BOOK,1,"menus.developer.variables.items.text",(byte)1);
-    private final ItemStack NUMBER_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.number",(byte) 2);
-    private final ItemStack BOOLEAN_ITEM = createItem(Material.CLOCK,1,"menus.developer.variables.items.boolean",(byte) 3);
-    private final ItemStack LOCATION_ITEM = createItem(Material.PAPER,1,"menus.developer.variables.items.location",(byte) 4);
-    private final ItemStack VARIABLE_ITEM = createItem(Material.MAGMA_CREAM,1,"menus.developer.variables.items.variable",(byte) 5);
-    private final ItemStack EVENT_VALUE_ITEM = createItem(Material.NAME_TAG,1,"menus.developer.variables.items.event-value",(byte) 6);
+    private final ItemStack TEXT_ITEM = createItem(Material.BOOK,1,"menus.developer.variables.items.text");
+    private final ItemStack NUMBER_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.number");
+    private final ItemStack BOOLEAN_ITEM = createItem(Material.CLOCK,1,"menus.developer.variables.items.boolean");
+    private final ItemStack LOCATION_ITEM = createItem(Material.PAPER,1,"menus.developer.variables.items.location");
+    private final ItemStack VARIABLE_ITEM = createItem(Material.MAGMA_CREAM,1,"menus.developer.variables.items.variable");
+    private final ItemStack EVENT_VALUE_ITEM = createItem(Material.NAME_TAG,1,"menus.developer.variables.items.event-value");
+    //private final ItemStack COLOR_ITEM = createItem(Material.BLACK_DYE,1,"menus.developer.variables.items.color");
     //private final ItemStack POTION_ITEM = createItem(Material.GLASS_BOTTLE,1,"menus.developer.variables.items.potion");
     //private final ItemStack PARTICLE_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.particle");
     //private final ItemStack ENTITY_TYPE_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.entity_type");
@@ -59,6 +60,7 @@ public class VariablesMenu extends AbstractMenu  {
         setItem((byte) 6,DECORATION_ITEM);
         setItem((byte) 7,DECORATION_ITEM);
         setItem((byte) 8,DECORATION_ITEM);
+
     }
 
     @Override

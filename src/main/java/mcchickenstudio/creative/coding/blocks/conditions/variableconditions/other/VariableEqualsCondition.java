@@ -24,20 +24,29 @@ import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.conditions.variableconditions.VariableCondition;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import mcchickenstudio.creative.coding.variables.VariableLink;
 import org.bukkit.entity.Entity;
 
 import java.util.List;
 
 public class VariableEqualsCondition extends VariableCondition {
-    public VariableEqualsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
-        super(executor, target, x, args, actions);
+    public VariableEqualsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, boolean isOpposed) {
+        super(executor, target, x, args, actions, isOpposed);
     }
 
     @Override
     public boolean check(Entity entity) {
-        Object first = getArguments().getValue("first",this);
-        Object second = getArguments().getValue("second",this);
-        return first.equals(second);
+        Object variableValue = getArguments().getValue("variable",this);
+        if (variableValue == null) {
+            return false;
+        }
+        List<Object> values = getArguments().getList("values",this);
+        for (Object value : values) {
+            if (variableValue.equals(value)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

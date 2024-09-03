@@ -35,8 +35,8 @@ import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingNotFoundTempVa
 
 public class IsBlockEqualsCondition extends PlayerCondition {
 
-    public IsBlockEqualsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
-        super(executor, target, x, args, actions);
+    public IsBlockEqualsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, boolean isOpposed) {
+        super(executor, target, x, args, actions, isOpposed);
     }
 
     @Override

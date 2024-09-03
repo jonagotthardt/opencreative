@@ -36,6 +36,7 @@ import java.util.*;
 
 import static mcchickenstudio.creative.coding.arguments.Argument.parseEntity;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugAction;
+import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugLog;
 
 /**
  * <h1>Action</h1>

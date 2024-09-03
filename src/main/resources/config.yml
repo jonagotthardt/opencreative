@@ -1,7 +1,7 @@
 #
-# Creative+ 1.5
+# OpenCreative+ 5.0 - Preview 4
 #
-#  Things will be different - Development build
+#  Things will be different - Preview
 #  Made by McChicken Studio 2022-2024.
 #
 # Config can be changed in next updates,
@@ -12,12 +12,14 @@
 # Notice: This plugin in development.
 #
 
-version: 1.5
+version: 5.0
 last-world-id: 0
 debug: true
 
 lobby:
   world: "world"
+
+recommended-worlds: [1,2,3,4,5] # List of featured worlds in /games, type world number IDs here.
 
 execute-console-commands: # These commands will be executed on some Creative events
   creative-chat: [] # Remove [] if there are some commands
@@ -45,6 +47,7 @@ groups:
       size: 25
       code-operations-limit: 100
       entities-limit: 50 # limit for spawned entities in world
+      modifying-blocks-limit: 5000 # limit for changing blocks with world actions per second
       redstone-operations-limit: 20 # limit for redstone operations in world
       opening-inventories-limit: 5 # limit for opening inventories per 5 seconds for preventing anti-exit in world
       variables-amount-limit: 50 # limit for amount of all variables in world (saved and not saved)
@@ -61,6 +64,7 @@ groups:
       size: 50
       code-operations-limit: 200
       entities-limit: 200
+      modifying-blocks-limit: 6000
       redstone-operations-limit: 50
       opening-inventories-limit: 5
       variables-amount-limit: 100

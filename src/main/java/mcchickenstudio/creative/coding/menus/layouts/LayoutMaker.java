@@ -59,8 +59,24 @@ public class LayoutMaker extends Layout {
                         }
                         return;
                     }
-                    if (actionType.getArgumentsSlots().length > 1 && !actionType.getArgumentsSlots()[1].isList()) {
-                        setArgSlotHorizontal((byte) 2,(byte) 22);
+                    if (actionType.getArgumentsSlots().length > 1) {
+                        if (actionType.getArgumentsSlots()[1].isList()) {
+                            setRows((byte) 6);
+                            for (byte slot = 27; slot < 36; slot++) {
+                                setGlass((byte) 2,slot);
+                            }
+                            for (byte slot = 36; slot < 45; slot++) {
+                                setArgSlot((byte) 2,slot);
+                            }
+                            for (byte slot = 45; slot < 54; slot++) {
+                                setGlass((byte) 2,slot);
+                            }
+                            if (actionType.getArgumentsSlots().length > 2) {
+                                setArgSlotHorizontal((byte) 3,(byte)49);
+                            }
+                        } else {
+                            setArgSlotHorizontal((byte) 2,(byte) 22);
+                        }
                     }
                     break;
                 }
@@ -121,7 +137,6 @@ public class LayoutMaker extends Layout {
                     }
                 }
             }
-
             return;
         }
         switch (getRequiredSlots().length) {

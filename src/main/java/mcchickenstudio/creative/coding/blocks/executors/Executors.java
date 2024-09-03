@@ -60,23 +60,28 @@ public class Executors {
         Executors executors = plot.getScript().getExecutors();
         for (Executor executor : executors.executorsList) {
             if (executor.getExecutorType().getEventClass() == event.getClass()) {
-                if (executors.getLastExecutorCallsAmount(executor) > plot.codeOperationsLimit) {
-                    executors.clearExecutionsAmount(executor);
-                    stopPlotCode(plot);
-                    sendPlotCodeCriticalErrorMessage(plot,executor,getLocaleMessage("plot-code-error.operations-limit",false).replace("%limit%",String.valueOf(plot.codeOperationsLimit)));
-                    return;
-                } else {
-                    executors.increaseCallsAmount(executor);
-                    executor.run(event);
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            executors.decreaseCallsAmount(executor);
-                        }
-                    }.runTaskLater(Main.getPlugin(),35L);
-                }
-
+                activate(executor,event);
             }
+        }
+    }
+
+    public static void activate(Executor executor, CreativeEvent event) {
+        Plot plot = executor.getPlot();
+        if (plot == null || plot.getScript() == null || plot.getScript().getExecutors() == null) return;
+        Executors executors = plot.getScript().getExecutors();
+        if (executors.getLastExecutorCallsAmount(executor) > plot.codeOperationsLimit) {
+            executors.clearExecutionsAmount(executor);
+            stopPlotCode(plot);
+            sendPlotCodeCriticalErrorMessage(plot,executor,getLocaleMessage("plot-code-error.operations-limit",false).replace("%limit%",String.valueOf(plot.codeOperationsLimit)));
+        } else {
+            executors.increaseCallsAmount(executor);
+            executor.run(event);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    executors.decreaseCallsAmount(executor);
+                }
+            }.runTaskLater(Main.getPlugin(),35L);
         }
     }
 
@@ -118,10 +123,22 @@ public class Executors {
             if (type == ExecutorType.CYCLE) {
                 String name = config.getString(path+".name");
                 int time = config.getInt(path+".time");
-                executor = type.getExecutorClass().getConstructor(Plot.class,int.class,int.class,int.class,String.class,int.class).newInstance(plot,coords[0],coords[1],coords[2],name,(time >= 5 && time <= 3600 ? time : 20));
+                /*
+                 * We will not create cycle without name,
+                 * because it can't be called in code.
+                 */
+                if (name != null) {
+                    executor = type.getExecutorClass().getConstructor(Plot.class,int.class,int.class,int.class,String.class,int.class).newInstance(plot,coords[0],coords[1],coords[2],name,(time >= 5 && time <= 3600 ? time : 20));
+                }
             } else if (type == ExecutorType.FUNCTION) {
                 String name = config.getString(path+".name");
-                executor = type.getExecutorClass().getConstructor(Plot.class,int.class,int.class,int.class,String.class).newInstance(plot,coords[0],coords[1],coords[2],name);
+                /*
+                 * We will not create function without name,
+                 * because it can't be called in code.
+                 */
+                if (name != null) {
+                    executor = type.getExecutorClass().getConstructor(Plot.class,int.class,int.class,int.class,String.class).newInstance(plot,coords[0],coords[1],coords[2],name);
+                }
             } else {
                 executor = type.getExecutorClass().getConstructor(Plot.class,int.class,int.class,int.class).newInstance(plot,coords[0],coords[1],coords[2]);
             }
@@ -176,10 +193,10 @@ public class Executors {
             }
             if (actionType.getCategory().isMultiAction()) {
                 if (config.getConfigurationSection(path+".actions") != null) {
-                    return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class).newInstance(executor,target,config.getInt(path+".location.x"),args,createActionList(executor,path+".actions",config));
+                    boolean isOpposed = config.getBoolean(path+".opposed",false);
+                    return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class,boolean.class).newInstance(executor,target,config.getInt(path+".location.x"),args,createActionList(executor,path+".actions",config),isOpposed);
                 }
             }
-
             return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class).newInstance(executor,target,config.getInt(path+".location.x"),args);
         } catch (Exception error) {
             return null;

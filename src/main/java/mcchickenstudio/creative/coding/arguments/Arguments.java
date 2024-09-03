@@ -25,6 +25,7 @@ import mcchickenstudio.creative.coding.variables.EventValueLink;
 import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.coding.variables.VariableLink;
 import mcchickenstudio.creative.plots.Plot;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -38,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static mcchickenstudio.creative.coding.arguments.Argument.parseEntity;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugNotFoundVariable;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugVariable;
 
@@ -49,7 +51,6 @@ public class Arguments {
 
     private final static Pattern INT_PATTERN = Pattern.compile("^-?[0-9]*$");
     private final static Pattern FLOAT_PATTERN = Pattern.compile("^-?[0-9]*\\.?[0-9]+$");
-    private final static Pattern BOOLEAN_PATTERN = Pattern.compile("(?i)true|yes|t|y|1");
 
     public Arguments(Plot plot, Executor executor) {
         this.plot = plot;
@@ -100,6 +101,19 @@ public class Arguments {
                 yaw = (float) listSection.getDouble("yaw");
                 pitch = (float) listSection.getDouble("pitch");
                 return new Location(plot.world,x,y,z,yaw,pitch);
+            case COLOR:
+                int r,g,b;
+                if (listSection == null) {
+                    return Color.WHITE;
+                }
+                r = listSection.getInt("red");
+                g = listSection.getInt("blue");
+                b = listSection.getInt("green");
+                if (r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255) {
+                    return Color.fromRGB(r,g,b);
+                } else {
+                    return Color.WHITE;
+                }
             case VARIABLE: {
                 if (listSection == null) {
                     return null;
@@ -117,6 +131,7 @@ public class Arguments {
                     return null;
                 }
                 String typeString = listSection.getString("name");
+                if (typeString == null) return null;
                 EventValues.Variable varType;
                 if (typeString.isEmpty()) return null;
                 try {
@@ -225,6 +240,7 @@ public class Arguments {
                         if (link.getVariableType() == VariableLink.VariableType.LOCAL) {
                             link.setHandler(action.getHandler().getMainActionHandler());
                         }
+                        link.setName(parseEntity(link.getName(),action));
                         list.add(link);
                     }
                 }
@@ -319,6 +335,7 @@ public class Arguments {
             if (link.getVariableType() == VariableLink.VariableType.LOCAL) {
                 link.setHandler(action.getHandler().getMainActionHandler());
             }
+            link.setName(parseEntity(link.getName(),action));
             sendCodingDebugVariable(plot,path,link);
             return link;
         }
@@ -428,6 +445,18 @@ public class Arguments {
         return value;
     }
 
+    public Color getValue(String path, Color defaultValue, Action action) {
+        Argument arg = getArg(path);
+        Color value = defaultValue;
+        if (arg == null) {
+            sendCodingDebugNotFoundVariable(plot,path,defaultValue);
+        } else if (arg.getValue(action) instanceof Color color){
+            value = color;
+            sendCodingDebugVariable(plot,path,color);
+        }
+        return value;
+    }
+
     public float getValue(String path, float defaultValue, Action action) {
         Argument arg = getArg(path);
         float value = defaultValue;
@@ -445,14 +474,8 @@ public class Arguments {
         double value = defaultValue;
         if (arg == null) {
             sendCodingDebugNotFoundVariable(plot, path, defaultValue);
-        } else if (arg.getValue(action) instanceof Float) {
-            value = (float) arg.getValue(action);
-            sendCodingDebugVariable(plot,path,value);
-        } else if (arg.getValue(action) instanceof Long || arg.getValue(action) instanceof Double) {
-            value = (double) arg.getValue(action);
-            sendCodingDebugVariable(plot,path,value);
-        } else if (arg.getValue(action) instanceof Integer) {
-            value = Double.parseDouble(String.valueOf(arg.getValue(action)));
+        } else {
+            value = parseObject(arg.getValue(action),defaultValue);
             sendCodingDebugVariable(plot,path,value);
         }
         return value;
@@ -510,10 +533,12 @@ public class Arguments {
 
     public float parseObject(Object object, float defaultValue) {
         float value = defaultValue;
-        if (object instanceof Integer || object instanceof Float) {
+        if (object instanceof Integer i) {
+            value = i.floatValue();
+        } else if (object instanceof Float) {
             value = (float) object;
-        } else if (object instanceof Double) {
-            value = ((Double) object).floatValue();
+        } else if (object instanceof Double d) {
+            value = d.floatValue();
         }
         return value;
     }
@@ -523,14 +548,16 @@ public class Arguments {
         if (object instanceof Integer || object instanceof Float || object instanceof Double) {
             value = Double.parseDouble(String.valueOf(object));
         }
-        if (object == null) {
-            return defaultValue;
-        } else if (object instanceof Float f) {
-            value = f;
-        } else if (object instanceof Long || object instanceof Double) {
-            value = (double) object;
-        } else if (object instanceof Integer) {
-            value = Double.parseDouble(String.valueOf(object));
+        switch (object) {
+            case null -> {
+                return defaultValue;
+            }
+            case Float f -> value = f;
+            case Long l -> value = l.doubleValue();
+            case Double d -> value = d;
+            case Integer i -> value = i.doubleValue();
+            default -> {
+            }
         }
         return value;
     }

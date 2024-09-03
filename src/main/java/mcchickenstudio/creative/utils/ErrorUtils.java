@@ -22,6 +22,7 @@ import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.arguments.Argument;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
+import mcchickenstudio.creative.coding.blocks.conditions.Condition;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
@@ -39,7 +40,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static mcchickenstudio.creative.utils.BlockUtils.getSignLine;
 import static mcchickenstudio.creative.utils.PlayerUtils.clearPlayer;
@@ -48,17 +51,29 @@ import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 
 public class ErrorUtils {
 
+    private static String cutClassesName(String text) {
+        String newText = text == null ? "null" : text;
+        newText = newText.replace("mcchickenstudio.creative.coding.","");
+        newText = newText.replace("mcchickenstudio.creative.","");
+        newText = newText.replace("org.bukkit.","");
+        newText = newText.replace("java.lang.","java.");
+        newText = newText.replace("blocks.","");
+        return newText;
+    }
+
     private static String parseException(Exception error) {
-        List<String> lastStacks = new ArrayList<>();
+        Set<String> lastStacks = new HashSet<>();
         byte i = 0;
         for (StackTraceElement stackTraceElement : error.getStackTrace()) {
-            lastStacks.add(stackTraceElement.getClassName() + ":" + stackTraceElement.getMethodName() + ":" + stackTraceElement.getLineNumber());
+            String stack = stackTraceElement.getClassName() + ":" + stackTraceElement.getMethodName() + ":" + stackTraceElement.getLineNumber();
+            stack = cutClassesName(stack);
+            lastStacks.add("§c" + stack);
             i++;
             if (i == 15) {
                 break;
             }
         }
-        return "\n" + error.getClass().getSimpleName() + ": " + error.getMessage() + "\n" + String.join("\n",lastStacks);
+        return "\n§c☹ Exception has occurred...\n§4 " + error.getClass().getSimpleName() + ": " + cutClassesName(error.getMessage()) + "\n \n" + String.join("\n",lastStacks);
     }
 
     /**
@@ -85,7 +100,7 @@ public class ErrorUtils {
      Sends error message for plot's players.
      **/
     public static void sendPlotErrorMessage(Plot plot, String errorMessage) {
-        Main.getPlugin().getLogger().warning("An error has occurred in plot " + plot.getPlotName() + ": " + errorMessage);
+        Main.getPlugin().getLogger().warning("An error has occurred in plot " + plot.getInformation().getDisplayName() + ": " + errorMessage);
         for (Player player : plot.getPlayers()) {
             player.sendMessage(getLocaleMessage("plot-error").replace("%error%",errorMessage));
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY,100f,2f);
@@ -110,12 +125,12 @@ public class ErrorUtils {
     /**
      Sends error message about plot's code exception on running Action for plot's players.
      **/
-    public static void sendPlotCodeErrorMessage(Executor executor, Action action, String errorMessage) {
+    public static void sendPlotCodeErrorMessage(Executor executor, Action action, String errorMessage, Exception error) {
         Plot plot = executor.getPlot();
         if (plot == null) return;
         for (Player player : plot.getPlayers()) {
             TextComponent message = new TextComponent(getLocaleMessage("plot-code-error.message").replace("%event%", executor.getExecutorType().getLocaleName()).replace("%action%",action.getActionType().getLocaleName()).replace("%error%",errorMessage).replace("%x%",String.valueOf(action.getX())).replace("%y%",String.valueOf(executor.getY())).replace("%z%",String.valueOf(executor.getZ())));
-            message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(getLocaleMessage("plot-code-error.hover-message"))));
+            message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(getLocaleMessage("plot-code-error.hover-message") + "\n" + parseException(error))));
             message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/dev " + action.getX() + " " + executor.getY() + " " + executor.getZ()));
             player.sendMessage(message);
             player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE,100,1.7f);
@@ -261,6 +276,9 @@ public class ErrorUtils {
     }
 
     public static void sendCodingDebugNotFoundVariable(Plot plot, String name, Object value) {
+        if (true) {
+            return;
+        }
         if (!plot.getDebug()) return;
         if (value == null) value = "null";
         for (Player player : plot.getPlayers()) {
@@ -273,7 +291,17 @@ public class ErrorUtils {
         sendPlotCodeErrorMessage(plot,executor,getLocaleMessage("plot-code-error.temp-var-not-exists",false).replace("%variable%", variable.getLocaleName()));
     }
 
+    public static void sendCodingDebugLog(Plot plot, String log) {
+        if (!plot.getDebug()) return;
+        for (Player player : plot.getPlayers()) {
+            player.sendMessage(getLocaleMessage("plot-code-debug.log",false).replace("%log%",log));
+        }
+    }
+
     public static void sendCodingDebugVariable(Plot plot, String name, Object value) {
+        if (true) {
+            return;
+        }
         if (!plot.getDebug()) return;
         if (value == null) value = "null";
         for (Player player : plot.getPlayers()) {
@@ -293,14 +321,21 @@ public class ErrorUtils {
         if (action.getExecutor() == null) return;
         Plot plot = action.getExecutor().getPlot();
         if (plot == null || !plot.getDebug()) return;
+        List<Argument> arguments = action.getArgumentsList();
+        String message = getLocaleMessage("plot-code-debug.hover." + (action.getActionType().isCondition() ? "condition" : "action"));
+        message = message.replace("%category%",action.getActionCategory().getLocaleName());
+        message = message.replace("%type%",action.getActionType().getLocaleName());
+        if (action instanceof Condition condition) {
+            message = message.replace("%opposed%",getLocaleMessage("plot-code-debug.condition.opposed." + condition.isOpposed()));
+        }
+        List<String> argumentsString = new ArrayList<>();
+        for (Argument arg : arguments) {
+            argumentsString.add(getLocaleMessage("plot-code-debug.hover.argument").replace("%name%",arg.getPath()).replace("%type%",arg.getType().getLocaleName()).replace("%value%",arg.getValue(action).toString().substring(0, Math.min(30, arg.getValue(action).toString().length()))));
+        }
+        message = message.replace("%arguments%",String.join(" \n",argumentsString));
+        String actionMessage = getLocaleMessage("plot-code-debug.action-message",false).replace("%type%",action.getActionType().getLocaleName()).replace("%x%",String.valueOf(action.getX())).replace("%y%",String.valueOf(action.getExecutor().getY())).replace("%z%",String.valueOf(action.getExecutor().getZ()));
         for (Player player : plot.getPlayers()) {
-            List<Argument> arguments = action.getArgumentsList();
-            StringBuilder hoverMessage = new StringBuilder();
-            for (Argument arg : arguments) {
-                hoverMessage.append(getLocaleMessage("plot-code-debug.action-hover", false).replace("%type%", arg.getType().getLocalized()).replace("%name%", arg.getPath()).replace("%value%", arg.getValue(action).toString().substring(0, Math.min(30, arg.getValue(action).toString().length())))).append("\n");
-            }
-            String actionMessage = getLocaleMessage("plot-code-debug.action-message",false).replace("%type%",action.getActionType().getLocaleName()).replace("%x%",String.valueOf(action.getX())).replace("%y%",String.valueOf(action.getExecutor().getY())).replace("%z%",String.valueOf(action.getExecutor().getZ()));
-            player.sendMessage(Component.text(actionMessage).hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(Component.text(hoverMessage.toString()))));
+            player.sendMessage(Component.text(actionMessage).hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(Component.text(message))));
         }
     }
 

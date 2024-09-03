@@ -22,7 +22,6 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.menu.AbstractMenu;
 import mcchickenstudio.creative.menu.buttons.ParameterButton;
-import mcchickenstudio.creative.utils.ItemUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -33,6 +32,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -54,12 +54,12 @@ public abstract class Layout extends AbstractMenu {
     protected final List<Byte> argsSlots = new ArrayList<>();
     protected final List<ParameterButton> parameterButtons = new ArrayList<>();
     protected final ArgumentSlot[] requiredSlots;
-    private final Block chestBlock;
+    private final Block containerBlock;
 
     public Layout(byte rows, ActionType actionType, Block chestBlock) {
         super(rows, ChatColor.stripColor(actionType.getLocaleName()));
         this.actionType = actionType;
-        this.chestBlock = chestBlock;
+        this.containerBlock = chestBlock;
         this.requiredSlots = actionType.getArgumentsSlots();
     }
 
@@ -78,7 +78,7 @@ public abstract class Layout extends AbstractMenu {
     protected abstract void fillVarsItems();
 
     protected ItemStack getFromContent(byte slot) {
-        if (!(chestBlock.getState() instanceof Chest chest)) return ItemStack.empty();
+        if (!(containerBlock.getState() instanceof Chest chest)) return ItemStack.empty();
         if (slot < 0 || slot >= chest.getBlockInventory().getContents().length) return ItemStack.empty();
         return chest.getBlockInventory().getContents()[slot];
     }
@@ -120,9 +120,9 @@ public abstract class Layout extends AbstractMenu {
     }
 
     private void saveArgumentsItems(Inventory inventory) {
+        if (!(containerBlock.getState() instanceof InventoryHolder container)) return;
         int chestSlot = 0;
         for (byte argSlot : argsSlots) {
-            if (!(chestBlock.getState() instanceof Chest)) continue;
             ItemStack argItem = inventory.getItem(argSlot);
             for (ParameterButton rb : parameterButtons) {
                 if (argItem == null) continue;
@@ -154,8 +154,8 @@ public abstract class Layout extends AbstractMenu {
                     }
                 }
             }
-            ((Chest) chestBlock.getState()).getBlockInventory().setItem(chestSlot++,argItem);
-            chestBlock.getState().update(true);
+            container.getInventory().setItem(chestSlot++,argItem);
+            containerBlock.getState().update(true);
         }
     }
 
