@@ -36,8 +36,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 
 import static mcchickenstudio.creative.utils.BlockUtils.setSignLine;
-import static mcchickenstudio.creative.utils.ItemUtils.createItem;
-import static mcchickenstudio.creative.utils.ItemUtils.replacePlaceholderInName;
+import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.MessageUtils.getPathFromMessage;
 import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
@@ -118,7 +117,9 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
                     Chest chestState = (Chest) chestBlock.getState();
                     for (ItemStack chestItem : chestState.getBlockInventory().getContents()) {
                         if (chestItem != null) {
-                            chestBlock.getWorld().dropItemNaturally(chestBlock.getLocation(),chestItem);
+                            if (chestItem.getItemMeta() == null || !chestItem.getItemMeta().getPersistentDataContainer().has(getCodingDoNotDropMeKey())) {
+                                chestBlock.getWorld().dropItem(chestBlock.getLocation(),chestItem);
+                            }
                         }
                     }
                     chestBlock.setType(Material.AIR);

@@ -37,10 +37,16 @@
 package mcchickenstudio.creative.events.player;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
+import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
+import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.plots.PlotManager;
+import mcchickenstudio.creative.utils.BlockUtils;
+import mcchickenstudio.creative.utils.PlayerUtils;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.WorldBorder;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -50,38 +56,43 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 import mcchickenstudio.creative.plots.Plot;
 
+import static mcchickenstudio.creative.utils.BlockUtils.isOutOfBorders;
+
 
 public class PlayerMove implements Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-
-        WorldBorder border = event.getPlayer().getWorld().getWorldBorder();
-        Location borderCenter = border.getCenter();
-
-        double radius = border.getSize()/2;
-        double borderCenterX1 = borderCenter.getX()+radius;
-        double borderCenterX2 = borderCenter.getX()-radius;
-        double borderCenterZ1 = borderCenter.getZ()+radius;
-        double borderCenterZ2 = borderCenter.getZ()-radius;
-
-        Location location = player.getLocation();
-        double playerX = location.getX();
-        double playerZ = location.getZ();
-
-        if (!(borderCenterX1 > playerX && playerX > borderCenterX2)) {
-            player.teleport(player.getWorld().getSpawnLocation());
-        } else if (!(borderCenterZ1 > playerZ && playerZ > borderCenterZ2)) {
-            player.teleport(player.getWorld().getSpawnLocation());
-        }
-
         if (player.getY() < 0 && player.getWorld().getName().endsWith("dev")) {
             player.teleport(player.getWorld().getSpawnLocation());
         }
-
         if (isBlockChanged(event.getFrom(),event.getTo())) {
             EventRaiser.raiseMoveEvent(event.getPlayer(),event);
+            if (player.getWorld().getName().endsWith("dev")) {
+                if (player.getY() >= 0 && player.getY() <= 4) {
+                    int radius = 10;
+                    int minX = player.getLocation().getBlockX()-radius;
+                    int maxX = player.getLocation().getBlockX()+radius;
+                    int minZ = player.getLocation().getBlockZ()-radius;
+                    int maxZ = player.getLocation().getBlockZ()+radius;
+                    for (int x = minX; x <= maxX; x++) {
+                        for (int z = minZ; z <= maxZ; z++) {
+                            Block block = player.getWorld().getBlockAt(x,1,z);
+                            if (block.getType() == Material.OAK_WALL_SIGN) {
+                                PlayerUtils.translateSign(block,player);
+                            }
+                        }
+                    }
+                }
+            }
+            if (isOutOfBorders(event.getTo())) {
+                if (isOutOfBorders(event.getFrom())) {
+                    player.teleport(player.getWorld().getSpawnLocation());
+                } else {
+                    player.teleport(event.getFrom());
+                }
+            }
         }
     }
 
@@ -116,6 +127,22 @@ public class PlayerMove implements Listener {
         if (plot != null) {
             if (event.isSprinting())  EventRaiser.raiseStartRunningEvent(event.getPlayer(),event);
             else  EventRaiser.raiseStopRunningEvent(event.getPlayer(),event);
+        }
+    }
+
+    @EventHandler
+    public void onChunkLoad(PlayerChunkLoadEvent event) {
+        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
+        if (plot != null) {
+            EventRaiser.raiseChunkLoadEvent(event);
+        }
+    }
+
+    @EventHandler
+    public void onChunkUnload(PlayerChunkUnloadEvent event) {
+        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
+        if (plot != null) {
+            EventRaiser.raiseChunkUnloadEvent(event);
         }
     }
 

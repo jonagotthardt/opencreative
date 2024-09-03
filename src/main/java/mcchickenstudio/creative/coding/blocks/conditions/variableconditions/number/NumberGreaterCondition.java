@@ -29,8 +29,8 @@ import org.bukkit.entity.Entity;
 import java.util.List;
 
 public class NumberGreaterCondition extends VariableCondition {
-    public NumberGreaterCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
-        super(executor, target, x, args, actions);
+    public NumberGreaterCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, boolean isOpposed) {
+        super(executor, target, x, args, actions, isOpposed);
     }
 
     @Override

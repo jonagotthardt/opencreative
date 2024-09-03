@@ -80,7 +80,7 @@ public class CommandAd implements CommandExecutor {
                         if (searchablePlot.worldID.equals(args[0])) {
                             foundPlot = searchablePlot;
                             break;
-                        } else if (searchablePlot.getPlotCustomID().equalsIgnoreCase(args[0])) {
+                        } else if (searchablePlot.getInformation().getCustomID().equalsIgnoreCase(args[0])) {
                             foundPlot = searchablePlot;
                             break;
                         }
@@ -117,7 +117,7 @@ public class CommandAd implements CommandExecutor {
                 setCooldown(player,Main.getPlugin().getConfig().getInt("cooldowns.advertisement"), CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND);
                 EventRaiser.raiseAdvertisedEvent(player);
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                    TextComponent advertisement = new TextComponent(getLocaleMessage("advertisement.message",player).replace("%world%",plot.getPlotName()));
+                    TextComponent advertisement = new TextComponent(getLocaleMessage("advertisement.message",player).replace("%world%",plot.getInformation().getDisplayName()));
                     advertisement.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(parsePlotLines(plot,getLocaleMessage("advertisement.hover")))));
                     advertisement.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ad " + plot.worldID));
                         p.sendMessage(advertisement);

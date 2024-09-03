@@ -64,6 +64,8 @@ public class Placeholders {
         result = result.replace("%space%"," ");
         result = result.replace("%empty%","");
         result = result.replace("%new-line%","\n");
+        result = result.replace("%nl%","\n");
+        result = result.replace("\\n","\n");
         result = parseWorld(result,action);
         if (result.contains("%random")) {
             result = parseRandom(text,action);

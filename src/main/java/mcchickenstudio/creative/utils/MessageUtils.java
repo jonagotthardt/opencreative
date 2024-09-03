@@ -21,6 +21,8 @@ package mcchickenstudio.creative.utils;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.utils.hooks.HookUtils;
 import mcchickenstudio.creative.utils.hooks.PAPIUtils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -42,6 +44,10 @@ public class MessageUtils {
 
     private static File localizationFile;
     private static FileConfiguration localizationConfig;
+
+    public static String getStringFromComponent(Component component) {
+        return LegacyComponentSerializer.legacyAmpersand().serialize(component);
+    }
 
     /**
      Loads localization file (.yml) from Creative/locales/ folder. If localization file is not found, then it creates a new one.
@@ -300,7 +306,7 @@ public class MessageUtils {
         if (plot.getPlotReputation() >= 1) plotReputation = "§a+" + plotReputation;
         else if (plot.getPlotReputation() <= -1) plotReputation = "§c" + plotReputation;
         else plotReputation = "§e" + plotReputation;
-        return parsePAPI(Bukkit.getOfflinePlayer(plot.getOwner()),string.replace("%plotName%", plot.getPlotName()).replace("%plotOnline%",String.valueOf(plot.getOnline())).replace("%plotOwner%", plot.getOwner()).replace("%plotID%",plot.worldID).replace("%plotCategory%", plot.getPlotCategory().getName()).replace("%plotUniques%",String.valueOf(plot.getUniques())).replace("%plotReputation%",plotReputation).replace("%plotLastTime%",getElapsedTime(System.currentTimeMillis(),plot.getLastActivityTime())).replace("%plotCreationTime%",getElapsedTime(System.currentTimeMillis(), plot.getCreationTime())));
+        return parsePAPI(Bukkit.getOfflinePlayer(plot.getOwner()),string.replace("%plotName%", plot.getInformation().getDisplayName()).replace("%plotOnline%",String.valueOf(plot.getOnline())).replace("%plotOwner%", plot.getOwner()).replace("%plotID%",plot.worldID).replace("%plotCategory%", plot.getInformation().getCategory().getName()).replace("%plotUniques%",String.valueOf(plot.getUniques())).replace("%plotReputation%",plotReputation).replace("%plotLastTime%",getElapsedTime(System.currentTimeMillis(),plot.getLastActivityTime())).replace("%plotCreationTime%",getElapsedTime(System.currentTimeMillis(), plot.getCreationTime())));
     }
 
     /**

@@ -19,8 +19,12 @@
 package mcchickenstudio.creative.commands;
 
 import mcchickenstudio.creative.menu.CreativeMenu;
+import mcchickenstudio.creative.menu.world.browsers.RecommendedWorldsMenu;
+import mcchickenstudio.creative.menu.world.browsers.WorldsBrowserMenu;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -79,6 +83,7 @@ public class CommandCreative implements CommandExecutor {
                     if (player != null) {
                         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 100, 2);
                     }
+                    break;
                 }
                 case "resetlocale" -> {
                     if (!sender.hasPermission("creative.resetlocale")) {
@@ -106,11 +111,12 @@ public class CommandCreative implements CommandExecutor {
                         return true;
                     }
                     long now = System.currentTimeMillis();
-                    sender.sendMessage(getLocaleMessage("world.info").replace("%name%", plot.getPlotName())
+                    sender.sendMessage(getLocaleMessage("world.info").replace("%name%", plot.getInformation().getDisplayName())
                             .replace("%id%", plot.worldID).replace("%creation-time%",getElapsedTime(now,plot.getCreationTime()))
                             .replace("%activity-time%",getElapsedTime(now,plot.getLastActivityTime())).replace("%online%",String.valueOf(plot.getOnline()))
                             .replace("%builders%",plot.getBuilders()).replace("%coders%",plot.getDevelopers()).replace("%owner%",plot.getOwner())
-                            .replace("%sharing%", plot.getPlotSharing().getName()).replace("%mode%", plot.getPlotMode().getName()).replace("%description%", plot.getPlotDescription()));
+                            .replace("%sharing%", plot.getPlotSharing().getName()).replace("%mode%", plot.getPlotMode().getName()).replace("%description%", plot.getInformation().getDescription()));
+                    break;
                 }
                 case "load" -> {
                     if (!sender.hasPermission("creative.load-world")) {
@@ -132,7 +138,7 @@ public class CommandCreative implements CommandExecutor {
                     } else {
                         sender.sendMessage(getLocaleMessage("world.already-loaded").replace("%id%",args[1]));
                     }
-
+                    break;
                 }
                 case "creative-chat" -> {
                     if (!sender.hasPermission("creative.creative-chat")) {
@@ -159,6 +165,7 @@ public class CommandCreative implements CommandExecutor {
                             onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.cleared",player));
                         }
                     }
+                    break;
                 }
                 case "kick-all" -> {
                     if (!sender.hasPermission("creative.kick-all")) {
@@ -202,6 +209,7 @@ public class CommandCreative implements CommandExecutor {
                             }
                         }
                     }
+                    break;
                 }
                 case "maintenance" -> {
                     if (!sender.hasPermission("creative.maintenance")) {
@@ -270,6 +278,7 @@ public class CommandCreative implements CommandExecutor {
                             onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.ended"));
                         }
                     }
+                    break;
                 }
                 case "unload" -> {
                     if (!sender.hasPermission("creative.unload-world")) {
@@ -291,6 +300,7 @@ public class CommandCreative implements CommandExecutor {
                     } else {
                         sender.sendMessage(getLocaleMessage("world.already-unloaded").replace("%id%",args[1]));
                     }
+                    break;
                 }
                 case "list" -> {
                     if (!sender.hasPermission("creative.list")) {
@@ -304,6 +314,62 @@ public class CommandCreative implements CommandExecutor {
                     sender.sendMessage(getLocaleMessage("creative.loaded-worlds-list")
                             .replace("%amount%",String.valueOf(worlds.size()))
                             + String.join(", ",worlds));
+                    break;
+                }
+                case "deprecated" -> {
+                    if (!sender.hasPermission("creative.list.deprecated")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
+                    }
+                    long currentTime = System.currentTimeMillis();
+                    List<Plot> deprecatedWorlds = new ArrayList<>();
+                    for (Plot plot : PlotManager.getInstance().getPlots()) {
+                        if (currentTime-plot.getCreationTime() > 2592000000L) {
+                            OfflinePlayer plotOwner = Bukkit.getOfflinePlayer(plot.getOwner());
+                            if (plotOwner.getLastSeen() == 0 || currentTime-plotOwner.getLastSeen() > 2592000000L) {
+                                deprecatedWorlds.add(plot);
+                            }
+                        }
+                    }
+                    sender.sendMessage(getLocaleMessage("creative.deprecated-worlds.list")
+                            .replace("%amount%",String.valueOf(deprecatedWorlds.size())));
+                    String worldMessage = getLocaleMessage("creative.deprecated-worlds.world");
+                    for (Plot plot : deprecatedWorlds) {
+                        sender.sendMessage(Component.text(worldMessage
+                                .replace("%id%",plot.worldID)
+                                .replace("%owner%",plot.getOwner())
+                                .replace("%created%",getElapsedTime(currentTime,plot.getCreationTime()))
+                                .replace("%seen%",getElapsedTime(currentTime,Bukkit.getOfflinePlayer(plot.getOwner()).getLastSeen())
+                                )).clickEvent(ClickEvent.runCommand("/join " + plot.worldID))
+                        );
+                    }
+                }
+                case "corrupted" -> {
+                    if (!sender.hasPermission("creative.list.corrupted")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
+                    }
+                    List<Plot> corruptedPlots = PlotManager.getInstance().getCorruptedPlots();
+                    sender.sendMessage(getLocaleMessage("creative.corrupted-worlds.list")
+                            .replace("%amount%",String.valueOf(corruptedPlots.size())));
+                    String worldMessage = getLocaleMessage("creative.corrupted-worlds.world");
+                    for (Plot plot : corruptedPlots) {
+                        sender.sendMessage(Component.text(worldMessage
+                                .replace("%id%",plot.worldID)
+                                ).clickEvent(ClickEvent.runCommand("/join " + plot.worldID))
+                        );
+                    }
+                }
+                case "print" -> {
+                    if (!sender.hasPermission("creative.print")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return true;
+                    }
+                    sender.sendMessage(getLocaleMessage(args[1]));
                 }
             }
         } else {

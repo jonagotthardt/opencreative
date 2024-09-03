@@ -16,29 +16,38 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mcchickenstudio.creative.coding.blocks.actions.playeractions.appearance;
+package mcchickenstudio.creative.coding.blocks.actions.worldactions.world;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
-import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
-import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
+import mcchickenstudio.creative.coding.blocks.actions.worldactions.WorldAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
+import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.text.Component;
+import org.bukkit.entity.Entity;
 
-public class SetTimeAction extends PlayerAction {
-    public SetTimeAction(Executor executor, Target target, int x, Arguments args) {
+public class BossBarProgressAction extends WorldAction {
+    public BossBarProgressAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
-    public void executePlayer(Player player) {
-        float time = getArguments().getValue("time",6f,this);
-        player.setPlayerTime((long) (time*1000),false);
-
+    protected void execute(Entity entity) {
+        if (!getArguments().pathExists("name")) {
+            return;
+        }
+        String name = getArguments().getValue("name","boss",this);
+        float progress = getArguments().getValue("progress",100.0f,this)/100;
+        BossBar bossBar = getPlot().getBossBars().get(name.toLowerCase());
+        if (bossBar != null) {
+            bossBar.progress(progress);
+        }
+        getPlot().getBossBars().put(name.toLowerCase(),bossBar);
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.PLAYER_SET_TIME;
+        return ActionType.WORLD_BOSS_BAR_PROGRESS;
     }
 }

@@ -88,20 +88,20 @@ public class OwnWorldsMenu extends LegacyMenu {
             int slot = 0;
             for (Plot plot: allPages.get(pageToOpen-1)) {
                 if (plot.getOwner().equalsIgnoreCase(player.getName())) {
-                    Material material = plot.getPlotIconMaterial();
+                    Material material = plot.getInformation().getMaterial();
                     if (!(plot.getPlotSharing() == Plot.Sharing.PUBLIC)) material = Material.BARRIER;
                     ItemStack item = new ItemStack(material);
                     ItemMeta meta = item.getItemMeta();
-                    meta.displayName(Component.text(plot.getPlotName()));
+                    meta.displayName(Component.text(plot.getInformation().getDisplayName()));
                     List<String> lore = new ArrayList<>();
                     for (String loreLine : MessageUtils.getLocaleItemDescription("menus.own-worlds.items.world.lore")) {
                         if (loreLine.contains("%plotDescription%")) {
-                            String[] newLines = plot.getPlotDescription().split("\\\\n");
+                            String[] newLines = plot.getInformation().getDescription().split("\\\\n");
                             for (String newLine : newLines) {
                                 lore.add(loreLine.replace("%plotDescription%", ChatColor.translateAlternateColorCodes('&',newLine)));
                             }
                         } else {
-                            lore.add(MessageUtils.parsePlotLines(plot,loreLine.replace("%id%", MessageUtils.getLocaleMessage("menus.own-worlds.items.world.id",false) + plot.getPlotCustomID())));
+                            lore.add(MessageUtils.parsePlotLines(plot,loreLine.replace("%id%", MessageUtils.getLocaleMessage("menus.own-worlds.items.world.id",false) + plot.getInformation().getCustomID())));
                         }
                     }
                     meta.setLore(lore);

@@ -24,25 +24,27 @@ import mcchickenstudio.creative.coding.CodeScript;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.coding.variables.WorldVariables;
 import org.bukkit.*;
+import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import mcchickenstudio.creative.utils.FileUtils;
 import mcchickenstudio.creative.utils.PlayerUtils;
 import mcchickenstudio.creative.utils.WorldUtils;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
-import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 import static mcchickenstudio.creative.utils.ErrorUtils.*;
 import static mcchickenstudio.creative.utils.FileUtils.*;
+import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.*;
 import static mcchickenstudio.creative.utils.PlayerUtils.*;
 import static mcchickenstudio.creative.utils.WorldUtils.generateWorld;
@@ -58,33 +60,37 @@ public class Plot {
     public String worldName;
     public String worldID;
 
+    private final PlotInfo plotInformation;
+    private final PlotPlayers worldPlayers;
+
     private String owner;
     private String ownerGroup;
 
     public boolean isLoaded;
     public DevPlot devPlot;
 
-    private String plotName;
-    private String plotDescription;
-    private Material plotIconMaterial;
-    private ItemStack plotIcon;
-    private String plotCustomID;
-
     private int plotReputation;
     private Mode plotMode;
     private Sharing plotSharing;
     private Category plotCategory;
 
+    public final int worldSize;
+    public int lastModifiedBlocksAmount;
+    public int lastRedstoneOperationsAmount;
     public boolean currentlyTransferringOwnership;
 
-    public final int worldSize;
     public final int entitiesLimit;
+    public final int codeOperationsLimit;
     public final int redstoneOperationsLimit;
-    public int lastRedstoneOperationsAmount;
+    private final int modifyingBlocksLimit;
+    private final int scoreboardsLimit;
+    private final int bossBarsLimit;
     private final int openingInventoriesLimit;
     private final int variablesAmountLimit;
+
+    private final Map<String, BossBar> bossBars = new HashMap<>();
+    private final Map<String, Scoreboard> scoreboards = new HashMap<>();
     private final List<BukkitRunnable> runningBukkitRunnables = new ArrayList<>();
-    public final int codeOperationsLimit;
 
     private final WorldVariables worldVariables;
     private boolean debug = false;
@@ -93,40 +99,41 @@ public class Plot {
     private boolean isCorrupted = false;
     private CodeScript script;
 
-    private final Set<PlotPlayer> plotPlayers = new HashSet<>();
-
-
     /**
      Creates a new plot for specified player with specified generator.
      **/
     public Plot(Player player, WorldUtils.WorldGenerator generator) {
 
         player.closeInventory();
-        plotPlayers.add(new PlotPlayer(this,player));
         owner = (player.getName());
         ownerGroup = getGroup(player);
 
-        plotName = (getLocaleMessage("creating-world.default-world-name",false).replace("%player%", getOwner()));
-        plotDescription = (getLocaleMessage("creating-world.default-world-description",false).replace("%player%", getOwner()));
-        plotIconMaterial = (Material.DIAMOND);
-
         plotMode = (Mode.BUILD);
-        plotCategory = (Category.SANDBOX);
         plotSharing = (Sharing.PUBLIC);
-        setPlotReputation(0);
+        plotReputation = 0;
 
+        lastModifiedBlocksAmount = 0;
         lastRedstoneOperationsAmount = 0;
         redstoneOperationsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_REDSTONE_OPERATIONS_LIMIT);
         entitiesLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_ENTITIES_LIMIT);
         codeOperationsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_CODE_OPERATIONS_LIMIT);
         openingInventoriesLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_OPENING_INVENTORIES_LIMIT);
         variablesAmountLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_VARIABLES_LIMIT);
+        modifyingBlocksLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerLimit.WORLD_MODIFYING_BLOCKS_LIMIT);
+        scoreboardsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerLimit.WORLD_SCOREBOARDS_LIMIT);
+        bossBarsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerLimit.WORLD_BOSSBARS_LIMIT);
         worldSize = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_SIZE);
         currentlyTransferringOwnership = false;
 
-        PlotManager.getInstance().addToPlots(this);
+        PlotManager.getInstance().registerPlot(this);
+
         create(this,generator);
+
+        worldPlayers = new PlotPlayers(this);
+        plotInformation = new PlotInfo(this);
         plotFlags = new PlotFlags(this);
+
+        worldPlayers.registerPlayer(player);
 
         devPlot = new DevPlot(this);
         script = new CodeScript(this,getPlotScriptFile(this));
@@ -135,7 +142,7 @@ public class Plot {
         new BukkitRunnable() {
             @Override
             public void run() {
-                updatePlotIcon();
+                plotInformation.updateIcon();
             }
         }.runTaskAsynchronously(Main.getPlugin());
 
@@ -153,28 +160,42 @@ public class Plot {
 
         loadInfo();
 
+        plotInformation = new PlotInfo(this);
+        worldPlayers = new PlotPlayers(this);
+
         plotFlags = new PlotFlags(this);
         worldVariables = new WorldVariables(this);
         devPlot = new DevPlot(this);
         script = new CodeScript(this,getPlotScriptFile(this));
 
+        lastModifiedBlocksAmount = 0;
         lastRedstoneOperationsAmount = 0;
         redstoneOperationsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_REDSTONE_OPERATIONS_LIMIT);
         entitiesLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_ENTITIES_LIMIT);
         codeOperationsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_CODE_OPERATIONS_LIMIT);
         openingInventoriesLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_OPENING_INVENTORIES_LIMIT);
         variablesAmountLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_VARIABLES_LIMIT);
+        modifyingBlocksLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerLimit.WORLD_MODIFYING_BLOCKS_LIMIT);
+        scoreboardsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerLimit.WORLD_SCOREBOARDS_LIMIT);
+        bossBarsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerLimit.WORLD_BOSSBARS_LIMIT);
         worldSize = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_SIZE);
 
-        if (!isCorrupted) {
-            PlotManager.getInstance().addToPlots(this);
-        }
+        PlotManager.getInstance().registerPlot(this);
+
         new BukkitRunnable() {
             @Override
             public void run() {
-                updatePlotIcon();
+                plotInformation.updateIcon();
             }
         }.runTaskAsynchronously(Main.getPlugin());
+    }
+
+    public PlotInfo getInformation() {
+        return plotInformation;
+    }
+
+    public PlotPlayers getWorldPlayers() {
+        return worldPlayers;
     }
 
     public boolean isOwner(Player player) {
@@ -183,30 +204,6 @@ public class Plot {
 
     public boolean isOwner(String nickname) {
         return getOwner().equalsIgnoreCase(nickname);
-    }
-
-    public void setPlotName(String name) {
-        this.plotName = name;
-        setPlotConfigParameter(this,"name",name);
-    }
-
-    public void setPlotDescription(String description) {
-        this.plotDescription = description;
-        setPlotConfigParameter(this,"description",description);
-    }
-
-    public void setPlotIconMaterial(Material material) {
-        this.plotIconMaterial = material;
-        setPlotConfigParameter(this,"icon",material.name());
-    }
-
-    public void setPlotIcon(ItemStack plotIcon) {
-        this.plotIcon = plotIcon;
-    }
-
-    public void setPlotCustomID(String customID) {
-        this.plotCustomID = customID;
-        setPlotConfigParameter(this,"customID",customID);
     }
 
     public int getPlotReputation() {
@@ -250,25 +247,18 @@ public class Plot {
 
     public enum Mode {
         PLAYING() {
-            public void onPlayerJoin(Player player) {
+            public void onPlayerConnect(Player player, Plot plot) {
                 player.setGameMode(GameMode.ADVENTURE);
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) {
-                    player.setGameMode(plot.getOwner().equalsIgnoreCase(player.getName()) ? GameMode.CREATIVE : GameMode.ADVENTURE);
-                    plot.getScript().loadCode();
-                }
+                player.setGameMode(plot.getOwner().equalsIgnoreCase(player.getName()) ? GameMode.CREATIVE : GameMode.ADVENTURE);
+                plot.getScript().loadCode();
             }
         }, BUILD() {
-            public void onPlayerJoin(Player player) {
+            public void onPlayerConnect(Player player, Plot plot) {
                 player.setGameMode(GameMode.ADVENTURE);
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null)  {
-                    if (plot.isOwner(player) || plot.getBuildersList().contains(player.getName())) {
-                        player.setGameMode(GameMode.CREATIVE);
-                        giveBuildPermissions(player);
-                    }
+                if (plot.worldPlayers.canBuild(player)) {
+                    player.setGameMode(GameMode.CREATIVE);
+                    giveBuildPermissions(player);
                 }
-
             }
         };
 
@@ -276,7 +266,7 @@ public class Plot {
             return getLocaleMessage("world." + (this == PLAYING ? "play-mode" : "build-mode") + ".name",false);
         }
 
-        public void onPlayerJoin(Player player) {}
+        public void onPlayerConnect(Player player, Plot plot) {}
     }
 
     public enum Sharing {
@@ -336,12 +326,8 @@ public class Plot {
         FileConfiguration config = getPlotConfig(this);
         String owner = "Unknown owner";
         String ownerGroup = "default";
-        String name = "Unknown name";
-        String description = "World data is corrupted,\\nplease report server admin\\nabout this world.";
-        String customID = worldID;
         Mode mode = Mode.BUILD;
         Category category = Category.SANDBOX;
-        Material material = Material.REDSTONE;
         Sharing sharing = Sharing.PRIVATE;
         if (config != null) {
             if (config.getString("owner") != null) {
@@ -352,37 +338,11 @@ public class Plot {
             if (config.getString("owner-group") != null) {
                 ownerGroup = config.getString("owner-group");
             }
-            if (config.getString("name") != null) {
-                name = config.getString("name");
-            }
-            if (config.getString("description") != null) {
-                description = config.getString("description");
-            }
-            if (config.getString("customID") != null) {
-                customID = config.getString("customID");
-            }
             if (config.getString("mode") != null) {
                 try {
                     mode = Mode.valueOf(config.getString("mode"));
                 } catch (Exception error) {
                     mode = Mode.BUILD;
-                }
-            }
-            if (config.getString("category") != null) {
-                try {
-                    category = Category.valueOf(config.getString("category"));
-                } catch (Exception error) {
-                    category = Category.SANDBOX;
-                }
-            }
-            if (config.getString("icon") != null) {
-                try {
-                    material = Material.valueOf(config.getString("icon"));
-                    if (material == Material.AIR) {
-                        material = Material.REDSTONE;
-                    }
-                } catch (Exception error) {
-                    material = Material.REDSTONE;
                 }
             }
             if (config.getString("sharing") != null) {
@@ -400,13 +360,10 @@ public class Plot {
         }
         this.owner = owner;
         this.ownerGroup = ownerGroup;
-        this.plotName = name;
-        this.plotDescription = description;
-        this.plotCustomID = customID;
         this.plotCategory = category;
         this.plotMode = mode;
-        this.plotIconMaterial = material;
         this.plotSharing = sharing;
+        this.plotReputation = getPlayersFromPlotConfig(this,PlayersType.LIKED).size()-getPlayersFromPlotConfig(this,PlayersType.DISLIKED).size();
     }
 
     public byte getFlagValue(PlotFlags.PlotFlag flag) {
@@ -415,43 +372,6 @@ public class Plot {
 
     public void setFlagValue(PlotFlags.PlotFlag flag, byte value) {
         this.plotFlags.setFlag(flag,value);
-    }
-
-    public ItemStack getPlotIcon() {
-        return plotIcon;
-    }
-
-    /**
-     Updates plot's icon.
-     **/
-    public void updatePlotIcon() {
-        Material material = this.getPlotIconMaterial();
-        if (!(this.getPlotSharing() == Plot.Sharing.PUBLIC)) material = Material.BARRIER;
-        ItemStack item = new ItemStack(material);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(getLocaleItemName("menus.all-worlds.items.world.name").replace("%plotName%", this.getPlotName()));
-        List<String> lore = new ArrayList<>();
-        for (String loreLine : getLocaleItemDescription("menus.all-worlds.items.world.lore")) {
-            if (loreLine.contains("%plotDescription%")) {
-                String[] newLines = this.getPlotDescription().split("\\\\n");
-                for (String newLine : newLines) {
-                    lore.add(loreLine.replace("%plotDescription%", ChatColor.translateAlternateColorCodes('&',newLine)));
-                }
-            } else {
-                lore.add(parsePlotLines(this,loreLine.replace("%id%",getLocaleMessage("menus.all-worlds.items.world.id",false) + this.getPlotCustomID())));
-            }
-        }
-        item.setAmount((Math.max(this.getOnline(), 1)));
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        meta.addItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
-        meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
-        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        meta.addItemFlags(ItemFlag.HIDE_DYE);
-        meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-        meta.setLore(lore);
-        item.setItemMeta(meta);
-        this.setPlotIcon(item);
     }
 
     /**
@@ -472,32 +392,8 @@ public class Plot {
         return getPlotSharing();
     }
 
-    // Получить название плота
-    public String getPlotName() {
-        return plotName;
-    }
-
-    // Получить описание плота
-    public String getPlotDescription() {
-        return plotDescription;
-    }
-
-    // Получить описание плота
-    public String getPlotCustomID() {
-        return plotCustomID;
-    }
-
     public Mode getPlotMode() {
         return plotMode;
-    }
-
-    public Category getPlotCategory() {
-        return plotCategory;
-    }
-
-    // Получить значок плота
-    public Material getPlotIconMaterial() {
-        return plotIconMaterial;
     }
 
     public int getOnline() {
@@ -510,41 +406,6 @@ public class Plot {
             return (getPlayersFromPlotConfig(this, PlayersType.LIKED).size() - getPlayersFromPlotConfig(this, PlayersType.DISLIKED).size());
         } catch (Exception error) {
             return 0;
-        }
-    }
-
-    public Set<String> getAllPlayersFromConfig() {
-        Set<String> allPlayers = new HashSet<>();
-        try {
-            List<String> onlinePlayers = new ArrayList<>();
-            List<String> trustedBuilders = getPlayersFromPlotConfig(this, PlayersType.BUILDERS_TRUSTED);
-            List<String> notTrustedBuilders = getPlayersFromPlotConfig(this, PlayersType.BUILDERS_NOT_TRUSTED);
-            List<String> trustedDevelopers = getPlayersFromPlotConfig(this, PlayersType.BUILDERS_NOT_TRUSTED);
-            List<String> notTrustedDevelopers = getPlayersFromPlotConfig(this, PlayersType.BUILDERS_NOT_TRUSTED);
-
-            this.getPlayers().forEach(player -> onlinePlayers.add(player.getName()));
-
-            allPlayers.addAll(trustedBuilders);
-            allPlayers.addAll(notTrustedBuilders);
-            allPlayers.addAll(trustedDevelopers);
-            allPlayers.addAll(notTrustedDevelopers);
-            allPlayers.addAll(onlinePlayers);
-            allPlayers.remove(this.getOwner());
-
-            return allPlayers;
-        } catch (Exception error) {
-            return allPlayers;
-        }
-    }
-
-    public List<String> getBuildersList() {
-        try {
-            List<String> trustedBuilders = getPlayersFromPlotConfig(this, PlayersType.BUILDERS_TRUSTED);
-            List<String> notTrustedBuilders = getPlayersFromPlotConfig(this, PlayersType.BUILDERS_NOT_TRUSTED);
-            trustedBuilders.addAll(notTrustedBuilders);
-            return trustedBuilders;
-        } catch (Exception error) {
-            return new ArrayList<>();
         }
     }
 
@@ -628,19 +489,19 @@ public class Plot {
             player.sendMessage(getLocaleMessage("blacklisted-in-plot", player));
             return;
         }
-        PlotPlayer plotPlayer = new PlotPlayer(this,player);
-        plotPlayers.add(plotPlayer);
+        worldPlayers.registerPlayer(player);
         player.sendTitle(getLocaleMessage("world.connecting.title"),getLocaleMessage("world.connecting.subtitle"),15,9999,15);
-        if (!this.isLoaded) {
+        player.playSound(player.getLocation(), Sound.BLOCK_TRIAL_SPAWNER_ABOUT_TO_SPAWN_ITEM,100,1);
+        if (!isLoaded) {
             Main.getPlugin().getLogger().info("Loading " + this.worldName + " and teleporting " + player.getName());
             PlotManager.getInstance().loadPlot(this);
         }
         clearPlayer(player);
-        this.world.getSpawnLocation().getChunk().load(true);
+        world.getSpawnLocation().getChunk().load(true);
         player.teleport(this.world.getSpawnLocation());
         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE,100,2);
-        this.plotMode.onPlayerJoin(player);
-        plotPlayer.load();
+        plotMode.onPlayerConnect(player,this);
+        worldPlayers.getPlotPlayer(player).load();
         clearPlayer(player);
         player.sendTitle("","");
         if (!getPlayersFromPlotConfig(this, PlayersType.UNIQUE).contains(player.getName())) {
@@ -658,17 +519,16 @@ public class Plot {
             }
         }
         EventRaiser.raiseJoinEvent(player);
-        Plot plot = this;
         new BukkitRunnable() {
             @Override
             public void run() {
-                plot.updatePlotIcon();
+                plotInformation.updateIcon();
             }
         }.runTaskAsynchronously(Main.getPlugin());
     }
 
     // Телепортировать игрока в мир разработки плота
-    public void teleportToDevPlot(Player player) {
+    public void connectToDevPlot(Player player) {
         player.sendTitle(getLocaleMessage("world.dev-mode.connecting.title"),getLocaleMessage("world.dev-mode.connecting.subtitle"),15,9999,15);
         devPlot.loadDevPlotWorld();
         devPlot.world.getSpawnLocation().getChunk().load(true);
@@ -677,18 +537,25 @@ public class Plot {
             player.sendMessage(ChatColor.RED + " Failed to teleport to developer's environment.");
             return;
         }
-        player.teleport(lastLocation == null ? this.devPlot.world.getSpawnLocation() : lastLocation);
+        if (lastLocation == null) {
+            lastLocation = devPlot.world.getSpawnLocation();
+        }
+        player.teleport(lastLocation);
+        devPlot.lastLocations.put(player,player.getLocation());
         clearPlayer(player);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,Integer.MAX_VALUE,0,false,false,false));
         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE,100,2);
-        WorldBorder border = Bukkit.createWorldBorder();
-        border.setCenter(devPlot.world.getWorldBorder().getCenter());
-        border.setSize(devPlot.world.getWorldBorder().getSize()*5);
-        player.setWorldBorder(border);
+        for (Player developer : devPlot.world.getPlayers()) {
+            WorldBorder border = Bukkit.createWorldBorder();
+            border.setCenter(devPlot.world.getWorldBorder().getCenter());
+            border.setSize(devPlot.world.getWorldBorder().getSize()*5);
+            developer.setWorldBorder(border);
+        }
         devPlot.translateCodingBlocks(player);
     }
 
-    public void teleportToDevPlot(Player player, double x, double y, double z) {
-        teleportToDevPlot(player);
+    public void connectToDevPlot(Player player, double x, double y, double z) {
+        connectToDevPlot(player);
         if (x > 0 && y > 0 && z > 0 && x < 99 && y < 99 && z < 99) {
             Location location = new Location(this.devPlot.world, x+1,y,z+2,180,5);
             player.teleport(location);
@@ -696,143 +563,15 @@ public class Plot {
         }
     }
 
-    public void removeDeveloper(String nickname) {
-        Player player = Bukkit.getPlayer(nickname);
-        if (player != null) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (this == plot) {
-                if (player.getGameMode() == GameMode.CREATIVE) {
-                    player.setGameMode(GameMode.ADVENTURE);
-                }
-            }
-        }
-        removePlayerFromListInPlotConfig(this,nickname,PlayersType.DEVELOPERS_NOT_TRUSTED);
-        removePlayerFromListInPlotConfig(this,nickname,PlayersType.DEVELOPERS_TRUSTED);
-    }
-
-    public void removeBuilder(String nickname) {
-        Player player = Bukkit.getPlayer(nickname);
-        if (player != null) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (this == plot) {
-                if (player.getGameMode() == GameMode.CREATIVE) {
-                    player.setGameMode(GameMode.ADVENTURE);
-                }
-                if (PlotManager.getInstance().getDevPlot(player) != null) {
-                    this.teleportPlayer(player);
-                }
-            }
-        }
-        removePlayerFromListInPlotConfig(this,nickname,PlayersType.BUILDERS_NOT_TRUSTED);
-        removePlayerFromListInPlotConfig(this,nickname,PlayersType.BUILDERS_TRUSTED);
-    }
-
-    public void setDeveloperGuest(String nickname) {
-        Player player = Bukkit.getPlayer(nickname);
-        if (player != null) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-             if (this == plot) {
-                    player.sendMessage(getLocaleMessage("world.players.developers.player-guest").replace("%player%",player.getName()));
-                    player.playSound(player.getLocation(),Sound.ENTITY_CAT_AMBIENT,100,1);
-                }
-            }
-        addPlayerToListInPlotConfig(this,nickname,PlayersType.DEVELOPERS_GUESTS);
-    }
-
-    public void setDeveloperTrusted(String nickname, boolean isTrusted) {
-        Player player = Bukkit.getPlayer(nickname);
-        if (player != null) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (this == plot) {
-                if (!isTrusted) {
-                    player.sendMessage(getLocaleMessage("world.players.developers.player").replace("%player%",player.getName()));
-                    player.playSound(player.getLocation(),Sound.ENTITY_CAT_AMBIENT,100,1);
-                    if (PlotManager.getInstance().getDevPlot(player) != null) player.setGameMode(GameMode.CREATIVE);
-                }
-            }
-        }
-        if (isTrusted) {
-            removePlayerFromListInPlotConfig(this,nickname,PlayersType.DEVELOPERS_NOT_TRUSTED);
-            addPlayerToListInPlotConfig(this,nickname,PlayersType.DEVELOPERS_TRUSTED);
-        } else {
-            addPlayerToListInPlotConfig(this,nickname,PlayersType.DEVELOPERS_NOT_TRUSTED);
-        }
-        removePlayerFromListInPlotConfig(this,nickname,PlayersType.DEVELOPERS_GUESTS);
-    }
-
-    public void setBuilderTrusted(String nickname, boolean isTrusted) {
-        Player player = Bukkit.getPlayer(nickname);
-        if (player != null) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (this == plot) {
-                if (!isTrusted) {
-                    player.sendMessage(getLocaleMessage("world.players.builders.player").replace("%player%",player.getName()));
-                    player.playSound(player.getLocation(),Sound.ENTITY_CAT_AMBIENT,100,1);
-                    if (PlotManager.getInstance().getDevPlot(player) != null) return;
-                    player.setGameMode(GameMode.CREATIVE);
-                }
-            }
-        }
-        if (isTrusted) {
-            removePlayerFromListInPlotConfig(this,nickname,PlayersType.BUILDERS_NOT_TRUSTED);
-            addPlayerToListInPlotConfig(this,nickname,PlayersType.BUILDERS_TRUSTED);
-        } else {
-            addPlayerToListInPlotConfig(this,nickname,PlayersType.BUILDERS_NOT_TRUSTED);
-        }
-    }
-
-    public void kickPlayer(Player player) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-        if (this == plot) {
-            teleportToLobby(player);
-            player.sendMessage(getLocaleMessage("world.players.kick.player").replace("%player%",player.getName()));
-            player.playSound(player.getLocation(),Sound.ENTITY_CAT_HURT,100,1);
-        }
-    }
-
-    public void addBlacklist(String nickname) {
-        Player player = Bukkit.getPlayer(nickname);
-        if (player != null) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (this == plot) {
-                teleportToLobby(player);
-                player.sendMessage(getLocaleMessage("world.players.black-list.player").replace("%player%",player.getName()));
-                player.playSound(player.getLocation(),Sound.ENTITY_CAT_HURT,100,1);
-            }
-        }
-        addPlayerToListInPlotConfig(this,nickname,PlayersType.BLACKLISTED);
-    }
-
-
     public void setOwner(String owner) {
         this.owner = owner;
         FileUtils.setPlotConfigParameter(this,"owner",owner);
         new BukkitRunnable() {
             @Override
             public void run() {
-                updatePlotIcon();
+                plotInformation.updateIcon();
             }
         }.runTaskAsynchronously(Main.getPlugin());
-    }
-    public void removeBlacklist(String nickname) {
-        removePlayerFromListInPlotConfig(this,nickname,PlayersType.BLACKLISTED);
-    }
-
-    public void addWhitelist(String nickname) {
-        Player player = Bukkit.getPlayer(nickname);
-        if (player != null) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (this == plot) {
-                player.sendMessage(getLocaleMessage("world.players.white-list.player").replace("%player%",player.getName()));
-                player.playSound(player.getLocation(),Sound.ENTITY_CAT_AMBIENT,100,1);
-            }
-        }
-        addPlayerToListInPlotConfig(this,nickname,PlayersType.BLACKLISTED);
-    }
-
-    public void setPlotCategory(Category category) {
-        this.plotCategory = category;
-        setPlotConfigParameter(this,"category",category.toString());
     }
 
     public boolean getDebug() {
@@ -866,61 +605,27 @@ public class Plot {
         return worldVariables;
     }
 
-    public boolean isDeveloper(Player player) {
-        if (isOwner(player)) {
-            return true;
-        }
-        List<String> trustedList = FileUtils.getPlayersFromPlotConfig(this,PlayersType.DEVELOPERS_TRUSTED);
-        for (String nickname : trustedList) {
-            if (nickname.equalsIgnoreCase(player.getName())) {
-                return true;
-            }
-        }
-        if (Bukkit.getPlayer(owner) == null) {
-            return false;
-        }
-        List<String> notTrustedList = FileUtils.getPlayersFromPlotConfig(this,PlayersType.DEVELOPERS_NOT_TRUSTED);
-        for (String nickname : notTrustedList) {
-            if (nickname.equalsIgnoreCase(player.getName())) {
-                return true;
-            }
-        }
-        return false;
+    public int getModifyingBlocksLimit() {
+        return modifyingBlocksLimit;
     }
 
-    public boolean isBuilder(Player player) {
-        if (isOwner(player)) {
-            return true;
-        }
-        List<String> trustedList = FileUtils.getPlayersFromPlotConfig(this,PlayersType.BUILDERS_TRUSTED);
-        for (String nickname : trustedList) {
-            if (nickname.equalsIgnoreCase(player.getName())) {
-                return true;
-            }
-        }
-        if (Bukkit.getPlayer(owner) == null) {
-            return false;
-        }
-        List<String> notTrustedList = FileUtils.getPlayersFromPlotConfig(this,PlayersType.BUILDERS_NOT_TRUSTED);
-        for (String nickname : notTrustedList) {
-            if (nickname.equalsIgnoreCase(player.getName())) {
-                return true;
-            }
-        }
-        return false;
+    public Map<String, Scoreboard> getScoreboards() {
+        return scoreboards;
     }
 
-    public void removePlotPlayer(Player player) {
-        plotPlayers.removeIf(plotPlayer -> plotPlayer.getPlayer().equals(player));
+    public Map<String, BossBar> getBossBars() {
+        return bossBars;
     }
 
-    public PlotPlayer getPlotPlayer(Player player) {
-        for (PlotPlayer plotPlayer : plotPlayers) {
-            if (plotPlayer.getPlayer().equals(player)) {
-                return plotPlayer;
-            }
-        }
-        return null;
+    public int getScoreboardsLimit() {
+        return scoreboardsLimit;
     }
 
+    public int getBossBarsLimit() {
+        return bossBarsLimit;
+    }
+
+    public boolean isCorrupted() {
+        return isCorrupted;
+    }
 }

@@ -19,11 +19,11 @@
 package mcchickenstudio.creative.commands;
 
 import mcchickenstudio.creative.Main;
+import mcchickenstudio.creative.menu.world.browsers.RecommendedWorldsMenu;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import mcchickenstudio.creative.menu.world.browsers.AllWorldsMenu;
 import mcchickenstudio.creative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,7 +45,7 @@ public class CommandMenu implements CommandExecutor {
                 return true;
             }
             setCooldown(player,Main.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
-            AllWorldsMenu.openInventory(player, 1);
+            new RecommendedWorldsMenu().open(player);
         }
         return true;
     }

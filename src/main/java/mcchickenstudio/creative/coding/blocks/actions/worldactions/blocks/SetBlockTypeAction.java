@@ -18,19 +18,20 @@
 
 package mcchickenstudio.creative.coding.blocks.actions.worldactions.blocks;
 
+import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
-import mcchickenstudio.creative.coding.blocks.actions.BlocksManipulation;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.worldactions.WorldAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
-@BlocksManipulation
 public class SetBlockTypeAction extends WorldAction {
     public SetBlockTypeAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
@@ -41,8 +42,20 @@ public class SetBlockTypeAction extends WorldAction {
         List<Location> locations = getArguments().getLocationList("locations",this);
         Material material = getArguments().getValue("type", Material.AIR,this);
         for (Location location : locations) {
+            if (getPlot().lastModifiedBlocksAmount > getPlot().getModifyingBlocksLimit()) {
+                return;
+            }
             location.getBlock().setType(material);
+            getPlot().lastModifiedBlocksAmount++;
         }
+        BukkitRunnable runnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+                getPlot().lastModifiedBlocksAmount = 0;
+            }
+        };
+        getPlot().addBukkitRunnable(runnable);
+        runnable.runTaskLater(Main.getPlugin(),20L);
     }
 
     @Override

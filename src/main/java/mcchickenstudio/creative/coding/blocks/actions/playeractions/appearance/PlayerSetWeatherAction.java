@@ -26,8 +26,8 @@ import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
 
-public class SetWeatherAction extends PlayerAction {
-    public SetWeatherAction(Executor executor, Target target, int x, Arguments args) {
+public class PlayerSetWeatherAction extends PlayerAction {
+    public PlayerSetWeatherAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 

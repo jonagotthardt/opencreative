@@ -61,7 +61,7 @@ public class Advancement {
                 "    },\n" +
                 "    \"display\": {\n" +
                 "        \"icon\": {\n" +
-                "            \"item\": \"minecraft:" + material.toString().toLowerCase() + "\"\n" +
+                "            \"id\": \"minecraft:" + material.toString().toLowerCase() + "\"\n" +
                 "        },\n" +
                 "        \"title\": {\n" +
                 "            \"text\": \"" + title + "\n" + message + "\"\n" +

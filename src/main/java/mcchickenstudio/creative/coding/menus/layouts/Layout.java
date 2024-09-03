@@ -32,6 +32,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -51,14 +52,14 @@ public abstract class Layout extends AbstractMenu {
 
     protected final ActionType actionType;
     protected final List<Byte> argsSlots = new ArrayList<>();
-    protected final List<ParameterButton> radioButtons = new ArrayList<>();
+    protected final List<ParameterButton> parameterButtons = new ArrayList<>();
     protected final ArgumentSlot[] requiredSlots;
-    private final Block chestBlock;
+    private final Block containerBlock;
 
     public Layout(byte rows, ActionType actionType, Block chestBlock) {
         super(rows, ChatColor.stripColor(actionType.getLocaleName()));
         this.actionType = actionType;
-        this.chestBlock = chestBlock;
+        this.containerBlock = chestBlock;
         this.requiredSlots = actionType.getArgumentsSlots();
     }
 
@@ -77,7 +78,7 @@ public abstract class Layout extends AbstractMenu {
     protected abstract void fillVarsItems();
 
     protected ItemStack getFromContent(byte slot) {
-        if (!(chestBlock.getState() instanceof Chest chest)) return ItemStack.empty();
+        if (!(containerBlock.getState() instanceof Chest chest)) return ItemStack.empty();
         if (slot < 0 || slot >= chest.getBlockInventory().getContents().length) return ItemStack.empty();
         return chest.getBlockInventory().getContents()[slot];
     }
@@ -85,14 +86,20 @@ public abstract class Layout extends AbstractMenu {
     @Override
     public void onClick(InventoryClickEvent event) {
         if (!isClickedInMenuSlots(event) || !isPlayerClicked(event)) return;
+        ItemStack currentItem = event.getCursor();
         if (argsSlots.contains((byte) event.getRawSlot())) {
             ItemStack argItem = event.getClickedInventory().getItem(event.getRawSlot());
-            for (ParameterButton rb : radioButtons) {
-                if (itemEquals(argItem,rb.getItem())) {
+            for (ParameterButton parameter : parameterButtons) {
+                if (itemEquals(argItem,parameter.getItem())) {
                     event.setCancelled(true);
-                    rb.next();
-                    ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.BLOCK_AMETHYST_BLOCK_RESONATE,100f,1.7f);
-                    event.getClickedInventory().setItem(event.getRawSlot(),rb.getItem());
+                    if (getValueType(currentItem) == ValueType.VARIABLE) {
+                        event.getClickedInventory().setItem(event.getRawSlot(),currentItem);
+                        ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.BLOCK_VAULT_ACTIVATE,100f,0.7f);
+                    } else {
+                        parameter.next();
+                        ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.BLOCK_AMETHYST_BLOCK_RESONATE,100f,1.7f);
+                        event.getClickedInventory().setItem(event.getRawSlot(),parameter.getItem());
+                    }
                 }
             }
         } else {
@@ -113,11 +120,11 @@ public abstract class Layout extends AbstractMenu {
     }
 
     private void saveArgumentsItems(Inventory inventory) {
+        if (!(containerBlock.getState() instanceof InventoryHolder container)) return;
         int chestSlot = 0;
         for (byte argSlot : argsSlots) {
-            if (!(chestBlock.getState() instanceof Chest)) continue;
             ItemStack argItem = inventory.getItem(argSlot);
-            for (ParameterButton rb : radioButtons) {
+            for (ParameterButton rb : parameterButtons) {
                 if (argItem == null) continue;
                 ItemStack itemStack = argItem.clone();
                 for (ItemFlag flag : itemStack.getItemFlags()) {
@@ -147,8 +154,8 @@ public abstract class Layout extends AbstractMenu {
                     }
                 }
             }
-            ((Chest) chestBlock.getState()).getBlockInventory().setItem(chestSlot++,argItem);
-            chestBlock.getState().update(true);
+            container.getInventory().setItem(chestSlot++,argItem);
+            containerBlock.getState().update(true);
         }
     }
 
@@ -196,8 +203,12 @@ public abstract class Layout extends AbstractMenu {
                 }
             }
             ParameterButton rb = createParamButton((ParameterSlot) argumentSlot,value);
-            setItem(slot,rb.getItem());
-            radioButtons.add(rb);
+            if (contentItem != null && getValueType(contentItem) == ValueType.VARIABLE) {
+                setItem(slot,contentItem);
+            } else {
+                setItem(slot,rb.getItem());
+            }
+            parameterButtons.add(rb);
         } else {
             setItem(slot,contentItem);
         }

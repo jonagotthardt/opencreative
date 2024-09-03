@@ -16,11 +16,19 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mcchickenstudio.creative.coding.blocks.actions;
+package mcchickenstudio.creative.coding.blocks.events.player.world;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
+import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerChatEvent;
 
-@Retention(RetentionPolicy.RUNTIME)
-public @interface InventoryOpener {
+public class ChunkLoadEvent extends CreativeEvent {
+
+    private final PlayerChunkLoadEvent event;
+
+    public ChunkLoadEvent(Player player, PlayerChunkLoadEvent event) {
+        super(player);
+        this.event = event;
+    }
 }

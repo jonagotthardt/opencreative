@@ -30,12 +30,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugAction;
+import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugLog;
+import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 
 public abstract class Condition extends Action {
 
     private final List<Action> actions = new ArrayList<>();
     private final List<Action> reactions = new ArrayList<>();
-    private final boolean isOpposed = false;
+    private final boolean isOpposed;
 
     /**
      * Creates an Condition with linked executor and specified arguments.
@@ -44,8 +46,9 @@ public abstract class Condition extends Action {
      * @param x        X from Action's block location in developers plot.
      * @param args     List of arguments for action.
      */
-    public Condition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
+    public Condition(Executor executor, Target target, int x, Arguments args, List<Action> actions, boolean isOpposed) {
         super(executor, target, x, args);
+        this.isOpposed = isOpposed;
         this.actions.addAll(actions);
     }
 
@@ -63,7 +66,8 @@ public abstract class Condition extends Action {
                 check = true;
             }
         }
-        if (check) {
+        sendCodingDebugLog(getPlot(), getLocaleMessage("plot-code-debug.condition.returned-" + check,false).replace("%type%",getActionType().getLocaleName()));
+        if (check ^ isOpposed) {
             new ActionsHandler(this).executeActions(actions);
         } else {
             new ActionsHandler(this).executeActions(reactions);
@@ -77,5 +81,9 @@ public abstract class Condition extends Action {
 
     public List<Action> getActions() {
         return actions;
+    }
+
+    public boolean isOpposed() {
+        return isOpposed;
     }
 }

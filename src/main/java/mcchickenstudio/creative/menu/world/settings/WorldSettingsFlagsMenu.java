@@ -68,6 +68,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -258,7 +259,9 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
             plot.world.setGameRule(GameRule.DO_WEATHER_CYCLE, true);
             plot.setFlagValue(PlotFlags.PlotFlag.WEATHER, (byte)3);
         });
-        return new RadioButton(Material.WATER_BUCKET, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.weather.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.weather.lore"), plot.getFlagValue(PlotFlags.PlotFlag.WEATHER), 3, choicesActions, "menus.world-settings-flags.items.weather.choices", "menus.world-settings-flags");
+        Boolean isWeatherChanging = plot.world.getGameRuleValue(GameRule.DO_WEATHER_CYCLE);
+        byte currentValue = (byte) (isWeatherChanging != null && isWeatherChanging ? 3 : plot.world.hasStorm() ? 2 : 1);
+        return new RadioButton(Material.WATER_BUCKET, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.weather.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.weather.lore"), currentValue, 3, choicesActions, "menus.world-settings-flags.items.weather.choices", "menus.world-settings-flags");
     }
 
     @Override

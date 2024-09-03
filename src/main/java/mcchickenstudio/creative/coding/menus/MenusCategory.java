@@ -29,6 +29,7 @@ public enum MenusCategory {
     INTERACTION(Material.GRASS_BLOCK),
     INVENTORY(Material.CHEST),
     MOVEMENT(Material.CHAINMAIL_BOOTS),
+    BLOCKS(Material.STRUCTURE_BLOCK),
     WORLD(Material.BEACON),
     ENTITY(Material.VILLAGER_SPAWN_EGG),
     COMMUNICATION(Material.OAK_SIGN),

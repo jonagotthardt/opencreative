@@ -36,7 +36,7 @@ public enum ExecutorCategory {
     EVENT_PLAYER(Material.DIAMOND_BLOCK, Material.DIAMOND_ORE, ChatColor.AQUA),
     EVENT_WORLD(Material.GOLD_BLOCK, Material.GOLD_ORE, ChatColor.YELLOW),
     CYCLE(Material.OXIDIZED_COPPER, Material.WAXED_OXIDIZED_CUT_COPPER, ChatColor.DARK_AQUA),
-    FUNCTION(Material.LAPIS_BLOCK, Material.LAPIS_ORE, ChatColor.BLUE),
+    FUNCTION(Material.LAPIS_BLOCK, Material.DEEPSLATE_LAPIS_ORE, ChatColor.BLUE),
     METHOD(Material.EMERALD_BLOCK, Material.EMERALD_ORE, ChatColor.GREEN);
 
     private final Material block;

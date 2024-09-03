@@ -36,7 +36,7 @@ import java.util.*;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static mcchickenstudio.creative.utils.FileUtils.getPlayerDataJson;
 
-public class PlotPlayer {
+public class WorldPlayer {
 
     private final Plot currentPlot;
     private final Player player;
@@ -45,7 +45,7 @@ public class PlotPlayer {
     private final ItemStack[] savedInventory = new ItemStack[41];
     private final ItemStack[] savedEnderChest = new ItemStack[54];
 
-    public PlotPlayer(Plot currentPlot, Player player) {
+    public WorldPlayer(Plot currentPlot, Player player) {
         this.currentPlot = currentPlot;
         this.player = player;
     }

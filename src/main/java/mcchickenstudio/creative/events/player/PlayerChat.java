@@ -38,9 +38,12 @@ package mcchickenstudio.creative.events.player;
 
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
+import mcchickenstudio.creative.menu.world.browsers.WorldsBrowserMenu;
 import mcchickenstudio.creative.menu.world.settings.WorldSettingsPlayersMenu;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.PlayerUtils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -48,8 +51,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
-import mcchickenstudio.creative.menu.world.browsers.AllWorldsMenu;
 import mcchickenstudio.creative.utils.CooldownUtils;
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -57,6 +58,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.*;
 
 
+import static mcchickenstudio.creative.utils.ColorUtils.parseRGB;
 import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
 import static mcchickenstudio.creative.utils.ItemUtils.*;
@@ -140,6 +142,20 @@ public class PlayerChat implements Listener {
                 player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.4f);
                 player.getInventory().setItemInMainHand(itemInHand);
                 player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),ChatColor.translateAlternateColorCodes('&',meta.getDisplayName()));
+            } else if (itemInHand.getType() == Material.BLACK_DYE) {
+                int[] rgbColor = parseRGB(message);
+                int red = rgbColor[0];
+                int green = rgbColor[1];
+                int blue = rgbColor[2];
+                ItemMeta meta = itemInHand.getItemMeta();
+                if (meta != null) {
+                    meta.displayName(Component.text(red + " " + green + " " + blue).color(TextColor.color(red,green,blue)));
+                    itemInHand.setItemMeta(meta);
+                }
+                setPersistentData(itemInHand,getCodingValueKey(),"COLOR");
+                player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),meta.getDisplayName());
+                player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.4f);
+                player.getInventory().setItemInMainHand(itemInHand);
             }
         }
     }
@@ -154,13 +170,13 @@ public class PlayerChat implements Listener {
                     String newName = "§f" + ChatColor.translateAlternateColorCodes('&',message);
                     if (player.getName().equals(plot.getOwner())) {
                         if (!(ChatColor.stripColor(newName).length() > 30) && (ChatColor.stripColor(newName).length() > 4)) {
-                            plot.setPlotName(newName);
+                            plot.getInformation().setDisplayName(newName);
                             player.sendMessage(getLocaleMessage("settings.world-name.changed").replace("%name%",newName));
                             Plot finalPlot = plot;
                             new BukkitRunnable() {
                                 @Override
                                 public void run() {
-                                    finalPlot.updatePlotIcon();
+                                    finalPlot.getInformation().updateIcon();
                                 }
                             }.runTaskAsynchronously(Main.getPlugin());
                         } else {
@@ -176,19 +192,19 @@ public class PlayerChat implements Listener {
                         if (newID.length() > 2 && newID.length() < 16 && newID.matches(pattern) && !Character.isDigit(newID.charAt(0))) {
                             boolean existsID = false;
                             for (Plot searchablePlot : PlotManager.getInstance().getPlots()) {
-                                if (searchablePlot.getPlotCustomID().equalsIgnoreCase(newID)) {
+                                if (searchablePlot.getInformation().getCustomID().equalsIgnoreCase(newID)) {
                                     existsID = true;
                                     break;
                                 }
                             }
                             if (!existsID) {
-                                plot.setPlotCustomID(newID);
+                                plot.getInformation().setCustomID(newID);
                                 player.sendMessage(getLocaleMessage("settings.world-id.changed").replace("%id%",newID));
                                 Plot finalPlot1 = plot;
                                 new BukkitRunnable() {
                                     @Override
                                     public void run() {
-                                        finalPlot1.updatePlotIcon();
+                                        finalPlot1.getInformation().updateIcon();
                                     }
                                 }.runTaskAsynchronously(Main.getPlugin());
                             } else {
@@ -205,13 +221,13 @@ public class PlayerChat implements Listener {
                     if (player.getName().equals(plot.getOwner())) {
                         if (!(ChatColor.stripColor(newDescription).length() > 256) && (ChatColor.stripColor(newDescription).length() > 4))  {
                             newDescription = String.join("\\n",splitDescription(newDescription,39));
-                            plot.setPlotDescription(newDescription);
+                            plot.getInformation().setDescription(newDescription);
                             player.sendMessage(getLocaleMessage("settings.world-description.changed").replace("%description%",newDescription));
                             Plot finalPlot2 = plot;
                             new BukkitRunnable() {
                                 @Override
                                 public void run() {
-                                    finalPlot2.updatePlotIcon();
+                                    finalPlot2.getInformation().updateIcon();
                                 }
                             }.runTaskAsynchronously(Main.getPlugin());
                         } else {
@@ -222,7 +238,7 @@ public class PlayerChat implements Listener {
                 case "searchPlotByPlotName":
                     List<Plot> foundPlotsByName = PlotManager.getInstance().getPlotsByPlotName(message);
                     if (!foundPlotsByName.isEmpty()) {
-                        AllWorldsMenu.openInventory(player,1,foundPlotsByName);
+                        new WorldsBrowserMenu(player,foundPlotsByName).open(player);
                     } else {
                         player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.not-found"));
                     }
@@ -230,7 +246,7 @@ public class PlayerChat implements Listener {
                 case "searchPlotByID":
                     List<Plot> foundPlotsByID = PlotManager.getInstance().getPlotsByID(message);
                     if (!foundPlotsByID.isEmpty()) {
-                        AllWorldsMenu.openInventory(player,1,foundPlotsByID);
+                        new WorldsBrowserMenu(player,foundPlotsByID).open(player);
                     } else {
                         player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.not-found"));
                     }
@@ -281,8 +297,8 @@ public class PlayerChat implements Listener {
                             }
                             oldOwner.sendMessage(getLocaleMessage("world.players.transfer-ownership.transferred-old").replace("%player%",player.getName()));
                             oldOwner.setGameMode(GameMode.ADVENTURE);
-                            plot.removeBuilder(player.getName());
-                            plot.removeDeveloper(player.getName());
+                            plot.getWorldPlayers().removeBuilder(player.getName());
+                            plot.getWorldPlayers().removeDeveloper(player.getName());
                             plot.setOwner(player.getName());
                             player.sendMessage(getLocaleMessage("world.players.transfer-ownership.transferred-new"));
                             player.playSound(player.getLocation(),Sound.UI_TOAST_CHALLENGE_COMPLETE,100,1.5f);

@@ -30,8 +30,8 @@ import java.util.List;
 
 public class PlayerNameEqualsCondition extends PlayerCondition {
 
-    public PlayerNameEqualsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
-        super(executor, target, x, args, actions);
+    public PlayerNameEqualsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, boolean isOpposed) {
+        super(executor, target, x, args, actions, isOpposed);
     }
 
     @Override

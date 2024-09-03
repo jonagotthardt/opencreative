@@ -74,6 +74,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static mcchickenstudio.creative.utils.ItemUtils.clearItemFlags;
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 
 public class WorldSettingsMenu extends LegacyMenu {
@@ -110,30 +111,25 @@ public class WorldSettingsMenu extends LegacyMenu {
         player.openInventory(new WorldSettingsMenu(player).getInventory());    }
 
     public static ItemStack getPlotExampleButton(Plot plot) {
-        ItemStack item = new ItemStack(plot.getPlotIconMaterial());
+        ItemStack item = new ItemStack(plot.getInformation().getIcon());
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(MessageUtils.getLocaleItemName("menus.world-settings.items.world.name").replace("%plotName%", plot.getPlotName()));
+        meta.setDisplayName(MessageUtils.getLocaleItemName("menus.world-settings.items.world.name").replace("%plotName%", plot.getInformation().getDisplayName()));
         List<String> lore = new ArrayList<>();
         for (String loreLine : MessageUtils.getLocaleItemDescription("menus.world-settings.items.world.lore")) {
             if (loreLine.contains("%plotDescription%")) {
-                String[] newLines = plot.getPlotDescription().split("\\\\n");
+                String[] newLines = plot.getInformation().getDescription().split("\\\\n");
                 for (String newLine : newLines) {
                     lore.add(loreLine.replace("%plotDescription%",ChatColor.translateAlternateColorCodes('&',newLine)));
                 }
             } else {
-                lore.add(MessageUtils.parsePlotLines(plot,loreLine.replace("%id%", MessageUtils.getLocaleMessage("menus.world-settings.items.world.id",false) + plot.getPlotCustomID())));
+                lore.add(MessageUtils.parsePlotLines(plot,loreLine.replace("%id%", MessageUtils.getLocaleMessage("menus.world-settings.items.world.id",false) + plot.getInformation().getCustomID())));
             }
         }
         meta.setLore(lore);
-        item.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        meta.addItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
-        meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
-        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        meta.addItemFlags(ItemFlag.HIDE_DYE);
-        meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
         item.setItemMeta(meta);
-        return item;    }
+        clearItemFlags(item);
+        return item;
+    }
 
     public static ItemStack getPlotNameButton() {
         return createItem(Material.NAME_TAG,1,"menus.world-settings.items.change-name");
@@ -239,6 +235,11 @@ public class WorldSettingsMenu extends LegacyMenu {
             plot.setFlagValue(PlotFlags.PlotFlag.DAY_CYCLE, (byte) 4);
             FileUtils.setPlotConfigParameter(plot, "flags.day-cycle", 4);
         });
-        return new RadioButton(Material.CLOCK, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.day-and-night.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.day-and-night.lore"), plot.getFlagValue(PlotFlags.PlotFlag.DAY_CYCLE), 4, choicesActions, "menus.world-settings-flags.items.day-and-night.choices", "menus.world-settings-flags");    }
+        Boolean isTimeChanging = plot.world.getGameRuleValue(GameRule.DO_DAYLIGHT_CYCLE);
+        long currentTime = plot.world.getTime();
+        boolean isNight = currentTime >= 15000L && currentTime <= 23000;
+        boolean isEvening = currentTime >= 12500 && currentTime < 15000;
+        byte currentValue = (byte) (isTimeChanging != null && isTimeChanging ? 4 : isNight ? 3 : isEvening ? 2 : 1);
+        return new RadioButton(Material.CLOCK, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.day-and-night.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.day-and-night.lore"), currentValue, 4, choicesActions, "menus.world-settings-flags.items.day-and-night.choices", "menus.world-settings-flags");    }
 
 }

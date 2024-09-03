@@ -73,7 +73,7 @@ public class CommandJoin implements CommandExecutor {
                         if (searchablePlot.worldID.equals(args[0])) {
                             foundPlot = searchablePlot;
                             break;
-                        } else if (searchablePlot.getPlotCustomID().equalsIgnoreCase(args[0])) {
+                        } else if (searchablePlot.getInformation().getCustomID().equalsIgnoreCase(args[0])) {
                             foundPlot = searchablePlot;
                             break;
                         }

@@ -43,8 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 import static mcchickenstudio.creative.utils.ErrorUtils.sendPlotCompileErrorMessage;
-import static mcchickenstudio.creative.utils.ItemUtils.getCodingValueKey;
-import static mcchickenstudio.creative.utils.ItemUtils.getCodingVariableTypeKey;
+import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 
 /**
@@ -141,6 +140,11 @@ public class CodingBlockParser {
                          * handle and save every item into list.
                          */
                         if (argSlot.isList()) {
+                            // slot = 0,
+                            // with items = 0, 1, 2
+                            //
+                            // i = 1, i < 10
+                            //
                             script.saveArguments(multiActions,actionBlock,argSlot.getPath(),null, ValueType.LIST);
                             for (byte i = 1; i < argSlot.getListSize()+1; i++) {
                                 if (slot < content.length) {
@@ -150,7 +154,7 @@ public class CodingBlockParser {
                                             item = new ItemStack(Material.AIR);
                                             script.saveArguments(multiActions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
                                         }
-                                    } else  {
+                                    } else {
                                         script.saveArguments(multiActions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
                                     }
                                 }
@@ -160,8 +164,8 @@ public class CodingBlockParser {
                             if (item != null) {
                                 script.saveArguments(multiActions,actionBlock,argSlot.getPath(),parseItemValue(item),parseItemType(item));
                             }
+                            slot++;
                         }
-                        slot++;
                     }
                 }
             }
@@ -246,6 +250,19 @@ public class CodingBlockParser {
                     } catch (Exception ignored) {}
                 }
             }
+            case COLOR -> {
+                Map<String, Object> colorMap = new HashMap<>();
+                String colorString = ChatColor.stripColor(name);
+                String[] colors = colorString.split(" ");
+                if (colors.length == 3) {
+                    try {
+                        colorMap.put("red",Integer.parseInt(colors[0]));
+                        colorMap.put("green",Integer.parseInt(colors[1]));
+                        colorMap.put("blue",Integer.parseInt(colors[2]));
+                        return colorMap;
+                    } catch (Exception ignored) {}
+                }
+            }
             case VARIABLE -> {
                 PersistentDataContainer container = itemMeta.getPersistentDataContainer();
                 String variableType = container.get(getCodingVariableTypeKey(), PersistentDataType.STRING);
@@ -268,6 +285,18 @@ public class CodingBlockParser {
                 try {
                     type = EventValues.Variable.valueOf(variableType);
                     valueMap.put("name",type.name());
+                    return valueMap;
+                } catch (Exception ignored) {}
+            }
+            case PARTICLE -> {
+                PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+                String particleType = container.get(getCodingParticleTypeKey(), PersistentDataType.STRING);
+                if (particleType == null) break;
+                Particle type;
+                Map<String, String> valueMap = new HashMap<>();
+                try {
+                    type = Particle.valueOf(particleType);
+                    valueMap.put("type",type.name());
                     return valueMap;
                 } catch (Exception ignored) {}
             }

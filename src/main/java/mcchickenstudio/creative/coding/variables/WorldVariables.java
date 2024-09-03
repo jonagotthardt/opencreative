@@ -22,6 +22,7 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionsHandler;
 import mcchickenstudio.creative.coding.variables.VariableLink;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.utils.FileUtils;
+import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
@@ -35,7 +36,9 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 
+import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugLog;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCriticalErrorMessage;
+import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 
 /**
  * <h1>WorldVariables</h1>
@@ -67,6 +70,7 @@ public class WorldVariables {
     public void setVariableValue(VariableLink link, ValueType type, Object value, ActionsHandler handler) {
         link.setHandler(handler.getMainActionHandler());
         WorldVariable variable = getVariable(link);
+        String valueString = value.toString().substring(0, Math.min(20, value.toString().length()));
         if (variable != null) {
             if (variable.getSize() + getTotalVariablesAmount() > plot.getVariablesAmountLimit()) return;
             variable.setType(type);
@@ -75,6 +79,8 @@ public class WorldVariables {
             if (getTotalVariablesAmount() > plot.getVariablesAmountLimit()) return;
             variables.add(new WorldVariable(link.getName(), link.getVariableType(), type, value, handler));
         }
+        sendCodingDebugLog(getPlot(),getLocaleMessage("plot-code-debug.variable." + (variable == null ? "created" : "set"),false).replace("%variable%",link.getName()).replace("%value%",valueString));
+
     }
 
     public Object getVariableValue(VariableLink link) {
@@ -93,7 +99,7 @@ public class WorldVariables {
     public void load() {
         clearVariables();
         File variablesJson = FileUtils.getPlotVariablesJson(plot);
-        if (variablesJson == null || variablesJson.length() == 0) {
+        if (variablesJson == null || variablesJson.length() <= 2) {
             return;
         }
         try {
@@ -104,12 +110,10 @@ public class WorldVariables {
                 String name = (String) jsonObject.get("name");
                 ValueType type = ValueType.valueOf((String) jsonObject.get("type"));
                 Object value = jsonObject.get("value");
-                if (type == ValueType.ITEM) {
-                    final ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(Base64Coder.decodeLines((String) value));
-                    final BukkitObjectInputStream objectInputStream = new BukkitObjectInputStream(arrayInputStream);
-                    value = objectInputStream.readObject();
+                value = deserializeObject(value,ValueType.getByObject(value));
+                if (variables.size() < plot.getVariablesAmountLimit()) {
+                    variables.add(new WorldVariable(name,VariableLink.VariableType.SAVED,type,value,null));
                 }
-                variables.add(new WorldVariable(name,VariableLink.VariableType.SAVED,type,value,null));
             }
         } catch (Exception e) {
             sendCriticalErrorMessage("Failed to parse JSON file " + variablesJson.getPath(),e);
@@ -117,9 +121,6 @@ public class WorldVariables {
     }
 
     public void save() {
-        if (variables.isEmpty()) {
-            return;
-        }
         File variablesJson = FileUtils.getPlotVariablesJson(plot);
         if (variablesJson == null) {
             return;
@@ -135,12 +136,7 @@ public class WorldVariables {
                 objItem.put("name", worldVariable.getName());
                 objItem.put("type", worldVariable.getType().name());
                 Object value = worldVariable.getValue();
-                if (value instanceof ItemStack) {
-                    final ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
-                    final BukkitObjectOutputStream objectOutputStream = new BukkitObjectOutputStream(arrayOutputStream);
-                    objectOutputStream.writeObject(value);
-                    value = Base64Coder.encodeLines(arrayOutputStream.toByteArray());
-                }
+                value = serializeObject(value);
                 objItem.put("value", value);
                 jsonArray.add(objItem);
             }
@@ -148,6 +144,61 @@ public class WorldVariables {
         } catch (Exception e){
             sendCriticalErrorMessage("Failed to save variables",e);
         }
+    }
+
+    private Object serializeObject(Object value) {
+        try {
+            if (value instanceof ItemStack || value instanceof Location) {
+                final ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+                final BukkitObjectOutputStream objectOutputStream = new BukkitObjectOutputStream(arrayOutputStream);
+                objectOutputStream.writeObject(value);
+                value = Base64Coder.encodeLines(arrayOutputStream.toByteArray());
+            } else if (value instanceof List<?> list) {
+                List<Object> newList = new ArrayList<>();
+                for (Object element : list) {
+                    newList.add(serializeObject(element));
+                }
+                return newList;
+            } else if (value instanceof Map<?,?> map) {
+                Map<Object,Object> newMap = new HashMap<>();
+                for (Object key : map.keySet()) {
+                    key = serializeObject(key);
+                    newMap.put(key,serializeObject(map.get(key)));
+                }
+                return newMap;
+            }
+        } catch (Exception e) {
+            return value;
+        }
+        return value;
+    }
+
+    private Object deserializeObject(Object value, ValueType type) {
+        try {
+            if (type == ValueType.ITEM || type == ValueType.LOCATION) {
+                final ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(Base64Coder.decodeLines((String) value));
+                final BukkitObjectInputStream objectInputStream = new BukkitObjectInputStream(arrayInputStream);
+                value = objectInputStream.readObject();
+            } else if (type == ValueType.LIST) {
+                List<Object> newList = new ArrayList<>();
+                List<?> oldList = (List<?>) value;
+                for (Object element : oldList) {
+                    newList.add(deserializeObject(element,ValueType.getByObject(element)));
+                }
+                return newList;
+            } else if (type == ValueType.MAP) {
+                Map<Object,Object> newMap = new HashMap<>();
+                Map<?,?> oldMap = (Map<?,?>) value;
+                for (Object key : oldMap.keySet()) {
+                    key = deserializeObject(key,ValueType.getByObject(key));
+                    newMap.put(key,deserializeObject(oldMap.get(key),ValueType.getByObject(oldMap.get(key))));
+                }
+                return newMap;
+            }
+        } catch (Exception e) {
+            return value;
+        }
+        return value;
     }
 
     public int getTotalVariablesAmount() {
@@ -160,5 +211,9 @@ public class WorldVariables {
 
     public Plot getPlot() {
         return plot;
+    }
+
+    public void garbageCollector(ActionsHandler actionsHandler) {
+        variables.removeIf(var -> var.getVarType() == VariableLink.VariableType.LOCAL && var.getHandler() != null && var.getHandler().equals(actionsHandler));
     }
 }

@@ -108,7 +108,7 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
         items.put(16,getBanButton(plot));
         items.put(6,getTransferOwnershipButton(plot));
 
-        Set<String> playersList = plot.getAllPlayersFromConfig();
+        Set<String> playersList = plot.getWorldPlayers().getAllPlayersFromConfig();
 
         if (playersList == null || playersList.isEmpty()) {
             ItemStack noPlayersButton = getNoPlayersButton();
@@ -308,19 +308,19 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
         List<Runnable> actions = new ArrayList<>();
         actions.add(() -> {
             player.sendMessage(MessageUtils.getLocaleMessage("world.players.developers.removed").replace("%player%",nickname));
-            plot.removeDeveloper(nickname);
+            plot.getWorldPlayers().removeDeveloper(nickname);
         });
         actions.add(() -> {
             player.sendMessage(MessageUtils.getLocaleMessage("world.players.developers.guest").replace("%player%",nickname));
-            plot.setDeveloperGuest(nickname);
+            plot.getWorldPlayers().addDeveloperGuest(nickname);
         });
         actions.add(() -> {
             player.sendMessage(MessageUtils.getLocaleMessage("world.players.developers.added").replace("%player%",nickname));
-            plot.setDeveloperTrusted(nickname, false);
+            plot.getWorldPlayers().addDeveloper(nickname, false);
         });
         actions.add(() -> {
             player.sendMessage(MessageUtils.getLocaleMessage("world.players.developers.trusted").replace("%player%",nickname));
-            plot.setDeveloperTrusted(nickname, true);
+            plot.getWorldPlayers().addDeveloper(nickname, true);
         });
 
         int canDev = 1;
@@ -347,15 +347,15 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
         List<Runnable> actions = new ArrayList<>();
         actions.add(() -> {
             player.sendMessage(MessageUtils.getLocaleMessage("world.players.builders.removed").replace("%player%",nickname));
-            plot.removeBuilder(nickname);
+            plot.getWorldPlayers().removeBuilder(nickname);
         });
         actions.add(() -> {
             player.sendMessage(MessageUtils.getLocaleMessage("world.players.builders.added").replace("%player%",nickname));
-            plot.setBuilderTrusted(nickname, false);
+            plot.getWorldPlayers().addBuilder(nickname, false);
         });
         actions.add(() -> {
             player.sendMessage(MessageUtils.getLocaleMessage("world.players.builders.trusted").replace("%player%",nickname));
-            plot.setBuilderTrusted(nickname, true);
+            plot.getWorldPlayers().addBuilder(nickname, true);
         });
 
         int canBuild = 1;

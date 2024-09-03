@@ -16,11 +16,22 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mcchickenstudio.creative.coding.blocks.actions;
+package mcchickenstudio.creative.coding.blocks.executors.player.world;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
+import mcchickenstudio.creative.coding.blocks.executors.player.PlayerExecutor;
+import mcchickenstudio.creative.plots.Plot;
+import org.bukkit.event.Cancellable;
 
-@Retention(RetentionPolicy.RUNTIME)
-public @interface BlocksManipulation {
+public class ChunkUnloadExecutor extends PlayerExecutor {
+
+    public ChunkUnloadExecutor(Plot plot, int x, int y, int z) {
+        super(plot, x, y, z);
+    }
+
+    @Override
+    public ExecutorType getExecutorType() {
+        return ExecutorType.PLAYER_CHUNK_UNLOAD;
+    }
+
 }

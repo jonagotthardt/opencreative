@@ -78,10 +78,15 @@ public class EventValues {
         UNIX_TIME_MINUTES       (Material.HOPPER_MINECART,          MenusCategory.WORLD,  Integer.class),
         UNIX_TIME_SECONDS       (Material.MINECART,                 MenusCategory.WORLD,  Integer.class),
 
+        BED_ENTER_RESULT        (Material.WHITE_BED,               MenusCategory.EVENTS, String.class),
+        BED                     (Material.RED_BED,                 MenusCategory.EVENTS, Block.class),
+
+
         ITEM                    (Material.ITEM_FRAME,               MenusCategory.EVENTS, ItemStack.class),
         //CLICKED_ITEM            (Material.GLOW_ITEM_FRAME,          MenusCategory.EVENTS, ItemStack.class),
         MESSAGE                 (Material.BOOK,                     MenusCategory.EVENTS, String.class),
         BLOCK                   (Material.GRASS_BLOCK,              MenusCategory.EVENTS, Block.class),
+        IS_CHUNK_NEW            (Material.GLASS,               MenusCategory.EVENTS, Boolean.class),
         PURCHASE_ID(Material.GOLDEN_APPLE,             MenusCategory.EVENTS, String.class),
         PURCHASE_NAME(Material.GOLD_BLOCK,               MenusCategory.EVENTS, String.class),
         PURCHASE_PRICE(Material.GOLD_INGOT,               MenusCategory.EVENTS, Integer.class),

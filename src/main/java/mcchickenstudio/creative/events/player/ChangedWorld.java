@@ -40,7 +40,7 @@ import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.commands.CreativeChat;
 
 import mcchickenstudio.creative.plots.PlotFlags;
-import mcchickenstudio.creative.plots.PlotPlayer;
+import mcchickenstudio.creative.plots.WorldPlayer;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -126,9 +126,9 @@ public class ChangedWorld implements Listener {
             player.setLastDeathLocation(null);
             removePlayerWithLocation(player);
             if (oldPlot != null) {
-                PlotPlayer plotPlayer = oldPlot.getPlotPlayer(player);
-                plotPlayer.save();
-                oldPlot.removePlotPlayer(player);
+                WorldPlayer worldPlayer = oldPlot.getWorldPlayers().getPlotPlayer(player);
+                worldPlayer.save();
+                oldPlot.getWorldPlayers().unregisterPlayer(player);
                 if (oldPlot.getOnline() > 0) {
                     if (oldPlot.getFlagValue(PlotFlags.PlotFlag.JOIN_MESSAGES) == 1) {
                         for (Player onlinePlayer : oldPlot.getPlayers()) {
@@ -161,7 +161,7 @@ public class ChangedWorld implements Listener {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        oldPlot.updatePlotIcon();
+                        oldPlot.getInformation().updateIcon();
                     }
                 }.runTaskAsynchronously(Main.getPlugin());
             }
@@ -174,7 +174,7 @@ public class ChangedWorld implements Listener {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        newPlot.updatePlotIcon();
+                        newPlot.getInformation().updateIcon();
                     }
                 }.runTaskAsynchronously(Main.getPlugin());
             }

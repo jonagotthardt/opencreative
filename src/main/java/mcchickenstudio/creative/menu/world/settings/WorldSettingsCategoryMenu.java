@@ -113,7 +113,7 @@ public class WorldSettingsCategoryMenu extends AbstractMenu {
             if (!itemEquals(event.getCurrentItem(),BACK_ITEM)) {
                 final String category = MessageUtils.getPathFromMessage("menus.world-settings-categories.items",event.getCurrentItem().getItemMeta().getDisplayName()).replace("menus.world-settings-categories.items.","").replace(".name","").toUpperCase();
                 event.getWhoClicked().closeInventory();
-                plot.setPlotCategory(Plot.Category.valueOf(category));
+                plot.getInformation().setCategory(Plot.Category.valueOf(category));
                 ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ENTITY_PLAYER_LEVELUP,100,1.6f);
                 event.getWhoClicked().sendMessage(getLocaleMessage("settings.world-category.changed").replace("%category%",getLocaleMessage("world.categories." + category.toLowerCase())));
             } else {

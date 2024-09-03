@@ -45,10 +45,12 @@ import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.coding.menus.*;
 import mcchickenstudio.creative.coding.menus.variables.EventValuesMenu;
+import mcchickenstudio.creative.coding.menus.variables.ParticlesMenu;
 import mcchickenstudio.creative.coding.menus.variables.PotionsMenu;
 import mcchickenstudio.creative.coding.menus.variables.VariablesMenu;
 import mcchickenstudio.creative.coding.menus.layouts.LayoutMaker;
 import mcchickenstudio.creative.coding.variables.VariableLink;
+import mcchickenstudio.creative.menu.world.browsers.RecommendedWorldsMenu;
 import mcchickenstudio.creative.plots.PlotFlags;
 import mcchickenstudio.creative.plots.PlotManager;
 import net.kyori.adventure.text.Component;
@@ -71,7 +73,6 @@ import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import mcchickenstudio.creative.menu.world.browsers.AllWorldsMenu;
 import mcchickenstudio.creative.menu.world.browsers.OwnWorldsMenu;
 import mcchickenstudio.creative.menu.world.settings.WorldSettingsMenu;
 import mcchickenstudio.creative.plots.DevPlot;
@@ -83,8 +84,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import static mcchickenstudio.creative.events.player.ChangedWorld.*;
 import static mcchickenstudio.creative.events.player.PlayerPlaceBlock.move;
-import static mcchickenstudio.creative.utils.BlockUtils.getSignLine;
-import static mcchickenstudio.creative.utils.BlockUtils.setSignLine;
+import static mcchickenstudio.creative.utils.BlockUtils.*;
 import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemName;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
@@ -110,6 +110,9 @@ public class PlayerInteract implements Listener {
             Block clickedBlock = event.getClickedBlock();
             if (currentItem.getItemMeta() != null) {
                 if (currentItem.getType() == Material.COMPARATOR && player.isSneaking() && clickedBlock != null) {
+                    if (clickedBlock.getType() == Material.OAK_WALL_SIGN) {
+                        clickedBlock = clickedBlock.getRelative(BlockFace.NORTH);
+                    }
                     if (ActionCategory.getByMaterial(clickedBlock.getType()) != null) {
                         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                             if (clickedBlock.getX() < 96) {
@@ -142,6 +145,9 @@ public class PlayerInteract implements Listener {
                 } else if (currentItem.getType() == Material.POTION || currentItem.getType() == Material.GLASS_BOTTLE) {
                     new PotionsMenu(player).open(player);
                     event.setCancelled(true);
+                } else if (currentItem.getType() == Material.NETHER_STAR) {
+                    new ParticlesMenu(player).open(player);
+                    event.setCancelled(true);
                 } else if (currentItem.getType() == Material.NAME_TAG) {
                     new EventValuesMenu(player).open(player);
                     event.setCancelled(true);
@@ -156,7 +162,7 @@ public class PlayerInteract implements Listener {
                         }
                     }
                 } else if (currentItem.getType() == Material.CLOCK) {
-                    if (event.getAction().isRightClick()) {
+                    if (event.getAction() == Action.RIGHT_CLICK_AIR) {
                         if (currentItem.hasItemMeta()) {
                             ItemMeta meta = currentItem.getItemMeta();
                             meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',(meta.getDisplayName().contains("true") ? "&cfalse" : "&atrue")));
@@ -206,6 +212,11 @@ public class PlayerInteract implements Listener {
                         player.sendMessage(Component.text(meta.getDisplayName()).hoverEvent(HoverEvent.showText(Component.text(getLocaleMessage("world.dev-mode.click-to-copy")))).clickEvent(ClickEvent.suggestCommand(ChatColor.stripColor(meta.getDisplayName()))));
                         setPersistentData(currentItem,getCodingValueKey(),"NUMBER");
                     }
+                } else if (currentItem.getType() == Material.BLACK_DYE && event.getAction() == Action.RIGHT_CLICK_AIR) {
+                    ItemMeta meta = currentItem.getItemMeta();
+                    if (meta != null) {
+                        player.sendMessage(meta.displayName().hoverEvent(HoverEvent.showText(Component.text(getLocaleMessage("world.dev-mode.click-to-copy")))).clickEvent(ClickEvent.suggestCommand(ChatColor.stripColor(meta.getDisplayName()))));
+                    }
                 }
             }
 
@@ -220,7 +231,18 @@ public class PlayerInteract implements Listener {
                 ExecutorCategory mainBlockCategory = ExecutorCategory.getByMaterial(mainBlock.getType());
                 ActionCategory actionBlockCategory = ActionCategory.getByMaterial(mainBlock.getType());
 
-                if (player.isSneaking() && actionBlockCategory != null) {
+                if (currentItem.getType() == Material.ARROW && actionBlockCategory != null && actionBlockCategory.isCondition()) {
+                    if (event.getHand() == EquipmentSlot.HAND) {
+                        if (isSignLineEmpty(clickedBlock.getLocation(),(byte) 1)) {
+                            setSignLine(clickedBlock.getLocation(),(byte) 1,"not");
+                            player.playSound(player.getLocation(),Sound.BLOCK_TRIAL_SPAWNER_CLOSE_SHUTTER,100, 1);
+                        } else {
+                            setSignLine(clickedBlock.getLocation(),(byte) 1,"");
+                            player.playSound(player.getLocation(),Sound.BLOCK_TRIAL_SPAWNER_CLOSE_SHUTTER,100, 0.1f);
+                        }
+                        translateBlockSign(clickedBlock);
+                    }
+                } else if (player.isSneaking() && actionBlockCategory != null) {
                     new TargetSelectionMenu(clickedBlock.getLocation()).open(player);
                 } else {
                     CodingBlockTypesMenu menu = null;
@@ -359,7 +381,7 @@ public class PlayerInteract implements Listener {
                 return;
             }
             event.getPlayer().setCooldown(Material.COMPASS,60);
-            AllWorldsMenu.openInventory(event.getPlayer(),1);
+            new RecommendedWorldsMenu().open(event.getPlayer());
         }
 
         if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
@@ -411,13 +433,13 @@ public class PlayerInteract implements Listener {
                 }
             }
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                if (event.getHand() == EquipmentSlot.HAND) {
-                    return;
-                }
                 if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                     EventRaiser.raiseBlockInteractionEvent(event.getPlayer(),event);
                 }
-                EventRaiser.raiseRightClickEvent(event.getPlayer(),event);
+                if (event.getHand() == EquipmentSlot.HAND) {
+                    EventRaiser.raiseRightClickEvent(event.getPlayer(),event);
+                    return;
+                }
             }
             if (event.getAction() == Action.PHYSICAL) {
                 EventRaiser.raiseWorldInteractEvent(event.getPlayer(),event);

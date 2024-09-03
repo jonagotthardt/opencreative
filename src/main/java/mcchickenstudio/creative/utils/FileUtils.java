@@ -24,6 +24,7 @@ import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -146,38 +147,34 @@ public class FileUtils {
         } catch (IOException | IllegalArgumentException error) {
             sendCriticalErrorMessage("Couldn't save world codeScript.yml for " + worldName + " because of " + error.getClass().getName() + " " + error.getMessage());
         }
-
     }
 
     /**
-     Creates plot's variables.yml file.
+     * Creates plot's codeScript.yml file.
      **/
-    public static boolean createVariablesFile(final String path, final String worldName) {
-        final File file = new File(path, "variables.yml");
+    public static void createDevPlotConfig(final String path, final String worldName) {
+        final File file = new File(path, "settings.yml");
         final FileConfiguration worldFile = YamlConfiguration.loadConfiguration(file);
         if (!file.exists()) {
             try {
                 file.createNewFile();
             } catch (IOException error) {
-                sendCriticalErrorMessage("Couldn't create a variables.yml for world " + worldName + " because of IOException. Maybe it is already exists? " + error.getMessage());
-                return false;
+                sendCriticalErrorMessage("Couldn't create a settings.yml for world " + worldName + " because of IOException. Maybe it is already exists? " + error.getMessage());
+                return;
             }
         }
         worldFile.createSection("world");
         worldFile.set("world",worldName);
         worldFile.createSection("creation-time");
         worldFile.set("creation-time",System.currentTimeMillis());
-        worldFile.createSection("last-activity-time");
-        worldFile.set("last-activity-time",System.currentTimeMillis());
-        worldFile.createSection("variables");
+        worldFile.createSection("container");
+        worldFile.set("container",Material.CHEST.name());
+        worldFile.createSection("container");
         try {
             worldFile.save(file);
-            return true;
         } catch (IOException | IllegalArgumentException error) {
-            sendCriticalErrorMessage("Couldn't save world variables.yml for " + worldName + " because of " + error.getClass().getName() + " " + error.getMessage());
-            return false;
+            sendCriticalErrorMessage("Couldn't save world settings.yml for " + worldName + " because of " + error.getClass().getName() + " " + error.getMessage());
         }
-
     }
 
     /**
@@ -279,26 +276,42 @@ public class FileUtils {
             // Если папка миров существует
             if (plotsFolders.length > 0) {
                 Main.getPlugin().getLogger().info("Found " + plotsFolders.length + " worlds, adding...");
+                int corruptedWorlds = 0;
+                int deprecatedWorlds = 0;
+                long currentTime = System.currentTimeMillis();
                 for (File plotFolder : plotsFolders) {
-                        String worldName = plotFolder.getPath().replace(Bukkit.getServer().getWorldContainer() + File.separator,"").replace("unloadedWorlds" + File.separator,"");
-                        // Отгруженные миры добавляются в базу
-                        if (plotFolder.getPath().contains("unloadedWorlds")) {
-                            Main.getPlugin().getLogger().info("Adding unloaded world " + worldName + " to base...");
-                            // Если мир находился в директории сервера, то его
-                            // переносят в папку отгруженных миров и добавляют в базу
-                        } else {
-                            Main.getPlugin().getLogger().info("Moving loaded world " + worldName + " to unloadedWorlds folder...");
-                            World world = Bukkit.getWorld(worldName);
-                            if (world != null) {
-                                for (Player player : world.getPlayers()) {
-                                    teleportToLobby(player);
-                                }
+                    String worldName = plotFolder.getPath().replace(Bukkit.getServer().getWorldContainer() + File.separator,"").replace("unloadedWorlds" + File.separator,"");
+                    // Отгруженные миры добавляются в базу
+                    if (plotFolder.getPath().contains("unloadedWorlds")) {
+                        Main.getPlugin().getLogger().info("Adding unloaded world " + worldName + " to base...");
+                        // Если мир находился в директории сервера, то его
+                        // переносят в папку отгруженных миров и добавляют в базу
+                    } else {
+                        Main.getPlugin().getLogger().info("Moving loaded world " + worldName + " to unloadedWorlds folder...");
+                        World world = Bukkit.getWorld(worldName);
+                        if (world != null) {
+                            for (Player player : world.getPlayers()) {
+                                teleportToLobby(player);
                             }
-                            unloadWorldFolder(worldName,true);
-                            Main.getPlugin().getLogger().info("Adding unloaded world " + worldName + " to base...");
                         }
-                        if (!worldName.endsWith("dev")) new Plot(worldName);
+                        unloadWorldFolder(worldName,true);
+                        Main.getPlugin().getLogger().info("Adding unloaded world " + worldName + " to base...");
+                    }
+                    if (!worldName.endsWith("dev")) {
+                        Plot plot = new Plot(worldName);
+                        if (plot.isCorrupted()) {
+                            corruptedWorlds++;
+                        } else if (currentTime-plot.getCreationTime() > 2592000000L) {
+                            OfflinePlayer plotOwner = Bukkit.getOfflinePlayer(plot.getOwner());
+                            if (plotOwner.getLastSeen() == 0 || currentTime-plotOwner.getLastSeen() > 2592000000L) {
+                                deprecatedWorlds++;
+                            }
+                        }
+                    }
                 }
+                Main.getPlugin().getLogger().info("Loaded " + PlotManager.getInstance().getPlots().size() + " worlds for " + (System.currentTimeMillis()-currentTime) + " ms.");
+                Main.getPlugin().getLogger().info(" Deprecated worlds: " + deprecatedWorlds);
+                Main.getPlugin().getLogger().info(" Corrupted worlds: " + corruptedWorlds);
             } else {
                 Main.getPlugin().getLogger().info("No worlds have been detected.");
             }
@@ -347,7 +360,20 @@ public class FileUtils {
             File file = new File(getPlotFolder(plot), "settings.yml");
             return YamlConfiguration.loadConfiguration(file);
         } catch (NullPointerException error) {
-            ErrorUtils.sendPlotErrorMessage(plot,"Конфиг settings.yml плота не обнаружен. " + error.getMessage());
+            ErrorUtils.sendPlotErrorMessage(plot,"Not found settings.yml for plot :( " + error.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     Returns development plot's settings.yml configuration.
+     **/
+    public static FileConfiguration getDevPlotConfig(DevPlot plot) {
+        try {
+            File file = new File(getDevPlotFolder(plot), "settings.yml");
+            return YamlConfiguration.loadConfiguration(file);
+        } catch (NullPointerException error) {
+            ErrorUtils.sendPlotErrorMessage(plot.getLinkedPlot(),"Not found settings.yml for development plot :(. " + error.getMessage());
             return null;
         }
     }

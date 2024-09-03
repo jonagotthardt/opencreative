@@ -19,7 +19,11 @@
 package mcchickenstudio.creative.coding.menus.layouts;
 
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LayoutMaker extends Layout {
 
@@ -33,6 +37,9 @@ public class LayoutMaker extends Layout {
             switch (actionType.getArgumentsSlots()[0].getListSize()) {
                 case 9: {
                     setRows((byte) 3);
+                    if (actionType == ActionType.WORLD_SPAWN_ENTITY) {
+                        setRows((byte) 6);
+                    }
                     for (byte slot = 0; slot < 9; slot++) {
                         setGlass((byte) 1,slot);
                     }
@@ -42,8 +49,34 @@ public class LayoutMaker extends Layout {
                     for (byte slot = 18; slot < 27; slot++) {
                         setGlass((byte) 1,slot);
                     }
-                    if (actionType.getArgumentsSlots().length > 1 && !actionType.getArgumentsSlots()[1].isList()) {
-                        setArgSlotHorizontal((byte) 2,(byte) 22);
+                    if (actionType == ActionType.WORLD_SPAWN_ENTITY) {
+                        byte slot = 36;
+                        for (byte argNumber = 2; argNumber <= actionType.getArgumentsSlots().length; argNumber++) {
+                            if (slot <= 44) {
+                                setArgSlotVertical(argNumber,slot);
+                                slot++;
+                            }
+                        }
+                        return;
+                    }
+                    if (actionType.getArgumentsSlots().length > 1) {
+                        if (actionType.getArgumentsSlots()[1].isList()) {
+                            setRows((byte) 6);
+                            for (byte slot = 27; slot < 36; slot++) {
+                                setGlass((byte) 2,slot);
+                            }
+                            for (byte slot = 36; slot < 45; slot++) {
+                                setArgSlot((byte) 2,slot);
+                            }
+                            for (byte slot = 45; slot < 54; slot++) {
+                                setGlass((byte) 2,slot);
+                            }
+                            if (actionType.getArgumentsSlots().length > 2) {
+                                setArgSlotHorizontal((byte) 3,(byte)49);
+                            }
+                        } else {
+                            setArgSlotHorizontal((byte) 2,(byte) 22);
+                        }
                     }
                     break;
                 }
@@ -59,10 +92,15 @@ public class LayoutMaker extends Layout {
                         setGlass((byte) 1,slot);
                     }
                     if (actionType.getArgumentsSlots().length > 1 && !actionType.getArgumentsSlots()[1].isList()) {
+                        setRows((byte) 6);
+                        for (byte slot = 36; slot < 54; slot++) {
+                            setItem(slot,DECORATION_PANE_ITEM);
+                        }
                         int remainingSlots = actionType.getArgumentsSlots().length-1;
                         byte i = 2;
-                        for (byte slot : getCentredSlots((byte) remainingSlots,(byte) 4)) {
+                        for (byte slot : getCentredSlots((byte) remainingSlots,(byte) 6)) {
                             if (remainingSlots > 3) {
+                                setGlass(i,(byte) (slot-9));
                                 setArgSlot(i,slot);
                             } else {
                                 setArgSlotHorizontal(i,slot);
@@ -99,7 +137,6 @@ public class LayoutMaker extends Layout {
                     }
                 }
             }
-
             return;
         }
         switch (getRequiredSlots().length) {

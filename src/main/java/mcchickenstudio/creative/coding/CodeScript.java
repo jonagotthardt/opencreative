@@ -157,6 +157,13 @@ public class CodeScript {
             scriptConfig.set(path + ".target", target.name());
         }
 
+        if (category.isCondition()) {
+            String firstSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(),(byte) 1);
+            if (firstSignLine != null && firstSignLine.equalsIgnoreCase("not")) {
+                scriptConfig.set(path + ".opposed",true);
+            }
+        }
+
         scriptConfig.set(path + ".location.x", actionBlock.getX());
         scriptConfig.createSection(path + ".arguments");
     }

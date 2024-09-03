@@ -40,7 +40,7 @@ import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
-import mcchickenstudio.creative.menu.world.browsers.AllWorldsMenu;
+import mcchickenstudio.creative.menu.world.browsers.RecommendedWorldsMenu;
 import mcchickenstudio.creative.menu.world.browsers.OwnWorldsMenu;
 import mcchickenstudio.creative.menu.world.*;
 import mcchickenstudio.creative.menu.world.settings.WorldSettingsCategoryMenu;
@@ -117,12 +117,12 @@ public class InventoryClick implements Listener {
                                     player.getInventory().addItem(getHeadItem(internal));
                                 }
                             }*/
-                            plot.setPlotIconMaterial(material);
+                            plot.getInformation().setIconMaterial(material);
                             player.sendMessage(getLocaleMessage("settings.world-icon.changed"));
                             new BukkitRunnable() {
                                 @Override
                                 public void run() {
-                                    plot.updatePlotIcon();
+                                    plot.getInformation().updateIcon();
                                 }
                             }.runTaskAsynchronously(Main.getPlugin());
                             WorldSettingsMenu.openInventory(player);
@@ -182,7 +182,7 @@ public class InventoryClick implements Listener {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            plot.updatePlotIcon();
+                            plot.getInformation().updateIcon();
                         }
                     }.runTaskAsynchronously(Main.getPlugin());
                     WorldSettingsMenu.openInventory(player);
@@ -240,7 +240,7 @@ public class InventoryClick implements Listener {
                     } else {
                         if (item.getType() == Material.SPECTRAL_ARROW) {
                             if (item.getItemMeta().getDisplayName().equalsIgnoreCase(getLocaleItemName("menus.own-worlds.items.all-worlds.name"))) {
-                                AllWorldsMenu.openInventory(player, 1);
+                                new RecommendedWorldsMenu().open(player);
                             } else {
                                 player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 100, 1);
                                 OwnWorldsMenu.openInventory(player, OwnWorldsMenu.openedPage.get(player) + 1);
@@ -255,7 +255,7 @@ public class InventoryClick implements Listener {
                 } catch (Exception error) {
                     sendPlayerErrorMessage(player, "An error has occurred while clicking item in inventory",error);
                 }
-            } else if (event.getInventory().getHolder() instanceof AllWorldsMenu) {
+            /*} else if (event.getInventory().getHolder() instanceof AllWorldsMenu) {
                 event.setCancelled(true);
                 if (item.getType() == Material.AIR) return;
                 if (!(event.getClickedInventory().getHolder() instanceof AllWorldsMenu)) return;
@@ -327,7 +327,7 @@ public class InventoryClick implements Listener {
                     }
                 } catch (Exception error) {
                     sendPlayerErrorMessage(player, "An error has occurred while clicking item in inventory", error);
-                }
+                }*/
         } else if (event.getInventory().getHolder() instanceof WorldSettingsPlayersMenu) {
             event.setCancelled(true);
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
@@ -354,19 +354,19 @@ public class InventoryClick implements Listener {
             } else if (item.getType() == Material.BARRIER && event.getSlot() == 16) {
                 player.closeInventory();
                 player.sendMessage(getLocaleMessage("world.players.black-list.added").replace("%player%", selectedPlayer));
-                plot.addBlacklist(selectedPlayer);
+                plot.getWorldPlayers().banPlayer(selectedPlayer);
             } else if (item.getType() == Material.STRUCTURE_VOID) {
                 if (event.getSlot() == 16) {
                     player.closeInventory();
                     player.sendMessage(getLocaleMessage("world.players.black-list.removed").replace("%player%", selectedPlayer));
-                    plot.removeBlacklist(selectedPlayer);
+                    plot.getWorldPlayers().unbanPlayer(selectedPlayer);
                 } else {
                     player.closeInventory();
                     player.sendMessage(getLocaleMessage("world.players.kick.kicked").replace("%player%", selectedPlayer));
                     Player plotPlayer = Bukkit.getPlayer(selectedPlayer);
                     if (plotPlayer != null) {
                         if (plotManager.getPlotByPlayer(plotPlayer) == plot) {
-                            plot.kickPlayer(plotPlayer);
+                            plot.getWorldPlayers().kickPlayer(plotPlayer);
                         }
                     }
                 }
@@ -422,7 +422,7 @@ public class InventoryClick implements Listener {
     @EventHandler
     public void onDrag(InventoryDragEvent event) {
         InventoryHolder inventoryHolder = event.getInventory().getHolder();
-        if (inventoryHolder instanceof AllWorldsMenu || inventoryHolder instanceof OwnWorldsMenu || inventoryHolder instanceof WorldSettingsMenu) {
+        if (inventoryHolder instanceof OwnWorldsMenu || inventoryHolder instanceof WorldSettingsMenu) {
             event.setCancelled(true);
         }
     }

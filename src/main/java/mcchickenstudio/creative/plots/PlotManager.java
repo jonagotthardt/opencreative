@@ -28,7 +28,6 @@ import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import mcchickenstudio.creative.Main;
 
 import java.util.ArrayList;
@@ -40,7 +39,6 @@ import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 public class PlotManager {
 
     private static PlotManager plotManager;
-    final Plugin plugin = Main.getPlugin();
 
     private PlotManager() {}
     public static PlotManager getInstance() {
@@ -51,13 +49,22 @@ public class PlotManager {
     }
 
     private final List<Plot> plots = new ArrayList<>();
+    private final List<Plot> corruptedPlots = new ArrayList<>();
 
     public List<Plot> getPlots() {
         return plots;
     }
 
-    public void addToPlots(Plot plot) {
-        plots.add(plot);
+    public List<Plot> getCorruptedPlots() {
+        return corruptedPlots;
+    }
+
+    public void registerPlot(Plot plot) {
+        if (plot.isCorrupted()) {
+            corruptedPlots.add(plot);
+        } else {
+            plots.add(plot);
+        }
     }
 
     public void clearPlots() {
@@ -137,7 +144,7 @@ public class PlotManager {
             FileUtils.deleteWorld(FileUtils.getPlotFolder(plot));
 
             // После 3 секунд удаления мир отгружается полностью
-            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
+            Bukkit.getServer().getScheduler().runTaskLater(Main.getPlugin(), () -> {
                 Bukkit.unloadWorld(plot.worldName,false);
                 if (plot.devPlot.isLoaded()) Bukkit.unloadWorld(plot.devPlot.worldName, false);
             }, 60);
@@ -163,13 +170,25 @@ public class PlotManager {
                 FileUtils.deleteWorld(FileUtils.getDevPlotFolder(plot.devPlot));
             }
             // После 3 секунд удаления мир отгружается полностью
-            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
+            Bukkit.getServer().getScheduler().runTaskLater(Main.getPlugin(), () -> {
                 Bukkit.unloadWorld(plot.worldName,false);
                 player.sendMessage(MessageUtils.getLocaleMessage("deleting-world.message"));
             }, 60);
         } catch (NullPointerException error) {
             ErrorUtils.sendCriticalErrorMessage("При удалении мира возникла ошибка: " + error.getMessage());
         }
+    }
+
+    public List<Plot> getRecommendedPlots() {
+        List<Plot> featuredPlots = new ArrayList<>();
+        List<Integer> featuredIds = Main.getPlugin().getConfig().getIntegerList("recommended-worlds");
+        for (int id : featuredIds) {
+            Plot plot = getPlotByWorldName("plot"+id);
+            if (plot != null) {
+                featuredPlots.add(plot);
+            }
+        }
+        return featuredPlots;
     }
 
 
@@ -179,7 +198,7 @@ public class PlotManager {
     public List<Plot> getPlotsByPlotName(String worldName) {
         List<Plot> foundPlots = new ArrayList<>();
         for (Plot plot : plots) {
-            if (plot.getPlotName().toLowerCase().contains(worldName.toLowerCase())) {
+            if (plot.getInformation().getDisplayName().toLowerCase().contains(worldName.toLowerCase())) {
                 foundPlots.add(plot);
             }
         }
@@ -192,7 +211,7 @@ public class PlotManager {
     public List<Plot> getPlotsByID(String worldID) {
         List<Plot> foundPlots = new ArrayList<>();
         for (Plot plot : plots) {
-            if (plot.getPlotCustomID().toLowerCase().contains(worldID.toLowerCase())) {
+            if (plot.getInformation().getCustomID().toLowerCase().contains(worldID.toLowerCase())) {
                 foundPlots.add(plot);
             }
         }
@@ -205,7 +224,7 @@ public class PlotManager {
     public List<Plot> getPlotsByCategory(Plot.Category category) {
         List<Plot> foundPlots = new ArrayList<>();
         for (Plot plot : plots) {
-            if (plot.getPlotCategory() == category) {
+            if (plot.getInformation().getCategory() == category) {
                 foundPlots.add(plot);
             }
         }
@@ -272,7 +291,7 @@ public class PlotManager {
      **/
     public Plot getPlotByCustomID(String customID) {
         for (Plot plot : plots) {
-            if (plot.getPlotCustomID().equalsIgnoreCase(customID)) {
+            if (plot.getInformation().getCustomID().equalsIgnoreCase(customID)) {
                 return plot;
             }
         }
