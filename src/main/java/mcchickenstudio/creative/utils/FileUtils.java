@@ -41,10 +41,7 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.*;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendWarningErrorMessage;
@@ -767,6 +764,22 @@ public class FileUtils {
         if (plotConfig != null && plotConfigFile != null) {
             plotConfig.createSection(parameterPath);
             plotConfig.set(parameterPath,parameterValue);
+            try {
+                plotConfig.save(plotConfigFile);
+            } catch (IOException error) {
+                sendCriticalErrorMessage("При сохранении конфига плота в файл произошла ошибка " + error.getMessage());
+            }
+        } else {
+            ErrorUtils.sendPlotErrorMessage(plot,"Не удалось получить файл конфига плота либо сам конфиг");
+        }
+    }
+
+    public static void setPlotConfigParameter(Plot plot, String parameterPath, Set<String> parameterValue) {
+        FileConfiguration plotConfig = getPlotConfig(plot);
+        File plotConfigFile = getPlotConfigFile(plot);
+        if (plotConfig != null && plotConfigFile != null) {
+            plotConfig.createSection(parameterPath);
+            plotConfig.set(parameterPath,new ArrayList<>(parameterValue));
             try {
                 plotConfig.save(plotConfigFile);
             } catch (IOException error) {

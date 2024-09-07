@@ -26,21 +26,29 @@ import mcchickenstudio.creative.coding.blocks.actions.worldactions.WorldAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.List;
-
-public class SetBlockTypeAction extends WorldAction {
-    public SetBlockTypeAction(Executor executor, Target target, int x, Arguments args) {
+public class SetBlocksAreaTypeAction extends WorldAction {
+    public SetBlocksAreaTypeAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     protected void execute(Entity entity) {
-        List<Location> locations = getArguments().getLocationList("locations",this);
-        Material material = getArguments().getValue("type", Material.AIR,this);
+        if (!getArguments().pathExists("first") || !getArguments().pathExists("second") || !getArguments().pathExists("type")) {
+            return;
+        }
+        Location firstLocation = getArguments().getValue("first",getWorld().getSpawnLocation(),this);
+        Location secondLocation = getArguments().getValue("second",getWorld().getSpawnLocation(),this);
+        Material type = getArguments().getValue("type", Material.AIR,this);
+        int minX = Math.min(firstLocation.getBlockX(),secondLocation.getBlockX());
+        int minY = Math.min(firstLocation.getBlockY(),secondLocation.getBlockY());
+        int minZ = Math.min(firstLocation.getBlockZ(),secondLocation.getBlockZ());
+        int maxX = Math.max(firstLocation.getBlockX(),secondLocation.getBlockX());
+        int maxY = Math.max(firstLocation.getBlockY(),secondLocation.getBlockY());
+        int maxZ = Math.max(firstLocation.getBlockZ(),secondLocation.getBlockZ());
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
@@ -48,22 +56,26 @@ public class SetBlockTypeAction extends WorldAction {
             }
         };
         getPlot().addBukkitRunnable(runnable);
-        for (Location location : locations) {
-            if (getPlot().lastModifiedBlocksAmount > getPlot().getModifyingBlocksLimit()) {
-                runnable.runTaskLater(Main.getPlugin(),20L);
-                getPlot().removeBukkitRunnable(runnable);
-                return;
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                for (int z = minZ; z <= maxZ; z++) {
+                    if (getPlot().lastModifiedBlocksAmount > getPlot().getModifyingBlocksLimit()) {
+                        runnable.runTaskLater(Main.getPlugin(),20L);
+                        getPlot().removeBukkitRunnable(runnable);
+                        return;
+                    }
+                    getPlot().lastModifiedBlocksAmount++;
+                    Block block = getWorld().getBlockAt(x,y,z);
+                    block.setType(type);
+                }
             }
-            location.getBlock().setType(material);
-            getPlot().lastModifiedBlocksAmount++;
         }
         runnable.runTaskLater(Main.getPlugin(),20L);
         getPlot().removeBukkitRunnable(runnable);
-
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.WORLD_SET_BLOCK_TYPE;
+        return ActionType.WORLD_SET_BLOCKS_AREA_TYPE;
     }
 }

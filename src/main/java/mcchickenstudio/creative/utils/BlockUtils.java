@@ -42,8 +42,6 @@ import java.util.List;
  */
 public class BlockUtils {
 
-    private BlockUtils() {}
-
     /**
      * Change text into line on sign.
      * @param location Location of sign block

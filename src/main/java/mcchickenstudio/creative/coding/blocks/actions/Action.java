@@ -41,8 +41,8 @@ import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugLog;
 /**
  * <h1>Action</h1>
  * This class represents Action that will be executed in executor.
- * @since 1.5
- * @version 1.5
+ * @since 5.0
+ * @version 5.0
  * @author McChicken Studio
  */
 public abstract class Action {
@@ -186,6 +186,9 @@ public abstract class Action {
                 if (victim != null) {
                     entities.add(victim);
                 }
+            }
+            case SELECTED -> {
+                entities.addAll(getHandler().getSelectedTargets());
             }
             default -> entities.addAll(eventEntities);
         }

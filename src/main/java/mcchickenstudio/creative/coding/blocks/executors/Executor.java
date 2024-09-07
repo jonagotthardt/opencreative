@@ -33,8 +33,8 @@ import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugExecutor;
  * <h1>Executor</h1>
  * This class represents Executor that has actions to run.
  * Executor will be executed on events in plot.
- * @since 1.5
- * @version 1.5
+ * @since 5.0
+ * @version 5.0
  * @author McChicken Studio
  */
 public abstract class Executor {

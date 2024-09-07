@@ -93,5 +93,11 @@ package mcchickenstudio.creative.coding.variables;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 
+/**
+ * This record represents a link to Event value, that can exists or can be empty.
+ * It's used for searching and getting real event value.
+ * @param type
+ * @param executor
+ */
 public record EventValueLink(EventValues.Variable type, Executor executor)  {
 }

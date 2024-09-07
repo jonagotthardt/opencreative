@@ -27,8 +27,8 @@ import org.bukkit.Material;
  * This enum defines different categories for coding blocks with executor type.
  * Every category has material of block that player will place. Members are:
  * EVENT_PLAYER, EVENT_WORLD, CYCLE, FUNCTION and etc.
- * @since 1.5
- * @version 1.5
+ * @since 5.0
+ * @version 5.0
  * @author McChicken Studio
  */
 public enum ExecutorCategory {

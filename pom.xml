@@ -6,7 +6,7 @@
 
     <groupId>mcchickenstudio</groupId>
     <artifactId>creative</artifactId>
-    <version>1.5</version>
+    <version>5.0</version>
     <packaging>jar</packaging>
 
     <name>creative</name>

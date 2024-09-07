@@ -57,8 +57,8 @@ import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
  * This enum defines different types of all executors in coding.
  * Every type contains event class, executor class, item material, cancellable.
  * Foe example: PLAYER_JOIN, WORLD_START, FUNCTION_EXEC.
- * @since 1.5
- * @version 1.5
+ * @since 5.0
+ * @version 5.0
  * @author McChicken Studio
  */
 public enum ExecutorType {

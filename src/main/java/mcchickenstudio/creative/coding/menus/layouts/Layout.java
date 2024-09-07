@@ -22,6 +22,8 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.menu.AbstractMenu;
 import mcchickenstudio.creative.menu.buttons.ParameterButton;
+import mcchickenstudio.creative.plots.DevPlot;
+import mcchickenstudio.creative.plots.PlotManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -38,7 +40,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static mcchickenstudio.creative.utils.ItemUtils.*;
 
@@ -55,6 +59,7 @@ public abstract class Layout extends AbstractMenu {
     protected final List<ParameterButton> parameterButtons = new ArrayList<>();
     protected final ArgumentSlot[] requiredSlots;
     private final Block containerBlock;
+    private final Set<Player> viewers = new HashSet<>();
 
     public Layout(byte rows, ActionType actionType, Block chestBlock) {
         super(rows, ChatColor.stripColor(actionType.getLocaleName()));
@@ -85,31 +90,41 @@ public abstract class Layout extends AbstractMenu {
 
     @Override
     public void onClick(InventoryClickEvent event) {
-        if (!isClickedInMenuSlots(event) || !isPlayerClicked(event)) return;
+        if (!isClickedInMenuSlots(event) || !isPlayerClicked(event)) {
+            return;
+        }
         ItemStack currentItem = event.getCursor();
         if (argsSlots.contains((byte) event.getRawSlot())) {
-            ItemStack argItem = event.getClickedInventory().getItem(event.getRawSlot());
+            ItemStack argItem = inventory.getItem(event.getRawSlot());
             for (ParameterButton parameter : parameterButtons) {
                 if (itemEquals(argItem,parameter.getItem())) {
                     event.setCancelled(true);
                     if (getValueType(currentItem) == ValueType.VARIABLE) {
-                        event.getClickedInventory().setItem(event.getRawSlot(),currentItem);
+                        inventory.setItem(event.getRawSlot(),currentItem);
                         ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.BLOCK_VAULT_ACTIVATE,100f,0.7f);
                     } else {
                         parameter.next();
                         ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.BLOCK_AMETHYST_BLOCK_RESONATE,100f,1.7f);
-                        event.getClickedInventory().setItem(event.getRawSlot(),parameter.getItem());
+                        inventory.setItem(event.getRawSlot(),parameter.getItem());
                     }
                 }
             }
+            /*if (!event.isCancelled()) {
+                event.setCancelled(true);
+                inventory.setItem(event.getRawSlot(),currentItem);
+                event.getWhoClicked().setItemOnCursor(inventory.getItem(event.getRawSlot()));
+                *//*for (Player viewer : viewers) {
+                    viewer.getOpenInventory().setItem(event.getRawSlot(),currentItem);
+                }*//*
+            }*/
         } else {
             event.setCancelled(true);
         }
-
     }
 
     @Override
     public void onOpen(InventoryOpenEvent event) {
+        viewers.add((Player) event.getPlayer());
         ((Player) event.getPlayer()).playSound(event.getPlayer().getLocation(),Sound.BLOCK_BARREL_OPEN,100,0.6f);
     }
 
@@ -117,6 +132,14 @@ public abstract class Layout extends AbstractMenu {
     public final void onClose(InventoryCloseEvent event) {
         saveArgumentsItems(event.getInventory());
         ((Player) event.getPlayer()).playSound(event.getPlayer().getLocation(),Sound.BLOCK_BARREL_CLOSE,100,0.6f);
+        viewers.remove((Player) event.getPlayer());
+        if (viewers.isEmpty()) {
+            DevPlot devPlot = PlotManager.getInstance().getDevPlot((Player) event.getPlayer());
+            if (devPlot != null) {
+                devPlot.unregisterOpenedMenu(containerBlock.getLocation());
+            }
+            destroy();
+        }
     }
 
     private void saveArgumentsItems(Inventory inventory) {
@@ -124,6 +147,7 @@ public abstract class Layout extends AbstractMenu {
         int chestSlot = 0;
         for (byte argSlot : argsSlots) {
             ItemStack argItem = inventory.getItem(argSlot);
+            container.getInventory().setItem(chestSlot,argItem);
             for (ParameterButton rb : parameterButtons) {
                 if (argItem == null) continue;
                 ItemStack itemStack = argItem.clone();
@@ -131,32 +155,33 @@ public abstract class Layout extends AbstractMenu {
                     itemStack.removeItemFlags(flag);
                 }
                 if (itemStack.equals(rb.getItem(true))) {
-                    if (argItem.hasItemMeta()) {
+                    if (itemStack.hasItemMeta()) {
                         ItemMeta itemMeta;
                         if (rb.getCurrentValue() instanceof Byte) {
-                            argItem.setType(Material.SLIME_BALL);
-                            itemMeta = argItem.getItemMeta();
+                            itemStack.setType(Material.SLIME_BALL);
+                            itemMeta = itemStack.getItemMeta();
                             itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&c")+ rb.getCurrentValue()+".0");
                         } else if (rb.getCurrentValue() instanceof Boolean) {
                             boolean value = (boolean) rb.getCurrentValue();
-                            argItem.setType(Material.CLOCK);
-                            itemMeta = argItem.getItemMeta();
+                            itemStack.setType(Material.CLOCK);
+                            itemMeta = itemStack.getItemMeta();
                             itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&" + (value ? "a" : "c") + value));
                         } else {
-                            argItem.setType(Material.BOOK);
-                            itemMeta = argItem.getItemMeta();
+                            itemStack.setType(Material.BOOK);
+                            itemMeta = itemStack.getItemMeta();
                             itemMeta.setDisplayName(rb.getCurrentValue().toString());
                         }
                         itemMeta.lore(null);
-                        argItem.setItemMeta(itemMeta);
-                        setPersistentData(argItem,getCodingValueKey(), ValueType.getByMaterial(argItem.getType()).name());
-                        setPersistentData(argItem,getCodingDoNotDropMeKey(), "1");
+                        itemStack.setItemMeta(itemMeta);
+                        setPersistentData(itemStack,getCodingValueKey(), ValueType.getByMaterial(argItem.getType()).name());
+                        setPersistentData(itemStack,getCodingDoNotDropMeKey(), "1");
+                        container.getInventory().setItem(chestSlot,itemStack);
                     }
                 }
             }
-            container.getInventory().setItem(chestSlot++,argItem);
-            containerBlock.getState().update(true);
+            chestSlot++;
         }
+        containerBlock.getState().update(true);
     }
 
     public ArgumentSlot[] getRequiredSlots() {

@@ -42,6 +42,11 @@ import org.bukkit.ChatColor;
 
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 
+/**
+ * This class represents a link to existing or not existing world variable.
+ * Links, as variables, have specified name and type. It's used for searching
+ * and getting variables values.
+ */
 public class VariableLink {
 
     private String name;
@@ -121,7 +126,7 @@ public class VariableLink {
 
     @Override
     public String toString() {
-        return "Variable: " + name + " Type: " + type.name();
+        return "null! " + name + " - " + type.name();
     }
 
 }

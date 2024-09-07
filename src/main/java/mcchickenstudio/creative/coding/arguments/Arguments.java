@@ -25,6 +25,7 @@ import mcchickenstudio.creative.coding.variables.EventValueLink;
 import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.coding.variables.VariableLink;
 import mcchickenstudio.creative.plots.Plot;
+import mcchickenstudio.creative.utils.BlockUtils;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -40,8 +41,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import static mcchickenstudio.creative.coding.arguments.Argument.parseEntity;
-import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugNotFoundVariable;
-import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugVariable;
+import static mcchickenstudio.creative.utils.ErrorUtils.*;
 
 public class Arguments {
 
@@ -315,7 +315,12 @@ public class Arguments {
             try {
                 List<Argument> args = (List<Argument>) arg.getValue(action);
                 for (Argument itemArg : args) {
-                    list.add((Location) itemArg.getValue(action));
+                    if (itemArg.getValue(action) instanceof Location loc) {
+                        loc.setWorld(plot.world);
+                        if (!BlockUtils.isOutOfBorders(loc)) {
+                            list.add(loc);
+                        }
+                    }
                 }
             } catch (ClassCastException e) {
                 return list;
@@ -524,6 +529,10 @@ public class Arguments {
             sendCodingDebugVariable(plot,path,locationValue.getX()+" "+locationValue.getY()+" "+locationValue.getZ()+" "+locationValue.getYaw()+" "+locationValue.getPitch());
         }
         locationValue.setWorld(plot.world);
+        if (BlockUtils.isOutOfBorders(locationValue)) {
+            sendCodingDebugLog(plot,"Location is out of borders! " + locationValue);
+            return defaultValue;
+        }
         return locationValue;
     }
 

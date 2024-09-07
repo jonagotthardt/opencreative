@@ -26,21 +26,23 @@ import mcchickenstudio.creative.coding.blocks.actions.worldactions.WorldAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
-public class SetBlockTypeAction extends WorldAction {
-    public SetBlockTypeAction(Executor executor, Target target, int x, Arguments args) {
+public class DestroyBlockAction extends WorldAction {
+    public DestroyBlockAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     protected void execute(Entity entity) {
         List<Location> locations = getArguments().getLocationList("locations",this);
-        Material material = getArguments().getValue("type", Material.AIR,this);
+        ItemStack item = getArguments().getValue("item",new ItemStack(Material.NETHERITE_PICKAXE),this);
+        boolean triggerEffect = getArguments().getValue("show-particle",true,this);
+        boolean dropExperience = getArguments().getValue("drop-experience",true,this);
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
@@ -54,7 +56,7 @@ public class SetBlockTypeAction extends WorldAction {
                 getPlot().removeBukkitRunnable(runnable);
                 return;
             }
-            location.getBlock().setType(material);
+            location.getBlock().breakNaturally(item,triggerEffect,dropExperience);
             getPlot().lastModifiedBlocksAmount++;
         }
         runnable.runTaskLater(Main.getPlugin(),20L);
@@ -64,6 +66,6 @@ public class SetBlockTypeAction extends WorldAction {
 
     @Override
     public ActionType getActionType() {
-        return ActionType.WORLD_SET_BLOCK_TYPE;
+        return ActionType.WORLD_DESTROY_BLOCK;
     }
 }

@@ -29,6 +29,7 @@ import mcchickenstudio.creative.coding.blocks.actions.playeractions.movement.Sad
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.movement.TeleportPlayerAction;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.params.*;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.state.*;
+import mcchickenstudio.creative.coding.blocks.actions.selectionactions.players.SelectRandomPlayerAction;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.item.*;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.list.*;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.location.*;
@@ -40,7 +41,11 @@ import mcchickenstudio.creative.coding.blocks.actions.variableactions.other.Dele
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.other.SetVariableRandomValueAction;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.other.SetVariableValueAction;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.text.*;
+import mcchickenstudio.creative.coding.blocks.actions.worldactions.appearance.*;
+import mcchickenstudio.creative.coding.blocks.actions.worldactions.blocks.DestroyBlockAction;
+import mcchickenstudio.creative.coding.blocks.actions.worldactions.blocks.SetBlockPoweredAction;
 import mcchickenstudio.creative.coding.blocks.actions.worldactions.blocks.SetBlockTypeAction;
+import mcchickenstudio.creative.coding.blocks.actions.worldactions.blocks.SetBlocksAreaTypeAction;
 import mcchickenstudio.creative.coding.blocks.actions.worldactions.entity.CreateExplosionAction;
 import mcchickenstudio.creative.coding.blocks.actions.worldactions.entity.SpawnEntityAction;
 import mcchickenstudio.creative.coding.blocks.actions.worldactions.entity.SpawnParticleAction;
@@ -74,7 +79,6 @@ import mcchickenstudio.creative.coding.menus.layouts.ArgumentSlot;
 import mcchickenstudio.creative.coding.menus.layouts.ParameterSlot;
 import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.utils.hooks.HookUtils;
-import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -179,7 +183,7 @@ public enum ActionType {
     PLAYER_SET_WEATHER(                 ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, PlayerSetWeatherAction.class, Material.WATER_BUCKET, new ParameterSlot("weather", Arrays.asList("clean","storm"), Material.SUNFLOWER, Material.WATER_BUCKET)),
     //PLAYER_SPAWN_PARTICLE(              ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, null, Material.NETHER_STAR, new ArgumentSlot("particle",VariableType.PARTICLE,(byte) 18),new ArgumentSlot("location",VariableType.LOCATION),new ArgumentSlot("count",VariableType.NUMBER)),
     PLAYER_SET_RESOURCE_PACK(           ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, SetResourcePackAction.class, Material.SHROOMLIGHT, new ArgumentSlot("url", ValueType.TEXT)),
-    PLAYER_SET_WORLD_BORDER(            ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, SetWorldBorderAction.class, Material.END_CRYSTAL, new ArgumentSlot("center", ValueType.LOCATION), new ArgumentSlot("radius", ValueType.NUMBER), new ArgumentSlot("time", ValueType.NUMBER), new ArgumentSlot("damage", ValueType.NUMBER), new ArgumentSlot("warning-distance", ValueType.NUMBER), new ArgumentSlot("warning-time", ValueType.NUMBER), new ArgumentSlot("safe-distance", ValueType.NUMBER)),
+    PLAYER_SET_WORLD_BORDER(            ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, PlayerSetWorldBorderAction.class, Material.END_CRYSTAL, new ArgumentSlot("center", ValueType.LOCATION), new ArgumentSlot("radius", ValueType.NUMBER), new ArgumentSlot("time", ValueType.NUMBER), new ArgumentSlot("damage", ValueType.NUMBER), new ArgumentSlot("warning-distance", ValueType.NUMBER), new ArgumentSlot("warning-time", ValueType.NUMBER), new ArgumentSlot("safe-distance", ValueType.NUMBER)),
     PLAYER_SEND_SIGN_CHANGE(            ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, SendSignChangeAction.class, Material.OAK_SIGN, new ArgumentSlot("location", ValueType.LOCATION), new ArgumentSlot("text", ValueType.TEXT), new ArgumentSlot("number", ValueType.NUMBER)),
     PLAYER_SHOW_ENTITY(                 ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, ShowEntityAction.class, Material.PIGLIN_HEAD, new ArgumentSlot("entity", ValueType.TEXT)),
     PLAYER_SHOW_SCOREBOARD(                 ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, ShowScoreboardAction.class, Material.PAINTING, new ArgumentSlot("scoreboard", ValueType.TEXT)),
@@ -233,6 +237,7 @@ public enum ActionType {
 
     WORLD_SET_TIME(                 ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SetTimeAction.class, Material.CLOCK, new ArgumentSlot("time", ValueType.NUMBER)),
     WORLD_SET_WEATHER(                 ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SetWeatherAction.class, Material.WATER_BUCKET, new ParameterSlot("weather", Arrays.asList("clean","storm","thunder"), Material.SUNFLOWER, Material.WATER_BUCKET, Material.TRIDENT), new ArgumentSlot("duration", ValueType.NUMBER)),
+    WORLD_SET_WORLD_BORDER(            ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SetWorldBorderAction.class, Material.END_CRYSTAL, new ArgumentSlot("center", ValueType.LOCATION), new ArgumentSlot("radius", ValueType.NUMBER), new ArgumentSlot("time", ValueType.NUMBER), new ArgumentSlot("damage", ValueType.NUMBER), new ArgumentSlot("warning-distance", ValueType.NUMBER), new ArgumentSlot("warning-time", ValueType.NUMBER), new ArgumentSlot("safe-distance", ValueType.NUMBER)),
 
     WORLD_CREATE_SCOREBOARD(                 ActionCategory.WORLD_ACTION, MenusCategory.APPEARANCE, CreateScoreboardAction.class, Material.PAINTING, new ArgumentSlot("name", ValueType.TEXT), new ArgumentSlot("display-name", ValueType.TEXT)),
     WORLD_SCOREBOARD_SET_SCORE(                 ActionCategory.WORLD_ACTION, MenusCategory.APPEARANCE, ScoreboardSetScoreAction.class, Material.ITEM_FRAME, new ArgumentSlot("name", ValueType.TEXT), new ArgumentSlot("object", ValueType.TEXT), new ArgumentSlot("score", ValueType.NUMBER)),
@@ -252,6 +257,11 @@ public enum ActionType {
     WORLD_SPAWN_PARTICLE(                 ActionCategory.WORLD_ACTION, MenusCategory.ENTITY, SpawnParticleAction.class, Material.NETHER_STAR, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ArgumentSlot("particle", ValueType.PARTICLE), new ArgumentSlot("count", ValueType.NUMBER), new ArgumentSlot("offset-x", ValueType.NUMBER), new ArgumentSlot("offset-y", ValueType.NUMBER), new ArgumentSlot("offset-z", ValueType.NUMBER)),
 
     WORLD_SET_BLOCK_TYPE(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, SetBlockTypeAction.class, Material.STONE, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ArgumentSlot("type", ValueType.ITEM)),
+    WORLD_SET_BLOCKS_AREA_TYPE(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, SetBlocksAreaTypeAction.class, Material.COBBLESTONE, new ArgumentSlot("first", ValueType.LOCATION), new ArgumentSlot("second", ValueType.LOCATION), new ArgumentSlot("type", ValueType.ITEM)),
+    //WORLD_COPY_PASTE_BLOCKS_AREA(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, null, Material.NOTE_BLOCK, new ArgumentSlot("first", ValueType.LOCATION), new ArgumentSlot("second", ValueType.LOCATION), new ArgumentSlot("from", ValueType.LOCATION), new ArgumentSlot("to", ValueType.LOCATION)),
+    WORLD_DESTROY_BLOCK(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, DestroyBlockAction.class, Material.TNT, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ParameterSlot("show-particle", true, Material.GUNPOWDER, Material.LIGHT_GRAY_STAINED_GLASS), new ParameterSlot("drop-experience", true, Material.EXPERIENCE_BOTTLE, Material.STRING)),
+    WORLD_SET_BLOCK_POWERED(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, SetBlockPoweredAction.class, Material.REDSTONE_BLOCK, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ParameterSlot("powered", true, Material.REDSTONE_BLOCK, Material.COAL_BLOCK)),
+
 
     /**
      * <h1>Variable Actions.</h1>
@@ -343,6 +353,14 @@ public enum ActionType {
 
     IF_VAR_LIST_IS_EMPTY(ActionCategory.VARIABLE_CONDITION, MenusCategory.LIST_OPERATIONS, ListIsEmptyCondition.class, Material.STRUCTURE_VOID, new ArgumentSlot("list", ValueType.VARIABLE)),
     IF_VAR_LIST_CONTAINS(ActionCategory.VARIABLE_CONDITION, MenusCategory.LIST_OPERATIONS, ListContainsCondition.class, Material.CHEST_MINECART, new ArgumentSlot("values", ValueType.ANY, (byte) 18), new ArgumentSlot("list", ValueType.VARIABLE), new ParameterSlot("all")),
+
+    /**
+     * <h1>Selection Actions.</h1>
+     */
+
+    SELECTION_RANDOM_PLAYER(ActionCategory.SELECTION_ACTION, MenusCategory.WORLD, SelectRandomPlayerAction.class, Material.PUFFERFISH_BUCKET),
+    SELECTION_CLEAR(ActionCategory.SELECTION_ACTION, MenusCategory.WORLD, null, Material.BARRIER),
+
 
     /**
      * <h1>Other Actions.</h1>

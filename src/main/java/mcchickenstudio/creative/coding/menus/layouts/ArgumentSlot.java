@@ -20,6 +20,11 @@ package mcchickenstudio.creative.coding.menus.layouts;
 
 import mcchickenstudio.creative.coding.variables.ValueType;
 
+/**
+ * This class represents an Argument Slot, that can be added to actions.
+ * It's used for creating layouts and saving items into chest.
+ * @see ParameterSlot
+ */
 public class ArgumentSlot {
 
     private final String path;

@@ -41,6 +41,10 @@ import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.MessageUtils.getPathFromMessage;
 import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
 
+/**
+ * This class represents a menu where player can select type of coding block.
+ * Every category of coding blocks has this menu.
+ */
 public abstract class CodingBlockTypesMenu extends AbstractListMenu {
 
     private final String codingBlockName;
@@ -153,7 +157,4 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
 
     @Override
     public void onOpen(InventoryOpenEvent event) {}
-
-    @Override
-    public void onClose(InventoryCloseEvent event) {}
 }

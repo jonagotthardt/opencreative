@@ -26,21 +26,29 @@ import mcchickenstudio.creative.coding.blocks.actions.worldactions.WorldAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Lightable;
+import org.bukkit.block.data.Powerable;
+import org.bukkit.block.data.type.Door;
+import org.bukkit.block.data.type.Fence;
+import org.bukkit.block.data.type.Gate;
+import org.bukkit.block.data.type.Piston;
 import org.bukkit.entity.Entity;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
-public class SetBlockTypeAction extends WorldAction {
-    public SetBlockTypeAction(Executor executor, Target target, int x, Arguments args) {
+public class SetBlockPoweredAction extends WorldAction {
+    public SetBlockPoweredAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     protected void execute(Entity entity) {
         List<Location> locations = getArguments().getLocationList("locations",this);
-        Material material = getArguments().getValue("type", Material.AIR,this);
+        boolean powered = getArguments().getValue("powered",true,this);
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
@@ -54,7 +62,29 @@ public class SetBlockTypeAction extends WorldAction {
                 getPlot().removeBukkitRunnable(runnable);
                 return;
             }
-            location.getBlock().setType(material);
+            Block block = location.getBlock();
+            BlockData data = block.getBlockData();
+            if (data instanceof Door door) {
+                door.setOpen(powered);
+            }
+            if (data instanceof Gate gate) {
+                gate.setOpen(powered);
+            }
+            if (data instanceof Powerable powerable) {
+                powerable.setPowered(powered);
+            }
+            if (data instanceof Piston piston) {
+                piston.setExtended(powered);
+            }
+            if (data instanceof Lightable lightable) {
+                lightable.setLit(powered);
+            }
+            if (data instanceof Door door) {
+                door.setOpen(powered);
+            }
+            block.setBlockData(data,false);
+            block.getState().update(true,false);
+
             getPlot().lastModifiedBlocksAmount++;
         }
         runnable.runTaskLater(Main.getPlugin(),20L);
@@ -64,6 +94,6 @@ public class SetBlockTypeAction extends WorldAction {
 
     @Override
     public ActionType getActionType() {
-        return ActionType.WORLD_SET_BLOCK_TYPE;
+        return ActionType.WORLD_SET_BLOCK_POWERED;
     }
 }

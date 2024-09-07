@@ -30,9 +30,11 @@ import java.util.List;
 public class Menus implements Listener {
 
     private static final List<AbstractMenu> activeMenus = new ArrayList<>();
-
     public static void addMenu(AbstractMenu menu) {
         activeMenus.add(menu);
+    }
+    public static void removeMenu(AbstractMenu menu) {
+        activeMenus.remove(menu);
     }
 
     @EventHandler

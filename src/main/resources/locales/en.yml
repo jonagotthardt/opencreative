@@ -1,5 +1,5 @@
 #
-# Creative+ 1.5
+# OpenCreative+ 5.0
 # English Translation
 #
 # ! Be careful when translating some messages, follow the rules !
@@ -37,7 +37,7 @@ plot-code-error:
 lobby:
   title: "&f&lCREATIVE&b&l+"
   subtitle: "&fCreate your worlds and invite friends!"
-  message: "\n &f\n&8&l&m--------------------------------------------&f\n &f\n &f&lCREATIVE&b&l+ &f1.5 Development\n&f Things will be different..\n &f\n&3 ◈ &fJoin the &3worlds&f using compass!\n&a ◈&f Create your world and &ainvite &ffriends!\n &e◈&f Have fun and &edo &fwhat you want!\n \n&8&l&m--------------------------------------------&f\n &f"
+  message: "\n &f\n&8&l&m--------------------------------------------&f\n &f\n &f&lCREATIVE&b&l+ &f5.0 Development\n&f Things will be different..\n &f\n&3 ◈ &fJoin the &3worlds&f using compass!\n&a ◈&f Create your world and &ainvite &ffriends!\n &e◈&f Have fun and &edo &fwhat you want!\n \n&8&l&m--------------------------------------------&f\n &f"
 creating-world:
   title: "&eCreating world ◌"
   subtitle: "&fPlease wait..."

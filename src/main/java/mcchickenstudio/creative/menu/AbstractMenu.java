@@ -108,6 +108,13 @@ public abstract class AbstractMenu implements InventoryHolder {
         return inventory;
     }
 
+    public @NotNull Inventory getCurrentInventory() {
+        if (inventory == null) {
+            return getInventory();
+        }
+        return inventory;
+    }
+
     public void open(Player player) {
         Menus.addMenu(this);
         try {
@@ -123,7 +130,10 @@ public abstract class AbstractMenu implements InventoryHolder {
     public abstract void fillItems(Player player);
     public abstract void onClick(InventoryClickEvent event);
     public abstract void onOpen(InventoryOpenEvent event);
-    public abstract void onClose(InventoryCloseEvent event);
+
+    public void onClose(InventoryCloseEvent event) {
+        destroy();
+    };
 
     protected final boolean isClickedInMenuSlots(InventoryClickEvent event) {
         if (event.getClickedInventory() == null) return false;
@@ -134,6 +144,7 @@ public abstract class AbstractMenu implements InventoryHolder {
     protected final boolean isPlayerClicked(InventoryClickEvent event) {
         return (event.getWhoClicked() instanceof Player);
     }
+
 
     public byte getSize() {
         return (byte) (rows*9);
@@ -149,5 +160,9 @@ public abstract class AbstractMenu implements InventoryHolder {
 
     protected boolean isEmpty(ItemStack item) {
         return (item != null && item.getType() != Material.AIR);
+    }
+
+    public void destroy() {
+        Menus.removeMenu(this);
     }
 }

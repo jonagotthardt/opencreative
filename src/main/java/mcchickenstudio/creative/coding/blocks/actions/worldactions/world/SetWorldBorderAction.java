@@ -21,33 +21,40 @@ package mcchickenstudio.creative.coding.blocks.actions.worldactions.world;
 import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
+import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.actions.worldactions.WorldAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import net.kyori.adventure.bossbar.BossBar;
-import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.WorldBorder;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
-public class BossBarProgressAction extends WorldAction {
-    public BossBarProgressAction(Executor executor, Target target, int x, Arguments args) {
+public class SetWorldBorderAction extends WorldAction {
+    public SetWorldBorderAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     protected void execute(Entity entity) {
-        if (!getArguments().pathExists("name")) {
-            return;
-        }
-        String name = getArguments().getValue("name","boss",this);
-        float progress = getArguments().getValue("progress",100.0f,this)/100;
-        BossBar bossBar = getPlot().getBossBars().get(name.toLowerCase());
-        if (bossBar != null) {
-            bossBar.progress(progress);
-        }
-        getPlot().getBossBars().put(name.toLowerCase(),bossBar);
+        double radius = getArguments().getValue("radius",(getWorld() == null ? 10d : getWorld().getWorldBorder().getSize()),this);
+        int time = getArguments().getValue("time",0,this);
+        int warningDistance = getArguments().getValue("warning-distance",5,this);
+        int warningTime = getArguments().getValue("warning-time",15,this);
+        double damage = getArguments().getValue("damage",0.2d,this);
+        int safeDistance = getArguments().getValue("safe-distance",5,this);
+        WorldBorder border = getWorld().getWorldBorder();
+        border.setSize(Math.min(getPlot().worldSize,radius),time);
+        border.setWarningTime(warningTime);
+        border.setWarningDistance(warningDistance);
+        border.setDamageAmount(damage);
+        border.setDamageBuffer(safeDistance);
+        Location center = getArguments().getValue("center",getWorld().getSpawnLocation(),this);
+        border.setCenter(center);
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.WORLD_BOSS_BAR_PROGRESS;
+        return ActionType.WORLD_SET_WORLD_BORDER;
     }
 }

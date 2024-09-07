@@ -44,6 +44,7 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.coding.menus.*;
+import mcchickenstudio.creative.coding.menus.layouts.Layout;
 import mcchickenstudio.creative.coding.menus.variables.EventValuesMenu;
 import mcchickenstudio.creative.coding.menus.variables.ParticlesMenu;
 import mcchickenstudio.creative.coding.menus.variables.PotionsMenu;
@@ -330,7 +331,14 @@ public class PlayerInteract implements Listener {
                     String type = sign.getLine(2);
                     try {
                         ActionType action = ActionType.valueOf(type.toUpperCase());
-                        new LayoutMaker(action,clickedBlock).open(player);
+                        Layout layout = devPlot.getOpenedMenu(clickedBlock.getLocation());
+                        if (layout == null) {
+                            layout = new LayoutMaker(action,clickedBlock);
+                            layout.open(player);
+                            devPlot.registerOpenedMenu(clickedBlock.getLocation(),layout);
+                        } else {
+                            player.openInventory(layout.getCurrentInventory());
+                        }
                         event.setCancelled(true);
                     } catch (IllegalArgumentException e) {
                         player.sendActionBar(getLocaleMessage("plot-code-error.unknown-layout"));

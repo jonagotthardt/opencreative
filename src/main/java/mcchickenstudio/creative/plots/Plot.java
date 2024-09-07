@@ -49,6 +49,13 @@ import static mcchickenstudio.creative.utils.MessageUtils.*;
 import static mcchickenstudio.creative.utils.PlayerUtils.*;
 import static mcchickenstudio.creative.utils.WorldUtils.generateWorld;
 
+/**
+ * <h1>Plot</h1>
+ * This class represents a world, that has owner, ID,
+ * information, players, script, limits and developer's world.
+ * @since 1.0
+ * @version 5.0
+ */
 public class Plot {
 
     /**
@@ -410,27 +417,11 @@ public class Plot {
     }
 
     public String getBuilders() {
-        try {
-            List<String> trustedBuilders = getPlayersFromPlotConfig(this, PlayersType.BUILDERS_TRUSTED);
-            List<String> notTrustedBuilders = getPlayersFromPlotConfig(this, PlayersType.BUILDERS_NOT_TRUSTED);
-            trustedBuilders.addAll(notTrustedBuilders);
-            return String.join(", ",trustedBuilders);
-        } catch (Exception error) {
-            return "";
-        }
+        return String.join(", ",getWorldPlayers().getAllBuilders());
     }
 
     public String getDevelopers() {
-        try {
-            List<String> trustedDevelopers = getPlayersFromPlotConfig(this, PlayersType.DEVELOPERS_TRUSTED);
-            List<String> notTrustedDevelopers = getPlayersFromPlotConfig(this, PlayersType.DEVELOPERS_NOT_TRUSTED);
-            List<String> guestDevelopers = getPlayersFromPlotConfig(this, PlayersType.DEVELOPERS_GUESTS);
-            trustedDevelopers.addAll(notTrustedDevelopers);
-            trustedDevelopers.addAll(guestDevelopers);
-            return String.join(", ",trustedDevelopers);
-        } catch (Exception error) {
-            return "";
-        }
+        return String.join(", ",getWorldPlayers().getAllDevelopers());
     }
 
     public int getUniques() {

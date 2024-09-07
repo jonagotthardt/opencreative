@@ -16,41 +16,28 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mcchickenstudio.creative.coding.blocks.actions.worldactions.world;
+package mcchickenstudio.creative.coding.blocks.actions.selectionactions.players;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
+import mcchickenstudio.creative.coding.blocks.actions.ActionsHandler;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
-import mcchickenstudio.creative.coding.blocks.actions.worldactions.WorldAction;
+import mcchickenstudio.creative.coding.blocks.actions.selectionactions.SelectionAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.entity.Entity;
 
-public class BossBarOverlayAction extends WorldAction {
-    public BossBarOverlayAction(Executor executor, Target target, int x, Arguments args) {
+public class SelectRandomPlayerAction extends SelectionAction {
+    public SelectRandomPlayerAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     protected void execute(Entity entity) {
-        if (!getArguments().pathExists("name")) {
-            return;
-        }
-        String name = getArguments().getValue("name","boss",this);
-        String overlayString = getArguments().getValue("overlay","progress",this);
-        BossBar.Overlay overlay = BossBar.Overlay.PROGRESS;
-        try {
-            overlay = BossBar.Overlay.valueOf(overlayString.toUpperCase());
-        } catch (IllegalArgumentException ignored) {}
-        BossBar bossBar = getPlot().getBossBars().get(name.toLowerCase());
-        if (bossBar != null) {
-            bossBar.overlay(overlay);
-        }
-        getPlot().getBossBars().put(name.toLowerCase(),bossBar);
+
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.WORLD_BOSS_BAR_PROGRESS;
+        return null;
     }
 }

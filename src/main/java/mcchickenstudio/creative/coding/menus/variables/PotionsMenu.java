@@ -125,9 +125,4 @@ public class PotionsMenu extends AbstractListMenu {
     public void onOpen(InventoryOpenEvent event) {
 
     }
-
-    @Override
-    public void onClose(InventoryCloseEvent event) {
-
-    }
 }

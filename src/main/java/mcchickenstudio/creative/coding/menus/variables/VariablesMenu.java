@@ -82,7 +82,4 @@ public class VariablesMenu extends AbstractMenu  {
     public void onOpen(InventoryOpenEvent event) {
         ((Player) event.getPlayer()).playSound(event.getPlayer().getLocation(), Sound.UI_LOOM_SELECT_PATTERN, 100f, 1f);
     }
-
-    @Override
-    public void onClose(InventoryCloseEvent event) {}
 }

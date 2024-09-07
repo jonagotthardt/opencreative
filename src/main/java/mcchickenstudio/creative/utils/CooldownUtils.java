@@ -22,6 +22,9 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 
+/**
+ * This class contains utils for checking and modifying player's cooldown.
+ */
 public class CooldownUtils {
 
     static final HashMap<Player, Long> genericCommandCooldown = new HashMap<>();
@@ -43,6 +46,9 @@ public class CooldownUtils {
 
     /**
      Sets player's cooldown.
+     @param player Player to set cooldown.
+     @param cooldown Cooldown to set, in seconds.
+     @param type Type of cooldown.
      **/
     public static void setCooldown(Player player, int cooldown, CooldownType type) {
 
@@ -57,6 +63,9 @@ public class CooldownUtils {
 
     /**
      Returns player's cooldown.
+     @param player Player for getting cooldown.
+     @param type Type of cooldown.
+     @return cooldown - Remaining time for passing cooldown, in seconds. Returns 0, if player hasn't cooldown or player has bypass.
      **/
     public static int getCooldown(Player player, CooldownType type) {
 

@@ -76,8 +76,10 @@ public class PlotPlayers {
         if (config != null) {
             buildersTrusted.addAll(config.getStringList("players.builders.trusted"));
             developersTrusted.addAll(config.getStringList("players.developers.trusted"));
+
             buildersNotTrusted.addAll(config.getStringList("players.builders.not-trusted"));
             developersNotTrusted.addAll(config.getStringList("players.developers.not-trusted"));
+
             developersGuests.addAll(config.getStringList("players.developers.guests"));
             bannedPlayers.addAll(config.getStringList("players.black-list"));
         }
@@ -101,6 +103,24 @@ public class PlotPlayers {
             return true;
         }
         for (String nickname : developersTrusted) {
+            if (nickname.equalsIgnoreCase(player.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isNotTrustedDeveloper(Player player) {
+        for (String nickname : developersNotTrusted) {
+            if (nickname.equalsIgnoreCase(player.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isNotTrustedBuilder(Player player) {
+        for (String nickname : buildersNotTrusted) {
             if (nickname.equalsIgnoreCase(player.getName())) {
                 return true;
             }
@@ -133,12 +153,16 @@ public class PlotPlayers {
         if (plot.isOwner(player)) {
             return true;
         }
-        for (String nickname : buildersTrusted) {
+        for (String nickname : developersTrusted) {
             if (nickname.equalsIgnoreCase(player.getName())) {
                 return true;
             }
         }
-        if (Bukkit.getPlayerExact(plot.getOwner()) == null) {
+        Player owner = Bukkit.getPlayer(plot.getOwner());
+        if (owner == null) {
+            return false;
+        }
+        if (!plot.equals(PlotManager.getInstance().getPlotByPlayer(owner))) {
             return false;
         }
         for (String nickname : developersNotTrusted) {
@@ -158,7 +182,11 @@ public class PlotPlayers {
                 return true;
             }
         }
-        if (Bukkit.getPlayerExact(plot.getOwner()) == null) {
+        Player owner = Bukkit.getPlayer(plot.getOwner());
+        if (owner == null) {
+            return false;
+        }
+        if (!plot.equals(PlotManager.getInstance().getPlotByPlayer(owner))) {
             return false;
         }
         for (String nickname : buildersNotTrusted) {
@@ -222,14 +250,16 @@ public class PlotPlayers {
         setPlotConfigParameter(plot,"players.developers.trusted",developersTrusted);    }
 
     public void addDeveloper(String nickname, boolean trusted) {
-        Player player = Bukkit.getPlayerExact(nickname);
+        Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
             Plot playerPlot = PlotManager.getInstance().getPlotByPlayer(player);
             if (plot.equals(playerPlot)) {
                 if (!trusted) {
                     player.sendMessage(getLocaleMessage("world.players.developers.player").replace("%player%",player.getName()));
                     player.playSound(player.getLocation(),Sound.ENTITY_CAT_AMBIENT,100,1);
-                    if (PlotManager.getInstance().getDevPlot(player) != null) player.setGameMode(GameMode.CREATIVE);
+                    if (PlotManager.getInstance().getDevPlot(player) != null) {
+                        player.setGameMode(GameMode.CREATIVE);
+                    }
                 }
             }
         }
@@ -255,8 +285,9 @@ public class PlotPlayers {
                 if (!trusted) {
                     player.sendMessage(getLocaleMessage("world.players.builders.player").replace("%player%",player.getName()));
                     player.playSound(player.getLocation(),Sound.ENTITY_CAT_AMBIENT,100,1);
-                    if (PlotManager.getInstance().getDevPlot(player) != null) return;
-                    player.setGameMode(GameMode.CREATIVE);
+                    if (PlotManager.getInstance().getDevPlot(player) == null) {
+                        player.setGameMode(GameMode.CREATIVE);
+                    }
                 }
             }
         }
@@ -312,5 +343,23 @@ public class PlotPlayers {
         return allPlayers;
     }
 
+    public Set<String> getBuildersTrusted() {
+        return new HashSet<>(buildersTrusted);
+    }
 
+    public Set<String> getBuildersNotTrusted() {
+        return new HashSet<>(buildersNotTrusted);
+    }
+
+    public Set<String> getDevelopersGuests() {
+        return new HashSet<>(developersGuests);
+    }
+
+    public Set<String> getDevelopersTrusted() {
+        return new HashSet<>(developersTrusted);
+    }
+
+    public Set<String> getDevelopersNotTrusted() {
+        return new HashSet<>(developersNotTrusted);
+    }
 }
