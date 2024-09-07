@@ -38,12 +38,16 @@ import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.ItemUtils.getWorldIdKey;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 
+/**
+ * This class represents a menu, that displays specified list of worlds.
+ * Player can sort worlds and change pages.
+ */
 public class WorldsBrowserMenu extends AbstractListMenu {
 
     private final List<Plot> plots;
     private final List<ParameterButton> buttons = new ArrayList<>();
-
     private final ItemStack RECOMMENDED = createItem(Material.WIND_CHARGE,1,"menus.all-worlds.items.recommended");
+    private byte sortType = 1;
 
     public WorldsBrowserMenu(Player player, List<Plot> plots) {
         super(getLocaleMessage("menus.all-worlds.title",false), player);
@@ -101,12 +105,8 @@ public class WorldsBrowserMenu extends AbstractListMenu {
             if (itemEquals(item,button.getItem(true))) {
                 if (event.getRawSlot() == 50) {
                     button.next();
-                    Comparator<Object> plotComparator = switch (button.getCurrentChoice()) {
-                        case 2 -> (plot1, plot2) -> Integer.compare(((Plot) plot2).getReputation(), ((Plot) plot1).getReputation());
-                        case 3 -> (plot1, plot2) -> Long.compare(((Plot) plot2).getCreationTime(), ((Plot) plot1).getCreationTime());
-                        default -> (plot1, plot2) -> Integer.compare(((Plot) plot2).getOnline(), ((Plot) plot1).getOnline());
-                    };
-                    elements.sort(plotComparator);
+                    sortType = button.getCurrentChoice();
+                    sortElements();
                     fillElements(getCurrentPage());
                     fillArrowsItems(getCurrentPage());
                     setItem((byte) 50, button.getItem());
@@ -120,6 +120,7 @@ public class WorldsBrowserMenu extends AbstractListMenu {
                     } else {
                         elements.addAll(new ArrayList<>(plots).stream().filter(plot -> plot.getInformation().getCategory().name().equalsIgnoreCase(button.getCurrentValue().toString())).toList());
                     }
+                    sortElements();
                     fillElements(getCurrentPage());
                     fillArrowsItems(getCurrentPage());
                     setItem((byte) 48, button.getItem());
@@ -173,6 +174,15 @@ public class WorldsBrowserMenu extends AbstractListMenu {
         }
     }
 
+    private void sortElements() {
+        Comparator<Object> plotComparator = switch (sortType) {
+            case 2 -> (plot1, plot2) -> Integer.compare(((Plot) plot2).getReputation(), ((Plot) plot1).getReputation());
+            case 3 -> (plot1, plot2) -> Long.compare(((Plot) plot2).getCreationTime(), ((Plot) plot1).getCreationTime());
+            default -> (plot1, plot2) -> Integer.compare(((Plot) plot2).getOnline(), ((Plot) plot1).getOnline());
+        };
+        elements.sort(plotComparator);
+    }
+
     @Override
     protected List<Object> getElements() {
         return new ArrayList<>(plots);
@@ -198,8 +208,4 @@ public class WorldsBrowserMenu extends AbstractListMenu {
         player.playSound(player.getLocation(),Sound.BLOCK_VAULT_ACTIVATE,100,1);
     }
 
-    @Override
-    public void onClose(InventoryCloseEvent event) {
-
-    }
 }

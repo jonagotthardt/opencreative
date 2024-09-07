@@ -79,7 +79,4 @@ public class TargetSelectionMenu extends AbstractMenu {
 
     @Override
     public void onOpen(InventoryOpenEvent event) {}
-
-    @Override
-    public void onClose(InventoryCloseEvent event) {}
 }

@@ -120,7 +120,4 @@ public class RecommendedWorldsMenu extends AbstractMenu {
     public void onOpen(InventoryOpenEvent event) {
         ((Player) event.getPlayer()).playSound(event.getPlayer().getLocation(),Sound.BLOCK_ENDER_CHEST_OPEN,100,0.1F);
     }
-
-    @Override
-    public void onClose(InventoryCloseEvent event) {}
 }

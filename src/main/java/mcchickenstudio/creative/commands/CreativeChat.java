@@ -50,57 +50,58 @@ public class CreativeChat implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        if (Main.maintenance && !sender.hasPermission("creative.maintenance.bypass")) {
+            sender.sendMessage(getLocaleMessage("maintenance"));
+            return true;
+        }
+        if (!chatEnabled && !sender.hasPermission("creative.creative-chat.bypass")) {
+            sender.sendMessage(getLocaleMessage("creative.creative-chat.off"));
+            return true;
+        }
+        if (args.length == 0) {
+            sender.sendMessage(getLocaleMessage("creative-chat.cc-usage"));
+            return true;
+        }
         if (sender instanceof Player player) {
-            if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
-                player.sendMessage(getLocaleMessage("maintenance"));
+            if (creativeChatOff.contains(player)) {
+                sender.sendMessage(getLocaleMessage("creative-chat.on-usage"));
                 return true;
             }
-            if (!chatEnabled && !player.hasPermission("creative.creative-chat.bypass")) {
-                player.sendMessage(getLocaleMessage("creative.creative-chat.off"));
+            if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
+                sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
                 return true;
             }
-            if (args.length > 0) {
-                if (args.length == 1 && (args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("on"))) {
-                    if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-                        sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
-                        return true;
-                    }
-                    if (args[0].equalsIgnoreCase("off")) {
-                        creativeChatOff.add(player);
-                        sender.sendMessage(getLocaleMessage("creative-chat.turned-off"));
-                    } else if (args[0].equalsIgnoreCase("on")) {
-                        creativeChatOff.remove(player);
-                        sender.sendMessage(getLocaleMessage("creative-chat.turned-on"));
-                    }
-                    setCooldown(player, Main.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
-                } else {
-                    if (creativeChatOff.contains(player)) {
-                        sender.sendMessage(getLocaleMessage("creative-chat.on-usage"));
-                    } else {
-                        if (getCooldown(player, CooldownUtils.CooldownType.CREATIVE_CHAT) > 0) {
-                            sender.sendMessage(getLocaleMessage("creative-chat.cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.CREATIVE_CHAT))));
-                            return true;
-                        }
-                        setCooldown(player, Main.getPlugin().getConfig().getInt("cooldowns.creative-chat"), CooldownUtils.CooldownType.CREATIVE_CHAT);
-                        Main.getPlugin().getLogger().info("[CREATIVE-CHAT] "+sender.getName()+": "+String.join(" ",args));
-                        for (String executeCommand : Main.getPlugin().getConfig().getStringList("execute-console-commands.creative-chat")) {
-                            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),parsePAPI(player,executeCommand.replace("%player%",player.getName()).replace("%message%",String.join(" ",args))));
-                        }
-                        for (Player p : Bukkit.getOnlinePlayers()) {
-                            if (!(creativeChatOff.contains(p))) {
-                                if (Main.getPlugin().getConfig().getString("messages.cc-chat") != null)
-                                    p.sendMessage(ChatColor.translateAlternateColorCodes('&',parsePAPI(Bukkit.getPlayer(sender.getName()),Main.getPlugin().getConfig().getString("messages.cc-chat")).replace("%player%",sender.getName()).replace("%cc-prefix%",Main.getPlugin().getConfig().getString("messages.cc-prefix")).replace("%message%",String.join(" ",args))));
-                                } else {
-                                    sendWarningErrorMessage("Не найдено в конфиге значение messages.cc-prefix messages.cc-chat");
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-            } else {
-                sender.sendMessage(getLocaleMessage("creative-chat.cc-usage"));
+            setCooldown(player, Main.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
+        }
+        if (args.length == 1 && (args[0].equalsIgnoreCase("off")
+                || args[0].equalsIgnoreCase("on")
+                || args[0].equalsIgnoreCase("enable")
+                || args[0].equalsIgnoreCase("disable"))
+                && sender instanceof Player player) {
+            if (args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("disable")) {
+                creativeChatOff.add(player);
+                sender.sendMessage(getLocaleMessage("creative-chat.turned-off"));
+            } else if (args[0].equalsIgnoreCase("on") || args[0].equalsIgnoreCase("enable")) {
+                creativeChatOff.remove(player);
+                sender.sendMessage(getLocaleMessage("creative-chat.turned-on"));
             }
+            return true;
+        }
+        Main.getPlugin().getLogger().info("[CREATIVE-CHAT] "+sender.getName()+": "+String.join(" ",args));
+        for (String executeCommand : Main.getPlugin().getConfig().getStringList("execute-console-commands.creative-chat")) {
+            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),parsePAPI(Bukkit.getOfflinePlayer(sender.getName()),executeCommand.replace("%player%",sender.getName()).replace("%message%",String.join(" ",args))));
+        }
+        String formattedMessage = Main.getPlugin().getConfig().getString("messages.cc-chat","&6%cc-prefix% &7%player%: %message%");
+        formattedMessage = formattedMessage.replace("%message%",String.join(" ",args));
+        formattedMessage = formattedMessage.replace("%player%",sender.getName());
+        formattedMessage = formattedMessage.replace("%cc-prefix%",Main.getPlugin().getConfig().getString("messages.cc-prefix","&6 Chat &8| &7"));
+        formattedMessage = parsePAPI(Bukkit.getOfflinePlayer(sender.getName()),formattedMessage);
+        formattedMessage = ChatColor.translateAlternateColorCodes('&',formattedMessage);
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            if (!(creativeChatOff.contains(onlinePlayer))) {
+                onlinePlayer.sendMessage(formattedMessage);
+            }
+        }
         return true;
     }
 }

@@ -28,8 +28,8 @@ import org.bukkit.Location;
 import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
 
-public class SetWorldBorderAction extends PlayerAction {
-    public SetWorldBorderAction(Executor executor, Target target, int x, Arguments args) {
+public class PlayerSetWorldBorderAction extends PlayerAction {
+    public PlayerSetWorldBorderAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 

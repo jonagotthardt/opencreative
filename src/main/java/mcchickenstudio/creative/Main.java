@@ -62,6 +62,11 @@ import java.util.Map;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 
+/**
+ * This class represents OpenCreative+ java plugin for PaperMC.
+ * Only for loading, enabling and disabling plugin. Contains
+ * general information about plugin's version and codename.
+ */
 public final class Main extends JavaPlugin {
 
     private static Main plugin;
@@ -172,6 +177,9 @@ public final class Main extends JavaPlugin {
         }
     }
 
+    /**
+     * Registers commands and their tab completer in server.
+     */
     private void registerCommands() {
         this.getLogger().info("Registering OpenCreative+ commands...");
         Map<String,Class<? extends CommandExecutor>> commands = new HashMap<>();
@@ -218,6 +226,9 @@ public final class Main extends JavaPlugin {
         this.getLogger().info("OpenCreative+ registered all " + commands.size() + " commands.");
     }
 
+    /**
+     * Registers event listeners in server.
+     */
     private void registerEvents() {
         this.getLogger().info("Registering OpenCreative+ event listeners...");
         getServer().getPluginManager().registerEvents(new ChangedWorld(), this);

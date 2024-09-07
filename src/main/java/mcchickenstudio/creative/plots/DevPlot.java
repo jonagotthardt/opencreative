@@ -21,13 +21,14 @@ package mcchickenstudio.creative.plots;
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
+import mcchickenstudio.creative.coding.menus.CodingBlockTypesMenu;
+import mcchickenstudio.creative.coding.menus.layouts.Layout;
 import mcchickenstudio.creative.utils.PlayerUtils;
 import org.bukkit.*;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.util.*;
@@ -35,6 +36,18 @@ import java.util.*;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static mcchickenstudio.creative.utils.FileUtils.*;
 
+/**
+ * <h1>DevPlot</h1>
+ * This class represents developer's world, where players
+ * can edit and change code with blocks on platform.
+ * <p>
+ * Platform consists of white, blue and gray stained glass
+ * and it can't be destroyed. Players can place chests,
+ * shulkers, signs and anvils on white stained glass.
+ * On blue stained glass players should place executor blocks,
+ * on gray stained glass - actions and conditions.
+ * </p>
+ */
 public class DevPlot {
 
     private final Plot linkedPlot;
@@ -45,9 +58,9 @@ public class DevPlot {
     public final Material eventBlockMaterial;
     public final Material actionBlockMaterial;
 
-    static final Plugin plugin = Main.getPlugin();
-
     public final Map<Player, Location> lastLocations = new HashMap<>();
+    private final Map<Location, Layout> openedBlocksMenus = new HashMap<>();
+
     public static final List<DevPlot> devPlots = new ArrayList<>();
     private boolean isLoaded;
 
@@ -92,7 +105,7 @@ public class DevPlot {
 
     public void create() {
 
-        File template = new File(plugin.getDataFolder() + File.separator + "templates" + File.separator + "devWorld" + File.separator);
+        File template = new File(Main.getPlugin().getDataFolder() + File.separator + "templates" + File.separator + "devWorld" + File.separator);
         File devWorldFolder = new File(Bukkit.getServer().getWorldContainer() + File.separator + this.worldName + File.separator);
         createCodeScript(devWorldFolder.getPath(),worldName);
         copyFilesToDirectory(template, devWorldFolder);
@@ -226,5 +239,17 @@ public class DevPlot {
 
     public Plot getLinkedPlot() {
         return linkedPlot;
+    }
+
+    public Layout getOpenedMenu(Location location) {
+        return openedBlocksMenus.get(location);
+    }
+
+    public void registerOpenedMenu(Location location, Layout menu) {
+        openedBlocksMenus.put(location,menu);
+    }
+
+    public void unregisterOpenedMenu(Location location) {
+        openedBlocksMenus.remove(location);
     }
 }

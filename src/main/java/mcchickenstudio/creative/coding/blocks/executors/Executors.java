@@ -39,8 +39,8 @@ import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 /**
  * <h1>Executors</h1>
  * This class represents Executors in every plot code script.
- * @since 1.5
- * @version 1.5
+ * @since 5.0
+ * @version 5.0
  * @author McChicken Studio
  */
 public class Executors {

@@ -25,6 +25,7 @@ import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.variables.VariableLink;
 import mcchickenstudio.creative.plots.Plot;
+import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -48,6 +49,7 @@ public class ActionsHandler {
     private final EventValues variables;
     private final Action action;
 
+    private final Set<Entity> selectedTargets;
     private final ActionsHandler parentActionsHandler;
     private final Queue<Action> actionsQueue = new LinkedList<>();
     private final boolean doNotUseTryFlag;
@@ -62,6 +64,7 @@ public class ActionsHandler {
         for (EventValues.Variable var : oldVars.keySet()) {
             this.variables.setVariable(var,oldVars.get(var));
         }
+        this.selectedTargets = new HashSet<>(event.getSelection());
         this.parentActionsHandler = null;
         this.action = null;
         this.doNotUseTryFlag = false;
@@ -74,6 +77,7 @@ public class ActionsHandler {
         this.event = mainHandler.event;
         this.variables = mainHandler.variables;
         this.action = action;
+        this.selectedTargets = new HashSet<>(parentActionsHandler.selectedTargets);
         /*if (action.getActionType() == ActionType.HANDLER_CATCH_ERROR) {
             this.doNotUseTryFlag = true;
         } else {*/
@@ -226,5 +230,9 @@ public class ActionsHandler {
     @Override
     public String toString() {
         return "ActionsHandler. Plot: " + executor.getPlot() + " WaitDelay: " + waitDelay + " Stopped: " + stopped + " Queue Size: " + actionsQueue.size();
+    }
+
+    public Set<Entity> getSelectedTargets() {
+        return selectedTargets;
     }
 }

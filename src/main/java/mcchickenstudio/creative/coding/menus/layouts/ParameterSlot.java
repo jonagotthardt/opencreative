@@ -25,6 +25,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This class represents a Parameter slot, that can be added in actions.
+ * It's used in layouts as button, that player can click, and it will change value.
+ * With this players can just select parameter value instead of putting tems in chest.
+ * @see ArgumentSlot
+ */
 public class ParameterSlot extends ArgumentSlot {
 
     private final List<Object> values = new ArrayList<>();

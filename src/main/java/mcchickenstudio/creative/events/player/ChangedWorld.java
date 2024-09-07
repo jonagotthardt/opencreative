@@ -169,6 +169,8 @@ public class ChangedWorld implements Listener {
                 if (newPlot.getFlagValue(PlotFlags.PlotFlag.JOIN_MESSAGES) == 1) {
                     for (Player onlinePlayer : newPlot.getPlayers()) {
                         onlinePlayer.sendMessage(getLocaleMessage("world.joined", player));
+                        onlinePlayer.showPlayer(player);
+                        player.showPlayer(onlinePlayer);
                     }
                 }
                 new BukkitRunnable() {

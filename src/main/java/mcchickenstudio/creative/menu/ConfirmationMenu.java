@@ -80,8 +80,4 @@ public class ConfirmationMenu extends AbstractMenu{
             player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_RESONATE,100,0.5f);
         }
     }
-
-    @Override
-    public void onClose(InventoryCloseEvent event) {
-    }
 }

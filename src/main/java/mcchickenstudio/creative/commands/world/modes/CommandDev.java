@@ -77,20 +77,16 @@ public class CommandDev implements CommandExecutor {
                 return true;
             }
             setCooldown(player, Main.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
-
-            List<String> trustedDevelopers = FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_TRUSTED);
-            List<String> notTrustedDevelopers = FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED);
-
             if (args.length == 0 || args.length == 3) {
                 if (plot.getWorldPlayers().canDevelop(player) || plot.getWorldPlayers().isDeveloperGuest(player)) {
-                    Player plotOwner = Bukkit.getPlayer(plot.getOwner());
-                    if (plot.getWorldPlayers().isDeveloperGuest(player)) {
+                    if (!plot.getWorldPlayers().isTrustedDeveloper(player)) {
+                        Player plotOwner = Bukkit.getPlayer(plot.getOwner());
                         if (plotOwner == null) {
                             sender.sendMessage(getLocaleMessage("world.dev-mode.cant-dev-when-offline"));
                             return true;
                         }
                         Plot ownerPlot = PlotManager.getInstance().getPlotByPlayer(plotOwner);
-                        if (!(ownerPlot == plot)) {
+                        if (!plot.equals(ownerPlot)) {
                             sender.sendMessage(getLocaleMessage("world.dev-mode.cant-dev-when-offline"));
                             return true;
                         }
@@ -112,7 +108,6 @@ public class CommandDev implements CommandExecutor {
                     } else {
                         plot.connectToDevPlot(player);
                     }
-
                     if (plot.getWorldPlayers().isDeveloperGuest(player)) {
                         player.setGameMode(GameMode.ADVENTURE);
                     } else {
@@ -135,33 +130,49 @@ public class CommandDev implements CommandExecutor {
                     sender.sendMessage(getLocaleMessage("not-owner", player));
                 }
             } else {
-                if (!plot.getOwner().equalsIgnoreCase(sender.getName())) {
+                if (!plot.isOwner(sender.getName())) {
                     sender.sendMessage(getLocaleMessage("not-owner"));
                     return true;
                 }
-                if (plot.getOwner().equalsIgnoreCase(args[0])) {
+                String nickname = args[0];
+                Player onlinePlayer = Bukkit.getPlayer(nickname);
+                if (!plot.getWorldPlayers().getAllDevelopers().contains(nickname)) {
+                    if (onlinePlayer != null) {
+                        nickname = onlinePlayer.getName();
+                    }
+                }
+                if (plot.isOwner(nickname)) {
                     sender.sendMessage(getLocaleMessage("same-player"));
                     return true;
                 }
-                if (notTrustedDevelopers.contains(args[0])) {
-                    plot.getWorldPlayers().addBuilder(args[0], true);
-                    sender.sendMessage(getLocaleMessage("world.players.developers.trusted").replace("%player%", args[0]));
-                } else if (trustedDevelopers.contains(args[0])) {
-                    plot.getWorldPlayers().removeBuilder(args[0]);
-                    sender.sendMessage(getLocaleMessage("world.players.developers.removed").replace("%player%", args[0]));
-                } else {
-                    Player addedPlayer = Bukkit.getPlayer(args[0]);
-                    if (addedPlayer != null && addedPlayer != player) {
-                        Plot plot1 = PlotManager.getInstance().getPlotByPlayer(addedPlayer);
-                        if (plot == plot1) {
-                            sender.sendMessage(getLocaleMessage("world.players.developers.added").replace("%player%", addedPlayer.getName()));
-                            plot.getWorldPlayers().addDeveloper(addedPlayer.getName(), false);
-                        } else {
-                            sender.sendMessage(getLocaleMessage("no-player-found"));
-                        }
+                /*
+                 * Checks if player's name contains in not trusted
+                 * or trusted developers.
+                 */
+                if (plot.getWorldPlayers().getDevelopersNotTrusted().contains(nickname)) {
+                    plot.getWorldPlayers().addDeveloper(nickname,true);
+                    sender.sendMessage(getLocaleMessage("world.players.developers.trusted").replace("%player%", nickname));
+                    return true;
+                }
+                if (plot.getWorldPlayers().getDevelopersTrusted().contains(nickname)) {
+                    plot.getWorldPlayers().removeDeveloper(nickname);
+                    sender.sendMessage(getLocaleMessage("world.players.developers.removed").replace("%player%", nickname));
+                    return true;
+                }
+                /*
+                 * Adds online player as not trusted developers, if he's not
+                 * listed in developers.
+                 */
+                if (onlinePlayer != null) {
+                    Plot playerPlot = PlotManager.getInstance().getPlotByPlayer(onlinePlayer);
+                    if (plot.equals(playerPlot)) {
+                        sender.sendMessage(getLocaleMessage("world.players.developers.added").replace("%player%", onlinePlayer.getName()));
+                        plot.getWorldPlayers().addDeveloper(onlinePlayer.getName(),false);
                     } else {
                         sender.sendMessage(getLocaleMessage("no-player-found"));
                     }
+                } else {
+                    sender.sendMessage(getLocaleMessage("no-player-found"));
                 }
             }
         }

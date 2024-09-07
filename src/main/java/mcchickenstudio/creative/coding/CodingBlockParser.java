@@ -54,6 +54,10 @@ import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
  */
 public class CodingBlockParser {
 
+    /**
+     * Checks every coding block on coding platform in developer's plot and saves them into codeScript.yml.
+     * @param devPlot Developer's plot to check blocks.
+     */
     public void parseCode(DevPlot devPlot) {
 
         World world = devPlot.world;
@@ -140,11 +144,6 @@ public class CodingBlockParser {
                          * handle and save every item into list.
                          */
                         if (argSlot.isList()) {
-                            // slot = 0,
-                            // with items = 0, 1, 2
-                            //
-                            // i = 1, i < 10
-                            //
                             script.saveArguments(multiActions,actionBlock,argSlot.getPath(),null, ValueType.LIST);
                             for (byte i = 1; i < argSlot.getListSize()+1; i++) {
                                 if (slot < content.length) {
