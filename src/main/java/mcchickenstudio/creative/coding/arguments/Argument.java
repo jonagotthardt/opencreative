@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.coding.arguments;
 
 import mcchickenstudio.creative.coding.blocks.actions.Action;
+import mcchickenstudio.creative.coding.blocks.actions.ActionsHandler;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.placeholders.Placeholders;
 import mcchickenstudio.creative.coding.variables.EventValueLink;
@@ -57,7 +58,7 @@ public class Argument {
 
     public Object getValue(Action action) {
         if (value instanceof VariableLink link) {
-            link.setName(parseEntity(link.getName(),action));
+            link.setName(parseEntity(link.getName(),action.getHandler().getMainActionHandler()));
             link.setHandler(action.getHandler().getMainActionHandler());
             Object variableValue = plot.getWorldVariables().getVariableValue(link);
             if (variableValue != null) {
@@ -70,7 +71,7 @@ public class Argument {
                 return value;
             }
         } else if (value instanceof String string) {
-            return parseEntity(string,action);
+            return parseEntity(string,action.getHandler().getMainActionHandler());
         }
         return value;
     }
@@ -162,7 +163,7 @@ public class Argument {
         }
     }
 
-    public static String parseEntity(String text, Action action) {
+    public static String parseEntity(String text, ActionsHandler action) {
         return Placeholders.getInstance().parseAction(text,action);
     }
 

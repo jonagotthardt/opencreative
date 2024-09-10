@@ -240,7 +240,7 @@ public class Arguments {
                         if (link.getVariableType() == VariableLink.VariableType.LOCAL) {
                             link.setHandler(action.getHandler().getMainActionHandler());
                         }
-                        link.setName(parseEntity(link.getName(),action));
+                        link.setName(parseEntity(link.getName(),action.getHandler().getMainActionHandler()));
                         list.add(link);
                     }
                 }
@@ -260,7 +260,7 @@ public class Arguments {
             try {
                 List<Argument> args = (List<Argument>) arg.getValue(action);
                 for (Argument textArg : args) {
-                    list.add(Argument.parseEntity(textArg.getValue(action).toString(),action));
+                    list.add(Argument.parseEntity(textArg.getValue(action).toString(),action.getHandler().getMainActionHandler()));
                 }
             } catch (ClassCastException e) {
                 return list;
@@ -340,7 +340,7 @@ public class Arguments {
             if (link.getVariableType() == VariableLink.VariableType.LOCAL) {
                 link.setHandler(action.getHandler().getMainActionHandler());
             }
-            link.setName(parseEntity(link.getName(),action));
+            link.setName(parseEntity(link.getName(),action.getHandler().getMainActionHandler()));
             sendCodingDebugVariable(plot,path,link);
             return link;
         }

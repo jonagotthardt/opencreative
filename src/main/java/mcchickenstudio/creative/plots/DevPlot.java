@@ -21,7 +21,6 @@ package mcchickenstudio.creative.plots;
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
-import mcchickenstudio.creative.coding.menus.CodingBlockTypesMenu;
 import mcchickenstudio.creative.coding.menus.layouts.Layout;
 import mcchickenstudio.creative.utils.PlayerUtils;
 import org.bukkit.*;
@@ -237,7 +236,7 @@ public class DevPlot {
         isLoaded = loaded;
     }
 
-    public Plot getLinkedPlot() {
+    public Plot getPlot() {
         return linkedPlot;
     }
 

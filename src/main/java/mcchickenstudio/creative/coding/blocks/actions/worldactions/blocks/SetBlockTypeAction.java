@@ -54,7 +54,15 @@ public class SetBlockTypeAction extends WorldAction {
                 getPlot().removeBukkitRunnable(runnable);
                 return;
             }
-            location.getBlock().setType(material);
+            material = switch (material) {
+                case WATER_BUCKET -> Material.WATER;
+                case LAVA_BUCKET -> Material.LAVA;
+                case POWDER_SNOW_BUCKET -> Material.POWDER_SNOW;
+                default -> material;
+            };
+            if (material.isBlock()) {
+                location.getBlock().setType(material);
+            }
             getPlot().lastModifiedBlocksAmount++;
         }
         runnable.runTaskLater(Main.getPlugin(),20L);

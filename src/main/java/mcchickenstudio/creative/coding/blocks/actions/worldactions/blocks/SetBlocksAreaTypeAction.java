@@ -66,7 +66,15 @@ public class SetBlocksAreaTypeAction extends WorldAction {
                     }
                     getPlot().lastModifiedBlocksAmount++;
                     Block block = getWorld().getBlockAt(x,y,z);
-                    block.setType(type);
+                    type = switch (type) {
+                        case WATER_BUCKET -> Material.WATER;
+                        case LAVA_BUCKET -> Material.LAVA;
+                        case POWDER_SNOW_BUCKET -> Material.POWDER_SNOW;
+                        default -> type;
+                    };
+                    if (type.isBlock()) {
+                        block.setType(type);
+                    }
                 }
             }
         }

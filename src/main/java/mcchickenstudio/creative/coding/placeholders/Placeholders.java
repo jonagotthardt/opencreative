@@ -16,27 +16,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/*
- * OpenCreative+, Minecraft plugin.
- * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
- *
- * OpenCreative+ is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * OpenCreative+ is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- */
-
 package mcchickenstudio.creative.coding.placeholders;
 
-import mcchickenstudio.creative.coding.blocks.actions.Action;
+import mcchickenstudio.creative.coding.blocks.actions.ActionsHandler;
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamagesMobEvent;
 import mcchickenstudio.creative.plots.Plot;
@@ -59,30 +41,30 @@ public class Placeholders {
         return instance;
     }
 
-    public String parseAction(String text, Action action) {
-        String result = parseEvent(text,action);
+    public String parseAction(String text, ActionsHandler handler) {
+        String result = parseEvent(text,handler);
         result = result.replace("%space%"," ");
         result = result.replace("%empty%","");
         result = result.replace("%new-line%","\n");
         result = result.replace("%nl%","\n");
         result = result.replace("\\n","\n");
-        result = parseWorld(result,action);
+        result = parseWorld(result,handler);
         if (result.contains("%random")) {
-            result = parseRandom(text,action);
+            result = parseRandom(text,handler);
         }
         if (result.contains("%player")) {
-            result = parsePlayer(text,action);
+            result = parsePlayer(text,handler);
         }
         if (result.contains("%entity")) {
-            result = parseEntity(text,action);
+            result = parseEntity(text,handler);
         }
         return result;
     }
 
-    private String parseRandom(String text, Action action) {
+    private String parseRandom(String text, ActionsHandler handler) {
         Player randomPlayer = null;
-        List<Player> playerList = action.getExecutor().getPlot().getPlayers();
-        if (action.getEntity() instanceof Player player) {
+        List<Player> playerList = handler.getExecutor().getPlot().getPlayers();
+        if (handler.getEvent().getSelection().getFirst() instanceof Player player) {
             playerList.remove(player);
             if (playerList.isEmpty()) {
                 randomPlayer = player;
@@ -99,8 +81,8 @@ public class Placeholders {
         return text;
     }
 
-    private String parseEvent(String text, Action action) {
-        CreativeEvent creativeEvent = action.getEvent();
+    private String parseEvent(String text, ActionsHandler handler) {
+        CreativeEvent creativeEvent = handler.getEvent();
         if (creativeEvent instanceof PlayerDamagesMobEvent event) {
             text = text
                     .replace("%damager%",event.getDamager().getName())
@@ -112,8 +94,8 @@ public class Placeholders {
         return text;
     }
 
-    private String parseWorld(String text, Action action) {
-        Plot plot = action.getExecutor().getPlot();
+    private String parseWorld(String text, ActionsHandler handler) {
+        Plot plot = handler.getExecutor().getPlot();
         text = text
                 .replace("%online%", String.valueOf(Bukkit.getOnlinePlayers().size()))
                 .replace("%players_amount%", String.valueOf(plot.getPlayers().size()))
@@ -121,8 +103,8 @@ public class Placeholders {
         return text;
     }
 
-    private String parsePlayer(String text, Action action) {
-        if (action.getHandler().getEvent().getSelection().getFirst() instanceof Player player) {
+    private String parsePlayer(String text, ActionsHandler handler) {
+        if (handler.getEvent().getSelection().getFirst() instanceof Player player) {
             text = text
                     .replace("%player%",player.getName())
                     .replace("%player_uuid%",player.getUniqueId().toString())
@@ -131,8 +113,8 @@ public class Placeholders {
         return text;
     }
 
-    private String parseEntity(String text, Action action) {
-        if (action.getHandler().getEvent().getSelection().getFirst() instanceof Entity entity) {
+    private String parseEntity(String text, ActionsHandler handler) {
+        if (handler.getEvent().getSelection().getFirst() instanceof Entity entity) {
             text = text
                     .replace("%entity%", entity.getName())
                     .replace("%entity_uuid%", entity.getUniqueId().toString());
