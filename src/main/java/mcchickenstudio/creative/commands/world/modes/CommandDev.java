@@ -16,24 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/*
- * OpenCreative+, Minecraft plugin.
- * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
- *
- * OpenCreative+ is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * OpenCreative+ is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- */
-
 package mcchickenstudio.creative.commands.world.modes;
 
 import mcchickenstudio.creative.Main;
@@ -55,6 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
+import static mcchickenstudio.creative.utils.ItemUtils.itemEquals;
 import static mcchickenstudio.creative.utils.PlayerUtils.clearPlayer;
 
 import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
@@ -114,15 +97,17 @@ public class CommandDev implements CommandExecutor {
                         player.setGameMode(GameMode.CREATIVE);
                         player.setFlying(true);
                     }
-                    if (plot.isOwner(player)) {
-                        player.getInventory().setItem(8, createItem(Material.COMPASS,1,"items.developer.world-settings"));
-                    }
                     giveItems(player);
+                    ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
+                    if (plot.isOwner(player)) {
+                        player.getInventory().setItem(8, worldSettingsItem);
+                    }
                     for (ItemStack item : playerInventoryItems) {
-                        if (item != null) {
+                        if (item != null && !itemEquals(item,worldSettingsItem)) {
                             player.getInventory().addItem(item);
                         }
                     }
+
                     player.sendTitle(getLocaleMessage("world.dev-mode.title"), getLocaleMessage("world.dev-mode.subtitle"));
                     player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 100, 1.3f);
 
@@ -231,7 +216,6 @@ public class CommandDev implements CommandExecutor {
         bookMeta.setPages(getBookPages("items.developer.coding-book.pages"));
         bookHelperItem.setItemMeta(bookMeta);
         player.getInventory().setItem(slot == 8 ? slot-2 : 17, bookHelperItem);
-
 
         ItemStack flySpeedChangerItem = createItem(Material.FEATHER,1,"items.developer.fly-speed-changer");
         player.getInventory().setItem(slot-1, flySpeedChangerItem);

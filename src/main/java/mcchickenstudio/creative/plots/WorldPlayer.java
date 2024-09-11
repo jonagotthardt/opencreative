@@ -18,7 +18,9 @@
 
 package mcchickenstudio.creative.plots;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
@@ -36,6 +38,12 @@ import java.util.*;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static mcchickenstudio.creative.utils.FileUtils.getPlayerDataJson;
 
+/**
+ * <h1>WorldPlayer</h1>
+ * This class represents a Player in plot, he has saved purchases,
+ * inventory, own ender chest and other required parameters.
+ * Saved data stores in plot's world as /playersData/UUID.json.
+ */
 public class WorldPlayer {
 
     private final Plot currentPlot;
@@ -44,6 +52,8 @@ public class WorldPlayer {
     private final Set<String> purchases = new HashSet<>();
     private final ItemStack[] savedInventory = new ItemStack[41];
     private final ItemStack[] savedEnderChest = new ItemStack[54];
+
+    private final Map<Location, BlockData> codingBlocksBuffer = new HashMap<>();
 
     public WorldPlayer(Plot currentPlot, Player player) {
         this.currentPlot = currentPlot;
@@ -54,6 +64,10 @@ public class WorldPlayer {
         return currentPlot;
     }
 
+    /**
+     * Returns Bukkit's player.
+     * @return World player as Bukkit's player.
+     */
     public Player getPlayer() {
         return player;
     }
@@ -62,6 +76,11 @@ public class WorldPlayer {
         return savedInventory;
     }
 
+    /**
+     * Saves items array as inventory.
+     * Used in player action "Save Inventory".
+     * @param items Array of ItemStacks to save.
+     */
     public void saveInventory(ItemStack[] items) {
         Arrays.fill(savedInventory, new ItemStack(Material.AIR));
         int slot = 0;
@@ -71,6 +90,11 @@ public class WorldPlayer {
         }
     }
 
+    /**
+     * Saves items array as items in ender chest.
+     * Used for saving player's own ender chest.
+     * @param items Array of ItemStacks to save.
+     */
     public void saveEnderChest(ItemStack[] items) {
         Arrays.fill(savedEnderChest, null);
         int slot = 0;
@@ -80,14 +104,19 @@ public class WorldPlayer {
         }
     }
 
+    /**
+     * Loads saved player data from JSON file, that
+     * stored in plot's folder as /playerData/UUID.json.
+     * @return True - if successfully loaded, false - if failed to load.
+     */
     @SuppressWarnings("unchecked")
-    public void load() {
+    public boolean load() {
         File playerDataJson = getPlayerDataJson(currentPlot,player);
         if (playerDataJson == null) {
-            return;
+            return false;
         }
         if (playerDataJson.length() == 0) {
-            return;
+            return true;
         }
         JSONParser parser = new JSONParser();
         try (FileReader fileReader = new FileReader(playerDataJson)) {
@@ -116,16 +145,23 @@ public class WorldPlayer {
                 }
                 saveEnderChest(items.toArray(new ItemStack[]{}));
             }
+            return true;
         } catch (Exception e) {
             sendCriticalErrorMessage("Couldn't read player data " + player.getName() + " " + currentPlot.worldName);
+            return false;
         }
     }
 
+    /**
+     * Saves some required player data into JSON file
+     * in plot's folder as /playerData/UUID.json.
+     * @return True - if successfully saved, false - if failed to save.
+     */
     @SuppressWarnings("unchecked")
-    public void save() {
+    public boolean save() {
         File playerDataJson = getPlayerDataJson(currentPlot,player);
         if (playerDataJson == null) {
-            return;
+            return false;
         }
         try {
             Files.newBufferedWriter(playerDataJson.toPath() , StandardOpenOption.TRUNCATE_EXISTING);
@@ -158,15 +194,34 @@ public class WorldPlayer {
 
             writer.write(playerObject.toString());
             writer.close();
+            return true;
         } catch (Exception e) {
             sendCriticalErrorMessage("Couldn't save player data " + player.getName() + " " + currentPlot.worldName,e);
+            return false;
         }
     }
 
+    /**
+     * Returns set of saved purchases IDs.
+     * @return Set of saved purchases IDs.
+     */
     public Set<String> getPurchases() {
         return purchases;
     }
 
+    /**
+     * Returns map of buffered location and block data, that
+     * are used when player copies coding lines in development plot.
+     * @return Map of location and block data of coding blocks.
+     */
+    public Map<Location, BlockData> getCodingBlocksBuffer() {
+        return codingBlocksBuffer;
+    }
+
+    /**
+     * Adds purchase ID into set of saved player's purchases.
+     * @param id ID of purchase.
+     */
     public void addPurchase(String id) {
         purchases.add(id);
     }

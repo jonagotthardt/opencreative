@@ -61,8 +61,8 @@ public class CodingBlockParser {
     public void parseCode(DevPlot devPlot) {
 
         World world = devPlot.world;
-        devPlot.getLinkedPlot().stopBukkitRunnables();
-        CodeScript script = devPlot.getLinkedPlot().getScript();
+        devPlot.getPlot().stopBukkitRunnables();
+        CodeScript script = devPlot.getPlot().getScript();
         script.clear();
 
         List<Block> unknownBlocks = new ArrayList<>();
@@ -123,7 +123,7 @@ public class CodingBlockParser {
                                 String last = multiActions.getLast();
                                 multiActions.remove(last);
                             } else {
-                                sendPlotCompileErrorMessage(devPlot.getLinkedPlot(),world.getBlockAt(x+1,y,z),getLocaleMessage("plot-code-error.bad-piston"));
+                                sendPlotCompileErrorMessage(devPlot.getPlot(),world.getBlockAt(x+1,y,z),getLocaleMessage("plot-code-error.bad-piston"));
                                 continue;
                             }
                         }
@@ -174,10 +174,10 @@ public class CodingBlockParser {
              * Warns world developer about old or unknown
              * coding blocks that were found while parsing.
              */
-            sendPlotCompileErrorMessage(devPlot.getLinkedPlot(),unknownBlocks);
+            sendPlotCompileErrorMessage(devPlot.getPlot(),unknownBlocks);
         }
-        if (devPlot.getLinkedPlot().getScript().saveCode()) {
-            devPlot.getLinkedPlot().getScript().loadCode();
+        if (devPlot.getPlot().getScript().saveCode()) {
+            devPlot.getPlot().getScript().loadCode();
         }
 
     }

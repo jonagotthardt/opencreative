@@ -518,7 +518,6 @@ public class Plot {
         }.runTaskAsynchronously(Main.getPlugin());
     }
 
-    // Телепортировать игрока в мир разработки плота
     public void connectToDevPlot(Player player) {
         player.sendTitle(getLocaleMessage("world.dev-mode.connecting.title"),getLocaleMessage("world.dev-mode.connecting.subtitle"),15,9999,15);
         devPlot.loadDevPlotWorld();
@@ -579,7 +578,9 @@ public class Plot {
 
     public void stopBukkitRunnables() {
         for (BukkitRunnable runnable : runningBukkitRunnables) {
-            runnable.cancel();
+            try {
+                runnable.cancel();
+            } catch (IllegalStateException error) {}
         }
         runningBukkitRunnables.clear();
     }

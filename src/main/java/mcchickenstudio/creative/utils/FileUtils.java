@@ -26,7 +26,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -344,7 +343,7 @@ public class FileUtils {
                 return new File(Bukkit.getServer().getWorldContainer() + File.separator + "unloadedWorlds" + File.separator + devPlot.worldName + File.separator);
             }
         } catch (NullPointerException error) {
-            ErrorUtils.sendPlotErrorMessage(devPlot.getLinkedPlot(),"Папка плота разработчика не обнаружена. " + error.getMessage());
+            ErrorUtils.sendPlotErrorMessage(devPlot.getPlot(),"Папка плота разработчика не обнаружена. " + error.getMessage());
             return null;
         }
     }
@@ -370,7 +369,7 @@ public class FileUtils {
             File file = new File(getDevPlotFolder(plot), "settings.yml");
             return YamlConfiguration.loadConfiguration(file);
         } catch (NullPointerException error) {
-            ErrorUtils.sendPlotErrorMessage(plot.getLinkedPlot(),"Not found settings.yml for development plot :(. " + error.getMessage());
+            ErrorUtils.sendPlotErrorMessage(plot.getPlot(),"Not found settings.yml for development plot :(. " + error.getMessage());
             return null;
         }
     }

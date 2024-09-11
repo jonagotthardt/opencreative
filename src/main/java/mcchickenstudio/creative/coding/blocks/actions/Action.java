@@ -197,7 +197,7 @@ public abstract class Action {
 
     protected void setVarValue(VariableLink link, Object value) {
         if (link != null) {
-            link.setName(parseEntity(link.getName(),this));
+            link.setName(parseEntity(link.getName(),getHandler().getMainActionHandler()));
             link.setHandler(getHandler().getMainActionHandler());
             ValueType type = ValueType.getByObject(value);
             if (type == null) {
