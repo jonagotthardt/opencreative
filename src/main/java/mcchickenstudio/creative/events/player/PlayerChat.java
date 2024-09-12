@@ -22,6 +22,7 @@ import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.menu.world.browsers.WorldsBrowserMenu;
 import mcchickenstudio.creative.menu.world.settings.WorldSettingsPlayersMenu;
+import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
@@ -70,9 +71,27 @@ public class PlayerChat implements Listener {
             player.sendMessage(getLocaleMessage("world.chat-cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.WORLD_CHAT))));
         } else {
             setCooldown(player,Main.getPlugin().getConfig().getInt("cooldowns.world-chat"), CooldownUtils.CooldownType.WORLD_CHAT);
-            for (Player p : player.getWorld().getPlayers()) {
-                p.sendMessage(ChatColor.translateAlternateColorCodes('&',parsePAPI(player,Main.getPlugin().getConfig().getString("messages.world-chat")).replace("%player%",player.getName()).replace("%message%",event.getMessage())));
+            String message = ChatColor.translateAlternateColorCodes('&',parsePAPI(player,Main.getPlugin().getConfig().getString("messages.world-chat")).replace("%player%",player.getName()).replace("%message%",event.getMessage()));
+            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+            if (plot != null) {
+                DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
+                if (devPlot != null) {
+                    for (Player p : plot.getPlayers()) {
+                        if (plot.getWorldPlayers().canDevelop(p)) {
+                            p.sendMessage(message);
+                        }
+                    }
+                } else {
+                    for (Player p : plot.getPlayers()) {
+                        p.sendMessage(message);
+                    }
+                }
+            } else {
+                for (Player p : player.getWorld().getPlayers()) {
+                    p.sendMessage(message);
+                }
             }
+
             Main.getPlugin().getLogger().info("[WORLD-CHAT: "+player.getWorld().getName()+"] "+player.getName()+": "+event.getMessage());
         }
 

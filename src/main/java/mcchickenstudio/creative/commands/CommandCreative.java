@@ -152,17 +152,17 @@ public class CommandCreative implements CommandExecutor {
                     if ("disable".equalsIgnoreCase(args[1])) {
                         CreativeChat.setChatEnabled(false);
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                            onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.disabled",player));
+                            onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.disabled").replace("%player%",sender.getName()));
                         }
                     } else if ("enable".equalsIgnoreCase(args[1])) {
                         CreativeChat.setChatEnabled(true);
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                            onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.enabled",player));
+                            onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.enabled").replace("%player%",sender.getName()));
                         }
                     } if ("clear".equalsIgnoreCase(args[1])) {
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                             onlinePlayer.sendMessage("\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n  \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n ");
-                            onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.cleared",player));
+                            onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.cleared").replace("%player%",sender.getName()));
                         }
                     }
                     break;

@@ -93,21 +93,23 @@ public class CommandDev implements CommandExecutor {
                     }
                     if (plot.getWorldPlayers().isDeveloperGuest(player)) {
                         player.setGameMode(GameMode.ADVENTURE);
+                        player.setAllowFlight(true);
+                        player.setFlying(true);
                     } else {
                         player.setGameMode(GameMode.CREATIVE);
+                        player.setAllowFlight(true);
                         player.setFlying(true);
                     }
-                    giveItems(player);
                     ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
                     if (plot.isOwner(player)) {
                         player.getInventory().setItem(8, worldSettingsItem);
                     }
+                    giveItems(player);
                     for (ItemStack item : playerInventoryItems) {
                         if (item != null && !itemEquals(item,worldSettingsItem)) {
                             player.getInventory().addItem(item);
                         }
                     }
-
                     player.sendTitle(getLocaleMessage("world.dev-mode.title"), getLocaleMessage("world.dev-mode.subtitle"));
                     player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 100, 1.3f);
 

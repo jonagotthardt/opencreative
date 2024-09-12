@@ -175,7 +175,7 @@ public abstract class AbstractListMenu extends AbstractMenu {
             event.setCancelled(true);
             return;
         }
-        if (isElementClicked((byte) event.getSlot()) && isEmpty(event.getCurrentItem())) {
+        if (isElementClicked((byte) event.getSlot()) && isEmpty(event.getCurrentItem()) && !itemEquals(event.getCurrentItem(),getNoElementsButton())) {
             onElementClick(event);
         } else if (itemEquals(event.getCurrentItem(),DECORATION_ITEM)) {
             event.setCancelled(true);

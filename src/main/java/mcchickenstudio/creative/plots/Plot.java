@@ -223,6 +223,7 @@ public class Plot {
 
     public void setPlotMode(Mode mode) {
         this.plotMode = mode;
+        stopBukkitRunnables();
         setPlotConfigParameter(this,"mode",mode);
     }
 

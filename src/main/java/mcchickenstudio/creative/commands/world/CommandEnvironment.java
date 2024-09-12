@@ -127,8 +127,7 @@ public class CommandEnvironment implements CommandExecutor {
                             player.sendMessage(" ");
                         }
                         break;
-                    case "containers": {
-                        if (!Main.debug) return true;
+                    case "containers", "barrel", "barrels", "container": {
                         DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
                         if (devPlot == null) {
                             player.sendMessage(getLocaleMessage("only-in-dev-world"));
@@ -149,6 +148,34 @@ public class CommandEnvironment implements CommandExecutor {
                                     }
                                 }
                             }
+                        }
+                        break;
+                    }
+                    case "createplatform": {
+                        if (!Main.debug) return true;
+                        if (!sender.hasPermission("creative.debug")) {
+                            sender.sendMessage(getLocaleMessage("no-perms"));
+                            return true;
+                        }
+                        if (args.length < 3) {
+                            sender.sendMessage(getLocaleMessage("too-few-args"));
+                            return true;
+                        }
+                        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
+                        if (devPlot == null) {
+                            sender.sendMessage(getLocaleMessage("only-in-dev-world"));
+                            return true;
+                        }
+                        int x = 1;
+                        int z = 1;
+                        try {
+                            x = Integer.parseInt(args[1]);
+                        } catch (Exception ignored) {}
+                        try {
+                            z = Integer.parseInt(args[2]);
+                        } catch (Exception ignored) {}
+                        if (devPlot.createPlatform(x,z)) {
+                            sender.sendMessage("Created platform " + x + " " + z);
                         }
                         break;
                     }
