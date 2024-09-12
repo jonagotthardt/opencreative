@@ -2,7 +2,7 @@
 
 Minecraft plugin for PaperMC servers that allows players to create their worlds.
 
-![logo](https://media.discordapp.net/attachments/1203026811647303721/1254848334208831508/image.png?ex=669c9a54&is=669b48d4&hm=f872bb68ed1cb64d2c077060178e2cbe29c52c0720494c1478662eb9a5d34d6e&=&format=webp&quality=lossless&width=756&height=452)
+![logo](https://i.imgur.com/4jzB4F9.png)
 
 This plugin is:
 - **Fast.** It uses RAM more often than hard drive.
@@ -79,6 +79,8 @@ Without arguments opens a menu with information about OpenCreative+.
 - `load [world id]` - loads specified world.
 - `unload [world id]` - unloads specified world.
 - `list` - displays list of loaded worlds on server.
+- `deprecated` - displays list of deprecated worlds, whose owner haven't logged in for a month.
+- `corrupted` - displays list of corrupted worlds, that lost settings.yml.
 - `maintenance start [seconds]` - start maintenance mode in next [seconds], that disallows players without permissions to create or join worlds.
 - `maintenance stop` - stop maintenance mode, players will be able to create and join worlds.
 - `creative-chat clear` - clears chat for every player. Useful to hide some inappropriate messages.
@@ -145,6 +147,18 @@ They will work only if command sender is owner of world, or if he has bypass per
 - `/teleport [x] [y] [z] [yaw] [pitch]` - teleports sender to specified coordinates.
 - `/teleport [player name] [x] [y] [z] [yaw] [pitch]` - teleports specified player to specified coordinates.
 - `/give [player name] [item material] [amount]` - gives item to specified player.
+
+- `/playsound [player name] [sound name] [volume] [pitch]` - plays a sound for player.
+
+- `/stopsound [player name] [sound category]` - stops a playing sounds for player.
+
+## Development
+
+To develop this plugin, simply download this project and use Intellij IDEA to code.
+
+We use Maven to compile plugin into jar file.
+
+Contribute your code into [`development branch`](https://gitlab.com/eagles-creative/opencreative/-/tree/development), then we will check it and we create merge request to the Main branch.
 
 ## License
 
