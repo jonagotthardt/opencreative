@@ -83,9 +83,9 @@ public abstract class Layout extends AbstractMenu {
     protected abstract void fillVarsItems();
 
     protected ItemStack getFromContent(byte slot) {
-        if (!(containerBlock.getState() instanceof Chest chest)) return ItemStack.empty();
-        if (slot < 0 || slot >= chest.getBlockInventory().getContents().length) return ItemStack.empty();
-        return chest.getBlockInventory().getContents()[slot];
+        if (!(containerBlock.getState() instanceof InventoryHolder container)) return ItemStack.empty();
+        if (slot < 0 || slot >= container.getInventory().getContents().length) return ItemStack.empty();
+        return container.getInventory().getContents()[slot];
     }
 
     @Override
@@ -173,7 +173,7 @@ public abstract class Layout extends AbstractMenu {
                         }
                         itemMeta.lore(null);
                         itemStack.setItemMeta(itemMeta);
-                        setPersistentData(itemStack,getCodingValueKey(), ValueType.getByMaterial(argItem.getType()).name());
+                        setPersistentData(itemStack,getCodingValueKey(), ValueType.getByMaterial(itemStack.getType()).name());
                         setPersistentData(itemStack,getCodingDoNotDropMeKey(), "1");
                         container.getInventory().setItem(chestSlot,itemStack);
                     }

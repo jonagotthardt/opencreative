@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.utils;
 
 import mcchickenstudio.creative.Main;
+import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Location;
@@ -104,6 +105,7 @@ public class BlockUtils {
         try {
             for (byte x = (byte) (location.getX()+2); x < 96; x= (byte) (x+2)) {
                 Block block = world.getBlockAt(new Location(world,x,location.getBlockY(),location.getBlockZ()));
+                ActionCategory category = ActionCategory.getByMaterial(block.getType());
                 if (block.getType() == Material.AIR) {
                     if (block.getRelative(BlockFace.EAST).getType() == Material.PISTON) {
                         if (!conditions.isEmpty()) {
@@ -113,7 +115,7 @@ public class BlockUtils {
                             return block.getRelative(BlockFace.EAST).getX();
                         }
                     }
-                } else if (block.getType() == Material.OAK_PLANKS) {
+                } else if (category != null && category.isCondition()) {
                     if (block.getRelative(BlockFace.EAST).getType() == Material.PISTON) {
                         conditions.add("cound" + block.getX());
                     }
@@ -141,6 +143,31 @@ public class BlockUtils {
         if (!(borderCenterX1 > playerX && playerX > borderCenterX2)) {
             return true;
         } else return !(borderCenterZ1 > playerZ && playerZ > borderCenterZ2);
+    }
+
+    public static int getBeginningBracketX(Block firstBlock) {
+        Location location = firstBlock.getLocation();
+        World world = location.getWorld();
+        List<String> conditions = new ArrayList<>();
+        for (byte x = (byte) (location.getX()-2); x >= 6; x= (byte) (x-2)) {
+            Block block = world.getBlockAt(new Location(world,x,location.getBlockY(),location.getBlockZ()));
+            ActionCategory category = ActionCategory.getByMaterial(block.getType());
+            if (block.getType() == Material.AIR) {
+                if (block.getRelative(BlockFace.WEST).getType() == Material.PISTON) {
+                    if (!conditions.isEmpty()) {
+                        String last = conditions.getLast();
+                        conditions.remove(last);
+                    } else {
+                        return block.getRelative(BlockFace.WEST).getX();
+                    }
+                }
+            } else if (category != null && category.isCondition()) {
+                if (block.getRelative(BlockFace.WEST).getType() == Material.PISTON) {
+                    conditions.add("cound" + block.getX());
+                }
+            }
+        }
+        return -1;
     }
 
 }

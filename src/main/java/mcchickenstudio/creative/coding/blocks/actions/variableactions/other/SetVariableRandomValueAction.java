@@ -41,7 +41,7 @@ public class SetVariableRandomValueAction extends VariableAction {
         if (values.isEmpty()) return;
         Object random = values.getFirst();
         if (values.size() > 1) {
-            random = values.get(new Random().nextInt(values.size() - 1));
+            random = values.get(new Random().nextInt(values.size()));
         }
         setVarValue(link,random);
     }

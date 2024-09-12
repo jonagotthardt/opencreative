@@ -38,10 +38,7 @@ import mcchickenstudio.creative.plots.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -444,6 +441,12 @@ public class PlayerInteract implements Listener {
                 player.teleport(getOldLocationPlayerWithLocation(player));
                 player.setCooldown(currentItem.getType(),60);
                 player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
+                for (Player developer : plot.devPlot.world.getPlayers()) {
+                    WorldBorder border = Bukkit.createWorldBorder();
+                    border.setCenter(plot.devPlot.world.getWorldBorder().getCenter());
+                    border.setSize(plot.devPlot.world.getWorldBorder().getSize()*5);
+                    developer.setWorldBorder(border);
+                }
             }
         }
     }

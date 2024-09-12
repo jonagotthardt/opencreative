@@ -145,8 +145,8 @@ plot-code-debug:
     action: "&7Категория: %category%\n&7Действие: %type%\n \n&7Аргументы:\n%arguments%"
     condition: "&7Категория: %category%\n&7Условие: %type%\n&7Наоборот: %opposed%\n \n&7Аргументы:\n%arguments%"
   variable:
-    set: "&6 Отладка &8| &fНовое значение %variable%&f: &7%value%"
-    created: "&6 Отладка &8| &fСоздана переменная %variable%&f: &7%value%"
+    set: "&fНовое значение %variable%&f: &7%value%"
+    created: "&fСоздана переменная %variable%&f: &7%value%"
   log: "&6 Отладка &8| &f%log%"
   event-message: "&7 Вызов события &8| &7Произошло событие %type%&f, находим триггер..."
   variable-found: "&7           %name% &a=&7 %value%"

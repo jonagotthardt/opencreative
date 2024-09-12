@@ -32,6 +32,7 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.util.*;
 
+import static mcchickenstudio.creative.utils.BlockUtils.getSignLine;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static mcchickenstudio.creative.utils.FileUtils.*;
 
@@ -164,6 +165,48 @@ public class DevPlot {
         return new HashSet<>(Arrays.stream(ActionCategory.values()).map(ActionCategory::getBlock).toList());
     }
 
+    /**
+     * Creates a coding platform with specified X and Z of platform.
+     * <p>
+     * By default, it generates floor with white stained-glass,
+     * and fills executor sections with blue stained-glass,
+     * action sections with gray stained-glass.</p>
+     * @param platformX X number of platform.
+     * @param platformZ Z number of platform.
+     * @return true - if successfully created, false - if failed.
+     */
+    public boolean createPlatform(int platformX, int platformZ) {
+        if (platformX >= 30 || platformZ >= 30 || platformX <= 0 || platformZ <= 0) {
+            return false;
+        }
+        int beginX = getPlatformBeginCoordinate(platformX);
+        int endX = getPlatformEndCoordinate(platformX);
+        int beginZ = getPlatformBeginCoordinate(platformZ);
+        int endZ = getPlatformEndCoordinate(platformZ);
+        int executorX = beginX+4;
+        for (int x = beginX; x <= endX; x++) {
+            for (int z = beginZ; z <= endZ; z++) {
+                Block block = world.getBlockAt(x,0,z);
+                if (x == executorX && (z - beginZ) % 4 == 0 && z != beginZ && z != endZ) {
+                    block.setType(eventBlockMaterial);
+                } else if (x > executorX && (x - executorX) % 2 == 0 && x < endX - 2 && (z - beginZ) % 4 == 0 && z != beginZ && z != endZ) {
+                    block.setType(actionBlockMaterial);
+                } else {
+                    block.setType(floorBlockMaterial);
+                }
+            }
+        }
+        return true;
+    }
+
+    public int getPlatformBeginCoordinate(int platformNumber) {
+        return (platformNumber - 1) * 102;
+    }
+
+    public int getPlatformEndCoordinate(int platformNumber) {
+        return getPlatformBeginCoordinate(platformNumber) + 100;
+    }
+
     public Set<Material> getIndestructibleBlocks() {
         Set<Material> indestructibleBlocks = new HashSet<>();
         indestructibleBlocks.add(floorBlockMaterial);
@@ -222,6 +265,22 @@ public class DevPlot {
                 ExecutorCategory blockCategory = ExecutorCategory.getByMaterial(world.getBlockAt(x,y,z).getType());
                 if (blockCategory == category) {
                     locations.add(world.getBlockAt(x,y,z).getLocation());
+                }
+            }
+        }
+        return locations;
+    }
+
+    public List<Location> getPlacedFunctions() {
+        List<Location> locations = new ArrayList<>();
+        byte x = 4;
+        for (byte y = 1; y < getFloors()*4; y=(byte)(y+4)) {
+            for (byte z = 4; z < 96; z = (byte) (z + 4)) {
+                Block block = world.getBlockAt(x,y,z);
+                ExecutorCategory blockCategory = ExecutorCategory.getByMaterial(block.getType());
+                String line = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
+                if (blockCategory == ExecutorCategory.FUNCTION && line != null && !line.isEmpty()) {
+                    locations.add(block.getLocation());
                 }
             }
         }

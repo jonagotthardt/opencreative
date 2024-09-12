@@ -303,55 +303,6 @@ public class CodingBlockParser {
         return name;
     }
 
-    public int getClosingBracketX(Block firstBlock) {
-        Location location = firstBlock.getLocation();
-        World world = location.getWorld();
-
-        List<String> conditions = new ArrayList<>();
-        for (byte x = (byte) (location.getX()+2); x < 96; x= (byte) (x+2)) {
-            Block block = world.getBlockAt(new Location(world,x,location.getBlockY(),location.getBlockZ()));
-            if (block.getType() == Material.AIR) {
-                if (block.getRelative(BlockFace.EAST).getType() == Material.PISTON) {
-                    if (!conditions.isEmpty()) {
-                        String last = conditions.getLast();
-                        conditions.remove(last);
-                    } else {
-                        return block.getRelative(BlockFace.EAST).getX();
-                    }
-                }
-            } else if (block.getType() == Material.OAK_PLANKS) {
-                if (block.getRelative(BlockFace.EAST).getType() == Material.PISTON) {
-                    conditions.add("cound" + block.getX());
-                }
-            }
-        }
-        return -1;
-    }
-
-    public int getBeginningBracketX(Block firstBlock) {
-        Location location = firstBlock.getLocation();
-        World world = location.getWorld();
-        List<String> conditions = new ArrayList<>();
-        for (byte x = (byte) (location.getX()-2); x >= 6; x= (byte) (x-2)) {
-            Block block = world.getBlockAt(new Location(world,x,location.getBlockY(),location.getBlockZ()));
-            if (block.getType() == Material.AIR) {
-                if (block.getRelative(BlockFace.WEST).getType() == Material.PISTON) {
-                    if (!conditions.isEmpty()) {
-                        String last = conditions.getLast();
-                        conditions.remove(last);
-                    } else {
-                        return block.getRelative(BlockFace.WEST).getX();
-                    }
-                }
-            } else if (block.getType() == Material.OAK_PLANKS) {
-                if (block.getRelative(BlockFace.WEST).getType() == Material.PISTON) {
-                    conditions.add("cound" + block.getX());
-                }
-            }
-        }
-        return -1;
-    }
-
     private boolean isSignEmpty(Block block, byte line) {
         Block signBlock = block.getRelative(BlockFace.SOUTH);
         if (signBlock.getType().name().contains("SIGN")) {

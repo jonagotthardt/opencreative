@@ -24,6 +24,7 @@ import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.conditions.variableconditions.VariableCondition;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import mcchickenstudio.creative.coding.variables.EventValueLink;
 import mcchickenstudio.creative.coding.variables.VariableLink;
 import org.bukkit.entity.Entity;
 
@@ -41,12 +42,15 @@ public class VariableEqualsCondition extends VariableCondition {
             return false;
         }
         List<Object> values = getArguments().getList("values",this);
+        boolean equals = false;
         for (Object value : values) {
-            if (variableValue.equals(value)) {
-                return true;
+            if (variableValue instanceof Number firstNumber && value instanceof Number secondNumber && firstNumber.doubleValue() == secondNumber.doubleValue()) {
+                equals = true;
+            } else if (variableValue.equals(value)) {
+                equals = true;
             }
         }
-        return false;
+        return equals;
     }
 
     @Override

@@ -54,6 +54,7 @@ public class FunctionChooserMenu extends AbstractListMenu {
         itemsSlots = allowedSlots;
         charmsBarSlots = new byte[]{};
         previousPageButtonSlot = 45;
+        noElementsPageButtonSlot = 22;
         this.devPlot = plot;
         this.signLocation = location;
     }
@@ -121,7 +122,7 @@ public class FunctionChooserMenu extends AbstractListMenu {
 
     @Override
     protected List<Object> getElements() {
-        return new ArrayList<>(devPlot.getPlacedExecutors(ExecutorCategory.FUNCTION));
+        return new ArrayList<>(devPlot.getPlacedFunctions());
     }
 
     @Override

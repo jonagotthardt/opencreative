@@ -34,6 +34,7 @@ public class CommandTabEnvironment implements TabCompleter {
         if (args.length == 1) {
             tabCompleter.add("variables");
             tabCompleter.add("debug");
+            tabCompleter.add("barrel");
         } else if (args.length == 2) {
             if ("variables".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("size");
