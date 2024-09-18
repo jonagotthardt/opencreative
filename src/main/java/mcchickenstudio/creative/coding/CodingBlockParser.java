@@ -70,7 +70,7 @@ public class CodingBlockParser {
         for (byte y = 1; y < devPlot.getFloors()*4; y=(byte)(y+4)) {
 
             // For coding executors
-            for (byte z = 4; z < 96; z = (byte)(z+4)) {
+            for (byte z = 4; z <= 96; z = (byte)(z+4)) {
 
                 Block executorBlock = world.getBlockAt(4,y,z);
                 ExecutorCategory executorCategory = ExecutorCategory.getByMaterial(executorBlock.getType());
@@ -91,7 +91,7 @@ public class CodingBlockParser {
 
                 // For coding actions
                 List<String> multiActions = new ArrayList<>();
-                for (byte x = 6; x < 96; x= (byte) (x+2)) {
+                for (byte x = 6; x <= 96; x= (byte) (x+2)) {
 
                     Block actionBlock = world.getBlockAt(x,y,z);
                     ActionCategory actionCategory = ActionCategory.getByMaterial(actionBlock.getType());

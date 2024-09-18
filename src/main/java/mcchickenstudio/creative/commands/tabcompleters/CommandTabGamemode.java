@@ -36,9 +36,9 @@ public class CommandTabGamemode implements TabCompleter {
         List<String> tabCompleter = new ArrayList<>();
         if (sender instanceof Player player) {
             if (args.length == 1) {
-                tabCompleter.addAll(player.getWorld().getPlayers().stream().map(Player::getName).toList());
-            } else if (args.length == 2) {
                 tabCompleter.addAll(Arrays.stream(GameMode.values()).map(gameMode -> gameMode.name().toLowerCase()).toList());
+            } else if (args.length == 2) {
+                tabCompleter.addAll(player.getWorld().getPlayers().stream().map(Player::getName).toList());
             }
         }
         return tabCompleter;

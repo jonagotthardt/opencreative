@@ -64,7 +64,7 @@ public class EventValuesMenu extends AbstractListMenu {
     }
 
     protected Set<MenusCategory> getMenusCategories() {
-        return new HashSet<>(List.of(MenusCategory.ENTITY,MenusCategory.EVENTS,MenusCategory.WORLD));
+        return new HashSet<>(List.of(MenusCategory.PLAYER,MenusCategory.ENTITY,MenusCategory.EVENTS,MenusCategory.WORLD));
     }
 
 

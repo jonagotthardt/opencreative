@@ -18,17 +18,40 @@
 
 package mcchickenstudio.creative.coding.blocks.executors.player.fighting;
 
+import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.EventValues;
+import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamagedEvent;
+import mcchickenstudio.creative.coding.blocks.events.player.interaction.BedEnterEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.blocks.executors.player.PlayerExecutor;
 import mcchickenstudio.creative.plots.Plot;
+import org.bukkit.event.Cancellable;
 
-public class PlayerDamagedExecutor extends PlayerExecutor {
+public class PlayerDamagedExecutor extends PlayerExecutor implements Cancellable {
+
     public PlayerDamagedExecutor(Plot plot, int x, int y, int z) {
         super(plot, x, y, z);
     }
 
     @Override
+    protected void setTempVars(CreativeEvent event) {
+        if (event instanceof PlayerDamagedEvent damagedEvent) {
+            setTempVar(EventValues.Variable.DAMAGE_CAUSE,damagedEvent.getCause().toString());
+        }
+    }
+
+    @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_GET_DAMAGED;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return getEvent().isCancelled();
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        getEvent().setCancelled(cancel);
     }
 }

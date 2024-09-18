@@ -65,6 +65,7 @@ import static mcchickenstudio.creative.utils.BlockUtils.*;
 import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemName;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.PlayerUtils.sendOpenedChestAnimation;
 import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
 
 public class PlayerInteract implements Listener {
@@ -148,6 +149,7 @@ public class PlayerInteract implements Listener {
                 try {
                     ActionType action = ActionType.valueOf(type.toUpperCase());
                     Layout layout = devPlot.getOpenedMenu(clickedBlock.getLocation());
+                    event.setCancelled(true);
                     if (layout == null) {
                         layout = new LayoutMaker(action,clickedBlock);
                         layout.open(player);
@@ -155,9 +157,9 @@ public class PlayerInteract implements Listener {
                     } else {
                         player.openInventory(layout.getCurrentInventory());
                     }
-                    event.setCancelled(true);
                 } catch (IllegalArgumentException e) {
                     player.sendActionBar(getLocaleMessage("plot-code-error.unknown-layout"));
+                    event.setCancelled(false);
                 }
             }
         }
@@ -192,8 +194,13 @@ public class PlayerInteract implements Listener {
             new TargetSelectionMenu(clickedBlock.getLocation()).open(player);
         } else {
             CodingBlockTypesMenu menu = null;
-            if (mainBlockCategory == ExecutorCategory.EVENT_PLAYER) {
-                menu = new PlayerEventsMenu(player,clickedBlock.getLocation());
+            if (mainBlockCategory != null) {
+                menu = switch (mainBlockCategory) {
+                    case EVENT_PLAYER -> new PlayerEventsMenu(player,clickedBlock.getLocation());
+                    case EVENT_WORLD -> new WorldEventsMenu(player,clickedBlock.getLocation());
+                    case EVENT_ENTITY -> new EntityEventsMenu(player,clickedBlock.getLocation());
+                    default -> null;
+                };
             }
             if (actionBlockCategory != null) {
                 menu = switch (actionBlockCategory) {
@@ -203,8 +210,8 @@ public class PlayerInteract implements Listener {
                     case VARIABLE_CONDITION -> new VariableConditionsMenu(player,clickedBlock.getLocation());
                     case VARIABLE_ACTION -> new VariableActionsMenu(player,clickedBlock.getLocation());
                     case WORLD_ACTION -> new WorldActionsMenu(player,clickedBlock.getLocation());
-                    //case HANDLER_ACTION -> new HandlerActionsMenu(player,clickedBlock.getLocation());
-                    //case REPEAT_ACTION -> new RepeatActionsMenu(player,clickedBlock.getLocation());
+                    case HANDLER_ACTION -> new HandlerActionsMenu(player,clickedBlock.getLocation());
+                    case REPEAT_ACTION -> new RepeatActionsMenu(player,clickedBlock.getLocation());
                     default -> null;
                 };
             }

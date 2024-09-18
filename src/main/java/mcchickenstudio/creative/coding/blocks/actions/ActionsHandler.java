@@ -20,6 +20,8 @@ package mcchickenstudio.creative.coding.blocks.actions;
 
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.blocks.actions.controlactions.lines.WaitAction;
+import mcchickenstudio.creative.coding.blocks.actions.repeatactions.RepeatAction;
+import mcchickenstudio.creative.coding.blocks.actions.repeatactions.other.RepeatForLoopAction;
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
@@ -78,11 +80,11 @@ public class ActionsHandler {
         this.variables = mainHandler.variables;
         this.action = action;
         this.selectedTargets = new HashSet<>(parentActionsHandler.selectedTargets);
-        /*if (action.getActionType() == ActionType.HANDLER_CATCH_ERROR) {
+        if (action.getActionType() == ActionType.HANDLER_CATCH_ERROR) {
             this.doNotUseTryFlag = true;
-        } else {*/
+        } else {
             this.doNotUseTryFlag = false;
-        //}
+        }
     }
 
     public final void executeActions(List<Action> actions) {
@@ -95,8 +97,7 @@ public class ActionsHandler {
             if (getMainActionHandler() == this) {
                 executor.getPlot().getWorldVariables().garbageCollector(this);
             }
-
-            /*if (action instanceof RepeatAction repeatAction) {
+            if (action instanceof RepeatAction repeatAction) {
                 if (action instanceof RepeatForLoopAction forLoopAction) {
                     VariableLink link = forLoopAction.getArguments().getVariableLink("variable",forLoopAction);
                     double add = forLoopAction.getArguments().getValue("add",1.0d,forLoopAction);
@@ -120,7 +121,6 @@ public class ActionsHandler {
                 }
                 repeatAction.prepareAndExecute(this);
             }
-            */
             return;
         }
         Action nextAction = actionsQueue.poll();
@@ -158,6 +158,7 @@ public class ActionsHandler {
                 } catch (Exception error) {
                     String id = error.getClass().getSimpleName().toLowerCase();
                     sendPlotCodeErrorMessage(executor, action, getLocaleMessage("plot-code-error." + (messageExists("plot-code-error." + id) ? id : "unknown")) + (error.getMessage() == null ? error.getClass().getSimpleName() : error.getMessage()).replace("mcchickenstudio.creative.coding.",""), error);
+                    removeAllActions();
                 }
             }
         }

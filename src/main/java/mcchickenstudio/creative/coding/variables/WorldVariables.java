@@ -72,12 +72,23 @@ public class WorldVariables {
         WorldVariable variable = getVariable(link);
         String valueString = value.toString().substring(0, Math.min(20, value.toString().length()));
         if (variable != null) {
-            if (variable.getSize() + getTotalVariablesAmount() > plot.getVariablesAmountLimit()) return;
+            if (variable.getSize() + getTotalVariablesAmount() > plot.getVariablesAmountLimit()) {
+                sendCodingDebugLog(getPlot(), "Reached limit of " + plot.getVariablesAmountLimit() + " variables.");
+                return;
+            }
             variable.setType(type);
             variable.setValue(value);
         } else {
-            if (getTotalVariablesAmount() > plot.getVariablesAmountLimit()) return;
-            variables.add(new WorldVariable(link.getName(), link.getVariableType(), type, value, handler));
+            if (getTotalVariablesAmount() > plot.getVariablesAmountLimit()) {
+                sendCodingDebugLog(getPlot(), "Reached limit of " + plot.getVariablesAmountLimit() + " variables.");
+                return;
+            }
+            WorldVariable newVariable = new WorldVariable(link.getName(), link.getVariableType(), type, value, handler);
+            if (newVariable.getSize() + getTotalVariablesAmount() > plot.getVariablesAmountLimit()) {
+                sendCodingDebugLog(getPlot(), "Reached limit of " + plot.getVariablesAmountLimit() + " variables.");
+                return;
+            }
+            variables.add(newVariable);
         }
         sendCodingDebugLog(getPlot(),getLocaleMessage("plot-code-debug.variable." + (variable == null ? "created" : "set"),false).replace("%variable%",link.getName()).replace("%value%",valueString));
 
@@ -110,7 +121,7 @@ public class WorldVariables {
                 String name = (String) jsonObject.get("name");
                 ValueType type = ValueType.valueOf((String) jsonObject.get("type"));
                 Object value = jsonObject.get("value");
-                value = deserializeObject(value,ValueType.getByObject(value));
+                value = deserializeObject(value,type);
                 if (variables.size() < plot.getVariablesAmountLimit()) {
                     variables.add(new WorldVariable(name,VariableLink.VariableType.SAVED,type,value,null));
                 }
@@ -148,22 +159,40 @@ public class WorldVariables {
 
     private Object serializeObject(Object value) {
         try {
-            if (value instanceof ItemStack || value instanceof Location) {
+            if (value instanceof ItemStack) {
                 final ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
                 final BukkitObjectOutputStream objectOutputStream = new BukkitObjectOutputStream(arrayOutputStream);
                 objectOutputStream.writeObject(value);
                 value = Base64Coder.encodeLines(arrayOutputStream.toByteArray());
+            } else if (value instanceof Location location) {
+                Map<String,Number> locationMap = new HashMap<>();
+                locationMap.put("x",location.getX());
+                locationMap.put("y",location.getY());
+                locationMap.put("z",location.getZ());
+                locationMap.put("yaw",location.getYaw());
+                locationMap.put("pitch",location.getPitch());
+                return locationMap;
             } else if (value instanceof List<?> list) {
                 List<Object> newList = new ArrayList<>();
                 for (Object element : list) {
-                    newList.add(serializeObject(element));
+                    Map<String,Object> parsedElement = new HashMap<>();
+                    parsedElement.put("type",ValueType.getByObject(element).name());
+                    parsedElement.put("value",serializeObject(element));
+                    newList.add(parsedElement);
                 }
                 return newList;
             } else if (value instanceof Map<?,?> map) {
                 Map<Object,Object> newMap = new HashMap<>();
                 for (Object key : map.keySet()) {
-                    key = serializeObject(key);
-                    newMap.put(key,serializeObject(map.get(key)));
+                    Map<String,Object> newKey = new HashMap<>();
+                    newKey.put("type",ValueType.getByObject(key).name());
+                    newKey.put("value",serializeObject(key));
+                    Map<String,Object> newValue = new HashMap<>();
+                    newValue.put("type",ValueType.getByObject(map.get(key)).name());
+                    newValue.put("value",serializeObject(map.get(key)));
+                    String serializedKey = new JSONObject(newKey).toString();
+                    newMap.put(serializedKey, newValue);
+                    //newMap.put(newKey,newValue);
                 }
                 return newMap;
             }
@@ -175,27 +204,64 @@ public class WorldVariables {
 
     private Object deserializeObject(Object value, ValueType type) {
         try {
-            if (type == ValueType.ITEM || type == ValueType.LOCATION) {
+            if (type == ValueType.ITEM) {
                 final ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(Base64Coder.decodeLines((String) value));
                 final BukkitObjectInputStream objectInputStream = new BukkitObjectInputStream(arrayInputStream);
                 value = objectInputStream.readObject();
+            } else if (type == ValueType.LOCATION) {
+                System.out.println("type location");
+                double x, y, z;
+                float yaw, pitch;
+                Map<?,?> locationMap = (Map<?,?>) value;
+                System.out.println("after assigning locaation map");
+                x = (Double) locationMap.get("x");
+                y = (Double) locationMap.get("y");
+                z = (Double) locationMap.get("z");
+                System.out.println("after coords");
+                yaw = ((Double) locationMap.get("yaw")).floatValue();
+                pitch = ((Double) locationMap.get("pitch")).floatValue();
+                System.out.println("after yaw pitch");
+                return new Location(plot.world,x,y,z,yaw,pitch);
             } else if (type == ValueType.LIST) {
                 List<Object> newList = new ArrayList<>();
                 List<?> oldList = (List<?>) value;
                 for (Object element : oldList) {
-                    newList.add(deserializeObject(element,ValueType.getByObject(element)));
+                    Object newElement = element;
+                    if (newElement instanceof Map<?,?> insideMap && insideMap.containsKey("type") && insideMap.containsKey("value")) {
+                        ValueType keyType = ValueType.parseString(insideMap.get("type").toString());
+                        newElement = deserializeObject(insideMap.get("value"),keyType);
+                    } else {
+                        newElement = deserializeObject(newElement,ValueType.getByObject(newElement));
+                    }
+                    newList.add(newElement);
                 }
                 return newList;
             } else if (type == ValueType.MAP) {
                 Map<Object,Object> newMap = new HashMap<>();
                 Map<?,?> oldMap = (Map<?,?>) value;
                 for (Object key : oldMap.keySet()) {
-                    key = deserializeObject(key,ValueType.getByObject(key));
-                    newMap.put(key,deserializeObject(oldMap.get(key),ValueType.getByObject(oldMap.get(key))));
+                    Object newKey = key;
+                    Object newValue = oldMap.get(key);
+                    Map<String, Object> deserializedKey = (Map<String, Object>) new JSONParser().parse((String) newKey);
+                    newKey = deserializeObject(deserializedKey.get("value"), ValueType.parseString(deserializedKey.get("type").toString()));
+                    /*if (newKey instanceof Map<?,?> insideMap && insideMap.containsKey("type") && insideMap.containsKey("value")) {
+                        //ValueType keyType = ValueType.parseString(insideMap.get("type").toString());
+                        //newKey = deserializeObject(insideMap.get("value"),keyType);
+                    } else {
+                        newKey = deserializeObject(key,ValueType.getByObject(key));
+                    }*/
+                    if (newValue instanceof Map<?,?> insideMap && insideMap.containsKey("type") && insideMap.containsKey("value")) {
+                        ValueType keyValueType = ValueType.parseString(insideMap.get("type").toString());
+                        newValue = deserializeObject(insideMap.get("value"),keyValueType);
+                    } else {
+                        newValue = deserializeObject(key,ValueType.getByObject(key));
+                    }
+                    newMap.put(newKey,newValue);
                 }
                 return newMap;
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return value;
         }
         return value;

@@ -133,18 +133,19 @@ public class CommandEnvironment implements CommandExecutor {
                             player.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
                         }
+                        devPlot.setContainerMaterial(devPlot.getContainerMaterial() == Material.CHEST ? Material.BARREL : Material.CHEST);
                         for (byte y = 1; y < devPlot.getFloors() * 4; y = (byte) (y + 4)) {
                             for (byte z = 4; z < 96; z = (byte) (z + 4)) {
-                                for (byte x = 6; x < 96; x = (byte) (x + 2)) {
-                                    Block chestBlock = new Location(devPlot.world, x, y + 1, z).getBlock();
-                                    if (chestBlock.getType() == Material.CHEST || chestBlock.getType() == Material.BARREL) {
-                                        ItemStack[] data = ((InventoryHolder) chestBlock.getState()).getInventory().getContents();
-                                        chestBlock.setType(chestBlock.getType() == Material.CHEST ? Material.BARREL : Material.CHEST);
-                                        ((Container) chestBlock.getState()).getInventory().setContents(data);
-                                        BlockData blockData = chestBlock.getBlockData();
+                                for (byte x = 6; x <= 96; x = (byte) (x + 2)) {
+                                    Block containerBlock = new Location(devPlot.world, x, y + 1, z).getBlock();
+                                    if (containerBlock.getState() instanceof InventoryHolder container) {
+                                        ItemStack[] data = container.getInventory().getContents();
+                                        containerBlock.setType(devPlot.getContainerMaterial());
+                                        ((Container) containerBlock.getState()).getInventory().setContents(data);
+                                        BlockData blockData = containerBlock.getBlockData();
                                         ((Directional) blockData).setFacing(BlockFace.SOUTH);
-                                        chestBlock.setBlockData(blockData);
-                                        chestBlock.getState().update();
+                                        containerBlock.setBlockData(blockData);
+                                        containerBlock.getState().update();
                                     }
                                 }
                             }

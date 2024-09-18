@@ -20,15 +20,19 @@ package mcchickenstudio.creative.coding.blocks.actions;
 
 import mcchickenstudio.creative.coding.blocks.actions.controlactions.events.CancelEventAction;
 import mcchickenstudio.creative.coding.blocks.actions.controlactions.lines.*;
+import mcchickenstudio.creative.coding.blocks.actions.handleractions.other.CatchErrorAction;
+import mcchickenstudio.creative.coding.blocks.actions.handleractions.other.MeasureTimeAction;
 import mcchickenstudio.creative.coding.blocks.actions.other.LaunchFunctionAction;
+import mcchickenstudio.creative.coding.blocks.actions.other.SelectTargetAction;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.appearance.*;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.communication.*;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.inventory.*;
-import mcchickenstudio.creative.coding.blocks.actions.playeractions.movement.KickPlayerAction;
-import mcchickenstudio.creative.coding.blocks.actions.playeractions.movement.SaddleEntityAction;
-import mcchickenstudio.creative.coding.blocks.actions.playeractions.movement.TeleportPlayerAction;
+import mcchickenstudio.creative.coding.blocks.actions.playeractions.movement.*;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.params.*;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.state.*;
+import mcchickenstudio.creative.coding.blocks.actions.repeatactions.other.RepeatAlwaysAction;
+import mcchickenstudio.creative.coding.blocks.actions.repeatactions.other.RepeatForLoopAction;
+import mcchickenstudio.creative.coding.blocks.actions.selectionactions.SelectionAction;
 import mcchickenstudio.creative.coding.blocks.actions.selectionactions.players.SelectRandomPlayerAction;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.item.*;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.list.*;
@@ -36,6 +40,7 @@ import mcchickenstudio.creative.coding.blocks.actions.variableactions.location.*
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.map.CreateMapAction;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.map.GetFromMapByKeyAction;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.map.PutIntoMapAction;
+import mcchickenstudio.creative.coding.blocks.actions.variableactions.map.RemoveFromMapByKeyAction;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.number.*;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.other.DeleteVariableAction;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.other.SetVariableRandomValueAction;
@@ -46,10 +51,8 @@ import mcchickenstudio.creative.coding.blocks.actions.worldactions.blocks.Destro
 import mcchickenstudio.creative.coding.blocks.actions.worldactions.blocks.SetBlockPoweredAction;
 import mcchickenstudio.creative.coding.blocks.actions.worldactions.blocks.SetBlockTypeAction;
 import mcchickenstudio.creative.coding.blocks.actions.worldactions.blocks.SetBlocksAreaTypeAction;
-import mcchickenstudio.creative.coding.blocks.actions.worldactions.entity.CreateExplosionAction;
-import mcchickenstudio.creative.coding.blocks.actions.worldactions.entity.SpawnEntityAction;
+import mcchickenstudio.creative.coding.blocks.actions.worldactions.entity.*;
 import mcchickenstudio.creative.coding.blocks.actions.worldactions.entity.SpawnParticleAction;
-import mcchickenstudio.creative.coding.blocks.actions.worldactions.entity.StrikeLightningAction;
 import mcchickenstudio.creative.coding.blocks.actions.worldactions.world.*;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.blocks.IsBlockEqualsCondition;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.blocks.IsLookingAtBlockCondition;
@@ -141,9 +144,9 @@ public enum ActionType {
     //PLAYER_TELEPORT_QUEUE(              ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      null, Material.ENDER_EYE,          new ArgumentSlot("locations",VariableType.LOCATION,(byte)18),new ArgumentSlot("cooldown",VariableType.NUMBER)),
     PLAYER_KICK(                        ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      KickPlayerAction.class, Material.BARRIER         ),
     PLAYER_SADDLE_ENTITY(               ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      SaddleEntityAction.class, Material.SADDLE,  new ArgumentSlot("entity", ValueType.TEXT)),
-    //PLAYER_LAUNCH_VERTICAL(             ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      null, Material.FIREWORK_ROCKET,         new ArgumentSlot("power",VariableType.NUMBER)),
-    //PLAYER_LAUNCH_HORIZONTAL(           ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      null, Material.CHAINMAIL_BOOTS,         new ArgumentSlot("power",VariableType.NUMBER)),
-    //PLAYER_LAUNCH_TO_LOCATION(          ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      null, Material.MAP,         new ArgumentSlot("location",VariableType.LOCATION)),
+    PLAYER_LAUNCH_VERTICAL(             ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      LaunchVerticalAction.class, Material.FIREWORK_ROCKET,new ArgumentSlot("power",ValueType.NUMBER)),
+    PLAYER_LAUNCH_HORIZONTAL(           ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      LaunchHorizontalAction.class, Material.FEATHER,         new ArgumentSlot("power",ValueType.NUMBER)),
+    PLAYER_LAUNCH_TO_LOCATION(          ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      LaunchToLocationAction.class, Material.MAP,         new ArgumentSlot("location",ValueType.LOCATION)),
     //PLAYER_SET_ROTATION(                ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT, null, Material.PLAYER_HEAD, new ArgumentSlot("yaw",VariableType.NUMBER),new ArgumentSlot("pitch",VariableType.NUMBER)),
     //PLAYER_SET_SPECTATOR_TARGET(        ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT, null, Material.SKELETON_SKULL, new ArgumentSlot("entity",VariableType.TEXT)),
 
@@ -177,6 +180,8 @@ public enum ActionType {
     PLAYER_SET_GLOWING(                 ActionCategory.PLAYER_ACTION, MenusCategory.STATE, SetGlowingAction.class, Material.DRAGON_BREATH,  new ParameterSlot("glowing", Arrays.asList(false,true), Material.WHITE_STAINED_GLASS, Material.GLASS)),
     PLAYER_SET_GLIDING(                 ActionCategory.PLAYER_ACTION, MenusCategory.STATE, SetGlidingAction.class, Material.ELYTRA, new ParameterSlot("boolean", Material.CHAINMAIL_BOOTS, Material.ELYTRA)),
     PLAYER_SET_SPRINTING(               ActionCategory.PLAYER_ACTION, MenusCategory.STATE, SetSprintingAction.class, Material.GOLDEN_BOOTS, new ParameterSlot("boolean", Material.LEATHER_BOOTS, Material.NETHERITE_BOOTS)),
+    PLAYER_SET_SNEAKING(               ActionCategory.PLAYER_ACTION, MenusCategory.STATE, SetSneakingAction.class, Material.RABBIT_FOOT, new ParameterSlot("boolean", Material.RABBIT_FOOT, Material.RABBIT_STEW)),
+
 
     // Appearance
     PLAYER_SET_TIME(                    ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, PlayerSetTimeAction.class, Material.CLOCK, new ArgumentSlot("time", ValueType.NUMBER)),
@@ -254,6 +259,8 @@ public enum ActionType {
     WORLD_SPAWN_ENTITY(                 ActionCategory.WORLD_ACTION, MenusCategory.ENTITY, SpawnEntityAction.class, Material.SPAWNER, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 9), new ArgumentSlot("type", ValueType.ITEM), new ArgumentSlot("name", ValueType.TEXT), new ParameterSlot("show-name", true, Material.NAME_TAG, Material.STRING), new ParameterSlot("gravity", true, Material.SAND, Material.COBWEB), new ParameterSlot("ai", true, Material.PLAYER_HEAD, Material.SKELETON_SKULL), new ParameterSlot("glowing", Material.GLASS, Material.WHITE_STAINED_GLASS), new ParameterSlot("invisible", Material.POTION, Material.GLASS_BOTTLE), new ParameterSlot("invulnerable", Material.REDSTONE, Material.TOTEM_OF_UNDYING), new ParameterSlot("visible-for-all", true, Material.GRASS_BLOCK, Material.GRAY_STAINED_GLASS)),
     WORLD_CREATE_EXPLOSION(                 ActionCategory.WORLD_ACTION, MenusCategory.ENTITY, CreateExplosionAction.class, Material.TNT, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ArgumentSlot("power", ValueType.NUMBER), new ParameterSlot("fire", Material.GUNPOWDER, Material.CAMPFIRE), new ParameterSlot("damage", Material.GRASS_BLOCK, Material.MAGMA_BLOCK)),
     WORLD_STRIKE_LIGHTNING(                 ActionCategory.WORLD_ACTION, MenusCategory.ENTITY, StrikeLightningAction.class, Material.TRIDENT, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ParameterSlot("damage", true, Material.REDSTONE, Material.GLOWSTONE_DUST)),
+    WORLD_DROP_ITEM(                 ActionCategory.WORLD_ACTION, MenusCategory.ENTITY, DropItemAction.class, Material.BREAD, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ParameterSlot("naturally", true, Material.PUMPKIN_SEEDS, Material.PUMPKIN_SEEDS), new ArgumentSlot("item",ValueType.ITEM)),
+
     WORLD_SPAWN_PARTICLE(                 ActionCategory.WORLD_ACTION, MenusCategory.ENTITY, SpawnParticleAction.class, Material.NETHER_STAR, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ArgumentSlot("particle", ValueType.PARTICLE), new ArgumentSlot("count", ValueType.NUMBER), new ArgumentSlot("offset-x", ValueType.NUMBER), new ArgumentSlot("offset-y", ValueType.NUMBER), new ArgumentSlot("offset-z", ValueType.NUMBER)),
 
     WORLD_SET_BLOCK_TYPE(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, SetBlockTypeAction.class, Material.STONE, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ArgumentSlot("type", ValueType.ITEM)),
@@ -288,6 +295,7 @@ public enum ActionType {
     VAR_REVERSE_TEXT( ActionCategory.VARIABLE_ACTION, MenusCategory.TEXT_OPERATIONS, ReverseTextAction.class, Material.ENCHANTING_TABLE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("text", ValueType.TEXT)),
     VAR_UPPER_CASE_TEXT( ActionCategory.VARIABLE_ACTION, MenusCategory.TEXT_OPERATIONS, UpperCaseTextAction.class, Material.OBSERVER, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("text", ValueType.TEXT)),
     VAR_LOWER_CASE_TEXT( ActionCategory.VARIABLE_ACTION, MenusCategory.TEXT_OPERATIONS, LowerCaseTextAction.class, Material.DROPPER, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("text", ValueType.TEXT)),
+    VAR_REPLACE_TEXT( ActionCategory.VARIABLE_ACTION, MenusCategory.TEXT_OPERATIONS, ReplaceTextAction.class, Material.MAGENTA_GLAZED_TERRACOTTA, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("text", ValueType.TEXT), new ArgumentSlot("target", ValueType.TEXT), new ArgumentSlot("replacement", ValueType.TEXT)),
     VAR_SPLIT_TEXT( ActionCategory.VARIABLE_ACTION, MenusCategory.TEXT_OPERATIONS, SplitTextAction.class, Material.CHISELED_BOOKSHELF, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("text", ValueType.TEXT), new ArgumentSlot("splitter", ValueType.TEXT)),
     VAR_TEXT_LENGTH( ActionCategory.VARIABLE_ACTION, MenusCategory.TEXT_OPERATIONS, TextLengthAction.class, Material.SLIME_BALL, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("text", ValueType.TEXT)),
 
@@ -309,6 +317,8 @@ public enum ActionType {
 
     VAR_CREATE_MAP( ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, CreateMapAction.class, Material.CHEST_MINECART, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("keys", ValueType.VARIABLE), new ArgumentSlot("values", ValueType.VARIABLE)),
     VAR_PUT_INTO_MAP( ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, PutIntoMapAction.class, Material.CHEST, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("key", ValueType.ANY), new ArgumentSlot("value", ValueType.ANY)),
+    VAR_REMOVE_FROM_MAP_BY_KEY( ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, RemoveFromMapByKeyAction.class, Material.BARRIER, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("key", ValueType.ANY)),
+
     VAR_GET_FROM_MAP_BY_KEY( ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, GetFromMapByKeyAction.class, Material.MINECART, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("map", ValueType.VARIABLE), new ArgumentSlot("key", ValueType.ANY)),
     VAR_GET_KEYS_SET( ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, GetFromMapByKeyAction.class, Material.NAME_TAG, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("map", ValueType.VARIABLE)),
     VAR_GET_VALUES_SET( ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, GetFromMapByKeyAction.class, Material.APPLE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("map", ValueType.VARIABLE)),
@@ -358,19 +368,18 @@ public enum ActionType {
      * <h1>Selection Actions.</h1>
      */
 
-    SELECTION_RANDOM_PLAYER(ActionCategory.SELECTION_ACTION, MenusCategory.WORLD, SelectRandomPlayerAction.class, Material.PUFFERFISH_BUCKET),
-    SELECTION_CLEAR(ActionCategory.SELECTION_ACTION, MenusCategory.WORLD, null, Material.BARRIER),
+    SELECTION_TARGET(ActionCategory.SELECTION_ACTION, MenusCategory.WORLD, SelectTargetAction.class, Material.BARRIER),
 
 
     /**
      * <h1>Other Actions.</h1>
      */
 
-    //HANDLER_CATCH_ERROR(ActionCategory.HANDLER_ACTION, MenusCategory.OTHER, CatchErrorAction.class, Material.RED_DYE, new ArgumentSlot("variable", ValueType.VARIABLE)),
-    //HANDLER_MEASURE_TIME(ActionCategory.HANDLER_ACTION, MenusCategory.OTHER, MeasureTimeAction.class, Material.CLOCK, new ArgumentSlot("variable", ValueType.VARIABLE)),
+    HANDLER_CATCH_ERROR(ActionCategory.HANDLER_ACTION, MenusCategory.OTHER, CatchErrorAction.class, Material.RED_DYE, new ArgumentSlot("variable", ValueType.VARIABLE)),
+    HANDLER_MEASURE_TIME(ActionCategory.HANDLER_ACTION, MenusCategory.OTHER, MeasureTimeAction.class, Material.CLOCK, new ArgumentSlot("variable", ValueType.VARIABLE)),
 
-    //REPEAT_ALWAYS(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatAlwaysAction.class, Material.BEACON),
-    //REPEAT_FOR_LOOP(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatForLoopAction.class, Material.SLIME_BALL, new ArgumentSlot("variable", ValueType.VARIABLE), new ParameterSlot("type", Arrays.asList("less","less-equals","greater","greater-equals"), Material.BRICK, Material.BRICKS, Material.NETHER_BRICK, Material.NETHER_BRICKS), new ArgumentSlot("range", ValueType.NUMBER), new ArgumentSlot("add", ValueType.NUMBER)),
+    REPEAT_ALWAYS(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatAlwaysAction.class, Material.BEACON),
+    REPEAT_FOR_LOOP(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatForLoopAction.class, Material.SLIME_BALL, new ArgumentSlot("variable", ValueType.VARIABLE), new ParameterSlot("type", Arrays.asList("less","less-equals","greater","greater-equals"), Material.BRICK, Material.BRICKS, Material.NETHER_BRICK, Material.NETHER_BRICKS), new ArgumentSlot("range", ValueType.NUMBER), new ArgumentSlot("add", ValueType.NUMBER)),
 
     LAUNCH_FUNCTION(ActionCategory.LAUNCH_FUNCTION_ACTION, MenusCategory.OTHER, LaunchFunctionAction.class, Material.LAPIS_ORE);
 

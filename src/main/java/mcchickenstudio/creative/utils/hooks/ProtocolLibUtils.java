@@ -23,6 +23,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.WrappedDataValue;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
@@ -32,6 +33,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -98,5 +100,21 @@ public class ProtocolLibUtils {
                 }
             }
         }.runTaskLater(Main.getPlugin(),60L);
+    }
+
+    public static void sendOpenedChestAnimation(Player player, Block block) {
+        PacketContainer blockActionPacket = manager.createPacket(BLOCK_ACTION);
+        blockActionPacket.getBlockPositionModifier().write(0, new BlockPosition(block.getLocation().toVector()));
+        blockActionPacket.getIntegers().write(0,1);
+        blockActionPacket.getIntegers().write(1,1);
+        manager.sendServerPacket(player,blockActionPacket);
+    }
+
+    public static void sendClosedChestAnimation(Player player, Block block) {
+        PacketContainer blockActionPacket = manager.createPacket(BLOCK_ACTION);
+        blockActionPacket.getBlockPositionModifier().write(0, new BlockPosition(block.getLocation().toVector()));
+        blockActionPacket.getIntegers().write(0,1);
+        blockActionPacket.getIntegers().write(1,0);
+        manager.sendServerPacket(player,blockActionPacket);
     }
 }

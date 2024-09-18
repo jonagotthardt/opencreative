@@ -96,7 +96,7 @@ public class CommandGamemode implements CommandExecutor {
 
         } else if (args.length == 2) {
             /*
-             * Example: /gamemode PlayerName survival
+             * Example: /gamemode survival PlayerName
              */
             GameMode mode = null;
             switch (args[0]) {
@@ -107,9 +107,9 @@ public class CommandGamemode implements CommandExecutor {
             }
             try {
                 if (mode == null) {
-                    mode = GameMode.valueOf(args[1].toUpperCase());
+                    mode = GameMode.valueOf(args[0].toUpperCase());
                 }
-                Player modePlayer = Bukkit.getPlayer(args[0]);
+                Player modePlayer = Bukkit.getPlayer(args[1]);
                 if (modePlayer == null) {
                     player.sendMessage(getLocaleMessage("no-player-found"));
                     return true;

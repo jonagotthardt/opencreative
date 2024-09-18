@@ -84,7 +84,14 @@ public class FunctionChooserMenu extends AbstractListMenu {
     }
 
     @Override
-    protected void fillDecorationItems() {}
+    protected void fillDecorationItems() {
+        for (byte slot = 0; slot <= 8; slot++) {
+            setItem(slot,DECORATION_PANE_ITEM);
+        }
+        for (byte slot = 45; slot <= 53; slot++) {
+            setItem(slot,DECORATION_PANE_ITEM);
+        }
+    }
 
     @Override
     protected void fillOtherItems() {}
@@ -121,23 +128,44 @@ public class FunctionChooserMenu extends AbstractListMenu {
     }
 
     @Override
+    protected void fillArrowsItems(byte currentPage) {
+        if (elements.isEmpty()) {
+            setItem(noElementsPageButtonSlot, getNoElementsButton());
+            setItem(previousPageButtonSlot, DECORATION_PANE_ITEM);
+            setItem(nextPageButtonSlot, DECORATION_PANE_ITEM);
+            updateSlot(noElementsPageButtonSlot);
+            updateSlot(previousPageButtonSlot);
+            updateSlot(nextPageButtonSlot);
+        } else {
+            int maxPagesAmount = getPages();
+            if (currentPage > maxPagesAmount || currentPage < 1) {
+                currentPage = 1;
+            }
+            setItem(previousPageButtonSlot,currentPage > 1 ? getPreviousPageButton() : DECORATION_PANE_ITEM);
+            updateSlot(previousPageButtonSlot);
+            setItem(nextPageButtonSlot,currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_PANE_ITEM);
+            updateSlot(nextPageButtonSlot);
+        }
+    }
+
+    @Override
     protected List<Object> getElements() {
         return new ArrayList<>(devPlot.getPlacedFunctions());
     }
 
     @Override
     protected ItemStack getNextPageButton() {
-        return createItem(Material.SPECTRAL_ARROW,1,"menus.developer.potions-list.items.next-page");
+        return createItem(Material.SPECTRAL_ARROW,1,"menus.developer.function-chooser.items.next-page");
     }
 
     @Override
     protected ItemStack getPreviousPageButton() {
-        return createItem(Material.ARROW,1,"menus.developer.potions-list.items.previous-page");
+        return createItem(Material.ARROW,1,"menus.developer.function-chooser.items.previous-page");
     }
 
     @Override
     protected ItemStack getNoElementsButton() {
-        return createItem(Material.BARRIER,1,"menus.developer.potions-list.items.no-elements");
+        return createItem(Material.BARRIER,1,"menus.developer.function-chooser.items.no-elements");
     }
 
     @Override

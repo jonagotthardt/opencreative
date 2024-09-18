@@ -20,11 +20,19 @@ package mcchickenstudio.creative.coding.blocks.events.player.movement;
 
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 public class StartSneakingEvent extends CreativeEvent {
 
-    public StartSneakingEvent(Player player) {
+    private final PlayerToggleSneakEvent event;
+
+    public StartSneakingEvent(Player player, PlayerToggleSneakEvent event) {
         super(player);
+        this.event = event;
     }
 
+    @Override
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
+    }
 }

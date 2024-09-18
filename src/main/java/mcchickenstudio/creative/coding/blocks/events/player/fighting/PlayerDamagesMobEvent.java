@@ -28,9 +28,11 @@ public class PlayerDamagesMobEvent extends CreativeEvent {
     private final Entity damager;
     private final Entity victim;
     private final double damage;
+    private final EntityDamageByEntityEvent event;
 
     public PlayerDamagesMobEvent(Player player, EntityDamageByEntityEvent event) {
         super(player);
+        this.event = event;
         damager = event.getDamager();
         victim = event.getEntity();
         damage = event.getDamage();
@@ -46,5 +48,10 @@ public class PlayerDamagesMobEvent extends CreativeEvent {
 
     public Entity getVictim() {
         return victim;
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
     }
 }

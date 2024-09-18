@@ -18,5 +18,28 @@
 
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.movement;
 
-public class LaunchToLocationAction {
+import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.ActionType;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
+import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
+import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
+
+public class LaunchToLocationAction extends PlayerAction {
+    public LaunchToLocationAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
+    }
+
+    @Override
+    public void executePlayer(Player player) {
+        Location location = getArguments().getValue("location",player.getLocation(),this);
+        player.setVelocity(new Vector(location.getX(),location.getY(),location.getZ()));
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return ActionType.PLAYER_LAUNCH_TO_LOCATION;
+    }
 }

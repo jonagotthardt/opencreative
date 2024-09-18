@@ -20,7 +20,10 @@ package mcchickenstudio.creative.coding.placeholders;
 
 import mcchickenstudio.creative.coding.blocks.actions.ActionsHandler;
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.player.fighting.MobDamagesPlayerEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamagesMobEvent;
+import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamagesPlayerEvent;
+import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerKilledPlayerEvent;
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -63,7 +66,7 @@ public class Placeholders {
 
     private String parseRandom(String text, ActionsHandler handler) {
         Player randomPlayer = null;
-        List<Player> playerList = handler.getExecutor().getPlot().getPlayers();
+        List<Player> playerList = handler.getExecutor().getPlot().world.getPlayers();
         if (handler.getEvent().getSelection().getFirst() instanceof Player player) {
             playerList.remove(player);
             if (playerList.isEmpty()) {
@@ -83,13 +86,32 @@ public class Placeholders {
 
     private String parseEvent(String text, ActionsHandler handler) {
         CreativeEvent creativeEvent = handler.getEvent();
+        Entity killer = null;
+        Entity victim = null;
         if (creativeEvent instanceof PlayerDamagesMobEvent event) {
+            killer = event.getDamager();
+            victim = event.getVictim();
+        } else if (creativeEvent instanceof PlayerDamagesPlayerEvent event) {
+            killer = event.getDamager();
+            victim = event.getVictim();
+        } if (creativeEvent instanceof MobDamagesPlayerEvent event) {
+            killer = event.getDamager();
+            victim = event.getVictim();
+        } if (creativeEvent instanceof PlayerKilledPlayerEvent event) {
+            killer = event.getKiller();
+            victim = event.getVictim();
+        }
+        if (killer != null) {
             text = text
-                    .replace("%damager%",event.getDamager().getName())
-                    .replace("%damager_uuid%",event.getDamager().getUniqueId().toString())
-                    .replace("%victim%",event.getVictim().getName())
-                    .replace("%victim_uuid%",event.getVictim().getUniqueId().toString());
-
+                    .replace("%killer%",killer.getName())
+                    .replace("%killer_uuid%",killer.getUniqueId().toString())
+                    .replace("%damager%",killer.getName())
+                    .replace("%damager_uuid%",killer.getUniqueId().toString());
+        }
+        if (victim != null) {
+            text = text
+                    .replace("%victim%",victim.getName())
+                    .replace("%victim_uuid%",victim.getUniqueId().toString());
         }
         return text;
     }

@@ -153,7 +153,20 @@ public class CodeScript {
             }
         }
 
-        if (target != Target.DEFAULT) {
+        if (type == ActionType.SELECTION_TARGET) {
+            String firstSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(),(byte) 1);
+            String secondSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(),(byte) 2);
+            String thirdSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
+            if (secondSignLine != null && !secondSignLine.isEmpty() && thirdSignLine != null && !thirdSignLine.isEmpty()) {
+                scriptConfig.set(path + ".condition.category", secondSignLine);
+                scriptConfig.set(path + ".condition.type", thirdSignLine);
+                if (firstSignLine != null && firstSignLine.equalsIgnoreCase("not")) {
+                    scriptConfig.set(path + ".condition.opposed",true);
+                }
+            } else if (secondSignLine != null && !secondSignLine.isEmpty()) {
+                scriptConfig.set(path + ".target", secondSignLine);
+            }
+        } else if (target != Target.DEFAULT) {
             scriptConfig.set(path + ".target", target.name());
         }
 

@@ -22,6 +22,7 @@ import mcchickenstudio.creative.coding.CodingBlockParser;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
+import mcchickenstudio.creative.coding.menus.layouts.Layout;
 import mcchickenstudio.creative.plots.PlotManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -35,6 +36,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.Plot;
+import org.bukkit.inventory.InventoryHolder;
 
 import java.util.*;
 
@@ -55,7 +57,7 @@ public class PlayerPlaceBlock implements Listener {
             Block blockAgainst = event.getBlockAgainst();
 
             if (blockAgainst.getType() == devPlot.floorBlockMaterial) {
-                if ((!(block.getType() == Material.PISTON && (blockAgainst.getZ() % 4) == 0)) && (!(block.getType().name().contains("SIGN") &&  blockAgainst.getX() >= 4 && (blockAgainst.getX() % 2) == 0)) && (!devPlot.getAllowedBlocks().contains(block.getType()))) {
+                if ((!(block.getType() == Material.PISTON && (blockAgainst.getZ() % 4) == 0 && blockAgainst.getRelative(BlockFace.WEST).getType() == devPlot.actionBlockMaterial)) && (!(block.getType().name().contains("SIGN") &&  blockAgainst.getX() >= 4 && (blockAgainst.getX() % 2) == 0)) && (!devPlot.getAllowedBlocks().contains(block.getType())) || block.getY() <= 0) {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-on-floor"));
                     player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
                     event.setCancelled(true);
@@ -73,7 +75,7 @@ public class PlayerPlaceBlock implements Listener {
                         signText = actionCategory.name().toLowerCase();
                         additionalBlockMaterial = actionCategory.getAdditionalBlock();
                     }
-                    placeDevBlock(player, block, additionalBlockMaterial, signText, devPlot);
+                    placeDevBlock(block, additionalBlockMaterial, signText);
                 } else {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-action-on-event"));
                     player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
@@ -95,7 +97,7 @@ public class PlayerPlaceBlock implements Listener {
                     if (block.getRelative(BlockFace.EAST).getType() == Material.PISTON) {
                         move(block.getLocation(), BlockFace.EAST);
                     }
-                    placeDevBlock(player, block, additionalBlockMaterial, signText, devPlot);
+                    placeDevBlock(block, additionalBlockMaterial, signText);
                 } else {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-event-on-action"));
                     player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
@@ -114,7 +116,7 @@ public class PlayerPlaceBlock implements Listener {
         if (plot != null)  EventRaiser.raisePlaceBlockEvent(event.getPlayer(),event);
     }
 
-    public static void placeDevBlock(Player player, Block block, Material additionalBlockMaterial, String signText, DevPlot devPlot) {
+    public static void placeDevBlock(Block block, Material additionalBlockMaterial, String signText) {
         Block eastBlock = block.getRelative(BlockFace.EAST);
         eastBlock.setType(additionalBlockMaterial);
         if (eastBlock.getType() == Material.PISTON) {
@@ -147,48 +149,18 @@ public class PlayerPlaceBlock implements Listener {
     }
 
     public static void move(Location location, BlockFace face) {
-
         if (face == BlockFace.EAST) {
             /*
              Moves blocks to right
              */
             Set<Block> movedBlocks = new HashSet<>(); // Создаем множество для отслеживания уже перемещенных блоков
-            for (double x = 97; x > location.getX(); x--) { // уменьшил диапазон на 2, чтобы не выйти за пределы мира
+            for (double x = 95; x > location.getX(); x--) { // уменьшил диапазон на 2, чтобы не выйти за пределы мира
                 Block oldBlock = location.getWorld().getBlockAt((int) x, location.getBlockY(), location.getBlockZ());
                 if (oldBlock.getType() == Material.AIR) continue;
                 if (!movedBlocks.contains(oldBlock)) { // Проверяем, был ли этот блок уже перемещен
                     Block newBlock = location.getWorld().getBlockAt((int) x + 2, location.getBlockY(), location.getBlockZ());
-                    newBlock.setType(oldBlock.getType());
-                    newBlock.setBlockData(oldBlock.getBlockData());
+                    moveCodingBlock(oldBlock,newBlock);
                     movedBlocks.add(newBlock);
-                    Block signBlock = oldBlock.getRelative(BlockFace.SOUTH);
-                    if (signBlock.getType().toString().contains("WALL_SIGN")) {
-                        Sign oldSign = (Sign) signBlock.getState();
-                        Block newSignBlock = newBlock.getRelative(BlockFace.SOUTH);
-                        newSignBlock.setType(Material.OAK_WALL_SIGN);
-
-                        Sign sign = (Sign) newSignBlock.getState();
-                        for (byte i = 0; i < oldSign.getSide(Side.FRONT).lines().size(); i++) {
-                            sign.getSide(Side.FRONT).line(i,oldSign.getSide(Side.FRONT).line(i));
-                        }
-                        sign.setBlockData(oldSign.getBlockData());
-                        sign.update();
-                        translateBlockSign(newSignBlock);
-                    }
-                    signBlock.setType(Material.AIR);
-                    oldBlock.setType(Material.AIR);
-
-                    Block chestBlock = oldBlock.getRelative(BlockFace.UP);
-                    if (chestBlock.getType().toString().contains("CHEST")) {
-                        Chest oldChest = (Chest) chestBlock.getState();
-                        Block newChestBlock = newBlock.getRelative(BlockFace.UP);
-                        newChestBlock.setType(Material.CHEST);
-                        newChestBlock.setBlockData(chestBlock.getBlockData());
-                        Chest newChest = (Chest) newChestBlock.getState();
-                        newChest.getBlockInventory().setContents(oldChest.getBlockInventory().getContents());
-                        chestBlock.setType(Material.AIR);
-                    }
-
                     //Block eastBlock = oldBlock.getRelative(BlockFace.EAST).getRelative(BlockFace.EAST).getRelative(BlockFace.EAST);
                     //Block newEastBlock = newBlock.getRelative(BlockFace.EAST);
                     //movedBlocks.add(newEastBlock);
@@ -205,44 +177,60 @@ public class PlayerPlaceBlock implements Listener {
                 Block oldBlock = location.getWorld().getBlockAt((int) x, location.getBlockY(), location.getBlockZ());
                 if (oldBlock.getType() == Material.AIR) continue;
                 if (!movedBlocks.contains(oldBlock)) { // Проверяем, был ли этот блок уже перемещен
-                    Block oldSignBlock = oldBlock.getRelative(BlockFace.SOUTH);
-                    Block oldChestBlock = oldBlock.getRelative(BlockFace.UP);
-
                     Block newBlock = location.getWorld().getBlockAt((int) x-2, location.getBlockY(), location.getBlockZ());
-                    Block newSignBlock = newBlock.getRelative(BlockFace.SOUTH);
-                    Block newChestBlock = newBlock.getRelative(BlockFace.UP);
-
-                    newBlock.setType(oldBlock.getType());
-                    newBlock.setBlockData(oldBlock.getBlockData());
+                    moveCodingBlock(oldBlock,newBlock);
                     movedBlocks.add(oldBlock);
-
-                    if (oldSignBlock.getType().toString().contains("WALL_SIGN")) {
-                        Sign oldSign = (Sign) oldSignBlock.getState();
-                        newSignBlock.setType(Material.OAK_WALL_SIGN);
-
-                        Sign sign = (Sign) newSignBlock.getState();
-                        for (byte i = 0; i < oldSign.getSide(Side.FRONT).lines().size(); i++) {
-                            sign.getSide(Side.FRONT).line(i,oldSign.getSide(Side.FRONT).line(i));
-                        }
-
-                        sign.setBlockData(oldSign.getBlockData());
-                        sign.update();
-                        translateBlockSign(newSignBlock);
-                    }
-                    if (oldChestBlock.getType().toString().contains("CHEST")) {
-                        Chest oldChest = (Chest) oldChestBlock.getState();
-                        newChestBlock.setType(Material.CHEST);
-                        newChestBlock.setBlockData(oldChestBlock.getBlockData());
-                        Chest newChest = (Chest) newChestBlock.getState();
-                        newChest.getBlockInventory().setContents(oldChest.getBlockInventory().getContents());
-                    }
-
-                    oldSignBlock.setType(Material.AIR);
-                    oldBlock.setType(Material.AIR);
-                    oldChestBlock.setType(Material.AIR);
                 }
             }
         }
+    }
+
+    /**
+     * Moves coding block with wall sign and container to next block.
+     * @param oldBlock Block to move and replace with air.
+     * @param newBlock Block where to move.
+     */
+    public static void moveCodingBlock(Block oldBlock, Block newBlock) {
+        Block oldSignBlock = oldBlock.getRelative(BlockFace.SOUTH);
+        Block oldContainerBlock = oldBlock.getRelative(BlockFace.UP);
+
+        Block newSignBlock = newBlock.getRelative(BlockFace.SOUTH);
+        Block newContainerBlock = newBlock.getRelative(BlockFace.UP);
+
+        newBlock.setType(oldBlock.getType());
+        newBlock.setBlockData(oldBlock.getBlockData());
+
+        if (oldSignBlock.getType().toString().contains("WALL_SIGN")) {
+            Sign oldSign = (Sign) oldSignBlock.getState();
+            newSignBlock.setType(Material.OAK_WALL_SIGN);
+
+            Sign sign = (Sign) newSignBlock.getState();
+            for (byte i = 0; i < oldSign.getSide(Side.FRONT).lines().size(); i++) {
+                sign.getSide(Side.FRONT).line(i,oldSign.getSide(Side.FRONT).line(i));
+            }
+            sign.setBlockData(oldSign.getBlockData());
+            sign.update();
+            translateBlockSign(newSignBlock);
+        }
+        if (oldContainerBlock.getState() instanceof InventoryHolder container) {
+            newContainerBlock.setType(oldContainerBlock.getType());
+            newContainerBlock.setBlockData(oldContainerBlock.getBlockData());
+            DevPlot devPlot = PlotManager.getInstance().getDevPlot(oldContainerBlock.getWorld());
+            if (devPlot != null) {
+                Layout layout = devPlot.getOpenedMenu(oldContainerBlock.getLocation());
+                if (layout != null) {
+                    for (Player player : layout.getViewers()) {
+                        player.closeInventory();
+                    }
+                }
+            }
+            if (newContainerBlock.getState() instanceof InventoryHolder newContainer) {
+                newContainer.getInventory().setContents(container.getInventory().getContents());
+            }
+        }
+        oldSignBlock.setType(Material.AIR);
+        oldBlock.setType(Material.AIR);
+        oldContainerBlock.setType(Material.AIR);
     }
 }
 

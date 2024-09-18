@@ -23,6 +23,8 @@ import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.MobDamagesPlayerEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamagesMobEvent;
+import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamagesPlayerEvent;
+import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerKilledPlayerEvent;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.coding.variables.VariableLink;
@@ -103,7 +105,7 @@ public abstract class Action {
         Set<Entity> entities = new HashSet<>();
         if (getWorld() == null) return entities;
         for (Entity entity : executor.getPlot().world.getEntities()) {
-            if (entity.getName().equalsIgnoreCase(text) || entity.getUniqueId().equals(UUID.fromString(text))) {
+            if (entity.getName().equalsIgnoreCase(text) || entity.getUniqueId().toString().equalsIgnoreCase(text)) {
                 entities.add(entity);
             }
         }
@@ -114,7 +116,7 @@ public abstract class Action {
         Set<Player> players = new HashSet<>();
         if (getWorld() == null) return players;
         for (Player player : getWorld().getPlayers()) {
-            if (player.getName().equalsIgnoreCase(text) || player.getUniqueId().equals(UUID.fromString(text))) {
+            if (player.getName().equalsIgnoreCase(text) || player.getUniqueId().toString().equalsIgnoreCase(text)) {
                 players.add(player);
             }
         }
@@ -151,7 +153,7 @@ public abstract class Action {
         switch (target) {
             case RANDOM_PLAYER -> {
                 Player randomPlayer = null;
-                List<Player> playerList = this.getExecutor().getPlot().getPlayers();
+                List<Player> playerList = this.getExecutor().getPlot().world.getPlayers();
                 if (!playerList.isEmpty()) {
                     Random r = new Random();
                     int i = r.nextInt(playerList.size());
@@ -171,6 +173,10 @@ public abstract class Action {
                     killer = mobEvent.getDamager();
                 } else if (executor.getEvent() instanceof MobDamagesPlayerEvent playerEvent) {
                     killer = playerEvent.getDamager();
+                } else if (executor.getEvent() instanceof PlayerDamagesPlayerEvent playerEvent) {
+                    killer = playerEvent.getDamager();
+                } else if (executor.getEvent() instanceof PlayerKilledPlayerEvent playerEvent) {
+                    killer = playerEvent.getKiller();
                 }
                 if (killer != null) {
                     entities.add(killer);
@@ -181,6 +187,10 @@ public abstract class Action {
                 if (executor.getEvent() instanceof PlayerDamagesMobEvent mobEvent) {
                     victim = mobEvent.getVictim();
                 } else if (executor.getEvent() instanceof MobDamagesPlayerEvent playerEvent) {
+                    victim = playerEvent.getVictim();
+                } else if (executor.getEvent() instanceof PlayerDamagesPlayerEvent playerEvent) {
+                    victim = playerEvent.getVictim();
+                } else if (executor.getEvent() instanceof PlayerKilledPlayerEvent playerEvent) {
                     victim = playerEvent.getVictim();
                 }
                 if (victim != null) {
@@ -202,6 +212,11 @@ public abstract class Action {
             ValueType type = ValueType.getByObject(value);
             if (type == null) {
                 type = ValueType.TEXT;
+            }
+            if (value instanceof String text) {
+                if (text.length() > 1024) {
+                    throw new RuntimeException("Can't assign text with length above 1024 symbols to variable!");
+                }
             }
             getPlot().getWorldVariables().setVariableValue(link, type, value, getHandler().getMainActionHandler());
         }

@@ -22,10 +22,7 @@ import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -57,7 +54,7 @@ public class FileUtils {
      * @param worldName Name of new world (plot31, plot103)
      * @param player    Owner of new world
      */
-    public static void createWorldSettings(final String worldName, final Player player) {
+    public static void createWorldSettings(final String worldName, final Player player, WorldCreator creator) {
         final String worldFolderPath = Bukkit.getServer().getWorldContainer() + File.separator + worldName + File.separator;
         final File file = new File(worldFolderPath, "settings.yml");
         if (!file.exists()) {
@@ -73,6 +70,8 @@ public class FileUtils {
         worldFile.set("owner", player.getName());
         worldFile.createSection("owner-group");
         worldFile.set("owner-group",PlayerUtils.getGroup(player));
+        worldFile.createSection("environment");
+        worldFile.set("environment", creator.environment().name());
         worldFile.createSection("world");
         worldFile.set("world",worldName);
         worldFile.createSection("creation-time");

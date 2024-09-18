@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.commands;
 
 import mcchickenstudio.creative.menu.CreativeMenu;
+import mcchickenstudio.creative.menu.world.WorldGenerationMenu;
 import mcchickenstudio.creative.menu.world.browsers.RecommendedWorldsMenu;
 import mcchickenstudio.creative.menu.world.browsers.WorldsBrowserMenu;
 import mcchickenstudio.creative.plots.Plot;
@@ -370,6 +371,18 @@ public class CommandCreative implements CommandExecutor {
                         return true;
                     }
                     sender.sendMessage(getLocaleMessage(args[1]));
+                }
+                case "generator" -> {
+                    if (!Main.debug) {
+                        return true;
+                    }
+                    if (!sender.hasPermission("creative.test")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
+                    }
+                    if (player != null) {
+                        new WorldGenerationMenu(player).open(player);
+                    }
                 }
             }
         } else {

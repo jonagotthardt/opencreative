@@ -1,5 +1,5 @@
 name: 'OpenCreative'
-version: '5.0 Preview 4'
+version: '5.0 Developer Preview'
 main: mcchickenstudio.creative.Main
 api-version: 1.21
 authors: [McChicken Studio]

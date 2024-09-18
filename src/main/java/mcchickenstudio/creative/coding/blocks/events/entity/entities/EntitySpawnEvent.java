@@ -16,7 +16,23 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mcchickenstudio.creative.coding.blocks.actions.playeractions.movement;
+package mcchickenstudio.creative.coding.blocks.events.entity.entities;
 
-public class SetRotationAction {
+import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.plots.Plot;
+import org.bukkit.entity.Entity;
+
+public class EntitySpawnEvent extends CreativeEvent {
+
+    private final org.bukkit.event.entity.EntitySpawnEvent event;
+
+    public EntitySpawnEvent(org.bukkit.event.entity.EntitySpawnEvent event) {
+        super(event.getEntity());
+        this.event = event;
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
+    }
 }

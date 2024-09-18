@@ -20,11 +20,33 @@ package mcchickenstudio.creative.coding.blocks.events.player.fighting;
 
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class HungerChangeEvent extends CreativeEvent {
 
-    public HungerChangeEvent(Player player) {
+    private final FoodLevelChangeEvent event;
+    private final ItemStack itemStack;
+    private final int foodLevel;
+
+
+    public HungerChangeEvent(Player player, FoodLevelChangeEvent event) {
         super(player);
+        this.event = event;
+        this.foodLevel = event.getFoodLevel();
+        this.itemStack = event.getItem();
     }
 
+    public int getFoodLevel() {
+        return foodLevel;
+    }
+
+    public ItemStack getItemStack() {
+        return itemStack;
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
+    }
 }

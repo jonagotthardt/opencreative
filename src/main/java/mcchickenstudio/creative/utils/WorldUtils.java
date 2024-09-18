@@ -18,11 +18,13 @@
 
 package mcchickenstudio.creative.utils;
 
+import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -40,17 +42,20 @@ public class WorldUtils {
         FLAT,
         EMPTY,
         WATER,
-        SURVIVAL
+        SURVIVAL,
+        LARGE_BIOMES,
 
     }
 
     /**
      Create a world for plot. It creates world, plot's settings.yml, sets plot parameters, teleports player.
      **/
-    public static boolean generateWorld(Plot plot, Player player, String worldName, WorldGenerator worldGenerator) {
+    public static boolean generateWorld(Plot plot, Player player, String worldName, WorldGenerator worldGenerator, World.Environment environment, long seed) {
 
         WorldCreator worldCreator = new WorldCreator(worldName).generateStructures(false);
         worldCreator.type(WorldType.FLAT);
+        worldCreator.environment(environment);
+        worldCreator.seed(seed);
 
         if (worldGenerator == WorldGenerator.EMPTY) {
             worldCreator.generator(new EmptyChunkGenerator());
@@ -58,6 +63,9 @@ public class WorldUtils {
             worldCreator.generator(new WaterChunkGenerator());
         } else if (worldGenerator == WorldGenerator.SURVIVAL) {
             worldCreator.type(WorldType.NORMAL);
+            worldCreator.generateStructures(true);
+        } else if (worldGenerator == WorldGenerator.LARGE_BIOMES) {
+            worldCreator.type(WorldType.LARGE_BIOMES);
             worldCreator.generateStructures(true);
         }
 
@@ -93,7 +101,7 @@ public class WorldUtils {
                 world.setSpawnLocation(0,8,0);
             }
 
-            createWorldSettings(worldName, player);
+            createWorldSettings(worldName, player, worldCreator);
 
             plot.world = Bukkit.getWorld(worldName);
             plot.worldName = worldName;
@@ -115,6 +123,18 @@ public class WorldUtils {
             for (Entity entity : world.getEntities()) {
                 if (entity.getType() != EntityType.PLAYER) entity.remove();
             }
+
+            BukkitRunnable runnable = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    for (Entity entity : world.getEntities()) {
+                        if (entity instanceof EnderDragon dragon) {
+                            dragon.setHealth(0);
+                        }
+                    }
+                }
+            };
+            runnable.runTaskLater(Main.getPlugin(),10L);
             return true;
 
         } else {

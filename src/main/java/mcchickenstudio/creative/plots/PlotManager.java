@@ -19,16 +19,21 @@
 package mcchickenstudio.creative.plots;
 
 import mcchickenstudio.creative.coding.CodeScript;
+import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.utils.ErrorUtils;
 import mcchickenstudio.creative.utils.FileUtils;
 import mcchickenstudio.creative.utils.MessageUtils;
 import mcchickenstudio.creative.utils.PlayerUtils;
+import net.kyori.adventure.util.TriState;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import mcchickenstudio.creative.Main;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,8 +81,17 @@ public class PlotManager {
      **/
     public void loadPlot(Plot plot) {
         FileUtils.loadWorldFolder(plot.worldName,true);
-        Bukkit.createWorld(new WorldCreator(plot.worldName));
-        plot.world = Bukkit.getWorld(plot.worldName);
+        World world = new WorldCreator(plot.worldName).environment(plot.getEnvironment()).keepSpawnLoaded(TriState.FALSE).createWorld();
+        if (world == null) return;
+        plot.world = world;
+        plot.world.setAutoSave(true);
+        plot.world.setKeepSpawnInMemory(false);
+        if (world.getEnvironment() == World.Environment.THE_END) {
+            if (world.getEnderDragonBattle() != null) {
+                world.getEnderDragonBattle().setPreviouslyKilled(true);
+                world.getEnderDragonBattle().getBossBar().setVisible(false);
+            }
+        }
         plot.isLoaded = true;
         plot.setScript(new CodeScript(plot, FileUtils.getPlotScriptFile(plot)));
         FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
@@ -94,6 +108,7 @@ public class PlotManager {
         plot.getWorldVariables().save();
         FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
         FileUtils.setPlotConfigParameter(plot,"mode", plot.getPlotMode());
+        FileUtils.setPlotConfigParameter(plot,"environment",plot.getEnvironment().name());
         plot.isLoaded = false;
         for (Player player : plot.getPlayers()) {
             teleportToLobby(player);
@@ -254,6 +269,15 @@ public class PlotManager {
                         return plot.devPlot;
                     }
                 }
+            }
+        }
+        return null;
+    }
+
+    public DevPlot getDevPlot(World world) {
+        for (Plot plot : plots) {
+            if (plot.devPlot != null && world.equals(plot.devPlot.world)) {
+                return plot.devPlot;
             }
         }
         return null;

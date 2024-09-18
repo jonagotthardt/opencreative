@@ -18,14 +18,26 @@
 
 package mcchickenstudio.creative.coding.blocks.executors.player.fighting;
 
+import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.EventValues;
+import mcchickenstudio.creative.coding.blocks.events.player.fighting.HungerChangeEvent;
+import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamagesMobEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.blocks.executors.player.PlayerExecutor;
 import mcchickenstudio.creative.plots.Plot;
+import org.bukkit.event.Cancellable;
 
-public class PlayerDamagesMobExecutor extends PlayerExecutor {
+public class PlayerDamagesMobExecutor extends PlayerExecutor implements Cancellable {
 
     public PlayerDamagesMobExecutor(Plot plot, int x, int y, int z) {
         super(plot, x, y, z);
+    }
+
+    @Override
+    protected void setTempVars(CreativeEvent event) {
+        if (event instanceof PlayerDamagesMobEvent damagesMobEvent) {
+            setTempVar(EventValues.Variable.DAMAGE,damagesMobEvent.getDamage());
+        }
     }
 
     @Override
@@ -34,4 +46,13 @@ public class PlayerDamagesMobExecutor extends PlayerExecutor {
     }
 
 
+    @Override
+    public boolean isCancelled() {
+        return getEvent().isCancelled();
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        getEvent().setCancelled(cancel);
+    }
 }

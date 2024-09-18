@@ -18,6 +18,7 @@
 
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.appearance;
 
+import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
@@ -34,7 +35,7 @@ public class ShowPlayerAction extends PlayerAction {
     public void executePlayer(Player player) {
         String text = getArguments().getValue("player"," ",this);
         for (Player p : getPlayersByNameOrUUID(text)) {
-            player.showPlayer(p);
+            player.showPlayer(Main.getPlugin(),p);
         }
     }
 

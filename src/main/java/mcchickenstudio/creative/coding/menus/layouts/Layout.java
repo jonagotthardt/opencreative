@@ -45,6 +45,8 @@ import java.util.List;
 import java.util.Set;
 
 import static mcchickenstudio.creative.utils.ItemUtils.*;
+import static mcchickenstudio.creative.utils.PlayerUtils.sendClosedChestAnimation;
+import static mcchickenstudio.creative.utils.PlayerUtils.sendOpenedChestAnimation;
 
 /**
  * <h1>Layout</h1>
@@ -125,18 +127,24 @@ public abstract class Layout extends AbstractMenu {
     @Override
     public void onOpen(InventoryOpenEvent event) {
         viewers.add((Player) event.getPlayer());
-        ((Player) event.getPlayer()).playSound(event.getPlayer().getLocation(),Sound.BLOCK_BARREL_OPEN,100,0.6f);
+        ((Player) event.getPlayer()).playSound(event.getPlayer().getLocation(),containerBlock.getType() == Material.BARREL ? Sound.BLOCK_BARREL_OPEN : Sound.BLOCK_ENDER_CHEST_OPEN,100,0.6f);
+        for (Player onlinePlayer : event.getPlayer().getWorld().getPlayers()) {
+            sendOpenedChestAnimation(onlinePlayer,containerBlock);
+        }
     }
 
     @Override
     public final void onClose(InventoryCloseEvent event) {
         saveArgumentsItems(event.getInventory());
-        ((Player) event.getPlayer()).playSound(event.getPlayer().getLocation(),Sound.BLOCK_BARREL_CLOSE,100,0.6f);
+        ((Player) event.getPlayer()).playSound(event.getPlayer().getLocation(),containerBlock.getType() == Material.BARREL ? Sound.BLOCK_BARREL_CLOSE : Sound.BLOCK_ENDER_CHEST_CLOSE,100,containerBlock.getType() == Material.BARREL ? 0.6f : 1.0f);
         viewers.remove((Player) event.getPlayer());
         if (viewers.isEmpty()) {
             DevPlot devPlot = PlotManager.getInstance().getDevPlot((Player) event.getPlayer());
             if (devPlot != null) {
                 devPlot.unregisterOpenedMenu(containerBlock.getLocation());
+                for (Player onlinePlayer : event.getPlayer().getWorld().getPlayers()) {
+                    sendClosedChestAnimation(onlinePlayer,containerBlock);
+                }
             }
             destroy();
         }
@@ -160,7 +168,7 @@ public abstract class Layout extends AbstractMenu {
                         if (rb.getCurrentValue() instanceof Byte) {
                             itemStack.setType(Material.SLIME_BALL);
                             itemMeta = itemStack.getItemMeta();
-                            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&c")+ rb.getCurrentValue()+".0");
+                            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&a")+ rb.getCurrentValue()+".0");
                         } else if (rb.getCurrentValue() instanceof Boolean) {
                             boolean value = (boolean) rb.getCurrentValue();
                             itemStack.setType(Material.CLOCK);
@@ -341,5 +349,9 @@ public abstract class Layout extends AbstractMenu {
             count += slot.getListSize();
         }
         return count;
+    }
+
+    public Set<Player> getViewers() {
+        return viewers;
     }
 }

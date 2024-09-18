@@ -19,11 +19,14 @@
 package mcchickenstudio.creative.coding.blocks.executors;
 
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.entity.entities.EntitySpawnEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.*;
 import mcchickenstudio.creative.coding.blocks.events.player.interaction.*;
 import mcchickenstudio.creative.coding.blocks.events.player.inventory.*;
 import mcchickenstudio.creative.coding.blocks.events.player.movement.*;
 import mcchickenstudio.creative.coding.blocks.events.player.world.*;
+import mcchickenstudio.creative.coding.blocks.events.world.other.GamePlayEvent;
+import mcchickenstudio.creative.coding.blocks.executors.entity.entities.EntitySpawnExecutor;
 import mcchickenstudio.creative.coding.blocks.executors.other.Cycle;
 import mcchickenstudio.creative.coding.blocks.executors.other.Function;
 import mcchickenstudio.creative.coding.blocks.executors.other.Method;
@@ -32,6 +35,7 @@ import mcchickenstudio.creative.coding.blocks.executors.player.interaction.*;
 import mcchickenstudio.creative.coding.blocks.executors.player.inventory.*;
 import mcchickenstudio.creative.coding.blocks.executors.player.movement.*;
 import mcchickenstudio.creative.coding.blocks.executors.player.world.*;
+import mcchickenstudio.creative.coding.blocks.executors.world.other.GamePlayExecutor;
 import mcchickenstudio.creative.coding.menus.MenusCategory;
 import mcchickenstudio.creative.utils.hooks.HookUtils;
 import net.kyori.adventure.text.Component;
@@ -104,7 +108,6 @@ public enum ExecutorType {
     PLAYER_UNLEASH_ENTITY(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
     PLAYER_ITEM_HELD(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
     PLAYER_ITEM_MEND(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_ITEM_CONSUME(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
     PLAYER_EXP_CHANGE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
     PLAYER_ARMOR_STAND_MANIPULATE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
     PLAYER_EGG_THROW(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
@@ -145,13 +148,17 @@ public enum ExecutorType {
     PLAYER_DROP_ITEM(       ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, ItemDropExecutor.class, ItemDropEvent.class, Material.HOPPER),
     PLAYER_PICKUP_ITEM(     ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, ItemPickupExecutor.class, ItemPickupEvent.class, Material.GLOWSTONE_DUST),
     PLAYER_CLOSE_INVENTORY( ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, CloseInventoryExecutor.class, CloseInventoryEvent.class, Material.STRUCTURE_VOID),
+    PLAYER_ITEM_CONSUME(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, ItemConsumeExecutor.class, ItemConsumeEvent.class, Material.BREAD),
+    PLAYER_ITEM_BREAK(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, ItemBreakExecutor.class, ItemBreakEvent.class, Material.GOLDEN_PICKAXE),
 
     PLAYER_GET_DAMAGED(     ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerDamagedExecutor.class, PlayerDamagedEvent.class, Material.DEAD_BUSH),
     MOB_DAMAGE_PLAYER(      ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, MobDamagesPlayerExecutor.class, MobDamagesPlayerEvent.class, Material.ZOMBIE_HEAD),
     PLAYER_DAMAGE_MOB(      ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerDamagesMobExecutor.class, PlayerDamagesMobEvent.class, Material.SKELETON_SKULL),
+    PLAYER_DAMAGE_PLAYER(   ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerDamagesPlayerExecutor.class, PlayerDamagesPlayerEvent.class, Material.PLAYER_HEAD),
     PLAYER_HUNGER_CHANGE(   ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, HungerChangeExecutor.class, HungerChangeEvent.class, Material.COOKED_CHICKEN),
+    PLAYER_KILLED_PLAYER(   ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerKilledPlayerExecutor.class, PlayerKilledPlayerEvent.class, Material.DIAMOND_SWORD),
     PLAYER_DEATH(           ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerDeathExecutor.class, PlayerDeathEvent.class,Material.REDSTONE),
-    PLAYER_RESPAWN(         ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerRespawnExecutor.class, PlayerRespawnEvent.class, Material.PLAYER_HEAD),
+    PLAYER_RESPAWN(         ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerRespawnExecutor.class, PlayerRespawnEvent.class, Material.NETHER_STAR),
     PLAYER_TOTEM_RESPAWN(   ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerTotemRespawnExecutor.class, PlayerTotemRespawnEvent.class, Material.TOTEM_OF_UNDYING),
 
     // in development
@@ -174,7 +181,12 @@ public enum ExecutorType {
     PLAYER_STOP_FLYING(     ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, StopFlyingExecutor.class, StopFlyingEvent.class, Material.FEATHER),
     PLAYER_SNEAKING(        ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, StartSneakingExecutor.class, StartSneakingEvent.class, Material.CHAINMAIL_LEGGINGS),
     PLAYER_STOP_SNEAKING(   ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, StopSneakingExecutor.class, StopSneakingEvent.class, Material.IRON_LEGGINGS),
-    PLAYER_TELEPORT(        ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, TeleportExecutor.class, TeleportEvent.class, Material.ENDER_PEARL);
+    PLAYER_TELEPORT(        ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, TeleportExecutor.class, TeleportEvent.class, Material.ENDER_PEARL),
+
+    WORLD_PLAY_MODE(        ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, GamePlayExecutor.class, GamePlayEvent.class, Material.ENDER_EYE),
+
+    ENTITY_SPAWNED(        ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY, EntitySpawnExecutor.class, EntitySpawnEvent.class, Material.CHICKEN_SPAWN_EGG);
+
 
     private final Class<? extends Executor> executor;
     private final Class<? extends CreativeEvent> creativeEvent;

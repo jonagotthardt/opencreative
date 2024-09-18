@@ -188,14 +188,20 @@ public class CommandDev implements CommandExecutor {
         ItemStack functionItem = createItem(Material.LAPIS_BLOCK,1,"items.developer.function");
         player.getInventory().setItem(9, functionItem);
 
+        ItemStack eventWorldItem = createItem(Material.REDSTONE_BLOCK,1,"items.developer.event-world");
+        player.getInventory().setItem(10, eventWorldItem);
+
         ItemStack actionControl = createItem(Material.COAL_BLOCK,1,"items.developer.action-control");
-        player.getInventory().setItem(10, actionControl);
+        player.getInventory().setItem(11, actionControl);
 
         ItemStack actionWorld = createItem(Material.NETHER_BRICKS,1,"items.developer.action-world");
-        player.getInventory().setItem(19, actionWorld);
+        player.getInventory().setItem(20, actionWorld);
+
+        ItemStack eventEntityItem = createItem(Material.GOLD_BLOCK,1,"items.developer.event-entity");
+        player.getInventory().setItem(27, eventEntityItem);
 
         ItemStack launchFunction = createItem(Material.LAPIS_ORE,1,"items.developer.launch-function");
-        player.getInventory().setItem(28, launchFunction);
+        player.getInventory().setItem(29, launchFunction);
 
         ItemStack cycleItem = createItem(Material.OXIDIZED_COPPER,1,"items.developer.cycle");
         player.getInventory().setItem(18, cycleItem);

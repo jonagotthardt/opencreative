@@ -70,7 +70,7 @@ import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 public final class Main extends JavaPlugin {
 
     private static Main plugin;
-    public static final String version = "5.0 Preview 4";
+    public static final String version = "5.0 Developer Preview";
     public static final String codename = "Things will be different";
     public static boolean maintenance = false;
     public static boolean debug = false;
@@ -86,6 +86,7 @@ public final class Main extends JavaPlugin {
         getLogger().info("We're AGAINST THE WAR. This software IS NOT DESIGNED for people, who support killing and robbing another country.");
         getLogger().info(" ");
         getLogger().info("Let us having fun, like players that create their worlds...");
+        getLogger().info("McChicken Studio 2017-2024");
         getLogger().info(" ");
     }
 
@@ -170,7 +171,7 @@ public final class Main extends JavaPlugin {
                 @Override
                 public void run() {
                     for (Player p : Bukkit.getOnlinePlayers()) {
-                        p.sendActionBar(Component.text("§fOpen§7Creative§b+ §3" + version + "§7 Debug Mode. §fSay goodbye to Yotta powered servers!"));
+                        p.sendActionBar(Component.text("§fOpen§7Creative§b+ §3" + version + "§7 Debug Mode. §fThings will be different."));
                     }
                 }
             }.runTaskTimer(this,20L,20L);

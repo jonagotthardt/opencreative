@@ -97,6 +97,7 @@ public class CommandPlay implements CommandExecutor {
                     } else {
                         plot.getScript().loadCode();
                     }
+                    EventRaiser.raiseWorldPlayEvent(plot);
                     for (Player p : plot.getPlayers()) {
                         if (PlotManager.getInstance().getDevPlot(p) == null || sender.getName().equals(p.getName())) {
                             EventRaiser.raiseJoinEvent(p);

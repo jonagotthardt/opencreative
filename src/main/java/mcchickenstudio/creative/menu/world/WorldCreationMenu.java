@@ -23,11 +23,14 @@ import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.utils.MessageUtils;
 import mcchickenstudio.creative.utils.WorldUtils;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Random;
 
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 import static mcchickenstudio.creative.utils.ItemUtils.itemEquals;
@@ -54,14 +57,15 @@ public class WorldCreationMenu extends AbstractMenu {
     @Override
     public void onClick(InventoryClickEvent event) {
         event.setCancelled(true);
+        long seed = new Random().nextInt();
         if (itemEquals(event.getCurrentItem(), FLAT_WORLD_ITEM)) {
-            new Plot((Player) event.getWhoClicked(), WorldUtils.WorldGenerator.FLAT);
+            new Plot((Player) event.getWhoClicked(), WorldUtils.WorldGenerator.FLAT, World.Environment.NORMAL,seed);
         } else if (itemEquals(event.getCurrentItem(), EMPTY_WORLD_ITEM)) {
-            new Plot((Player) event.getWhoClicked(), WorldUtils.WorldGenerator.EMPTY);
+            new Plot((Player) event.getWhoClicked(), WorldUtils.WorldGenerator.EMPTY, World.Environment.NORMAL,seed);
         } else if (itemEquals(event.getCurrentItem(), OCEAN_WORLD_ITEM)) {
-            new Plot((Player) event.getWhoClicked(), WorldUtils.WorldGenerator.WATER);
+            new Plot((Player) event.getWhoClicked(), WorldUtils.WorldGenerator.WATER, World.Environment.NORMAL,seed);
         } else if (itemEquals(event.getCurrentItem(), PLAINS_WORLD_ITEM)) {
-            new Plot((Player) event.getWhoClicked(), WorldUtils.WorldGenerator.SURVIVAL);
+            new Plot((Player) event.getWhoClicked(), WorldUtils.WorldGenerator.SURVIVAL, World.Environment.NORMAL,seed);
         }
     }
 

@@ -18,18 +18,41 @@
 
 package mcchickenstudio.creative.coding.blocks.executors.player.fighting;
 
+import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.EventValues;
+import mcchickenstudio.creative.coding.blocks.events.player.fighting.HungerChangeEvent;
+import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamagedEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.blocks.executors.player.PlayerExecutor;
 import mcchickenstudio.creative.plots.Plot;
+import org.bukkit.event.Cancellable;
 
-public class HungerChangeExecutor extends PlayerExecutor {
+public class HungerChangeExecutor extends PlayerExecutor implements Cancellable {
 
     public HungerChangeExecutor(Plot plot, int x, int y, int z) {
         super(plot, x, y, z);
     }
 
     @Override
+    protected void setTempVars(CreativeEvent event) {
+        if (event instanceof HungerChangeEvent hungerChangeEvent) {
+            setTempVar(EventValues.Variable.ITEM,hungerChangeEvent.getItemStack());
+            setTempVar(EventValues.Variable.FOOD_LEVEL,hungerChangeEvent.getFoodLevel());
+        }
+    }
+
+    @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_HUNGER_CHANGE;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return getEvent().isCancelled();
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        getEvent().setCancelled(cancel);
     }
 }

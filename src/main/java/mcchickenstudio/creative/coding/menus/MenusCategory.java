@@ -38,6 +38,7 @@ public enum MenusCategory {
     APPEARANCE(Material.ARMOR_STAND),
     EVENTS(Material.NETHER_BRICKS),
     PARAMS(Material.ITEM_FRAME),
+    PLAYER(Material.PLAYER_HEAD),
     OTHER(Material.PUMPKIN_SEEDS),
 
     TEXT_OPERATIONS(Material.BOOK),
