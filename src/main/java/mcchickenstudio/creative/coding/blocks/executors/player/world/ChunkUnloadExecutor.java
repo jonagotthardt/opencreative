@@ -21,7 +21,6 @@ package mcchickenstudio.creative.coding.blocks.executors.player.world;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.blocks.executors.player.PlayerExecutor;
 import mcchickenstudio.creative.plots.Plot;
-import org.bukkit.event.Cancellable;
 
 public class ChunkUnloadExecutor extends PlayerExecutor {
 

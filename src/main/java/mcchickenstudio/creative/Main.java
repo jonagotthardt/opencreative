@@ -42,8 +42,6 @@ import mcchickenstudio.creative.utils.hooks.HookUtils;
 import mcchickenstudio.creative.utils.PlayerUtils;
 import mcchickenstudio.creative.utils.hooks.Metrics;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -54,7 +52,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;

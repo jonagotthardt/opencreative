@@ -28,7 +28,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -115,9 +114,7 @@ public abstract class Layout extends AbstractMenu {
                 event.setCancelled(true);
                 inventory.setItem(event.getRawSlot(),currentItem);
                 event.getWhoClicked().setItemOnCursor(inventory.getItem(event.getRawSlot()));
-                *//*for (Player viewer : viewers) {
-                    viewer.getOpenInventory().setItem(event.getRawSlot(),currentItem);
-                }*//*
+                *//*
             }*/
         } else {
             event.setCancelled(true);

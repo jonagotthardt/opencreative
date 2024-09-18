@@ -38,7 +38,6 @@ import java.util.*;
 
 import static mcchickenstudio.creative.coding.arguments.Argument.parseEntity;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugAction;
-import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugLog;
 
 /**
  * <h1>Action</h1>
@@ -168,16 +167,7 @@ public abstract class Action {
                 }
             }
             case KILLER -> {
-                Entity killer = null;
-                if (executor.getEvent() instanceof PlayerDamagesMobEvent mobEvent) {
-                    killer = mobEvent.getDamager();
-                } else if (executor.getEvent() instanceof MobDamagesPlayerEvent playerEvent) {
-                    killer = playerEvent.getDamager();
-                } else if (executor.getEvent() instanceof PlayerDamagesPlayerEvent playerEvent) {
-                    killer = playerEvent.getDamager();
-                } else if (executor.getEvent() instanceof PlayerKilledPlayerEvent playerEvent) {
-                    killer = playerEvent.getKiller();
-                }
+                Entity killer = getKiller();
                 if (killer != null) {
                     entities.add(killer);
                 }
@@ -197,12 +187,24 @@ public abstract class Action {
                     entities.add(victim);
                 }
             }
-            case SELECTED -> {
-                entities.addAll(getHandler().getSelectedTargets());
-            }
+            case SELECTED -> entities.addAll(getHandler().getSelectedTargets());
             default -> entities.addAll(eventEntities);
         }
         return entities;
+    }
+
+    private Entity getKiller() {
+        Entity killer = null;
+        if (executor.getEvent() instanceof PlayerDamagesMobEvent mobEvent) {
+            killer = mobEvent.getDamager();
+        } else if (executor.getEvent() instanceof MobDamagesPlayerEvent playerEvent) {
+            killer = playerEvent.getDamager();
+        } else if (executor.getEvent() instanceof PlayerDamagesPlayerEvent playerEvent) {
+            killer = playerEvent.getDamager();
+        } else if (executor.getEvent() instanceof PlayerKilledPlayerEvent playerEvent) {
+            killer = playerEvent.getKiller();
+        }
+        return killer;
     }
 
     protected void setVarValue(VariableLink link, Object value) {

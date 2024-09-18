@@ -65,7 +65,6 @@ import static mcchickenstudio.creative.utils.BlockUtils.*;
 import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemName;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
-import static mcchickenstudio.creative.utils.PlayerUtils.sendOpenedChestAnimation;
 import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
 
 public class PlayerInteract implements Listener {

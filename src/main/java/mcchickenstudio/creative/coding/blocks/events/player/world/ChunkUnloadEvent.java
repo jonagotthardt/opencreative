@@ -18,7 +18,6 @@
 
 package mcchickenstudio.creative.coding.blocks.events.player.world;
 
-import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import org.bukkit.entity.Player;

@@ -24,7 +24,6 @@ import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 

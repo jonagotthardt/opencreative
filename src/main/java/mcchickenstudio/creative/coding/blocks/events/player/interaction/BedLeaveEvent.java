@@ -21,7 +21,6 @@ package mcchickenstudio.creative.coding.blocks.events.player.interaction;
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 
 public class BedLeaveEvent extends CreativeEvent {

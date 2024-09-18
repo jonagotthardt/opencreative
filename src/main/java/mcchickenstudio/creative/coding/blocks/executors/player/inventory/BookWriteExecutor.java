@@ -21,7 +21,6 @@ package mcchickenstudio.creative.coding.blocks.executors.player.inventory;
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.events.player.inventory.BookWriteEvent;
-import mcchickenstudio.creative.coding.blocks.events.player.inventory.ItemClickEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.blocks.executors.player.PlayerExecutor;
 import mcchickenstudio.creative.plots.Plot;

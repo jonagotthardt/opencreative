@@ -7188,7 +7188,7 @@ blocks:
   var_get_location_y: "&aY координата"
   var_get_location_z: "&9Z координата"
   var_get_location_yaw: "&eYAW осмотр"
-  var_get_location_yaw: "&6PITCH осмотр"
+  var_get_location_pitch: "&6PITCH осмотр"
   var_get_distance: "Узн. дистанцию"
   var_create_map: "&aСоздать словарь"
   var_put_into_map: "&6Добав. в словарь"

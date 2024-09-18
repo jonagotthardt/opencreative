@@ -19,8 +19,6 @@
 package mcchickenstudio.creative.coding.blocks.events.entity.entities;
 
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
-import mcchickenstudio.creative.plots.Plot;
-import org.bukkit.entity.Entity;
 
 public class EntitySpawnEvent extends CreativeEvent {
 

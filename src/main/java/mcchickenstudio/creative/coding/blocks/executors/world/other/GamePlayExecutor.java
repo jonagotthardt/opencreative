@@ -19,7 +19,6 @@
 package mcchickenstudio.creative.coding.blocks.executors.world.other;
 
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
-import mcchickenstudio.creative.coding.blocks.executors.player.PlayerExecutor;
 import mcchickenstudio.creative.coding.blocks.executors.world.WorldExecutor;
 import mcchickenstudio.creative.plots.Plot;
 

@@ -226,40 +226,6 @@ public class FileUtils {
     }
 
     // Загрузка шаблонов миров
-    /*public static void loadTemplates() {
-        Main.getPlugin().getLogger().info("Loading Creative world templates...");
-        try {
-            File folder = new File(plugin.getDataFolder() + File.separator + "templates" + File.separator);
-            if (!folder.exists()) if (!folder.mkdirs()) sendCriticalErrorMessage("Directory " + folder.getPath() + " could not be created");
-            File devWorldTemplate = new File(folder,"devWorld.zip");
-            if (!devWorldTemplate.exists()) {
-                plugin.saveResource("templates" + File.separator + "devWorld.zip",true);
-                byte[] buffer = new byte[1024];
-                try (ZipInputStream zipInputStream = new ZipInputStream(Files.newInputStream(devWorldTemplate.toPath()))) {
-                    ZipEntry zipEntry = zipInputStream.getNextEntry();
-                    while (zipEntry != null) {
-                        String entryPath = folder + File.separator + zipEntry.getName();
-                        if (zipEntry.isDirectory()) {
-                            new File(entryPath).mkdirs();
-                        } else {
-                            try (FileOutputStream outputStream = new FileOutputStream(entryPath)) {
-                                int bytesRead;
-                                while ((bytesRead = zipInputStream.read(buffer)) != -1) {
-                                    outputStream.write(buffer, 0, bytesRead);
-                                }
-                            }
-                        }
-                        zipEntry = zipInputStream.getNextEntry();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            Main.getPlugin().getLogger().info("Loaded Creative world templates...");
-        } catch (Exception error) {
-            sendCriticalErrorMessage("Error while loading Creative world templates: " + error.getMessage());
-        }
-    }*/
 
     /**
      Loads all plots to base. It contains plots from /unloadedWorlds/ and plots with loaded worlds.
@@ -636,11 +602,6 @@ public class FileUtils {
     }
 
     // Перенести папку готового мира в директорию сервера
-    /*public static boolean copyTemplateToWorlds(String templateName, String worldName) {
-        File templateWorldFolder = new File(plugin.getDataFolder() + File.separator + "worlds" + File.separator + templateName);
-        File worldsFolder = new File(Bukkit.getServer().getWorldContainer().toPath() + File.separator + worldName);
-        return copyFilesToDirectory(templateWorldFolder,worldsFolder);
-    }*/
 
     /**
      Copy input files into output directory.

@@ -31,7 +31,6 @@ import static mcchickenstudio.creative.utils.FileUtils.getPlotConfig;
 import static mcchickenstudio.creative.utils.FileUtils.setPlotConfigParameter;
 import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.*;
-import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 
 public class PlotInfo {
 

@@ -23,7 +23,6 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.worldactions.WorldAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.WeatherType;
 import org.bukkit.entity.Entity;
 
 public class SetWeatherAction extends WorldAction {

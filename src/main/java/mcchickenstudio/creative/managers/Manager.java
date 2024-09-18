@@ -23,6 +23,6 @@ public interface Manager {
     /**
      * Initialization of manager.
      */
-    public void init();
+    void init();
 
 }

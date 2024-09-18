@@ -80,7 +80,6 @@ public class Plot {
     private int plotReputation;
     private Mode plotMode;
     private Sharing plotSharing;
-    private Category plotCategory;
 
     public final int worldSize;
     public int lastModifiedBlocksAmount;
@@ -378,7 +377,6 @@ public class Plot {
         }
         this.owner = owner;
         this.ownerGroup = ownerGroup;
-        this.plotCategory = category;
         this.plotMode = mode;
         this.plotSharing = sharing;
         this.plotReputation = getPlayersFromPlotConfig(this,PlayersType.LIKED).size()-getPlayersFromPlotConfig(this,PlayersType.DISLIKED).size();
@@ -596,7 +594,7 @@ public class Plot {
         for (BukkitRunnable runnable : runningBukkitRunnables) {
             try {
                 runnable.cancel();
-            } catch (IllegalStateException error) {}
+            } catch (IllegalStateException ignored) {}
         }
         runningBukkitRunnables.clear();
     }

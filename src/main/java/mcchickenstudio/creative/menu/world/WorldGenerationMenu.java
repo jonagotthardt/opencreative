@@ -32,12 +32,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
-import static mcchickenstudio.creative.utils.ItemUtils.itemEquals;
 
 public class WorldGenerationMenu extends AbstractMenu {
 

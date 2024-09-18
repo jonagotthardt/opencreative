@@ -31,11 +31,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import mcchickenstudio.creative.utils.CooldownUtils;
 import mcchickenstudio.creative.plots.Plot;
-import mcchickenstudio.creative.utils.FileUtils;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static mcchickenstudio.creative.events.player.ChangedWorld.removePlayerWithLocation;
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;

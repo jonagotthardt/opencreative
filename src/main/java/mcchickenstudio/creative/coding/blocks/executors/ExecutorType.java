@@ -37,7 +37,6 @@ import mcchickenstudio.creative.coding.blocks.executors.player.movement.*;
 import mcchickenstudio.creative.coding.blocks.executors.player.world.*;
 import mcchickenstudio.creative.coding.blocks.executors.world.other.GamePlayExecutor;
 import mcchickenstudio.creative.coding.menus.MenusCategory;
-import mcchickenstudio.creative.utils.hooks.HookUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Material;

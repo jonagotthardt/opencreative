@@ -33,7 +33,6 @@ import java.io.File;
 import java.util.*;
 
 import static mcchickenstudio.creative.utils.BlockUtils.getSignLine;
-import static mcchickenstudio.creative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static mcchickenstudio.creative.utils.FileUtils.*;
 
 /**

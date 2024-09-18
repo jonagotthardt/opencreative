@@ -30,7 +30,7 @@ public interface Economy extends Manager {
      * @param money Amount of money to give.
      * @return true - if successfully taken, false - failed.
      */
-    public boolean depositMoney(OfflinePlayer offlinePlayer, Number money);
+    boolean depositMoney(OfflinePlayer offlinePlayer, Number money);
 
     /**
      * Takes money from player balance, examples:
@@ -39,13 +39,13 @@ public interface Economy extends Manager {
      * @param money Amount of money to take.
      * @return true - if successfully taken, false - failed.
      */
-    public boolean withdrawMoney(OfflinePlayer offlinePlayer, Number money);
+    boolean withdrawMoney(OfflinePlayer offlinePlayer, Number money);
 
     /**
      * Returns an amount of money that player has currently on his balance.
      * @param offlinePlayer Player to check balance.
      * @return Amount of money on player's balance.
      */
-    public Number getBalance(OfflinePlayer offlinePlayer);
+    Number getBalance(OfflinePlayer offlinePlayer);
 
 }

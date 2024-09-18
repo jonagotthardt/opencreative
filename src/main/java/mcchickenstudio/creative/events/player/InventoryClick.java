@@ -87,18 +87,6 @@ public class InventoryClick implements Listener {
                         Material material = event.getCursor().getType();
                         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
                         if (material != Material.AIR) {
-                            /*if (material == Material.PLAYER_HEAD) {
-                                SkullMeta skullMeta = (SkullMeta) event.getCursor().getItemMeta();
-                                if (skullMeta.toString().contains("internal")) {
-                                    String internal = skullMeta.toString().split("internal=")[1];
-                                    if (internal.contains(",")) {
-                                        internal = internal.split(",")[0];
-                                    } else if (internal.contains("}")) {
-                                        internal = internal.replace("}","");
-                                    }
-                                    player.getInventory().addItem(getHeadItem(internal));
-                                }
-                            }*/
                             plot.getInformation().setIconMaterial(material);
                             player.sendMessage(getLocaleMessage("settings.world-icon.changed"));
                             new BukkitRunnable() {

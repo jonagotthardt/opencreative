@@ -21,7 +21,6 @@ package mcchickenstudio.creative.coding.variables;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 

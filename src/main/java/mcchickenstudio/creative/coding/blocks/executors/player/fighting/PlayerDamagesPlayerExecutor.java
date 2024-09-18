@@ -20,7 +20,6 @@ package mcchickenstudio.creative.coding.blocks.executors.player.fighting;
 
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
-import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamagesMobEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamagesPlayerEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.blocks.executors.player.PlayerExecutor;

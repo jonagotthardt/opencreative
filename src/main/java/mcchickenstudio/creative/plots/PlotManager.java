@@ -19,7 +19,6 @@
 package mcchickenstudio.creative.plots;
 
 import mcchickenstudio.creative.coding.CodeScript;
-import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.utils.ErrorUtils;
 import mcchickenstudio.creative.utils.FileUtils;
 import mcchickenstudio.creative.utils.MessageUtils;
@@ -29,11 +28,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
-import org.bukkit.entity.EnderDragon;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import mcchickenstudio.creative.Main;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;

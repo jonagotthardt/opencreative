@@ -136,11 +136,13 @@ public class ActionsHandler {
             BukkitRunnable executeActionLaterRunnable = new BukkitRunnable() {
                 @Override
                 public void run() {
-                if (action == null || action.getPlot() == null || action.getPlot().getPlotMode() != Plot.Mode.PLAYING || !action.getPlot().isLoaded) {
-                    cancel();
-                }
-                executeAction(action);
-                action.getPlot().removeBukkitRunnable(this);
+                    if (action == null || action.getPlot() == null || action.getPlot().getPlotMode() != Plot.Mode.PLAYING || !action.getPlot().isLoaded) {
+                        cancel();
+                    }
+                    if (action != null) {
+                        executeAction(action);
+                        action.getPlot().removeBukkitRunnable(this);
+                    }
                 }
             };
             action.getPlot().addBukkitRunnable(executeActionLaterRunnable);

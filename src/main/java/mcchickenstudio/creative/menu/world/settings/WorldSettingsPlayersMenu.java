@@ -287,24 +287,7 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
     public ItemStack getDevButton(Plot plot) {
         if (playersSelected.get(player) == null) return null;
         String nickname = playersSelected.get(player);
-        List<Runnable> actions = new ArrayList<>();
-        actions.add(() -> {
-            player.sendMessage(MessageUtils.getLocaleMessage("world.players.developers.removed").replace("%player%",nickname));
-            plot.getWorldPlayers().removeDeveloper(nickname);
-        });
-        actions.add(() -> {
-            player.sendMessage(MessageUtils.getLocaleMessage("world.players.developers.guest").replace("%player%",nickname));
-            plot.getWorldPlayers().addDeveloperGuest(nickname);
-        });
-        actions.add(() -> {
-            player.sendMessage(MessageUtils.getLocaleMessage("world.players.developers.added").replace("%player%",nickname));
-            plot.getWorldPlayers().addDeveloper(nickname, false);
-        });
-        actions.add(() -> {
-            player.sendMessage(MessageUtils.getLocaleMessage("world.players.developers.trusted").replace("%player%",nickname));
-            plot.getWorldPlayers().addDeveloper(nickname, true);
-        });
-
+        List<Runnable> actions = getRunnableList(plot, nickname);
         int canDev = 1;
         if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_GUESTS).contains(nickname)) {
             canDev = 2;
@@ -321,24 +304,33 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
         return radioButton.getButtonItem();
     }
 
+    private List<Runnable> getRunnableList(Plot plot, String nickname) {
+        List<Runnable> actions = new ArrayList<>();
+        actions.add(() -> {
+            player.sendMessage(MessageUtils.getLocaleMessage("world.players.developers.removed").replace("%player%", nickname));
+            plot.getWorldPlayers().removeDeveloper(nickname);
+        });
+        actions.add(() -> {
+            player.sendMessage(MessageUtils.getLocaleMessage("world.players.developers.guest").replace("%player%", nickname));
+            plot.getWorldPlayers().addDeveloperGuest(nickname);
+        });
+        actions.add(() -> {
+            player.sendMessage(MessageUtils.getLocaleMessage("world.players.developers.added").replace("%player%", nickname));
+            plot.getWorldPlayers().addDeveloper(nickname, false);
+        });
+        actions.add(() -> {
+            player.sendMessage(MessageUtils.getLocaleMessage("world.players.developers.trusted").replace("%player%", nickname));
+            plot.getWorldPlayers().addDeveloper(nickname, true);
+        });
+        return actions;
+    }
+
     public ItemStack getBuildButton(Plot plot) {
         if (playersSelected.get(player) == null) return null;
 
         String nickname = playersSelected.get(player);
 
-        List<Runnable> actions = new ArrayList<>();
-        actions.add(() -> {
-            player.sendMessage(MessageUtils.getLocaleMessage("world.players.builders.removed").replace("%player%",nickname));
-            plot.getWorldPlayers().removeBuilder(nickname);
-        });
-        actions.add(() -> {
-            player.sendMessage(MessageUtils.getLocaleMessage("world.players.builders.added").replace("%player%",nickname));
-            plot.getWorldPlayers().addBuilder(nickname, false);
-        });
-        actions.add(() -> {
-            player.sendMessage(MessageUtils.getLocaleMessage("world.players.builders.trusted").replace("%player%",nickname));
-            plot.getWorldPlayers().addBuilder(nickname, true);
-        });
+        List<Runnable> actions = getRunnables(plot, nickname);
 
         int canBuild = 1;
         if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.BUILDERS_NOT_TRUSTED).contains(nickname)) {
@@ -352,6 +344,23 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
                 "menus.world-settings-players.items.build.choices", "menus.world-settings-players");
 
         return radioButton.getButtonItem();
+    }
+
+    private List<Runnable> getRunnables(Plot plot, String nickname) {
+        List<Runnable> actions = new ArrayList<>();
+        actions.add(() -> {
+            player.sendMessage(MessageUtils.getLocaleMessage("world.players.builders.removed").replace("%player%", nickname));
+            plot.getWorldPlayers().removeBuilder(nickname);
+        });
+        actions.add(() -> {
+            player.sendMessage(MessageUtils.getLocaleMessage("world.players.builders.added").replace("%player%", nickname));
+            plot.getWorldPlayers().addBuilder(nickname, false);
+        });
+        actions.add(() -> {
+            player.sendMessage(MessageUtils.getLocaleMessage("world.players.builders.trusted").replace("%player%", nickname));
+            plot.getWorldPlayers().addBuilder(nickname, true);
+        });
+        return actions;
     }
 
     public ItemStack getPlayerButton(Plot plot) {
@@ -403,15 +412,7 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
         return item;
     }
 
- /*   public static List<Plot> getCurrentPlotList(Player player) {
-        return currentPlotList.getOrDefault(player,plots);
-    }
-
-    public static int getCurrentPage(Player player) {
-        return openedPage.getOrDefault(player, 1);
-    }
-*/
-    private static List<List<String>> getPagesForPlayers(Set<String> playerList) {
+ private static List<List<String>> getPagesForPlayers(Set<String> playerList) {
 
         List<List<String>> pages = new ArrayList<>();
 

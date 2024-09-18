@@ -18,7 +18,6 @@
 
 package mcchickenstudio.creative.coding.menus;
 
-import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.menu.AbstractListMenu;
 import mcchickenstudio.creative.plots.DevPlot;
 import org.bukkit.ChatColor;
@@ -29,7 +28,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;

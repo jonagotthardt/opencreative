@@ -244,12 +244,6 @@ public class WorldVariables {
                     Object newValue = oldMap.get(key);
                     Map<String, Object> deserializedKey = (Map<String, Object>) new JSONParser().parse((String) newKey);
                     newKey = deserializeObject(deserializedKey.get("value"), ValueType.parseString(deserializedKey.get("type").toString()));
-                    /*if (newKey instanceof Map<?,?> insideMap && insideMap.containsKey("type") && insideMap.containsKey("value")) {
-                        //ValueType keyType = ValueType.parseString(insideMap.get("type").toString());
-                        //newKey = deserializeObject(insideMap.get("value"),keyType);
-                    } else {
-                        newKey = deserializeObject(key,ValueType.getByObject(key));
-                    }*/
                     if (newValue instanceof Map<?,?> insideMap && insideMap.containsKey("type") && insideMap.containsKey("value")) {
                         ValueType keyValueType = ValueType.parseString(insideMap.get("type").toString());
                         newValue = deserializeObject(insideMap.get("value"),keyValueType);
@@ -261,7 +255,6 @@ public class WorldVariables {
                 return newMap;
             }
         } catch (Exception e) {
-            e.printStackTrace();
             return value;
         }
         return value;

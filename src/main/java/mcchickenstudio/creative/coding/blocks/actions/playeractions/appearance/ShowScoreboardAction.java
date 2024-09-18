@@ -18,15 +18,12 @@
 
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.appearance;
 
-import io.papermc.paper.scoreboard.numbers.NumberFormat;
-import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 

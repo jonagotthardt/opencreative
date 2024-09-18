@@ -95,7 +95,7 @@ public class SelectTargetAction extends Action {
         }
         switch (targetAction) {
             case ADD_TARGET -> getHandler().getMainActionHandler().getSelectedTargets().addAll(entities);
-            case REMOVE_TARGET -> getHandler().getMainActionHandler().getSelectedTargets().removeAll(entities);
+            case REMOVE_TARGET -> getHandler().getMainActionHandler().getSelectedTargets().forEach(entities::remove);
             case SET_TARGET -> {
                 getHandler().getMainActionHandler().getSelectedTargets().clear();
                 getHandler().getMainActionHandler().getSelectedTargets().addAll(entities);

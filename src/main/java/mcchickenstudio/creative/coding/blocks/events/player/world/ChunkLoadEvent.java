@@ -21,7 +21,6 @@ package mcchickenstudio.creative.coding.blocks.events.player.world;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerChatEvent;
 
 public class ChunkLoadEvent extends CreativeEvent {
 

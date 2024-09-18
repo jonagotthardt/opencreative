@@ -19,7 +19,6 @@
 package mcchickenstudio.creative.coding.blocks.events.player.fighting;
 
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 

@@ -18,7 +18,6 @@
 
 package mcchickenstudio.creative.events.player;
 
-import mcchickenstudio.creative.coding.CodingBlockParser;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
@@ -40,7 +39,6 @@ import org.bukkit.inventory.InventoryHolder;
 
 import java.util.*;
 
-import static mcchickenstudio.creative.utils.BlockUtils.getBeginningBracketX;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
 
@@ -161,11 +159,6 @@ public class PlayerPlaceBlock implements Listener {
                     Block newBlock = location.getWorld().getBlockAt((int) x + 2, location.getBlockY(), location.getBlockZ());
                     moveCodingBlock(oldBlock,newBlock);
                     movedBlocks.add(newBlock);
-                    //Block eastBlock = oldBlock.getRelative(BlockFace.EAST).getRelative(BlockFace.EAST).getRelative(BlockFace.EAST);
-                    //Block newEastBlock = newBlock.getRelative(BlockFace.EAST);
-                    //movedBlocks.add(newEastBlock);
-                    //newEastBlock.setType(eastBlock.getType());
-                    //newEastBlock.setBlockData(eastBlock.getBlockData());
                 }
             }
         } else if (face == BlockFace.WEST) {

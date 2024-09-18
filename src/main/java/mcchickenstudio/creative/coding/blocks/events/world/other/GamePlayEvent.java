@@ -20,9 +20,6 @@ package mcchickenstudio.creative.coding.blocks.events.world.other;
 
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import mcchickenstudio.creative.plots.Plot;
-import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
 
 public class GamePlayEvent extends CreativeEvent {
 
