@@ -38,6 +38,6 @@ public class SetTimeAction extends WorldAction {
 
     @Override
     public ActionType getActionType() {
-        return ActionType.WORLD_SET_WEATHER;
+        return ActionType.WORLD_SET_TIME;
     }
 }

@@ -333,7 +333,7 @@ public class Arguments {
     public VariableLink getVariableLink(String path, Action action) {
         Argument arg = getArg(path);
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path,null);
+            sendCodingDebugNotFoundVariable(plot,path);
             return null;
         }
         if (arg.value instanceof VariableLink link) {
@@ -344,14 +344,14 @@ public class Arguments {
             sendCodingDebugVariable(plot,path,link);
             return link;
         }
-        sendCodingDebugNotFoundVariable(plot,path,null);
+        sendCodingDebugNotFoundVariable(plot,path);
         return null;
     }
 
     public Material getValue(String path, Material defaultValue, Action action) {
         Argument arg = getArg(path);
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path,defaultValue);
+            sendCodingDebugNotFoundVariable(plot,path);
             return defaultValue;
         }
         if (arg.getValue(action) instanceof ItemStack item) {
@@ -366,21 +366,21 @@ public class Arguments {
             sendCodingDebugVariable(plot,path,location.getBlock().getType());
             return location.getBlock().getType();
         }
-        sendCodingDebugNotFoundVariable(plot,path,defaultValue);
+        sendCodingDebugNotFoundVariable(plot,path);
         return defaultValue;
     }
 
     public ItemStack getValue(String path, ItemStack defaultValue, Action action) {
         Argument arg = getArg(path);
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path,defaultValue);
+            sendCodingDebugNotFoundVariable(plot,path);
             return defaultValue;
         }
         if (arg.getValue(action) instanceof ItemStack) {
             sendCodingDebugVariable(plot,path,arg.getValue(action));
             return (ItemStack) arg.getValue(action);
         }
-        sendCodingDebugNotFoundVariable(plot,path,defaultValue);
+        sendCodingDebugNotFoundVariable(plot,path);
         return defaultValue;
     }
 
@@ -388,7 +388,7 @@ public class Arguments {
         Argument arg = getArg(path);
         boolean value = defaultValue;
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path,defaultValue);
+            sendCodingDebugNotFoundVariable(plot,path);
         } else if (arg.getValue(action) instanceof Boolean) {
             value = (boolean) arg.getValue(action);
             sendCodingDebugVariable(plot,path,value);
@@ -409,7 +409,7 @@ public class Arguments {
         Argument arg = getArg(path);
         Object value = "";
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path,value);
+            sendCodingDebugNotFoundVariable(plot,path);
         } else {
             value = arg.getValue(action);
             sendCodingDebugVariable(plot,path,value);
@@ -421,7 +421,7 @@ public class Arguments {
         Argument arg = getArg(path);
         byte value = defaultValue;
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path,defaultValue);
+            sendCodingDebugNotFoundVariable(plot,path);
         } else {
             value = parseObject(arg.getValue(action),defaultValue);
             sendCodingDebugVariable(plot,path,value);
@@ -433,7 +433,7 @@ public class Arguments {
         Argument arg = getArg(path);
         int value = defaultValue;
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot, path, defaultValue);
+            sendCodingDebugNotFoundVariable(plot, path);
         } else if (arg.getValue(action) instanceof Long l) {
             value = l.intValue();
             sendCodingDebugVariable(plot,path,value);
@@ -454,7 +454,7 @@ public class Arguments {
         Argument arg = getArg(path);
         Color value = defaultValue;
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path,defaultValue);
+            sendCodingDebugNotFoundVariable(plot,path);
         } else if (arg.getValue(action) instanceof Color color){
             value = color;
             sendCodingDebugVariable(plot,path,color);
@@ -466,7 +466,7 @@ public class Arguments {
         Argument arg = getArg(path);
         float value = defaultValue;
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path,defaultValue);
+            sendCodingDebugNotFoundVariable(plot,path);
         } else {
             value = parseObject(arg.getValue(action),defaultValue);
             sendCodingDebugVariable(plot,path,value);
@@ -478,7 +478,7 @@ public class Arguments {
         Argument arg = getArg(path);
         double value = defaultValue;
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot, path, defaultValue);
+            sendCodingDebugNotFoundVariable(plot, path);
         } else {
             value = parseObject(arg.getValue(action),defaultValue);
             sendCodingDebugVariable(plot,path,value);
@@ -489,7 +489,7 @@ public class Arguments {
     public String getValue(String path, String defaultValue, Action action) {
         Argument arg = getArg(path);
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path,defaultValue);
+            sendCodingDebugNotFoundVariable(plot,path);
             return defaultValue;
         }
         sendCodingDebugVariable(plot,path,arg.getValue(action));
@@ -502,7 +502,7 @@ public class Arguments {
             sendCodingDebugVariable(plot,path,arg.getValue(action));
             return particle;
         }
-        sendCodingDebugNotFoundVariable(plot,path,defaultValue);
+        sendCodingDebugNotFoundVariable(plot,path);
         return defaultValue;
     }
 
@@ -515,7 +515,7 @@ public class Arguments {
                 return value.charAt(0);
             }
         }
-        sendCodingDebugNotFoundVariable(plot,path,defaultValue);
+        sendCodingDebugNotFoundVariable(plot,path);
         return defaultValue;
     }
 
@@ -523,7 +523,7 @@ public class Arguments {
         Argument arg = getArg(path);
         Location locationValue = defaultValue;
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path,locationValue.getX()+" "+locationValue.getY()+" "+locationValue.getZ()+" "+locationValue.getYaw()+" "+locationValue.getPitch());
+            sendCodingDebugNotFoundVariable(plot,path);
         } else if (arg.getValue(action) instanceof Location) {
             locationValue = (Location) arg.getValue(action);
             sendCodingDebugVariable(plot,path,locationValue.getX()+" "+locationValue.getY()+" "+locationValue.getZ()+" "+locationValue.getYaw()+" "+locationValue.getPitch());

@@ -24,7 +24,6 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -52,8 +51,6 @@ public class PotionsMenu extends AbstractListMenu {
 
     static {
         potions.put(PotionEffectType.BLINDNESS,Material.BLACK_SHULKER_BOX);
-        //potions.put(PotionEffectType.JUMP_BOOST,Material.RABBIT_FOOT);
-        //potions.put(PotionEffectType.HEALTH_BOOST,Material.GOLDEN_APPLE);
     }
 
     private Material getMaterial(PotionEffectType type) {

@@ -20,11 +20,32 @@ package mcchickenstudio.creative.coding.blocks.events.player.inventory;
 
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerEditBookEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class BookWriteEvent extends CreativeEvent {
 
-    public BookWriteEvent(Player player) {
+    private final PlayerEditBookEvent event;
+    private final ItemStack oldBook;
+    private final ItemStack newBook;
+
+    public BookWriteEvent(Player player, PlayerEditBookEvent event) {
         super(player);
+        this.event = event;
+        this.oldBook = event.getPlayer().getActiveItem();
+        this.newBook = event.getPlayer().getActiveItem();
     }
 
+    public ItemStack getOldBook() {
+        return oldBook;
+    }
+
+    public ItemStack getNewBook() {
+        return newBook;
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
+    }
 }

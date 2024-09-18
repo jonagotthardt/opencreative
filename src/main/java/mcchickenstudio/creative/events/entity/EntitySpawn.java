@@ -18,16 +18,14 @@
 
 package mcchickenstudio.creative.events.entity;
 
+import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.plots.PlotFlags;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.World;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Slime;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -68,6 +66,8 @@ public class EntitySpawn implements Listener {
                 warning.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(getLocaleMessage("world.entity-limit-hover"))));
                 warning.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/world deletemobs"));
                 sendMessageOnce(plot,warning,3);
+            } else {
+                EventRaiser.raiseEntitySpawnEvent(event);
             }
         }
     }
@@ -122,6 +122,11 @@ public class EntitySpawn implements Listener {
                 }
                 if (world.getEntityCount() >= plot.entitiesLimit/2) {
                     event.setCancelled(true);
+                }
+            }
+            if (plot.getEnvironment() == World.Environment.THE_END) {
+                if (event.getEntity() instanceof EnderDragon dragon) {
+                    dragon.setHealth(0);
                 }
             }
 

@@ -275,14 +275,15 @@ public class ErrorUtils {
         }
     }
 
-    public static void sendCodingDebugNotFoundVariable(Plot plot, String name, Object value) {
+    public static void sendCodingDebugNotFoundVariable(Plot plot, String name) {
         if (true) {
             return;
         }
         if (!plot.getDebug()) return;
+        Object value = null;
         if (value == null) value = "null";
         for (Player player : plot.getPlayers()) {
-            player.sendMessage(getLocaleMessage("plot-code-debug.variable-not-found",false).replace("%name%",name).replace("%value%",value.toString()));
+            player.sendMessage(getLocaleMessage("plot-code-debug.variable-not-found",false).replace("%name%",name).replace("%value%", value.toString()));
         }
     }
 

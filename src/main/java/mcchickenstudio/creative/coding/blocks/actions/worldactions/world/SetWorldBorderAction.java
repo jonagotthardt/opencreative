@@ -21,14 +21,11 @@ package mcchickenstudio.creative.coding.blocks.actions.worldactions.world;
 import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
-import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.actions.worldactions.WorldAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.WorldBorder;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 
 public class SetWorldBorderAction extends WorldAction {
     public SetWorldBorderAction(Executor executor, Target target, int x, Arguments args) {

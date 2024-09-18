@@ -38,7 +38,7 @@ public class SpawnEntityAction extends WorldAction {
     @Override
     protected void execute(Entity entity) {
 
-        String typeString = "chicken";
+        String typeString;
         String customName = getArguments().getValue("name","",this);
 
         boolean ai = getArguments().getValue("ai",true,this);

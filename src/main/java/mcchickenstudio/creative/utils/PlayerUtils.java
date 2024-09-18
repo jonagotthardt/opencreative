@@ -34,7 +34,6 @@ import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.DisplaySlot;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -213,6 +212,7 @@ public class PlayerUtils {
         player.setMaximumNoDamageTicks(20);
         player.setArrowsInBody(0);
         player.setExp(0);
+        player.setLevel(0);
         player.setMaxHealth(20);
         player.setHealth(20);
         player.setFoodLevel(20);
@@ -230,7 +230,6 @@ public class PlayerUtils {
         for (Entity entity : player.getWorld().getEntities()) {
             player.showEntity(Main.getPlugin(),entity);
         }
-
         for (Player p : player.getWorld().getPlayers()) {
             player.showEntity(Main.getPlugin(),p);
         }
@@ -259,7 +258,7 @@ public class PlayerUtils {
         player.sendTitle(getLocaleMessage("lobby.title"), getLocaleMessage("lobby.subtitle"),20,60,20);
         player.sendMessage(getLocaleMessage("lobby.message"));
         player.playSound(player.getLocation(),Sound.BLOCK_BEACON_DEACTIVATE,100,1.5f);
-        player.playSound(player.getLocation(),Sound.MUSIC_DISC_CREATOR ,100,0.7f);
+        player.playSound(player.getLocation(),Sound.MUSIC_DISC_CREATOR_MUSIC_BOX ,100,0.7f);
 
         ItemStack gamesItem = createItem(Material.COMPASS,1,"items.lobby.games");
         player.getInventory().setItem(3, gamesItem);
@@ -351,6 +350,18 @@ public class PlayerUtils {
     public static void spawnGlowingBlock(Player player, Location location) {
         if (HookUtils.isProtocolLibEnabled) {
             ProtocolLibUtils.spawnGlowingFallingBlock(player,location);
+        }
+    }
+
+    public static void sendOpenedChestAnimation(Player player, Block block) {
+        if (HookUtils.isProtocolLibEnabled && (block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST)) {
+            ProtocolLibUtils.sendOpenedChestAnimation(player,block);
+        }
+    }
+
+    public static void sendClosedChestAnimation(Player player, Block block) {
+        if (HookUtils.isProtocolLibEnabled && (block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST)) {
+            ProtocolLibUtils.sendClosedChestAnimation(player,block);
         }
     }
 

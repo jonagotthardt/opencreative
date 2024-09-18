@@ -35,9 +35,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
-import org.bukkit.event.player.PlayerEditBookEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -66,9 +64,11 @@ public class InventoryClick implements Listener {
 
         Plot plot1 = PlotManager.getInstance().getPlotByPlayer(player);
         if (plot1 != null) {
-            EventRaiser.raiseItemClickEvent((Player) event.getWhoClicked(), event);
-            if (event.getAction() == InventoryAction.PLACE_ALL) {
-                EventRaiser.raiseItemMoveEvent((Player) event.getWhoClicked(),event);
+            if (event.getCurrentItem() != null) {
+                EventRaiser.raiseItemClickEvent((Player) event.getWhoClicked(), event);
+                if (event.getAction() == InventoryAction.PLACE_ALL) {
+                    EventRaiser.raiseItemMoveEvent((Player) event.getWhoClicked(),event);
+                }
             }
         }
 
@@ -87,18 +87,6 @@ public class InventoryClick implements Listener {
                         Material material = event.getCursor().getType();
                         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
                         if (material != Material.AIR) {
-                            /*if (material == Material.PLAYER_HEAD) {
-                                SkullMeta skullMeta = (SkullMeta) event.getCursor().getItemMeta();
-                                if (skullMeta.toString().contains("internal")) {
-                                    String internal = skullMeta.toString().split("internal=")[1];
-                                    if (internal.contains(",")) {
-                                        internal = internal.split(",")[0];
-                                    } else if (internal.contains("}")) {
-                                        internal = internal.replace("}","");
-                                    }
-                                    player.getInventory().addItem(getHeadItem(internal));
-                                }
-                            }*/
                             plot.getInformation().setIconMaterial(material);
                             player.sendMessage(getLocaleMessage("settings.world-icon.changed"));
                             new BukkitRunnable() {
@@ -231,7 +219,7 @@ public class InventoryClick implements Listener {
                             player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 100, 1);
                             OwnWorldsMenu.openInventory(player, OwnWorldsMenu.openedPage.get(player) - 1);
                         } else if (item.getType() == Material.WHITE_STAINED_GLASS) {
-                            new WorldCreationMenu().open(player);
+                            new WorldGenerationMenu(player).open(player);
                         }
                     }
                 } catch (Exception error) {
@@ -504,6 +492,18 @@ public class InventoryClick implements Listener {
     public void onBookWrite(PlayerEditBookEvent event) {
         Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
         if (plot != null) EventRaiser.raiseBookWriteEvent(event.getPlayer(),event);
+    }
+
+    @EventHandler
+    public void onItemConsume(PlayerItemConsumeEvent event) {
+        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
+        if (plot != null) EventRaiser.raiseItemConsumeEvent(event.getPlayer(),event);
+    }
+
+    @EventHandler
+    public void onItemBreak(PlayerItemBreakEvent event) {
+        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
+        if (plot != null) EventRaiser.raiseItemBreakEvent(event.getPlayer(),event);
     }
 
     @EventHandler

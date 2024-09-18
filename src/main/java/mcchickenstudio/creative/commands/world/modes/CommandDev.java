@@ -30,11 +30,8 @@ import org.bukkit.inventory.PlayerInventory;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.CooldownUtils;
 import mcchickenstudio.creative.plots.Plot;
-import mcchickenstudio.creative.utils.FileUtils;
 import org.bukkit.inventory.meta.BookMeta;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 import static mcchickenstudio.creative.utils.ItemUtils.itemEquals;
@@ -188,14 +185,20 @@ public class CommandDev implements CommandExecutor {
         ItemStack functionItem = createItem(Material.LAPIS_BLOCK,1,"items.developer.function");
         player.getInventory().setItem(9, functionItem);
 
+        ItemStack eventWorldItem = createItem(Material.REDSTONE_BLOCK,1,"items.developer.event-world");
+        player.getInventory().setItem(10, eventWorldItem);
+
         ItemStack actionControl = createItem(Material.COAL_BLOCK,1,"items.developer.action-control");
-        player.getInventory().setItem(10, actionControl);
+        player.getInventory().setItem(11, actionControl);
 
         ItemStack actionWorld = createItem(Material.NETHER_BRICKS,1,"items.developer.action-world");
-        player.getInventory().setItem(19, actionWorld);
+        player.getInventory().setItem(20, actionWorld);
+
+        ItemStack eventEntityItem = createItem(Material.GOLD_BLOCK,1,"items.developer.event-entity");
+        player.getInventory().setItem(27, eventEntityItem);
 
         ItemStack launchFunction = createItem(Material.LAPIS_ORE,1,"items.developer.launch-function");
-        player.getInventory().setItem(28, launchFunction);
+        player.getInventory().setItem(29, launchFunction);
 
         ItemStack cycleItem = createItem(Material.OXIDIZED_COPPER,1,"items.developer.cycle");
         player.getInventory().setItem(18, cycleItem);
@@ -224,7 +227,5 @@ public class CommandDev implements CommandExecutor {
 
         player.getInventory().setItem(slot, createItem(Material.IRON_INGOT,1,"items.developer.variables"));
 
-        /*ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
-        player.getInventory().setItem(8, worldSettingsItem);*/
     }
 }

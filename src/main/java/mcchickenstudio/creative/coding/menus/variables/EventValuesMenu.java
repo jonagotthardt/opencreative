@@ -27,7 +27,6 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -64,7 +63,7 @@ public class EventValuesMenu extends AbstractListMenu {
     }
 
     protected Set<MenusCategory> getMenusCategories() {
-        return new HashSet<>(List.of(MenusCategory.ENTITY,MenusCategory.EVENTS,MenusCategory.WORLD));
+        return new HashSet<>(List.of(MenusCategory.PLAYER,MenusCategory.ENTITY,MenusCategory.EVENTS,MenusCategory.WORLD));
     }
 
 

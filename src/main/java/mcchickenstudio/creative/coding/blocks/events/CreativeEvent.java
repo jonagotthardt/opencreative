@@ -38,10 +38,16 @@ public abstract class CreativeEvent extends Event  {
     private static final HandlerList handlers = new HandlerList();
     protected List<Entity> selection = new ArrayList<>();
     protected boolean cancelled = false;
-    protected World world;
+    protected final World world;
 
     public CreativeEvent(Plot plot, List<Entity> selection) {
         this.selection = selection;
+        world = plot.world;
+    }
+
+    public CreativeEvent(Plot plot) {
+        this.selection.addAll(plot.world.getPlayers());
+        world = plot.world;
     }
 
     public CreativeEvent(Entity entity) {

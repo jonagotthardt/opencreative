@@ -33,7 +33,6 @@ import java.io.File;
 import java.util.*;
 
 import static mcchickenstudio.creative.utils.BlockUtils.getSignLine;
-import static mcchickenstudio.creative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static mcchickenstudio.creative.utils.FileUtils.*;
 
 /**
@@ -57,6 +56,7 @@ public class DevPlot {
     public final Material floorBlockMaterial;
     public final Material eventBlockMaterial;
     public final Material actionBlockMaterial;
+    private Material containerMaterial = Material.CHEST;
 
     public final Map<Player, Location> lastLocations = new HashMap<>();
     private final Map<Location, Layout> openedBlocksMenus = new HashMap<>();
@@ -232,6 +232,13 @@ public class DevPlot {
         allowedBlocks.add(Material.MANGROVE_SIGN);
         allowedBlocks.add(Material.DARK_OAK_SIGN);
         allowedBlocks.add(Material.BIRCH_SIGN);
+        allowedBlocks.add(Material.CRAFTING_TABLE);
+        allowedBlocks.add(Material.JUKEBOX);
+        allowedBlocks.add(Material.STONECUTTER);
+        allowedBlocks.add(Material.CARTOGRAPHY_TABLE);
+        allowedBlocks.add(Material.SMITHING_TABLE);
+        allowedBlocks.add(Material.LOOM);
+        allowedBlocks.add(Material.GRINDSTONE);
         allowedBlocks.add(Material.CHEST);
         allowedBlocks.add(Material.ANVIL);
         allowedBlocks.add(Material.CHIPPED_ANVIL);
@@ -309,5 +316,15 @@ public class DevPlot {
 
     public void unregisterOpenedMenu(Location location) {
         openedBlocksMenus.remove(location);
+    }
+
+    public Material getContainerMaterial() {
+        return containerMaterial;
+    }
+
+    public void setContainerMaterial(Material containerMaterial) {
+        if (containerMaterial == Material.BARREL || containerMaterial == Material.CHEST || containerMaterial == Material.ENDER_CHEST || containerMaterial == Material.TRAPPED_CHEST) {
+            this.containerMaterial = containerMaterial;
+        }
     }
 }

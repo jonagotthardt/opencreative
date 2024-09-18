@@ -16,7 +16,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mcchickenstudio.creative.coding.blocks.actions.playeractions.movement;
+package mcchickenstudio.creative.managers;
 
-public class SetRotationAction {
+public interface Manager {
+
+    /**
+     * Initialization of manager.
+     */
+    void init();
+
 }

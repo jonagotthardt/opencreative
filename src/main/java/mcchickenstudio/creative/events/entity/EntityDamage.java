@@ -34,34 +34,31 @@ public class EntityDamage implements Listener {
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
 
-        if (event.getEntity() instanceof Player) {
-
-            Player victim = ((Player) event.getEntity()).getPlayer();
-
-            if (victim != null) {
-
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(victim);
-                if (plot != null) {
-                    if (plot.getPlotMode() == Plot.Mode.BUILD) {
-                        event.setCancelled(true);
-                        if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
-                            victim.teleport(victim.getWorld().getSpawnLocation());
-                        }
+        if (event.getEntity() instanceof Player victim) {
+            Plot plot = PlotManager.getInstance().getPlotByPlayer(victim);
+            if (plot != null) {
+                if (plot.getPlotMode() == Plot.Mode.BUILD) {
+                    event.setCancelled(true);
+                    if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
+                        victim.teleport(victim.getWorld().getSpawnLocation());
                     }
-
-                    if (victim.getLocation().distance(victim.getWorld().getSpawnLocation()) < 5) event.setCancelled(true);
-
-                    byte playerDamageFlag = plot.getFlagValue(PlotFlags.PlotFlag.PLAYER_DAMAGE);
-                    if (playerDamageFlag == 2) event.setCancelled(true);
-                    if (playerDamageFlag == 3 && event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) event.setCancelled(true);
-                    if (playerDamageFlag == 4 && event.getCause() == EntityDamageEvent.DamageCause.FALL) event.setCancelled(true);
-                    if (playerDamageFlag == 5 && (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK || event.getCause() == EntityDamageEvent.DamageCause.FALL)) event.setCancelled(true);
-
-                    EventRaiser.raisePlayerDamagedEvent(victim,event);
-
-                } else if (victim.getWorld().getName().equalsIgnoreCase("world")) {
+                }
+                if (PlotManager.getInstance().getDevPlot(victim) != null) {
                     event.setCancelled(true);
                 }
+
+                if (victim.getLocation().distance(victim.getWorld().getSpawnLocation()) < 5) event.setCancelled(true);
+
+                byte playerDamageFlag = plot.getFlagValue(PlotFlags.PlotFlag.PLAYER_DAMAGE);
+                if (playerDamageFlag == 2) event.setCancelled(true);
+                if (playerDamageFlag == 3 && event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) event.setCancelled(true);
+                if (playerDamageFlag == 4 && event.getCause() == EntityDamageEvent.DamageCause.FALL) event.setCancelled(true);
+                if (playerDamageFlag == 5 && (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK || event.getCause() == EntityDamageEvent.DamageCause.FALL)) event.setCancelled(true);
+
+                EventRaiser.raisePlayerDamagedEvent(victim,event);
+
+            } else if (victim.getWorld().getName().equalsIgnoreCase("world")) {
+                event.setCancelled(true);
             }
 
         }
@@ -69,19 +66,26 @@ public class EntityDamage implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageByEntityEvent event) {
-        if (event.getEntity() instanceof Player) {
-            if (!(event.getDamager() instanceof Player)) {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer((Player) event.getEntity());
+        if (event.getEntity() instanceof Player victim) {
+            // Player damages player
+            if (event.getDamager() instanceof Player damager) {
+                Plot plot = PlotManager.getInstance().getPlotByPlayer(damager);
                 if (plot != null) {
-                    EventRaiser.raiseMobDamagesPlayerEvent((Player) event.getEntity(),event);
+                    EventRaiser.raisePlayerDamagesPlayerEvent(damager,victim,event);
+                }
+            // Mob damages player
+            } else {
+                Plot plot = PlotManager.getInstance().getPlotByPlayer(victim);
+                if (plot != null) {
+                    EventRaiser.raiseMobDamagesPlayerEvent(victim,event);
                 }
             }
-        }
-        if (!(event.getEntity() instanceof Player)) {
-            if (event.getDamager() instanceof Player) {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer((Player) event.getDamager());
+        } else {
+            // Player damages mob
+            if (event.getDamager() instanceof Player damager) {
+                Plot plot = PlotManager.getInstance().getPlotByPlayer(damager);
                 if (plot != null) {
-                    EventRaiser.raisePlayerDamagedMobEvent((Player) event.getDamager(),event);
+                    EventRaiser.raisePlayerDamagedMobEvent(damager,event);
                 }
             }
         }

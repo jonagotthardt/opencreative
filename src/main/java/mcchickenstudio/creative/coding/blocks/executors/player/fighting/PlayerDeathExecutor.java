@@ -21,8 +21,9 @@ package mcchickenstudio.creative.coding.blocks.executors.player.fighting;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.blocks.executors.player.PlayerExecutor;
 import mcchickenstudio.creative.plots.Plot;
+import org.bukkit.event.Cancellable;
 
-public class PlayerDeathExecutor extends PlayerExecutor {
+public class PlayerDeathExecutor extends PlayerExecutor implements Cancellable {
 
     public PlayerDeathExecutor(Plot plot, int x, int y, int z) {
         super(plot, x, y, z);
@@ -31,5 +32,15 @@ public class PlayerDeathExecutor extends PlayerExecutor {
     @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_DEATH;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return getEvent().isCancelled();
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        getEvent().setCancelled(cancel);
     }
 }

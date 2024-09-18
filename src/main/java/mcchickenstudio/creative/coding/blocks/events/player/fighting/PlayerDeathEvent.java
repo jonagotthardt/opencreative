@@ -23,8 +23,15 @@ import org.bukkit.entity.Player;
 
 public class PlayerDeathEvent extends CreativeEvent {
 
-    public PlayerDeathEvent(Player player) {
+    private final org.bukkit.event.entity.PlayerDeathEvent event;
+
+    public PlayerDeathEvent(Player player, org.bukkit.event.entity.PlayerDeathEvent event) {
         super(player);
+        this.event = event;
     }
 
+    @Override
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
+    }
 }

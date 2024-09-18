@@ -59,7 +59,11 @@ public class PlayerDeath implements Listener {
                 }
             }
             event.getDrops().remove(createItem(Material.COMPASS,1,"items.developer.world-settings"));
-            EventRaiser.raisePlayerDeathEvent(event.getPlayer(),event);
+            EventRaiser.raisePlayerDeathEvent(player,event);
+            Player killer = player.getKiller();
+            if (killer != null) {
+                EventRaiser.raisePlayerKilledPlayerEvent(killer,player,event);
+            }
         } else {
             event.setKeepInventory(true);
             PlayerUtils.teleportToLobby(player);

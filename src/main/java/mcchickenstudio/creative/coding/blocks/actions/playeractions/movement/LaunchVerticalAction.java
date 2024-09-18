@@ -18,5 +18,32 @@
 
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.movement;
 
-public class LaunchVerticalAction {
+import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.ActionType;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
+import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
+import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
+
+public class LaunchVerticalAction extends PlayerAction {
+    public LaunchVerticalAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
+    }
+
+    @Override
+    public void executePlayer(Player player) {
+        float power = getArguments().getValue("power",1.0f,this);
+        if (power < -20) {
+            power = -20;
+        } else if (power > 20) {
+            power = 20;
+        }
+        player.setVelocity(new Vector(player.getVelocity().getX(),power,player.getVelocity().getZ()));
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return ActionType.PLAYER_LAUNCH_VERTICAL;
+    }
 }

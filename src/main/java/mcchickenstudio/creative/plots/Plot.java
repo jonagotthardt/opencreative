@@ -66,6 +66,7 @@ public class Plot {
     public World world;
     public String worldName;
     public String worldID;
+    private World.Environment environment;
 
     private final PlotInfo plotInformation;
     private final PlotPlayers worldPlayers;
@@ -79,7 +80,6 @@ public class Plot {
     private int plotReputation;
     private Mode plotMode;
     private Sharing plotSharing;
-    private Category plotCategory;
 
     public final int worldSize;
     public int lastModifiedBlocksAmount;
@@ -109,7 +109,7 @@ public class Plot {
     /**
      Creates a new plot for specified player with specified generator.
      **/
-    public Plot(Player player, WorldUtils.WorldGenerator generator) {
+    public Plot(Player player, WorldUtils.WorldGenerator generator, World.Environment environment, long seed) {
 
         player.closeInventory();
         owner = (player.getName());
@@ -134,7 +134,8 @@ public class Plot {
 
         PlotManager.getInstance().registerPlot(this);
 
-        create(this,generator);
+        create(this,generator,environment,seed);
+        this.environment = environment;
 
         worldPlayers = new PlotPlayers(this);
         plotInformation = new PlotInfo(this);
@@ -337,6 +338,7 @@ public class Plot {
         Mode mode = Mode.BUILD;
         Category category = Category.SANDBOX;
         Sharing sharing = Sharing.PRIVATE;
+        World.Environment environment = World.Environment.NORMAL;
         if (config != null) {
             if (config.getString("owner") != null) {
                 owner = config.getString("owner");
@@ -351,6 +353,13 @@ public class Plot {
                     mode = Mode.valueOf(config.getString("mode"));
                 } catch (Exception error) {
                     mode = Mode.BUILD;
+                }
+            }
+            if (config.getString("environment") != null) {
+                try {
+                    environment = World.Environment.valueOf(config.getString("environment"));
+                } catch (Exception error) {
+                    environment = World.Environment.NORMAL;
                 }
             }
             if (config.getString("sharing") != null) {
@@ -368,10 +377,10 @@ public class Plot {
         }
         this.owner = owner;
         this.ownerGroup = ownerGroup;
-        this.plotCategory = category;
         this.plotMode = mode;
         this.plotSharing = sharing;
         this.plotReputation = getPlayersFromPlotConfig(this,PlayersType.LIKED).size()-getPlayersFromPlotConfig(this,PlayersType.DISLIKED).size();
+        this.environment = environment;
     }
 
     public byte getFlagValue(PlotFlags.PlotFlag flag) {
@@ -385,12 +394,12 @@ public class Plot {
     /**
      Creates a world for plot.
      **/
-    public void create(Plot plot, WorldUtils.WorldGenerator generator) {
+    public void create(Plot plot, WorldUtils.WorldGenerator generator, World.Environment environment, long seed) {
         Player player = Bukkit.getPlayer(plot.getOwner());
         String worldName = "plot" + WorldUtils.generateWorldID();
         player.sendTitle(getLocaleMessage("creating-world.title"),getLocaleMessage("creating-world.subtitle"),10,300,40);
         Main.getPlugin().getLogger().info("Creating new " + worldName + " by " + player.getName() + "...");
-        if (!generateWorld(plot,player,worldName,generator)) {
+        if (!generateWorld(plot,player,worldName,generator,environment,seed)) {
             player.clearTitle();
             sendPlayerErrorMessage(player,"§cПроизошла ошибка при создании мира... \n§cОбратитесь к администрации!");
         }
@@ -484,6 +493,7 @@ public class Plot {
         worldPlayers.registerPlayer(player);
         player.sendTitle(getLocaleMessage("world.connecting.title"),getLocaleMessage("world.connecting.subtitle"),15,9999,15);
         player.playSound(player.getLocation(), Sound.BLOCK_TRIAL_SPAWNER_ABOUT_TO_SPAWN_ITEM,100,1);
+        boolean wasLoaded = isLoaded;
         if (!isLoaded) {
             Main.getPlugin().getLogger().info("Loading " + this.worldName + " and teleporting " + player.getName());
             PlotManager.getInstance().loadPlot(this);
@@ -509,6 +519,9 @@ public class Plot {
             if (this.devPlot.isLoaded()) {
                 new CodingBlockParser().parseCode(this.devPlot);
             }
+        }
+        if (!wasLoaded) {
+            EventRaiser.raiseWorldPlayEvent(this);
         }
         EventRaiser.raiseJoinEvent(player);
         new BukkitRunnable() {
@@ -581,7 +594,7 @@ public class Plot {
         for (BukkitRunnable runnable : runningBukkitRunnables) {
             try {
                 runnable.cancel();
-            } catch (IllegalStateException error) {}
+            } catch (IllegalStateException ignored) {}
         }
         runningBukkitRunnables.clear();
     }
@@ -620,5 +633,9 @@ public class Plot {
 
     public boolean isCorrupted() {
         return isCorrupted;
+    }
+
+    public World.Environment getEnvironment() {
+        return environment;
     }
 }

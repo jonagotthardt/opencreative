@@ -21,16 +21,17 @@ package mcchickenstudio.creative.coding.menus;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.menu.AbstractListMenu;
+import mcchickenstudio.creative.plots.DevPlot;
+import mcchickenstudio.creative.plots.PlotManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Chest;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -96,7 +97,8 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
     protected void onElementClick(InventoryClickEvent event) {
         ItemStack item = event.getCurrentItem();
         event.setCancelled(true);
-        if (signLocation.getWorld().getName().contains("dev")) {
+        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
+        if (signLocation.getWorld().getName().contains("dev") && devPlot != null) {
             String beginLocalizationPath = "items.developer." + codingBlockName + ".";
             String path = getPathFromMessage(beginLocalizationPath, item.getItemMeta().getDisplayName());
             if (path == null || !path.endsWith(".name")) {
@@ -116,24 +118,22 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
             */
             if (ActionCategory.getByMaterial(codingBlock.getType()) != null)  {
                 ActionType type = ActionType.getType(codingBlock);
-                Block chestBlock = codingBlock.getRelative(BlockFace.UP);
-                if (chestBlock.getType() == Material.CHEST) {
-                    Chest chestState = (Chest) chestBlock.getState();
-                    for (ItemStack chestItem : chestState.getBlockInventory().getContents()) {
+                Block containerBlock = codingBlock.getRelative(BlockFace.UP);
+                if (containerBlock.getState() instanceof InventoryHolder container) {
+                    for (ItemStack chestItem : container.getInventory().getContents()) {
                         if (chestItem != null) {
                             if (chestItem.getItemMeta() == null || !chestItem.getItemMeta().getPersistentDataContainer().has(getCodingDoNotDropMeKey())) {
-                                chestBlock.getWorld().dropItem(chestBlock.getLocation(),chestItem);
+                                containerBlock.getWorld().dropItem(containerBlock.getLocation(),chestItem);
                             }
                         }
                     }
-                    chestBlock.setType(Material.AIR);
+                    containerBlock.setType(Material.AIR);
                 }
                 if (type != null && type.isChestRequired()) {
-                    chestBlock.setType(Material.CHEST);
-                    BlockData blockData = chestBlock.getBlockData();
+                    containerBlock.setType(devPlot.getContainerMaterial());
+                    BlockData blockData = containerBlock.getBlockData();
                     ((Directional) blockData).setFacing(BlockFace.SOUTH);
-                    chestBlock.setBlockData(blockData);
-                    //player.spawnParticle(Particle.EXPLOSION,chestBlock.getLocation(),1);
+                    containerBlock.setBlockData(blockData);
                     player.playSound(player.getLocation(),Sound.BLOCK_ENDER_CHEST_CLOSE,100f,1.2f);
                 }
             }

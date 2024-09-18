@@ -21,8 +21,10 @@ package mcchickenstudio.creative.coding.blocks.executors;
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.actions.Action;
+import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
+import mcchickenstudio.creative.coding.blocks.actions.other.SelectTargetAction;
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.plots.Plot;
@@ -96,7 +98,9 @@ public class Executors {
                 path = "code.blocks." + key;
                 if (config.getString(path + ".type") != null) {
                     Executor executor = createExecutor(config,path);
-                    if (executor != null) executors.add(executor);
+                    if (executor != null) {
+                        executors.add(executor);
+                    }
                 }
             }
             this.executorsList = executors;
@@ -142,7 +146,6 @@ public class Executors {
             } else {
                 executor = type.getExecutorClass().getConstructor(Plot.class,int.class,int.class,int.class).newInstance(plot,coords[0],coords[1],coords[2]);
             }
-
             List<Action> allActionsList = createActionList(executor, path + ".actions",config);
             if (!allActionsList.isEmpty()) {
                 executor.setActions(allActionsList);
@@ -181,6 +184,26 @@ public class Executors {
                 if (config.getString(path+".name") != null) {
                     args.setArgumentValue("name", ValueType.TEXT,config.getString(path+".name"));
                 }
+            } else if (actionType == ActionType.SELECTION_TARGET) {
+                String targetActionString = config.getString(path+".action");
+                if (targetActionString == null) return null;
+                SelectTargetAction.TargetAction targetAction = SelectTargetAction.TargetAction.valueOf(targetActionString.toUpperCase());
+                if (config.getConfigurationSection(path+".condition") != null) {
+                    boolean isOpposed = config.getBoolean(path+".condition.opposed",false);
+                    ActionCategory conditionCategory = ActionCategory.valueOf(config.getString(path+".condition.category").toUpperCase());
+                    ActionType conditionType = ActionType.valueOf(config.getString(path+".condition.type").toUpperCase());
+                    return actionType.getActionClass().getConstructor(Executor.class,int.class, Arguments.class, SelectTargetAction.TargetAction.class, ActionCategory.class, ActionType.class, boolean.class).newInstance(executor,config.getInt(path+".location.x"),args,targetAction,conditionCategory,conditionType,isOpposed);
+                } else if (config.getString(path+".target") != null){
+                    Target target = Target.DEFAULT;
+                    String targetString = config.getString(path + ".target");
+                    if (targetString != null && !targetString.isEmpty()) {
+                        target = Target.valueOf(targetString);
+                    }
+                    return actionType.getActionClass().getConstructor(Executor.class,int.class, Arguments.class, SelectTargetAction.TargetAction.class, Target.class).newInstance(executor,config.getInt(path+".location.x"),args,targetAction,target);
+                }
+                if (config.getString(path+".condition.type") != null) {
+                    args.setArgumentValue("name", ValueType.TEXT,config.getString(path+".name"));
+                }
             }
             Target target = Target.DEFAULT;
             String targetString = config.getString(path + ".target");
@@ -193,8 +216,12 @@ public class Executors {
             }
             if (actionType.getCategory().isMultiAction()) {
                 if (config.getConfigurationSection(path+".actions") != null) {
-                    boolean isOpposed = config.getBoolean(path+".opposed",false);
-                    return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class,boolean.class).newInstance(executor,target,config.getInt(path+".location.x"),args,createActionList(executor,path+".actions",config),isOpposed);
+                    if (actionType.getCategory().isCondition()) {
+                        boolean isOpposed = config.getBoolean(path+".opposed",false);
+                        return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class,boolean.class).newInstance(executor,target,config.getInt(path+".location.x"),args,createActionList(executor,path+".actions",config),isOpposed);
+                    } else {
+                        return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class).newInstance(executor,target,config.getInt(path+".location.x"),args,createActionList(executor,path+".actions",config));
+                    }
                 }
             }
             return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class).newInstance(executor,target,config.getInt(path+".location.x"),args);

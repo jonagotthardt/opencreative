@@ -25,15 +25,17 @@ import org.bukkit.Material;
 public enum ActionCategory {
 
     PLAYER_ACTION(Material.COBBLESTONE, Material.STONE, ChatColor.GRAY),
+    ENTITY_ACTION(Material.MOSSY_COBBLESTONE, Material.STONE, ChatColor.GREEN),
     WORLD_ACTION(Material.NETHER_BRICKS, Material.NETHERRACK, ChatColor.RED),
     VARIABLE_ACTION(Material.IRON_BLOCK, Material.STONE, ChatColor.WHITE),
     SELECTION_ACTION(Material.PURPUR_BLOCK, Material.PURPUR_PILLAR, ChatColor.MAGIC),
     LAUNCH_FUNCTION_ACTION(Material.LAPIS_ORE, Material.STONE, ChatColor.AQUA),
     CONTROL_ACTION(Material.COAL_BLOCK, Material.COAL_ORE, ChatColor.DARK_GRAY),
     PLAYER_CONDITION(Material.OAK_PLANKS, Material.PISTON, ChatColor.GOLD),
-    VARIABLE_CONDITION(Material.OBSIDIAN, Material.PISTON, ChatColor.BLUE);
-    //HANDLER_ACTION(Material.DARK_PRISMARINE, Material.PISTON, ChatColor.GREEN),
-    //REPEAT_ACTION(Material.PRISMARINE, Material.PISTON, ChatColor.AQUA);
+    ENTITY_CONDITION(Material.BRICKS, Material.PISTON, ChatColor.RED),
+    VARIABLE_CONDITION(Material.OBSIDIAN, Material.PISTON, ChatColor.BLUE),
+    HANDLER_ACTION(Material.DARK_PRISMARINE, Material.PISTON, ChatColor.GREEN),
+    REPEAT_ACTION(Material.PRISMARINE, Material.PISTON, ChatColor.AQUA);
 
 
     //ELSE_CONDITION(Material.END_STONE, ChatColor.YELLOW);

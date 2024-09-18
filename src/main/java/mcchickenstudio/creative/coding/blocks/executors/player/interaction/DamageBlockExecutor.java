@@ -36,6 +36,8 @@ public class DamageBlockExecutor extends PlayerExecutor implements Cancellable {
     protected void setTempVars(CreativeEvent event) {
         if (event instanceof DamageBlockEvent blockEvent) {
             setTempVar(EventValues.Variable.BLOCK, blockEvent.getBlock());
+            setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getBlock().getType().name().toLowerCase());
+            setTempVar(EventValues.Variable.BLOCK_LOCATION, blockEvent.getBlock().getLocation());
         }
     }
 

@@ -26,7 +26,6 @@ import mcchickenstudio.creative.coding.blocks.conditions.variableconditions.Vari
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
 
-import java.util.HashSet;
 import java.util.List;
 
 public class ListIsEmptyCondition extends VariableCondition {

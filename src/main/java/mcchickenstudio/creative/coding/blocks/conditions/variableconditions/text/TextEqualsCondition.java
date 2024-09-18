@@ -36,7 +36,7 @@ public class TextEqualsCondition extends VariableCondition {
 
     @Override
     public boolean check(Entity entity) {
-        if (!getArguments().pathExists("text") || !getArguments().pathExists("start")) {
+        if (!getArguments().pathExists("text") || !getArguments().pathExists("content")) {
             return false;
         }
         String text = getArguments().getValue("text","",this);

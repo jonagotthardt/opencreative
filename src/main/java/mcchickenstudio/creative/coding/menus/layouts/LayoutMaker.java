@@ -19,11 +19,7 @@
 package mcchickenstudio.creative.coding.menus.layouts;
 
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class LayoutMaker extends Layout {
 

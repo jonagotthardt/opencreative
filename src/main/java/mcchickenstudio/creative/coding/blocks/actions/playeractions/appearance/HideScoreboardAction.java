@@ -25,7 +25,6 @@ import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Scoreboard;
 
 public class HideScoreboardAction extends PlayerAction {
     public HideScoreboardAction(Executor executor, Target target, int x, Arguments args) {

@@ -28,6 +28,8 @@ import mcchickenstudio.creative.coding.variables.VariableLink;
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -84,7 +86,8 @@ public class Argument {
         // FIXME: We need to separate these methods into different class.
         if (action.getEntity() instanceof Entity entity) {
             setEventVariable(action, EventValues.Variable.NICKNAME,entity.getName());
-            setEventVariable(action, EventValues.Variable.UUID,entity.getUniqueId());
+            setEventVariable(action, EventValues.Variable.TYPE,entity.getType().name().toLowerCase());
+            setEventVariable(action, EventValues.Variable.UUID,entity.getUniqueId().toString());
         }
         setTempPlotVars(action);
         setTempPlayerVars(action);
@@ -104,7 +107,7 @@ public class Argument {
 
         setEventVariable(action, EventValues.Variable.PLOT_NAME,plot.getInformation().getDisplayName());
         setEventVariable(action, EventValues.Variable.PLOT_DESCRIPTION,plot.getInformation().getDescription());
-        setEventVariable(action, EventValues.Variable.PLOT_ONLINE,plot.getOnline());
+        setEventVariable(action, EventValues.Variable.PLOT_ONLINE,plot.world.getPlayerCount());
         setEventVariable(action, EventValues.Variable.PLOT_ICON,new ItemStack(plot.getInformation().getMaterial(),1));
         setEventVariable(action, EventValues.Variable.PLOT_REPUTATION,plot.getReputation());
         setEventVariable(action, EventValues.Variable.PLOT_ENTITIES_AMOUNT,plot.world.getEntityCount() + ((plot.devPlot != null && plot.devPlot.world != null) ? plot.devPlot.world.getEntityCount() : 0));
@@ -125,41 +128,48 @@ public class Argument {
     }
 
     private void setTempPlayerVars(Action action) {
+        if (action.getEntity() instanceof Entity entity) {
+            setEventVariable(action, EventValues.Variable.FALL_DISTANCE, entity.getFallDistance());
+            setEventVariable(action, EventValues.Variable.FREEZE_TICKS, entity.getFreezeTicks());
+            setEventVariable(action, EventValues.Variable.FIRE_TICKS, entity.getFireTicks());
+            setEventVariable(action, EventValues.Variable.LOCATION, entity.getLocation());
+            setEventVariable(action, EventValues.Variable.LAST_DAMAGE_CAUSE, (entity.getLastDamageCause() != null ? entity.getLastDamageCause().getCause().name().toLowerCase() : null));
+        }
+        if (action.getEntity() instanceof LivingEntity livingEntity) {
+            setEventVariable(action, EventValues.Variable.ARROWS_IN_BODY, livingEntity.getArrowsInBody());
+            setEventVariable(action, EventValues.Variable.BEE_STINGER_COOLDOWN, livingEntity.getBeeStingerCooldown());
+            setEventVariable(action, EventValues.Variable.NO_DAMAGE_TICKS, livingEntity.getNoDamageTicks());
+            setEventVariable(action, EventValues.Variable.MAX_NO_DAMAGE_TICKS, livingEntity.getMaximumNoDamageTicks());
+            setEventVariable(action, EventValues.Variable.HEALTH, livingEntity.getHealth());
+            setEventVariable(action, EventValues.Variable.MAX_HEALTH, (livingEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH) != null ? livingEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() : null));
+            setEventVariable(action, EventValues.Variable.SHIELD_BLOCKING_DELAY, livingEntity.getShieldBlockingDelay());
+            setEventVariable(action, EventValues.Variable.EYE_LOCATION, livingEntity.getEyeLocation());
+            setEventVariable(action, EventValues.Variable.LAST_DAMAGE, livingEntity.getLastDamage());
+            setEventVariable(action, EventValues.Variable.CAN_PICKUP_ITEM, livingEntity.getCanPickupItems());
+        }
+        if (action.getEntity() instanceof HumanEntity humanEntity) {
+            setEventVariable(action, EventValues.Variable.GAME_MODE, humanEntity.getGameMode().name().toLowerCase());
+            setEventVariable(action, EventValues.Variable.HUNGER, humanEntity.getFoodLevel());
+            setEventVariable(action, EventValues.Variable.LAST_DEATH_LOCATION, humanEntity.getLastDeathLocation());
+            setEventVariable(action, EventValues.Variable.ITEM_IN_MAIN_HAND, humanEntity.getInventory().getItemInMainHand());
+            setEventVariable(action, EventValues.Variable.ITEM_IN_OFF_HAND, humanEntity.getInventory().getItemInOffHand());
+            setEventVariable(action, EventValues.Variable.HELMET, humanEntity.getInventory().getHelmet());
+            setEventVariable(action, EventValues.Variable.CHESTPLATE, humanEntity.getInventory().getChestplate());
+            setEventVariable(action, EventValues.Variable.LEGGINGS, humanEntity.getInventory().getLeggings());
+            setEventVariable(action, EventValues.Variable.BOOTS, humanEntity.getInventory().getBoots());
+        }
         if (action.getEntity() instanceof Player player) {
+            setEventVariable(action, EventValues.Variable.LOCALE_COUNTRY, player.locale().getCountry());
+            setEventVariable(action, EventValues.Variable.LOCALE_DISPLAY_COUNTRY, player.locale().getDisplayCountry());
+            setEventVariable(action, EventValues.Variable.LOCALE_LANGUAGE, player.locale().getLanguage());
+            setEventVariable(action, EventValues.Variable.LOCALE_DISPLAY_LANGUAGE, player.locale().getDisplayLanguage());
             setEventVariable(action, EventValues.Variable.PING, player.getPing());
             setEventVariable(action, EventValues.Variable.WALK_SPEED, player.getWalkSpeed());
             setEventVariable(action, EventValues.Variable.FLY_SPEED, player.getFlySpeed());
-            setEventVariable(action, EventValues.Variable.ARROWS_IN_BODY, player.getArrowsInBody());
-            setEventVariable(action, EventValues.Variable.BEE_STINGER_COOLDOWN, player.getBeeStingerCooldown());
-            setEventVariable(action, EventValues.Variable.FALL_DISTANCE, player.getFallDistance());
-            setEventVariable(action, EventValues.Variable.FREEZE_TICKS, player.getFreezeTicks());
-            setEventVariable(action, EventValues.Variable.FIRE_TICKS, player.getFireTicks());
-            setEventVariable(action, EventValues.Variable.GAME_MODE, player.getGameMode().name().toLowerCase());
-            setEventVariable(action, EventValues.Variable.NO_DAMAGE_TICKS, player.getNoDamageTicks());
-            setEventVariable(action, EventValues.Variable.MAX_NO_DAMAGE_TICKS, player.getMaximumNoDamageTicks());
-            setEventVariable(action, EventValues.Variable.HEALTH, player.getHealth());
-            setEventVariable(action, EventValues.Variable.MAX_HEALTH, (player.getAttribute(Attribute.GENERIC_MAX_HEALTH) != null ? player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() : null));
-            setEventVariable(action, EventValues.Variable.HUNGER, player.getFoodLevel());
             setEventVariable(action, EventValues.Variable.EXPERIENCE, player.getExp());
             setEventVariable(action, EventValues.Variable.EXPERIENCE_LEVEL, player.getLevel());
             setEventVariable(action, EventValues.Variable.TOTAL_EXPERIENCE, player.getTotalExperience());
-            setEventVariable(action, EventValues.Variable.SHIELD_BLOCKING_DELAY, player.getShieldBlockingDelay());
-
-            setEventVariable(action, EventValues.Variable.LOCATION, player.getLocation());
-            setEventVariable(action, EventValues.Variable.EYE_LOCATION, player.getEyeLocation());
             setEventVariable(action, EventValues.Variable.COMPASS_TARGET, player.getCompassTarget());
-
-            setEventVariable(action, EventValues.Variable.LAST_DEATH_LOCATION, player.getLastDeathLocation());
-            setEventVariable(action, EventValues.Variable.LAST_DAMAGE, player.getLastDamage());
-            setEventVariable(action, EventValues.Variable.LAST_DAMAGE_CAUSE, (player.getLastDamageCause() != null ? player.getLastDamageCause().getCause().name().toLowerCase() : null));
-            setEventVariable(action, EventValues.Variable.CAN_PICKUP_ITEM, player.getCanPickupItems());
-
-            setEventVariable(action, EventValues.Variable.ITEM_IN_MAIN_HAND, player.getInventory().getItemInMainHand());
-            setEventVariable(action, EventValues.Variable.ITEM_IN_OFF_HAND, player.getInventory().getItemInOffHand());
-            setEventVariable(action, EventValues.Variable.HELMET, player.getInventory().getHelmet());
-            setEventVariable(action, EventValues.Variable.CHESTPLATE, player.getInventory().getChestplate());
-            setEventVariable(action, EventValues.Variable.LEGGINGS, player.getInventory().getLeggings());
-            setEventVariable(action, EventValues.Variable.BOOTS, player.getInventory().getBoots());
         }
     }
 

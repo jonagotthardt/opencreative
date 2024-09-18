@@ -18,11 +18,23 @@
 
 package mcchickenstudio.creative.coding.blocks.executors.player.inventory;
 
+import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.EventValues;
+import mcchickenstudio.creative.coding.blocks.events.player.inventory.BookWriteEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.blocks.executors.player.PlayerExecutor;
 import mcchickenstudio.creative.plots.Plot;
+import org.bukkit.event.Cancellable;
 
-public class BookWriteExecutor extends PlayerExecutor {
+public class BookWriteExecutor extends PlayerExecutor implements Cancellable {
+
+    @Override
+    protected void setTempVars(CreativeEvent event) {
+        if (event instanceof BookWriteEvent bookWriteEvent) {
+            setTempVar(EventValues.Variable.ITEM,bookWriteEvent.getOldBook());
+            setTempVar(EventValues.Variable.NEW_ITEM,bookWriteEvent.getNewBook());
+        }
+    }
 
     public BookWriteExecutor(Plot plot, int x, int y, int z) {
         super(plot, x, y, z);
@@ -31,5 +43,15 @@ public class BookWriteExecutor extends PlayerExecutor {
     @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_WRITE_BOOK;
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        getEvent().setCancelled(cancel);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return getEvent().isCancelled();
     }
 }

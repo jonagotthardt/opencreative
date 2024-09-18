@@ -19,8 +19,7 @@
 package mcchickenstudio.creative.commands;
 
 import mcchickenstudio.creative.menu.CreativeMenu;
-import mcchickenstudio.creative.menu.world.browsers.RecommendedWorldsMenu;
-import mcchickenstudio.creative.menu.world.browsers.WorldsBrowserMenu;
+import mcchickenstudio.creative.menu.world.WorldGenerationMenu;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
 import net.kyori.adventure.text.Component;
@@ -83,7 +82,6 @@ public class CommandCreative implements CommandExecutor {
                     if (player != null) {
                         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 100, 2);
                     }
-                    break;
                 }
                 case "resetlocale" -> {
                     if (!sender.hasPermission("creative.resetlocale")) {
@@ -116,7 +114,6 @@ public class CommandCreative implements CommandExecutor {
                             .replace("%activity-time%",getElapsedTime(now,plot.getLastActivityTime())).replace("%online%",String.valueOf(plot.getOnline()))
                             .replace("%builders%",plot.getBuilders()).replace("%coders%",plot.getDevelopers()).replace("%owner%",plot.getOwner())
                             .replace("%sharing%", plot.getPlotSharing().getName()).replace("%mode%", plot.getPlotMode().getName()).replace("%description%", plot.getInformation().getDescription()));
-                    break;
                 }
                 case "load" -> {
                     if (!sender.hasPermission("creative.load-world")) {
@@ -138,7 +135,6 @@ public class CommandCreative implements CommandExecutor {
                     } else {
                         sender.sendMessage(getLocaleMessage("world.already-loaded").replace("%id%",args[1]));
                     }
-                    break;
                 }
                 case "creative-chat" -> {
                     if (!sender.hasPermission("creative.creative-chat")) {
@@ -165,7 +161,6 @@ public class CommandCreative implements CommandExecutor {
                             onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.cleared").replace("%player%",sender.getName()));
                         }
                     }
-                    break;
                 }
                 case "kick-all" -> {
                     if (!sender.hasPermission("creative.kick-all")) {
@@ -209,7 +204,6 @@ public class CommandCreative implements CommandExecutor {
                             }
                         }
                     }
-                    break;
                 }
                 case "maintenance" -> {
                     if (!sender.hasPermission("creative.maintenance")) {
@@ -278,7 +272,6 @@ public class CommandCreative implements CommandExecutor {
                             onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.ended"));
                         }
                     }
-                    break;
                 }
                 case "unload" -> {
                     if (!sender.hasPermission("creative.unload-world")) {
@@ -300,7 +293,6 @@ public class CommandCreative implements CommandExecutor {
                     } else {
                         sender.sendMessage(getLocaleMessage("world.already-unloaded").replace("%id%",args[1]));
                     }
-                    break;
                 }
                 case "list" -> {
                     if (!sender.hasPermission("creative.list")) {
@@ -314,7 +306,6 @@ public class CommandCreative implements CommandExecutor {
                     sender.sendMessage(getLocaleMessage("creative.loaded-worlds-list")
                             .replace("%amount%",String.valueOf(worlds.size()))
                             + String.join(", ",worlds));
-                    break;
                 }
                 case "deprecated" -> {
                     if (!sender.hasPermission("creative.list.deprecated")) {
@@ -370,6 +361,18 @@ public class CommandCreative implements CommandExecutor {
                         return true;
                     }
                     sender.sendMessage(getLocaleMessage(args[1]));
+                }
+                case "generator" -> {
+                    if (!Main.debug) {
+                        return true;
+                    }
+                    if (!sender.hasPermission("creative.test")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
+                    }
+                    if (player != null) {
+                        new WorldGenerationMenu(player).open(player);
+                    }
                 }
             }
         } else {

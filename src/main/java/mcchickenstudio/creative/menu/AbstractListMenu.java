@@ -144,31 +144,6 @@ public abstract class AbstractListMenu extends AbstractMenu {
         return (elements.size() + itemsSlots.length - 1) / itemsSlots.length;
     }
 
-    /*protected List<List<Object>> dividePagesByElements(List<Object> elements) {
-        List<List<Object>> pages = new ArrayList<>();
-
-        byte pageSize = (byte) itemsSlots.length;
-        byte pageCount = countPages(elements);
-
-        // For pages
-        for (int i = 0; i < pageCount; i++) {
-
-            int fromIndex = i * pageSize;
-            int toIndex = Math.min((i + 1) * pageSize, elements.size());
-            List<Object> sublist = elements.subList(fromIndex, toIndex);
-
-            // One list of items
-            ArrayList<Object> page = new ArrayList<>(sublist);
-            pages.add(page);
-        }
-
-        return pages;
-    }*/
-
-    /*private byte countPages(List<Object> objects) {
-        return (byte) Math.ceil((double) objects.size() / itemsSlots.length);
-    }*/
-
     @Override
     public void onClick(InventoryClickEvent event) {
         if (!isPlayerClicked(event) || !isClickedInMenuSlots(event)) {

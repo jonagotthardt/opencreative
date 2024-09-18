@@ -18,10 +18,6 @@
 
 package mcchickenstudio.creative.utils;
 
-import org.bukkit.Color;
-import org.bukkit.Material;
-import org.bukkit.inventory.meta.ItemMeta;
-
 public class ColorUtils {
 
     public static int[] parseRGB(String string) {

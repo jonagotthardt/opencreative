@@ -76,9 +76,12 @@ public class PlayerChat implements Listener {
             if (plot != null) {
                 DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
                 if (devPlot != null) {
-                    for (Player p : plot.getPlayers()) {
-                        if (plot.getWorldPlayers().canDevelop(p)) {
-                            p.sendMessage(message);
+                    for (Player onlinePlayer : plot.getPlayers()) {
+                        for (String developer : plot.getWorldPlayers().getAllDevelopers()) {
+                            if (plot.isOwner(onlinePlayer) || onlinePlayer.getName().equalsIgnoreCase(developer)) {
+                                onlinePlayer.sendMessage(message);
+                                break;
+                            }
                         }
                     }
                 } else {
@@ -116,7 +119,7 @@ public class PlayerChat implements Listener {
                 try {
                     double number = Double.parseDouble(numberString);
                     ItemMeta meta = itemInHand.getItemMeta();
-                    meta.setDisplayName("§c" + number);
+                    meta.setDisplayName("§a" + number);
                     itemInHand.setItemMeta(meta);
                     setPersistentData(itemInHand,getCodingValueKey(),"NUMBER");
                     player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.7f);

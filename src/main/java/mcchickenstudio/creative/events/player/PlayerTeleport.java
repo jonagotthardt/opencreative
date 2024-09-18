@@ -18,10 +18,16 @@
 
 package mcchickenstudio.creative.events.player;
 
+import io.papermc.paper.event.entity.EntityInsideBlockEvent;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.plots.PlotManager;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityPortalEnterEvent;
+import org.bukkit.event.entity.EntityPortalEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import mcchickenstudio.creative.plots.Plot;
 
@@ -30,9 +36,9 @@ import static mcchickenstudio.creative.utils.ErrorUtils.stopPlotCode;
 
 public class PlayerTeleport implements Listener {
 
-    @EventHandler
-    public void onPortalTeleport(PlayerTeleportEvent event) {
-        if (event.getCause() == PlayerTeleportEvent.TeleportCause.END_PORTAL || event.getCause() == PlayerTeleportEvent.TeleportCause.NETHER_PORTAL) {
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onTeleport(PlayerTeleportEvent event) {
+        if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_PORTAL) || event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_GATEWAY) || event.getCause().equals(PlayerTeleportEvent.TeleportCause.NETHER_PORTAL)) {
             event.setCancelled(true);
         }
 
@@ -45,6 +51,30 @@ public class PlayerTeleport implements Listener {
             } catch (StackOverflowError error) {
                 stopPlotCode(plot);
             }
+        }
+    }
+
+    @EventHandler
+    public void onPortalTeleport(PlayerPortalEvent event) {
+        event.setCancelled(true);
+        event.setCanCreatePortal(false);
+    }
+
+    @EventHandler
+    public void onPortalTeleport(EntityPortalEvent event) {
+        event.setCancelled(true);
+        event.setCanCreatePortal(false);
+    }
+
+    @EventHandler
+    public void onPortalTeleport(EntityPortalEnterEvent event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onPortalTeleport(EntityInsideBlockEvent event) {
+        if (event.getBlock().getType() == Material.END_PORTAL || event.getBlock().getType() == Material.END_GATEWAY) {
+            event.setCancelled(true);
         }
     }
 

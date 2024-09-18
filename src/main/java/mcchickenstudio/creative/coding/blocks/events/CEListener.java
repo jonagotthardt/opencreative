@@ -18,11 +18,13 @@
 
 package mcchickenstudio.creative.coding.blocks.events;
 
+import mcchickenstudio.creative.coding.blocks.events.entity.entities.EntitySpawnEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.*;
 import mcchickenstudio.creative.coding.blocks.events.player.interaction.*;
 import mcchickenstudio.creative.coding.blocks.events.player.inventory.*;
 import mcchickenstudio.creative.coding.blocks.events.player.movement.*;
 import mcchickenstudio.creative.coding.blocks.events.player.world.*;
+import mcchickenstudio.creative.coding.blocks.events.world.other.GamePlayEvent;
 import mcchickenstudio.creative.coding.blocks.executors.Executors;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -256,6 +258,17 @@ public class CEListener implements Listener {
     }
 
     @EventHandler
+    public void onPlayerDamagedPlayer(PlayerDamagesPlayerEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onPlayerKilledPlayer(PlayerKilledPlayerEvent event) {
+        Executors.activate(event);
+    }
+
+
+    @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
         Executors.activate(event);
     }
@@ -266,7 +279,27 @@ public class CEListener implements Listener {
     }
 
     @EventHandler
-    public void onPurchasse(PlayerPurchaseEvent event) {
+    public void onPurchase(PlayerPurchaseEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onPlayMode(GamePlayEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onEntitySpawn(EntitySpawnEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onConsume(ItemConsumeEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onEntitySpawn(ItemBreakEvent event) {
         Executors.activate(event);
     }
 

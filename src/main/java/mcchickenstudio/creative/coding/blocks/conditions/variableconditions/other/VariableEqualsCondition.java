@@ -24,8 +24,6 @@ import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.conditions.variableconditions.VariableCondition;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import mcchickenstudio.creative.coding.variables.EventValueLink;
-import mcchickenstudio.creative.coding.variables.VariableLink;
 import org.bukkit.entity.Entity;
 
 import java.util.List;

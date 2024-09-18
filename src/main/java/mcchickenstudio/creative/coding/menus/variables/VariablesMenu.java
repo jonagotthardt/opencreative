@@ -24,7 +24,6 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -39,11 +38,6 @@ public class VariablesMenu extends AbstractMenu  {
     private final ItemStack LOCATION_ITEM = createItem(Material.PAPER,1,"menus.developer.variables.items.location");
     private final ItemStack VARIABLE_ITEM = createItem(Material.MAGMA_CREAM,1,"menus.developer.variables.items.variable");
     private final ItemStack EVENT_VALUE_ITEM = createItem(Material.NAME_TAG,1,"menus.developer.variables.items.event-value");
-    //private final ItemStack COLOR_ITEM = createItem(Material.BLACK_DYE,1,"menus.developer.variables.items.color");
-    //private final ItemStack POTION_ITEM = createItem(Material.GLASS_BOTTLE,1,"menus.developer.variables.items.potion");
-    //private final ItemStack PARTICLE_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.particle");
-    //private final ItemStack ENTITY_TYPE_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.entity_type");
-
 
     public VariablesMenu() {
         super((byte) 1, getLocaleMessage("menus.developer.variables.title"));

@@ -22,6 +22,7 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionsHandler;
 import mcchickenstudio.creative.coding.variables.VariableLink;
 
 import java.util.List;
+import java.util.Map;
 
 public class WorldVariable {
 
@@ -68,6 +69,13 @@ public class WorldVariable {
     }
 
     public int getSize() {
-        return (value instanceof List) ? ((List<?>) value).size() : 1;
+        int size = 1;
+        if (value instanceof List<?> list) {
+            size += list.size();
+        } else if (value instanceof Map<?,?> map) {
+            size += map.keySet().size();
+            size += map.values().size();
+        }
+        return size;
     }
 }

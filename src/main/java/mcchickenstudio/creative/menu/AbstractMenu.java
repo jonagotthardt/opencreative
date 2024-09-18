@@ -133,7 +133,7 @@ public abstract class AbstractMenu implements InventoryHolder {
 
     public void onClose(InventoryCloseEvent event) {
         destroy();
-    };
+    }
 
     protected final boolean isClickedInMenuSlots(InventoryClickEvent event) {
         if (event.getClickedInventory() == null) return false;
