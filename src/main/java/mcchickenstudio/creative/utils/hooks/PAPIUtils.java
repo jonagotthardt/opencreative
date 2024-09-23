@@ -103,7 +103,7 @@ class Placeholder extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getIdentifier() {
-        return "creative";
+        return "opencreative";
     }
 
     @Override

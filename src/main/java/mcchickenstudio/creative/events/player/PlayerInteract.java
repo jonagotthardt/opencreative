@@ -65,6 +65,7 @@ import static mcchickenstudio.creative.utils.BlockUtils.*;
 import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemName;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.PlayerUtils.isEntityInLobby;
 import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
 
 public class PlayerInteract implements Listener {
@@ -428,6 +429,10 @@ public class PlayerInteract implements Listener {
     }
 
     private void setPaperLocation(PlayerInteractEvent event, Player player, ItemStack currentItem) {
+        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+        if (isPlayerWithLocation(player) && plot != null && !plot.getWorldPlayers().canBuild(player)) {
+            event.setCancelled(true);
+        }
         if (currentItem.getType() != Material.PAPER || !isPlayerWithLocation(player) || player.hasCooldown(currentItem.getType())) {
             return;
         }
@@ -442,7 +447,6 @@ public class PlayerInteract implements Listener {
             player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),locationString,5,40,5);
             player.playSound(player.getLocation(),Sound.ENTITY_EXPERIENCE_ORB_PICKUP,100,2);
         } else if (event.getAction() == Action.LEFT_CLICK_AIR) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
             if (plot != null && plot.devPlot.isLoaded()) {
                 player.teleport(getOldLocationPlayerWithLocation(player));
                 player.setCooldown(currentItem.getType(),60);
@@ -477,8 +481,7 @@ public class PlayerInteract implements Listener {
             return;
         }
         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-        //FIXME: Use config world name instead of "world"
-        if (player.getWorld().getName().equalsIgnoreCase("world")) {
+        if (isEntityInLobby(player)) {
             if (currentItem.getType() == Material.COMPASS) {
                 // Opens recommended worlds menu.
                 if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {

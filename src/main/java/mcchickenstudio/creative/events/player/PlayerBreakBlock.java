@@ -26,12 +26,12 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.Plot;
@@ -39,12 +39,14 @@ import mcchickenstudio.creative.plots.Plot;
 import static mcchickenstudio.creative.events.player.PlayerPlaceBlock.move;
 import static mcchickenstudio.creative.utils.BlockUtils.getClosingBracketX;
 import static mcchickenstudio.creative.utils.ItemUtils.getCodingDoNotDropMeKey;
+import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
 
 public class PlayerBreakBlock implements Listener {
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
+        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
         DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
         if (devPlot != null) {
             Block block = event.getBlock();
@@ -55,7 +57,7 @@ public class PlayerBreakBlock implements Listener {
             }
 
             if (devPlot.getIndestructibleBlocks().contains(block.getType())) {
-                player.playSound(player.getLocation(),Sound.ENTITY_ITEM_BREAK,100,1.2f);
+                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
                 event.setCancelled(true);
             }
 
@@ -64,7 +66,7 @@ public class PlayerBreakBlock implements Listener {
                 event.setCancelled(true);
                 if (ActionCategory.getByMaterial(block.getType()) != null) {
                     block.setType(Material.AIR);
-                    move(block.getLocation(),BlockFace.WEST);
+                    move(block.getLocation(), BlockFace.WEST);
                 } else {
                     if (ExecutorCategory.getByMaterial(block.getType()) != null) {
                         if (event.getPlayer().isSneaking()) {
@@ -81,25 +83,28 @@ public class PlayerBreakBlock implements Listener {
 
             if (block.getType() == Material.CHEST) {
                 Block blockAtDown = block.getRelative(BlockFace.DOWN).getRelative(BlockFace.DOWN);
-                if (blockAtDown.getType() == devPlot.eventBlockMaterial || blockAtDown.getType() == devPlot.actionBlockMaterial) {
+                if (blockAtDown.getType() == devPlot.getEventBlockMaterial() || blockAtDown.getType() == devPlot.getActionBlockMaterial()) {
                     event.setCancelled(true);
                 }
             }
 
             if (block.getType() == Material.OAK_WALL_SIGN) {
                 event.setCancelled(true);
-                translateBlockSign(block,player);
+                translateBlockSign(block, player);
 
             }
-
+        } else if (plot != null) {
+            if (ChangedWorld.isPlayerWithLocation(player) && !plot.getWorldPlayers().canBuild(player)) {
+                player.sendActionBar(getLocaleMessage("not-builder"));
+                event.setCancelled(true);
+                return;
+            }
+            EventRaiser.raiseDestroyEvent(event.getPlayer(),event);
         }
-
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-        if (plot != null) EventRaiser.raiseDestroyEvent(event.getPlayer(),event);
     }
 
     private void destroyAdditionalBlocks(Block block) {
-        Block chestBlock = block.getRelative(BlockFace.UP);
+        Block containerBlock = block.getRelative(BlockFace.UP);
         Block additionalBlock = block.getRelative(BlockFace.EAST);
         Block signBlock = block.getRelative(BlockFace.SOUTH);
 
@@ -111,17 +116,16 @@ public class PlayerBreakBlock implements Listener {
         }
         additionalBlock.setType(Material.AIR);
         signBlock.setType(Material.AIR);
-        if (chestBlock.getType() == Material.CHEST) {
-            Chest chest = (Chest) chestBlock.getState();
-            for (ItemStack item : chest.getBlockInventory().getContents()) {
+        if (containerBlock.getState() instanceof InventoryHolder container) {
+            for (ItemStack item : container.getInventory().getContents()) {
                 if (item != null) {
                     if (item.getItemMeta() == null || !item.getItemMeta().getPersistentDataContainer().has(getCodingDoNotDropMeKey())) {
-                        chestBlock.getWorld().dropItem(chestBlock.getLocation(),item);
+                        containerBlock.getWorld().dropItem(containerBlock.getLocation(),item);
                     }
                 }
             }
         }
-        chestBlock.setType(Material.AIR);
+        containerBlock.setType(Material.AIR);
     }
 
     @EventHandler

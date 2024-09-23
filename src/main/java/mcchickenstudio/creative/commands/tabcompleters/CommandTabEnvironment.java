@@ -35,6 +35,9 @@ public class CommandTabEnvironment implements TabCompleter {
             tabCompleter.add("variables");
             tabCompleter.add("debug");
             tabCompleter.add("barrel");
+            tabCompleter.add("floor");
+            tabCompleter.add("action");
+            tabCompleter.add("event");
         } else if (args.length == 2) {
             if ("variables".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("size");
@@ -43,6 +46,21 @@ public class CommandTabEnvironment implements TabCompleter {
             } else if ("debug".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");
+            } else if ("floor".equalsIgnoreCase(args[0]) || "event".equalsIgnoreCase(args[0]) || "action".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("barrier");
+                tabCompleter.add("black");
+                tabCompleter.add("blue");
+                tabCompleter.add("light_blue");
+                tabCompleter.add("white");
+                tabCompleter.add("red");
+                tabCompleter.add("orange");
+                tabCompleter.add("yellow");
+                tabCompleter.add("purple");
+                tabCompleter.add("green");
+                tabCompleter.add("lime");
+                tabCompleter.add("brown");
+                tabCompleter.add("cyan");
+                tabCompleter.add("pink");
             }
         }
         return tabCompleter;

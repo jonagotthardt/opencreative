@@ -109,7 +109,7 @@ public class CommandDev implements CommandExecutor {
                     }
                     player.sendTitle(getLocaleMessage("world.dev-mode.title"), getLocaleMessage("world.dev-mode.subtitle"));
                     player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 100, 1.3f);
-
+                    player.playSound(player.getLocation(), Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR, 100, 0.5f);
                 } else {
                     sender.sendMessage(getLocaleMessage("not-owner", player));
                 }

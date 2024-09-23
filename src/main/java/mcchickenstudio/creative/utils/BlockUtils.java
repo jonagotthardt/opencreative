@@ -131,7 +131,7 @@ public class BlockUtils {
         WorldBorder border = location.getWorld().getWorldBorder();
         Location borderCenter = border.getCenter();
 
-        double radius = border.getSize()/2;
+        double radius = border.getSize()/2+1;
         double borderCenterX1 = borderCenter.getX()+radius;
         double borderCenterX2 = borderCenter.getX()-radius;
         double borderCenterZ1 = borderCenter.getZ()+radius;

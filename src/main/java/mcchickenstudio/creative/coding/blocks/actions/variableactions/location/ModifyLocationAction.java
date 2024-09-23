@@ -36,6 +36,7 @@ public class ModifyLocationAction extends VariableAction {
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
         Location location = getArguments().getValue("location",entity.getLocation(),this);
+        location = location.clone();
         boolean add = getArguments().getValue("add",false,this);
         double x = (add ? 0.0d : location.getX());
         double y = (add ? 0.0d : location.getY());
@@ -63,6 +64,12 @@ public class ModifyLocationAction extends VariableAction {
             location.setZ(location.getZ()+z);
             location.setYaw(location.getYaw()+yaw);
             location.setPitch(location.getPitch()+pitch);
+        } else {
+            location.setX(x);
+            location.setY(y);
+            location.setZ(z);
+            location.setYaw(yaw);
+            location.setPitch(pitch);
         }
         setVarValue(link,location);
     }

@@ -20,7 +20,9 @@ package mcchickenstudio.creative.utils;
 
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.plots.Plot;
+import net.kyori.adventure.util.TriState;
 import org.bukkit.*;
+import org.bukkit.block.Biome;
 import org.bukkit.entity.*;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.ItemStack;
@@ -47,14 +49,19 @@ public class WorldUtils {
 
     }
 
+    public static boolean isDevPlot(World world) {
+        return world.getName().endsWith("dev");
+    }
+
     /**
      Create a world for plot. It creates world, plot's settings.yml, sets plot parameters, teleports player.
      **/
-    public static boolean generateWorld(Plot plot, Player player, String worldName, WorldGenerator worldGenerator, World.Environment environment, long seed) {
+    public static boolean generateWorld(Plot plot, Player player, String worldName, WorldGenerator worldGenerator, World.Environment environment, long seed, boolean generateStructures) {
 
         WorldCreator worldCreator = new WorldCreator(worldName).generateStructures(false);
         worldCreator.type(WorldType.FLAT);
         worldCreator.environment(environment);
+        worldCreator.generateStructures(generateStructures);
         worldCreator.seed(seed);
 
         if (worldGenerator == WorldGenerator.EMPTY) {
@@ -63,15 +70,15 @@ public class WorldUtils {
             worldCreator.generator(new WaterChunkGenerator());
         } else if (worldGenerator == WorldGenerator.SURVIVAL) {
             worldCreator.type(WorldType.NORMAL);
-            worldCreator.generateStructures(true);
         } else if (worldGenerator == WorldGenerator.LARGE_BIOMES) {
             worldCreator.type(WorldType.LARGE_BIOMES);
-            worldCreator.generateStructures(true);
         }
 
+        worldCreator.keepSpawnLoaded(TriState.FALSE);
         World world = Bukkit.createWorld(worldCreator);
 
         if (world != null) {
+            world.setGameRule(GameRule.SPAWN_CHUNK_RADIUS,1);
             world.getWorldBorder().setSize(plot.worldSize);
 
             world.setGameRule(GameRule.DO_MOB_LOOT,true);
@@ -183,14 +190,6 @@ public class WorldUtils {
 
 }
 
-class EmptyChunkGenerator extends ChunkGenerator {
-
-    @Override
-    public ChunkGenerator.@NotNull ChunkData generateChunkData(@NotNull World world, @NotNull Random random, int x, int z, @NotNull BiomeGrid biome) {
-        return createChunkData(world);
-    }
-}
-
 class WaterChunkGenerator extends ChunkGenerator {
 
     @Override
@@ -211,4 +210,11 @@ class WaterChunkGenerator extends ChunkGenerator {
         return chunkData;
     }
 
+}
+
+class EmptyChunkGenerator extends ChunkGenerator {
+    @Override
+    public @NotNull ChunkData generateChunkData(@NotNull World world, @NotNull Random random, int x, int z, @NotNull BiomeGrid biome) {
+        return createChunkData(world);
+    }
 }

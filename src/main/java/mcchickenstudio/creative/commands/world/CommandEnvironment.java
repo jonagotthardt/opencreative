@@ -180,22 +180,69 @@ public class CommandEnvironment implements CommandExecutor {
                         }
                         break;
                     }
-                    case "addfloor":
-                        if (!Main.debug) return true;
-                        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-                        if (devPlot == null) {
-                            player.sendMessage(getLocaleMessage("only-in-dev-world"));
+                    case "floor": {
+                        if (args.length < 2) {
+                            sender.sendMessage(getLocaleMessage("too-few-args"));
                             return true;
                         }
-                        byte y = 0;
-                        for (byte z = 0; z < 100; z++) {
-                            for (byte x = 0; x < 100; x++) {
-                                Block copyBlock = new Location(devPlot.world,x,y,z).getBlock();
-                                Block newBlock = new Location(devPlot.world,x,y+8,z).getBlock();
-                                newBlock.setType(copyBlock.getType());
+                        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
+                        if (devPlot == null) {
+                            sender.sendMessage(getLocaleMessage("only-in-dev-world"));
+                            return true;
+                        }
+                        Material material = Material.WHITE_STAINED_GLASS;
+                        try {
+                            material = Material.valueOf(args[1].equalsIgnoreCase("barrier") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
+                        } catch (Exception ignored) {}
+                        if (devPlot.setFloorBlockMaterial(material)) {
+                            if (devPlot.createPlatform(1,1)) {
+                                player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
                             }
                         }
                         break;
+                    }
+                    case "action": {
+                        if (args.length < 2) {
+                            sender.sendMessage(getLocaleMessage("too-few-args"));
+                            return true;
+                        }
+                        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
+                        if (devPlot == null) {
+                            sender.sendMessage(getLocaleMessage("only-in-dev-world"));
+                            return true;
+                        }
+                        Material material = Material.GRAY_STAINED_GLASS;
+                        try {
+                            material = Material.valueOf(args[1].equalsIgnoreCase("barrier") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
+                        } catch (Exception ignored) {}
+                        if (devPlot.setActionBlockMaterial(material)) {
+                            if (devPlot.createPlatform(1,1)) {
+                                player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+                            }
+                        }
+                        break;
+                    }
+                    case "event", "executor": {
+                        if (args.length < 2) {
+                            sender.sendMessage(getLocaleMessage("too-few-args"));
+                            return true;
+                        }
+                        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
+                        if (devPlot == null) {
+                            sender.sendMessage(getLocaleMessage("only-in-dev-world"));
+                            return true;
+                        }
+                        Material material = Material.BLUE_STAINED_GLASS;
+                        try {
+                            material = Material.valueOf(args[1].equalsIgnoreCase("barrier") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
+                        } catch (Exception ignored) {}
+                        if (devPlot.setEventBlockMaterial(material)) {
+                            if (devPlot.createPlatform(1,1)) {
+                                player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+                            }
+                        }
+                        break;
+                    }
                     case "debug": {
                         if (args.length == 1) {
                             player.sendMessage(getLocaleMessage("environment.debug.help"));

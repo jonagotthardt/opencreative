@@ -40,6 +40,7 @@ import mcchickenstudio.creative.plots.PlotManager;
 
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.MessageUtils.sendMessageOnce;
+import static mcchickenstudio.creative.utils.PlayerUtils.isEntityInDevPlot;
 import static mcchickenstudio.creative.utils.WorldUtils.isEntityHostile;
 
 public class EntitySpawn implements Listener {
@@ -49,7 +50,7 @@ public class EntitySpawn implements Listener {
         World world = event.getLocation().getWorld();
         Plot plot = PlotManager.getInstance().getPlotByWorld(world);
         if (plot != null) {
-            int limit = plot.entitiesLimit;
+            int limit = plot.getEntitiesLimit();
             int count = plot.world.getEntityCount();
             if (world.getName().contains("dev")) {
                 if (!(event.getEntity() instanceof Item)) {
@@ -77,7 +78,7 @@ public class EntitySpawn implements Listener {
         World world = event.getBlock().getWorld();
         Plot plot = PlotManager.getInstance().getPlotByWorld(world);
         if (plot != null) {
-            int limit = plot.entitiesLimit;
+            int limit = plot.getEntitiesLimit();
             if (world.getEntityCount() > limit) {
                 event.setCancelled(true);
                 if (plot.getOnline() < 1) return;
@@ -98,7 +99,7 @@ public class EntitySpawn implements Listener {
         World world = event.getEntity().getWorld();
         Entity entity = event.getEntity();
         Plot plot = PlotManager.getInstance().getPlotByWorld(world);
-        if (world.getName().endsWith("dev") && !(event.getEntity() instanceof Item)) {
+        if (isEntityInDevPlot(entity) && !(event.getEntity() instanceof Item)) {
             event.setCancelled(true);
         }
         if (plot != null) {
@@ -120,7 +121,7 @@ public class EntitySpawn implements Listener {
                         }
                         break;
                 }
-                if (world.getEntityCount() >= plot.entitiesLimit/2) {
+                if (world.getEntityCount() >= plot.getEntitiesLimit() /2) {
                     event.setCancelled(true);
                 }
             }
@@ -136,8 +137,7 @@ public class EntitySpawn implements Listener {
     @EventHandler
     public void onVehicleCreation(VehicleCreateEvent event) {
         Entity entity = event.getVehicle();
-        World world = entity.getWorld();
-        if (world.getName().endsWith("dev")) {
+        if (isEntityInDevPlot(entity)) {
             event.setCancelled(true);
         }
     }
@@ -147,7 +147,7 @@ public class EntitySpawn implements Listener {
         World world = event.getWorld();
         Plot plot = PlotManager.getInstance().getPlotByWorld(world);
         if (plot != null && event.isNewChunk()) {
-            if (world.getEntityCount() >= plot.entitiesLimit/2) {
+            if (world.getEntityCount() >= plot.getEntitiesLimit() /2) {
                 for (Entity entity : event.getChunk().getEntities()) {
                     entity.remove();
                 }

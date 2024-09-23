@@ -27,6 +27,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
+import static mcchickenstudio.creative.utils.WorldUtils.isDevPlot;
+
 public class BlockChanged implements Listener {
 
     @EventHandler
@@ -47,7 +49,7 @@ public class BlockChanged implements Listener {
                 event.blockList().clear();
             }
         }
-        if (world.getName().endsWith("dev")) {
+        if (isDevPlot(world)) {
             event.blockList().clear();
         }
     }

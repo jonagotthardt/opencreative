@@ -29,8 +29,7 @@ import java.util.Set;
 
 import static mcchickenstudio.creative.utils.FileUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
-import static mcchickenstudio.creative.utils.PlayerUtils.clearPlayer;
-import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
+import static mcchickenstudio.creative.utils.PlayerUtils.*;
 
 public class PlotPlayers {
 
@@ -220,7 +219,7 @@ public class PlotPlayers {
                 if (player.getGameMode() == GameMode.CREATIVE) {
                     player.setGameMode(GameMode.ADVENTURE);
                 }
-                if (player.getWorld().getName().endsWith("dev")) {
+                if (isEntityInDevPlot(player)) {
                     clearPlayer(player);
                     player.teleport(plot.world.getSpawnLocation());
                 }

@@ -11,10 +11,18 @@
 
 version: 5.0
 last-world-id: 0
-debug: true
 
 lobby:
+  #
+  # Lobby is a world, where player teleports on server join,
+  # or on command type: /lobby, /hub, /spawn. It gives player
+  # items for opening menus. To change spawn location use
+  # /setworldspawn command.
+  #
   world: "world"
+  sound:
+    name: "music_disc.creator_music_box"
+    pitch: 0.7
 
 recommended-worlds: [1,2,3,4,5] # List of featured worlds in /games, type world number IDs here.
 
@@ -24,12 +32,12 @@ execute-console-commands: # These commands will be executed on some Creative eve
 
 messages:
   locale: en # Supported: en, ru - Для русского языка: ru
+  branding: "&fOpen&x&d&b&d&b&d&bC&x&e&0&d&a&d&7r&x&e&5&d&9&d&4e&x&e&a&d&8&d&0a&x&f&0&d&7&c&dt&x&f&5&d&6&c&9i&x&f&a&d&5&c&6v&x&f&f&d&4&c&2e&a+"
   prefix: "&6 Worlds &8| &f"
   cc-prefix: "&6 Creative Chat &8| &7"
   cc-chat: "%cc-prefix%&7%player%&7: %message%" # You can use PAPI placeholders here
   world-chat: "&7 %player% &8» &f%message%" # and here
-  version: "\n&f This server uses &f&lCreative&b&l+ &b%version%&f: %codename%&f.\n &7Contributors: TimePlay. Translators: initzero, Nagibator6000LoL.\n &cMcChicken 2017-2024\n &f"
-
+  version: "&f \n &fPowered by Open&7Creative&b+ &3%version%\n &f%codename% \n \n &fContibutors: &7McChicken Team\n &fTranslators: &7initzero, Nagibator6000Lol \n \n &cMcChicken Studio 2017-2014\n &c"
 cooldowns:
   generic-command: 5 # /play, /build, /games
   advertisement: 120 # /ad
@@ -37,35 +45,87 @@ cooldowns:
   world-chat: 2 # chat in world
 
 groups:
+  #
+  # Groups are made for specifying players permissions,
+  # like world size, world limits, worlds amount.
+  #
   default: # default - by default for any player, no permissions required
     creating-world:
       limit: 2
     world:
       size: 25
-      code-operations-limit: 100
-      entities-limit: 50 # limit for spawned entities in world
-      modifying-blocks-limit: 5000 # limit for changing blocks with world actions per second
-      redstone-operations-limit: 20 # limit for redstone operations in world
-      opening-inventories-limit: 5 # limit for opening inventories per 5 seconds for preventing anti-exit in world
-      variables-amount-limit: 50 # limit for amount of all variables in world (saved and not saved)
+      limits:
+        #
+        # Limits for world, that player created.
+        #
+        executor-calls: 100 # limit of executor calls
+        entities-amount: 50 # limit for spawned entities in world
+        modifying-blocks: 5000 # limit for changing blocks with world actions per second
+        redstone-changes: 100 # limit for redstone operations in world
+        opening-inventories: 5 # limit for opening inventories per 5 seconds for preventing anti-exit
+        variables-amount: 50 # limit for amount of all variables in world (saved, global, local)
+        scoreboards-amount: 50
+        bossbars-amount: 10
+      per-player-limit-modifiers:
+        #
+        # When player joins a world or leaves from world,
+        # this will increase or decrease limits values.
+        #
+        executor-calls: 100
+        entities-amount: 50
+        modifying-blocks: 0
+        redstone-changes: 20
+        opening-inventories: 5
+        variables-amount: 50
+        scoreboards-amount: 3
+        bossbars-amount: 3
       build-permissions: # Permissions will be given when player types /build command
         - "worldedit.wand"
         # If you want to add WorldEdit permissions please turn off
         # region-restrictions in WorldEdit/config.yml to make //set working
         #- "worldedit.region.set"
+        -
   premium:
     permission: "creative.group.premium"
     creating-world:
       limit: 4
     world:
       size: 50
-      code-operations-limit: 200
-      entities-limit: 200
-      modifying-blocks-limit: 6000
-      redstone-operations-limit: 50
-      opening-inventories-limit: 5
-      variables-amount-limit: 100
+      limits:
+        executor-calls: 120 # limit of executor calls
+        entities-amount: 200 # limit for spawned entities in world
+        modifying-blocks: 7500 # limit for changing blocks with world actions per second
+        redstone-changes: 200 # limit for redstone operations in world
+        opening-inventories: 5 # limit for opening inventories per 5 seconds for preventing anti-exit
+        variables-amount: 500 # limit for amount of all variables in world (saved, global, local)
+        scoreboards-amount: 50
+        bossbars-amount: 10
+      per-player-limit-modifiers:
+        executor-calls: 30
+        entities-amount: 50
+        modifying-blocks: 0
+        redstone-changes: 20
+        opening-inventories: 5
+        variables-amount: 50
+        scoreboards-amount: 10
+        bossbars-amount: 10
       build-permissions:
         - "worldedit.wand"
         #- "worldedit.region.set"
         #- "worldedit.region.replace"
+
+#
+# Maintenance mode unloads all worlds and
+# prevents players without admin permissions
+# from loading or creating worlds.
+#
+# /creative maintenance start 30
+# /creative maintenance end
+#
+maintenance: false
+#
+# In Debug mode OpenCreative+ will send some
+# information about plugin's work and state.
+# Not useful, if you're not developing OC+.
+#
+debug: true

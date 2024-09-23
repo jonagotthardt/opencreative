@@ -260,7 +260,16 @@ public class Arguments {
             try {
                 List<Argument> args = (List<Argument>) arg.getValue(action);
                 for (Argument textArg : args) {
-                    list.add(Argument.parseEntity(textArg.getValue(action).toString(),action.getHandler().getMainActionHandler()));
+                    Object textObject = textArg.getValue(action);
+                    String textString = textObject.toString();
+                    if (textObject instanceof ItemStack item) {
+                        if (item.hasItemMeta() && item.getItemMeta() != null) {
+                            textString = item.getItemMeta().getDisplayName();
+                        } else {
+                            textString = item.getType().name();
+                        }
+                    }
+                    list.add(Argument.parseEntity(textString,action.getHandler().getMainActionHandler()));
                 }
             } catch (ClassCastException e) {
                 return list;

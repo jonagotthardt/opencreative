@@ -47,6 +47,8 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 
+import static mcchickenstudio.creative.utils.PlayerUtils.isEntityInDevPlot;
+
 public class EventRaiser {
 
     // Player Events
@@ -62,7 +64,7 @@ public class EventRaiser {
     public static boolean cantRaiseEvent(Entity entity) {
         if (PlotManager.getInstance().getPlotByWorld(entity.getWorld()) == null) return true;
         if (PlotManager.getInstance().getPlotByWorld(entity.getWorld()).getPlotMode() == Plot.Mode.BUILD) return true;
-        if (entity.getWorld().getName().endsWith("dev")) return true;
+        if (isEntityInDevPlot(entity)) return true;
         return false;
     }
 

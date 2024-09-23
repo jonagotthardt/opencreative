@@ -50,9 +50,6 @@ import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 
 public class CommandCreative implements CommandExecutor {
 
-    final Plugin plugin = Main.getPlugin();
-    final FileConfiguration config = plugin.getConfig();
-
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length > 0) {
@@ -76,7 +73,7 @@ public class CommandCreative implements CommandExecutor {
                     if (player != null) {
                         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_AMBIENT, 100, 2);
                     }
-                    plugin.reloadConfig();
+                    Main.getPlugin().reloadConfig();
                     loadLocales();
                     sender.sendMessage(getLocaleMessage("creative.reloaded"));
                     if (player != null) {
@@ -376,10 +373,7 @@ public class CommandCreative implements CommandExecutor {
                 }
             }
         } else {
-            String copyright = config.getString("messages.version");
-            if (plugin == null || copyright == null || copyright.isEmpty()) {
-                copyright = "\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2024\n ";
-            }
+            String copyright = Main.getPlugin().getConfig().getString("messages.version","\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2024\n ");
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', copyright.replace("%version%", Main.version).replace("%codename%",Main.codename)));
             if (sender instanceof Player player) {
                 player.playSound(player.getLocation(),Sound.BLOCK_BEACON_ACTIVATE,100,2f);

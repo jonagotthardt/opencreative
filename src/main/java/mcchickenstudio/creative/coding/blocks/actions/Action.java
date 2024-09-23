@@ -77,7 +77,7 @@ public abstract class Action {
         this.event = handler.getEvent();
         sendCodingDebugAction(this);
         for (Entity entity : getTargets()) {
-            if (!getActionType().isSelectionMustBeInWorld() || entity.getWorld() == getPlot().world) {
+            if (!getActionType().isSelectionMustBeInWorld() || (entity != null && entity.getWorld() == getPlot().world)) {
                 this.entity = entity;
                 execute(entity);
             }
@@ -158,7 +158,9 @@ public abstract class Action {
                     int i = r.nextInt(playerList.size());
                     randomPlayer = playerList.get(i);
                 }
-                entities.add(randomPlayer);
+                if (randomPlayer != null) {
+                    entities.add(randomPlayer);
+                }
             }
             case ALL_PLAYERS -> {
                 List<Player> playerList = this.getExecutor().getPlot().getPlayers();

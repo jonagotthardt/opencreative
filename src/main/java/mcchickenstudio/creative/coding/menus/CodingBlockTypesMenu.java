@@ -18,6 +18,7 @@
 
 package mcchickenstudio.creative.coding.menus;
 
+import com.destroystokyo.paper.ParticleBuilder;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.menu.AbstractListMenu;
@@ -134,6 +135,7 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
                     BlockData blockData = containerBlock.getBlockData();
                     ((Directional) blockData).setFacing(BlockFace.SOUTH);
                     containerBlock.setBlockData(blockData);
+                    player.spawnParticle(Particle.BLOCK,containerBlock.getLocation(),1,0,0.5f,0.5f,containerBlock.getBlockData());
                     player.playSound(player.getLocation(),Sound.BLOCK_ENDER_CHEST_CLOSE,100f,1.2f);
                 }
             }

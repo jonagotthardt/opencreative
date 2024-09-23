@@ -44,8 +44,8 @@ public class BlockRedstone implements Listener {
         Plot plot = PlotManager.getInstance().getPlotByWorld(location.getWorld());
         if (plot != null) {
             plot.lastRedstoneOperationsAmount++;
-            if (plot.lastRedstoneOperationsAmount > plot.redstoneOperationsLimit) {
-                    sendMessageOnce(plot,getLocaleMessage("world.redstone-limit").replace("%count%",String.valueOf(plot.redstoneOperationsLimit)),5);
+            if (plot.lastRedstoneOperationsAmount > plot.getRedstoneOperationsLimit()) {
+                    sendMessageOnce(plot,getLocaleMessage("world.redstone-limit").replace("%count%",String.valueOf(plot.getRedstoneOperationsLimit())),5);
                     if (location.getBlock().getType() == Material.OBSERVER) {
                         new BukkitRunnable() {
                             @Override

@@ -94,7 +94,9 @@ public class CreativeChat implements CommandExecutor {
         formattedMessage = formattedMessage.replace("%message%",String.join(" ",args));
         formattedMessage = formattedMessage.replace("%player%",sender.getName());
         formattedMessage = formattedMessage.replace("%cc-prefix%",Main.getPlugin().getConfig().getString("messages.cc-prefix","&6 Chat &8| &7"));
-        formattedMessage = parsePAPI(Bukkit.getOfflinePlayer(sender.getName()),formattedMessage);
+        if (sender instanceof Player) {
+            formattedMessage = parsePAPI(Bukkit.getOfflinePlayer(sender.getName()),formattedMessage);
+        }
         formattedMessage = ChatColor.translateAlternateColorCodes('&',formattedMessage);
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (!(creativeChatOff.contains(onlinePlayer))) {
