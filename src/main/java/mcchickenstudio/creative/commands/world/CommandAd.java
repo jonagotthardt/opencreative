@@ -29,18 +29,22 @@ import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.CooldownUtils;
 import mcchickenstudio.creative.plots.Plot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.MessageUtils.parsePlotLines;
 
-public class CommandAd implements CommandExecutor {
+public class CommandAd implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
@@ -108,6 +112,18 @@ public class CommandAd implements CommandExecutor {
         }
 
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
+        if (args.length == 1) {
+            List<String> TabCompleter = new ArrayList<>();
+            for (Plot plot : PlotManager.getInstance().getPlots()) {
+                TabCompleter.add(plot.getInformation().getCustomID());
+            }
+            return TabCompleter;
+        }
+        return null;
     }
 
 }

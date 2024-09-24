@@ -153,9 +153,34 @@ public class CommandEdit implements CommandExecutor, TabCompleter {
                     sender.sendMessage(Component.text(getLocaleMessage("commands.edit.set-lore").replace("%number%",String.valueOf(newLore.size())).replace("%lore%", newLoreLine)).clickEvent(ClickEvent.suggestCommand(newLoreLine)));
                     break;
                 }
+                case "removelore", "deletelore", "dellore", "remlore": {
+                    if (args.length == 1) {
+                        sender.sendMessage(getLocaleMessage("commands.edit.item"));
+                        return true;
+                    }
+                    int lineNumber = 1;
+                    try {
+                        lineNumber = Integer.parseInt(args[1]);
+                        if (lineNumber < 1) {
+                            lineNumber = 1;
+                        } else if (lineNumber >= LINES_LIMIT) {
+                            sender.sendMessage(Component.text(getLocaleMessage("commands.edit.lines-limit").replace("%limit%",String.valueOf(LINES_LIMIT))));
+                            return true;
+                        }
+                    } catch (NumberFormatException ignored) {}
+                    List<String> newLore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
+                    if (newLore.size() >= lineNumber) {
+                        newLore.remove(lineNumber-1);
+                    }
+                    meta.setLore(newLore);
+                    item.setItemMeta(meta);
+                    sender.sendMessage(Component.text(getLocaleMessage("commands.edit.removed-lore").replace("%number%",String.valueOf(lineNumber))));
+                    break;
+                }
                 case "clear": {
                     meta.displayName(null);
                     meta.lore(null);
+                    item.setItemMeta(meta);
                     sender.sendMessage(Component.text(getLocaleMessage("commands.edit.cleared")));
                     break;
                 }
@@ -171,6 +196,7 @@ public class CommandEdit implements CommandExecutor, TabCompleter {
             tabCompleter.add("name");
             tabCompleter.add("lore");
             tabCompleter.add("addlore");
+            tabCompleter.add("removelore");
             tabCompleter.add("clear");
         }
         return tabCompleter;

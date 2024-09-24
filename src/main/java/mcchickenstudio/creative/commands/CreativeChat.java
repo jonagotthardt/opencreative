@@ -62,10 +62,6 @@ public class CreativeChat implements CommandExecutor {
             return true;
         }
         if (sender instanceof Player player) {
-            if (creativeChatOff.contains(player)) {
-                sender.sendMessage(getLocaleMessage("creative-chat.on-usage"));
-                return true;
-            }
             if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
                 sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
                 return true;
@@ -85,6 +81,12 @@ public class CreativeChat implements CommandExecutor {
                 sender.sendMessage(getLocaleMessage("creative-chat.turned-on"));
             }
             return true;
+        }
+        if (sender instanceof Player player) {
+            if (creativeChatOff.contains(player)) {
+                sender.sendMessage(getLocaleMessage("creative-chat.on-usage"));
+                return true;
+            }
         }
         Main.getPlugin().getLogger().info("[CREATIVE-CHAT] "+sender.getName()+": "+String.join(" ",args));
         for (String executeCommand : Main.getPlugin().getConfig().getStringList("execute-console-commands.creative-chat")) {

@@ -28,6 +28,7 @@ import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.generator.WorldInfo;
@@ -48,7 +49,7 @@ import static mcchickenstudio.creative.utils.MessageUtils.getElapsedTime;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 
-public class CommandCreative implements CommandExecutor {
+public class CommandCreative implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
@@ -381,5 +382,46 @@ public class CommandCreative implements CommandExecutor {
             }
         }
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
+        List<String> tabCompleter = new ArrayList<>();
+        if (args.length == 1) {
+            tabCompleter.add("reload");
+            tabCompleter.add("maintenance");
+            tabCompleter.add("load");
+            tabCompleter.add("unload");
+            tabCompleter.add("resetlocale");
+            tabCompleter.add("creative-chat");
+            tabCompleter.add("kick-all");
+            tabCompleter.add("list");
+            tabCompleter.add("deprecated");
+            tabCompleter.add("corrupted");
+        } else if (args.length == 2) {
+            if ("maintenance".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("start");
+                tabCompleter.add("end");
+            } else if ("kick-all".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("starts");
+                tabCompleter.add("ends");
+                tabCompleter.add("contains");
+                tabCompleter.add("ignore");
+            } else if ("creative-chat".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("enable");
+                tabCompleter.add("disable");
+                tabCompleter.add("clear");
+            }  else if ("load".equalsIgnoreCase(args[0]) || "unload".equalsIgnoreCase(args[0])) {
+                tabCompleter.addAll(PlotManager.getInstance().getPlots().stream().map(plot -> plot.worldID).toList());
+            }
+        } else if (args.length == 3) {
+            if ("start".equalsIgnoreCase(args[1])) {
+                tabCompleter.add("120");
+                tabCompleter.add("60");
+                tabCompleter.add("30");
+                tabCompleter.add("15");
+            }
+        }
+        return tabCompleter;
     }
 }

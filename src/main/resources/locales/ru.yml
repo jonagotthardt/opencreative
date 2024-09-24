@@ -32,10 +32,15 @@ commands:
     help: "%prefix%Редактируйте название и описание предмета в вашей руке.\n &6/edit name Новое имя &7- Переименует предмет\n &6/edit lore 1 Строка описания &7- Изменит строку описания по номеру \n &6/edit addlore Строка описания &7- Добавит новую строку описания\n &6/edit clear &7- Очистит название и описание предмета"
     renamed: "%prefix%Предмет переименован: %name%"
     set-lore: "%prefix%Установлена %number% строка: %lore%"
+    removed-lore: "%prefix%Убрана %number% строка с описания предмета."
     cleared: "%prefix%Убрано название и описание предмета."
     item: "%prefix%&cДержите предмет в основной руке."
     lines-limit: "%prefix%&cДостигнут лимит описания в %limit% строк"
     text-limit: "%prefix%&cДостигнут лимит в %limit% символов."
+  time:
+    help: "%prefix%Изменяйте время суток в вашем мире, это изменит небо, яркость блоков и поведение мира.\n &6/time set 0 &7- Установит день\n &6/time set 12500 &7- Установит вечер \n &6/time set 15000 &7- Установит ночь\n &6/time add 1000 &7- Пропустить 1000 тиков"
+  weather:
+    help: "%prefix%Меняйте погоду в вашем мире на солнечную, дождевую или даже громовую!\n &6/weather sun &7- Солнечная погода\n &6/weather rain &7- Дождевая погода \n &6/weather thunder &7- Дождь с громом и молниями"
   play-sound:
     help: "%prefix%Вы можете проигрывать звук себе или игроку.\n &6/playsound Звук Громкость Скорость &7- Прослушать звук самому\n &6/playsound Никнейм Звук Громкость Скорость &7- Проиграть звук игроку"
     played: "%prefix%&fПроигран звук &6%sound% &fс громкостью &6%volume%&f и скоростью &6%pitch%&f игроку &6%player%"
@@ -157,9 +162,9 @@ plot-code-debug:
   condition-message-true: "&7 Условие &8| &7%type%&7 (%x% %y% %z%) вернуло &aДА&7: Выполняем действия..."
   condition-message-false: "&7 Условие &8| &7%type%&7 (%x% %y% %z%) вернуло &cНЕТ&7: Выполняем иначе..."
 lobby:
-  title: "&fOpen&x&d&b&d&b&d&bC&x&e&0&d&a&d&7r&x&e&5&d&9&d&4e&x&e&a&d&8&d&0a&x&f&0&d&7&c&dt&x&f&5&d&6&c&9i&x&f&a&d&5&c&6v&x&f&f&d&4&c&2e&a+"
+  title: "&f%branding%"
   subtitle: "&fДавайте &aтворить&f в своих мирах!"
-  message: "\n &f\n&f\n &f\n &fOpen&x&d&b&d&b&d&bC&x&e&0&d&a&d&7r&x&e&5&d&9&d&4e&x&e&a&d&8&d&0a&x&f&0&d&7&c&dt&x&f&5&d&6&c&9i&x&f&a&d&5&c&6v&x&f&f&d&4&c&2e&a+ &85.0 Developer Preview\n&a Всё будет по другому..\n &f\n&6 ⭐ &fОсмотри все &6миры&f с помощью компаса!\n&d ❤&f Создай свой мир и &dпригласи &fдрузей!\n &e⌚&f Веселись и &eтвори &fчто угодно!\n \n&f\n &f"
+  message: "\n &f\n&f\n &f\n &f%branding% &85.0 Developer Preview\n&a Всё будет по другому..\n &f\n&6 ⭐ &fОсмотри все &6миры&f с помощью компаса!\n&d ❤&f Создай свой мир и &dпригласи &fдрузей!\n &e⌚&f Веселись и &eтвори &fчто угодно!\n \n&f\n &f"
 creating-world:
   title: "&eСоздание мира ◌"
   subtitle: "&fПодождите несколько секунд..."
@@ -7991,7 +7996,7 @@ blocks:
   var_get_location_y: "&aY координата"
   var_get_location_z: "&9Z координата"
   var_get_location_yaw: "&eYAW осмотр"
-  var_get_location_yaw: "&6PITCH осмотр"
+  var_get_location_pitch: "&6PITCH осмотр"
   var_get_distance: "Узн. дистанцию"
   var_create_map: "&aСоздать словарь"
   var_put_into_map: "&6Добав. в словарь"

@@ -19,7 +19,7 @@ commands:
     aliases: [увше, itemedit, edititem]
   locate:
     usage: /locate
-    aliases: [дщсфеу]
+    aliases: [дщсфеу, find, аштв]
   chat:
     usage: /creativechat
     aliases: [cc,сс]
@@ -71,3 +71,9 @@ commands:
   stopsound:
     usage: /stopsound
     aliases: [ыещзыщгтв, іещзіщгтв]
+  weather:
+    usage: /weather
+    aliases: [цуферук]
+  time:
+    usage: /time
+    aliases: [ешьу]

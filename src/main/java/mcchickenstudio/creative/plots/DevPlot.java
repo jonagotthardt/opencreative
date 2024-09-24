@@ -99,6 +99,7 @@ public class DevPlot {
         } else {
             this.world = Bukkit.createWorld(new WorldCreator(this.worldName).type(WorldType.FLAT).generator(new DevPlotChunkGenerator()).keepSpawnLoaded(TriState.FALSE));
             createPlatform(1,1);
+            this.world.setTime(12500);
             setupWorld();
         }
         this.isLoaded = true;
@@ -106,7 +107,6 @@ public class DevPlot {
 
     private void setupWorld() {
         this.world.setSpawnLocation(2,1,2);
-        this.world.setTime(12500);
         this.world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
         this.world.setGameRule(GameRule.DO_WEATHER_CYCLE,false);
         this.world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS,false);
@@ -219,6 +219,11 @@ public class DevPlot {
 
     public Set<Material> getAllowedBlocks() {
         Set<Material> allowedBlocks = new HashSet<>();
+        allowedBlocks.add(Material.LANTERN);
+        allowedBlocks.add(Material.JACK_O_LANTERN);
+        allowedBlocks.add(Material.SOUL_LANTERN);
+        allowedBlocks.add(Material.TORCH);
+        allowedBlocks.add(Material.SOUL_TORCH);
         allowedBlocks.add(Material.BARREL);
         allowedBlocks.add(Material.OAK_SIGN);
         allowedBlocks.add(Material.SPRUCE_SIGN);
@@ -325,6 +330,25 @@ public class DevPlot {
         if (containerMaterial == Material.BARREL || containerMaterial == Material.CHEST || containerMaterial == Material.TRAPPED_CHEST) {
             this.containerMaterial = containerMaterial;
         }
+    }
+
+    public boolean setFloorEventActionBlocksMaterial(Material floorBlockMaterial, Material eventBlockMaterial, Material actionBlockMaterial) {
+        if (!floorBlockMaterial.isBlock() || !eventBlockMaterial.isBlock() || !actionBlockMaterial.isBlock() || floorBlockMaterial == eventBlockMaterial || floorBlockMaterial == actionBlockMaterial || eventBlockMaterial == actionBlockMaterial) {
+            return false;
+        }
+        if (floorBlockMaterial != Material.BARRIER && !floorBlockMaterial.name().endsWith("GLASS")) {
+            return false;
+        }
+        if (eventBlockMaterial != Material.BARRIER && !eventBlockMaterial.name().endsWith("GLASS")) {
+            return false;
+        }
+        if (actionBlockMaterial != Material.BARRIER && !actionBlockMaterial.name().endsWith("GLASS")) {
+            return false;
+        }
+        this.floorBlockMaterial = floorBlockMaterial;
+        this.eventBlockMaterial = eventBlockMaterial;
+        this.actionBlockMaterial = actionBlockMaterial;
+        return true;
     }
 
     public boolean setFloorBlockMaterial(Material floorBlockMaterial) {

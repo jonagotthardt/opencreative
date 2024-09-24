@@ -209,18 +209,14 @@ public class WorldVariables {
                 final BukkitObjectInputStream objectInputStream = new BukkitObjectInputStream(arrayInputStream);
                 value = objectInputStream.readObject();
             } else if (type == ValueType.LOCATION) {
-                System.out.println("type location");
                 double x, y, z;
                 float yaw, pitch;
                 Map<?,?> locationMap = (Map<?,?>) value;
-                System.out.println("after assigning locaation map");
                 x = (Double) locationMap.get("x");
                 y = (Double) locationMap.get("y");
                 z = (Double) locationMap.get("z");
-                System.out.println("after coords");
                 yaw = ((Double) locationMap.get("yaw")).floatValue();
                 pitch = ((Double) locationMap.get("pitch")).floatValue();
-                System.out.println("after yaw pitch");
                 return new Location(plot.world,x,y,z,yaw,pitch);
             } else if (type == ValueType.LIST) {
                 List<Object> newList = new ArrayList<>();
