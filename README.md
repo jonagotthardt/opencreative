@@ -147,10 +147,11 @@ They will work only if command sender is owner of world, or if he has bypass per
 - `/teleport [x] [y] [z] [yaw] [pitch]` - teleports sender to specified coordinates.
 - `/teleport [player name] [x] [y] [z] [yaw] [pitch]` - teleports specified player to specified coordinates.
 - `/give [player name] [item material] [amount]` - gives item to specified player.
-
 - `/playsound [player name] [sound name] [volume] [pitch]` - plays a sound for player.
-
 - `/stopsound [player name] [sound category]` - stops a playing sounds for player.
+- `/weather [rain/thunder/sun]` - changes weather in world.
+- `/time [set/add] [ticks]` - changes time in world.
+
 
 ## Development
 
