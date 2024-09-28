@@ -29,6 +29,8 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
 
+import static mcchickenstudio.creative.utils.PlayerUtils.isEntityInLobby;
+
 public class EntityDamage implements Listener {
 
     @EventHandler
@@ -40,7 +42,7 @@ public class EntityDamage implements Listener {
                 if (plot.getPlotMode() == Plot.Mode.BUILD) {
                     event.setCancelled(true);
                     if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
-                        victim.teleport(victim.getWorld().getSpawnLocation());
+                        victim.teleport(victim.getWorld().getSpawnLocation().add(0,0.5,0));
                     }
                 }
                 if (PlotManager.getInstance().getDevPlot(victim) != null) {
@@ -57,7 +59,7 @@ public class EntityDamage implements Listener {
 
                 EventRaiser.raisePlayerDamagedEvent(victim,event);
 
-            } else if (victim.getWorld().getName().equalsIgnoreCase("world")) {
+            } else if (isEntityInLobby(victim)) {
                 event.setCancelled(true);
             }
 

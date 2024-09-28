@@ -153,18 +153,18 @@ public class CodeScript {
             }
         }
 
-        if (type == ActionType.SELECTION_TARGET) {
+        if (category == ActionCategory.SELECTION_ACTION) {
             String firstSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(),(byte) 1);
             String secondSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(),(byte) 2);
             String thirdSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
             if (secondSignLine != null && !secondSignLine.isEmpty() && thirdSignLine != null && !thirdSignLine.isEmpty()) {
-                scriptConfig.set(path + ".condition.category", secondSignLine);
-                scriptConfig.set(path + ".condition.type", thirdSignLine);
+                scriptConfig.set(path + ".condition.category", secondSignLine.toUpperCase());
+                scriptConfig.set(path + ".condition.type", thirdSignLine.toUpperCase());
                 if (firstSignLine != null && firstSignLine.equalsIgnoreCase("not")) {
                     scriptConfig.set(path + ".condition.opposed",true);
                 }
             } else if (secondSignLine != null && !secondSignLine.isEmpty()) {
-                scriptConfig.set(path + ".target", secondSignLine);
+                scriptConfig.set(path + ".target", secondSignLine.toUpperCase());
             }
         } else if (target != Target.DEFAULT) {
             scriptConfig.set(path + ".target", target.name());

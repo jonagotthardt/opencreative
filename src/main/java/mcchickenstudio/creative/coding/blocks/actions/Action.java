@@ -20,6 +20,7 @@ package mcchickenstudio.creative.coding.blocks.actions;
 
 import mcchickenstudio.creative.coding.arguments.Argument;
 import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.selectionactions.SelectionAction;
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.MobDamagesPlayerEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamagesMobEvent;
@@ -76,8 +77,11 @@ public abstract class Action {
         this.handler = handler;
         this.event = handler.getEvent();
         sendCodingDebugAction(this);
+        if (this instanceof SelectionAction) {
+            execute(null);
+        }
         for (Entity entity : getTargets()) {
-            if (!getActionType().isSelectionMustBeInWorld() || entity.getWorld() == getPlot().world) {
+            if (!getActionType().isSelectionMustBeInWorld() || (entity != null && entity.getWorld() == getPlot().world)) {
                 this.entity = entity;
                 execute(entity);
             }
@@ -158,7 +162,9 @@ public abstract class Action {
                     int i = r.nextInt(playerList.size());
                     randomPlayer = playerList.get(i);
                 }
-                entities.add(randomPlayer);
+                if (randomPlayer != null) {
+                    entities.add(randomPlayer);
+                }
             }
             case ALL_PLAYERS -> {
                 List<Player> playerList = this.getExecutor().getPlot().getPlayers();
@@ -209,7 +215,6 @@ public abstract class Action {
 
     protected void setVarValue(VariableLink link, Object value) {
         if (link != null) {
-            link.setName(parseEntity(link.getName(),getHandler().getMainActionHandler()));
             link.setHandler(getHandler().getMainActionHandler());
             ValueType type = ValueType.getByObject(value);
             if (type == null) {
@@ -220,12 +225,19 @@ public abstract class Action {
                     throw new RuntimeException("Can't assign text with length above 1024 symbols to variable!");
                 }
             }
-            getPlot().getWorldVariables().setVariableValue(link, type, value, getHandler().getMainActionHandler());
+            getPlot().getWorldVariables().setVariableValue(link, type, value, getHandler().getMainActionHandler(), this);
         }
+    }
+
+    public void setHandler(ActionsHandler handler) {
+        this.handler = handler;
     }
 
     public List<Argument> getArgumentsList() {
         return getArguments().getArgumentList();
     }
 
+    public void setEntity(Entity entity) {
+        this.entity = entity;
+    }
 }

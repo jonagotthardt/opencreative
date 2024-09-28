@@ -18,6 +18,7 @@
 
 package mcchickenstudio.creative.coding.variables;
 
+import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionsHandler;
 import mcchickenstudio.creative.coding.variables.VariableLink;
 import mcchickenstudio.creative.plots.Plot;
@@ -36,6 +37,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 
+import static mcchickenstudio.creative.coding.arguments.Argument.parseEntity;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugLog;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
@@ -58,18 +60,22 @@ public class WorldVariables {
         return variables;
     }
 
-    public WorldVariable getVariable(VariableLink link) {
+    public WorldVariable getVariable(VariableLink link, Action action) {
+        return getVariable(parseEntity(link.getName(),action.getHandler(),action),link.getVariableType(),link.getHandler());
+    }
+
+    public WorldVariable getVariable(String name, VariableLink.VariableType type, ActionsHandler handler) {
         return variables.stream()
-                .filter(var -> var.getName().equalsIgnoreCase(link.getName()))
-                .filter(var -> link.getVariableType() == var.getVarType())
-                .filter(var -> link.getVariableType() != VariableLink.VariableType.LOCAL || link.getHandler().equals(var.getHandler()))
+                .filter(var -> var.getName().equalsIgnoreCase(name))
+                .filter(var -> type == var.getVarType())
+                .filter(var -> type != VariableLink.VariableType.LOCAL || handler.equals(var.getHandler()))
                 .findFirst()
                 .orElse(null);
     }
 
-    public void setVariableValue(VariableLink link, ValueType type, Object value, ActionsHandler handler) {
+    public void setVariableValue(VariableLink link, ValueType type, Object value, ActionsHandler handler, Action action) {
         link.setHandler(handler.getMainActionHandler());
-        WorldVariable variable = getVariable(link);
+        WorldVariable variable = getVariable(link,action);
         String valueString = value.toString().substring(0, Math.min(20, value.toString().length()));
         if (variable != null) {
             if (variable.getSize() + getTotalVariablesAmount() > plot.getVariablesAmountLimit()) {
@@ -83,24 +89,24 @@ public class WorldVariables {
                 sendCodingDebugLog(getPlot(), "Reached limit of " + plot.getVariablesAmountLimit() + " variables.");
                 return;
             }
-            WorldVariable newVariable = new WorldVariable(link.getName(), link.getVariableType(), type, value, handler);
+            WorldVariable newVariable = new WorldVariable(parseEntity(link.getName(),action.getHandler(),action), link.getVariableType(), type, value, handler);
             if (newVariable.getSize() + getTotalVariablesAmount() > plot.getVariablesAmountLimit()) {
                 sendCodingDebugLog(getPlot(), "Reached limit of " + plot.getVariablesAmountLimit() + " variables.");
                 return;
             }
             variables.add(newVariable);
         }
-        sendCodingDebugLog(getPlot(),getLocaleMessage("plot-code-debug.variable." + (variable == null ? "created" : "set"),false).replace("%variable%",link.getName()).replace("%value%",valueString));
+        sendCodingDebugLog(getPlot(),getLocaleMessage("plot-code-debug.variable." + (variable == null ? "created" : "set"),false).replace("%variable%", parseEntity(link.getName(),action.getHandler(),action)).replace("%value%",valueString));
 
     }
 
-    public Object getVariableValue(VariableLink link) {
-        WorldVariable variable = getVariable(link);
+    public Object getVariableValue(VariableLink link, Action action) {
+        WorldVariable variable = getVariable(link,action);
         return variable != null ? variable.getValue() : null;
     }
 
-    public void removeVariable(VariableLink link) {
-        variables.removeIf(var -> var.equals(getVariable(link)));
+    public void removeVariable(VariableLink link, Action action) {
+        variables.removeIf(var -> var.equals(getVariable(link,action)));
     }
 
     public void clearVariables() {
@@ -209,18 +215,14 @@ public class WorldVariables {
                 final BukkitObjectInputStream objectInputStream = new BukkitObjectInputStream(arrayInputStream);
                 value = objectInputStream.readObject();
             } else if (type == ValueType.LOCATION) {
-                System.out.println("type location");
                 double x, y, z;
                 float yaw, pitch;
                 Map<?,?> locationMap = (Map<?,?>) value;
-                System.out.println("after assigning locaation map");
                 x = (Double) locationMap.get("x");
                 y = (Double) locationMap.get("y");
                 z = (Double) locationMap.get("z");
-                System.out.println("after coords");
                 yaw = ((Double) locationMap.get("yaw")).floatValue();
                 pitch = ((Double) locationMap.get("pitch")).floatValue();
-                System.out.println("after yaw pitch");
                 return new Location(plot.world,x,y,z,yaw,pitch);
             } else if (type == ValueType.LIST) {
                 List<Object> newList = new ArrayList<>();

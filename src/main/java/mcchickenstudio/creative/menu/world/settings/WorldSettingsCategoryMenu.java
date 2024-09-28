@@ -43,7 +43,6 @@ import mcchickenstudio.creative.utils.MessageUtils;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -63,7 +62,6 @@ public class WorldSettingsCategoryMenu extends AbstractMenu {
     private final ItemStack CATEGORY_STORY_ITEM = createItem(WRITABLE_BOOK,1,"menus.world-settings-categories.items.story");
     private final ItemStack CATEGORY_SIMULATOR_ITEM = createItem(GOLDEN_PICKAXE,1,"menus.world-settings-categories.items.simulator");
     private final ItemStack CATEGORY_EXPERIMENT_ITEM = createItem(TNT,1,"menus.world-settings-categories.items.experiment");
-
 
     public WorldSettingsCategoryMenu() {
         super((byte) 6, MessageUtils.getLocaleMessage("menus.world-settings.title"));
@@ -99,15 +97,11 @@ public class WorldSettingsCategoryMenu extends AbstractMenu {
                 ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ENTITY_PLAYER_LEVELUP,100,1.6f);
                 event.getWhoClicked().sendMessage(getLocaleMessage("settings.world-category.changed").replace("%category%",getLocaleMessage("world.categories." + category.toLowerCase())));
             } else {
-                WorldSettingsMenu.openInventory((Player) event.getWhoClicked());
+                new WorldSettingsMenu(plot,(Player) event.getWhoClicked()).open((Player) event.getWhoClicked());
             }
-
         }
     }
 
     @Override
     public void onOpen(InventoryOpenEvent event) {}
-
-    @Override
-    public void onClose(InventoryCloseEvent event) {}
 }

@@ -41,6 +41,6 @@ public class ModuleNumberAction extends VariableAction {
 
     @Override
     public ActionType getActionType() {
-        return ActionType.VAR_SET_RANDOM_NUMBER;
+        return ActionType.VAR_MODULE_NUMBER;
     }
 }

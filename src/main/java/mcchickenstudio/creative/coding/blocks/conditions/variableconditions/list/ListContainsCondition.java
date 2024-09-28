@@ -37,7 +37,7 @@ public class ListContainsCondition extends VariableCondition {
 
     @Override
     public boolean check(Entity entity) {
-        List<Object> list = getArguments().getList("variable",this);
+        List<Object> list = getArguments().getList("list",this);
         List<Object> elements = getArguments().getList("elements",this);
         boolean allElements = getArguments().getValue("all",true,this);
         if (allElements) {

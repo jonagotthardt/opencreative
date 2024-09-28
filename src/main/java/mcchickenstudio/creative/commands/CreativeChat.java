@@ -62,10 +62,6 @@ public class CreativeChat implements CommandExecutor {
             return true;
         }
         if (sender instanceof Player player) {
-            if (creativeChatOff.contains(player)) {
-                sender.sendMessage(getLocaleMessage("creative-chat.on-usage"));
-                return true;
-            }
             if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
                 sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
                 return true;
@@ -86,6 +82,12 @@ public class CreativeChat implements CommandExecutor {
             }
             return true;
         }
+        if (sender instanceof Player player) {
+            if (creativeChatOff.contains(player)) {
+                sender.sendMessage(getLocaleMessage("creative-chat.on-usage"));
+                return true;
+            }
+        }
         Main.getPlugin().getLogger().info("[CREATIVE-CHAT] "+sender.getName()+": "+String.join(" ",args));
         for (String executeCommand : Main.getPlugin().getConfig().getStringList("execute-console-commands.creative-chat")) {
             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),parsePAPI(Bukkit.getOfflinePlayer(sender.getName()),executeCommand.replace("%player%",sender.getName()).replace("%message%",String.join(" ",args))));
@@ -94,7 +96,9 @@ public class CreativeChat implements CommandExecutor {
         formattedMessage = formattedMessage.replace("%message%",String.join(" ",args));
         formattedMessage = formattedMessage.replace("%player%",sender.getName());
         formattedMessage = formattedMessage.replace("%cc-prefix%",Main.getPlugin().getConfig().getString("messages.cc-prefix","&6 Chat &8| &7"));
-        formattedMessage = parsePAPI(Bukkit.getOfflinePlayer(sender.getName()),formattedMessage);
+        if (sender instanceof Player) {
+            formattedMessage = parsePAPI(Bukkit.getOfflinePlayer(sender.getName()),formattedMessage);
+        }
         formattedMessage = ChatColor.translateAlternateColorCodes('&',formattedMessage);
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (!(creativeChatOff.contains(onlinePlayer))) {

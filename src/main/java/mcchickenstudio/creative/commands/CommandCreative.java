@@ -19,7 +19,9 @@
 package mcchickenstudio.creative.commands;
 
 import mcchickenstudio.creative.menu.CreativeMenu;
-import mcchickenstudio.creative.menu.world.WorldGenerationMenu;
+import mcchickenstudio.creative.menu.world.WorldEnvironmentMenu;
+import mcchickenstudio.creative.menu.world.settings.WorldSettingsMenu;
+import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
 import net.kyori.adventure.text.Component;
@@ -28,10 +30,9 @@ import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.*;
 import org.bukkit.generator.WorldInfo;
-import org.bukkit.plugin.Plugin;
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.utils.CooldownUtils;
 import mcchickenstudio.creative.utils.FileUtils;
@@ -48,10 +49,7 @@ import static mcchickenstudio.creative.utils.MessageUtils.getElapsedTime;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 
-public class CommandCreative implements CommandExecutor {
-
-    final Plugin plugin = Main.getPlugin();
-    final FileConfiguration config = plugin.getConfig();
+public class CommandCreative implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
@@ -76,7 +74,7 @@ public class CommandCreative implements CommandExecutor {
                     if (player != null) {
                         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_AMBIENT, 100, 2);
                     }
-                    plugin.reloadConfig();
+                    Main.getPlugin().reloadConfig();
                     loadLocales();
                     sender.sendMessage(getLocaleMessage("creative.reloaded"));
                     if (player != null) {
@@ -362,7 +360,7 @@ public class CommandCreative implements CommandExecutor {
                     }
                     sender.sendMessage(getLocaleMessage(args[1]));
                 }
-                case "generator" -> {
+                case "test" -> {
                     if (!Main.debug) {
                         return true;
                     }
@@ -371,15 +369,14 @@ public class CommandCreative implements CommandExecutor {
                         return true;
                     }
                     if (player != null) {
-                        new WorldGenerationMenu(player).open(player);
+                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                        if (plot == null) return true;
+                        new WorldEnvironmentMenu(player,plot.devPlot).open(player);
                     }
                 }
             }
         } else {
-            String copyright = config.getString("messages.version");
-            if (plugin == null || copyright == null || copyright.isEmpty()) {
-                copyright = "\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2024\n ";
-            }
+            String copyright = Main.getPlugin().getConfig().getString("messages.version","\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2024\n ");
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', copyright.replace("%version%", Main.version).replace("%codename%",Main.codename)));
             if (sender instanceof Player player) {
                 player.playSound(player.getLocation(),Sound.BLOCK_BEACON_ACTIVATE,100,2f);
@@ -387,5 +384,46 @@ public class CommandCreative implements CommandExecutor {
             }
         }
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
+        List<String> tabCompleter = new ArrayList<>();
+        if (args.length == 1) {
+            tabCompleter.add("reload");
+            tabCompleter.add("maintenance");
+            tabCompleter.add("load");
+            tabCompleter.add("unload");
+            tabCompleter.add("resetlocale");
+            tabCompleter.add("creative-chat");
+            tabCompleter.add("kick-all");
+            tabCompleter.add("list");
+            tabCompleter.add("deprecated");
+            tabCompleter.add("corrupted");
+        } else if (args.length == 2) {
+            if ("maintenance".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("start");
+                tabCompleter.add("end");
+            } else if ("kick-all".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("starts");
+                tabCompleter.add("ends");
+                tabCompleter.add("contains");
+                tabCompleter.add("ignore");
+            } else if ("creative-chat".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("enable");
+                tabCompleter.add("disable");
+                tabCompleter.add("clear");
+            }  else if ("load".equalsIgnoreCase(args[0]) || "unload".equalsIgnoreCase(args[0])) {
+                tabCompleter.addAll(PlotManager.getInstance().getPlots().stream().map(plot -> plot.worldID).toList());
+            }
+        } else if (args.length == 3) {
+            if ("start".equalsIgnoreCase(args[1])) {
+                tabCompleter.add("120");
+                tabCompleter.add("60");
+                tabCompleter.add("30");
+                tabCompleter.add("15");
+            }
+        }
+        return tabCompleter;
     }
 }

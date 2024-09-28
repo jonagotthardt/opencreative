@@ -84,26 +84,72 @@ public class ParameterButton {
         updateLore();
     }
 
+    public ParameterButton(Object currentValue, List<Object> values, String name, String turnedPath, String itemPath, Material material) {
+        this.turnedPath = turnedPath;
+        this.localizationPath = itemPath;
+        materialList.add(material);
+        valueList.addAll(values);
+        if (currentChoice == materialList.size() || currentChoice == valueList.size()) {
+            currentChoice = (byte) 1;
+        }
+        if (currentChoice == 0) {
+            currentChoice = (byte) 1;
+        }
+        for (byte i = 0; i < valueList.size(); i++) {
+            if (currentValue.equals(valueList.get(i)))  {
+                currentChoice = (byte) (i+1);
+                break;
+            }
+        }
+        this.currentValue = currentValue;
+        this.item = createItem(material,1,localizationPath);
+        if (!messageExists(localizationPath+".name")) {
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&fParameter: &6" + name));
+            item.setItemMeta(meta);
+        }
+        if (!messageExists(localizationPath+".lore")) {
+            ItemMeta meta = item.getItemMeta();
+            List<String> notFoundLore = new ArrayList<>();
+            notFoundLore.add(ChatColor.translateAlternateColorCodes('&',"&6This parameter was not filled in localization,"));
+            notFoundLore.add(ChatColor.translateAlternateColorCodes('&',"&6please tell administration to fill line."));
+            notFoundLore.add(" ");
+            notFoundLore.add(ChatColor.translateAlternateColorCodes('&',"&7" + localizationPath));
+            notFoundLore.add(ChatColor.translateAlternateColorCodes('&',"&fValues:"));
+            for (byte i = 1; i < valueList.size()+1; i++) {
+                notFoundLore.add("%" + i + "%");
+            }
+            meta.setLore(notFoundLore);
+            item.setItemMeta(meta);
+        }
+        this.originalLore = item.getItemMeta().getLore();
+        updateLore();
+    }
+
     public void previous() {
         if (currentChoice <= 1) {
-            currentChoice = (byte) materialList.size();
+            currentChoice = (byte) valueList.size();
         } else {
             currentChoice--;
         }
         currentValue = valueList.get(currentChoice-1);
-        item.setType(materialList.get(currentChoice-1));
+        if (currentChoice <= materialList.size()) {
+            item.setType(materialList.get(currentChoice-1));
+        }
         updateLore();
     }
 
     public void next() {
-        if (currentChoice >= materialList.size()) {
+        if (currentChoice >= valueList.size()) {
             currentChoice = (byte) 1;
         } else {
             currentChoice++;
         }
         currentValue = valueList.get(currentChoice-1);
+        if (currentChoice <= materialList.size()) {
+            item.setType(materialList.get(currentChoice-1));
+        }
         updateLore();
-        item.setType(materialList.get(currentChoice-1));
 
     }
 

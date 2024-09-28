@@ -60,9 +60,8 @@ public class Argument {
 
     public Object getValue(Action action) {
         if (value instanceof VariableLink link) {
-            link.setName(parseEntity(link.getName(),action.getHandler().getMainActionHandler()));
             link.setHandler(action.getHandler().getMainActionHandler());
-            Object variableValue = plot.getWorldVariables().getVariableValue(link);
+            Object variableValue = plot.getWorldVariables().getVariableValue(link,action);
             if (variableValue != null) {
                 return variableValue;
             }
@@ -73,7 +72,7 @@ public class Argument {
                 return value;
             }
         } else if (value instanceof String string) {
-            return parseEntity(string,action.getHandler().getMainActionHandler());
+            return parseEntity(string,action.getHandler().getMainActionHandler(),action);
         }
         return value;
     }
@@ -111,9 +110,9 @@ public class Argument {
         setEventVariable(action, EventValues.Variable.PLOT_ICON,new ItemStack(plot.getInformation().getMaterial(),1));
         setEventVariable(action, EventValues.Variable.PLOT_REPUTATION,plot.getReputation());
         setEventVariable(action, EventValues.Variable.PLOT_ENTITIES_AMOUNT,plot.world.getEntityCount() + ((plot.devPlot != null && plot.devPlot.world != null) ? plot.devPlot.world.getEntityCount() : 0));
-        setEventVariable(action, EventValues.Variable.PLOT_ENTITIES_AMOUNT_LIMIT,plot.entitiesLimit);
+        setEventVariable(action, EventValues.Variable.PLOT_ENTITIES_AMOUNT_LIMIT, plot.getEntitiesLimit());
         setEventVariable(action, EventValues.Variable.PLOT_LAST_REDSTONE_OPERATIONS,plot.lastRedstoneOperationsAmount);
-        setEventVariable(action, EventValues.Variable.PLOT_REDSTONE_OPERATIONS_LIMIT,plot.redstoneOperationsLimit);
+        setEventVariable(action, EventValues.Variable.PLOT_REDSTONE_OPERATIONS_LIMIT, plot.getRedstoneOperationsLimit());
         setEventVariable(action, EventValues.Variable.PLOT_CUSTOM_ID,plot.getInformation().getCustomID());
         setEventVariable(action, EventValues.Variable.PLOT_ID,plot.worldID);
         setEventVariable(action, EventValues.Variable.PLOT_VARIABLES_AMOUNT,plot.getWorldVariables().getTotalVariablesAmount());
@@ -173,8 +172,8 @@ public class Argument {
         }
     }
 
-    public static String parseEntity(String text, ActionsHandler action) {
-        return Placeholders.getInstance().parseAction(text,action);
+    public static String parseEntity(String text, ActionsHandler handler, Action action) {
+        return Placeholders.getInstance().parseAction(text,handler,action);
     }
 
     @Override

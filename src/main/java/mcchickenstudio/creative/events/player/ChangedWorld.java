@@ -39,6 +39,7 @@ import java.util.*;
 
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.PlayerUtils.clearBuildPermissions;
+import static mcchickenstudio.creative.utils.WorldUtils.isDevPlot;
 
 public class ChangedWorld implements Listener {
 
@@ -86,13 +87,13 @@ public class ChangedWorld implements Listener {
         }
 
         if (oldPlot != null && oldPlot == newPlot) {
-            if (oldWorld.getName().endsWith("dev")) {
+            if (isDevPlot(oldWorld)) {
                 if (!isPlayerWithLocation(player)) {
                     for (Player onlinePlayer : oldWorld.getPlayers()) {
                         onlinePlayer.sendMessage(getLocaleMessage("world.dev-mode.left", player));
                     }
                 }
-            } else if (newWorld.getName().endsWith("dev")) {
+            } else if (isDevPlot(newWorld)) {
                 if (!isPlayerWithLocation(player)) {
                     for (Player onlinePlayer : newWorld.getPlayers()) {
                         onlinePlayer.sendMessage(getLocaleMessage("world.dev-mode.joined", player));

@@ -37,6 +37,7 @@ import org.bukkit.event.player.PlayerToggleSprintEvent;
 import mcchickenstudio.creative.plots.Plot;
 
 import static mcchickenstudio.creative.utils.BlockUtils.isOutOfBorders;
+import static mcchickenstudio.creative.utils.PlayerUtils.isEntityInDevPlot;
 
 
 public class PlayerMove implements Listener {
@@ -44,12 +45,12 @@ public class PlayerMove implements Listener {
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        if (player.getY() < 0 && player.getWorld().getName().endsWith("dev")) {
+        if (player.getY() < 0 && isEntityInDevPlot(player)) {
             player.teleport(player.getWorld().getSpawnLocation());
         }
         if (isBlockChanged(event.getFrom(),event.getTo())) {
             EventRaiser.raiseMoveEvent(event.getPlayer(),event);
-            if (player.getWorld().getName().endsWith("dev")) {
+            if (isEntityInDevPlot(player)) {
                 if (player.getY() >= 0 && player.getY() <= 4) {
                     int radius = 10;
                     int minX = player.getLocation().getBlockX()-radius;

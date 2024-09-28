@@ -109,7 +109,7 @@ public class CommandDev implements CommandExecutor {
                     }
                     player.sendTitle(getLocaleMessage("world.dev-mode.title"), getLocaleMessage("world.dev-mode.subtitle"));
                     player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 100, 1.3f);
-
+                    player.playSound(player.getLocation(), Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR, 100, 0.5f);
                 } else {
                     sender.sendMessage(getLocaleMessage("not-owner", player));
                 }
@@ -185,8 +185,9 @@ public class CommandDev implements CommandExecutor {
         ItemStack functionItem = createItem(Material.LAPIS_BLOCK,1,"items.developer.function");
         player.getInventory().setItem(9, functionItem);
 
-        ItemStack eventWorldItem = createItem(Material.REDSTONE_BLOCK,1,"items.developer.event-world");
-        player.getInventory().setItem(10, eventWorldItem);
+        ItemStack launchFunction = createItem(Material.LAPIS_ORE,1,"items.developer.launch-function");
+        player.getInventory().setItem(10, launchFunction);
+
 
         ItemStack actionControl = createItem(Material.COAL_BLOCK,1,"items.developer.action-control");
         player.getInventory().setItem(11, actionControl);
@@ -197,11 +198,17 @@ public class CommandDev implements CommandExecutor {
         ItemStack eventEntityItem = createItem(Material.GOLD_BLOCK,1,"items.developer.event-entity");
         player.getInventory().setItem(27, eventEntityItem);
 
-        ItemStack launchFunction = createItem(Material.LAPIS_ORE,1,"items.developer.launch-function");
-        player.getInventory().setItem(29, launchFunction);
+        ItemStack worldConditionItem = createItem(Material.RED_NETHER_BRICKS,1,"items.developer.condition-world");
+        player.getInventory().setItem(28, worldConditionItem);
+
+        ItemStack eventWorldItem = createItem(Material.REDSTONE_BLOCK,1,"items.developer.event-world");
+        player.getInventory().setItem(29, eventWorldItem);
 
         ItemStack cycleItem = createItem(Material.OXIDIZED_COPPER,1,"items.developer.cycle");
         player.getInventory().setItem(18, cycleItem);
+
+        ItemStack selectionItem = createItem(Material.PURPUR_BLOCK,1,"items.developer.action-selection");
+        player.getInventory().setItem(19, selectionItem);
 
         ItemStack linesControllerItem = createItem(Material.COMPARATOR,1,"items.developer.lines-controller");
         player.getInventory().setItem(26, linesControllerItem);

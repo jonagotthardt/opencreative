@@ -71,6 +71,7 @@ public abstract class AbstractMenu implements InventoryHolder {
     }
 
     public void setItem(byte slot, ItemStack item) {
+        if (item == null) item = new ItemStack(Material.AIR);
         if (!(slot >= rows*9) && !(slot<0)) {
             items.put(slot,item);
         }

@@ -18,13 +18,15 @@
 
 package mcchickenstudio.creative.plots;
 
-import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.coding.menus.layouts.Layout;
+import mcchickenstudio.creative.utils.DevPlotChunkGenerator;
 import mcchickenstudio.creative.utils.PlayerUtils;
+import net.kyori.adventure.util.TriState;
 import org.bukkit.*;
 
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -53,9 +55,9 @@ public class DevPlot {
     public final String worldName;
 
     public World world;
-    public final Material floorBlockMaterial;
-    public final Material eventBlockMaterial;
-    public final Material actionBlockMaterial;
+    private Material floorBlockMaterial;
+    private Material eventBlockMaterial;
+    private Material actionBlockMaterial;
     private Material containerMaterial = Material.CHEST;
 
     public final Map<Player, Location> lastLocations = new HashMap<>();
@@ -70,8 +72,8 @@ public class DevPlot {
         this.worldName = plot.worldName + "dev";
 
         this.floorBlockMaterial = Material.WHITE_STAINED_GLASS;
-        this.eventBlockMaterial = Material.LIGHT_BLUE_STAINED_GLASS;
-        this.actionBlockMaterial = Material.LIGHT_GRAY_STAINED_GLASS;
+        this.eventBlockMaterial = Material.BLUE_STAINED_GLASS;
+        this.actionBlockMaterial = Material.GRAY_STAINED_GLASS;
 
         this.isLoaded = false;
         plot.devPlot = this;
@@ -84,32 +86,38 @@ public class DevPlot {
             if (loadWorldFolder(this.worldName, true)) {
                 Bukkit.createWorld(new WorldCreator(this.worldName));
                 this.world = Bukkit.getWorld(this.worldName);
-                setupWorld();
+                if (world != null) {
+                    setFloorBlockMaterial(world.getBlockAt(1,0,1).getType());
+                    setEventBlockMaterial(world.getBlockAt(4,0,4).getType());
+                    setActionBlockMaterial(world.getBlockAt(6,0,4).getType());
+                    if (world.getBlockAt(4,0,4).getType() != getEventBlockMaterial()) {
+                        createPlatform(1,1);
+                    }
+                    setupWorld();
+                }
             }
         } else {
-            create();
-            Bukkit.createWorld(new WorldCreator(this.worldName));
-            this.world = Bukkit.getWorld(this.worldName);
+            this.world = Bukkit.createWorld(new WorldCreator(this.worldName).type(WorldType.FLAT).generator(new DevPlotChunkGenerator()).keepSpawnLoaded(TriState.FALSE));
+            createPlatform(1,1);
+            this.world.setTime(12500);
             setupWorld();
         }
         this.isLoaded = true;
     }
 
     private void setupWorld() {
-        this.world.setTime(12500);
+        this.world.setSpawnLocation(2,1,2);
         this.world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
         this.world.setGameRule(GameRule.DO_WEATHER_CYCLE,false);
+        this.world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS,false);
+        this.world.setGameRule(GameRule.DO_MOB_SPAWNING,false);
+        this.world.setGameRule(GameRule.DO_MOB_SPAWNING,false);
+        this.world.setGameRule(GameRule.MOB_GRIEFING,false);
+        this.world.setGameRule(GameRule.DO_PATROL_SPAWNING,false);
+        this.world.setGameRule(GameRule.DO_FIRE_TICK,false);
         this.world.getWorldBorder().setSize(120);
+        this.world.getWorldBorder().setCenter(50,50);
         this.world.getWorldBorder().setWarningDistance(0);
-    }
-
-    public void create() {
-
-        File template = new File(Main.getPlugin().getDataFolder() + File.separator + "templates" + File.separator + "devWorld" + File.separator);
-        File devWorldFolder = new File(Bukkit.getServer().getWorldContainer() + File.separator + this.worldName + File.separator);
-        createCodeScript(devWorldFolder.getPath(),worldName);
-        copyFilesToDirectory(template, devWorldFolder);
-
     }
 
     public boolean exists() {
@@ -124,17 +132,7 @@ public class DevPlot {
     }
 
     public int getFloors() {
-        int floors = 0;
-        if (world != null) {
-            for (int y = 0; y < 256; y=y+4) {
-                if (world.getBlockAt(1, y, 1).getType() == Material.WHITE_STAINED_GLASS) {
-                    floors++;
-                } else {
-                    break;
-                }
-            }
-        }
-        return floors;
+        return 1;
     }
 
     public void translateCodingBlocks(Player player) {
@@ -188,12 +186,13 @@ public class DevPlot {
             for (int z = beginZ; z <= endZ; z++) {
                 Block block = world.getBlockAt(x,0,z);
                 if (x == executorX && (z - beginZ) % 4 == 0 && z != beginZ && z != endZ) {
-                    block.setType(eventBlockMaterial);
+                    block.setType(getEventBlockMaterial());
                 } else if (x > executorX && (x - executorX) % 2 == 0 && x < endX - 2 && (z - beginZ) % 4 == 0 && z != beginZ && z != endZ) {
-                    block.setType(actionBlockMaterial);
+                    block.setType(getActionBlockMaterial());
                 } else {
-                    block.setType(floorBlockMaterial);
+                    block.setType(getFloorBlockMaterial());
                 }
+                block.setBiome(Biome.ICE_SPIKES);
             }
         }
         return true;
@@ -209,9 +208,9 @@ public class DevPlot {
 
     public Set<Material> getIndestructibleBlocks() {
         Set<Material> indestructibleBlocks = new HashSet<>();
-        indestructibleBlocks.add(floorBlockMaterial);
-        indestructibleBlocks.add(actionBlockMaterial);
-        indestructibleBlocks.add(eventBlockMaterial);
+        indestructibleBlocks.add(getFloorBlockMaterial());
+        indestructibleBlocks.add(getActionBlockMaterial());
+        indestructibleBlocks.add(getEventBlockMaterial());
         indestructibleBlocks.addAll(Arrays.stream(ExecutorCategory.values()).map(ExecutorCategory::getAdditionalBlock).toList());
         indestructibleBlocks.addAll(Arrays.stream(ActionCategory.values()).map(ActionCategory::getAdditionalBlock).toList());
         indestructibleBlocks.remove(Material.PISTON);
@@ -220,6 +219,11 @@ public class DevPlot {
 
     public Set<Material> getAllowedBlocks() {
         Set<Material> allowedBlocks = new HashSet<>();
+        allowedBlocks.add(Material.LANTERN);
+        allowedBlocks.add(Material.JACK_O_LANTERN);
+        allowedBlocks.add(Material.SOUL_LANTERN);
+        allowedBlocks.add(Material.TORCH);
+        allowedBlocks.add(Material.SOUL_TORCH);
         allowedBlocks.add(Material.BARREL);
         allowedBlocks.add(Material.OAK_SIGN);
         allowedBlocks.add(Material.SPRUCE_SIGN);
@@ -323,8 +327,72 @@ public class DevPlot {
     }
 
     public void setContainerMaterial(Material containerMaterial) {
-        if (containerMaterial == Material.BARREL || containerMaterial == Material.CHEST || containerMaterial == Material.ENDER_CHEST || containerMaterial == Material.TRAPPED_CHEST) {
+        if (containerMaterial == Material.BARREL || containerMaterial == Material.CHEST || containerMaterial == Material.TRAPPED_CHEST) {
             this.containerMaterial = containerMaterial;
         }
+    }
+
+    public boolean setFloorEventActionBlocksMaterial(Material floorBlockMaterial, Material eventBlockMaterial, Material actionBlockMaterial) {
+        if (!floorBlockMaterial.isBlock() || !eventBlockMaterial.isBlock() || !actionBlockMaterial.isBlock() || floorBlockMaterial == eventBlockMaterial || floorBlockMaterial == actionBlockMaterial || eventBlockMaterial == actionBlockMaterial) {
+            return false;
+        }
+        if (floorBlockMaterial != Material.BARRIER && !floorBlockMaterial.name().endsWith("GLASS")) {
+            return false;
+        }
+        if (eventBlockMaterial != Material.BARRIER && !eventBlockMaterial.name().endsWith("GLASS")) {
+            return false;
+        }
+        if (actionBlockMaterial != Material.BARRIER && !actionBlockMaterial.name().endsWith("GLASS")) {
+            return false;
+        }
+        this.floorBlockMaterial = floorBlockMaterial;
+        this.eventBlockMaterial = eventBlockMaterial;
+        this.actionBlockMaterial = actionBlockMaterial;
+        return true;
+    }
+
+    public boolean setFloorBlockMaterial(Material floorBlockMaterial) {
+        if (!floorBlockMaterial.isBlock() || floorBlockMaterial == eventBlockMaterial || floorBlockMaterial == actionBlockMaterial || floorBlockMaterial == containerMaterial) {
+            return false;
+        }
+        if (floorBlockMaterial == Material.BARRIER || floorBlockMaterial.name().endsWith("GLASS")) {
+            this.floorBlockMaterial = floorBlockMaterial;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean setEventBlockMaterial(Material eventBlockMaterial) {
+        if (!eventBlockMaterial.isBlock() || eventBlockMaterial == floorBlockMaterial || eventBlockMaterial == actionBlockMaterial || eventBlockMaterial == containerMaterial) {
+            return false;
+        }
+        if (eventBlockMaterial == Material.BARRIER || eventBlockMaterial.name().endsWith("GLASS")) {
+            this.eventBlockMaterial = eventBlockMaterial;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean setActionBlockMaterial(Material actionBlockMaterial) {
+        if (!actionBlockMaterial.isBlock() || actionBlockMaterial == eventBlockMaterial || actionBlockMaterial == floorBlockMaterial || actionBlockMaterial == containerMaterial) {
+            return false;
+        }
+        if (actionBlockMaterial == Material.BARRIER || actionBlockMaterial.name().endsWith("GLASS")) {
+            this.actionBlockMaterial = actionBlockMaterial;
+            return true;
+        }
+        return false;
+    }
+
+    public Material getFloorBlockMaterial() {
+        return floorBlockMaterial;
+    }
+
+    public Material getEventBlockMaterial() {
+        return eventBlockMaterial;
+    }
+
+    public Material getActionBlockMaterial() {
+        return actionBlockMaterial;
     }
 }

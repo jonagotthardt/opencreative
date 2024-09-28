@@ -23,6 +23,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPistonEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -32,27 +34,27 @@ import mcchickenstudio.creative.plots.PlotManager;
 
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.MessageUtils.sendMessageOnce;
+import static mcchickenstudio.creative.utils.WorldUtils.isDevPlot;
 
 public class BlockRedstone implements Listener {
 
-    @NotNull
-    static final Plugin plugin = Main.getPlugin();
 
     @EventHandler
     public void onBlockRedstone(BlockRedstoneEvent event) {
         Location location = event.getBlock().getLocation();
+
         Plot plot = PlotManager.getInstance().getPlotByWorld(location.getWorld());
         if (plot != null) {
             plot.lastRedstoneOperationsAmount++;
-            if (plot.lastRedstoneOperationsAmount > plot.redstoneOperationsLimit) {
-                    sendMessageOnce(plot,getLocaleMessage("world.redstone-limit").replace("%count%",String.valueOf(plot.redstoneOperationsLimit)),5);
+            if (plot.lastRedstoneOperationsAmount > plot.getRedstoneOperationsLimit()) {
+                    sendMessageOnce(plot,getLocaleMessage("world.redstone-limit").replace("%count%",String.valueOf(plot.getRedstoneOperationsLimit())),5);
                     if (location.getBlock().getType() == Material.OBSERVER) {
                         new BukkitRunnable() {
                             @Override
                             public void run() {
                                 location.getBlock().setType(Material.AIR);
                             }
-                        }.runTaskLater(plugin,1L);
+                        }.runTaskLater(Main.getPlugin(),1L);
                     } else {
                         location.getBlock().setType(Material.CAVE_AIR);
                     }
@@ -64,8 +66,16 @@ public class BlockRedstone implements Listener {
                     public void run() {
                         plot.lastRedstoneOperationsAmount = plot.lastRedstoneOperationsAmount-1;
                     }
-                }.runTaskLater(plugin,5L);
+                }.runTaskLater(Main.getPlugin(),5L);
             }
+        }
+
+    }
+
+    @EventHandler
+    public void onPiston(BlockPistonExtendEvent event) {
+        if (isDevPlot(event.getBlock().getWorld())) {
+            event.setCancelled(true);
         }
     }
 

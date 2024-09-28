@@ -1,5 +1,5 @@
 name: 'OpenCreative'
-version: '5.0 Developer Preview'
+version: '5.0 Technical Preview'
 main: mcchickenstudio.creative.Main
 api-version: 1.21
 authors: [McChicken Studio]
@@ -12,14 +12,14 @@ loadbefore:
   - Essentials
 commands:
   creative:
-    usage: /creativecoding
-    aliases: [coding,creative,скуфешму]
+    usage: /opencreative
+    aliases: [coding,creativecoding,скуфешму,creative,oc]
   edit:
     usage: /edit
     aliases: [увше, itemedit, edititem]
   locate:
     usage: /locate
-    aliases: [дщсфеу]
+    aliases: [дщсфеу, find, аштв]
   chat:
     usage: /creativechat
     aliases: [cc,сс]
@@ -71,3 +71,9 @@ commands:
   stopsound:
     usage: /stopsound
     aliases: [ыещзыщгтв, іещзіщгтв]
+  weather:
+    usage: /weather
+    aliases: [цуферук]
+  time:
+    usage: /time
+    aliases: [ешьу]

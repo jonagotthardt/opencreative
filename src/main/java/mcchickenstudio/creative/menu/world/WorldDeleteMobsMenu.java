@@ -23,6 +23,7 @@ import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.MessageUtils;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -53,10 +54,11 @@ public class WorldDeleteMobsMenu extends AbstractMenu {
     public void onClick(InventoryClickEvent event) {
         event.setCancelled(true);
         if (!isPlayerClicked(event)) return;
-        Plot plot = PlotManager.getInstance().getPlotByPlayer((Player) event.getWhoClicked());
+        Player player = (Player) event.getWhoClicked();
+        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
         if (plot == null) return;
-        if (!plot.isOwner((Player) event.getWhoClicked())) {
-            event.getWhoClicked().closeInventory();
+        if (!plot.isOwner(player)) {
+            player.closeInventory();
             return;
         }
         int count = 0;
@@ -75,8 +77,8 @@ public class WorldDeleteMobsMenu extends AbstractMenu {
                     }
                 }
             }
-            event.getWhoClicked().closeInventory();
-            event.getWhoClicked().sendMessage(getLocaleMessage("world.delete-mobs.items").replace("%count%", String.valueOf(count)));
+            player.closeInventory();
+            player.sendMessage(getLocaleMessage("world.delete-mobs.items").replace("%count%", String.valueOf(count)));
         } else if (itemEquals(event.getCurrentItem(),DELETE_ENTITIES_ITEM)) {
             for (Entity entity : plot.world.getEntities()) {
                 if (!(entity instanceof LivingEntity)) {
@@ -84,8 +86,8 @@ public class WorldDeleteMobsMenu extends AbstractMenu {
                     count++;
                 }
             }
-            event.getWhoClicked().closeInventory();
-            event.getWhoClicked().sendMessage(getLocaleMessage("world.delete-mobs.entities").replace("%count%", String.valueOf(count)));
+            player.closeInventory();
+            player.sendMessage(getLocaleMessage("world.delete-mobs.entities").replace("%count%", String.valueOf(count)));
         } else if (itemEquals(event.getCurrentItem(),DELETE_MOBS_ITEM)) {
             for (Entity entity : plot.world.getEntities()) {
                 if (entity instanceof LivingEntity && !(entity instanceof Player)) {
@@ -93,11 +95,14 @@ public class WorldDeleteMobsMenu extends AbstractMenu {
                     count++;
                 }
             }
-            event.getWhoClicked().closeInventory();
-            event.getWhoClicked().sendMessage(getLocaleMessage("world.delete-mobs.mobs").replace("%count%", String.valueOf(count)));
+            player.closeInventory();
+            player.sendMessage(getLocaleMessage("world.delete-mobs.mobs").replace("%count%", String.valueOf(count)));
         }
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {}
+    public void onOpen(InventoryOpenEvent event) {
+        Player player = (Player) event.getPlayer();
+        player.playSound(player.getLocation(), Sound.ENTITY_PANDA_WORRIED_AMBIENT,100,0.1f);
+    }
 }

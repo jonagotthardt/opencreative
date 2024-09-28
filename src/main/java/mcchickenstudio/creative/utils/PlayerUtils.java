@@ -42,20 +42,21 @@ import static mcchickenstudio.creative.utils.ErrorUtils.sendCriticalErrorMessage
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.MessageUtils.messageExists;
+import static mcchickenstudio.creative.utils.WorldUtils.isDevPlot;
 
 public class PlayerUtils {
 
     public enum PlayerLimit {
 
         WORLD_SIZE("world.size"),
-        WORLD_ENTITIES_LIMIT("world.entities-limit"),
-        WORLD_CODE_OPERATIONS_LIMIT("world.code-operations-limit"),
-        WORLD_SCOREBOARDS_LIMIT("world.scoreboards-limit"),
-        WORLD_BOSSBARS_LIMIT("world.bossbars-limit"),
-        WORLD_REDSTONE_OPERATIONS_LIMIT("world.redstone-operations-limit"),
-        WORLD_OPENING_INVENTORIES_LIMIT("world.opening-inventories-limit"),
-        WORLD_VARIABLES_LIMIT("world.variables-limit"),
-        WORLD_MODIFYING_BLOCKS_LIMIT("world.modifying-blocks-limit"),
+        WORLD_ENTITIES_LIMIT("world.limits.entities-amount"),
+        WORLD_CODE_OPERATIONS_LIMIT("world.limits.executor-calls"),
+        WORLD_SCOREBOARDS_LIMIT("world.limits.scoreboards-amount"),
+        WORLD_BOSSBARS_LIMIT("world.limits.bossbars-amount"),
+        WORLD_REDSTONE_OPERATIONS_LIMIT("world.limits.redstone-changes"),
+        WORLD_OPENING_INVENTORIES_LIMIT("world.limits.opening-inventories"),
+        WORLD_VARIABLES_LIMIT("world.limits.variables-amount"),
+        WORLD_MODIFYING_BLOCKS_LIMIT("world.limits.modifying-blocks"),
         PLAYER_WORLDS_AMOUNT_LIMIT("creating-world.limit");
 
         private final String path;
@@ -102,6 +103,14 @@ public class PlayerUtils {
 
     public static int getPlayerLimitValue(String group, PlayerLimit type) {
         return getIntFromGroups(group,type.getPath());
+    }
+
+    public static int getPlayerModifierValue(Player player, PlayerLimit type) {
+        return getIntFromGroups(getGroup(player),type.getPath().replace(".limits",".per-player-limit-modifiers"));
+    }
+
+    public static int getPlayerModifierValue(String group, PlayerLimit type) {
+        return getIntFromGroups(group,type.getPath().replace(".limits",".per-player-limit-modifiers"));
     }
 
     public static int getIntFromGroups(Player player, String intPath) {
@@ -245,11 +254,7 @@ public class PlayerUtils {
      **/
     public static void teleportToLobby(Player player) {
 
-        String spawnWorld = Main.getPlugin().getConfig().getString("spawn.world");
-        if (spawnWorld == null || spawnWorld.isEmpty()) {
-            spawnWorld = "world";
-        }
-        World lobbyWorld = Bukkit.getWorld(spawnWorld);
+        World lobbyWorld = getLobbyWorld();
         if (lobbyWorld != null) {
             player.teleport(lobbyWorld.getSpawnLocation());
         }
@@ -258,13 +263,29 @@ public class PlayerUtils {
         player.sendTitle(getLocaleMessage("lobby.title"), getLocaleMessage("lobby.subtitle"),20,60,20);
         player.sendMessage(getLocaleMessage("lobby.message"));
         player.playSound(player.getLocation(),Sound.BLOCK_BEACON_DEACTIVATE,100,1.5f);
-        player.playSound(player.getLocation(),Sound.MUSIC_DISC_CREATOR_MUSIC_BOX ,100,0.7f);
+        player.playSound(player.getLocation(),Main.getPlugin().getConfig().getString("lobby.sound.name","music_disc.creator_music_box") ,100,(float) Main.getPlugin().getConfig().getDouble("lobby.sound.pitch",0.7f));
 
         ItemStack gamesItem = createItem(Material.COMPASS,1,"items.lobby.games");
         player.getInventory().setItem(3, gamesItem);
 
         ItemStack myWorldsItem = createItem(Material.NETHER_STAR,1,"items.lobby.own");
         player.getInventory().setItem(5, myWorldsItem);
+    }
+
+    public static World getLobbyWorld() {
+        String spawnWorld = Main.getPlugin().getConfig().getString("lobby.world");
+        if (spawnWorld == null || spawnWorld.isEmpty() || Bukkit.getWorld(spawnWorld) == null) {
+            spawnWorld = "world";
+        }
+        return Bukkit.getWorld(spawnWorld);
+    }
+
+    public static boolean isEntityInDevPlot(Entity entity) {
+        return isDevPlot(entity.getWorld());
+    }
+
+    public static boolean isEntityInLobby(Entity entity) {
+        return getLobbyWorld().equals(entity.getWorld());
     }
 
     /**

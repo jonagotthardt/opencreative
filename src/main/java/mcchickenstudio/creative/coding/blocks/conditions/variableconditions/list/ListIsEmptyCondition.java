@@ -36,7 +36,7 @@ public class ListIsEmptyCondition extends VariableCondition {
 
     @Override
     public boolean check(Entity entity) {
-        List<Object> list = getArguments().getList("variable",this);
+        List<Object> list = getArguments().getList("list",this);
         return list.isEmpty();
     }
 

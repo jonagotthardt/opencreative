@@ -47,6 +47,7 @@ public class PlayerPlaceBlock implements Listener {
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
+        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
         DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
 
         if (devPlot != null) {
@@ -54,13 +55,13 @@ public class PlayerPlaceBlock implements Listener {
             Block block = event.getBlock();
             Block blockAgainst = event.getBlockAgainst();
 
-            if (blockAgainst.getType() == devPlot.floorBlockMaterial) {
-                if ((!(block.getType() == Material.PISTON && (blockAgainst.getZ() % 4) == 0 && blockAgainst.getRelative(BlockFace.WEST).getType() == devPlot.actionBlockMaterial)) && (!(block.getType().name().contains("SIGN") &&  blockAgainst.getX() >= 4 && (blockAgainst.getX() % 2) == 0)) && (!devPlot.getAllowedBlocks().contains(block.getType())) || block.getY() <= 0) {
+            if (blockAgainst.getType() == devPlot.getFloorBlockMaterial()) {
+                if ((!(block.getType() == Material.PISTON && (blockAgainst.getZ() % 4) == 0 && blockAgainst.getRelative(BlockFace.WEST).getType() == devPlot.getActionBlockMaterial())) && (!(block.getType().name().contains("SIGN") &&  blockAgainst.getX() >= 4 && (blockAgainst.getX() % 2) == 0)) && (!devPlot.getAllowedBlocks().contains(block.getType())) || block.getY() <= 0) {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-on-floor"));
                     player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
                     event.setCancelled(true);
                 }
-            } else if (blockAgainst.getType() == devPlot.eventBlockMaterial) {
+            } else if (blockAgainst.getType() == devPlot.getEventBlockMaterial()) {
                 if (devPlot.getEventsBlocks().contains(block.getType())) {
                     Material additionalBlockMaterial = Material.REDSTONE_ORE;
                     String signText = "unknown";
@@ -79,7 +80,7 @@ public class PlayerPlaceBlock implements Listener {
                     player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
                     event.setCancelled(true);
                 }
-            } else if (blockAgainst.getType() == devPlot.actionBlockMaterial) {
+            } else if (blockAgainst.getType() == devPlot.getActionBlockMaterial()) {
                 if (devPlot.getActionsBlocks().contains(block.getType())) {
                     Material additionalBlockMaterial = Material.REDSTONE_ORE;
                     String signText = "unknown";
@@ -107,11 +108,14 @@ public class PlayerPlaceBlock implements Listener {
                 }
                 event.setCancelled(true);
             }
-
+        } else if (plot != null) {
+            if (ChangedWorld.isPlayerWithLocation(player) && !plot.getWorldPlayers().canBuild(player)) {
+                player.sendActionBar(getLocaleMessage("not-builder"));
+                event.setCancelled(true);
+                return;
+            }
+            EventRaiser.raisePlaceBlockEvent(event.getPlayer(),event);
         }
-
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-        if (plot != null)  EventRaiser.raisePlaceBlockEvent(event.getPlayer(),event);
     }
 
     public static void placeDevBlock(Block block, Material additionalBlockMaterial, String signText) {
@@ -136,6 +140,10 @@ public class PlayerPlaceBlock implements Listener {
         sign.setLine(1, signText);
         if (block.getType() == Material.OXIDIZED_COPPER) {
             sign.setLine(2,"20");
+        }
+        if (block.getType() == Material.PURPUR_BLOCK) {
+            sign.setLine(1,"");
+            sign.setLine(3,"selection_set");
         }
         sign.update();
 
@@ -196,11 +204,11 @@ public class PlayerPlaceBlock implements Listener {
         if (oldSignBlock.getType().toString().contains("WALL_SIGN")) {
             Sign oldSign = (Sign) oldSignBlock.getState();
             newSignBlock.setType(Material.OAK_WALL_SIGN);
-
             Sign sign = (Sign) newSignBlock.getState();
             for (byte i = 0; i < oldSign.getSide(Side.FRONT).lines().size(); i++) {
                 sign.getSide(Side.FRONT).line(i,oldSign.getSide(Side.FRONT).line(i));
             }
+            sign.getSide(Side.FRONT).setGlowingText(oldSign.getSide(Side.FRONT).isGlowingText());
             sign.setBlockData(oldSign.getBlockData());
             sign.update();
             translateBlockSign(newSignBlock);

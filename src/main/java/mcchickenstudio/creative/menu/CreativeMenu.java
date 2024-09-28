@@ -43,9 +43,20 @@ public class CreativeMenu extends AbstractMenu {
 
     @Override
     public void fillItems(Player player) {
-        setItem((byte) 10,createItem(Material.BEACON,1,"menus.creative.items.info"));
-        if (player.hasPermission("creative.reload")) setItem((byte) 15,RELOAD_ITEM);
-        if (player.hasPermission("creative.resetlocale")) setItem((byte) 16,RESET_LOCALE_ITEM);
+        setItem((byte) 13,createItem(Material.BEACON,1,"menus.creative.items.info"));
+        setItem((byte) 0,DECORATION_PANE_ITEM);
+        setItem((byte) 8,DECORATION_PANE_ITEM);
+        setItem((byte) 9,DECORATION_PANE_ITEM);
+        setItem((byte) 10,DECORATION_ITEM);
+        setItem((byte) 16,DECORATION_ITEM);
+        setItem((byte) 17,DECORATION_PANE_ITEM);
+        setItem((byte) 29,DECORATION_ITEM);
+        setItem((byte) 18,DECORATION_PANE_ITEM);
+        setItem((byte) 19,DECORATION_ITEM);
+        setItem((byte) 25,DECORATION_ITEM);
+        setItem((byte) 26,DECORATION_PANE_ITEM);
+        setItem((byte) 1,player.hasPermission("creative.reload") ? RELOAD_ITEM : DECORATION_ITEM);
+        setItem((byte) 7,player.hasPermission("creative.resetlocale") ? RESET_LOCALE_ITEM : DECORATION_ITEM);
     }
 
     @Override
@@ -53,22 +64,13 @@ public class CreativeMenu extends AbstractMenu {
         ItemStack clickedItem = event.getCurrentItem();
         event.setCancelled(true);
         if (event.getClickedInventory() != event.getInventory()) return;
+        Player player = (Player) event.getWhoClicked();
         if (itemEquals(clickedItem,RELOAD_ITEM)) {
-            event.getWhoClicked().closeInventory();
-            event.getWhoClicked().sendMessage("§fCreative§b+ §8| §7Reloading Creative's config and localization...");
-            ((Player) event.getWhoClicked()).sendTitle("§f§lCREATIVE§b§l+", "§fReloading...", 0, 60, 20);
-            ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100, 1);
-            Main.getPlugin().reloadConfig();
-            loadLocales();
-            event.getWhoClicked().sendMessage("§fCreative§b+ §8| §7Reloaded §asuccessfully!");
-            ((Player) event.getWhoClicked()).sendTitle("§f§lCREATIVE§b§l+", "§fReloaded successfully!", 0, 60, 20);
-            ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100, 2);
+            player.performCommand("creative reload");
+            player.closeInventory();
         } else if (itemEquals(clickedItem, RESET_LOCALE_ITEM)) {
-            event.getWhoClicked().closeInventory();
-            event.getWhoClicked().sendMessage("§fCreative§b+ §8| §fResetting localization file...");
-            FileUtils.resetLocales();
-            event.getWhoClicked().sendMessage("§fCreative§b+ §8| §fLocalization file §6successfully§f reset.");
-            ((Player) event.getWhoClicked()).playSound((event.getWhoClicked()).getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100, 1);
+            player.performCommand("creative resetlocale");
+            player.closeInventory();
         }
     }
 

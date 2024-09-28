@@ -86,4 +86,5 @@ public abstract class Condition extends Action {
     public boolean isOpposed() {
         return isOpposed;
     }
+
 }

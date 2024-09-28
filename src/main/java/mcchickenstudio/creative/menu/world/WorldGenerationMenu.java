@@ -26,6 +26,7 @@ import mcchickenstudio.creative.utils.MessageUtils;
 import mcchickenstudio.creative.utils.PlayerUtils;
 import mcchickenstudio.creative.utils.WorldUtils;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -50,7 +51,7 @@ public class WorldGenerationMenu extends AbstractMenu {
         this.player = player;
         this.generatorButton = new ParameterButton("flat", List.of("flat","empty","water","survival","large_biomes"), "type", "menus.world-creation", "menus.world-creation.items.type", List.of(Material.MOSS_BLOCK, Material.GLASS, Material.WATER_BUCKET, Material.OAK_SAPLING, Material.MYCELIUM));
         this.environmentButton = new ParameterButton("normal", List.of("normal","nether","the_end"), "environment", "menus.world-creation", "menus.world-creation.items.environment", List.of(Material.GRASS_BLOCK, Material.NETHERRACK, Material.END_STONE));
-        this.generateStructures = new ParameterButton(false, List.of(false,true), "environment", "menus.world-creation", "menus.world-creation.items.generate-structures", List.of(Material.DECORATED_POT, Material.BOOKSHELF));
+        this.generateStructures = new ParameterButton(false, List.of(false,true), "generate-structures", "menus.world-creation", "menus.world-creation.items.generate-structures", List.of(Material.DECORATED_POT, Material.BOOKSHELF));
 
     }
 
@@ -73,20 +74,24 @@ public class WorldGenerationMenu extends AbstractMenu {
                 generatorButton.next();
                 setItem((byte) event.getRawSlot(),generatorButton.getItem());
                 updateSlot((byte) event.getRawSlot());
+                player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_RESONATE,100,1f);
             }
             case 11 -> {
                 environmentButton.next();
                 setItem((byte) event.getRawSlot(),environmentButton.getItem());
                 updateSlot((byte) event.getRawSlot());
+                player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_STEP,100,0.1f);
             }
             case 12 -> {
                 generateStructures.next();
                 setItem((byte) event.getRawSlot(),generateStructures.getItem());
                 updateSlot((byte) event.getRawSlot());
+                player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_CHARGE,100,2);
             }
             case 16 -> {
                 if (PlotManager.getInstance().getPlayerPlots(player).size() < PlayerUtils.getPlayerPlotsLimit(player)) {
-                    new Plot(player, WorldUtils.WorldGenerator.valueOf(generatorButton.getCurrentValue().toString().toUpperCase()), World.Environment.valueOf(environmentButton.getCurrentValue().toString().toUpperCase()),new Random().nextInt());
+                    player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_SET_SPAWN,100,0.1f);
+                    new Plot(player, WorldUtils.WorldGenerator.valueOf(generatorButton.getCurrentValue().toString().toUpperCase()), World.Environment.valueOf(environmentButton.getCurrentValue().toString().toUpperCase()),new Random().nextInt(),Boolean.parseBoolean(generateStructures.getCurrentValue().toString()));
                 }
                 player.closeInventory();
             }
@@ -94,5 +99,7 @@ public class WorldGenerationMenu extends AbstractMenu {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {}
+    public void onOpen(InventoryOpenEvent event) {
+        player.playSound(player.getLocation(), Sound.BLOCK_PORTAL_AMBIENT,100,1);
+    }
 }

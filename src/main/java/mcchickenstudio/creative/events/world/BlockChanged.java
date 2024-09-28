@@ -18,14 +18,20 @@
 
 package mcchickenstudio.creative.events.world;
 
+import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotFlags;
 import mcchickenstudio.creative.plots.PlotManager;
 import org.bukkit.World;
+import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockFadeEvent;
+import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+
+import static mcchickenstudio.creative.utils.WorldUtils.isDevPlot;
 
 public class BlockChanged implements Listener {
 
@@ -34,12 +40,32 @@ public class BlockChanged implements Listener {
         World world = event.getBlock().getWorld();
         Plot plot = PlotManager.getInstance().getPlotByWorld(world);
         if (plot != null) {
-            if (plot.getFlagValue(PlotFlags.PlotFlag.BLOCK_CHANGING) == 2) event.setCancelled(true);
+            if (plot.getFlagValue(PlotFlags.PlotFlag.BLOCK_CHANGING) == 2) {
+                event.setCancelled(true);
+            }
         }
     }
 
     @EventHandler
-    public void onBlockExplosion(EntityExplodeEvent event) {
+    public void onBlockChanged(BlockFormEvent event) {
+        World world = event.getBlock().getWorld();
+        DevPlot devPlot = PlotManager.getInstance().getDevPlot(world);
+        if (devPlot != null) {
+            if (devPlot.getEventBlockMaterial() == event.getBlock().getRelative(BlockFace.DOWN).getType() || devPlot.getActionBlockMaterial() == event.getBlock().getRelative(BlockFace.DOWN).getType()) {
+                event.setCancelled(true);
+                return;
+            }
+        }
+        Plot plot = PlotManager.getInstance().getPlotByWorld(world);
+        if (plot != null) {
+            if (plot.getFlagValue(PlotFlags.PlotFlag.BLOCK_CHANGING) == 2) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityExplosion(EntityExplodeEvent event) {
         World world = event.getLocation().getWorld();
         Plot plot = PlotManager.getInstance().getPlotByWorld(world);
         if (plot != null) {
@@ -47,7 +73,21 @@ public class BlockChanged implements Listener {
                 event.blockList().clear();
             }
         }
-        if (world.getName().endsWith("dev")) {
+        if (isDevPlot(world)) {
+            event.blockList().clear();
+        }
+    }
+
+    @EventHandler
+    public void onBlockExplosion(BlockExplodeEvent event) {
+        World world = event.getBlock().getLocation().getWorld();
+        Plot plot = PlotManager.getInstance().getPlotByWorld(world);
+        if (plot != null) {
+            if (plot.getFlagValue(PlotFlags.PlotFlag.BLOCK_EXPLOSION) == 2) {
+                event.blockList().clear();
+            }
+        }
+        if (isDevPlot(world)) {
             event.blockList().clear();
         }
     }

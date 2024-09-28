@@ -26,6 +26,7 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.coding.menus.*;
+import mcchickenstudio.creative.coding.menus.blocks.*;
 import mcchickenstudio.creative.coding.menus.layouts.Layout;
 import mcchickenstudio.creative.coding.menus.variables.EventValuesMenu;
 import mcchickenstudio.creative.coding.menus.variables.ParticlesMenu;
@@ -33,7 +34,9 @@ import mcchickenstudio.creative.coding.menus.variables.PotionsMenu;
 import mcchickenstudio.creative.coding.menus.variables.VariablesMenu;
 import mcchickenstudio.creative.coding.menus.layouts.LayoutMaker;
 import mcchickenstudio.creative.coding.variables.VariableLink;
+import mcchickenstudio.creative.menu.AbstractMenu;
 import mcchickenstudio.creative.menu.world.browsers.RecommendedWorldsMenu;
+import mcchickenstudio.creative.menu.world.settings.WorldSettingsMenu;
 import mcchickenstudio.creative.plots.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -53,7 +56,6 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import mcchickenstudio.creative.menu.world.browsers.OwnWorldsMenu;
-import mcchickenstudio.creative.menu.world.settings.WorldSettingsMenu;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -65,6 +67,7 @@ import static mcchickenstudio.creative.utils.BlockUtils.*;
 import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemName;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.PlayerUtils.isEntityInLobby;
 import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
 
 public class PlayerInteract implements Listener {
@@ -178,8 +181,17 @@ public class PlayerInteract implements Listener {
         Block mainBlock = clickedBlock.getRelative(BlockFace.NORTH);
         ExecutorCategory mainBlockCategory = ExecutorCategory.getByMaterial(mainBlock.getType());
         ActionCategory actionBlockCategory = ActionCategory.getByMaterial(mainBlock.getType());
-        if (currentItem.getType() == Material.ARROW && actionBlockCategory != null && actionBlockCategory.isCondition()) {
+        if (currentItem.getType() == Material.ARROW && (actionBlockCategory != null && actionBlockCategory.isCondition() || actionBlockCategory == ActionCategory.SELECTION_ACTION)) {
             if (event.getHand() == EquipmentSlot.HAND) {
+                /*
+                 * We cancel changing NOT in selection action,
+                 * when sign doesn't have specified condition type
+                 * in third sign line, because we can't select
+                 * ALL PLAYERS with NOT parameter, it's useless.
+                 */
+                if (actionBlockCategory == ActionCategory.SELECTION_ACTION && isSignLineEmpty(clickedBlock.getLocation(),(byte) 3)) {
+                    return;
+                }
                 if (isSignLineEmpty(clickedBlock.getLocation(),(byte) 1)) {
                     setSignLine(clickedBlock.getLocation(),(byte) 1,"not");
                     player.playSound(player.getLocation(),Sound.BLOCK_TRIAL_SPAWNER_CLOSE_SHUTTER,100, 1);
@@ -190,9 +202,28 @@ public class PlayerInteract implements Listener {
                 translateBlockSign(clickedBlock);
             }
         } else if (player.isSneaking() && actionBlockCategory != null) {
-            new TargetSelectionMenu(clickedBlock.getLocation()).open(player);
+            if (actionBlockCategory == ActionCategory.SELECTION_ACTION) {
+                String selectionAction = getSignLine(clickedBlock.getLocation(),(byte) 4);
+                switch (selectionAction) {
+                    case "selection_set" -> {
+                        setSignLine(clickedBlock.getLocation(),(byte) 4,"selection_add");
+                        player.playSound(player.getLocation(),Sound.BLOCK_AMETHYST_BLOCK_RESONATE,100f,0.5f);
+                    }
+                    case "selection_add" -> {
+                        setSignLine(clickedBlock.getLocation(),(byte) 4,"selection_remove");
+                        player.playSound(player.getLocation(),Sound.BLOCK_AMETHYST_BLOCK_RESONATE,100f,0.1f);
+                    }
+                    case null, default -> {
+                        setSignLine(clickedBlock.getLocation(),(byte) 4,"selection_set");
+                        player.playSound(player.getLocation(),Sound.BLOCK_AMETHYST_BLOCK_RESONATE,100f,1f);
+                    }
+                }
+                translateBlockSign(clickedBlock);
+            } else {
+                new TargetSelectionMenu(clickedBlock.getLocation()).open(player);
+            }
         } else {
-            CodingBlockTypesMenu menu = null;
+            AbstractMenu menu = null;
             if (mainBlockCategory != null) {
                 menu = switch (mainBlockCategory) {
                     case EVENT_PLAYER -> new PlayerEventsMenu(player,clickedBlock.getLocation());
@@ -207,10 +238,13 @@ public class PlayerInteract implements Listener {
                     case CONTROL_ACTION -> new ControlActionsMenu(player,clickedBlock.getLocation());
                     case PLAYER_CONDITION -> new PlayerConditionsMenu(player,clickedBlock.getLocation());
                     case VARIABLE_CONDITION -> new VariableConditionsMenu(player,clickedBlock.getLocation());
+                    case WORLD_CONDITION -> new WorldConditionsMenu(player,clickedBlock.getLocation());
                     case VARIABLE_ACTION -> new VariableActionsMenu(player,clickedBlock.getLocation());
                     case WORLD_ACTION -> new WorldActionsMenu(player,clickedBlock.getLocation());
                     case HANDLER_ACTION -> new HandlerActionsMenu(player,clickedBlock.getLocation());
                     case REPEAT_ACTION -> new RepeatActionsMenu(player,clickedBlock.getLocation());
+                    case SELECTION_ACTION -> new SelectionActionsMenu(player,clickedBlock.getLocation());
+                    case ENTITY_ACTION -> new EntityActionsMenu(player,clickedBlock.getLocation());
                     default -> null;
                 };
             }
@@ -428,6 +462,10 @@ public class PlayerInteract implements Listener {
     }
 
     private void setPaperLocation(PlayerInteractEvent event, Player player, ItemStack currentItem) {
+        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+        if (isPlayerWithLocation(player) && plot != null && !plot.getWorldPlayers().canBuild(player)) {
+            event.setCancelled(true);
+        }
         if (currentItem.getType() != Material.PAPER || !isPlayerWithLocation(player) || player.hasCooldown(currentItem.getType())) {
             return;
         }
@@ -442,7 +480,6 @@ public class PlayerInteract implements Listener {
             player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),locationString,5,40,5);
             player.playSound(player.getLocation(),Sound.ENTITY_EXPERIENCE_ORB_PICKUP,100,2);
         } else if (event.getAction() == Action.LEFT_CLICK_AIR) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
             if (plot != null && plot.devPlot.isLoaded()) {
                 player.teleport(getOldLocationPlayerWithLocation(player));
                 player.setCooldown(currentItem.getType(),60);
@@ -477,8 +514,7 @@ public class PlayerInteract implements Listener {
             return;
         }
         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-        //FIXME: Use config world name instead of "world"
-        if (player.getWorld().getName().equalsIgnoreCase("world")) {
+        if (isEntityInLobby(player)) {
             if (currentItem.getType() == Material.COMPASS) {
                 // Opens recommended worlds menu.
                 if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
@@ -504,7 +540,7 @@ public class PlayerInteract implements Listener {
             }
             if (plot.isOwner(player)) {
                 player.setCooldown(Material.COMPASS,60);
-                WorldSettingsMenu.openInventory(player);
+                new WorldSettingsMenu(plot,player).open(player);
             }
         }
     }

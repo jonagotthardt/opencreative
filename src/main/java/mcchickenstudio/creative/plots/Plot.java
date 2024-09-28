@@ -86,9 +86,9 @@ public class Plot {
     public int lastRedstoneOperationsAmount;
     public boolean currentlyTransferringOwnership;
 
-    public final int entitiesLimit;
-    public final int codeOperationsLimit;
-    public final int redstoneOperationsLimit;
+    private final int entitiesLimit;
+    private final int codeOperationsLimit;
+    private final int redstoneOperationsLimit;
     private final int modifyingBlocksLimit;
     private final int scoreboardsLimit;
     private final int bossBarsLimit;
@@ -109,7 +109,7 @@ public class Plot {
     /**
      Creates a new plot for specified player with specified generator.
      **/
-    public Plot(Player player, WorldUtils.WorldGenerator generator, World.Environment environment, long seed) {
+    public Plot(Player player, WorldUtils.WorldGenerator generator, World.Environment environment, long seed, boolean generateStructures) {
 
         player.closeInventory();
         owner = (player.getName());
@@ -134,7 +134,7 @@ public class Plot {
 
         PlotManager.getInstance().registerPlot(this);
 
-        create(this,generator,environment,seed);
+        create(this,generator,environment,seed,generateStructures);
         this.environment = environment;
 
         worldPlayers = new PlotPlayers(this);
@@ -394,19 +394,15 @@ public class Plot {
     /**
      Creates a world for plot.
      **/
-    public void create(Plot plot, WorldUtils.WorldGenerator generator, World.Environment environment, long seed) {
+    public void create(Plot plot, WorldUtils.WorldGenerator generator, World.Environment environment, long seed, boolean generateStructures) {
         Player player = Bukkit.getPlayer(plot.getOwner());
         String worldName = "plot" + WorldUtils.generateWorldID();
         player.sendTitle(getLocaleMessage("creating-world.title"),getLocaleMessage("creating-world.subtitle"),10,300,40);
         Main.getPlugin().getLogger().info("Creating new " + worldName + " by " + player.getName() + "...");
-        if (!generateWorld(plot,player,worldName,generator,environment,seed)) {
+        if (!generateWorld(plot,player,worldName,generator,environment,seed,generateStructures)) {
             player.clearTitle();
             sendPlayerErrorMessage(player,"§cПроизошла ошибка при создании мира... \n§cОбратитесь к администрации!");
         }
-    }
-
-    public Sharing getWorldSharing() {
-        return getPlotSharing();
     }
 
     public Mode getPlotMode() {
@@ -555,7 +551,16 @@ public class Plot {
             border.setSize(devPlot.world.getWorldBorder().getSize()*5);
             developer.setWorldBorder(border);
         }
-        devPlot.translateCodingBlocks(player);
+        BukkitRunnable translation = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (devPlot.world == null) return;
+                devPlot.translateCodingBlocks(player);
+                removeBukkitRunnable(this);
+            }
+        };
+        addBukkitRunnable(translation);
+        translation.runTaskLater(Main.getPlugin(),5L);
     }
 
     public void connectToDevPlot(Player player, double x, double y, double z) {
@@ -600,11 +605,11 @@ public class Plot {
     }
 
     public int getVariablesAmountLimit() {
-        return variablesAmountLimit;
+        return variablesAmountLimit + (getPlayers().size() * PlayerUtils.getPlayerModifierValue(ownerGroup,PlayerLimit.WORLD_VARIABLES_LIMIT));
     }
 
     public int getOpeningInventoriesLimit() {
-        return openingInventoriesLimit;
+        return openingInventoriesLimit + (getPlayers().size() * PlayerUtils.getPlayerModifierValue(ownerGroup,PlayerLimit.WORLD_OPENING_INVENTORIES_LIMIT));
     }
 
     public WorldVariables getWorldVariables() {
@@ -612,7 +617,19 @@ public class Plot {
     }
 
     public int getModifyingBlocksLimit() {
-        return modifyingBlocksLimit;
+        return modifyingBlocksLimit + (getPlayers().size() * PlayerUtils.getPlayerModifierValue(ownerGroup,PlayerLimit.WORLD_MODIFYING_BLOCKS_LIMIT));
+    }
+
+    public int getRedstoneOperationsLimit() {
+        return redstoneOperationsLimit + (getPlayers().size() * PlayerUtils.getPlayerModifierValue(ownerGroup,PlayerLimit.WORLD_REDSTONE_OPERATIONS_LIMIT));
+    }
+
+    public int getCodeOperationsLimit() {
+        return codeOperationsLimit + (getPlayers().size() * PlayerUtils.getPlayerModifierValue(ownerGroup,PlayerLimit.WORLD_CODE_OPERATIONS_LIMIT));
+    }
+
+    public int getEntitiesLimit() {
+        return entitiesLimit + (getPlayers().size() * PlayerUtils.getPlayerModifierValue(ownerGroup,PlayerLimit.WORLD_ENTITIES_LIMIT));
     }
 
     public Map<String, Scoreboard> getScoreboards() {
@@ -624,11 +641,11 @@ public class Plot {
     }
 
     public int getScoreboardsLimit() {
-        return scoreboardsLimit;
+        return scoreboardsLimit + (getPlayers().size() * PlayerUtils.getPlayerModifierValue(ownerGroup,PlayerLimit.WORLD_SCOREBOARDS_LIMIT));
     }
 
     public int getBossBarsLimit() {
-        return bossBarsLimit;
+        return bossBarsLimit + (getPlayers().size() * PlayerUtils.getPlayerModifierValue(ownerGroup,PlayerLimit.WORLD_BOSSBARS_LIMIT));
     }
 
     public boolean isCorrupted() {

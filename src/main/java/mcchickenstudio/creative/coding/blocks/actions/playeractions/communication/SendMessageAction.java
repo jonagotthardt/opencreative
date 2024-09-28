@@ -23,6 +23,12 @@ import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -37,14 +43,23 @@ public class SendMessageAction extends PlayerAction {
     public void executePlayer(Player player) {
         String type = getArguments().getValue("type","new-line",this);
         List<String> messages = getArguments().getTextList("messages",this);
+        String message;
         if (type.equals("new-line")) {
-            for (String message : messages) {
-                player.sendMessage(message);
-            }
+            message = String.join("\n",messages);
         } else if (type.equals("join-spaces")) {
-            player.sendMessage(String.join(" ",messages));
+            message = String.join(" ",messages);
         } else {
-            player.sendMessage(String.join("",messages));
+            message = String.join("",messages);
+        }
+        if (message.contains("§")) {
+            player.sendMessage(message);
+        } else {
+            Component miniMessage = MiniMessage.miniMessage().deserialize(message);
+            ClickEvent clickEvent = miniMessage.clickEvent();
+            if (clickEvent != null && clickEvent.action() == ClickEvent.Action.RUN_COMMAND) {
+                miniMessage = miniMessage.clickEvent(null);
+            }
+            player.sendMessage(miniMessage);
         }
     }
 

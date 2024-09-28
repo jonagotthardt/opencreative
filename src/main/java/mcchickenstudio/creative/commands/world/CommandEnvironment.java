@@ -21,6 +21,7 @@ package mcchickenstudio.creative.commands.world;
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.variables.WorldVariable;
 import mcchickenstudio.creative.coding.variables.VariableLink;
+import mcchickenstudio.creative.menu.world.WorldEnvironmentMenu;
 import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
@@ -37,6 +38,7 @@ import org.bukkit.block.data.Directional;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -49,7 +51,7 @@ import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 
-public class CommandEnvironment implements CommandExecutor {
+public class CommandEnvironment implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
@@ -70,7 +72,7 @@ public class CommandEnvironment implements CommandExecutor {
                 return true;
             }
             if (args.length == 0) {
-                player.sendMessage(getLocaleMessage("environment.help"));
+                new WorldEnvironmentMenu(player,plot.devPlot).open(player);
             } else {
                 switch (args[0].toLowerCase()) {
                     case "vars", "variables":
@@ -180,22 +182,96 @@ public class CommandEnvironment implements CommandExecutor {
                         }
                         break;
                     }
-                    case "addfloor":
-                        if (!Main.debug) return true;
-                        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-                        if (devPlot == null) {
-                            player.sendMessage(getLocaleMessage("only-in-dev-world"));
+                    case "floor": {
+                        if (args.length < 2) {
+                            sender.sendMessage(getLocaleMessage("too-few-args"));
                             return true;
                         }
-                        byte y = 0;
-                        for (byte z = 0; z < 100; z++) {
-                            for (byte x = 0; x < 100; x++) {
-                                Block copyBlock = new Location(devPlot.world,x,y,z).getBlock();
-                                Block newBlock = new Location(devPlot.world,x,y+8,z).getBlock();
-                                newBlock.setType(copyBlock.getType());
+                        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
+                        if (devPlot == null) {
+                            sender.sendMessage(getLocaleMessage("only-in-dev-world"));
+                            return true;
+                        }
+                        Material material = Material.WHITE_STAINED_GLASS;
+                        try {
+                            material = Material.valueOf(args[1].equalsIgnoreCase("barrier") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
+                        } catch (Exception ignored) {}
+                        if (devPlot.setFloorBlockMaterial(material)) {
+                            if (devPlot.createPlatform(1,1)) {
+                                player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
                             }
                         }
                         break;
+                    }
+                    case "action": {
+                        if (args.length < 2) {
+                            sender.sendMessage(getLocaleMessage("too-few-args"));
+                            return true;
+                        }
+                        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
+                        if (devPlot == null) {
+                            sender.sendMessage(getLocaleMessage("only-in-dev-world"));
+                            return true;
+                        }
+                        Material material = Material.GRAY_STAINED_GLASS;
+                        try {
+                            material = Material.valueOf(args[1].equalsIgnoreCase("barrier") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
+                        } catch (Exception ignored) {}
+                        if (devPlot.setActionBlockMaterial(material)) {
+                            if (devPlot.createPlatform(1,1)) {
+                                player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+                            }
+                        }
+                        break;
+                    }
+                    case "event", "executor": {
+                        if (args.length < 2) {
+                            sender.sendMessage(getLocaleMessage("too-few-args"));
+                            return true;
+                        }
+                        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
+                        if (devPlot == null) {
+                            sender.sendMessage(getLocaleMessage("only-in-dev-world"));
+                            return true;
+                        }
+                        Material material = Material.BLUE_STAINED_GLASS;
+                        try {
+                            material = Material.valueOf(args[1].equalsIgnoreCase("barrier") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
+                        } catch (Exception ignored) {}
+                        if (devPlot.setEventBlockMaterial(material)) {
+                            if (devPlot.createPlatform(1,1)) {
+                                player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+                            }
+                        }
+                        break;
+                    }
+                    case "theme", "settheme", "themes": {
+                        if (args.length < 2) {
+                            sender.sendMessage(getLocaleMessage("too-few-args"));
+                            return true;
+                        }
+                        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
+                        if (devPlot == null) {
+                            sender.sendMessage(getLocaleMessage("only-in-dev-world"));
+                            return true;
+                        }
+                        if (switch (args[1].toLowerCase()) {
+                            case "dark", "black", "darkmode", "space", "night" -> devPlot.setFloorEventActionBlocksMaterial(Material.BARRIER,Material.GRAY_STAINED_GLASS,Material.BLACK_STAINED_GLASS);
+                            case "light", "white", "lightmode" -> devPlot.setFloorEventActionBlocksMaterial(Material.BARRIER,Material.GRAY_STAINED_GLASS,Material.WHITE_STAINED_GLASS);
+                            case "pink", "magenta", "purple" -> devPlot.setFloorEventActionBlocksMaterial(Material.BARRIER,Material.PINK_STAINED_GLASS,Material.MAGENTA_STAINED_GLASS);
+                            case "blue", "ocean", "cyan" -> devPlot.setFloorEventActionBlocksMaterial(Material.BARRIER,Material.BLUE_STAINED_GLASS,Material.LIGHT_BLUE_STAINED_GLASS);
+                            case "ukraine", "ua", "uk" -> devPlot.setFloorEventActionBlocksMaterial(Material.BARRIER,Material.BLUE_STAINED_GLASS,Material.YELLOW_STAINED_GLASS);
+                            case "rhombus", "old", "legacy" -> devPlot.setFloorEventActionBlocksMaterial(Material.WHITE_STAINED_GLASS,Material.LIGHT_BLUE_STAINED_GLASS,Material.LIGHT_GRAY_STAINED_GLASS);
+                            case "just", "planet", "default" -> devPlot.setFloorEventActionBlocksMaterial(Material.WHITE_STAINED_GLASS,Material.BLUE_STAINED_GLASS,Material.GRAY_STAINED_GLASS);
+                            case "art", "artur" -> devPlot.setFloorEventActionBlocksMaterial(Material.WHITE_STAINED_GLASS,Material.BLACK_STAINED_GLASS,Material.CYAN_STAINED_GLASS);
+                            case "cloud" -> devPlot.setFloorEventActionBlocksMaterial(Material.WHITE_STAINED_GLASS,Material.CYAN_STAINED_GLASS,Material.GRAY_STAINED_GLASS);
+                            default -> false;
+                        }) {
+                            devPlot.createPlatform(1,1);
+                            player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+                        }
+                        break;
+                    }
                     case "debug": {
                         if (args.length == 1) {
                             player.sendMessage(getLocaleMessage("environment.debug.help"));
@@ -220,5 +296,56 @@ public class CommandEnvironment implements CommandExecutor {
             }
         }
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        List<String> tabCompleter = new ArrayList<>();
+        if (args.length == 1) {
+            tabCompleter.add("variables");
+            tabCompleter.add("debug");
+            tabCompleter.add("barrel");
+            tabCompleter.add("floor");
+            tabCompleter.add("action");
+            tabCompleter.add("theme");
+            tabCompleter.add("event");
+        } else if (args.length == 2) {
+            if ("variables".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("size");
+                tabCompleter.add("clear");
+                tabCompleter.add("list");
+            } else if ("debug".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("enable");
+                tabCompleter.add("disable");
+            } else if ("floor".equalsIgnoreCase(args[0]) || "event".equalsIgnoreCase(args[0]) || "action".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("barrier");
+                tabCompleter.add("black");
+                tabCompleter.add("blue");
+                tabCompleter.add("light_blue");
+                tabCompleter.add("light_gray");
+                tabCompleter.add("white");
+                tabCompleter.add("red");
+                tabCompleter.add("orange");
+                tabCompleter.add("yellow");
+                tabCompleter.add("purple");
+                tabCompleter.add("green");
+                tabCompleter.add("lime");
+                tabCompleter.add("magenta");
+                tabCompleter.add("brown");
+                tabCompleter.add("cyan");
+                tabCompleter.add("pink");
+            } else if ("theme".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("default");
+                tabCompleter.add("dark");
+                tabCompleter.add("light");
+                tabCompleter.add("legacy");
+                tabCompleter.add("cloud");
+                tabCompleter.add("art");
+                tabCompleter.add("blue");
+                tabCompleter.add("purple");
+                tabCompleter.add("ukraine");
+            }
+        }
+        return tabCompleter;
     }
 }

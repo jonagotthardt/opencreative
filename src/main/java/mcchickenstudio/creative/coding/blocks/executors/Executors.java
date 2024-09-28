@@ -24,7 +24,6 @@ import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
-import mcchickenstudio.creative.coding.blocks.actions.other.SelectTargetAction;
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.plots.Plot;
@@ -71,10 +70,10 @@ public class Executors {
         Plot plot = executor.getPlot();
         if (plot == null || plot.getScript() == null || plot.getScript().getExecutors() == null) return;
         Executors executors = plot.getScript().getExecutors();
-        if (executors.getLastExecutorCallsAmount(executor) > plot.codeOperationsLimit) {
+        if (executors.getLastExecutorCallsAmount(executor) > plot.getCodeOperationsLimit()) {
             executors.clearExecutionsAmount(executor);
             stopPlotCode(plot);
-            sendPlotCodeCriticalErrorMessage(plot,executor,getLocaleMessage("plot-code-error.operations-limit",false).replace("%limit%",String.valueOf(plot.codeOperationsLimit)));
+            sendPlotCodeCriticalErrorMessage(plot,executor,getLocaleMessage("plot-code-error.operations-limit",false).replace("%limit%",String.valueOf(plot.getCodeOperationsLimit())));
         } else {
             executors.increaseCallsAmount(executor);
             executor.run(event);
@@ -180,31 +179,6 @@ public class Executors {
         try {
             ActionType actionType = ActionType.valueOf(type);
             Arguments args = new Arguments(executor.getPlot(),executor);
-            if (actionType == ActionType.LAUNCH_FUNCTION) {
-                if (config.getString(path+".name") != null) {
-                    args.setArgumentValue("name", ValueType.TEXT,config.getString(path+".name"));
-                }
-            } else if (actionType == ActionType.SELECTION_TARGET) {
-                String targetActionString = config.getString(path+".action");
-                if (targetActionString == null) return null;
-                SelectTargetAction.TargetAction targetAction = SelectTargetAction.TargetAction.valueOf(targetActionString.toUpperCase());
-                if (config.getConfigurationSection(path+".condition") != null) {
-                    boolean isOpposed = config.getBoolean(path+".condition.opposed",false);
-                    ActionCategory conditionCategory = ActionCategory.valueOf(config.getString(path+".condition.category").toUpperCase());
-                    ActionType conditionType = ActionType.valueOf(config.getString(path+".condition.type").toUpperCase());
-                    return actionType.getActionClass().getConstructor(Executor.class,int.class, Arguments.class, SelectTargetAction.TargetAction.class, ActionCategory.class, ActionType.class, boolean.class).newInstance(executor,config.getInt(path+".location.x"),args,targetAction,conditionCategory,conditionType,isOpposed);
-                } else if (config.getString(path+".target") != null){
-                    Target target = Target.DEFAULT;
-                    String targetString = config.getString(path + ".target");
-                    if (targetString != null && !targetString.isEmpty()) {
-                        target = Target.valueOf(targetString);
-                    }
-                    return actionType.getActionClass().getConstructor(Executor.class,int.class, Arguments.class, SelectTargetAction.TargetAction.class, Target.class).newInstance(executor,config.getInt(path+".location.x"),args,targetAction,target);
-                }
-                if (config.getString(path+".condition.type") != null) {
-                    args.setArgumentValue("name", ValueType.TEXT,config.getString(path+".name"));
-                }
-            }
             Target target = Target.DEFAULT;
             String targetString = config.getString(path + ".target");
             if (targetString != null && !targetString.isEmpty()) {
@@ -213,6 +187,26 @@ public class Executors {
             ConfigurationSection section = config.getConfigurationSection(path + ".arguments");
             if (section != null) {
                 args.load(section);
+            }
+            if (actionType == ActionType.LAUNCH_FUNCTION) {
+                if (config.getString(path+".name") != null) {
+                    args.setArgumentValue("name", ValueType.TEXT,config.getString(path+".name"));
+                }
+            } else if (actionType == ActionType.SELECTION_SET) {
+                if (config.getConfigurationSection(path+".condition") != null) {
+                    boolean isOpposed = config.getBoolean(path+".condition.opposed",false);
+                    ActionCategory conditionCategory = ActionCategory.valueOf(config.getString(path+".condition.category"));
+                    ActionType conditionType = ActionType.valueOf(config.getString(path+".condition.type"));
+                    return actionType.getActionClass().getConstructor(Executor.class,int.class, Arguments.class, ActionCategory.class, ActionType.class, boolean.class).newInstance(executor,config.getInt(path+".location.x"),args,conditionCategory,conditionType,isOpposed);
+                } else if (config.getString(path+".target") != null){
+                    if (targetString != null && !targetString.isEmpty()) {
+                        target = Target.valueOf(targetString);
+                    }
+                    return actionType.getActionClass().getConstructor(Executor.class,int.class, Arguments.class, Target.class).newInstance(executor,config.getInt(path+".location.x"),args,target);
+                }
+                if (config.getString(path+".condition.type") != null) {
+                    args.setArgumentValue("name", ValueType.TEXT,config.getString(path+".name"));
+                }
             }
             if (actionType.getCategory().isMultiAction()) {
                 if (config.getConfigurationSection(path+".actions") != null) {

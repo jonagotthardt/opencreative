@@ -93,6 +93,18 @@ public class MessageUtils {
         }
     }
 
+    private static String getBranding() {
+        String prefix = plugin.getConfig().getString("messages.branding");
+        if (prefix == null || prefix.equalsIgnoreCase("null")) {
+            prefix = ChatColor.translateAlternateColorCodes('&',"&fOpen&7Creative&a+");
+            plugin.getConfig().set("messages.branding","&fOpen&7Creative&a+");
+            plugin.reloadConfig();
+            return prefix;
+        } else {
+            return ChatColor.translateAlternateColorCodes('&',prefix);
+        }
+    }
+
     private static String getLanguage() {
         Object language = plugin.getConfig().get("messages.locale");
         if (language != null) {
@@ -142,7 +154,7 @@ public class MessageUtils {
             ErrorUtils.sendWarningErrorMessage("Not found " + messageID + " in localization file!");
             return "§6 Error §8| §fNot found §6" + messageID + "§f! Administration of server needs to fill that line in §6locales"+File.separator+getLanguage()+".yml";
         } else {
-            return ChatColor.translateAlternateColorCodes('&',originalMessage.replace("%prefix%",getPrefix()).replace("%cc-prefix%",getCreativeChatPrefix()));
+            return ChatColor.translateAlternateColorCodes('&',originalMessage.replace("%prefix%",getPrefix()).replace("%branding%",getBranding()).replace("%cc-prefix%",getCreativeChatPrefix()));
         }
     }
 
@@ -155,7 +167,7 @@ public class MessageUtils {
             ErrorUtils.sendWarningErrorMessage("Not found " + messageID + " in localization file!");
             return "§6 Error §8| §fNot found §6" + messageID + "§f! Administration of server needs to fill that line in §6locales"+File.separator+getLanguage()+".yml";
         } else {
-            return ChatColor.translateAlternateColorCodes('&',parsePAPI(Bukkit.getOfflinePlayer(player.getName()),originalMessage.replace("%prefix%",getPrefix()).replace("%cc-prefix%",getCreativeChatPrefix()).replace("%player%",player.getName())));
+            return ChatColor.translateAlternateColorCodes('&',parsePAPI(Bukkit.getOfflinePlayer(player.getName()),originalMessage.replace("%prefix%",getPrefix()).replace("%branding%",getBranding()).replace("%cc-prefix%",getCreativeChatPrefix()).replace("%player%",player.getName())));
         }
     }
 
@@ -172,7 +184,7 @@ public class MessageUtils {
                 return messageID;
             }
         } else {
-            return ChatColor.translateAlternateColorCodes('&',originalMessage.replace("%prefix%",getPrefix()).replace("%cc-prefix%",getCreativeChatPrefix()));
+            return ChatColor.translateAlternateColorCodes('&',originalMessage.replace("%prefix%",getPrefix()).replace("%branding%",getBranding()).replace("%cc-prefix%",getCreativeChatPrefix()));
         }
     }
 
@@ -186,7 +198,7 @@ public class MessageUtils {
             return "§fNot found: " + nameID;
         } else {
             if (originalName.length() > 50) originalName = originalName.substring(0,50);
-            return ChatColor.translateAlternateColorCodes('&',originalName.replace("%prefix%",getPrefix()).replace("%cc-prefix%",getCreativeChatPrefix()));
+            return ChatColor.translateAlternateColorCodes('&',originalName.replace("%prefix%",getPrefix()).replace("%cc-prefix%",getCreativeChatPrefix()).replace("%branding%",getBranding()));
         }
     }
 
@@ -205,7 +217,7 @@ public class MessageUtils {
             parsedDescription.add("§f localization file: locales" + File.separator + getLanguage() + ".yml");
         } else {
             for (String descriptionLine : originalDescription) {
-                parsedDescription.add(ChatColor.translateAlternateColorCodes('&',descriptionLine.replace("%prefix%",getPrefix()).replace("%cc-prefix%",getCreativeChatPrefix())));
+                parsedDescription.add(ChatColor.translateAlternateColorCodes('&',descriptionLine.replace("%prefix%",getPrefix()).replace("%cc-prefix%",getCreativeChatPrefix()).replace("%branding%",getBranding())));
             }
         }
         return parsedDescription;
@@ -306,7 +318,7 @@ public class MessageUtils {
         if (plot.getPlotReputation() >= 1) plotReputation = "§a+" + plotReputation;
         else if (plot.getPlotReputation() <= -1) plotReputation = "§c" + plotReputation;
         else plotReputation = "§e" + plotReputation;
-        return parsePAPI(Bukkit.getOfflinePlayer(plot.getOwner()),string.replace("%plotName%", plot.getInformation().getDisplayName()).replace("%plotOnline%",String.valueOf(plot.getOnline())).replace("%plotOwner%", plot.getOwner()).replace("%plotID%",plot.worldID).replace("%plotCategory%", plot.getInformation().getCategory().getName()).replace("%plotUniques%",String.valueOf(plot.getUniques())).replace("%plotReputation%",plotReputation).replace("%plotLastTime%",getElapsedTime(System.currentTimeMillis(),plot.getLastActivityTime())).replace("%plotCreationTime%",getElapsedTime(System.currentTimeMillis(), plot.getCreationTime())));
+        return parsePAPI(Bukkit.getOfflinePlayer(plot.getOwner()),string.replace("%plotName%", plot.getInformation().getDisplayName()).replace("%plotOnline%",String.valueOf(plot.getOnline())).replace("%plotOwner%", plot.getOwner()).replace("%plotID%",plot.worldID).replace("%plotCustomID%",plot.getInformation().getCustomID()).replace("%plotCategory%", plot.getInformation().getCategory().getName()).replace("%plotUniques%",String.valueOf(plot.getUniques())).replace("%plotReputation%",plotReputation).replace("%plotLastTime%",getElapsedTime(System.currentTimeMillis(),plot.getLastActivityTime())).replace("%plotCreationTime%",getElapsedTime(System.currentTimeMillis(), plot.getCreationTime())));
     }
 
     /**

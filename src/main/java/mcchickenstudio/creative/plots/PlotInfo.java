@@ -27,6 +27,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 
+import static mcchickenstudio.creative.plots.Plot.Sharing.PUBLIC;
 import static mcchickenstudio.creative.utils.FileUtils.getPlotConfig;
 import static mcchickenstudio.creative.utils.FileUtils.setPlotConfigParameter;
 import static mcchickenstudio.creative.utils.ItemUtils.*;
@@ -93,8 +94,7 @@ public class PlotInfo {
     }
 
     public void updateIcon() {
-        if (!(plot.getPlotSharing() == Plot.Sharing.PUBLIC)) material = Material.BARRIER;
-        ItemStack item = new ItemStack(material);
+        ItemStack item = new ItemStack(plot.getPlotSharing() == PUBLIC ? material : Material.BARRIER);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(getLocaleItemName("menus.all-worlds.items.world.name").replace("%plotName%", displayName));
         List<String> lore = new ArrayList<>();
@@ -105,8 +105,7 @@ public class PlotInfo {
                     lore.add(loreLine.replace("%plotDescription%", ChatColor.translateAlternateColorCodes('&',newLine)));
                 }
             } else {
-                // Will be removed!!!
-                lore.add(parsePlotLines(this.plot,loreLine.replace("%id%",getLocaleMessage("menus.all-worlds.items.world.id",false) + customID)));
+                lore.add(parsePlotLines(this.plot,loreLine));
             }
         }
         item.setAmount((Math.max(plot.getOnline(), 1)));

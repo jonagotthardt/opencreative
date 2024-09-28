@@ -21,7 +21,6 @@ package mcchickenstudio.creative;
 import mcchickenstudio.creative.coding.blocks.events.CEListener;
 import mcchickenstudio.creative.commands.*;
 import mcchickenstudio.creative.commands.minecraft.*;
-import mcchickenstudio.creative.commands.tabcompleters.*;
 import mcchickenstudio.creative.commands.world.CommandAd;
 import mcchickenstudio.creative.commands.world.CommandEnvironment;
 import mcchickenstudio.creative.commands.world.CommandJoin;
@@ -67,7 +66,7 @@ import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 public final class Main extends JavaPlugin {
 
     private static Main plugin;
-    public static final String version = "5.0 Developer Preview";
+    public static final String version = "5.0 Technical Preview";
     public static final String codename = "Things will be different";
     public static boolean maintenance = false;
     public static boolean debug = false;
@@ -201,19 +200,13 @@ public final class Main extends JavaPlugin {
         commands.put("edit",        CommandEdit.class);
         commands.put("playsound",   CommandPlaySound.class);
         commands.put("stopsound",   CommandStopSound.class);
+        commands.put("time",        CommandTime.class);
+        commands.put("weather",     CommandWeather.class);
         for (String commandName : commands.keySet()) {
             PluginCommand command = getCommand(commandName);
             if (command != null) {
                 try {
                     command.setExecutor(commands.get(commandName).newInstance());
-                    switch (commandName) {
-                        case "join", "ad" -> command.setTabCompleter(new CommandTabJoin());
-                        case "locate" -> command.setTabCompleter(new CommandTabLocate());
-                        case "creative" -> command.setTabCompleter(new CommandTabCreative());
-                        case "environment" -> command.setTabCompleter(new CommandTabEnvironment());
-                        case "gamemode" -> command.setTabCompleter(new CommandTabGamemode());
-                        case "give" -> command.setTabCompleter(new CommandTabGive());
-                    }
                 } catch (IllegalAccessException | InstantiationException error) {
                     sendCriticalErrorMessage("Couldn't register command " + commandName,error);
                 }
