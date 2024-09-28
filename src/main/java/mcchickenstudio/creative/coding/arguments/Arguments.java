@@ -240,7 +240,6 @@ public class Arguments {
                         if (link.getVariableType() == VariableLink.VariableType.LOCAL) {
                             link.setHandler(action.getHandler().getMainActionHandler());
                         }
-                        link.setName(parseEntity(link.getName(),action.getHandler().getMainActionHandler()));
                         list.add(link);
                     }
                 }
@@ -269,7 +268,7 @@ public class Arguments {
                             textString = item.getType().name();
                         }
                     }
-                    list.add(Argument.parseEntity(textString,action.getHandler().getMainActionHandler()));
+                    list.add(Argument.parseEntity(textString,action.getHandler().getMainActionHandler(),action));
                 }
             } catch (ClassCastException e) {
                 return list;
@@ -349,7 +348,6 @@ public class Arguments {
             if (link.getVariableType() == VariableLink.VariableType.LOCAL) {
                 link.setHandler(action.getHandler().getMainActionHandler());
             }
-            link.setName(parseEntity(link.getName(),action.getHandler().getMainActionHandler()));
             sendCodingDebugVariable(plot,path,link);
             return link;
         }
@@ -432,7 +430,7 @@ public class Arguments {
         if (arg == null) {
             sendCodingDebugNotFoundVariable(plot,path);
         } else {
-            value = parseObject(arg.getValue(action),defaultValue);
+            value = parseObject(arg.getValue(action),defaultValue,action);
             sendCodingDebugVariable(plot,path,value);
         }
         return value;
@@ -545,8 +543,8 @@ public class Arguments {
         return locationValue;
     }
 
-    private Object getVariableValue(VariableLink link) {
-        return plot.getWorldVariables().getVariableValue(link);
+    private Object getVariableValue(VariableLink link, Action action) {
+        return plot.getWorldVariables().getVariableValue(link,action);
     }
 
     public float parseObject(Object object, float defaultValue) {
@@ -580,10 +578,10 @@ public class Arguments {
         return value;
     }
 
-    public byte parseObject(Object object, byte defaultValue) {
+    public byte parseObject(Object object, byte defaultValue, Action action) {
         byte value = defaultValue;
         if (object instanceof VariableLink link) {
-            return parseObject(getVariableValue(link),defaultValue);
+            return parseObject(getVariableValue(link,action),defaultValue,action);
         } else if (object instanceof Integer) {
             value = (byte) object;
         } else if (object instanceof Float) {

@@ -141,6 +141,10 @@ public class PlayerPlaceBlock implements Listener {
         if (block.getType() == Material.OXIDIZED_COPPER) {
             sign.setLine(2,"20");
         }
+        if (block.getType() == Material.PURPUR_BLOCK) {
+            sign.setLine(1,"");
+            sign.setLine(3,"selection_set");
+        }
         sign.update();
 
         translateBlockSign(wallSign);
@@ -200,11 +204,11 @@ public class PlayerPlaceBlock implements Listener {
         if (oldSignBlock.getType().toString().contains("WALL_SIGN")) {
             Sign oldSign = (Sign) oldSignBlock.getState();
             newSignBlock.setType(Material.OAK_WALL_SIGN);
-
             Sign sign = (Sign) newSignBlock.getState();
             for (byte i = 0; i < oldSign.getSide(Side.FRONT).lines().size(); i++) {
                 sign.getSide(Side.FRONT).line(i,oldSign.getSide(Side.FRONT).line(i));
             }
+            sign.getSide(Side.FRONT).setGlowingText(oldSign.getSide(Side.FRONT).isGlowingText());
             sign.setBlockData(oldSign.getBlockData());
             sign.update();
             translateBlockSign(newSignBlock);

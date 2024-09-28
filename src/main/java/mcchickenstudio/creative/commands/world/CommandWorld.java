@@ -19,12 +19,12 @@
 package mcchickenstudio.creative.commands.world;
 
 import mcchickenstudio.creative.Main;
+import mcchickenstudio.creative.menu.world.settings.WorldSettingsMenu;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import mcchickenstudio.creative.menu.world.WorldDeleteMobsMenu;
-import mcchickenstudio.creative.menu.world.settings.WorldSettingsMenu;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.CooldownUtils;
 import mcchickenstudio.creative.plots.Plot;
@@ -102,7 +102,7 @@ public class CommandWorld implements CommandExecutor {
                     return true;
                 }
                 if (plot.getOwner().equalsIgnoreCase(sender.getName())) {
-                    WorldSettingsMenu.openInventory(player);
+                    new WorldSettingsMenu(plot,player).open(player);
                 } else {
                     long now = System.currentTimeMillis();
                     sender.sendMessage(getLocaleMessage("world.info").replace("%name%", plot.getInformation().getDisplayName())

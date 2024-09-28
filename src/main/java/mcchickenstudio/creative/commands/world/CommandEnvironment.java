@@ -21,6 +21,7 @@ package mcchickenstudio.creative.commands.world;
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.variables.WorldVariable;
 import mcchickenstudio.creative.coding.variables.VariableLink;
+import mcchickenstudio.creative.menu.world.WorldEnvironmentMenu;
 import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
@@ -71,7 +72,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                 return true;
             }
             if (args.length == 0) {
-                player.sendMessage(getLocaleMessage("environment.help"));
+                new WorldEnvironmentMenu(player,plot.devPlot).open(player);
             } else {
                 switch (args[0].toLowerCase()) {
                     case "vars", "variables":

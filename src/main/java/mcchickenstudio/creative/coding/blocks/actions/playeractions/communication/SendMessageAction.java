@@ -23,6 +23,8 @@ import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
@@ -52,7 +54,12 @@ public class SendMessageAction extends PlayerAction {
         if (message.contains("§")) {
             player.sendMessage(message);
         } else {
-            player.sendMessage(MiniMessage.miniMessage().deserialize(message));
+            Component miniMessage = MiniMessage.miniMessage().deserialize(message);
+            ClickEvent clickEvent = miniMessage.clickEvent();
+            if (clickEvent != null && clickEvent.action() == ClickEvent.Action.RUN_COMMAND) {
+                miniMessage = miniMessage.clickEvent(null);
+            }
+            player.sendMessage(miniMessage);
         }
     }
 

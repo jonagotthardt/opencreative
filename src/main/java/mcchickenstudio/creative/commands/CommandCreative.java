@@ -19,7 +19,9 @@
 package mcchickenstudio.creative.commands;
 
 import mcchickenstudio.creative.menu.CreativeMenu;
-import mcchickenstudio.creative.menu.world.WorldGenerationMenu;
+import mcchickenstudio.creative.menu.world.WorldEnvironmentMenu;
+import mcchickenstudio.creative.menu.world.settings.WorldSettingsMenu;
+import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
 import net.kyori.adventure.text.Component;
@@ -29,10 +31,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.generator.WorldInfo;
-import org.bukkit.plugin.Plugin;
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.utils.CooldownUtils;
 import mcchickenstudio.creative.utils.FileUtils;
@@ -360,7 +360,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                     sender.sendMessage(getLocaleMessage(args[1]));
                 }
-                case "generator" -> {
+                case "test" -> {
                     if (!Main.debug) {
                         return true;
                     }
@@ -369,7 +369,9 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     if (player != null) {
-                        new WorldGenerationMenu(player).open(player);
+                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                        if (plot == null) return true;
+                        new WorldEnvironmentMenu(player,plot.devPlot).open(player);
                     }
                 }
             }

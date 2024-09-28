@@ -284,10 +284,10 @@ public class PlotManager {
      **/
     public Plot getPlotByWorld(World world) {
         for (Plot plot : plots) {
-            if (plot.world == world) {
+            if (world.equals(plot.world)) {
                 return plot;
             }
-            if (plot.devPlot != null && plot.devPlot.isLoaded() && plot.devPlot.world == world) {
+            if (world.equals(plot.devPlot.world)) {
                 return plot;
             }
         }

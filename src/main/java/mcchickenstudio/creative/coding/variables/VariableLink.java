@@ -31,7 +31,7 @@ import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
  */
 public class VariableLink {
 
-    private String name;
+    private final String name;
     private final VariableType type;
     private ActionsHandler handler;
 
@@ -47,10 +47,6 @@ public class VariableLink {
 
     public VariableType getVariableType() {
         return type;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getName() {

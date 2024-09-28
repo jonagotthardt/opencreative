@@ -34,7 +34,6 @@ public enum Target {
     KILLER(Material.NETHERITE_SWORD),
     VICTIM(Material.SKELETON_SKULL);
 
-
     private final Material icon;
 
     Target(Material icon) {

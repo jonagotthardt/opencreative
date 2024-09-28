@@ -18,6 +18,7 @@
 
 package mcchickenstudio.creative.coding.placeholders;
 
+import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionsHandler;
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.MobDamagesPlayerEvent;
@@ -26,6 +27,7 @@ import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamag
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerKilledPlayerEvent;
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -44,7 +46,7 @@ public class Placeholders {
         return instance;
     }
 
-    public String parseAction(String text, ActionsHandler handler) {
+    public String parseAction(String text, ActionsHandler handler, Action action) {
         String result = parseEvent(text,handler);
         result = result.replace("%space%"," ");
         result = result.replace("%empty%","");
@@ -55,6 +57,9 @@ public class Placeholders {
         if (result.contains("%random")) {
             result = parseRandom(text,handler);
         }
+        if (result.contains("%target") || result.contains("%select")) {
+            result = parseTarget(text,action);
+        }
         if (result.contains("%player")) {
             result = parsePlayer(text,handler);
         }
@@ -62,6 +67,23 @@ public class Placeholders {
             result = parseEntity(text,handler);
         }
         return result;
+    }
+
+    private String parseTarget(String text, Action action) {
+        Entity entity = action.getEntity();
+        if (entity != null) {
+            text = text
+                    .replace("%selected%",entity.getName())
+                    .replace("%selected_uuid%",entity.getUniqueId().toString())
+                    .replace("%target%",entity.getName())
+                    .replace("%target_uuid%",entity.getUniqueId().toString());
+        }
+        if (text.contains("%targets") || text.contains("%selection")) {
+            List<String> names = action.getHandler().getSelectedTargets().stream().map(CommandSender::getName).toList();
+            text = text.replace("%targets%",String.join(", ",names));
+            text = text.replace("%selection%",String.join(", ",names));
+        }
+        return text;
     }
 
     private String parseRandom(String text, ActionsHandler handler) {

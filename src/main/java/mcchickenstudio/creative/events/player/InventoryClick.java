@@ -25,10 +25,7 @@ import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.menu.world.browsers.RecommendedWorldsMenu;
 import mcchickenstudio.creative.menu.world.browsers.OwnWorldsMenu;
 import mcchickenstudio.creative.menu.world.*;
-import mcchickenstudio.creative.menu.world.settings.WorldSettingsCategoryMenu;
-import mcchickenstudio.creative.menu.world.settings.WorldSettingsFlagsMenu;
-import mcchickenstudio.creative.menu.world.settings.WorldSettingsMenu;
-import mcchickenstudio.creative.menu.world.settings.WorldSettingsPlayersMenu;
+import mcchickenstudio.creative.menu.world.settings.*;
 import mcchickenstudio.creative.utils.PlayerUtils;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -76,104 +73,7 @@ public class InventoryClick implements Listener {
             ItemStack item = event.getCurrentItem();
             ItemMeta meta = item.getItemMeta();
 
-            if (event.getInventory().getHolder() instanceof WorldSettingsMenu) {
-                if (!(event.getClickedInventory().getHolder() instanceof WorldSettingsMenu)) return;
-                if (event.getSlot() == 40 || item.getType() == Material.AIR) {
-                    event.setCancelled(true);
-                    return;
-                }
-                if (item.getType() == Material.EMERALD) {
-                    try {
-                        Material material = event.getCursor().getType();
-                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                        if (material != Material.AIR) {
-                            plot.getInformation().setIconMaterial(material);
-                            player.sendMessage(getLocaleMessage("settings.world-icon.changed"));
-                            new BukkitRunnable() {
-                                @Override
-                                public void run() {
-                                    plot.getInformation().updateIcon();
-                                }
-                            }.runTaskAsynchronously(Main.getPlugin());
-                            WorldSettingsMenu.openInventory(player);
-                        } else {
-                            player.sendMessage(getLocaleMessage("settings.world-icon.error"));
-                            player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 2);
-                        }
-                    } catch (NullPointerException error) {
-                        sendPlayerErrorMessage(player, "Невозможно установить значок мира. " + error.getMessage());
-                    }
-                }
-                event.setCancelled(true);
-                if (item.getType() == Material.ENDER_PEARL) {
-                    player.closeInventory();
-                    if (event.getClick().isLeftClick()) {
-                        player.getWorld().setSpawnLocation(player.getLocation());
-                        player.sendTitle(getLocaleMessage("settings.world-spawn.title"), getLocaleMessage("settings.world-spawn.subtitle"));
-                    } else {
-                        player.teleport(player.getWorld().getSpawnLocation());
-                    }
-                } else if (item.getType() == Material.NAME_TAG) {
-                    player.sendTitle(getLocaleMessage("settings.world-name.title"), getLocaleMessage("settings.world-name.subtitle"));
-                    player.sendMessage(getLocaleMessage("settings.world-name.usage").replace("%player%", player.getName()));
-                    player.closeInventory();
-                    if (!(PlayerChat.confirmation.containsKey(player))) {
-                        PlayerChat.confirmation.put(player, "title");
-                    }
-                } else if (item.getType() == Material.LEAD) {
-                    player.sendTitle(getLocaleMessage("settings.world-id.title"), getLocaleMessage("settings.world-id.subtitle"));
-                    player.sendMessage(getLocaleMessage("settings.world-id.usage").replace("%player%", player.getName()));
-                    player.closeInventory();
-                    if (!(PlayerChat.confirmation.containsKey(player))) {
-                        PlayerChat.confirmation.put(player, "id");
-                    }
-                } else if (item.getType() == Material.BOOK) {
-                    player.sendTitle(getLocaleMessage("settings.world-description.title"), getLocaleMessage("settings.world-description.subtitle"));
-                    player.sendMessage(getLocaleMessage("settings.world-description.usage"));
-                    player.closeInventory();
-                    if (!(PlayerChat.confirmation.containsKey(player))) {
-                        PlayerChat.confirmation.put(player, "description");
-                    }
-                } else if (item.getType() == Material.BOOKSHELF) {
-                    new WorldSettingsCategoryMenu().open(player);
-                } else if (item.getType() == Material.PLAYER_HEAD) {
-                    WorldSettingsPlayersMenu.openInventory(player);
-                } else if (item.getType() == Material.OAK_DOOR || item.getType() == Material.IRON_DOOR) {
-                    Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                    if (plot.getPlotSharing() == Plot.Sharing.PUBLIC) {
-                        plot.setPlotSharing(Plot.Sharing.PRIVATE);
-                        player.sendMessage(getLocaleMessage("settings.world-sharing.disabled"));
-                        player.playSound(player.getLocation(), Sound.BLOCK_IRON_DOOR_CLOSE, 100, 1);
-                    } else {
-                        plot.setPlotSharing(Plot.Sharing.PUBLIC);
-                        player.sendMessage(getLocaleMessage("settings.world-sharing.enabled"));
-                        player.playSound(player.getLocation(), Sound.BLOCK_IRON_DOOR_OPEN, 100, 1);
-                    }
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            plot.getInformation().updateIcon();
-                        }
-                    }.runTaskAsynchronously(Main.getPlugin());
-                    WorldSettingsMenu.openInventory(player);
-                } else if (item.getType() == Material.PISTON) {
-                    new WorldSettingsFlagsMenu().open(player);
-                } else if (item.getType() == Material.BRICKS) {
-                    player.performCommand("build");
-                } else if (item.getType() == Material.DIAMOND_BLOCK) {
-                    player.performCommand("play");
-                } else if (item.getType() == Material.COMMAND_BLOCK) {
-                    player.performCommand("dev");
-                } else if (item.getType() == Material.BEACON) {
-                    player.performCommand("ad");
-                    player.closeInventory();
-                } else if (item.getType() == Material.CLOCK) {
-                    RadioButton rd = RadioButton.getRadioButtonByItemStack(item);
-                    rd.onChoice();
-                    player.playSound(player.getLocation(), Sound.AMBIENT_UNDERWATER_EXIT, 100, 1);
-                    WorldSettingsMenu.openInventory(player);
-                }
-            } else if (event.getInventory().getHolder() instanceof OwnWorldsMenu) {
+            if (event.getInventory().getHolder() instanceof OwnWorldsMenu) {
                 event.setCancelled(true);
                 if (item.getType() == Material.AIR) return;
                 if (!(event.getClickedInventory().getHolder() instanceof OwnWorldsMenu)) return;
@@ -225,79 +125,6 @@ public class InventoryClick implements Listener {
                 } catch (Exception error) {
                     sendPlayerErrorMessage(player, "An error has occurred while clicking item in inventory",error);
                 }
-            /*} else if (event.getInventory().getHolder() instanceof AllWorldsMenu) {
-                event.setCancelled(true);
-                if (item.getType() == Material.AIR) return;
-                if (!(event.getClickedInventory().getHolder() instanceof AllWorldsMenu)) return;
-                try {
-                    boolean worldClicked = false;
-                    if (!plotManager.getPlots().isEmpty()) {
-                        for (int slot : AllWorldsMenu.worldSlots) {
-                            if (event.getSlot() == slot) {
-                                worldClicked = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (worldClicked) {
-                        List<String> lore = meta.getLore();
-                        for (String loreLine : lore) {
-                            if (loreLine.startsWith(getLocaleMessage("menus.all-worlds.items.world.id"))) {
-                                String worldID = loreLine.replace(getLocaleMessage("menus.all-worlds.items.world.id"), "");
-                                player.closeInventory();
-                                if (plotManager.getPlotByCustomID(worldID) != null) {
-                                    plotManager.getPlotByCustomID(worldID).teleportPlayer(player);
-                                } else {
-                                    player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY, 100, 2);
-                                    player.clearTitle();
-                                    player.sendMessage(getLocaleMessage("no-plot-found", player));
-                                }
-                            }
-                        }
-                    } else {
-                        if (item.getType() == Material.COMMAND_BLOCK) {
-                            OwnWorldsMenu.openInventory(player, 1);
-                        } else if (item.getType() == Material.SPECTRAL_ARROW) {
-                            player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 100, 1);
-                            AllWorldsMenu.openInventory(player, AllWorldsMenu.openedPage.get(player) + 1);
-                        } else if (item.getType() == Material.ARROW) {
-                            player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 100, 1);
-                            AllWorldsMenu.openInventory(player, AllWorldsMenu.openedPage.get(player) - 1);
-                        } else if (item.getType() == Material.BEACON) {
-                            if (event.getClick() == ClickType.LEFT) {
-                                player.sendTitle(getLocaleMessage("menus.all-worlds.items.search.title").replace("%search%", getLocaleMessage("menus.all-worlds.items.search.world-name")), getLocaleMessage("menus.all-worlds.items.search.subtitle").replace("%search%", getLocaleMessage("menus.all-worlds.items.search.world-name")));
-                                player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.usage", player).replace("%search%", getLocaleMessage("menus.all-worlds.items.search.world-name")));
-                                player.closeInventory();
-                                if (!(PlayerChat.confirmation.containsKey(player))) {
-                                    PlayerChat.confirmation.put(player, "searchPlotByPlotName");
-                                }
-                            } else {
-                                player.sendTitle(getLocaleMessage("menus.all-worlds.items.search.title").replace("%search%", getLocaleMessage("menus.all-worlds.items.search.id")), getLocaleMessage("menus.all-worlds.items.search.subtitle").replace("%search%", getLocaleMessage("menus.all-worlds.items.search.id")));
-                                player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.usage", player).replace("%search%", getLocaleMessage("menus.all-worlds.items.search.id")));
-                                player.closeInventory();
-                                if (!(PlayerChat.confirmation.containsKey(player))) {
-                                    PlayerChat.confirmation.put(player, "searchPlotByID");
-                                }
-                            }
-                        } else if (item.getType() == Material.CHEST_MINECART) {
-                            int nextCategory = AllWorldsMenu.chosenCategories.get(player) + 1;
-                            if (nextCategory < 1 || nextCategory > 9) nextCategory = 1;
-                            player.playSound(player.getLocation(), Sound.BLOCK_BARREL_OPEN, 100, 1.3f);
-                            AllWorldsMenu.chosenCategories.put(player, nextCategory);
-                            if (nextCategory == 1) AllWorldsMenu.openInventory(player, 1);
-                            else AllWorldsMenu.openInventory(player, 1, plotManager.getPlotsByCategory(AllWorldsMenu.getPlayerCategory(player)));
-                        } else if (item.getType() == Material.HOPPER) {
-                            int nextSort = AllWorldsMenu.chosenSorts.get(player) + 1;
-                            if (nextSort < 1 || nextSort > 3) nextSort = 1;
-                            player.playSound(player.getLocation(), Sound.ITEM_SPYGLASS_USE, 100, 2);
-                            AllWorldsMenu.chosenSorts.put(player, nextSort);
-                            AllWorldsMenu.openInventory(player, AllWorldsMenu.getCurrentPage(player), AllWorldsMenu.getCurrentPlotList(player));
-
-                        }
-                    }
-                } catch (Exception error) {
-                    sendPlayerErrorMessage(player, "An error has occurred while clicking item in inventory", error);
-                }*/
         } else if (event.getInventory().getHolder() instanceof WorldSettingsPlayersMenu) {
             event.setCancelled(true);
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
@@ -392,7 +219,7 @@ public class InventoryClick implements Listener {
     @EventHandler
     public void onDrag(InventoryDragEvent event) {
         InventoryHolder inventoryHolder = event.getInventory().getHolder();
-        if (inventoryHolder instanceof OwnWorldsMenu || inventoryHolder instanceof WorldSettingsMenu) {
+        if (inventoryHolder instanceof OwnWorldsMenu) {
             event.setCancelled(true);
         }
     }

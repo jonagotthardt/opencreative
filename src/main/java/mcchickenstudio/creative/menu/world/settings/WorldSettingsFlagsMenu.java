@@ -263,7 +263,7 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
 
         Plot plot = PlotManager.getInstance().getPlotByPlayer((Player) event.getWhoClicked());
         if (event.getCurrentItem().getType() == Material.SPECTRAL_ARROW) {
-            WorldSettingsMenu.openInventory((Player) event.getWhoClicked());
+            new WorldSettingsMenu(plot,(Player) event.getWhoClicked()).open((Player) event.getWhoClicked());
         } else if (event.getCurrentItem().getType() != Material.AIR) {
             if (plot == null) return;
             RadioButton rd = RadioButton.getRadioButtonByItemStack(event.getCurrentItem());
@@ -276,7 +276,5 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {
-
-    }
+    public void onOpen(InventoryOpenEvent event) {}
 }

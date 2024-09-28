@@ -1,0 +1,129 @@
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package mcchickenstudio.creative.coding.menus.blocks;
+
+import mcchickenstudio.creative.coding.blocks.actions.Target;
+import mcchickenstudio.creative.coding.menus.layouts.Layout;
+import mcchickenstudio.creative.menu.AbstractMenu;
+import mcchickenstudio.creative.plots.DevPlot;
+import mcchickenstudio.creative.plots.PlotManager;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.inventory.ItemStack;
+
+import static mcchickenstudio.creative.utils.BlockUtils.setSignLine;
+import static mcchickenstudio.creative.utils.ItemUtils.createItem;
+import static mcchickenstudio.creative.utils.ItemUtils.itemEquals;
+import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
+import static mcchickenstudio.creative.utils.PlayerUtils.translateSign;
+
+public class SelectionActionsMenu extends AbstractMenu {
+
+    private Player player;
+    private Location signLocation;
+
+    private final ItemStack varCondition = createItem(Material.OBSIDIAN,1,"items.developer.condition-var");
+    private final ItemStack playerCondition = createItem(Material.OAK_PLANKS,1,"items.developer.condition-player");
+    private final ItemStack allPlayers = createItem(Target.ALL_PLAYERS.getIcon(),1,"menus.developer.selection.items.all-players");
+    private final ItemStack randomPlayer = createItem(Target.RANDOM_PLAYER.getIcon(),1,"menus.developer.selection.items.random-player");
+    private final ItemStack victim = createItem(Target.VICTIM.getIcon(),1,"menus.developer.selection.items.victim");
+    private final ItemStack killer = createItem(Target.KILLER.getIcon(),1,"menus.developer.selection.items.killer");
+
+
+    public SelectionActionsMenu(Player player, Location location) {
+        super((byte) 3, getLocaleMessage("blocks.selection_action",false));
+        this.player = player;
+        this.signLocation = location;
+    }
+
+    @Override
+    public void fillItems(Player player) {
+        setItem((byte) 10,playerCondition);
+        setItem((byte) 11,varCondition);
+        setItem((byte) 13,allPlayers);
+        setItem((byte) 14,randomPlayer);
+        setItem((byte) 15,killer);
+        setItem((byte) 16,victim);
+
+    }
+
+    @Override
+    public void onClick(InventoryClickEvent event) {
+        if (!isClickedInMenuSlots(event) || !isPlayerClicked(event)) {
+            return;
+        }
+        event.setCancelled(true);
+        ItemStack currentItem = event.getCurrentItem();
+        if (currentItem == null) return;
+        if (itemEquals(currentItem, playerCondition)) {
+            new PlayerConditionsMenu(player,signLocation).open(player);
+        } else if (itemEquals(currentItem, varCondition)) {
+            new VariableConditionsMenu(player,signLocation).open(player);
+        } else if (itemEquals(currentItem, allPlayers)) {
+            setLine("all_players");
+            player.playSound(player.getLocation(), Sound.BLOCK_END_PORTAL_FRAME_FILL,100,0.2f);
+            player.closeInventory();
+        } else if (itemEquals(currentItem, randomPlayer)) {
+            setLine("random_player");
+            player.playSound(player.getLocation(), Sound.BLOCK_END_PORTAL_FRAME_FILL,100,0.2f);
+            player.closeInventory();
+        } else if (itemEquals(currentItem, killer)) {
+            setLine("killer");
+            player.playSound(player.getLocation(), Sound.BLOCK_END_PORTAL_FRAME_FILL,100,0.2f);
+            player.closeInventory();
+        } else if (itemEquals(currentItem, victim)) {
+            setLine("victim");
+            player.playSound(player.getLocation(), Sound.BLOCK_END_PORTAL_FRAME_FILL,100,0.2f);
+            player.closeInventory();
+        }
+    }
+
+    private void setLine(String text) {
+        setSignLine(signLocation, (byte) 1,"");
+        setSignLine(signLocation, (byte) 2,text);
+        setSignLine(signLocation, (byte) 3,"");
+        translateBlockSign(signLocation.getBlock());
+        Block containerBlock = signLocation.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.NORTH);
+        DevPlot devPlot = PlotManager.getInstance().getDevPlot(signLocation.getWorld());
+        if (devPlot == null) {
+            containerBlock.setType(Material.AIR);
+            return;
+        }
+        Layout layout = devPlot.getOpenedMenu(containerBlock.getLocation());
+        if (layout != null) {
+            for (Player viewer : layout.getViewers()) {
+                viewer.closeInventory();
+            }
+            devPlot.unregisterOpenedMenu(containerBlock.getLocation());
+        }
+        containerBlock.setType(Material.AIR);
+    }
+
+    @Override
+    public void onOpen(InventoryOpenEvent event) {
+
+    }
+}

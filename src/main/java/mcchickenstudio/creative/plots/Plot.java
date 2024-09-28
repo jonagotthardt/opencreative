@@ -405,10 +405,6 @@ public class Plot {
         }
     }
 
-    public Sharing getWorldSharing() {
-        return getPlotSharing();
-    }
-
     public Mode getPlotMode() {
         return plotMode;
     }
@@ -555,7 +551,16 @@ public class Plot {
             border.setSize(devPlot.world.getWorldBorder().getSize()*5);
             developer.setWorldBorder(border);
         }
-        devPlot.translateCodingBlocks(player);
+        BukkitRunnable translation = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (devPlot.world == null) return;
+                devPlot.translateCodingBlocks(player);
+                removeBukkitRunnable(this);
+            }
+        };
+        addBukkitRunnable(translation);
+        translation.runTaskLater(Main.getPlugin(),5L);
     }
 
     public void connectToDevPlot(Player player, double x, double y, double z) {

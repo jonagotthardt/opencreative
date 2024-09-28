@@ -20,10 +20,13 @@ package mcchickenstudio.creative.coding.blocks.actions;
 
 import mcchickenstudio.creative.coding.blocks.actions.controlactions.events.CancelEventAction;
 import mcchickenstudio.creative.coding.blocks.actions.controlactions.lines.*;
+import mcchickenstudio.creative.coding.blocks.actions.entityactions.other.SetArmorStandPoseAction;
 import mcchickenstudio.creative.coding.blocks.actions.handleractions.other.CatchErrorAction;
 import mcchickenstudio.creative.coding.blocks.actions.handleractions.other.MeasureTimeAction;
 import mcchickenstudio.creative.coding.blocks.actions.other.LaunchFunctionAction;
-import mcchickenstudio.creative.coding.blocks.actions.other.SelectTargetAction;
+import mcchickenstudio.creative.coding.blocks.actions.selectionactions.SelectionAddTargetAction;
+import mcchickenstudio.creative.coding.blocks.actions.selectionactions.SelectionRemoveTargetAction;
+import mcchickenstudio.creative.coding.blocks.actions.selectionactions.SelectionSetTargetAction;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.appearance.*;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.communication.*;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.inventory.*;
@@ -75,6 +78,8 @@ import mcchickenstudio.creative.coding.blocks.conditions.variableconditions.text
 import mcchickenstudio.creative.coding.blocks.conditions.variableconditions.text.TextEndsWithCondition;
 import mcchickenstudio.creative.coding.blocks.conditions.variableconditions.text.TextEqualsCondition;
 import mcchickenstudio.creative.coding.blocks.conditions.variableconditions.text.TextStartsWithCondition;
+import mcchickenstudio.creative.coding.blocks.conditions.worldconditions.blocks.*;
+import mcchickenstudio.creative.coding.blocks.conditions.worldconditions.world.*;
 import mcchickenstudio.creative.coding.menus.MenusCategory;
 import mcchickenstudio.creative.coding.menus.layouts.ArgumentSlot;
 import mcchickenstudio.creative.coding.menus.layouts.ParameterSlot;
@@ -276,8 +281,31 @@ public enum ActionType {
     VAR_SET_RANDOM_VALUE( ActionCategory.VARIABLE_ACTION, MenusCategory.OTHER, SetVariableRandomValueAction.class, Material.PUMPKIN_SEEDS, new ArgumentSlot("values", ValueType.ANY, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
     VAR_DELETE_VARIABLE( ActionCategory.VARIABLE_ACTION, MenusCategory.OTHER, DeleteVariableAction.class, Material.BARRIER, new ArgumentSlot("variables", ValueType.VARIABLE, (byte) 18)),
 
+
+    VAR_SUM_ASSIGN_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, SumAssignNumberAction.class, Material.BRICK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("number", ValueType.NUMBER)),
+    VAR_SUBTRACT_ASSIGN_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, SubtractAssignNumberAction.class, Material.BRICK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("number", ValueType.NUMBER)),
+    VAR_MULTIPLY_ASSIGN_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, MultiplyAssignNumberAction.class, Material.BRICK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("number", ValueType.NUMBER)),
+    VAR_DIVIDE_ASSIGN_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, DivideAssignNumberAction.class, Material.BRICK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("number", ValueType.NUMBER)),
+    VAR_MODULAR_DIVIDE_NUMBERS( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, ModularDivideNumbersAction.class, Material.BRICK, new ArgumentSlot("numbers", ValueType.NUMBER, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
+    VAR_MODULAR_DIVIDE_ASSIGN_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, ModularDivideAssignNumberAction.class, Material.BRICK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("number", ValueType.NUMBER)),
+    VAR_SQUARE_ROOT_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, SquareRootNumberAction.class, Material.BRICK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("number", ValueType.NUMBER)),
+    VAR_POWER_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, PowerNumberAction.class, Material.BRICK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("number", ValueType.NUMBER), new ArgumentSlot("power", ValueType.NUMBER)),
+    VAR_MIN_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, MinNumberAction.class, Material.BRICK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("first", ValueType.NUMBER), new ArgumentSlot("second", ValueType.NUMBER)),
+    VAR_MAX_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, MaxNumberAction.class, Material.BRICK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("first", ValueType.NUMBER), new ArgumentSlot("second", ValueType.NUMBER)),
+    VAR_NEGATE_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, NegateNumberAction.class, Material.BRICK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("number", ValueType.NUMBER)),
+    VAR_TO_RADIANS( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, NumberToRadiansAction.class, Material.BRICK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("number", ValueType.NUMBER)),
+    VAR_TO_DEGREES( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, NumberToDegreesAction.class, Material.BRICK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("number", ValueType.NUMBER)),
+    VAR_SINE_OF_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, SineOfNumberAction.class, Material.BRICK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("number", ValueType.NUMBER)),
+    VAR_COSINE_OF_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, CosineOfNumberAction.class, Material.BRICK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("number", ValueType.NUMBER)),
+    VAR_ARCSINE_OF_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, ArcSineOfNumberAction.class, Material.BRICK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("number", ValueType.NUMBER)),
+    VAR_ARCCOSINE_OF_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, ArcCosineOfNumberAction.class, Material.BRICK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("number", ValueType.NUMBER)),
+    VAR_ARCTANGENT_OF_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, ArcTangentOfNumberAction.class, Material.BRICK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("number", ValueType.NUMBER)),
+    VAR_TANGENT_OF_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, TangentOfNumberAction.class, Material.BRICK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("number", ValueType.NUMBER)),
+    VAR_LOGARITHM_OF_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, LogarithmOfNumberAction.class, Material.BRICK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("number", ValueType.NUMBER)),
+
     VAR_SUM_NUMBERS( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, SumNumbersAction.class, Material.BRICK, new ArgumentSlot("numbers", ValueType.NUMBER, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
     VAR_SUBTRACT_NUMBERS( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, SubtractNumbersAction.class, Material.NETHER_BRICK, new ArgumentSlot("numbers", ValueType.NUMBER, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
+
     VAR_MULTIPLY_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, MultiplyNumberAction.class, Material.COPPER_INGOT,new ArgumentSlot("numbers", ValueType.NUMBER, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
     VAR_DIVIDE_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, DivideNumberAction.class, Material.NETHERITE_INGOT, new ArgumentSlot("numbers", ValueType.NUMBER, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
     VAR_SET_RANDOM_NUMBER( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, RandomNumberAction.class, Material.ENDER_EYE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("min", ValueType.NUMBER), new ArgumentSlot("max", ValueType.NUMBER)),
@@ -341,6 +369,31 @@ public enum ActionType {
     VAR_GET_ITEM_LORE_LINE( ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, GetItemLoreLineAction.class, Material.WRITABLE_BOOK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM), new ArgumentSlot("index", ValueType.NUMBER)),
     //VAR_GET_ITEM_PAGES( ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, null, Material.CRAFTING_TABLE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM)),
 
+    /**
+     * <h1>Selection Actions.</h1>
+     */
+
+    SELECTION_SET(ActionCategory.SELECTION_ACTION, MenusCategory.WORLD, SelectionSetTargetAction.class, Material.BARRIER),
+    SELECTION_ADD(ActionCategory.SELECTION_ACTION, MenusCategory.WORLD, SelectionAddTargetAction.class, Material.BARRIER),
+    SELECTION_REMOVE(ActionCategory.SELECTION_ACTION, MenusCategory.WORLD, SelectionRemoveTargetAction.class, Material.BARRIER),
+
+    /**
+     * <h1>Entity Action.</h1>
+     */
+
+    ENTITY_SET_ARMOR_STAND_POSE(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, SetArmorStandPoseAction.class, Material.ARMOR_STAND, new ArgumentSlot("x",ValueType.NUMBER), new ArgumentSlot("y",ValueType.NUMBER), new ArgumentSlot("z",ValueType.NUMBER)),
+
+    /**
+     * <h1>Other Actions.</h1>
+     */
+
+    HANDLER_CATCH_ERROR(ActionCategory.HANDLER_ACTION, MenusCategory.OTHER, CatchErrorAction.class, Material.RED_DYE, new ArgumentSlot("variable", ValueType.VARIABLE)),
+    HANDLER_MEASURE_TIME(ActionCategory.HANDLER_ACTION, MenusCategory.OTHER, MeasureTimeAction.class, Material.CLOCK, new ArgumentSlot("variable", ValueType.VARIABLE)),
+
+    REPEAT_ALWAYS(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatAlwaysAction.class, Material.BEACON),
+    REPEAT_FOR_LOOP(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatForLoopAction.class, Material.SLIME_BALL, new ArgumentSlot("variable", ValueType.VARIABLE), new ParameterSlot("type", Arrays.asList("less","less-equals","greater","greater-equals"), Material.BRICK, Material.BRICKS, Material.NETHER_BRICK, Material.NETHER_BRICKS), new ArgumentSlot("range", ValueType.NUMBER), new ArgumentSlot("add", ValueType.NUMBER)),
+
+    LAUNCH_FUNCTION(ActionCategory.LAUNCH_FUNCTION_ACTION, MenusCategory.OTHER, LaunchFunctionAction.class, Material.LAPIS_ORE),
 
     /**
      * <h1>Variable Conditions.</h1>
@@ -363,32 +416,38 @@ public enum ActionType {
     IF_VAR_LIST_CONTAINS(ActionCategory.VARIABLE_CONDITION, MenusCategory.LIST_OPERATIONS, ListContainsCondition.class, Material.CHEST_MINECART, new ArgumentSlot("elements", ValueType.ANY, (byte) 18), new ArgumentSlot("list", ValueType.VARIABLE), new ParameterSlot("all")),
 
     /**
-     * <h1>Selection Actions.</h1>
+     * <h1>World Conditions.</h1>
      */
 
-    SELECTION_TARGET(ActionCategory.SELECTION_ACTION, MenusCategory.WORLD, SelectTargetAction.class, Material.BARRIER),
+    IF_WORLD_IS_IN_DEBUG_MODE(ActionCategory.WORLD_CONDITION, MenusCategory.WORLD, IsWorldDebugModeCondition.class, Material.PUFFERFISH_BUCKET),
+    IF_WORLD_IS_PUBLIC(ActionCategory.WORLD_CONDITION, MenusCategory.WORLD, IsWorldPublicCondition.class, Material.PLAYER_HEAD),
+    IF_WORLD_IS_THUNDERING(ActionCategory.WORLD_CONDITION, MenusCategory.WORLD, IsWorldThunderingCondition.class, Material.TRIDENT),
+    IF_WORLD_IS_DAY_TIME(ActionCategory.WORLD_CONDITION, MenusCategory.WORLD, IsWorldDayTimeCondition.class, Material.SUNFLOWER),
+    IF_WORLD_IS_BED_WORKS(ActionCategory.WORLD_CONDITION, MenusCategory.WORLD, IsWorldBedWorksCondition.class, Material.GREEN_BED),
+    IF_WORLD_IS_CLEAR_WEATHER(ActionCategory.WORLD_CONDITION, MenusCategory.WORLD, IsWorldClearWeatherCondition.class, Material.BLUE_WOOL),
+    IF_WORLD_BLOCK_TYPE_EQUALS(ActionCategory.WORLD_CONDITION, MenusCategory.BLOCKS, WorldBlockTypeEqualsCondition.class, Material.GRASS_BLOCK, new ArgumentSlot("blocks", ValueType.LOCATION, (byte) 18), new ArgumentSlot("type", ValueType.ITEM), new ParameterSlot("all")),
+    IF_WORLD_BLOCK_IS_EMPTY(ActionCategory.WORLD_CONDITION, MenusCategory.BLOCKS, IsWorldBlockEmptyCondition.class, Material.GLASS, new ArgumentSlot("blocks", ValueType.LOCATION, (byte) 18), new ParameterSlot("all")),
+    IF_WORLD_BLOCK_IS_POWERED(ActionCategory.WORLD_CONDITION, MenusCategory.BLOCKS, IsWorldBlockPoweredCondition.class, Material.REDSTONE_BLOCK, new ArgumentSlot("blocks", ValueType.LOCATION, (byte) 18), new ParameterSlot("all")),
+    IF_WORLD_BLOCK_IS_SOLID(ActionCategory.WORLD_CONDITION, MenusCategory.BLOCKS, IsWorldBlockSolidCondition.class, Material.BRICKS, new ArgumentSlot("blocks", ValueType.LOCATION, (byte) 18), new ParameterSlot("all")),
+    IF_WORLD_BLOCK_IS_BURNABLE(ActionCategory.WORLD_CONDITION, MenusCategory.BLOCKS, IsWorldBlockBurnableCondition.class, Material.CAMPFIRE, new ArgumentSlot("blocks", ValueType.LOCATION, (byte) 18), new ParameterSlot("all")),
+    IF_WORLD_BLOCK_IS_LIQUID(ActionCategory.WORLD_CONDITION, MenusCategory.BLOCKS, IsWorldBlockLiquidCondition.class, Material.WATER_BUCKET, new ArgumentSlot("blocks", ValueType.LOCATION, (byte) 18), new ParameterSlot("all")),
+    IF_WORLD_BLOCK_IS_PASSABLE(ActionCategory.WORLD_CONDITION, MenusCategory.BLOCKS, IsWorldBlockPassableCondition.class, Material.SHORT_GRASS, new ArgumentSlot("blocks", ValueType.LOCATION, (byte) 18), new ParameterSlot("all")),
+    IF_WORLD_BLOCK_IS_BUILDABLE(ActionCategory.WORLD_CONDITION, MenusCategory.BLOCKS, IsWorldBlockBuildableCondition.class, Material.RED_TULIP, new ArgumentSlot("blocks", ValueType.LOCATION, (byte) 18), new ParameterSlot("all")),
+    IF_WORLD_BLOCK_IS_REPLACEABLE(ActionCategory.WORLD_CONDITION, MenusCategory.BLOCKS, IsWorldBlockReplaceableCondition.class, Material.TALL_GRASS, new ArgumentSlot("blocks", ValueType.LOCATION, (byte) 18), new ParameterSlot("all")),
+    IF_WORLD_BLOCK_IS_COLLIDABLE(ActionCategory.WORLD_CONDITION, MenusCategory.BLOCKS, IsWorldBlockCollidableCondition.class, Material.RED_NETHER_BRICKS, new ArgumentSlot("blocks", ValueType.LOCATION, (byte) 18), new ParameterSlot("all")),
+    IF_WORLD_BLOCK_IS_PREFERRED_TOOL(ActionCategory.WORLD_CONDITION, MenusCategory.BLOCKS, WorldBlockIsPreferredToolCondition.class, Material.DIAMOND_PICKAXE, new ArgumentSlot("blocks", ValueType.LOCATION, (byte) 18), new ArgumentSlot("tool", ValueType.ITEM), new ParameterSlot("all")),
+    IF_WORLD_BLOCK_IS_VALID_TOOL(ActionCategory.WORLD_CONDITION, MenusCategory.BLOCKS, WorldBlockIsValidToolCondition.class, Material.STONE_PICKAXE, new ArgumentSlot("blocks", ValueType.LOCATION, (byte) 18), new ArgumentSlot("tool", ValueType.ITEM), new ParameterSlot("all")),
 
 
-    /**
-     * <h1>Other Actions.</h1>
-     */
+    ;
 
-    HANDLER_CATCH_ERROR(ActionCategory.HANDLER_ACTION, MenusCategory.OTHER, CatchErrorAction.class, Material.RED_DYE, new ArgumentSlot("variable", ValueType.VARIABLE)),
-    HANDLER_MEASURE_TIME(ActionCategory.HANDLER_ACTION, MenusCategory.OTHER, MeasureTimeAction.class, Material.CLOCK, new ArgumentSlot("variable", ValueType.VARIABLE)),
-
-    REPEAT_ALWAYS(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatAlwaysAction.class, Material.BEACON),
-    REPEAT_FOR_LOOP(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatForLoopAction.class, Material.SLIME_BALL, new ArgumentSlot("variable", ValueType.VARIABLE), new ParameterSlot("type", Arrays.asList("less","less-equals","greater","greater-equals"), Material.BRICK, Material.BRICKS, Material.NETHER_BRICK, Material.NETHER_BRICKS), new ArgumentSlot("range", ValueType.NUMBER), new ArgumentSlot("add", ValueType.NUMBER)),
-
-    LAUNCH_FUNCTION(ActionCategory.LAUNCH_FUNCTION_ACTION, MenusCategory.OTHER, LaunchFunctionAction.class, Material.LAPIS_ORE);
-
-
-    final Class<? extends Action> actionClass;
+    private final Class<? extends Action> actionClass;
     private final ActionCategory category;
     private final MenusCategory menusCategory;
     private final Material material;
     private final boolean selectionMustBeInWorld;
     private final String requiredPlugin;
-    ArgumentSlot[] layout;
+    private ArgumentSlot[] layout;
 
     ActionType(ActionCategory category, MenusCategory menusCategory, Class<? extends Action> actionClass, Material material) {
         this.actionClass = actionClass;
@@ -460,6 +519,22 @@ public enum ActionType {
         if (block.getType() == Material.LAPIS_ORE) {
             return LAUNCH_FUNCTION;
         }
+        Block signBlock = block.getRelative(BlockFace.SOUTH);
+        String signLine = getSignLine(signBlock.getLocation(), (byte) 3);
+        if (block.getType() == Material.PURPUR_BLOCK) {
+            signLine = getSignLine(signBlock.getLocation(), (byte) 4);
+        }
+        if (signLine != null) {
+            for (ActionType actionType : values()) {
+                if (actionType.name().equals(signLine.toUpperCase())) {
+                    return actionType;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static ActionType getTypeFromSelectionAction(Block block) {
         Block signBlock = block.getRelative(BlockFace.SOUTH);
         String signLine = getSignLine(signBlock.getLocation(), (byte) 3);
         if (signLine != null) {
