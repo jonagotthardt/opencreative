@@ -21,10 +21,15 @@ package mcchickenstudio.creative.utils.hooks;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.events.PacketListener;
+import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.*;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import mcchickenstudio.creative.Main;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -36,6 +41,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.*;
 
 import static com.comphenix.protocol.PacketType.Play.Server.*;
+import static com.comphenix.protocol.wrappers.EnumWrappers.PlayerInfoAction.UPDATE_GAME_MODE;
 
 public class ProtocolLibUtils {
 
@@ -106,5 +112,30 @@ public class ProtocolLibUtils {
         blockActionPacket.getIntegers().write(0,1);
         blockActionPacket.getIntegers().write(1,0);
         manager.sendServerPacket(player,blockActionPacket);
+    }
+
+    public static void sendSpectatorColoredNickname(Player spectator, Player receiver) {
+        PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.PLAYER_INFO);
+        packet.getPlayerInfoActions().write(0, EnumSet.of(UPDATE_GAME_MODE));
+        packet.getPlayerInfoDataLists().write(1, Collections.singletonList(new PlayerInfoData(
+                new WrappedGameProfile(spectator.getUniqueId(), spectator.getName()),
+                spectator.getPing(),
+                EnumWrappers.NativeGameMode.SPECTATOR,
+                WrappedChatComponent.fromText(spectator.getName())
+        )));
+        manager.sendServerPacket(receiver,packet);
+    }
+
+    public static void sendSpectatorUncoloredNickname(Player spectator, Player receiver) {
+        if (spectator.getGameMode() == GameMode.SPECTATOR) return;
+        PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.PLAYER_INFO);
+        packet.getPlayerInfoActions().write(0, EnumSet.of(UPDATE_GAME_MODE));
+        packet.getPlayerInfoDataLists().write(1, Collections.singletonList(new PlayerInfoData(
+                new WrappedGameProfile(spectator.getUniqueId(), spectator.getName()),
+                spectator.getPing(),
+                EnumWrappers.NativeGameMode.valueOf(spectator.getGameMode().name()),
+                WrappedChatComponent.fromText(spectator.getName())
+        )));
+        manager.sendServerPacket(receiver,packet);
     }
 }

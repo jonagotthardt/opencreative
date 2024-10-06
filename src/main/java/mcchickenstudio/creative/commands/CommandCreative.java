@@ -19,9 +19,6 @@
 package mcchickenstudio.creative.commands;
 
 import mcchickenstudio.creative.menu.CreativeMenu;
-import mcchickenstudio.creative.menu.world.WorldEnvironmentMenu;
-import mcchickenstudio.creative.menu.world.settings.WorldSettingsMenu;
-import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
 import net.kyori.adventure.text.Component;
@@ -47,6 +44,7 @@ import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
 import static mcchickenstudio.creative.utils.FileUtils.loadLocales;
 import static mcchickenstudio.creative.utils.MessageUtils.getElapsedTime;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.PlayerUtils.hidePlayerInTab;
 import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 
 public class CommandCreative implements CommandExecutor, TabCompleter {
@@ -369,9 +367,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     if (player != null) {
-                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                        if (plot == null) return true;
-                        new WorldEnvironmentMenu(player,plot.devPlot).open(player);
+                        hidePlayerInTab(player,player);
                     }
                 }
             }

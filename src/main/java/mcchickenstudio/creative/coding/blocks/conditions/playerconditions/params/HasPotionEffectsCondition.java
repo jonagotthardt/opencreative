@@ -1,0 +1,78 @@
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package mcchickenstudio.creative.coding.blocks.conditions.playerconditions.params;
+
+import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.Action;
+import mcchickenstudio.creative.coding.blocks.actions.ActionType;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
+import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.PlayerCondition;
+import mcchickenstudio.creative.coding.blocks.events.EventValues;
+import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingNotFoundTempVar;
+
+public class HasPotionEffectsCondition extends PlayerCondition {
+    public HasPotionEffectsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, boolean isOpposed) {
+        super(executor, target, x, args, actions, isOpposed);
+    }
+
+    @Override
+    public boolean checkPlayer(Player player) {
+        List<ItemStack> potionsItems = getArguments().getItemList("potions",this);
+        boolean requireAll = getArguments().getValue("all",false,this);
+        boolean hasEffect = false;
+        for (ItemStack potionItem : potionsItems) {
+            PotionMeta potionMeta = (PotionMeta) potionItem.getItemMeta();
+            List<PotionEffect> effects = new ArrayList<>();
+            if (potionMeta.getBasePotionType() != null) {
+                effects.addAll(potionMeta.getBasePotionType().getPotionEffects());
+            }
+            if (potionMeta.hasCustomEffects()) {
+                effects.addAll(potionMeta.getCustomEffects());
+            }
+            for (PotionEffect potionEffect : effects) {
+                if (player.hasPotionEffect(potionEffect.getType())) {
+                    if (!requireAll) {
+                        return true;
+                    }
+                    hasEffect = true;
+                } else {
+                    if (requireAll) {
+                        return false;
+                    }
+                    hasEffect = false;
+                }
+            }
+        }
+        return hasEffect;
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return ActionType.IF_PLAYER_HAS_POTION_EFFECTS;
+    }
+}

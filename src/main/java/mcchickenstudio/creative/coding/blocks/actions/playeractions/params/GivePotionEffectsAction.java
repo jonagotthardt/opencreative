@@ -18,5 +18,49 @@
 
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.params;
 
-public class GivePotionEffectsAction {
+import mcchickenstudio.creative.coding.arguments.Arguments;
+import mcchickenstudio.creative.coding.blocks.actions.ActionType;
+import mcchickenstudio.creative.coding.blocks.actions.Target;
+import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
+import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class GivePotionEffectsAction extends PlayerAction {
+    public GivePotionEffectsAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
+    }
+
+    @Override
+    public void executePlayer(Player player) {
+        List<ItemStack> potionsItems = getArguments().getItemList("potions",this);
+        boolean replace = getArguments().getValue("replace",true,this);
+        for (ItemStack potionItem : potionsItems) {
+            PotionMeta potionMeta = (PotionMeta) potionItem.getItemMeta();
+            List<PotionEffect> effects = new ArrayList<>();
+            if (potionMeta.getBasePotionType() != null) {
+                effects.addAll(potionMeta.getBasePotionType().getPotionEffects());
+            }
+            if (potionMeta.hasCustomEffects()) {
+                effects.addAll(potionMeta.getCustomEffects());
+            }
+
+            for (PotionEffect potionEffect : effects) {
+                if (!player.hasPotionEffect(potionEffect.getType()) || replace) {
+                    player.addPotionEffect(potionEffect);
+                }
+            }
+        }
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return ActionType.PLAYER_GIVE_POTION_EFFECTS;
+    }
 }

@@ -32,6 +32,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static mcchickenstudio.creative.utils.PlayerUtils.hidePlayerInTab;
 import static mcchickenstudio.creative.utils.PlayerUtils.loadPermissions;
 
 public class PlayerJoin implements Listener {
@@ -51,8 +52,8 @@ public class PlayerJoin implements Listener {
         PlayerUtils.teleportToLobby(event.getPlayer());
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (event.getPlayer().getWorld() != onlinePlayer.getWorld()) {
-                event.getPlayer().hidePlayer(onlinePlayer);
-                onlinePlayer.hidePlayer(event.getPlayer());
+                hidePlayerInTab(onlinePlayer,event.getPlayer());
+                hidePlayerInTab(event.getPlayer(),onlinePlayer);
             }
         }
         if (isBlocked(event.getPlayer().getName())) {

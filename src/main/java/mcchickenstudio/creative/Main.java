@@ -242,6 +242,7 @@ public final class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new BlockChanged(), this);
         getServer().getPluginManager().registerEvents(new Menus(), this);
         getServer().getPluginManager().registerEvents(new CEListener(), this);
+        getServer().getPluginManager().registerEvents(new GameModeChange(), this);
         this.getLogger().info("OpenCreative+ registered all event listeners.");
     }
 

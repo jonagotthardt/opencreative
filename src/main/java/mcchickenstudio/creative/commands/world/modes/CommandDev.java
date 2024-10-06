@@ -192,8 +192,14 @@ public class CommandDev implements CommandExecutor {
         ItemStack actionControl = createItem(Material.COAL_BLOCK,1,"items.developer.action-control");
         player.getInventory().setItem(11, actionControl);
 
+        ItemStack conditionEntity = createItem(Material.BRICKS,1,"items.developer.condition-entity");
+        player.getInventory().setItem(12, conditionEntity);
+
         ItemStack actionWorld = createItem(Material.NETHER_BRICKS,1,"items.developer.action-world");
         player.getInventory().setItem(20, actionWorld);
+
+        ItemStack actionEntity = createItem(Material.MOSSY_COBBLESTONE,1,"items.developer.action-entity");
+        player.getInventory().setItem(21, actionEntity);
 
         ItemStack eventEntityItem = createItem(Material.GOLD_BLOCK,1,"items.developer.event-entity");
         player.getInventory().setItem(27, eventEntityItem);

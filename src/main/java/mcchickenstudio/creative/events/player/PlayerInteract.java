@@ -38,6 +38,7 @@ import mcchickenstudio.creative.menu.AbstractMenu;
 import mcchickenstudio.creative.menu.world.browsers.RecommendedWorldsMenu;
 import mcchickenstudio.creative.menu.world.settings.WorldSettingsMenu;
 import mcchickenstudio.creative.plots.*;
+import mcchickenstudio.creative.utils.ItemUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -239,6 +240,7 @@ public class PlayerInteract implements Listener {
                     case PLAYER_CONDITION -> new PlayerConditionsMenu(player,clickedBlock.getLocation());
                     case VARIABLE_CONDITION -> new VariableConditionsMenu(player,clickedBlock.getLocation());
                     case WORLD_CONDITION -> new WorldConditionsMenu(player,clickedBlock.getLocation());
+                    case ENTITY_CONDITION -> new EntityConditionsMenu(player,clickedBlock.getLocation());
                     case VARIABLE_ACTION -> new VariableActionsMenu(player,clickedBlock.getLocation());
                     case WORLD_ACTION -> new WorldActionsMenu(player,clickedBlock.getLocation());
                     case HANDLER_ACTION -> new HandlerActionsMenu(player,clickedBlock.getLocation());
@@ -515,7 +517,7 @@ public class PlayerInteract implements Listener {
         }
         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
         if (isEntityInLobby(player)) {
-            if (currentItem.getType() == Material.COMPASS) {
+            if (getItemType(currentItem).equals("worlds")) {
                 // Opens recommended worlds menu.
                 if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
                     player.sendMessage(getLocaleMessage("maintenance"));
@@ -523,7 +525,7 @@ public class PlayerInteract implements Listener {
                 }
                 player.setCooldown(Material.COMPASS,60);
                 new RecommendedWorldsMenu().open(player);
-            } else if (currentItem.getType() == Material.NETHER_STAR) {
+            } else if (getItemType(currentItem).equals("own_worlds")) {
                 // Opens player's worlds menu.
                 if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
                     player.sendMessage(getLocaleMessage("maintenance"));

@@ -76,7 +76,7 @@ public enum ValueType {
     /**
      * Potion stores Minecraft potion, for example: BLINDNESS.
      */
-    POTION(Material.POTION, Material.PINK_STAINED_GLASS),
+    POTION(Material.POTION, Material.BLUE_STAINED_GLASS_PANE),
     /**
      * Text stores string value, for example: "Hello world". Text can be formatted with Minecraft color codes.
      */

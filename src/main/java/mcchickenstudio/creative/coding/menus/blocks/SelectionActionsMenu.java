@@ -38,7 +38,6 @@ import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 import static mcchickenstudio.creative.utils.ItemUtils.itemEquals;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
-import static mcchickenstudio.creative.utils.PlayerUtils.translateSign;
 
 public class SelectionActionsMenu extends AbstractMenu {
 
@@ -47,27 +46,37 @@ public class SelectionActionsMenu extends AbstractMenu {
 
     private final ItemStack varCondition = createItem(Material.OBSIDIAN,1,"items.developer.condition-var");
     private final ItemStack playerCondition = createItem(Material.OAK_PLANKS,1,"items.developer.condition-player");
+    private final ItemStack entityCondition = createItem(Material.BRICKS,1,"items.developer.condition-entity");
+
+    private final ItemStack defaultItem = createItem(Target.RANDOM_TARGET.getIcon(),1,"menus.developer.selection.items.default");
     private final ItemStack allPlayers = createItem(Target.ALL_PLAYERS.getIcon(),1,"menus.developer.selection.items.all-players");
+    private final ItemStack allEntities = createItem(Target.ALL_ENTITIES.getIcon(),1,"menus.developer.selection.items.all-entities");
+    private final ItemStack randomTarget = createItem(Target.RANDOM_TARGET.getIcon(),1,"menus.developer.selection.items.random-target");
     private final ItemStack randomPlayer = createItem(Target.RANDOM_PLAYER.getIcon(),1,"menus.developer.selection.items.random-player");
     private final ItemStack victim = createItem(Target.VICTIM.getIcon(),1,"menus.developer.selection.items.victim");
     private final ItemStack killer = createItem(Target.KILLER.getIcon(),1,"menus.developer.selection.items.killer");
 
 
     public SelectionActionsMenu(Player player, Location location) {
-        super((byte) 3, getLocaleMessage("blocks.selection_action",false));
+        super((byte) 5, getLocaleMessage("blocks.selection_action",false));
         this.player = player;
         this.signLocation = location;
     }
 
     @Override
     public void fillItems(Player player) {
-        setItem((byte) 10,playerCondition);
-        setItem((byte) 11,varCondition);
-        setItem((byte) 13,allPlayers);
-        setItem((byte) 14,randomPlayer);
-        setItem((byte) 15,killer);
-        setItem((byte) 16,victim);
+        setItem((byte) 10,defaultItem);
+        setItem((byte) 12,randomTarget);
+        setItem((byte) 13,randomPlayer);
+        setItem((byte) 16,playerCondition);
 
+        setItem((byte) 19,allPlayers);
+        setItem((byte) 25,entityCondition);
+
+        setItem((byte) 28,allEntities);
+        setItem((byte) 30,killer);
+        setItem((byte) 31,victim);
+        setItem((byte) 34,varCondition);
     }
 
     @Override
@@ -80,6 +89,8 @@ public class SelectionActionsMenu extends AbstractMenu {
         if (currentItem == null) return;
         if (itemEquals(currentItem, playerCondition)) {
             new PlayerConditionsMenu(player,signLocation).open(player);
+        } else if (itemEquals(currentItem, entityCondition)) {
+            new EntityConditionsMenu(player,signLocation).open(player);
         } else if (itemEquals(currentItem, varCondition)) {
             new VariableConditionsMenu(player,signLocation).open(player);
         } else if (itemEquals(currentItem, allPlayers)) {
@@ -96,6 +107,14 @@ public class SelectionActionsMenu extends AbstractMenu {
             player.closeInventory();
         } else if (itemEquals(currentItem, victim)) {
             setLine("victim");
+            player.playSound(player.getLocation(), Sound.BLOCK_END_PORTAL_FRAME_FILL,100,0.2f);
+            player.closeInventory();
+        } else if (itemEquals(currentItem, randomTarget)) {
+            setLine("random_target");
+            player.playSound(player.getLocation(), Sound.BLOCK_END_PORTAL_FRAME_FILL,100,0.2f);
+            player.closeInventory();
+        } else if (itemEquals(currentItem, allEntities)) {
+            setLine("all_entities");
             player.playSound(player.getLocation(), Sound.BLOCK_END_PORTAL_FRAME_FILL,100,0.2f);
             player.closeInventory();
         }

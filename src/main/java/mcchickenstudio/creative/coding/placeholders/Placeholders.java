@@ -89,12 +89,6 @@ public class Placeholders {
     private String parseRandom(String text, ActionsHandler handler) {
         Player randomPlayer = null;
         List<Player> playerList = handler.getExecutor().getPlot().world.getPlayers();
-        if (handler.getEvent().getSelection().getFirst() instanceof Player player) {
-            playerList.remove(player);
-            if (playerList.isEmpty()) {
-                randomPlayer = player;
-            }
-        }
         if (!playerList.isEmpty()) {
             Random r = new Random();
             int i = r.nextInt(playerList.size());

@@ -38,6 +38,7 @@ public class IsLikedWorldCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
+        //FIXME: Use liked players in plot.getWorldPlayers() instead of loading files
         List<String> likedPlayers = FileUtils.getPlayersFromPlotConfig(getPlot(), Plot.PlayersType.LIKED);
         for (String nickname : likedPlayers) {
             if (nickname.equalsIgnoreCase(player.getName())) {

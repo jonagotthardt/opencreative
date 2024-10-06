@@ -25,10 +25,28 @@ import java.util.List;
 
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugAction;
 
+/**
+ * <h1>MultiAction</h1>
+ * This class represents an action, that has actions
+ * inside to execute. All multi-actions have piston
+ * as additional block.
+ * @see mcchickenstudio.creative.coding.blocks.conditions.Condition
+ * @since 5.0
+ * @version 5.0
+ * @author McChicken Studio
+ */
 public abstract class MultiAction extends Action {
 
     private final List<Action> actions;
 
+    /**
+     * Creates MultiAction, that will execute actions inside.
+     * @param executor Executor, from which this action will be executed.
+     * @param target Target, that will execute action.
+     * @param x X Coordinate of coding block in developer's world.
+     * @param args Arguments for action.
+     * @param actions Actions, that will be executed with this action.
+     */
     public MultiAction(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
         super(executor, target, x, args);
         this.actions = actions;

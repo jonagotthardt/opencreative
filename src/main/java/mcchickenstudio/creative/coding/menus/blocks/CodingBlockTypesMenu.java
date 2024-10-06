@@ -20,6 +20,8 @@ package mcchickenstudio.creative.coding.menus.blocks;
 
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
+import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
+import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.menus.MenusCategory;
 import mcchickenstudio.creative.menu.AbstractListMenu;
 import mcchickenstudio.creative.plots.DevPlot;
@@ -99,6 +101,7 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
         ItemStack item = event.getCurrentItem();
         event.setCancelled(true);
         DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
+        Block codingBlock = signLocation.getBlock().getRelative(BlockFace.NORTH);
         if (signLocation.getWorld().getName().contains("dev") && devPlot != null) {
             String beginLocalizationPath = "items.developer." + codingBlockName + ".";
             String path = getPathFromMessage(beginLocalizationPath, item.getItemMeta().getDisplayName());
@@ -106,14 +109,21 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
                 return;
             }
             String typeString = path.replace(beginLocalizationPath,"").replace(".name","").replace("-","_");
-            ActionType type = null;
+            ExecutorType executorType = null;
+            ActionType actionType = null;
             try {
-                type = ActionType.valueOf(typeString.toUpperCase());
+                actionType = ActionType.valueOf(typeString.toUpperCase());
             } catch (Exception ignored) {}
-            Block codingBlock = signLocation.getBlock().getRelative(BlockFace.NORTH);
-            ActionCategory category = type == null ? null : type.getCategory();
-            if (category != null) {
-                setSignLine(signLocation,(byte) 2, category.name().toLowerCase());
+            try {
+                executorType = ExecutorType.valueOf(typeString.toUpperCase());
+            } catch (Exception ignored) {}
+            ActionCategory actionCategory = actionType == null ? null : actionType.getCategory();
+            ExecutorCategory executorCategory = executorType == null ? null : ExecutorCategory.getByMaterial(codingBlock.getType());
+            if (actionCategory != null) {
+                setSignLine(signLocation,(byte) 2, actionCategory.name().toLowerCase());
+            }
+            if (executorCategory != null) {
+                setSignLine(signLocation,(byte) 2, executorCategory.name().toLowerCase());
             }
             if (setSignLine(signLocation,(byte) 3,typeString)) {
                 translateBlockSign(signLocation.getBlock());
@@ -125,7 +135,7 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
              Setting a chest block if action requires container.
              Executors don't have arguments, neither chests...
             */
-            if (category != null)  {
+            if (actionCategory != null && executorCategory == null)  {
                 Block containerBlock = codingBlock.getRelative(BlockFace.UP);
                 if (containerBlock.getState() instanceof InventoryHolder container) {
                     for (ItemStack chestItem : container.getInventory().getContents()) {
@@ -137,7 +147,7 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
                     }
                     containerBlock.setType(Material.AIR);
                 }
-                if (type.isChestRequired()) {
+                if (actionType.isChestRequired()) {
                     containerBlock.setType(devPlot.getContainerMaterial());
                     BlockData blockData = containerBlock.getBlockData();
                     ((Directional) blockData).setFacing(BlockFace.SOUTH);

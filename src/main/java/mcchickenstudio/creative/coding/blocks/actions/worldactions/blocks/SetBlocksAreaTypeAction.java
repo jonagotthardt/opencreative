@@ -37,7 +37,7 @@ public class SetBlocksAreaTypeAction extends WorldAction {
 
     @Override
     protected void execute(Entity entity) {
-        if (!getArguments().pathExists("first") || !getArguments().pathExists("second") || !getArguments().pathExists("type")) {
+        if (!getArguments().pathExists("first") || !getArguments().pathExists("second")) {
             return;
         }
         Location firstLocation = getArguments().getValue("first",getWorld().getSpawnLocation(),this);

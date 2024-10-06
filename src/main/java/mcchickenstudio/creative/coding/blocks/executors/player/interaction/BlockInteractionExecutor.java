@@ -32,6 +32,7 @@ public class BlockInteractionExecutor extends PlayerExecutor implements Cancella
     protected void setTempVars(CreativeEvent event) {
         if (event instanceof BlockInteractionEvent blockEvent) {
             setTempVar(EventValues.Variable.BLOCK,blockEvent.getBlock());
+            setTempVar(EventValues.Variable.BLOCK_INTERACTION_TYPE,blockEvent.getInteractionType().name().toLowerCase());
             if (blockEvent.getBlock() == null) return;
             setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getBlock().getType().name().toLowerCase());
             setTempVar(EventValues.Variable.BLOCK_LOCATION, blockEvent.getBlock().getLocation());
