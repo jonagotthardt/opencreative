@@ -15,7 +15,7 @@ cache:
 build_job:
   stage: build
   tags:
-    - docker 
+    - gitlab-org-docker 
   script: 
     - echo "Compiling OpenCreative+, please wait..."
     - "mvn compile"
@@ -23,7 +23,7 @@ build_job:
 package_job:
   stage: package
   tags:
-    - docker 
+    - gitlab-org-docker 
   script: 
     - echo "Saving OpenCreative+ into file, please wait..."
     - "mvn package"
@@ -31,6 +31,6 @@ package_job:
 Deploy_job:
   stage: deploy
   tags:
-    - docker 
+    - gitlab-org-docker 
   script: 
     - echo "Deploying..."
