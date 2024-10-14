@@ -1,0 +1,45 @@
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package mcchickenstudio.creative.coding.blocks.executors.player.inventory;
+
+import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.EventValues;
+import mcchickenstudio.creative.coding.blocks.events.player.inventory.ItemBreakEvent;
+import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
+import mcchickenstudio.creative.coding.blocks.executors.player.PlayerExecutor;
+import mcchickenstudio.creative.plots.Plot;
+
+public class ItemBreakExecutor extends PlayerExecutor {
+
+    @Override
+    protected void setTempVars(CreativeEvent event) {
+        if (event instanceof ItemBreakEvent breakEvent) {
+            setTempVar(EventValues.Variable.ITEM,breakEvent.getItem());
+        }
+    }
+
+    public ItemBreakExecutor(Plot plot, int x, int y, int z) {
+        super(plot, x, y, z);
+    }
+
+    @Override
+    public ExecutorType getExecutorType() {
+        return ExecutorType.PLAYER_ITEM_BREAK;
+    }
+}
