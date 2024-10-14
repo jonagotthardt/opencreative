@@ -6,10 +6,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>mcchickenstudio</groupId>
-    <artifactId>creative</artifactId>
+    <artifactId>opencreative-pre-release-build</artifactId>
     <version>5.0</version>
     <packaging>jar</packaging>
-    <name>creative</name>
+    <name>opencreative</name>
     <description>Minecraft plugin, that allows players to create their worlds. McChicken Studio 2024</description>
     <developers>
         <!-- If you're developing OC+, you can write yourself here -->
