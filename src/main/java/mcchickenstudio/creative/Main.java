@@ -66,7 +66,7 @@ import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 public final class Main extends JavaPlugin {
 
     private static Main plugin;
-    public static final String version = "5.0 Technical Preview";
+    public static final String version = "5.0 Pre-release";
     public static final String codename = "Things will be different";
     public static boolean maintenance = false;
     public static boolean debug = false;
@@ -242,6 +242,7 @@ public final class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new BlockChanged(), this);
         getServer().getPluginManager().registerEvents(new Menus(), this);
         getServer().getPluginManager().registerEvents(new CEListener(), this);
+        getServer().getPluginManager().registerEvents(new GameModeChange(), this);
         this.getLogger().info("OpenCreative+ registered all event listeners.");
     }
 

@@ -111,8 +111,8 @@ public class CommandPlay implements CommandExecutor {
                     plot.world.getSpawnLocation().getChunk().load(true);
                     DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
                     player.teleport(plot.world.getSpawnLocation());
+                    clearPlayer(player);
                     if (plot.getWorldPlayers().canDevelop(player)) {
-                        clearPlayer(player);
                         player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
                         if (plot.isOwner(sender.getName())) {
                             player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));

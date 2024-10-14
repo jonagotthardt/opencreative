@@ -26,6 +26,7 @@ import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.variables.VariableLink;
 import org.bukkit.entity.Entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddToListAction extends VariableAction {
@@ -36,7 +37,7 @@ public class AddToListAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink variable = getArguments().getVariableLink("variable",this);
-        List<Object> list = getArguments().getList("variable",this);
+        List<Object> list = new ArrayList<>(getArguments().getList("variable",this));
         List<Object> elements = getArguments().getList("elements",this);
         list.addAll(elements);
         setVarValue(variable, list);

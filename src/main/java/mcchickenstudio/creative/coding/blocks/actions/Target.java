@@ -25,12 +25,23 @@ import org.bukkit.block.BlockFace;
 
 import static mcchickenstudio.creative.utils.BlockUtils.getSignLine;
 
+/**
+ * <h1>Target</h1>
+ * This enum represents targets, that can be specified
+ * for executing actions and conditions. Target is a
+ * list of entities in world.
+ * @since 5.0
+ * @version 5.0
+ * @author McChicken Studio
+ */
 public enum Target {
 
     DEFAULT(Material.LIGHT_BLUE_STAINED_GLASS),
     SELECTED(Material.PURPUR_BLOCK),
     ALL_PLAYERS(Material.BEACON),
-    RANDOM_PLAYER(Material.PUFFERFISH),
+    ALL_ENTITIES(Material.PUFFERFISH),
+    RANDOM_PLAYER(Material.PLAYER_HEAD),
+    RANDOM_TARGET(Material.PURPUR_STAIRS),
     KILLER(Material.NETHERITE_SWORD),
     VICTIM(Material.SKELETON_SKULL);
 

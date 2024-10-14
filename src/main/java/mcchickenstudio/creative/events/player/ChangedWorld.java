@@ -38,7 +38,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.*;
 
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
-import static mcchickenstudio.creative.utils.PlayerUtils.clearBuildPermissions;
+import static mcchickenstudio.creative.utils.PlayerUtils.*;
 import static mcchickenstudio.creative.utils.WorldUtils.isDevPlot;
 
 public class ChangedWorld implements Listener {
@@ -77,13 +77,13 @@ public class ChangedWorld implements Listener {
         Plot oldPlot = PlotManager.getInstance().getPlotByWorld(oldWorld);
         Plot newPlot = PlotManager.getInstance().getPlotByWorld(newWorld);
 
-        for (Player onlinePlayer : oldWorld.getPlayers()) {
-            onlinePlayer.hidePlayer(player);
-            player.hidePlayer(onlinePlayer);
+        for (Player oldWorldPlayer : oldWorld.getPlayers()) {
+            hidePlayerInTab(player,oldWorldPlayer);
+            hidePlayerInTab(oldWorldPlayer,player);
         }
-        for (Player onlinePlayer : newWorld.getPlayers()) {
-            onlinePlayer.showPlayer(player);
-            player.showPlayer(onlinePlayer);
+        for (Player newWorldPlayer : newWorld.getPlayers()) {
+            showPlayerFromTab(player,newWorldPlayer);
+            showPlayerFromTab(newWorldPlayer,player);
         }
 
         if (oldPlot != null && oldPlot == newPlot) {
@@ -102,7 +102,7 @@ public class ChangedWorld implements Listener {
                     removePlayerWithLocation(player);
                 }
                 for (Player onlinePlayer : newPlot.getPlayers()) {
-                    player.showPlayer(onlinePlayer);
+                    showPlayerFromTab(onlinePlayer,player);
                 }
             }
         } else {
@@ -116,6 +116,8 @@ public class ChangedWorld implements Listener {
                     if (oldPlot.getFlagValue(PlotFlags.PlotFlag.JOIN_MESSAGES) == 1) {
                         for (Player onlinePlayer : oldPlot.getPlayers()) {
                             onlinePlayer.sendMessage(getLocaleMessage("world.left", player));
+                            hidePlayerInTab(player,onlinePlayer);
+                            hidePlayerInTab(onlinePlayer,player);
                         }
                     }
                     if (oldPlot.isOwner(player)) {
@@ -136,6 +138,10 @@ public class ChangedWorld implements Listener {
                             }
                         }
                     }
+                    for (Player plotPlayer : oldPlot.getPlayers()) {
+                        hidePlayerInTab(player,plotPlayer);
+                        hidePlayerInTab(plotPlayer,player);
+                    }
                 } else {
                     if (oldPlot.isLoaded) {
                         PlotManager.getInstance().unloadPlot(oldPlot);
@@ -152,9 +158,11 @@ public class ChangedWorld implements Listener {
                 if (newPlot.getFlagValue(PlotFlags.PlotFlag.JOIN_MESSAGES) == 1) {
                     for (Player onlinePlayer : newPlot.getPlayers()) {
                         onlinePlayer.sendMessage(getLocaleMessage("world.joined", player));
-                        onlinePlayer.showPlayer(player);
-                        player.showPlayer(onlinePlayer);
                     }
+                }
+                for (Player onlinePlayer : newPlot.getPlayers()) {
+                    showPlayerFromTab(onlinePlayer,player);
+                    showPlayerFromTab(player,onlinePlayer);
                 }
                 new BukkitRunnable() {
                     @Override

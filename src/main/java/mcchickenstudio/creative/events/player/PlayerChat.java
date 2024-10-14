@@ -36,6 +36,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import mcchickenstudio.creative.utils.CooldownUtils;
 import mcchickenstudio.creative.plots.Plot;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -45,8 +47,8 @@ import static mcchickenstudio.creative.utils.ColorUtils.parseRGB;
 import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
 import static mcchickenstudio.creative.utils.ItemUtils.*;
-import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
-import static mcchickenstudio.creative.utils.MessageUtils.parsePAPI;
+import static mcchickenstudio.creative.utils.MessageUtils.*;
+import static mcchickenstudio.creative.utils.PlayerUtils.isEntityInDevPlot;
 
 public class PlayerChat implements Listener {
 
@@ -77,8 +79,11 @@ public class PlayerChat implements Listener {
                 DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
                 if (devPlot != null) {
                     for (Player onlinePlayer : plot.getPlayers()) {
+                        if (plot.isOwner(onlinePlayer)) {
+                            onlinePlayer.sendMessage(message);
+                        }
                         for (String developer : plot.getWorldPlayers().getAllDevelopers()) {
-                            if (plot.isOwner(onlinePlayer) || onlinePlayer.getName().equalsIgnoreCase(developer)) {
+                            if (onlinePlayer.getName().equalsIgnoreCase(developer) && !plot.isOwner(developer)) {
                                 onlinePlayer.sendMessage(message);
                                 break;
                             }
@@ -101,7 +106,7 @@ public class PlayerChat implements Listener {
     }
 
     private void checkDevItems(Player player, String message) {
-        if (player.getWorld().getName().contains("dev")) {
+        if (isEntityInDevPlot(player)) {
             ItemStack itemInHand = player.getInventory().getItemInMainHand();
             if (itemInHand.getType() == Material.BOOK) {
                 ItemMeta meta = itemInHand.getItemMeta();
@@ -117,7 +122,7 @@ public class PlayerChat implements Listener {
                     numberString = "3.1415926";
                 }
                 try {
-                    double number = Double.parseDouble(numberString);
+                    double number = parseTicks(numberString);
                     ItemMeta meta = itemInHand.getItemMeta();
                     meta.setDisplayName("§a" + number);
                     itemInHand.setItemMeta(meta);
@@ -160,6 +165,58 @@ public class PlayerChat implements Listener {
                 player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),meta.getDisplayName());
                 player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.4f);
                 player.getInventory().setItemInMainHand(itemInHand);
+            } else if (itemInHand.getType() == Material.POTION || itemInHand.getType() == Material.LINGERING_POTION || itemInHand.getType() == Material.SPLASH_POTION) {
+                if (!(itemInHand.getItemMeta() instanceof PotionMeta oldMeta)) {
+                    return;
+                }
+                List<PotionEffect> effects = new ArrayList<>();
+                if (oldMeta.hasCustomEffects()) {
+                    effects.addAll(oldMeta.getCustomEffects());
+                    oldMeta.clearCustomEffects();
+                }
+                if (oldMeta.getBasePotionType() != null) {
+                    effects.addAll(oldMeta.getBasePotionType().getPotionEffects());
+                }
+                if (effects.isEmpty()) {
+                    return;
+                }
+                message = ChatColor.stripColor(message);
+                int amplifier = 1;
+                int duration = 1200;
+                int effectNumber = 1;
+                String[] potionDataList = new String[3];
+                if (message.contains(", ")) {
+                    potionDataList = message.split(", ");
+                } else if (message.contains(" ")) {
+                    potionDataList = message.split(" ");
+                } else {
+                    potionDataList[0] = message;
+                }
+                if (potionDataList.length >= 1) {
+                    try {
+                        duration = ((Double) parseTicks(potionDataList[0])).intValue();
+                    } catch (NumberFormatException ignored) {}
+                }
+                if (potionDataList.length >= 2) {
+                    try {
+                        amplifier = Integer.parseInt(potionDataList[1]);
+                    } catch (NumberFormatException ignored) {}
+                }
+                if (potionDataList.length >= 3) {
+                    try {
+                        effectNumber = Integer.parseInt(potionDataList[2]);
+                    } catch (NumberFormatException ignored) {}
+                }
+                if (effectNumber < 1) effectNumber = 1;
+                PotionEffect effect = effects.get(effectNumber > effects.size() ? 0 : effectNumber-1);
+                PotionMeta newMeta = (PotionMeta) new ItemStack(Material.POTION,1).getItemMeta();
+                for (PotionEffect oldEffect : effects) {
+                    newMeta.addCustomEffect(oldEffect,true);
+                }
+                newMeta.addCustomEffect(new PotionEffect(effect.getType(),duration,amplifier-1),true);
+                player.sendTitle("",getLocaleMessage("world.dev-mode.set-potion").replace("%duration%", convertTime(duration * 50L)).replace("%amplifier%",""+amplifier));
+                player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.4f);
+                itemInHand.setItemMeta(newMeta);
             }
         }
     }

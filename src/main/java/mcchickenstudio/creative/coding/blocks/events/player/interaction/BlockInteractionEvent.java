@@ -21,17 +21,24 @@ package mcchickenstudio.creative.coding.blocks.events.player.interaction;
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class BlockInteractionEvent extends CreativeEvent {
 
     private final PlayerInteractEvent event;
+    private final Action action;
     private final Block block;
 
     public BlockInteractionEvent(Player player, PlayerInteractEvent event) {
         super(player);
         this.event = event;
         this.block = event.getClickedBlock();
+        this.action = event.getAction();
+    }
+
+    public Action getInteractionType() {
+        return action;
     }
 
     @Override

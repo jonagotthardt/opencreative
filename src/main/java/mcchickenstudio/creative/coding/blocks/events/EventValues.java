@@ -84,6 +84,12 @@ public class EventValues {
         NEW_ITEM                (Material.GLOW_ITEM_FRAME,               MenusCategory.EVENTS, ItemStack.class),
 
         //CLICKED_ITEM            (Material.GLOW_ITEM_FRAME,          MenusCategory.EVENTS, ItemStack.class),
+        BLOCK_INTERACTION_TYPE  (Material.GOLDEN_HOE,                     MenusCategory.EVENTS, String.class),
+        CURSOR_ITEM             (Material.TRIPWIRE_HOOK,                     MenusCategory.EVENTS, ItemStack.class),
+        CLICK_TYPE              (Material.LEVER,                     MenusCategory.EVENTS, String.class),
+        CLICKED_SLOT            (Material.SLIME_BALL,                     MenusCategory.EVENTS, Integer.class),
+        EQUIPMENT_SLOT          (Material.NETHERITE_SWORD,                     MenusCategory.EVENTS, String.class),
+
         MESSAGE                 (Material.BOOK,                     MenusCategory.EVENTS, String.class),
         BLOCK                   (Material.GRASS_BLOCK,              MenusCategory.EVENTS, Block.class),
         BLOCK_MATERIAL          (Material.GLOBE_BANNER_PATTERN,              MenusCategory.EVENTS, Block.class),
@@ -97,6 +103,7 @@ public class EventValues {
         DAMAGE_CAUSE            (Material.REDSTONE_TORCH,           MenusCategory.EVENTS, String.class),
         DAMAGE                  (Material.SOUL_TORCH,           MenusCategory.EVENTS, String.class),
 
+        CLIENT_BRAND            (Material.GRASS_BLOCK,              MenusCategory.PLAYER, String.class),
         HUNGER                  (Material.COOKED_CHICKEN,           MenusCategory.PLAYER, Double.class),
         LAST_DEATH_LOCATION     (Material.SKELETON_SKULL,           MenusCategory.PLAYER, Location.class),
         PING                    (Material.SCULK_SENSOR,             MenusCategory.PLAYER, Integer.class),
@@ -136,7 +143,6 @@ public class EventValues {
         ARROWS_IN_BODY          (Material.ARROW,                    MenusCategory.ENTITY, Integer.class),
         SHIELD_BLOCKING_DELAY   (Material.SHIELD,                   MenusCategory.ENTITY, Integer.class),
         BEE_STINGER_COOLDOWN    (Material.BEE_NEST,                 MenusCategory.ENTITY, Integer.class);
-
         final Class<?> valueClass;
         final MenusCategory category;
         final Material icon;

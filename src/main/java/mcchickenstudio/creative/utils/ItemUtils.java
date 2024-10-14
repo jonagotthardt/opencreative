@@ -23,6 +23,8 @@ import mcchickenstudio.creative.coding.variables.ValueType;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -38,6 +40,7 @@ import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemName;
 public class ItemUtils {
 
     private final static NamespacedKey WORLD_ID = new NamespacedKey(Main.getPlugin(), "oc_world_id");
+    private final static NamespacedKey ITEM_TYPE_KEY = new NamespacedKey(Main.getPlugin(), "oc_item");
     private final static NamespacedKey CODING_VALUE_KEY = new NamespacedKey(Main.getPlugin(), "oc_value_type");
     private final static NamespacedKey CODING_POTION_EFFECT_KEY = new NamespacedKey(Main.getPlugin(), "oc_potion_effect");
     private final static NamespacedKey CODING_POTION_DURATION_KEY = new NamespacedKey(Main.getPlugin(), "oc_potion_duration");
@@ -78,16 +81,8 @@ public class ItemUtils {
         return CODING_PARTICLE_TYPE_KEY;
     }
 
-    public static NamespacedKey getCodingPotionDurationKey() {
-        return CODING_POTION_DURATION_KEY;
-    }
-
-    public static NamespacedKey getCodingPotionEffectKey() {
-        return CODING_POTION_EFFECT_KEY;
-    }
-
-    public static NamespacedKey getCodingPotionLevelKey() {
-        return CODING_POTION_LEVEL_KEY;
+    public static NamespacedKey getItemTypeKey() {
+        return ITEM_TYPE_KEY;
     }
 
     public static NamespacedKey getWorldIdKey() {
@@ -108,6 +103,21 @@ public class ItemUtils {
         container.set(key, PersistentDataType.DOUBLE, value);
         item.setItemMeta(meta);
         return item;
+    }
+
+    /**
+     Returns item stack with name, description found in localization file and persistent data.
+     **/
+    public static ItemStack createItem(Material material, int amount, String localizationPath, String persistentData) {
+
+        ItemStack itemStack = createItem(material,amount);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName(getLocaleItemName(localizationPath + ".name"));
+        itemMeta.setLore(getLocaleItemDescription(localizationPath + ".lore"));
+        itemStack.setItemMeta(itemMeta);
+        setPersistentData(itemStack,getItemTypeKey(),persistentData);
+        return itemStack;
+
     }
 
     /**
@@ -162,6 +172,9 @@ public class ItemUtils {
                 ItemFlag.HIDE_STORED_ENCHANTS,
                 ItemFlag.HIDE_ITEM_SPECIFICS
         );
+        if (!meta.hasAttributeModifiers()) {
+            meta.addAttributeModifier(Attribute.GENERIC_ARMOR,new AttributeModifier(new NamespacedKey(Main.getPlugin(),"hide_attributes"),0.0d, AttributeModifier.Operation.ADD_NUMBER));
+        }
         itemStack.setItemMeta(meta);
         return itemStack;
     }
@@ -256,6 +269,10 @@ public class ItemUtils {
         } catch (IllegalArgumentException e) {
             return ValueType.ITEM;
         }
+    }
+
+    public static String getItemType(ItemStack item) {
+        return getPersistentData(item,getItemTypeKey());
     }
 
     public static String getPersistentData(ItemStack item, NamespacedKey key) {

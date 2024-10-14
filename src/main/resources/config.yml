@@ -11,6 +11,7 @@
 
 version: 5.0
 last-world-id: 0
+hide-from-tab: spectator # Hides players, that aren't in same world: spectator - Transparent nickname (requires ProtocolLib), full - Full hide from tab list, none - Not hide.
 
 lobby:
   #

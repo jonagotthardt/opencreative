@@ -43,6 +43,9 @@ import static mcchickenstudio.creative.utils.MessageUtils.messageExists;
  * brackets.
  * @see Executor
  * @see mcchickenstudio.creative.coding.blocks.conditions.Condition
+ * @since 5.0
+ * @version 5.0
+ * @author McChicken Studio
  */
 public class ActionsHandler {
 

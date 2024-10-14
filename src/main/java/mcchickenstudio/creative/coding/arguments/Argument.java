@@ -158,6 +158,7 @@ public class Argument {
             setEventVariable(action, EventValues.Variable.BOOTS, humanEntity.getInventory().getBoots());
         }
         if (action.getEntity() instanceof Player player) {
+            setEventVariable(action, EventValues.Variable.CLIENT_BRAND, player.getClientBrandName());
             setEventVariable(action, EventValues.Variable.LOCALE_COUNTRY, player.locale().getCountry());
             setEventVariable(action, EventValues.Variable.LOCALE_DISPLAY_COUNTRY, player.locale().getDisplayCountry());
             setEventVariable(action, EventValues.Variable.LOCALE_LANGUAGE, player.locale().getLanguage());

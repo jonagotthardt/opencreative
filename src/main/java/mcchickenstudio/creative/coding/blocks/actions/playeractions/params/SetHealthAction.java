@@ -25,12 +25,18 @@ import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
 
+import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugLog;
+
 public class SetHealthAction extends PlayerAction {
     public SetHealthAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     public void executePlayer(Player player) {
+        if (player.isDead()) {
+            sendCodingDebugLog(getPlot(),"Can't set player's health, player is dead.");
+            return;
+        }
         boolean add = getArguments().getValue("add",false,this);
         double health = getArguments().getValue("health",20.0d,this);
         if (add) {

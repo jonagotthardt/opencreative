@@ -19,9 +19,6 @@
 package mcchickenstudio.creative.commands;
 
 import mcchickenstudio.creative.menu.CreativeMenu;
-import mcchickenstudio.creative.menu.world.WorldEnvironmentMenu;
-import mcchickenstudio.creative.menu.world.settings.WorldSettingsMenu;
-import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
 import net.kyori.adventure.text.Component;
@@ -47,6 +44,7 @@ import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
 import static mcchickenstudio.creative.utils.FileUtils.loadLocales;
 import static mcchickenstudio.creative.utils.MessageUtils.getElapsedTime;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.PlayerUtils.hidePlayerInTab;
 import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 
 public class CommandCreative implements CommandExecutor, TabCompleter {
@@ -310,12 +308,20 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
+                    int months = 1;
+                    if (args.length >= 2) {
+                        try {
+                            months = Integer.parseInt(args[1]);
+                        } catch (NumberFormatException ignored) {}
+                    }
+                    if (months < 1) months = 1;
                     long currentTime = System.currentTimeMillis();
                     List<Plot> deprecatedWorlds = new ArrayList<>();
                     for (Plot plot : PlotManager.getInstance().getPlots()) {
-                        if (currentTime-plot.getCreationTime() > 2592000000L) {
+                        long monthsInMillis = 2592000000L*months;
+                        if (currentTime-plot.getCreationTime() > monthsInMillis) {
                             OfflinePlayer plotOwner = Bukkit.getOfflinePlayer(plot.getOwner());
-                            if (plotOwner.getLastSeen() == 0 || currentTime-plotOwner.getLastSeen() > 2592000000L) {
+                            if (plotOwner.getLastSeen() == 0 || currentTime-plotOwner.getLastLogin() > monthsInMillis) {
                                 deprecatedWorlds.add(plot);
                             }
                         }
@@ -369,9 +375,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     if (player != null) {
-                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                        if (plot == null) return true;
-                        new WorldEnvironmentMenu(player,plot.devPlot).open(player);
+                        hidePlayerInTab(player,player);
                     }
                 }
             }

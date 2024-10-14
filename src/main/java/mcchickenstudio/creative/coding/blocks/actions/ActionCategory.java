@@ -27,7 +27,7 @@ public enum ActionCategory {
     PLAYER_ACTION(Material.COBBLESTONE, Material.STONE, ChatColor.GRAY),
     ENTITY_ACTION(Material.MOSSY_COBBLESTONE, Material.STONE, ChatColor.GREEN),
     WORLD_ACTION(Material.NETHER_BRICKS, Material.NETHERRACK, ChatColor.RED),
-    VARIABLE_ACTION(Material.IRON_BLOCK, Material.STONE, ChatColor.WHITE),
+    VARIABLE_ACTION(Material.IRON_BLOCK, Material.IRON_ORE, ChatColor.WHITE),
     SELECTION_ACTION(Material.PURPUR_BLOCK, Material.PURPUR_PILLAR, ChatColor.MAGIC),
     LAUNCH_FUNCTION_ACTION(Material.LAPIS_ORE, Material.STONE, ChatColor.AQUA),
     CONTROL_ACTION(Material.COAL_BLOCK, Material.COAL_ORE, ChatColor.DARK_GRAY),
@@ -37,11 +37,7 @@ public enum ActionCategory {
     PLAYER_CONDITION(Material.OAK_PLANKS, Material.PISTON, ChatColor.GOLD),
     VARIABLE_CONDITION(Material.OBSIDIAN, Material.PISTON, ChatColor.BLUE),
     WORLD_CONDITION(Material.RED_NETHER_BRICKS, Material.PISTON, ChatColor.RED),
-
     ENTITY_CONDITION(Material.BRICKS, Material.PISTON, ChatColor.RED);
-
-
-
     //ELSE_CONDITION(Material.END_STONE, ChatColor.YELLOW);
 
     private final Material block;
@@ -67,7 +63,7 @@ public enum ActionCategory {
 
     public boolean isCondition() {
         // FIXME: maybe we should use class extends Condition?
-        return this == PLAYER_CONDITION || this == VARIABLE_CONDITION || this == WORLD_CONDITION;
+        return this == PLAYER_CONDITION || this == VARIABLE_CONDITION || this == WORLD_CONDITION || this == ENTITY_CONDITION;
     }
 
     public ChatColor getColor() {

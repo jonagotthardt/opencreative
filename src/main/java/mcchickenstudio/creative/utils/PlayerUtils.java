@@ -230,6 +230,7 @@ public class PlayerUtils {
         player.setGliding(false);
         player.setFlySpeed(0.1f);
         player.setWalkSpeed(0.2f);
+        player.setCanPickupItems(true);
         player.setGlowing(false);
         player.resetPlayerTime();
         player.resetPlayerWeather();
@@ -263,12 +264,12 @@ public class PlayerUtils {
         player.sendTitle(getLocaleMessage("lobby.title"), getLocaleMessage("lobby.subtitle"),20,60,20);
         player.sendMessage(getLocaleMessage("lobby.message"));
         player.playSound(player.getLocation(),Sound.BLOCK_BEACON_DEACTIVATE,100,1.5f);
-        player.playSound(player.getLocation(),Main.getPlugin().getConfig().getString("lobby.sound.name","music_disc.creator_music_box") ,100,(float) Main.getPlugin().getConfig().getDouble("lobby.sound.pitch",0.7f));
+        player.playSound(player.getLocation(),Main.getPlugin().getConfig().getString("lobby.sound.name","music_disc.precipice") ,100,(float) Main.getPlugin().getConfig().getDouble("lobby.sound.pitch",0.1f));
 
-        ItemStack gamesItem = createItem(Material.COMPASS,1,"items.lobby.games");
+        ItemStack gamesItem = createItem(Material.COMPASS,1,"items.lobby.games","worlds");
         player.getInventory().setItem(3, gamesItem);
 
-        ItemStack myWorldsItem = createItem(Material.NETHER_STAR,1,"items.lobby.own");
+        ItemStack myWorldsItem = createItem(Material.NETHER_STAR,1,"items.lobby.own","own_worlds");
         player.getInventory().setItem(5, myWorldsItem);
     }
 
@@ -383,6 +384,29 @@ public class PlayerUtils {
     public static void sendClosedChestAnimation(Player player, Block block) {
         if (HookUtils.isProtocolLibEnabled && (block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST)) {
             ProtocolLibUtils.sendClosedChestAnimation(player,block);
+        }
+    }
+
+    public static void hidePlayerInTab(Player spectator, Player receiver) {
+        if (spectator == receiver) return;
+        String type = Main.getPlugin().getConfig().getString("hide-from-tab","full");
+        if (type.equalsIgnoreCase("spectator")) {
+            if (HookUtils.isProtocolLibEnabled) {
+                ProtocolLibUtils.sendSpectatorColoredNickname(spectator,receiver);
+            } else {
+                receiver.hidePlayer(Main.getPlugin(),spectator);
+            }
+        } else if (type.equalsIgnoreCase("full")) {
+            receiver.hidePlayer(Main.getPlugin(),spectator);
+        }
+    }
+
+    public static void showPlayerFromTab(Player spectator, Player receiver) {
+        if (spectator == receiver) return;
+        if (HookUtils.isProtocolLibEnabled) {
+            ProtocolLibUtils.sendSpectatorUncoloredNickname(spectator,receiver);
+        } else {
+            receiver.showPlayer(Main.getPlugin(),spectator);
         }
     }
 

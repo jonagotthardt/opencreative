@@ -177,10 +177,10 @@ public class CommandDev implements CommandExecutor {
         player.getInventory().setItem(2, conditionPlayerItem);
 
         ItemStack actionVar = createItem(Material.IRON_BLOCK,1,"items.developer.action-var");
-        player.getInventory().setItem(3, actionVar);
+        player.getInventory().setItem(13, actionVar);
 
         ItemStack conditionVarItem = createItem(Material.OBSIDIAN,1,"items.developer.condition-var");
-        player.getInventory().setItem(4, conditionVarItem);
+        player.getInventory().setItem(22, conditionVarItem);
 
         ItemStack functionItem = createItem(Material.LAPIS_BLOCK,1,"items.developer.function");
         player.getInventory().setItem(9, functionItem);
@@ -192,8 +192,14 @@ public class CommandDev implements CommandExecutor {
         ItemStack actionControl = createItem(Material.COAL_BLOCK,1,"items.developer.action-control");
         player.getInventory().setItem(11, actionControl);
 
+        ItemStack conditionEntity = createItem(Material.BRICKS,1,"items.developer.condition-entity");
+        player.getInventory().setItem(12, conditionEntity);
+
         ItemStack actionWorld = createItem(Material.NETHER_BRICKS,1,"items.developer.action-world");
         player.getInventory().setItem(20, actionWorld);
+
+        ItemStack actionEntity = createItem(Material.MOSSY_COBBLESTONE,1,"items.developer.action-entity");
+        player.getInventory().setItem(21, actionEntity);
 
         ItemStack eventEntityItem = createItem(Material.GOLD_BLOCK,1,"items.developer.event-entity");
         player.getInventory().setItem(27, eventEntityItem);
@@ -227,10 +233,10 @@ public class CommandDev implements CommandExecutor {
         bookMeta.setAuthor("OpenCreative+");
         bookMeta.setPages(getBookPages("items.developer.coding-book.pages"));
         bookHelperItem.setItemMeta(bookMeta);
-        player.getInventory().setItem(slot == 8 ? slot-2 : 17, bookHelperItem);
+        player.getInventory().setItem(slot == 8 ? slot-1 : 17, bookHelperItem);
 
         ItemStack flySpeedChangerItem = createItem(Material.FEATHER,1,"items.developer.fly-speed-changer");
-        player.getInventory().setItem(slot-1, flySpeedChangerItem);
+        player.getInventory().setItem(slot == 8 ? 17 : 16, flySpeedChangerItem);
 
         player.getInventory().setItem(slot, createItem(Material.IRON_INGOT,1,"items.developer.variables"));
 

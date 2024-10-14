@@ -37,7 +37,6 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
-import static mcchickenstudio.creative.coding.arguments.Argument.parseEntity;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugAction;
 
 /**
@@ -63,7 +62,8 @@ public abstract class Action {
     /**
      * Creates an Action with linked executor and specified arguments.
      * @param executor Executor where this action will be added.
-     * @param x X from Action's block location in developers plot.
+     * @param target Target, that will execute this action.
+     * @param x X coordinate from Action's block location in developers plot.
      * @param args List of arguments for action.
      */
     public Action(Executor executor, Target target, int x, Arguments args) {
@@ -73,6 +73,10 @@ public abstract class Action {
         this.arguments = args;
     }
 
+    /**
+     * Prepares action for executing, sets handler and event, and executes action with target.
+     * @param handler ActionsHandler that stores event data and temporary variables.
+     */
     public void prepareAndExecute(ActionsHandler handler) {
         this.handler = handler;
         this.event = handler.getEvent();
@@ -88,22 +92,43 @@ public abstract class Action {
         }
     }
 
+    /**
+     * Executes action with specified entity.
+     * @param entity Entity to execute action.
+     */
     protected abstract void execute(Entity entity);
     public abstract ActionType getActionType();
     public abstract ActionCategory getActionCategory();
 
+    /**
+     * Returns arguments of action.
+     * @return Arguments of action.
+     */
     protected final Arguments getArguments() {
         return arguments;
     }
 
+    /**
+     * Returns executor, that stores this action.
+     * @return Executor with this action.
+     */
     public final Executor getExecutor() {
         return executor;
     }
 
+    /**
+     * Returns X coordinate of action coding block in developer's world.
+     * @return X coordinate of coding block location.
+     */
     public final int getX() {
         return x;
     }
 
+    /**
+     * Returns a set of entities whose name or UUID is equal to specified text.
+     * @param text Text to compare world's entities names and UUIDs.
+     * @return Set of entities with same names or UUIDs, as text.
+     */
     protected Set<Entity> getEntitiesByNameOrUUID(String text) {
         Set<Entity> entities = new HashSet<>();
         if (getWorld() == null) return entities;
@@ -126,6 +151,10 @@ public abstract class Action {
         return players;
     }
 
+    /**
+     * Returns plot's world, where action will be executed.
+     * @return Plot's world.
+     */
     protected World getWorld() {
         return getPlot().world;
     }
@@ -134,22 +163,42 @@ public abstract class Action {
         return executor.getPlot();
     }
 
+    /**
+     * Returns involved entity in action from ActionsHandler.
+     * @return Involved entity.
+     */
     public Entity getEntity() {
         return entity;
     }
 
+    /**
+     * Returns last stored event in action.
+     * @return CreativeEvent, that called executor with this action.
+     */
     public CreativeEvent getEvent() {
         return event;
     }
 
+    /**
+     * Returns current ActionsHandler in action.
+     * @return Handler of this action.
+     */
     public ActionsHandler getHandler() {
         return handler;
     }
 
+    /**
+     * Returns enum of target.
+     * @return Enum of target.
+     */
     public Target getTarget() {
         return target;
     }
 
+    /**
+     * Returns list of entities that will execute this action.
+     * @return List of entities to execute action.
+     */
     protected List<Entity> getTargets() {
         List<Entity> entities = new ArrayList<>();
         List<Entity> eventEntities = executor.getEvent().getSelection();
@@ -194,11 +243,28 @@ public abstract class Action {
                 }
             }
             case SELECTED -> entities.addAll(getHandler().getSelectedTargets());
+            case ALL_ENTITIES -> {
+                for (Entity entity : getWorld().getEntities()) {
+                    if (!(entity instanceof Player)) {
+                        entities.add(entity);
+                    }
+                }
+            }
+            case RANDOM_TARGET -> {
+                List<Entity> selectedTargets = new ArrayList<>(getHandler().getSelectedTargets());
+                if (!selectedTargets.isEmpty()) {
+                    entities.add(selectedTargets.get(new Random().nextInt(selectedTargets.size())));
+                }
+            }
             default -> entities.addAll(eventEntities);
         }
         return entities;
     }
 
+    /**
+     * Returns entity killer, that involved in damage event.
+     * @return Killer, or null if there's no involved entity in damage event.
+     */
     private Entity getKiller() {
         Entity killer = null;
         if (executor.getEvent() instanceof PlayerDamagesMobEvent mobEvent) {
@@ -213,6 +279,11 @@ public abstract class Action {
         return killer;
     }
 
+    /**
+     * Sets value in local, global or saved variable in world.
+     * @param link Link of variable.
+     * @param value New value.
+     */
     protected void setVarValue(VariableLink link, Object value) {
         if (link != null) {
             link.setHandler(getHandler().getMainActionHandler());
@@ -229,14 +300,26 @@ public abstract class Action {
         }
     }
 
+    /**
+     * Sets new ActionsHandler.
+     * @param handler New handler of action.
+     */
     public void setHandler(ActionsHandler handler) {
         this.handler = handler;
     }
 
+    /**
+     * Returns a list of all arguments in this action.
+     * @return List of action's arguments.
+     */
     public List<Argument> getArgumentsList() {
         return getArguments().getArgumentList();
     }
 
+    /**
+     * Sets entity involved in executor's event.
+     * @param entity New entity.
+     */
     public void setEntity(Entity entity) {
         this.entity = entity;
     }

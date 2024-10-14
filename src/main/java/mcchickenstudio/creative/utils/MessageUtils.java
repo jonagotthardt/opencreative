@@ -266,6 +266,30 @@ public class MessageUtils {
 
     }
 
+    public static String convertTime(long currentTime) {
+
+        String convertedTime = "";
+
+        long seconds = currentTime / 1000;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        long days = hours / 24;
+
+        seconds %= 60;
+        minutes %= 60;
+        hours %= 24;
+
+        if (days > 0) convertedTime = convertedTime.concat(days + " " + getLocaleMessage("time.days",false) + " ");
+        if (hours > 0) convertedTime = convertedTime.concat(hours + " "+ getLocaleMessage("time.hours",false) +" ");
+        if (minutes > 0) convertedTime = convertedTime.concat(minutes + " "+ getLocaleMessage("time.minutes",false) +" ");
+        if (seconds > 0) convertedTime = convertedTime.concat(seconds + " "+ getLocaleMessage("time.seconds",false));
+        if (currentTime < 1000) convertedTime = getLocaleMessage("time.less-second",false);
+        if (currentTime < 0) convertedTime = "∞";
+
+        return convertedTime;
+
+    }
+
 
     static final Map<Plot,Long> messagesOnce = new HashMap<>();
     /**
@@ -330,6 +354,26 @@ public class MessageUtils {
         } else {
             return string;
         }
+    }
+
+    public static double parseTicks(String message) {
+        double ticks = 0;
+        if (message == null) return ticks;
+        if (message.isEmpty()) return ticks;
+        double modifier = switch (message.toLowerCase().charAt(message.length()-1)) {
+            case 's' -> 20;
+            case 'm' -> 1200;
+            case 'h' -> 72000;
+            case 'd' -> 1728000;
+            default -> 1;
+        };
+        if (modifier != 1) {
+            message = message.substring(0,message.length()-1);
+        }
+        try {
+            ticks = Double.parseDouble(message);
+        } catch (NumberFormatException ignored) {}
+        return ticks * modifier;
     }
 
     public static boolean messageExists(String messageID) {

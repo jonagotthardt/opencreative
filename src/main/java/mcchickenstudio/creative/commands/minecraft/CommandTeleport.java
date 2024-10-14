@@ -24,6 +24,7 @@ import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,6 +35,7 @@ import static mcchickenstudio.creative.utils.BlockUtils.isOutOfBorders;
 import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.PlayerUtils.clearPlayer;
 
 public class CommandTeleport implements CommandExecutor {
 
@@ -95,8 +97,23 @@ public class CommandTeleport implements CommandExecutor {
                     player.sendMessage(getLocaleMessage("only-in-world"));
                     return true;
                 }
+
             }
-            player.teleport(teleportToPlayer.getLocation());
+            if (!player.hasPermission("creative.teleport.clear-bypass")) {
+                clearPlayer(player);
+                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                if (plot == null || !plot.equals(teleportPlot)) {
+                    teleportPlot.teleportPlayer(player);
+                } else {
+                    player.teleport(teleportToPlayer.getLocation());
+                }
+            } else {
+                player.teleport(teleportToPlayer.getLocation());
+            }
+            player.playSound(player.getLocation(), Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100,0.1f);
+            if (!player.hasPermission("creative.teleport.clear-bypass")) {
+                clearPlayer(player);
+            }
         } else if (args.length == 2) {
             /*
              * Example: /tp FirstPlayer SecondPlayer
@@ -113,7 +130,7 @@ public class CommandTeleport implements CommandExecutor {
             }
             Plot firstPlot = PlotManager.getInstance().getPlotByPlayer(firstPlayer);
             Plot secondPlot = PlotManager.getInstance().getPlotByPlayer(secondPlayer);
-            if (!player.hasPermission("creative.teleport.bypass")) {
+            if (!player.hasPermission("creative.teleport.others-bypass")) {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
                 if (plot == null || !plot.equals(firstPlot) || !plot.equals(secondPlot) || !firstPlot.equals(secondPlot)) {
                     player.sendMessage(getLocaleMessage("no-player-found"));
@@ -124,7 +141,14 @@ public class CommandTeleport implements CommandExecutor {
                     return true;
                 }
             }
+            if (!player.hasPermission("creative.teleport.clear-bypass")) {
+                clearPlayer(firstPlayer);
+            }
             firstPlayer.teleport(secondPlayer.getLocation());
+            firstPlayer.playSound(firstPlayer.getLocation(), Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100,0.1f);
+            if (!player.hasPermission("creative.teleport.clear-bypass")) {
+                clearPlayer(firstPlayer);
+            }
         } else if (args.length >= 3) {
             /*
              * Example: /tp 30 4 30
@@ -147,6 +171,7 @@ public class CommandTeleport implements CommandExecutor {
                 Location newLocation = new Location(location.getWorld(),x,y,z,yaw,pitch);
                 if (!isOutOfBorders(newLocation)) {
                     player.teleport(newLocation);
+                    player.playSound(player.getLocation(), Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100,0.1f);
                 } else {
                     sender.sendMessage(getLocaleMessage("commands.teleport.out-of-borders"));
                 }

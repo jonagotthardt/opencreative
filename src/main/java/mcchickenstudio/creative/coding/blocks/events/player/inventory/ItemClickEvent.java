@@ -20,6 +20,7 @@ package mcchickenstudio.creative.coding.blocks.events.player.inventory;
 
 import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -27,15 +28,33 @@ public class ItemClickEvent extends CreativeEvent {
 
     private final InventoryClickEvent event;
     private final ItemStack item;
+    private final ClickType click;
+    private final int slot;
+    private final ItemStack cursor;
 
     public ItemClickEvent(Player player, InventoryClickEvent event) {
         super(player);
         this.event = event;
         this.item = event.getCurrentItem();
+        this.cursor = event.getCursor();
+        this.click = event.getClick();
+        this.slot = event.getSlot();
     }
 
     public ItemStack getItem() {
         return item;
+    }
+
+    public ClickType getClick() {
+        return click;
+    }
+
+    public int getSlot() {
+        return slot;
+    }
+
+    public ItemStack getCursor() {
+        return cursor;
     }
 
     @Override

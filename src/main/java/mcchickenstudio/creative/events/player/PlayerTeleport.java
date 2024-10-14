@@ -41,7 +41,6 @@ public class PlayerTeleport implements Listener {
         if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_PORTAL) || event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_GATEWAY) || event.getCause().equals(PlayerTeleportEvent.TeleportCause.NETHER_PORTAL)) {
             event.setCancelled(true);
         }
-
         Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
         if (plot != null) {
             try {

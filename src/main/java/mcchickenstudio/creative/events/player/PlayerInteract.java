@@ -38,6 +38,7 @@ import mcchickenstudio.creative.menu.AbstractMenu;
 import mcchickenstudio.creative.menu.world.browsers.RecommendedWorldsMenu;
 import mcchickenstudio.creative.menu.world.settings.WorldSettingsMenu;
 import mcchickenstudio.creative.plots.*;
+import mcchickenstudio.creative.utils.ItemUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -51,10 +52,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.player.PlayerFishEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.*;
 import mcchickenstudio.creative.menu.world.browsers.OwnWorldsMenu;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.InventoryHolder;
@@ -239,6 +237,7 @@ public class PlayerInteract implements Listener {
                     case PLAYER_CONDITION -> new PlayerConditionsMenu(player,clickedBlock.getLocation());
                     case VARIABLE_CONDITION -> new VariableConditionsMenu(player,clickedBlock.getLocation());
                     case WORLD_CONDITION -> new WorldConditionsMenu(player,clickedBlock.getLocation());
+                    case ENTITY_CONDITION -> new EntityConditionsMenu(player,clickedBlock.getLocation());
                     case VARIABLE_ACTION -> new VariableActionsMenu(player,clickedBlock.getLocation());
                     case WORLD_ACTION -> new WorldActionsMenu(player,clickedBlock.getLocation());
                     case HANDLER_ACTION -> new HandlerActionsMenu(player,clickedBlock.getLocation());
@@ -515,7 +514,7 @@ public class PlayerInteract implements Listener {
         }
         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
         if (isEntityInLobby(player)) {
-            if (currentItem.getType() == Material.COMPASS) {
+            if (getItemType(currentItem).equals("worlds")) {
                 // Opens recommended worlds menu.
                 if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
                     player.sendMessage(getLocaleMessage("maintenance"));
@@ -523,7 +522,7 @@ public class PlayerInteract implements Listener {
                 }
                 player.setCooldown(Material.COMPASS,60);
                 new RecommendedWorldsMenu().open(player);
-            } else if (currentItem.getType() == Material.NETHER_STAR) {
+            } else if (getItemType(currentItem).equals("own_worlds")) {
                 // Opens player's worlds menu.
                 if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
                     player.sendMessage(getLocaleMessage("maintenance"));
@@ -693,5 +692,17 @@ public class PlayerInteract implements Listener {
     public void onSpectatingStop(PlayerStopSpectatingEntityEvent event) {
         Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
         if (plot != null) EventRaiser.raiseStopSpectatingEvent(event.getPlayer(),event);
+    }
+
+    @EventHandler
+    public void onBedInteract(PlayerBedEnterEvent event) {
+        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
+        if (plot != null) EventRaiser.raisePlayerBedEnterEvent(event.getPlayer(),event);
+    }
+
+    @EventHandler
+    public void onBedInteract(PlayerBedLeaveEvent event) {
+        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
+        if (plot != null) EventRaiser.raisePlayerBedLeaveEvent(event.getPlayer(),event);
     }
 }

@@ -492,4 +492,20 @@ public class EventRaiser {
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
+    public static void raisePlayerBedEnterEvent(Player player, PlayerBedEnterEvent bukkitEvent) {
+        if (cantRaiseEvent(player)) {
+            return;
+        }
+        CreativeEvent creativeEvent = new BedEnterEvent(player,bukkitEvent);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raisePlayerBedLeaveEvent(Player player, PlayerBedLeaveEvent bukkitEvent) {
+        if (cantRaiseEvent(player)) {
+            return;
+        }
+        CreativeEvent creativeEvent = new BedLeaveEvent(player,bukkitEvent);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
 }
