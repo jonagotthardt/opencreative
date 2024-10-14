@@ -91,7 +91,23 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <!-- For deploying on Gitlab -->
+            <id>gitlab-maven</id>
+            <url>https://gitlab.com/api/v4/projects/${PROJECT_ID}/packages/maven</url>
+        </repository>
     </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>gitlab-maven</id>
+            <url>https://gitlab.com/api/v4/projects/${PROJECT_ID}/packages/maven</url>
+        </repository>
+        <snapshotRepository>
+            <id>gitlab-maven</id>
+            <url>https://gitlab.com/api/v4/projects/${PROJECT_ID}/packages/maven</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
