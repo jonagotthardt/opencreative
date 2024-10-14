@@ -1,36 +1,11 @@
 image: maven:latest
-variables:
-  MAVEN_OPTS: -Dmaven.repo.local=.m2/repository
 
 stages:
-    - build
-    - package
-    - deploy
+  - deploy
 
-cache:
-  paths:
-    - .m2/repository
-    - target
-
-build_job:
-  stage: build
-  tags:
-    - gitlab-org-docker 
-  script: 
-    - echo "Compiling OpenCreative+, please wait..."
-    - "mvn compile"
-
-package_job:
-  stage: package
-  tags:
-    - gitlab-org-docker 
-  script: 
-    - echo "Saving OpenCreative+ into file, please wait..."
-    - "mvn package"
-
-Deploy_job:
+deploy_job:
   stage: deploy
-  tags:
-    - gitlab-org-docker 
-  script: 
-    - echo "Deploying..."
+  script:
+    - mvn deploy -s settings.xml
+  only:
+    - main
