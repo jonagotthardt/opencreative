@@ -36,6 +36,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
@@ -62,6 +65,15 @@ public class PlayerPlaceBlock implements Listener {
                     event.setCancelled(true);
                 }
             } else if (blockAgainst.getType() == devPlot.getEventBlockMaterial()) {
+                // Easter egg :)
+                if (block.getType() == Material.PUMPKIN) {
+                    event.setCancelled(true);
+                    block.getLocation().getWorld().strikeLightningEffect(block.getLocation());
+                    player.getInventory().setHelmet(new ItemStack(Material.PUMPKIN,1));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,40,0));
+                    player.playSound(player.getLocation(),Sound.ENTITY_WITCH_CELEBRATE,100,1f);
+                    return;
+                }
                 if (devPlot.getEventsBlocks().contains(block.getType())) {
                     Material additionalBlockMaterial = Material.REDSTONE_ORE;
                     String signText = "unknown";

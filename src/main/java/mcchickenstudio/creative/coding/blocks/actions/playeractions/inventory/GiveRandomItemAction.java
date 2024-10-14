@@ -40,7 +40,7 @@ public class GiveRandomItemAction extends PlayerAction {
         if (items.isEmpty()) return;
         ItemStack randomItem = items.getFirst();
         if (items.size() > 1) {
-            randomItem = items.get(new Random().nextInt(items.size() - 1));
+            randomItem = items.get(new Random().nextInt(items.size()));
         }
         player.getInventory().addItem(randomItem);
     }

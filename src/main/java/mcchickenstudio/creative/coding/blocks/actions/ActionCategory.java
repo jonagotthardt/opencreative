@@ -27,7 +27,7 @@ public enum ActionCategory {
     PLAYER_ACTION(Material.COBBLESTONE, Material.STONE, ChatColor.GRAY),
     ENTITY_ACTION(Material.MOSSY_COBBLESTONE, Material.STONE, ChatColor.GREEN),
     WORLD_ACTION(Material.NETHER_BRICKS, Material.NETHERRACK, ChatColor.RED),
-    VARIABLE_ACTION(Material.IRON_BLOCK, Material.STONE, ChatColor.WHITE),
+    VARIABLE_ACTION(Material.IRON_BLOCK, Material.IRON_ORE, ChatColor.WHITE),
     SELECTION_ACTION(Material.PURPUR_BLOCK, Material.PURPUR_PILLAR, ChatColor.MAGIC),
     LAUNCH_FUNCTION_ACTION(Material.LAPIS_ORE, Material.STONE, ChatColor.AQUA),
     CONTROL_ACTION(Material.COAL_BLOCK, Material.COAL_ORE, ChatColor.DARK_GRAY),

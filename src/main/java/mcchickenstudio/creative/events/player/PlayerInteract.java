@@ -52,10 +52,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.player.PlayerFishEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.*;
 import mcchickenstudio.creative.menu.world.browsers.OwnWorldsMenu;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.InventoryHolder;
@@ -695,5 +692,17 @@ public class PlayerInteract implements Listener {
     public void onSpectatingStop(PlayerStopSpectatingEntityEvent event) {
         Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
         if (plot != null) EventRaiser.raiseStopSpectatingEvent(event.getPlayer(),event);
+    }
+
+    @EventHandler
+    public void onBedInteract(PlayerBedEnterEvent event) {
+        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
+        if (plot != null) EventRaiser.raisePlayerBedEnterEvent(event.getPlayer(),event);
+    }
+
+    @EventHandler
+    public void onBedInteract(PlayerBedLeaveEvent event) {
+        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
+        if (plot != null) EventRaiser.raisePlayerBedLeaveEvent(event.getPlayer(),event);
     }
 }

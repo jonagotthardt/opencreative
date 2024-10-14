@@ -136,19 +136,17 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             return true;
                         }
                         devPlot.setContainerMaterial(devPlot.getContainerMaterial() == Material.CHEST ? Material.BARREL : Material.CHEST);
-                        for (byte y = 1; y < devPlot.getFloors() * 4; y = (byte) (y + 4)) {
-                            for (byte z = 4; z < 96; z = (byte) (z + 4)) {
-                                for (byte x = 6; x <= 96; x = (byte) (x + 2)) {
-                                    Block containerBlock = new Location(devPlot.world, x, y + 1, z).getBlock();
-                                    if (containerBlock.getState() instanceof InventoryHolder container) {
-                                        ItemStack[] data = container.getInventory().getContents();
-                                        containerBlock.setType(devPlot.getContainerMaterial());
-                                        ((Container) containerBlock.getState()).getInventory().setContents(data);
-                                        BlockData blockData = containerBlock.getBlockData();
-                                        ((Directional) blockData).setFacing(BlockFace.SOUTH);
-                                        containerBlock.setBlockData(blockData);
-                                        containerBlock.getState().update();
-                                    }
+                        for (byte z = 4; z < 96; z = (byte) (z + 4)) {
+                            for (byte x = 6; x <= 96; x = (byte) (x + 2)) {
+                                Block containerBlock = new Location(devPlot.world, x, 2, z).getBlock();
+                                if (containerBlock.getState() instanceof InventoryHolder container) {
+                                    ItemStack[] data = container.getInventory().getContents();
+                                    containerBlock.setType(devPlot.getContainerMaterial());
+                                    ((Container) containerBlock.getState()).getInventory().setContents(data);
+                                    BlockData blockData = containerBlock.getBlockData();
+                                    ((Directional) blockData).setFacing(BlockFace.SOUTH);
+                                    containerBlock.setBlockData(blockData);
+                                    containerBlock.getState().update();
                                 }
                             }
                         }

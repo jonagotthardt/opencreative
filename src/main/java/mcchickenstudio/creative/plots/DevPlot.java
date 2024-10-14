@@ -58,6 +58,7 @@ public class DevPlot {
     private Material floorBlockMaterial;
     private Material eventBlockMaterial;
     private Material actionBlockMaterial;
+    private Material signBlockMaterial = Material.OAK_WALL_SIGN;
     private Material containerMaterial = Material.CHEST;
 
     public final Map<Player, Location> lastLocations = new HashMap<>();
@@ -326,10 +327,20 @@ public class DevPlot {
         return containerMaterial;
     }
 
-    public void setContainerMaterial(Material containerMaterial) {
+    public boolean setContainerMaterial(Material containerMaterial) {
         if (containerMaterial == Material.BARREL || containerMaterial == Material.CHEST || containerMaterial == Material.TRAPPED_CHEST) {
             this.containerMaterial = containerMaterial;
+            return true;
         }
+        return false;
+    }
+
+    public boolean setSignMaterial(Material signMaterial) {
+        if (signMaterial == Material.OAK_WALL_SIGN || signMaterial == Material.ACACIA_WALL_SIGN || signMaterial == Material.BAMBOO_WALL_SIGN || signMaterial == Material.CHERRY_WALL_SIGN || signMaterial == Material.BIRCH_WALL_SIGN || signMaterial == Material.JUNGLE_WALL_SIGN) {
+            this.containerMaterial = signMaterial;
+            return true;
+        }
+        return false;
     }
 
     public boolean setFloorEventActionBlocksMaterial(Material floorBlockMaterial, Material eventBlockMaterial, Material actionBlockMaterial) {

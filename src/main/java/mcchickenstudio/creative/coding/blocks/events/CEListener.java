@@ -303,4 +303,14 @@ public class CEListener implements Listener {
         Executors.activate(event);
     }
 
+    @EventHandler
+    public void onBedEvent(BedEnterEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onBedEvent(BedLeaveEvent event) {
+        Executors.activate(event);
+    }
+
 }

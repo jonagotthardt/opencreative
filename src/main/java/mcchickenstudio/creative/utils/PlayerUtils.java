@@ -230,6 +230,7 @@ public class PlayerUtils {
         player.setGliding(false);
         player.setFlySpeed(0.1f);
         player.setWalkSpeed(0.2f);
+        player.setCanPickupItems(true);
         player.setGlowing(false);
         player.resetPlayerTime();
         player.resetPlayerWeather();

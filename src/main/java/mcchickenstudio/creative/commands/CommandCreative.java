@@ -308,12 +308,20 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
+                    int months = 1;
+                    if (args.length >= 2) {
+                        try {
+                            months = Integer.parseInt(args[1]);
+                        } catch (NumberFormatException ignored) {}
+                    }
+                    if (months < 1) months = 1;
                     long currentTime = System.currentTimeMillis();
                     List<Plot> deprecatedWorlds = new ArrayList<>();
                     for (Plot plot : PlotManager.getInstance().getPlots()) {
-                        if (currentTime-plot.getCreationTime() > 2592000000L) {
+                        long monthsInMillis = 2592000000L*months;
+                        if (currentTime-plot.getCreationTime() > monthsInMillis) {
                             OfflinePlayer plotOwner = Bukkit.getOfflinePlayer(plot.getOwner());
-                            if (plotOwner.getLastSeen() == 0 || currentTime-plotOwner.getLastSeen() > 2592000000L) {
+                            if (plotOwner.getLastSeen() == 0 || currentTime-plotOwner.getLastLogin() > monthsInMillis) {
                                 deprecatedWorlds.add(plot);
                             }
                         }

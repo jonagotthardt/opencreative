@@ -107,6 +107,8 @@ public class CommandTeleport implements CommandExecutor {
                 } else {
                     player.teleport(teleportToPlayer.getLocation());
                 }
+            } else {
+                player.teleport(teleportToPlayer.getLocation());
             }
             player.playSound(player.getLocation(), Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100,0.1f);
             if (!player.hasPermission("creative.teleport.clear-bypass")) {
