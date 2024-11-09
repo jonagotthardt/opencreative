@@ -42,17 +42,23 @@ import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 
 public class PotionsMenu extends AbstractListMenu {
 
-    public PotionsMenu(Player player) {
+    private final Material potionMaterial;
+
+    public PotionsMenu(Player player, Material material) {
         super(getLocaleMessage("menus.developer.potions-list.title"), player);
         itemsSlots = allowedSlots;
         charmsBarSlots = new byte[]{};
         previousPageButtonSlot = 45;
+        if (material != Material.POTION && material != Material.LINGERING_POTION && material != Material.SPLASH_POTION) {
+            material = Material.POTION;
+        }
+        potionMaterial = material;
     }
 
     @Override
     protected ItemStack getElementIcon(Object object) {
         if (object instanceof PotionEffectType type) {
-            ItemStack itemStack = new ItemStack(Material.POTION,1);
+            ItemStack itemStack = new ItemStack(potionMaterial,1);
             PotionMeta meta = (PotionMeta) itemStack.getItemMeta();
             PotionType potionType = PotionType.getByEffect(type);
             String name = type.getName().toLowerCase().replace("minecraft:","");

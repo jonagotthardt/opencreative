@@ -27,7 +27,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 
 import static mcchickenstudio.creative.utils.PlayerUtils.hidePlayerInTab;
-import static mcchickenstudio.creative.utils.PlayerUtils.showPlayerFromTab;
 
 public class GameModeChange implements Listener {
 
@@ -36,6 +35,7 @@ public class GameModeChange implements Listener {
         Player player = event.getPlayer();
         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
         if (plot == null) {
+            // If player is not in plot
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 if (!player.getWorld().equals(onlinePlayer.getWorld())) {
                     hidePlayerInTab(onlinePlayer,player);
@@ -44,8 +44,10 @@ public class GameModeChange implements Listener {
             }
             return;
         }
+        if (plot.world == null) return;
+        // If player is in plot
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (!plot.world.equals(onlinePlayer.getWorld()) && !onlinePlayer.getWorld().equals(plot.devPlot.world)) {
+            if (!onlinePlayer.getWorld().equals(plot.world) && (plot.devPlot.world != null && !onlinePlayer.getWorld().equals(plot.devPlot.world))) {
                 hidePlayerInTab(onlinePlayer,player);
                 hidePlayerInTab(player,onlinePlayer);
             }

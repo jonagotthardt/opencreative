@@ -108,15 +108,8 @@ public class CommandPlay implements CommandExecutor {
                 }
             } else {
                 if (EventRaiser.raisePlayEvent(player) || plot.getWorldPlayers().canDevelop(player)) {
-                    plot.world.getSpawnLocation().getChunk().load(true);
-                    DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-                    player.teleport(plot.world.getSpawnLocation());
-                    clearPlayer(player);
                     if (plot.getWorldPlayers().canDevelop(player)) {
                         player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
-                        if (plot.isOwner(sender.getName())) {
-                            player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
-                        }
                         if (plot.devPlot.isLoaded()) {
                             new CodingBlockParser().parseCode(plot.devPlot);
                         } else {
@@ -125,8 +118,17 @@ public class CommandPlay implements CommandExecutor {
                     } else {
                         player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
                     }
-                    if (devPlot == null) {
+                    plot.world.getSpawnLocation().getChunk().load(true);
+                    DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
+                    if (devPlot != null) {
+                        clearPlayer(player);
+                    } else {
                         EventRaiser.raiseQuitEvent(player);
+                    }
+                    clearPlayer(player);
+                    player.teleport(plot.world.getSpawnLocation());
+                    if (plot.isOwner(sender.getName())) {
+                        player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
                     }
                     EventRaiser.raiseJoinEvent(player);
                 }

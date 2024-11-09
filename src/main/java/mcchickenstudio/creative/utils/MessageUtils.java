@@ -60,6 +60,7 @@ public class MessageUtils {
         } else {
             String defaultLanguage = getLanguage().equalsIgnoreCase("ru") ? "ru" : "en";
             plugin.getConfig().set("messages.locale",defaultLanguage);
+            plugin.saveResource("locales" + File.separator + "olden.yml",false);
             plugin.saveResource("locales" + File.separator + "en.yml",false);
             plugin.saveResource("locales" + File.separator + "ru.yml",false);
             plugin.reloadConfig();
@@ -112,6 +113,7 @@ public class MessageUtils {
         } else {
             Object defaultLanguage = "en";
             plugin.getConfig().set("messages.locale",defaultLanguage);
+            plugin.saveResource("locales" + File.separator + "olden.yml",false);
             plugin.saveResource("locales" + File.separator + "en.yml",false);
             plugin.saveResource("locales" + File.separator + "ru.yml",false);
             plugin.reloadConfig();

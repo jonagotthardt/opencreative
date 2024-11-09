@@ -45,16 +45,15 @@ public class IsBlockEqualsCondition extends PlayerCondition {
             sendCodingNotFoundTempVar(getPlot(),getExecutor(), EventValues.Variable.BLOCK);
             return false;
         }
-        boolean check = false;
         Block block = (Block) getHandler().getVarValue(EventValues.Variable.BLOCK);
         List<ItemStack> blocks = getArguments().getItemList("blocks",this);
         if (blocks.isEmpty()) return false;
         for (ItemStack checkBlock : blocks) {
             if (block.getType() == checkBlock.getType()) {
-                check = true;
+                return true;
             }
         }
-        return check;
+        return false;
     }
 
     @Override

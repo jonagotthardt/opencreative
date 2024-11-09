@@ -58,6 +58,13 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.util.Vector;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static mcchickenstudio.creative.events.player.ChangedWorld.*;
 import static mcchickenstudio.creative.events.player.PlayerPlaceBlock.move;
@@ -124,12 +131,45 @@ public class PlayerInteract implements Listener {
                 }
             }
             case NETHER_STAR -> {
-                new ParticlesMenu(player).open(player);
+                if (player.isSneaking()) {
+                    String particleType = getPersistentData(currentItem,getCodingParticleTypeKey());
+                    if (particleType.isEmpty()) return;
+                    try {
+                        Particle particle = Particle.valueOf(particleType.toUpperCase());
+                        Vector direction = player.getLocation().getDirection().normalize().multiply(1.5);;
+                        Location particleLocation = player.getLocation().add(direction).add(0,1,0);
+                        player.spawnParticle(particle,particleLocation,1);
+                    } catch (Exception ignored) {}
+                } else {
+                    new ParticlesMenu(player).open(player);
+                }
                 event.setCancelled(true);
             }
-            case POTION, GLASS_BOTTLE -> {
-                new PotionsMenu(player).open(player);
+            case POTION, GLASS_BOTTLE, LINGERING_POTION, SPLASH_POTION -> {
                 event.setCancelled(true);
+                if (player.isSneaking() && currentItem.getType() != Material.GLASS_BOTTLE) {
+                    if (player.hasCooldown(currentItem.getType())) return;
+                    player.setCooldown(currentItem.getType(),10);
+                    try {
+                        PotionMeta potionMeta = (PotionMeta) currentItem.getItemMeta();
+                        List<PotionEffect> effects = new ArrayList<>();
+                        if (potionMeta.getBasePotionType() != null) {
+                            effects.addAll(potionMeta.getBasePotionType().getPotionEffects());
+                        }
+                        if (potionMeta.hasCustomEffects()) {
+                            effects.addAll(potionMeta.getCustomEffects());
+                        }
+                        for (PotionEffect potionEffect : effects) {
+                            if (player.hasPotionEffect(potionEffect.getType())) {
+                                player.removePotionEffect(potionEffect.getType());
+                            } else {
+                                player.addPotionEffect(potionEffect);
+                            }
+                        }
+                    } catch (Exception ignored) {}
+                } else {
+                    new PotionsMenu(player, currentItem.getType()).open(player);
+                }
             }
         }
     }

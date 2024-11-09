@@ -73,6 +73,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_AMBIENT, 100, 2);
                     }
                     Main.getPlugin().reloadConfig();
+                    Main.getSettings().load(Main.getPlugin().getConfig());
                     loadLocales();
                     sender.sendMessage(getLocaleMessage("creative.reloaded"));
                     if (player != null) {

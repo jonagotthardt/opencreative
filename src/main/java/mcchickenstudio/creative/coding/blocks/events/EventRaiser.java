@@ -70,8 +70,7 @@ public class EventRaiser {
 
     public static boolean cantRaiseEvent(Plot plot) {
         if (plot == null) return true;
-        if (plot.getPlotMode() == Plot.Mode.BUILD) return true;
-        return false;
+        return plot.getPlotMode() == Plot.Mode.BUILD;
     }
 
     public static void raiseChunkLoadEvent(PlayerChunkLoadEvent event) {

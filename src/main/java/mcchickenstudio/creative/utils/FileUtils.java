@@ -196,7 +196,7 @@ public class FileUtils {
 
     private static void setDefaultLocales() {
         try {
-            plugin.saveResource("locales" + File.separator + "en.yml",false);
+            plugin.saveResource("locales" + File.separator + "olden.yml",false);
             plugin.saveResource("locales" + File.separator + "ru.yml",false);
         } catch (IllegalArgumentException error) {
             sendWarningErrorMessage("Couldn't save default localization file (resource) " + error.getClass().getName() + " " + error.getMessage());

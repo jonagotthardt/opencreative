@@ -33,6 +33,7 @@ import mcchickenstudio.creative.Main;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static mcchickenstudio.creative.utils.PlayerUtils.getPlayerPlotSize;
 import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
@@ -192,7 +193,7 @@ public class PlotManager {
 
     public List<Plot> getRecommendedPlots() {
         List<Plot> featuredPlots = new ArrayList<>();
-        List<Integer> featuredIds = Main.getPlugin().getConfig().getIntegerList("recommended-worlds");
+        Set<Integer> featuredIds = Main.getSettings().getRecommendedWorldsIDs();
         for (int id : featuredIds) {
             Plot plot = getPlotByWorldName("plot"+id);
             if (plot != null) {
