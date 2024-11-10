@@ -27,7 +27,9 @@ import mcchickenstudio.creative.coding.variables.VariableLink;
 import org.bukkit.entity.Entity;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class AddToListAction extends VariableAction {
     public AddToListAction(Executor executor, Target target, int x, Arguments args) {
@@ -39,7 +41,12 @@ public class AddToListAction extends VariableAction {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         List<Object> list = new ArrayList<>(getArguments().getList("variable",this));
         List<Object> elements = getArguments().getList("elements",this);
-        list.addAll(elements);
+        for (Object element : elements) {
+            if (element instanceof Collection<?> || element instanceof Map<?,?>) {
+                throw new RuntimeException("Some element is list or map, instead of Add To List action use Merge Lists action.");
+            }
+            list.add(element);
+        }
         setVarValue(variable, list);
     }
 

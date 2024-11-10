@@ -45,7 +45,6 @@ import java.util.List;
 import java.util.Set;
 
 import static mcchickenstudio.creative.utils.BlockUtils.getSignLine;
-import static mcchickenstudio.creative.utils.PlayerUtils.clearPlayer;
 
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 
@@ -236,15 +235,9 @@ public class ErrorUtils {
      Stops plot's code execution and changes plot's mode to BUILD.
      **/
     public static void stopPlotCode(Plot plot) {
-        Main.getPlugin().getLogger().info("Plot code has been stopped in " + plot.worldName + " because of operations limit.");
-        if (plot.getPlotMode() != Plot.Mode.BUILD) {
-            plot.setPlotMode(Plot.Mode.BUILD);
-            for (Player p : plot.getPlayers()){
-                if (PlotManager.getInstance().getDevPlot(p) == null) {
-                    clearPlayer(p);
-                    p.teleport(plot.world.getSpawnLocation());
-                }
-            }
+        Main.getPlugin().getLogger().info("Plot code has been stopped in " + plot.getWorldName() + " because of operations limit.");
+        if (plot.getMode() != Plot.Mode.BUILD) {
+            plot.setMode(Plot.Mode.BUILD);
         }
     }
 
@@ -279,7 +272,7 @@ public class ErrorUtils {
         if (true) {
             return;
         }
-        if (!plot.getDebug()) return;
+        if (!plot.isDebug()) return;
         Object value = null;
         if (value == null) value = "null";
         for (Player player : plot.getPlayers()) {
@@ -293,7 +286,7 @@ public class ErrorUtils {
     }
 
     public static void sendCodingDebugLog(Plot plot, String log) {
-        if (!plot.getDebug()) return;
+        if (!plot.isDebug()) return;
         for (Player player : plot.getPlayers()) {
             player.sendMessage(getLocaleMessage("plot-code-debug.log",false).replace("%log%",log));
         }
@@ -303,7 +296,7 @@ public class ErrorUtils {
         if (true) {
             return;
         }
-        if (!plot.getDebug()) return;
+        if (!plot.isDebug()) return;
         if (value == null) value = "null";
         for (Player player : plot.getPlayers()) {
             player.sendMessage(getLocaleMessage("plot-code-debug.variable-found",false).replace("%name%",name).replace("%value%",value.toString()));
@@ -312,7 +305,7 @@ public class ErrorUtils {
 
     public static void sendCodingDebugExecutor(Executor executor) {
         Plot plot = executor.getPlot();
-        if (plot == null || !plot.getDebug()) return;
+        if (plot == null || !plot.isDebug()) return;
         for (Player player : plot.getPlayers()) {
             player.sendMessage(getLocaleMessage("plot-code-debug.executor-message",false).replace("%type%",executor.getExecutorType().getLocaleName()).replace("%x%",String.valueOf(executor.getX())).replace("%y%",String.valueOf(executor.getY())).replace("%z%",String.valueOf(executor.getZ())));
         }
@@ -321,7 +314,7 @@ public class ErrorUtils {
     public static void sendCodingDebugAction(Action action) {
         if (action.getExecutor() == null) return;
         Plot plot = action.getExecutor().getPlot();
-        if (plot == null || !plot.getDebug()) return;
+        if (plot == null || !plot.isDebug()) return;
         List<Argument> arguments = action.getArgumentsList();
         String message = getLocaleMessage("plot-code-debug.hover." + (action.getActionType().isCondition() ? "condition" : "action"));
         message = message.replace("%category%",action.getActionCategory().getLocaleName());

@@ -46,9 +46,9 @@ public class CreateScoreboardAction extends WorldAction {
         String name = getArguments().getValue("name","board",this);
         String displayName = getArguments().getValue("display-name","Scoreboard",this);
         try {
-            if (getPlot().getScoreboards().size() >= getPlot().getScoreboardsLimit()) {
+            if (getPlot().getScoreboards().size() >= getPlot().getLimits().getScoreboardsLimit()) {
                 // FIXME: Replace with hard-coded message, sendMessageOnce()
-                sendCodingDebugLog(getPlot(),"Limit of " + getPlot().getScoreboardsLimit() + " scoreboards reached.");
+                sendCodingDebugLog(getPlot(),"Limit of " + getPlot().getLimits().getScoreboardsLimit() + " scoreboards reached.");
                 return;
             }
             Scoreboard scoreboard;

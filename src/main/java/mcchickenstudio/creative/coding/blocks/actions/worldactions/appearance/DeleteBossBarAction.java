@@ -39,7 +39,7 @@ public class DeleteBossBarAction extends WorldAction {
         String name = getArguments().getValue("name","boss",this);
         BossBar bossBar = getPlot().getBossBars().get(name.toLowerCase());
         if (bossBar != null) {
-            getPlot().world.audiences().forEach(bossBar::removeViewer);
+            getPlot().getWorld().audiences().forEach(bossBar::removeViewer);
             getPlot().getBossBars().remove(name.toLowerCase());
         }
     }

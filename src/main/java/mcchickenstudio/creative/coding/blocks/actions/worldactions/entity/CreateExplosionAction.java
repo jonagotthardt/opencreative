@@ -37,7 +37,7 @@ public class CreateExplosionAction extends WorldAction {
         boolean setFire = getArguments().getValue("fire",false,this);
         boolean breakBlocks = getArguments().getValue("damage",false,this);
         for (Location location : getArguments().getLocationList("locations",this)) {
-            getPlot().world.createExplosion(location,power,setFire,breakBlocks);
+            getPlot().getWorld().createExplosion(location,power,setFire,breakBlocks);
         }
     }
 

@@ -50,7 +50,7 @@ public class CommandAd implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
+            if (Main.maintenance && !player.hasPermission("opencreative.maintenance.bypass")) {
                 player.sendMessage(getLocaleMessage("maintenance"));
                 return true;
             }
@@ -63,7 +63,7 @@ public class CommandAd implements CommandExecutor, TabCompleter {
                 if (!PlotManager.getInstance().getPlots().isEmpty()) {
                     Plot foundPlot = null;
                     for (Plot searchablePlot : PlotManager.getInstance().getPlots()) {
-                        if (searchablePlot.worldID.equals(args[0])) {
+                        if (String.valueOf(searchablePlot.getId()).equals(args[0])) {
                             foundPlot = searchablePlot;
                             break;
                         } else if (searchablePlot.getInformation().getCustomID().equalsIgnoreCase(args[0])) {
@@ -75,7 +75,7 @@ public class CommandAd implements CommandExecutor, TabCompleter {
                         if (foundPlot.equals(PlotManager.getInstance().getPlotByPlayer(player))) {
                             player.sendMessage(getLocaleMessage("same-world",player));
                         } else {
-                            foundPlot.teleportPlayer(player);
+                            foundPlot.connectPlayer(player);
                         }
                     } else {
                         player.playSound(player.getLocation(),Sound.BLOCK_ANVIL_DESTROY,100,2);
@@ -105,7 +105,7 @@ public class CommandAd implements CommandExecutor, TabCompleter {
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     TextComponent advertisement = new TextComponent(getLocaleMessage("advertisement.message",player).replace("%world%",plot.getInformation().getDisplayName()));
                     advertisement.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(parsePlotLines(plot,getLocaleMessage("advertisement.hover")))));
-                    advertisement.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ad " + plot.worldID));
+                    advertisement.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ad " + plot.getId()));
                         p.sendMessage(advertisement);
                 }
             }

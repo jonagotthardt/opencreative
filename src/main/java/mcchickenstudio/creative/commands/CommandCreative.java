@@ -38,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
@@ -64,7 +65,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
             }
             switch (args[0].toLowerCase()) {
                 case "reload" -> {
-                    if (!sender.hasPermission("creative.reload")) {
+                    if (!sender.hasPermission("opencreative.reload")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -73,6 +74,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_AMBIENT, 100, 2);
                     }
                     Main.getPlugin().reloadConfig();
+                    Main.getSettings().load(Main.getPlugin().getConfig());
                     loadLocales();
                     sender.sendMessage(getLocaleMessage("creative.reloaded"));
                     if (player != null) {
@@ -80,7 +82,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                 }
                 case "resetlocale" -> {
-                    if (!sender.hasPermission("creative.resetlocale")) {
+                    if (!sender.hasPermission("opencreative.resetlocale")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -106,13 +108,13 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                     long now = System.currentTimeMillis();
                     sender.sendMessage(getLocaleMessage("world.info").replace("%name%", plot.getInformation().getDisplayName())
-                            .replace("%id%", plot.worldID).replace("%creation-time%",getElapsedTime(now,plot.getCreationTime()))
+                            .replace("%id%", String.valueOf(plot.getId())).replace("%creation-time%",getElapsedTime(now,plot.getCreationTime()))
                             .replace("%activity-time%",getElapsedTime(now,plot.getLastActivityTime())).replace("%online%",String.valueOf(plot.getOnline()))
-                            .replace("%builders%",plot.getBuilders()).replace("%coders%",plot.getDevelopers()).replace("%owner%",plot.getOwner())
-                            .replace("%sharing%", plot.getPlotSharing().getName()).replace("%mode%", plot.getPlotMode().getName()).replace("%description%", plot.getInformation().getDescription()));
+                            .replace("%builders%", plot.getWorldPlayers().getBuilders()).replace("%coders%", plot.getWorldPlayers().getDevelopers()).replace("%owner%",plot.getOwner())
+                            .replace("%sharing%", plot.getPlotSharing().getName()).replace("%mode%", plot.getMode().getName()).replace("%description%", plot.getInformation().getDescription()));
                 }
                 case "load" -> {
-                    if (!sender.hasPermission("creative.load-world")) {
+                    if (!sender.hasPermission("opencreative.load-world")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -125,7 +127,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("no-plot-found"));
                         return true;
                     }
-                    if (!plot.isLoaded) {
+                    if (!plot.isLoaded()) {
                         PlotManager.getInstance().loadPlot(plot);
                         sender.sendMessage(getLocaleMessage("world.loaded").replace("%id%",args[1]));
                     } else {
@@ -133,7 +135,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                 }
                 case "creative-chat" -> {
-                    if (!sender.hasPermission("creative.creative-chat")) {
+                    if (!sender.hasPermission("opencreative.creative-chat")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -159,7 +161,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                 }
                 case "kick-all" -> {
-                    if (!sender.hasPermission("creative.kick-all")) {
+                    if (!sender.hasPermission("opencreative.kick-all")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -202,7 +204,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                 }
                 case "maintenance" -> {
-                    if (!sender.hasPermission("creative.maintenance")) {
+                    if (!sender.hasPermission("opencreative.maintenance")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -247,7 +249,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                                         onlinePlayer.playSound(onlinePlayer.getLocation(),Sound.BLOCK_BEACON_POWER_SELECT,100,0.5f);
                                         onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.started"));
                                         for (Plot plot : PlotManager.getInstance().getPlots()) {
-                                            if (plot.isLoaded) {
+                                            if (plot.isLoaded()) {
                                                 for (Player player : plot.getPlayers()) {
                                                     teleportToLobby(player);
                                                 }
@@ -270,7 +272,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                 }
                 case "unload" -> {
-                    if (!sender.hasPermission("creative.unload-world")) {
+                    if (!sender.hasPermission("opencreative.unload-world")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -283,7 +285,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("no-plot-found"));
                         return true;
                     }
-                    if (plot.isLoaded) {
+                    if (plot.isLoaded()) {
                         PlotManager.getInstance().unloadPlot(plot);
                         sender.sendMessage(getLocaleMessage("world.unloaded").replace("%id%",args[1]));
                     } else {
@@ -291,7 +293,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                 }
                 case "list" -> {
-                    if (!sender.hasPermission("creative.list")) {
+                    if (!sender.hasPermission("opencreative.list")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -304,7 +306,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                             + String.join(", ",worlds));
                 }
                 case "deprecated" -> {
-                    if (!sender.hasPermission("creative.list.deprecated")) {
+                    if (!sender.hasPermission("opencreative.list.deprecated")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -331,32 +333,32 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     String worldMessage = getLocaleMessage("creative.deprecated-worlds.world");
                     for (Plot plot : deprecatedWorlds) {
                         sender.sendMessage(Component.text(worldMessage
-                                .replace("%id%",plot.worldID)
+                                .replace("%id%", String.valueOf(plot.getId()))
                                 .replace("%owner%",plot.getOwner())
                                 .replace("%created%",getElapsedTime(currentTime,plot.getCreationTime()))
                                 .replace("%seen%",getElapsedTime(currentTime,Bukkit.getOfflinePlayer(plot.getOwner()).getLastSeen())
-                                )).clickEvent(ClickEvent.runCommand("/join " + plot.worldID))
+                                )).clickEvent(ClickEvent.runCommand("/join " + plot.getId()))
                         );
                     }
                 }
                 case "corrupted" -> {
-                    if (!sender.hasPermission("creative.list.corrupted")) {
+                    if (!sender.hasPermission("opencreative.list.corrupted")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
-                    List<Plot> corruptedPlots = PlotManager.getInstance().getCorruptedPlots();
+                    Set<Plot> corruptedPlots = PlotManager.getInstance().getCorruptedPlots();
                     sender.sendMessage(getLocaleMessage("creative.corrupted-worlds.list")
                             .replace("%amount%",String.valueOf(corruptedPlots.size())));
                     String worldMessage = getLocaleMessage("creative.corrupted-worlds.world");
                     for (Plot plot : corruptedPlots) {
                         sender.sendMessage(Component.text(worldMessage
-                                .replace("%id%",plot.worldID)
-                                ).clickEvent(ClickEvent.runCommand("/join " + plot.worldID))
+                                .replace("%id%", String.valueOf(plot.getId()))
+                                ).clickEvent(ClickEvent.runCommand("/join " + plot.getId()))
                         );
                     }
                 }
                 case "print" -> {
-                    if (!sender.hasPermission("creative.print")) {
+                    if (!sender.hasPermission("opencreative.print")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -370,7 +372,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     if (!Main.debug) {
                         return true;
                     }
-                    if (!sender.hasPermission("creative.test")) {
+                    if (!sender.hasPermission("opencreative.test")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -418,7 +420,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 tabCompleter.add("disable");
                 tabCompleter.add("clear");
             }  else if ("load".equalsIgnoreCase(args[0]) || "unload".equalsIgnoreCase(args[0])) {
-                tabCompleter.addAll(PlotManager.getInstance().getPlots().stream().map(plot -> plot.worldID).toList());
+                tabCompleter.addAll(PlotManager.getInstance().getPlots().stream().map(plot -> String.valueOf(plot.getId())).toList());
             }
         } else if (args.length == 3) {
             if ("start".equalsIgnoreCase(args[1])) {

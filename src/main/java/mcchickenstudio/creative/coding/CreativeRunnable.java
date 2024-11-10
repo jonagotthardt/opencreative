@@ -51,12 +51,12 @@ public abstract class CreativeRunnable {
         id = new BukkitRunnable() {
             @Override
             public void run() {
-                if (plot != null && plot.getPlotMode() == Plot.Mode.PLAYING) {
+                if (plot != null && plot.getMode() == Plot.Mode.PLAYING) {
                     for (Player player : onlinePlayers) {
                         if (currentPlayers.isEmpty()) {
                             cancel();
                         }
-                        if (plot.getPlotMode() != Plot.Mode.PLAYING) {
+                        if (plot.getMode() != Plot.Mode.PLAYING) {
                             cancel();
                         }
                         if (player == null) {
@@ -90,12 +90,12 @@ public abstract class CreativeRunnable {
         id = new BukkitRunnable() {
             @Override
             public void run() {
-                if (plot != null && plot.getPlotMode() == Plot.Mode.PLAYING) {
+                if (plot != null && plot.getMode() == Plot.Mode.PLAYING) {
                     for (Player player : onlinePlayers) {
                         if (currentPlayers.isEmpty()) {
                             cancel();
                         }
-                        if (plot.getPlotMode() != Plot.Mode.PLAYING) {
+                        if (plot.getMode() != Plot.Mode.PLAYING) {
                             cancel();
                         }
                         if (player == null) {

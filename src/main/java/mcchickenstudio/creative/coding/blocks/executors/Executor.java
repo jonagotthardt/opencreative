@@ -106,7 +106,7 @@ public abstract class Executor {
 
     @Override
     public String toString() {
-        return "Executor | Plot: " + getPlot().worldName + " Coords: " + x + " " + y + " " + z;
+        return "Executor | Plot: " + getPlot().getWorldName() + " Coords: " + x + " " + y + " " + z;
     }
 
     public final int getX() {

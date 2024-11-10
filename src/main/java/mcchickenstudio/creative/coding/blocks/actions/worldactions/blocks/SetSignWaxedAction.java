@@ -44,19 +44,19 @@ public class SetSignWaxedAction extends WorldAction {
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
-                getPlot().lastModifiedBlocksAmount = 0;
+                getPlot().getLimits().setLastModifiedBlocksAmount(0);
             }
         };
         getPlot().addBukkitRunnable(runnable);
         for (Location location : locations) {
-            if (getPlot().lastModifiedBlocksAmount > getPlot().getModifyingBlocksLimit()) {
+            if (getPlot().getLimits().getLastModifiedBlocksAmount() > getPlot().getLimits().getModifyingBlocksLimit()) {
                 runnable.runTaskLater(Main.getPlugin(),20L);
                 getPlot().removeBukkitRunnable(runnable);
                 return;
             }
             if (location.getBlock().getState() instanceof Sign sign) {
                 sign.setWaxed(waxed);
-                getPlot().lastModifiedBlocksAmount++;
+                getPlot().getLimits().setLastModifiedBlocksAmount(getPlot().getLimits().getLastModifiedBlocksAmount()+1);
             }
         }
         runnable.runTaskLater(Main.getPlugin(),20L);

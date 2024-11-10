@@ -18,12 +18,15 @@
 
 package mcchickenstudio.creative.coding.blocks.actions.playeractions.appearance;
 
+import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
+
+import java.util.Set;
 
 public class SetResourcePackAction extends PlayerAction {
     public SetResourcePackAction(Executor executor, Target target, int x, Arguments args) {
@@ -34,7 +37,24 @@ public class SetResourcePackAction extends PlayerAction {
     public void executePlayer(Player player) {
         String url = getArguments().getValue("url","",this);
         if (url.isEmpty()) return;
-        player.setResourcePack(url);
+        /*
+         * We check url, because some world owners
+         * can use IP logger when player downloads
+         * a resource pack from owner's site.
+         */
+        String checkUrl = url.toLowerCase()
+                .replace("https:////","")
+                .replace("http:////","")
+                .replace("www.","");
+        Set<String> allowedLinks = Main.getSettings().getAllowedResourcePackLinks();
+        for (String allowed : allowedLinks) {
+            if (allowed.startsWith(checkUrl)) {
+                player.setResourcePack(url);
+                return;
+            }
+        }
+        throw new RuntimeException("The requested url " + url + " is not trusted by server.");
+
     }
 
     @Override

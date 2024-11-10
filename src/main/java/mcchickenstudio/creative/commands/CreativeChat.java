@@ -49,11 +49,11 @@ public class CreativeChat implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (Main.maintenance && !sender.hasPermission("creative.maintenance.bypass")) {
+        if (Main.maintenance && !sender.hasPermission("opencreative.maintenance.bypass")) {
             sender.sendMessage(getLocaleMessage("maintenance"));
             return true;
         }
-        if (!chatEnabled && !sender.hasPermission("creative.creative-chat.bypass")) {
+        if (!chatEnabled && !sender.hasPermission("opencreative.creative-chat.bypass")) {
             sender.sendMessage(getLocaleMessage("creative.creative-chat.off"));
             return true;
         }

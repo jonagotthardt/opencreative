@@ -52,7 +52,7 @@ public class PlayerDeath implements Listener {
         event.deathMessage(null);
         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
         if (plot != null) {
-            deathLocations.put(player, plot.world.getSpawnLocation());
+            deathLocations.put(player, plot.getWorld().getSpawnLocation());
             if (plot.getFlagValue(PlotFlags.PlotFlag.DEATH_MESSAGES) == 1) {
                 for (Player p : plot.getPlayers()) {
                     p.sendMessage("§7 " + player.getName() + "§f " + translateDeathMessage(player));

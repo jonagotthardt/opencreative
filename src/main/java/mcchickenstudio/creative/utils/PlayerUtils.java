@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.utils;
 
 import mcchickenstudio.creative.Main;
+import mcchickenstudio.creative.settings.Settings;
 import mcchickenstudio.creative.utils.hooks.HookUtils;
 import mcchickenstudio.creative.utils.hooks.ProtocolLibUtils;
 import net.kyori.adventure.text.Component;
@@ -389,14 +390,14 @@ public class PlayerUtils {
 
     public static void hidePlayerInTab(Player spectator, Player receiver) {
         if (spectator == receiver) return;
-        String type = Main.getPlugin().getConfig().getString("hide-from-tab","full");
-        if (type.equalsIgnoreCase("spectator")) {
+        Settings.PlayerListChanger changer = Main.getSettings().getListChanger();
+        if (changer == Settings.PlayerListChanger.SPECTATOR) {
             if (HookUtils.isProtocolLibEnabled) {
                 ProtocolLibUtils.sendSpectatorColoredNickname(spectator,receiver);
             } else {
                 receiver.hidePlayer(Main.getPlugin(),spectator);
             }
-        } else if (type.equalsIgnoreCase("full")) {
+        } else if (changer == Settings.PlayerListChanger.FULL) {
             receiver.hidePlayer(Main.getPlugin(),spectator);
         }
     }

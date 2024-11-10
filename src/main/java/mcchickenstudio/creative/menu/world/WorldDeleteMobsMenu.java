@@ -63,14 +63,14 @@ public class WorldDeleteMobsMenu extends AbstractMenu {
         }
         int count = 0;
         if (itemEquals(event.getCurrentItem(),DELETE_ITEMS_ITEM)) {
-            for (Entity entity : plot.world.getEntities()) {
+            for (Entity entity : plot.getWorld().getEntities()) {
                 if (entity instanceof Item) {
                     entity.remove();
                     count++;
                 }
             }
-            if (plot.devPlot != null && plot.devPlot.world != null) {
-                for (Entity entity : plot.devPlot.world.getEntities()) {
+            if (plot.getDevPlot() != null && plot.getDevPlot().world != null) {
+                for (Entity entity : plot.getDevPlot().world.getEntities()) {
                     if (entity instanceof Item) {
                         entity.remove();
                         count++;
@@ -80,7 +80,7 @@ public class WorldDeleteMobsMenu extends AbstractMenu {
             player.closeInventory();
             player.sendMessage(getLocaleMessage("world.delete-mobs.items").replace("%count%", String.valueOf(count)));
         } else if (itemEquals(event.getCurrentItem(),DELETE_ENTITIES_ITEM)) {
-            for (Entity entity : plot.world.getEntities()) {
+            for (Entity entity : plot.getWorld().getEntities()) {
                 if (!(entity instanceof LivingEntity)) {
                     entity.remove();
                     count++;
@@ -89,7 +89,7 @@ public class WorldDeleteMobsMenu extends AbstractMenu {
             player.closeInventory();
             player.sendMessage(getLocaleMessage("world.delete-mobs.entities").replace("%count%", String.valueOf(count)));
         } else if (itemEquals(event.getCurrentItem(),DELETE_MOBS_ITEM)) {
-            for (Entity entity : plot.world.getEntities()) {
+            for (Entity entity : plot.getWorld().getEntities()) {
                 if (entity instanceof LivingEntity && !(entity instanceof Player)) {
                     entity.remove();
                     count++;

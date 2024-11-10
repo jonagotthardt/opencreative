@@ -147,7 +147,7 @@ public class WorldPlayer {
             }
             return true;
         } catch (Exception e) {
-            sendCriticalErrorMessage("Couldn't read player data " + player.getName() + " " + currentPlot.worldName);
+            sendCriticalErrorMessage("Couldn't read player data " + player.getName() + " " + currentPlot.getWorldName());
             return false;
         }
     }
@@ -196,7 +196,7 @@ public class WorldPlayer {
             writer.close();
             return true;
         } catch (Exception e) {
-            sendCriticalErrorMessage("Couldn't save player data " + player.getName() + " " + currentPlot.worldName,e);
+            sendCriticalErrorMessage("Couldn't save player data " + player.getName() + " " + currentPlot.getWorldName(),e);
             return false;
         }
     }

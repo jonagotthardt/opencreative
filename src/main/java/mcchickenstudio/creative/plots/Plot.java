@@ -23,20 +23,22 @@ import mcchickenstudio.creative.coding.CodingBlockParser;
 import mcchickenstudio.creative.coding.CodeScript;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.coding.variables.WorldVariables;
+import mcchickenstudio.creative.utils.*;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
+import net.kyori.adventure.util.TriState;
 import org.bukkit.*;
 import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 
-import mcchickenstudio.creative.utils.FileUtils;
-import mcchickenstudio.creative.utils.PlayerUtils;
-import mcchickenstudio.creative.utils.WorldUtils;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +49,6 @@ import static mcchickenstudio.creative.utils.FileUtils.*;
 import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.*;
 import static mcchickenstudio.creative.utils.PlayerUtils.*;
-import static mcchickenstudio.creative.utils.WorldUtils.generateWorld;
 
 /**
  * <h1>Plot</h1>
@@ -58,134 +59,52 @@ import static mcchickenstudio.creative.utils.WorldUtils.generateWorld;
  */
 public class Plot {
 
-    /**
-     * Some fields will be separated into different
-     * classes in next updates.
-     */
-
-    public World world;
-    public String worldName;
-    public String worldID;
-    private World.Environment environment;
-
-    private final PlotInfo plotInformation;
+    private final int id;
+    private final PlotInfo info;
+    private final DevPlot devPlot;
+    private final PlotFlags flags;
+    private final PlotLimits limits;
     private final PlotPlayers worldPlayers;
+    private final WorldVariables variables;
+    private final int worldSize;
 
     private String owner;
     private String ownerGroup;
 
-    public boolean isLoaded;
-    public DevPlot devPlot;
+    private World world;
+    private World.Environment environment;
 
     private int plotReputation;
-    private Mode plotMode;
+    private Mode mode;
     private Sharing plotSharing;
-
-    public final int worldSize;
-    public int lastModifiedBlocksAmount;
-    public int lastRedstoneOperationsAmount;
-    public boolean currentlyTransferringOwnership;
-
-    private final int entitiesLimit;
-    private final int codeOperationsLimit;
-    private final int redstoneOperationsLimit;
-    private final int modifyingBlocksLimit;
-    private final int scoreboardsLimit;
-    private final int bossBarsLimit;
-    private final int openingInventoriesLimit;
-    private final int variablesAmountLimit;
 
     private final Map<String, BossBar> bossBars = new HashMap<>();
     private final Map<String, Scoreboard> scoreboards = new HashMap<>();
     private final List<BukkitRunnable> runningBukkitRunnables = new ArrayList<>();
 
-    private final WorldVariables worldVariables;
-    private boolean debug = false;
-    private final PlotFlags plotFlags;
+    private boolean debug;
+    private boolean corrupted;
+    private boolean changingOwner;
 
-    private boolean isCorrupted = false;
     private CodeScript script;
-
-    /**
-     Creates a new plot for specified player with specified generator.
-     **/
-    public Plot(Player player, WorldUtils.WorldGenerator generator, World.Environment environment, long seed, boolean generateStructures) {
-
-        player.closeInventory();
-        owner = (player.getName());
-        ownerGroup = getGroup(player);
-
-        plotMode = (Mode.BUILD);
-        plotSharing = (Sharing.PUBLIC);
-        plotReputation = 0;
-
-        lastModifiedBlocksAmount = 0;
-        lastRedstoneOperationsAmount = 0;
-        redstoneOperationsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_REDSTONE_OPERATIONS_LIMIT);
-        entitiesLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_ENTITIES_LIMIT);
-        codeOperationsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_CODE_OPERATIONS_LIMIT);
-        openingInventoriesLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_OPENING_INVENTORIES_LIMIT);
-        variablesAmountLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_VARIABLES_LIMIT);
-        modifyingBlocksLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerLimit.WORLD_MODIFYING_BLOCKS_LIMIT);
-        scoreboardsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerLimit.WORLD_SCOREBOARDS_LIMIT);
-        bossBarsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerLimit.WORLD_BOSSBARS_LIMIT);
-        worldSize = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_SIZE);
-        currentlyTransferringOwnership = false;
-
-        PlotManager.getInstance().registerPlot(this);
-
-        create(this,generator,environment,seed,generateStructures);
-        this.environment = environment;
-
-        worldPlayers = new PlotPlayers(this);
-        plotInformation = new PlotInfo(this);
-        plotFlags = new PlotFlags(this);
-
-        worldPlayers.registerPlayer(player);
-
-        devPlot = new DevPlot(this);
-        script = new CodeScript(this,getPlotScriptFile(this));
-        worldVariables = new WorldVariables(this);
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                plotInformation.updateIcon();
-            }
-        }.runTaskAsynchronously(Main.getPlugin());
-
-    }
 
     /**
      Loads a plot with world name.
      **/
-    public Plot(String fileName) {
+    public Plot(int id) {
 
-        worldName = fileName;
-        worldID = fileName.replace("plot","");
-        isLoaded = false;
-        currentlyTransferringOwnership = false;
-
+        this.id = id;
+        devPlot = new DevPlot(this);
         loadInfo();
 
-        plotInformation = new PlotInfo(this);
+        info = new PlotInfo(this);
         worldPlayers = new PlotPlayers(this);
+        limits = new PlotLimits(this);
 
-        plotFlags = new PlotFlags(this);
-        worldVariables = new WorldVariables(this);
-        devPlot = new DevPlot(this);
+        flags = new PlotFlags(this);
+        variables = new WorldVariables(this);
         script = new CodeScript(this,getPlotScriptFile(this));
 
-        lastModifiedBlocksAmount = 0;
-        lastRedstoneOperationsAmount = 0;
-        redstoneOperationsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_REDSTONE_OPERATIONS_LIMIT);
-        entitiesLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_ENTITIES_LIMIT);
-        codeOperationsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_CODE_OPERATIONS_LIMIT);
-        openingInventoriesLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_OPENING_INVENTORIES_LIMIT);
-        variablesAmountLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_VARIABLES_LIMIT);
-        modifyingBlocksLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerLimit.WORLD_MODIFYING_BLOCKS_LIMIT);
-        scoreboardsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerLimit.WORLD_SCOREBOARDS_LIMIT);
-        bossBarsLimit = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerLimit.WORLD_BOSSBARS_LIMIT);
         worldSize = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_SIZE);
 
         PlotManager.getInstance().registerPlot(this);
@@ -193,13 +112,13 @@ public class Plot {
         new BukkitRunnable() {
             @Override
             public void run() {
-                plotInformation.updateIcon();
+                info.updateIcon();
             }
         }.runTaskAsynchronously(Main.getPlugin());
     }
 
     public PlotInfo getInformation() {
-        return plotInformation;
+        return info;
     }
 
     public PlotPlayers getWorldPlayers() {
@@ -214,7 +133,7 @@ public class Plot {
         return getOwner().equalsIgnoreCase(nickname);
     }
 
-    public int getPlotReputation() {
+    public int getReputation() {
         return plotReputation;
     }
 
@@ -222,10 +141,138 @@ public class Plot {
         this.plotReputation = plotReputation;
     }
 
-    public void setPlotMode(Mode mode) {
-        this.plotMode = mode;
-        stopBukkitRunnables();
+    /**
+     * Changes plot's mode to Play or Build.
+     * <p>In the Build mode players cannot get damaged, they only can look at builders which are creating a map.</p>
+     * <p>In the Play mode code script will work, player damaging is enabled.</p>
+     * @param mode Mode to set.
+     */
+    public void setMode(Mode mode) {
+        if (this.mode == mode) return;
+        this.mode = mode;
         setPlotConfigParameter(this,"mode",mode);
+        stopBukkitRunnables();
+        world.getSpawnLocation().getChunk().load(true);
+        if (mode == Mode.BUILD) {
+            for (Player player : getPlayers()){
+                if (!isEntityInDevPlot(player)) {
+                    clearPlayer(player);
+                    player.showTitle(Title.title(
+                            Component.text(getLocaleMessage("world.build-mode.title")), Component.text(getLocaleMessage("world.build-mode.subtitle")),
+                            Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(30), Duration.ofMillis(130))
+                    ));
+                    player.teleport(world.getSpawnLocation());
+                    player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT,100,1.7f);
+                    if (worldPlayers.canBuild(player)) {
+                        player.setGameMode(GameMode.CREATIVE);
+                        giveBuildPermissions(player);
+                        player.sendMessage(getLocaleMessage("world.build-mode.message.owner"));
+                    } else {
+                        player.sendMessage(getLocaleMessage("world.build-mode.message.players"));
+                    }
+                } else {
+                    player.sendMessage(getLocaleMessage("world.build-mode.message.players"));
+                }
+            }
+        } else {
+            for (Player player : getPlayers()) {
+                if (!isEntityInDevPlot(player)) {
+                    clearPlayer(player);
+                    player.teleport(world.getSpawnLocation());
+                    if (worldPlayers.canDevelop(player)) {
+                        player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
+                    } else {
+                        player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
+                    }
+                } else {
+                    player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
+                }
+            }
+            if (devPlot.isLoaded()) {
+                new CodingBlockParser().parseCode(devPlot);
+            } else {
+                script.loadCode();
+            }
+            EventRaiser.raiseWorldPlayEvent(this);
+            for (Player player : getPlayers()) {
+                if (PlotManager.getInstance().getDevPlot(player) == null) {
+                    EventRaiser.raiseJoinEvent(player);
+                }
+            }
+        }
+
+    }
+
+    public World generateWorld(WorldUtils.WorldGenerator worldGenerator, World.Environment environment, long seed, boolean generateStructures) {
+
+        WorldCreator worldCreator = new WorldCreator(getWorldName()).generateStructures(false);
+        worldCreator.type(WorldType.FLAT);
+        worldCreator.environment(environment);
+        worldCreator.generateStructures(generateStructures);
+        worldCreator.seed(seed);
+
+        switch (worldGenerator) {
+            case EMPTY -> worldCreator.generator(new EmptyChunkGenerator());
+            case WATER -> worldCreator.generator(new WaterChunkGenerator());
+            case SURVIVAL -> worldCreator.type(WorldType.NORMAL);
+            case LARGE_BIOMES ->  worldCreator.type(WorldType.LARGE_BIOMES);
+        }
+
+        worldCreator.keepSpawnLoaded(TriState.FALSE);
+        World world = Bukkit.createWorld(worldCreator);
+
+        if (world != null) {
+            world.setGameRule(GameRule.SPAWN_CHUNK_RADIUS, 1);
+            world.getWorldBorder().setSize(worldSize);
+
+            world.setGameRule(GameRule.DO_MOB_LOOT, true);
+            world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+            world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+            world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+            world.setGameRule(GameRule.KEEP_INVENTORY, false);
+            world.setGameRule(GameRule.MOB_GRIEFING, true);
+            world.setGameRule(GameRule.NATURAL_REGENERATION, true);
+            world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, false);
+            world.setGameRule(GameRule.DO_FIRE_TICK, true);
+            world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
+            world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+
+            world.setTime(0);
+
+            if (worldGenerator == WorldUtils.WorldGenerator.EMPTY) {
+                world.setSpawnLocation(0, 5, 0);
+
+                for (int x = 1; x >= -1; x--) {
+                    for (int z = 1; z >= -1; z--) {
+                        world.getBlockAt(x, 4, z).setType(Material.STONE);
+                    }
+                }
+
+            } else if (worldGenerator == WorldUtils.WorldGenerator.WATER) {
+                world.setSpawnLocation(0, 8, 0);
+            }
+
+            this.world = world;
+
+            for (Entity entity : world.getEntities()) {
+                if (entity.getType() != EntityType.PLAYER) entity.remove();
+            }
+
+            BukkitRunnable runnable = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    for (Entity entity : world.getEntities()) {
+                        if (entity instanceof EnderDragon dragon) {
+                            dragon.setHealth(0);
+                        }
+                    }
+                }
+            };
+            runnable.runTaskLater(Main.getPlugin(),10L);
+
+            return world;
+        }
+        return null;
     }
 
     public Sharing getPlotSharing() {
@@ -235,11 +282,6 @@ public class Plot {
     public void setPlotSharing(Sharing sharing) {
         this.plotSharing = sharing;
         setPlotConfigParameter(this,"sharing",sharing);
-    }
-
-    public void setOwnerGroup(String group) {
-        this.ownerGroup = group;
-        setPlotConfigParameter(this,"owner-group",group);
     }
 
     public void setDebug(boolean debug) {
@@ -254,17 +296,51 @@ public class Plot {
         this.script = script;
     }
 
+    public World getWorld() {
+        return world;
+    }
+
+    public void setWorld(World world) {
+        this.world = world;
+    }
+
+    public String getWorldName() {
+        return "plot" + id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getWorldSize() {
+        return worldSize;
+    }
+
+    public DevPlot getDevPlot() {
+        return devPlot;
+    }
+
+    public boolean isLoaded() {
+        return Bukkit.getWorld(getWorldName()) != null;
+    }
+
+    public boolean isChangingOwner() {
+        return changingOwner;
+    }
+
+    public void setChangingOwner(boolean changingOwner) {
+        this.changingOwner = changingOwner;
+    }
+
     public enum Mode {
         PLAYING() {
             public void onPlayerConnect(Player player, Plot plot) {
-                player.setGameMode(GameMode.ADVENTURE);
                 player.setGameMode(plot.getOwner().equalsIgnoreCase(player.getName()) ? GameMode.CREATIVE : GameMode.ADVENTURE);
                 plot.getScript().loadCode();
             }
         }, BUILD() {
             public void onPlayerConnect(Player player, Plot plot) {
-                player.setGameMode(GameMode.ADVENTURE);
-                if (plot.worldPlayers.canBuild(player)) {
+                if (plot.getWorldPlayers().canBuild(player)) {
                     player.setGameMode(GameMode.CREATIVE);
                     giveBuildPermissions(player);
                 }
@@ -283,27 +359,6 @@ public class Plot {
 
         public String getName() {
             return getLocaleMessage("world.sharing." + (this == PUBLIC ? "public" : "private"),false);
-        }
-    }
-
-    public enum Category {
-        SANDBOX(getLocaleMessage("world.categories.sandbox")),
-        ADVENTURE(getLocaleMessage("world.categories.adventure")),
-        STRATEGY(getLocaleMessage("world.categories.strategy")),
-        ARCADE(getLocaleMessage("world.categories.arcade")),
-        ROLEPLAY(getLocaleMessage("world.categories.roleplay")),
-        STORY(getLocaleMessage("world.categories.story")),
-        SIMULATOR(getLocaleMessage("world.categories.simulator")),
-        EXPERIMENT(getLocaleMessage("world.categories.experiment"));
-
-        private final String name;
-
-        Category(String localeMessage) {
-            this.name = localeMessage;
-        }
-
-        public String getName() {
-            return name;
         }
     }
 
@@ -336,14 +391,13 @@ public class Plot {
         String owner = "Unknown owner";
         String ownerGroup = "default";
         Mode mode = Mode.BUILD;
-        Category category = Category.SANDBOX;
         Sharing sharing = Sharing.PRIVATE;
         World.Environment environment = World.Environment.NORMAL;
         if (config != null) {
             if (config.getString("owner") != null) {
                 owner = config.getString("owner");
             } else {
-                isCorrupted = true;
+                corrupted = true;
             }
             if (config.getString("owner-group") != null) {
                 ownerGroup = config.getString("owner-group");
@@ -351,83 +405,46 @@ public class Plot {
             if (config.getString("mode") != null) {
                 try {
                     mode = Mode.valueOf(config.getString("mode"));
-                } catch (Exception error) {
-                    mode = Mode.BUILD;
-                }
+                } catch (Exception ignored) {}
             }
             if (config.getString("environment") != null) {
                 try {
                     environment = World.Environment.valueOf(config.getString("environment"));
-                } catch (Exception error) {
-                    environment = World.Environment.NORMAL;
-                }
+                } catch (Exception ignored) {}
             }
             if (config.getString("sharing") != null) {
                 try {
                     sharing = Sharing.valueOf(config.getString("sharing"));
-                } catch (Exception error) {
-                    sharing = Sharing.PRIVATE;
-                }
+                } catch (Exception ignored) {}
             }
         } else {
-            isCorrupted = true;
+            corrupted = true;
         }
-        if (isCorrupted) {
-            sendCriticalErrorMessage("Plot " + worldName + " lost it's config file, please check plot files in /unloadedWorlds/" + worldName);
+        if (corrupted) {
+            sendCriticalErrorMessage("Plot " + getWorldName() + " lost it's config file, please check plot files in /unloadedWorlds/" + getWorldName());
         }
         this.owner = owner;
         this.ownerGroup = ownerGroup;
-        this.plotMode = mode;
+        this.mode = mode;
         this.plotSharing = sharing;
         this.plotReputation = getPlayersFromPlotConfig(this,PlayersType.LIKED).size()-getPlayersFromPlotConfig(this,PlayersType.DISLIKED).size();
         this.environment = environment;
     }
 
     public byte getFlagValue(PlotFlags.PlotFlag flag) {
-        return (this.plotFlags == null ? 1 : this.plotFlags.getFlagValue(flag));
+        return (this.flags == null ? 1 : this.flags.getFlagValue(flag));
     }
 
     public void setFlagValue(PlotFlags.PlotFlag flag, byte value) {
-        this.plotFlags.setFlag(flag,value);
+        this.flags.setFlag(flag,value);
     }
 
-    /**
-     Creates a world for plot.
-     **/
-    public void create(Plot plot, WorldUtils.WorldGenerator generator, World.Environment environment, long seed, boolean generateStructures) {
-        Player player = Bukkit.getPlayer(plot.getOwner());
-        String worldName = "plot" + WorldUtils.generateWorldID();
-        player.sendTitle(getLocaleMessage("creating-world.title"),getLocaleMessage("creating-world.subtitle"),10,300,40);
-        Main.getPlugin().getLogger().info("Creating new " + worldName + " by " + player.getName() + "...");
-        if (!generateWorld(plot,player,worldName,generator,environment,seed,generateStructures)) {
-            player.clearTitle();
-            sendPlayerErrorMessage(player,"§cПроизошла ошибка при создании мира... \n§cОбратитесь к администрации!");
-        }
-    }
-
-    public Mode getPlotMode() {
-        return plotMode;
+    public Mode getMode() {
+        return mode;
     }
 
     public int getOnline() {
-        List<Player> playersList = this.getPlayers();
-        return playersList.size();
-    }
-
-    public int getReputation() {
-        try {
-            return (getPlayersFromPlotConfig(this, PlayersType.LIKED).size() - getPlayersFromPlotConfig(this, PlayersType.DISLIKED).size());
-        } catch (Exception error) {
-            return 0;
-        }
-    }
-
-    public String getBuilders() {
-        return String.join(", ",getWorldPlayers().getAllBuilders());
-    }
-
-    public String getDevelopers() {
-        return String.join(", ",getWorldPlayers().getAllDevelopers());
+        return this.getPlayers().size();
     }
 
     public int getUniques() {
@@ -438,6 +455,7 @@ public class Plot {
         }
     }
 
+    @SuppressWarnings("all")
     public long getCreationTime() {
         try {
             return Long.parseLong(String.valueOf(getPlotConfig(this).get("creation-time")));
@@ -446,6 +464,7 @@ public class Plot {
         }
     }
 
+    @SuppressWarnings("all")
     public long getLastActivityTime() {
         try {
             return Long.parseLong(String.valueOf(getPlotConfig(this).get("last-activity-time")));
@@ -456,10 +475,10 @@ public class Plot {
 
     public List<Player> getPlayers() {
         List<Player> playerList = new ArrayList<>();
-        if (this.world != null) {
-            playerList.addAll(this.world.getPlayers());
-            if (devPlot != null && devPlot.world != null) {
-                playerList.addAll(devPlot.world.getPlayers());
+        if (this.getWorld() != null) {
+            playerList.addAll(this.getWorld().getPlayers());
+            if (getDevPlot() != null && getDevPlot().world != null) {
+                playerList.addAll(getDevPlot().world.getPlayers());
             }
         }
         return playerList;
@@ -473,47 +492,56 @@ public class Plot {
         return ownerGroup;
     }
 
-    public void teleportPlayer(Player player) {
-        if (!(this.getPlotSharing() == Sharing.PUBLIC)) {
-            if (!this.getOwner().equalsIgnoreCase(player.getName())) {
-                if (!(player.hasPermission("creative.private.bypass"))) {
+    public void connectPlayer(Player player) {
+        if (getPlotSharing() != Sharing.PUBLIC) {
+            if (!isOwner(player)) {
+                if (!(player.hasPermission("opencreative.private.bypass"))) {
                     player.sendMessage(getLocaleMessage("private-plot", player));
                     return;
                 }
             }
         }
-        if (!this.isOwner(player.getName()) && FileUtils.getPlayersFromPlotConfig(this,PlayersType.BLACKLISTED).contains(player.getName())) {
-            player.sendMessage(getLocaleMessage("blacklisted-in-plot", player));
-            return;
+        if (!isOwner(player.getName())) {
+            if (getPlotSharing() != Sharing.PUBLIC && !player.hasPermission("opencreative.private.bypass")) {
+                player.sendMessage(getLocaleMessage("private-plot", player));
+                return;
+            }
+            if (worldPlayers.isBanned(player.getName())) {
+                player.sendMessage(getLocaleMessage("blacklisted-in-plot", player));
+                return;
+            }
         }
-        worldPlayers.registerPlayer(player);
-        player.sendTitle(getLocaleMessage("world.connecting.title"),getLocaleMessage("world.connecting.subtitle"),15,9999,15);
+        getWorldPlayers().registerPlayer(player);
+        player.showTitle(Title.title(
+                Component.text(getLocaleMessage("world.connecting.title")), Component.text(getLocaleMessage("world.connecting.subtitle")),
+                Title.Times.times(Duration.ofMillis(710), Duration.ofSeconds(30), Duration.ofMillis(130))
+        ));
         player.playSound(player.getLocation(), Sound.BLOCK_TRIAL_SPAWNER_ABOUT_TO_SPAWN_ITEM,100,1);
-        boolean wasLoaded = isLoaded;
-        if (!isLoaded) {
-            Main.getPlugin().getLogger().info("Loading " + this.worldName + " and teleporting " + player.getName());
+        boolean wasLoaded = isLoaded();
+        if (!isLoaded()) {
+            Main.getPlugin().getLogger().info("Loading " + this.getWorldName() + " and teleporting " + player.getName());
             PlotManager.getInstance().loadPlot(this);
         }
         clearPlayer(player);
-        world.getSpawnLocation().getChunk().load(true);
-        player.teleport(this.world.getSpawnLocation());
+        getWorld().getSpawnLocation().getChunk().load(true);
+        player.teleport(this.getWorld().getSpawnLocation());
         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE,100,2);
-        plotMode.onPlayerConnect(player,this);
-        worldPlayers.getPlotPlayer(player).load();
+        mode.onPlayerConnect(player,this);
+        getWorldPlayers().getPlotPlayer(player).load();
         clearPlayer(player);
-        player.sendTitle("","");
+        player.clearTitle();
         if (!getPlayersFromPlotConfig(this, PlayersType.UNIQUE).contains(player.getName())) {
             addPlayerToListInPlotConfig(this,player.getName(), PlayersType.UNIQUE);
         }
         if (this.isOwner(player.getName())) {
-            this.setOwnerGroup(PlayerUtils.getGroup(player));
+            ownerGroup = PlayerUtils.getGroup(player);
             ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
             player.getInventory().setItem(8,worldSettingsItem);
-            if (plotFlags.getFlagValue(PlotFlags.PlotFlag.JOIN_MESSAGES) == 1) {
+            if (flags.getFlagValue(PlotFlags.PlotFlag.JOIN_MESSAGES) == 1) {
                 player.sendMessage(getLocaleMessage("world.connecting.owner-help",player));
             }
-            if (this.devPlot.isLoaded()) {
-                new CodingBlockParser().parseCode(this.devPlot);
+            if (this.getDevPlot().isLoaded()) {
+                new CodingBlockParser().parseCode(this.getDevPlot());
             }
         }
         if (!wasLoaded) {
@@ -523,39 +551,41 @@ public class Plot {
         new BukkitRunnable() {
             @Override
             public void run() {
-                plotInformation.updateIcon();
+                info.updateIcon();
             }
         }.runTaskAsynchronously(Main.getPlugin());
     }
 
     public void connectToDevPlot(Player player) {
-        player.sendTitle(getLocaleMessage("world.dev-mode.connecting.title"),getLocaleMessage("world.dev-mode.connecting.subtitle"),15,9999,15);
-        devPlot.loadDevPlotWorld();
-        devPlot.world.getSpawnLocation().getChunk().load(true);
-        Location lastLocation = this.devPlot.lastLocations.get(player);
-        if (this.devPlot.world == null) {
-            player.sendMessage(ChatColor.RED + " Failed to teleport to developer's environment.");
+        player.showTitle(Title.title(
+                Component.text(getLocaleMessage("world.dev-mode.connecting.title")), Component.text(getLocaleMessage("world.dev-mode.connecting.subtitle")),
+                Title.Times.times(Duration.ofSeconds(15), Duration.ofSeconds(9999), Duration.ofSeconds(10))
+        ));
+        getDevPlot().loadDevPlotWorld();
+        getDevPlot().world.getSpawnLocation().getChunk().load(true);
+        Location lastLocation = this.getDevPlot().lastLocations.get(player);
+        if (this.getDevPlot().world == null) {
             return;
         }
         if (lastLocation == null) {
-            lastLocation = devPlot.world.getSpawnLocation();
+            lastLocation = getDevPlot().world.getSpawnLocation();
         }
         player.teleport(lastLocation);
-        devPlot.lastLocations.put(player,player.getLocation());
+        getDevPlot().lastLocations.put(player,player.getLocation());
         clearPlayer(player);
         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,Integer.MAX_VALUE,0,false,false,false));
         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE,100,2);
-        for (Player developer : devPlot.world.getPlayers()) {
+        for (Player developer : getDevPlot().world.getPlayers()) {
             WorldBorder border = Bukkit.createWorldBorder();
-            border.setCenter(devPlot.world.getWorldBorder().getCenter());
-            border.setSize(devPlot.world.getWorldBorder().getSize()*5);
+            border.setCenter(getDevPlot().world.getWorldBorder().getCenter());
+            border.setSize(getDevPlot().world.getWorldBorder().getSize()*5);
             developer.setWorldBorder(border);
         }
         BukkitRunnable translation = new BukkitRunnable() {
             @Override
             public void run() {
-                if (devPlot.world == null) return;
-                devPlot.translateCodingBlocks(player);
+                if (getDevPlot().world == null) return;
+                getDevPlot().translateCodingBlocks(player);
                 removeBukkitRunnable(this);
             }
         };
@@ -566,9 +596,9 @@ public class Plot {
     public void connectToDevPlot(Player player, double x, double y, double z) {
         connectToDevPlot(player);
         if (x > 0 && y > 0 && z > 0 && x < 99 && y < 99 && z < 99) {
-            Location location = new Location(this.devPlot.world, x+1,y,z+2,180,5);
+            Location location = new Location(this.getDevPlot().world, x+1,y,z+2,180,5);
             player.teleport(location);
-            spawnGlowingBlock(player,new Location(this.devPlot.world,x,y,z));
+            spawnGlowingBlock(player,new Location(this.getDevPlot().world,x,y,z));
         }
     }
 
@@ -578,12 +608,12 @@ public class Plot {
         new BukkitRunnable() {
             @Override
             public void run() {
-                plotInformation.updateIcon();
+                info.updateIcon();
             }
         }.runTaskAsynchronously(Main.getPlugin());
     }
 
-    public boolean getDebug() {
+    public boolean isDebug() {
         return debug;
     }
 
@@ -604,32 +634,9 @@ public class Plot {
         runningBukkitRunnables.clear();
     }
 
-    public int getVariablesAmountLimit() {
-        return variablesAmountLimit + (getPlayers().size() * PlayerUtils.getPlayerModifierValue(ownerGroup,PlayerLimit.WORLD_VARIABLES_LIMIT));
-    }
 
-    public int getOpeningInventoriesLimit() {
-        return openingInventoriesLimit + (getPlayers().size() * PlayerUtils.getPlayerModifierValue(ownerGroup,PlayerLimit.WORLD_OPENING_INVENTORIES_LIMIT));
-    }
-
-    public WorldVariables getWorldVariables() {
-        return worldVariables;
-    }
-
-    public int getModifyingBlocksLimit() {
-        return modifyingBlocksLimit + (getPlayers().size() * PlayerUtils.getPlayerModifierValue(ownerGroup,PlayerLimit.WORLD_MODIFYING_BLOCKS_LIMIT));
-    }
-
-    public int getRedstoneOperationsLimit() {
-        return redstoneOperationsLimit + (getPlayers().size() * PlayerUtils.getPlayerModifierValue(ownerGroup,PlayerLimit.WORLD_REDSTONE_OPERATIONS_LIMIT));
-    }
-
-    public int getCodeOperationsLimit() {
-        return codeOperationsLimit + (getPlayers().size() * PlayerUtils.getPlayerModifierValue(ownerGroup,PlayerLimit.WORLD_CODE_OPERATIONS_LIMIT));
-    }
-
-    public int getEntitiesLimit() {
-        return entitiesLimit + (getPlayers().size() * PlayerUtils.getPlayerModifierValue(ownerGroup,PlayerLimit.WORLD_ENTITIES_LIMIT));
+    public WorldVariables getVariables() {
+        return variables;
     }
 
     public Map<String, Scoreboard> getScoreboards() {
@@ -640,19 +647,16 @@ public class Plot {
         return bossBars;
     }
 
-    public int getScoreboardsLimit() {
-        return scoreboardsLimit + (getPlayers().size() * PlayerUtils.getPlayerModifierValue(ownerGroup,PlayerLimit.WORLD_SCOREBOARDS_LIMIT));
-    }
-
-    public int getBossBarsLimit() {
-        return bossBarsLimit + (getPlayers().size() * PlayerUtils.getPlayerModifierValue(ownerGroup,PlayerLimit.WORLD_BOSSBARS_LIMIT));
-    }
 
     public boolean isCorrupted() {
-        return isCorrupted;
+        return corrupted;
     }
 
     public World.Environment getEnvironment() {
         return environment;
+    }
+
+    public PlotLimits getLimits() {
+        return limits;
     }
 }

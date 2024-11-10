@@ -38,7 +38,6 @@ import mcchickenstudio.creative.menu.AbstractMenu;
 import mcchickenstudio.creative.menu.world.browsers.RecommendedWorldsMenu;
 import mcchickenstudio.creative.menu.world.settings.WorldSettingsMenu;
 import mcchickenstudio.creative.plots.*;
-import mcchickenstudio.creative.utils.ItemUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -58,6 +57,12 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.util.Vector;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static mcchickenstudio.creative.events.player.ChangedWorld.*;
 import static mcchickenstudio.creative.events.player.PlayerPlaceBlock.move;
@@ -124,12 +129,45 @@ public class PlayerInteract implements Listener {
                 }
             }
             case NETHER_STAR -> {
-                new ParticlesMenu(player).open(player);
+                if (player.isSneaking()) {
+                    String particleType = getPersistentData(currentItem,getCodingParticleTypeKey());
+                    if (particleType.isEmpty()) return;
+                    try {
+                        Particle particle = Particle.valueOf(particleType.toUpperCase());
+                        Vector direction = player.getLocation().getDirection().normalize().multiply(1.5);;
+                        Location particleLocation = player.getLocation().add(direction).add(0,1,0);
+                        player.spawnParticle(particle,particleLocation,1);
+                    } catch (Exception ignored) {}
+                } else {
+                    new ParticlesMenu(player).open(player);
+                }
                 event.setCancelled(true);
             }
-            case POTION, GLASS_BOTTLE -> {
-                new PotionsMenu(player).open(player);
+            case POTION, GLASS_BOTTLE, LINGERING_POTION, SPLASH_POTION -> {
                 event.setCancelled(true);
+                if (player.isSneaking() && currentItem.getType() != Material.GLASS_BOTTLE) {
+                    if (player.hasCooldown(currentItem.getType())) return;
+                    player.setCooldown(currentItem.getType(),10);
+                    try {
+                        PotionMeta potionMeta = (PotionMeta) currentItem.getItemMeta();
+                        List<PotionEffect> effects = new ArrayList<>();
+                        if (potionMeta.getBasePotionType() != null) {
+                            effects.addAll(potionMeta.getBasePotionType().getPotionEffects());
+                        }
+                        if (potionMeta.hasCustomEffects()) {
+                            effects.addAll(potionMeta.getCustomEffects());
+                        }
+                        for (PotionEffect potionEffect : effects) {
+                            if (player.hasPotionEffect(potionEffect.getType())) {
+                                player.removePotionEffect(potionEffect.getType());
+                            } else {
+                                player.addPotionEffect(potionEffect);
+                            }
+                        }
+                    } catch (Exception ignored) {}
+                } else {
+                    new PotionsMenu(player, currentItem.getType()).open(player);
+                }
             }
         }
     }
@@ -373,9 +411,9 @@ public class PlayerInteract implements Listener {
     private void handlePaperInteraction(PlayerInteractEvent event, Player player, ItemStack currentItem) {
         if (event.getAction() == Action.LEFT_CLICK_AIR && !player.hasCooldown(currentItem.getType())) {
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null && plot.world != null) {
+            if (plot != null && plot.getWorld() != null) {
                 addPlayerWithLocation(player);
-                player.teleport(plot.world.getSpawnLocation());
+                player.teleport(plot.getWorld().getSpawnLocation());
                 player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
                 player.setCooldown(currentItem.getType(),60);
             }
@@ -479,14 +517,14 @@ public class PlayerInteract implements Listener {
             player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),locationString,5,40,5);
             player.playSound(player.getLocation(),Sound.ENTITY_EXPERIENCE_ORB_PICKUP,100,2);
         } else if (event.getAction() == Action.LEFT_CLICK_AIR) {
-            if (plot != null && plot.devPlot.isLoaded()) {
+            if (plot != null && plot.getDevPlot().isLoaded()) {
                 player.teleport(getOldLocationPlayerWithLocation(player));
                 player.setCooldown(currentItem.getType(),60);
                 player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
-                for (Player developer : plot.devPlot.world.getPlayers()) {
+                for (Player developer : plot.getDevPlot().world.getPlayers()) {
                     WorldBorder border = Bukkit.createWorldBorder();
-                    border.setCenter(plot.devPlot.world.getWorldBorder().getCenter());
-                    border.setSize(plot.devPlot.world.getWorldBorder().getSize()*5);
+                    border.setCenter(plot.getDevPlot().world.getWorldBorder().getCenter());
+                    border.setSize(plot.getDevPlot().world.getWorldBorder().getSize()*5);
                     developer.setWorldBorder(border);
                 }
             }
@@ -516,7 +554,7 @@ public class PlayerInteract implements Listener {
         if (isEntityInLobby(player)) {
             if (getItemType(currentItem).equals("worlds")) {
                 // Opens recommended worlds menu.
-                if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
+                if (Main.maintenance && !player.hasPermission("opencreative.maintenance.bypass")) {
                     player.sendMessage(getLocaleMessage("maintenance"));
                     return;
                 }
@@ -524,7 +562,7 @@ public class PlayerInteract implements Listener {
                 new RecommendedWorldsMenu().open(player);
             } else if (getItemType(currentItem).equals("own_worlds")) {
                 // Opens player's worlds menu.
-                if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
+                if (Main.maintenance && !player.hasPermission("opencreative.maintenance.bypass")) {
                     player.sendMessage(getLocaleMessage("maintenance"));
                     return;
                 }
@@ -533,7 +571,7 @@ public class PlayerInteract implements Listener {
             }
         } else if (plot != null && currentItem.getType() == Material.COMPASS) {
             // Opens world settings menu.
-            if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
+            if (Main.maintenance && !player.hasPermission("opencreative.maintenance.bypass")) {
                 player.sendMessage(getLocaleMessage("maintenance"));
                 return;
             }

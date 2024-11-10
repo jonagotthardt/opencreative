@@ -36,6 +36,7 @@ import mcchickenstudio.creative.events.player.*;
 import mcchickenstudio.creative.events.world.BlockChanged;
 import mcchickenstudio.creative.events.world.BlockRedstone;
 import mcchickenstudio.creative.menu.Menus;
+import mcchickenstudio.creative.settings.Settings;
 import mcchickenstudio.creative.utils.FileUtils;
 import mcchickenstudio.creative.utils.hooks.HookUtils;
 import mcchickenstudio.creative.utils.PlayerUtils;
@@ -66,6 +67,8 @@ import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 public final class Main extends JavaPlugin {
 
     private static Main plugin;
+    private static Settings settings;
+
     public static final String version = "5.0 Pre-release";
     public static final String codename = "Things will be different";
     public static boolean maintenance = false;
@@ -108,6 +111,8 @@ public final class Main extends JavaPlugin {
         PlayerUtils.loadPermissions();
         HookUtils.loadHooks();
         FileUtils.loadPlots();
+        settings = new Settings();
+        settings.load(getConfig());
         checkDebug();
 
         long loadedTime = System.currentTimeMillis()-startTime;
@@ -246,4 +251,7 @@ public final class Main extends JavaPlugin {
         this.getLogger().info("OpenCreative+ registered all event listeners.");
     }
 
+    public static Settings getSettings() {
+        return settings;
+    }
 }

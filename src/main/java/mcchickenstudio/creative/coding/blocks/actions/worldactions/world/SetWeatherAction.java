@@ -36,21 +36,21 @@ public class SetWeatherAction extends WorldAction {
         int duration = getArguments().getValue("duration", 6000,this);
         switch (weather.toLowerCase()) {
             case "storm": {
-                getPlot().world.setStorm(true);
+                getPlot().getWorld().setStorm(true);
                 if (duration >= 0) {
-                    getPlot().world.setWeatherDuration(duration);
+                    getPlot().getWorld().setWeatherDuration(duration);
                 }
                 break;
             }
             case "thunder": {
-                getPlot().world.setThundering(true);
+                getPlot().getWorld().setThundering(true);
                 if (duration >= 0) {
-                    getPlot().world.setThunderDuration(duration);
+                    getPlot().getWorld().setThunderDuration(duration);
                 }
                 break;
             }
             default: {
-                getPlot().world.setClearWeatherDuration(Math.max(duration, 0));
+                getPlot().getWorld().setClearWeatherDuration(Math.max(duration, 0));
                 break;
             }
         }

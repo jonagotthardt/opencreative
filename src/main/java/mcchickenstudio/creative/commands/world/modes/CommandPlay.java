@@ -46,6 +46,7 @@ import static mcchickenstudio.creative.utils.PlayerUtils.clearPlayer;
 import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
 import static mcchickenstudio.creative.utils.MessageUtils.*;
+import static mcchickenstudio.creative.utils.PlayerUtils.isEntityInDevPlot;
 
 
 public class CommandPlay implements CommandExecutor {
@@ -78,55 +79,43 @@ public class CommandPlay implements CommandExecutor {
             developers.addAll(trustedDevelopers);
 
             removePlayerWithLocation(player);
-            if (plot.getPlotMode() != Plot.Mode.PLAYING) {
+            if (plot.getMode() != Plot.Mode.PLAYING) {
                 if (plot.getOwner().equals(sender.getName()) || developers.contains(sender.getName())) {
-                    plot.setPlotMode(Plot.Mode.PLAYING);
-                    for (Player p : plot.getPlayers()) {
-                        if (PlotManager.getInstance().getDevPlot(p) == null || sender.getName().equals(p.getName())) {
-                            p.sendMessage(getLocaleMessage("world.play-mode.message." + (sender == p ? "owner" : "players")));
-                            clearPlayer(p);
-                            plot.world.getSpawnLocation().getChunk().load(true);
-                            p.teleport(plot.world.getSpawnLocation());
+                    plot.setMode(Plot.Mode.PLAYING);
+                    if (isEntityInDevPlot(player)) {
+                        clearPlayer(player);
+                        player.teleport(plot.getWorld().getSpawnLocation());
+                        if (plot.isOwner(sender.getName())) {
+                            player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
                         }
-                    }
-                    if (plot.isOwner(sender.getName())) {
-                        player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
-                    }
-                    if (plot.devPlot.isLoaded()) {
-                        new CodingBlockParser().parseCode(plot.devPlot);
-                    } else {
-                        plot.getScript().loadCode();
-                    }
-                    EventRaiser.raiseWorldPlayEvent(plot);
-                    for (Player p : plot.getPlayers()) {
-                        if (PlotManager.getInstance().getDevPlot(p) == null || sender.getName().equals(p.getName())) {
-                            EventRaiser.raiseJoinEvent(p);
-                        }
+                        EventRaiser.raiseJoinEvent(player);
                     }
                 } else {
                     sender.sendMessage(getLocaleMessage("not-owner", player));
                 }
             } else {
                 if (EventRaiser.raisePlayEvent(player) || plot.getWorldPlayers().canDevelop(player)) {
-                    plot.world.getSpawnLocation().getChunk().load(true);
-                    DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-                    player.teleport(plot.world.getSpawnLocation());
-                    clearPlayer(player);
                     if (plot.getWorldPlayers().canDevelop(player)) {
                         player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
-                        if (plot.isOwner(sender.getName())) {
-                            player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
-                        }
-                        if (plot.devPlot.isLoaded()) {
-                            new CodingBlockParser().parseCode(plot.devPlot);
+                        if (plot.getDevPlot().isLoaded()) {
+                            new CodingBlockParser().parseCode(plot.getDevPlot());
                         } else {
                             plot.getScript().loadCode();
                         }
                     } else {
                         player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
                     }
-                    if (devPlot == null) {
+                    plot.getWorld().getSpawnLocation().getChunk().load(true);
+                    DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
+                    if (devPlot != null) {
+                        clearPlayer(player);
+                    } else {
                         EventRaiser.raiseQuitEvent(player);
+                    }
+                    clearPlayer(player);
+                    player.teleport(plot.getWorld().getSpawnLocation());
+                    if (plot.isOwner(sender.getName())) {
+                        player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
                     }
                     EventRaiser.raiseJoinEvent(player);
                 }

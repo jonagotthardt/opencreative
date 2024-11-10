@@ -62,7 +62,7 @@ public class SpawnEntityAction extends WorldAction {
             type = EntityType.CHICKEN;
         }
         for (Location location : getArguments().getLocationList("locations",this)) {
-            Entity spawnedEntity = getPlot().world.spawnEntity(location,type);
+            Entity spawnedEntity = getPlot().getWorld().spawnEntity(location,type);
 
             spawnedEntity.setGravity(gravity);
             if (!customName.isEmpty()) {

@@ -55,7 +55,7 @@ public class CommandTime implements CommandExecutor, TabCompleter {
             return true;
         }
         setCooldown(player, Main.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
-        if (!player.hasPermission("creative.time.bypass")) {
+        if (!player.hasPermission("opencreative.time.bypass")) {
             /*
              * Checking is player owner, builder or developer of world.
              * If not, he can't change world's time.

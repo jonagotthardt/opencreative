@@ -70,10 +70,10 @@ public class Executors {
         Plot plot = executor.getPlot();
         if (plot == null || plot.getScript() == null || plot.getScript().getExecutors() == null) return;
         Executors executors = plot.getScript().getExecutors();
-        if (executors.getLastExecutorCallsAmount(executor) > plot.getCodeOperationsLimit()) {
+        if (executors.getLastExecutorCallsAmount(executor) > plot.getLimits().getCodeOperationsLimit()) {
             executors.clearExecutionsAmount(executor);
             stopPlotCode(plot);
-            sendPlotCodeCriticalErrorMessage(plot,executor,getLocaleMessage("plot-code-error.operations-limit",false).replace("%limit%",String.valueOf(plot.getCodeOperationsLimit())));
+            sendPlotCodeCriticalErrorMessage(plot,executor,getLocaleMessage("plot-code-error.operations-limit",false).replace("%limit%",String.valueOf(plot.getLimits().getCodeOperationsLimit())));
         } else {
             executors.increaseCallsAmount(executor);
             executor.run(event);

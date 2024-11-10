@@ -59,7 +59,7 @@ public class CommandEdit implements CommandExecutor, TabCompleter {
                 return true;
             }
             setCooldown(player, Main.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
-            if (!player.hasPermission("creative.edit.bypass")) {
+            if (!player.hasPermission("opencreative.edit.bypass")) {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
                 if (plot == null) {
                     player.sendMessage(getLocaleMessage("only-in-world"));

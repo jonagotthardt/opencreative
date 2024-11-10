@@ -48,7 +48,7 @@ public class CommandStopSound implements CommandExecutor {
                 return true;
             }
             setCooldown(player, Main.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
-            if (!player.hasPermission("creative.stop-sound.bypass")) {
+            if (!player.hasPermission("opencreative.stop-sound.bypass")) {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
                 if (plot == null) {
                     player.sendMessage(getLocaleMessage("only-in-world"));
@@ -73,9 +73,9 @@ public class CommandStopSound implements CommandExecutor {
                 if (target == null) {
                     sender.sendMessage(getLocaleMessage("no-player-found"));
                     return true;
-                } else if (!sender.hasPermission("creative.stop-sound.bypass")) {
+                } else if (!sender.hasPermission("opencreative.stop-sound.bypass")) {
                     Plot targetPlot = PlotManager.getInstance().getPlotByPlayer(target);
-                    if (!player.hasPermission("creative.stop-sound.bypass")) {
+                    if (!player.hasPermission("opencreative.stop-sound.bypass")) {
                         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
                         if (plot == null || !plot.equals(targetPlot)) {
                             player.sendMessage(getLocaleMessage("no-player-found"));

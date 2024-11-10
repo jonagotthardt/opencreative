@@ -98,7 +98,7 @@ public class ActionsHandler {
     private void executeNextAction() {
         if (actionsQueue.isEmpty()) {
             if (getMainActionHandler() == this) {
-                executor.getPlot().getWorldVariables().garbageCollector(this);
+                executor.getPlot().getVariables().garbageCollector(this);
             }
             if (action instanceof RepeatAction repeatAction) {
                 if (action instanceof RepeatForLoopAction forLoopAction) {
@@ -139,7 +139,7 @@ public class ActionsHandler {
             BukkitRunnable executeActionLaterRunnable = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (action == null || action.getPlot() == null || action.getPlot().getPlotMode() != Plot.Mode.PLAYING || !action.getPlot().isLoaded) {
+                    if (action == null || action.getPlot() == null || action.getPlot().getMode() != Plot.Mode.PLAYING || !action.getPlot().isLoaded()) {
                         cancel();
                     }
                     if (action != null) {

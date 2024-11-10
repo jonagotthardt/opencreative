@@ -36,9 +36,9 @@ public class StrikeLightningAction extends WorldAction {
         boolean damage = getArguments().getValue("damage",true,this);
         for (Location location : getArguments().getLocationList("locations",this)) {
             if (damage) {
-                getPlot().world.strikeLightning(location);
+                getPlot().getWorld().strikeLightning(location);
             } else {
-                getPlot().world.strikeLightningEffect(location);
+                getPlot().getWorld().strikeLightningEffect(location);
             }
         }
     }

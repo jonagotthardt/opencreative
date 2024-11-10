@@ -19,23 +19,23 @@
 package mcchickenstudio.creative.plots;
 
 import mcchickenstudio.creative.coding.CodeScript;
-import mcchickenstudio.creative.utils.ErrorUtils;
-import mcchickenstudio.creative.utils.FileUtils;
-import mcchickenstudio.creative.utils.MessageUtils;
-import mcchickenstudio.creative.utils.PlayerUtils;
+import mcchickenstudio.creative.utils.*;
 import net.kyori.adventure.util.TriState;
-import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import mcchickenstudio.creative.Main;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import static mcchickenstudio.creative.utils.PlayerUtils.getPlayerPlotSize;
-import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
+import static mcchickenstudio.creative.utils.ErrorUtils.sendPlayerErrorMessage;
+import static mcchickenstudio.creative.utils.FileUtils.*;
+import static mcchickenstudio.creative.utils.ItemUtils.createItem;
+import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.PlayerUtils.*;
 
 public class PlotManager {
 
@@ -49,14 +49,14 @@ public class PlotManager {
         return plotManager;
     }
 
-    private final List<Plot> plots = new ArrayList<>();
-    private final List<Plot> corruptedPlots = new ArrayList<>();
+    private final Set<Plot> plots = new HashSet<>();
+    private final Set<Plot> corruptedPlots = new HashSet<>();
 
-    public List<Plot> getPlots() {
+    public Set<Plot> getPlots() {
         return plots;
     }
 
-    public List<Plot> getCorruptedPlots() {
+    public Set<Plot> getCorruptedPlots() {
         return corruptedPlots;
     }
 
@@ -68,6 +68,38 @@ public class PlotManager {
         }
     }
 
+    /**
+     * Creates and loads a new plot for player with specified world generation parameters.
+     * @param owner Owner of plot.
+     * @param id Id of plot.
+     * @param generator Generator of world.
+     * @param environment Environment of world.
+     * @param seed Seed for generation.
+     * @param generateStructures Generate or not generate structures.
+     */
+    public void createPlot(Player owner, int id, WorldUtils.WorldGenerator generator, World.Environment environment, long seed, boolean generateStructures) {
+        owner.sendTitle(getLocaleMessage("creating-world.title"),getLocaleMessage("creating-world.subtitle"),10,300,40);
+        Main.getPlugin().getLogger().info("Creating new plot " + id + " by " + owner.getName() + "...");
+
+        createWorldSettings(id, false, owner, environment);
+        Plot plot = new Plot(id);
+
+        FileUtils.loadWorldFolder(plot.getWorldName(),true);
+        if (plot.generateWorld(generator,environment,seed,generateStructures) != null) {
+            plot.connectPlayer(owner);
+            plot.getWorld().getSpawnLocation().getChunk().load(true);
+            owner.sendTitle(getLocaleMessage("creating-world.welcome-title",owner),getLocaleMessage("creating-world.welcome-subtitle",owner),15,180,45);
+            owner.playSound(owner.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE,100,0.1f);
+            owner.sendMessage(getLocaleMessage("creating-world.welcome",owner));
+            owner.setGameMode(GameMode.CREATIVE);
+            ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
+            owner.getInventory().setItem(8,worldSettingsItem);
+        } else {
+            sendPlayerErrorMessage(owner,"Failed to create world, world is null.");
+        }
+
+    }
+
     public void clearPlots() {
         plots.clear();
     }
@@ -76,24 +108,23 @@ public class PlotManager {
      Load plot, for example if player tries to join it. It loads world folder, world and code script.
      **/
     public void loadPlot(Plot plot) {
-        FileUtils.loadWorldFolder(plot.worldName,true);
-        World world = new WorldCreator(plot.worldName).environment(plot.getEnvironment()).keepSpawnLoaded(TriState.FALSE).createWorld();
+        FileUtils.loadWorldFolder(plot.getWorldName(),true);
+        World world = new WorldCreator(plot.getWorldName()).environment(plot.getEnvironment()).keepSpawnLoaded(TriState.FALSE).createWorld();
         if (world == null) return;
-        plot.world = world;
-        plot.world.setAutoSave(true);
-        plot.world.setKeepSpawnInMemory(false);
+        plot.setWorld(world);
+        plot.getWorld().setAutoSave(true);
+        plot.getWorld().setKeepSpawnInMemory(false);
         if (world.getEnvironment() == World.Environment.THE_END) {
             if (world.getEnderDragonBattle() != null) {
                 world.getEnderDragonBattle().setPreviouslyKilled(true);
                 world.getEnderDragonBattle().getBossBar().setVisible(false);
             }
         }
-        plot.isLoaded = true;
         plot.setScript(new CodeScript(plot, FileUtils.getPlotScriptFile(plot)));
         FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
-        plot.world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS,false);
-        plot.world.getWorldBorder().setSize(getPlayerPlotSize(plot.getOwnerGroup()));
-        plot.getWorldVariables().load();
+        plot.getWorld().setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS,false);
+        plot.getWorld().getWorldBorder().setSize(getPlayerPlotSize(plot.getOwnerGroup()));
+        plot.getVariables().load();
     }
 
 
@@ -101,24 +132,23 @@ public class PlotManager {
     Unload plot, for example if no players playing in plot.
      **/
     public void unloadPlot(Plot plot) {
-        plot.getWorldVariables().save();
+        plot.getVariables().save();
         FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
-        FileUtils.setPlotConfigParameter(plot,"mode", plot.getPlotMode());
+        FileUtils.setPlotConfigParameter(plot,"mode", plot.getMode());
         FileUtils.setPlotConfigParameter(plot,"environment",plot.getEnvironment().name());
-        plot.isLoaded = false;
         for (Player player : plot.getPlayers()) {
             teleportToLobby(player);
         }
         plot.stopBukkitRunnables();
-        if (Bukkit.unloadWorld(plot.worldName,true)) {
-            FileUtils.unloadWorldFolder(plot.worldName,true);
-            if (Bukkit.getWorld(plot.devPlot.worldName) != null) {
-                for (Player player : plot.devPlot.world.getPlayers()) {
+        if (Bukkit.unloadWorld(plot.getWorldName(),true)) {
+            FileUtils.unloadWorldFolder(plot.getWorldName(),true);
+            if (Bukkit.getWorld(plot.getDevPlot().worldName) != null) {
+                for (Player player : plot.getDevPlot().world.getPlayers()) {
                     teleportToLobby(player);
                 }
-                plot.devPlot.setLoaded(false);
-                if (Bukkit.unloadWorld(plot.devPlot.worldName,true)) {
-                    FileUtils.unloadWorldFolder(plot.devPlot.worldName,true);
+                plot.getDevPlot().setLoaded(false);
+                if (Bukkit.unloadWorld(plot.getDevPlot().worldName,true)) {
+                    FileUtils.unloadWorldFolder(plot.getDevPlot().worldName,true);
                 }
             }
         }
@@ -146,8 +176,8 @@ public class PlotManager {
             for (Player p : plot.getPlayers()) {
                 PlayerUtils.teleportToLobby(p);
             }
-            if (plot.devPlot.exists()) {
-                FileUtils.deleteWorld(FileUtils.getDevPlotFolder(plot.devPlot));
+            if (plot.getDevPlot().exists()) {
+                FileUtils.deleteWorld(FileUtils.getDevPlotFolder(plot.getDevPlot()));
             }
             // Удаляет папку мира
             plot.setPlotSharing(Plot.Sharing.CLOSED);
@@ -156,8 +186,8 @@ public class PlotManager {
 
             // После 3 секунд удаления мир отгружается полностью
             Bukkit.getServer().getScheduler().runTaskLater(Main.getPlugin(), () -> {
-                Bukkit.unloadWorld(plot.worldName,false);
-                if (plot.devPlot.isLoaded()) Bukkit.unloadWorld(plot.devPlot.worldName, false);
+                Bukkit.unloadWorld(plot.getWorldName(),false);
+                if (plot.getDevPlot().isLoaded()) Bukkit.unloadWorld(plot.getDevPlot().worldName, false);
             }, 60);
         } catch (NullPointerException error) {
             ErrorUtils.sendCriticalErrorMessage("При удалении мира возникла ошибка: " + error.getMessage());
@@ -177,12 +207,12 @@ public class PlotManager {
             plot.setPlotSharing(Plot.Sharing.CLOSED);
             plots.remove(plot);
             FileUtils.deleteWorld(FileUtils.getPlotFolder(plot));
-            if (plot.devPlot != null) {
-                FileUtils.deleteWorld(FileUtils.getDevPlotFolder(plot.devPlot));
+            if (plot.getDevPlot() != null) {
+                FileUtils.deleteWorld(FileUtils.getDevPlotFolder(plot.getDevPlot()));
             }
             // После 3 секунд удаления мир отгружается полностью
             Bukkit.getServer().getScheduler().runTaskLater(Main.getPlugin(), () -> {
-                Bukkit.unloadWorld(plot.worldName,false);
+                Bukkit.unloadWorld(plot.getWorldName(),false);
                 player.sendMessage(MessageUtils.getLocaleMessage("deleting-world.message"));
             }, 60);
         } catch (NullPointerException error) {
@@ -192,7 +222,7 @@ public class PlotManager {
 
     public List<Plot> getRecommendedPlots() {
         List<Plot> featuredPlots = new ArrayList<>();
-        List<Integer> featuredIds = Main.getPlugin().getConfig().getIntegerList("recommended-worlds");
+        Set<Integer> featuredIds = Main.getSettings().getRecommendedWorldsIDs();
         for (int id : featuredIds) {
             Plot plot = getPlotByWorldName("plot"+id);
             if (plot != null) {
@@ -206,8 +236,8 @@ public class PlotManager {
     /**
      Returns plots that contains specified name.
      **/
-    public List<Plot> getPlotsByPlotName(String worldName) {
-        List<Plot> foundPlots = new ArrayList<>();
+    public Set<Plot> getPlotsByPlotName(String worldName) {
+        Set<Plot> foundPlots = new HashSet<>();
         for (Plot plot : plots) {
             if (plot.getInformation().getDisplayName().toLowerCase().contains(worldName.toLowerCase())) {
                 foundPlots.add(plot);
@@ -219,8 +249,8 @@ public class PlotManager {
     /**
      Returns plots that contains specified ID.
      **/
-    public List<Plot> getPlotsByID(String worldID) {
-        List<Plot> foundPlots = new ArrayList<>();
+    public Set<Plot> getPlotsByID(String worldID) {
+        Set<Plot> foundPlots = new HashSet<>();
         for (Plot plot : plots) {
             if (plot.getInformation().getCustomID().toLowerCase().contains(worldID.toLowerCase())) {
                 foundPlots.add(plot);
@@ -232,8 +262,8 @@ public class PlotManager {
     /**
      Returns plots that has specified category.
      **/
-    public List<Plot> getPlotsByCategory(Plot.Category category) {
-        List<Plot> foundPlots = new ArrayList<>();
+    public Set<Plot> getPlotsByCategory(PlotInfo.Category category) {
+        Set<Plot> foundPlots = new HashSet<>();
         for (Plot plot : plots) {
             if (plot.getInformation().getCategory() == category) {
                 foundPlots.add(plot);
@@ -259,10 +289,10 @@ public class PlotManager {
      **/
     public DevPlot getDevPlot(Player player) {
         for (Plot plot : plots) {
-            if (plot.devPlot != null && plot.devPlot.world != null) {
+            if (plot.getDevPlot() != null && plot.getDevPlot().world != null) {
                 if (plot.getPlayers().contains(player)) {
-                    if (plot.devPlot.world.getPlayers().contains(player)) {
-                        return plot.devPlot;
+                    if (plot.getDevPlot().world.getPlayers().contains(player)) {
+                        return plot.getDevPlot();
                     }
                 }
             }
@@ -272,8 +302,8 @@ public class PlotManager {
 
     public DevPlot getDevPlot(World world) {
         for (Plot plot : plots) {
-            if (plot.devPlot != null && world.equals(plot.devPlot.world)) {
-                return plot.devPlot;
+            if (plot.getDevPlot() != null && world.equals(plot.getDevPlot().world)) {
+                return plot.getDevPlot();
             }
         }
         return null;
@@ -284,10 +314,10 @@ public class PlotManager {
      **/
     public Plot getPlotByWorld(World world) {
         for (Plot plot : plots) {
-            if (world.equals(plot.world)) {
+            if (world.equals(plot.getWorld())) {
                 return plot;
             }
-            if (world.equals(plot.devPlot.world)) {
+            if (world.equals(plot.getDevPlot().world)) {
                 return plot;
             }
         }
@@ -299,7 +329,7 @@ public class PlotManager {
      **/
     public Plot getPlotByWorldName(String worldName) {
         for (Plot plot : plots) {
-            if (plot.worldName.equalsIgnoreCase(worldName)) {
+            if (plot.getWorldName().equalsIgnoreCase(worldName)) {
                 return plot;
             }
         }

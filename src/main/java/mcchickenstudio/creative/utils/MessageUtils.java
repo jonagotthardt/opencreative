@@ -60,6 +60,7 @@ public class MessageUtils {
         } else {
             String defaultLanguage = getLanguage().equalsIgnoreCase("ru") ? "ru" : "en";
             plugin.getConfig().set("messages.locale",defaultLanguage);
+            plugin.saveResource("locales" + File.separator + "olden.yml",false);
             plugin.saveResource("locales" + File.separator + "en.yml",false);
             plugin.saveResource("locales" + File.separator + "ru.yml",false);
             plugin.reloadConfig();
@@ -112,6 +113,7 @@ public class MessageUtils {
         } else {
             Object defaultLanguage = "en";
             plugin.getConfig().set("messages.locale",defaultLanguage);
+            plugin.saveResource("locales" + File.separator + "olden.yml",false);
             plugin.saveResource("locales" + File.separator + "en.yml",false);
             plugin.saveResource("locales" + File.separator + "ru.yml",false);
             plugin.reloadConfig();
@@ -299,7 +301,7 @@ public class MessageUtils {
 
         long currentTime = System.currentTimeMillis();
 
-        if (messagesOnce.get(plot) != null) {
+        if (messagesOnce.containsKey(plot)) {
             long timeInMap = messagesOnce.get(plot);
             long elapsedTime = currentTime-timeInMap;
             long elapsedSeconds = elapsedTime/1000;
@@ -338,11 +340,11 @@ public class MessageUtils {
      Returns string, that parsed plot lines: plot name, description, online, reputation, owner, id, category, uniques, last activity time, creation time.
      **/
     public static String parsePlotLines(Plot plot, String string) {
-        String plotReputation = String.valueOf(plot.getPlotReputation());
-        if (plot.getPlotReputation() >= 1) plotReputation = "§a+" + plotReputation;
-        else if (plot.getPlotReputation() <= -1) plotReputation = "§c" + plotReputation;
+        String plotReputation = String.valueOf(plot.getReputation());
+        if (plot.getReputation() >= 1) plotReputation = "§a+" + plotReputation;
+        else if (plot.getReputation() <= -1) plotReputation = "§c" + plotReputation;
         else plotReputation = "§e" + plotReputation;
-        return parsePAPI(Bukkit.getOfflinePlayer(plot.getOwner()),string.replace("%plotName%", plot.getInformation().getDisplayName()).replace("%plotOnline%",String.valueOf(plot.getOnline())).replace("%plotOwner%", plot.getOwner()).replace("%plotID%",plot.worldID).replace("%plotCustomID%",plot.getInformation().getCustomID()).replace("%plotCategory%", plot.getInformation().getCategory().getName()).replace("%plotUniques%",String.valueOf(plot.getUniques())).replace("%plotReputation%",plotReputation).replace("%plotLastTime%",getElapsedTime(System.currentTimeMillis(),plot.getLastActivityTime())).replace("%plotCreationTime%",getElapsedTime(System.currentTimeMillis(), plot.getCreationTime())));
+        return parsePAPI(Bukkit.getOfflinePlayer(plot.getOwner()),string.replace("%plotName%", plot.getInformation().getDisplayName()).replace("%plotOnline%",String.valueOf(plot.getOnline())).replace("%plotOwner%", plot.getOwner()).replace("%plotID%", String.valueOf(plot.getId())).replace("%plotCustomID%",plot.getInformation().getCustomID()).replace("%plotCategory%", plot.getInformation().getCategory().getName()).replace("%plotUniques%",String.valueOf(plot.getUniques())).replace("%plotReputation%",plotReputation).replace("%plotLastTime%",getElapsedTime(System.currentTimeMillis(),plot.getLastActivityTime())).replace("%plotCreationTime%",getElapsedTime(System.currentTimeMillis(), plot.getCreationTime())));
     }
 
     /**

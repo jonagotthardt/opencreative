@@ -42,12 +42,12 @@ public abstract class CreativeEvent extends Event  {
 
     public CreativeEvent(Plot plot, List<Entity> selection) {
         this.selection = selection;
-        world = plot.world;
+        world = plot.getWorld();
     }
 
     public CreativeEvent(Plot plot) {
-        this.selection.addAll(plot.world.getPlayers());
-        world = plot.world;
+        this.selection.addAll(plot.getWorld().getPlayers());
+        world = plot.getWorld();
     }
 
     public CreativeEvent(Entity entity) {
