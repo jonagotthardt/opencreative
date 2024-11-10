@@ -340,9 +340,9 @@ public class MessageUtils {
      Returns string, that parsed plot lines: plot name, description, online, reputation, owner, id, category, uniques, last activity time, creation time.
      **/
     public static String parsePlotLines(Plot plot, String string) {
-        String plotReputation = String.valueOf(plot.getPlotReputation());
-        if (plot.getPlotReputation() >= 1) plotReputation = "§a+" + plotReputation;
-        else if (plot.getPlotReputation() <= -1) plotReputation = "§c" + plotReputation;
+        String plotReputation = String.valueOf(plot.getReputation());
+        if (plot.getReputation() >= 1) plotReputation = "§a+" + plotReputation;
+        else if (plot.getReputation() <= -1) plotReputation = "§c" + plotReputation;
         else plotReputation = "§e" + plotReputation;
         return parsePAPI(Bukkit.getOfflinePlayer(plot.getOwner()),string.replace("%plotName%", plot.getInformation().getDisplayName()).replace("%plotOnline%",String.valueOf(plot.getOnline())).replace("%plotOwner%", plot.getOwner()).replace("%plotID%", String.valueOf(plot.getId())).replace("%plotCustomID%",plot.getInformation().getCustomID()).replace("%plotCategory%", plot.getInformation().getCategory().getName()).replace("%plotUniques%",String.valueOf(plot.getUniques())).replace("%plotReputation%",plotReputation).replace("%plotLastTime%",getElapsedTime(System.currentTimeMillis(),plot.getLastActivityTime())).replace("%plotCreationTime%",getElapsedTime(System.currentTimeMillis(), plot.getCreationTime())));
     }

@@ -554,7 +554,7 @@ public class PlayerInteract implements Listener {
         if (isEntityInLobby(player)) {
             if (getItemType(currentItem).equals("worlds")) {
                 // Opens recommended worlds menu.
-                if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
+                if (Main.maintenance && !player.hasPermission("opencreative.maintenance.bypass")) {
                     player.sendMessage(getLocaleMessage("maintenance"));
                     return;
                 }
@@ -562,7 +562,7 @@ public class PlayerInteract implements Listener {
                 new RecommendedWorldsMenu().open(player);
             } else if (getItemType(currentItem).equals("own_worlds")) {
                 // Opens player's worlds menu.
-                if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
+                if (Main.maintenance && !player.hasPermission("opencreative.maintenance.bypass")) {
                     player.sendMessage(getLocaleMessage("maintenance"));
                     return;
                 }
@@ -571,7 +571,7 @@ public class PlayerInteract implements Listener {
             }
         } else if (plot != null && currentItem.getType() == Material.COMPASS) {
             // Opens world settings menu.
-            if (Main.maintenance && !player.hasPermission("creative.maintenance.bypass")) {
+            if (Main.maintenance && !player.hasPermission("opencreative.maintenance.bypass")) {
                 player.sendMessage(getLocaleMessage("maintenance"));
                 return;
             }

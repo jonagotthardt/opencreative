@@ -53,7 +53,7 @@ public class CommandGive implements CommandExecutor, TabCompleter {
                 return true;
             }
             setCooldown(player, Main.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
-            if (!player.hasPermission("creative.give.bypass")) {
+            if (!player.hasPermission("opencreative.give.bypass")) {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
                 if (plot == null) {
                     player.sendMessage(getLocaleMessage("only-in-world"));
@@ -85,7 +85,7 @@ public class CommandGive implements CommandExecutor, TabCompleter {
                     return true;
                 } else {
                     Plot givePlot = PlotManager.getInstance().getPlotByPlayer(givePlayer);
-                    if (!player.hasPermission("creative.give.bypass")) {
+                    if (!player.hasPermission("opencreative.give.bypass")) {
                         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
                         if (plot == null || !plot.equals(givePlot)) {
                             player.sendMessage(getLocaleMessage("no-player-found"));

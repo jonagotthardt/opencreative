@@ -65,7 +65,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
             }
             switch (args[0].toLowerCase()) {
                 case "reload" -> {
-                    if (!sender.hasPermission("creative.reload")) {
+                    if (!sender.hasPermission("opencreative.reload")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -82,7 +82,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                 }
                 case "resetlocale" -> {
-                    if (!sender.hasPermission("creative.resetlocale")) {
+                    if (!sender.hasPermission("opencreative.resetlocale")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -114,7 +114,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                             .replace("%sharing%", plot.getPlotSharing().getName()).replace("%mode%", plot.getMode().getName()).replace("%description%", plot.getInformation().getDescription()));
                 }
                 case "load" -> {
-                    if (!sender.hasPermission("creative.load-world")) {
+                    if (!sender.hasPermission("opencreative.load-world")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -135,7 +135,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                 }
                 case "creative-chat" -> {
-                    if (!sender.hasPermission("creative.creative-chat")) {
+                    if (!sender.hasPermission("opencreative.creative-chat")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -161,7 +161,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                 }
                 case "kick-all" -> {
-                    if (!sender.hasPermission("creative.kick-all")) {
+                    if (!sender.hasPermission("opencreative.kick-all")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -204,7 +204,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                 }
                 case "maintenance" -> {
-                    if (!sender.hasPermission("creative.maintenance")) {
+                    if (!sender.hasPermission("opencreative.maintenance")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -272,7 +272,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                 }
                 case "unload" -> {
-                    if (!sender.hasPermission("creative.unload-world")) {
+                    if (!sender.hasPermission("opencreative.unload-world")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -293,7 +293,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                 }
                 case "list" -> {
-                    if (!sender.hasPermission("creative.list")) {
+                    if (!sender.hasPermission("opencreative.list")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -306,7 +306,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                             + String.join(", ",worlds));
                 }
                 case "deprecated" -> {
-                    if (!sender.hasPermission("creative.list.deprecated")) {
+                    if (!sender.hasPermission("opencreative.list.deprecated")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -342,7 +342,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                 }
                 case "corrupted" -> {
-                    if (!sender.hasPermission("creative.list.corrupted")) {
+                    if (!sender.hasPermission("opencreative.list.corrupted")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -358,7 +358,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                 }
                 case "print" -> {
-                    if (!sender.hasPermission("creative.print")) {
+                    if (!sender.hasPermission("opencreative.print")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -372,7 +372,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     if (!Main.debug) {
                         return true;
                     }
-                    if (!sender.hasPermission("creative.test")) {
+                    if (!sender.hasPermission("opencreative.test")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }

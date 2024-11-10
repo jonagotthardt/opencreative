@@ -55,8 +55,8 @@ public class CreativeMenu extends AbstractMenu {
         setItem((byte) 19,DECORATION_ITEM);
         setItem((byte) 25,DECORATION_ITEM);
         setItem((byte) 26,DECORATION_PANE_ITEM);
-        setItem((byte) 1,player.hasPermission("creative.reload") ? RELOAD_ITEM : DECORATION_ITEM);
-        setItem((byte) 7,player.hasPermission("creative.resetlocale") ? RESET_LOCALE_ITEM : DECORATION_ITEM);
+        setItem((byte) 1,player.hasPermission("opencreative.reload") ? RELOAD_ITEM : DECORATION_ITEM);
+        setItem((byte) 7,player.hasPermission("opencreative.resetlocale") ? RESET_LOCALE_ITEM : DECORATION_ITEM);
     }
 
     @Override

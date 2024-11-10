@@ -56,7 +56,7 @@ public class CommandGamemode implements CommandExecutor, TabCompleter {
             return true;
         }
         setCooldown(player, Main.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
-        if (!player.hasPermission("creative.game-mode.bypass")) {
+        if (!player.hasPermission("opencreative.game-mode.bypass")) {
             /*
              * Checking is player owner, builder or developer of world.
              * If not, he can't change his game mode.
@@ -125,7 +125,7 @@ public class CommandGamemode implements CommandExecutor, TabCompleter {
                      * will be not changed.
                      */
                     Plot modePlot = PlotManager.getInstance().getPlotByPlayer(modePlayer);
-                    if (!player.hasPermission("creative.game-mode.bypass")) {
+                    if (!player.hasPermission("opencreative.game-mode.bypass")) {
                         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
                         if (plot == null || !plot.equals(modePlot)) {
                             player.sendMessage(getLocaleMessage("no-player-found"));

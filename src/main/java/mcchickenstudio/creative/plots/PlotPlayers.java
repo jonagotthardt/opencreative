@@ -368,4 +368,17 @@ public class PlotPlayers {
     public String getDevelopers() {
         return String.join(", ", plot.getWorldPlayers().getAllDevelopers());
     }
+
+    public boolean isBanned(String nickname) {
+        for (String banned : bannedPlayers) {
+            if (banned.equalsIgnoreCase(nickname)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Set<String> getBannedPlayers() {
+        return bannedPlayers;
+    }
 }

@@ -52,8 +52,8 @@ public class CommandWorld implements CommandExecutor {
                 case "delete":
                     if (sender instanceof Player player) {
                         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                        if (sender.hasPermission("creative.delete")) {
-                            if (plot.isOwner(player) || sender.hasPermission("creative.delete.bypass")) {
+                        if (sender.hasPermission("opencreative.delete")) {
+                            if (plot.isOwner(player) || sender.hasPermission("opencreative.delete.bypass")) {
                                 PlotManager.getInstance().deletePlot(plot, player);
                             }
                         } else {

@@ -22,21 +22,16 @@ import mcchickenstudio.creative.coding.CodeScript;
 import mcchickenstudio.creative.utils.*;
 import net.kyori.adventure.util.TriState;
 import org.bukkit.*;
-import org.bukkit.entity.EnderDragon;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import mcchickenstudio.creative.Main;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.ApiStatus;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static mcchickenstudio.creative.utils.ErrorUtils.sendPlayerErrorMessage;
 import static mcchickenstudio.creative.utils.FileUtils.*;
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
@@ -73,24 +68,36 @@ public class PlotManager {
         }
     }
 
-    @ApiStatus.Experimental
+    /**
+     * Creates and loads a new plot for player with specified world generation parameters.
+     * @param owner Owner of plot.
+     * @param id Id of plot.
+     * @param generator Generator of world.
+     * @param environment Environment of world.
+     * @param seed Seed for generation.
+     * @param generateStructures Generate or not generate structures.
+     */
     public void createPlot(Player owner, int id, WorldUtils.WorldGenerator generator, World.Environment environment, long seed, boolean generateStructures) {
         owner.sendTitle(getLocaleMessage("creating-world.title"),getLocaleMessage("creating-world.subtitle"),10,300,40);
         Main.getPlugin().getLogger().info("Creating new plot " + id + " by " + owner.getName() + "...");
 
-        createWorldSettingsConfig("unloadedWorlds" + File.separator + "plot" + id + File.separator, "plot"+id, owner, environment);
+        createWorldSettings(id, false, owner, environment);
         Plot plot = new Plot(id);
 
         FileUtils.loadWorldFolder(plot.getWorldName(),true);
-        plot.generateWorld(generator,environment,seed,generateStructures);
-        plot.connectPlayer(owner);
-        plot.getWorld().getSpawnLocation().getChunk().load(true);
-        owner.sendTitle(getLocaleMessage("creating-world.welcome-title",owner),getLocaleMessage("creating-world.welcome-subtitle",owner),15,180,45);
-        owner.playSound(owner.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE,100,0.1f);
-        owner.sendMessage(getLocaleMessage("creating-world.welcome",owner));
-        owner.setGameMode(GameMode.CREATIVE);
-        ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
-        owner.getInventory().setItem(8,worldSettingsItem);
+        if (plot.generateWorld(generator,environment,seed,generateStructures) != null) {
+            plot.connectPlayer(owner);
+            plot.getWorld().getSpawnLocation().getChunk().load(true);
+            owner.sendTitle(getLocaleMessage("creating-world.welcome-title",owner),getLocaleMessage("creating-world.welcome-subtitle",owner),15,180,45);
+            owner.playSound(owner.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE,100,0.1f);
+            owner.sendMessage(getLocaleMessage("creating-world.welcome",owner));
+            owner.setGameMode(GameMode.CREATIVE);
+            ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
+            owner.getInventory().setItem(8,worldSettingsItem);
+        } else {
+            sendPlayerErrorMessage(owner,"Failed to create world, world is null.");
+        }
+
     }
 
     public void clearPlots() {
@@ -113,7 +120,6 @@ public class PlotManager {
                 world.getEnderDragonBattle().getBossBar().setVisible(false);
             }
         }
-        plot.setLoaded(true);
         plot.setScript(new CodeScript(plot, FileUtils.getPlotScriptFile(plot)));
         FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
         plot.getWorld().setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS,false);
@@ -130,7 +136,6 @@ public class PlotManager {
         FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
         FileUtils.setPlotConfigParameter(plot,"mode", plot.getMode());
         FileUtils.setPlotConfigParameter(plot,"environment",plot.getEnvironment().name());
-        plot.setLoaded(false);
         for (Player player : plot.getPlayers()) {
             teleportToLobby(player);
         }

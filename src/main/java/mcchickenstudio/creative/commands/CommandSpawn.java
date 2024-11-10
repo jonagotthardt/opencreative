@@ -40,7 +40,7 @@ public class CommandSpawn implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length > 0) {
-            if (!(sender instanceof Player) || sender.hasPermission("creative.spawnothers")) {
+            if (!(sender instanceof Player) || sender.hasPermission("opencreative.spawnothers")) {
                 if (!(Bukkit.getPlayer(args[0]) == null)) {
                     EventRaiser.raiseQuitEvent(Bukkit.getPlayer(args[0]));
                     teleportToLobby((Bukkit.getPlayer(args[0])));

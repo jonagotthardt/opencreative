@@ -55,7 +55,7 @@ public class CommandWeather implements CommandExecutor, TabCompleter {
             return true;
         }
         setCooldown(player, Main.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
-        if (!player.hasPermission("creative.weather.bypass")) {
+        if (!player.hasPermission("opencreative.weather.bypass")) {
             /*
              * Checking is player owner, builder or developer of world.
              * If not, he can't change world's time.

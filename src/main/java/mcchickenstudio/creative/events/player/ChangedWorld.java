@@ -128,6 +128,7 @@ public class ChangedWorld implements Listener {
                                 if (notTrustedBuilders.contains(p.getName())) {
                                     p.setGameMode(GameMode.ADVENTURE);
                                     p.sendMessage(getLocaleMessage("world.build-mode.cant-build-when-offline"));
+                                    clearBuildPermissions(p);
                                 }
                             }
                             if (PlotManager.getInstance().getDevPlot(p) != null) {

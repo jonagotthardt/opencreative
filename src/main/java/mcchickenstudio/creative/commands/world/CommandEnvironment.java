@@ -154,7 +154,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                     }
                     case "createplatform": {
                         if (!Main.debug) return true;
-                        if (!sender.hasPermission("creative.debug")) {
+                        if (!sender.hasPermission("opencreative.debug")) {
                             sender.sendMessage(getLocaleMessage("no-perms"));
                             return true;
                         }

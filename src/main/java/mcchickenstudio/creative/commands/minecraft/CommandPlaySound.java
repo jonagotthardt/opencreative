@@ -53,7 +53,7 @@ public class CommandPlaySound implements CommandExecutor, TabCompleter {
                 return true;
             }
             setCooldown(player, Main.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
-            if (!player.hasPermission("creative.play-sound.bypass")) {
+            if (!player.hasPermission("opencreative.play-sound.bypass")) {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
                 if (plot == null) {
                     player.sendMessage(getLocaleMessage("only-in-world"));
@@ -91,9 +91,9 @@ public class CommandPlaySound implements CommandExecutor, TabCompleter {
                 if (target == null) {
                     sender.sendMessage(getLocaleMessage("no-player-found"));
                     return true;
-                } else if (!sender.hasPermission("creative.play-sound.bypass")) {
+                } else if (!sender.hasPermission("opencreative.play-sound.bypass")) {
                     Plot targetPlot = PlotManager.getInstance().getPlotByPlayer(target);
-                    if (!player.hasPermission("creative.play-sound.bypass")) {
+                    if (!player.hasPermission("opencreative.play-sound.bypass")) {
                         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
                         if (plot == null || !plot.equals(targetPlot)) {
                             player.sendMessage(getLocaleMessage("no-player-found"));

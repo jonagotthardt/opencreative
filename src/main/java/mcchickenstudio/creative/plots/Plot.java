@@ -24,6 +24,8 @@ import mcchickenstudio.creative.coding.CodeScript;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.coding.variables.WorldVariables;
 import mcchickenstudio.creative.utils.*;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import net.kyori.adventure.util.TriState;
 import org.bukkit.*;
 import net.kyori.adventure.bossbar.BossBar;
@@ -36,6 +38,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,7 +73,6 @@ public class Plot {
 
     private World world;
     private World.Environment environment;
-    private boolean isLoaded;
 
     private int plotReputation;
     private Mode mode;
@@ -131,7 +133,7 @@ public class Plot {
         return getOwner().equalsIgnoreCase(nickname);
     }
 
-    public int getPlotReputation() {
+    public int getReputation() {
         return plotReputation;
     }
 
@@ -155,7 +157,10 @@ public class Plot {
             for (Player player : getPlayers()){
                 if (!isEntityInDevPlot(player)) {
                     clearPlayer(player);
-                    player.sendTitle(getLocaleMessage("world.build-mode.title"),getLocaleMessage("world.build-mode.subtitle"));
+                    player.showTitle(Title.title(
+                            Component.text(getLocaleMessage("world.build-mode.title")), Component.text(getLocaleMessage("world.build-mode.subtitle")),
+                            Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(30), Duration.ofMillis(130))
+                    ));
                     player.teleport(world.getSpawnLocation());
                     player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT,100,1.7f);
                     if (worldPlayers.canBuild(player)) {
@@ -175,9 +180,9 @@ public class Plot {
                     clearPlayer(player);
                     player.teleport(world.getSpawnLocation());
                     if (worldPlayers.canDevelop(player)) {
-                        player.sendMessage(getLocaleMessage("world.build-mode.message.owner"));
+                        player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
                     } else {
-                        player.sendMessage(getLocaleMessage("world.build-mode.message.players"));
+                        player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
                     }
                 } else {
                     player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
@@ -199,20 +204,18 @@ public class Plot {
     }
 
     public World generateWorld(WorldUtils.WorldGenerator worldGenerator, World.Environment environment, long seed, boolean generateStructures) {
+
         WorldCreator worldCreator = new WorldCreator(getWorldName()).generateStructures(false);
         worldCreator.type(WorldType.FLAT);
         worldCreator.environment(environment);
         worldCreator.generateStructures(generateStructures);
         worldCreator.seed(seed);
 
-        if (worldGenerator == WorldUtils.WorldGenerator.EMPTY) {
-            worldCreator.generator(new EmptyChunkGenerator());
-        } else if (worldGenerator == WorldUtils.WorldGenerator.WATER) {
-            worldCreator.generator(new WaterChunkGenerator());
-        } else if (worldGenerator == WorldUtils.WorldGenerator.SURVIVAL) {
-            worldCreator.type(WorldType.NORMAL);
-        } else if (worldGenerator == WorldUtils.WorldGenerator.LARGE_BIOMES) {
-            worldCreator.type(WorldType.LARGE_BIOMES);
+        switch (worldGenerator) {
+            case EMPTY -> worldCreator.generator(new EmptyChunkGenerator());
+            case WATER -> worldCreator.generator(new WaterChunkGenerator());
+            case SURVIVAL -> worldCreator.type(WorldType.NORMAL);
+            case LARGE_BIOMES ->  worldCreator.type(WorldType.LARGE_BIOMES);
         }
 
         worldCreator.keepSpawnLoaded(TriState.FALSE);
@@ -250,7 +253,6 @@ public class Plot {
             }
 
             this.world = world;
-            isLoaded = true;
 
             for (Entity entity : world.getEntities()) {
                 if (entity.getType() != EntityType.PLAYER) entity.remove();
@@ -319,11 +321,7 @@ public class Plot {
     }
 
     public boolean isLoaded() {
-        return isLoaded;
-    }
-
-    public void setLoaded(boolean loaded) {
-        isLoaded = loaded;
+        return Bukkit.getWorld(getWorldName()) != null;
     }
 
     public boolean isChangingOwner() {
@@ -337,13 +335,11 @@ public class Plot {
     public enum Mode {
         PLAYING() {
             public void onPlayerConnect(Player player, Plot plot) {
-                player.setGameMode(GameMode.ADVENTURE);
                 player.setGameMode(plot.getOwner().equalsIgnoreCase(player.getName()) ? GameMode.CREATIVE : GameMode.ADVENTURE);
                 plot.getScript().loadCode();
             }
         }, BUILD() {
             public void onPlayerConnect(Player player, Plot plot) {
-                player.setGameMode(GameMode.ADVENTURE);
                 if (plot.getWorldPlayers().canBuild(player)) {
                     player.setGameMode(GameMode.CREATIVE);
                     giveBuildPermissions(player);
@@ -443,33 +439,12 @@ public class Plot {
         this.flags.setFlag(flag,value);
     }
 
-    /**
-     Creates a world for plot.
-     **/
-    public void create(Plot plot, WorldUtils.WorldGenerator generator, World.Environment environment, long seed, boolean generateStructures) {
-        Player player = Bukkit.getPlayer(plot.getOwner());
-        player.sendTitle(getLocaleMessage("creating-world.title"),getLocaleMessage("creating-world.subtitle"),10,300,40);
-        Main.getPlugin().getLogger().info("Creating new " + getWorldName() + " by " + player.getName() + "...");
-        if (!WorldUtils.generateWorld(plot,player,getWorldName(),generator,environment,seed,generateStructures)) {
-            player.clearTitle();
-            sendPlayerErrorMessage(player,"§cПроизошла ошибка при создании мира... \n§cОбратитесь к администрации!");
-        }
-    }
-
     public Mode getMode() {
         return mode;
     }
 
     public int getOnline() {
         return this.getPlayers().size();
-    }
-
-    public int getReputation() {
-        try {
-            return (getPlayersFromPlotConfig(this, PlayersType.LIKED).size() - getPlayersFromPlotConfig(this, PlayersType.DISLIKED).size());
-        } catch (Exception error) {
-            return 0;
-        }
     }
 
     public int getUniques() {
@@ -480,6 +455,7 @@ public class Plot {
         }
     }
 
+    @SuppressWarnings("all")
     public long getCreationTime() {
         try {
             return Long.parseLong(String.valueOf(getPlotConfig(this).get("creation-time")));
@@ -488,6 +464,7 @@ public class Plot {
         }
     }
 
+    @SuppressWarnings("all")
     public long getLastActivityTime() {
         try {
             return Long.parseLong(String.valueOf(getPlotConfig(this).get("last-activity-time")));
@@ -516,20 +493,29 @@ public class Plot {
     }
 
     public void connectPlayer(Player player) {
-        if (!(this.getPlotSharing() == Sharing.PUBLIC)) {
-            if (!this.getOwner().equalsIgnoreCase(player.getName())) {
-                if (!(player.hasPermission("creative.private.bypass"))) {
+        if (getPlotSharing() != Sharing.PUBLIC) {
+            if (!isOwner(player)) {
+                if (!(player.hasPermission("opencreative.private.bypass"))) {
                     player.sendMessage(getLocaleMessage("private-plot", player));
                     return;
                 }
             }
         }
-        if (!this.isOwner(player.getName()) && FileUtils.getPlayersFromPlotConfig(this,PlayersType.BLACKLISTED).contains(player.getName())) {
-            player.sendMessage(getLocaleMessage("blacklisted-in-plot", player));
-            return;
+        if (!isOwner(player.getName())) {
+            if (getPlotSharing() != Sharing.PUBLIC && !player.hasPermission("opencreative.private.bypass")) {
+                player.sendMessage(getLocaleMessage("private-plot", player));
+                return;
+            }
+            if (worldPlayers.isBanned(player.getName())) {
+                player.sendMessage(getLocaleMessage("blacklisted-in-plot", player));
+                return;
+            }
         }
         getWorldPlayers().registerPlayer(player);
-        player.sendTitle(getLocaleMessage("world.connecting.title"),getLocaleMessage("world.connecting.subtitle"),15,9999,15);
+        player.showTitle(Title.title(
+                Component.text(getLocaleMessage("world.connecting.title")), Component.text(getLocaleMessage("world.connecting.subtitle")),
+                Title.Times.times(Duration.ofMillis(710), Duration.ofSeconds(30), Duration.ofMillis(130))
+        ));
         player.playSound(player.getLocation(), Sound.BLOCK_TRIAL_SPAWNER_ABOUT_TO_SPAWN_ITEM,100,1);
         boolean wasLoaded = isLoaded();
         if (!isLoaded()) {
@@ -543,7 +529,7 @@ public class Plot {
         mode.onPlayerConnect(player,this);
         getWorldPlayers().getPlotPlayer(player).load();
         clearPlayer(player);
-        player.sendTitle("","");
+        player.clearTitle();
         if (!getPlayersFromPlotConfig(this, PlayersType.UNIQUE).contains(player.getName())) {
             addPlayerToListInPlotConfig(this,player.getName(), PlayersType.UNIQUE);
         }
@@ -571,7 +557,10 @@ public class Plot {
     }
 
     public void connectToDevPlot(Player player) {
-        player.sendTitle(getLocaleMessage("world.dev-mode.connecting.title"),getLocaleMessage("world.dev-mode.connecting.subtitle"),15,9999,15);
+        player.showTitle(Title.title(
+                Component.text(getLocaleMessage("world.dev-mode.connecting.title")), Component.text(getLocaleMessage("world.dev-mode.connecting.subtitle")),
+                Title.Times.times(Duration.ofSeconds(15), Duration.ofSeconds(9999), Duration.ofSeconds(10))
+        ));
         getDevPlot().loadDevPlotWorld();
         getDevPlot().world.getSpawnLocation().getChunk().load(true);
         Location lastLocation = this.getDevPlot().lastLocations.get(player);
@@ -624,7 +613,7 @@ public class Plot {
         }.runTaskAsynchronously(Main.getPlugin());
     }
 
-    public boolean getDebug() {
+    public boolean isDebug() {
         return debug;
     }
 

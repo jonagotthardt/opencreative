@@ -61,7 +61,7 @@ public class WorldEnvironmentMenu extends AbstractMenu {
         super((byte) 6, getLocaleMessage("menus.developer.environment.title"));
         this.player = player;
         this.devPlot = devPlot;
-        debug = new ParameterButton(devPlot.getPlot().getDebug() ? "all" : "disabled", List.of("disabled","all"),"debug","menus.developer.environment","menus.developer.environment.items.debug",List.of(Material.PUFFERFISH_BUCKET,Material.PUFFERFISH));
+        debug = new ParameterButton(devPlot.getPlot().isDebug() ? "all" : "disabled", List.of("disabled","all"),"debug","menus.developer.environment","menus.developer.environment.items.debug",List.of(Material.PUFFERFISH_BUCKET,Material.PUFFERFISH));
         containers = new ParameterButton(devPlot.getContainerMaterial() == Material.CHEST ? "chest" : "barrel", List.of("chest","barrel"),"containers","menus.developer.environment","menus.developer.environment.items.containers",List.of(Material.CHEST,Material.BARREL));
         info = createItem(Material.AMETHYST_CLUSTER,1,"menus.developer.environment.items.info");
         replacePlaceholderInLore(info,"%executors%",devPlot.getPlot().getScript().getExecutors().getExecutorsList().size());

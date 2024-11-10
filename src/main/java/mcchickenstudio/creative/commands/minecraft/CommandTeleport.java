@@ -54,7 +54,7 @@ public class CommandTeleport implements CommandExecutor {
             return true;
         }
         setCooldown(player, Main.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
-        if (!player.hasPermission("creative.teleport.bypass")) {
+        if (!player.hasPermission("opencreative.teleport.bypass")) {
             /*
              * Checking is player owner, builder or developer of world.
              * If not, he can't teleport.
@@ -87,7 +87,7 @@ public class CommandTeleport implements CommandExecutor {
                 return true;
             }
             Plot teleportPlot = PlotManager.getInstance().getPlotByPlayer(teleportToPlayer);
-            if (!player.hasPermission("creative.teleport.bypass")) {
+            if (!player.hasPermission("opencreative.teleport.bypass")) {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
                 if (plot == null || !plot.equals(teleportPlot)) {
                     player.sendMessage(getLocaleMessage("no-player-found"));
@@ -99,7 +99,7 @@ public class CommandTeleport implements CommandExecutor {
                 }
 
             }
-            if (!player.hasPermission("creative.teleport.clear-bypass")) {
+            if (!player.hasPermission("opencreative.teleport.clear-bypass")) {
                 clearPlayer(player);
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
                 if (plot == null || !plot.equals(teleportPlot)) {
@@ -111,7 +111,7 @@ public class CommandTeleport implements CommandExecutor {
                 player.teleport(teleportToPlayer.getLocation());
             }
             player.playSound(player.getLocation(), Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100,0.1f);
-            if (!player.hasPermission("creative.teleport.clear-bypass")) {
+            if (!player.hasPermission("opencreative.teleport.clear-bypass")) {
                 clearPlayer(player);
             }
         } else if (args.length == 2) {
@@ -130,7 +130,7 @@ public class CommandTeleport implements CommandExecutor {
             }
             Plot firstPlot = PlotManager.getInstance().getPlotByPlayer(firstPlayer);
             Plot secondPlot = PlotManager.getInstance().getPlotByPlayer(secondPlayer);
-            if (!player.hasPermission("creative.teleport.others-bypass")) {
+            if (!player.hasPermission("opencreative.teleport.others-bypass")) {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
                 if (plot == null || !plot.equals(firstPlot) || !plot.equals(secondPlot) || !firstPlot.equals(secondPlot)) {
                     player.sendMessage(getLocaleMessage("no-player-found"));
@@ -141,12 +141,12 @@ public class CommandTeleport implements CommandExecutor {
                     return true;
                 }
             }
-            if (!player.hasPermission("creative.teleport.clear-bypass")) {
+            if (!player.hasPermission("opencreative.teleport.clear-bypass")) {
                 clearPlayer(firstPlayer);
             }
             firstPlayer.teleport(secondPlayer.getLocation());
             firstPlayer.playSound(firstPlayer.getLocation(), Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100,0.1f);
-            if (!player.hasPermission("creative.teleport.clear-bypass")) {
+            if (!player.hasPermission("opencreative.teleport.clear-bypass")) {
                 clearPlayer(firstPlayer);
             }
         } else if (args.length >= 3) {
