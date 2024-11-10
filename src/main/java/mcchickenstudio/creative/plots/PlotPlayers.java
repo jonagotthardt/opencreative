@@ -57,7 +57,7 @@ public class PlotPlayers {
 
     public void unregisterPlayer(Player player) {
         worldPlayers.removeIf(plotPlayer -> plotPlayer.getPlayer().equals(player));
-        plot.devPlot.lastLocations.remove(player);
+        plot.getDevPlot().lastLocations.remove(player);
     }
 
     public WorldPlayer getPlotPlayer(Player player) {
@@ -221,7 +221,7 @@ public class PlotPlayers {
                 }
                 if (isEntityInDevPlot(player)) {
                     clearPlayer(player);
-                    player.teleport(plot.world.getSpawnLocation());
+                    player.teleport(plot.getWorld().getSpawnLocation());
                 }
             }
         }
@@ -359,5 +359,13 @@ public class PlotPlayers {
 
     public Set<String> getDevelopersNotTrusted() {
         return new HashSet<>(developersNotTrusted);
+    }
+
+    public String getBuilders() {
+        return String.join(", ", plot.getWorldPlayers().getAllBuilders());
+    }
+
+    public String getDevelopers() {
+        return String.join(", ", plot.getWorldPlayers().getAllDevelopers());
     }
 }

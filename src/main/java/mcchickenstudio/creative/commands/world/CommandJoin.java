@@ -56,7 +56,7 @@ public class CommandJoin implements CommandExecutor, TabCompleter {
                 if (!PlotManager.getInstance().getPlots().isEmpty()) {
                     Plot foundPlot = null;
                     for (Plot searchablePlot : PlotManager.getInstance().getPlots()) {
-                        if (searchablePlot.worldID.equals(args[0])) {
+                        if (String.valueOf(searchablePlot.getId()).equals(args[0])) {
                             foundPlot = searchablePlot;
                             break;
                         } else if (searchablePlot.getInformation().getCustomID().equalsIgnoreCase(args[0])) {
@@ -65,7 +65,7 @@ public class CommandJoin implements CommandExecutor, TabCompleter {
                         }
                     }
                     if (foundPlot != null) {
-                        foundPlot.teleportPlayer(player);
+                        foundPlot.connectPlayer(player);
                     } else {
                         player.playSound(player.getLocation(),Sound.BLOCK_ANVIL_DESTROY,100,2);
                         player.clearTitle();

@@ -50,7 +50,7 @@ public class CommandLocate implements CommandExecutor, TabCompleter {
                     String message = parsePlotLines(plot,parsePAPI(player,getLocaleMessage("locate.found").replace("%player%",player.getName())));
                     TextComponent advertisement = new TextComponent(message);
                     advertisement.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(parsePlotLines(plot,getLocaleMessage("advertisement.hover")))));
-                    advertisement.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ad " + plot.worldID));
+                    advertisement.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ad " + plot.getId()));
                     sender.sendMessage(advertisement);
                 } else {
                     sender.sendMessage(getLocaleMessage("locate.offline"));

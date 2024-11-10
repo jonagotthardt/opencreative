@@ -54,9 +54,9 @@ public class CreateBossBarAction extends WorldAction {
             color = BossBar.Color.valueOf(colorString.toUpperCase());
         } catch (IllegalArgumentException ignored) {}
 
-        if (getPlot().getBossBars().size() >= getPlot().getBossBarsLimit()) {
+        if (getPlot().getBossBars().size() >= getPlot().getLimits().getBossBarsLimit()) {
             // FIXME: Replace with hard-coded message, sendMessageOnce()
-            sendCodingDebugLog(getPlot(),"Limit of " + getPlot().getBossBarsLimit() + " boss bars reached.");
+            sendCodingDebugLog(getPlot(),"Limit of " + getPlot().getLimits().getBossBarsLimit() + " boss bars reached.");
             return;
         }
         BossBar bossBar = getPlot().getBossBars().get(name.toLowerCase());

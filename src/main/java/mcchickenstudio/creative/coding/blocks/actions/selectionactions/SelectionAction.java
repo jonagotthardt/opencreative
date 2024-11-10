@@ -16,24 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/*
- * OpenCreative+, Minecraft plugin.
- * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
- *
- * OpenCreative+ is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * OpenCreative+ is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- */
-
 package mcchickenstudio.creative.coding.blocks.actions.selectionactions;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
@@ -51,8 +33,6 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugLog;
 
 public abstract class SelectionAction extends Action {
 
@@ -89,7 +69,7 @@ public abstract class SelectionAction extends Action {
                 Action action = conditionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class,boolean.class).newInstance(getExecutor(),target,getX(),getArguments(),new ArrayList<>(),isOpposed);
                 if (action instanceof PlayerCondition playerCondition) {
                     playerCondition.setHandler(this.getHandler());
-                    for (Player player : getPlot().world.getPlayers()) {
+                    for (Player player : getPlot().getWorld().getPlayers()) {
                         playerCondition.setEntity(player);
                         if (playerCondition.checkPlayer(player) ^ isOpposed) {
                             entities.add(player);
@@ -97,7 +77,7 @@ public abstract class SelectionAction extends Action {
                     }
                 } else if (action instanceof Condition condition) {
                     condition.setHandler(this.getHandler());
-                    for (Entity checkEntity : getPlot().world.getEntities()) {
+                    for (Entity checkEntity : getPlot().getWorld().getEntities()) {
                         condition.setEntity(checkEntity);
                         if (condition.check(checkEntity) ^ isOpposed) {
                             entities.add(checkEntity);

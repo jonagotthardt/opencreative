@@ -236,15 +236,9 @@ public class ErrorUtils {
      Stops plot's code execution and changes plot's mode to BUILD.
      **/
     public static void stopPlotCode(Plot plot) {
-        Main.getPlugin().getLogger().info("Plot code has been stopped in " + plot.worldName + " because of operations limit.");
-        if (plot.getPlotMode() != Plot.Mode.BUILD) {
-            plot.setPlotMode(Plot.Mode.BUILD);
-            for (Player p : plot.getPlayers()){
-                if (PlotManager.getInstance().getDevPlot(p) == null) {
-                    clearPlayer(p);
-                    p.teleport(plot.world.getSpawnLocation());
-                }
-            }
+        Main.getPlugin().getLogger().info("Plot code has been stopped in " + plot.getWorldName() + " because of operations limit.");
+        if (plot.getMode() != Plot.Mode.BUILD) {
+            plot.setMode(Plot.Mode.BUILD);
         }
     }
 

@@ -66,11 +66,11 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
     public static RadioButton getMobLootFlagButton(Plot plot) {
         List<Runnable> choicesActions = new ArrayList<>();
         choicesActions.add(() -> {
-            plot.world.setGameRule(GameRule.DO_MOB_LOOT, true);
+            plot.getWorld().setGameRule(GameRule.DO_MOB_LOOT, true);
             plot.setFlagValue(PlotFlags.PlotFlag.MOB_LOOT,(byte) 1);
         });
         choicesActions.add(() -> {
-            plot.world.setGameRule(GameRule.DO_MOB_LOOT, false);
+            plot.getWorld().setGameRule(GameRule.DO_MOB_LOOT, false);
             plot.setFlagValue(PlotFlags.PlotFlag.MOB_LOOT, (byte) 2);
         });
         return new RadioButton(Material.FEATHER, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.mob-loot.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.mob-loot.lore"), plot.getFlagValue(PlotFlags.PlotFlag.MOB_LOOT), 2, choicesActions, "menus.world-settings-flags.items.mob-loot.choices", "menus.world-settings-flags");
@@ -79,11 +79,11 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
     public static RadioButton getKeepInventoryFlagButton(Plot plot) {
         List<Runnable> choicesActions = new ArrayList<>();
         choicesActions.add(() -> {
-            plot.world.setGameRule(GameRule.KEEP_INVENTORY, false);
+            plot.getWorld().setGameRule(GameRule.KEEP_INVENTORY, false);
             plot.setFlagValue(PlotFlags.PlotFlag.KEEP_INVENTORY, (byte) 1);
         });
         choicesActions.add(() -> {
-            plot.world.setGameRule(GameRule.KEEP_INVENTORY, true);
+            plot.getWorld().setGameRule(GameRule.KEEP_INVENTORY, true);
             plot.setFlagValue(PlotFlags.PlotFlag.KEEP_INVENTORY, (byte) 2);
         });
         return new RadioButton(Material.CHEST_MINECART, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.keep-inventory.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.keep-inventory.lore"), plot.getFlagValue(PlotFlags.PlotFlag.KEEP_INVENTORY), 2, choicesActions, "menus.world-settings-flags.items.keep-inventory.choices", "menus.world-settings-flags");
@@ -92,11 +92,11 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
     public static RadioButton getNaturalRegenerationFlagButton(Plot plot) {
         List<Runnable> choicesActions = new ArrayList<>();
         choicesActions.add(() -> {
-            plot.world.setGameRule(GameRule.NATURAL_REGENERATION, true);
+            plot.getWorld().setGameRule(GameRule.NATURAL_REGENERATION, true);
             plot.setFlagValue(PlotFlags.PlotFlag.NATURAL_REGENERATION, (byte) 1);
         });
         choicesActions.add(() -> {
-            plot.world.setGameRule(GameRule.NATURAL_REGENERATION, false);
+            plot.getWorld().setGameRule(GameRule.NATURAL_REGENERATION, false);
             plot.setFlagValue(PlotFlags.PlotFlag.NATURAL_REGENERATION, (byte) 2);
         });
         return new RadioButton(Material.POTION, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.natural-regeneration.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.natural-regeneration.lore"), plot.getFlagValue(PlotFlags.PlotFlag.NATURAL_REGENERATION), 2, choicesActions, "menus.world-settings-flags.items.natural-regeneration.choices", "menus.world-settings-flags");
@@ -112,11 +112,11 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
     public static RadioButton getImmediateRespawnFlagButton(Plot plot) {
         List<Runnable> choicesActions = new ArrayList<>();
         choicesActions.add(() -> {
-            plot.world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, false);
+            plot.getWorld().setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, false);
             plot.setFlagValue(PlotFlags.PlotFlag.IMMEDIATE_RESPAWN, (byte) 1);
         });
         choicesActions.add(() -> {
-            plot.world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+            plot.getWorld().setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
             plot.setFlagValue(PlotFlags.PlotFlag.IMMEDIATE_RESPAWN, (byte) 2);
         });
         return new RadioButton(Material.SKELETON_SKULL, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.immediate-respawn.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.immediate-respawn.lore"), plot.getFlagValue(PlotFlags.PlotFlag.IMMEDIATE_RESPAWN), 2, choicesActions, "menus.world-settings-flags.items.immediate-respawn.choices", "menus.world-settings-flags");
@@ -139,23 +139,23 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
     public static RadioButton getMobSpawnFlagButton(Plot plot) {
         List<Runnable> choicesActions = new ArrayList<>();
         choicesActions.add(() -> {
-            plot.world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+            plot.getWorld().setGameRule(GameRule.DO_MOB_SPAWNING, false);
             plot.setFlagValue(PlotFlags.PlotFlag.MOB_SPAWN, (byte)1);
         });
         choicesActions.add(() -> {
-            plot.world.setGameRule(GameRule.DO_MOB_SPAWNING, true);
+            plot.getWorld().setGameRule(GameRule.DO_MOB_SPAWNING, true);
             plot.setFlagValue(PlotFlags.PlotFlag.MOB_SPAWN, (byte)2);
         });
         choicesActions.add(() -> {
-            plot.world.setGameRule(GameRule.DO_MOB_SPAWNING, true);
+            plot.getWorld().setGameRule(GameRule.DO_MOB_SPAWNING, true);
             plot.setFlagValue(PlotFlags.PlotFlag.MOB_SPAWN, (byte)3);
         });
         choicesActions.add(() -> {
-            plot.world.setGameRule(GameRule.DO_MOB_SPAWNING, true);
+            plot.getWorld().setGameRule(GameRule.DO_MOB_SPAWNING, true);
             plot.setFlagValue(PlotFlags.PlotFlag.MOB_SPAWN, (byte)4);
         });
         choicesActions.add(() -> {
-            plot.world.setGameRule(GameRule.DO_MOB_SPAWNING, true);
+            plot.getWorld().setGameRule(GameRule.DO_MOB_SPAWNING, true);
             plot.setFlagValue(PlotFlags.PlotFlag.MOB_SPAWN, (byte)5);
         });
         return new RadioButton(Material.EGG, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.mob-spawn.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.mob-spawn.lore"), plot.getFlagValue(PlotFlags.PlotFlag.MOB_SPAWN), 5, choicesActions, "menus.world-settings-flags.items.mob-spawn.choices", "menus.world-settings-flags");
@@ -164,11 +164,11 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
     public static RadioButton getBlockExplosionFlagButton(Plot plot) {
         List<Runnable> choicesActions = new ArrayList<>();
         choicesActions.add(() -> {
-            plot.world.setGameRule(GameRule.MOB_GRIEFING, true);
+            plot.getWorld().setGameRule(GameRule.MOB_GRIEFING, true);
             plot.setFlagValue(PlotFlags.PlotFlag.BLOCK_EXPLOSION,(byte) 1);
         });
         choicesActions.add(() -> {
-            plot.world.setGameRule(GameRule.MOB_GRIEFING, false);
+            plot.getWorld().setGameRule(GameRule.MOB_GRIEFING, false);
             plot.setFlagValue(PlotFlags.PlotFlag.BLOCK_EXPLOSION,(byte) 2);
         });
         return new RadioButton(Material.TNT, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.block-explosion.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.block-explosion.lore"), plot.getFlagValue(PlotFlags.PlotFlag.BLOCK_EXPLOSION), 2, choicesActions, "menus.world-settings-flags.items.block-explosion.choices", "menus.world-settings-flags");
@@ -177,11 +177,11 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
     public static RadioButton FireSpreadButton(Plot plot) {
         List<Runnable> choicesActions = new ArrayList<>();
         choicesActions.add(() -> {
-            plot.world.setGameRule(GameRule.DO_FIRE_TICK, true);
+            plot.getWorld().setGameRule(GameRule.DO_FIRE_TICK, true);
             plot.setFlagValue(PlotFlags.PlotFlag.FIRE_SPREAD,(byte) 1);
         });
         choicesActions.add(() -> {
-            plot.world.setGameRule(GameRule.DO_FIRE_TICK, false);
+            plot.getWorld().setGameRule(GameRule.DO_FIRE_TICK, false);
             plot.setFlagValue(PlotFlags.PlotFlag.FIRE_SPREAD,(byte) 2);
         });
         return new RadioButton(Material.CAMPFIRE, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.fire-spread.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.fire-spread.lore"), plot.getFlagValue(PlotFlags.PlotFlag.FIRE_SPREAD), 2, choicesActions, "menus.world-settings-flags.items.fire-spread.choices", "menus.world-settings-flags");
@@ -206,26 +206,26 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
 
     public static RadioButton getWeatherFlagButton(Plot plot) {
         List<Runnable> choicesActions = getRunnables(plot);
-        Boolean isWeatherChanging = plot.world.getGameRuleValue(GameRule.DO_WEATHER_CYCLE);
-        byte currentValue = (byte) (isWeatherChanging != null && isWeatherChanging ? 3 : plot.world.hasStorm() ? 2 : 1);
+        Boolean isWeatherChanging = plot.getWorld().getGameRuleValue(GameRule.DO_WEATHER_CYCLE);
+        byte currentValue = (byte) (isWeatherChanging != null && isWeatherChanging ? 3 : plot.getWorld().hasStorm() ? 2 : 1);
         return new RadioButton(Material.WATER_BUCKET, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.weather.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.weather.lore"), currentValue, 3, choicesActions, "menus.world-settings-flags.items.weather.choices", "menus.world-settings-flags");
     }
 
     private static List<Runnable> getRunnables(Plot plot) {
         List<Runnable> choicesActions = new ArrayList<>();
         choicesActions.add(() -> {
-            plot.world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
-            plot.world.setStorm(false);
+            plot.getWorld().setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+            plot.getWorld().setStorm(false);
             plot.setFlagValue(PlotFlags.PlotFlag.WEATHER, (byte)1);
         });
         choicesActions.add(() -> {
-            plot.world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
-            plot.world.setStorm(true);
+            plot.getWorld().setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+            plot.getWorld().setStorm(true);
             plot.setFlagValue(PlotFlags.PlotFlag.WEATHER, (byte)2);
         });
         choicesActions.add(() -> {
-            plot.world.setStorm(false);
-            plot.world.setGameRule(GameRule.DO_WEATHER_CYCLE, true);
+            plot.getWorld().setStorm(false);
+            plot.getWorld().setGameRule(GameRule.DO_WEATHER_CYCLE, true);
             plot.setFlagValue(PlotFlags.PlotFlag.WEATHER, (byte)3);
         });
         return choicesActions;

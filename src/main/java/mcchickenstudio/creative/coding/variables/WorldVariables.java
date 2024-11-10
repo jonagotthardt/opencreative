@@ -20,7 +20,6 @@ package mcchickenstudio.creative.coding.variables;
 
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionsHandler;
-import mcchickenstudio.creative.coding.variables.VariableLink;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.utils.FileUtils;
 import org.bukkit.Location;
@@ -78,20 +77,20 @@ public class WorldVariables {
         WorldVariable variable = getVariable(link,action);
         String valueString = value.toString().substring(0, Math.min(20, value.toString().length()));
         if (variable != null) {
-            if (variable.getSize() + getTotalVariablesAmount() > plot.getVariablesAmountLimit()) {
-                sendCodingDebugLog(getPlot(), "Reached limit of " + plot.getVariablesAmountLimit() + " variables.");
+            if (variable.getSize() + getTotalVariablesAmount() > plot.getLimits().getVariablesAmountLimit()) {
+                sendCodingDebugLog(getPlot(), "Reached limit of " + plot.getLimits().getVariablesAmountLimit() + " variables.");
                 return;
             }
             variable.setType(type);
             variable.setValue(value);
         } else {
-            if (getTotalVariablesAmount() > plot.getVariablesAmountLimit()) {
-                sendCodingDebugLog(getPlot(), "Reached limit of " + plot.getVariablesAmountLimit() + " variables.");
+            if (getTotalVariablesAmount() > plot.getLimits().getVariablesAmountLimit()) {
+                sendCodingDebugLog(getPlot(), "Reached limit of " + plot.getLimits().getVariablesAmountLimit() + " variables.");
                 return;
             }
             WorldVariable newVariable = new WorldVariable(parseEntity(link.getName(),action.getHandler(),action), link.getVariableType(), type, value, handler);
-            if (newVariable.getSize() + getTotalVariablesAmount() > plot.getVariablesAmountLimit()) {
-                sendCodingDebugLog(getPlot(), "Reached limit of " + plot.getVariablesAmountLimit() + " variables.");
+            if (newVariable.getSize() + getTotalVariablesAmount() > plot.getLimits().getVariablesAmountLimit()) {
+                sendCodingDebugLog(getPlot(), "Reached limit of " + plot.getLimits().getVariablesAmountLimit() + " variables.");
                 return;
             }
             variables.add(newVariable);
@@ -128,7 +127,7 @@ public class WorldVariables {
                 ValueType type = ValueType.valueOf((String) jsonObject.get("type"));
                 Object value = jsonObject.get("value");
                 value = deserializeObject(value,type);
-                if (variables.size() < plot.getVariablesAmountLimit()) {
+                if (variables.size() < plot.getLimits().getVariablesAmountLimit()) {
                     variables.add(new WorldVariable(name,VariableLink.VariableType.SAVED,type,value,null));
                 }
             }
@@ -223,7 +222,7 @@ public class WorldVariables {
                 z = (Double) locationMap.get("z");
                 yaw = ((Double) locationMap.get("yaw")).floatValue();
                 pitch = ((Double) locationMap.get("pitch")).floatValue();
-                return new Location(plot.world,x,y,z,yaw,pitch);
+                return new Location(plot.getWorld(),x,y,z,yaw,pitch);
             } else if (type == ValueType.LIST) {
                 List<Object> newList = new ArrayList<>();
                 List<?> oldList = (List<?>) value;

@@ -57,20 +57,20 @@ public class EventRaiser {
     public static boolean cantRaiseEvent(Player player) {
         if (PlotManager.getInstance().getPlotByPlayer(player) == null) return true;
         if (PlotManager.getInstance().getDevPlot(player) != null) return true;
-        if (PlotManager.getInstance().getPlotByPlayer(player).getPlotMode() == Plot.Mode.BUILD) return true;
+        if (PlotManager.getInstance().getPlotByPlayer(player).getMode() == Plot.Mode.BUILD) return true;
         return ChangedWorld.isPlayerWithLocation(player);
     }
 
     public static boolean cantRaiseEvent(Entity entity) {
         if (PlotManager.getInstance().getPlotByWorld(entity.getWorld()) == null) return true;
-        if (PlotManager.getInstance().getPlotByWorld(entity.getWorld()).getPlotMode() == Plot.Mode.BUILD) return true;
+        if (PlotManager.getInstance().getPlotByWorld(entity.getWorld()).getMode() == Plot.Mode.BUILD) return true;
         if (isEntityInDevPlot(entity)) return true;
         return false;
     }
 
     public static boolean cantRaiseEvent(Plot plot) {
         if (plot == null) return true;
-        return plot.getPlotMode() == Plot.Mode.BUILD;
+        return plot.getMode() == Plot.Mode.BUILD;
     }
 
     public static void raiseChunkLoadEvent(PlayerChunkLoadEvent event) {

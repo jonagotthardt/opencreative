@@ -71,12 +71,12 @@ public class LegacyConvertor {
                     currentPlot = plots.getFirst();
                 }
                 if (!convertedDevPlot) {
-                    if (currentPlot.devPlot.world == null) {
+                    if (currentPlot.getDevPlot().world == null) {
                         PlotManager.getInstance().loadPlot(currentPlot);
-                        currentPlot.devPlot.loadDevPlotWorld();
+                        currentPlot.getDevPlot().loadDevPlotWorld();
                         return;
                     }
-                    convertDevPlot(currentPlot.devPlot);
+                    convertDevPlot(currentPlot.getDevPlot());
                 }
 
             }

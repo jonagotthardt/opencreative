@@ -87,10 +87,10 @@ public class CommandWorld implements CommandExecutor {
                         if (plot == null) return true;
                         long now = System.currentTimeMillis();
                         sender.sendMessage(getLocaleMessage("world.info").replace("%name%", plot.getInformation().getDisplayName())
-                                .replace("%id%", plot.worldID).replace("%creation-time%", getElapsedTime(now, plot.getCreationTime()))
+                                .replace("%id%", String.valueOf(plot.getId())).replace("%creation-time%", getElapsedTime(now, plot.getCreationTime()))
                                 .replace("%activity-time%", getElapsedTime(now, plot.getLastActivityTime())).replace("%online%", String.valueOf(plot.getOnline()))
-                                .replace("%builders%", plot.getBuilders()).replace("%coders%", plot.getDevelopers()).replace("%owner%", plot.getOwner())
-                                .replace("%sharing%", plot.getPlotSharing().getName()).replace("%mode%", plot.getPlotMode().getName()).replace("%description%", plot.getInformation().getDescription()));
+                                .replace("%builders%", plot.getWorldPlayers().getBuilders()).replace("%coders%", plot.getWorldPlayers().getDevelopers()).replace("%owner%", plot.getOwner())
+                                .replace("%sharing%", plot.getPlotSharing().getName()).replace("%mode%", plot.getMode().getName()).replace("%description%", plot.getInformation().getDescription()));
                         break;
                     }
             }
@@ -106,10 +106,10 @@ public class CommandWorld implements CommandExecutor {
                 } else {
                     long now = System.currentTimeMillis();
                     sender.sendMessage(getLocaleMessage("world.info").replace("%name%", plot.getInformation().getDisplayName())
-                            .replace("%id%", plot.worldID).replace("%creation-time%",getElapsedTime(now,plot.getCreationTime()))
+                            .replace("%id%", String.valueOf(plot.getId())).replace("%creation-time%",getElapsedTime(now,plot.getCreationTime()))
                             .replace("%activity-time%",getElapsedTime(now,plot.getLastActivityTime())).replace("%online%",String.valueOf(plot.getOnline()))
-                            .replace("%builders%",plot.getBuilders()).replace("%coders%",plot.getDevelopers()).replace("%owner%",plot.getOwner())
-                            .replace("%sharing%", plot.getPlotSharing().getName()).replace("%mode%", plot.getPlotMode().getName()).replace("%description%", plot.getInformation().getDescription()));
+                            .replace("%builders%", plot.getWorldPlayers().getBuilders()).replace("%coders%", plot.getWorldPlayers().getDevelopers()).replace("%owner%",plot.getOwner())
+                            .replace("%sharing%", plot.getPlotSharing().getName()).replace("%mode%", plot.getMode().getName()).replace("%description%", plot.getInformation().getDescription()));
                 }
             } else {
                 Main.getPlugin().getLogger().info("Worlds Commands: ");

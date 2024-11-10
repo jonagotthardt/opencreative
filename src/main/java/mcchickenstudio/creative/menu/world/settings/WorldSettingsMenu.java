@@ -75,8 +75,8 @@ public class WorldSettingsMenu extends AbstractMenu {
         this.player = player;
         worldIcon = getPlotIcon();
         access = new ParameterButton(plot.getPlotSharing().name().toLowerCase(), List.of("public","private"),"access","menus.world-settings","menus.world-settings.items.change-sharing",List.of(Material.SPRUCE_DOOR,Material.IRON_DOOR));
-        Boolean isTimeChanging = plot.world.getGameRuleValue(GameRule.DO_DAYLIGHT_CYCLE);
-        long currentTime = plot.world.getTime();
+        Boolean isTimeChanging = plot.getWorld().getGameRuleValue(GameRule.DO_DAYLIGHT_CYCLE);
+        long currentTime = plot.getWorld().getTime();
         boolean isNight = currentTime >= 15000L && currentTime <= 23000;
         boolean isEvening = currentTime >= 12500 && currentTime < 15000;
         int timeValue = (isTimeChanging != null && isTimeChanging ? 4 : isNight ? 3 : isEvening ? 2 : 1);
@@ -185,7 +185,7 @@ public class WorldSettingsMenu extends AbstractMenu {
         } else if (itemEquals(currentItem,parameters)) {
             new WorldSettingsFlagsMenu().open(player);
         } else if (itemEquals(currentItem,environment)) {
-            new WorldEnvironmentMenu(player,plot.devPlot).open(player);
+            new WorldEnvironmentMenu(player, plot.getDevPlot()).open(player);
         } else if (itemEquals(currentItem,advertise)) {
             player.performCommand("ad");
             player.closeInventory();
@@ -221,20 +221,20 @@ public class WorldSettingsMenu extends AbstractMenu {
             setItem((byte) event.getRawSlot(),time.getItem());
             updateSlot((byte) event.getRawSlot());
             if (time.getCurrentValue().equals(1)) {
-                plot.world.setTime(1000L);
-                plot.world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+                plot.getWorld().setTime(1000L);
+                plot.getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
                 plot.setFlagValue(PlotFlags.PlotFlag.DAY_CYCLE, (byte) 1);
             } else if (time.getCurrentValue().equals(2)) {
-                plot.world.setTime(12500L);
-                plot.world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+                plot.getWorld().setTime(12500L);
+                plot.getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
                 plot.setFlagValue(PlotFlags.PlotFlag.DAY_CYCLE, (byte) 2);
             } else if (time.getCurrentValue().equals(3)) {
-                plot.world.setTime(15000L);
-                plot.world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+                plot.getWorld().setTime(15000L);
+                plot.getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
                 plot.setFlagValue(PlotFlags.PlotFlag.DAY_CYCLE, (byte) 3);
             } else {
-                plot.world.setTime(1000L);
-                plot.world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
+                plot.getWorld().setTime(1000L);
+                plot.getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
                 plot.setFlagValue(PlotFlags.PlotFlag.DAY_CYCLE, (byte) 4);
             }
         } else if (itemEquals(currentItem,worldIcon)) {

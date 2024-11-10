@@ -50,15 +50,15 @@ public class EntitySpawn implements Listener {
         World world = event.getLocation().getWorld();
         Plot plot = PlotManager.getInstance().getPlotByWorld(world);
         if (plot != null) {
-            int limit = plot.getEntitiesLimit();
-            int count = plot.world.getEntityCount();
+            int limit = plot.getLimits().getEntitiesLimit();
+            int count = plot.getWorld().getEntityCount();
             if (world.getName().contains("dev")) {
                 if (!(event.getEntity() instanceof Item)) {
                     event.setCancelled(true);
                 }
             }
-            if (plot.devPlot != null && plot.devPlot.world != null) {
-                count += plot.devPlot.world.getEntityCount();
+            if (plot.getDevPlot() != null && plot.getDevPlot().world != null) {
+                count += plot.getDevPlot().world.getEntityCount();
             }
             if (count > limit) {
                 event.setCancelled(true);
@@ -78,7 +78,7 @@ public class EntitySpawn implements Listener {
         World world = event.getBlock().getWorld();
         Plot plot = PlotManager.getInstance().getPlotByWorld(world);
         if (plot != null) {
-            int limit = plot.getEntitiesLimit();
+            int limit = plot.getLimits().getEntitiesLimit();
             if (world.getEntityCount() > limit) {
                 event.setCancelled(true);
                 if (plot.getOnline() < 1) return;
@@ -121,13 +121,15 @@ public class EntitySpawn implements Listener {
                         }
                         break;
                 }
-                if (world.getEntityCount() >= plot.getEntitiesLimit() /2) {
+                if (world.getEntityCount() >= plot.getLimits().getEntitiesLimit() /2) {
                     event.setCancelled(true);
                 }
             }
             if (plot.getEnvironment() == World.Environment.THE_END) {
                 if (event.getEntity() instanceof EnderDragon dragon) {
-                    dragon.setHealth(0);
+                    if (System.currentTimeMillis()-plot.getLastActivityTime() < 10000) {
+                        dragon.setHealth(0);
+                    }
                 }
             }
 
@@ -147,7 +149,7 @@ public class EntitySpawn implements Listener {
         World world = event.getWorld();
         Plot plot = PlotManager.getInstance().getPlotByWorld(world);
         if (plot != null && event.isNewChunk()) {
-            if (world.getEntityCount() >= plot.getEntitiesLimit() /2) {
+            if (world.getEntityCount() >= plot.getLimits().getEntitiesLimit() /2) {
                 for (Entity entity : event.getChunk().getEntities()) {
                     entity.remove();
                 }

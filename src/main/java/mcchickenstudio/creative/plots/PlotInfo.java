@@ -41,7 +41,7 @@ public class PlotInfo {
     private String description;
     private String customID;
 
-    private Plot.Category category;
+    private Category category;
     private Material material;
     private ItemStack icon;
 
@@ -54,10 +54,9 @@ public class PlotInfo {
         FileConfiguration config = getPlotConfig(plot);
         String name = "Unknown name";
         String description = "World data is corrupted,\\nplease report server admin\\nabout this world.";
-        String customID = plot.worldID;
-        Plot.Category category = Plot.Category.SANDBOX;
+        String customID = String.valueOf(plot.getId());
+        Category category = Category.SANDBOX;
         Material material = Material.REDSTONE;
-        Plot.Sharing sharing = Plot.Sharing.PRIVATE;
         if (config != null) {
             if (config.getString("name") != null) {
                 name = config.getString("name");
@@ -70,9 +69,9 @@ public class PlotInfo {
             }
             if (config.getString("category") != null) {
                 try {
-                    category = Plot.Category.valueOf(config.getString("category"));
+                    category = Category.valueOf(config.getString("category"));
                 } catch (Exception error) {
-                    category = Plot.Category.SANDBOX;
+                    category = Category.SANDBOX;
                 }
             }
             if (config.getString("icon") != null) {
@@ -116,7 +115,7 @@ public class PlotInfo {
         icon = item;
     }
 
-    public void setCategory(Plot.Category category) {
+    public void setCategory(Category category) {
         this.category = category;
         setPlotConfigParameter(plot,"category",category.toString());
     }
@@ -149,7 +148,7 @@ public class PlotInfo {
         return description;
     }
 
-    public Plot.Category getCategory() {
+    public Category getCategory() {
         return category;
     }
 
@@ -163,5 +162,26 @@ public class PlotInfo {
 
     public Material getMaterial() {
         return material;
+    }
+
+    public enum Category {
+        SANDBOX(getLocaleMessage("world.categories.sandbox")),
+        ADVENTURE(getLocaleMessage("world.categories.adventure")),
+        STRATEGY(getLocaleMessage("world.categories.strategy")),
+        ARCADE(getLocaleMessage("world.categories.arcade")),
+        ROLEPLAY(getLocaleMessage("world.categories.roleplay")),
+        STORY(getLocaleMessage("world.categories.story")),
+        SIMULATOR(getLocaleMessage("world.categories.simulator")),
+        EXPERIMENT(getLocaleMessage("world.categories.experiment"));
+
+        private final String name;
+
+        Category(String localeMessage) {
+            this.name = localeMessage;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 }

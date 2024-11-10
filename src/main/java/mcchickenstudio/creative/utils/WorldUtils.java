@@ -22,7 +22,6 @@ import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.plots.Plot;
 import net.kyori.adventure.util.TriState;
 import org.bukkit.*;
-import org.bukkit.block.Biome;
 import org.bukkit.entity.*;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.ItemStack;
@@ -79,7 +78,7 @@ public class WorldUtils {
 
         if (world != null) {
             world.setGameRule(GameRule.SPAWN_CHUNK_RADIUS,1);
-            world.getWorldBorder().setSize(plot.worldSize);
+            world.getWorldBorder().setSize(plot.getWorldSize());
 
             world.setGameRule(GameRule.DO_MOB_LOOT,true);
             world.setGameRule(GameRule.DO_MOB_SPAWNING,false);
@@ -108,12 +107,10 @@ public class WorldUtils {
                 world.setSpawnLocation(0,8,0);
             }
 
-            createWorldSettings(worldName, player, worldCreator);
+            createWorldSettings(worldName, player, environment);
 
-            plot.world = Bukkit.getWorld(worldName);
-            plot.worldName = worldName;
-            plot.worldID = worldName.replace("plot","");
-            plot.isLoaded = true;
+            plot.setWorld(Bukkit.getWorld(worldName));
+            plot.setLoaded(true);
 
             // Для игрока сообщение и телепортация
             world.getSpawnLocation().getChunk().load(true);
@@ -190,31 +187,3 @@ public class WorldUtils {
 
 }
 
-class WaterChunkGenerator extends ChunkGenerator {
-
-    @Override
-    public ChunkGenerator.@NotNull ChunkData generateChunkData(@NotNull World world, @NotNull Random random, int x, int z, @NotNull BiomeGrid biome) {
-        ChunkData chunkData = createChunkData(world);
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 16; j++) {
-                chunkData.setBlock(i, 0, j, Material.BEDROCK);
-                chunkData.setBlock(i, 1, j, Material.SAND);
-                chunkData.setBlock(i, 2, j, Material.SAND);
-                chunkData.setBlock(i, 3, j, Material.WATER);
-                chunkData.setBlock(i, 4, j, Material.WATER);
-                chunkData.setBlock(i, 5, j, Material.WATER);
-                chunkData.setBlock(i, 6, j, Material.WATER);
-                chunkData.setBlock(i, 7, j, Material.WATER);
-            }
-        }
-        return chunkData;
-    }
-
-}
-
-class EmptyChunkGenerator extends ChunkGenerator {
-    @Override
-    public @NotNull ChunkData generateChunkData(@NotNull World world, @NotNull Random random, int x, int z, @NotNull BiomeGrid biome) {
-        return createChunkData(world);
-    }
-}

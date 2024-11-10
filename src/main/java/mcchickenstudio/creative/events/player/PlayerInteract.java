@@ -38,7 +38,6 @@ import mcchickenstudio.creative.menu.AbstractMenu;
 import mcchickenstudio.creative.menu.world.browsers.RecommendedWorldsMenu;
 import mcchickenstudio.creative.menu.world.settings.WorldSettingsMenu;
 import mcchickenstudio.creative.plots.*;
-import mcchickenstudio.creative.utils.ItemUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -59,7 +58,6 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
@@ -413,9 +411,9 @@ public class PlayerInteract implements Listener {
     private void handlePaperInteraction(PlayerInteractEvent event, Player player, ItemStack currentItem) {
         if (event.getAction() == Action.LEFT_CLICK_AIR && !player.hasCooldown(currentItem.getType())) {
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null && plot.world != null) {
+            if (plot != null && plot.getWorld() != null) {
                 addPlayerWithLocation(player);
-                player.teleport(plot.world.getSpawnLocation());
+                player.teleport(plot.getWorld().getSpawnLocation());
                 player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
                 player.setCooldown(currentItem.getType(),60);
             }
@@ -519,14 +517,14 @@ public class PlayerInteract implements Listener {
             player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),locationString,5,40,5);
             player.playSound(player.getLocation(),Sound.ENTITY_EXPERIENCE_ORB_PICKUP,100,2);
         } else if (event.getAction() == Action.LEFT_CLICK_AIR) {
-            if (plot != null && plot.devPlot.isLoaded()) {
+            if (plot != null && plot.getDevPlot().isLoaded()) {
                 player.teleport(getOldLocationPlayerWithLocation(player));
                 player.setCooldown(currentItem.getType(),60);
                 player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
-                for (Player developer : plot.devPlot.world.getPlayers()) {
+                for (Player developer : plot.getDevPlot().world.getPlayers()) {
                     WorldBorder border = Bukkit.createWorldBorder();
-                    border.setCenter(plot.devPlot.world.getWorldBorder().getCenter());
-                    border.setSize(plot.devPlot.world.getWorldBorder().getSize()*5);
+                    border.setCenter(plot.getDevPlot().world.getWorldBorder().getCenter());
+                    border.setSize(plot.getDevPlot().world.getWorldBorder().getSize()*5);
                     developer.setWorldBorder(border);
                 }
             }

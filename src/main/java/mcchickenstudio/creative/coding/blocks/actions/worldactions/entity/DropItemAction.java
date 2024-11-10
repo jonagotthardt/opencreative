@@ -39,9 +39,9 @@ public class DropItemAction extends WorldAction {
         boolean naturally = getArguments().getValue("naturally",true,this);
         for (Location location : getArguments().getLocationList("locations",this)) {
             if (naturally) {
-                getPlot().world.dropItemNaturally(location,item);
+                getPlot().getWorld().dropItemNaturally(location,item);
             } else {
-                getPlot().world.dropItem(location,item);
+                getPlot().getWorld().dropItem(location,item);
             }
         }
     }

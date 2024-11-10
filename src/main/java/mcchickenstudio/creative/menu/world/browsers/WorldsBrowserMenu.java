@@ -32,6 +32,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
@@ -47,7 +48,7 @@ public class WorldsBrowserMenu extends AbstractListMenu {
     private final ItemStack RECOMMENDED = createItem(Material.WIND_CHARGE,1,"menus.all-worlds.items.recommended");
     private byte sortType = 1;
 
-    public WorldsBrowserMenu(Player player, List<Plot> plots) {
+    public WorldsBrowserMenu(Player player, Set<Plot> plots) {
         super(getLocaleMessage("menus.all-worlds.title",false), player);
         this.plots = new ArrayList<>(plots);
         Comparator<Plot> sortByOnline = (plot1, plot2) -> Integer.compare(plot2.getOnline(), plot1.getOnline());
@@ -147,7 +148,7 @@ public class WorldsBrowserMenu extends AbstractListMenu {
         Plot plot = PlotManager.getInstance().getPlotByCustomID(worldID);
         if (plot != null) {
             player.closeInventory();
-            plot.teleportPlayer(player);
+            plot.connectPlayer(player);
         }
     }
 

@@ -51,6 +51,9 @@ public class SendMessageAction extends PlayerAction {
         } else {
             message = String.join("",messages);
         }
+        if (message.length() > 1024) {
+            throw new RuntimeException("Can't send message with length above 1024 symbols.");
+        }
         if (message.contains("§")) {
             player.sendMessage(message);
         } else {

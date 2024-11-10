@@ -21,6 +21,7 @@ package mcchickenstudio.creative.utils;
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.Plot;
+import mcchickenstudio.creative.plots.PlotInfo;
 import mcchickenstudio.creative.plots.PlotManager;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -54,8 +55,12 @@ public class FileUtils {
      * @param worldName Name of new world (plot31, plot103)
      * @param player    Owner of new world
      */
-    public static void createWorldSettings(final String worldName, final Player player, WorldCreator creator) {
+    public static void createWorldSettings(final String worldName, final Player player, World.Environment environment) {
         final String worldFolderPath = Bukkit.getServer().getWorldContainer() + File.separator + worldName + File.separator;
+        final File folder = new File(worldFolderPath);
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
         final File file = new File(worldFolderPath, "settings.yml");
         if (!file.exists()) {
             try {
@@ -71,7 +76,7 @@ public class FileUtils {
         worldFile.createSection("owner-group");
         worldFile.set("owner-group",PlayerUtils.getGroup(player));
         worldFile.createSection("environment");
-        worldFile.set("environment", creator.environment().name());
+        worldFile.set("environment", environment.name());
         worldFile.createSection("world");
         worldFile.set("world",worldName);
         worldFile.createSection("creation-time");
@@ -87,7 +92,79 @@ public class FileUtils {
         worldFile.createSection("sharing");
         worldFile.set("sharing", String.valueOf(Plot.Sharing.PUBLIC));
         worldFile.createSection("category");
-        worldFile.set("category", String.valueOf(Plot.Category.SANDBOX));
+        worldFile.set("category", String.valueOf(PlotInfo.Category.SANDBOX));
+        worldFile.createSection("customID");
+        worldFile.set("customID",worldName.replace("plot",""));
+        worldFile.createSection("players.unique");
+        worldFile.set("players.unique", new ArrayList<String>());
+        worldFile.createSection("players.liked");
+        worldFile.set("players.liked", new ArrayList<String>());
+        worldFile.createSection("players.builders.trusted");
+        worldFile.set("players.builders.trusted", new ArrayList<String>());
+        worldFile.createSection("players.builders.not-trusted");
+        worldFile.set("players.builders.not-trusted", new ArrayList<String>());
+        worldFile.createSection("players.developers.trusted");
+        worldFile.set("players.developers.trusted", new ArrayList<String>());
+        worldFile.createSection("players.developers.not-trusted");
+        worldFile.set("players.developers.not-trusted", new ArrayList<String>());
+        worldFile.createSection("players.whitelist");
+        worldFile.set("players.whitelist", new ArrayList<String>());
+        worldFile.createSection("players.blacklist");
+        worldFile.set("players.blacklist", new ArrayList<String>());
+        worldFile.createSection("flags");
+        Map<String,Integer> flags = new HashMap<>();
+        worldFile.set("flags",flags);
+        try {
+            worldFile.save(file);
+        } catch (IOException | IllegalArgumentException error) {
+            sendCriticalErrorMessage("Couldn't save world settings.yml for " + worldName + " because of " + error.getClass().getName() + " " + error.getMessage());
+        }
+    }
+
+    /**
+     * Creates plot's settings.yml file.
+     *
+     * @param path      Path of world folder (plot31, plot103)
+     * @param player    Owner of new world
+     */
+    public static void createWorldSettingsConfig(final String path, final String worldName, final Player player, World.Environment environment) {
+        final String worldFolderPath = Bukkit.getServer().getWorldContainer() + File.separator + path;
+        final File folder = new File(worldFolderPath);
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
+        final File file = new File(worldFolderPath, "settings.yml");
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException error) {
+                sendCriticalErrorMessage("Couldn't create a settings.yml for world " + worldName + " because of IOException. Maybe it is already exists? " + error.getMessage());
+                return;
+            }
+        }
+        final FileConfiguration worldFile = YamlConfiguration.loadConfiguration(file);
+        worldFile.createSection("owner");
+        worldFile.set("owner", player.getName());
+        worldFile.createSection("owner-group");
+        worldFile.set("owner-group",PlayerUtils.getGroup(player));
+        worldFile.createSection("environment");
+        worldFile.set("environment", environment.name());
+        worldFile.createSection("world");
+        worldFile.set("world",worldName);
+        worldFile.createSection("creation-time");
+        worldFile.set("creation-time",System.currentTimeMillis());
+        worldFile.createSection("last-activity-time");
+        worldFile.set("last-activity-time",System.currentTimeMillis());
+        worldFile.createSection("name");
+        worldFile.set("name", MessageUtils.getLocaleMessage("creating-world.default-world-name").replace("%player%", player.getName()));
+        worldFile.createSection("description");
+        worldFile.set("description", MessageUtils.getLocaleMessage("creating-world.default-world-description").replace("%player%", player.getName()));
+        worldFile.createSection("icon");
+        worldFile.set("icon", String.valueOf(Material.DIAMOND));
+        worldFile.createSection("sharing");
+        worldFile.set("sharing", String.valueOf(Plot.Sharing.PUBLIC));
+        worldFile.createSection("category");
+        worldFile.set("category", String.valueOf(PlotInfo.Category.SANDBOX));
         worldFile.createSection("customID");
         worldFile.set("customID",worldName.replace("plot",""));
         worldFile.createSection("players.unique");
@@ -259,7 +336,11 @@ public class FileUtils {
                         Main.getPlugin().getLogger().info("Adding unloaded world " + worldName + " to base...");
                     }
                     if (!worldName.endsWith("dev")) {
-                        Plot plot = new Plot(worldName);
+                        int id = -1;
+                        try {
+                            id = Integer.parseInt(worldName.replace("plot",""));
+                        } catch (NumberFormatException ignored) {}
+                        Plot plot = new Plot(id);
                         if (plot.isCorrupted()) {
                             corruptedWorlds++;
                         } else if (currentTime-plot.getCreationTime() > 2592000000L) {
@@ -286,10 +367,10 @@ public class FileUtils {
      **/
     public static File getPlotFolder(Plot plot) {
         try {
-            if (plot.isLoaded) {
-                return new File(Bukkit.getServer().getWorldContainer() + File.separator + plot.worldName);
+            if (plot.isLoaded()) {
+                return new File(Bukkit.getServer().getWorldContainer() + File.separator + plot.getWorldName());
             } else {
-                return new File(Bukkit.getServer().getWorldContainer() + File.separator + "unloadedWorlds" + File.separator + plot.worldName);
+                return new File(Bukkit.getServer().getWorldContainer() + File.separator + "unloadedWorlds" + File.separator + plot.getWorldName());
             }
         } catch (NullPointerException error) {
             ErrorUtils.sendPlotErrorMessage(plot,"Папка плота не обнаружена. " + error.getMessage());
@@ -358,7 +439,7 @@ public class FileUtils {
         File scriptFile = new File((getPlotFolder(plot)),"codeScript.yml");
         if (scriptFile.exists()) return scriptFile;
         else {
-            createCodeScript(getPlotFolder(plot).getPath(), plot.worldName);
+            createCodeScript(getPlotFolder(plot).getPath(), plot.getWorldName());
             return getPlotScriptFile(plot);
         }
     }
@@ -425,7 +506,7 @@ public class FileUtils {
             file.write(objItem.toString());
             return true;
         } catch (Exception e){
-            sendCriticalErrorMessage("Couldn't not save player data " + plot.worldName + " " + player.getName() + " " + path + " " + value,e);
+            sendCriticalErrorMessage("Couldn't not save player data " + plot.getWorldName() + " " + player.getName() + " " + path + " " + value,e);
             return false;
         }
    }
@@ -462,7 +543,7 @@ public class FileUtils {
             file.close();
             return true;
         } catch (Exception e){
-            sendCriticalErrorMessage("Couldn't not save player data " + plot.worldName + " " + player.getName() + " " + path + " " + value,e);
+            sendCriticalErrorMessage("Couldn't not save player data " + plot.getWorldName() + " " + player.getName() + " " + path + " " + value,e);
             return false;
         }
     }
@@ -492,7 +573,7 @@ public class FileUtils {
                 return false;
             }
         } catch (Exception e){
-            sendCriticalErrorMessage("Couldn't not get from player data " + plot.worldName + " " + player.getName() + " " + path + " " + value,e);
+            sendCriticalErrorMessage("Couldn't not get from player data " + plot.getWorldName() + " " + player.getName() + " " + path + " " + value,e);
             return false;
         }
     }
@@ -776,7 +857,7 @@ public class FileUtils {
         if (plotConfig != null) {
             return new ArrayList<>(plotConfig.getStringList(type.getPath()));
         } else {
-            sendCriticalErrorMessage("При попытке получить список игроков из файла конфига плота " + plot.worldName + " произошла ошибка. Тип: " + type.toString() + " Конфиг плота оказался null.");
+            sendCriticalErrorMessage("При попытке получить список игроков из файла конфига плота " + plot.getWorldName() + " произошла ошибка. Тип: " + type.toString() + " Конфиг плота оказался null.");
             return new ArrayList<>();
         }
     }
@@ -792,7 +873,7 @@ public class FileUtils {
             setPlotConfigParameter(plot,type.getPath(),newPlayersPlotConfigList);
             return true;
         } else {
-            sendCriticalErrorMessage("При попытке добавить игрока в список файла конфига плота " + plot.worldName + " произошла ошибка. Никнейм: " + nickname + " Тип: " + type.toString() + " Конфиг плота оказался null.");
+            sendCriticalErrorMessage("При попытке добавить игрока в список файла конфига плота " + plot.getWorldName() + " произошла ошибка. Никнейм: " + nickname + " Тип: " + type.toString() + " Конфиг плота оказался null.");
             return false;
         }
     }
@@ -807,7 +888,7 @@ public class FileUtils {
             newPlayersPlotConfigList.remove(nickname);
             setPlotConfigParameter(plot,type.getPath(),newPlayersPlotConfigList);
         } else {
-            sendCriticalErrorMessage("При попытке убрать игрока из списка файла конфига плота " + plot.worldName + " произошла ошибка. Никнейм: " + nickname + " Тип: " + type.toString() + " Конфиг плота оказался null.");
+            sendCriticalErrorMessage("При попытке убрать игрока из списка файла конфига плота " + plot.getWorldName() + " произошла ошибка. Никнейм: " + nickname + " Тип: " + type.toString() + " Конфиг плота оказался null.");
         }
     }
 

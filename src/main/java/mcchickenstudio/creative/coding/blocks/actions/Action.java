@@ -85,7 +85,7 @@ public abstract class Action {
             execute(null);
         }
         for (Entity entity : getTargets()) {
-            if (!getActionType().isSelectionMustBeInWorld() || (entity != null && entity.getWorld() == getPlot().world)) {
+            if (!getActionType().isSelectionMustBeInWorld() || (entity != null && entity.getWorld() == getPlot().getWorld())) {
                 this.entity = entity;
                 execute(entity);
             }
@@ -132,7 +132,7 @@ public abstract class Action {
     protected Set<Entity> getEntitiesByNameOrUUID(String text) {
         Set<Entity> entities = new HashSet<>();
         if (getWorld() == null) return entities;
-        for (Entity entity : executor.getPlot().world.getEntities()) {
+        for (Entity entity : executor.getPlot().getWorld().getEntities()) {
             if (entity.getName().equalsIgnoreCase(text) || entity.getUniqueId().toString().equalsIgnoreCase(text)) {
                 entities.add(entity);
             }
@@ -156,7 +156,7 @@ public abstract class Action {
      * @return Plot's world.
      */
     protected World getWorld() {
-        return getPlot().world;
+        return getPlot().getWorld();
     }
 
     protected Plot getPlot() {
@@ -205,7 +205,7 @@ public abstract class Action {
         switch (target) {
             case RANDOM_PLAYER -> {
                 Player randomPlayer = null;
-                List<Player> playerList = this.getExecutor().getPlot().world.getPlayers();
+                List<Player> playerList = this.getExecutor().getPlot().getWorld().getPlayers();
                 if (!playerList.isEmpty()) {
                     Random r = new Random();
                     int i = r.nextInt(playerList.size());
@@ -296,7 +296,7 @@ public abstract class Action {
                     throw new RuntimeException("Can't assign text with length above 1024 symbols to variable!");
                 }
             }
-            getPlot().getWorldVariables().setVariableValue(link, type, value, getHandler().getMainActionHandler(), this);
+            getPlot().getVariables().setVariableValue(link, type, value, getHandler().getMainActionHandler(), this);
         }
     }
 

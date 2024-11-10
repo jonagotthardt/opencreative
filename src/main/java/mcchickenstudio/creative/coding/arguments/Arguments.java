@@ -40,7 +40,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static mcchickenstudio.creative.coding.arguments.Argument.parseEntity;
 import static mcchickenstudio.creative.utils.ErrorUtils.*;
 
 public class Arguments {
@@ -93,14 +92,14 @@ public class Arguments {
                 double x,y,z;
                 float yaw,pitch;
                 if (listSection == null) {
-                    return plot.world.getSpawnLocation();
+                    return plot.getWorld().getSpawnLocation();
                 }
                 x = listSection.getDouble("x");
                 y = listSection.getDouble("y");
                 z = listSection.getDouble("z");
                 yaw = (float) listSection.getDouble("yaw");
                 pitch = (float) listSection.getDouble("pitch");
-                return new Location(plot.world,x,y,z,yaw,pitch);
+                return new Location(plot.getWorld(),x,y,z,yaw,pitch);
             case COLOR:
                 int r,g,b;
                 if (listSection == null) {
@@ -324,7 +323,7 @@ public class Arguments {
                 List<Argument> args = (List<Argument>) arg.getValue(action);
                 for (Argument itemArg : args) {
                     if (itemArg.getValue(action) instanceof Location loc) {
-                        loc.setWorld(plot.world);
+                        loc.setWorld(plot.getWorld());
                         if (!BlockUtils.isOutOfBorders(loc)) {
                             list.add(loc);
                         }
@@ -535,7 +534,7 @@ public class Arguments {
             locationValue = (Location) arg.getValue(action);
             sendCodingDebugVariable(plot,path,locationValue.getX()+" "+locationValue.getY()+" "+locationValue.getZ()+" "+locationValue.getYaw()+" "+locationValue.getPitch());
         }
-        locationValue.setWorld(plot.world);
+        locationValue.setWorld(plot.getWorld());
         if (BlockUtils.isOutOfBorders(locationValue)) {
             sendCodingDebugLog(plot,"Location is out of borders! " + locationValue);
             return defaultValue;
@@ -544,7 +543,7 @@ public class Arguments {
     }
 
     private Object getVariableValue(VariableLink link, Action action) {
-        return plot.getWorldVariables().getVariableValue(link,action);
+        return plot.getVariables().getVariableValue(link,action);
     }
 
     public float parseObject(Object object, float defaultValue) {

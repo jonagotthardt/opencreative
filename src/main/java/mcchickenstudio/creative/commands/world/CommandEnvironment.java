@@ -72,7 +72,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                 return true;
             }
             if (args.length == 0) {
-                new WorldEnvironmentMenu(player,plot.devPlot).open(player);
+                new WorldEnvironmentMenu(player, plot.getDevPlot()).open(player);
             } else {
                 switch (args[0].toLowerCase()) {
                     case "vars", "variables":
@@ -80,13 +80,13 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             return true;
                         }
                         if (args[1].equalsIgnoreCase("size")) {
-                            player.sendMessage(getLocaleMessage("environment.variables.size").replace("%count%", String.valueOf(plot.getWorldVariables().getTotalVariablesAmount())));
+                            player.sendMessage(getLocaleMessage("environment.variables.size").replace("%count%", String.valueOf(plot.getVariables().getTotalVariablesAmount())));
                         } else if (args[1].equalsIgnoreCase("clear")) {
-                            plot.getWorldVariables().clearVariables();
+                            plot.getVariables().clearVariables();
                             player.sendMessage(getLocaleMessage("environment.variables.cleared"));
                         } else if (args[1].equalsIgnoreCase("list")) {
                             int page = 0;
-                            List<WorldVariable> allVariables = new ArrayList<>(plot.getWorldVariables().getSet());
+                            List<WorldVariable> allVariables = new ArrayList<>(plot.getVariables().getSet());
                             if (allVariables.isEmpty()) {
                                 player.sendMessage(getLocaleMessage("environment.variables.list.empty"));
                                 return true;

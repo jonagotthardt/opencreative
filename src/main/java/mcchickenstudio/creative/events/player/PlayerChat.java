@@ -297,7 +297,7 @@ public class PlayerChat implements Listener {
                     }
                     break;
                 case "searchPlotByPlotName":
-                    List<Plot> foundPlotsByName = PlotManager.getInstance().getPlotsByPlotName(message);
+                    Set<Plot> foundPlotsByName = PlotManager.getInstance().getPlotsByPlotName(message);
                     if (!foundPlotsByName.isEmpty()) {
                         new WorldsBrowserMenu(player,foundPlotsByName).open(player);
                     } else {
@@ -305,7 +305,7 @@ public class PlayerChat implements Listener {
                     }
                     break;
                 case "searchPlotByID":
-                    List<Plot> foundPlotsByID = PlotManager.getInstance().getPlotsByID(message);
+                    Set<Plot> foundPlotsByID = PlotManager.getInstance().getPlotsByID(message);
                     if (!foundPlotsByID.isEmpty()) {
                         new WorldsBrowserMenu(player,foundPlotsByID).open(player);
                     } else {
@@ -315,7 +315,7 @@ public class PlayerChat implements Listener {
                 case "transfer-ownership":
                     plot = PlotManager.getInstance().getPlotByPlayer(player);
                     if (plot != null && WorldSettingsPlayersMenu.playersSelected.get(player) != null && plot.getOwner().equalsIgnoreCase(player.getName())) {
-                        if (message.equals(plot.worldID)) {
+                        if (message.equals(plot.getId())) {
                             String newOwner = WorldSettingsPlayersMenu.playersSelected.get(player);
                             Player newOwnerPlayer = Bukkit.getPlayer(newOwner);
                             if (newOwnerPlayer == null) {
@@ -330,9 +330,9 @@ public class PlayerChat implements Listener {
                                 player.sendMessage(getLocaleMessage("world.players.transfer-ownership.limit").replace("%player%",newOwner));
                                 return;
                             }
-                            plot.currentlyTransferringOwnership = true;
+                            plot.setChangingOwner(true);
                             player.sendMessage(getLocaleMessage("world.players.transfer-ownership.awaiting").replace("%player%",newOwner));
-                            newOwnerPlayer.sendMessage(getLocaleMessage("world.players.transfer-ownership.confirm-new").replace("%player%",player.getName()).replace("%id%",plot.worldID));
+                            newOwnerPlayer.sendMessage(getLocaleMessage("world.players.transfer-ownership.confirm-new").replace("%player%",player.getName()).replace("%id%", String.valueOf(plot.getId())));
                             confirmation.put(newOwnerPlayer,"get-ownership");
                         } else {
                             player.sendMessage(getLocaleMessage("world.players.transfer-ownership.wrong-id"));
@@ -343,7 +343,7 @@ public class PlayerChat implements Listener {
                     plot = PlotManager.getInstance().getPlotByPlayer(player);
                     if (plot != null) {
                         Player oldOwner = Bukkit.getPlayer(plot.getOwner());
-                        if (message.equals(plot.worldID)) {
+                        if (message.equals(plot.getId())) {
                             if (oldOwner == null) {
                                 player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%",player.getName()));
                                 return;
@@ -363,11 +363,11 @@ public class PlayerChat implements Listener {
                             plot.setOwner(player.getName());
                             player.sendMessage(getLocaleMessage("world.players.transfer-ownership.transferred-new"));
                             player.playSound(player.getLocation(),Sound.UI_TOAST_CHALLENGE_COMPLETE,100,1.5f);
-                            plot.currentlyTransferringOwnership = false;
+                            plot.setChangingOwner(false);
                         } else {
                             if (oldOwner != null) oldOwner.sendMessage(getLocaleMessage("world.players.transfer-ownership.cancelled"));
                             player.sendMessage(getLocaleMessage("world.players.transfer-ownership.wrong-id"));
-                            plot.currentlyTransferringOwnership = false;
+                            plot.setChangingOwner(false);
                         }
                     }
             }

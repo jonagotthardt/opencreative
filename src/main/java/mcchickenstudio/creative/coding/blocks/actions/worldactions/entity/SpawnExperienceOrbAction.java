@@ -24,12 +24,9 @@ import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.worldactions.WorldAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.inventory.ItemStack;
 
 public class SpawnExperienceOrbAction extends WorldAction {
     public SpawnExperienceOrbAction(Executor executor, Target target, int x, Arguments args) {
@@ -40,7 +37,7 @@ public class SpawnExperienceOrbAction extends WorldAction {
     protected void execute(Entity entity) {
         int amount = getArguments().getValue("amount",1,this);
         for (Location location : getArguments().getLocationList("locations",this)) {
-            Entity spawnedEntity = getPlot().world.spawnEntity(location,EntityType.EXPERIENCE_ORB);
+            Entity spawnedEntity = getPlot().getWorld().spawnEntity(location,EntityType.EXPERIENCE_ORB);
             if (spawnedEntity instanceof ExperienceOrb orb) {
                 orb.setExperience(amount);
             }

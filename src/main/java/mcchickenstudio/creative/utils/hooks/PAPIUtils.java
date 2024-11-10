@@ -47,7 +47,7 @@ class Placeholder extends PlaceholderExpansion {
         switch (identifier) {
             case "plot_id" -> {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return plot.worldID;
+                if (plot != null) return String.valueOf(plot.getId());
             }
             case "plot_custom_id" -> {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
@@ -91,11 +91,11 @@ class Placeholder extends PlaceholderExpansion {
             }
             case "plot_mode" -> {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return String.valueOf(plot.getPlotMode());
+                if (plot != null) return String.valueOf(plot.getMode());
             }
             case "plot_is_dev_plot_loaded" -> {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return String.valueOf(plot.devPlot != null && plot.devPlot.isLoaded());
+                if (plot != null) return String.valueOf(plot.getDevPlot() != null && plot.getDevPlot().isLoaded());
             }
         }
         return null;

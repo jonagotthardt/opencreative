@@ -39,7 +39,7 @@ public class CreateFireworkExplosionAction extends WorldAction {
     protected void execute(Entity entity) {
         ItemStack firework = getArguments().getValue("firework",new ItemStack(Material.FIREWORK_ROCKET,1),this);
         for (Location location : getArguments().getLocationList("locations",this)) {
-            Entity spawnedEntity = getPlot().world.spawnEntity(location,EntityType.FIREWORK_ROCKET);
+            Entity spawnedEntity = getPlot().getWorld().spawnEntity(location,EntityType.FIREWORK_ROCKET);
             if (spawnedEntity instanceof Firework rocket) {
                 rocket.setItem(firework);
                 rocket.detonate();

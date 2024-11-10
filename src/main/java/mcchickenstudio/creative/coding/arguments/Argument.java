@@ -61,7 +61,7 @@ public class Argument {
     public Object getValue(Action action) {
         if (value instanceof VariableLink link) {
             link.setHandler(action.getHandler().getMainActionHandler());
-            Object variableValue = plot.getWorldVariables().getVariableValue(link,action);
+            Object variableValue = plot.getVariables().getVariableValue(link,action);
             if (variableValue != null) {
                 return variableValue;
             }
@@ -106,24 +106,24 @@ public class Argument {
 
         setEventVariable(action, EventValues.Variable.PLOT_NAME,plot.getInformation().getDisplayName());
         setEventVariable(action, EventValues.Variable.PLOT_DESCRIPTION,plot.getInformation().getDescription());
-        setEventVariable(action, EventValues.Variable.PLOT_ONLINE,plot.world.getPlayerCount());
+        setEventVariable(action, EventValues.Variable.PLOT_ONLINE, plot.getWorld().getPlayerCount());
         setEventVariable(action, EventValues.Variable.PLOT_ICON,new ItemStack(plot.getInformation().getMaterial(),1));
         setEventVariable(action, EventValues.Variable.PLOT_REPUTATION,plot.getReputation());
-        setEventVariable(action, EventValues.Variable.PLOT_ENTITIES_AMOUNT,plot.world.getEntityCount() + ((plot.devPlot != null && plot.devPlot.world != null) ? plot.devPlot.world.getEntityCount() : 0));
-        setEventVariable(action, EventValues.Variable.PLOT_ENTITIES_AMOUNT_LIMIT, plot.getEntitiesLimit());
-        setEventVariable(action, EventValues.Variable.PLOT_LAST_REDSTONE_OPERATIONS,plot.lastRedstoneOperationsAmount);
-        setEventVariable(action, EventValues.Variable.PLOT_REDSTONE_OPERATIONS_LIMIT, plot.getRedstoneOperationsLimit());
+        setEventVariable(action, EventValues.Variable.PLOT_ENTITIES_AMOUNT, plot.getWorld().getEntityCount() + ((plot.getDevPlot() != null && plot.getDevPlot().world != null) ? plot.getDevPlot().world.getEntityCount() : 0));
+        setEventVariable(action, EventValues.Variable.PLOT_ENTITIES_AMOUNT_LIMIT, plot.getLimits().getEntitiesLimit());
+        setEventVariable(action, EventValues.Variable.PLOT_LAST_REDSTONE_OPERATIONS,plot.getLimits().getLastRedstoneOperationsAmount());
+        setEventVariable(action, EventValues.Variable.PLOT_REDSTONE_OPERATIONS_LIMIT, plot.getLimits().getRedstoneOperationsLimit());
         setEventVariable(action, EventValues.Variable.PLOT_CUSTOM_ID,plot.getInformation().getCustomID());
-        setEventVariable(action, EventValues.Variable.PLOT_ID,plot.worldID);
-        setEventVariable(action, EventValues.Variable.PLOT_VARIABLES_AMOUNT,plot.getWorldVariables().getTotalVariablesAmount());
-        setEventVariable(action, EventValues.Variable.PLOT_VARIABLES_AMOUNT_LIMIT,plot.getVariablesAmountLimit());
+        setEventVariable(action, EventValues.Variable.PLOT_ID, plot.getId());
+        setEventVariable(action, EventValues.Variable.PLOT_VARIABLES_AMOUNT,plot.getVariables().getTotalVariablesAmount());
+        setEventVariable(action, EventValues.Variable.PLOT_VARIABLES_AMOUNT_LIMIT,plot.getLimits().getVariablesAmountLimit());
         setEventVariable(action, EventValues.Variable.UNIX_TIME,time);
         setEventVariable(action, EventValues.Variable.UNIX_TIME_HOURS,Integer.parseInt(hoursFormat.format(date)));
         setEventVariable(action, EventValues.Variable.UNIX_TIME_MINUTES,Integer.parseInt(minutesFormat.format(date)));
         setEventVariable(action, EventValues.Variable.UNIX_TIME_SECONDS,Integer.parseInt(secondsFormat.format(date)));
-        setEventVariable(action, EventValues.Variable.WORLD_TIME,plot.world.getTime());
-        setEventVariable(action, EventValues.Variable.CLEAR_WEATHER_DURATION,plot.world.getClearWeatherDuration());
-        setEventVariable(action, EventValues.Variable.THUNDER_WEATHER_DURATION,plot.world.getThunderDuration());
+        setEventVariable(action, EventValues.Variable.WORLD_TIME, plot.getWorld().getTime());
+        setEventVariable(action, EventValues.Variable.CLEAR_WEATHER_DURATION, plot.getWorld().getClearWeatherDuration());
+        setEventVariable(action, EventValues.Variable.THUNDER_WEATHER_DURATION, plot.getWorld().getThunderDuration());
     }
 
     private void setTempPlayerVars(Action action) {

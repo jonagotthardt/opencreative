@@ -43,8 +43,8 @@ public class SetResourcePackAction extends PlayerAction {
          * a resource pack from owner's site.
          */
         String checkUrl = url.toLowerCase()
-                .replace("https://","")
-                .replace("http://","")
+                .replace("https:////","")
+                .replace("http:////","")
                 .replace("www.","");
         Set<String> allowedLinks = Main.getSettings().getAllowedResourcePackLinks();
         for (String allowed : allowedLinks) {

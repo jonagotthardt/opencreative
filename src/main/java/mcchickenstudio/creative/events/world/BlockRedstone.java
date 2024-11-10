@@ -45,9 +45,9 @@ public class BlockRedstone implements Listener {
 
         Plot plot = PlotManager.getInstance().getPlotByWorld(location.getWorld());
         if (plot != null) {
-            plot.lastRedstoneOperationsAmount++;
-            if (plot.lastRedstoneOperationsAmount > plot.getRedstoneOperationsLimit()) {
-                    sendMessageOnce(plot,getLocaleMessage("world.redstone-limit").replace("%count%",String.valueOf(plot.getRedstoneOperationsLimit())),5);
+            plot.getLimits().setLastRedstoneOperationsAmount(plot.getLimits().getLastRedstoneOperationsAmount()+1);
+            if (plot.getLimits().getLastRedstoneOperationsAmount() > plot.getLimits().getRedstoneOperationsLimit()) {
+                    sendMessageOnce(plot,getLocaleMessage("world.redstone-limit").replace("%count%",String.valueOf(plot.getLimits().getRedstoneOperationsLimit())),5);
                     if (location.getBlock().getType() == Material.OBSERVER) {
                         new BukkitRunnable() {
                             @Override
@@ -58,13 +58,13 @@ public class BlockRedstone implements Listener {
                     } else {
                         location.getBlock().setType(Material.CAVE_AIR);
                     }
-                    plot.lastRedstoneOperationsAmount = 0;
+                    plot.getLimits().setLastRedstoneOperationsAmount(0);
             }
-            if (plot.lastRedstoneOperationsAmount > 0) {
+            if (plot.getLimits().getLastRedstoneOperationsAmount() > 0) {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        plot.lastRedstoneOperationsAmount = plot.lastRedstoneOperationsAmount-1;
+                        plot.getLimits().setLastRedstoneOperationsAmount(plot.getLimits().getLastRedstoneOperationsAmount()-1);
                     }
                 }.runTaskLater(Main.getPlugin(),5L);
             }

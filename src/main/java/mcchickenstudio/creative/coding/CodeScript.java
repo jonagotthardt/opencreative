@@ -92,7 +92,7 @@ public class CodeScript {
         try {
             scriptConfig.save(file);
         } catch (IOException exception) {
-            sendCriticalErrorMessage("An error has occurred while clearing and saving code script " + this.getLinkedPlot().worldName,exception);
+            sendCriticalErrorMessage("An error has occurred while clearing and saving code script " + this.getLinkedPlot().getWorldName(),exception);
         }
     }
 

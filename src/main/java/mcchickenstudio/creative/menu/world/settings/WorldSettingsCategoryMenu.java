@@ -16,28 +16,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/*
- * OpenCreative+, Minecraft plugin.
- * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
- *
- * OpenCreative+ is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * OpenCreative+ is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- */
-
 package mcchickenstudio.creative.menu.world.settings;
 
 import mcchickenstudio.creative.menu.AbstractMenu;
 import mcchickenstudio.creative.plots.Plot;
+import mcchickenstudio.creative.plots.PlotInfo;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.MessageUtils;
 import org.bukkit.Sound;
@@ -93,7 +76,7 @@ public class WorldSettingsCategoryMenu extends AbstractMenu {
             if (!itemEquals(event.getCurrentItem(),BACK_ITEM)) {
                 final String category = MessageUtils.getPathFromMessage("menus.world-settings-categories.items",event.getCurrentItem().getItemMeta().getDisplayName()).replace("menus.world-settings-categories.items.","").replace(".name","").toUpperCase();
                 event.getWhoClicked().closeInventory();
-                plot.getInformation().setCategory(Plot.Category.valueOf(category));
+                plot.getInformation().setCategory(PlotInfo.Category.valueOf(category));
                 ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ENTITY_PLAYER_LEVELUP,100,1.6f);
                 event.getWhoClicked().sendMessage(getLocaleMessage("settings.world-category.changed").replace("%category%",getLocaleMessage("world.categories." + category.toLowerCase())));
             } else {

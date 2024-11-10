@@ -20,7 +20,6 @@ package mcchickenstudio.creative.events.player;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
-import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.menu.world.browsers.RecommendedWorldsMenu;
 import mcchickenstudio.creative.menu.world.browsers.OwnWorldsMenu;
@@ -39,7 +38,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import mcchickenstudio.creative.menu.buttons.RadioButton;
 import mcchickenstudio.creative.plots.*;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 import java.util.Set;
@@ -95,7 +93,7 @@ public class InventoryClick implements Listener {
                                 player.closeInventory();
                                 if (PlotManager.getInstance().getPlotByCustomID(worldID) != null) {
                                     if (!(event.getClick() == ClickType.SHIFT_RIGHT)) {
-                                        PlotManager.getInstance().getPlotByCustomID(worldID).teleportPlayer(player);
+                                        PlotManager.getInstance().getPlotByCustomID(worldID).connectPlayer(player);
                                     } else {
                                         PlotManager.getInstance().deletePlot(PlotManager.getInstance().getPlotByCustomID(worldID), player);
                                     }
@@ -190,7 +188,7 @@ public class InventoryClick implements Listener {
                         player.sendMessage(getLocaleMessage("world.players.transfer-ownership.limit").replace("%player%", newOwner));
                         return;
                     }
-                    player.sendMessage(getLocaleMessage("world.players.transfer-ownership.confirm-old").replace("%player%", newOwner).replace("%id%", plot.worldID));
+                    player.sendMessage(getLocaleMessage("world.players.transfer-ownership.confirm-old").replace("%player%", newOwner).replace("%id%", String.valueOf(plot.getId())));
                     player.closeInventory();
                     if (!(PlayerChat.confirmation.containsKey(player))) {
                         PlayerChat.confirmation.put(player, "transfer-ownership");
@@ -251,7 +249,7 @@ public class InventoryClick implements Listener {
             if (currentItem.getType() == Material.PAPER) {
                 event.setCancelled(true);
                 if (!player.hasCooldown(currentItem.getType())) {
-                    if (plot != null && plot.world != null) {
+                    if (plot != null && plot.getWorld() != null) {
                         addPlayerWithLocation(player);
                         if (currentItem.hasItemMeta()) {
                             ItemMeta meta = currentItem.getItemMeta();
@@ -266,13 +264,13 @@ public class InventoryClick implements Listener {
                                     z = Double.parseDouble(locCoords[2]);
                                     yaw = Float.parseFloat(locCoords[3]);
                                     pitch = Float.parseFloat(locCoords[4]);
-                                    player.teleport(new Location(plot.world,x,y,z,yaw,pitch));
+                                    player.teleport(new Location(plot.getWorld(),x,y,z,yaw,pitch));
                                 } catch (Exception error) {
-                                    player.teleport(plot.world.getSpawnLocation());
+                                    player.teleport(plot.getWorld().getSpawnLocation());
                                 }
                             }
                         } else {
-                            player.teleport(plot.world.getSpawnLocation());
+                            player.teleport(plot.getWorld().getSpawnLocation());
                         }
                         player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
                         player.setCooldown(currentItem.getType(),60);
@@ -297,12 +295,12 @@ public class InventoryClick implements Listener {
                                     z = Double.parseDouble(locCoords[2]);
                                     yaw = Float.parseFloat(locCoords[3]);
                                     pitch = Float.parseFloat(locCoords[4]);
-                                    player.teleport(new Location(plot.world,x,y,z,yaw,pitch));
+                                    player.teleport(new Location(plot.getWorld(),x,y,z,yaw,pitch));
                                 } catch (Exception error) {
-                                    player.teleport(plot.world.getSpawnLocation());
+                                    player.teleport(plot.getWorld().getSpawnLocation());
                                 }
                             } else {
-                                player.teleport(plot.world.getSpawnLocation());
+                                player.teleport(plot.getWorld().getSpawnLocation());
                             }
                         player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
                         player.setCooldown(currentItem.getType(),60);

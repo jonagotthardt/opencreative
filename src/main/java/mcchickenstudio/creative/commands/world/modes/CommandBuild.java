@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.commands.world.modes;
 
 import mcchickenstudio.creative.Main;
+import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.plots.PlotManager;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -35,14 +36,12 @@ import org.jetbrains.annotations.NotNull;
 
 import static mcchickenstudio.creative.events.player.ChangedWorld.removePlayerWithLocation;
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
-import static mcchickenstudio.creative.utils.PlayerUtils.clearPlayer;
-
 
 
 import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
 import static mcchickenstudio.creative.utils.MessageUtils.*;
-import static mcchickenstudio.creative.utils.PlayerUtils.giveBuildPermissions;
+import static mcchickenstudio.creative.utils.PlayerUtils.*;
 
 public class CommandBuild implements CommandExecutor {
     @Override
@@ -60,7 +59,7 @@ public class CommandBuild implements CommandExecutor {
             setCooldown(player, Main.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (args.length == 0) {
                 removePlayerWithLocation(player);
-                if (plot.getPlotMode() != Plot.Mode.BUILD) {
+                if (plot.getMode() != Plot.Mode.BUILD) {
                     if (plot.getWorldPlayers().canBuild(player)) {
                         Player plotOwner = Bukkit.getPlayer(plot.getOwner());
                         if (plot.getWorldPlayers().getBuildersNotTrusted().contains(sender.getName())) {
@@ -74,26 +73,15 @@ public class CommandBuild implements CommandExecutor {
                                 return true;
                             }
                         }
-                        plot.stopBukkitRunnables();
-                        plot.setPlotMode(Plot.Mode.BUILD);
-                        for (Player p : plot.getPlayers()){
-                            p.sendMessage(getLocaleMessage("world.build-mode.message." + (sender == p ? "owner" : "players")));
-                            if (PlotManager.getInstance().getDevPlot(p) == null || sender.getName().equals(p.getName())) {
-                                clearPlayer(p);
-                                p.sendTitle(getLocaleMessage("world.build-mode.title"),getLocaleMessage("world.build-mode.subtitle"));
-                                p.teleport(plot.world.getSpawnLocation());
-                                p.playSound(p.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT,100,1.7f);
-                                if (plot.getWorldPlayers().canBuild(p)) {
-                                    p.setGameMode(GameMode.CREATIVE);
-                                    giveBuildPermissions(p);
-                                }
+                        plot.setMode(Plot.Mode.BUILD);
+                        if (isEntityInDevPlot(player)) {
+                            clearPlayer(player);
+                            player.teleport(plot.getWorld().getSpawnLocation());
+                            if (plot.isOwner(sender.getName())) {
+                                player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
                             }
-                        }
-                        player.setGameMode(GameMode.CREATIVE);
-                        if (plot.isOwner(sender.getName())) {
                             giveBuildPermissions(player);
-                            ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
-                            player.getInventory().setItem(8,worldSettingsItem);
+                            player.setGameMode(GameMode.CREATIVE);
                         }
                     } else {
                         sender.sendMessage(getLocaleMessage("not-owner"));
@@ -101,7 +89,7 @@ public class CommandBuild implements CommandExecutor {
                 } else {
                     clearPlayer(player);
                     player.sendTitle(getLocaleMessage("world.build-mode.title"),getLocaleMessage("world.build-mode.subtitle"));
-                    player.teleport(plot.world.getSpawnLocation());
+                    player.teleport(plot.getWorld().getSpawnLocation());
                     player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT,100,1.7f);
                     if (plot.getWorldPlayers().canBuild(player)) {
                         Player plotOwner = Bukkit.getPlayer(plot.getOwner());

@@ -110,7 +110,7 @@ public class RecommendedWorldsMenu extends AbstractMenu {
             Plot plot = PlotManager.getInstance().getPlotByCustomID(worldID);
             if (plot != null) {
                 player.closeInventory();
-                plot.teleportPlayer(player);
+                plot.connectPlayer(player);
             }
         }
     }

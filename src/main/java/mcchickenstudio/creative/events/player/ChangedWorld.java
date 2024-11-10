@@ -124,7 +124,7 @@ public class ChangedWorld implements Listener {
                         List<String> notTrustedDevelopers = FileUtils.getPlayersFromPlotConfig(oldPlot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED);
                         List<String> notTrustedBuilders = FileUtils.getPlayersFromPlotConfig(oldPlot, Plot.PlayersType.BUILDERS_NOT_TRUSTED);
                         for (Player p : oldPlot.getPlayers()) {
-                            if (oldPlot.getPlotMode() == Plot.Mode.BUILD) {
+                            if (oldPlot.getMode() == Plot.Mode.BUILD) {
                                 if (notTrustedBuilders.contains(p.getName())) {
                                     p.setGameMode(GameMode.ADVENTURE);
                                     p.sendMessage(getLocaleMessage("world.build-mode.cant-build-when-offline"));
@@ -143,7 +143,7 @@ public class ChangedWorld implements Listener {
                         hidePlayerInTab(plotPlayer,player);
                     }
                 } else {
-                    if (oldPlot.isLoaded) {
+                    if (oldPlot.isLoaded()) {
                         PlotManager.getInstance().unloadPlot(oldPlot);
                     }
                 }

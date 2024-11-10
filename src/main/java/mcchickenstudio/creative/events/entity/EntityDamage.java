@@ -39,7 +39,7 @@ public class EntityDamage implements Listener {
         if (event.getEntity() instanceof Player victim) {
             Plot plot = PlotManager.getInstance().getPlotByPlayer(victim);
             if (plot != null) {
-                if (plot.getPlotMode() == Plot.Mode.BUILD) {
+                if (plot.getMode() == Plot.Mode.BUILD) {
                     event.setCancelled(true);
                     if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
                         victim.teleport(victim.getWorld().getSpawnLocation().add(0,0.5,0));

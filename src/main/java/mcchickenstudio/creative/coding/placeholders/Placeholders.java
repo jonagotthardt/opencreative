@@ -88,7 +88,7 @@ public class Placeholders {
 
     private String parseRandom(String text, ActionsHandler handler) {
         Player randomPlayer = null;
-        List<Player> playerList = handler.getExecutor().getPlot().world.getPlayers();
+        List<Player> playerList = handler.getExecutor().getPlot().getWorld().getPlayers();
         if (!playerList.isEmpty()) {
             Random r = new Random();
             int i = r.nextInt(playerList.size());
@@ -137,7 +137,7 @@ public class Placeholders {
         text = text
                 .replace("%online%", String.valueOf(Bukkit.getOnlinePlayers().size()))
                 .replace("%players_amount%", String.valueOf(plot.getPlayers().size()))
-                .replace("%entities_amount%", String.valueOf(plot.world.getEntityCount() + (plot.devPlot != null && plot.devPlot.world != null ? plot.devPlot.world.getEntityCount() : 0)));
+                .replace("%entities_amount%", String.valueOf(plot.getWorld().getEntityCount() + (plot.getDevPlot() != null && plot.getDevPlot().world != null ? plot.getDevPlot().world.getEntityCount() : 0)));
         return text;
     }
 

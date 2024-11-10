@@ -52,19 +52,19 @@ public class SetBlocksAreaTypeAction extends WorldAction {
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
-                getPlot().lastModifiedBlocksAmount = 0;
+                getPlot().getLimits().setLastModifiedBlocksAmount(0);
             }
         };
         getPlot().addBukkitRunnable(runnable);
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
-                    if (getPlot().lastModifiedBlocksAmount > getPlot().getModifyingBlocksLimit()) {
+                    if (getPlot().getLimits().getLastModifiedBlocksAmount() > getPlot().getLimits().getModifyingBlocksLimit()) {
                         runnable.runTaskLater(Main.getPlugin(),20L);
                         getPlot().removeBukkitRunnable(runnable);
                         return;
                     }
-                    getPlot().lastModifiedBlocksAmount++;
+                    getPlot().getLimits().setLastModifiedBlocksAmount(getPlot().getLimits().getLastModifiedBlocksAmount()+1);
                     Block block = getWorld().getBlockAt(x,y,z);
                     type = switch (type) {
                         case WATER_BUCKET -> Material.WATER;

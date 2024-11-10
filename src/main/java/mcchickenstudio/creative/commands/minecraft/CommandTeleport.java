@@ -103,7 +103,7 @@ public class CommandTeleport implements CommandExecutor {
                 clearPlayer(player);
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
                 if (plot == null || !plot.equals(teleportPlot)) {
-                    teleportPlot.teleportPlayer(player);
+                    teleportPlot.connectPlayer(player);
                 } else {
                     player.teleport(teleportToPlayer.getLocation());
                 }

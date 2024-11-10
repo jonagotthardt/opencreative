@@ -51,7 +51,7 @@ import static mcchickenstudio.creative.utils.FileUtils.*;
  */
 public class DevPlot {
 
-    private final Plot linkedPlot;
+    private final Plot plot;
     public final String worldName;
 
     public World world;
@@ -69,15 +69,14 @@ public class DevPlot {
 
     public DevPlot(Plot plot) {
 
-        this.linkedPlot = plot;
-        this.worldName = plot.worldName + "dev";
+        this.plot = plot;
+        this.worldName = plot.getWorldName() + "dev";
 
         this.floorBlockMaterial = Material.WHITE_STAINED_GLASS;
         this.eventBlockMaterial = Material.BLUE_STAINED_GLASS;
         this.actionBlockMaterial = Material.GRAY_STAINED_GLASS;
 
         this.isLoaded = false;
-        plot.devPlot = this;
         devPlots.add(this);
 
     }
@@ -308,7 +307,7 @@ public class DevPlot {
     }
 
     public Plot getPlot() {
-        return linkedPlot;
+        return plot;
     }
 
     public Layout getOpenedMenu(Location location) {

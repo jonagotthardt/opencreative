@@ -44,10 +44,10 @@ public class GameModeChange implements Listener {
             }
             return;
         }
-        if (plot.world == null) return;
+        if (plot.getWorld() == null) return;
         // If player is in plot
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (!onlinePlayer.getWorld().equals(plot.world) && (plot.devPlot.world != null && !onlinePlayer.getWorld().equals(plot.devPlot.world))) {
+            if (!onlinePlayer.getWorld().equals(plot.getWorld()) && (plot.getDevPlot().world != null && !onlinePlayer.getWorld().equals(plot.getDevPlot().world))) {
                 hidePlayerInTab(onlinePlayer,player);
                 hidePlayerInTab(player,onlinePlayer);
             }
