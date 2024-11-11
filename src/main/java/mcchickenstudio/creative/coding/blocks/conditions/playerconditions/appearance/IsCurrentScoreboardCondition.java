@@ -24,7 +24,6 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import mcchickenstudio.creative.plots.WorldPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 
@@ -40,7 +39,7 @@ public class IsCurrentScoreboardCondition extends PlayerCondition {
     public boolean checkPlayer(Player player) {
         List<String> names = getArguments().getTextList("scoreboards",this);
         for (String name : names) {
-            Scoreboard scoreboard = getPlot().getScoreboards().get(name);
+            Scoreboard scoreboard = getPlot().getTerritory().getScoreboards().get(name);
             if (player.getScoreboard().equals(scoreboard)) {
                 return true;
             }

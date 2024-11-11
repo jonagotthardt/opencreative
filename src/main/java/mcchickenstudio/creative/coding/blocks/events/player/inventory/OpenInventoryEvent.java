@@ -18,10 +18,10 @@
 
 package mcchickenstudio.creative.coding.blocks.events.player.inventory;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class OpenInventoryEvent extends CreativeEvent {
+public class OpenInventoryEvent extends WorldEvent {
 
     public OpenInventoryEvent(Player player) {
         super(player);

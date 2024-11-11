@@ -18,12 +18,12 @@
 
 package mcchickenstudio.creative.coding.blocks.events.player.inventory;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerEditBookEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class BookWriteEvent extends CreativeEvent {
+public class BookWriteEvent extends WorldEvent {
 
     private final PlayerEditBookEvent event;
     private final ItemStack oldBook;

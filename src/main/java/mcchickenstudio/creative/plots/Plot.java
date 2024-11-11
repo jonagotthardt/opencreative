@@ -20,15 +20,13 @@ package mcchickenstudio.creative.plots;
 
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.CodingBlockParser;
-import mcchickenstudio.creative.coding.CodeScript;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.coding.variables.WorldVariables;
+import mcchickenstudio.creative.events.plot.PlotConnectPlayerEvent;
 import mcchickenstudio.creative.utils.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
-import net.kyori.adventure.util.TriState;
 import org.bukkit.*;
-import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
@@ -36,13 +34,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.Scoreboard;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static mcchickenstudio.creative.utils.ErrorUtils.*;
 import static mcchickenstudio.creative.utils.FileUtils.*;
@@ -52,41 +47,38 @@ import static mcchickenstudio.creative.utils.PlayerUtils.*;
 
 /**
  * <h1>Plot</h1>
- * This class represents a world, that has owner, ID,
- * information, players, script, limits and developer's world.
+ * This class represents a Plot, the individual place for players that
+ * consists of two worlds: for building and for developing. It has owner,
+ * world size, sharing, world mode, limits, flags, players data, variables
+ * and states.
+ *
+ * <p>Plot has two file states: unloaded and loaded. Unloaded plots files
+ * are stored in /unloadedWorlds/ directory, and loaded plots files are
+ * stored in server's worlds storage directory.</p>
+ * @author McChicken Studio
  * @since 1.0
  * @version 5.0
  */
 public class Plot {
 
     private final int id;
+    private String owner;
+    private String ownerGroup;
+
     private final PlotInfo info;
     private final DevPlot devPlot;
     private final PlotFlags flags;
     private final PlotLimits limits;
+    private final PlotTerritory territory;
     private final PlotPlayers worldPlayers;
     private final WorldVariables variables;
-    private final int worldSize;
 
-    private String owner;
-    private String ownerGroup;
-
-    private World world;
-    private World.Environment environment;
-
-    private int plotReputation;
     private Mode mode;
-    private Sharing plotSharing;
-
-    private final Map<String, BossBar> bossBars = new HashMap<>();
-    private final Map<String, Scoreboard> scoreboards = new HashMap<>();
-    private final List<BukkitRunnable> runningBukkitRunnables = new ArrayList<>();
+    private Sharing sharing;
 
     private boolean debug;
     private boolean corrupted;
     private boolean changingOwner;
-
-    private CodeScript script;
 
     /**
      Loads a plot with world name.
@@ -95,24 +87,23 @@ public class Plot {
 
         this.id = id;
         devPlot = new DevPlot(this);
+        info = new PlotInfo(this);
+
         loadInfo();
 
-        info = new PlotInfo(this);
         worldPlayers = new PlotPlayers(this);
         limits = new PlotLimits(this);
+        territory = new PlotTerritory(this);
 
         flags = new PlotFlags(this);
         variables = new WorldVariables(this);
-        script = new CodeScript(this,getPlotScriptFile(this));
-
-        worldSize = PlayerUtils.getPlayerLimitValue(getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_SIZE);
 
         PlotManager.getInstance().registerPlot(this);
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                info.updateIcon();
+                getInformation().updateIcon();
             }
         }.runTaskAsynchronously(Main.getPlugin());
     }
@@ -133,14 +124,6 @@ public class Plot {
         return getOwner().equalsIgnoreCase(nickname);
     }
 
-    public int getReputation() {
-        return plotReputation;
-    }
-
-    public void setPlotReputation(int plotReputation) {
-        this.plotReputation = plotReputation;
-    }
-
     /**
      * Changes plot's mode to Play or Build.
      * <p>In the Build mode players cannot get damaged, they only can look at builders which are creating a map.</p>
@@ -151,8 +134,8 @@ public class Plot {
         if (this.mode == mode) return;
         this.mode = mode;
         setPlotConfigParameter(this,"mode",mode);
-        stopBukkitRunnables();
-        world.getSpawnLocation().getChunk().load(true);
+        territory.stopBukkitRunnables();
+        territory.getWorld().getSpawnLocation().getChunk().load(true);
         if (mode == Mode.BUILD) {
             for (Player player : getPlayers()){
                 if (!isEntityInDevPlot(player)) {
@@ -161,7 +144,7 @@ public class Plot {
                             Component.text(getLocaleMessage("world.build-mode.title")), Component.text(getLocaleMessage("world.build-mode.subtitle")),
                             Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(30), Duration.ofMillis(130))
                     ));
-                    player.teleport(world.getSpawnLocation());
+                    player.teleport(territory.getWorld().getSpawnLocation());
                     player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT,100,1.7f);
                     if (worldPlayers.canBuild(player)) {
                         player.setGameMode(GameMode.CREATIVE);
@@ -178,7 +161,7 @@ public class Plot {
             for (Player player : getPlayers()) {
                 if (!isEntityInDevPlot(player)) {
                     clearPlayer(player);
-                    player.teleport(world.getSpawnLocation());
+                    player.teleport(territory.getWorld().getSpawnLocation());
                     if (worldPlayers.canDevelop(player)) {
                         player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
                     } else {
@@ -191,7 +174,7 @@ public class Plot {
             if (devPlot.isLoaded()) {
                 new CodingBlockParser().parseCode(devPlot);
             } else {
-                script.loadCode();
+                territory.getScript().loadCode();
             }
             EventRaiser.raiseWorldPlayEvent(this);
             for (Player player : getPlayers()) {
@@ -203,105 +186,25 @@ public class Plot {
 
     }
 
-    public World generateWorld(WorldUtils.WorldGenerator worldGenerator, World.Environment environment, long seed, boolean generateStructures) {
-
-        WorldCreator worldCreator = new WorldCreator(getWorldName()).generateStructures(false);
-        worldCreator.type(WorldType.FLAT);
-        worldCreator.environment(environment);
-        worldCreator.generateStructures(generateStructures);
-        worldCreator.seed(seed);
-
-        switch (worldGenerator) {
-            case EMPTY -> worldCreator.generator(new EmptyChunkGenerator());
-            case WATER -> worldCreator.generator(new WaterChunkGenerator());
-            case SURVIVAL -> worldCreator.type(WorldType.NORMAL);
-            case LARGE_BIOMES ->  worldCreator.type(WorldType.LARGE_BIOMES);
-        }
-
-        worldCreator.keepSpawnLoaded(TriState.FALSE);
-        World world = Bukkit.createWorld(worldCreator);
-
-        if (world != null) {
-            world.setGameRule(GameRule.SPAWN_CHUNK_RADIUS, 1);
-            world.getWorldBorder().setSize(worldSize);
-
-            world.setGameRule(GameRule.DO_MOB_LOOT, true);
-            world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
-            world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-            world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
-            world.setGameRule(GameRule.KEEP_INVENTORY, false);
-            world.setGameRule(GameRule.MOB_GRIEFING, true);
-            world.setGameRule(GameRule.NATURAL_REGENERATION, true);
-            world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, false);
-            world.setGameRule(GameRule.DO_FIRE_TICK, true);
-            world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
-            world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
-
-            world.setTime(0);
-
-            if (worldGenerator == WorldUtils.WorldGenerator.EMPTY) {
-                world.setSpawnLocation(0, 5, 0);
-
-                for (int x = 1; x >= -1; x--) {
-                    for (int z = 1; z >= -1; z--) {
-                        world.getBlockAt(x, 4, z).setType(Material.STONE);
-                    }
-                }
-
-            } else if (worldGenerator == WorldUtils.WorldGenerator.WATER) {
-                world.setSpawnLocation(0, 8, 0);
-            }
-
-            this.world = world;
-
-            for (Entity entity : world.getEntities()) {
-                if (entity.getType() != EntityType.PLAYER) entity.remove();
-            }
-
-            BukkitRunnable runnable = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    for (Entity entity : world.getEntities()) {
-                        if (entity instanceof EnderDragon dragon) {
-                            dragon.setHealth(0);
-                        }
-                    }
-                }
-            };
-            runnable.runTaskLater(Main.getPlugin(),10L);
-
-            return world;
-        }
-        return null;
+    public Sharing getSharing() {
+        return sharing;
     }
 
-    public Sharing getPlotSharing() {
-        return plotSharing;
-    }
-
-    public void setPlotSharing(Sharing sharing) {
-        this.plotSharing = sharing;
+    /**
+     * Sharing is ability for players to connect to the world.
+     * <p>Public - all players can connect to the world.</p>
+     * <p>Private - only world owner can connect to the world.</p>
+     * <p>Closed - no one can connect to the world, deleting mode.</p>
+     * @param sharing Sharing mode.
+     */
+    public void setSharing(Sharing sharing) {
+        if (this.sharing == sharing) return;
+        this.sharing = sharing;
         setPlotConfigParameter(this,"sharing",sharing);
     }
 
     public void setDebug(boolean debug) {
         this.debug = debug;
-    }
-
-    public CodeScript getScript() {
-        return script;
-    }
-
-    public void setScript(CodeScript script) {
-        this.script = script;
-    }
-
-    public World getWorld() {
-        return world;
-    }
-
-    public void setWorld(World world) {
-        this.world = world;
     }
 
     public String getWorldName() {
@@ -312,16 +215,8 @@ public class Plot {
         return id;
     }
 
-    public int getWorldSize() {
-        return worldSize;
-    }
-
     public DevPlot getDevPlot() {
         return devPlot;
-    }
-
-    public boolean isLoaded() {
-        return Bukkit.getWorld(getWorldName()) != null;
     }
 
     public boolean isChangingOwner() {
@@ -332,11 +227,23 @@ public class Plot {
         this.changingOwner = changingOwner;
     }
 
+    public PlotTerritory getTerritory() {
+        return territory;
+    }
+
+    /**
+     * Checks is loaded main world of plot.
+     * @return true - if loaded, false - unloaded.
+     */
+    public boolean isLoaded() {
+        return Bukkit.getWorld(getWorldName()) != null;
+    }
+
     public enum Mode {
         PLAYING() {
             public void onPlayerConnect(Player player, Plot plot) {
                 player.setGameMode(plot.getOwner().equalsIgnoreCase(player.getName()) ? GameMode.CREATIVE : GameMode.ADVENTURE);
-                plot.getScript().loadCode();
+                plot.territory.getScript().loadCode();
             }
         }, BUILD() {
             public void onPlayerConnect(Player player, Plot plot) {
@@ -392,7 +299,6 @@ public class Plot {
         String ownerGroup = "default";
         Mode mode = Mode.BUILD;
         Sharing sharing = Sharing.PRIVATE;
-        World.Environment environment = World.Environment.NORMAL;
         if (config != null) {
             if (config.getString("owner") != null) {
                 owner = config.getString("owner");
@@ -405,11 +311,6 @@ public class Plot {
             if (config.getString("mode") != null) {
                 try {
                     mode = Mode.valueOf(config.getString("mode"));
-                } catch (Exception ignored) {}
-            }
-            if (config.getString("environment") != null) {
-                try {
-                    environment = World.Environment.valueOf(config.getString("environment"));
                 } catch (Exception ignored) {}
             }
             if (config.getString("sharing") != null) {
@@ -426,9 +327,7 @@ public class Plot {
         this.owner = owner;
         this.ownerGroup = ownerGroup;
         this.mode = mode;
-        this.plotSharing = sharing;
-        this.plotReputation = getPlayersFromPlotConfig(this,PlayersType.LIKED).size()-getPlayersFromPlotConfig(this,PlayersType.DISLIKED).size();
-        this.environment = environment;
+        this.sharing = sharing;
     }
 
     public byte getFlagValue(PlotFlags.PlotFlag flag) {
@@ -475,8 +374,8 @@ public class Plot {
 
     public List<Player> getPlayers() {
         List<Player> playerList = new ArrayList<>();
-        if (this.getWorld() != null) {
-            playerList.addAll(this.getWorld().getPlayers());
+        if (this.territory.getWorld() != null) {
+            playerList.addAll(this.territory.getWorld().getPlayers());
             if (getDevPlot() != null && getDevPlot().world != null) {
                 playerList.addAll(getDevPlot().world.getPlayers());
             }
@@ -493,7 +392,7 @@ public class Plot {
     }
 
     public void connectPlayer(Player player) {
-        if (getPlotSharing() != Sharing.PUBLIC) {
+        if (getSharing() != Sharing.PUBLIC) {
             if (!isOwner(player)) {
                 if (!(player.hasPermission("opencreative.private.bypass"))) {
                     player.sendMessage(getLocaleMessage("private-plot", player));
@@ -502,7 +401,7 @@ public class Plot {
             }
         }
         if (!isOwner(player.getName())) {
-            if (getPlotSharing() != Sharing.PUBLIC && !player.hasPermission("opencreative.private.bypass")) {
+            if (getSharing() != Sharing.PUBLIC && !player.hasPermission("opencreative.private.bypass")) {
                 player.sendMessage(getLocaleMessage("private-plot", player));
                 return;
             }
@@ -520,11 +419,11 @@ public class Plot {
         boolean wasLoaded = isLoaded();
         if (!isLoaded()) {
             Main.getPlugin().getLogger().info("Loading " + this.getWorldName() + " and teleporting " + player.getName());
-            PlotManager.getInstance().loadPlot(this);
+            territory.load();
         }
         clearPlayer(player);
-        getWorld().getSpawnLocation().getChunk().load(true);
-        player.teleport(this.getWorld().getSpawnLocation());
+        territory.getWorld().getSpawnLocation().getChunk().load(true);
+        player.teleport(this.territory.getWorld().getSpawnLocation());
         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE,100,2);
         mode.onPlayerConnect(player,this);
         getWorldPlayers().getPlotPlayer(player).load();
@@ -548,10 +447,11 @@ public class Plot {
             EventRaiser.raiseWorldPlayEvent(this);
         }
         EventRaiser.raiseJoinEvent(player);
+        new PlotConnectPlayerEvent(this,player).callEvent();
         new BukkitRunnable() {
             @Override
             public void run() {
-                info.updateIcon();
+                getInformation().updateIcon();
             }
         }.runTaskAsynchronously(Main.getPlugin());
     }
@@ -586,10 +486,10 @@ public class Plot {
             public void run() {
                 if (getDevPlot().world == null) return;
                 getDevPlot().translateCodingBlocks(player);
-                removeBukkitRunnable(this);
+                territory.removeBukkitRunnable(this);
             }
         };
-        addBukkitRunnable(translation);
+        territory.addBukkitRunnable(translation);
         translation.runTaskLater(Main.getPlugin(),5L);
     }
 
@@ -608,7 +508,7 @@ public class Plot {
         new BukkitRunnable() {
             @Override
             public void run() {
-                info.updateIcon();
+                getInformation().updateIcon();
             }
         }.runTaskAsynchronously(Main.getPlugin());
     }
@@ -617,46 +517,16 @@ public class Plot {
         return debug;
     }
 
-    public void addBukkitRunnable(BukkitRunnable runnable) {
-        runningBukkitRunnables.add(runnable);
-    }
-
-    public void removeBukkitRunnable(BukkitRunnable runnable) {
-        runningBukkitRunnables.remove(runnable);
-    }
-
-    public void stopBukkitRunnables() {
-        for (BukkitRunnable runnable : runningBukkitRunnables) {
-            try {
-                runnable.cancel();
-            } catch (IllegalStateException ignored) {}
-        }
-        runningBukkitRunnables.clear();
-    }
-
-
     public WorldVariables getVariables() {
         return variables;
     }
-
-    public Map<String, Scoreboard> getScoreboards() {
-        return scoreboards;
-    }
-
-    public Map<String, BossBar> getBossBars() {
-        return bossBars;
-    }
-
 
     public boolean isCorrupted() {
         return corrupted;
     }
 
-    public World.Environment getEnvironment() {
-        return environment;
-    }
-
     public PlotLimits getLimits() {
         return limits;
     }
+
 }

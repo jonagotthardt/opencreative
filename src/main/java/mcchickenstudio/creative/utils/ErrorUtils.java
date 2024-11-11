@@ -26,6 +26,8 @@ import mcchickenstudio.creative.coding.blocks.conditions.Condition;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
+import mcchickenstudio.creative.events.CreativeEvent;
+import mcchickenstudio.creative.events.plot.PlotModeChangeEvent;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
 import net.kyori.adventure.text.Component;
@@ -99,7 +101,7 @@ public class ErrorUtils {
      Sends error message for plot's players.
      **/
     public static void sendPlotErrorMessage(Plot plot, String errorMessage) {
-        Main.getPlugin().getLogger().warning("An error has occurred in plot " + plot.getInformation().getDisplayName() + ": " + errorMessage);
+        Main.getPlugin().getLogger().warning("An error has occurred in plot " + plot.getWorldName() + ": " + errorMessage);
         for (Player player : plot.getPlayers()) {
             player.sendMessage(getLocaleMessage("plot-error").replace("%error%",errorMessage));
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY,100f,2f);
@@ -237,7 +239,11 @@ public class ErrorUtils {
     public static void stopPlotCode(Plot plot) {
         Main.getPlugin().getLogger().info("Plot code has been stopped in " + plot.getWorldName() + " because of operations limit.");
         if (plot.getMode() != Plot.Mode.BUILD) {
-            plot.setMode(Plot.Mode.BUILD);
+            PlotModeChangeEvent event = new PlotModeChangeEvent(plot,plot.getMode(), Plot.Mode.BUILD);
+            event.callEvent();
+            if (!event.isCancelled()) {
+                plot.setMode(Plot.Mode.BUILD);
+            }
         }
     }
 

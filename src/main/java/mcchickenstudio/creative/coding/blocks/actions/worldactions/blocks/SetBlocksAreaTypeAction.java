@@ -55,13 +55,13 @@ public class SetBlocksAreaTypeAction extends WorldAction {
                 getPlot().getLimits().setLastModifiedBlocksAmount(0);
             }
         };
-        getPlot().addBukkitRunnable(runnable);
+        getPlot().getTerritory().addBukkitRunnable(runnable);
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
                     if (getPlot().getLimits().getLastModifiedBlocksAmount() > getPlot().getLimits().getModifyingBlocksLimit()) {
                         runnable.runTaskLater(Main.getPlugin(),20L);
-                        getPlot().removeBukkitRunnable(runnable);
+                        getPlot().getTerritory().removeBukkitRunnable(runnable);
                         return;
                     }
                     getPlot().getLimits().setLastModifiedBlocksAmount(getPlot().getLimits().getLastModifiedBlocksAmount()+1);
@@ -79,7 +79,7 @@ public class SetBlocksAreaTypeAction extends WorldAction {
             }
         }
         runnable.runTaskLater(Main.getPlugin(),20L);
-        getPlot().removeBukkitRunnable(runnable);
+        getPlot().getTerritory().removeBukkitRunnable(runnable);
     }
 
     @Override

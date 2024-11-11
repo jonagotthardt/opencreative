@@ -37,7 +37,7 @@ public class IsWorldPublicCondition extends WorldCondition {
 
     @Override
     public boolean check(Entity entity) {
-        return getPlot().getPlotSharing() == Plot.Sharing.PUBLIC;
+        return getPlot().getSharing() == Plot.Sharing.PUBLIC;
     }
 
     @Override

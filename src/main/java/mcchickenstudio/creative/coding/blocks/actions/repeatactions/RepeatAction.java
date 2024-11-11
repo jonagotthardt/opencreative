@@ -54,7 +54,7 @@ public abstract class RepeatAction extends MultiAction {
                 calls--;
             }
         };
-        getPlot().addBukkitRunnable(runnable);
+        getPlot().getTerritory().addBukkitRunnable(runnable);
         runnable.runTaskLater(Main.getPlugin(),20L);
     }
 

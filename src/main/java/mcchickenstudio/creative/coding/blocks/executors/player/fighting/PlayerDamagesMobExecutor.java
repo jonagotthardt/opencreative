@@ -18,7 +18,7 @@
 
 package mcchickenstudio.creative.coding.blocks.executors.player.fighting;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamagesMobEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
@@ -33,7 +33,7 @@ public class PlayerDamagesMobExecutor extends PlayerExecutor implements Cancella
     }
 
     @Override
-    protected void setTempVars(CreativeEvent event) {
+    protected void setTempVars(WorldEvent event) {
         if (event instanceof PlayerDamagesMobEvent damagesMobEvent) {
             setTempVar(EventValues.Variable.DAMAGE,damagesMobEvent.getDamage());
         }

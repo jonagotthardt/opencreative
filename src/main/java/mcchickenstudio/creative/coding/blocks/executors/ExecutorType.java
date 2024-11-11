@@ -18,7 +18,7 @@
 
 package mcchickenstudio.creative.coding.blocks.executors;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import mcchickenstudio.creative.coding.blocks.events.entity.entities.EntitySpawnEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.*;
 import mcchickenstudio.creative.coding.blocks.events.player.interaction.*;
@@ -188,7 +188,7 @@ public enum ExecutorType {
 
 
     private final Class<? extends Executor> executor;
-    private final Class<? extends CreativeEvent> creativeEvent;
+    private final Class<? extends WorldEvent> creativeEvent;
     private final ExecutorCategory category;
     private final MenusCategory menusCategory;
     private final Material material;
@@ -201,7 +201,7 @@ public enum ExecutorType {
         this.material = null;
     }
 
-    ExecutorType(ExecutorCategory category, MenusCategory menusCategory, Class<? extends Executor> executor, Class<? extends CreativeEvent> event, Material material) {
+    ExecutorType(ExecutorCategory category, MenusCategory menusCategory, Class<? extends Executor> executor, Class<? extends WorldEvent> event, Material material) {
         this.executor = executor;
         this.menusCategory = menusCategory;
         this.creativeEvent = event;
@@ -227,7 +227,7 @@ public enum ExecutorType {
         return getLocaleMessage("items.developer.events." + this.name().toLowerCase().replace("_","-") + ".name", false);
     }
 
-    public final Class<? extends CreativeEvent> getEventClass() {
+    public final Class<? extends WorldEvent> getEventClass() {
         return this.creativeEvent;
     }
 

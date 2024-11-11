@@ -35,7 +35,7 @@ public class HideBossBarAction extends PlayerAction {
     public void executePlayer(Player player) {
         if (getArguments().pathExists("bossbar")) {
             String name = getArguments().getValue("bossbar"," ",this);
-            BossBar bossBar = getPlot().getBossBars().get(name.toLowerCase());
+            BossBar bossBar = getPlot().getTerritory().getBossBars().get(name.toLowerCase());
             if (bossBar != null) {
                 player.hideBossBar(bossBar);
                 return;

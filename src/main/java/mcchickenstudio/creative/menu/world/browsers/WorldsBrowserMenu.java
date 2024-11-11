@@ -175,7 +175,7 @@ public class WorldsBrowserMenu extends AbstractListMenu {
 
     private void sortElements() {
         Comparator<Object> plotComparator = switch (sortType) {
-            case 2 -> (plot1, plot2) -> Integer.compare(((Plot) plot2).getReputation(), ((Plot) plot1).getReputation());
+            case 2 -> (plot1, plot2) -> Integer.compare(((Plot) plot2).getInformation().getReputation(), ((Plot) plot1).getInformation().getReputation());
             case 3 -> (plot1, plot2) -> Long.compare(((Plot) plot2).getCreationTime(), ((Plot) plot1).getCreationTime());
             default -> (plot1, plot2) -> Integer.compare(((Plot) plot2).getOnline(), ((Plot) plot1).getOnline());
         };

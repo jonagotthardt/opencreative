@@ -18,13 +18,13 @@
 
 package mcchickenstudio.creative.coding.blocks.events.player.inventory;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemClickEvent extends CreativeEvent {
+public class ItemClickEvent extends WorldEvent {
 
     private final InventoryClickEvent event;
     private final ItemStack item;

@@ -16,11 +16,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mcchickenstudio.creative.events.player;
+package mcchickenstudio.creative.listeners.player;
 
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.commands.CreativeChat;
 
+import mcchickenstudio.creative.events.plot.PlotDisconnectPlayerEvent;
 import mcchickenstudio.creative.plots.PlotFlags;
 import mcchickenstudio.creative.plots.WorldPlayer;
 import org.bukkit.GameMode;
@@ -112,6 +113,7 @@ public class ChangedWorld implements Listener {
                 WorldPlayer worldPlayer = oldPlot.getWorldPlayers().getPlotPlayer(player);
                 worldPlayer.save();
                 oldPlot.getWorldPlayers().unregisterPlayer(player);
+                new PlotDisconnectPlayerEvent(oldPlot,player).callEvent();
                 if (oldPlot.getOnline() > 0) {
                     if (oldPlot.getFlagValue(PlotFlags.PlotFlag.JOIN_MESSAGES) == 1) {
                         for (Player onlinePlayer : oldPlot.getPlayers()) {
@@ -145,7 +147,7 @@ public class ChangedWorld implements Listener {
                     }
                 } else {
                     if (oldPlot.isLoaded()) {
-                        PlotManager.getInstance().unloadPlot(oldPlot);
+                        oldPlot.getTerritory().unload();
                     }
                 }
                 new BukkitRunnable() {
@@ -164,6 +166,24 @@ public class ChangedWorld implements Listener {
                 for (Player onlinePlayer : newPlot.getPlayers()) {
                     showPlayerFromTab(onlinePlayer,player);
                     showPlayerFromTab(player,onlinePlayer);
+                }
+                if (newPlot.isOwner(player)) {
+                    if (newPlot.getDevPlot().isLoaded()) {
+                        for (Player onlinePlayer : newPlot.getDevPlot().world.getPlayers()) {
+                            if (newPlot.getWorldPlayers().isNotTrustedDeveloper(onlinePlayer)) {
+                                onlinePlayer.setGameMode(GameMode.CREATIVE);
+                            }
+                        }
+                    }
+                    if (newPlot.getMode() == Plot.Mode.BUILD) {
+                        for (Player onlinePlayer : newPlot.getTerritory().getWorld().getPlayers()) {
+                            if (newPlot.getWorldPlayers().isNotTrustedBuilder(onlinePlayer)) {
+                                onlinePlayer.setGameMode(GameMode.CREATIVE);
+                                giveBuildPermissions(onlinePlayer);
+                            }
+                        }
+                    }
+
                 }
                 new BukkitRunnable() {
                     @Override

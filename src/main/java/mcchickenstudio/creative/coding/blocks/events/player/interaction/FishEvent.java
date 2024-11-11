@@ -18,13 +18,13 @@
 
 package mcchickenstudio.creative.coding.blocks.events.player.interaction;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class FishEvent extends CreativeEvent {
+public class FishEvent extends WorldEvent {
 
     private final PlayerFishEvent event;
     private ItemStack caughtItem = null ;

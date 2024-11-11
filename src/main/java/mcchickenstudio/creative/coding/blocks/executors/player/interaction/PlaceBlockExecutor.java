@@ -18,7 +18,7 @@
 
 package mcchickenstudio.creative.coding.blocks.executors.player.interaction;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.events.player.interaction.PlaceBlockEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
@@ -33,7 +33,7 @@ public class PlaceBlockExecutor extends PlayerExecutor implements Cancellable {
     }
 
     @Override
-    protected void setTempVars(CreativeEvent event) {
+    protected void setTempVars(WorldEvent event) {
         if (event instanceof PlaceBlockEvent blockEvent) {
             setTempVar(EventValues.Variable.BLOCK, blockEvent.getPlacedBlock());
             setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getPlacedBlock().getType().name().toLowerCase());

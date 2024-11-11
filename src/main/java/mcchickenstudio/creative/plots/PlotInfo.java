@@ -28,11 +28,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static mcchickenstudio.creative.plots.Plot.Sharing.PUBLIC;
-import static mcchickenstudio.creative.utils.FileUtils.getPlotConfig;
-import static mcchickenstudio.creative.utils.FileUtils.setPlotConfigParameter;
+import static mcchickenstudio.creative.utils.FileUtils.*;
+import static mcchickenstudio.creative.utils.FileUtils.getPlayersFromPlotConfig;
 import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.*;
 
+/**
+ * <h1>PlotInfo</h1>
+ * This class represents an information of plot. It contains
+ * display name, description, custom ID, category, reputation
+ * and icon of plot.
+ *
+ * <p>This information will be displayed in worlds browser
+ * or in advertisement messages.
+ * </p>
+ */
 public class PlotInfo {
 
     private final Plot plot;
@@ -41,6 +51,7 @@ public class PlotInfo {
     private String description;
     private String customID;
 
+    private int reputation;
     private Category category;
     private Material material;
     private ItemStack icon;
@@ -57,6 +68,7 @@ public class PlotInfo {
         String customID = String.valueOf(plot.getId());
         Category category = Category.SANDBOX;
         Material material = Material.REDSTONE;
+        reputation = getPlayersFromPlotConfig(plot, Plot.PlayersType.LIKED).size()-getPlayersFromPlotConfig(plot, Plot.PlayersType.DISLIKED).size();
         if (config != null) {
             if (config.getString("name") != null) {
                 name = config.getString("name");
@@ -93,7 +105,7 @@ public class PlotInfo {
     }
 
     public void updateIcon() {
-        ItemStack item = new ItemStack(plot.getPlotSharing() == PUBLIC ? material : Material.BARRIER);
+        ItemStack item = new ItemStack(plot.getSharing() == PUBLIC ? material : Material.BARRIER);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(getLocaleItemName("menus.all-worlds.items.world.name").replace("%plotName%", displayName));
         List<String> lore = new ArrayList<>();
@@ -162,6 +174,14 @@ public class PlotInfo {
 
     public Material getMaterial() {
         return material;
+    }
+
+    public int getReputation() {
+        return reputation;
+    }
+
+    public void setPlotReputation(int reputation) {
+        this.reputation = reputation;
     }
 
     public enum Category {

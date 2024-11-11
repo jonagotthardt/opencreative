@@ -18,10 +18,10 @@
 
 package mcchickenstudio.creative.coding.blocks.events.player.world;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class PlayerPurchaseEvent extends CreativeEvent {
+public class PlayerPurchaseEvent extends WorldEvent {
 
     private final String id;
     private final String name;

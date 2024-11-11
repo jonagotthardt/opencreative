@@ -106,10 +106,10 @@ public class Argument {
 
         setEventVariable(action, EventValues.Variable.PLOT_NAME,plot.getInformation().getDisplayName());
         setEventVariable(action, EventValues.Variable.PLOT_DESCRIPTION,plot.getInformation().getDescription());
-        setEventVariable(action, EventValues.Variable.PLOT_ONLINE, plot.getWorld().getPlayerCount());
+        setEventVariable(action, EventValues.Variable.PLOT_ONLINE, plot.getTerritory().getWorld().getPlayerCount());
         setEventVariable(action, EventValues.Variable.PLOT_ICON,new ItemStack(plot.getInformation().getMaterial(),1));
-        setEventVariable(action, EventValues.Variable.PLOT_REPUTATION,plot.getReputation());
-        setEventVariable(action, EventValues.Variable.PLOT_ENTITIES_AMOUNT, plot.getWorld().getEntityCount() + ((plot.getDevPlot() != null && plot.getDevPlot().world != null) ? plot.getDevPlot().world.getEntityCount() : 0));
+        setEventVariable(action, EventValues.Variable.PLOT_REPUTATION, plot.getInformation().getReputation());
+        setEventVariable(action, EventValues.Variable.PLOT_ENTITIES_AMOUNT, plot.getTerritory().getWorld().getEntityCount() + ((plot.getDevPlot() != null && plot.getDevPlot().world != null) ? plot.getDevPlot().world.getEntityCount() : 0));
         setEventVariable(action, EventValues.Variable.PLOT_ENTITIES_AMOUNT_LIMIT, plot.getLimits().getEntitiesLimit());
         setEventVariable(action, EventValues.Variable.PLOT_LAST_REDSTONE_OPERATIONS,plot.getLimits().getLastRedstoneOperationsAmount());
         setEventVariable(action, EventValues.Variable.PLOT_REDSTONE_OPERATIONS_LIMIT, plot.getLimits().getRedstoneOperationsLimit());
@@ -121,9 +121,9 @@ public class Argument {
         setEventVariable(action, EventValues.Variable.UNIX_TIME_HOURS,Integer.parseInt(hoursFormat.format(date)));
         setEventVariable(action, EventValues.Variable.UNIX_TIME_MINUTES,Integer.parseInt(minutesFormat.format(date)));
         setEventVariable(action, EventValues.Variable.UNIX_TIME_SECONDS,Integer.parseInt(secondsFormat.format(date)));
-        setEventVariable(action, EventValues.Variable.WORLD_TIME, plot.getWorld().getTime());
-        setEventVariable(action, EventValues.Variable.CLEAR_WEATHER_DURATION, plot.getWorld().getClearWeatherDuration());
-        setEventVariable(action, EventValues.Variable.THUNDER_WEATHER_DURATION, plot.getWorld().getThunderDuration());
+        setEventVariable(action, EventValues.Variable.WORLD_TIME, plot.getTerritory().getWorld().getTime());
+        setEventVariable(action, EventValues.Variable.CLEAR_WEATHER_DURATION, plot.getTerritory().getWorld().getClearWeatherDuration());
+        setEventVariable(action, EventValues.Variable.THUNDER_WEATHER_DURATION, plot.getTerritory().getWorld().getThunderDuration());
     }
 
     private void setTempPlayerVars(Action action) {

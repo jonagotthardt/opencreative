@@ -18,10 +18,10 @@
 
 package mcchickenstudio.creative.coding.blocks.events.player.movement;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class StopRunningEvent extends CreativeEvent {
+public class StopRunningEvent extends WorldEvent {
 
     public StopRunningEvent(Player player) {
         super(player);

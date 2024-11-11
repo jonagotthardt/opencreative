@@ -20,7 +20,7 @@ package mcchickenstudio.creative.coding.placeholders;
 
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionsHandler;
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.MobDamagesPlayerEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamagesMobEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamagesPlayerEvent;
@@ -88,7 +88,7 @@ public class Placeholders {
 
     private String parseRandom(String text, ActionsHandler handler) {
         Player randomPlayer = null;
-        List<Player> playerList = handler.getExecutor().getPlot().getWorld().getPlayers();
+        List<Player> playerList = handler.getExecutor().getPlot().getTerritory().getWorld().getPlayers();
         if (!playerList.isEmpty()) {
             Random r = new Random();
             int i = r.nextInt(playerList.size());
@@ -101,19 +101,19 @@ public class Placeholders {
     }
 
     private String parseEvent(String text, ActionsHandler handler) {
-        CreativeEvent creativeEvent = handler.getEvent();
+        WorldEvent worldEvent = handler.getEvent();
         Entity killer = null;
         Entity victim = null;
-        if (creativeEvent instanceof PlayerDamagesMobEvent event) {
+        if (worldEvent instanceof PlayerDamagesMobEvent event) {
             killer = event.getDamager();
             victim = event.getVictim();
-        } else if (creativeEvent instanceof PlayerDamagesPlayerEvent event) {
+        } else if (worldEvent instanceof PlayerDamagesPlayerEvent event) {
             killer = event.getDamager();
             victim = event.getVictim();
-        } if (creativeEvent instanceof MobDamagesPlayerEvent event) {
+        } if (worldEvent instanceof MobDamagesPlayerEvent event) {
             killer = event.getDamager();
             victim = event.getVictim();
-        } if (creativeEvent instanceof PlayerKilledPlayerEvent event) {
+        } if (worldEvent instanceof PlayerKilledPlayerEvent event) {
             killer = event.getKiller();
             victim = event.getVictim();
         }
@@ -137,7 +137,7 @@ public class Placeholders {
         text = text
                 .replace("%online%", String.valueOf(Bukkit.getOnlinePlayers().size()))
                 .replace("%players_amount%", String.valueOf(plot.getPlayers().size()))
-                .replace("%entities_amount%", String.valueOf(plot.getWorld().getEntityCount() + (plot.getDevPlot() != null && plot.getDevPlot().world != null ? plot.getDevPlot().world.getEntityCount() : 0)));
+                .replace("%entities_amount%", String.valueOf(plot.getTerritory().getWorld().getEntityCount() + (plot.getDevPlot() != null && plot.getDevPlot().world != null ? plot.getDevPlot().world.getEntityCount() : 0)));
         return text;
     }
 

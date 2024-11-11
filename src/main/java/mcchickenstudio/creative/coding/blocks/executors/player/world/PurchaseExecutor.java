@@ -18,7 +18,7 @@
 
 package mcchickenstudio.creative.coding.blocks.executors.player.world;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.events.player.world.PlayerPurchaseEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
@@ -32,7 +32,7 @@ public class PurchaseExecutor extends PlayerExecutor{
     }
 
     @Override
-    public void setTempVars(CreativeEvent event) {
+    public void setTempVars(WorldEvent event) {
         if (event instanceof PlayerPurchaseEvent purchaseEvent) {
             setTempVar(EventValues.Variable.PURCHASE_ID, purchaseEvent.getId());
             setTempVar(EventValues.Variable.PURCHASE_NAME, purchaseEvent.getName());

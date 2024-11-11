@@ -18,10 +18,10 @@
 
 package mcchickenstudio.creative.coding.blocks.events.player.fighting;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class PlayerDeathEvent extends CreativeEvent {
+public class PlayerDeathEvent extends WorldEvent {
 
     private final org.bukkit.event.entity.PlayerDeathEvent event;
 

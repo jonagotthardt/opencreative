@@ -18,10 +18,10 @@
 
 package mcchickenstudio.creative.coding.blocks.events.player.interaction;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class StartSpectatingEvent extends CreativeEvent {
+public class StartSpectatingEvent extends WorldEvent {
 
     public StartSpectatingEvent(Player player) {
         super(player);

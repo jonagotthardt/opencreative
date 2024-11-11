@@ -33,7 +33,7 @@ public class SetTimeAction extends WorldAction {
     @Override
     protected void execute(Entity entity) {
         float time = getArguments().getValue("time",6f,this);
-        getPlot().getWorld().setTime((long) (time*1000));
+        getPlot().getTerritory().getWorld().setTime((long) (time*1000));
     }
 
     @Override

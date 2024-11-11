@@ -18,7 +18,6 @@
 
 package mcchickenstudio.creative.coding;
 
-import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
@@ -62,8 +61,8 @@ public class CodingBlockParser {
     public void parseCode(DevPlot devPlot) {
 
         World world = devPlot.world;
-        devPlot.getPlot().stopBukkitRunnables();
-        CodeScript script = devPlot.getPlot().getScript();
+        devPlot.getPlot().getTerritory().stopBukkitRunnables();
+        CodeScript script = devPlot.getPlot().getTerritory().getScript();
         script.clear();
 
         List<Block> unknownBlocks = new ArrayList<>();
@@ -181,7 +180,7 @@ public class CodingBlockParser {
             sendPlotCompileErrorMessage(devPlot.getPlot(),unknownBlocks);
         }
         if (script.saveCode()) {
-            devPlot.getPlot().getScript().loadCode();
+            devPlot.getPlot().getTerritory().getScript().loadCode();
         }
     }
 

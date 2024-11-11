@@ -111,7 +111,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                             .replace("%id%", String.valueOf(plot.getId())).replace("%creation-time%",getElapsedTime(now,plot.getCreationTime()))
                             .replace("%activity-time%",getElapsedTime(now,plot.getLastActivityTime())).replace("%online%",String.valueOf(plot.getOnline()))
                             .replace("%builders%", plot.getWorldPlayers().getBuilders()).replace("%coders%", plot.getWorldPlayers().getDevelopers()).replace("%owner%",plot.getOwner())
-                            .replace("%sharing%", plot.getPlotSharing().getName()).replace("%mode%", plot.getMode().getName()).replace("%description%", plot.getInformation().getDescription()));
+                            .replace("%sharing%", plot.getSharing().getName()).replace("%mode%", plot.getMode().getName()).replace("%description%", plot.getInformation().getDescription()));
                 }
                 case "load" -> {
                     if (!sender.hasPermission("opencreative.load-world")) {
@@ -128,7 +128,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     if (!plot.isLoaded()) {
-                        PlotManager.getInstance().loadPlot(plot);
+                        plot.getTerritory().load();
                         sender.sendMessage(getLocaleMessage("world.loaded").replace("%id%",args[1]));
                     } else {
                         sender.sendMessage(getLocaleMessage("world.already-loaded").replace("%id%",args[1]));
@@ -286,7 +286,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     if (plot.isLoaded()) {
-                        PlotManager.getInstance().unloadPlot(plot);
+                        plot.getTerritory().unload();
                         sender.sendMessage(getLocaleMessage("world.unloaded").replace("%id%",args[1]));
                     } else {
                         sender.sendMessage(getLocaleMessage("world.already-unloaded").replace("%id%",args[1]));

@@ -18,7 +18,7 @@
 
 package mcchickenstudio.creative.coding.blocks.executors.player.world;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.events.player.world.ChatEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
@@ -33,7 +33,7 @@ public class ChatExecutor extends PlayerExecutor implements Cancellable {
     }
 
     @Override
-    public void setTempVars(CreativeEvent event) {
+    public void setTempVars(WorldEvent event) {
         if (event instanceof ChatEvent chatEvent) {
             setTempVar(EventValues.Variable.MESSAGE, chatEvent.getMessage());
         }

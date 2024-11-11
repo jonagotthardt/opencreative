@@ -19,10 +19,10 @@
 package mcchickenstudio.creative.coding.blocks.events.player.world;
 
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class ChunkLoadEvent extends CreativeEvent {
+public class ChunkLoadEvent extends WorldEvent {
 
     private final PlayerChunkLoadEvent event;
 

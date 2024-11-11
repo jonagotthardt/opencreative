@@ -18,11 +18,11 @@
 
 package mcchickenstudio.creative.coding.blocks.events.player.movement;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
-public class StopSneakingEvent extends CreativeEvent {
+public class StopSneakingEvent extends WorldEvent {
 
     private final PlayerToggleSneakEvent event;
 

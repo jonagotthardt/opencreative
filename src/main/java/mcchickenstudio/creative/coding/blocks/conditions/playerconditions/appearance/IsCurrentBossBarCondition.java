@@ -26,7 +26,6 @@ import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.Player
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.List;
 
@@ -42,7 +41,7 @@ public class IsCurrentBossBarCondition extends PlayerCondition {
         boolean requireAll = getArguments().getValue("all",false,this);
         boolean seesBossBar = false;
         for (String name : names) {
-            BossBar bossBar = getPlot().getBossBars().get(name);
+            BossBar bossBar = getPlot().getTerritory().getBossBars().get(name);
             for (BossBar playerBossBar : player.activeBossBars()) {
                 if (playerBossBar.equals(bossBar)) {
                     if (!requireAll) {

@@ -17,7 +17,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mcchickenstudio.creative.events.player;
+package mcchickenstudio.creative.listeners.player;
 
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.plots.PlotFlags;
@@ -52,7 +52,7 @@ public class PlayerDeath implements Listener {
         event.deathMessage(null);
         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
         if (plot != null) {
-            deathLocations.put(player, plot.getWorld().getSpawnLocation());
+            deathLocations.put(player, plot.getTerritory().getWorld().getSpawnLocation());
             if (plot.getFlagValue(PlotFlags.PlotFlag.DEATH_MESSAGES) == 1) {
                 for (Player p : plot.getPlayers()) {
                     p.sendMessage("§7 " + player.getName() + "§f " + translateDeathMessage(player));

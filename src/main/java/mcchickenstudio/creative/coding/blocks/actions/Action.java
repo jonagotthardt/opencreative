@@ -21,7 +21,7 @@ package mcchickenstudio.creative.coding.blocks.actions;
 import mcchickenstudio.creative.coding.arguments.Argument;
 import mcchickenstudio.creative.coding.arguments.Arguments;
 import mcchickenstudio.creative.coding.blocks.actions.selectionactions.SelectionAction;
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.MobDamagesPlayerEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamagesMobEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamagesPlayerEvent;
@@ -53,7 +53,7 @@ public abstract class Action {
     private final int x;
     protected Entity entity;
 
-    protected CreativeEvent event;
+    protected WorldEvent event;
     protected ActionsHandler handler;
 
     protected final Arguments arguments;
@@ -85,7 +85,7 @@ public abstract class Action {
             execute(null);
         }
         for (Entity entity : getTargets()) {
-            if (!getActionType().isSelectionMustBeInWorld() || (entity != null && entity.getWorld() == getPlot().getWorld())) {
+            if (!getActionType().isSelectionMustBeInWorld() || (entity != null && entity.getWorld() == getPlot().getTerritory().getWorld())) {
                 this.entity = entity;
                 execute(entity);
             }
@@ -132,7 +132,7 @@ public abstract class Action {
     protected Set<Entity> getEntitiesByNameOrUUID(String text) {
         Set<Entity> entities = new HashSet<>();
         if (getWorld() == null) return entities;
-        for (Entity entity : executor.getPlot().getWorld().getEntities()) {
+        for (Entity entity : executor.getPlot().getTerritory().getWorld().getEntities()) {
             if (entity.getName().equalsIgnoreCase(text) || entity.getUniqueId().toString().equalsIgnoreCase(text)) {
                 entities.add(entity);
             }
@@ -156,7 +156,7 @@ public abstract class Action {
      * @return Plot's world.
      */
     protected World getWorld() {
-        return getPlot().getWorld();
+        return getPlot().getTerritory().getWorld();
     }
 
     protected Plot getPlot() {
@@ -175,7 +175,7 @@ public abstract class Action {
      * Returns last stored event in action.
      * @return CreativeEvent, that called executor with this action.
      */
-    public CreativeEvent getEvent() {
+    public WorldEvent getEvent() {
         return event;
     }
 
@@ -205,7 +205,7 @@ public abstract class Action {
         switch (target) {
             case RANDOM_PLAYER -> {
                 Player randomPlayer = null;
-                List<Player> playerList = this.getExecutor().getPlot().getWorld().getPlayers();
+                List<Player> playerList = this.getExecutor().getPlot().getTerritory().getWorld().getPlayers();
                 if (!playerList.isEmpty()) {
                     Random r = new Random();
                     int i = r.nextInt(playerList.size());

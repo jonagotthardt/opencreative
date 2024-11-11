@@ -18,10 +18,10 @@
 
 package mcchickenstudio.creative.coding.blocks.events.world.other;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import mcchickenstudio.creative.plots.Plot;
 
-public class GamePlayEvent extends CreativeEvent {
+public class GamePlayEvent extends WorldEvent {
 
     public GamePlayEvent(Plot plot) {
         super(plot);

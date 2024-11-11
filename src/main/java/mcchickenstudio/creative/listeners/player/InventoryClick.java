@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mcchickenstudio.creative.events.player;
+package mcchickenstudio.creative.listeners.player;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
@@ -43,8 +43,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import static mcchickenstudio.creative.events.player.ChangedWorld.addPlayerWithLocation;
-import static mcchickenstudio.creative.events.player.ChangedWorld.isPlayerWithLocation;
+import static mcchickenstudio.creative.listeners.player.ChangedWorld.addPlayerWithLocation;
+import static mcchickenstudio.creative.listeners.player.ChangedWorld.isPlayerWithLocation;
 import static mcchickenstudio.creative.utils.ErrorUtils.sendPlayerErrorMessage;
 
 import static mcchickenstudio.creative.utils.MessageUtils.*;
@@ -249,7 +249,7 @@ public class InventoryClick implements Listener {
             if (currentItem.getType() == Material.PAPER) {
                 event.setCancelled(true);
                 if (!player.hasCooldown(currentItem.getType())) {
-                    if (plot != null && plot.getWorld() != null) {
+                    if (plot != null && plot.getTerritory().getWorld() != null) {
                         addPlayerWithLocation(player);
                         if (currentItem.hasItemMeta()) {
                             ItemMeta meta = currentItem.getItemMeta();
@@ -264,13 +264,13 @@ public class InventoryClick implements Listener {
                                     z = Double.parseDouble(locCoords[2]);
                                     yaw = Float.parseFloat(locCoords[3]);
                                     pitch = Float.parseFloat(locCoords[4]);
-                                    player.teleport(new Location(plot.getWorld(),x,y,z,yaw,pitch));
+                                    player.teleport(new Location(plot.getTerritory().getWorld(),x,y,z,yaw,pitch));
                                 } catch (Exception error) {
-                                    player.teleport(plot.getWorld().getSpawnLocation());
+                                    player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
                                 }
                             }
                         } else {
-                            player.teleport(plot.getWorld().getSpawnLocation());
+                            player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
                         }
                         player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
                         player.setCooldown(currentItem.getType(),60);
@@ -295,12 +295,12 @@ public class InventoryClick implements Listener {
                                     z = Double.parseDouble(locCoords[2]);
                                     yaw = Float.parseFloat(locCoords[3]);
                                     pitch = Float.parseFloat(locCoords[4]);
-                                    player.teleport(new Location(plot.getWorld(),x,y,z,yaw,pitch));
+                                    player.teleport(new Location(plot.getTerritory().getWorld(),x,y,z,yaw,pitch));
                                 } catch (Exception error) {
-                                    player.teleport(plot.getWorld().getSpawnLocation());
+                                    player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
                                 }
                             } else {
-                                player.teleport(plot.getWorld().getSpawnLocation());
+                                player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
                             }
                         player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
                         player.setCooldown(currentItem.getType(),60);

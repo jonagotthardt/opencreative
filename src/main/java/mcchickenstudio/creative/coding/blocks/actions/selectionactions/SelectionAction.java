@@ -69,7 +69,7 @@ public abstract class SelectionAction extends Action {
                 Action action = conditionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class,boolean.class).newInstance(getExecutor(),target,getX(),getArguments(),new ArrayList<>(),isOpposed);
                 if (action instanceof PlayerCondition playerCondition) {
                     playerCondition.setHandler(this.getHandler());
-                    for (Player player : getPlot().getWorld().getPlayers()) {
+                    for (Player player : getPlot().getTerritory().getWorld().getPlayers()) {
                         playerCondition.setEntity(player);
                         if (playerCondition.checkPlayer(player) ^ isOpposed) {
                             entities.add(player);
@@ -77,7 +77,7 @@ public abstract class SelectionAction extends Action {
                     }
                 } else if (action instanceof Condition condition) {
                     condition.setHandler(this.getHandler());
-                    for (Entity checkEntity : getPlot().getWorld().getEntities()) {
+                    for (Entity checkEntity : getPlot().getTerritory().getWorld().getEntities()) {
                         condition.setEntity(checkEntity);
                         if (condition.check(checkEntity) ^ isOpposed) {
                             entities.add(checkEntity);

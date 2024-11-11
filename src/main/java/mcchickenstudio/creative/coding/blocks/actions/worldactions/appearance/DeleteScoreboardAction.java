@@ -43,7 +43,7 @@ public class DeleteScoreboardAction extends WorldAction {
         }
         List<String> scoreboards = getArguments().getTextList("scoreboards",this);
         for (String name : scoreboards) {
-            Scoreboard scoreboard = getPlot().getScoreboards().get(name.toLowerCase());
+            Scoreboard scoreboard = getPlot().getTerritory().getScoreboards().get(name.toLowerCase());
             if (scoreboard != null) {
                 Objective objective = scoreboard.getObjective("score");
                 if (objective != null) {
@@ -54,7 +54,7 @@ public class DeleteScoreboardAction extends WorldAction {
                         player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
                     }
                 }
-                getPlot().getScoreboards().remove(name.toLowerCase());
+                getPlot().getTerritory().getScoreboards().remove(name.toLowerCase());
             }
         }
 

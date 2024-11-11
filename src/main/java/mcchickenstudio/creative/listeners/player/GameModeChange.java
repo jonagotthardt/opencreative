@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mcchickenstudio.creative.events.player;
+package mcchickenstudio.creative.listeners.player;
 
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
@@ -44,10 +44,10 @@ public class GameModeChange implements Listener {
             }
             return;
         }
-        if (plot.getWorld() == null) return;
+        if (plot.getTerritory().getWorld() == null) return;
         // If player is in plot
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (!onlinePlayer.getWorld().equals(plot.getWorld()) && (plot.getDevPlot().world != null && !onlinePlayer.getWorld().equals(plot.getDevPlot().world))) {
+            if (!onlinePlayer.getWorld().equals(plot.getTerritory().getWorld()) && (plot.getDevPlot().world != null && !onlinePlayer.getWorld().equals(plot.getDevPlot().world))) {
                 hidePlayerInTab(onlinePlayer,player);
                 hidePlayerInTab(player,onlinePlayer);
             }

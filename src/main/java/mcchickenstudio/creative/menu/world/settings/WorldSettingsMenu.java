@@ -18,7 +18,8 @@
 
 package mcchickenstudio.creative.menu.world.settings;
 
-import mcchickenstudio.creative.events.player.PlayerChat;
+import mcchickenstudio.creative.events.plot.PlotSharingChangeEvent;
+import mcchickenstudio.creative.listeners.player.PlayerChat;
 import mcchickenstudio.creative.menu.AbstractMenu;
 import mcchickenstudio.creative.menu.buttons.ParameterButton;
 import mcchickenstudio.creative.menu.world.WorldDeleteMobsMenu;
@@ -74,9 +75,9 @@ public class WorldSettingsMenu extends AbstractMenu {
         this.plot = plot;
         this.player = player;
         worldIcon = getPlotIcon();
-        access = new ParameterButton(plot.getPlotSharing().name().toLowerCase(), List.of("public","private"),"access","menus.world-settings","menus.world-settings.items.change-sharing",List.of(Material.SPRUCE_DOOR,Material.IRON_DOOR));
-        Boolean isTimeChanging = plot.getWorld().getGameRuleValue(GameRule.DO_DAYLIGHT_CYCLE);
-        long currentTime = plot.getWorld().getTime();
+        access = new ParameterButton(plot.getSharing().name().toLowerCase(), List.of("public","private"),"access","menus.world-settings","menus.world-settings.items.change-sharing",List.of(Material.SPRUCE_DOOR,Material.IRON_DOOR));
+        Boolean isTimeChanging = plot.getTerritory().getWorld().getGameRuleValue(GameRule.DO_DAYLIGHT_CYCLE);
+        long currentTime = plot.getTerritory().getWorld().getTime();
         boolean isNight = currentTime >= 15000L && currentTime <= 23000;
         boolean isEvening = currentTime >= 12500 && currentTime < 15000;
         int timeValue = (isTimeChanging != null && isTimeChanging ? 4 : isNight ? 3 : isEvening ? 2 : 1);
@@ -113,7 +114,7 @@ public class WorldSettingsMenu extends AbstractMenu {
     }
 
     public ItemStack getPlotIcon() {
-        ItemStack item = createItem(plot.getPlotSharing() == Plot.Sharing.PUBLIC ? plot.getInformation().getMaterial() : Material.BARRIER,1);
+        ItemStack item = createItem(plot.getSharing() == Plot.Sharing.PUBLIC ? plot.getInformation().getMaterial() : Material.BARRIER,1);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(MessageUtils.getLocaleItemName("menus.world-settings.items.world.name").replace("%plotName%", plot.getInformation().getDisplayName()));
         List<String> lore = new ArrayList<>();
@@ -202,12 +203,18 @@ public class WorldSettingsMenu extends AbstractMenu {
             setItem((byte) event.getRawSlot(),access.getItem());
             updateSlot((byte) event.getRawSlot());
             if ("public".equals(access.getCurrentValue().toString())) {
-                plot.setPlotSharing(Plot.Sharing.PUBLIC);
+                PlotSharingChangeEvent plotEvent = new PlotSharingChangeEvent(plot,plot.getSharing(),Plot.Sharing.PUBLIC,player);
+                plotEvent.callEvent();
+                if (plotEvent.isCancelled()) return;
+                plot.setSharing(Plot.Sharing.PUBLIC);
                 player.sendMessage(getLocaleMessage("settings.world-sharing.enabled"));
                 player.playSound(player.getLocation(), Sound.BLOCK_IRON_DOOR_OPEN, 100, 1);
                 plot.getInformation().updateIcon();
             } else {
-                plot.setPlotSharing(Plot.Sharing.PRIVATE);
+                PlotSharingChangeEvent plotEvent = new PlotSharingChangeEvent(plot,plot.getSharing(),Plot.Sharing.PRIVATE,player);
+                plotEvent.callEvent();
+                if (plotEvent.isCancelled()) return;
+                plot.setSharing(Plot.Sharing.PRIVATE);
                 player.sendMessage(getLocaleMessage("settings.world-sharing.disabled"));
                 player.playSound(player.getLocation(), Sound.ENTITY_EVOKER_FANGS_ATTACK, 100, 0.6f);
                 plot.getInformation().updateIcon();
@@ -221,20 +228,20 @@ public class WorldSettingsMenu extends AbstractMenu {
             setItem((byte) event.getRawSlot(),time.getItem());
             updateSlot((byte) event.getRawSlot());
             if (time.getCurrentValue().equals(1)) {
-                plot.getWorld().setTime(1000L);
-                plot.getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+                plot.getTerritory().getWorld().setTime(1000L);
+                plot.getTerritory().getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
                 plot.setFlagValue(PlotFlags.PlotFlag.DAY_CYCLE, (byte) 1);
             } else if (time.getCurrentValue().equals(2)) {
-                plot.getWorld().setTime(12500L);
-                plot.getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+                plot.getTerritory().getWorld().setTime(12500L);
+                plot.getTerritory().getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
                 plot.setFlagValue(PlotFlags.PlotFlag.DAY_CYCLE, (byte) 2);
             } else if (time.getCurrentValue().equals(3)) {
-                plot.getWorld().setTime(15000L);
-                plot.getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+                plot.getTerritory().getWorld().setTime(15000L);
+                plot.getTerritory().getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
                 plot.setFlagValue(PlotFlags.PlotFlag.DAY_CYCLE, (byte) 3);
             } else {
-                plot.getWorld().setTime(1000L);
-                plot.getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
+                plot.getTerritory().getWorld().setTime(1000L);
+                plot.getTerritory().getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
                 plot.setFlagValue(PlotFlags.PlotFlag.DAY_CYCLE, (byte) 4);
             }
         } else if (itemEquals(currentItem,worldIcon)) {

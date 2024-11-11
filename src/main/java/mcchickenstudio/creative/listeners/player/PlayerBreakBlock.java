@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mcchickenstudio.creative.events.player;
+package mcchickenstudio.creative.listeners.player;
 
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
@@ -36,7 +36,7 @@ import org.bukkit.inventory.ItemStack;
 import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.Plot;
 
-import static mcchickenstudio.creative.events.player.PlayerPlaceBlock.move;
+import static mcchickenstudio.creative.listeners.player.PlayerPlaceBlock.move;
 import static mcchickenstudio.creative.utils.BlockUtils.getClosingBracketX;
 import static mcchickenstudio.creative.utils.ItemUtils.getCodingDoNotDropMeKey;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;

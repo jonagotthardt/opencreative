@@ -46,15 +46,15 @@ import static mcchickenstudio.creative.utils.ErrorUtils.*;
  */
 public class CodeScript {
 
-    private final Plot linkedPlot;
+    private final Plot plot;
     private final File file;
     private final Executors executors;
     private final YamlConfiguration scriptConfig;
 
-    public CodeScript(Plot linkedPlot, File file) {
-        this.linkedPlot = linkedPlot;
+    public CodeScript(Plot plot, File file) {
+        this.plot = plot;
         this.file = file;
-        this.executors = new Executors(linkedPlot);
+        this.executors = new Executors(plot);
         this.scriptConfig = YamlConfiguration.loadConfiguration(file);
     }
 
@@ -74,7 +74,7 @@ public class CodeScript {
             scriptConfig.save(file);
             return true;
         } catch (IOException error) {
-            sendCriticalErrorMessage("An IO Exception has occurred while saving code. ", error);
+            sendCriticalErrorMessage("An IO Exception has occurred while saving code.", error);
             return false;
         }
     }
@@ -92,7 +92,7 @@ public class CodeScript {
         try {
             scriptConfig.save(file);
         } catch (IOException exception) {
-            sendCriticalErrorMessage("An error has occurred while clearing and saving code script " + this.getLinkedPlot().getWorldName(),exception);
+            sendCriticalErrorMessage("An error has occurred while clearing and saving code script " + this.getPlot().getWorldName(),exception);
         }
     }
 
@@ -227,8 +227,8 @@ public class CodeScript {
         return executors;
     }
 
-    public Plot getLinkedPlot() {
-        return linkedPlot;
+    public Plot getPlot() {
+        return plot;
     }
 }
 

@@ -19,10 +19,10 @@
 package mcchickenstudio.creative.coding.blocks.events.player.movement;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class JumpEvent extends CreativeEvent {
+public class JumpEvent extends WorldEvent {
 
     private final PlayerJumpEvent event;
 

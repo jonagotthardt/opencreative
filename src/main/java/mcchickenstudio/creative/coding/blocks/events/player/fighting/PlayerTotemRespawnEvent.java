@@ -18,10 +18,10 @@
 
 package mcchickenstudio.creative.coding.blocks.events.player.fighting;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class PlayerTotemRespawnEvent extends CreativeEvent {
+public class PlayerTotemRespawnEvent extends WorldEvent {
 
     public PlayerTotemRespawnEvent(Player player) {
         super(player);
