@@ -18,11 +18,11 @@
 
 package mcchickenstudio.creative.coding.blocks.events.player.world;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
 
-public class ChatEvent extends CreativeEvent {
+public class ChatEvent extends WorldEvent {
 
     private final String message;
     private final PlayerChatEvent event;

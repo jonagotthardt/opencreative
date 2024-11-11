@@ -22,7 +22,7 @@ import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.blocks.actions.controlactions.lines.WaitAction;
 import mcchickenstudio.creative.coding.blocks.actions.repeatactions.RepeatAction;
 import mcchickenstudio.creative.coding.blocks.actions.repeatactions.other.RepeatForLoopAction;
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.variables.VariableLink;
@@ -50,7 +50,7 @@ import static mcchickenstudio.creative.utils.MessageUtils.messageExists;
 public class ActionsHandler {
 
     private final Executor executor;
-    private final CreativeEvent event;
+    private final WorldEvent event;
     private final EventValues variables;
     private final Action action;
 
@@ -144,11 +144,11 @@ public class ActionsHandler {
                     }
                     if (action != null) {
                         executeAction(action);
-                        action.getPlot().removeBukkitRunnable(this);
+                        action.getPlot().getTerritory().removeBukkitRunnable(this);
                     }
                 }
             };
-            action.getPlot().addBukkitRunnable(executeActionLaterRunnable);
+            action.getPlot().getTerritory().addBukkitRunnable(executeActionLaterRunnable);
             executeActionLaterRunnable.runTaskLater(Main.getPlugin(),waitDelay);
         }
     }
@@ -209,7 +209,7 @@ public class ActionsHandler {
         this.waitDelay = waitDelay;
     }
 
-    public CreativeEvent getEvent() {
+    public WorldEvent getEvent() {
         return event;
     }
 

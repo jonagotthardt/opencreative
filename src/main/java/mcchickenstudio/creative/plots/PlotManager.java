@@ -18,24 +18,21 @@
 
 package mcchickenstudio.creative.plots;
 
-import mcchickenstudio.creative.coding.CodeScript;
+import mcchickenstudio.creative.events.plot.PlotDeletionEvent;
+import mcchickenstudio.creative.events.plot.PlotRegisterEvent;
+import mcchickenstudio.creative.events.plot.PlotSharingChangeEvent;
 import mcchickenstudio.creative.utils.*;
-import net.kyori.adventure.util.TriState;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import mcchickenstudio.creative.Main;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static mcchickenstudio.creative.utils.ErrorUtils.sendPlayerErrorMessage;
 import static mcchickenstudio.creative.utils.FileUtils.*;
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
-import static mcchickenstudio.creative.utils.PlayerUtils.*;
 
 public class PlotManager {
 
@@ -66,10 +63,21 @@ public class PlotManager {
         } else {
             plots.add(plot);
         }
+        new PlotRegisterEvent(plot).callEvent();
     }
 
     /**
-     * Creates and loads a new plot for player with specified world generation parameters.
+     * Creates and loads a new plot for player with specified world generator.
+     * @param owner Owner of plot.
+     * @param id Id of plot.
+     * @param generator Generator of world.
+     */
+    public void createPlot(Player owner, int id, WorldUtils.WorldGenerator generator) {
+        createPlot(owner,id,generator, World.Environment.NORMAL,new Random().nextInt(),false);
+    }
+
+    /**
+     * Creates and loads a new plot for player with specified world generator, environment, seed and generate sturctures option.
      * @param owner Owner of plot.
      * @param id Id of plot.
      * @param generator Generator of world.
@@ -85,9 +93,9 @@ public class PlotManager {
         Plot plot = new Plot(id);
 
         FileUtils.loadWorldFolder(plot.getWorldName(),true);
-        if (plot.generateWorld(generator,environment,seed,generateStructures) != null) {
+        if (plot.getTerritory().generateWorld(generator,environment,seed,generateStructures) != null) {
             plot.connectPlayer(owner);
-            plot.getWorld().getSpawnLocation().getChunk().load(true);
+            plot.getTerritory().getWorld().getSpawnLocation().getChunk().load(true);
             owner.sendTitle(getLocaleMessage("creating-world.welcome-title",owner),getLocaleMessage("creating-world.welcome-subtitle",owner),15,180,45);
             owner.playSound(owner.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE,100,0.1f);
             owner.sendMessage(getLocaleMessage("creating-world.welcome",owner));
@@ -105,56 +113,6 @@ public class PlotManager {
     }
 
     /**
-     Load plot, for example if player tries to join it. It loads world folder, world and code script.
-     **/
-    public void loadPlot(Plot plot) {
-        FileUtils.loadWorldFolder(plot.getWorldName(),true);
-        World world = new WorldCreator(plot.getWorldName()).environment(plot.getEnvironment()).keepSpawnLoaded(TriState.FALSE).createWorld();
-        if (world == null) return;
-        plot.setWorld(world);
-        plot.getWorld().setAutoSave(true);
-        plot.getWorld().setKeepSpawnInMemory(false);
-        if (world.getEnvironment() == World.Environment.THE_END) {
-            if (world.getEnderDragonBattle() != null) {
-                world.getEnderDragonBattle().setPreviouslyKilled(true);
-                world.getEnderDragonBattle().getBossBar().setVisible(false);
-            }
-        }
-        plot.setScript(new CodeScript(plot, FileUtils.getPlotScriptFile(plot)));
-        FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
-        plot.getWorld().setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS,false);
-        plot.getWorld().getWorldBorder().setSize(getPlayerPlotSize(plot.getOwnerGroup()));
-        plot.getVariables().load();
-    }
-
-
-    /**
-    Unload plot, for example if no players playing in plot.
-     **/
-    public void unloadPlot(Plot plot) {
-        plot.getVariables().save();
-        FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
-        FileUtils.setPlotConfigParameter(plot,"mode", plot.getMode());
-        FileUtils.setPlotConfigParameter(plot,"environment",plot.getEnvironment().name());
-        for (Player player : plot.getPlayers()) {
-            teleportToLobby(player);
-        }
-        plot.stopBukkitRunnables();
-        if (Bukkit.unloadWorld(plot.getWorldName(),true)) {
-            FileUtils.unloadWorldFolder(plot.getWorldName(),true);
-            if (Bukkit.getWorld(plot.getDevPlot().worldName) != null) {
-                for (Player player : plot.getDevPlot().world.getPlayers()) {
-                    teleportToLobby(player);
-                }
-                plot.getDevPlot().setLoaded(false);
-                if (Bukkit.unloadWorld(plot.getDevPlot().worldName,true)) {
-                    FileUtils.unloadWorldFolder(plot.getDevPlot().worldName,true);
-                }
-            }
-        }
-    }
-
-    /**
      Returns plots, these player owns.
      **/
     public List<Plot> getPlayerPlots(Player player) {
@@ -168,55 +126,28 @@ public class PlotManager {
     }
 
     /**
-     Delete plot. It teleports plot players to spawn, closes plot, unloads world and deletes world folder.
-     **/
-    public void deletePlot(Plot plot) {
-        try {
-            // Телепортирует всех игроков в мире на спавн
-            for (Player p : plot.getPlayers()) {
-                PlayerUtils.teleportToLobby(p);
-            }
-            if (plot.getDevPlot().exists()) {
-                FileUtils.deleteWorld(FileUtils.getDevPlotFolder(plot.getDevPlot()));
-            }
-            // Удаляет папку мира
-            plot.setPlotSharing(Plot.Sharing.CLOSED);
-            plots.remove(plot);
-            FileUtils.deleteWorld(FileUtils.getPlotFolder(plot));
-
-            // После 3 секунд удаления мир отгружается полностью
-            Bukkit.getServer().getScheduler().runTaskLater(Main.getPlugin(), () -> {
-                Bukkit.unloadWorld(plot.getWorldName(),false);
-                if (plot.getDevPlot().isLoaded()) Bukkit.unloadWorld(plot.getDevPlot().worldName, false);
-            }, 60);
-        } catch (NullPointerException error) {
-            ErrorUtils.sendCriticalErrorMessage("При удалении мира возникла ошибка: " + error.getMessage());
-        }
-    }
-
-    /**
      Delete plot on player request. It teleports plot players to spawn, closes plot, unloads world and deletes world folder.
      **/
     public void deletePlot(Plot plot, Player player) {
+        new PlotDeletionEvent(plot).callEvent();
         try {
-            // Телепортирует всех игроков в мире на спавн
             for (Player p : plot.getPlayers()) {
                 PlayerUtils.teleportToLobby(p);
             }
-            // Удаляет папку мира
-            plot.setPlotSharing(Plot.Sharing.CLOSED);
+            PlotSharingChangeEvent plotEvent = new PlotSharingChangeEvent(plot,plot.getSharing(),Plot.Sharing.PUBLIC);
+            plotEvent.callEvent();
+            if (!plotEvent.isCancelled()) {
+                plot.setSharing(Plot.Sharing.CLOSED);
+            }
             plots.remove(plot);
             FileUtils.deleteWorld(FileUtils.getPlotFolder(plot));
-            if (plot.getDevPlot() != null) {
-                FileUtils.deleteWorld(FileUtils.getDevPlotFolder(plot.getDevPlot()));
-            }
-            // После 3 секунд удаления мир отгружается полностью
+            FileUtils.deleteWorld(FileUtils.getDevPlotFolder(plot.getDevPlot()));
             Bukkit.getServer().getScheduler().runTaskLater(Main.getPlugin(), () -> {
                 Bukkit.unloadWorld(plot.getWorldName(),false);
                 player.sendMessage(MessageUtils.getLocaleMessage("deleting-world.message"));
             }, 60);
         } catch (NullPointerException error) {
-            ErrorUtils.sendCriticalErrorMessage("При удалении мира возникла ошибка: " + error.getMessage());
+            ErrorUtils.sendCriticalErrorMessage("Error while deleting world " + plot.getId(), error);
         }
     }
 
@@ -314,7 +245,7 @@ public class PlotManager {
      **/
     public Plot getPlotByWorld(World world) {
         for (Plot plot : plots) {
-            if (world.equals(plot.getWorld())) {
+            if (world.equals(plot.getTerritory().getWorld())) {
                 return plot;
             }
             if (world.equals(plot.getDevPlot().world)) {

@@ -24,7 +24,6 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.worldactions.WorldAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import mcchickenstudio.creative.coding.variables.VariableLink;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -58,14 +57,14 @@ public class SetSignLineAction extends WorldAction {
         };
         if (getPlot().getLimits().getLastModifiedBlocksAmount() > getPlot().getLimits().getModifyingBlocksLimit()) {
             runnable.runTaskLater(Main.getPlugin(),20L);
-            getPlot().removeBukkitRunnable(runnable);
+            getPlot().getTerritory().removeBukkitRunnable(runnable);
             return;
         }
 
         sign.getSide(side).setLine(number-1,text);
         getPlot().getLimits().setLastModifiedBlocksAmount(getPlot().getLimits().getLastModifiedBlocksAmount()+1);
         runnable.runTaskLater(Main.getPlugin(),20L);
-        getPlot().removeBukkitRunnable(runnable);
+        getPlot().getTerritory().removeBukkitRunnable(runnable);
     }
 
     @Override

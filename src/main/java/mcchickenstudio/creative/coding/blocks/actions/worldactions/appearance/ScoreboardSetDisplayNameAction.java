@@ -40,7 +40,7 @@ public class ScoreboardSetDisplayNameAction extends WorldAction {
         }
         String name = getArguments().getValue("name","board",this);
         String displayName = getArguments().getValue("display-name","Scoreboard",this);
-        Scoreboard scoreboard = getPlot().getScoreboards().get(name.toLowerCase());
+        Scoreboard scoreboard = getPlot().getTerritory().getScoreboards().get(name.toLowerCase());
         if (scoreboard == null) {
             return;
         }

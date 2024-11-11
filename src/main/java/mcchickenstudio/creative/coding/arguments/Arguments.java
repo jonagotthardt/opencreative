@@ -92,14 +92,14 @@ public class Arguments {
                 double x,y,z;
                 float yaw,pitch;
                 if (listSection == null) {
-                    return plot.getWorld().getSpawnLocation();
+                    return plot.getTerritory().getWorld().getSpawnLocation();
                 }
                 x = listSection.getDouble("x");
                 y = listSection.getDouble("y");
                 z = listSection.getDouble("z");
                 yaw = (float) listSection.getDouble("yaw");
                 pitch = (float) listSection.getDouble("pitch");
-                return new Location(plot.getWorld(),x,y,z,yaw,pitch);
+                return new Location(plot.getTerritory().getWorld(),x,y,z,yaw,pitch);
             case COLOR:
                 int r,g,b;
                 if (listSection == null) {
@@ -323,7 +323,7 @@ public class Arguments {
                 List<Argument> args = (List<Argument>) arg.getValue(action);
                 for (Argument itemArg : args) {
                     if (itemArg.getValue(action) instanceof Location loc) {
-                        loc.setWorld(plot.getWorld());
+                        loc.setWorld(plot.getTerritory().getWorld());
                         if (!BlockUtils.isOutOfBorders(loc)) {
                             list.add(loc);
                         }
@@ -534,7 +534,7 @@ public class Arguments {
             locationValue = (Location) arg.getValue(action);
             sendCodingDebugVariable(plot,path,locationValue.getX()+" "+locationValue.getY()+" "+locationValue.getZ()+" "+locationValue.getYaw()+" "+locationValue.getPitch());
         }
-        locationValue.setWorld(plot.getWorld());
+        locationValue.setWorld(plot.getTerritory().getWorld());
         if (BlockUtils.isOutOfBorders(locationValue)) {
             sendCodingDebugLog(plot,"Location is out of borders! " + locationValue);
             return defaultValue;

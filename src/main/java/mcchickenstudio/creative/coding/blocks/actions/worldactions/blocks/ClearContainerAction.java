@@ -25,7 +25,6 @@ import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.worldactions.WorldAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -46,11 +45,11 @@ public class ClearContainerAction extends WorldAction {
                 getPlot().getLimits().setLastModifiedBlocksAmount(0);
             }
         };
-        getPlot().addBukkitRunnable(runnable);
+        getPlot().getTerritory().addBukkitRunnable(runnable);
         for (Location location : locations) {
             if (getPlot().getLimits().getLastModifiedBlocksAmount() > getPlot().getLimits().getModifyingBlocksLimit()) {
                 runnable.runTaskLater(Main.getPlugin(),20L);
-                getPlot().removeBukkitRunnable(runnable);
+                getPlot().getTerritory().removeBukkitRunnable(runnable);
                 return;
             }
             if (location.getBlock().getState() instanceof InventoryHolder container) {
@@ -59,7 +58,7 @@ public class ClearContainerAction extends WorldAction {
             getPlot().getLimits().setLastModifiedBlocksAmount(getPlot().getLimits().getLastModifiedBlocksAmount()+1);
         }
         runnable.runTaskLater(Main.getPlugin(),20L);
-        getPlot().removeBukkitRunnable(runnable);
+        getPlot().getTerritory().removeBukkitRunnable(runnable);
 
     }
 

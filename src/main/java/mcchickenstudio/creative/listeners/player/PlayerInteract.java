@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mcchickenstudio.creative.events.player;
+package mcchickenstudio.creative.listeners.player;
 
 import com.destroystokyo.paper.event.player.PlayerStartSpectatingEntityEvent;
 import com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent;
@@ -64,8 +64,8 @@ import org.bukkit.util.Vector;
 import java.util.ArrayList;
 import java.util.List;
 
-import static mcchickenstudio.creative.events.player.ChangedWorld.*;
-import static mcchickenstudio.creative.events.player.PlayerPlaceBlock.move;
+import static mcchickenstudio.creative.listeners.player.ChangedWorld.*;
+import static mcchickenstudio.creative.listeners.player.PlayerPlaceBlock.move;
 import static mcchickenstudio.creative.utils.BlockUtils.*;
 import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemName;
@@ -411,9 +411,9 @@ public class PlayerInteract implements Listener {
     private void handlePaperInteraction(PlayerInteractEvent event, Player player, ItemStack currentItem) {
         if (event.getAction() == Action.LEFT_CLICK_AIR && !player.hasCooldown(currentItem.getType())) {
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null && plot.getWorld() != null) {
+            if (plot != null && plot.getTerritory().getWorld() != null) {
                 addPlayerWithLocation(player);
-                player.teleport(plot.getWorld().getSpawnLocation());
+                player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
                 player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
                 player.setCooldown(currentItem.getType(),60);
             }

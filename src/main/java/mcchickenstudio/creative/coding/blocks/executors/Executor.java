@@ -20,7 +20,7 @@ package mcchickenstudio.creative.coding.blocks.executors;
 
 import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionsHandler;
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.plots.Plot;
 
@@ -45,7 +45,7 @@ public abstract class Executor {
     private final int z;
     private final List<Action> actions = new ArrayList<>();
     private final EventValues variables = new EventValues();
-    private CreativeEvent event;
+    private WorldEvent event;
     private ActionsHandler handler;
 
     /**
@@ -66,14 +66,14 @@ public abstract class Executor {
      * Executes all actions with specified event.
      * @param event Event that occurred in plot.
      */
-    public void run(CreativeEvent event) {
+    public void run(WorldEvent event) {
         sendCodingDebugExecutor(this);
         setTempVars(event);
         executeActions(event);
     }
 
-    protected void setTempVars(CreativeEvent event) {}
-    protected void executeActions(CreativeEvent event) {
+    protected void setTempVars(WorldEvent event) {}
+    protected void executeActions(WorldEvent event) {
         this.event = event;
         handler = new ActionsHandler(this);
         handler.executeActions(actions);
@@ -129,7 +129,7 @@ public abstract class Executor {
         return variables;
     }
 
-    public CreativeEvent getEvent() {
+    public WorldEvent getEvent() {
         return event;
     }
 

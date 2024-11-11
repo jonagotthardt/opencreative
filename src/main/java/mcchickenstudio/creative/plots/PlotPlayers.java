@@ -221,7 +221,7 @@ public class PlotPlayers {
                 }
                 if (isEntityInDevPlot(player)) {
                     clearPlayer(player);
-                    player.teleport(plot.getWorld().getSpawnLocation());
+                    player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
                 }
             }
         }

@@ -18,12 +18,12 @@
 
 package mcchickenstudio.creative.coding.blocks.events.player.interaction;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 
-public class DestroyBlockEvent extends CreativeEvent {
+public class DestroyBlockEvent extends WorldEvent {
 
     private final BlockBreakEvent event;
     private final Block destroyedBlock;

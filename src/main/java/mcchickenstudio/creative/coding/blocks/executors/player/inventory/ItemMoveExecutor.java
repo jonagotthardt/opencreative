@@ -18,7 +18,7 @@
 
 package mcchickenstudio.creative.coding.blocks.executors.player.inventory;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.events.player.inventory.ItemMoveEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
@@ -33,7 +33,7 @@ public class ItemMoveExecutor extends PlayerExecutor implements Cancellable {
     }
 
     @Override
-    protected void setTempVars(CreativeEvent event) {
+    protected void setTempVars(WorldEvent event) {
         if (event instanceof ItemMoveEvent) {
             setTempVar(EventValues.Variable.ITEM,((ItemMoveEvent) event).getItem());
         }

@@ -20,6 +20,7 @@ package mcchickenstudio.creative.commands.world.modes;
 
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
+import mcchickenstudio.creative.events.plot.PlotModeChangeEvent;
 import mcchickenstudio.creative.plots.DevPlot;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -38,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import static mcchickenstudio.creative.events.player.ChangedWorld.removePlayerWithLocation;
+import static mcchickenstudio.creative.listeners.player.ChangedWorld.removePlayerWithLocation;
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 import static mcchickenstudio.creative.utils.PlayerUtils.clearPlayer;
 
@@ -81,10 +82,15 @@ public class CommandPlay implements CommandExecutor {
             removePlayerWithLocation(player);
             if (plot.getMode() != Plot.Mode.PLAYING) {
                 if (plot.getOwner().equals(sender.getName()) || developers.contains(sender.getName())) {
+                    PlotModeChangeEvent event = new PlotModeChangeEvent(plot,plot.getMode(), Plot.Mode.PLAYING,player);
+                    event.callEvent();
+                    if (event.isCancelled()) {
+                        return true;
+                    }
                     plot.setMode(Plot.Mode.PLAYING);
                     if (isEntityInDevPlot(player)) {
                         clearPlayer(player);
-                        player.teleport(plot.getWorld().getSpawnLocation());
+                        player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
                         if (plot.isOwner(sender.getName())) {
                             player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
                         }
@@ -100,12 +106,12 @@ public class CommandPlay implements CommandExecutor {
                         if (plot.getDevPlot().isLoaded()) {
                             new CodingBlockParser().parseCode(plot.getDevPlot());
                         } else {
-                            plot.getScript().loadCode();
+                            plot.getTerritory().getScript().loadCode();
                         }
                     } else {
                         player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
                     }
-                    plot.getWorld().getSpawnLocation().getChunk().load(true);
+                    plot.getTerritory().getWorld().getSpawnLocation().getChunk().load(true);
                     DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
                     if (devPlot != null) {
                         clearPlayer(player);
@@ -113,7 +119,7 @@ public class CommandPlay implements CommandExecutor {
                         EventRaiser.raiseQuitEvent(player);
                     }
                     clearPlayer(player);
-                    player.teleport(plot.getWorld().getSpawnLocation());
+                    player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
                     if (plot.isOwner(sender.getName())) {
                         player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
                     }

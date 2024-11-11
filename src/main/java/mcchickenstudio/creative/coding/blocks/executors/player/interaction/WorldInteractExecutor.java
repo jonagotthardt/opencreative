@@ -18,7 +18,7 @@
 
 package mcchickenstudio.creative.coding.blocks.executors.player.interaction;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.events.player.interaction.WorldInteractEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
@@ -29,7 +29,7 @@ import org.bukkit.event.Cancellable;
 public class WorldInteractExecutor extends PlayerExecutor implements Cancellable {
 
     @Override
-    protected void setTempVars(CreativeEvent event) {
+    protected void setTempVars(WorldEvent event) {
         if (event instanceof WorldInteractEvent blockEvent) {
             setTempVar(EventValues.Variable.BLOCK, blockEvent.getClickedBlock());
             setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getClickedBlock().getType().name().toLowerCase());

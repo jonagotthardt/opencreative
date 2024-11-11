@@ -42,11 +42,11 @@ public class BossBarOverlayAction extends WorldAction {
         try {
             overlay = BossBar.Overlay.valueOf(overlayString.toUpperCase());
         } catch (IllegalArgumentException ignored) {}
-        BossBar bossBar = getPlot().getBossBars().get(name.toLowerCase());
+        BossBar bossBar = getPlot().getTerritory().getBossBars().get(name.toLowerCase());
         if (bossBar != null) {
             bossBar.overlay(overlay);
         }
-        getPlot().getBossBars().put(name.toLowerCase(),bossBar);
+        getPlot().getTerritory().getBossBars().put(name.toLowerCase(),bossBar);
     }
 
     @Override

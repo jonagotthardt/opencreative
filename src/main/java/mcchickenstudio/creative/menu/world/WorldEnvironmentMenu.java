@@ -64,10 +64,10 @@ public class WorldEnvironmentMenu extends AbstractMenu {
         debug = new ParameterButton(devPlot.getPlot().isDebug() ? "all" : "disabled", List.of("disabled","all"),"debug","menus.developer.environment","menus.developer.environment.items.debug",List.of(Material.PUFFERFISH_BUCKET,Material.PUFFERFISH));
         containers = new ParameterButton(devPlot.getContainerMaterial() == Material.CHEST ? "chest" : "barrel", List.of("chest","barrel"),"containers","menus.developer.environment","menus.developer.environment.items.containers",List.of(Material.CHEST,Material.BARREL));
         info = createItem(Material.AMETHYST_CLUSTER,1,"menus.developer.environment.items.info");
-        replacePlaceholderInLore(info,"%executors%",devPlot.getPlot().getScript().getExecutors().getExecutorsList().size());
-        replacePlaceholderInLore(info,"%scoreboards%",devPlot.getPlot().getScoreboards().size());
+        replacePlaceholderInLore(info,"%executors%", devPlot.getPlot().getTerritory().getScript().getExecutors().getExecutorsList().size());
+        replacePlaceholderInLore(info,"%scoreboards%", devPlot.getPlot().getTerritory().getScoreboards().size());
         replacePlaceholderInLore(info,"%scoreboards-limit%",devPlot.getPlot().getLimits().getScoreboardsLimit());
-        replacePlaceholderInLore(info,"%bossbars%",devPlot.getPlot().getBossBars().size());
+        replacePlaceholderInLore(info,"%bossbars%", devPlot.getPlot().getTerritory().getBossBars().size());
         replacePlaceholderInLore(info,"%bossbars-limit%",devPlot.getPlot().getLimits().getBossBarsLimit());
         replacePlaceholderInLore(info,"%variables%",devPlot.getPlot().getVariables().getTotalVariablesAmount());
         replacePlaceholderInLore(info,"%variables-limit%",devPlot.getPlot().getLimits().getVariablesAmountLimit());

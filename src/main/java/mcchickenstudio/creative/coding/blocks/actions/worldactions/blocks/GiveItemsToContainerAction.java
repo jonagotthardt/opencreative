@@ -50,7 +50,7 @@ public class GiveItemsToContainerAction extends WorldAction {
         if (location.getBlock().getState() instanceof InventoryHolder container) {
             if (getPlot().getLimits().getLastModifiedBlocksAmount() > getPlot().getLimits().getModifyingBlocksLimit()) {
                 runnable.runTaskLater(Main.getPlugin(),20L);
-                getPlot().removeBukkitRunnable(runnable);
+                getPlot().getTerritory().removeBukkitRunnable(runnable);
                 return;
             }
             for (ItemStack item : items) {
@@ -59,7 +59,7 @@ public class GiveItemsToContainerAction extends WorldAction {
             getPlot().getLimits().setLastModifiedBlocksAmount(getPlot().getLimits().getLastModifiedBlocksAmount()+1);
         }
         runnable.runTaskLater(Main.getPlugin(),20L);
-        getPlot().removeBukkitRunnable(runnable);
+        getPlot().getTerritory().removeBukkitRunnable(runnable);
 
     }
 

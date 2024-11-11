@@ -18,12 +18,12 @@
 
 package mcchickenstudio.creative.coding.blocks.events.player.fighting;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class HungerChangeEvent extends CreativeEvent {
+public class HungerChangeEvent extends WorldEvent {
 
     private final FoodLevelChangeEvent event;
     private final ItemStack itemStack;

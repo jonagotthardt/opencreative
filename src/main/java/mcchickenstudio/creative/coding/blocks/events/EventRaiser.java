@@ -30,7 +30,7 @@ import mcchickenstudio.creative.coding.blocks.events.player.movement.*;
 import mcchickenstudio.creative.coding.blocks.events.player.movement.PlayerMoveEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.world.*;
 import mcchickenstudio.creative.coding.blocks.events.world.other.GamePlayEvent;
-import mcchickenstudio.creative.events.player.ChangedWorld;
+import mcchickenstudio.creative.listeners.player.ChangedWorld;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
 import org.bukkit.Bukkit;
@@ -77,7 +77,7 @@ public class EventRaiser {
         if (cantRaiseEvent(event.getPlayer())) {
             return;
         }
-        CreativeEvent creativeEvent = new ChunkLoadEvent(event.getPlayer(),event);
+        WorldEvent creativeEvent = new ChunkLoadEvent(event.getPlayer(),event);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
@@ -85,7 +85,7 @@ public class EventRaiser {
         if (cantRaiseEvent(event.getPlayer())) {
             return;
         }
-        CreativeEvent creativeEvent = new ChunkUnloadEvent(event.getPlayer(),event);
+        WorldEvent creativeEvent = new ChunkUnloadEvent(event.getPlayer(),event);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
@@ -93,7 +93,7 @@ public class EventRaiser {
         if (cantRaiseEvent(plot)) {
             return;
         }
-        CreativeEvent creativeEvent = new GamePlayEvent(plot);
+        WorldEvent creativeEvent = new GamePlayEvent(plot);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
@@ -101,7 +101,7 @@ public class EventRaiser {
         if (cantRaiseEvent(event.getEntity())) {
             return;
         }
-        CreativeEvent creativeEvent = new EntitySpawnEvent(event);
+        WorldEvent creativeEvent = new EntitySpawnEvent(event);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
@@ -239,7 +239,7 @@ public class EventRaiser {
         if (cantRaiseEvent(player)) {
             return;
         }
-        CreativeEvent creativeEvent = new ItemBreakEvent(player,bukkitEvent);
+        WorldEvent creativeEvent = new ItemBreakEvent(player,bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
@@ -247,7 +247,7 @@ public class EventRaiser {
         if (cantRaiseEvent(player)) {
             return;
         }
-        CreativeEvent creativeEvent = new ItemConsumeEvent(player,bukkitEvent);
+        WorldEvent creativeEvent = new ItemConsumeEvent(player,bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
@@ -454,7 +454,7 @@ public class EventRaiser {
         if (cantRaiseEvent(killer) || cantRaiseEvent(victim)) {
             return;
         }
-        CreativeEvent creativeEvent = new PlayerKilledPlayerEvent(killer,victim,bukkitEvent);
+        WorldEvent creativeEvent = new PlayerKilledPlayerEvent(killer,victim,bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
@@ -462,7 +462,7 @@ public class EventRaiser {
         if (cantRaiseEvent(damager) || cantRaiseEvent(victim)) {
             return;
         }
-        CreativeEvent creativeEvent = new PlayerDamagesPlayerEvent(damager,victim,bukkitEvent);
+        WorldEvent creativeEvent = new PlayerDamagesPlayerEvent(damager,victim,bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
@@ -487,7 +487,7 @@ public class EventRaiser {
         if (cantRaiseEvent(player)) {
             return;
         }
-        CreativeEvent creativeEvent = new PlayerPurchaseEvent(player,id,name,price,save);
+        WorldEvent creativeEvent = new PlayerPurchaseEvent(player,id,name,price,save);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
@@ -495,7 +495,7 @@ public class EventRaiser {
         if (cantRaiseEvent(player)) {
             return;
         }
-        CreativeEvent creativeEvent = new BedEnterEvent(player,bukkitEvent);
+        WorldEvent creativeEvent = new BedEnterEvent(player,bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
@@ -503,7 +503,7 @@ public class EventRaiser {
         if (cantRaiseEvent(player)) {
             return;
         }
-        CreativeEvent creativeEvent = new BedLeaveEvent(player,bukkitEvent);
+        WorldEvent creativeEvent = new BedLeaveEvent(player,bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 

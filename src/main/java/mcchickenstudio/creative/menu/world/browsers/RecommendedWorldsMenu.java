@@ -18,7 +18,7 @@
 
 package mcchickenstudio.creative.menu.world.browsers;
 
-import mcchickenstudio.creative.events.player.PlayerChat;
+import mcchickenstudio.creative.listeners.player.PlayerChat;
 import mcchickenstudio.creative.menu.AbstractMenu;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;

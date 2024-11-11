@@ -63,7 +63,7 @@ class Placeholder extends PlaceholderExpansion {
             }
             case "plot_reputation" -> {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return String.valueOf(plot.getReputation());
+                if (plot != null) return String.valueOf(plot.getInformation().getReputation());
             }
             case "is_in_plot" -> {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
@@ -87,7 +87,7 @@ class Placeholder extends PlaceholderExpansion {
             }
             case "plot_sharing" -> {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return String.valueOf(plot.getPlotSharing());
+                if (plot != null) return String.valueOf(plot.getSharing());
             }
             case "plot_mode" -> {
                 Plot plot = PlotManager.getInstance().getPlotByPlayer(player);

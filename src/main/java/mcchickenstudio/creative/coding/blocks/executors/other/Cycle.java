@@ -19,7 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.executors.other;
 
 import mcchickenstudio.creative.Main;
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
@@ -42,7 +42,7 @@ public class Cycle extends Executor {
     }
 
     @Override
-    public void run(CreativeEvent event) {
+    public void run(WorldEvent event) {
         if (!enabled) {
             enabled = true;
             Executor executor = this;
@@ -53,7 +53,7 @@ public class Cycle extends Executor {
                     executeActions(event);
                 }
             };
-            getPlot().addBukkitRunnable(runnable);
+            getPlot().getTerritory().addBukkitRunnable(runnable);
             runnable.runTaskTimer(Main.getPlugin(),0,repeatTime);
         }
     }

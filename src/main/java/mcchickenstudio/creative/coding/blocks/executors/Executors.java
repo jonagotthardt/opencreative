@@ -24,7 +24,7 @@ import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.configuration.ConfigurationSection;
@@ -55,10 +55,10 @@ public class Executors {
         this.plot = plot;
     }
 
-    public static void activate(CreativeEvent event) {
+    public static void activate(WorldEvent event) {
         Plot plot = event.getPlot();
-        if (plot == null || plot.getScript() == null || plot.getScript().getExecutors() == null) return;
-        Executors executors = plot.getScript().getExecutors();
+        if (plot == null || plot.getTerritory().getScript() == null || plot.getTerritory().getScript().getExecutors() == null) return;
+        Executors executors = plot.getTerritory().getScript().getExecutors();
         for (Executor executor : executors.executorsList) {
             if (executor.getExecutorType().getEventClass() == event.getClass()) {
                 activate(executor,event);
@@ -66,10 +66,10 @@ public class Executors {
         }
     }
 
-    public static void activate(Executor executor, CreativeEvent event) {
+    public static void activate(Executor executor, WorldEvent event) {
         Plot plot = executor.getPlot();
-        if (plot == null || plot.getScript() == null || plot.getScript().getExecutors() == null) return;
-        Executors executors = plot.getScript().getExecutors();
+        if (plot == null || plot.getTerritory().getScript() == null || plot.getTerritory().getScript().getExecutors() == null) return;
+        Executors executors = plot.getTerritory().getScript().getExecutors();
         if (executors.getLastExecutorCallsAmount(executor) > plot.getLimits().getCodeOperationsLimit()) {
             executors.clearExecutionsAmount(executor);
             stopPlotCode(plot);

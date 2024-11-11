@@ -38,7 +38,7 @@ public class LaunchCyclesAction extends ControlAction {
     protected void execute(Entity entity) {
         List<String> list = getArguments().getTextList("names",this);
         for (String name : list) {
-            for (Executor executor : getPlot().getScript().getExecutors().getExecutorsList()) {
+            for (Executor executor : getPlot().getTerritory().getScript().getExecutors().getExecutorsList()) {
                 if (executor instanceof Cycle cycle) {
                     if (cycle.getName().equalsIgnoreCase(name)) {
                         cycle.run(getEvent());

@@ -18,7 +18,7 @@
 
 package mcchickenstudio.creative.coding.blocks.executors.player.inventory;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.events.player.inventory.ItemBreakEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
@@ -28,7 +28,7 @@ import mcchickenstudio.creative.plots.Plot;
 public class ItemBreakExecutor extends PlayerExecutor {
 
     @Override
-    protected void setTempVars(CreativeEvent event) {
+    protected void setTempVars(WorldEvent event) {
         if (event instanceof ItemBreakEvent breakEvent) {
             setTempVar(EventValues.Variable.ITEM,breakEvent.getItem());
         }

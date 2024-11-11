@@ -18,7 +18,7 @@
 
 package mcchickenstudio.creative.coding.blocks.executors.player.interaction;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.events.player.interaction.BedEnterEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
@@ -33,7 +33,7 @@ public class BedEnterExecutor extends PlayerExecutor implements Cancellable {
     }
 
     @Override
-    protected void setTempVars(CreativeEvent event) {
+    protected void setTempVars(WorldEvent event) {
         if (event instanceof BedEnterEvent enterEvent) {
             setTempVar(EventValues.Variable.BED_ENTER_RESULT,enterEvent.getBedEnterResult().toString());
             setTempVar(EventValues.Variable.BED,enterEvent.getBed());

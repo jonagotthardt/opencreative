@@ -46,14 +46,14 @@ public class CreateScoreboardAction extends WorldAction {
         String name = getArguments().getValue("name","board",this);
         String displayName = getArguments().getValue("display-name","Scoreboard",this);
         try {
-            if (getPlot().getScoreboards().size() >= getPlot().getLimits().getScoreboardsLimit()) {
+            if (getPlot().getTerritory().getScoreboards().size() >= getPlot().getLimits().getScoreboardsLimit()) {
                 // FIXME: Replace with hard-coded message, sendMessageOnce()
                 sendCodingDebugLog(getPlot(),"Limit of " + getPlot().getLimits().getScoreboardsLimit() + " scoreboards reached.");
                 return;
             }
             Scoreboard scoreboard;
-            if (getPlot().getScoreboards().containsKey(name.toLowerCase())) {
-                scoreboard = getPlot().getScoreboards().get(name.toLowerCase());
+            if (getPlot().getTerritory().getScoreboards().containsKey(name.toLowerCase())) {
+                scoreboard = getPlot().getTerritory().getScoreboards().get(name.toLowerCase());
                 Objective objective = scoreboard.getObjective("score");
                 if (objective == null) {
                     objective = scoreboard.registerNewObjective("score",Criteria.DUMMY,displayName);
@@ -64,7 +64,7 @@ public class CreateScoreboardAction extends WorldAction {
                 Objective objective = scoreboard.registerNewObjective("score",Criteria.DUMMY,displayName);
                 objective.setDisplaySlot(DisplaySlot.SIDEBAR);
             }
-            getPlot().getScoreboards().put(name.toLowerCase(),scoreboard);
+            getPlot().getTerritory().getScoreboards().put(name.toLowerCase(),scoreboard);
         } catch (Exception ignored) {}
     }
 

@@ -16,29 +16,26 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mcchickenstudio.creative.events.player;
+package mcchickenstudio.creative.events.plot;
 
-import mcchickenstudio.creative.commands.CreativeChat;
+import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerQuitEvent;
 
+/**
+ * Called when players disconnects from plot.
+ * <p>
+ * Usually it happens, when player teleports to another world (not related to this plot) or quits the server.
+ */
+public class PlotDisconnectPlayerEvent extends PlotEvent {
 
-import static mcchickenstudio.creative.utils.PlayerUtils.*;
+    private final Player player;
 
-public class PlayerQuit implements Listener {
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        teleportToLobby(player);
-
-        PlayerChat.confirmation.remove(player);
-        CreativeChat.creativeChatOff.remove(player);
-
-        removeFromPermissionsMap(player);
+    public PlotDisconnectPlayerEvent(Plot plot, Player player) {
+        super(plot);
+        this.player = player;
     }
 
-
+    public Player getPlayer() {
+        return player;
+    }
 }

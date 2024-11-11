@@ -18,10 +18,10 @@
 
 package mcchickenstudio.creative.coding.blocks.events.player.movement;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class StartFlyingEvent extends CreativeEvent {
+public class StartFlyingEvent extends WorldEvent {
 
     public StartFlyingEvent(Player player) {
         super(player);

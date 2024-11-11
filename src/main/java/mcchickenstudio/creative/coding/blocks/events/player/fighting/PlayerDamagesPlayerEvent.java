@@ -18,11 +18,11 @@
 
 package mcchickenstudio.creative.coding.blocks.events.player.fighting;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-public class PlayerDamagesPlayerEvent extends CreativeEvent {
+public class PlayerDamagesPlayerEvent extends WorldEvent {
 
     private final EntityDamageByEntityEvent event;
     private final Player damager;

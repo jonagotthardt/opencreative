@@ -18,12 +18,12 @@
 
 package mcchickenstudio.creative.coding.blocks.events.player.interaction;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-public class PlaceBlockEvent extends CreativeEvent {
+public class PlaceBlockEvent extends WorldEvent {
 
     private final BlockPlaceEvent event;
     private final Block placedBlock;

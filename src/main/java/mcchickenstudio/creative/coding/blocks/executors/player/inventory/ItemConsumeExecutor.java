@@ -18,7 +18,7 @@
 
 package mcchickenstudio.creative.coding.blocks.executors.player.inventory;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.events.player.inventory.ItemConsumeEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
@@ -29,7 +29,7 @@ import org.bukkit.event.Cancellable;
 public class ItemConsumeExecutor extends PlayerExecutor implements Cancellable {
 
     @Override
-    protected void setTempVars(CreativeEvent event) {
+    protected void setTempVars(WorldEvent event) {
         if (event instanceof ItemConsumeEvent consumeEvent) {
             setTempVar(EventValues.Variable.ITEM,consumeEvent.getItem());
             setTempVar(EventValues.Variable.NEW_ITEM,consumeEvent.getNewItem());

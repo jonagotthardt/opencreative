@@ -71,7 +71,7 @@ public class OwnWorldsMenu extends LegacyMenu {
             for (Plot plot: allPages.get(pageToOpen-1)) {
                 if (plot.getOwner().equalsIgnoreCase(player.getName())) {
                     Material material = plot.getInformation().getMaterial();
-                    if (!(plot.getPlotSharing() == Plot.Sharing.PUBLIC)) material = Material.BARRIER;
+                    if (!(plot.getSharing() == Plot.Sharing.PUBLIC)) material = Material.BARRIER;
                     ItemStack item = new ItemStack(material);
                     ItemMeta meta = item.getItemMeta();
                     meta.displayName(Component.text(plot.getInformation().getDisplayName()));

@@ -20,6 +20,7 @@ package mcchickenstudio.creative.commands.world;
 
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
+import mcchickenstudio.creative.events.plot.PlotAdvertisementEvent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -31,6 +32,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.NotNull;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.CooldownUtils;
@@ -96,10 +98,13 @@ public class CommandAd implements CommandExecutor, TabCompleter {
                     player.sendMessage(getLocaleMessage("advertisement.cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND))));
                     return true;
                 }
-                if (!(plot.getPlotSharing() == Plot.Sharing.PUBLIC)) {
+                if (!(plot.getSharing() == Plot.Sharing.PUBLIC)) {
                     player.sendMessage(getLocaleMessage("advertisement.closed-world"));
                     return true;
                 }
+                PlotAdvertisementEvent event = new PlotAdvertisementEvent(plot,player);
+                event.callEvent();
+                if (event.isCancelled()) return true;
                 setCooldown(player,Main.getPlugin().getConfig().getInt("cooldowns.advertisement"), CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND);
                 EventRaiser.raiseAdvertisedEvent(player);
                 for (Player p : Bukkit.getOnlinePlayers()) {

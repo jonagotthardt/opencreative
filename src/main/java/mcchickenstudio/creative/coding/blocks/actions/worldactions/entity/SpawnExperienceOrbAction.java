@@ -37,7 +37,7 @@ public class SpawnExperienceOrbAction extends WorldAction {
     protected void execute(Entity entity) {
         int amount = getArguments().getValue("amount",1,this);
         for (Location location : getArguments().getLocationList("locations",this)) {
-            Entity spawnedEntity = getPlot().getWorld().spawnEntity(location,EntityType.EXPERIENCE_ORB);
+            Entity spawnedEntity = getPlot().getTerritory().getWorld().spawnEntity(location,EntityType.EXPERIENCE_ORB);
             if (spawnedEntity instanceof ExperienceOrb orb) {
                 orb.setExperience(amount);
             }

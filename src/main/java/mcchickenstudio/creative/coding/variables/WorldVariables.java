@@ -222,7 +222,7 @@ public class WorldVariables {
                 z = (Double) locationMap.get("z");
                 yaw = ((Double) locationMap.get("yaw")).floatValue();
                 pitch = ((Double) locationMap.get("pitch")).floatValue();
-                return new Location(plot.getWorld(),x,y,z,yaw,pitch);
+                return new Location(plot.getTerritory().getWorld(),x,y,z,yaw,pitch);
             } else if (type == ValueType.LIST) {
                 List<Object> newList = new ArrayList<>();
                 List<?> oldList = (List<?>) value;

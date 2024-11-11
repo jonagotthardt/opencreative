@@ -291,7 +291,7 @@ public class FileUtils {
                 Main.getPlugin().getLogger().info("No worlds have been detected.");
             }
         } catch (Exception error) {
-            sendCriticalErrorMessage("An error has occurred while loading worlds... " + error.getMessage());
+            sendCriticalErrorMessage("An error has occurred while loading worlds...",error);
         }
     }
 

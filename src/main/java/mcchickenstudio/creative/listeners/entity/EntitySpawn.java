@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mcchickenstudio.creative.events.entity;
+package mcchickenstudio.creative.listeners.entity;
 
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.plots.PlotFlags;
@@ -51,7 +51,7 @@ public class EntitySpawn implements Listener {
         Plot plot = PlotManager.getInstance().getPlotByWorld(world);
         if (plot != null) {
             int limit = plot.getLimits().getEntitiesLimit();
-            int count = plot.getWorld().getEntityCount();
+            int count = plot.getTerritory().getWorld().getEntityCount();
             if (world.getName().contains("dev")) {
                 if (!(event.getEntity() instanceof Item)) {
                     event.setCancelled(true);
@@ -125,7 +125,7 @@ public class EntitySpawn implements Listener {
                     event.setCancelled(true);
                 }
             }
-            if (plot.getEnvironment() == World.Environment.THE_END) {
+            if (plot.getTerritory().getEnvironment() == World.Environment.THE_END) {
                 if (event.getEntity() instanceof EnderDragon dragon) {
                     if (System.currentTimeMillis()-plot.getLastActivityTime() < 10000) {
                         dragon.setHealth(0);

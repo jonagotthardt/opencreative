@@ -16,24 +16,38 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mcchickenstudio.creative.events.player;
+package mcchickenstudio.creative.events.plot;
 
-import mcchickenstudio.creative.plots.PlotManager;
+import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import mcchickenstudio.creative.plots.DevPlot;
+import org.bukkit.event.Cancellable;
 
-public class PlayerBucket implements Listener {
+/**
+ * Called when player tries to advertise plot.
+ * <p>
+ * If a Plot Advertisement event is cancelled, the advertisement will not display for all players.
+ */
+public class PlotAdvertisementEvent extends PlotEvent implements Cancellable {
 
-    @EventHandler
-    public void onBucket(PlayerBucketEmptyEvent event) {
-        Player player = event.getPlayer();
-        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-        if (devPlot != null) {
-            event.setCancelled(true);
-        }
+    private final Player player;
+    private boolean cancel;
+
+    public PlotAdvertisementEvent(Plot plot, Player player) {
+        super(plot);
+        this.player = player;
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancel;
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        this.cancel = cancel;
+    }
 }

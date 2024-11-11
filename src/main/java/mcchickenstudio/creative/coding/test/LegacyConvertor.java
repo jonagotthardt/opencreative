@@ -22,7 +22,6 @@ import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.Plot;
-import mcchickenstudio.creative.plots.PlotManager;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -72,7 +71,7 @@ public class LegacyConvertor {
                 }
                 if (!convertedDevPlot) {
                     if (currentPlot.getDevPlot().world == null) {
-                        PlotManager.getInstance().loadPlot(currentPlot);
+                        currentPlot.getTerritory().load();
                         currentPlot.getDevPlot().loadDevPlotWorld();
                         return;
                     }
@@ -119,7 +118,7 @@ public class LegacyConvertor {
                 convertCodingBlock(codingBlock,location,firstSignLine,secondSignLine,thirdSignLine,fourthSignLine);
             }
         }
-        PlotManager.getInstance().unloadPlot(devPlot.getPlot());
+        devPlot.getPlot().getTerritory().unload();
     }
 
     public void convertScript(File file) {

@@ -19,7 +19,7 @@
 package mcchickenstudio.creative.commands.world.modes;
 
 import mcchickenstudio.creative.Main;
-import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
+import mcchickenstudio.creative.events.plot.PlotModeChangeEvent;
 import mcchickenstudio.creative.plots.PlotManager;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -34,7 +34,7 @@ import mcchickenstudio.creative.utils.CooldownUtils;
 import mcchickenstudio.creative.plots.Plot;
 import org.jetbrains.annotations.NotNull;
 
-import static mcchickenstudio.creative.events.player.ChangedWorld.removePlayerWithLocation;
+import static mcchickenstudio.creative.listeners.player.ChangedWorld.removePlayerWithLocation;
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 
 
@@ -73,10 +73,15 @@ public class CommandBuild implements CommandExecutor {
                                 return true;
                             }
                         }
+                        PlotModeChangeEvent event = new PlotModeChangeEvent(plot,plot.getMode(), Plot.Mode.BUILD,player);
+                        event.callEvent();
+                        if (event.isCancelled()) {
+                            return true;
+                        }
                         plot.setMode(Plot.Mode.BUILD);
                         if (isEntityInDevPlot(player)) {
                             clearPlayer(player);
-                            player.teleport(plot.getWorld().getSpawnLocation());
+                            player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
                             if (plot.isOwner(sender.getName())) {
                                 player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
                             }
@@ -89,7 +94,7 @@ public class CommandBuild implements CommandExecutor {
                 } else {
                     clearPlayer(player);
                     player.sendTitle(getLocaleMessage("world.build-mode.title"),getLocaleMessage("world.build-mode.subtitle"));
-                    player.teleport(plot.getWorld().getSpawnLocation());
+                    player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
                     player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT,100,1.7f);
                     if (plot.getWorldPlayers().canBuild(player)) {
                         Player plotOwner = Bukkit.getPlayer(plot.getOwner());

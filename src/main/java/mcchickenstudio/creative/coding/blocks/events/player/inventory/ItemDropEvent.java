@@ -18,12 +18,12 @@
 
 package mcchickenstudio.creative.coding.blocks.events.player.inventory;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemDropEvent extends CreativeEvent {
+public class ItemDropEvent extends WorldEvent {
 
     private final PlayerDropItemEvent event;
     private final ItemStack item;

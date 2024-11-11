@@ -18,10 +18,10 @@
 
 package mcchickenstudio.creative.coding.blocks.events.player.interaction;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class RightClickEvent extends CreativeEvent {
+public class RightClickEvent extends WorldEvent {
 
     public RightClickEvent(Player player) {
         super(player);

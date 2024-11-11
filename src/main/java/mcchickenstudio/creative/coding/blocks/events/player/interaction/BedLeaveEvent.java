@@ -18,12 +18,12 @@
 
 package mcchickenstudio.creative.coding.blocks.events.player.interaction;
 
-import mcchickenstudio.creative.coding.blocks.events.CreativeEvent;
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 
-public class BedLeaveEvent extends CreativeEvent {
+public class BedLeaveEvent extends WorldEvent {
 
     private final Block bed;
     private final PlayerBedLeaveEvent event;

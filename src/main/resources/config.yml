@@ -1,12 +1,80 @@
 #
-# OpenCreative+ 5.0 - Developer Preview
+# OpenCreative+ 5.0 - Things will be different.
+# (C) McChicken Studio 2017-2024.
 #
-#  Things will be different
-#  Made by McChicken Studio 2022-2024.
+
 #
-# Config can be changed in next updates,
-# please always check update notes before
-# updating a plugin to next version.
+# Pre-release version!
+#
+#   Config can be changed in next updates,
+#   please always check update notes before
+#   updating a plugin to next version.
+#
+
+#
+# This plugin allows players to create their worlds,
+# where they can build, play and even make a code.
+#
+# Commands:
+#
+#  /spawn - Teleports to spawn world.
+#  /locate [Player] - Displays world info, where player currently plays.
+#  /join [ID] - Connects player to world with specified ID.
+#  /games - Opens worlds browser
+#  /cc    - Sends message to creative (global) chat for all players.
+#    /cc off - Turns off creative chat for player.
+#    /cc on  - Turns on creative chat for player.
+#
+#  /world - Opens world's settings or displays world's info
+#    /world info - Displays world's info.
+#    /world delete - Deletes world.
+#    /world deletemobs - Removes mobs.
+#  /ad - Advertises world in chat for all players.
+#  /build - Changes world's mode to Build, disables PvP,
+#           and gives Creative mode to world owner and builders.
+#  /play  - Changes world's mode to Play, enables PvP out of spawn area,
+#           and executes code made in developer mode.
+#  /dev   - Connects player to developer world, where he can create
+#           a code for world, that will be executed in Play mode.
+#  /environment - Opens environment settings. (for world owners, world developers)
+#    /env vars list - Displays list of variables.
+#    /env vars size - Displays total amount of variables.
+#    /env debug - Debug mode of code.
+#    /env barrel - Toggles chests or barrels in dev world.
+#    /env event [Material] - Changes material for event section in dev world.
+#    /env action [Material] - Changes material for action section in dev world.
+#    /env floor [Material] - Changes material for floor in dev world.
+#  /like - Changes world's reputation by +1
+#  /dislike - Changes world's reputation by -1
+#
+#  /give [Player] [Material] [Amount] - Gives item.               (for world owners, world developers or builders)
+#  /tp [Player] (player) - Teleports to player.                   (for world owners, world developers or builders)
+#  /gamemode [Gamemode] (player) - Changes player's gamemode.     (for world owners, world developers or builders)
+#  /playsound [Player] [Sound] [Volume] [Pitch] - Plays a sound.  (for world owners, world developers or builders)
+#  /time set [Time] - Changes world's time.                       (for world owners, world developers or builders)
+#  /weather [Sun/Storm] - Changes world's weather.                (for world owners, world developers or builders)
+#  /stopsound [Player] - Stops sounds.                            (for world owners, world developers or builders)
+#
+#  /creative - Opens menu of plugin info.
+#    /creative reload - Reloads config.
+#    /creative list - Displays list of loaded worlds.
+#    /creative deprecated - Displays list of old worlds, which have owner,
+#                           that last joined server 1 month ago.
+#    /creative corrupted - Displays list of worlds, that lost settings.yml.
+#    /creative load [ID] - Loads specified world.
+#    /creative unload [ID] - Unloads specified world.
+#    /creative maintenance - Maintenance mode settings (start, end).
+#    /creative creative-chat - Creative Chat settings (on, off)
+#
+
+#
+# Powered by Paper API.
+# Licensed under GNU GPL v3.
+# Additional features by: Vault, ProtocolLib, PlaceholderAPI.
+#
+# Hangar: https://hangar.papermc.io/mcchickenstudio/OpenCreative
+# Source code: https://gitlab.com/eagles-creative/opencreative
+# Discord: https://discord.gg/sSFCXUeq63
 #
 
 version: 5.0
@@ -134,4 +202,4 @@ maintenance: false
 # information about plugin's work and state.
 # Not useful, if you're not developing OC+.
 #
-debug: true
+debug: false
