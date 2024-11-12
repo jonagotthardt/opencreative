@@ -6,8 +6,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>mcchickenstudio</groupId>
-    <artifactId>opencreative-pre-release-build-${CI_PIPELINE_IID}</artifactId>
-    <version>5.0</version>
+    <artifactId>opencreative</artifactId>
+    <version>5.0-pre-release-${CI_PIPELINE_IID</version>
     <packaging>jar</packaging>
     <name>opencreative</name>
     <description>Minecraft plugin, that allows players to create their worlds. McChicken Studio 2024</description>
