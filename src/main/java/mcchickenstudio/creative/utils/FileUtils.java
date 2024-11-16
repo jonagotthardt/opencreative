@@ -317,9 +317,9 @@ public class FileUtils {
     public static File getDevPlotFolder(DevPlot devPlot) {
         try {
             if (devPlot.isLoaded()) {
-                return new File(Bukkit.getServer().getWorldContainer() + File.separator + devPlot.worldName + File.separator);
+                return new File(Bukkit.getServer().getWorldContainer() + File.separator + devPlot.getWorldName() + File.separator);
             } else {
-                return new File(Bukkit.getServer().getWorldContainer() + File.separator + "unloadedWorlds" + File.separator + devPlot.worldName + File.separator);
+                return new File(Bukkit.getServer().getWorldContainer() + File.separator + "unloadedWorlds" + File.separator + devPlot.getWorldName() + File.separator);
             }
         } catch (NullPointerException error) {
             ErrorUtils.sendPlotErrorMessage(devPlot.getPlot(),"Папка плота разработчика не обнаружена. " + error.getMessage());
@@ -691,6 +691,25 @@ public class FileUtils {
     }
 
     /**
+     Set plot's settings.yml parameter to boolean value.
+     **/
+    public static void setPlotConfigParameter(Plot plot, String parameterPath, boolean parameterValue) {
+        FileConfiguration plotConfig = getPlotConfig(plot);
+        File plotConfigFile = getPlotConfigFile(plot);
+        if (plotConfig != null && plotConfigFile != null) {
+            plotConfig.createSection(parameterPath);
+            plotConfig.set(parameterPath,parameterValue);
+            try {
+                plotConfig.save(plotConfigFile);
+            } catch (IOException error) {
+                sendCriticalErrorMessage("При сохранении конфига плота в файл произошла ошибка " + error.getMessage());
+            }
+        } else {
+            ErrorUtils.sendPlotErrorMessage(plot,"Не удалось получить файл конфига плота либо сам конфиг");
+        }
+    }
+
+    /**
      Set plot's settings.yml parameter to object value.
      **/
     public static void setPlotConfigParameter(Plot plot, String parameterPath, Object parameterValue) {
@@ -825,4 +844,19 @@ public class FileUtils {
         }
     }
 
+    public static long getFolderSize(File file) {
+        try {
+            return org.apache.commons.io.FileUtils.sizeOfDirectory(file);
+        } catch (Exception exception) {
+            return 0;
+        }
+    }
+
+    public static long getFileSize(File file) {
+        try {
+            return org.apache.commons.io.FileUtils.sizeOf(file);
+        } catch (Exception exception) {
+            return 0;
+        }
+    }
 }

@@ -24,6 +24,7 @@ import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.coding.variables.WorldVariables;
 import mcchickenstudio.creative.events.plot.PlotConnectPlayerEvent;
 import mcchickenstudio.creative.utils.*;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
@@ -39,6 +40,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import static mcchickenstudio.creative.utils.BlockUtils.isOutOfBorders;
 import static mcchickenstudio.creative.utils.ErrorUtils.*;
 import static mcchickenstudio.creative.utils.FileUtils.*;
 import static mcchickenstudio.creative.utils.ItemUtils.*;
@@ -72,6 +74,7 @@ public class Plot {
     private final PlotTerritory territory;
     private final PlotPlayers worldPlayers;
     private final WorldVariables variables;
+    private final PlotExperiments experiments;
 
     private Mode mode;
     private Sharing sharing;
@@ -97,6 +100,7 @@ public class Plot {
 
         flags = new PlotFlags(this);
         variables = new WorldVariables(this);
+        experiments = new PlotExperiments(this);
 
         PlotManager.getInstance().registerPlot(this);
 
@@ -150,6 +154,9 @@ public class Plot {
                         player.setGameMode(GameMode.CREATIVE);
                         giveBuildPermissions(player);
                         player.sendMessage(getLocaleMessage("world.build-mode.message.owner"));
+                        if (!territory.isAutoSave()) {
+                            player.sendMessage(getLocaleMessage("settings.autosave.warning"));
+                        }
                     } else {
                         player.sendMessage(getLocaleMessage("world.build-mode.message.players"));
                     }
@@ -243,7 +250,6 @@ public class Plot {
         PLAYING() {
             public void onPlayerConnect(Player player, Plot plot) {
                 player.setGameMode(plot.getOwner().equalsIgnoreCase(player.getName()) ? GameMode.CREATIVE : GameMode.ADVENTURE);
-                plot.territory.getScript().loadCode();
             }
         }, BUILD() {
             public void onPlayerConnect(Player player, Plot plot) {
@@ -383,6 +389,17 @@ public class Plot {
         return playerList;
     }
 
+    public Audience getAudience() {
+        Audience audience = Audience.empty();
+        if (isLoaded()) {
+            audience = Audience.audience(territory.getWorld());
+            if (devPlot.isLoaded()) {
+                audience = Audience.audience(territory.getWorld(),devPlot.world);
+            }
+        }
+        return audience;
+    }
+
     public String getOwner() {
         return owner;
     }
@@ -394,18 +411,18 @@ public class Plot {
     public void connectPlayer(Player player) {
         if (getSharing() != Sharing.PUBLIC) {
             if (!isOwner(player)) {
-                if (!(player.hasPermission("opencreative.private.bypass"))) {
+                if (!(player.hasPermission("opencreative.world.private.bypass"))) {
                     player.sendMessage(getLocaleMessage("private-plot", player));
                     return;
                 }
             }
         }
         if (!isOwner(player.getName())) {
-            if (getSharing() != Sharing.PUBLIC && !player.hasPermission("opencreative.private.bypass")) {
+            if (getSharing() != Sharing.PUBLIC && !player.hasPermission("opencreative.world.private.bypass")) {
                 player.sendMessage(getLocaleMessage("private-plot", player));
                 return;
             }
-            if (worldPlayers.isBanned(player.getName())) {
+            if (worldPlayers.isBanned(player.getName()) && !player.hasPermission("opencreative.world.banned.bypass")) {
                 player.sendMessage(getLocaleMessage("blacklisted-in-plot", player));
                 return;
             }
@@ -423,7 +440,7 @@ public class Plot {
         }
         clearPlayer(player);
         territory.getWorld().getSpawnLocation().getChunk().load(true);
-        player.teleport(this.territory.getWorld().getSpawnLocation());
+        player.teleport(territory.getWorld().getSpawnLocation());
         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE,100,2);
         mode.onPlayerConnect(player,this);
         getWorldPlayers().getPlotPlayer(player).load();
@@ -443,7 +460,11 @@ public class Plot {
                 new CodingBlockParser().parseCode(this.getDevPlot());
             }
         }
+        if (!territory.isAutoSave() && worldPlayers.canBuild(player)) {
+            player.sendMessage(getLocaleMessage("settings.autosave.warning"));
+        }
         if (!wasLoaded) {
+            territory.getScript().loadCode();
             EventRaiser.raiseWorldPlayEvent(this);
         }
         EventRaiser.raiseJoinEvent(player);
@@ -495,10 +516,10 @@ public class Plot {
 
     public void connectToDevPlot(Player player, double x, double y, double z) {
         connectToDevPlot(player);
-        if (x > 0 && y > 0 && z > 0 && x < 99 && y < 99 && z < 99) {
+        if (x > 0 && y > 0 && z > 0 && y < 30 && !isOutOfBorders(new Location(devPlot.world,x+1,y,z+2))) {
             Location location = new Location(this.getDevPlot().world, x+1,y,z+2,180,5);
             player.teleport(location);
-            spawnGlowingBlock(player,new Location(this.getDevPlot().world,x,y,z));
+            if (y == 1) spawnGlowingBlock(player,new Location(this.getDevPlot().world,x,y,z));
         }
     }
 
@@ -529,4 +550,7 @@ public class Plot {
         return limits;
     }
 
+    public PlotExperiments getExperiments() {
+        return experiments;
+    }
 }

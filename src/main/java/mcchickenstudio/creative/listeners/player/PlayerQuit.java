@@ -19,6 +19,8 @@
 package mcchickenstudio.creative.listeners.player;
 
 import mcchickenstudio.creative.commands.CreativeChat;
+import mcchickenstudio.creative.plots.Plot;
+import mcchickenstudio.creative.plots.PlotManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,12 +34,20 @@ public class PlayerQuit implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+
+        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+        if (plot != null && plot.getOnline() == 1) {
+            plot.getTerritory().unload();
+        }
         teleportToLobby(player);
 
         PlayerChat.confirmation.remove(player);
         CreativeChat.creativeChatOff.remove(player);
 
         removeFromPermissionsMap(player);
+
+
+
     }
 
 

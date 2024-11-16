@@ -20,6 +20,7 @@ package mcchickenstudio.creative.utils;
 
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
+import mcchickenstudio.creative.plots.DevPlatform;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Location;
@@ -97,13 +98,13 @@ public class BlockUtils {
         }.runTaskLater(Main.getPlugin(),5L);
     }
 
-    public static int getClosingBracketX(Block conditionBlock) {
+    public static int getClosingBracketX(DevPlatform platform, Block conditionBlock) {
         Location location = conditionBlock.getLocation();
         World world = location.getWorld();
 
         List<String> conditions = new ArrayList<>();
         try {
-            for (byte x = (byte) (location.getX()+2); x < 96; x= (byte) (x+2)) {
+            for (byte x = (byte) (location.getX()+2); x < platform.getEndX()-4; x= (byte) (x+2)) {
                 Block block = world.getBlockAt(new Location(world,x,location.getBlockY(),location.getBlockZ()));
                 ActionCategory category = ActionCategory.getByMaterial(block.getType());
                 if (block.getType() == Material.AIR) {

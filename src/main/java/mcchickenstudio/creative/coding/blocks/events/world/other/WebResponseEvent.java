@@ -16,24 +16,33 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mcchickenstudio.creative.events.plot;
+package mcchickenstudio.creative.coding.blocks.events.world.other;
 
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import mcchickenstudio.creative.plots.Plot;
-import org.bukkit.entity.Player;
 
-/**
- * Called when player connects to plot.
- */
-public class PlotConnectPlayerEvent extends PlotEvent {
+public class WebResponseEvent extends WorldEvent {
 
-    private final Player player;
+    private final String url;
+    private final int code;
+    private final String response;
 
-    public PlotConnectPlayerEvent(Plot plot, Player player) {
+    public WebResponseEvent(Plot plot, String url, int code, String response) {
         super(plot);
-        this.player = player;
+        this.url = url;
+        this.code = code;
+        this.response = response;
     }
 
-    public Player getPlayer() {
-        return player;
+    public String getUrl() {
+        return url;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getResponse() {
+        return response;
     }
 }

@@ -64,7 +64,7 @@ public class WorldSettingsMenu extends AbstractMenu {
     private final ParameterButton time;
     private final ItemStack removeMobs = createItem(Material.BRUSH,1,"menus.world-settings.items.remove-mobs");
     private final ItemStack environment = createItem(Material.AMETHYST_CLUSTER,1,"menus.world-settings.items.environment");
-
+    private final ParameterButton autoSave;
 
     private final ParameterButton access;
     private ItemStack worldIcon;
@@ -82,6 +82,8 @@ public class WorldSettingsMenu extends AbstractMenu {
         boolean isEvening = currentTime >= 12500 && currentTime < 15000;
         int timeValue = (isTimeChanging != null && isTimeChanging ? 4 : isNight ? 3 : isEvening ? 2 : 1);
         time = new ParameterButton(timeValue, List.of(1,2,3,4),"time","menus.world-settings","menus.world-settings.items.time",Material.CLOCK);
+        autoSave = new ParameterButton(plot.getTerritory().getWorld().isAutoSave(), List.of(true,false),"autosave","menus.world-settings","menus.world-settings.items.autosave",List.of(Material.CHEST_MINECART,Material.TNT_MINECART));
+
     }
 
     @Override
@@ -97,6 +99,7 @@ public class WorldSettingsMenu extends AbstractMenu {
         setItem((byte) 16, time.getItem());
         setItem((byte) 24, removeMobs);
         setItem((byte) 25, environment);
+        setItem((byte) 33, autoSave.getItem());
 
         setItem((byte) 13, buildMode);
         setItem((byte) 22, playMode);
@@ -243,6 +246,17 @@ public class WorldSettingsMenu extends AbstractMenu {
                 plot.getTerritory().getWorld().setTime(1000L);
                 plot.getTerritory().getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
                 plot.setFlagValue(PlotFlags.PlotFlag.DAY_CYCLE, (byte) 4);
+            }
+        } else if (itemEquals(currentItem,autoSave.getItem())) {
+            autoSave.next();
+            setItem((byte) event.getRawSlot(),autoSave.getItem());
+            updateSlot((byte) event.getRawSlot());
+            if (autoSave.getCurrentValue().equals(true)) {
+                plot.getTerritory().setAutoSave(true);
+                player.playSound(player.getLocation(),Sound.BLOCK_BEACON_ACTIVATE,100,0.7f);
+            } else if (autoSave.getCurrentValue().equals(false)) {
+                plot.getTerritory().setAutoSave(false);
+                player.playSound(player.getLocation(),Sound.BLOCK_RESPAWN_ANCHOR_DEPLETE,100,0.3f);
             }
         } else if (itemEquals(currentItem,worldIcon)) {
             if (event.getCursor().isEmpty()) {

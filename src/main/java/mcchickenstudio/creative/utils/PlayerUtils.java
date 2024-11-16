@@ -57,6 +57,7 @@ public class PlayerUtils {
         WORLD_REDSTONE_OPERATIONS_LIMIT("world.limits.redstone-changes"),
         WORLD_OPENING_INVENTORIES_LIMIT("world.limits.opening-inventories"),
         WORLD_VARIABLES_LIMIT("world.limits.variables-amount"),
+        WORLD_CODING_PLATFORMS_LIMIT("world.limits.coding-platforms"),
         WORLD_MODIFYING_BLOCKS_LIMIT("world.limits.modifying-blocks"),
         PLAYER_WORLDS_AMOUNT_LIMIT("creating-world.limit");
 

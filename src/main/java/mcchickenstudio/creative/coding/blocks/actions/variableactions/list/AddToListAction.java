@@ -23,6 +23,7 @@ import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.variableactions.VariableAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import mcchickenstudio.creative.coding.exceptions.CollectionWithCollectionException;
 import mcchickenstudio.creative.coding.variables.VariableLink;
 import org.bukkit.entity.Entity;
 
@@ -43,7 +44,7 @@ public class AddToListAction extends VariableAction {
         List<Object> elements = getArguments().getList("elements",this);
         for (Object element : elements) {
             if (element instanceof Collection<?> || element instanceof Map<?,?>) {
-                throw new RuntimeException("Some element is list or map, instead of Add To List action use Merge Lists action.");
+                throw new CollectionWithCollectionException(list.getClass(),element.getClass());
             }
             list.add(element);
         }

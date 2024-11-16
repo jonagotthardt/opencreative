@@ -29,9 +29,10 @@ public class DevPlotChunkGenerator extends ChunkGenerator {
 
     @Override
     public @NotNull ChunkData generateChunkData(@NotNull World world, @NotNull Random random, int x, int z, @NotNull BiomeGrid biome) {
-        for (int y = -64; y <= 320; y++) {
+        /*for (int y = -64; y <= 320; y++) {
             biome.setBiome(x,y,z, Biome.ICE_SPIKES);
-        }
+        }*/
         return createChunkData(world);
     }
+
 }

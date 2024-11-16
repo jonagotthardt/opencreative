@@ -16,24 +16,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mcchickenstudio.creative.events.plot;
+package mcchickenstudio.creative.coding.exceptions;
 
-import mcchickenstudio.creative.plots.Plot;
-import org.bukkit.entity.Player;
-
-/**
- * Called when player connects to plot.
- */
-public class PlotConnectPlayerEvent extends PlotEvent {
-
-    private final Player player;
-
-    public PlotConnectPlayerEvent(Plot plot, Player player) {
-        super(plot);
-        this.player = player;
-    }
-
-    public Player getPlayer() {
-        return player;
+public class CollectionWithCollectionException extends RuntimeException {
+    public CollectionWithCollectionException(Class<?> first, Class<?> second) {
+        super("Adding collection (" + first.getSimpleName() + ") to collection (" + second.getSimpleName() + ") is not supported." );
     }
 }

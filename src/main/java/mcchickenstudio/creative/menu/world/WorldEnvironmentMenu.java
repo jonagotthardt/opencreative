@@ -22,6 +22,7 @@ import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.menu.AbstractMenu;
 import mcchickenstudio.creative.menu.buttons.ParameterButton;
 import mcchickenstudio.creative.menu.world.settings.WorldSettingsMenu;
+import mcchickenstudio.creative.plots.DevPlatform;
 import mcchickenstudio.creative.plots.DevPlot;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -34,11 +35,13 @@ import java.util.List;
 
 import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.WorldUtils.isDevPlot;
 
 public class WorldEnvironmentMenu extends AbstractMenu {
 
     private final Player player;
     private final DevPlot devPlot;
+    private final DevPlatform devPlatform;
 
     private final ItemStack back = createItem(Material.ARROW,1,"menus.developer.environment.items.back");
 
@@ -61,6 +64,7 @@ public class WorldEnvironmentMenu extends AbstractMenu {
         super((byte) 6, getLocaleMessage("menus.developer.environment.title"));
         this.player = player;
         this.devPlot = devPlot;
+        this.devPlatform = isDevPlot(player.getWorld()) ? devPlot.getPlatformInLocation(player.getLocation()) : null;
         debug = new ParameterButton(devPlot.getPlot().isDebug() ? "all" : "disabled", List.of("disabled","all"),"debug","menus.developer.environment","menus.developer.environment.items.debug",List.of(Material.PUFFERFISH_BUCKET,Material.PUFFERFISH));
         containers = new ParameterButton(devPlot.getContainerMaterial() == Material.CHEST ? "chest" : "barrel", List.of("chest","barrel"),"containers","menus.developer.environment","menus.developer.environment.items.containers",List.of(Material.CHEST,Material.BARREL));
         info = createItem(Material.AMETHYST_CLUSTER,1,"menus.developer.environment.items.info");
@@ -79,9 +83,9 @@ public class WorldEnvironmentMenu extends AbstractMenu {
         boolean isNight = currentTime >= 15000L && currentTime <= 23000L;
         boolean isEvening = currentTime >= 12500L && currentTime < 15000L;
         time = new ParameterButton(isMorning ? "morning" : isNight ? "night" : isEvening ? "evening" : "day", List.of("morning","day","evening","night"),"time","menus.developer.environment","menus.developer.environment.items.time",Material.CLOCK);
-        floorMaterial = createItem(devPlot.getFloorBlockMaterial(),1,"menus.developer.environment.items.floor-material");
-        eventMaterial = createItem(devPlot.getEventBlockMaterial(),1,"menus.developer.environment.items.event-material");
-        actionMaterial = createItem(devPlot.getActionBlockMaterial(),1,"menus.developer.environment.items.action-material");
+        floorMaterial = createItem(devPlatform != null ? devPlatform.getFloorMaterial() : DevPlot.getDefaultFloorMaterial(),1,"menus.developer.environment.items.floor-material");
+        eventMaterial = createItem(devPlatform != null ? devPlatform.getEventMaterial() : DevPlot.getDefaultEventMaterial(),1,"menus.developer.environment.items.event-material");
+        actionMaterial = createItem(devPlatform != null ? devPlatform.getActionMaterial() : DevPlot.getDefaultActionMaterial(),1,"menus.developer.environment.items.action-material");
     }
 
     @Override
@@ -152,11 +156,11 @@ public class WorldEnvironmentMenu extends AbstractMenu {
                 new WorldSettingsMenu(devPlot.getPlot(),player).open(player);
             }
         } else if (itemEquals(currentItem,eventMaterial)) {
-            new WorldEnvironmentColorMenu(player,devPlot,"event").open(player);
+            new WorldEnvironmentColorMenu(player,devPlot,devPlatform,"event").open(player);
         } else if (itemEquals(currentItem,actionMaterial)) {
-            new WorldEnvironmentColorMenu(player,devPlot,"action").open(player);
+            new WorldEnvironmentColorMenu(player,devPlot,devPlatform,"action").open(player);
         } else if (itemEquals(currentItem,floorMaterial)) {
-            new WorldEnvironmentColorMenu(player,devPlot,"floor").open(player);
+            new WorldEnvironmentColorMenu(player,devPlot,devPlatform,"floor").open(player);
         }
     }
 

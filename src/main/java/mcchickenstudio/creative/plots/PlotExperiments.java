@@ -16,24 +16,21 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mcchickenstudio.creative.events.plot;
+package mcchickenstudio.creative.plots;
 
-import mcchickenstudio.creative.plots.Plot;
-import org.bukkit.entity.Player;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 
-/**
- * Called when player connects to plot.
- */
-public class PlotConnectPlayerEvent extends PlotEvent {
+public class PlotExperiments {
 
-    private final Player player;
+    private final Plot plot;
 
-    public PlotConnectPlayerEvent(Plot plot, Player player) {
-        super(plot);
-        this.player = player;
+    public PlotExperiments(Plot plot) {
+        this.plot = plot;
     }
 
-    public Player getPlayer() {
-        return player;
+    private void announce(String message) {
+        plot.getAudience().sendMessage(Component.text("[Experiment: " + message +"]").decorate(TextDecoration.ITALIC).color(TextColor.color(170,170,170)));
     }
 }

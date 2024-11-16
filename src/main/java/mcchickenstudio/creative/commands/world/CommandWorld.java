@@ -20,6 +20,7 @@ package mcchickenstudio.creative.commands.world;
 
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.menu.world.settings.WorldSettingsMenu;
+import org.apache.commons.io.FileUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -31,8 +32,11 @@ import mcchickenstudio.creative.plots.Plot;
 import org.jetbrains.annotations.NotNull;
 
 
+import java.io.File;
+
 import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
+import static mcchickenstudio.creative.utils.FileUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.getElapsedTime;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 
@@ -93,6 +97,45 @@ public class CommandWorld implements CommandExecutor {
                                 .replace("%sharing%", plot.getSharing().getName()).replace("%mode%", plot.getMode().getName()).replace("%description%", plot.getInformation().getDescription()));
                         break;
                     }
+                case "size":
+                    if (sender instanceof Player player) {
+                        if (!sender.hasPermission("opencreative.world.size")) return true;
+                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                        if (plot == null) return true;
+                        long settingsSize = getFileSize(new File(getPlotFolder(plot), "settings.yml"));
+                        long scriptSize = getFileSize(new File(getPlotFolder(plot), "codeScript.yml"));
+                        long variablesSize = getFileSize(new File(getPlotFolder(plot), "variables.json"));
+                        long dataSize = getFolderSize(new File(getPlotFolder(plot), "playersData"));
+                        long folderSize = getFolderSize(getPlotFolder(plot));
+                        long devWorldSize = getFolderSize(getDevPlotFolder(plot.getDevPlot()));
+                        long worldSize = folderSize-dataSize-variablesSize-scriptSize-settingsSize;
+                        sender.sendMessage(getLocaleMessage("world.size")
+                                .replace("%total%",FileUtils.byteCountToDisplaySize(folderSize+devWorldSize))
+                                .replace("%world%",FileUtils.byteCountToDisplaySize(worldSize))
+                                .replace("%script%",FileUtils.byteCountToDisplaySize(scriptSize))
+                                .replace("%variables%",FileUtils.byteCountToDisplaySize(variablesSize))
+                                .replace("%dev%",FileUtils.byteCountToDisplaySize(devWorldSize))
+                                .replace("%data%",FileUtils.byteCountToDisplaySize(dataSize))
+                                .replace("%settings%",FileUtils.byteCountToDisplaySize(settingsSize)));
+                    }
+                    break;
+                case "ram", "mem", "tps", "memory":
+                    if (sender instanceof Player player) {
+                        if (!sender.hasPermission("opencreative.world.memory")) return true;
+                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                        if (plot == null) return true;
+                        if (!plot.isLoaded()) return true;
+                        int chunks = plot.getTerritory().getWorld().getChunkCount()
+                                + (plot.getDevPlot().isLoaded() ? plot.getDevPlot().world.getChunkCount() : 0);
+                        int entities = plot.getTerritory().getWorld().getEntityCount()
+                                + (plot.getDevPlot().isLoaded() ? plot.getDevPlot().world.getEntityCount() : 0);
+
+                        sender.sendMessage("");
+                        sender.sendMessage(" Chunks: " + chunks);
+                        sender.sendMessage(" Entities: " + entities);
+                        sender.sendMessage("");
+                    }
+                    break;
             }
         } else {
             if (sender instanceof Player player) {

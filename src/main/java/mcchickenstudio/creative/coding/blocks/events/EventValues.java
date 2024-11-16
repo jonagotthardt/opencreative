@@ -95,6 +95,12 @@ public class EventValues {
         BLOCK_MATERIAL          (Material.GLOBE_BANNER_PATTERN,              MenusCategory.EVENTS, Block.class),
         BLOCK_LOCATION          (Material.PAPER,              MenusCategory.EVENTS, Block.class),
         IS_CHUNK_NEW            (Material.GLASS,               MenusCategory.EVENTS, Boolean.class),
+        TRANSFER_KEY            (Material.CALIBRATED_SCULK_SENSOR,               MenusCategory.EVENTS, String.class),
+        TRANSFER_VALUE            (Material.SCULK_SENSOR,               MenusCategory.EVENTS, Object.class),
+        URL                     (Material.NAME_TAG,               MenusCategory.EVENTS, String.class),
+        URL_RESPONSE_CODE       (Material.SLIME_BALL,               MenusCategory.EVENTS, Integer.class),
+        URL_RESPONSE                     (Material.KNOWLEDGE_BOOK,               MenusCategory.EVENTS, String.class),
+
         PURCHASE_ID(Material.GOLDEN_APPLE,             MenusCategory.EVENTS, String.class),
         PURCHASE_NAME(Material.GOLD_BLOCK,               MenusCategory.EVENTS, String.class),
         PURCHASE_PRICE(Material.GOLD_INGOT,               MenusCategory.EVENTS, Integer.class),

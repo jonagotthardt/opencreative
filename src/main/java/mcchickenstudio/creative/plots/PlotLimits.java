@@ -27,6 +27,7 @@ public class PlotLimits {
     private final int entitiesLimit;
     private final int codeOperationsLimit;
     private final int redstoneOperationsLimit;
+    private final int codingPlatformsLimit;
     private final int modifyingBlocksLimit;
     private final int scoreboardsLimit;
     private final int bossBarsLimit;
@@ -44,6 +45,7 @@ public class PlotLimits {
         scoreboardsLimit = PlayerUtils.getPlayerLimitValue(plot.getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_SCOREBOARDS_LIMIT);
         bossBarsLimit = PlayerUtils.getPlayerLimitValue(plot.getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_BOSSBARS_LIMIT);
         variablesAmountLimit = PlayerUtils.getPlayerLimitValue(plot.getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_VARIABLES_LIMIT);
+        codingPlatformsLimit = PlayerUtils.getPlayerLimitValue(plot.getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_CODING_PLATFORMS_LIMIT);
     }
 
     public int getVariablesAmountLimit() {
@@ -88,6 +90,10 @@ public class PlotLimits {
 
     public int getLastRedstoneOperationsAmount() {
         return lastRedstoneOperationsAmount;
+    }
+
+    public int getCodingPlatformsLimit() {
+        return codingPlatformsLimit;
     }
 }
 

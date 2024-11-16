@@ -16,24 +16,27 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mcchickenstudio.creative.events.plot;
+package mcchickenstudio.creative.coding.blocks.events.world.other;
 
+import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
 import mcchickenstudio.creative.plots.Plot;
-import org.bukkit.entity.Player;
 
-/**
- * Called when player connects to plot.
- */
-public class PlotConnectPlayerEvent extends PlotEvent {
+public class VariableTransferEvent extends WorldEvent {
 
-    private final Player player;
+    private final String key;
+    private final Object value;
 
-    public PlotConnectPlayerEvent(Plot plot, Player player) {
+    public VariableTransferEvent(Plot plot, String key, Object value) {
         super(plot);
-        this.player = player;
+        this.key = key;
+        this.value = value;
     }
 
-    public Player getPlayer() {
-        return player;
+    public String getKey() {
+        return key;
+    }
+
+    public Object getValue() {
+        return value;
     }
 }

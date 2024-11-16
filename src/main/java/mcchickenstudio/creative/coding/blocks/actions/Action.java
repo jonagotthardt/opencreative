@@ -27,6 +27,7 @@ import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamag
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerDamagesPlayerEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.fighting.PlayerKilledPlayerEvent;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import mcchickenstudio.creative.coding.exceptions.TooLongTextException;
 import mcchickenstudio.creative.coding.variables.ValueType;
 import mcchickenstudio.creative.coding.variables.VariableLink;
 import mcchickenstudio.creative.plots.Plot;
@@ -293,7 +294,7 @@ public abstract class Action {
             }
             if (value instanceof String text) {
                 if (text.length() > 1024) {
-                    throw new RuntimeException("Can't assign text with length above 1024 symbols to variable!");
+                    throw new TooLongTextException(1024);
                 }
             }
             getPlot().getVariables().setVariableValue(link, type, value, getHandler().getMainActionHandler(), this);

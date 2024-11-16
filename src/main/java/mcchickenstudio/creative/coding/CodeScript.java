@@ -30,6 +30,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import mcchickenstudio.creative.plots.Plot;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,7 +63,12 @@ public class CodeScript {
      * Loads code from codeScript.yml file.
      */
     public void loadCode() {
-        executors.load(file);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                executors.load(file);
+            }
+        }.run();
     }
 
     /**
@@ -83,6 +89,7 @@ public class CodeScript {
      * Moves stored code in old-code section to prevent being overwritten by new code.
      */
     public void clear() {
+        executors.getExecutorsList().clear();
         ConfigurationSection section = scriptConfig.getConfigurationSection("code.blocks");
         if (section == null) return;
         scriptConfig.set("old-code.blocks", null);
@@ -107,7 +114,7 @@ public class CodeScript {
         int y = block.getY();
         int z = block.getZ();
 
-        String path = "code.blocks.exec_block_" + z + "_" + y;
+        String path = "code.blocks.exec_block_" + z + "_" + x;
         scriptConfig.set(path + ".category", category.name());
         scriptConfig.set(path + ".type", type.name());
 
@@ -140,8 +147,8 @@ public class CodeScript {
      * @param type type of action.
      * @param target target for action.
      */
-    public void saveActionBlock(List<String> multiActions, Block actionBlock, ActionCategory category, ActionType type, Target target) {
-        String path = getActionBlockPath(actionBlock,multiActions);
+    public void saveActionBlock(Block executorBlock, List<String> multiActions, Block actionBlock, ActionCategory category, ActionType type, Target target) {
+        String path = getActionBlockPath(executorBlock,actionBlock,multiActions);
 
         scriptConfig.set(path + ".category", category.name());
         scriptConfig.set(path + ".type", type.name());
@@ -189,8 +196,8 @@ public class CodeScript {
      * @param value value of argument.
      * @param type value type.
      */
-    public void saveArguments(List<String> multiActions, Block actionBlock, String argument, Object value, ValueType type) {
-        String path = getActionBlockPath(actionBlock,multiActions);
+    public void saveArguments(Block executorBlock, List<String> multiActions, Block actionBlock, String argument, Object value, ValueType type) {
+        String path = getActionBlockPath(executorBlock,actionBlock,multiActions);
         scriptConfig.set(path + ".arguments." + argument + ".type",type.name());
         scriptConfig.set(path + ".arguments." + argument + ".value",value);
     }
@@ -201,18 +208,22 @@ public class CodeScript {
      * @param multiActions list of multi actions that have brackets and inside actions.
      * @return Configuration path of action block.
      */
-    private String getActionBlockPath(Block actionBlock, List<String> multiActions) {
-        int y = actionBlock.getY();
+    private String getActionBlockPath(Block executorBlock, Block actionBlock, List<String> multiActions) {
         int z = actionBlock.getZ();
         StringBuilder conditionsPath = new StringBuilder();
         for (String condition : multiActions) {
             conditionsPath.append(condition).append(".actions.");
         }
-        String path = "code.blocks.exec_block_" + z + "_" + y + ".actions." + conditionsPath;
+        String path = "code.blocks.exec_block_";
         StringBuilder builder = new StringBuilder(path);
+        builder.append(z);
+        builder.append("_");
+        builder.append(executorBlock.getX());
+        builder.append(".actions.");
+        builder.append(conditionsPath);
         ActionCategory category = ActionCategory.getByMaterial(actionBlock.getType());
         if (category != null && category.isMultiAction()) {
-            builder.delete(path.length()-9,path.length());
+            builder.delete(builder.length()-9,builder.length());
         } else {
             builder.append("action_block").append(getBlockNumber(actionBlock));
         }

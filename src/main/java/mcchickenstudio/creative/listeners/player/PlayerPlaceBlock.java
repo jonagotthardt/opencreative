@@ -22,6 +22,7 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
 import mcchickenstudio.creative.coding.menus.layouts.Layout;
+import mcchickenstudio.creative.plots.DevPlatform;
 import mcchickenstudio.creative.plots.PlotManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -58,13 +59,19 @@ public class PlayerPlaceBlock implements Listener {
             Block block = event.getBlock();
             Block blockAgainst = event.getBlockAgainst();
 
-            if (blockAgainst.getType() == devPlot.getFloorBlockMaterial()) {
-                if ((!(block.getType() == Material.PISTON && (blockAgainst.getZ() % 4) == 0 && blockAgainst.getRelative(BlockFace.WEST).getType() == devPlot.getActionBlockMaterial())) && (!(block.getType().name().contains("SIGN") &&  blockAgainst.getX() >= 4 && (blockAgainst.getX() % 2) == 0)) && (!devPlot.getAllowedBlocks().contains(block.getType())) || block.getY() <= 0) {
+            DevPlatform platform = devPlot.getPlatformInLocation(event.getBlock().getLocation());
+            if (platform == null) {
+                event.setCancelled(true);
+                return;
+            }
+
+            if (blockAgainst.getType() == platform.getFloorMaterial()) {
+                if ((!(block.getType() == Material.PISTON && (blockAgainst.getZ() % 4) == 0 && blockAgainst.getRelative(BlockFace.WEST).getType() == platform.getActionMaterial())) && (!(block.getType().name().contains("SIGN") &&  blockAgainst.getX() >= 4 && (blockAgainst.getX() % 2) == 0)) && (!devPlot.getAllowedBlocks().contains(block.getType())) || block.getY() <= 0) {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-on-floor"));
                     player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
                     event.setCancelled(true);
                 }
-            } else if (blockAgainst.getType() == devPlot.getEventBlockMaterial()) {
+            } else if (blockAgainst.getType() == platform.getEventMaterial()) {
                 // Easter egg :)
                 if (block.getType() == Material.PUMPKIN) {
                     event.setCancelled(true);
@@ -92,7 +99,7 @@ public class PlayerPlaceBlock implements Listener {
                     player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
                     event.setCancelled(true);
                 }
-            } else if (blockAgainst.getType() == devPlot.getActionBlockMaterial()) {
+            } else if (blockAgainst.getType() == platform.getActionMaterial()) {
                 if (devPlot.getActionsBlocks().contains(block.getType())) {
                     Material additionalBlockMaterial = Material.REDSTONE_ORE;
                     String signText = "unknown";
@@ -166,16 +173,21 @@ public class PlayerPlaceBlock implements Listener {
         wallSign.setBlockData(data);
     }
 
-    public static void move(Location location, BlockFace face) {
+    public static boolean move(Location location, BlockFace face) {
+        DevPlot devPlot = PlotManager.getInstance().getDevPlot(location.getWorld());
+        if (devPlot == null) return false;
+        DevPlatform platform = devPlot.getPlatformInLocation(location);
+        if (platform == null) return false;
         if (face == BlockFace.EAST) {
             /*
              Moves blocks to right
              */
-            Set<Block> movedBlocks = new HashSet<>(); // Создаем множество для отслеживания уже перемещенных блоков
-            for (double x = 95; x > location.getX(); x--) { // уменьшил диапазон на 2, чтобы не выйти за пределы мира
+            if (location.getX() >= platform.getEndX()-4) return false;
+            Set<Block> movedBlocks = new HashSet<>();
+            for (double x = platform.getEndX()-5; x > location.getX(); x--) {
                 Block oldBlock = location.getWorld().getBlockAt((int) x, location.getBlockY(), location.getBlockZ());
                 if (oldBlock.getType() == Material.AIR) continue;
-                if (!movedBlocks.contains(oldBlock)) { // Проверяем, был ли этот блок уже перемещен
+                if (!movedBlocks.contains(oldBlock)) {
                     Block newBlock = location.getWorld().getBlockAt((int) x + 2, location.getBlockY(), location.getBlockZ());
                     moveCodingBlock(oldBlock,newBlock);
                     movedBlocks.add(newBlock);
@@ -185,17 +197,21 @@ public class PlayerPlaceBlock implements Listener {
             /*
              Moves blocks to left.
              */
-            Set<Block> movedBlocks = new HashSet<>(); // Создаем множество для отслеживания уже перемещенных блоков
-            for (double x = location.getX()+1; x < 100; x++) { // уменьшил диапазон на 2, чтобы не выйти за пределы мира
+            if (location.getX() <= platform.getBeginX()+5) return false;
+            if (!location.getBlock().isEmpty()) return false;
+            if (!location.getBlock().getRelative(BlockFace.WEST).isEmpty()) return false;
+            Set<Block> movedBlocks = new HashSet<>();
+            for (double x = location.getX()+1; x < platform.getEndX(); x++) {
                 Block oldBlock = location.getWorld().getBlockAt((int) x, location.getBlockY(), location.getBlockZ());
                 if (oldBlock.getType() == Material.AIR) continue;
-                if (!movedBlocks.contains(oldBlock)) { // Проверяем, был ли этот блок уже перемещен
+                if (!movedBlocks.contains(oldBlock)) {
                     Block newBlock = location.getWorld().getBlockAt((int) x-2, location.getBlockY(), location.getBlockZ());
                     moveCodingBlock(oldBlock,newBlock);
                     movedBlocks.add(oldBlock);
                 }
             }
         }
+        return true;
     }
 
     /**

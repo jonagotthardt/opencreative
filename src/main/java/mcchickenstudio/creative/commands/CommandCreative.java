@@ -18,9 +18,11 @@
 
 package mcchickenstudio.creative.commands;
 
+import mcchickenstudio.creative.coding.CodingBlockParser;
 import mcchickenstudio.creative.menu.CreativeMenu;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
+import mcchickenstudio.creative.utils.WorldUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.*;
@@ -33,9 +35,11 @@ import org.bukkit.generator.WorldInfo;
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.utils.CooldownUtils;
 import mcchickenstudio.creative.utils.FileUtils;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -114,7 +118,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                             .replace("%sharing%", plot.getSharing().getName()).replace("%mode%", plot.getMode().getName()).replace("%description%", plot.getInformation().getDescription()));
                 }
                 case "load" -> {
-                    if (!sender.hasPermission("opencreative.load-world")) {
+                    if (!sender.hasPermission("opencreative.world.load")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -122,7 +126,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return true;
                     }
-                    Plot plot = PlotManager.getInstance().getPlotByWorldName("plot" + args[1]);
+                    Plot plot = PlotManager.getInstance().getPlotByWorldName("plot" + args[1].replace("dev",""));
                     if (plot == null) {
                         sender.sendMessage(getLocaleMessage("no-plot-found"));
                         return true;
@@ -133,6 +137,30 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     } else {
                         sender.sendMessage(getLocaleMessage("world.already-loaded").replace("%id%",args[1]));
                     }
+                }
+                case "dev" -> {
+                    if (!sender.hasPermission("opencreative.world.dev.visit")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return true;
+                    }
+                    Plot plot = PlotManager.getInstance().getPlotByWorldName("plot" + args[1].replace("dev",""));
+                    if (plot == null) {
+                        sender.sendMessage(getLocaleMessage("no-plot-found"));
+                        return true;
+                    }
+                    if (plot.getDevPlot().isLoaded()) {
+                        sender.sendMessage(getLocaleMessage("world.already-loaded").replace("%id%",args[1]));
+                        return true;
+                    }
+                    if (!plot.isLoaded()) {
+                        plot.getTerritory().load();
+                    }
+                    plot.connectToDevPlot(player);
+                    sender.sendMessage(getLocaleMessage("world.loaded").replace("%id%",args[1]));
                 }
                 case "creative-chat" -> {
                     if (!sender.hasPermission("opencreative.creative-chat")) {
@@ -272,7 +300,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                 }
                 case "unload" -> {
-                    if (!sender.hasPermission("opencreative.unload-world")) {
+                    if (!sender.hasPermission("opencreative.world.unload")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -293,7 +321,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                 }
                 case "list" -> {
-                    if (!sender.hasPermission("opencreative.list")) {
+                    if (!sender.hasPermission("opencreative.list.loaded")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -369,16 +397,27 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     sender.sendMessage(getLocaleMessage(args[1]));
                 }
                 case "test" -> {
-                    if (!Main.debug) {
-                        return true;
-                    }
                     if (!sender.hasPermission("opencreative.test")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
-                    if (player != null) {
-                        hidePlayerInTab(player,player);
+                }
+                case "template" -> {
+                    if (!sender.hasPermission("opencreative.test")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
                     }
+                    if (player == null) return true;
+                    if (args.length == 1) return true;
+                    File template = new File(Main.getPlugin().getDataPath()+File.separator+"templates"+File.separator+args[1]);
+                    if (!template.exists()) {
+                        sender.sendMessage("Template doesn't exists.");
+                        return true;
+                    }
+                    int id = WorldUtils.generateWorldID();
+                    File world = new File(Bukkit.getWorldContainer().getPath()+File.separator+"unloadedWorlds"+File.separator+"plot"+id+File.separator);
+                    FileUtils.copyFilesToDirectory(template,world);
+                    PlotManager.getInstance().createPlot(player, id, WorldUtils.WorldGenerator.FLAT);
                 }
             }
         } else {

@@ -62,7 +62,7 @@ public class CommandBuild implements CommandExecutor {
                 if (plot.getMode() != Plot.Mode.BUILD) {
                     if (plot.getWorldPlayers().canBuild(player)) {
                         Player plotOwner = Bukkit.getPlayer(plot.getOwner());
-                        if (plot.getWorldPlayers().getBuildersNotTrusted().contains(sender.getName())) {
+                        if (!plot.getWorldPlayers().isTrustedBuilder(player)) {
                             if (plotOwner == null) {
                                 sender.sendMessage(getLocaleMessage("world.build-mode.cant-build-when-offline"));
                                 return true;
@@ -116,6 +116,9 @@ public class CommandBuild implements CommandExecutor {
                         player.setGameMode(GameMode.CREATIVE);
                         giveBuildPermissions(player);
                         sender.sendMessage(getLocaleMessage("world.build-mode.message.owner"));
+                        if (!plot.getTerritory().isAutoSave()) {
+                            player.sendMessage(getLocaleMessage("settings.autosave.warning"));
+                        }
                     } else {
                         sender.sendMessage(getLocaleMessage("world.build-mode.message.players"));
                     }

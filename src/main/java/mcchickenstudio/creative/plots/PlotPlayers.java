@@ -100,6 +100,9 @@ public class PlotPlayers {
         if (plot.isOwner(player)) {
             return true;
         }
+        if (player.hasPermission("opencreative.world.dev.others")) {
+            return true;
+        }
         for (String nickname : developersTrusted) {
             if (nickname.equalsIgnoreCase(player.getName())) {
                 return true;
@@ -130,6 +133,9 @@ public class PlotPlayers {
         if (plot.isOwner(player)) {
             return true;
         }
+        if (player.hasPermission("opencreative.world.build.others")) {
+            return true;
+        }
         for (String nickname : buildersTrusted) {
             if (nickname.equalsIgnoreCase(player.getName())) {
                 return true;
@@ -149,6 +155,9 @@ public class PlotPlayers {
 
     public boolean canDevelop(Player player) {
         if (plot.isOwner(player)) {
+            return true;
+        }
+        if (player.hasPermission("opencreative.world.dev.others")) {
             return true;
         }
         for (String nickname : developersTrusted) {
@@ -173,6 +182,9 @@ public class PlotPlayers {
 
     public boolean canBuild(Player player) {
         if (plot.isOwner(player)) {
+            return true;
+        }
+        if (player.hasPermission("opencreative.world.build.others")) {
             return true;
         }
         for (String nickname : buildersTrusted) {

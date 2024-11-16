@@ -140,6 +140,7 @@ groups:
         variables-amount: 50 # limit for amount of all variables in world (saved, global, local)
         scoreboards-amount: 50
         bossbars-amount: 10
+        coding-platforms: 4
       per-player-limit-modifiers:
         #
         # When player joins a world or leaves from world,
@@ -174,6 +175,7 @@ groups:
         variables-amount: 500 # limit for amount of all variables in world (saved, global, local)
         scoreboards-amount: 50
         bossbars-amount: 10
+        coding-platforms: 4
       per-player-limit-modifiers:
         executor-calls: 30
         entities-amount: 50

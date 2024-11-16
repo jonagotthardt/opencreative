@@ -21,6 +21,7 @@ package mcchickenstudio.creative.listeners.player;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
+import mcchickenstudio.creative.plots.DevPlatform;
 import mcchickenstudio.creative.plots.PlotManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -56,13 +57,22 @@ public class PlayerBreakBlock implements Listener {
                 return;
             }
 
-            if (devPlot.getIndestructibleBlocks().contains(block.getType())) {
+            DevPlatform platform = devPlot.getPlatformInLocation(block.getLocation());
+            if (platform == null) {
+                event.setCancelled(true);
+                return;
+            }
+
+            if (devPlot.getIndestructibleBlocks().contains(block.getType())
+                    || block.getType() == platform.getFloorMaterial()
+                    || block.getType() == platform.getEventMaterial()
+                    || block.getType() == platform.getActionMaterial()) {
                 player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
                 event.setCancelled(true);
             }
 
             if (devPlot.getAllCodingBlocksForPlacing().contains(block.getType())) {
-                destroyAdditionalBlocks(block);
+                destroyAdditionalBlocks(platform,block);
                 event.setCancelled(true);
                 if (ActionCategory.getByMaterial(block.getType()) != null) {
                     block.setType(Material.AIR);
@@ -70,9 +80,9 @@ public class PlayerBreakBlock implements Listener {
                 } else {
                     if (ExecutorCategory.getByMaterial(block.getType()) != null) {
                         if (event.getPlayer().isSneaking()) {
-                            for (byte x = (byte) block.getX(); x < 99; x = (byte) (x + 2)) {
+                            for (byte x = (byte) block.getX(); x < platform.getEndX()-1; x = (byte) (x + 2)) {
                                 Block actionBlock = block.getWorld().getBlockAt(x, block.getY(), block.getZ());
-                                destroyAdditionalBlocks(actionBlock);
+                                destroyAdditionalBlocks(platform,actionBlock);
                                 actionBlock.setType(Material.AIR);
                             }
                         }
@@ -83,7 +93,7 @@ public class PlayerBreakBlock implements Listener {
 
             if (block.getType() == Material.CHEST) {
                 Block blockAtDown = block.getRelative(BlockFace.DOWN).getRelative(BlockFace.DOWN);
-                if (blockAtDown.getType() == devPlot.getEventBlockMaterial() || blockAtDown.getType() == devPlot.getActionBlockMaterial()) {
+                if (blockAtDown.getType() == platform.getEventMaterial() || blockAtDown.getType() == platform.getActionMaterial()) {
                     event.setCancelled(true);
                 }
             }
@@ -103,13 +113,13 @@ public class PlayerBreakBlock implements Listener {
         }
     }
 
-    private void destroyAdditionalBlocks(Block block) {
+    private void destroyAdditionalBlocks(DevPlatform platform, Block block) {
         Block containerBlock = block.getRelative(BlockFace.UP);
         Block additionalBlock = block.getRelative(BlockFace.EAST);
         Block signBlock = block.getRelative(BlockFace.SOUTH);
 
         if (additionalBlock.getType() == Material.PISTON) {
-            int closingBracketX = getClosingBracketX(block);
+            int closingBracketX = getClosingBracketX(platform, block);
             if (closingBracketX != -1) {
                 block.getWorld().getBlockAt(closingBracketX,block.getY(),block.getZ()).setType(Material.AIR);
             }

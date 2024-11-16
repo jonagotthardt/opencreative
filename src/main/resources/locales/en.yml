@@ -81,6 +81,9 @@ environment:
     potion: "&bPotion"
     list: "&eList"
     map: "&eMap"
+  platform:
+    claimed: "%prefix%Created a &6new platform &ffor coding, now you can place coding blocks here too!"
+    limit: "%prefix%&cYou reached a limit of %amount% platforms, you can't create new coding platforms anymore :("
 help:
   placeholders: "%prefix%List of placeholders: &6%player% %player_uuid% %entity% %entity_uuid% %target% %target_uuid% %players_amount% %entities_amount% %online%"
 creative:
@@ -196,6 +199,10 @@ settings:
     disabled: "%prefix%You have &6disabled&f players from visiting your world."
   world-category:
     changed: "%prefix%You have set the world category to &6%category%&f."
+  autosave:
+    enabled: "%prefix%Auto-saving is &6enabled&f, now you can build safely and your buildings will be saved."
+    disabled: "%prefix%&cAuto-saving is disabled by world owner, &nnew buildings will be not saved&c!"
+    warning: "%prefix%&cNew buildings will be not saved in world, because auto-saving is disabled by world owner."
 deleting-world:
   title: "&cDeleting ◌"
   subtitle: "&fPlease wait a few seconds..."
@@ -250,6 +257,7 @@ world:
     entities: "%prefix%&fDeleted &6%count% entities&f in the world."
     mobs: "%prefix%&fDeleted &6%count% mobs&f in the world."
   info: "%prefix%&fWorld information: &6%name%\n &f Description: &6%description%&r\n &f Owner: &6%owner%\n &f ID: &6%id%\n &f Created: &6%creation-time%\n &f Last active: &6%activity-time%\n &f Builders: &6%builders%\n &f Developers: &6%coders%\n &f World access: &6%sharing%\n &f World mode: &6%mode%\n &f Online: &6%online%"
+  size: "%prefix%&fTotal size of world: &6%total%\n&f World size: &6%world%\n&f Developers world: &6%dev%\n&f Script size: &6%script%\n&f Variables size: &6%variables%\n&f Settings size: &6%settings%\n&f Players data size: &6%data%"
   not-in-play-mode: "%prefix%The world is not currently in &6play mode&f."
   not-in-build-mode: "%prefix%The world is not currently in &6build mode&f."
   chat-cooldown: "%prefix%Please wait &6%cooldown% seconds&f before sending another message."
@@ -7369,6 +7377,25 @@ menus:
           - ""
           - "&e Click to change the time."
           - ""
+      autosave:
+        choices:
+          true: "Save all world changes"
+          false: "Don't save world changes"
+        name: " "
+        lore:
+          - "&c 🪣 Auto-saving"
+          - "&7 Saves new buildings in world."
+          - " "
+          - "&7 If this is &cdisabled&7, new"
+          - "&7 buildings and world changes"
+          - "&7 &cwill be not saved&7."
+          - ""
+          - "&f Options:"
+          - "%1%"
+          - "%2%"
+          - ""
+          - "&c Click to change saving."
+          - ""
   world-settings-players:
     title: "Управление игроками"
     in-world: "&aИгрок сейчас находится в мире!"
@@ -8243,7 +8270,7 @@ blocks:
   var_get_location_y: "&aY coordinate"
   var_get_location_z: "&9Z coordinate"
   var_get_location_yaw: "&eYAW direction"
-  var_get_location_yaw: "&6PITCH direction"
+  var_get_location_pitch: "&6PITCH direction"
   var_get_distance: "Get distance"
   var_create_map: "&aCreate dictionary"
   var_put_into_map: "&6Add to dictionary"

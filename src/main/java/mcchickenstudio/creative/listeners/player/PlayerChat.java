@@ -78,18 +78,17 @@ public class PlayerChat implements Listener {
             if (plot != null) {
                 DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
                 if (devPlot != null) {
-                    for (Player onlinePlayer : plot.getPlayers()) {
-                        if (plot.isOwner(onlinePlayer)) {
-                            onlinePlayer.sendMessage(message);
-                        }
-                        for (String developer : plot.getWorldPlayers().getAllDevelopers()) {
-                            if (onlinePlayer.getName().equalsIgnoreCase(developer) && !plot.isOwner(developer)) {
-                                onlinePlayer.sendMessage(message);
-                                break;
-                            }
+                    // If player in dev world
+                    for (Player p : devPlot.world.getPlayers()) {
+                        p.sendMessage(message);
+                    }
+                    for (Player p : plot.getTerritory().getWorld().getPlayers()) {
+                        if (plot.getWorldPlayers().canDevelop(p)) {
+                            p.sendMessage(message);
                         }
                     }
                 } else {
+                    // If player in build world
                     for (Player p : plot.getPlayers()) {
                         p.sendMessage(message);
                     }

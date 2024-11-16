@@ -270,6 +270,18 @@ public class PlotManager {
     /**
      Returns plot that has same specified ID.
      **/
+    public Plot getPlotById(String id) {
+        for (Plot plot : plots) {
+            if (id.equalsIgnoreCase(String.valueOf(plot.getId()))) {
+                return plot;
+            }
+        }
+        return null;
+    }
+
+    /**
+     Returns plot that has same specified ID.
+     **/
     public Plot getPlotByCustomID(String customID) {
         for (Plot plot : plots) {
             if (plot.getInformation().getCustomID().equalsIgnoreCase(customID)) {

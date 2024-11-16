@@ -72,16 +72,9 @@ public class CommandPlay implements CommandExecutor {
                 playerDevPlot.lastLocations.put(player,player.getLocation());
             }
 
-            List<String> developers = new ArrayList<>();
-            List<String> trustedDevelopers = FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_TRUSTED);
-            List<String> notTrustedDevelopers = FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED);
-
-            developers.addAll(notTrustedDevelopers);
-            developers.addAll(trustedDevelopers);
-
             removePlayerWithLocation(player);
             if (plot.getMode() != Plot.Mode.PLAYING) {
-                if (plot.getOwner().equals(sender.getName()) || developers.contains(sender.getName())) {
+                if (plot.getWorldPlayers().canDevelop(player)) {
                     PlotModeChangeEvent event = new PlotModeChangeEvent(plot,plot.getMode(), Plot.Mode.PLAYING,player);
                     event.callEvent();
                     if (event.isCancelled()) {

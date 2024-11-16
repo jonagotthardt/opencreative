@@ -35,6 +35,7 @@ import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 import mcchickenstudio.creative.plots.Plot;
+import org.bukkit.util.Vector;
 
 import static mcchickenstudio.creative.utils.BlockUtils.isOutOfBorders;
 import static mcchickenstudio.creative.utils.PlayerUtils.isEntityInDevPlot;
@@ -46,7 +47,10 @@ public class PlayerMove implements Listener {
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         if (player.getY() < 0 && isEntityInDevPlot(player)) {
-            player.teleport(player.getWorld().getSpawnLocation());
+            player.setVelocity(new Vector(0,0.6f,0));
+            if (player.getLocation().clone().toCenterLocation().add(0,1.5d,1).getBlock().isSolid()) {
+                player.teleport(player.getLocation().clone().toCenterLocation().add(0,2.5,1));
+            }
         }
         if (isBlockChanged(event.getFrom(),event.getTo())) {
             EventRaiser.raiseMoveEvent(event.getPlayer(),event);
