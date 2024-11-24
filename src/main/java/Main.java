@@ -1,10 +1,12 @@
+import ua.mcchickenstudio.opencreative.OpenCreative;
+
 import javax.swing.*;
 import java.awt.*;
 
 /**
  * This Main class is called when user executes .jar file.
  * It's not called when plugin loads on PaperMC server.
- * @see mcchickenstudio.creative.Main
+ * @see OpenCreative
  */
 public class Main {
 

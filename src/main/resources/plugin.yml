@@ -1,79 +1,96 @@
+#
+# OpenCreative+ 5.0 - Things will be different.
+# (C) McChicken Studio 2017-2024.
+#
+
 name: 'OpenCreative'
-version: '5.0 Pre-release'
-main: mcchickenstudio.creative.Main
+main: ua.mcchickenstudio.opencreative.OpenCreative
 api-version: 1.21
-authors: [McChicken Studio]
+
+version: '5.0 Pre-release'
 description: 'Let players create the worlds'
+authors: [McChicken Studio]
 prefix: "OC+"
+
+load: POSTWORLD
+database: false
+website: https://gitlab.com/eagles-creative/opencreative
+
 softdepend: [PlaceholderAPI, ProtocolLib, Vault]
+
+#
+# We load plugin before these plugins
+# to register some commands first.
+#
 loadbefore:
   - FastAsyncWorldEdit
   - WorldEdit
   - Essentials
+
 commands:
   creative:
-    usage: /opencreative
+    description: 'Shows OpenCreative+ information.'
     aliases: [coding,creativecoding,скуфешму,creative,oc]
   edit:
-    usage: /edit
+    description: 'Edits item in hand.'
     aliases: [увше, itemedit, edititem]
   locate:
-    usage: /locate
+    description: 'Locates player`s current world.'
     aliases: [дщсфеу, find, аштв]
   chat:
-    usage: /creativechat
+    description: 'Sends message to all players.'
     aliases: [cc,сс]
   build:
-    usage: /build
+    description: 'Changes world`s mode to build.'
     aliases: [игшдв]
   dev:
-    usage: /dev
+    description: 'Connects to developer world.'
     aliases: [develop,code,вум,d]
   play:
-    usage: /play
+    description: 'Changes world`s mode to play.'
     aliases: [start,здфн,ыефке,run,кгт]
   join:
-    usage: /join
+    description: 'Joins world by specified id.'
     aliases: [ощшт,id,j,о]
   ad:
-    usage: /ad
+    description: 'Advertises world to all players.'
     aliases: [фв]
   like:
-    usage: /like
+    description: 'Marks current world as liked.'
     aliases: [дшлу, vote, v, l]
   dislike:
-    usage: /dislike
+    description: 'Marks current world as disliked.'
     aliases: [вшыдшлу, вшідшлу, dis]
   spawn:
-    usage: /spawn
+    description: 'Teleports to spawn.'
     aliases: [спавн, ізфцт, ызфцт, hub, lobby, s, ы]
   menu:
-    usage: /menu
+    description: 'Opens worlds browser menu.'
     aliases: [меню, games, worlds, ьутг, minigames, g, п]
   world:
-    usage: /world
+    description: 'Opens world`s settings menu.'
     aliases: [settings, game, іуеештпі, ыуеештпы, setting, цщкдв]
   environment:
-    usage: /environment
+    description: 'Opens environment`s settings menu.'
     aliases: [env, утм, утмшкщтьуте]
   gamemode:
-    usage: /gamemode
+    description: 'Changes current player`s gamemode.'
     aliases: [gm, гм, пь, пфьуьщву]
   give:
-    usage: /give
+    description: 'Gives specified item to player.'
     aliases: [пшму]
   teleport:
-    usage: /teleport
+    description: 'Teleports to specified location.'
     aliases: [tp, еудузщке, ез]
   playsound:
-    usage: /playsound
+    description: 'Plays specified sound.'
     aliases: [здфніщгтв, здфныщгтв]
   stopsound:
-    usage: /stopsound
+    description: 'Stops specified sound.'
     aliases: [ыещзыщгтв, іещзіщгтв]
   weather:
-    usage: /weather
+    description: 'Changes current world`s weather.'
     aliases: [цуферук]
   time:
-    usage: /time
+    description: 'Sets current world`s time.'
     aliases: [ешьу]
