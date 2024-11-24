@@ -26,6 +26,8 @@ import mcchickenstudio.creative.coding.menus.MenusCategory;
 import mcchickenstudio.creative.menu.AbstractListMenu;
 import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.PlotManager;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -37,12 +39,12 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
+import java.time.Duration;
 import java.util.*;
 
 import static mcchickenstudio.creative.utils.BlockUtils.setSignLine;
 import static mcchickenstudio.creative.utils.ItemUtils.*;
-import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
-import static mcchickenstudio.creative.utils.MessageUtils.getPathFromMessage;
+import static mcchickenstudio.creative.utils.MessageUtils.*;
 import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
 
 /**
@@ -100,6 +102,8 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
     protected void onElementClick(InventoryClickEvent event) {
         ItemStack item = event.getCurrentItem();
         event.setCancelled(true);
+        if (item == null) return;
+        if (item.getItemMeta() == null) return;
         DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
         Block codingBlock = signLocation.getBlock().getRelative(BlockFace.NORTH);
         if (signLocation.getWorld().getName().contains("dev") && devPlot != null) {
@@ -128,7 +132,10 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
             if (setSignLine(signLocation,(byte) 3,typeString)) {
                 translateBlockSign(signLocation.getBlock());
                 player.closeInventory();
-                player.sendTitle(getLocaleMessage("world.dev-mode.set-" + codingBlockName),item.getItemMeta().getDisplayName(),15,20,15);
+                player.showTitle(Title.title(
+                        toComponent(getLocaleMessage("world.dev-mode.set-" + codingBlockName)), item.getItemMeta().displayName(),
+                        Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(1), Duration.ofMillis(750))
+                ));
                 player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 100, 1.7f);
             }
             /*

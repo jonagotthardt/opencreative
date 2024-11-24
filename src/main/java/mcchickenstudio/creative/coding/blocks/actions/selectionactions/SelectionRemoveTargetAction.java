@@ -40,7 +40,9 @@ public class SelectionRemoveTargetAction extends SelectionAction {
 
     @Override
     protected void modifyTargets(List<Entity> newTarget, Set<Entity> currentTarget) {
-        currentTarget.forEach(newTarget::remove);
+        for (Entity target : newTarget) {
+            currentTarget.remove(target);
+        }
     }
 
     @Override

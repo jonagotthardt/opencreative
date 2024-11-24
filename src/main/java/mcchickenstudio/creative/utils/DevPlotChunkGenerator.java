@@ -19,7 +19,6 @@
 package mcchickenstudio.creative.utils;
 
 import org.bukkit.World;
-import org.bukkit.block.Biome;
 import org.bukkit.generator.ChunkGenerator;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,9 +28,7 @@ public class DevPlotChunkGenerator extends ChunkGenerator {
 
     @Override
     public @NotNull ChunkData generateChunkData(@NotNull World world, @NotNull Random random, int x, int z, @NotNull BiomeGrid biome) {
-        for (int y = -64; y <= 320; y++) {
-            biome.setBiome(x,y,z, Biome.ICE_SPIKES);
-        }
         return createChunkData(world);
     }
+
 }

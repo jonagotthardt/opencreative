@@ -22,7 +22,7 @@ import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.entity.Player;
 
 /**
- * Called when players connects to plot.
+ * Called when player connects to plot.
  */
 public class PlotConnectPlayerEvent extends PlotEvent {
 

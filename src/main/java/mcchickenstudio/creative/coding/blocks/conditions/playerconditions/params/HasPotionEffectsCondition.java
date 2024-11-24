@@ -23,7 +23,6 @@ import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.PlayerCondition;
-import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -32,8 +31,6 @@ import org.bukkit.potion.PotionEffect;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingNotFoundTempVar;
 
 public class HasPotionEffectsCondition extends PlayerCondition {
     public HasPotionEffectsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, boolean isOpposed) {

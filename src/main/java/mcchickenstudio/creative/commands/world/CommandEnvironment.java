@@ -22,6 +22,7 @@ import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.variables.WorldVariable;
 import mcchickenstudio.creative.coding.variables.VariableLink;
 import mcchickenstudio.creative.menu.world.WorldEnvironmentMenu;
+import mcchickenstudio.creative.plots.DevPlatform;
 import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
@@ -50,6 +51,7 @@ import java.util.List;
 import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.MessageUtils.toComponent;
 
 public class CommandEnvironment implements CommandExecutor, TabCompleter {
 
@@ -75,7 +77,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                 new WorldEnvironmentMenu(player, plot.getDevPlot()).open(player);
             } else {
                 switch (args[0].toLowerCase()) {
-                    case "vars", "variables":
+                    case "vars", "variables", "var":
                         if (args.length == 1) {
                             return true;
                         }
@@ -116,14 +118,14 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                                 }
                                 player.sendMessage(getLocaleMessage("environment.variables.list.variable", false).replace("%name%", name).replace("%type%", type.getLocalized()).replace("%value%", value));
                             }
-                            TextComponent navigation = Component.text(getLocaleMessage("environment.variables.list.navigation"));
+                            Component navigation = toComponent(getLocaleMessage("environment.variables.list.navigation"));
                             if (page * 20 > 20) {
-                                navigation = navigation.append(Component.text(getLocaleMessage("environment.variables.list.previous-page")).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/environment variables list " + (page - 1))));
+                                navigation = navigation.append(toComponent(getLocaleMessage("environment.variables.list.previous-page")).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/environment variables list " + (page - 1))));
                             }
                             if (allVariables.size() > current + 1) {
-                                navigation = navigation.append(Component.text(getLocaleMessage("environment.variables.list.next-page")).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/environment variables list " + (page + 1))));
+                                navigation = navigation.append(toComponent(getLocaleMessage("environment.variables.list.next-page")).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/environment variables list " + (page + 1))));
                             }
-                            if (!Component.text(getLocaleMessage("environment.variables.list.navigation")).equals(navigation)) {
+                            if (!toComponent(getLocaleMessage("environment.variables.list.navigation")).equals(navigation)) {
                                 player.sendMessage(navigation);
                             }
                             player.sendMessage(" ");
@@ -136,24 +138,26 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             return true;
                         }
                         devPlot.setContainerMaterial(devPlot.getContainerMaterial() == Material.CHEST ? Material.BARREL : Material.CHEST);
-                        for (byte z = 4; z < 96; z = (byte) (z + 4)) {
-                            for (byte x = 6; x <= 96; x = (byte) (x + 2)) {
-                                Block containerBlock = new Location(devPlot.world, x, 2, z).getBlock();
-                                if (containerBlock.getState() instanceof InventoryHolder container) {
-                                    ItemStack[] data = container.getInventory().getContents();
-                                    containerBlock.setType(devPlot.getContainerMaterial());
-                                    ((Container) containerBlock.getState()).getInventory().setContents(data);
-                                    BlockData blockData = containerBlock.getBlockData();
-                                    ((Directional) blockData).setFacing(BlockFace.SOUTH);
-                                    containerBlock.setBlockData(blockData);
-                                    containerBlock.getState().update();
+                        for (DevPlatform platform : devPlot.getPlatforms()) {
+                            for (int z = platform.getBeginZ()+4; z < platform.getEndZ()-4; z = z + 4) {
+                                for (int x = platform.getBeginX()+6; x <= platform.getEndX()-4; x = x + 2) {
+                                    Block containerBlock = new Location(devPlot.getWorld(), x, 2, z).getBlock();
+                                    if (containerBlock.getState() instanceof InventoryHolder container) {
+                                        ItemStack[] data = container.getInventory().getContents();
+                                        containerBlock.setType(devPlot.getContainerMaterial());
+                                        ((Container) containerBlock.getState()).getInventory().setContents(data);
+                                        BlockData blockData = containerBlock.getBlockData();
+                                        ((Directional) blockData).setFacing(BlockFace.SOUTH);
+                                        containerBlock.setBlockData(blockData);
+                                        containerBlock.getState().update();
+                                    }
                                 }
                             }
                         }
+
                         break;
                     }
                     case "createplatform": {
-                        if (!Main.debug) return true;
                         if (!sender.hasPermission("opencreative.debug")) {
                             sender.sendMessage(getLocaleMessage("no-perms"));
                             return true;
@@ -180,6 +184,29 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         }
                         break;
                     }
+                    case "platform", "p": {
+                        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
+                        if (devPlot == null) {
+                            sender.sendMessage(getLocaleMessage("only-in-dev-world"));
+                            return true;
+                        }
+                        if (devPlot.getPlatforms().size() >= devPlot.getPlot().getLimits().getCodingPlatformsLimit()) {
+                            sender.sendMessage(getLocaleMessage("environment.platform.limit").replace("%amount%",String.valueOf(devPlot.getPlot().getLimits().getCodingPlatformsLimit())));
+                            return true;
+                        }
+                        int[][] platformCoordinates = {
+                                {2, 1}, {1, 2}, {2, 2}, {3, 1}, {1, 3}, {2, 3}, {3, 2}, {3, 3}
+                        };
+                        DevPlatform platform = null;
+                        for (int[] coords : platformCoordinates) {
+                            platform = new DevPlatform(devPlot.getWorld(), coords[0], coords[1]);
+                            if (!platform.exists()) {
+                                break;
+                            }
+                        }
+                        devPlot.claimPlatform(platform, player);
+                        break;
+                    }
                     case "floor": {
                         if (args.length < 2) {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
@@ -194,11 +221,15 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         try {
                             material = Material.valueOf(args[1].equalsIgnoreCase("barrier") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
                         } catch (Exception ignored) {}
-                        if (devPlot.setFloorBlockMaterial(material)) {
-                            if (devPlot.createPlatform(1,1)) {
-                                player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+                        DevPlatform currentPlatform = devPlot.getPlatformInLocation(player.getX(),player.getZ());
+                        if (currentPlatform == null) {
+                            for (DevPlatform platform : devPlot.getPlatforms()) {
+                                platform.setFloorMaterial(material);
                             }
+                        } else {
+                            currentPlatform.setFloorMaterial(material);
                         }
+                        player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
                         break;
                     }
                     case "action": {
@@ -215,11 +246,15 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         try {
                             material = Material.valueOf(args[1].equalsIgnoreCase("barrier") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
                         } catch (Exception ignored) {}
-                        if (devPlot.setActionBlockMaterial(material)) {
-                            if (devPlot.createPlatform(1,1)) {
-                                player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+                        DevPlatform currentPlatform = devPlot.getPlatformInLocation(player.getX(),player.getZ());
+                        if (currentPlatform == null) {
+                            for (DevPlatform platform : devPlot.getPlatforms()) {
+                                platform.setActionMaterial(material);
                             }
+                        } else {
+                            currentPlatform.setActionMaterial(material);
                         }
+                        player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
                         break;
                     }
                     case "event", "executor": {
@@ -236,11 +271,15 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         try {
                             material = Material.valueOf(args[1].equalsIgnoreCase("barrier") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
                         } catch (Exception ignored) {}
-                        if (devPlot.setEventBlockMaterial(material)) {
-                            if (devPlot.createPlatform(1,1)) {
-                                player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+                        DevPlatform currentPlatform = devPlot.getPlatformInLocation(player.getX(),player.getZ());
+                        if (currentPlatform == null) {
+                            for (DevPlatform platform : devPlot.getPlatforms()) {
+                                platform.setEventMaterial(material);
                             }
+                        } else {
+                            currentPlatform.setEventMaterial(material);
                         }
+                        player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
                         break;
                     }
                     case "theme", "settheme", "themes": {
@@ -253,19 +292,22 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
                         }
+                        DevPlatform platform = devPlot.getPlatformInLocation(player.getX(),player.getZ());
+                        if (platform == null) {
+                            return true;
+                        }
                         if (switch (args[1].toLowerCase()) {
-                            case "dark", "black", "darkmode", "space", "night" -> devPlot.setFloorEventActionBlocksMaterial(Material.BARRIER,Material.GRAY_STAINED_GLASS,Material.BLACK_STAINED_GLASS);
-                            case "light", "white", "lightmode" -> devPlot.setFloorEventActionBlocksMaterial(Material.BARRIER,Material.GRAY_STAINED_GLASS,Material.WHITE_STAINED_GLASS);
-                            case "pink", "magenta", "purple" -> devPlot.setFloorEventActionBlocksMaterial(Material.BARRIER,Material.PINK_STAINED_GLASS,Material.MAGENTA_STAINED_GLASS);
-                            case "blue", "ocean", "cyan" -> devPlot.setFloorEventActionBlocksMaterial(Material.BARRIER,Material.BLUE_STAINED_GLASS,Material.LIGHT_BLUE_STAINED_GLASS);
-                            case "ukraine", "ua", "uk" -> devPlot.setFloorEventActionBlocksMaterial(Material.BARRIER,Material.BLUE_STAINED_GLASS,Material.YELLOW_STAINED_GLASS);
-                            case "rhombus", "old", "legacy" -> devPlot.setFloorEventActionBlocksMaterial(Material.WHITE_STAINED_GLASS,Material.LIGHT_BLUE_STAINED_GLASS,Material.LIGHT_GRAY_STAINED_GLASS);
-                            case "just", "planet", "default" -> devPlot.setFloorEventActionBlocksMaterial(Material.WHITE_STAINED_GLASS,Material.BLUE_STAINED_GLASS,Material.GRAY_STAINED_GLASS);
-                            case "art", "artur" -> devPlot.setFloorEventActionBlocksMaterial(Material.WHITE_STAINED_GLASS,Material.BLACK_STAINED_GLASS,Material.CYAN_STAINED_GLASS);
-                            case "cloud" -> devPlot.setFloorEventActionBlocksMaterial(Material.WHITE_STAINED_GLASS,Material.CYAN_STAINED_GLASS,Material.GRAY_STAINED_GLASS);
+                            case "dark", "black", "darkmode", "space", "night" -> platform.setMaterials(Material.BARRIER,Material.GRAY_STAINED_GLASS,Material.BLACK_STAINED_GLASS);
+                            case "light", "white", "lightmode" -> platform.setMaterials(Material.BARRIER,Material.GRAY_STAINED_GLASS,Material.WHITE_STAINED_GLASS);
+                            case "pink", "magenta", "purple" -> platform.setMaterials(Material.BARRIER,Material.PINK_STAINED_GLASS,Material.MAGENTA_STAINED_GLASS);
+                            case "blue", "ocean", "cyan" -> platform.setMaterials(Material.BARRIER,Material.BLUE_STAINED_GLASS,Material.LIGHT_BLUE_STAINED_GLASS);
+                            case "ukraine", "ua", "uk" -> platform.setMaterials(Material.BARRIER,Material.BLUE_STAINED_GLASS,Material.YELLOW_STAINED_GLASS);
+                            case "rhombus", "old", "legacy" -> platform.setMaterials(Material.WHITE_STAINED_GLASS,Material.LIGHT_BLUE_STAINED_GLASS,Material.LIGHT_GRAY_STAINED_GLASS);
+                            case "just", "planet", "default" -> platform.setMaterials(Material.WHITE_STAINED_GLASS,Material.BLUE_STAINED_GLASS,Material.GRAY_STAINED_GLASS);
+                            case "art", "artur" -> platform.setMaterials(Material.WHITE_STAINED_GLASS,Material.BLACK_STAINED_GLASS,Material.CYAN_STAINED_GLASS);
+                            case "cloud" -> platform.setMaterials(Material.WHITE_STAINED_GLASS,Material.CYAN_STAINED_GLASS,Material.GRAY_STAINED_GLASS);
                             default -> false;
                         }) {
-                            devPlot.createPlatform(1,1);
                             player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
                         }
                         break;
@@ -300,6 +342,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         List<String> tabCompleter = new ArrayList<>();
         if (args.length == 1) {
+            tabCompleter.add("platform");
             tabCompleter.add("variables");
             tabCompleter.add("debug");
             tabCompleter.add("barrel");

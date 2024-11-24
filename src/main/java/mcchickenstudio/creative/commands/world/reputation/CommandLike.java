@@ -18,6 +18,7 @@
 
 package mcchickenstudio.creative.commands.world.reputation;
 
+import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.plots.PlotFlags;
 import org.bukkit.Sound;
@@ -51,13 +52,13 @@ public class CommandLike implements CommandExecutor {
                 player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.GENERIC_COMMAND))));
                 return true;
             }
-            setCooldown(player,plugin.getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
-            if (getPlayersFromPlotConfig(plot, Plot.PlayersType.LIKED).contains(sender.getName())) {
+            setCooldown(player,Main.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
+            if (getPlayersFromPlotList(plot, Plot.PlayersType.LIKED).contains(sender.getName())) {
                 sender.sendMessage(getLocaleMessage("world.already-rated"));
-            } else if (getPlayersFromPlotConfig(plot, Plot.PlayersType.DISLIKED).contains(sender.getName())) {
+            } else if (getPlayersFromPlotList(plot, Plot.PlayersType.DISLIKED).contains(sender.getName())) {
                 sender.sendMessage(getLocaleMessage("world.already-rated"));
             } else {
-                if (addPlayerToListInPlotConfig(plot,sender.getName(), Plot.PlayersType.LIKED)) {
+                if (addPlayerInPlotList(plot,sender.getName(), Plot.PlayersType.LIKED)) {
                     player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.3f);
                     plot.getInformation().setPlotReputation(plot.getInformation().getReputation() +1);
                     EventRaiser.raiseLikeEvent(player);

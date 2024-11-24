@@ -137,7 +137,7 @@ public class Placeholders {
         text = text
                 .replace("%online%", String.valueOf(Bukkit.getOnlinePlayers().size()))
                 .replace("%players_amount%", String.valueOf(plot.getPlayers().size()))
-                .replace("%entities_amount%", String.valueOf(plot.getTerritory().getWorld().getEntityCount() + (plot.getDevPlot() != null && plot.getDevPlot().world != null ? plot.getDevPlot().world.getEntityCount() : 0)));
+                .replace("%entities_amount%", String.valueOf(plot.getTerritory().getWorld().getEntityCount() + (plot.getDevPlot() != null && plot.getDevPlot().getWorld() != null ? plot.getDevPlot().getWorld().getEntityCount() : 0)));
         return text;
     }
 

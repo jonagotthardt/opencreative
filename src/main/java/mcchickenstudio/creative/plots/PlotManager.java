@@ -22,17 +22,21 @@ import mcchickenstudio.creative.events.plot.PlotDeletionEvent;
 import mcchickenstudio.creative.events.plot.PlotRegisterEvent;
 import mcchickenstudio.creative.events.plot.PlotSharingChangeEvent;
 import mcchickenstudio.creative.utils.*;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import mcchickenstudio.creative.Main;
 import org.bukkit.inventory.ItemStack;
 
+import java.time.Duration;
 import java.util.*;
 
 import static mcchickenstudio.creative.utils.ErrorUtils.sendPlayerErrorMessage;
 import static mcchickenstudio.creative.utils.FileUtils.*;
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.MessageUtils.toComponent;
 
 public class PlotManager {
 
@@ -86,7 +90,10 @@ public class PlotManager {
      * @param generateStructures Generate or not generate structures.
      */
     public void createPlot(Player owner, int id, WorldUtils.WorldGenerator generator, World.Environment environment, long seed, boolean generateStructures) {
-        owner.sendTitle(getLocaleMessage("creating-world.title"),getLocaleMessage("creating-world.subtitle"),10,300,40);
+        owner.showTitle(Title.title(
+                toComponent(getLocaleMessage("creating-world.title")), toComponent(getLocaleMessage("creating-world.subtitle")),
+                Title.Times.times(Duration.ofMillis(500), Duration.ofSeconds(30), Duration.ofSeconds(2))
+        ));
         Main.getPlugin().getLogger().info("Creating new plot " + id + " by " + owner.getName() + "...");
 
         createWorldSettings(id, false, owner, environment);
@@ -96,7 +103,10 @@ public class PlotManager {
         if (plot.getTerritory().generateWorld(generator,environment,seed,generateStructures) != null) {
             plot.connectPlayer(owner);
             plot.getTerritory().getWorld().getSpawnLocation().getChunk().load(true);
-            owner.sendTitle(getLocaleMessage("creating-world.welcome-title",owner),getLocaleMessage("creating-world.welcome-subtitle",owner),15,180,45);
+            owner.showTitle(Title.title(
+                    toComponent(getLocaleMessage("creating-world.welcome-title",owner)), toComponent(getLocaleMessage("creating-world.welcome-subtitle",owner)),
+                    Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(9), Duration.ofSeconds(2))
+            ));
             owner.playSound(owner.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE,100,0.1f);
             owner.sendMessage(getLocaleMessage("creating-world.welcome",owner));
             owner.setGameMode(GameMode.CREATIVE);
@@ -140,8 +150,8 @@ public class PlotManager {
                 plot.setSharing(Plot.Sharing.CLOSED);
             }
             plots.remove(plot);
-            FileUtils.deleteWorld(FileUtils.getPlotFolder(plot));
-            FileUtils.deleteWorld(FileUtils.getDevPlotFolder(plot.getDevPlot()));
+            FileUtils.deleteFolder(FileUtils.getPlotFolder(plot));
+            FileUtils.deleteFolder(FileUtils.getDevPlotFolder(plot.getDevPlot()));
             Bukkit.getServer().getScheduler().runTaskLater(Main.getPlugin(), () -> {
                 Bukkit.unloadWorld(plot.getWorldName(),false);
                 player.sendMessage(MessageUtils.getLocaleMessage("deleting-world.message"));
@@ -220,9 +230,9 @@ public class PlotManager {
      **/
     public DevPlot getDevPlot(Player player) {
         for (Plot plot : plots) {
-            if (plot.getDevPlot() != null && plot.getDevPlot().world != null) {
+            if (plot.getDevPlot() != null && plot.getDevPlot().getWorld() != null) {
                 if (plot.getPlayers().contains(player)) {
-                    if (plot.getDevPlot().world.getPlayers().contains(player)) {
+                    if (plot.getDevPlot().getWorld().getPlayers().contains(player)) {
                         return plot.getDevPlot();
                     }
                 }
@@ -233,7 +243,7 @@ public class PlotManager {
 
     public DevPlot getDevPlot(World world) {
         for (Plot plot : plots) {
-            if (plot.getDevPlot() != null && world.equals(plot.getDevPlot().world)) {
+            if (plot.getDevPlot() != null && world.equals(plot.getDevPlot().getWorld())) {
                 return plot.getDevPlot();
             }
         }
@@ -248,7 +258,7 @@ public class PlotManager {
             if (world.equals(plot.getTerritory().getWorld())) {
                 return plot;
             }
-            if (world.equals(plot.getDevPlot().world)) {
+            if (world.equals(plot.getDevPlot().getWorld())) {
                 return plot;
             }
         }
@@ -261,6 +271,18 @@ public class PlotManager {
     public Plot getPlotByWorldName(String worldName) {
         for (Plot plot : plots) {
             if (plot.getWorldName().equalsIgnoreCase(worldName)) {
+                return plot;
+            }
+        }
+        return null;
+    }
+
+    /**
+     Returns plot that has same specified ID.
+     **/
+    public Plot getPlotById(String id) {
+        for (Plot plot : plots) {
+            if (id.equalsIgnoreCase(String.valueOf(plot.getId()))) {
                 return plot;
             }
         }

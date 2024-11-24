@@ -19,7 +19,7 @@
 package mcchickenstudio.creative.menu.world;
 
 import mcchickenstudio.creative.menu.AbstractListMenu;
-import mcchickenstudio.creative.menu.AbstractMenu;
+import mcchickenstudio.creative.plots.DevPlatform;
 import mcchickenstudio.creative.plots.DevPlot;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -42,10 +42,12 @@ public class WorldEnvironmentColorMenu extends AbstractListMenu {
     private final String type;
     private final Material currentMaterial;
     private final DevPlot devPlot;
+    private final DevPlatform platform;
 
-    public WorldEnvironmentColorMenu(Player player, DevPlot devPlot, String type) {
+    public WorldEnvironmentColorMenu(Player player, DevPlot devPlot, DevPlatform devPlatform, String type) {
         super(getLocaleMessage("menus.developer.environment.colors.title"), player);
         this.devPlot = devPlot;
+        this.platform = devPlatform;
         this.type = type;
         setRows((byte) 5);
         itemsSlots = new byte[]{10,11,12,13,14,15,16,19,20,21,22,23,24,25};
@@ -69,21 +71,24 @@ public class WorldEnvironmentColorMenu extends AbstractListMenu {
         materials.add(Material.LIGHT_GRAY_STAINED_GLASS);
         materials.add(Material.WHITE_STAINED_GLASS);
         materials.add(Material.BARRIER);
+        if (devPlatform == null) {
+            devPlatform = new DevPlatform(devPlot.getWorld(),1,1);
+        }
         switch (type.toLowerCase()) {
             case "floor" -> {
-                this.currentMaterial = devPlot.getFloorBlockMaterial();
-                materials.remove(devPlot.getActionBlockMaterial());
-                materials.remove(devPlot.getEventBlockMaterial());
+                this.currentMaterial = devPlatform.getFloorMaterial();
+                materials.remove(devPlatform.getActionMaterial());
+                materials.remove(devPlatform.getEventMaterial());
             }
             case "event" -> {
-                this.currentMaterial = devPlot.getEventBlockMaterial();
-                materials.remove(devPlot.getActionBlockMaterial());
-                materials.remove(devPlot.getFloorBlockMaterial());
+                this.currentMaterial = devPlatform.getEventMaterial();
+                materials.remove(devPlatform.getActionMaterial());
+                materials.remove(devPlatform.getFloorMaterial());
             }
             default -> {
-                this.currentMaterial = devPlot.getActionBlockMaterial();
-                materials.remove(devPlot.getEventBlockMaterial());
-                materials.remove(devPlot.getFloorBlockMaterial());
+                this.currentMaterial = devPlatform.getActionMaterial();
+                materials.remove(devPlatform.getEventMaterial());
+                materials.remove(devPlatform.getFloorMaterial());
             }
         }
         materials.remove(currentMaterial);
@@ -105,7 +110,7 @@ public class WorldEnvironmentColorMenu extends AbstractListMenu {
 
     @Override
     protected void onCharmsBarClick(InventoryClickEvent event) {
-        new WorldEnvironmentMenu(player,devPlot).open(player);
+        new WorldEnvironmentMenu(player, devPlot).open(player);
     }
 
     @Override
@@ -113,15 +118,38 @@ public class WorldEnvironmentColorMenu extends AbstractListMenu {
         ItemStack currentItem = event.getCurrentItem();
         if (currentItem == null) return;
         Material material = currentItem.getType();
-        if (devPlot.world != null && devPlot.getPlot().getWorldPlayers().canDevelop(player)) {
-            boolean set = switch (type.toLowerCase()) {
-                case "floor" -> devPlot.setFloorBlockMaterial(material);
-                case "event" -> devPlot.setEventBlockMaterial(material);
-                case "action" -> devPlot.setActionBlockMaterial(material);
-                default -> false;
-            };
-            if (set && devPlot.createPlatform(1,1)) {
-                player.playSound(player.getLocation(), Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+        if (devPlot != null && devPlot.isLoaded() && devPlot.getPlot().getWorldPlayers().canDevelop(player)) {
+            switch (type.toLowerCase()) {
+                case "floor" -> {
+                    if (platform == null) {
+                        for (DevPlatform p : devPlot.getPlatforms()) {
+                            p.setFloorMaterial(material);
+                        }
+                    } else {
+                        platform.setFloorMaterial(material);
+                    }
+                    player.playSound(player.getLocation(), Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+                }
+                case "event" -> {
+                    if (platform == null) {
+                        for (DevPlatform p : devPlot.getPlatforms()) {
+                            p.setEventMaterial(material);
+                        }
+                    } else {
+                        platform.setEventMaterial(material);
+                    }
+                    player.playSound(player.getLocation(), Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+                }
+                case "action" -> {
+                    if (platform == null) {
+                        for (DevPlatform p : devPlot.getPlatforms()) {
+                            p.setActionMaterial(material);
+                        }
+                    } else {
+                        platform.setActionMaterial(material);
+                    }
+                    player.playSound(player.getLocation(), Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+                }
             }
         }
         player.closeInventory();

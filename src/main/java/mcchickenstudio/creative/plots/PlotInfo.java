@@ -29,7 +29,6 @@ import java.util.List;
 
 import static mcchickenstudio.creative.plots.Plot.Sharing.PUBLIC;
 import static mcchickenstudio.creative.utils.FileUtils.*;
-import static mcchickenstudio.creative.utils.FileUtils.getPlayersFromPlotConfig;
 import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.*;
 
@@ -55,6 +54,7 @@ public class PlotInfo {
     private Category category;
     private Material material;
     private ItemStack icon;
+    private boolean downloadable;
 
     public PlotInfo(Plot plot) {
         this.plot = plot;
@@ -68,7 +68,8 @@ public class PlotInfo {
         String customID = String.valueOf(plot.getId());
         Category category = Category.SANDBOX;
         Material material = Material.REDSTONE;
-        reputation = getPlayersFromPlotConfig(plot, Plot.PlayersType.LIKED).size()-getPlayersFromPlotConfig(plot, Plot.PlayersType.DISLIKED).size();
+        boolean downloadable = false;
+        reputation = getPlayersFromPlotList(plot, Plot.PlayersType.LIKED).size()- getPlayersFromPlotList(plot, Plot.PlayersType.DISLIKED).size();
         if (config != null) {
             if (config.getString("name") != null) {
                 name = config.getString("name");
@@ -96,12 +97,16 @@ public class PlotInfo {
                     material = Material.REDSTONE;
                 }
             }
+            if (config.getString("customID") != null) {
+                downloadable = config.getBoolean("downloadable");
+            }
         }
         this.displayName = name;
         this.description = description;
         this.category = category;
         this.material = material;
         this.customID = customID;
+        this.downloadable = downloadable;
     }
 
     public void updateIcon() {
@@ -203,5 +208,14 @@ public class PlotInfo {
         public String getName() {
             return name;
         }
+    }
+
+    public boolean isDownloadable() {
+        return downloadable;
+    }
+
+    public void setDownloadable(boolean downloadable) {
+        this.downloadable = downloadable;
+        setPlotConfigParameter(plot,"downloadable",downloadable);
     }
 }

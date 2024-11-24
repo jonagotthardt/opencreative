@@ -30,6 +30,8 @@ import mcchickenstudio.creative.coding.blocks.events.player.movement.*;
 import mcchickenstudio.creative.coding.blocks.events.player.movement.PlayerMoveEvent;
 import mcchickenstudio.creative.coding.blocks.events.player.world.*;
 import mcchickenstudio.creative.coding.blocks.events.world.other.GamePlayEvent;
+import mcchickenstudio.creative.coding.blocks.events.world.other.VariableTransferEvent;
+import mcchickenstudio.creative.coding.blocks.events.world.other.WebResponseEvent;
 import mcchickenstudio.creative.listeners.player.ChangedWorld;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
@@ -94,6 +96,22 @@ public class EventRaiser {
             return;
         }
         WorldEvent creativeEvent = new GamePlayEvent(plot);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseVariableTransferEvent(Plot plot, String key, Object value) {
+        if (cantRaiseEvent(plot)) {
+            return;
+        }
+        WorldEvent creativeEvent = new VariableTransferEvent(plot,key,value);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseWebResponseEvent(Plot plot, String url, int code, String text) {
+        if (cantRaiseEvent(plot)) {
+            return;
+        }
+        WorldEvent creativeEvent = new WebResponseEvent(plot,url,code,text);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 

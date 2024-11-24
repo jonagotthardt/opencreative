@@ -31,12 +31,7 @@ import mcchickenstudio.creative.coding.CodingBlockParser;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.CooldownUtils;
 import mcchickenstudio.creative.plots.Plot;
-import mcchickenstudio.creative.utils.FileUtils;
 import org.jetbrains.annotations.NotNull;
-
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 import static mcchickenstudio.creative.listeners.player.ChangedWorld.removePlayerWithLocation;
@@ -69,19 +64,12 @@ public class CommandPlay implements CommandExecutor {
 
             DevPlot playerDevPlot = PlotManager.getInstance().getDevPlot(player);
             if (playerDevPlot != null) {
-                playerDevPlot.lastLocations.put(player,player.getLocation());
+                playerDevPlot.getLastLocations().put(player,player.getLocation());
             }
-
-            List<String> developers = new ArrayList<>();
-            List<String> trustedDevelopers = FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_TRUSTED);
-            List<String> notTrustedDevelopers = FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED);
-
-            developers.addAll(notTrustedDevelopers);
-            developers.addAll(trustedDevelopers);
 
             removePlayerWithLocation(player);
             if (plot.getMode() != Plot.Mode.PLAYING) {
-                if (plot.getOwner().equals(sender.getName()) || developers.contains(sender.getName())) {
+                if (plot.getWorldPlayers().canDevelop(player)) {
                     PlotModeChangeEvent event = new PlotModeChangeEvent(plot,plot.getMode(), Plot.Mode.PLAYING,player);
                     event.callEvent();
                     if (event.isCancelled()) {

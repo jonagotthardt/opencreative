@@ -22,6 +22,8 @@ import mcchickenstudio.creative.listeners.player.PlayerChat;
 import mcchickenstudio.creative.menu.AbstractMenu;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -30,6 +32,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -93,7 +96,15 @@ public class RecommendedWorldsMenu extends AbstractMenu {
         if (itemEquals(currentItem,SEARCH)) {
             player.closeInventory();
             String searchQuery = event.getClick() == ClickType.LEFT ? "world-name" : "id";
-            player.sendTitle(getLocaleMessage("menus.all-worlds.items.search.title").replace("%search%", getLocaleMessage("menus.all-worlds.items.search." + searchQuery)), getLocaleMessage("menus.all-worlds.items.search.subtitle").replace("%search%", getLocaleMessage("menus.all-worlds.items.search." + searchQuery)));
+            player.showTitle(Title.title(
+                    Component.text(
+                            getLocaleMessage("menus.all-worlds.items.search.title")
+                                    .replace("%search%", getLocaleMessage("menus.all-worlds.items.search." + searchQuery))),
+                    Component.text(
+                            getLocaleMessage("menus.all-worlds.items.search.subtitle")
+                                    .replace("%search%", getLocaleMessage("menus.all-worlds.items.search." + searchQuery))),
+                    Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(20), Duration.ofMillis(750))
+            ));
             player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.usage", player).replace("%search%", getLocaleMessage("menus.all-worlds.items.search." + searchQuery)));
             player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_AMBIENT, 100, 1);
             PlayerChat.confirmation.put(player, event.getClick() == ClickType.LEFT ? "searchPlotByPlotName" : "searchPlotByID");

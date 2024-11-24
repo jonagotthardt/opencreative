@@ -26,6 +26,8 @@ import mcchickenstudio.creative.coding.blocks.events.player.inventory.*;
 import mcchickenstudio.creative.coding.blocks.events.player.movement.*;
 import mcchickenstudio.creative.coding.blocks.events.player.world.*;
 import mcchickenstudio.creative.coding.blocks.events.world.other.GamePlayEvent;
+import mcchickenstudio.creative.coding.blocks.events.world.other.VariableTransferEvent;
+import mcchickenstudio.creative.coding.blocks.events.world.other.WebResponseEvent;
 import mcchickenstudio.creative.coding.blocks.executors.entity.entities.EntitySpawnExecutor;
 import mcchickenstudio.creative.coding.blocks.executors.other.Cycle;
 import mcchickenstudio.creative.coding.blocks.executors.other.Function;
@@ -36,6 +38,8 @@ import mcchickenstudio.creative.coding.blocks.executors.player.inventory.*;
 import mcchickenstudio.creative.coding.blocks.executors.player.movement.*;
 import mcchickenstudio.creative.coding.blocks.executors.player.world.*;
 import mcchickenstudio.creative.coding.blocks.executors.world.other.GamePlayExecutor;
+import mcchickenstudio.creative.coding.blocks.executors.world.other.VariableTransferExecutor;
+import mcchickenstudio.creative.coding.blocks.executors.world.other.WebResponseExecutor;
 import mcchickenstudio.creative.coding.menus.MenusCategory;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -183,6 +187,8 @@ public enum ExecutorType {
     PLAYER_TELEPORT(        ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, TeleportExecutor.class, TeleportEvent.class, Material.ENDER_PEARL),
 
     WORLD_PLAY_MODE(        ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, GamePlayExecutor.class, GamePlayEvent.class, Material.ENDER_EYE),
+    WORLD_VARIABLE_TRANSFER(        ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, VariableTransferExecutor.class, VariableTransferEvent.class, Material.CALIBRATED_SCULK_SENSOR),
+    WORLD_WEB_RESPONSE(        ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, WebResponseExecutor.class, WebResponseEvent.class, Material.BEACON),
 
     ENTITY_SPAWNED(        ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY, EntitySpawnExecutor.class, EntitySpawnEvent.class, Material.CHICKEN_SPAWN_EGG);
 

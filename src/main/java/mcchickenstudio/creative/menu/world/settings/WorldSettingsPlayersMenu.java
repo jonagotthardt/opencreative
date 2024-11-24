@@ -104,14 +104,14 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
                     String fly = MessageUtils.getLocaleMessage("menus.world-settings-players.items.fly.choices.1");
                     String online = MessageUtils.getLocaleMessage("menus.world-settings-players.not-in-world");
 
-                    if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.BUILDERS_TRUSTED).contains(plotPlayer)) {
+                    if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.BUILDERS_TRUSTED).contains(plotPlayer)) {
                         build = MessageUtils.getLocaleMessage("menus.world-settings-players.items.build.choices.3");
-                    } else if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.BUILDERS_NOT_TRUSTED).contains(plotPlayer)) {
+                    } else if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.BUILDERS_NOT_TRUSTED).contains(plotPlayer)) {
                         build = MessageUtils.getLocaleMessage("menus.world-settings-players.items.build.choices.2");
                     }
-                    if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_TRUSTED).contains(plotPlayer)) {
+                    if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_TRUSTED).contains(plotPlayer)) {
                         dev = MessageUtils.getLocaleMessage("menus.world-settings-players.items.dev.choices.3");
-                    } else if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED).contains(plotPlayer)) {
+                    } else if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED).contains(plotPlayer)) {
                         dev = MessageUtils.getLocaleMessage("menus.world-settings-players.items.dev.choices.2");
                     }
 
@@ -122,9 +122,9 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
                         }
                         if (plotPlayer_.isFlying()) fly = MessageUtils.getLocaleMessage("menus.world-settings-players.items.fly.choices.2");
                     }
-                    if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_TRUSTED).contains(plotPlayer)) {
+                    if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_TRUSTED).contains(plotPlayer)) {
                         dev = MessageUtils.getLocaleMessage("menus.world-settings-players.items.dev.choices.3");
-                    } else if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED).contains(plotPlayer)) {
+                    } else if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED).contains(plotPlayer)) {
                         dev = MessageUtils.getLocaleMessage("menus.world-settings-players.items.dev.choices.2");
                     }
 
@@ -189,7 +189,7 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
         if (playersSelected.get(player) == null) return null;
         ItemStack item;
         String plotPlayer = playersSelected.get(player);
-        if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.BLACKLISTED).contains(plotPlayer)) {
+        if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.BLACKLISTED).contains(plotPlayer)) {
             item = new ItemStack(Material.STRUCTURE_VOID);
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName(MessageUtils.getLocaleItemName("menus.world-settings-players.items.unban.name"));
@@ -228,8 +228,8 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
         String plotPlayer = playersSelected.get(player);
         if (Bukkit.getPlayer(plotPlayer) == null) return null;
         if (plot.getPlayers().contains(Bukkit.getPlayer(plotPlayer))) {
-            if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.BUILDERS_TRUSTED).contains(plotPlayer)
-            && FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_TRUSTED).contains(plotPlayer)
+            if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.BUILDERS_TRUSTED).contains(plotPlayer)
+            && FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_TRUSTED).contains(plotPlayer)
             && !plot.isChangingOwner()) {
                 return createItem(Material.ENCHANTED_GOLDEN_APPLE,1, "menus.world-settings-players.items.transfer-ownership");
             }
@@ -271,11 +271,11 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
         String nickname = playersSelected.get(player);
         List<Runnable> actions = getRunnableList(plot, nickname);
         int canDev = 1;
-        if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_GUESTS).contains(nickname)) {
+        if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_GUESTS).contains(nickname)) {
             canDev = 2;
-        } else if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED).contains(nickname)) {
+        } else if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED).contains(nickname)) {
             canDev = 3;
-        } else if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_TRUSTED).contains(nickname)) {
+        } else if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_TRUSTED).contains(nickname)) {
             canDev = 4;
         }
 
@@ -315,9 +315,9 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
         List<Runnable> actions = getRunnables(plot, nickname);
 
         int canBuild = 1;
-        if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.BUILDERS_NOT_TRUSTED).contains(nickname)) {
+        if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.BUILDERS_NOT_TRUSTED).contains(nickname)) {
             canBuild = 2;
-        } else if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.BUILDERS_TRUSTED).contains(nickname)) {
+        } else if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.BUILDERS_TRUSTED).contains(nickname)) {
             canBuild = 3;
         }
 
@@ -362,14 +362,14 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
             String fly = MessageUtils.getLocaleMessage("menus.world-settings-players.items.fly.choices.1");
             String online = MessageUtils.getLocaleMessage("menus.world-settings-players.not-in-world");
 
-            if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.BUILDERS_TRUSTED).contains(plotPlayer)) {
+            if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.BUILDERS_TRUSTED).contains(plotPlayer)) {
                 build = MessageUtils.getLocaleMessage("menus.world-settings-players.items.build.choices.3");
-            } else if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.BUILDERS_NOT_TRUSTED).contains(plotPlayer)) {
+            } else if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.BUILDERS_NOT_TRUSTED).contains(plotPlayer)) {
                 build = MessageUtils.getLocaleMessage("menus.world-settings-players.items.build.choices.2");
             }
-            if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_TRUSTED).contains(plotPlayer)) {
+            if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_TRUSTED).contains(plotPlayer)) {
                 dev = MessageUtils.getLocaleMessage("menus.world-settings-players.items.dev.choices.3");
-            } else if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED).contains(plotPlayer)) {
+            } else if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED).contains(plotPlayer)) {
                 dev = MessageUtils.getLocaleMessage("menus.world-settings-players.items.dev.choices.2");
             }
 
@@ -380,9 +380,9 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
                 }
                 if (plotPlayer_.isFlying()) fly = MessageUtils.getLocaleMessage("menus.world-settings-players.items.fly.choices.2");
             }
-            if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_TRUSTED).contains(plotPlayer)) {
+            if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_TRUSTED).contains(plotPlayer)) {
                 dev = MessageUtils.getLocaleMessage("menus.world-settings-players.items.dev.choices.3");
-            } else if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED).contains(plotPlayer)) {
+            } else if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED).contains(plotPlayer)) {
                 dev = MessageUtils.getLocaleMessage("menus.world-settings-players.items.dev.choices.2");
             }
 

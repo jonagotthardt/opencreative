@@ -23,7 +23,13 @@ import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.playeractions.PlayerAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import org.bukkit.entity.Player;
+
+import java.time.Duration;
+
+import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 
 public class ShowTitleAction extends PlayerAction {
     public ShowTitleAction(Executor executor, Target target, int x, Arguments args) {
@@ -35,9 +41,17 @@ public class ShowTitleAction extends PlayerAction {
         String title = getArguments().getValue("title", EMPTY_STRING,this);
         String subtitle = getArguments().getValue("subtitle", EMPTY_STRING,this);
         int fadeIn = getArguments().getValue("fade-in",20,this);
-        int fadeOut = getArguments().getValue("stay",60,this);
-        int stay = getArguments().getValue("fade-out",10,this);
-        player.sendTitle(title,subtitle,fadeIn,stay,fadeOut);
+        int stay = getArguments().getValue("stay",60,this);
+        int fadeOut = getArguments().getValue("stay-out",10,this);
+        /*
+         * We multiply ticks by 50L to
+         * convert them into milliseconds.
+         * 1000 milliseconds = 1 second = 20 ticks.
+         */
+        player.showTitle(Title.title(
+                Component.text(title), Component.text(subtitle),
+                Title.Times.times(Duration.ofMillis(fadeIn * 50L), Duration.ofMillis(stay * 50L), Duration.ofMillis(fadeOut * 50L))
+        ));
     }
 
     @Override

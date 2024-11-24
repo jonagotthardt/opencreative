@@ -39,8 +39,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static mcchickenstudio.creative.utils.FileUtils.getPlotConfig;
-import static mcchickenstudio.creative.utils.FileUtils.getPlotScriptFile;
+import static mcchickenstudio.creative.utils.FileUtils.*;
+import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 import static mcchickenstudio.creative.utils.PlayerUtils.getPlayerPlotSize;
 import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 
@@ -51,21 +51,39 @@ import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
  */
 public class PlotTerritory {
 
-    public final Plot plot;
-    private final CodeScript script;
+    private final Plot plot;
 
     private final Map<String, BossBar> bossBars = new HashMap<>();
     private final Map<String, Scoreboard> scoreboards = new HashMap<>();
     private final List<BukkitRunnable> runningBukkitRunnables = new ArrayList<>();
 
     private World world;
+    private CodeScript script;
     private int worldSize = 25;
     private World.Environment environment;
+    private boolean autoSave = true;
 
     public PlotTerritory(Plot plot) {
         this.plot = plot;
         script = new CodeScript(plot,getPlotScriptFile(plot));
         loadInformation();
+    }
+
+    /**
+     * Sets auto-save option to specified value.
+     * @param autoSave true - build world changes will be saved.
+     * <p>false - build world changes will be not saved.</p>
+     */
+    public void setAutoSave(boolean autoSave) {
+        if (this.autoSave == autoSave) return;
+        this.autoSave = autoSave;
+        for (Player plotPlayer : plot.getPlayers()) {
+            plotPlayer.sendMessage(getLocaleMessage("settings.autosave." + (autoSave ? "enabled" : "disabled")));
+        }
+        if (world != null) {
+            world.setAutoSave(autoSave);
+        }
+        FileUtils.setPlotConfigParameter(plot,"autosave",autoSave ? true : null);
     }
 
     private void loadInformation() {
@@ -78,20 +96,23 @@ public class PlotTerritory {
                     environment = World.Environment.valueOf(config.getString("environment"));
                 } catch (Exception ignored) {}
             }
+            autoSave = config.getBoolean("autosave",true);
         }
         this.environment = environment;
     }
 
-    /*
-     * Loads plot, for example if player tries to join it. It loads world folder, world and code script.
+    /**
+     * Loads plot's files into worlds directory, loads and setups build world, loads script and variables.
      */
-    public void load() {
+    public synchronized void load() {
+        loadInformation();
         FileUtils.loadWorldFolder(plot.getWorldName(),true);
         World world = new WorldCreator(plot.getWorldName()).environment(plot.getTerritory().getEnvironment()).keepSpawnLoaded(TriState.FALSE).createWorld();
         if (world == null) return;
         this.world = world;
-        world.setAutoSave(true);
-        world.setKeepSpawnInMemory(false);
+        script = new CodeScript(plot,getPlotScriptFile(plot));
+        world.setAutoSave(autoSave);
+        world.setGameRule(GameRule.SPAWN_CHUNK_RADIUS,1);
         if (world.getEnvironment() == World.Environment.THE_END) {
             if (world.getEnderDragonBattle() != null) {
                 world.getEnderDragonBattle().setPreviouslyKilled(true);
@@ -115,26 +136,26 @@ public class PlotTerritory {
         new PlotLoadEvent(plot).callEvent();
     }
 
-    /*
-     * Unloads plot, for example if no players playing in plot.
+    /**
+     * Saves plot's data and unloads plot's build and dev worlds into /unloadedWorlds/ directory.
      */
-    public void unload() {
+    public synchronized void unload() {
         FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
         FileUtils.setPlotConfigParameter(plot,"environment", plot.getTerritory().getEnvironment().name());
         plot.getVariables().save();
-        clearData();
         for (Player player : plot.getPlayers()) {
             teleportToLobby(player);
         }
-        if (Bukkit.unloadWorld(plot.getWorldName(),true)) {
+        clearData();
+        if (Bukkit.unloadWorld(plot.getWorldName(),autoSave)) {
             FileUtils.unloadWorldFolder(plot.getWorldName(),true);
-            if (Bukkit.getWorld(plot.getDevPlot().worldName) != null) {
-                for (Player player : plot.getDevPlot().world.getPlayers()) {
+            if (Bukkit.getWorld(plot.getDevPlot().getWorldName()) != null) {
+                for (Player player : plot.getDevPlot().getWorld().getPlayers()) {
                     teleportToLobby(player);
                 }
-                plot.getDevPlot().setLoaded(false);
-                if (Bukkit.unloadWorld(plot.getDevPlot().worldName,true)) {
-                    FileUtils.unloadWorldFolder(plot.getDevPlot().worldName,true);
+                if (Bukkit.unloadWorld(plot.getDevPlot().getWorldName(),true)) {
+                    FileUtils.unloadWorldFolder(plot.getDevPlot().getWorldName(),true);
+                    plot.getDevPlot().setWorld(null);
                 }
             }
         }
@@ -143,9 +164,11 @@ public class PlotTerritory {
     }
 
     public void clearData() {
+        stopBukkitRunnables();
         bossBars.clear();
         scoreboards.clear();
-        stopBukkitRunnables();
+        script.getExecutors().getExecutorsList().clear();
+        plot.getVariables().clearVariables();
     }
 
     public void addBukkitRunnable(BukkitRunnable runnable) {
@@ -213,6 +236,7 @@ public class PlotTerritory {
         World world = Bukkit.createWorld(worldCreator);
 
         if (world != null) {
+            world.setAutoSave(true);
             world.setGameRule(GameRule.SPAWN_CHUNK_RADIUS, 1);
             world.getWorldBorder().setSize(getWorldSize());
 
@@ -243,7 +267,8 @@ public class PlotTerritory {
                 world.setSpawnLocation(0, 8, 0);
             }
 
-            setWorld(world);
+            this.world = world;
+            script = new CodeScript(plot,getPlotScriptFile(plot));
 
             for (Entity entity : world.getEntities()) {
                 if (entity.getType() != EntityType.PLAYER) entity.remove();
@@ -264,5 +289,9 @@ public class PlotTerritory {
             return world;
         }
         return null;
+    }
+
+    public boolean isAutoSave() {
+        return autoSave;
     }
 }

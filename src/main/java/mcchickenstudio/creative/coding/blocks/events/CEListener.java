@@ -25,6 +25,8 @@ import mcchickenstudio.creative.coding.blocks.events.player.inventory.*;
 import mcchickenstudio.creative.coding.blocks.events.player.movement.*;
 import mcchickenstudio.creative.coding.blocks.events.player.world.*;
 import mcchickenstudio.creative.coding.blocks.events.world.other.GamePlayEvent;
+import mcchickenstudio.creative.coding.blocks.events.world.other.VariableTransferEvent;
+import mcchickenstudio.creative.coding.blocks.events.world.other.WebResponseEvent;
 import mcchickenstudio.creative.coding.blocks.executors.Executors;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -285,6 +287,16 @@ public class CEListener implements Listener {
 
     @EventHandler
     public void onPlayMode(GamePlayEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onTransfer(VariableTransferEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
+    public void onResponse(WebResponseEvent event) {
         Executors.activate(event);
     }
 

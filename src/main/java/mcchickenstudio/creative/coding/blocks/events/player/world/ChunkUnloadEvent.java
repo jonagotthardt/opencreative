@@ -24,10 +24,7 @@ import org.bukkit.entity.Player;
 
 public class ChunkUnloadEvent extends WorldEvent {
 
-    private final PlayerChunkUnloadEvent event;
-
     public ChunkUnloadEvent(Player player, PlayerChunkUnloadEvent event) {
         super(player);
-        this.event = event;
     }
 }

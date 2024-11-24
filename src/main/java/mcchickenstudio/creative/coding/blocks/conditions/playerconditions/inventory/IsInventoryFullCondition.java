@@ -24,7 +24,6 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.List;

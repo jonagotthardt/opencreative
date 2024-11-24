@@ -19,7 +19,7 @@
 package mcchickenstudio.creative.coding.blocks.executors;
 
 import mcchickenstudio.creative.utils.MessageUtils;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 
 /**
@@ -33,18 +33,18 @@ import org.bukkit.Material;
  */
 public enum ExecutorCategory {
 
-    EVENT_PLAYER(Material.DIAMOND_BLOCK, Material.DIAMOND_ORE, ChatColor.AQUA),
-    EVENT_ENTITY(Material.GOLD_BLOCK, Material.GOLD_ORE, ChatColor.YELLOW),
-    EVENT_WORLD(Material.REDSTONE_BLOCK, Material.REDSTONE_ORE, ChatColor.RED),
-    CYCLE(Material.OXIDIZED_COPPER, Material.WAXED_OXIDIZED_CUT_COPPER, ChatColor.DARK_AQUA),
-    FUNCTION(Material.LAPIS_BLOCK, Material.DEEPSLATE_LAPIS_ORE, ChatColor.BLUE),
-    METHOD(Material.EMERALD_BLOCK, Material.EMERALD_ORE, ChatColor.GREEN);
+    EVENT_PLAYER(Material.DIAMOND_BLOCK, Material.DIAMOND_ORE, NamedTextColor.AQUA),
+    EVENT_ENTITY(Material.GOLD_BLOCK, Material.GOLD_ORE, NamedTextColor.YELLOW),
+    EVENT_WORLD(Material.REDSTONE_BLOCK, Material.REDSTONE_ORE, NamedTextColor.RED),
+    CYCLE(Material.OXIDIZED_COPPER, Material.WAXED_OXIDIZED_CUT_COPPER, NamedTextColor.DARK_AQUA),
+    FUNCTION(Material.LAPIS_BLOCK, Material.DEEPSLATE_LAPIS_ORE, NamedTextColor.BLUE),
+    METHOD(Material.EMERALD_BLOCK, Material.EMERALD_ORE, NamedTextColor.GREEN);
 
     private final Material block;
     private final Material additionalBlock;
-    private final ChatColor color;
+    private final NamedTextColor color;
 
-    ExecutorCategory(Material block, Material additionalBlock, ChatColor color) {
+    ExecutorCategory(Material block, Material additionalBlock, NamedTextColor color) {
         this.block = block;
         this.additionalBlock = additionalBlock;
         this.color = color;
@@ -61,7 +61,7 @@ public enum ExecutorCategory {
         return null;
     }
 
-    public ChatColor getColor() {
+    public NamedTextColor getColor() {
         return color;
     }
 

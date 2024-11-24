@@ -46,12 +46,12 @@ public class CommandDislike implements CommandExecutor {
                 return true;
             }
             CooldownUtils.setCooldown(player, Main.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
-            if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.LIKED).contains(sender.getName())) {
+            if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.LIKED).contains(sender.getName())) {
                 sender.sendMessage(MessageUtils.getLocaleMessage("world.already-rated"));
-            } else if (FileUtils.getPlayersFromPlotConfig(plot, Plot.PlayersType.DISLIKED).contains(sender.getName())) {
+            } else if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DISLIKED).contains(sender.getName())) {
                 sender.sendMessage(MessageUtils.getLocaleMessage("world.already-rated"));
             } else {
-                if (FileUtils.addPlayerToListInPlotConfig(plot,sender.getName(), Plot.PlayersType.DISLIKED)) {
+                if (FileUtils.addPlayerInPlotList(plot,sender.getName(), Plot.PlayersType.DISLIKED)) {
                     plot.getInformation().setPlotReputation(plot.getInformation().getReputation() -1);
                     player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,0.7f);
                     sender.sendMessage(MessageUtils.getLocaleMessage("world.disliked",player));

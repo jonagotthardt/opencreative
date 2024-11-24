@@ -69,8 +69,8 @@ public class WorldDeleteMobsMenu extends AbstractMenu {
                     count++;
                 }
             }
-            if (plot.getDevPlot() != null && plot.getDevPlot().world != null) {
-                for (Entity entity : plot.getDevPlot().world.getEntities()) {
+            if (plot.getDevPlot() != null && plot.getDevPlot().getWorld() != null) {
+                for (Entity entity : plot.getDevPlot().getWorld().getEntities()) {
                     if (entity instanceof Item) {
                         entity.remove();
                         count++;

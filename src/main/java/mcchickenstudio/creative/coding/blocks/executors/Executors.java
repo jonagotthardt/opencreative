@@ -192,7 +192,7 @@ public class Executors {
                 if (config.getString(path+".name") != null) {
                     args.setArgumentValue("name", ValueType.TEXT,config.getString(path+".name"));
                 }
-            } else if (actionType == ActionType.SELECTION_SET) {
+            } else if (actionType == ActionType.SELECTION_SET || actionType == ActionType.SELECTION_ADD || actionType == ActionType.SELECTION_REMOVE) {
                 if (config.getConfigurationSection(path+".condition") != null) {
                     boolean isOpposed = config.getBoolean(path+".condition.opposed",false);
                     ActionCategory conditionCategory = ActionCategory.valueOf(config.getString(path+".condition.category"));

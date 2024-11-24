@@ -19,22 +19,12 @@
 package mcchickenstudio.creative.utils;
 
 import mcchickenstudio.creative.Main;
-import mcchickenstudio.creative.plots.Plot;
-import net.kyori.adventure.util.TriState;
 import org.bukkit.*;
 import org.bukkit.entity.*;
-import org.bukkit.generator.ChunkGenerator;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.Random;
 
-import static mcchickenstudio.creative.utils.ItemUtils.createItem;
-import static mcchickenstudio.creative.utils.PlayerUtils.clearPlayer;
 import static mcchickenstudio.creative.utils.FileUtils.*;
-import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
 
 public class WorldUtils {
 
@@ -57,7 +47,7 @@ public class WorldUtils {
      @return Unique ID for new world.
      **/
     public static int generateWorldID() {
-        int newWorldID = plugin.getConfig().getInt("last-world-id",1);
+        int newWorldID = Main.getPlugin().getConfig().getInt("last-world-id",1);
         while (true) {
             newWorldID++;
             boolean exists = false;
@@ -68,8 +58,8 @@ public class WorldUtils {
                 }
             }
             if (!exists) {
-                plugin.getConfig().set("last-world-id",newWorldID);
-                plugin.saveConfig();
+                Main.getPlugin().getConfig().set("last-world-id",newWorldID);
+                Main.getPlugin().saveConfig();
                 return newWorldID;
             }
         }

@@ -22,6 +22,7 @@ import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.utils.hooks.HookUtils;
 import mcchickenstudio.creative.utils.hooks.PAPIUtils;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -47,6 +48,18 @@ public class MessageUtils {
 
     public static String getStringFromComponent(Component component) {
         return LegacyComponentSerializer.legacyAmpersand().serialize(component);
+    }
+
+    public static Component toComponent(String text) {
+        if (isLegacyFormat(text)) {
+            return LegacyComponentSerializer.legacyAmpersand().deserialize(text);
+        } else {
+            return MiniMessage.miniMessage().deserialize(text);
+        }
+    }
+
+    public static boolean isLegacyFormat(String text) {
+        return text.indexOf(LegacyComponentSerializer.AMPERSAND_CHAR) != -1 || text.indexOf(LegacyComponentSerializer.SECTION_CHAR) != -1;
     }
 
     /**

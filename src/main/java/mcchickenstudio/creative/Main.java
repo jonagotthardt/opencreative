@@ -42,6 +42,7 @@ import mcchickenstudio.creative.utils.hooks.HookUtils;
 import mcchickenstudio.creative.utils.PlayerUtils;
 import mcchickenstudio.creative.utils.hooks.Metrics;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -52,6 +53,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -97,11 +99,13 @@ public final class Main extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         long startTime = System.currentTimeMillis();
-        this.getLogger().info("Loading OpenCreative+ " + version + ": " + codename + ", please wait...");
+        this.getLogger().info("Starting OpenCreative+ " + version + ": " + codename + ", please wait...");
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,100,1));
-            player.sendTitle(ChatColor.translateAlternateColorCodes('&',"&fOpen&7Creative&b+ &7" + version),
-                    ChatColor.translateAlternateColorCodes('&',"&f" + codename + "..."),0,100,0);
+            player.showTitle(Title.title(
+                    Component.text("§fOpen§7Creative§b+ §7" + version), Component.text("§f" + codename + "..."),
+                    Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(5), Duration.ofSeconds(0))
+            ));
         }
         registerCommands();
         registerEvents();
@@ -118,7 +122,7 @@ public final class Main extends JavaPlugin {
         long loadedTime = System.currentTimeMillis()-startTime;
         for (Player player : Bukkit.getOnlinePlayers()) {
             teleportToLobby(player);
-            getServer().sendActionBar(Component.text(ChatColor.translateAlternateColorCodes('&', "&7Open&fCreative&b+ &7" + version + "&f is loaded for " + loadedTime + " ms.")));
+            getServer().sendActionBar(Component.text("§7Open§fCreative§b+ §7" + version + "§f is loaded for " + loadedTime + " ms."));
         }
         getLogger().info("OpenCreative+ " + version + ": " + codename + " is loaded for " + loadedTime + " ms.");
         getLogger().info(" ");
@@ -141,7 +145,7 @@ public final class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         for (Player player: Bukkit.getOnlinePlayers()) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&f\n&f Shutting down &7Open&fCreative&b+ &7" + version + "&f, please wait...\n&f"));
+            player.sendMessage(Component.text("§f\n§f Shutting down §7Open§fCreative§b+ §7" + version + "§f, please wait...\n§f"));
             teleportToLobby(player);
         }
         FileUtils.unloadPlots();
@@ -211,8 +215,8 @@ public final class Main extends JavaPlugin {
             PluginCommand command = getCommand(commandName);
             if (command != null) {
                 try {
-                    command.setExecutor(commands.get(commandName).newInstance());
-                } catch (IllegalAccessException | InstantiationException error) {
+                    command.setExecutor(commands.get(commandName).getDeclaredConstructor().newInstance());
+                } catch (Exception error) {
                     sendCriticalErrorMessage("Couldn't register command " + commandName,error);
                 }
             } else {

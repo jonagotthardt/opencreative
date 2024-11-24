@@ -18,16 +18,9 @@
 
 package mcchickenstudio.creative.events;
 
-import mcchickenstudio.creative.plots.Plot;
-import mcchickenstudio.creative.plots.PlotManager;
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <h1>CreativeEvent</h1>

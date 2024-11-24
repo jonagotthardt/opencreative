@@ -22,7 +22,7 @@ import mcchickenstudio.creative.plots.Plot;
 import org.bukkit.entity.Player;
 
 /**
- * Called when players disconnects from plot.
+ * Called when player disconnects from plot.
  * <p>
  * Usually it happens, when player teleports to another world (not related to this plot) or quits the server.
  */

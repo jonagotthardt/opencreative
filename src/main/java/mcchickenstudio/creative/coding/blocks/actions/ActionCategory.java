@@ -19,32 +19,32 @@
 package mcchickenstudio.creative.coding.blocks.actions;
 
 import mcchickenstudio.creative.utils.MessageUtils;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 
 public enum ActionCategory {
 
-    PLAYER_ACTION(Material.COBBLESTONE, Material.STONE, ChatColor.GRAY),
-    ENTITY_ACTION(Material.MOSSY_COBBLESTONE, Material.STONE, ChatColor.GREEN),
-    WORLD_ACTION(Material.NETHER_BRICKS, Material.NETHERRACK, ChatColor.RED),
-    VARIABLE_ACTION(Material.IRON_BLOCK, Material.IRON_ORE, ChatColor.WHITE),
-    SELECTION_ACTION(Material.PURPUR_BLOCK, Material.PURPUR_PILLAR, ChatColor.MAGIC),
-    LAUNCH_FUNCTION_ACTION(Material.LAPIS_ORE, Material.STONE, ChatColor.AQUA),
-    CONTROL_ACTION(Material.COAL_BLOCK, Material.COAL_ORE, ChatColor.DARK_GRAY),
-    HANDLER_ACTION(Material.DARK_PRISMARINE, Material.PISTON, ChatColor.GREEN),
-    REPEAT_ACTION(Material.PRISMARINE, Material.PISTON, ChatColor.AQUA),
+    PLAYER_ACTION(Material.COBBLESTONE, Material.STONE, NamedTextColor.GRAY),
+    ENTITY_ACTION(Material.MOSSY_COBBLESTONE, Material.STONE, NamedTextColor.GREEN),
+    WORLD_ACTION(Material.NETHER_BRICKS, Material.NETHERRACK, NamedTextColor.RED),
+    VARIABLE_ACTION(Material.IRON_BLOCK, Material.IRON_ORE, NamedTextColor.WHITE),
+    SELECTION_ACTION(Material.PURPUR_BLOCK, Material.PURPUR_PILLAR, NamedTextColor.LIGHT_PURPLE),
+    LAUNCH_FUNCTION_ACTION(Material.LAPIS_ORE, Material.STONE, NamedTextColor.AQUA),
+    CONTROL_ACTION(Material.COAL_BLOCK, Material.COAL_ORE, NamedTextColor.DARK_GRAY),
+    HANDLER_ACTION(Material.DARK_PRISMARINE, Material.PISTON, NamedTextColor.GREEN),
+    REPEAT_ACTION(Material.PRISMARINE, Material.PISTON, NamedTextColor.AQUA),
 
-    PLAYER_CONDITION(Material.OAK_PLANKS, Material.PISTON, ChatColor.GOLD),
-    VARIABLE_CONDITION(Material.OBSIDIAN, Material.PISTON, ChatColor.BLUE),
-    WORLD_CONDITION(Material.RED_NETHER_BRICKS, Material.PISTON, ChatColor.RED),
-    ENTITY_CONDITION(Material.BRICKS, Material.PISTON, ChatColor.RED);
-    //ELSE_CONDITION(Material.END_STONE, ChatColor.YELLOW);
+    PLAYER_CONDITION(Material.OAK_PLANKS, Material.PISTON, NamedTextColor.GOLD),
+    VARIABLE_CONDITION(Material.OBSIDIAN, Material.PISTON, NamedTextColor.BLUE),
+    WORLD_CONDITION(Material.RED_NETHER_BRICKS, Material.PISTON, NamedTextColor.RED),
+    ENTITY_CONDITION(Material.BRICKS, Material.PISTON, NamedTextColor.RED);
+    //ELSE_CONDITION(Material.END_STONE, NamedTextColor.YELLOW);
 
     private final Material block;
     private final Material additionalBlock;
-    private final ChatColor color;
+    private final NamedTextColor color;
 
-    ActionCategory(Material block, Material additionalBlock, ChatColor color) {
+    ActionCategory(Material block, Material additionalBlock, NamedTextColor color) {
         this.block = block;
         this.additionalBlock = additionalBlock;
         this.color = color;
@@ -66,7 +66,7 @@ public enum ActionCategory {
         return this == PLAYER_CONDITION || this == VARIABLE_CONDITION || this == WORLD_CONDITION || this == ENTITY_CONDITION;
     }
 
-    public ChatColor getColor() {
+    public NamedTextColor getColor() {
         return color;
     }
 

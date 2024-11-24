@@ -19,6 +19,7 @@
 package mcchickenstudio.creative.commands;
 
 import mcchickenstudio.creative.Main;
+import mcchickenstudio.creative.events.player.CreativeChatEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -100,6 +101,10 @@ public class CreativeChat implements CommandExecutor {
         }
         formattedMessage = formattedMessage.replace("%message%",String.join(" ",args));
         formattedMessage = ChatColor.translateAlternateColorCodes('&',formattedMessage);
+        CreativeChatEvent event = new CreativeChatEvent(sender,String.join(" ",args),formattedMessage);
+        event.callEvent();
+        if (event.isCancelled()) return true;
+        formattedMessage = event.getFormattedMessage();
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (!(creativeChatOff.contains(onlinePlayer))) {
                 onlinePlayer.sendMessage(formattedMessage);

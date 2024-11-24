@@ -18,10 +18,7 @@
 
 package mcchickenstudio.creative.listeners.world;
 
-import mcchickenstudio.creative.plots.DevPlot;
-import mcchickenstudio.creative.plots.Plot;
-import mcchickenstudio.creative.plots.PlotFlags;
-import mcchickenstudio.creative.plots.PlotManager;
+import mcchickenstudio.creative.plots.*;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
@@ -49,19 +46,25 @@ public class BlockChanged implements Listener {
     @EventHandler
     public void onBlockChanged(BlockFormEvent event) {
         World world = event.getBlock().getWorld();
-        DevPlot devPlot = PlotManager.getInstance().getDevPlot(world);
-        if (devPlot != null) {
-            if (devPlot.getEventBlockMaterial() == event.getBlock().getRelative(BlockFace.DOWN).getType() || devPlot.getActionBlockMaterial() == event.getBlock().getRelative(BlockFace.DOWN).getType()) {
-                event.setCancelled(true);
-                return;
+        if (isDevPlot(world)) {
+            DevPlot devPlot = PlotManager.getInstance().getDevPlot(world);
+            if (devPlot != null) {
+                DevPlatform platform = devPlot.getPlatformInLocation(event.getBlock().getLocation());
+                if (platform == null) return;
+                if (platform.getEventMaterial() == event.getBlock().getRelative(BlockFace.DOWN).getType() || platform.getActionMaterial() == event.getBlock().getRelative(BlockFace.DOWN).getType()) {
+                    event.setCancelled(true);
+                }
+            }
+        } else {
+            Plot plot = PlotManager.getInstance().getPlotByWorld(world);
+            if (plot != null) {
+                if (plot.getFlagValue(PlotFlags.PlotFlag.BLOCK_CHANGING) == 2) {
+                    event.setCancelled(true);
+                }
             }
         }
-        Plot plot = PlotManager.getInstance().getPlotByWorld(world);
-        if (plot != null) {
-            if (plot.getFlagValue(PlotFlags.PlotFlag.BLOCK_CHANGING) == 2) {
-                event.setCancelled(true);
-            }
-        }
+
+
     }
 
     @EventHandler

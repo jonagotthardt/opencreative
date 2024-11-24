@@ -22,6 +22,7 @@ import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.menus.MenusCategory;
 import mcchickenstudio.creative.menu.AbstractListMenu;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -31,11 +32,11 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.time.Duration;
 import java.util.*;
 
 import static mcchickenstudio.creative.utils.ItemUtils.*;
-import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
-import static mcchickenstudio.creative.utils.MessageUtils.getPathFromMessage;
+import static mcchickenstudio.creative.utils.MessageUtils.*;
 
 public class EventValuesMenu extends AbstractListMenu {
 
@@ -101,7 +102,10 @@ public class EventValuesMenu extends AbstractListMenu {
         setPersistentData(itemInHand,getCodingValueKey(),"EVENT_VALUE");
         setPersistentData(itemInHand,getCodingVariableTypeKey(),typeString.toUpperCase());
         player.closeInventory();
-        player.sendTitle(getLocaleMessage("world.dev-mode.set-variable",false),item.getItemMeta().getDisplayName(),0,40,20);
+        player.showTitle(Title.title(
+                toComponent(getLocaleMessage("world.dev-mode.set-variable")), item.displayName(),
+                Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
+        ));
         player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.7f);
     }
 

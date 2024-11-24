@@ -25,7 +25,6 @@ import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.conditions.entityconditions.EntityCondition;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Projectile;
 import org.bukkit.entity.ThrowableProjectile;
 
 import java.util.List;
