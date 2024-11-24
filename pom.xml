@@ -55,7 +55,7 @@
                             <relocations>
                                 <relocation>
                                     <pattern>org.bstats.bukkit</pattern>
-                                    <shadedPattern>mcchickenstudio.creative.utils.hooks</shadedPattern>
+                                    <shadedPattern>ua.mcchickenstudio.opencreative.utils.hooks</shadedPattern>
                                 </relocation>
                             </relocations>
                             <minimizeJar>true</minimizeJar>
@@ -94,6 +94,7 @@
         <repository>
             <!-- For deploying on Gitlab -->
             <id>gitlab-maven</id>
+            <!--suppress UnresolvedMavenProperty -->
             <url>https://gitlab.com/api/v4/projects/${PROJECT_ID}/packages/maven</url>
         </repository>
     </repositories>
@@ -101,10 +102,12 @@
     <distributionManagement>
         <repository>
             <id>gitlab-maven</id>
+            <!--suppress UnresolvedMavenProperty -->
             <url>https://gitlab.com/api/v4/projects/${PROJECT_ID}/packages/maven</url>
         </repository>
         <snapshotRepository>
             <id>gitlab-maven</id>
+            <!--suppress UnresolvedMavenProperty -->
             <url>https://gitlab.com/api/v4/projects/${PROJECT_ID}/packages/maven</url>
         </snapshotRepository>
     </distributionManagement>
