@@ -25,12 +25,10 @@ import org.bukkit.inventory.ItemStack;
 
 public class ItemBreakEvent extends WorldEvent {
 
-    private final PlayerItemBreakEvent event;
     private final ItemStack item;
 
     public ItemBreakEvent(Player player, PlayerItemBreakEvent event) {
         super(player);
-        this.event = event;
         this.item = event.getBrokenItem();
     }
 

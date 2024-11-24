@@ -27,7 +27,6 @@ import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.CooldownUtils;
-import mcchickenstudio.creative.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -52,6 +51,7 @@ import java.util.List;
 import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.MessageUtils.toComponent;
 
 public class CommandEnvironment implements CommandExecutor, TabCompleter {
 
@@ -118,14 +118,14 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                                 }
                                 player.sendMessage(getLocaleMessage("environment.variables.list.variable", false).replace("%name%", name).replace("%type%", type.getLocalized()).replace("%value%", value));
                             }
-                            TextComponent navigation = Component.text(getLocaleMessage("environment.variables.list.navigation"));
+                            Component navigation = toComponent(getLocaleMessage("environment.variables.list.navigation"));
                             if (page * 20 > 20) {
-                                navigation = navigation.append(Component.text(getLocaleMessage("environment.variables.list.previous-page")).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/environment variables list " + (page - 1))));
+                                navigation = navigation.append(toComponent(getLocaleMessage("environment.variables.list.previous-page")).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/environment variables list " + (page - 1))));
                             }
                             if (allVariables.size() > current + 1) {
-                                navigation = navigation.append(Component.text(getLocaleMessage("environment.variables.list.next-page")).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/environment variables list " + (page + 1))));
+                                navigation = navigation.append(toComponent(getLocaleMessage("environment.variables.list.next-page")).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/environment variables list " + (page + 1))));
                             }
-                            if (!Component.text(getLocaleMessage("environment.variables.list.navigation")).equals(navigation)) {
+                            if (!toComponent(getLocaleMessage("environment.variables.list.navigation")).equals(navigation)) {
                                 player.sendMessage(navigation);
                             }
                             player.sendMessage(" ");
@@ -141,7 +141,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         for (DevPlatform platform : devPlot.getPlatforms()) {
                             for (int z = platform.getBeginZ()+4; z < platform.getEndZ()-4; z = z + 4) {
                                 for (int x = platform.getBeginX()+6; x <= platform.getEndX()-4; x = x + 2) {
-                                    Block containerBlock = new Location(devPlot.world, x, 2, z).getBlock();
+                                    Block containerBlock = new Location(devPlot.getWorld(), x, 2, z).getBlock();
                                     if (containerBlock.getState() instanceof InventoryHolder container) {
                                         ItemStack[] data = container.getInventory().getContents();
                                         containerBlock.setType(devPlot.getContainerMaterial());
@@ -195,11 +195,11 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             return true;
                         }
                         int[][] platformCoordinates = {
-                                {2, 1}, {1, 2}, {2, 2}, //{3, 1}, {1, 3}, {2, 3}, {3, 2}, {3, 3}
+                                {2, 1}, {1, 2}, {2, 2}, {3, 1}, {1, 3}, {2, 3}, {3, 2}, {3, 3}
                         };
                         DevPlatform platform = null;
                         for (int[] coords : platformCoordinates) {
-                            platform = new DevPlatform(devPlot.world, coords[0], coords[1]);
+                            platform = new DevPlatform(devPlot.getWorld(), coords[0], coords[1]);
                             if (!platform.exists()) {
                                 break;
                             }

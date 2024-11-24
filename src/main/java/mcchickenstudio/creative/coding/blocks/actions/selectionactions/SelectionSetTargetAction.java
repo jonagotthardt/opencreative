@@ -19,22 +19,14 @@
 package mcchickenstudio.creative.coding.blocks.actions.selectionactions;
 
 import mcchickenstudio.creative.coding.arguments.Arguments;
-import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionCategory;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
-import mcchickenstudio.creative.coding.blocks.conditions.Condition;
-import mcchickenstudio.creative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import mcchickenstudio.creative.utils.ErrorUtils;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import static mcchickenstudio.creative.utils.ErrorUtils.sendCodingDebugLog;
 
 public class SelectionSetTargetAction extends SelectionAction {
 

@@ -45,7 +45,7 @@ public class WorldsBrowserMenu extends AbstractListMenu {
 
     private final List<Plot> plots;
     private final List<ParameterButton> buttons = new ArrayList<>();
-    private final ItemStack RECOMMENDED = createItem(Material.WIND_CHARGE,1,"menus.all-worlds.items.recommended");
+    private final ItemStack RECOMMENDED;
     private byte sortType = 1;
 
     public WorldsBrowserMenu(Player player, Set<Plot> plots) {
@@ -58,6 +58,20 @@ public class WorldsBrowserMenu extends AbstractListMenu {
         decorationSlots = new byte[]{45,46,47,51,52,53};
         charmsBarSlots = new byte[]{45,48,50};
         previousPageButtonSlot = 45;
+        RECOMMENDED = createItem(Material.WIND_CHARGE,1,"menus.all-worlds.items.recommended");
+    }
+
+    public WorldsBrowserMenu(Player player, Set<Plot> plots, boolean withRecommendedButton) {
+        super(getLocaleMessage("menus.all-worlds.title",false), player);
+        this.plots = new ArrayList<>(plots);
+        Comparator<Plot> sortByOnline = (plot1, plot2) -> Integer.compare(plot2.getOnline(), plot1.getOnline());
+        this.plots.sort(sortByOnline);
+        itemsSlots = new byte[]{10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34};
+        noElementsPageButtonSlot = 13;
+        decorationSlots = new byte[]{45,46,47,51,52,53};
+        charmsBarSlots = new byte[]{45,48,50};
+        previousPageButtonSlot = 45;
+        RECOMMENDED = withRecommendedButton ? createItem(Material.WIND_CHARGE,1,"menus.all-worlds.items.recommended") : DECORATION_ITEM;
     }
 
     @Override
@@ -147,9 +161,13 @@ public class WorldsBrowserMenu extends AbstractListMenu {
         }
         Plot plot = PlotManager.getInstance().getPlotByCustomID(worldID);
         if (plot != null) {
-            player.closeInventory();
-            plot.connectPlayer(player);
+            onPlotClick(player,plot);
         }
+    }
+
+    protected void onPlotClick(Player player, Plot plot) {
+        player.closeInventory();
+        plot.connectPlayer(player);
     }
 
     @Override

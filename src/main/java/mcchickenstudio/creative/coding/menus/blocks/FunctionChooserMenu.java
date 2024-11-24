@@ -20,6 +20,9 @@ package mcchickenstudio.creative.coding.menus.blocks;
 
 import mcchickenstudio.creative.menu.AbstractListMenu;
 import mcchickenstudio.creative.plots.DevPlot;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.title.Title;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -34,12 +37,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.time.Duration;
 import java.util.*;
 
 import static mcchickenstudio.creative.utils.BlockUtils.getSignLine;
 import static mcchickenstudio.creative.utils.BlockUtils.setSignLine;
 import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.MessageUtils.toComponent;
 import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
 
 public class FunctionChooserMenu extends AbstractListMenu {
@@ -118,7 +123,10 @@ public class FunctionChooserMenu extends AbstractListMenu {
             } else {
                 setSignLine(signLocation,(byte) 3,name);
                 translateBlockSign(signLocation.getBlock());
-                ((Player) event.getWhoClicked()).sendTitle(getLocaleMessage("menus.developer.function-chooser.chosen"),ChatColor.BLUE+name,10,40,15);
+                player.showTitle(Title.title(
+                        toComponent(getLocaleMessage("menus.developer.function-chooser.chosen")), Component.text(name).color(NamedTextColor.BLUE),
+                        Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
+                ));
                 ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE,100,1.2f);
             }
         }

@@ -24,6 +24,7 @@ import mcchickenstudio.creative.utils.hooks.HookUtils;
 import mcchickenstudio.creative.utils.hooks.ProtocolLibUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -37,12 +38,12 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.Duration;
 import java.util.*;
 
 import static mcchickenstudio.creative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
-import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
-import static mcchickenstudio.creative.utils.MessageUtils.messageExists;
+import static mcchickenstudio.creative.utils.MessageUtils.*;
 import static mcchickenstudio.creative.utils.WorldUtils.isDevPlot;
 
 public class PlayerUtils {
@@ -263,7 +264,10 @@ public class PlayerUtils {
         }
         clearPlayer(player);
 
-        player.sendTitle(getLocaleMessage("lobby.title"), getLocaleMessage("lobby.subtitle"),20,60,20);
+        player.showTitle(Title.title(
+                toComponent(getLocaleMessage("lobby.title")), toComponent(getLocaleMessage("lobby.subtitle")),
+                Title.Times.times(Duration.ofSeconds(1), Duration.ofSeconds(3), Duration.ofSeconds(1))
+        ));
         player.sendMessage(getLocaleMessage("lobby.message"));
         player.playSound(player.getLocation(),Sound.BLOCK_BEACON_DEACTIVATE,100,1.5f);
         player.playSound(player.getLocation(),Main.getPlugin().getConfig().getString("lobby.sound.name","music_disc.precipice") ,100,(float) Main.getPlugin().getConfig().getDouble("lobby.sound.pitch",0.1f));
@@ -307,7 +311,7 @@ public class PlayerUtils {
             } else if (!messageExists(path)) {
                 newLines.add(Component.text(content));
             } else {
-                newLines.add(Component.text(getLocaleMessage(path,false)));
+                newLines.add(toComponent(getLocaleMessage(path,false)));
             }
         }
         new BukkitRunnable() {
@@ -337,7 +341,7 @@ public class PlayerUtils {
             } else if (!messageExists(path)) {
                 newLines.add(Component.text(content));
             } else {
-                newLines.add(Component.text(getLocaleMessage(path,false)));
+                newLines.add(toComponent(getLocaleMessage(path,false)));
             }
         }
         new BukkitRunnable() {
@@ -365,7 +369,7 @@ public class PlayerUtils {
             } else if (!messageExists(path)) {
                 newLines.add(Component.text(content));
             } else {
-                newLines.add(Component.text(getLocaleMessage(path,false)));
+                newLines.add(toComponent(getLocaleMessage(path,false)));
             }
         }
         player.sendSignChange(block.getLocation(), newLines);

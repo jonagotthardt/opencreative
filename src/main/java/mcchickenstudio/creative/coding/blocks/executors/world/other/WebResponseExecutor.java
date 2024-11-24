@@ -20,7 +20,6 @@ package mcchickenstudio.creative.coding.blocks.executors.world.other;
 
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.events.WorldEvent;
-import mcchickenstudio.creative.coding.blocks.events.world.other.VariableTransferEvent;
 import mcchickenstudio.creative.coding.blocks.events.world.other.WebResponseEvent;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorType;
 import mcchickenstudio.creative.coding.blocks.executors.world.WorldExecutor;

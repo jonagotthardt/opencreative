@@ -73,8 +73,8 @@ public class WorldVariable {
         if (value instanceof List<?> list) {
             size += list.size();
         } else if (value instanceof Map<?,?> map) {
-            size += map.keySet().size();
-            size += map.values().size();
+            size += map.size();
+            size += map.size();
         }
         return size;
     }

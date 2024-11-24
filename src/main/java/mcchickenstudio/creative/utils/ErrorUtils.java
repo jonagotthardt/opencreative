@@ -26,16 +26,13 @@ import mcchickenstudio.creative.coding.blocks.conditions.Condition;
 import mcchickenstudio.creative.coding.blocks.events.EventValues;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.blocks.executors.ExecutorCategory;
-import mcchickenstudio.creative.events.CreativeEvent;
 import mcchickenstudio.creative.events.plot.PlotModeChangeEvent;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
 import net.kyori.adventure.text.Component;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -49,6 +46,7 @@ import java.util.Set;
 import static mcchickenstudio.creative.utils.BlockUtils.getSignLine;
 
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.MessageUtils.toComponent;
 
 public class ErrorUtils {
 
@@ -62,7 +60,7 @@ public class ErrorUtils {
         return newText;
     }
 
-    private static String parseException(Exception error) {
+    public static String parseException(Exception error, boolean colored) {
         Set<String> lastStacks = new HashSet<>();
         byte i = 0;
         for (StackTraceElement stackTraceElement : error.getStackTrace()) {
@@ -74,7 +72,16 @@ public class ErrorUtils {
                 break;
             }
         }
-        return "\n§c☹ Exception has occurred...\n§4 " + error.getClass().getSimpleName() + ": " + cutClassesName(error.getMessage()) + "\n \n" + String.join("\n",lastStacks);
+        return "\n" +
+                (colored ? "§c" : "") +
+                "☹ Exception has occurred..." +
+                "\n" +
+                (colored ? "§4 " : " ") +
+                error.getClass().getSimpleName() +
+                ": " +
+                cutClassesName(error.getMessage()) +
+                "\n \n" +
+                String.join("\n", lastStacks);
     }
 
     /**
@@ -90,9 +97,10 @@ public class ErrorUtils {
      Sends error message to player.
      **/
     public static void sendPlayerErrorMessage(Player player, String errorMessage, Exception error) {
-        Main.getPlugin().getLogger().warning("An player error has occurred for " + player.getName() + ": " + errorMessage + " " + parseException(error));
-        TextComponent message = new TextComponent(getLocaleMessage("player-error").replace("%error%",errorMessage));
-        message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(parseException(error))));
+        Main.getPlugin().getLogger().warning("An player error has occurred for " + player.getName() + ": " + errorMessage + " " + parseException(error,false));
+        Component message = Component
+                .text(getLocaleMessage("player-error").replace("%error%",errorMessage))
+                .hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(Component.text(parseException(error,true))));
         player.sendMessage(message);
         player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK,100f,0.1f);
     }
@@ -115,9 +123,16 @@ public class ErrorUtils {
         Plot plot = executor.getPlot();
         if (plot == null) return;
         for (Player player : plot.getPlayers()) {
-            TextComponent message = new TextComponent(getLocaleMessage("plot-code-warning.message").replace("%event%", executor.getExecutorType().getLocaleName()).replace("%action%",action.getActionType().getLocaleName()).replace("%warning%",warningMessage).replace("%x%",String.valueOf(action.getX())).replace("%y%",String.valueOf(executor.getY())).replace("%z%",String.valueOf(executor.getZ())));
-            message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(getLocaleMessage("plot-code-error.hover-message"))));
-            message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/dev " + action.getX() + " " + executor.getY() + " " + executor.getZ()));
+            Component message = Component
+                    .text(getLocaleMessage("plot-code-warning.message")
+                            .replace("%event%", executor.getExecutorType().getLocaleName())
+                            .replace("%action%",action.getActionType().getLocaleName())
+                            .replace("%warning%",warningMessage)
+                            .replace("%x%",String.valueOf(action.getX()))
+                            .replace("%y%",String.valueOf(executor.getY()))
+                            .replace("%z%",String.valueOf(executor.getZ())))
+                    .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("plot-code-error.hover-message"))))
+                    .clickEvent(ClickEvent.runCommand("/dev " + action.getX() + " " + executor.getY() + " " + executor.getZ()));
             player.sendMessage(message);
             player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE,100,1.7f);
         }
@@ -130,9 +145,16 @@ public class ErrorUtils {
         Plot plot = executor.getPlot();
         if (plot == null) return;
         for (Player player : plot.getPlayers()) {
-            TextComponent message = new TextComponent(getLocaleMessage("plot-code-error.message").replace("%event%", executor.getExecutorType().getLocaleName()).replace("%action%",action.getActionType().getLocaleName()).replace("%error%",errorMessage).replace("%x%",String.valueOf(action.getX())).replace("%y%",String.valueOf(executor.getY())).replace("%z%",String.valueOf(executor.getZ())));
-            message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(getLocaleMessage("plot-code-error.hover-message") + "\n" + parseException(error))));
-            message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/dev " + action.getX() + " " + executor.getY() + " " + executor.getZ()));
+            Component message = Component
+                    .text(getLocaleMessage("plot-code-error.message")
+                            .replace("%event%", executor.getExecutorType().getLocaleName())
+                            .replace("%action%",action.getActionType().getLocaleName())
+                            .replace("%error%",errorMessage)
+                            .replace("%x%",String.valueOf(action.getX()))
+                            .replace("%y%",String.valueOf(executor.getY()))
+                            .replace("%z%",String.valueOf(executor.getZ())))
+                    .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("plot-code-error.hover-message") + "\n" + parseException(error,false))))
+                    .clickEvent(ClickEvent.runCommand("/dev " + action.getX() + " " + executor.getY() + " " + executor.getZ()));
             player.sendMessage(message);
             player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE,100,1.7f);
         }
@@ -157,9 +179,15 @@ public class ErrorUtils {
         if (plot == null) return;
         for (Player player : plot.getPlayers()) {
             player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_DEPLETE,100,0.5f);
-            TextComponent message = new TextComponent(getLocaleMessage("plot-code-error.message-event-critical").replace("%event%", executor.getExecutorType().getLocaleName()).replace("%error%",errorMessage).replace("%x%",String.valueOf(executor.getX())).replace("%y%",String.valueOf(executor.getY())).replace("%z%",String.valueOf(executor.getZ())));
-            message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(getLocaleMessage("plot-code-error.hover-message"))));
-            message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/dev " + executor.getX() + " " + executor.getY() + " " + executor.getZ()));
+            Component message = Component
+                    .text(getLocaleMessage("plot-code-error.message-event-critical")
+                            .replace("%event%", executor.getExecutorType().getLocaleName())
+                            .replace("%error%",errorMessage)
+                            .replace("%x%",String.valueOf(executor.getX()))
+                            .replace("%y%",String.valueOf(executor.getY()))
+                            .replace("%z%",String.valueOf(executor.getZ())))
+                    .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("plot-code-error.hover-message"))))
+                    .clickEvent(ClickEvent.runCommand("/dev " + executor.getX() + " " + executor.getY() + " " + executor.getZ()));
             player.sendMessage(message);
         }
     }
@@ -170,9 +198,15 @@ public class ErrorUtils {
     public static void sendPlotCodeErrorMessage(Plot plot, Executor executor, String errorMessage) {
         if (plot == null) return;
         for (Player player : plot.getPlayers()) {
-            TextComponent message = new TextComponent(getLocaleMessage("plot-code-error.message-event").replace("%event%", executor.getExecutorType().getLocaleName()).replace("%error%",errorMessage).replace("%x%",String.valueOf(executor.getX())).replace("%y%",String.valueOf(executor.getY())).replace("%z%",String.valueOf(executor.getZ())));
-            message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(getLocaleMessage("plot-code-error.hover-message"))));
-            message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/dev " + executor.getX() + " " + executor.getY() + " " + executor.getZ()));
+            Component message = Component
+                    .text(getLocaleMessage("plot-code-error.message-event")
+                            .replace("%event%", executor.getExecutorType().getLocaleName())
+                            .replace("%error%",errorMessage)
+                            .replace("%x%",String.valueOf(executor.getX()))
+                            .replace("%y%",String.valueOf(executor.getY()))
+                            .replace("%z%",String.valueOf(executor.getZ())))
+                    .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("plot-code-error.hover-message"))))
+                    .clickEvent(ClickEvent.runCommand("/dev " + executor.getX() + " " + executor.getY() + " " + executor.getZ()));
             player.sendMessage(message);
             player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE,100,1.7f);
 
@@ -185,9 +219,14 @@ public class ErrorUtils {
     public static void sendPlotCompileErrorMessage(Plot plot, Block block, String errorMessage) {
         if (plot == null) return;
         for (Player player : plot.getPlayers()) {
-            TextComponent message = new TextComponent(getLocaleMessage("plot-code-error.message-compile").replace("%error%",errorMessage).replace("%x%",String.valueOf(block.getLocation().getX())).replace("%y%",String.valueOf(block.getLocation().getY())).replace("%z%",String.valueOf(block.getLocation().getZ())));
-            message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(getLocaleMessage("plot-code-error.hover-message"))));
-            message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/dev " + block.getLocation().getX() + " " + block.getLocation().getY() + " " + block.getLocation().getZ()));
+            Component message = Component
+                    .text(getLocaleMessage("plot-code-error.message-compile")
+                            .replace("%error%",errorMessage)
+                            .replace("%x%",String.valueOf(block.getX()))
+                            .replace("%y%",String.valueOf(block.getY()))
+                            .replace("%z%",String.valueOf(block.getZ())))
+                    .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("plot-code-error.hover-message"))))
+                    .clickEvent(ClickEvent.runCommand("/dev " + block.getX() + " " + block.getY() + " " + block.getZ()));
             player.sendMessage(message);
             player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE,100,1.7f);
         }
@@ -201,7 +240,7 @@ public class ErrorUtils {
         for (Player player : plot.getPlayers()) {
             player.sendMessage(getLocaleMessage("plot-code-error.unknown-block-detected").replace("%error%",getLocaleMessage("plot-code-error.unknown-blocks",false)));
             for (Block block : unknownBlocks) {
-                ChatColor color = ChatColor.GRAY;
+                NamedTextColor color = NamedTextColor.GRAY;
                 String category = "???";
                 String type = getSignLine(block.getLocation(),(byte) 3);
                 if (type == null || type.isEmpty()) type = "???";
@@ -216,16 +255,16 @@ public class ErrorUtils {
                     category = actionCategory.getLocaleName();
                 }
 
-                TextComponent blockCoordinatesMessage = new TextComponent(getLocaleMessage("plot-code-error.unknown-block-coords")
-                        .replace("%x%", String.valueOf(block.getLocation().getX()))
-                        .replace("%y%", String.valueOf(block.getLocation().getY()))
-                        .replace("%z%", String.valueOf(block.getLocation().getZ()))
-                        .replace("%category%",category)
-                        .replace("%type%",type));
-
-                blockCoordinatesMessage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(getLocaleMessage("plot-code-error.hover-message"))));
-                blockCoordinatesMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/dev " + block.getLocation().getX() + " " + block.getLocation().getY() + " " + block.getLocation().getZ()));
-                blockCoordinatesMessage.setColor(color);
+                Component blockCoordinatesMessage = Component
+                        .text(getLocaleMessage("plot-code-error.unknown-block-coords")
+                            .replace("%x%", String.valueOf(block.getLocation().getX()))
+                            .replace("%y%", String.valueOf(block.getLocation().getY()))
+                            .replace("%z%", String.valueOf(block.getLocation().getZ()))
+                            .replace("%category%",category)
+                            .replace("%type%",type))
+                        .color(color)
+                        .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("plot-code-error.hover-message"))))
+                        .clickEvent(ClickEvent.runCommand("/dev " + block.getLocation().getX() + " " + block.getLocation().getY() + " " + block.getLocation().getZ()));
                 player.sendMessage(blockCoordinatesMessage);
             }
             player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE,100,1.7f);
@@ -265,7 +304,7 @@ public class ErrorUtils {
      Sends critical error message about problem with plugin.
      **/
     public static void sendCriticalErrorMessage(String errorMessage, Exception error) {
-        Main.getPlugin().getLogger().severe("CRITICAL ERROR has occured: " + errorMessage + " " + parseException(error));
+        Main.getPlugin().getLogger().severe("CRITICAL ERROR has occured: " + errorMessage + " " + parseException(error,false));
     }
 
     public static void sendDebug(String message) {

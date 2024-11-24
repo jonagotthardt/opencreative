@@ -229,16 +229,7 @@ public abstract class Action {
                 }
             }
             case VICTIM -> {
-                Entity victim = null;
-                if (executor.getEvent() instanceof PlayerDamagesMobEvent mobEvent) {
-                    victim = mobEvent.getVictim();
-                } else if (executor.getEvent() instanceof MobDamagesPlayerEvent playerEvent) {
-                    victim = playerEvent.getVictim();
-                } else if (executor.getEvent() instanceof PlayerDamagesPlayerEvent playerEvent) {
-                    victim = playerEvent.getVictim();
-                } else if (executor.getEvent() instanceof PlayerKilledPlayerEvent playerEvent) {
-                    victim = playerEvent.getVictim();
-                }
+                Entity victim = getVictim();
                 if (victim != null) {
                     entities.add(victim);
                 }
@@ -260,6 +251,20 @@ public abstract class Action {
             default -> entities.addAll(eventEntities);
         }
         return entities;
+    }
+
+    private Entity getVictim() {
+        Entity victim = null;
+        if (executor.getEvent() instanceof PlayerDamagesMobEvent mobEvent) {
+            victim = mobEvent.getVictim();
+        } else if (executor.getEvent() instanceof MobDamagesPlayerEvent playerEvent) {
+            victim = playerEvent.getVictim();
+        } else if (executor.getEvent() instanceof PlayerDamagesPlayerEvent playerEvent) {
+            victim = playerEvent.getVictim();
+        } else if (executor.getEvent() instanceof PlayerKilledPlayerEvent playerEvent) {
+            victim = playerEvent.getVictim();
+        }
+        return victim;
     }
 
     /**

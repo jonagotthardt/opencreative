@@ -123,8 +123,8 @@ public class ChangedWorld implements Listener {
                         }
                     }
                     if (oldPlot.isOwner(player)) {
-                        List<String> notTrustedDevelopers = FileUtils.getPlayersFromPlotConfig(oldPlot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED);
-                        List<String> notTrustedBuilders = FileUtils.getPlayersFromPlotConfig(oldPlot, Plot.PlayersType.BUILDERS_NOT_TRUSTED);
+                        List<String> notTrustedDevelopers = FileUtils.getPlayersFromPlotList(oldPlot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED);
+                        List<String> notTrustedBuilders = FileUtils.getPlayersFromPlotList(oldPlot, Plot.PlayersType.BUILDERS_NOT_TRUSTED);
                         for (Player p : oldPlot.getPlayers()) {
                             if (oldPlot.getMode() == Plot.Mode.BUILD) {
                                 if (notTrustedBuilders.contains(p.getName())) {
@@ -169,7 +169,7 @@ public class ChangedWorld implements Listener {
                 }
                 if (newPlot.isOwner(player)) {
                     if (newPlot.getDevPlot().isLoaded()) {
-                        for (Player onlinePlayer : newPlot.getDevPlot().world.getPlayers()) {
+                        for (Player onlinePlayer : newPlot.getDevPlot().getWorld().getPlayers()) {
                             if (newPlot.getWorldPlayers().isNotTrustedDeveloper(onlinePlayer)) {
                                 onlinePlayer.setGameMode(GameMode.CREATIVE);
                             }

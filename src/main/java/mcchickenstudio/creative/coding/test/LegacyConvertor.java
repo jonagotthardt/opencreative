@@ -52,7 +52,7 @@ public class LegacyConvertor {
 
             private final int maxAwaitingTime = 30;
 
-            private Plot currentPlot = plots.get(0);
+            private Plot currentPlot = plots.getFirst();
             private int wastedTime = 0;
             private boolean convertedDevPlot = false;
             private boolean convertedCodeScript = false;
@@ -70,7 +70,7 @@ public class LegacyConvertor {
                     currentPlot = plots.getFirst();
                 }
                 if (!convertedDevPlot) {
-                    if (currentPlot.getDevPlot().world == null) {
+                    if (currentPlot.getDevPlot().getWorld() == null) {
                         currentPlot.getTerritory().load();
                         currentPlot.getDevPlot().loadDevPlotWorld();
                         return;
@@ -105,7 +105,7 @@ public class LegacyConvertor {
     }
 
     public void convertDevPlot(DevPlot devPlot) {
-        World world = devPlot.world;
+        World world = devPlot.getWorld();
         byte y = 1;
         for (byte z = 4; z <= 96; z = (byte)(z+4)) {
             for (byte x = 4; x <= 96; x = (byte) (x + 2)) {

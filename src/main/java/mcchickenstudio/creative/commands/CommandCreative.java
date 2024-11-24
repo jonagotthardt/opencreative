@@ -18,8 +18,10 @@
 
 package mcchickenstudio.creative.commands;
 
-import mcchickenstudio.creative.coding.CodingBlockParser;
 import mcchickenstudio.creative.menu.CreativeMenu;
+import mcchickenstudio.creative.menu.world.browsers.WorldsBrowserMenu;
+import mcchickenstudio.creative.menu.world.browsers.WorldsPickerMenu;
+import mcchickenstudio.creative.plots.DevPlot;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.WorldUtils;
@@ -35,12 +37,12 @@ import org.bukkit.generator.WorldInfo;
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.utils.CooldownUtils;
 import mcchickenstudio.creative.utils.FileUtils;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -49,7 +51,6 @@ import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
 import static mcchickenstudio.creative.utils.FileUtils.loadLocales;
 import static mcchickenstudio.creative.utils.MessageUtils.getElapsedTime;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
-import static mcchickenstudio.creative.utils.PlayerUtils.hidePlayerInTab;
 import static mcchickenstudio.creative.utils.PlayerUtils.teleportToLobby;
 
 public class CommandCreative implements CommandExecutor, TabCompleter {
@@ -401,9 +402,21 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
+                    if (player == null) return true;
+                    DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
+                    if (devPlot == null) return true;
+                }
+                case "test2" -> {
+                    if (!sender.hasPermission("opencreative.test")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
+                    }
+                    if (player == null) return true;
+                    WorldsBrowserMenu menu = new WorldsPickerMenu(player, new HashSet<>(PlotManager.getInstance().getPlots().stream().filter(plot -> plot.getInformation().isDownloadable()).toList()));
+                    menu.open(player);
                 }
                 case "template" -> {
-                    if (!sender.hasPermission("opencreative.test")) {
+                    if (!sender.hasPermission("opencreative.template")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }

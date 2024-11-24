@@ -24,12 +24,9 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.conditions.worldconditions.WorldCondition;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import mcchickenstudio.creative.coding.variables.EventValueLink;
-import mcchickenstudio.creative.coding.variables.VariableLink;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
-import java.util.HashSet;
 import java.util.List;
 
 public class IsWorldBlockSolidCondition extends WorldCondition {

@@ -20,7 +20,6 @@ package mcchickenstudio.creative.menu.world;
 
 import mcchickenstudio.creative.menu.AbstractMenu;
 import mcchickenstudio.creative.menu.buttons.ParameterButton;
-import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.MessageUtils;
 import mcchickenstudio.creative.utils.PlayerUtils;

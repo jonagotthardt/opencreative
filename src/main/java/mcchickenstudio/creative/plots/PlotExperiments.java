@@ -21,6 +21,7 @@ package mcchickenstudio.creative.plots;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.entity.Player;
 
 public class PlotExperiments {
 
@@ -28,6 +29,13 @@ public class PlotExperiments {
 
     public PlotExperiments(Plot plot) {
         this.plot = plot;
+    }
+
+    public void handle(Player player, String[] args) {
+        if ("downloadable".equalsIgnoreCase(args[0])) {
+            plot.getInformation().setDownloadable(!plot.getInformation().isDownloadable());
+            announce("Now world " + (plot.getInformation().isDownloadable() ? "can be downloaded" : "can't be downloaded"));
+        }
     }
 
     private void announce(String message) {

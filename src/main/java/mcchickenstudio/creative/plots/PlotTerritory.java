@@ -83,7 +83,7 @@ public class PlotTerritory {
         if (world != null) {
             world.setAutoSave(autoSave);
         }
-        FileUtils.setPlotConfigParameter(plot,"autosave",autoSave);
+        FileUtils.setPlotConfigParameter(plot,"autosave",autoSave ? true : null);
     }
 
     private void loadInformation() {
@@ -101,10 +101,10 @@ public class PlotTerritory {
         this.environment = environment;
     }
 
-    /*
-     * Loads plot, for example if player tries to join it. It loads world folder, world and code script.
+    /**
+     * Loads plot's files into worlds directory, loads and setups build world, loads script and variables.
      */
-    public void load() {
+    public synchronized void load() {
         loadInformation();
         FileUtils.loadWorldFolder(plot.getWorldName(),true);
         World world = new WorldCreator(plot.getWorldName()).environment(plot.getTerritory().getEnvironment()).keepSpawnLoaded(TriState.FALSE).createWorld();
@@ -136,10 +136,10 @@ public class PlotTerritory {
         new PlotLoadEvent(plot).callEvent();
     }
 
-    /*
-     * Unloads plot, for example if no players playing in plot.
+    /**
+     * Saves plot's data and unloads plot's build and dev worlds into /unloadedWorlds/ directory.
      */
-    public void unload() {
+    public synchronized void unload() {
         FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
         FileUtils.setPlotConfigParameter(plot,"environment", plot.getTerritory().getEnvironment().name());
         plot.getVariables().save();
@@ -150,11 +150,12 @@ public class PlotTerritory {
         if (Bukkit.unloadWorld(plot.getWorldName(),autoSave)) {
             FileUtils.unloadWorldFolder(plot.getWorldName(),true);
             if (Bukkit.getWorld(plot.getDevPlot().getWorldName()) != null) {
-                for (Player player : plot.getDevPlot().world.getPlayers()) {
+                for (Player player : plot.getDevPlot().getWorld().getPlayers()) {
                     teleportToLobby(player);
                 }
                 if (Bukkit.unloadWorld(plot.getDevPlot().getWorldName(),true)) {
                     FileUtils.unloadWorldFolder(plot.getDevPlot().getWorldName(),true);
+                    plot.getDevPlot().setWorld(null);
                 }
             }
         }

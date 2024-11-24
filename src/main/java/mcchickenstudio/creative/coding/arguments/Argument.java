@@ -109,7 +109,7 @@ public class Argument {
         setEventVariable(action, EventValues.Variable.PLOT_ONLINE, plot.getTerritory().getWorld().getPlayerCount());
         setEventVariable(action, EventValues.Variable.PLOT_ICON,new ItemStack(plot.getInformation().getMaterial(),1));
         setEventVariable(action, EventValues.Variable.PLOT_REPUTATION, plot.getInformation().getReputation());
-        setEventVariable(action, EventValues.Variable.PLOT_ENTITIES_AMOUNT, plot.getTerritory().getWorld().getEntityCount() + ((plot.getDevPlot() != null && plot.getDevPlot().world != null) ? plot.getDevPlot().world.getEntityCount() : 0));
+        setEventVariable(action, EventValues.Variable.PLOT_ENTITIES_AMOUNT, plot.getTerritory().getWorld().getEntityCount() + ((plot.getDevPlot() != null && plot.getDevPlot().getWorld() != null) ? plot.getDevPlot().getWorld().getEntityCount() : 0));
         setEventVariable(action, EventValues.Variable.PLOT_ENTITIES_AMOUNT_LIMIT, plot.getLimits().getEntitiesLimit());
         setEventVariable(action, EventValues.Variable.PLOT_LAST_REDSTONE_OPERATIONS,plot.getLimits().getLastRedstoneOperationsAmount());
         setEventVariable(action, EventValues.Variable.PLOT_REDSTONE_OPERATIONS_LIMIT, plot.getLimits().getRedstoneOperationsLimit());

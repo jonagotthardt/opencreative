@@ -22,6 +22,8 @@ package mcchickenstudio.creative.listeners.player;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.plots.PlotFlags;
 import mcchickenstudio.creative.utils.PlayerUtils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -36,11 +38,12 @@ import mcchickenstudio.creative.plots.Plot;
 
 import mcchickenstudio.creative.plots.PlotManager;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
-import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.MessageUtils.*;
 
 public class PlayerDeath implements Listener {
 
@@ -68,7 +71,10 @@ public class PlayerDeath implements Listener {
             event.setKeepInventory(true);
             PlayerUtils.teleportToLobby(player);
         }
-        player.sendTitle(getLocaleMessage("deaths.title",false),"§7 " + player.getName() + "§f " + translateDeathMessage(player));
+        player.showTitle(Title.title(
+                toComponent(getLocaleMessage("deaths.title",false)), Component.text("§7 " + player.getName() + "§f " + translateDeathMessage(player)),
+                Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(2), Duration.ofMillis(500))
+        ));
     }
 
     private String translateDeathMessage(Player player ) {

@@ -18,16 +18,13 @@
 
 package mcchickenstudio.creative.coding.blocks.actions.worldactions.world;
 
-import com.google.gson.Gson;
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.arguments.Arguments;
-import mcchickenstudio.creative.coding.blocks.actions.Action;
 import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.worldactions.WorldAction;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import mcchickenstudio.creative.utils.ErrorUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -36,6 +33,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 
 public class SendWebRequestAction extends WorldAction {
@@ -45,50 +43,73 @@ public class SendWebRequestAction extends WorldAction {
 
     @Override
     protected void execute(Entity entity) {
-        String url = getArguments().getValue("url","",this);
-        String body = getArguments().getValue("body","",this);
-        String request = getArguments().getValue("request","get",this);
-        String media = getArguments().getValue("media","text",this);
+        String url = getArguments().getValue("url", "", this);
+        String body = getArguments().getValue("body", "", this);
+        String request = getArguments().getValue("request", "GET", this).toUpperCase();
+        String media = getArguments().getValue("media", "text", this);
+
         if (url.isEmpty()) return;
-        if (body.isEmpty()) return;
+
+        if (!List.of("GET", "POST").contains(request)) {
+            throw new IllegalArgumentException("Invalid HTTP method, use GET or POST.");
+        }
+
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            throw new IllegalArgumentException("Invalid URL protocol, use http:// or https:// on the start of URL.");
+        }
+
+        if (url.toLowerCase().startsWith("http://localhost")
+                || url.toLowerCase().startsWith("http://127.0.0.1")
+                || url.toLowerCase().startsWith("https://localhost")
+                || url.toLowerCase().startsWith("https://127.0.0.1")
+        ) {
+            throw new IllegalArgumentException("This URL is blocked from sending requests.");
+        }
+
         new BukkitRunnable() {
             @Override
             public void run() {
                 try {
-                    URL requestUrl = new URL(url);
-                    HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
-                    connection.setConnectTimeout(5000);
-                    connection.setReadTimeout(5000);
-                    connection.setRequestMethod(request.toUpperCase());
-                    connection.setDoOutput("POST".equalsIgnoreCase(request)); // Разрешить отправку данных для POST
-                    if ("json".equalsIgnoreCase(media)) {
-                        connection.setRequestProperty("Content-Type", "application/json");
-                    } else if ("text".equalsIgnoreCase(media)) {
-                        connection.setRequestProperty("Content-Type", "text/plain");
-                    }
-                    if ("POST".equalsIgnoreCase(request)) {
-                        connection.getOutputStream().write(body.getBytes(StandardCharsets.UTF_8));
-                    }
-                    int code = connection.getResponseCode();
-                    InputStream is = code >= 400 ? connection.getErrorStream() : connection.getInputStream();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
-                    StringBuilder responseString = new StringBuilder();
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        responseString.append(line);
-                    }
-                    bufferedReader.close();
-                    connection.disconnect();
-                    String response = responseString.toString();
-                    response = response.substring(0,Math.min(1024,response.length()));
-                    String finalResponse = response;
-                    Bukkit.getScheduler().runTask(Main.getPlugin(), () -> EventRaiser.raiseWebResponseEvent(getPlot(),url,code, finalResponse));
-                } catch (Exception error) {
-                    Bukkit.getScheduler().runTask(Main.getPlugin(), () -> EventRaiser.raiseWebResponseEvent(getPlot(),url,408,"Error: " + error.getMessage()));
-                }
+                    HttpURLConnection connection = getHttpURLConnection(url, request, media);
 
+                    if ("POST".equalsIgnoreCase(request) && !body.isEmpty()) {
+                        try (OutputStream os = connection.getOutputStream()) {
+                            os.write(body.getBytes(StandardCharsets.UTF_8));
+                        }
+                    }
+
+                    int code = connection.getResponseCode();
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                            code >= 400 ? connection.getErrorStream() : connection.getInputStream()))) {
+                        char[] buffer = new char[1024];
+                        int read = reader.read(buffer);
+                        String response = new String(buffer, 0, Math.max(0, read));
+                        Bukkit.getScheduler().runTask(Main.getPlugin(),
+                                () -> EventRaiser.raiseWebResponseEvent(getPlot(), url, code, response));
+                    }
+                } catch (Exception e) {
+                    Bukkit.getScheduler().runTask(Main.getPlugin(),
+                            () -> EventRaiser.raiseWebResponseEvent(getPlot(), url, 408, "Error: " + e.getMessage()));
+                }
             }
         }.runTaskAsynchronously(Main.getPlugin());
+
+    }
+
+    private static HttpURLConnection getHttpURLConnection(String url, String request, String media) throws IOException {
+        URL requestUrl = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
+        connection.setConnectTimeout(5000);
+        connection.setReadTimeout(5000);
+        connection.setRequestMethod(request);
+        connection.setDoOutput("POST".equalsIgnoreCase(request));
+
+        if ("json".equalsIgnoreCase(media)) {
+            connection.setRequestProperty("Content-Type", "application/json");
+        } else {
+            connection.setRequestProperty("Content-Type", "text/plain");
+        }
+        return connection;
     }
 
     @Override

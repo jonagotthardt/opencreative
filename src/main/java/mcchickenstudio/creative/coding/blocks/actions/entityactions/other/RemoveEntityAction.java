@@ -23,9 +23,7 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.actions.entityactions.EntityAction;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Mob;
 
 public class RemoveEntityAction extends EntityAction {
     public RemoveEntityAction(Executor executor, Target target, int x, Arguments args) {

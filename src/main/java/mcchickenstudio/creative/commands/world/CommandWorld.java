@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 import java.io.File;
+import java.util.Arrays;
 
 import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
@@ -126,14 +127,23 @@ public class CommandWorld implements CommandExecutor {
                         if (plot == null) return true;
                         if (!plot.isLoaded()) return true;
                         int chunks = plot.getTerritory().getWorld().getChunkCount()
-                                + (plot.getDevPlot().isLoaded() ? plot.getDevPlot().world.getChunkCount() : 0);
+                                + (plot.getDevPlot().isLoaded() ? plot.getDevPlot().getWorld().getChunkCount() : 0);
                         int entities = plot.getTerritory().getWorld().getEntityCount()
-                                + (plot.getDevPlot().isLoaded() ? plot.getDevPlot().world.getEntityCount() : 0);
+                                + (plot.getDevPlot().isLoaded() ? plot.getDevPlot().getWorld().getEntityCount() : 0);
 
                         sender.sendMessage("");
                         sender.sendMessage(" Chunks: " + chunks);
                         sender.sendMessage(" Entities: " + entities);
                         sender.sendMessage("");
+                    }
+                    break;
+                case "e", "experiment", "experiments":
+                    if (sender instanceof Player player) {
+                        if (!sender.hasPermission("opencreative.world.memory")) return true;
+                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                        if (plot == null) return true;
+                        if (args.length == 1) return true;
+                        plot.getExperiments().handle(player, Arrays.copyOfRange(args,1,args.length));
                     }
                     break;
             }

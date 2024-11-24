@@ -19,15 +19,12 @@
 package mcchickenstudio.creative.menu;
 
 import mcchickenstudio.creative.Main;
-import mcchickenstudio.creative.utils.FileUtils;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 
-import static mcchickenstudio.creative.utils.FileUtils.loadLocales;
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
 import static mcchickenstudio.creative.utils.ItemUtils.itemEquals;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;

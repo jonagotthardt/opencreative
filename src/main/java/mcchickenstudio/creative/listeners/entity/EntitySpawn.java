@@ -57,8 +57,8 @@ public class EntitySpawn implements Listener {
                     event.setCancelled(true);
                 }
             }
-            if (plot.getDevPlot() != null && plot.getDevPlot().world != null) {
-                count += plot.getDevPlot().world.getEntityCount();
+            if (plot.getDevPlot() != null && plot.getDevPlot().getWorld() != null) {
+                count += plot.getDevPlot().getWorld().getEntityCount();
             }
             if (count > limit) {
                 event.setCancelled(true);

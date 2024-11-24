@@ -61,7 +61,7 @@ public class CodingBlockParser {
      */
     public void parseCode(DevPlot devPlot) {
 
-        World world = devPlot.world;
+        World world = devPlot.getWorld();
         devPlot.getPlot().getTerritory().stopBukkitRunnables();
         CodeScript script = devPlot.getPlot().getTerritory().getScript();
         script.clear();

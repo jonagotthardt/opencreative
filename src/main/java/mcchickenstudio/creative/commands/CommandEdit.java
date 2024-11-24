@@ -42,6 +42,7 @@ import java.util.List;
 import static mcchickenstudio.creative.utils.CooldownUtils.getCooldown;
 import static mcchickenstudio.creative.utils.CooldownUtils.setCooldown;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.MessageUtils.toComponent;
 
 public class CommandEdit implements CommandExecutor, TabCompleter {
 
@@ -91,12 +92,12 @@ public class CommandEdit implements CommandExecutor, TabCompleter {
                     } else {
                         String newName = ChatColor.translateAlternateColorCodes('&',String.join(" ", Arrays.copyOfRange(args,1,args.length)));
                         if (ChatColor.stripColor(newName).length() >= TEXT_LIMIT) {
-                            sender.sendMessage(Component.text(getLocaleMessage("commands.edit.text-limit").replace("%limit%",String.valueOf(TEXT_LIMIT))));
+                            sender.sendMessage(toComponent(getLocaleMessage("commands.edit.text-limit").replace("%limit%",String.valueOf(TEXT_LIMIT))));
                             return true;
                         }
                         meta.setDisplayName(newName);
                         item.setItemMeta(meta);
-                        sender.sendMessage(Component.text(getLocaleMessage("commands.edit.renamed").replace("%name%", newName)).clickEvent(ClickEvent.suggestCommand(newName)));
+                        sender.sendMessage(toComponent(getLocaleMessage("commands.edit.renamed").replace("%name%", newName)).clickEvent(ClickEvent.suggestCommand(newName)));
                     }
                     break;
                 }
@@ -111,13 +112,13 @@ public class CommandEdit implements CommandExecutor, TabCompleter {
                         if (lineNumber < 1) {
                             lineNumber = 1;
                         } else if (lineNumber >= LINES_LIMIT) {
-                            sender.sendMessage(Component.text(getLocaleMessage("commands.edit.lines-limit").replace("%limit%",String.valueOf(LINES_LIMIT))));
+                            sender.sendMessage(toComponent(getLocaleMessage("commands.edit.lines-limit").replace("%limit%",String.valueOf(LINES_LIMIT))));
                             return true;
                         }
                     } catch (NumberFormatException ignored) {}
                     String newLoreLine = ChatColor.translateAlternateColorCodes('&',String.join(" ", Arrays.copyOfRange(args,2,args.length)));
                     if (ChatColor.stripColor(newLoreLine).length() >= TEXT_LIMIT) {
-                        sender.sendMessage(Component.text(getLocaleMessage("commands.edit.text-limit").replace("%limit%",String.valueOf(TEXT_LIMIT))));
+                        sender.sendMessage(toComponent(getLocaleMessage("commands.edit.text-limit").replace("%limit%",String.valueOf(TEXT_LIMIT))));
                         return true;
                     }
                     List<String> newLore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
@@ -133,24 +134,24 @@ public class CommandEdit implements CommandExecutor, TabCompleter {
                     newLore.set(lineNumber-1,newLoreLine);
                     meta.setLore(newLore);
                     item.setItemMeta(meta);
-                    sender.sendMessage(Component.text(getLocaleMessage("commands.edit.set-lore").replace("%number%",String.valueOf(lineNumber)).replace("%lore%", newLoreLine)).clickEvent(ClickEvent.suggestCommand(newLoreLine)));
+                    sender.sendMessage(toComponent(getLocaleMessage("commands.edit.set-lore").replace("%number%",String.valueOf(lineNumber)).replace("%lore%", newLoreLine)).clickEvent(ClickEvent.suggestCommand(newLoreLine)));
                     break;
                 }
                 case "addlore": {
                     String newLoreLine = ChatColor.translateAlternateColorCodes('&',String.join(" ", Arrays.copyOfRange(args,1,args.length)));
                     if (ChatColor.stripColor(newLoreLine).length() >= TEXT_LIMIT) {
-                        sender.sendMessage(Component.text(getLocaleMessage("commands.edit.text-limit").replace("%limit%",String.valueOf(TEXT_LIMIT))));
+                        sender.sendMessage(toComponent(getLocaleMessage("commands.edit.text-limit").replace("%limit%",String.valueOf(TEXT_LIMIT))));
                         return true;
                     }
                     List<String> newLore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
                     if (newLore.size() >= LINES_LIMIT) {
-                        sender.sendMessage(Component.text(getLocaleMessage("commands.edit.lines-limit").replace("%limit%",String.valueOf(LINES_LIMIT))));
+                        sender.sendMessage(toComponent(getLocaleMessage("commands.edit.lines-limit").replace("%limit%",String.valueOf(LINES_LIMIT))));
                         return true;
                     }
                     newLore.add(newLoreLine);
                     meta.setLore(newLore);
                     item.setItemMeta(meta);
-                    sender.sendMessage(Component.text(getLocaleMessage("commands.edit.set-lore").replace("%number%",String.valueOf(newLore.size())).replace("%lore%", newLoreLine)).clickEvent(ClickEvent.suggestCommand(newLoreLine)));
+                    sender.sendMessage(toComponent(getLocaleMessage("commands.edit.set-lore").replace("%number%",String.valueOf(newLore.size())).replace("%lore%", newLoreLine)).clickEvent(ClickEvent.suggestCommand(newLoreLine)));
                     break;
                 }
                 case "removelore", "deletelore", "dellore", "remlore": {
@@ -164,7 +165,7 @@ public class CommandEdit implements CommandExecutor, TabCompleter {
                         if (lineNumber < 1) {
                             lineNumber = 1;
                         } else if (lineNumber >= LINES_LIMIT) {
-                            sender.sendMessage(Component.text(getLocaleMessage("commands.edit.lines-limit").replace("%limit%",String.valueOf(LINES_LIMIT))));
+                            sender.sendMessage(toComponent(getLocaleMessage("commands.edit.lines-limit").replace("%limit%",String.valueOf(LINES_LIMIT))));
                             return true;
                         }
                     } catch (NumberFormatException ignored) {}
@@ -174,14 +175,14 @@ public class CommandEdit implements CommandExecutor, TabCompleter {
                     }
                     meta.setLore(newLore);
                     item.setItemMeta(meta);
-                    sender.sendMessage(Component.text(getLocaleMessage("commands.edit.removed-lore").replace("%number%",String.valueOf(lineNumber))));
+                    sender.sendMessage(toComponent(getLocaleMessage("commands.edit.removed-lore").replace("%number%",String.valueOf(lineNumber))));
                     break;
                 }
                 case "clear": {
                     meta.displayName(null);
                     meta.lore(null);
                     item.setItemMeta(meta);
-                    sender.sendMessage(Component.text(getLocaleMessage("commands.edit.cleared")));
+                    sender.sendMessage(toComponent(getLocaleMessage("commands.edit.cleared")));
                     break;
                 }
             }

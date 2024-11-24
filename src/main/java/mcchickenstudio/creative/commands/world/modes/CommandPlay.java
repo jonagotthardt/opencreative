@@ -31,12 +31,7 @@ import mcchickenstudio.creative.coding.CodingBlockParser;
 import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.CooldownUtils;
 import mcchickenstudio.creative.plots.Plot;
-import mcchickenstudio.creative.utils.FileUtils;
 import org.jetbrains.annotations.NotNull;
-
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 import static mcchickenstudio.creative.listeners.player.ChangedWorld.removePlayerWithLocation;
@@ -69,7 +64,7 @@ public class CommandPlay implements CommandExecutor {
 
             DevPlot playerDevPlot = PlotManager.getInstance().getDevPlot(player);
             if (playerDevPlot != null) {
-                playerDevPlot.lastLocations.put(player,player.getLocation());
+                playerDevPlot.getLastLocations().put(player,player.getLocation());
             }
 
             removePlayerWithLocation(player);

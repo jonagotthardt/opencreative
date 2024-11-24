@@ -95,8 +95,8 @@ creative:
   creative-chat:
     cleared: "%prefix%The chat has been cleared by the server administration..."
     off: "%prefix%Creative chat is currently &6unavailable&f for communication, as it has been &6disabled&f by the server administration for all players. Please wait for the administration's decision..."
-    enabled: "%prefix%A server admin &6%player%&f has &cdisabled&f creative chat..."
-    disabled: "%prefix%A server admin &6%player%&f has &aenabled&f creative chat! Please follow the chat rules."
+    disabled: "%prefix%A server admin &6%player%&f has &cdisabled&f creative chat..."
+    enabled: "%prefix%A server admin &6%player%&f has &aenabled&f creative chat! Please follow the chat rules."
   maintenance:
     starting-notification: "%prefix%&cAttention!&f In &6%time% seconds, &fa maintenance break will begin, during which all worlds will be unloaded for technical work. \n \n&f If you are in a world, save your items and leave it by typing the command &6/spawn&f in the chat."
     starting-in: "%prefix%&fMaintenance break will start in &6%time% seconds&f."

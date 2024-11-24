@@ -25,7 +25,6 @@ import mcchickenstudio.creative.coding.blocks.actions.entityactions.EntityAction
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 
 public class SetEntityPathMoveToLocationAction extends EntityAction {

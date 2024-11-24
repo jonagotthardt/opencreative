@@ -26,8 +26,6 @@ import mcchickenstudio.creative.coding.blocks.executors.Executor;
 import mcchickenstudio.creative.coding.variables.VariableLink;
 import org.bukkit.entity.Entity;
 
-import java.util.Random;
-
 public class MinNumberAction extends VariableAction {
     public MinNumberAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);

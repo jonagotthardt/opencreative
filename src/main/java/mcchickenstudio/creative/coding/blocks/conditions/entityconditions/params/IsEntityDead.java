@@ -24,7 +24,6 @@ import mcchickenstudio.creative.coding.blocks.actions.ActionType;
 import mcchickenstudio.creative.coding.blocks.actions.Target;
 import mcchickenstudio.creative.coding.blocks.conditions.entityconditions.EntityCondition;
 import mcchickenstudio.creative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 
 import java.util.List;

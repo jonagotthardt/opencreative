@@ -78,7 +78,7 @@ public class WorldEnvironmentMenu extends AbstractMenu {
         replacePlaceholderInLore(info,"%executor-calls-limit%",devPlot.getPlot().getLimits().getCodeOperationsLimit());
         replacePlaceholderInLore(info,"%plotID%", devPlot.getPlot().getId());
         replacePlaceholderInLore(info,"%version%",Main.version);
-        long currentTime = devPlot.world == null ? 0 : devPlot.world.getTime();
+        long currentTime = devPlot.getWorld() == null ? 0 : devPlot.getWorld().getTime();
         boolean isMorning = currentTime >= 0L && currentTime < 6000L;
         boolean isNight = currentTime >= 15000L && currentTime <= 23000L;
         boolean isEvening = currentTime >= 12500L && currentTime < 15000L;
@@ -96,11 +96,11 @@ public class WorldEnvironmentMenu extends AbstractMenu {
         setItem((byte) 14,variablesList);
         setItem((byte) 16,clearVariables);
 
-        setItem((byte) 28,devPlot.world != null ? containers.getItem() : DECORATION_ITEM);
-        setItem((byte) 30,devPlot.world != null ? time.getItem() : DECORATION_ITEM);
-        setItem((byte) 32,devPlot.world != null ? floorMaterial : DECORATION_ITEM);
-        setItem((byte) 33,devPlot.world != null ? eventMaterial : DECORATION_ITEM);
-        setItem((byte) 34,devPlot.world != null ? actionMaterial : DECORATION_ITEM);
+        setItem((byte) 28, devPlot.getWorld() != null ? containers.getItem() : DECORATION_ITEM);
+        setItem((byte) 30, devPlot.getWorld() != null ? time.getItem() : DECORATION_ITEM);
+        setItem((byte) 32, devPlot.getWorld() != null ? floorMaterial : DECORATION_ITEM);
+        setItem((byte) 33, devPlot.getWorld() != null ? eventMaterial : DECORATION_ITEM);
+        setItem((byte) 34, devPlot.getWorld() != null ? actionMaterial : DECORATION_ITEM);
 
         setItem((byte) 45,devPlot.getPlot().isOwner(player) ? back : DECORATION_PANE_ITEM);
         setItem((byte) 46,DECORATION_PANE_ITEM);
@@ -130,22 +130,22 @@ public class WorldEnvironmentMenu extends AbstractMenu {
             player.performCommand("env vars clear");
             player.closeInventory();
         } else if (itemEquals(currentItem,time.getItem())) {
-            if (devPlot.world == null) return;
+            if (devPlot.getWorld() == null) return;
             time.next();
             player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_CHARGE,100,1.2f);
             setItem((byte) event.getRawSlot(),time.getItem());
             updateSlot((byte) event.getRawSlot());
             if ("night".equals(time.getCurrentValue().toString())) {
-                devPlot.world.setTime(15000L);
+                devPlot.getWorld().setTime(15000L);
             } else if ("evening".equals(time.getCurrentValue().toString())) {
-                devPlot.world.setTime(12500L);
+                devPlot.getWorld().setTime(12500L);
             } else if ("day".equals(time.getCurrentValue().toString())) {
-                devPlot.world.setTime(6000L);
+                devPlot.getWorld().setTime(6000L);
             } else {
-                devPlot.world.setTime(0L);
+                devPlot.getWorld().setTime(0L);
             }
         } else if (itemEquals(currentItem,containers.getItem())) {
-            if (devPlot.world == null) return;
+            if (devPlot.getWorld() == null) return;
             player.performCommand("env barrel");
             player.closeInventory();
         } else if (itemEquals(currentItem,debug.getItem())) {

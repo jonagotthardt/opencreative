@@ -24,7 +24,9 @@ import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static mcchickenstudio.creative.utils.FileUtils.*;
@@ -57,7 +59,7 @@ public class PlotPlayers {
 
     public void unregisterPlayer(Player player) {
         worldPlayers.removeIf(plotPlayer -> plotPlayer.getPlayer().equals(player));
-        plot.getDevPlot().lastLocations.remove(player);
+        plot.getDevPlot().getLastLocations().remove(player);
     }
 
     public WorldPlayer getPlotPlayer(Player player) {
@@ -71,16 +73,14 @@ public class PlotPlayers {
 
     private void loadPlayers() {
         FileConfiguration config = getPlotConfig(plot);
-        if (config != null) {
-            buildersTrusted.addAll(config.getStringList("players.builders.trusted"));
-            developersTrusted.addAll(config.getStringList("players.developers.trusted"));
+        buildersTrusted.addAll(config.getStringList("players.builders.trusted"));
+        developersTrusted.addAll(config.getStringList("players.developers.trusted"));
 
-            buildersNotTrusted.addAll(config.getStringList("players.builders.not-trusted"));
-            developersNotTrusted.addAll(config.getStringList("players.developers.not-trusted"));
+        buildersNotTrusted.addAll(config.getStringList("players.builders.not-trusted"));
+        developersNotTrusted.addAll(config.getStringList("players.developers.not-trusted"));
 
-            developersGuests.addAll(config.getStringList("players.developers.guests"));
-            bannedPlayers.addAll(config.getStringList("players.black-list"));
-        }
+        developersGuests.addAll(config.getStringList("players.developers.guests"));
+        bannedPlayers.addAll(config.getStringList("players.black-list"));
     }
 
     public Set<String> getAllBuilders() {
@@ -392,5 +392,25 @@ public class PlotPlayers {
 
     public Set<String> getBannedPlayers() {
         return bannedPlayers;
+    }
+
+    public void purgeData() {
+        List<String> empty = new ArrayList<>();
+        buildersTrusted.clear();
+        buildersNotTrusted.clear();
+        developersGuests.clear();
+        developersTrusted.clear();
+        developersNotTrusted.clear();
+        bannedPlayers.clear();
+        setPlotConfigParameter(plot,"players.unique",empty);
+        setPlotConfigParameter(plot,"players.liked",empty);
+        setPlotConfigParameter(plot,"players.disliked",empty);
+        setPlotConfigParameter(plot,"players.blacklist",empty);
+        setPlotConfigParameter(plot,"players.whitelist",empty);
+        setPlotConfigParameter(plot,"players.developers.trusted",empty);
+        setPlotConfigParameter(plot,"players.developers.not-trusted",empty);
+        setPlotConfigParameter(plot,"players.developers.guests",empty);
+        setPlotConfigParameter(plot,"players.builders.trusted",empty);
+        setPlotConfigParameter(plot,"players.builders.not-trusted",empty);
     }
 }

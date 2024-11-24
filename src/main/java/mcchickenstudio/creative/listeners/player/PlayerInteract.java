@@ -41,6 +41,7 @@ import mcchickenstudio.creative.plots.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -61,6 +62,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,8 +70,7 @@ import static mcchickenstudio.creative.listeners.player.ChangedWorld.*;
 import static mcchickenstudio.creative.listeners.player.PlayerPlaceBlock.move;
 import static mcchickenstudio.creative.utils.BlockUtils.*;
 import static mcchickenstudio.creative.utils.ItemUtils.*;
-import static mcchickenstudio.creative.utils.MessageUtils.getLocaleItemName;
-import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.MessageUtils.*;
 import static mcchickenstudio.creative.utils.PlayerUtils.isEntityInLobby;
 import static mcchickenstudio.creative.utils.PlayerUtils.translateBlockSign;
 
@@ -352,7 +353,7 @@ public class PlayerInteract implements Listener {
             }
             Component displayName = meta.displayName();
             if (displayName != null) {
-                player.sendMessage(displayName.hoverEvent(HoverEvent.showText(Component.text(getLocaleMessage("world.dev-mode.click-to-copy")))).clickEvent(ClickEvent.suggestCommand(ChatColor.stripColor(meta.getDisplayName()))));
+                player.sendMessage(displayName.hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("world.dev-mode.click-to-copy")))).clickEvent(ClickEvent.suggestCommand(ChatColor.stripColor(meta.getDisplayName()))));
             }
         }
     }
@@ -365,7 +366,7 @@ public class PlayerInteract implements Listener {
             }
             Component displayName = meta.displayName();
             if (displayName != null) {
-                player.sendMessage(displayName.hoverEvent(HoverEvent.showText(Component.text(getLocaleMessage("world.dev-mode.click-to-copy")))).clickEvent(ClickEvent.suggestCommand(ChatColor.stripColor(meta.getDisplayName()))));
+                player.sendMessage(displayName.hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("world.dev-mode.click-to-copy")))).clickEvent(ClickEvent.suggestCommand(ChatColor.stripColor(meta.getDisplayName()))));
                 setPersistentData(currentItem,getCodingValueKey(),"NUMBER");
             }
         }
@@ -379,7 +380,7 @@ public class PlayerInteract implements Listener {
             }
             Component displayName = meta.displayName();
             if (displayName != null) {
-                player.sendMessage(displayName.hoverEvent(HoverEvent.showText(Component.text(getLocaleMessage("world.dev-mode.click-to-copy")))).clickEvent(ClickEvent.suggestCommand(meta.getDisplayName().replace("§","&"))));
+                player.sendMessage(displayName.hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("world.dev-mode.click-to-copy")))).clickEvent(ClickEvent.suggestCommand(meta.getDisplayName().replace("§","&"))));
                 setPersistentData(currentItem,getCodingValueKey(),"TEXT");
             }
         }
@@ -433,7 +434,10 @@ public class PlayerInteract implements Listener {
         ItemMeta meta = currentItem.getItemMeta();
         VariableLink.VariableType type = getVariableType(meta);
         meta.setDisplayName(type.getColor() + ChatColor.stripColor(meta.getDisplayName()));
-        player.sendTitle(meta.getDisplayName(),type.getLocalized(),0,40,20);
+        player.showTitle(Title.title(
+                meta.displayName(), Component.text(type.getLocalized()),
+                Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(2), Duration.ofSeconds(1))
+        ));
         currentItem.setItemMeta(meta);
         setPersistentData(currentItem,getCodingValueKey(),"VARIABLE");
         setPersistentData(currentItem,getCodingVariableTypeKey(),type.name());
@@ -493,7 +497,10 @@ public class PlayerInteract implements Listener {
         String displayName = ChatColor.translateAlternateColorCodes('&',!value ? "&atrue" : "&cfalse");
         setDisplayName(currentItem,displayName);
         player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH, 100, 1.7f);
-        player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"), displayName, 0, 40, 20);
+        player.showTitle(Title.title(
+                toComponent(getLocaleMessage("world.dev-mode.set-variable")), Component.text(displayName),
+                Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
+        ));
     }
 
     private void setPaperLocation(PlayerInteractEvent event, Player player, ItemStack currentItem) {
@@ -512,17 +519,20 @@ public class PlayerInteract implements Listener {
             }
             String locationString = formatLocation(location);
             setDisplayName(currentItem,locationString);
-            player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),locationString,5,40,5);
+            player.showTitle(Title.title(
+                    toComponent(getLocaleMessage("world.dev-mode.set-variable")), Component.text(locationString),
+                    Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
+            ));
             player.playSound(player.getLocation(),Sound.ENTITY_EXPERIENCE_ORB_PICKUP,100,2);
         } else if (event.getAction() == Action.LEFT_CLICK_AIR) {
             if (plot != null && plot.getDevPlot().isLoaded()) {
                 player.teleport(getOldLocationPlayerWithLocation(player));
                 player.setCooldown(currentItem.getType(),60);
                 player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
-                for (Player developer : plot.getDevPlot().world.getPlayers()) {
+                for (Player developer : plot.getDevPlot().getWorld().getPlayers()) {
                     WorldBorder border = Bukkit.createWorldBorder();
-                    border.setCenter(plot.getDevPlot().world.getWorldBorder().getCenter());
-                    border.setSize(plot.getDevPlot().world.getWorldBorder().getSize()*5);
+                    border.setCenter(plot.getDevPlot().getWorld().getWorldBorder().getCenter());
+                    border.setSize(plot.getDevPlot().getWorld().getWorldBorder().getSize()*5);
                     developer.setWorldBorder(border);
                 }
             }

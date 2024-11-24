@@ -54,13 +54,11 @@ public class DevPlot {
 
     private final Plot plot;
 
-    public World world;
+    private World world;
     private Material containerMaterial = Material.CHEST;
 
-    public final Map<Player, Location> lastLocations = new HashMap<>();
+    private final Map<Player, Location> lastLocations = new HashMap<>();
     private final Map<Location, Layout> openedBlocksMenus = new HashMap<>();
-
-    public static final List<DevPlot> devPlots = new ArrayList<>();
 
     private final static Material DEFAULT_EVENT_MATERIAL = Material.BLUE_STAINED_GLASS;
     private final static Material DEFAULT_ACTION_MATERIAL = Material.GRAY_STAINED_GLASS;
@@ -69,7 +67,6 @@ public class DevPlot {
     public DevPlot(Plot plot) {
 
         this.plot = plot;
-        devPlots.add(this);
 
     }
 
@@ -77,32 +74,32 @@ public class DevPlot {
         if (this.exists()) {
             if (loadWorldFolder(this.getWorldName(), true)) {
                 Bukkit.createWorld(new WorldCreator(this.getWorldName()).type(WorldType.FLAT).generator(new DevPlotChunkGenerator()));
-                this.world = Bukkit.getWorld(this.getWorldName());
-                if (world != null) {
-                    if (world.getBlockAt(4,0,4).isEmpty()) {
+                this.setWorld(Bukkit.getWorld(this.getWorldName()));
+                if (getWorld() != null) {
+                    if (getWorld().getBlockAt(4,0,4).isEmpty()) {
                         createPlatform(1,1);
                     }
                     setupWorld();
                 }
             }
         } else {
-            this.world = Bukkit.createWorld(new WorldCreator(this.getWorldName()).type(WorldType.FLAT).generator(new DevPlotChunkGenerator()).keepSpawnLoaded(TriState.FALSE));
+            this.setWorld(Bukkit.createWorld(new WorldCreator(this.getWorldName()).type(WorldType.FLAT).generator(new DevPlotChunkGenerator()).keepSpawnLoaded(TriState.FALSE)));
             createPlatform(1,1);
-            this.world.setTime(12500);
+            this.getWorld().setTime(12500);
             setupWorld();
         }
     }
 
     private void setupWorld() {
-        this.world.setSpawnLocation(2,1,2);
-        this.world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
-        this.world.setGameRule(GameRule.DO_WEATHER_CYCLE,false);
-        this.world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS,false);
-        this.world.setGameRule(GameRule.DO_MOB_SPAWNING,false);
-        this.world.setGameRule(GameRule.DO_MOB_SPAWNING,false);
-        this.world.setGameRule(GameRule.MOB_GRIEFING,false);
-        this.world.setGameRule(GameRule.DO_PATROL_SPAWNING,false);
-        this.world.setGameRule(GameRule.DO_FIRE_TICK,false);
+        this.getWorld().setSpawnLocation(2,1,2);
+        this.getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
+        this.getWorld().setGameRule(GameRule.DO_WEATHER_CYCLE,false);
+        this.getWorld().setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS,false);
+        this.getWorld().setGameRule(GameRule.DO_MOB_SPAWNING,false);
+        this.getWorld().setGameRule(GameRule.DO_MOB_SPAWNING,false);
+        this.getWorld().setGameRule(GameRule.MOB_GRIEFING,false);
+        this.getWorld().setGameRule(GameRule.DO_PATROL_SPAWNING,false);
+        this.getWorld().setGameRule(GameRule.DO_FIRE_TICK,false);
         setWorldBorder();
 
     }
@@ -121,10 +118,10 @@ public class DevPlot {
 
     public void translateCodingBlocks(Player player) {
         for (byte z = 4; z < 96; z = (byte) (z + 4)) {
-            Block executorBlock = world.getBlockAt(4, 1, z);
+            Block executorBlock = getWorld().getBlockAt(4, 1, z);
             PlayerUtils.translateBlockSign(executorBlock.getRelative(BlockFace.SOUTH),player);
             for (byte x = 6; x < 96; x = (byte) (x + 2)) {
-                Block actionBlock = world.getBlockAt(x,1,z);
+                Block actionBlock = getWorld().getBlockAt(x,1,z);
                 PlayerUtils.translateBlockSign(actionBlock.getRelative(BlockFace.SOUTH),player);
             }
         }
@@ -166,7 +163,7 @@ public class DevPlot {
         int executorX = beginX+4;
         for (int x = beginX; x <= endX; x++) {
             for (int z = beginZ; z <= endZ; z++) {
-                Block block = world.getBlockAt(x,0,z);
+                Block block = getWorld().getBlockAt(x,0,z);
                 if (x == executorX && (z - beginZ) % 4 == 0 && z != beginZ && z != endZ) {
                     block.setType(DEFAULT_EVENT_MATERIAL);
                 } else if (x > executorX && (x - executorX) % 2 == 0 && x < endX - 2 && (z - beginZ) % 4 == 0 && z != beginZ && z != endZ) {
@@ -187,10 +184,10 @@ public class DevPlot {
         platform.build(DEFAULT_FLOOR_MATERIAL,DEFAULT_EVENT_MATERIAL,DEFAULT_ACTION_MATERIAL);
         setWorldBorder();
         player.teleport(platform.getSpawnLocation());
-        for (Player developer : world.getPlayers()) {
+        for (Player developer : getWorld().getPlayers()) {
             WorldBorder border = Bukkit.createWorldBorder();
-            border.setCenter(world.getWorldBorder().getCenter());
-            border.setSize(world.getWorldBorder().getSize()*5);
+            border.setCenter(getWorld().getWorldBorder().getCenter());
+            border.setSize(getWorld().getWorldBorder().getSize()*5);
             developer.setWorldBorder(border);
         }
         player.sendMessage(getLocaleMessage("environment.platform.claimed"));
@@ -272,9 +269,9 @@ public class DevPlot {
         List<Location> locations = new ArrayList<>();
         byte x = 4;
         for (byte z = 4; z < 96; z = (byte) (z + 4)) {
-            ExecutorCategory blockCategory = ExecutorCategory.getByMaterial(world.getBlockAt(x,1,z).getType());
+            ExecutorCategory blockCategory = ExecutorCategory.getByMaterial(getWorld().getBlockAt(x,1,z).getType());
             if (blockCategory == category) {
-                locations.add(world.getBlockAt(x,1,z).getLocation());
+                locations.add(getWorld().getBlockAt(x,1,z).getLocation());
             }
         }
         return locations;
@@ -285,7 +282,7 @@ public class DevPlot {
         int x = 4;
         for (DevPlatform platform : getPlatforms()) {
             for (int z = platform.getBeginZ()+4; z < platform.getEndZ()-4; z =z+4) {
-                Block block = world.getBlockAt(x,1,z);
+                Block block = getWorld().getBlockAt(x,1,z);
                 ExecutorCategory blockCategory = ExecutorCategory.getByMaterial(block.getType());
                 String line = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
                 if (blockCategory == ExecutorCategory.FUNCTION && line != null && !line.isEmpty()) {
@@ -346,7 +343,7 @@ public class DevPlot {
         if (!isLoaded()) return platforms;
         for (int x = 10; x >= 1; x--) {
             for (int z = 10; z >= 1; z--) {
-                DevPlatform platform = new DevPlatform(world,x,z);
+                DevPlatform platform = new DevPlatform(getWorld(),x,z);
                 if (platform.exists()) {
                     platforms.add(platform);
                 }
@@ -356,10 +353,10 @@ public class DevPlot {
     }
 
     public DevPlatform getFarPlatformByX() {
-        DevPlatform farPlatform = new DevPlatform(world,1,1);
+        DevPlatform farPlatform = new DevPlatform(getWorld(),1,1);
         if (!isLoaded()) return farPlatform;
         for (int x = 2; x <= 10; x++) {
-            DevPlatform current = new DevPlatform(world,x,1);
+            DevPlatform current = new DevPlatform(getWorld(),x,1);
             if (current.exists()) {
                 farPlatform = current;
             }
@@ -368,10 +365,10 @@ public class DevPlot {
     }
 
     public DevPlatform getFarPlatformByZ() {
-        DevPlatform farPlatform = new DevPlatform(world,1,1);
+        DevPlatform farPlatform = new DevPlatform(getWorld(),1,1);
         if (!isLoaded()) return farPlatform;
         for (int z = 2; z <= 10; z++) {
-            DevPlatform current = new DevPlatform(world,1,z);
+            DevPlatform current = new DevPlatform(getWorld(),1,z);
             if (current.exists()) {
                 farPlatform = current;
             }
@@ -395,9 +392,9 @@ public class DevPlot {
     }
 
     public void setWorldBorder() {
-        world.getWorldBorder().setWarningDistance(0);
-        world.getWorldBorder().setCenter(50,50);
-        world.getWorldBorder().setSize(120);
+        getWorld().getWorldBorder().setWarningDistance(0);
+        getWorld().getWorldBorder().setCenter(50,50);
+        getWorld().getWorldBorder().setSize(120);
         DevPlatform platformZ = getFarPlatformByZ();
         DevPlatform platformX = getFarPlatformByX();
         double endZ = platformZ.getEndZ();
@@ -409,13 +406,13 @@ public class DevPlot {
          */
         double centerZ = endZ/2;
         double centerX = endX/2;
-        world.getWorldBorder().setCenter(centerX,centerZ);
+        getWorld().getWorldBorder().setCenter(centerX,centerZ);
         /*
          * We find size by subtracting most far
          * coordinate with center coordinate.
          */
         double size = ((Math.max(endX, endZ))-(Math.max(centerX, centerZ)))*2+20;
-        world.getWorldBorder().setSize(size);
+        getWorld().getWorldBorder().setSize(size);
     }
 
     public static Material getDefaultActionMaterial() {
@@ -428,5 +425,17 @@ public class DevPlot {
 
     public static Material getDefaultFloorMaterial() {
         return DEFAULT_FLOOR_MATERIAL;
+    }
+
+    public Map<Player, Location> getLastLocations() {
+        return lastLocations;
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
+    public void setWorld(World world) {
+        this.world = world;
     }
 }

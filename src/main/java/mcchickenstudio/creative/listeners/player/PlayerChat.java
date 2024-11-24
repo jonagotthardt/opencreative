@@ -20,6 +20,8 @@ package mcchickenstudio.creative.listeners.player;
 
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.coding.blocks.events.EventRaiser;
+import mcchickenstudio.creative.events.CreativeEvent;
+import mcchickenstudio.creative.events.player.WorldChatEvent;
 import mcchickenstudio.creative.menu.world.browsers.WorldsBrowserMenu;
 import mcchickenstudio.creative.menu.world.settings.WorldSettingsPlayersMenu;
 import mcchickenstudio.creative.plots.DevPlot;
@@ -27,6 +29,7 @@ import mcchickenstudio.creative.plots.PlotManager;
 import mcchickenstudio.creative.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -40,6 +43,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.time.Duration;
 import java.util.*;
 
 
@@ -75,11 +79,15 @@ public class PlayerChat implements Listener {
             setCooldown(player,Main.getPlugin().getConfig().getInt("cooldowns.world-chat"), CooldownUtils.CooldownType.WORLD_CHAT);
             String message = ChatColor.translateAlternateColorCodes('&',parsePAPI(player,Main.getPlugin().getConfig().getString("messages.world-chat")).replace("%player%",player.getName()).replace("%message%",event.getMessage()));
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+            WorldChatEvent creativeEvent = new WorldChatEvent(player,event.getMessage(),message,player.getWorld(),plot);
+            creativeEvent.callEvent();
+            if (creativeEvent.isCancelled()) return;
+            message = creativeEvent.getFormattedMessage();
             if (plot != null) {
                 DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
                 if (devPlot != null) {
                     // If player in dev world
-                    for (Player p : devPlot.world.getPlayers()) {
+                    for (Player p : devPlot.getWorld().getPlayers()) {
                         p.sendMessage(message);
                     }
                     for (Player p : plot.getTerritory().getWorld().getPlayers()) {
@@ -98,7 +106,6 @@ public class PlayerChat implements Listener {
                     p.sendMessage(message);
                 }
             }
-
             Main.getPlugin().getLogger().info("[WORLD-CHAT: "+player.getWorld().getName()+"] "+player.getName()+": "+event.getMessage());
         }
 
@@ -114,7 +121,10 @@ public class PlayerChat implements Listener {
                 player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.4f);
                 setPersistentData(itemInHand,getCodingValueKey(),"TEXT");
                 player.setItemInHand(itemInHand);
-                player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),ChatColor.translateAlternateColorCodes('&',meta.getDisplayName()));
+                player.showTitle(Title.title(
+                        toComponent(getLocaleMessage("world.dev-mode.set-variable")), meta.displayName(),
+                        Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
+                ));
             } else if (itemInHand.getType() == Material.SLIME_BALL) {
                 String numberString = ChatColor.stripColor(message);
                 if (numberString.equalsIgnoreCase("p") || numberString.equalsIgnoreCase("pi")) {
@@ -128,9 +138,15 @@ public class PlayerChat implements Listener {
                     setPersistentData(itemInHand,getCodingValueKey(),"NUMBER");
                     player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.7f);
                     player.setItemInHand(itemInHand);
-                    player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),meta.getDisplayName());
+                    player.showTitle(Title.title(
+                            toComponent(getLocaleMessage("world.dev-mode.set-variable")), meta.displayName(),
+                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
+                    ));
                 } catch (NumberFormatException exception) {
-                    player.sendTitle("",getLocaleMessage("world.dev-mode.set-variable-number-error"));
+                    player.showTitle(Title.title(
+                            Component.empty(), toComponent(getLocaleMessage("world.dev-mode.set-variable-number-error")),
+                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
+                    ));
                 }
             } else if (itemInHand.getType() == Material.MAGMA_CREAM) {
                 StringBuilder newValue = new StringBuilder(ChatColor.stripColor(message));
@@ -149,7 +165,10 @@ public class PlayerChat implements Listener {
                 setPersistentData(itemInHand,getCodingVariableTypeKey(),insert == 'a' ? "SAVED" : insert == 'e' ? "GLOBAL" : "LOCAL");
                 player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.4f);
                 player.getInventory().setItemInMainHand(itemInHand);
-                player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),ChatColor.translateAlternateColorCodes('&',meta.getDisplayName()));
+                player.showTitle(Title.title(
+                        toComponent(getLocaleMessage("world.dev-mode.set-variable")), meta.displayName(),
+                        Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
+                ));
             } else if (itemInHand.getType() == Material.BLACK_DYE) {
                 int[] rgbColor = parseRGB(message);
                 int red = rgbColor[0];
@@ -161,7 +180,10 @@ public class PlayerChat implements Listener {
                     itemInHand.setItemMeta(meta);
                 }
                 setPersistentData(itemInHand,getCodingValueKey(),"COLOR");
-                player.sendTitle(getLocaleMessage("world.dev-mode.set-variable"),meta.getDisplayName());
+                player.showTitle(Title.title(
+                        toComponent(getLocaleMessage("world.dev-mode.set-variable")), meta.displayName(),
+                        Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
+                ));
                 player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.4f);
                 player.getInventory().setItemInMainHand(itemInHand);
             } else if (itemInHand.getType() == Material.POTION || itemInHand.getType() == Material.LINGERING_POTION || itemInHand.getType() == Material.SPLASH_POTION) {
@@ -213,7 +235,10 @@ public class PlayerChat implements Listener {
                     newMeta.addCustomEffect(oldEffect,true);
                 }
                 newMeta.addCustomEffect(new PotionEffect(effect.getType(),duration,amplifier-1),true);
-                player.sendTitle("",getLocaleMessage("world.dev-mode.set-potion").replace("%duration%", convertTime(duration * 50L)).replace("%amplifier%",""+amplifier));
+                player.showTitle(Title.title(
+                        Component.empty(), toComponent(getLocaleMessage("world.dev-mode.set-potion").replace("%duration%", convertTime(duration * 50L)).replace("%amplifier%",""+amplifier)),
+                        Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(2), Duration.ofMillis(500))
+                ));
                 player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.4f);
                 itemInHand.setItemMeta(newMeta);
             }

@@ -27,6 +27,8 @@ import mcchickenstudio.creative.menu.world.WorldEnvironmentMenu;
 import mcchickenstudio.creative.plots.Plot;
 import mcchickenstudio.creative.plots.PlotFlags;
 import mcchickenstudio.creative.utils.MessageUtils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import org.bukkit.ChatColor;
 import org.bukkit.GameRule;
 import org.bukkit.Material;
@@ -37,11 +39,13 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
 import static mcchickenstudio.creative.utils.ItemUtils.*;
 import static mcchickenstudio.creative.utils.MessageUtils.getLocaleMessage;
+import static mcchickenstudio.creative.utils.MessageUtils.toComponent;
 import static mcchickenstudio.creative.utils.PlayerUtils.isEntityInDevPlot;
 
 public class WorldSettingsMenu extends AbstractMenu {
@@ -148,21 +152,29 @@ public class WorldSettingsMenu extends AbstractMenu {
             return;
         }
         if (itemEquals(currentItem,name)) {
-            player.sendTitle(getLocaleMessage("settings.world-name.title"), getLocaleMessage("settings.world-name.subtitle"));
+            player.showTitle(Title.title(
+                    toComponent(getLocaleMessage("settings.world-name.title")), toComponent(getLocaleMessage("settings.world-name.subtitle")),
+                    Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(30), Duration.ofMillis(130))
+            ));
             player.sendMessage(getLocaleMessage("settings.world-name.usage").replace("%player%", player.getName()));
             player.closeInventory();
             if (!(PlayerChat.confirmation.containsKey(player))) {
                 PlayerChat.confirmation.put(player, "title");
             }
         } else if (itemEquals(currentItem,description)) {
-            player.sendTitle(getLocaleMessage("settings.world-description.title"), getLocaleMessage("settings.world-description.subtitle"));
-            player.sendMessage(getLocaleMessage("settings.world-description.usage"));
+            player.showTitle(Title.title(
+                    toComponent(getLocaleMessage("settings.world-description.title")), toComponent(getLocaleMessage("settings.world-description.subtitle")),
+                    Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(30), Duration.ofMillis(130))
+            ));            player.sendMessage(getLocaleMessage("settings.world-description.usage"));
             player.closeInventory();
             if (!(PlayerChat.confirmation.containsKey(player))) {
                 PlayerChat.confirmation.put(player, "description");
             }
         } else if (itemEquals(currentItem,customID)) {
-            player.sendTitle(getLocaleMessage("settings.world-id.title"), getLocaleMessage("settings.world-id.subtitle"));
+            player.showTitle(Title.title(
+                    toComponent(getLocaleMessage("settings.world-id.title")), toComponent(getLocaleMessage("settings.world-id.subtitle")),
+                    Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(30), Duration.ofMillis(130))
+            ));
             player.sendMessage(getLocaleMessage("settings.world-id.usage").replace("%player%", player.getName()));
             player.closeInventory();
             if (!(PlayerChat.confirmation.containsKey(player))) {
@@ -176,7 +188,10 @@ public class WorldSettingsMenu extends AbstractMenu {
             player.closeInventory();
             if (event.getClick().isLeftClick()) {
                 player.getWorld().setSpawnLocation(player.getLocation());
-                player.sendTitle(getLocaleMessage("settings.world-spawn.title"), getLocaleMessage("settings.world-spawn.subtitle"));
+                player.showTitle(Title.title(
+                        toComponent(getLocaleMessage("settings.world-spawn.title")), toComponent(getLocaleMessage("settings.world-spawn.subtitle")),
+                        Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(30), Duration.ofMillis(130))
+                ));
                 player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_CAST_SPELL,100,0.8f);
             } else {
                 player.teleport(player.getWorld().getSpawnLocation());

@@ -21,6 +21,8 @@ package mcchickenstudio.creative.commands.world.modes;
 import mcchickenstudio.creative.Main;
 import mcchickenstudio.creative.events.plot.PlotModeChangeEvent;
 import mcchickenstudio.creative.plots.PlotManager;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -33,6 +35,8 @@ import org.bukkit.inventory.ItemStack;
 import mcchickenstudio.creative.utils.CooldownUtils;
 import mcchickenstudio.creative.plots.Plot;
 import org.jetbrains.annotations.NotNull;
+
+import java.time.Duration;
 
 import static mcchickenstudio.creative.listeners.player.ChangedWorld.removePlayerWithLocation;
 import static mcchickenstudio.creative.utils.ItemUtils.createItem;
@@ -93,7 +97,10 @@ public class CommandBuild implements CommandExecutor {
                     }
                 } else {
                     clearPlayer(player);
-                    player.sendTitle(getLocaleMessage("world.build-mode.title"),getLocaleMessage("world.build-mode.subtitle"));
+                    player.showTitle(Title.title(
+                            toComponent(getLocaleMessage("world.build-mode.title")), toComponent(getLocaleMessage("world.build-mode.subtitle")),
+                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(750))
+                    ));
                     player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
                     player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT,100,1.7f);
                     if (plot.getWorldPlayers().canBuild(player)) {
