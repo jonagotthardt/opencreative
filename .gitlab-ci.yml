@@ -1,0 +1,11 @@
+image: maven:latest
+
+stages:
+  - deploy
+
+deploy_job:
+  stage: deploy
+  script:
+    - mvn deploy -s settings.xml
+  only:
+    - main
