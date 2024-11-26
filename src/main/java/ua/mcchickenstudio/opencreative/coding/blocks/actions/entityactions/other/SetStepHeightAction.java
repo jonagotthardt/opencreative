@@ -16,33 +16,35 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.params;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.other;
 
+import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
 
-public class SetExpAction extends PlayerAction {
-    public SetExpAction(Executor executor, Target target, int x, Arguments args) {
+public class SetStepHeightAction extends EntityAction {
+    public SetStepHeightAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
-    public void executePlayer(Player player) {
-        boolean add = getArguments().getValue("add",false,this);
-        float exp = getArguments().getValue("exp",0.0f,this);
-        if (!add) {
-            player.setExp(exp);
-        } else {
-            player.setExp(player.getExp()+exp);
+    protected void execute(Entity entity) {
+        if (!(entity instanceof LivingEntity livingEntity)) {
+            return;
         }
+        boolean add = getArguments().getValue("add",false,this);
+        double height = getArguments().getValue("height",0.6f,this);
+        if (add) height += livingEntity.getAttribute(Attribute.GENERIC_STEP_HEIGHT).getBaseValue();
+        livingEntity.getAttribute(Attribute.GENERIC_STEP_HEIGHT).setBaseValue(height);
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.PLAYER_SET_EXP;
+        return ActionType.ENTITY_SET_STEP_HEIGHT;
     }
 }

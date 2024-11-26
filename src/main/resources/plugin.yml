@@ -72,7 +72,7 @@ commands:
     aliases: [settings, game, іуеештпі, ыуеештпы, setting, цщкдв]
   environment:
     description: 'Opens environment`s settings menu.'
-    aliases: [env, утм, утмшкщтьуте]
+    aliases: [env, утм, утмшкщтьуте, editor, увшещк]
   gamemode:
     description: 'Changes current player`s gamemode.'
     aliases: [gm, гм, пь, пфьуьщву]

@@ -398,7 +398,7 @@ public class PlayerInteract implements Listener {
                     player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
                 }
             } else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-                if (move(clickedBlock.getRelative(BlockFace.WEST).getLocation(),BlockFace.WEST)) {
+                if (move(clickedBlock.getRelative(-2,0,0).getLocation(),BlockFace.WEST)) {
                     player.playSound(player.getLocation(), Sound.BLOCK_BARREL_CLOSE, 100, 1.3f);
                 } else {
                     player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);

@@ -19,8 +19,10 @@
 package ua.mcchickenstudio.opencreative.commands.world;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.WorldVariable;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
+import ua.mcchickenstudio.opencreative.coding.variables.WorldVariables;
 import ua.mcchickenstudio.opencreative.menu.world.WorldEnvironmentMenu;
 import ua.mcchickenstudio.opencreative.plots.DevPlatform;
 import ua.mcchickenstudio.opencreative.plots.DevPlot;
@@ -43,14 +45,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 public class CommandEnvironment implements CommandExecutor, TabCompleter {
 
@@ -82,7 +83,89 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         }
                         if (args[1].equalsIgnoreCase("size")) {
                             player.sendMessage(getLocaleMessage("environment.variables.size").replace("%count%", String.valueOf(plot.getVariables().getTotalVariablesAmount())));
-                        } else if (args[1].equalsIgnoreCase("clear")) {
+                        } else if (args[1].equalsIgnoreCase("set")) {
+                            if (args.length <= 3) {
+                                player.sendMessage(getLocaleMessage("environment.variables.set.help"));
+                                return true;
+                            }
+                            // /env var set VAR_NAME VAR_TYPE VALUE_TYPE VALUE
+                            String varName = args[2];
+                            VariableLink.VariableType type = VariableLink.VariableType.getEnum(args[3]);
+                            if (type == null || type == VariableLink.VariableType.LOCAL) return true;
+                            ValueType valueType = ValueType.TEXT;
+                            Object value = null;
+                            switch (args[4].toLowerCase()) {
+                                case "number", "n", "num", "numb" -> {
+                                    if (args.length == 5) return true;
+                                    String numberString = args[5];
+                                    if (numberString.equalsIgnoreCase("p") || numberString.equalsIgnoreCase("pi")) {
+                                        numberString = "3.1415926";
+                                    }
+                                    valueType = ValueType.NUMBER;
+                                    try {
+                                        value = parseTicks(numberString);
+                                    } catch (NumberFormatException ignored) {}
+                                }
+                                case "boolean", "bool", "b" -> {
+                                    if (args.length == 5) return true;
+                                    value = Boolean.parseBoolean(args[5]);
+                                    valueType = ValueType.BOOLEAN;
+                                }
+                                case "text", "t" -> value = String.join(" ",Arrays.copyOfRange(args,5,args.length));
+                                case "item", "i" -> {
+                                    value = player.getInventory().getItemInMainHand();
+                                    valueType = ValueType.ITEM;
+                                }
+                                case "location", "loc" -> {
+                                    try {
+                                        if (args.length < 8) return true;
+                                        double x = parseCoordinate(args[5],player.getX());
+                                        double y = parseCoordinate(args[6],player.getY());
+                                        double z = parseCoordinate(args[7],player.getZ());
+                                        float yaw = player.getYaw();
+                                        float pitch = player.getPitch();
+                                        if (args.length >= 9) {
+                                            yaw = parseCoordinate(args[8],player.getYaw());
+                                        }
+                                        if (args.length >= 10) {
+                                            pitch = parseCoordinate(args[9],player.getPitch());
+                                        }
+                                        value = new Location(plot.getTerritory().getWorld(),x,y,z,yaw,pitch);
+                                        valueType = ValueType.LOCATION;
+                                    } catch (NumberFormatException ignored) {}
+                                }
+                            }
+                            if (value != null) {
+                                if (plot.getVariables().setVariableValue(new VariableLink(varName,type),valueType,value)) {
+                                    player.sendMessage(getLocaleMessage("environment.variables.set.message")
+                                            .replace("%variable%",varName)
+                                            .replace("%value%",value.toString().length() > 100 ? value.toString().substring(0,100) + "..." : value.toString()));
+                                } else {
+                                    player.sendMessage(getLocaleMessage("environment.variables.set.limit")
+                                            .replace("%limit%",String.valueOf(plot.getLimits().getVariablesAmountLimit())));
+                                }
+                            }
+                        } else if (args[1].equalsIgnoreCase("get")) {
+                            VariableLink.VariableType type = VariableLink.VariableType.GLOBAL;
+                            if (args.length == 2) return true;
+                            String varName = args[2];
+                            if (args.length >= 4) {
+                                type = VariableLink.VariableType.getEnum(args[3]);
+                                if (type == null || type == VariableLink.VariableType.LOCAL) type = VariableLink.VariableType.GLOBAL;
+                            }
+                            WorldVariable var = plot.getVariables().getVariable(varName,type);
+                            if (var == null) {
+                                player.sendMessage(getLocaleMessage("environment.variables.get.empty"));
+                            } else {
+                                String message = getLocaleMessage("environment.variables.get.message")
+                                        .replace("%variable%",varName)
+                                        .replace("%type%",var.getType().getLocaleName())
+                                        .replace("%valuetype%",var.getVarType().getLocalized());
+                                message = message.replace("%value%",message.length()+var.getValue().toString().length() > 700 ? var.getValue().toString().substring(0,Math.min(var.getValue().toString().length(),700)) + "..." : var.getValue().toString());
+                                player.sendMessage(message);
+                            }
+                        }
+                        else if (args[1].equalsIgnoreCase("clear")) {
                             plot.getVariables().clearVariables();
                             player.sendMessage(getLocaleMessage("environment.variables.cleared"));
                         } else if (args[1].equalsIgnoreCase("list")) {
@@ -341,51 +424,89 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         List<String> tabCompleter = new ArrayList<>();
         if (args.length == 1) {
-            tabCompleter.add("platform");
-            tabCompleter.add("variables");
-            tabCompleter.add("debug");
-            tabCompleter.add("barrel");
-            tabCompleter.add("floor");
-            tabCompleter.add("action");
-            tabCompleter.add("theme");
-            tabCompleter.add("event");
-        } else if (args.length == 2) {
-            if ("variables".equalsIgnoreCase(args[0])) {
-                tabCompleter.add("size");
-                tabCompleter.add("clear");
-                tabCompleter.add("list");
+            Collections.addAll(tabCompleter,"platform","variables","debug","barrel","floor","action","theme","event");
+            return tabCompleter;
+        }
+        if (args.length == 2) {
+            if (List.of("var", "vars", "variables").contains(args[0].toLowerCase())) {
+                Collections.addAll(tabCompleter, "set", "get", "size", "clear", "list");
             } else if ("debug".equalsIgnoreCase(args[0])) {
-                tabCompleter.add("enable");
-                tabCompleter.add("disable");
+                Collections.addAll(tabCompleter, "enable", "disable");
             } else if ("floor".equalsIgnoreCase(args[0]) || "event".equalsIgnoreCase(args[0]) || "action".equalsIgnoreCase(args[0])) {
-                tabCompleter.add("barrier");
-                tabCompleter.add("black");
-                tabCompleter.add("blue");
-                tabCompleter.add("light_blue");
-                tabCompleter.add("light_gray");
-                tabCompleter.add("white");
-                tabCompleter.add("red");
-                tabCompleter.add("orange");
-                tabCompleter.add("yellow");
-                tabCompleter.add("purple");
-                tabCompleter.add("green");
-                tabCompleter.add("lime");
-                tabCompleter.add("magenta");
-                tabCompleter.add("brown");
-                tabCompleter.add("cyan");
-                tabCompleter.add("pink");
+                Collections.addAll(tabCompleter,
+                        "barrier", "black", "blue"
+                        , "light_blue", "light_gray", "white"
+                        , "red", "orange", "yellow", "purple"
+                        , "green", "lime", "magenta", "brown"
+                        , "cyan", "pink");
             } else if ("theme".equalsIgnoreCase(args[0])) {
-                tabCompleter.add("default");
-                tabCompleter.add("dark");
-                tabCompleter.add("light");
-                tabCompleter.add("legacy");
-                tabCompleter.add("cloud");
-                tabCompleter.add("art");
-                tabCompleter.add("blue");
-                tabCompleter.add("purple");
-                tabCompleter.add("ukraine");
+                Collections.addAll(tabCompleter,
+                        "default", "dark", "light",
+                        "legacy", "cloud", "art", "ukraine",
+                        "blue", "purple");
+            }
+            return tabCompleter;
+        }
+        if (List.of("var","vars","variables").contains(args[0].toLowerCase())) {
+            if (args[1].equalsIgnoreCase("set")) {
+                if (args.length == 3) {
+                    if (sender instanceof Player player) {
+                        if (PlayerUtils.isEntityInLobby(player)) return tabCompleter;
+                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                        if (plot == null || !plot.getWorldPlayers().canDevelop(player)) return tabCompleter;
+                        List<WorldVariable> allVariables = new ArrayList<>(plot.getVariables().getSet());
+                        if (allVariables.isEmpty()) return tabCompleter;
+                        List<WorldVariable> vars = allVariables.subList(Math.max(0,allVariables.size()-10),allVariables.size());
+                        tabCompleter.addAll(vars.stream().map(WorldVariable::getName).toList());
+                    }
+                }
+                if (args.length == 4) {
+                    Collections.addAll(tabCompleter, "global", "saved");
+                }
+                if (args.length == 5) {
+                    Collections.addAll(tabCompleter, "text", "number", "location", "item", "boolean");
+                }
+                if (args.length == 6) {
+                    switch (args[4].toLowerCase()) {
+                        case "number", "n", "numb", "num" -> Collections.addAll(tabCompleter, "0","1","16","32","64","100","500");
+                        case "boolean", "b", "bool" -> Collections.addAll(tabCompleter, "true","false");
+                    }
+                }
+            }
+            if (args[1].equalsIgnoreCase("get")) {
+                if (args.length == 3) {
+                    if (sender instanceof Player player) {
+                        if (PlayerUtils.isEntityInLobby(player)) return tabCompleter;
+                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                        if (plot == null || !plot.getWorldPlayers().canDevelop(player)) return tabCompleter;
+                        List<WorldVariable> allVariables = new ArrayList<>(plot.getVariables().getSet());
+                        if (allVariables.isEmpty()) return tabCompleter;
+                        List<WorldVariable> vars = allVariables.subList(Math.max(0,allVariables.size()-10),allVariables.size());
+                        tabCompleter.addAll(vars.stream().map(WorldVariable::getName).toList());
+                    }
+                } else if (args.length == 4) {
+                    Collections.addAll(tabCompleter, "global","saved");
+                } else {
+                    return null;
+                }
             }
         }
         return tabCompleter;
+    }
+
+    private double parseCoordinate(String arg, double current) throws NumberFormatException {
+        if (arg.startsWith("~")) {
+            return arg.equals("~") ? current : current + Double.parseDouble(arg.substring(1));
+        } else {
+            return Double.parseDouble(arg);
+        }
+    }
+
+    private float parseCoordinate(String arg, float current) throws NumberFormatException {
+        if (arg.startsWith("~")) {
+            return arg.equals("~") ? current : current + Float.parseFloat(arg.substring(1));
+        } else {
+            return Float.parseFloat(arg);
+        }
     }
 }

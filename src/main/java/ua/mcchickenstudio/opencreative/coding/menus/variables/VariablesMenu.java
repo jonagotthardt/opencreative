@@ -39,7 +39,7 @@ public class VariablesMenu extends AbstractMenu  {
     private final ItemStack VARIABLE_ITEM = createItem(Material.MAGMA_CREAM,1,"menus.developer.variables.items.variable");
     private final ItemStack EVENT_VALUE_ITEM = createItem(Material.NAME_TAG,1,"menus.developer.variables.items.event-value");
     private final ItemStack POTION_ITEM = createItem(Material.POTION,1,"menus.developer.variables.items.potion");
-
+    private final ItemStack PARTICLE_ITEM = createItem(Material.NETHER_STAR,1,"menus.developer.variables.items.particle");
 
     public VariablesMenu() {
         super((byte) 1, getLocaleMessage("menus.developer.variables.title"));
@@ -49,12 +49,12 @@ public class VariablesMenu extends AbstractMenu  {
     public void fillItems(Player player) {
         setItem((byte) 0,TEXT_ITEM);
         setItem((byte) 1,NUMBER_ITEM);
-        setItem((byte) 2,BOOLEAN_ITEM);
-        setItem((byte) 3,LOCATION_ITEM);
-        setItem((byte) 4,VARIABLE_ITEM);
+        setItem((byte) 2,LOCATION_ITEM);
+        setItem((byte) 3,POTION_ITEM);
+        setItem((byte) 4,PARTICLE_ITEM);
         setItem((byte) 5,EVENT_VALUE_ITEM);
-        setItem((byte) 6,POTION_ITEM);
-        setItem((byte) 7,DECORATION_ITEM);
+        setItem((byte) 6,VARIABLE_ITEM);
+        setItem((byte) 7,BOOLEAN_ITEM);
         setItem((byte) 8,DECORATION_ITEM);
 
     }

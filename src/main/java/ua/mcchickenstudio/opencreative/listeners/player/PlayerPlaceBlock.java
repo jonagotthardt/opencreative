@@ -199,7 +199,7 @@ public class PlayerPlaceBlock implements Listener {
              */
             if (location.getX() <= platform.getBeginX()+5) return false;
             if (!location.getBlock().isEmpty()) return false;
-            if (!location.getBlock().getRelative(BlockFace.WEST).isEmpty()) return false;
+            //if (!location.getBlock().getRelative(BlockFace.WEST).isEmpty()) return false;
             Set<Block> movedBlocks = new HashSet<>();
             for (double x = location.getX()+1; x < platform.getEndX(); x++) {
                 Block oldBlock = location.getWorld().getBlockAt((int) x, location.getBlockY(), location.getBlockZ());

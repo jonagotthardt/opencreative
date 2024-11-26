@@ -72,6 +72,15 @@ public class WorldVariables {
                 .orElse(null);
     }
 
+    public WorldVariable getVariable(String name, VariableLink.VariableType type) {
+        return variables.stream()
+                .filter(var -> var.getName().equalsIgnoreCase(name))
+                .filter(var -> type == var.getVarType())
+                .filter(var -> type != VariableLink.VariableType.LOCAL)
+                .findFirst()
+                .orElse(null);
+    }
+
     public void setVariableValue(VariableLink link, ValueType type, Object value, ActionsHandler handler, Action action) {
         link.setHandler(handler.getMainActionHandler());
         WorldVariable variable = getVariable(link,action);
@@ -96,7 +105,32 @@ public class WorldVariables {
             variables.add(newVariable);
         }
         sendCodingDebugLog(getPlot(),getLocaleMessage("plot-code-debug.variable." + (variable == null ? "created" : "set"),false).replace("%variable%", parseEntity(link.getName(),action.getHandler(),action)).replace("%value%",valueString));
+    }
 
+    public boolean setVariableValue(VariableLink link, ValueType type, Object value) {
+        WorldVariable variable = getVariable(link.getName(),link.getVariableType());
+        String valueString = value.toString().substring(0, Math.min(20, value.toString().length()));
+        if (variable != null) {
+            if (variable.getSize() + getTotalVariablesAmount() > plot.getLimits().getVariablesAmountLimit()) {
+                sendCodingDebugLog(getPlot(), "Reached limit of " + plot.getLimits().getVariablesAmountLimit() + " variables.");
+                return false;
+            }
+            variable.setType(type);
+            variable.setValue(value);
+        } else {
+            if (getTotalVariablesAmount() > plot.getLimits().getVariablesAmountLimit()) {
+                sendCodingDebugLog(getPlot(), "Reached limit of " + plot.getLimits().getVariablesAmountLimit() + " variables.");
+                return false;
+            }
+            WorldVariable newVariable = new WorldVariable(link.getName(), link.getVariableType(), type, value, null);
+            if (newVariable.getSize() + getTotalVariablesAmount() > plot.getLimits().getVariablesAmountLimit()) {
+                sendCodingDebugLog(getPlot(), "Reached limit of " + plot.getLimits().getVariablesAmountLimit() + " variables.");
+                return false;
+            }
+            variables.add(newVariable);
+        }
+        sendCodingDebugLog(getPlot(),getLocaleMessage("plot-code-debug.variable." + (variable == null ? "created" : "set"),false).replace("%variable%", link.getName()).replace("%value%",valueString));
+        return true;
     }
 
     public Object getVariableValue(VariableLink link, Action action) {

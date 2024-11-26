@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
+import org.bukkit.attribute.Attribute;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
@@ -238,6 +239,8 @@ public class PlayerUtils {
         player.resetPlayerTime();
         player.resetPlayerWeather();
         player.removeResourcePacks();
+        player.getAttribute(Attribute.GENERIC_SCALE).setBaseValue(1);
+        player.getAttribute(Attribute.GENERIC_STEP_HEIGHT).setBaseValue(0.6f);
         player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
         player.activeBossBars().forEach(player::hideBossBar);
         for (Entity entity : player.getWorld().getEntities()) {
@@ -268,7 +271,7 @@ public class PlayerUtils {
                 toComponent(getLocaleMessage("lobby.title")), toComponent(getLocaleMessage("lobby.subtitle")),
                 Title.Times.times(Duration.ofSeconds(1), Duration.ofSeconds(3), Duration.ofSeconds(1))
         ));
-        player.sendMessage(getLocaleMessage("lobby.message"));
+        player.sendMessage(toComponent(getLocaleMessage("lobby.message")));
         player.playSound(player.getLocation(),Sound.BLOCK_BEACON_DEACTIVATE,100,1.5f);
         player.playSound(player.getLocation(), OpenCreative.getPlugin().getConfig().getString("lobby.sound.name","music_disc.precipice") ,100,(float) OpenCreative.getPlugin().getConfig().getDouble("lobby.sound.pitch",0.1f));
 
