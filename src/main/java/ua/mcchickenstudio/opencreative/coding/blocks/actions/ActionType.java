@@ -20,10 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.events.CancelEventAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.other.RemoveEntityAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.other.SetArmorStandPoseAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.other.SetEntityPathMoveToLocationAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.other.SetEntityTargetAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.other.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.handleractions.other.CatchErrorAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.handleractions.other.MeasureTimeAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.other.LaunchFunctionAction;
@@ -435,6 +432,9 @@ public enum ActionType {
     ENTITY_SET_TARGET(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, SetEntityTargetAction.class, Material.NETHER_STAR, new ArgumentSlot("entity",ValueType.TEXT)),
     ENTITY_PATH_MOVE_TO_LOCATION(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, SetEntityPathMoveToLocationAction.class, Material.PAPER, new ArgumentSlot("location",ValueType.LOCATION)),
     ENTITY_SET_ARMOR_STAND_POSE(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, SetArmorStandPoseAction.class, Material.ARMOR_STAND, new ArgumentSlot("x",ValueType.NUMBER), new ArgumentSlot("y",ValueType.NUMBER), new ArgumentSlot("z",ValueType.NUMBER)),
+    ENTITY_SET_SCALE(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, SetScaleAction.class, Material.SHULKER_SHELL, new ArgumentSlot("scale", ValueType.NUMBER), new ParameterSlot("add")),
+    ENTITY_SET_STEP_HEIGHT(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, SetStepHeightAction.class, Material.RABBIT_FOOT, new ArgumentSlot("height", ValueType.NUMBER), new ParameterSlot("add")),
+
 
     /**
      * <h1>Other Actions.</h1>

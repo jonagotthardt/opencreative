@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
+import org.bukkit.attribute.Attribute;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
@@ -238,6 +239,8 @@ public class PlayerUtils {
         player.resetPlayerTime();
         player.resetPlayerWeather();
         player.removeResourcePacks();
+        player.getAttribute(Attribute.GENERIC_SCALE).setBaseValue(1);
+        player.getAttribute(Attribute.GENERIC_STEP_HEIGHT).setBaseValue(0.6f);
         player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
         player.activeBossBars().forEach(player::hideBossBar);
         for (Entity entity : player.getWorld().getEntities()) {

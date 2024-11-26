@@ -143,6 +143,10 @@ public class MessageUtils {
         //return YamlConfiguration.loadConfiguration(getLocalizationFile());
     }
 
+    public static String getLocaleString(String path) {
+        return getLocalization().getString(path,path);
+    }
+
     /**
      Returns a path, that has specified message. May work wrong, if some messages will be same.
      **/

@@ -157,7 +157,7 @@ plot-code-debug:
   condition-message-true: "&7 Condition &8| &7%type%&7 (%x% %y% %z%) returned &aYES&7: Executing actions..."
   condition-message-false: "&7 Condition &8| &7%type%&7 (%x% %y% %z%) returned &cNO&7: Executing otherwise..."
 lobby:
-  title: "&fOpen&x&d&b&d&b&d&bC&x&e&0&d&a&d&7r&x&e&5&d&9&d&4e&x&e&a&d&8&d&0a&x&f&0&d&7&c&dt&x&f&5&d&6&c&9i&x&f&a&d&5&c&6v&x&f&f&d&4&c&2e&a+"
+  title: "%branding%"
   subtitle: "&fLet's &acreate&f in your worlds!"
   message: "\n &f\n&f\n &f\n &fOpen&x&d&b&d&b&d&bC&x&e&0&d&a&d&7r&x&e&5&d&9&d&4e&x&e&a&d&8&d&0a&x&f&0&d&7&c&dt&x&f&5&d&6&c&9i&x&f&a&d&5&c&6v&x&f&f&d&4&c&2e&a+ &85.0 Preview 4\n&a Everything will be different..\n &f\n&6 ⭐ &fExplore all &6worlds&f using the compass!\n&d ❤&f Create your own world and &dinvite &fyour friends!\n &e⌚&f Have fun and &ecreate &fwhatever you want!\n \n&f\n &f"
 creating-world:
@@ -1586,6 +1586,30 @@ items:
           - "&7> Загрузки карты, блоков, мобов"
           - " "
           - "&eНажми, чтобы установить событие."
+      world-variable-transfer:
+        name: "&9Receiving value from world"
+        lore:
+          - "&7This occurs when a value is sent"
+          - "&7from another world to yours."
+          - " "
+          - "&fUse for:"
+          - "&7> Synchronizing in-game currency"
+          - "&7> Determining why player joined a world"
+          - "&7> Checking if the world is online"
+          - " "
+          - "&eClick to set the event."
+      world-web-response:
+        name: "&bReceiving response from site"
+        lore:
+          - "&7This occurs after a request to a"
+          - "&7website when site sends a response."
+          - " "
+          - "&fUse for:"
+          - "&7> Checking if connection is successful"
+          - "&7> Processing the response content"
+          - "&7> Verifying the website"
+          - " "
+          - "&eClick to set the event."
       entity-spawned:
         name: "&aПризыв сущности"
         lore:
@@ -1604,6 +1628,157 @@ items:
           - " "
           - "&eНажми, чтобы установить событие."
     actions:
+      entity-set-step-height:
+        name: "&dSet step height of entity"
+        lore:
+          - "&7Allows entity to move when"
+          - "&7height of blocks is long."
+          - " "
+          - "&fIn chest:"
+          - "&a Number &7- Height"
+          - "&3 Parameter &7- Set or add"
+          - " "
+          - "&eClick to set action."
+        placeholders:
+          scale:
+            name: "&aHeight"
+            lore:
+              - "&7Put here a number value"
+              - "&7for setting step height."
+              - ""
+              - "&7By default: &a0.6"
+        arguments:
+          add:
+            name: "&fSet or add"
+            lore:
+              - "&7If you choose add, it will"
+              - "&7increase current value with"
+              - "&7specified one."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fChoices:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
+      entity-set-scale:
+        name: "&dSet scale of entity"
+        lore:
+          - "&7Makes living entity model"
+          - "&7bigger or smaller."
+          - " "
+          - "&fIn chest:"
+          - "&a Number &7- Scale"
+          - "&3 Parameter &7- Set or add"
+          - " "
+          - "&eClick to set action."
+        placeholders:
+          scale:
+            name: "&aScale"
+            lore:
+              - "&7Put here a number value"
+              - "&7for setting entity's scale."
+              - ""
+              - "&7By default: &a1"
+        arguments:
+          add:
+            name: "&fSet or add"
+            lore:
+              - "&7If you choose add, it will"
+              - "&7increase current value with"
+              - "&7specified one."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fChoices:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
+      world-send-web-request:
+        name: "&bSend a Request to a Website"
+        lore:
+          - "&7Sends an HTTP request to the"
+          - "&7specified website. This will trigger"
+          - "&7the event &bResponse from Website&7."
+          - " "
+          - "&fIn the chest:"
+          - "&6 Text &7- Website URL"
+          - "&6 Text &7- Request body"
+          - "&3 Parameter &7- Type (get, post)"
+          - "&3 Parameter &7- Media (text, json)"
+          - " "
+          - "&eClick to set the action."
+        placeholders:
+          url:
+            name: "&6Website URL"
+            lore:
+              - "&7Place a text here with the specified"
+              - "&7URL of the website. It must start with"
+              - "&6https://&7."
+          body:
+            name: "&6Content (body)"
+            lore:
+              - "&7Place a text here with the specified"
+              - "&7request body. Usually not needed"
+              - "&7for GET requests."
+        arguments:
+          request:
+            name: "&eRequest Type"
+            lore:
+              - "&7Use GET to retrieve content from the website"
+              - "&7or POST to send data."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              get: "Retrieve (get)"
+              post: "Send (post)"
+          media:
+            name: "&eMedia Type"
+            lore:
+              - "&7If JSON is selected, ensure"
+              - "&7the request body is in valid format."
+              - '&7Example JSON: &6{"content":"Hello"}'
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              text: "text/plain"
+              json: "application/json"
+      world-transfer-variable:
+        name: "&9Send a value to world"
+        lore:
+          - "&7Sends a value to another world."
+          - "&7The world must belong to you and"
+          - "&7it must be online, &bValue Received"
+          - "&7event will be triggered in world."
+          - " "
+          - "&fIn the chest:"
+          - "&6 Text &7- World ID"
+          - "&6 Text &7- Key"
+          - "&9 Any Value &7- Value"
+          - " "
+          - "&eClick to set the action."
+        placeholders:
+          world:
+            name: "&6World ID"
+          key:
+            name: "&6Key"
+            lore:
+              - "&7The key can be any text and is used"
+              - "&7in the event to distinguish values."
+              - ""
+              - "&fExamples: &6online&f, &6money"
       world-set-world-border:
         name: "&dУстановить границу мира"
         lore:
@@ -6181,7 +6356,73 @@ menus:
             - "&7 Получает ID материала блока"
             - "&7 из событий про изменение блока."
             - ""
-            - "&eНажми, чтобы установить."    
+            - "&eНажми, чтобы установить."
+        url:
+          name: "&eURL"
+          lore:
+            - "&7Type: &6Text"
+            - ""
+            - "&7 Retrieves the website URL from"
+            - "&7 which the response was received."
+            - ""
+            - "&eClick to set."
+        url-response-code:
+          name: "&aResponse code"
+          lore:
+            - "&7Type: &aNumber"
+            - ""
+            - "&7 Retrieves response code from site."
+            - ""
+            - "&f Examples:"
+            - "&a  200 &7- Success"
+            - "&a  400 &7- Bad Request"
+            - "&a  404 &7- Not Found"
+            - "&a  408 &7- Request Timeout"
+            - "&a  500 &7- Internal Server Error"
+            - ""
+            - "&eClick to set."
+        url-response:
+          name: "&aWebsite Response Content"
+          lore:
+            - "&7Type: &6Text"
+            - ""
+            - "&7 Retrieves the website's response,"
+            - "&7 which can be an HTML document,"
+            - "&7 a JSON response, or plain text."
+            - ""
+            - "&eClick to set."
+        client-brand:
+          name: "&2Player's Client Name"
+          lore:
+            - "&7Type: &6Text"
+            - ""
+            - "&7 Gets the name of the client"
+            - "&7 the player is using."
+            - ""
+            - "&f Examples:"
+            - "&6  vanilla"
+            - "&6  fabric"
+            - "&6  forge"
+            - ""
+            - "&eClick to set."
+        transfer-key:
+          name: "&bValue Transfer Key"
+          lore:
+            - "&7Type: &6Text"
+            - ""
+            - "&7 Gets the key used when sending"
+            - "&7 a value to this world."
+            - ""
+            - "&eClick to set."
+        transfer-value:
+          name: "&9Value Received from World"
+          lore:
+            - "&7Type: &9Any Value"
+            - ""
+            - "&7 Gets the value that"
+            - "&7 was sent to this world."
+            - ""
+            - "&eClick to set."
         is-chunk-new:
           name: "&aНовый ли чанк"
           lore:
@@ -6954,90 +7195,88 @@ menus:
             - ""
             - "&eНажми, чтобы установить."
     variables:
-      title: "&0Значения"
+      title: "&0Values"
       items:
         text:
-          name: "&x&E&1&6&E&4&0Текст"
+          name: "&x&E&1&6&E&4&0Text"
           lore:
-            - "&7Значение, которое хранит символы"
-            - "&7в себе для хранения информации."
+            - "&7A value that stores characters"
+            - "&7for holding information."
             - ""
-            - "&fВ руке:"
-            - " &eСообщение в чат &7- Установить текст"
+            - "&fIn hand:"
+            - " &eChat message &7- Set text"
             - ""
-            - "&7Поддерживает цвета через символ &f&"
-            - "&7Поддерживает заменители (плейсхолдеры)"
+            - "&7Supports colors with the symbol &f&"
+            - "&7Supports placeholders"
         number:
-          name: "&aЧисло"
+          name: "&aNumber"
           lore:
-            - "&7Значение, которое хранит целое"
-            - "&7или дробное число."
+            - "&7A value that stores either an"
+            - "&7integer or a decimal number."
             - " "
-            - "&fВ руке: "
-            - " &eСообщение в чат &7- Установить число"
+            - "&fIn hand:"
+            - " &eChat message &7- Set number"
         color:
-          name: "&bЦвет"
+          name: "&bColor"
           lore:
-            - "&7Значение, которое хранит цвет"
-            - "&7в формате RGB."
+            - "&7A value that stores a color"
+            - "&7in RGB format."
             - ""
-            - "&fВ руке: "
-            - " &eСообщение в чат &7- Установить цвет"
+            - "&fIn hand:"
+            - " &eChat message &7- Set color"
             - ""
-            - "&7Формат сообщения: &cR &aG &bB"
+            - "&7Message format: &cR &aG &bB"
         boolean:
-          name: "&eЛогическое значение"
+          name: "&eBoolean Value"
           lore:
-            - "&7Логическое значение используется"
-            - "&7во многих параметрах, чтобы ответить"
-            - "&7либо &aда&7, либо &cнет&7."
+            - "&7A boolean value used in many"
+            - "&7parameters to answer either"
+            - "&7&aYes&7 or &cNo&7."
             - " "
-            - "&fВ руке: "
-            - " &eПКМ &7- Переключить ДА или НЕТ"
+            - "&fIn hand:"
+            - " &eRight-click &7- Toggle Yes or No"
         location:
-          name: "&fМестоположение"
+          name: "&fLocation"
           lore:
-            - "&7Хранит местоположение блока, куда"
-            - "&7смотрит игрок или на чём стоит. "
+            - "&7Stores the location of a block the"
+            - "&7player is looking at or standing on."
             - " "
-            - "&fВ руке: "
-            - " &eЛКМ &7- Телепорт в мир"
-            - " &eF &7- Телепорт на координаты"
-            - " &eПКМ &7- Установить координаты"
+            - "&fIn hand:"
+            - " &eLeft-click &7- Teleport to world"
+            - " &eF &7- Teleport to coordinates"
+            - " &eRight-click &7- Set coordinates"
         potion:
-          name: "&dЭффект от зелья"
+          name: "&dPotion Effect"
           lore:
-            - "&7Создаёт эффект зелья, который"
-            - "&7можно применить игроку или мобу. "
+            - "&7Creates a potion effect that can"
+            - "&7be applied to a player or mob."
             - " "
-            - "&fВ руке: "
-            - " &eПКМ &7- Выбрать тип эффекта"
-            - " &eСообщение в чат &7- Установка"
-            - " &7 длительности эффекта"
+            - "&fIn hand:"
+            - " &eRight-click &7- Select effect type"
+            - " &eChat message &7- Set effect duration"
         variable:
-          name: "&eПеременная"
+          name: "&eVariable"
           lore:
-            - "&7Может хранить в себе любое"
-            - "&7значение: текст, число, список,"
-            - "&7местоположение, предмет."
+            - "&7Can store any value: text, number,"
+            - "&7list, location, item."
             - ""
-            - "&fВ руке: "
-            - " &eПКМ &7- Переключить тип"
+            - "&fIn hand:"
+            - " &eRight-click &7- Switch type"
             - " "
-            - "&7Значения &cлокальных&7 доступны лишь"
-            - "&7в одной строке кода, а &eглобальных"
-            - "&7доступны везде. &aСохраняемые&7 будут"
-            - "&7сохранены после отгрузки мира."
+            - "&7&cLocal&7 variables are only available"
+            - "&7within one code line, while &eGlobal"
+            - "&7ones are accessible everywhere. &aSaved"
+            - "&7variables persist after unloading the world."
         event-value:
-          name: "&6Значение события"
+          name: "&6Event Value"
           lore:
-            - "&7Хранит значение из события,"
-            - "&7сущности или мира."
+            - "&7Stores a value from an event,"
+            - "&7entity, or world."
             - ""
-            - "&fВ руке: "
-            - " &eПКМ &7- Выбрать тип значения"
+            - "&fIn hand:"
+            - " &eRight-click &7- Select value type"
             - ""
-            - "&7Некоторые могут быть &3пустыми&7."
+            - "&7Some values may be &3empty&7."
   own-worlds:
     title: "&2☄ My Worlds"
     title-pages: "My Worlds (%page% of %pages%)"
@@ -8167,7 +8406,9 @@ blocks:
   player_killed_player: "Killed a player"
   player_damage_player: "Hit a player"
   
-  world_play_mode: "&aWorld play mode"
+  world_play_mode: "&aPlay mode"
+  world_variable_transfer: "Value receive"
+  world_web_response: "Web response"
 
   entity_spawned: "Entity spawned"
 
@@ -8239,7 +8480,20 @@ blocks:
   player_request_purchase: "Request purchase"
   player_open_container: "Open block inventory"
   player_open_book: "Open book"
-  player_get_item_by_slot: "Get item by slot"
+  player_get_item_by_slot: "Get item"
+
+  entity_remove: "&cRemove"
+  entity_set_step_height: "Step height"
+  entity_set_scale: "Set scale"
+  entity_set_target: "Set target"
+  entity_path_move_to_location: "Path location"
+  entity_set_armor_stand_pose: "Stand Pose"
+
+  handler_catch_error: "Catch error"
+  handler_measure_time: "Measure time"
+
+  repeat_always: "Always"
+  repeat_for_loop: "For loop"
 
   control_cancel_event: "&cCancel event"
   control_throw_error: "Trigger error"
