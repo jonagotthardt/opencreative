@@ -59,7 +59,7 @@ environment:
     size: "%prefix%В мире сейчас имеется всего &6%count% переменных&f.\n &fВсё содержимое списков и ключи со значениями словарей входит в число переменных."
     get:
       empty: "%prefix%&cЭтой переменной не существует :("
-      message: "%prefix%Данные переменной &6%name%&f:\n &fТип переменной: %type%\n &fТип значения: %valuetype%\n &fЗначение: &6%value%"
+      message: "%prefix%Данные переменной &6%variable%&f:\n &fТип переменной: %type%\n &fТип значения: %valuetype%\n &fЗначение: &6%value%"
     list:
       empty: "%prefix%В мире сейчас нет установленных переменных."
       header: "\n%prefix%Список переменных в мире (&6%current% &fиз &6%amount%&f всего):"
@@ -67,6 +67,10 @@ environment:
       next-page: "&a                   [Далее →]"
       previous-page: "&c[← Назад]"
       navigation: "\n&f Навигация: "
+    set:
+      help: "%prefix%Чтобы установить значение переменной напишите в чат:\n &6/env var set [Переменная] [global/saved] [text,number,item,location] (значение)\n&f Для установки предмета используется тот, что в основной руке."
+      limit: "%prefix%&cДостигнут лимит переменных (%limit%)!"
+      message: "%prefix%Установлено новое значение %variable%&f: &7%value%"
   debug:
     help: "%prefix%Режим отладки отправляет в чат выполнение событий, действий и условий, а также значения внутри них.\n &6/env debug enable &f- Включить режим отладки\n &6/env debug disable &f- Отключить режим отладки"
     enabled: "%prefix%&fРазработчик мира &6%player% &fвключил режим отладки."
@@ -168,7 +172,7 @@ plot-code-debug:
 lobby:
   title: "%branding%"
   subtitle: "&fДавайте &aтворить&f в своих мирах!"
-  message: "\n &f\n&f\n &f\n &f%branding% &85.0 Developer Preview\n&a Всё будет по другому..\n &f\n&6 ⭐ &fОсмотри все &6миры&f с помощью компаса!\n&d ❤&f Создай свой мир и &dпригласи &fдрузей!\n &e⌚&f Веселись и &eтвори &fчто угодно!\n \n&f\n &f"
+  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.0 Pre-release\n<green> Всё будет по другому..\n <white>\n<gold> ⭐ <white>Осмотри все <gold>миры<white> с помощью компаса!\n<light_purple> ❤ <white>Создай свой мир и <light_purple>пригласи <white>друзей!\n <yellow>⌚<white> Веселись и <yellow>твори <white>что угодно!\n \n<white>\n <white>"
 creating-world:
   title: "&eСоздание мира ◌"
   subtitle: "&fПодождите несколько секунд..."
@@ -7347,8 +7351,18 @@ menus:
             - " "
             - "&fВ руке: "
             - " &eПКМ &7- Выбрать тип эффекта"
+            - " &eShift+ПКМ &7- Опробовать эффект"
             - " &eСообщение в чат &7- Установка"
             - " &7 длительности и силы эффекта"
+        particle:
+          name: "&bЧастица"
+          lore:
+            - "&7Создаёт частицу, которую"
+            - "&7можно показать игрокам. "
+            - " "
+            - "&fВ руке: "
+            - " &eПКМ &7- Выбрать тип частицы"
+            - " &eShift+ПКМ &7- Показать частицу"
         variable:
           name: "&eПеременная"
           lore:

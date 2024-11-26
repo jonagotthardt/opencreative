@@ -271,7 +271,7 @@ public class PlayerUtils {
                 toComponent(getLocaleMessage("lobby.title")), toComponent(getLocaleMessage("lobby.subtitle")),
                 Title.Times.times(Duration.ofSeconds(1), Duration.ofSeconds(3), Duration.ofSeconds(1))
         ));
-        player.sendMessage(getLocaleMessage("lobby.message"));
+        player.sendMessage(toComponent(getLocaleMessage("lobby.message")));
         player.playSound(player.getLocation(),Sound.BLOCK_BEACON_DEACTIVATE,100,1.5f);
         player.playSound(player.getLocation(), OpenCreative.getPlugin().getConfig().getString("lobby.sound.name","music_disc.precipice") ,100,(float) OpenCreative.getPlugin().getConfig().getDouble("lobby.sound.pitch",0.1f));
 

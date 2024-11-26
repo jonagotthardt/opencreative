@@ -57,7 +57,7 @@ environment:
     size: "%prefix%There are currently &6%count% variables&f in the world.\n &fThis includes all list contents and keys with values from dictionaries."
     get:
       empty: "%prefix%&cThis variable does not exist :("
-      message: "%prefix%Variable data &6%name%&f:\n &fVariable type: %type%\n &fValue type: %valuetype%\n &fValue: &6%value%"
+      message: "%prefix%Variable data &6%variable%&f:\n &fVariable type: %type%\n &fValue type: %valuetype%\n &fValue: &6%value%"
     list:
       empty: "%prefix%There are currently no variables set in the world."
       header: "\n%prefix%List of variables in the world (&6%current% &fout of &6%amount%&f total):"
@@ -65,6 +65,10 @@ environment:
       next-page: "&a                   [Next →]"
       previous-page: "&c[← Back]"
       navigation: "\n&f Navigation: "
+    set:
+      help: "%prefix%To change variable value type in chat:\n &6/env var set [Variable Name] [global/saved] [text,number,item,location] (Value)\n&f Item, that will be used in setting item is from main hand."
+      limit: "%prefix%&cReached limit of variables (%limit%)!"
+      message: "%prefix%Assigned variable %variable%&f: &7%value%"
   debug:
     help: "%prefix%Debug mode sends event, action, and condition execution to the chat, along with their internal values.\n &6/env debug enable &f- Enable debug mode\n &6/env debug disable &f- Disable debug mode"
     enabled: "%prefix%&fWorld developer &6%player% &fenabled debug mode."
@@ -159,7 +163,7 @@ plot-code-debug:
 lobby:
   title: "%branding%"
   subtitle: "&fLet's &acreate&f in your worlds!"
-  message: "\n &f\n&f\n &f\n &fOpen&x&d&b&d&b&d&bC&x&e&0&d&a&d&7r&x&e&5&d&9&d&4e&x&e&a&d&8&d&0a&x&f&0&d&7&c&dt&x&f&5&d&6&c&9i&x&f&a&d&5&c&6v&x&f&f&d&4&c&2e&a+ &85.0 Preview 4\n&a Everything will be different..\n &f\n&6 ⭐ &fExplore all &6worlds&f using the compass!\n&d ❤&f Create your own world and &dinvite &fyour friends!\n &e⌚&f Have fun and &ecreate &fwhatever you want!\n \n&f\n &f"
+  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.0 Pre-release\n<green> Things will be different..\n <white>\n<gold> ⭐ <white>Explore all <gold>worlds<white> using the compass!\n<light_purple> ❤ <white>Create your own world and <light_purple>invite <white>your friends!\n <yellow>⌚<white> Have fun and <yellow>create <white>whatever you want!\n \n<white>\n <white>"
 creating-world:
   title: "&eCreating World ◌"
   subtitle: "&fPlease wait a few seconds..."
@@ -7246,14 +7250,24 @@ menus:
             - " &eF &7- Teleport to coordinates"
             - " &eRight-click &7- Set coordinates"
         potion:
-          name: "&dPotion Effect"
+          name: "&dPotion"
           lore:
             - "&7Creates a potion effect that can"
             - "&7be applied to a player or mob."
             - " "
             - "&fIn hand:"
-            - " &eRight-click &7- Select effect type"
+            - " &eRight click &7- Select effect type"
+            - " &eShift+Right click &7- Give potion effect"
             - " &eChat message &7- Set effect duration"
+        particle:
+          name: "&bParticle"
+          lore:
+            - "&7Creates a particle, that"
+            - "&7can be displayed for players. "
+            - " "
+            - "&fIn hand: "
+            - " &eRight Click &7- Select particle type"
+            - " &eShift+Right Click &7- Show particle"
         variable:
           name: "&eVariable"
           lore:

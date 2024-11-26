@@ -72,9 +72,8 @@ public class PlayerBreakBlock implements Listener {
             }
 
             if (devPlot.getAllCodingBlocksForPlacing().contains(block.getType())) {
-                destroyAdditionalBlocks(platform,block);
-                event.setCancelled(true);
                 if (ActionCategory.getByMaterial(block.getType()) != null) {
+                    destroyAdditionalBlocks(platform,block);
                     block.setType(Material.AIR);
                     move(block.getLocation(), BlockFace.WEST);
                 } else {
@@ -87,8 +86,10 @@ public class PlayerBreakBlock implements Listener {
                             }
                         }
                     }
+                    destroyAdditionalBlocks(platform,block);
                     block.setType(Material.AIR);
                 }
+                event.setCancelled(true);
             }
 
             if (block.getType() == Material.CHEST) {
