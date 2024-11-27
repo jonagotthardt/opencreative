@@ -33,7 +33,7 @@ public class CancelEventAction extends ControlAction {
 
     @Override
     protected void execute(Entity entity) {
-        Executor executor = getExecutor();
+        Executor executor = getHandler().getExecutor();
         if (executor instanceof Cancellable) {
             ((Cancellable) executor).setCancelled(true);
         }

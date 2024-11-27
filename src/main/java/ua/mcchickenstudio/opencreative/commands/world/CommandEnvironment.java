@@ -84,7 +84,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         if (args[1].equalsIgnoreCase("size")) {
                             player.sendMessage(getLocaleMessage("environment.variables.size").replace("%count%", String.valueOf(plot.getVariables().getTotalVariablesAmount())));
                         } else if (args[1].equalsIgnoreCase("set")) {
-                            if (args.length <= 3) {
+                            if (args.length <= 4) {
                                 player.sendMessage(getLocaleMessage("environment.variables.set.help"));
                                 return true;
                             }
