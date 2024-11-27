@@ -48,6 +48,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.oth
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.other.SetVariableRandomValueAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.other.SetVariableValueAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.text.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.vector.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appearance.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.blocks.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.entity.*;
@@ -372,6 +373,7 @@ public enum ActionType {
     VAR_TEXT_LENGTH( ActionCategory.VARIABLE_ACTION, MenusCategory.TEXT_OPERATIONS, TextLengthAction.class, Material.SLIME_BALL, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("text", ValueType.TEXT)),
 
     VAR_MODIFY_LOCATION( ActionCategory.VARIABLE_ACTION, MenusCategory.LOCATION_OPERATIONS, ModifyLocationAction.class, Material.WHITE_STAINED_GLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("location", ValueType.LOCATION), new ArgumentSlot("yaw", ValueType.NUMBER), new ArgumentSlot("pitch", ValueType.NUMBER), new ArgumentSlot("x", ValueType.NUMBER), new ArgumentSlot("y", ValueType.NUMBER), new ArgumentSlot("z", ValueType.NUMBER), new ParameterSlot("add")),
+    VAR_LOCATION_TO_VECTOR( ActionCategory.VARIABLE_ACTION, MenusCategory.LOCATION_OPERATIONS, LocationToVectorAction.class, Material.PRISMARINE_SHARD, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("location", ValueType.LOCATION)),
     VAR_GET_DISTANCE( ActionCategory.VARIABLE_ACTION, MenusCategory.LOCATION_OPERATIONS, GetDistanceAction.class, Material.SPYGLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("first", ValueType.LOCATION), new ArgumentSlot("second", ValueType.LOCATION)),
     VAR_GET_LOCATION_X( ActionCategory.VARIABLE_ACTION, MenusCategory.LOCATION_OPERATIONS, GetLocationXAction.class, Material.RED_STAINED_GLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("location", ValueType.LOCATION)),
     VAR_GET_LOCATION_Y( ActionCategory.VARIABLE_ACTION, MenusCategory.LOCATION_OPERATIONS, GetLocationYAction.class, Material.GREEN_STAINED_GLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("location", ValueType.LOCATION)),
@@ -417,6 +419,23 @@ public enum ActionType {
     VAR_GET_ITEM_LORE_LINE( ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, GetItemLoreLineAction.class, Material.WRITABLE_BOOK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM), new ArgumentSlot("index", ValueType.NUMBER)),
     //VAR_GET_ITEM_PAGES( ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, null, Material.CRAFTING_TABLE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM)),
 
+    VAR_NORMALIZE_VECTOR( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, NormalizeVectorAction.class, Material.PRISMARINE_BRICKS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("vector", ValueType.VECTOR)),
+    VAR_VECTOR_TO_LOCATION( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, VectorToLocationAction.class, Material.PAPER, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("vector", ValueType.VECTOR)),
+    VAR_CROSS_PRODUCT_VECTOR( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, CrossProductVectorAction.class, Material.BEETROOT, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("first", ValueType.VECTOR), new ArgumentSlot("second", ValueType.VECTOR)),
+    VAR_ANGLE_VECTOR( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, AngleVectorAction.class, Material.HEART_OF_THE_SEA, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("first", ValueType.VECTOR), new ArgumentSlot("second", ValueType.VECTOR)),
+    VAR_DOT_VECTOR( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, DotVectorAction.class, Material.ARMADILLO_SCUTE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("first", ValueType.VECTOR), new ArgumentSlot("second", ValueType.VECTOR)),
+    VAR_MIDPOINT_VECTOR( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, MidpointVectorAction.class, Material.NETHER_STAR, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("first", ValueType.VECTOR), new ArgumentSlot("second", ValueType.VECTOR)),
+    VAR_DISTANCE_VECTOR( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, DistanceVectorAction.class, Material.SPYGLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("first", ValueType.VECTOR), new ArgumentSlot("second", ValueType.VECTOR)),
+
+    VAR_ADD_VECTORS( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, AddVectorsAction.class, Material.BRICK,new ArgumentSlot("vectors", ValueType.VECTOR, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
+    VAR_SUBTRACT_VECTORS( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, SubtractVectorsAction.class, Material.NETHER_BRICK,new ArgumentSlot("vectors", ValueType.VECTOR, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
+    VAR_MULTIPLY_VECTORS( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, MultiplyVectorsAction.class, Material.COPPER_INGOT,new ArgumentSlot("vectors", ValueType.VECTOR, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
+    VAR_DIVIDE_VECTORS( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, DivideVectorsAction.class, Material.NETHERITE_INGOT,new ArgumentSlot("vectors", ValueType.VECTOR, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
+
+    VAR_GET_VECTOR_X( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, GetVectorXAction.class, Material.RED_STAINED_GLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("vector", ValueType.VECTOR)),
+    VAR_GET_VECTOR_Y( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, GetVectorYAction.class, Material.GREEN_STAINED_GLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("vector", ValueType.VECTOR)),
+    VAR_GET_VECTOR_Z( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, GetVectorZAction.class, Material.BLUE_STAINED_GLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("vector", ValueType.VECTOR)),
+
     /**
      * <h1>Selection Actions.</h1>
      */
@@ -435,6 +454,7 @@ public enum ActionType {
     ENTITY_SET_ARMOR_STAND_POSE(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, SetArmorStandPoseAction.class, Material.ARMOR_STAND, new ArgumentSlot("x",ValueType.NUMBER), new ArgumentSlot("y",ValueType.NUMBER), new ArgumentSlot("z",ValueType.NUMBER)),
     ENTITY_SET_SCALE(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, SetScaleAction.class, Material.SHULKER_SHELL, new ArgumentSlot("scale", ValueType.NUMBER), new ParameterSlot("add")),
     ENTITY_SET_STEP_HEIGHT(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, SetStepHeightAction.class, Material.RABBIT_FOOT, new ArgumentSlot("height", ValueType.NUMBER), new ParameterSlot("add")),
+    ENTITY_SET_VELOCITY(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, SetVelocityAction.class, Material.PRISMARINE_SHARD, new ArgumentSlot("vector", ValueType.VECTOR)),
 
 
     /**

@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.arguments;
 
+import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
@@ -100,6 +101,14 @@ public class Arguments {
                 yaw = (float) listSection.getDouble("yaw");
                 pitch = (float) listSection.getDouble("pitch");
                 return new Location(plot.getTerritory().getWorld(),x,y,z,yaw,pitch);
+            case VECTOR:
+                if (listSection == null) {
+                    return new Vector(0,0,0);
+                }
+                x = listSection.getDouble("x");
+                y = listSection.getDouble("y");
+                z = listSection.getDouble("z");
+                return new Vector(x,y,z);
             case COLOR:
                 int r,g,b;
                 if (listSection == null) {
@@ -540,6 +549,18 @@ public class Arguments {
             return defaultValue;
         }
         return locationValue;
+    }
+
+    public Vector getValue(String path, Vector defaultValue, Action action) {
+        Argument arg = getArg(path);
+        Vector vectionValue = defaultValue;
+        if (arg == null) {
+            sendCodingDebugNotFoundVariable(plot,path);
+        } else if (arg.getValue(action) instanceof Vector) {
+            vectionValue = (Vector) arg.getValue(action);
+            sendCodingDebugVariable(plot,path,vectionValue.getX()+" "+vectionValue.getY()+" "+vectionValue.getZ());
+        }
+        return vectionValue;
     }
 
     private Object getVariableValue(VariableLink link, Action action) {

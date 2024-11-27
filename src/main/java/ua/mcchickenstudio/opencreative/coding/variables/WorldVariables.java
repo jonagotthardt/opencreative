@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.variables;
 
+import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.plots.Plot;
@@ -211,6 +212,12 @@ public class WorldVariables {
                 locationMap.put("yaw",location.getYaw());
                 locationMap.put("pitch",location.getPitch());
                 return locationMap;
+            } else if (value instanceof Vector vector) {
+                Map<String,Number> vectorMap = new HashMap<>();
+                vectorMap.put("x",vector.getX());
+                vectorMap.put("y",vector.getY());
+                vectorMap.put("z",vector.getZ());
+                return vectorMap;
             } else if (value instanceof List<?> list) {
                 List<Object> newList = new ArrayList<>();
                 for (Object element : list) {
@@ -257,6 +264,13 @@ public class WorldVariables {
                 yaw = ((Double) locationMap.get("yaw")).floatValue();
                 pitch = ((Double) locationMap.get("pitch")).floatValue();
                 return new Location(plot.getTerritory().getWorld(),x,y,z,yaw,pitch);
+            } else if (type == ValueType.VECTOR) {
+                double x, y, z;
+                Map<?,?> vectorMap = (Map<?,?>) value;
+                x = (Double) vectorMap.get("x");
+                y = (Double) vectorMap.get("y");
+                z = (Double) vectorMap.get("z");
+                return new Vector(x,y,z);
             } else if (type == ValueType.LIST) {
                 List<Object> newList = new ArrayList<>();
                 List<?> oldList = (List<?>) value;

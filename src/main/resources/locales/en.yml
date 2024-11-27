@@ -84,6 +84,7 @@ environment:
     item: "&cItem"
     potion: "&bPotion"
     list: "&eList"
+    vector: "&bVector"
     map: "&eMap"
   execute:
     help: "%prefix%Call executors by yourself, and they will execute code.\n &6/env execute function [Name] &f- Call Function.\n &6/env execute method [Name] &f- Call Method.\n &6/env execute player_join [Player] &f- Call Player Join event."
@@ -427,6 +428,11 @@ items:
         lore:
           - "&7Place an item here"
           - "&7with slime containing a number."
+      vector:
+        name: "&bVector"
+        lore:
+          - "&7Place here a prismarine"
+          - "&7shard with vector."
       item:
         name: "&6Item"
         lore:
@@ -7287,6 +7293,14 @@ menus:
             - " "
             - "&fIn hand:"
             - " &eChat message &7- Set number"
+        vector:
+          name: "&bVector"
+          lore:
+            - "&7A value that stores vector's"
+            - "&7coordinates (X,Y,Z)."
+            - " "
+            - "&fIn hand: "
+            - " &eChat message &7- Set coordinates"
         color:
           name: "&bColor"
           lore:

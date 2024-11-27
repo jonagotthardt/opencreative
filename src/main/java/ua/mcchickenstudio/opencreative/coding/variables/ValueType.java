@@ -90,6 +90,10 @@ public enum ValueType {
      */
     EVENT_VALUE(Material.NAME_TAG, Material.YELLOW_STAINED_GLASS_PANE),
     /**
+     * Vector stores Minecraft vector coordinates.
+     */
+    VECTOR(Material.PRISMARINE_SHARD, Material.LIGHT_BLUE_STAINED_GLASS_PANE),
+    /**
      * Color stores RGB color.
      */
     COLOR(Material.BLACK_DYE, Material.LIGHT_BLUE_STAINED_GLASS),

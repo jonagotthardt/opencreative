@@ -249,6 +249,19 @@ public class CodingBlockParser {
                     } catch (Exception ignored) {}
                 }
             }
+            case VECTOR -> {
+                Map<String, Object> vectorMap = new HashMap<>();
+                String vectorString = ChatColor.stripColor(name);
+                String[] coords = vectorString.split(" ");
+                if (coords.length == 5) {
+                    try {
+                        vectorMap.put("x",Double.parseDouble(coords[0]));
+                        vectorMap.put("y",Double.parseDouble(coords[1]));
+                        vectorMap.put("z",Double.parseDouble(coords[2]));
+                        return vectorMap;
+                    } catch (Exception ignored) {}
+                }
+            }
             case COLOR -> {
                 Map<String, Object> colorMap = new HashMap<>();
                 String colorString = ChatColor.stripColor(name);
