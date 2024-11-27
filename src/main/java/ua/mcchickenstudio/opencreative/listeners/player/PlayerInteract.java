@@ -290,6 +290,8 @@ public class PlayerInteract implements Listener {
                 menu.open(player);
             } else if (actionBlockCategory == ActionCategory.LAUNCH_FUNCTION_ACTION) {
                 new FunctionChooserMenu(player, devPlot,clickedBlock.getLocation()).open(player);
+            } else if (actionBlockCategory == ActionCategory.LAUNCH_METHOD_ACTION) {
+                new MethodChooserMenu(player, devPlot,clickedBlock.getLocation()).open(player);
             } else if (mainBlockCategory == ExecutorCategory.CYCLE) {
                 String cycleTicksString = getSignLine(clickedBlock.getLocation(),(byte) 3);
                 if (cycleTicksString != null && !cycleTicksString.isEmpty()) {
@@ -331,7 +333,7 @@ public class PlayerInteract implements Listener {
                     setSignLine(clickedBlock.getLocation(),(byte) 3,String.valueOf(cycleTicks));
                     translateBlockSign(clickedBlock);
                 }
-            } else if (mainBlockCategory == ExecutorCategory.FUNCTION) {
+            } else if (mainBlockCategory == ExecutorCategory.FUNCTION || mainBlockCategory == ExecutorCategory.METHOD) {
                 ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
                 if (!item.isEmpty() && item.hasItemMeta()) {
                     String displayName = ChatColor.stripColor(item.getItemMeta().getDisplayName());
@@ -395,13 +397,13 @@ public class PlayerInteract implements Listener {
                 if (move(clickedBlock.getRelative(BlockFace.WEST).getLocation(),BlockFace.EAST)) {
                     player.playSound(player.getLocation(), Sound.BLOCK_BARREL_CLOSE, 100, 1.3f);
                 } else {
-                    player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
+                    player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 100, 1.2f);
                 }
             } else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
                 if (move(clickedBlock.getRelative(-2,0,0).getLocation(),BlockFace.WEST)) {
                     player.playSound(player.getLocation(), Sound.BLOCK_BARREL_CLOSE, 100, 1.3f);
                 } else {
-                    player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
+                    player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 100, 1.2f);
                 }
             }
         }

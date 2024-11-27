@@ -67,7 +67,7 @@ public class PlayerBreakBlock implements Listener {
                     || block.getType() == platform.getFloorMaterial()
                     || block.getType() == platform.getEventMaterial()
                     || block.getType() == platform.getActionMaterial()) {
-                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
+                player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 100, 1.2f);
                 event.setCancelled(true);
             }
 

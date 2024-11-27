@@ -18,139 +18,29 @@
 
 package ua.mcchickenstudio.opencreative.coding.test;
 
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.plots.DevPlot;
-import ua.mcchickenstudio.opencreative.plots.Plot;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.inventory.InventoryHolder;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.plots.Plot;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getSignLine;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.setSignLine;
 
-public class LegacyConvertor {
+public class LegacyConvertor extends Convertor {
 
-    private boolean isRunning;
-    private final BukkitRunnable runnable;
-    private final List<Plot> plots;
-    private int convertedPlotsAmount = 0;
 
     public LegacyConvertor(List<Plot> plots) {
-        this.plots = plots;
-        this.runnable = new BukkitRunnable() {
-
-            private final int maxAwaitingTime = 30;
-
-            private Plot currentPlot = plots.getFirst();
-            private int wastedTime = 0;
-            private boolean convertedDevPlot = false;
-            private boolean convertedCodeScript = false;
-
-            @Override
-            public void run() {
-                wastedTime += 1;
-                if (wastedTime > maxAwaitingTime) {
-                    plots.remove(currentPlot);
-                    if (plots.isEmpty()) {
-                        end();
-                        cancel();
-                        return;
-                    }
-                    currentPlot = plots.getFirst();
-                }
-                if (!convertedDevPlot) {
-                    if (currentPlot.getDevPlot().getWorld() == null) {
-                        currentPlot.getTerritory().load();
-                        currentPlot.getDevPlot().loadDevPlotWorld();
-                        return;
-                    }
-                    convertDevPlot(currentPlot.getDevPlot());
-                }
-
-            }
-
-            public void resetValues() {
-                wastedTime = 0;
-                convertedDevPlot = false;
-                convertedCodeScript = false;
-            }
-        };
+        super("Converts legacy code from 1.4 version to 5.0",plots);
     }
 
-    public void convertCodingBlock(Block mainBlock, Location signLocation, String first, String second, String third, String fourth) {
+    @Override
+    public boolean convertCodingBlock(@NotNull Block mainBlock, @NotNull Location containerLocation, InventoryHolder container, Location signLocation, @NotNull String first, @NotNull String second, @NotNull String third, @NotNull String fourth) {
         if ("action_player".equalsIgnoreCase(first)) {
             setSignLine(signLocation,(byte) 1,"player_action");
+            return true;
         }
+        return false;
     }
-
-    public void start() {
-        if (isRunning) return;
-        isRunning = true;
-        runnable.runTaskTimer(OpenCreative.getPlugin(),20L,20L);
-    }
-
-    public void end() {
-        isRunning = false;
-    }
-
-    public void convertDevPlot(DevPlot devPlot) {
-        World world = devPlot.getWorld();
-        byte y = 1;
-        for (byte z = 4; z <= 96; z = (byte)(z+4)) {
-            for (byte x = 4; x <= 96; x = (byte) (x + 2)) {
-                Block codingBlock = world.getBlockAt(x, y, z);
-                Location location = codingBlock.getRelative(BlockFace.SOUTH).getLocation();
-                String firstSignLine = getSignLine(location,(byte) 1);
-                String secondSignLine = getSignLine(location,(byte) 2);
-                String thirdSignLine = getSignLine(location,(byte) 3);
-                String fourthSignLine = getSignLine(location,(byte) 4);
-                convertCodingBlock(codingBlock,location,firstSignLine,secondSignLine,thirdSignLine,fourthSignLine);
-            }
-        }
-        devPlot.getPlot().getTerritory().unload();
-    }
-
-    public void convertScript(File file) {
-        YamlConfiguration script = YamlConfiguration.loadConfiguration(file);
-        ConfigurationSection section = script.getConfigurationSection("code.blocks");
-        if (section != null) {
-            List<Executor> executors = new ArrayList<>();
-            Set<String> keys = section.getKeys(false);
-            String path;
-            for (String key : keys) {
-                path = "code.blocks." + key;
-                ConfigurationSection blockSection = script.getConfigurationSection(path);
-                if (script.getString(path + ".type") != null && blockSection != null) {
-                    ConfigurationSection newSection = convertScriptSection(blockSection);
-                    if (!blockSection.equals(newSection)) {
-                        script.set(path,newSection);
-                    }
-                }
-            }
-        }
-        try {
-            script.save(file);
-        } catch (IOException e) {
-
-        }
-    }
-
-    public ConfigurationSection convertScriptSection(ConfigurationSection section) {
-        if (section.getString("type","").equalsIgnoreCase("action_player")) {
-            section.set("type","player_action");
-        }
-        return section;
-    }
-
 }

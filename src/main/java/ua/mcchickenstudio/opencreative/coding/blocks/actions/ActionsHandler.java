@@ -95,6 +95,13 @@ public class ActionsHandler {
         executeNextAction();
     }
 
+    public final void addActions(List<Action> actions) {
+        List<Action> current = new ArrayList<>(actionsQueue);
+        actionsQueue.clear();
+        actionsQueue.addAll(actions);
+        actionsQueue.addAll(current);
+    }
+
     private void executeNextAction() {
         if (actionsQueue.isEmpty()) {
             if (getMainActionHandler() == this) {

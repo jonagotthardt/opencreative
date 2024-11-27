@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.commands;
 
+import ua.mcchickenstudio.opencreative.coding.test.LegacyConvertor;
 import ua.mcchickenstudio.opencreative.menu.CreativeMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsPickerMenu;
@@ -414,6 +415,13 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     if (player == null) return true;
                     WorldsBrowserMenu menu = new WorldsPickerMenu(player, new HashSet<>(PlotManager.getInstance().getPlots().stream().filter(plot -> plot.getInformation().isDownloadable()).toList()));
                     menu.open(player);
+                }
+                case "test3" -> {
+                    if (!sender.hasPermission("opencreative.test")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
+                    }
+                    new LegacyConvertor(new ArrayList<>(PlotManager.getInstance().getPlots())).start();
                 }
                 case "template" -> {
                     if (!sender.hasPermission("opencreative.template")) {

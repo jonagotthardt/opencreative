@@ -25,8 +25,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Function;
 import org.bukkit.entity.Entity;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Method;
 
 public class LaunchMethodAction extends Action {
 
@@ -39,9 +39,9 @@ public class LaunchMethodAction extends Action {
         String name = getArguments().getValue("name","",this);
         if (name.isEmpty()) return;
         for (Executor executor : getPlot().getTerritory().getScript().getExecutors().getExecutorsList()) {
-            if (executor instanceof Function function) {
-                if (function.getName().equalsIgnoreCase(name)) {
-                    Executors.activate(function, getEvent());
+            if (executor instanceof Method method) {
+                if (method.getName().equalsIgnoreCase(name)) {
+                    Executors.activate(method, getEvent());
                 }
             }
         }
@@ -49,11 +49,11 @@ public class LaunchMethodAction extends Action {
 
     @Override
     public ActionType getActionType() {
-        return ActionType.LAUNCH_FUNCTION;
+        return ActionType.LAUNCH_METHOD;
     }
 
     @Override
     public ActionCategory getActionCategory() {
-        return ActionCategory.LAUNCH_FUNCTION_ACTION;
+        return ActionCategory.LAUNCH_METHOD_ACTION;
     }
 }

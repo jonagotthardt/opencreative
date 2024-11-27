@@ -66,7 +66,7 @@ public class ErrorUtils {
         for (StackTraceElement stackTraceElement : error.getStackTrace()) {
             String stack = stackTraceElement.getClassName() + ":" + stackTraceElement.getMethodName() + ":" + stackTraceElement.getLineNumber();
             stack = cutClassesName(stack);
-            lastStacks.add("§c" + stack);
+            lastStacks.add((colored ? "§c" : "") + stack);
             i++;
             if (i == 15) {
                 break;
@@ -79,7 +79,7 @@ public class ErrorUtils {
                 (!colored ?
                 """
                 \\|/ _____ \\|/
-                "@'/ . . \\`@"
+                "@'/ . .   \\`@"
                 /_| \\___/ |_\\
                    \\___U_/""" : "") +
                 (colored ? "§4 " : " ") +
@@ -157,10 +157,10 @@ public class ErrorUtils {
                             .replace("%action%",action.getActionType().getLocaleName())
                             .replace("%error%",errorMessage)
                             .replace("%x%",String.valueOf(action.getX()))
-                            .replace("%y%",String.valueOf(executor.getY()))
-                            .replace("%z%",String.valueOf(executor.getZ())))
-                    .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("plot-code-error.hover-message") + "\n" + parseException(error,false))))
-                    .clickEvent(ClickEvent.runCommand("/dev " + action.getX() + " " + executor.getY() + " " + executor.getZ()));
+                            .replace("%y%",String.valueOf(1))
+                            .replace("%z%",String.valueOf(action.getExecutor().getZ())))
+                    .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("plot-code-error.hover-message") + "\n" + parseException(error,true))))
+                    .clickEvent(ClickEvent.runCommand("/dev " + action.getX() + " " + 1 + " " + action.getExecutor().getZ()));
             player.sendMessage(message);
             player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE,100,1.7f);
         }

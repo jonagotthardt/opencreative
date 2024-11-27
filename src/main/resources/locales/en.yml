@@ -488,27 +488,27 @@ items:
     event-player:
       name: "&bPlayer Event"
       lore:
-        - "&7Used to execute code"
-        - "&7when a player does something or when"
+        - "&7Used to execute code when"
+        - "&7a player does something or when"
         - "&7something happens to a player."
         - " "
         - "&fExamples:"
-        - "&7> Execute code when a player joins the game"
-        - "&7> Execute code when a player takes damage"
-        - "&7> Execute code when a player right-clicks"
+        - "&7> Execute code on player join"
+        - "&7> Execute code when player damaged"
+        - "&7> Execute code when player right-clicks"
         - " "
         - "&fCategory: &9Event"
     event-world:
       name: "&cWorld Event"
       lore:
-        - "&7Used to execute code"
-        - "&7when the environment in the world changes,"
-        - "&7blocks are altered, or settings are adjusted."
+        - "&7Used to execute code when the"
+        - "&7world's blocks or settings are"
+        - "&7changed."
         - " "
         - "&fExamples:"
-        - "&7> Execute code when the game starts"
-        - "&7> Execute code when the world is unloaded"
-        - "&7> Execute code when the world’s name is changed"
+        - "&7> Execute code on game start"
+        - "&7> Execute code on world unload"
+        - "&7> Execute code on world’s name change"
         - " "
         - "&fCategory: &9Event"
     event-entity:
@@ -546,7 +546,37 @@ items:
         - " "
         - "&eSet function:"
         - "&7 Right-click the block sign"
-        - "&7 and choose a function from the list."
+        - "&7 and choose a function from list."
+        - " "
+        - "&fCategory: &cAction"
+    method:
+      name: "&2Method"
+      lore:
+        - "&7Executes code when triggered"
+        - "&7by a &aCall Method&7 block."
+        - ""
+        - "&7Unlike in functions, &ccode"
+        - "&cactions&7 from method will not "
+        - "&7change main code line behaviour."
+        - " "
+        - "&eSet method name:"
+        - "&7 Right-click the block sign"
+        - "&7 while holding a book."
+        - " "
+        - "&fCategory: &9Executor"
+    launch-method:
+      name: "&aCall method"
+      lore:
+        - "&7Calls specified method and"
+        - "&7executes all code within it."
+        - " "
+        - "&7Methods are useful for executing"
+        - "&7separately regardless of the call "
+        - "&7method location."
+        - " "
+        - "&eSet function:"
+        - "&7 Right-click the block sign"
+        - "&7 and choose a method from list."
         - " "
         - "&fCategory: &cAction"
     cycle:
@@ -599,6 +629,18 @@ items:
         - "&7> Cancel an event"
         - "&7> Throw an error"
         - "&7> Skip a cycle"
+        - " "
+        - "&fCategory: &cAction"
+    action-entity:
+      name: "&aEntity Action"
+      lore:
+        - "&7Useful for changing entity's"
+        - "&7behaviour or location."
+        - " "
+        - "&fExamples:"
+        - "&7> Set name of mob"
+        - "&7> Change health of entity"
+        - "&7> Set mob's goal"
         - " "
         - "&fCategory: &cAction"
     else:
@@ -5835,6 +5877,24 @@ menus:
           - "&2 ⏵ &a&nJoin the world&a! &e &e &e &e "
           - ""
   developer:
+    method-chooser:
+      title: "&1Choose a Method"
+      chosen: "&aSelected Method:"
+      items:
+        method:
+          name: "&aMethod"
+          lore:
+            - "&7Coordinates: %x%, %y%, %z%"
+            - ""
+            - "&eLeft-click &f- Select method"
+            - "&eRight-click &f- Teleport"
+        no-elements:
+          name: "&cNo methods!"
+          lore:
+            - "&7Place a &amethod&7 block and"
+            - "&7while holding a book with &6text&7,"
+            - "&7set the method name by"
+            - "&7right-clicking on the sign."
     function-chooser:
       title: "&9Choose a Function"
       chosen: "&9Selected function:"
@@ -8356,6 +8416,7 @@ blocks:
   event_entity: "&eEntity event"
   cycle: "&aCycle"
   function: "&1Function"
+  method: "&2Method"
   player_action: "&7Player action"
   variable_action: "&fSet variable"
   world_action: "&cWorld action"
@@ -8364,6 +8425,7 @@ blocks:
   variable_condition: "&0If variable"
   condition_player: "&6If player"
   launch_function_action: "&9Call function"
+  launch_method_action: "&aCall method"
   handler_action: "&aCode handler"
   repeat_action: "&bRepeat"
   else: "&eElse"

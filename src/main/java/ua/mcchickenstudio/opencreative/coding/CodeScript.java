@@ -153,7 +153,7 @@ public class CodeScript {
         scriptConfig.set(path + ".category", category.name());
         scriptConfig.set(path + ".type", type.name());
 
-        if (type == ActionType.LAUNCH_FUNCTION) {
+        if (type == ActionType.LAUNCH_FUNCTION || type == ActionType.LAUNCH_METHOD) {
             String thirdSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
             if (thirdSignLine != null && !thirdSignLine.isEmpty()) {
                 scriptConfig.set(path + ".name",thirdSignLine);

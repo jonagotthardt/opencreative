@@ -216,6 +216,12 @@ public class CommandDev implements CommandExecutor {
         ItemStack eventWorldItem = createItem(Material.REDSTONE_BLOCK,1,"items.developer.event-world");
         player.getInventory().setItem(29, eventWorldItem);
 
+        ItemStack methodItem = createItem(Material.EMERALD_BLOCK,1,"items.developer.method");
+        player.getInventory().setItem(30, methodItem);
+
+        ItemStack launchMethodItem = createItem(Material.EMERALD_ORE,1,"items.developer.launch-method");
+        player.getInventory().setItem(31, launchMethodItem);
+
         ItemStack cycleItem = createItem(Material.OXIDIZED_COPPER,1,"items.developer.cycle");
         player.getInventory().setItem(18, cycleItem);
 

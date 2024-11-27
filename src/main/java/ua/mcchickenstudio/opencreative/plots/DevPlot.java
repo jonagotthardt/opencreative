@@ -267,11 +267,13 @@ public class DevPlot {
 
     public List<Location> getPlacedExecutors(ExecutorCategory category) {
         List<Location> locations = new ArrayList<>();
-        byte x = 4;
-        for (byte z = 4; z < 96; z = (byte) (z + 4)) {
-            ExecutorCategory blockCategory = ExecutorCategory.getByMaterial(getWorld().getBlockAt(x,1,z).getType());
-            if (blockCategory == category) {
-                locations.add(getWorld().getBlockAt(x,1,z).getLocation());
+        for (DevPlatform platform : getPlatforms()) {
+            for (int z = platform.getBeginZ()+4; z < platform.getEndZ()-4; z =z+4) {
+                Block block = world.getBlockAt(platform.getBeginX()+4,1,z);
+                ExecutorCategory blockCategory = ExecutorCategory.getByMaterial(block.getType());
+                if (blockCategory == category) {
+                    locations.add(block.getLocation());
+                }
             }
         }
         return locations;
@@ -279,18 +281,25 @@ public class DevPlot {
 
     public List<Location> getPlacedFunctions() {
         List<Location> locations = new ArrayList<>();
-        int x = 4;
-        for (DevPlatform platform : getPlatforms()) {
-            for (int z = platform.getBeginZ()+4; z < platform.getEndZ()-4; z =z+4) {
-                Block block = getWorld().getBlockAt(x,1,z);
-                ExecutorCategory blockCategory = ExecutorCategory.getByMaterial(block.getType());
-                String line = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
-                if (blockCategory == ExecutorCategory.FUNCTION && line != null && !line.isEmpty()) {
-                    locations.add(block.getLocation());
-                }
+        for (Location location : getPlacedExecutors(ExecutorCategory.FUNCTION)) {
+            Block block = location.getBlock();
+            String line = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
+            if (line != null && !line.isEmpty()) {
+                locations.add(block.getLocation());
             }
         }
+        return locations;
+    }
 
+    public List<Location> getPlacedMethods() {
+        List<Location> locations = new ArrayList<>();
+        for (Location location : getPlacedExecutors(ExecutorCategory.METHOD)) {
+            Block block = location.getBlock();
+            String line = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
+            if (line != null && !line.isEmpty()) {
+                locations.add(block.getLocation());
+            }
+        }
         return locations;
     }
 

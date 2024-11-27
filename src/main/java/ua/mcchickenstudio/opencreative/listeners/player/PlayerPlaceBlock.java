@@ -68,7 +68,7 @@ public class PlayerPlaceBlock implements Listener {
             if (blockAgainst.getType() == platform.getFloorMaterial()) {
                 if ((!(block.getType() == Material.PISTON && (blockAgainst.getZ() % 4) == 0 && blockAgainst.getRelative(BlockFace.WEST).getType() == platform.getActionMaterial())) && (!(block.getType().name().contains("SIGN") &&  blockAgainst.getX() >= 4 && (blockAgainst.getX() % 2) == 0)) && (!devPlot.getAllowedBlocks().contains(block.getType())) || block.getY() <= 0) {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-on-floor"));
-                    player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
+                    player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 100, 1.2f);
                     event.setCancelled(true);
                 }
             } else if (blockAgainst.getType() == platform.getEventMaterial()) {
@@ -96,7 +96,7 @@ public class PlayerPlaceBlock implements Listener {
                     placeDevBlock(block, additionalBlockMaterial, signText);
                 } else {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-action-on-event"));
-                    player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
+                    player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 100, 1.2f);
                     event.setCancelled(true);
                 }
             } else if (blockAgainst.getType() == platform.getActionMaterial()) {
@@ -118,12 +118,12 @@ public class PlayerPlaceBlock implements Listener {
                     placeDevBlock(block, additionalBlockMaterial, signText);
                 } else {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-event-on-action"));
-                    player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
+                    player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 100, 1.2f);
                     event.setCancelled(true);
                 }
             } else {
                 if (block.getType() != Material.COMPARATOR) {
-                    player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 100, 1.2f);
+                    player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 100, 1.2f);
                 }
                 event.setCancelled(true);
             }

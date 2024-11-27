@@ -25,8 +25,15 @@ import ua.mcchickenstudio.opencreative.plots.Plot;
 
 public class Method extends Executor {
 
-    public Method(Plot plot, int x, int y, int z) {
+    private final String name;
+
+    public Method(Plot plot, int x, int y, int z, String name) {
         super(plot, x, y, z);
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
