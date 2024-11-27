@@ -244,6 +244,8 @@ public enum ExecutorType {
     public static ExecutorType getType(Block block) {
         if (block.getType() == Material.LAPIS_BLOCK) {
             return FUNCTION;
+        } else if (block.getType() == Material.EMERALD_BLOCK) {
+            return METHOD;
         } else if (block.getType() == Material.OXIDIZED_COPPER) {
             return CYCLE;
         }
