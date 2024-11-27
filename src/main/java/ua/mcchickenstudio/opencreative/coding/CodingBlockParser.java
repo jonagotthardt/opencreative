@@ -253,7 +253,7 @@ public class CodingBlockParser {
                 Map<String, Object> vectorMap = new HashMap<>();
                 String vectorString = ChatColor.stripColor(name);
                 String[] coords = vectorString.split(" ");
-                if (coords.length == 5) {
+                if (coords.length == 3) {
                     try {
                         vectorMap.put("x",Double.parseDouble(coords[0]));
                         vectorMap.put("y",Double.parseDouble(coords[1]));
