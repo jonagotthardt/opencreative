@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.variables;
 
+import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -165,6 +166,8 @@ public enum ValueType {
             return ITEM;
         } else if (object instanceof Location) {
             return LOCATION;
+        } else if (object instanceof Vector) {
+            return VECTOR;
         }
         return null;
     }
