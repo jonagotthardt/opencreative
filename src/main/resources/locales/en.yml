@@ -85,6 +85,13 @@ environment:
     potion: "&bPotion"
     list: "&eList"
     map: "&eMap"
+  execute:
+    help: "%prefix%Call executors by yourself, and they will execute code.\n &6/env execute function [Name] &f- Call Function.\n &6/env execute method [Name] &f- Call Method.\n &6/env execute player_join [Player] &f- Call Player Join event."
+    offline: "%prefix%&cPlayer is not in world."
+    function: "%prefix%Calling function &9%function%&f..."
+    function-not-found: "%prefix%&cThis function doesn't exists O_o"
+    method: "%prefix%Calling method &a%method%&f..."
+    method-not-found: "%prefix%&cThis method doesn't exists O_o"
   platform:
     claimed: "%prefix%Created a &6new platform &ffor coding, now you can place coding blocks here too!"
     limit: "%prefix%&cYou reached a limit of %amount% platforms, you can't create new coding platforms anymore :("

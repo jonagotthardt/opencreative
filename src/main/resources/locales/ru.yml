@@ -88,6 +88,13 @@ environment:
     potion: "&bЗелье"
     list: "&eСписок"
     map: "&eСловарь"
+  execute:
+    help: "%prefix%Вызывайте выполнители вручную, чтобы они выполнили код.\n &6/env execute function [Название] &f- Выполнить функцию.\n &6/env execute method [Название] &f- Выполнить метод.\n &6/env execute player_join [Никнейм] &f- Выполнить событие входа."
+    offline: "%prefix%&cИгрок должен находится в мире."
+    function: "%prefix%Выполняем функцию &9%function%&f..."
+    function-not-found: "%prefix%&cТакой функции нет О_о"
+    method: "%prefix%Выполняем метод &a%method%&f..."
+    method-not-found: "%prefix%&cТакого метода нет О_о"
   platform:
     claimed: "%prefix%Создана &6новая платформа &fдля кодинга, теперь вы можете ставить блоки кодинга ещё и здесь!"
     limit: "%prefix%&cВы достигли лимита в %amount% платформ, вы не можете создать новые платформы кодинга :("
