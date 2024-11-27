@@ -24,6 +24,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.other
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.handleractions.other.CatchErrorAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.handleractions.other.MeasureTimeAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.other.LaunchFunctionAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.other.LaunchMethodAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.selectionactions.SelectionAddTargetAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.selectionactions.SelectionRemoveTargetAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.selectionactions.SelectionSetTargetAction;
@@ -447,6 +448,7 @@ public enum ActionType {
     REPEAT_FOR_LOOP(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatForLoopAction.class, Material.SLIME_BALL, new ArgumentSlot("variable", ValueType.VARIABLE), new ParameterSlot("type", Arrays.asList("less","less-equals","greater","greater-equals"), Material.BRICK, Material.BRICKS, Material.NETHER_BRICK, Material.NETHER_BRICKS), new ArgumentSlot("range", ValueType.NUMBER), new ArgumentSlot("add", ValueType.NUMBER)),
 
     LAUNCH_FUNCTION(ActionCategory.LAUNCH_FUNCTION_ACTION, MenusCategory.OTHER, LaunchFunctionAction.class, Material.LAPIS_ORE),
+    LAUNCH_METHOD(ActionCategory.LAUNCH_METHOD_ACTION, MenusCategory.OTHER, LaunchMethodAction.class, Material.EMERALD),
 
     /**
      * <h1>Variable Conditions.</h1>
@@ -598,6 +600,9 @@ public enum ActionType {
     public static ActionType getType(Block block) {
         if (block.getType() == Material.LAPIS_ORE) {
             return LAUNCH_FUNCTION;
+        }
+        if (block.getType() == Material.EMERALD_ORE) {
+            return LAUNCH_METHOD;
         }
         Block signBlock = block.getRelative(BlockFace.SOUTH);
         String signLine = getSignLine(signBlock.getLocation(), (byte) 3);

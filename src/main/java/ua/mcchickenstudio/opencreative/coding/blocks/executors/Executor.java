@@ -136,4 +136,8 @@ public abstract class Executor {
     public ActionsHandler getHandler() {
         return handler;
     }
+
+    public List<Action> getActions() {
+        return actions;
+    }
 }

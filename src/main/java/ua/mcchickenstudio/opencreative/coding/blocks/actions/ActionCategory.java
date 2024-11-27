@@ -30,6 +30,7 @@ public enum ActionCategory {
     VARIABLE_ACTION(Material.IRON_BLOCK, Material.IRON_ORE, NamedTextColor.WHITE),
     SELECTION_ACTION(Material.PURPUR_BLOCK, Material.PURPUR_PILLAR, NamedTextColor.LIGHT_PURPLE),
     LAUNCH_FUNCTION_ACTION(Material.LAPIS_ORE, Material.STONE, NamedTextColor.AQUA),
+    LAUNCH_METHOD_ACTION(Material.EMERALD_ORE, Material.STONE, NamedTextColor.GREEN),
     CONTROL_ACTION(Material.COAL_BLOCK, Material.COAL_ORE, NamedTextColor.DARK_GRAY),
     HANDLER_ACTION(Material.DARK_PRISMARINE, Material.PISTON, NamedTextColor.GREEN),
     REPEAT_ACTION(Material.PRISMARINE, Material.PISTON, NamedTextColor.AQUA),

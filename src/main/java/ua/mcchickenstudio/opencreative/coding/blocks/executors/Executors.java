@@ -86,6 +86,24 @@ public class Executors {
         }
     }
 
+    public static void callAmount(Executor executor) {
+        Plot plot = executor.getPlot();
+        Executors executors = plot.getTerritory().getScript().getExecutors();
+        if (executors.getLastExecutorCallsAmount(executor) > plot.getLimits().getCodeOperationsLimit()) {
+            executors.clearExecutionsAmount(executor);
+            stopPlotCode(plot);
+            sendPlotCodeCriticalErrorMessage(plot,executor,getLocaleMessage("plot-code-error.operations-limit",false).replace("%limit%",String.valueOf(plot.getLimits().getCodeOperationsLimit())));
+        } else {
+            executors.increaseCallsAmount(executor);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    executors.decreaseCallsAmount(executor);
+                }
+            }.runTaskLater(OpenCreative.getPlugin(),35L);
+        }
+    }
+
     public void load(File file) {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
         ConfigurationSection section = config.getConfigurationSection("code.blocks");
@@ -133,7 +151,7 @@ public class Executors {
                 if (name != null) {
                     executor = type.getExecutorClass().getConstructor(Plot.class,int.class,int.class,int.class,String.class,int.class).newInstance(plot,coords[0],coords[1],coords[2],name,(time >= 5 && time <= 3600 ? time : 20));
                 }
-            } else if (type == ExecutorType.FUNCTION) {
+            } else if (type == ExecutorType.FUNCTION || type == ExecutorType.METHOD) {
                 String name = config.getString(path+".name");
                 /*
                  * We will not create function without name,
@@ -188,7 +206,7 @@ public class Executors {
             if (section != null) {
                 args.load(section);
             }
-            if (actionType == ActionType.LAUNCH_FUNCTION) {
+            if (actionType == ActionType.LAUNCH_FUNCTION || actionType == ActionType.LAUNCH_METHOD) {
                 if (config.getString(path+".name") != null) {
                     args.setArgumentValue("name", ValueType.TEXT,config.getString(path+".name"));
                 }

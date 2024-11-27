@@ -290,6 +290,8 @@ public class PlayerInteract implements Listener {
                 menu.open(player);
             } else if (actionBlockCategory == ActionCategory.LAUNCH_FUNCTION_ACTION) {
                 new FunctionChooserMenu(player, devPlot,clickedBlock.getLocation()).open(player);
+            } else if (actionBlockCategory == ActionCategory.LAUNCH_METHOD_ACTION) {
+                new MethodChooserMenu(player, devPlot,clickedBlock.getLocation()).open(player);
             } else if (mainBlockCategory == ExecutorCategory.CYCLE) {
                 String cycleTicksString = getSignLine(clickedBlock.getLocation(),(byte) 3);
                 if (cycleTicksString != null && !cycleTicksString.isEmpty()) {
@@ -331,7 +333,7 @@ public class PlayerInteract implements Listener {
                     setSignLine(clickedBlock.getLocation(),(byte) 3,String.valueOf(cycleTicks));
                     translateBlockSign(clickedBlock);
                 }
-            } else if (mainBlockCategory == ExecutorCategory.FUNCTION) {
+            } else if (mainBlockCategory == ExecutorCategory.FUNCTION || mainBlockCategory == ExecutorCategory.METHOD) {
                 ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
                 if (!item.isEmpty() && item.hasItemMeta()) {
                     String displayName = ChatColor.stripColor(item.getItemMeta().getDisplayName());

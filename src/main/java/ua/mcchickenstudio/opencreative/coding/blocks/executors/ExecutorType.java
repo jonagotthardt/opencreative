@@ -98,12 +98,12 @@ public enum ExecutorType {
     PLAYER_SHEAR_ENTITY(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
     PLAYER_VELOCITY(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
     PLAYER_TRADE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_EDIT_BOOK(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+
     PLAYER_ITEM_BREAK(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
     PLAYER_SIGN_OPEN(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
     PLAYER_PICKUP_ARROW(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
     PLAYER_LOCALE_CHANGE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_RESOURCE_PACK_STATUS(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
+
     PLAYER_RIPTIDE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
     PLAYER_PORTAL(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
     PLAYER_NAME_ENTITY(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
@@ -165,8 +165,8 @@ public enum ExecutorType {
     PLAYER_TOTEM_RESPAWN(   ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerTotemRespawnExecutor.class, PlayerTotemRespawnEvent.class, Material.TOTEM_OF_UNDYING),
 
     // in development
-    /*PLAYER_DAMAGES_PLAYER(        ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, null, null, Material.WATER_BUCKET),
-    PLAYER_KILLS_PLAYER(        ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, null, null, Material.WATER_BUCKET),
+    /*
+
     MOB_KILLS_PLAYER(        ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, null, null, Material.WATER_BUCKET),
     PLAYER_KILLS_MOB(        ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, null, null, Material.WATER_BUCKET),
     PROJECTILE_DAMAGES_PLAYER(        ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, null, null, Material.WATER_BUCKET),

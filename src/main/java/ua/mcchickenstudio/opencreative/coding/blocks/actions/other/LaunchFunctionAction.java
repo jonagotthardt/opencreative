@@ -41,7 +41,8 @@ public class LaunchFunctionAction extends Action {
         for (Executor executor : getPlot().getTerritory().getScript().getExecutors().getExecutorsList()) {
             if (executor instanceof Function function) {
                 if (function.getName().equalsIgnoreCase(name)) {
-                    Executors.activate(function, getEvent());
+                    getHandler().addActions(function.getActions());
+                    Executors.callAmount(function);
                 }
             }
         }
