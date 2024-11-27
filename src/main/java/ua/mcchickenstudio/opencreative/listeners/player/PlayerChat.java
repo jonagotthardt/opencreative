@@ -240,6 +240,42 @@ public class PlayerChat implements Listener {
                 ));
                 player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.4f);
                 itemInHand.setItemMeta(newMeta);
+            } else if (itemInHand.getType() == Material.PRISMARINE_SHARD) {
+                ItemMeta meta = itemInHand.getItemMeta();
+                if (meta == null) return;
+                double x = 0;
+                double y = 0;
+                double z = 0;
+                message = ChatColor.stripColor(message);
+                String[] coordinates = new String[3];
+                if (message.contains(", ")) {
+                    coordinates = message.split(", ");
+                } else if (message.contains(" ")) {
+                    coordinates = message.split(" ");
+                } else {
+                    coordinates[0] = message;
+                }
+                try {
+                    x = Double.parseDouble(coordinates[0]);
+                } catch (NumberFormatException ignored) {}
+                if (coordinates[1] != null) {
+                    try {
+                        y = Double.parseDouble(coordinates[1]);
+                    } catch (NumberFormatException ignored) {}
+                }
+                if (coordinates[2] != null) {
+                    try {
+                        z = Double.parseDouble(coordinates[2]);
+                    } catch (NumberFormatException ignored) {}
+                }
+                meta.setDisplayName("§b" + x + " " + y + " " + z);
+                itemInHand.setItemMeta(meta);
+                setPersistentData(itemInHand,getCodingValueKey(),"VECTOR");
+                player.showTitle(Title.title(
+                        toComponent(getLocaleMessage("world.dev-mode.set-variable")), meta.displayName(),
+                        Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(2), Duration.ofMillis(500))
+                ));
+                player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.4f);
             }
         }
     }

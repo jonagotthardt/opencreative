@@ -25,6 +25,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Function;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Method;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.plots.Plot;
 import org.bukkit.configuration.ConfigurationSection;
@@ -126,6 +128,26 @@ public class Executors {
 
     public List<Executor> getExecutorsList() {
         return executorsList;
+    }
+
+    public List<Function> getFunctionsList() {
+        List<Function> functions = new ArrayList<>();
+        for (Executor executor : executorsList) {
+            if (executor instanceof Function function) {
+                functions.add(function);
+            }
+        }
+        return functions;
+    }
+
+    public List<Method> getMethodsList() {
+        List<Method> methods = new ArrayList<>();
+        for (Executor executor : executorsList) {
+            if (executor instanceof Method method) {
+                methods.add(method);
+            }
+        }
+        return methods;
     }
 
     private int[] getCoords(YamlConfiguration config, String path) {

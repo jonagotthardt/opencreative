@@ -132,6 +132,7 @@ public class Argument {
             setEventVariable(action, EventValues.Variable.FREEZE_TICKS, entity.getFreezeTicks());
             setEventVariable(action, EventValues.Variable.FIRE_TICKS, entity.getFireTicks());
             setEventVariable(action, EventValues.Variable.LOCATION, entity.getLocation());
+            setEventVariable(action, EventValues.Variable.VELOCITY, entity.getVelocity());
             setEventVariable(action, EventValues.Variable.LAST_DAMAGE_CAUSE, (entity.getLastDamageCause() != null ? entity.getLastDamageCause().getCause().name().toLowerCase() : null));
         }
         if (action.getEntity() instanceof LivingEntity livingEntity) {

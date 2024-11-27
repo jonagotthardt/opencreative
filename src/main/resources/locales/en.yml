@@ -84,7 +84,15 @@ environment:
     item: "&cItem"
     potion: "&bPotion"
     list: "&eList"
+    vector: "&bVector"
     map: "&eMap"
+  execute:
+    help: "%prefix%Call executors by yourself, and they will execute code.\n &6/env execute function [Name] &f- Call Function.\n &6/env execute method [Name] &f- Call Method.\n &6/env execute player_join [Player] &f- Call Player Join event."
+    offline: "%prefix%&cPlayer is not in world."
+    function: "%prefix%Calling function &9%function%&f..."
+    function-not-found: "%prefix%&cThis function doesn't exists O_o"
+    method: "%prefix%Calling method &a%method%&f..."
+    method-not-found: "%prefix%&cThis method doesn't exists O_o"
   platform:
     claimed: "%prefix%Created a &6new platform &ffor coding, now you can place coding blocks here too!"
     limit: "%prefix%&cYou reached a limit of %amount% platforms, you can't create new coding platforms anymore :("
@@ -420,6 +428,11 @@ items:
         lore:
           - "&7Place an item here"
           - "&7with slime containing a number."
+      vector:
+        name: "&bVector"
+        lore:
+          - "&7Place here a prismarine"
+          - "&7shard with vector."
       item:
         name: "&6Item"
         lore:
@@ -825,6 +838,13 @@ items:
           lore:
             - "&7Они содержат внутри себя"
             - "&7много значений."
+            - " "
+            - "&eНажми, чтобы выбрать категорию."
+        vector_operations:
+          name: "&bВекторы"
+          lore:
+            - "&7Добавить к вектору, умножить,"
+            - "&7узнать дистанцию векторов."
             - " "
             - "&eНажми, чтобы выбрать категорию."
         text_operations:
@@ -7280,6 +7300,14 @@ menus:
             - " "
             - "&fIn hand:"
             - " &eChat message &7- Set number"
+        vector:
+          name: "&bVector"
+          lore:
+            - "&7A value that stores vector's"
+            - "&7coordinates (X,Y,Z)."
+            - " "
+            - "&fIn hand: "
+            - " &eChat message &7- Set coordinates"
         color:
           name: "&bColor"
           lore:

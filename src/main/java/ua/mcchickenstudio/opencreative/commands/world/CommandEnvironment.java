@@ -19,6 +19,12 @@
 package ua.mcchickenstudio.opencreative.commands.world;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.GamePlayEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Function;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Method;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.WorldVariable;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
@@ -236,7 +242,6 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                                 }
                             }
                         }
-
                         break;
                     }
                     case "createplatform": {
@@ -394,6 +399,87 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         }
                         break;
                     }
+                    case "execute", "exec", "launch", "run": {
+                        if (plot.getMode() != Plot.Mode.PLAYING) {
+                            sender.sendMessage(getLocaleMessage("world.not-in-play-mode"));
+                            return true;
+                        }
+                        if (args.length < 3) {
+                            sender.sendMessage(getLocaleMessage("too-few-args"));
+                            return true;
+                        }
+                        String eventName = args[1];
+                        String argument = String.join(" ",Arrays.copyOfRange(args,2,args.length));
+                        // /env execute player_join PlayerName
+                        // /env execute function Function
+                        switch (eventName.toLowerCase()) {
+                            case "join", "player_join" -> {
+                                Player eventPlayer = Bukkit.getPlayer(argument);
+                                if (eventPlayer == null || !plot.getTerritory().getWorld().getPlayers().contains(eventPlayer)) {
+                                    sender.sendMessage(getLocaleMessage("environment.execute.offline"));
+                                    return true;
+                                }
+                                new JoinEvent(player).callEvent();
+                            }
+                            case "quit", "player_quit" -> {
+                                Player eventPlayer = Bukkit.getPlayer(argument);
+                                if (eventPlayer == null || !plot.getTerritory().getWorld().getPlayers().contains(eventPlayer)) {
+                                    sender.sendMessage(getLocaleMessage("environment.execute.offline"));
+                                    return true;
+                                }
+                                new QuitEvent(player).callEvent();
+                            }
+                            case "liked", "like", "player_like", "player_liked" -> {
+                                Player eventPlayer = Bukkit.getPlayer(argument);
+                                if (eventPlayer == null || !plot.getTerritory().getWorld().getPlayers().contains(eventPlayer)) {
+                                    sender.sendMessage(getLocaleMessage("environment.execute.offline"));
+                                    return true;
+                                }
+                                new LikeEvent(player).callEvent();
+                            }
+                            case "play", "player_play" -> {
+                                Player eventPlayer = Bukkit.getPlayer(argument);
+                                if (eventPlayer == null || !plot.getTerritory().getWorld().getPlayers().contains(eventPlayer)) {
+                                    sender.sendMessage(getLocaleMessage("environment.execute.offline"));
+                                    return true;
+                                }
+                                new PlayEvent(player).callEvent();
+                            }
+                            case "world_play" -> new GamePlayEvent(plot).callEvent();
+                            case "function", "func" -> {
+                                boolean found = false;
+                                for (Function function : plot.getTerritory().getScript().getExecutors().getFunctionsList()) {
+                                    if (argument.equalsIgnoreCase(function.getName())) {
+                                        if (!found) {
+                                            /*
+                                             * For sending message once and
+                                             * before function activation.
+                                             */
+                                            found = true;
+                                            sender.sendMessage(getLocaleMessage("environment.execute.function").replace("%function%",argument));
+                                        }
+                                        Executors.activate(function, new JoinEvent(player));
+                                    }
+                                }
+                                if (!found) sender.sendMessage(getLocaleMessage("environment.execute.function-not-found"));
+                            }
+                            case "method", "meth" -> {
+                                boolean found = false;
+                                for (Method method : plot.getTerritory().getScript().getExecutors().getMethodsList()) {
+                                    if (argument.equalsIgnoreCase(method.getName())) {
+                                        if (!found) {
+                                            found = true;
+                                            sender.sendMessage(getLocaleMessage("environment.execute.method").replace("%method%",argument));
+                                        }
+                                        Executors.activate(method, new JoinEvent(player));
+                                    }
+                                }
+                                if (!found) sender.sendMessage(getLocaleMessage("environment.execute.method-not-found"));
+                            }
+                            default -> sender.sendMessage(getLocaleMessage("environment.execute.help"));
+                        }
+                        break;
+                    }
                     case "debug": {
                         if (args.length == 1) {
                             player.sendMessage(getLocaleMessage("environment.debug.help"));
@@ -424,12 +510,14 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         List<String> tabCompleter = new ArrayList<>();
         if (args.length == 1) {
-            Collections.addAll(tabCompleter,"platform","variables","debug","barrel","floor","action","theme","event");
+            Collections.addAll(tabCompleter,"platform","variables","debug","execute","barrel","floor","action","theme","event");
             return tabCompleter;
         }
         if (args.length == 2) {
             if (List.of("var", "vars", "variables").contains(args[0].toLowerCase())) {
                 Collections.addAll(tabCompleter, "set", "get", "size", "clear", "list");
+            } else if (List.of("execute", "exec", "run").contains(args[0].toLowerCase())) {
+                Collections.addAll(tabCompleter, "function", "method", "player_join", "player_quit", "player_liked", "player_play", "world_play");
             } else if ("debug".equalsIgnoreCase(args[0])) {
                 Collections.addAll(tabCompleter, "enable", "disable");
             } else if ("floor".equalsIgnoreCase(args[0]) || "event".equalsIgnoreCase(args[0]) || "action".equalsIgnoreCase(args[0])) {
@@ -446,6 +534,20 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         "blue", "purple");
             }
             return tabCompleter;
+        }
+        if (List.of("execute", "exec", "run").contains(args[0].toLowerCase())) {
+            if (sender instanceof Player player) {
+                if (PlayerUtils.isEntityInLobby(player)) return tabCompleter;
+                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                if (plot == null || !plot.getWorldPlayers().canDevelop(player)) return tabCompleter;
+                if (List.of("join", "quit", "player_join", "player_quit", "player_play", "play", "player_liked", "liked").contains(args[1].toLowerCase())) {
+                    tabCompleter.addAll(plot.getTerritory().getWorld().getPlayers().stream().map(Player::getName).toList());
+                } else if (args[1].equalsIgnoreCase("function")) {
+                    tabCompleter.addAll(plot.getTerritory().getScript().getExecutors().getFunctionsList().stream().map(Function::getName).toList());
+                } else if (args[1].equalsIgnoreCase("method")) {
+                    tabCompleter.addAll(plot.getTerritory().getScript().getExecutors().getMethodsList().stream().map(Method::getName).toList());
+                }
+            }
         }
         if (List.of("var","vars","variables").contains(args[0].toLowerCase())) {
             if (args[1].equalsIgnoreCase("set")) {

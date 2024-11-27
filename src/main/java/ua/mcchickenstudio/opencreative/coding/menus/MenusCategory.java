@@ -46,8 +46,8 @@ public enum MenusCategory {
     LOCATION_OPERATIONS(Material.PAPER),
     ITEM_OPERATIONS(Material.GLOW_ITEM_FRAME),
     LIST_OPERATIONS(Material.BOOKSHELF),
-    MAP_OPERATIONS(Material.CHEST_MINECART);
-
+    MAP_OPERATIONS(Material.CHEST_MINECART),
+    VECTOR_OPERATIONS(Material.PRISMARINE_SHARD);
 
     private final Material material;
 

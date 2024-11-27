@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events;
 
+import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -127,6 +128,7 @@ public class EventValues {
         TYPE                    (Material.SPAWNER,                  MenusCategory.ENTITY, String.class),
         UUID                    (Material.KNOWLEDGE_BOOK,           MenusCategory.ENTITY, String.class),
         LOCATION                (Material.PAPER,                    MenusCategory.ENTITY, Location.class),
+        VELOCITY                (Material.PRISMARINE_SHARD,         MenusCategory.ENTITY, Vector.class),
         ITEM_IN_MAIN_HAND       (Material.WOODEN_SWORD,             MenusCategory.ENTITY, ItemStack.class),
         ITEM_IN_OFF_HAND        (Material.SHIELD,                   MenusCategory.ENTITY, ItemStack.class),
         HELMET                  (Material.NETHERITE_HELMET,         MenusCategory.ENTITY, ItemStack.class),
