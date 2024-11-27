@@ -38,7 +38,7 @@ public enum ExecutorCategory {
     EVENT_WORLD(Material.REDSTONE_BLOCK, Material.REDSTONE_ORE, NamedTextColor.RED),
     CYCLE(Material.OXIDIZED_COPPER, Material.WAXED_OXIDIZED_CUT_COPPER, NamedTextColor.DARK_AQUA),
     FUNCTION(Material.LAPIS_BLOCK, Material.DEEPSLATE_LAPIS_ORE, NamedTextColor.BLUE),
-    METHOD(Material.EMERALD_BLOCK, Material.EMERALD_ORE, NamedTextColor.GREEN);
+    METHOD(Material.EMERALD_BLOCK, Material.DEEPSLATE_EMERALD_ORE, NamedTextColor.GREEN);
 
     private final Material block;
     private final Material additionalBlock;

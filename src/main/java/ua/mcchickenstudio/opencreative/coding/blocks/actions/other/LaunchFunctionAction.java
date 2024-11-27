@@ -42,7 +42,7 @@ public class LaunchFunctionAction extends Action {
             if (executor instanceof Function function) {
                 if (function.getName().equalsIgnoreCase(name)) {
                     getHandler().addActions(function.getActions());
-                    Executors.callAmount(function);
+                    Executors.simulateIncreaseCall(function);
                 }
             }
         }

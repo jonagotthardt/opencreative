@@ -86,7 +86,7 @@ public class Executors {
         }
     }
 
-    public static void callAmount(Executor executor) {
+    public static void simulateIncreaseCall(Executor executor) {
         Plot plot = executor.getPlot();
         Executors executors = plot.getTerritory().getScript().getExecutors();
         if (executors.getLastExecutorCallsAmount(executor) > plot.getLimits().getCodeOperationsLimit()) {

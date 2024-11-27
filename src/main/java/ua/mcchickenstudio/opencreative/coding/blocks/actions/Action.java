@@ -202,7 +202,7 @@ public abstract class Action {
      */
     protected List<Entity> getTargets() {
         List<Entity> entities = new ArrayList<>();
-        List<Entity> eventEntities = executor.getEvent().getSelection();
+        List<Entity> eventEntities = getHandler().getEvent().getSelection();
         switch (target) {
             case RANDOM_PLAYER -> {
                 Player randomPlayer = null;
