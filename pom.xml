@@ -92,6 +92,10 @@
             <url>https://jitpack.io</url>
         </repository>
         <repository>
+            <id>md_5-public</id>
+            <url>https://repo.md-5.net/content/groups/public/</url>
+        </repository>
+        <repository>
             <!-- For deploying on Gitlab -->
             <id>gitlab-maven</id>
             <!--suppress UnresolvedMavenProperty -->
@@ -157,6 +161,13 @@
             <groupId>com.github.MilkBowl</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.7</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <!-- Addon: Adds mob disguises -->
+            <groupId>LibsDisguises</groupId>
+            <artifactId>LibsDisguises</artifactId>
+            <version>10.0.44</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

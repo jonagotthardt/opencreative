@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.entities.EntitySpawnEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerRespawnEvent;
@@ -415,11 +416,19 @@ public class EventRaiser {
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
-    public static void raiseMobInteractionEvent(Player player, Event bukkitEvent) {
+    public static void raiseMobInteractionEvent(Player player, PlayerInteractAtEntityEvent bukkitEvent) {
         if (cantRaiseEvent(player)) {
             return;
         }
-        MobInteractionEvent creativeEvent = new MobInteractionEvent(player);
+        MobInteractionEvent creativeEvent = new MobInteractionEvent(player,bukkitEvent);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseMobInteractionEvent(Player player, HangingBreakByEntityEvent bukkitEvent) {
+        if (cantRaiseEvent(player)) {
+            return;
+        }
+        MobInteractionEvent creativeEvent = new MobInteractionEvent(player,bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 

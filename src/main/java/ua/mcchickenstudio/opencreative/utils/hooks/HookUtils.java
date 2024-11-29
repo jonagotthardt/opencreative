@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.utils.hooks;
 
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -27,6 +29,8 @@ public class HookUtils {
     public static boolean isPlaceholderAPIEnabled = false;
     public static boolean isProtocolLibEnabled = false;
     public static boolean isVaultEnabled = false;
+    public static boolean isLibsDisguisesEnabled = false;
+
     /**
      Load hooks into other plugins for working with them. For example: Creative+ can hook into PlaceholderAPI.
      **/
@@ -34,9 +38,11 @@ public class HookUtils {
         isPlaceholderAPIEnabled = isPluginEnabled("PlaceholderAPI");
         isProtocolLibEnabled = isPluginEnabled("ProtocolLib");
         isVaultEnabled = isPluginEnabled("Vault");
+        isLibsDisguisesEnabled = isProtocolLibEnabled && isPluginEnabled("LibsDisguises");
         OpenCreative.getPlugin().getLogger().info((isPlaceholderAPIEnabled ? "Creative+ hooked into PlaceholderAPI." : "Creative+ didn't detect PlaceholderAPI."));
         OpenCreative.getPlugin().getLogger().info((isProtocolLibEnabled ? "Creative+ hooked into ProtocolLib." : "Creative+ didn't detect ProtocolLib, some block effects will be not available."));
         OpenCreative.getPlugin().getLogger().info((isVaultEnabled ? "Creative+ hooked into Vault." : "Creative+ didn't detect Vault, action Request Purchase will be not available."));
+        OpenCreative.getPlugin().getLogger().info((isLibsDisguisesEnabled ? "Creative+ hooked into LibsDisguises." : "Creative+ didn't detect LibsDisguises or ProtocolLib, disguise actions will be not available."));
         if (isPlaceholderAPIEnabled) {
             PAPIUtils.registerPlaceholder();
         }
@@ -51,6 +57,14 @@ public class HookUtils {
     public static boolean isPluginEnabled(String pluginName) {
         Plugin plugin = Bukkit.getPluginManager().getPlugin(pluginName);
         return plugin != null && plugin.isEnabled();
+    }
+
+    public static void clearEntitiesHook(World world) {
+        if (isLibsDisguisesEnabled) DisguiseUtils.clearDisguises(world);
+    }
+
+    public static void clearPlayerHook(Player player) {
+        if (isLibsDisguisesEnabled) DisguiseUtils.clearDisguise(player);
     }
 
 }

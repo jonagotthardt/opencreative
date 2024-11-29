@@ -359,9 +359,11 @@ public class FileUtils {
             sendCriticalErrorMessage("При попытке получить файлы с директории сервера они оказались null.");
         }
 
-        // Получаем отгруженные миры
         if (includeUnloadedWorlds) {
             File unloadedWorldsFolder = new File(serverDirectory + File.separator + "unloadedWorlds" + File.separator);
+            if (!unloadedWorldsFolder.exists()) {
+                unloadedWorldsFolder.mkdirs();
+            }
             File[] unloadedWorlds = unloadedWorldsFolder.listFiles();
 
             if (unloadedWorlds != null) {

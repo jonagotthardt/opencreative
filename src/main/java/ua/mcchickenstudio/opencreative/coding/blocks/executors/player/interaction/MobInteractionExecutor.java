@@ -18,11 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.interaction;
 
+import org.bukkit.event.Cancellable;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
 import ua.mcchickenstudio.opencreative.plots.Plot;
 
-public class MobInteractionExecutor extends PlayerExecutor {
+public class MobInteractionExecutor extends PlayerExecutor implements Cancellable {
 
     public MobInteractionExecutor(Plot plot, int x, int y, int z) {
         super(plot, x, y, z);
@@ -31,5 +32,15 @@ public class MobInteractionExecutor extends PlayerExecutor {
     @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_MOB_INTERACT;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return getEvent().isCancelled();
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        getEvent().setCancelled(cancel);
     }
 }

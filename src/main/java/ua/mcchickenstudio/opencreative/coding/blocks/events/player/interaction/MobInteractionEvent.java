@@ -18,13 +18,42 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
 public class MobInteractionEvent extends WorldEvent {
 
-    public MobInteractionEvent(Player player) {
+    private final Cancellable event;
+    private final Entity entity;
+
+    public MobInteractionEvent(Player player, PlayerInteractEntityEvent event) {
         super(player);
+        this.event = event;
+        this.entity = event.getRightClicked();
     }
 
+    public MobInteractionEvent(Player player, HangingBreakByEntityEvent event) {
+        super(player);
+        this.event = event;
+        this.entity = event.getEntity();
+    }
+
+    public Entity getEntity() {
+        return entity;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
+    }
 }

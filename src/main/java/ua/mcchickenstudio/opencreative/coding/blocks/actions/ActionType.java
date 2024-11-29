@@ -455,7 +455,7 @@ public enum ActionType {
     ENTITY_SET_SCALE(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, SetScaleAction.class, Material.SHULKER_SHELL, new ArgumentSlot("scale", ValueType.NUMBER), new ParameterSlot("add")),
     ENTITY_SET_STEP_HEIGHT(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, SetStepHeightAction.class, Material.RABBIT_FOOT, new ArgumentSlot("height", ValueType.NUMBER), new ParameterSlot("add")),
     ENTITY_SET_VELOCITY(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, SetVelocityAction.class, Material.PRISMARINE_SHARD, new ArgumentSlot("vector", ValueType.VECTOR)),
-
+    ENTITY_DISGUISE_AS_PLAYER(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, DisguiseAsPlayerAction.class, Material.PLAYER_HEAD, "LibsDisguises", new ArgumentSlot("name", ValueType.TEXT), new ArgumentSlot("skin", ValueType.TEXT)),
 
     /**
      * <h1>Other Actions.</h1>

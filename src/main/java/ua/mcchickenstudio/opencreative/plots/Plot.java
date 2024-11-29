@@ -34,6 +34,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -137,8 +138,10 @@ public class Plot {
         if (this.mode == mode) return;
         this.mode = mode;
         setPlotConfigParameter(this,"mode",mode);
+        if (!isLoaded()) return;
         territory.stopBukkitRunnables();
         territory.getWorld().getSpawnLocation().getChunk().load(true);
+        HookUtils.clearEntitiesHook(territory.getWorld());
         if (mode == Mode.BUILD) {
             for (Player player : getPlayers()){
                 if (!isEntityInDevPlot(player)) {

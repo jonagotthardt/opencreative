@@ -249,10 +249,10 @@ public class PlayerUtils {
         for (Player p : player.getWorld().getPlayers()) {
             player.showEntity(OpenCreative.getPlugin(),p);
         }
-
         for (Sound sound : Sound.values()) {
             player.stopSound(sound);
         }
+        HookUtils.clearPlayerHook(player);
     }
 
     /**
