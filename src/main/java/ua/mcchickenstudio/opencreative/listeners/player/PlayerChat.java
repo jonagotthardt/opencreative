@@ -42,6 +42,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.lang.reflect.Array;
 import java.time.Duration;
 import java.util.*;
 
@@ -247,23 +248,23 @@ public class PlayerChat implements Listener {
                 double y = 0;
                 double z = 0;
                 message = ChatColor.stripColor(message);
-                String[] coordinates = new String[3];
+                String[] coordinates;
                 if (message.contains(", ")) {
                     coordinates = message.split(", ");
                 } else if (message.contains(" ")) {
                     coordinates = message.split(" ");
                 } else {
-                    coordinates[0] = message;
+                    coordinates = new String[]{message};
                 }
                 try {
                     x = Double.parseDouble(coordinates[0]);
                 } catch (NumberFormatException ignored) {}
-                if (coordinates[1] != null) {
+                if (coordinates.length >= 2) {
                     try {
                         y = Double.parseDouble(coordinates[1]);
                     } catch (NumberFormatException ignored) {}
                 }
-                if (coordinates[2] != null) {
+                if (coordinates.length >= 3) {
                     try {
                         z = Double.parseDouble(coordinates[2]);
                     } catch (NumberFormatException ignored) {}

@@ -42,10 +42,7 @@ public class SetResourcePackAction extends PlayerAction {
          * can use IP logger when player downloads
          * a resource pack from owner's site.
          */
-        String checkUrl = url.toLowerCase()
-                .replace("https:////","")
-                .replace("http:////","")
-                .replace("www.","");
+        String checkUrl = url.toLowerCase().replaceAll("^https?://(www.)?", "");
         Set<String> allowedLinks = OpenCreative.getSettings().getAllowedResourcePackLinks();
         for (String allowed : allowedLinks) {
             if (allowed.startsWith(checkUrl)) {

@@ -64,7 +64,9 @@ import org.bukkit.util.Vector;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.*;
 import static ua.mcchickenstudio.opencreative.listeners.player.PlayerPlaceBlock.move;
@@ -120,6 +122,7 @@ public class PlayerInteract implements Listener {
             case CLOCK -> handleClockInteraction(event, player, currentItem);
             case MAGMA_CREAM -> handleMagmaCreamInteraction(event, player, currentItem);
             case PAPER -> handlePaperInteraction(event, player, currentItem);
+            case PRISMARINE_SHARD -> handlePrismarineShardClick(event, player, currentItem);
             case NAME_TAG -> {
                 new EventValuesMenu(player).open(player);
                 event.setCancelled(true);
@@ -384,6 +387,32 @@ public class PlayerInteract implements Listener {
             if (displayName != null) {
                 player.sendMessage(displayName.hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("world.dev-mode.click-to-copy")))).clickEvent(ClickEvent.suggestCommand(meta.getDisplayName().replace("§","&"))));
                 setPersistentData(currentItem,getCodingValueKey(),"TEXT");
+            }
+        }
+    }
+
+    private void handlePrismarineShardClick(PlayerInteractEvent event, Player player, ItemStack currentItem) {
+        if (event.getAction() == Action.RIGHT_CLICK_AIR) {
+            ItemMeta meta = currentItem.getItemMeta();
+            if (meta == null || !meta.hasDisplayName()) return;
+            if (player.isSneaking()) {
+                String vectorString = ChatColor.stripColor(meta.getDisplayName());
+                String[] coords = vectorString.split(" ");
+                if (coords.length == 3) {
+                    try {
+                        double x,y,z;
+                        x = Double.parseDouble(coords[0]);
+                        y = Double.parseDouble(coords[1]);
+                        z = Double.parseDouble(coords[2]);
+                        player.setVelocity(new Vector(x,y,z));
+                    } catch (Exception ignored) {}
+                }
+            } else {
+                Component displayName = meta.displayName();
+                if (displayName != null) {
+                    player.sendMessage(displayName.hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("world.dev-mode.click-to-copy")))).clickEvent(ClickEvent.suggestCommand(ChatColor.stripColor(meta.getDisplayName()))));
+                    setPersistentData(currentItem,getCodingValueKey(),"VECTOR");
+                }
             }
         }
     }
@@ -684,7 +713,9 @@ public class PlayerInteract implements Listener {
         Player player = event.getPlayer();
         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
         if (plot != null) {
-            EventRaiser.raiseMobInteractionEvent(player,event);
+            if (event.getHand() == EquipmentSlot.HAND) {
+                EventRaiser.raiseMobInteractionEvent(player,event);
+            }
             if (plot.getFlagValue(PlotFlags.PlotFlag.MOB_INTERACT) == 2 && !plot.getWorldPlayers().canBuild(player)) {
                 // Disallow entire mob interaction.
                 event.getPlayer().sendActionBar(getLocaleMessage("world.cant-mob-interact"));

@@ -16,7 +16,7 @@ load: POSTWORLD
 database: false
 website: https://gitlab.com/eagles-creative/opencreative
 
-softdepend: [PlaceholderAPI, ProtocolLib, Vault]
+softdepend: [PlaceholderAPI, ProtocolLib, Vault, LibsDisguises]
 
 #
 # We load plugin before these plugins

@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.commands.world;
 
+import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.GamePlayEvent;
@@ -138,6 +139,16 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                                         }
                                         value = new Location(plot.getTerritory().getWorld(),x,y,z,yaw,pitch);
                                         valueType = ValueType.LOCATION;
+                                    } catch (NumberFormatException ignored) {}
+                                }
+                                case "vector", "vec" -> {
+                                    try {
+                                        if (args.length < 6) return true;
+                                        double x = Double.parseDouble(args[5]);
+                                        double y = Double.parseDouble(args[6]);
+                                        double z = Double.parseDouble(args[7]);
+                                        value = new Vector(x,y,z);
+                                        valueType = ValueType.VECTOR;
                                     } catch (NumberFormatException ignored) {}
                                 }
                             }
@@ -566,7 +577,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                     Collections.addAll(tabCompleter, "global", "saved");
                 }
                 if (args.length == 5) {
-                    Collections.addAll(tabCompleter, "text", "number", "location", "item", "boolean");
+                    Collections.addAll(tabCompleter, "text", "number", "location", "item", "boolean", "vector");
                 }
                 if (args.length == 6) {
                     switch (args[4].toLowerCase()) {

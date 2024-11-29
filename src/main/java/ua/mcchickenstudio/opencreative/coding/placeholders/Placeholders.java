@@ -25,6 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.MobD
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDamagesMobEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDamagesPlayerEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerKilledPlayerEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.MobInteractionEvent;
 import ua.mcchickenstudio.opencreative.plots.Plot;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -152,7 +153,11 @@ public class Placeholders {
     }
 
     private String parseEntity(String text, ActionsHandler handler) {
-        if (handler.getEvent().getSelection().getFirst() instanceof Entity entity) {
+        if (handler.getEvent() instanceof MobInteractionEvent event) {
+            text = text
+                    .replace("%entity%", event.getEntity().getName())
+                    .replace("%entity_uuid%", event.getEntity().getUniqueId().toString());
+        } else if (handler.getEvent().getSelection().getFirst() instanceof Entity entity) {
             text = text
                     .replace("%entity%", entity.getName())
                     .replace("%entity_uuid%", entity.getUniqueId().toString());
