@@ -54,7 +54,6 @@ public class DevPlot {
 
     private final Plot plot;
 
-    private World world;
     private Material containerMaterial = Material.CHEST;
 
     private final Map<Player, Location> lastLocations = new HashMap<>();
@@ -74,7 +73,6 @@ public class DevPlot {
         if (this.exists()) {
             if (loadWorldFolder(this.getWorldName(), true)) {
                 Bukkit.createWorld(new WorldCreator(this.getWorldName()).type(WorldType.FLAT).generator(new DevPlotChunkGenerator()));
-                this.setWorld(Bukkit.getWorld(this.getWorldName()));
                 if (getWorld() != null) {
                     if (getWorld().getBlockAt(4,0,4).isEmpty()) {
                         createPlatform(1,1);
@@ -83,7 +81,6 @@ public class DevPlot {
                 }
             }
         } else {
-            this.setWorld(Bukkit.createWorld(new WorldCreator(this.getWorldName()).type(WorldType.FLAT).generator(new DevPlotChunkGenerator()).keepSpawnLoaded(TriState.FALSE)));
             createPlatform(1,1);
             this.getWorld().setTime(12500);
             setupWorld();
@@ -269,7 +266,7 @@ public class DevPlot {
         List<Location> locations = new ArrayList<>();
         for (DevPlatform platform : getPlatforms()) {
             for (int z = platform.getBeginZ()+4; z < platform.getEndZ()-4; z =z+4) {
-                Block block = world.getBlockAt(platform.getBeginX()+4,1,z);
+                Block block = getWorld().getBlockAt(platform.getBeginX()+4,1,z);
                 ExecutorCategory blockCategory = ExecutorCategory.getByMaterial(block.getType());
                 if (blockCategory == category) {
                     locations.add(block.getLocation());
@@ -441,10 +438,6 @@ public class DevPlot {
     }
 
     public World getWorld() {
-        return world;
-    }
-
-    public void setWorld(World world) {
-        this.world = world;
+        return Bukkit.getWorld(getWorldName());
     }
 }

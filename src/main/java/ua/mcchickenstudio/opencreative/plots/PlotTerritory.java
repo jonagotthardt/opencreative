@@ -155,7 +155,6 @@ public class PlotTerritory {
                 }
                 if (Bukkit.unloadWorld(plot.getDevPlot().getWorldName(),true)) {
                     FileUtils.unloadWorldFolder(plot.getDevPlot().getWorldName(),true);
-                    plot.getDevPlot().setWorld(null);
                 }
             }
         }

@@ -18,48 +18,40 @@
 
 package ua.mcchickenstudio.opencreative.managers.economy;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.plugin.RegisteredServiceProvider;
 
 /**
- * Implementation of Vault economy,
- * the most used on servers.
+ * This class represents a disabled economy manager, that will be
+ * used by default, if Vault will be not detected. It will not
+ * do any money operation and will be disabled forever.
  */
-public class VaultEconomy implements Economy {
-
-    private net.milkbowl.vault.economy.Economy vaultEconomy;
+public class DisabledEconomy implements Economy {
 
     @Override
     public boolean depositMoney(OfflinePlayer offlinePlayer, Number money) {
-        return vaultEconomy.depositPlayer(offlinePlayer, money.doubleValue()).transactionSuccess();
+        return false;
     }
 
     @Override
     public boolean withdrawMoney(OfflinePlayer offlinePlayer, Number money) {
-        return vaultEconomy.withdrawPlayer(offlinePlayer, money.doubleValue()).transactionSuccess();
+        return false;
     }
 
     @Override
     public Number getBalance(OfflinePlayer offlinePlayer) {
-        return vaultEconomy.getBalance(offlinePlayer);
+        return 0;
     }
 
     @Override
-    public void init() {
-        RegisteredServiceProvider<net.milkbowl.vault.economy.Economy> rsp = Bukkit.getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-        if (rsp != null) {
-            vaultEconomy = rsp.getProvider();
-        }
-    }
+    public void init() {}
 
     @Override
     public boolean isEnabled() {
-        return vaultEconomy.isEnabled();
+        return false;
     }
 
     @Override
     public String getName() {
-        return "Vault Economy";
+        return "Disabled Economy";
     }
 }

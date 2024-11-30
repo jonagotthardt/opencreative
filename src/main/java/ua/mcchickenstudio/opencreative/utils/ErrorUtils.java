@@ -314,7 +314,7 @@ public class ErrorUtils {
     }
 
     public static void sendDebug(String message) {
-        if (OpenCreative.debug) {
+        if (OpenCreative.getSettings().isDebug()) {
             OpenCreative.getPlugin().getLogger().info("[DEBUG] " + message);
         }
     }

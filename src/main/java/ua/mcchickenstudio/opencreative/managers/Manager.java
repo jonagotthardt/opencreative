@@ -18,11 +18,28 @@
 
 package ua.mcchickenstudio.opencreative.managers;
 
+/**
+ * This interface represents a manager, that controls
+ * something and can be replaced with your realization.
+ */
 public interface Manager {
 
     /**
      * Initialization of manager.
      */
     void init();
+
+    /**
+     * Checks if manager is ready to work.
+     * @return true - if enabled, false - disabled.
+     */
+    boolean isEnabled();
+
+    /**
+     * Returns name of manager, that will be
+     * displayed by request in the logs.
+     * @return name of manager.
+     */
+    String getName();
 
 }

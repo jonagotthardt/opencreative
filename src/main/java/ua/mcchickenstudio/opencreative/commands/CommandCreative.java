@@ -25,6 +25,8 @@ import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsPickerMenu;
 import ua.mcchickenstudio.opencreative.plots.DevPlot;
 import ua.mcchickenstudio.opencreative.plots.Plot;
 import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.settings.Settings;
+import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.WorldUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -50,9 +52,7 @@ import java.util.Set;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.loadLocales;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getElapsedTime;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 public class CommandCreative implements CommandExecutor, TabCompleter {
 
@@ -174,12 +174,12 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     if ("disable".equalsIgnoreCase(args[1])) {
-                        CreativeChat.setChatEnabled(false);
+                        OpenCreative.getSettings().setCreativeChatEnabled(false);
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                             onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.disabled").replace("%player%",sender.getName()));
                         }
                     } else if ("enable".equalsIgnoreCase(args[1])) {
-                        CreativeChat.setChatEnabled(true);
+                        OpenCreative.getSettings().setCreativeChatEnabled(true);
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                             onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.enabled").replace("%player%",sender.getName()));
                         }
@@ -189,6 +189,42 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                             onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.cleared").replace("%player%",sender.getName()));
                         }
                     }
+                }
+                case "debug" -> {
+                    if (!sender.hasPermission("opencreative.debug")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return true;
+                    }
+                    if ("disable".equalsIgnoreCase(args[1])) {
+                        OpenCreative.getSettings().setDebug(false);
+                        sender.sendMessage(getLocaleMessage("creative.debug.disabled").replace("%player%",sender.getName()));
+                    } else if ("enable".equalsIgnoreCase(args[1])) {
+                        OpenCreative.getSettings().setDebug(true);
+                        sender.sendMessage(getLocaleMessage("creative.debug.enabled").replace("%player%",sender.getName()));
+                    }
+                }
+                case "locale", "lang", "language" -> {
+                    if (!sender.hasPermission("opencreative.locale")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return true;
+                    }
+                    if (localizationFileExists(args[1])) {
+                        OpenCreative.getPlugin().getConfig().set("messages.locale",args[1]);
+                        OpenCreative.getPlugin().saveConfig();
+                        loadLocalizationFile();
+                        sender.sendMessage(getLocaleMessage("creative.locale.changed"));
+                    } else {
+                        sender.sendMessage(getLocaleMessage("creative.locale.not-found"));
+                    }
+
                 }
                 case "kick-all" -> {
                     if (!sender.hasPermission("opencreative.kick-all")) {
@@ -271,34 +307,13 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                                     }
                                     seconds--;
                                 } else {
-                                    OpenCreative.maintenance = true;
-                                    OpenCreative.getPlugin().getConfig().set("maintenance",true);
-                                    OpenCreative.getPlugin().saveConfig();
-                                    OpenCreative.getPlugin().getLogger().info("Maintenance mode started! Unloading plots, please wait...");
-                                    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                                        onlinePlayer.playSound(onlinePlayer.getLocation(),Sound.BLOCK_BEACON_POWER_SELECT,100,0.5f);
-                                        onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.started"));
-                                        for (Plot plot : PlotManager.getInstance().getPlots()) {
-                                            if (plot.isLoaded()) {
-                                                for (Player player : plot.getPlayers()) {
-                                                    teleportToLobby(player);
-                                                }
-                                            }
-                                        }
-                                    }
+                                    OpenCreative.getSettings().setMaintenance(true);
                                     cancel();
                                 }
                             }
                         }.runTaskTimer(OpenCreative.getPlugin(),0L,20L);
                     } else if ("end".equalsIgnoreCase(args[1])) {
-                        OpenCreative.maintenance = false;
-                        OpenCreative.getPlugin().getConfig().set("maintenance",false);
-                        OpenCreative.getPlugin().saveConfig();
-                        OpenCreative.getPlugin().getLogger().info("Maintenance mode ended, now players can play in worlds.");
-                        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                            onlinePlayer.playSound(onlinePlayer.getLocation(),Sound.BLOCK_BEACON_POWER_SELECT,100,0.7f);
-                            onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.ended"));
-                        }
+                        OpenCreative.getSettings().setMaintenance(false);
                     }
                 }
                 case "unload" -> {
@@ -406,6 +421,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     if (player == null) return true;
                     DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
                     if (devPlot == null) return true;
+                    player.sendMessage("Test of dev plot helper");
                 }
                 case "test2" -> {
                     if (!sender.hasPermission("opencreative.test")) {
@@ -413,6 +429,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     if (player == null) return true;
+                    player.sendMessage("Test of worlds downloader");
                     WorldsBrowserMenu menu = new WorldsPickerMenu(player, new HashSet<>(PlotManager.getInstance().getPlots().stream().filter(plot -> plot.getInformation().isDownloadable()).toList()));
                     menu.open(player);
                 }
@@ -421,6 +438,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
+                    player.sendMessage("Test of legacy convertor");
                     new LegacyConvertor(new ArrayList<>(PlotManager.getInstance().getPlots())).start();
                 }
                 case "template" -> {
@@ -443,7 +461,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
             }
         } else {
             String copyright = OpenCreative.getPlugin().getConfig().getString("messages.version","\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2024\n ");
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', copyright.replace("%version%", OpenCreative.version).replace("%codename%", OpenCreative.codename)));
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', copyright.replace("%version%", OpenCreative.getVersion()).replace("%codename%", OpenCreative.getCodename())));
             if (sender instanceof Player player) {
                 player.playSound(player.getLocation(),Sound.BLOCK_BEACON_ACTIVATE,100,2f);
                 new CreativeMenu().open(player);
@@ -455,8 +473,11 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         List<String> tabCompleter = new ArrayList<>();
+        if (!sender.hasPermission("opencreative.admin")) return null;
         if (args.length == 1) {
             tabCompleter.add("reload");
+            tabCompleter.add("locale");
+            tabCompleter.add("debug");
             tabCompleter.add("maintenance");
             tabCompleter.add("load");
             tabCompleter.add("unload");
@@ -479,7 +500,10 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");
                 tabCompleter.add("clear");
-            }  else if ("load".equalsIgnoreCase(args[0]) || "unload".equalsIgnoreCase(args[0])) {
+            }  else if ("debug".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("enable");
+                tabCompleter.add("disable");
+            } else if ("load".equalsIgnoreCase(args[0]) || "unload".equalsIgnoreCase(args[0])) {
                 tabCompleter.addAll(PlotManager.getInstance().getPlots().stream().map(plot -> String.valueOf(plot.getId())).toList());
             }
         } else if (args.length == 3) {

@@ -114,6 +114,12 @@ creative:
     starting-in: "%prefix%&fMaintenance break will start in &6%time% seconds&f."
     started: "\n%prefix%Maintenance break has &6begun&f, during which the server may be restarted.\n \n &fIt's time to take a break from the game, &6make yourself some tea&f and &6wait for the maintenance to end&f!"
     ended: "%prefix%Maintenance break has &aended&f, you can now play in your worlds. Enjoy the game!"
+  debug:
+    enabled: "%prefix%&fDebug mode is &6enabled&f, some experimental features will be able and console will get additional logs."
+    disabled: "%prefix%&fDebug mode is &6disabled&f, goodbye experiments!"
+  locale:
+    changed: "%prefix%&fChanged language to &6English&f!"
+    not-found: "%prefix%&cNot found localization file for this language O_o"
 not-owner: "%prefix%&cYou are not the owner of this world."
 not-developer: "%prefix%&cYou are not the developer of this world."
 not-builder: "%prefix%&cYou are not the builder of this world."
