@@ -35,7 +35,7 @@ public class CreativeMenu extends AbstractMenu {
     private final ItemStack RESET_LOCALE_ITEM = createItem(Material.BOOKSHELF,1,"menus.creative.items.reset-locale");
 
     public CreativeMenu() {
-        super((byte) 3, getLocaleMessage("menus.creative.title",false).replace("%version%", OpenCreative.version).replace("%codename%", OpenCreative.codename));
+        super((byte) 3, getLocaleMessage("menus.creative.title",false).replace("%version%", OpenCreative.getVersion()).replace("%codename%", OpenCreative.getCodename()));
     }
 
     @Override

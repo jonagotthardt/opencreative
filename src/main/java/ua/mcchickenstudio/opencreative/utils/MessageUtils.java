@@ -83,6 +83,10 @@ public class MessageUtils {
         localizationConfig = YamlConfiguration.loadConfiguration(localeFile);
     }
 
+    public static boolean localizationFileExists(String languageName) {
+        return "en".equalsIgnoreCase(languageName) || "ru".equalsIgnoreCase(languageName) || new File(plugin.getDataFolder() + File.separator + "locales" + File.separator, languageName + ".yml").exists();
+    }
+
     private static String getPrefix() {
         String prefix = plugin.getConfig().getString("messages.prefix");
         if (prefix == null || prefix.equalsIgnoreCase("null")) {

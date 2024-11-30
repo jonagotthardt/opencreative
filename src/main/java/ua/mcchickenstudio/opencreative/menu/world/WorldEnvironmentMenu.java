@@ -77,7 +77,7 @@ public class WorldEnvironmentMenu extends AbstractMenu {
         replacePlaceholderInLore(info,"%variables-limit%",devPlot.getPlot().getLimits().getVariablesAmountLimit());
         replacePlaceholderInLore(info,"%executor-calls-limit%",devPlot.getPlot().getLimits().getCodeOperationsLimit());
         replacePlaceholderInLore(info,"%plotID%", devPlot.getPlot().getId());
-        replacePlaceholderInLore(info,"%version%", OpenCreative.version);
+        replacePlaceholderInLore(info,"%version%", OpenCreative.getVersion());
         long currentTime = devPlot.getWorld() == null ? 0 : devPlot.getWorld().getTime();
         boolean isMorning = currentTime >= 0L && currentTime < 6000L;
         boolean isNight = currentTime >= 15000L && currentTime <= 23000L;

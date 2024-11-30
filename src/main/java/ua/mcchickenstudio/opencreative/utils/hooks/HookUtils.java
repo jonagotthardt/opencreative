@@ -23,6 +23,9 @@ import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import ua.mcchickenstudio.opencreative.managers.economy.DisabledEconomy;
+import ua.mcchickenstudio.opencreative.managers.economy.Economy;
+import ua.mcchickenstudio.opencreative.managers.economy.VaultEconomy;
 
 public class HookUtils {
 
@@ -65,6 +68,14 @@ public class HookUtils {
 
     public static void clearPlayerHook(Player player) {
         if (isLibsDisguisesEnabled) DisguiseUtils.clearDisguise(player);
+    }
+
+    public static Economy getEconomy() {
+        if (isVaultEnabled) {
+            return new VaultEconomy();
+        } else {
+            return new DisabledEconomy();
+        }
     }
 
 }

@@ -487,7 +487,7 @@ public class Plot {
         getDevPlot().loadDevPlotWorld();
         getDevPlot().getWorld().getSpawnLocation().getChunk().load(true);
         Location lastLocation = this.getDevPlot().getLastLocations().get(player);
-        if (this.getDevPlot().getWorld() == null) {
+        if (!this.getDevPlot().isLoaded()) {
             return;
         }
         if (lastLocation == null) {

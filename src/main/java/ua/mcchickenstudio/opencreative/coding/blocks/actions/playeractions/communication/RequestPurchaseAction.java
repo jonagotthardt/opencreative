@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.communication;
 
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -27,7 +28,6 @@ import ua.mcchickenstudio.opencreative.menu.ConfirmationMenu;
 import ua.mcchickenstudio.opencreative.plots.Plot;
 import ua.mcchickenstudio.opencreative.plots.PlotManager;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
-import ua.mcchickenstudio.opencreative.utils.hooks.VaultUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -61,11 +61,11 @@ public class RequestPurchaseAction extends PlayerAction {
                     @Override
                     public void run() {
                         Plot currentPlot = PlotManager.getInstance().getPlotByPlayer(player);
-                        if (!plot.equals(currentPlot) || !(HookUtils.isPluginEnabled("Vault"))) {
+                        if (!plot.equals(currentPlot) || !OpenCreative.getEconomy().isEnabled()) {
                             cancel();
                             return;
                         }
-                        if (VaultUtils.getBalance(player) < price) {
+                        if (OpenCreative.getEconomy().getBalance(player).intValue() < price) {
                             player.sendMessage(getLocaleMessage("no-money").replace("%money%",String.valueOf(price)));
                         } else {
                             if (save) {
@@ -77,8 +77,8 @@ public class RequestPurchaseAction extends PlayerAction {
                             }
                             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP,100,1.2f);
                             if (!plot.isOwner(player)) {
-                                VaultUtils.takeMoney(player,price);
-                                VaultUtils.giveMoney(Bukkit.getOfflinePlayer(plot.getOwner()),price);
+                                OpenCreative.getEconomy().withdrawMoney(player,price);
+                                OpenCreative.getEconomy().depositMoney(Bukkit.getOfflinePlayer(plot.getOwner()),price);
                             }
                             raisePlayerPurchaseEvent(player,id,name,price,save);
                         }

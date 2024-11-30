@@ -26,6 +26,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,19 +43,13 @@ public class CreativeChat implements CommandExecutor {
 
     public static final List<Player> creativeChatOff = new ArrayList<>();
 
-    private static boolean chatEnabled = true;
-
-    public static void setChatEnabled(boolean chatEnabled) {
-        CreativeChat.chatEnabled = chatEnabled;
-    }
-
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (OpenCreative.maintenance && !sender.hasPermission("opencreative.maintenance.bypass")) {
+        if (OpenCreative.getSettings().isMaintenance() && !sender.hasPermission("opencreative.maintenance.bypass")) {
             sender.sendMessage(getLocaleMessage("maintenance"));
             return true;
         }
-        if (!chatEnabled && !sender.hasPermission("opencreative.creative-chat.bypass")) {
+        if (!OpenCreative.getSettings().isCreativeChatEnabled() && !sender.hasPermission("opencreative.creative-chat.bypass")) {
             sender.sendMessage(getLocaleMessage("creative.creative-chat.off"));
             return true;
         }

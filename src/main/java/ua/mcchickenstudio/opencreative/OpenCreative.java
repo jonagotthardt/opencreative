@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative;
 
+import org.bukkit.event.Listener;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.CEListener;
 import ua.mcchickenstudio.opencreative.commands.*;
 import ua.mcchickenstudio.opencreative.commands.minecraft.*;
@@ -35,6 +36,7 @@ import ua.mcchickenstudio.opencreative.listeners.entity.EntitySpawn;
 import ua.mcchickenstudio.opencreative.listeners.player.*;
 import ua.mcchickenstudio.opencreative.listeners.world.BlockChanged;
 import ua.mcchickenstudio.opencreative.listeners.world.BlockRedstone;
+import ua.mcchickenstudio.opencreative.managers.economy.Economy;
 import ua.mcchickenstudio.opencreative.menu.Menus;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
@@ -50,7 +52,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -65,16 +66,16 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
  * This class represents OpenCreative+ java plugin for PaperMC.
  * Only for loading, enabling and disabling plugin. Contains
  * general information about plugin's version and codename.
+ * @author McChicken Studio
  */
 public final class OpenCreative extends JavaPlugin {
 
     private static OpenCreative plugin;
     private static Settings settings;
+    private static Economy economy;
 
-    public static final String version = "5.0 Pre-release";
-    public static final String codename = "Things will be different";
-    public static boolean maintenance = false;
-    public static boolean debug = false;
+    private static final String version = "5.0 Pre-release";
+    private static final String codename = "Things will be different";
 
     /**
      * Plugin load operations.
@@ -115,15 +116,18 @@ public final class OpenCreative extends JavaPlugin {
         PlayerUtils.loadPermissions();
         HookUtils.loadHooks();
         FileUtils.loadPlots();
+
+        economy = HookUtils.getEconomy();
+        economy.init();
         settings = new Settings();
-        settings.load(getConfig());
-        checkDebug();
+        getSettings().load(getConfig());
 
         long loadedTime = System.currentTimeMillis()-startTime;
         for (Player player : Bukkit.getOnlinePlayers()) {
             teleportToLobby(player);
             getServer().sendActionBar(Component.text("§7Open§fCreative§b+ §7" + version + "§f is loaded for " + loadedTime + " ms."));
         }
+
         getLogger().info("OpenCreative+ " + version + ": " + codename + " is loaded for " + loadedTime + " ms.");
         getLogger().info(" ");
         getLogger().info(" Welcome to OpenCreative+ " + version + "!");
@@ -162,32 +166,11 @@ public final class OpenCreative extends JavaPlugin {
     }
 
     /**
-     * Checks if debug mode is enabled in config.yml.
-     */
-    private void checkDebug() {
-        maintenance = getConfig().getBoolean("maintenance",false);
-        if (maintenance) {
-            getLogger().warning("Maintenance mode is still enabled in config.yml, to disable: /maintenance end");
-        }
-        debug = getConfig().getBoolean("debug",false);
-        if (debug) {
-            getLogger().warning("Debug Mode is enabled in config.yml, some logs will appear in console.");
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    for (Player p : Bukkit.getOnlinePlayers()) {
-                        p.sendActionBar(Component.text("§fOpen§7Creative§b+ §3" + version + "§7 Debug Mode. §fThings will be different."));
-                    }
-                }
-            }.runTaskTimer(this,20L,20L);
-        }
-    }
-
-    /**
      * Registers commands and their tab completer in server.
      */
     private void registerCommands() {
         this.getLogger().info("Registering OpenCreative+ commands...");
+        int registeredCommands = 0;
         Map<String,Class<? extends CommandExecutor>> commands = new HashMap<>();
         commands.put("creative",    CommandCreative.class);
         commands.put("spawn",       CommandSpawn.class);
@@ -216,6 +199,7 @@ public final class OpenCreative extends JavaPlugin {
             if (command != null) {
                 try {
                     command.setExecutor(commands.get(commandName).getDeclaredConstructor().newInstance());
+                    registeredCommands++;
                 } catch (Exception error) {
                     sendCriticalErrorMessage("Couldn't register command " + commandName,error);
                 }
@@ -223,7 +207,7 @@ public final class OpenCreative extends JavaPlugin {
                 sendCriticalErrorMessage("Couldn't get command with name " + commandName + ", it is null. Maybe it doesn't exist in plugins.yml?");
             }
         }
-        this.getLogger().info("OpenCreative+ registered all " + commands.size() + " commands.");
+        this.getLogger().info("OpenCreative+ registered " + (registeredCommands == commands.size() ? "all" : registeredCommands + "/" + commands.size() +  " commands."));
     }
 
     /**
@@ -231,31 +215,70 @@ public final class OpenCreative extends JavaPlugin {
      */
     private void registerEvents() {
         this.getLogger().info("Registering OpenCreative+ event listeners...");
-        getServer().getPluginManager().registerEvents(new ChangedWorld(), this);
-        getServer().getPluginManager().registerEvents(new EntitySpawn(), this);
-        getServer().getPluginManager().registerEvents(new EntityDamage(), this);
-        getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
-        getServer().getPluginManager().registerEvents(new PlayerQuit(), this);
-        getServer().getPluginManager().registerEvents(new PlayerRespawn(), this);
-        getServer().getPluginManager().registerEvents(new PlayerDeath(), this);
-        getServer().getPluginManager().registerEvents(new PlayerTeleport(), this);
-        getServer().getPluginManager().registerEvents(new PlayerMove(), this);
-        getServer().getPluginManager().registerEvents(new PlayerChat(), this);
-        getServer().getPluginManager().registerEvents(new PlayerInteract(), this);
-        getServer().getPluginManager().registerEvents(new PlayerDropItem(), this);
-        getServer().getPluginManager().registerEvents(new PlayerPlaceBlock(), this);
-        getServer().getPluginManager().registerEvents(new PlayerBreakBlock(), this);
-        getServer().getPluginManager().registerEvents(new PlayerBucket(), this);
-        getServer().getPluginManager().registerEvents(new InventoryClick(), this);
-        getServer().getPluginManager().registerEvents(new BlockRedstone(), this);
-        getServer().getPluginManager().registerEvents(new BlockChanged(), this);
-        getServer().getPluginManager().registerEvents(new Menus(), this);
-        getServer().getPluginManager().registerEvents(new CEListener(), this);
-        getServer().getPluginManager().registerEvents(new GameModeChange(), this);
-        this.getLogger().info("OpenCreative+ registered all event listeners.");
+        int registeredListeners = 0;
+        Class<?>[] listeners = new Class[] {
+                ChangedWorld.class,     EntitySpawn.class,      EntityDamage.class,
+                PlayerJoin.class,       PlayerQuit.class,       PlayerRespawn.class,
+                PlayerDeath.class,      PlayerTeleport.class,   PlayerMove.class,
+                PlayerChat.class,       PlayerInteract.class,   PlayerDropItem.class,
+                PlayerPlaceBlock.class, PlayerBreakBlock.class, PlayerBucket.class,
+                InventoryClick.class,   BlockRedstone.class,    BlockChanged.class,
+                Menus.class,            CEListener.class,       GameModeChange.class,
+        };
+        for (Class<?> listenerClass : listeners) {
+            try {
+                getServer().getPluginManager().registerEvents(
+                        (Listener) listenerClass.getDeclaredConstructor().newInstance(), this
+                );
+                registeredListeners++;
+            } catch (Exception exception) {
+                sendCriticalErrorMessage("Couldn't register event listener: " + listenerClass.getSimpleName(),exception);
+            }
+        }
+        this.getLogger().info("OpenCreative+ registered " + (registeredListeners == listeners.length ? "all" : registeredListeners + "/" + listeners.length + " event listeners."));
     }
 
+    /**
+     * Returns OpenCreative+ settings.
+     * @return settings of plugin.
+     */
     public static Settings getSettings() {
         return settings;
     }
+
+    /**
+     * Sets custom economy manager.
+     * @param economy economy manager.
+     */
+    @SuppressWarnings("unused")
+    public static void setEconomy(Economy economy) {
+        getPlugin().getLogger().info("Now using economy manager: " + economy.getName());
+        OpenCreative.economy = economy;
+    }
+
+    /**
+     * Gets economy manager, that has money operations for players.
+     * @return economy manager.
+     */
+    public static Economy getEconomy() {
+        return economy;
+    }
+
+    /**
+     * Gets version of OpenCreative+.
+     * @return version of plugin.
+     */
+    public static String getVersion() {
+        return version;
+    }
+
+    /**
+     * Gets codename of current OpenCreative+ version.
+     * @return codename of version.
+     */
+    public static String getCodename() {
+        return codename;
+    }
+
+
 }

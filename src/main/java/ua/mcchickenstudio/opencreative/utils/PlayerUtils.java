@@ -400,7 +400,7 @@ public class PlayerUtils {
         if (spectator == receiver) return;
         Settings.PlayerListChanger changer = OpenCreative.getSettings().getListChanger();
         if (changer == Settings.PlayerListChanger.SPECTATOR) {
-            if (HookUtils.isProtocolLibEnabled) {
+            if (HookUtils.isProtocolLibEnabled  && OpenCreative.getSettings().getListChanger() == Settings.PlayerListChanger.SPECTATOR) {
                 ProtocolLibUtils.sendSpectatorColoredNickname(spectator,receiver);
             } else {
                 receiver.hidePlayer(OpenCreative.getPlugin(),spectator);
@@ -412,7 +412,7 @@ public class PlayerUtils {
 
     public static void showPlayerFromTab(Player spectator, Player receiver) {
         if (spectator == receiver) return;
-        if (HookUtils.isProtocolLibEnabled) {
+        if (HookUtils.isProtocolLibEnabled && OpenCreative.getSettings().getListChanger() == Settings.PlayerListChanger.SPECTATOR) {
             ProtocolLibUtils.sendSpectatorUncoloredNickname(spectator,receiver);
         } else {
             receiver.showPlayer(OpenCreative.getPlugin(),spectator);

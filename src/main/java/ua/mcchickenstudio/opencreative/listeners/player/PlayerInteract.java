@@ -64,9 +64,7 @@ import org.bukkit.util.Vector;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.*;
 import static ua.mcchickenstudio.opencreative.listeners.player.PlayerPlaceBlock.move;
@@ -593,7 +591,7 @@ public class PlayerInteract implements Listener {
         if (isEntityInLobby(player)) {
             if (getItemType(currentItem).equals("worlds")) {
                 // Opens recommended worlds menu.
-                if (OpenCreative.maintenance && !player.hasPermission("opencreative.maintenance.bypass")) {
+                if (OpenCreative.getSettings().isMaintenance() && !player.hasPermission("opencreative.maintenance.bypass")) {
                     player.sendMessage(getLocaleMessage("maintenance"));
                     return;
                 }
@@ -601,7 +599,7 @@ public class PlayerInteract implements Listener {
                 new RecommendedWorldsMenu().open(player);
             } else if (getItemType(currentItem).equals("own_worlds")) {
                 // Opens player's worlds menu.
-                if (OpenCreative.maintenance && !player.hasPermission("opencreative.maintenance.bypass")) {
+                if (OpenCreative.getSettings().isMaintenance() && !player.hasPermission("opencreative.maintenance.bypass")) {
                     player.sendMessage(getLocaleMessage("maintenance"));
                     return;
                 }
@@ -610,7 +608,7 @@ public class PlayerInteract implements Listener {
             }
         } else if (plot != null && currentItem.getType() == Material.COMPASS) {
             // Opens world settings menu.
-            if (OpenCreative.maintenance && !player.hasPermission("opencreative.maintenance.bypass")) {
+            if (OpenCreative.getSettings().isMaintenance() && !player.hasPermission("opencreative.maintenance.bypass")) {
                 player.sendMessage(getLocaleMessage("maintenance"));
                 return;
             }

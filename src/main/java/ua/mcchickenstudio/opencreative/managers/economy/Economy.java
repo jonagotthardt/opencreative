@@ -47,5 +47,4 @@ public interface Economy extends Manager {
      * @return Amount of money on player's balance.
      */
     Number getBalance(OfflinePlayer offlinePlayer);
-
 }
