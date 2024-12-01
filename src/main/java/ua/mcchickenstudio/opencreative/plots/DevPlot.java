@@ -81,6 +81,7 @@ public class DevPlot {
                 }
             }
         } else {
+            Bukkit.createWorld(new WorldCreator(this.getWorldName()).type(WorldType.FLAT).generator(new DevPlotChunkGenerator()));
             createPlatform(1,1);
             this.getWorld().setTime(12500);
             setupWorld();
