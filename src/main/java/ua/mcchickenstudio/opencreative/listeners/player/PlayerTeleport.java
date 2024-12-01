@@ -38,17 +38,17 @@ public class PlayerTeleport implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onTeleport(PlayerTeleportEvent event) {
-        if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_PORTAL) || event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_GATEWAY) || event.getCause().equals(PlayerTeleportEvent.TeleportCause.NETHER_PORTAL)) {
+        if (event.getCause() == PlayerTeleportEvent.TeleportCause.END_PORTAL
+                || event.getCause() == PlayerTeleportEvent.TeleportCause.END_GATEWAY
+                || event.getCause() == PlayerTeleportEvent.TeleportCause.NETHER_PORTAL) {
             event.setCancelled(true);
         }
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
+        Plot plot = PlotManager.getInstance().getPlotByWorld(event.getFrom().getWorld());
         if (plot != null) {
-            try {
-                if (event.getTo().getWorld() == event.getFrom().getWorld()) {
-                    EventRaiser.raiseTeleportEvent(event.getPlayer(),event);
-                }
-            } catch (StackOverflowError error) {
-                stopPlotCode(plot);
+            if (event.getTo().getWorld().equals(event.getFrom().getWorld())) {
+                EventRaiser.raiseTeleportEvent(event.getPlayer(),event);
+            } else if (event.getCause() == PlayerTeleportEvent.TeleportCause.SPECTATE) {
+                event.setCancelled(true);
             }
         }
     }
