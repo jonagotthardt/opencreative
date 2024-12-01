@@ -101,10 +101,9 @@ public class BlockUtils {
     public static int getClosingBracketX(DevPlatform platform, Block conditionBlock) {
         Location location = conditionBlock.getLocation();
         World world = location.getWorld();
-
         List<String> conditions = new ArrayList<>();
         try {
-            for (byte x = (byte) (location.getX()+2); x < platform.getEndX()-4; x= (byte) (x+2)) {
+            for (double x = location.getX()+2; x < platform.getEndX()-4; x += 2) {
                 Block block = world.getBlockAt(new Location(world,x,location.getBlockY(),location.getBlockZ()));
                 ActionCategory category = ActionCategory.getByMaterial(block.getType());
                 if (block.getType() == Material.AIR) {
