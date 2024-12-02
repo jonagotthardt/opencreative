@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
+import org.bukkit.GameMode;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.plots.Plot;
 import ua.mcchickenstudio.opencreative.plots.PlotManager;
 import org.bukkit.Bukkit;
@@ -27,6 +29,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.hidePlayerInTab;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
 
 public class GameModeChange implements Listener {
 
@@ -36,6 +39,10 @@ public class GameModeChange implements Listener {
         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
         if (plot == null) {
             // If player is not in plot
+            if (isEntityInLobby(player) && event.getNewGameMode() == GameMode.CREATIVE && !player.hasPermission("opencreative.gamemode.change")) {
+                OpenCreative.getPlugin().getLogger().warning("Player " + player.getName() + " tried to get Creative mode in lobby, but he doesn't have permission.");
+                event.setCancelled(true);
+            }
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 if (!player.getWorld().equals(onlinePlayer.getWorld())) {
                     hidePlayerInTab(onlinePlayer,player);
@@ -44,7 +51,7 @@ public class GameModeChange implements Listener {
             }
             return;
         }
-        if (plot.getTerritory().getWorld() == null) return;
+        if (!plot.isLoaded()) return;
         // If player is in plot
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (!onlinePlayer.getWorld().equals(plot.getTerritory().getWorld()) && (plot.getDevPlot().getWorld() != null && !onlinePlayer.getWorld().equals(plot.getDevPlot().getWorld()))) {

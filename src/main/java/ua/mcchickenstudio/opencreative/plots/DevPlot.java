@@ -64,9 +64,7 @@ public class DevPlot {
     private final static Material DEFAULT_FLOOR_MATERIAL = Material.WHITE_STAINED_GLASS;
 
     public DevPlot(Plot plot) {
-
         this.plot = plot;
-
     }
 
     public void loadDevPlotWorld() {

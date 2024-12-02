@@ -1,6 +1,6 @@
 #
 # OpenCreative+ 5.0 - Things will be different.
-# (C) McChicken Studio 2017-2024.
+# (C) McChicken Studio 2017-2025.
 #
 
 #
@@ -70,7 +70,7 @@
 #
 # Powered by Paper API.
 # Licensed under GNU GPL v3.
-# Additional features by: Vault, ProtocolLib, PlaceholderAPI.
+# Additional features by: Vault, ProtocolLib, PlaceholderAPI, LibsDisguises.
 #
 # Hangar: https://hangar.papermc.io/mcchickenstudio/OpenCreative
 # Source code: https://gitlab.com/eagles-creative/opencreative
@@ -111,7 +111,7 @@ messages:
   cc-prefix: "&6 Creative Chat &8| &7"
   cc-chat: "%cc-prefix%&7%player%&7: %message%" # You can use PAPI placeholders here
   world-chat: "&7 %player% &8» &f%message%" # and here
-  version: "&f \n &fPowered by Open&7Creative&b+ &3%version%\n &f%codename% \n \n &fContibutors: &7McChicken Team\n &fTranslators: &7initzero, Nagibator6000Lol \n \n &cMcChicken Studio 2017-2014\n &c"
+  version: "&f \n &fPowered by Open&7Creative&b+ &3%version%\n &f%codename% \n \n &fContibutors: &7McChicken Team\n &fTranslators: &7initzero, Nagibator6000Lol \n \n &cMcChicken Studio 2017-2025\n &c"
 cooldowns:
   generic-command: 5 # /play, /build, /games
   advertisement: 120 # /ad
