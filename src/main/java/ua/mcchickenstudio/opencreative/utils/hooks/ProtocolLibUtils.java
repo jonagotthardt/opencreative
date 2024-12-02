@@ -32,6 +32,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.utils.ErrorUtils;
 
 import java.util.*;
 
@@ -110,27 +111,36 @@ public class ProtocolLibUtils {
     }
 
     public static void sendSpectatorColoredNickname(Player spectator, Player receiver) {
-        PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.PLAYER_INFO);
-        packet.getPlayerInfoActions().write(0, EnumSet.of(UPDATE_GAME_MODE));
-        packet.getPlayerInfoDataLists().write(1, Collections.singletonList(new PlayerInfoData(
-                new WrappedGameProfile(spectator.getUniqueId(), spectator.getName()),
-                spectator.getPing(),
-                EnumWrappers.NativeGameMode.SPECTATOR,
-                WrappedChatComponent.fromText(spectator.getName())
-        )));
-        manager.sendServerPacket(receiver,packet);
+        try {
+            PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.PLAYER_INFO);
+            packet.getPlayerInfoActions().write(0, EnumSet.of(UPDATE_GAME_MODE));
+            packet.getPlayerInfoDataLists().write(1, Collections.singletonList(new PlayerInfoData(
+                    new WrappedGameProfile(spectator.getUniqueId(), spectator.getName()),
+                    spectator.getPing(),
+                    EnumWrappers.NativeGameMode.SPECTATOR,
+                    WrappedChatComponent.fromText(spectator.getName())
+            )));
+            manager.sendServerPacket(receiver,packet);
+        } catch (Exception error) {
+            ErrorUtils.sendCriticalErrorMessage("Can't send spectator colored packet",error);
+        }
     }
 
     public static void sendSpectatorUncoloredNickname(Player spectator, Player receiver) {
-        if (spectator.getGameMode() == GameMode.SPECTATOR) return;
-        PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.PLAYER_INFO);
-        packet.getPlayerInfoActions().write(0, EnumSet.of(UPDATE_GAME_MODE));
-        packet.getPlayerInfoDataLists().write(1, Collections.singletonList(new PlayerInfoData(
-                new WrappedGameProfile(spectator.getUniqueId(), spectator.getName()),
-                spectator.getPing(),
-                EnumWrappers.NativeGameMode.valueOf(spectator.getGameMode().name()),
-                WrappedChatComponent.fromText(spectator.getName())
-        )));
-        manager.sendServerPacket(receiver,packet);
+        try {
+            if (spectator.getGameMode() == GameMode.SPECTATOR) return;
+            PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.PLAYER_INFO);
+            packet.getPlayerInfoActions().write(0, EnumSet.of(UPDATE_GAME_MODE));
+            packet.getPlayerInfoDataLists().write(1, Collections.singletonList(new PlayerInfoData(
+                    new WrappedGameProfile(spectator.getUniqueId(), spectator.getName()),
+                    spectator.getPing(),
+                    EnumWrappers.NativeGameMode.valueOf(spectator.getGameMode().name()),
+                    WrappedChatComponent.fromText(spectator.getName())
+            )));
+            manager.sendServerPacket(receiver,packet);
+        } catch (Exception error) {
+            ErrorUtils.sendCriticalErrorMessage("Can't send spectator uncolored packet",error);
+        }
+
     }
 }

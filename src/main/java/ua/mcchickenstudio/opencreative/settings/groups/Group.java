@@ -18,31 +18,110 @@
 
 package ua.mcchickenstudio.opencreative.settings.groups;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+/**
+ * <h1>Group</h1>
+ * This class represents a player group, that stores
+ * fields of limits, modifiers and cooldowns.
+ */
 public class Group {
 
-    private int worldsLimit = 2;
-    private int worldSize = 25;
+    private final String name;
+    private final String permission;
 
-    private int genericCommandCooldown = 5;
-    private int creativeChatCooldown = 5;
-    private int advertisementCooldown = 120;
-    private int chatCooldown = 2;
+    private final int worldsLimit;
+    private final int worldSize;
+
+    private final int genericCommandCooldown;
+    private final int creativeChatCooldown;
+    private final int advertisementCooldown;
+    private final int chatCooldown;
 
     private final Set<String> playPermissions = new HashSet<>();
     private final Set<String> buildPermissions = new HashSet<>();
     private final Set<String> devPermissions = new HashSet<>();
 
-    public void load(String name, FileConfiguration config) {
-        ConfigurationSection section = config.getConfigurationSection("groups." + name);
-        if (section == null) return;
-        worldsLimit = section.getInt("creating-world.limit",worldsLimit);
-        worldSize = section.getInt("world.size",worldSize);
+    private final Map<LimitType, LimitModifier> limits = new HashMap<>();
+
+    public Group(String name, FileConfiguration config) {
+        this.name = name;
+        String path = "groups." + name + ".";
+        this.permission = config.getString(path + "permission","default");
+        worldsLimit = config.getInt(path + "creating-world.limit",1);
+        worldSize = config.getInt(path + "world.size",25);
+        genericCommandCooldown = config.getInt(path + "cooldown.generic",5);
+        advertisementCooldown = config.getInt(path + "cooldown.advertisement",120);
+        creativeChatCooldown = config.getInt(path + "cooldown.creative-chat",5);
+        chatCooldown = config.getInt(path + "cooldown.chat",2);
+        playPermissions.addAll(config.getStringList(path + "play-permissions"));
+        buildPermissions.addAll(config.getStringList(path + "build-permissions"));
+        devPermissions.addAll(config.getStringList(path + "dev-permissions"));
+        for (LimitType type : LimitType.values()) {
+            limits.put(type,
+                    new LimitModifier(
+                            config.getInt(path + "world.limits." + type.getPath(),0),
+                            config.getInt(path + "world.per-player-limit-modifiers." + type.getPath(),0)
+                    ));
+        }
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getAdvertisementCooldown() {
+        return advertisementCooldown;
+    }
+
+    public int getChatCooldown() {
+        return chatCooldown;
+    }
+
+    public int getCreativeChatCooldown() {
+        return creativeChatCooldown;
+    }
+
+    public int getGenericCommandCooldown() {
+        return genericCommandCooldown;
+    }
+
+    public int getWorldSize() {
+        return worldSize;
+    }
+
+    public int getWorldsLimit() {
+        return worldsLimit;
+    }
+
+    public Set<String> getBuildPermissions() {
+        return buildPermissions;
+    }
+
+    public Set<String> getDevPermissions() {
+        return devPermissions;
+    }
+
+    public Set<String> getPlayPermissions() {
+        return playPermissions;
+    }
+
+    public String getPermission() {
+        return permission;
+    }
+
+    public @NotNull LimitModifier getLimit(LimitType type) {
+        for (LimitType limitType : limits.keySet()) {
+            if (limitType == type) {
+                return limits.get(type);
+            }
+        }
+        return new LimitModifier(0,0);
+    }
 }

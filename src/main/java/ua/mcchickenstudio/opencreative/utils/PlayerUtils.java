@@ -96,7 +96,7 @@ public class PlayerUtils {
             }
             return returnGroup;
         } else {
-            sendCriticalErrorMessage("При попытке получить группу игрока оказалось, что секция groups из config.yml не заполнена, вам необходимо её заполнить.");
+            sendCriticalErrorMessage("Section `groups` is empty in config.yml.");
             return "default";
         }
     }
@@ -125,10 +125,6 @@ public class PlayerUtils {
         return plugin.getConfig().getInt("groups." + group + "." + intPath);
     }
 
-    public static int getListFromGroups(String group, String listPath) {
-        return plugin.getConfig().getInt("groups." + group + "." + listPath);
-    }
-
     public static int getPlayerPlotsLimit(Player player) {
         return getIntFromGroups(player,"creating-world.limit");
     }
@@ -137,60 +133,30 @@ public class PlayerUtils {
         return getIntFromGroups(group,"world.size");
     }
 
-    public static int getPlayerPlotEntitiesLimit(String group) {
-        return getIntFromGroups(group,"world.entities-limit");
-    }
-
-    public static int getPlayerPlotCodeOperationsLimit(String group) {
-        return getIntFromGroups(group,"world.code-operations-limit");
-    }
-
-    public static int getPlayerPlotRedstoneOperationsLimit(String group) {
-        return getIntFromGroups(group,"world.redstone-operations-limit");
-    }
-
-    public static int getPlayerPlot(String group) {
-        return getIntFromGroups(group,"world.redstone-operations-limit");
-    }
-
-
-    public static int getPlayerPermissionsList(String group) {
-        return getListFromGroups(group,"permissions");
-    }
-
     public static void loadPermissions() {
-
         permissionAttachmentMap.clear();
         for (Player player : Bukkit.getOnlinePlayers()) {
             PermissionAttachment permissionAttachment = player.addAttachment(plugin);
             permissionAttachmentMap.put(player.getUniqueId(),permissionAttachment);
         }
         OpenCreative.getPlugin().getLogger().info("Loaded build permissions for every player...");
-
     }
 
     public static void loadPermissions(Player player) {
-
         PermissionAttachment permissionAttachment = player.addAttachment(plugin);
         permissionAttachmentMap.put(player.getUniqueId(),permissionAttachment);
-
     }
 
     public static void removeFromPermissionsMap(Player player) {
-
         permissionAttachmentMap.remove(player.getUniqueId());
-
     }
 
-    public static void  giveBuildPermissions(Player player) {
-
+    public static void giveBuildPermissions(Player player) {
         PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
-
         List<String> buildPermissions = plugin.getConfig().getStringList("groups." + getGroup(player) + ".world.build-permissions");
         for (String permission : buildPermissions) {
             permissionAttachment.setPermission(permission,true);
         }
-
     }
 
     /**
@@ -401,7 +367,7 @@ public class PlayerUtils {
         if (spectator == receiver) return;
         Settings.PlayerListChanger changer = OpenCreative.getSettings().getListChanger();
         if (changer == Settings.PlayerListChanger.SPECTATOR) {
-            if (HookUtils.isProtocolLibEnabled  && OpenCreative.getSettings().getListChanger() == Settings.PlayerListChanger.SPECTATOR) {
+            if (HookUtils.isProtocolLibEnabled) {
                 ProtocolLibUtils.sendSpectatorColoredNickname(spectator,receiver);
             } else {
                 receiver.hidePlayer(OpenCreative.getPlugin(),spectator);

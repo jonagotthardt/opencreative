@@ -50,8 +50,6 @@ public class PlayerQuit implements Listener {
 
         removeFromPermissionsMap(player);
 
-
-
     }
 
 
