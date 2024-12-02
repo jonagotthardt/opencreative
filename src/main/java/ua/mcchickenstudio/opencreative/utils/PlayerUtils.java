@@ -213,6 +213,7 @@ public class PlayerUtils {
      Clears player's settings: inventory, health, fire ticks, game mode.
      **/
     public static void clearPlayer(Player player) {
+        player.setGameMode(GameMode.ADVENTURE);
         PlayerUtils.clearBuildPermissions(player);
         player.closeInventory();
         player.getInventory().clear();
@@ -229,7 +230,6 @@ public class PlayerUtils {
         player.setMaxHealth(20);
         player.setHealth(20);
         player.setFoodLevel(20);
-        player.setGameMode(GameMode.ADVENTURE);
         player.setFlying(false);
         player.setGliding(false);
         player.setFlySpeed(0.1f);
@@ -253,6 +253,7 @@ public class PlayerUtils {
             player.stopSound(sound);
         }
         HookUtils.clearPlayerHook(player);
+        player.setGameMode(GameMode.ADVENTURE);
     }
 
     /**

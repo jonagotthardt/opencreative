@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
+import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.commands.CreativeChat;
 import ua.mcchickenstudio.opencreative.plots.Plot;
 import ua.mcchickenstudio.opencreative.plots.PlotManager;
@@ -36,8 +37,11 @@ public class PlayerQuit implements Listener {
         Player player = event.getPlayer();
 
         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-        if (plot != null && plot.getOnline() == 1) {
-            plot.getTerritory().unload();
+        if (plot != null) {
+            EventRaiser.raiseQuitEvent(player);
+            if (plot.getOnline() == 1) {
+                plot.getTerritory().unload();
+            }
         }
         teleportToLobby(player);
 
