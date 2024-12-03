@@ -29,7 +29,6 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -49,138 +48,16 @@ import static ua.mcchickenstudio.opencreative.utils.WorldUtils.isDevPlot;
 
 public class PlayerUtils {
 
-    public enum PlayerLimit {
-
-        WORLD_SIZE("world.size"),
-        WORLD_ENTITIES_LIMIT("world.limits.entities-amount"),
-        WORLD_CODE_OPERATIONS_LIMIT("world.limits.executor-calls"),
-        WORLD_SCOREBOARDS_LIMIT("world.limits.scoreboards-amount"),
-        WORLD_BOSSBARS_LIMIT("world.limits.bossbars-amount"),
-        WORLD_REDSTONE_OPERATIONS_LIMIT("world.limits.redstone-changes"),
-        WORLD_OPENING_INVENTORIES_LIMIT("world.limits.opening-inventories"),
-        WORLD_VARIABLES_LIMIT("world.limits.variables-amount"),
-        WORLD_CODING_PLATFORMS_LIMIT("world.limits.coding-platforms"),
-        WORLD_MODIFYING_BLOCKS_LIMIT("world.limits.modifying-blocks"),
-        PLAYER_WORLDS_AMOUNT_LIMIT("creating-world.limit");
-
-        private final String path;
-
-        PlayerLimit(String path) {
-            this.path = path;
-        }
-
-        public String getPath() {
-            return path;
-        }
-    }
-
-    @NotNull
-    final static Plugin plugin = OpenCreative.getPlugin();
-    final static Map<UUID, PermissionAttachment> permissionAttachmentMap = new HashMap<>();
+    private final static Map<UUID, PermissionAttachment> permissionAttachmentMap = new HashMap<>();
 
     /**
-     Returns player's group from config.yml. If player doesn't have any "creative.group" permissions, then returns "default".
-     **/
-    public static String getGroup(Player player) {
-        ConfigurationSection groupsSection = plugin.getConfig().getConfigurationSection("groups");
-        if (groupsSection != null) {
-            String returnGroup;
-            returnGroup = "default";
-            for (String group : groupsSection.getKeys(false)) {
-                if (!(group.equals("default"))) {
-                    String permission = plugin.getConfig().getString("groups." + group + ".permission");
-                    if (permission != null && player.hasPermission(permission)) {
-                        returnGroup = group;
-                    }
-                }
-            }
-            return returnGroup;
-        } else {
-            sendCriticalErrorMessage("Section `groups` is empty in config.yml.");
-            return "default";
-        }
-    }
-
-    public static int getPlayerLimitValue(Player player, PlayerLimit type) {
-        return getIntFromGroups(player,type.getPath());
-    }
-
-    public static int getPlayerLimitValue(String group, PlayerLimit type) {
-        return getIntFromGroups(group,type.getPath());
-    }
-
-    public static int getPlayerModifierValue(Player player, PlayerLimit type) {
-        return getIntFromGroups(getGroup(player),type.getPath().replace(".limits",".per-player-limit-modifiers"));
-    }
-
-    public static int getPlayerModifierValue(String group, PlayerLimit type) {
-        return getIntFromGroups(group,type.getPath().replace(".limits",".per-player-limit-modifiers"));
-    }
-
-    public static int getIntFromGroups(Player player, String intPath) {
-        return plugin.getConfig().getInt("groups." + getGroup(player) + "." + intPath);
-    }
-
-    public static int getIntFromGroups(String group, String intPath) {
-        return plugin.getConfig().getInt("groups." + group + "." + intPath);
-    }
-
-    public static int getPlayerPlotsLimit(Player player) {
-        return getIntFromGroups(player,"creating-world.limit");
-    }
-
-    public static int getPlayerPlotSize(String group) {
-        return getIntFromGroups(group,"world.size");
-    }
-
-    public static void loadPermissions() {
-        permissionAttachmentMap.clear();
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            PermissionAttachment permissionAttachment = player.addAttachment(plugin);
-            permissionAttachmentMap.put(player.getUniqueId(),permissionAttachment);
-        }
-        OpenCreative.getPlugin().getLogger().info("Loaded build permissions for every player...");
-    }
-
-    public static void loadPermissions(Player player) {
-        PermissionAttachment permissionAttachment = player.addAttachment(plugin);
-        permissionAttachmentMap.put(player.getUniqueId(),permissionAttachment);
-    }
-
-    public static void removeFromPermissionsMap(Player player) {
-        permissionAttachmentMap.remove(player.getUniqueId());
-    }
-
-    public static void giveBuildPermissions(Player player) {
-        PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
-        List<String> buildPermissions = plugin.getConfig().getStringList("groups." + getGroup(player) + ".world.build-permissions");
-        for (String permission : buildPermissions) {
-            permissionAttachment.setPermission(permission,true);
-        }
-    }
-
-    /**
-     Clears player's builders permissions.
-     **/
-    public static void clearBuildPermissions(Player player) {
-
-        PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
-        Map<String, Boolean> permissions = permissionAttachment.getPermissions();
-        Map<String, Boolean> permissions2 = new HashMap<>(permissions);
-
-        for (Map.Entry<String, Boolean> entry : permissions2.entrySet()) {
-            String key = entry.getKey();
-            permissionAttachment.unsetPermission(key);
-        }
-
-    }
-
-    /**
-     Clears player's settings: inventory, health, fire ticks, game mode.
-     **/
+     * Clears player from modifications made by world
+     * and resets his states, parameters and attributes.
+     * @param player player to clear.
+     */
     public static void clearPlayer(Player player) {
         player.setGameMode(GameMode.ADVENTURE);
-        PlayerUtils.clearBuildPermissions(player);
+        PlayerUtils.clearWorldModePermissions(player);
         player.closeInventory();
         player.getInventory().clear();
         for (PotionEffect effect : player.getActivePotionEffects()) {
@@ -223,8 +100,8 @@ public class PlayerUtils {
     }
 
     /**
-     Teleports player to lobby.
-     @param player specified player to teleport.
+     * Teleports player to lobby.
+     * @param player specified player to teleport.
      **/
     public static void teleportToLobby(Player player) {
 
@@ -249,6 +126,10 @@ public class PlayerUtils {
         player.getInventory().setItem(5, myWorldsItem);
     }
 
+    /**
+     * Returns a lobby world, where player will get lobby items.
+     * @return lobby world.
+     */
     public static World getLobbyWorld() {
         String spawnWorld = OpenCreative.getPlugin().getConfig().getString("lobby.world");
         if (spawnWorld == null || spawnWorld.isEmpty() || Bukkit.getWorld(spawnWorld) == null) {
@@ -265,9 +146,66 @@ public class PlayerUtils {
         return getLobbyWorld().equals(entity.getWorld());
     }
 
+    public static void loadPermissions() {
+        permissionAttachmentMap.clear();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            loadPermissions(player);
+        }
+    }
+
+    public static void loadPermissions(Player player) {
+        PermissionAttachment permissionAttachment = player.addAttachment(OpenCreative.getPlugin());
+        permissionAttachmentMap.put(player.getUniqueId(),permissionAttachment);
+    }
+
+    public static void removeFromPermissionsMap(Player player) {
+        clearWorldModePermissions(player);
+        permissionAttachmentMap.remove(player.getUniqueId());
+    }
+
+    public static void giveDevPermissions(Player player) {
+        PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
+        Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getDevPermissions();
+        for (String permission : perms) {
+            permissionAttachment.setPermission(permission,true);
+        }
+    }
+
+    public static void givePlayPermissions(Player player) {
+        PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
+        Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getPlayPermissions();
+        for (String permission : perms) {
+            permissionAttachment.setPermission(permission,true);
+        }
+    }
+
+    public static void giveBuildPermissions(Player player) {
+        PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
+        Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getBuildPermissions();
+        for (String permission : perms) {
+            permissionAttachment.setPermission(permission,true);
+        }
+    }
+
     /**
-     * Translate sign text on code block.
-     * @param block Block with sign that will be translated.
+     * Removes player's permissions that he got in world in Build, Play or Dev mode.
+     * @param player player to remove permissions.
+     */
+    public static void clearWorldModePermissions(Player player) {
+
+        PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
+        Map<String, Boolean> permissions = permissionAttachment.getPermissions();
+
+        for (Map.Entry<String, Boolean> entry : permissions.entrySet()) {
+            String key = entry.getKey();
+            permissionAttachment.unsetPermission(key);
+        }
+
+    }
+
+    /**
+     * Translates sign text on code block.
+     * @param block block with sign that will be translated.
      */
     public static void translateBlockSign(Block block) {
         if (!block.getType().toString().contains("SIGN")) return;
@@ -295,8 +233,8 @@ public class PlayerUtils {
     }
 
     /**
-     * Translate sign text on code block.
-     * @param block Block with sign that will be translated.
+     * Translates sign text on code block.
+     * @param block block with sign that will be translated.
      */
     public static void translateBlockSign(Block block, Player player) {
         if (block == null) return;

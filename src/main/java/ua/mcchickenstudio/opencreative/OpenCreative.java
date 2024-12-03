@@ -112,6 +112,8 @@ public final class OpenCreative extends JavaPlugin {
         registerEvents();
 
         saveDefaultConfig();
+        settings = new Settings();
+        getSettings().load(getConfig());
         FileUtils.loadLocales();
         PlayerUtils.loadPermissions();
         HookUtils.loadHooks();
@@ -119,8 +121,7 @@ public final class OpenCreative extends JavaPlugin {
 
         economy = HookUtils.getEconomy();
         economy.init();
-        settings = new Settings();
-        getSettings().load(getConfig());
+
 
         long loadedTime = System.currentTimeMillis()-startTime;
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -207,7 +208,7 @@ public final class OpenCreative extends JavaPlugin {
                 sendCriticalErrorMessage("Couldn't get command with name " + commandName + ", it is null. Maybe it doesn't exist in plugins.yml?");
             }
         }
-        this.getLogger().info("OpenCreative+ registered " + (registeredCommands == commands.size() ? "all" : registeredCommands + "/" + commands.size() +  " commands."));
+        this.getLogger().info("OpenCreative+ registered " + (registeredCommands == commands.size() ? "all" : registeredCommands + "/" + commands.size()) +  " commands.");
     }
 
     /**
@@ -235,7 +236,7 @@ public final class OpenCreative extends JavaPlugin {
                 sendCriticalErrorMessage("Couldn't register event listener: " + listenerClass.getSimpleName(),exception);
             }
         }
-        this.getLogger().info("OpenCreative+ registered " + (registeredListeners == listeners.length ? "all" : registeredListeners + "/" + listeners.length + " event listeners."));
+        this.getLogger().info("OpenCreative+ registered " + (registeredListeners == listeners.length ? "all" : registeredListeners + "/" + listeners.length) + " event listeners.");
     }
 
     /**

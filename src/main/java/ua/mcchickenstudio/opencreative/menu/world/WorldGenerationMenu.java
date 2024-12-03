@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.menu.world;
 
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menu.buttons.ParameterButton;
 import ua.mcchickenstudio.opencreative.plots.PlotManager;
@@ -88,7 +89,7 @@ public class WorldGenerationMenu extends AbstractMenu {
                 player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_CHARGE,100,2);
             }
             case 16 -> {
-                if (PlotManager.getInstance().getPlayerPlots(player).size() < PlayerUtils.getPlayerPlotsLimit(player)) {
+                if (PlotManager.getInstance().getPlayerPlots(player).size() < OpenCreative.getSettings().getGroups().getGroup(player).getWorldsLimit()) {
                     player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_SET_SPAWN,100,0.1f);
                     player.closeInventory();
                     PlotManager.getInstance().createPlot(player, WorldUtils.generateWorldID(), WorldUtils.WorldGenerator.valueOf(generatorButton.getCurrentValue().toString().toUpperCase()), World.Environment.valueOf(environmentButton.getCurrentValue().toString().toUpperCase()),new Random().nextInt(),Boolean.parseBoolean(generateStructures.getCurrentValue().toString()));

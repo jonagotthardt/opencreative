@@ -41,7 +41,6 @@ import java.util.Map;
 
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.getPlayerPlotSize;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 
 /**
@@ -87,17 +86,16 @@ public class PlotTerritory {
     }
 
     private void loadInformation() {
-        worldSize = PlayerUtils.getPlayerLimitValue(plot.getOwnerGroup(), PlayerUtils.PlayerLimit.WORLD_SIZE);
+        worldSize = OpenCreative.getSettings().getGroups().getGroup(plot.getOwnerGroup()).getWorldSize();
         FileConfiguration config = getPlotConfig(plot);
         World.Environment environment = World.Environment.NORMAL;
-        if (config != null) {
-            if (config.getString("environment") != null) {
-                try {
-                    environment = World.Environment.valueOf(config.getString("environment"));
-                } catch (Exception ignored) {}
+        if (config.getString("environment") != null) {
+            try {
+                environment = World.Environment.valueOf(config.getString("environment"));
+            } catch (Exception ignored) {
             }
-            autoSave = config.getBoolean("autosave",true);
         }
+        autoSave = config.getBoolean("autosave",true);
         this.environment = environment;
     }
 
@@ -131,7 +129,7 @@ public class PlotTerritory {
         }
         FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
         world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS,false);
-        world.getWorldBorder().setSize(getPlayerPlotSize(plot.getOwnerGroup()));
+        world.getWorldBorder().setSize(worldSize);
         plot.getVariables().load();
         new PlotLoadEvent(plot).callEvent();
     }

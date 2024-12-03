@@ -386,7 +386,7 @@ public class PlayerChat implements Listener {
                                 player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%",newOwner));
                                 return;
                             }
-                            if (PlotManager.getInstance().getPlayerPlots(newOwnerPlayer).size() >= PlayerUtils.getPlayerPlotsLimit(newOwnerPlayer)) {
+                            if (PlotManager.getInstance().getPlayerPlots(newOwnerPlayer).size() >= OpenCreative.getSettings().getGroups().getGroup(newOwnerPlayer).getWorldsLimit()) {
                                 player.sendMessage(getLocaleMessage("world.players.transfer-ownership.limit").replace("%player%",newOwner));
                                 return;
                             }
@@ -412,7 +412,7 @@ public class PlayerChat implements Listener {
                                 player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%",player.getName()));
                                 return;
                             }
-                            if (PlotManager.getInstance().getPlayerPlots(player).size() >= PlayerUtils.getPlayerPlotsLimit(player)) {
+                            if (PlotManager.getInstance().getPlayerPlots(player).size() >= OpenCreative.getSettings().getGroups().getGroup(player).getWorldsLimit()) {
                                 player.sendMessage(getLocaleMessage("world.players.transfer-ownership.limit").replace("%player%",player.getName()));
                                 return;
                             }

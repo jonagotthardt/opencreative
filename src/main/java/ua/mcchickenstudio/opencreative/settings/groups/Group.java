@@ -38,6 +38,7 @@ public class Group {
 
     private final int worldsLimit;
     private final int worldSize;
+    private final int codingPlatformsLimit;
 
     private final int genericCommandCooldown;
     private final int creativeChatCooldown;
@@ -56,6 +57,7 @@ public class Group {
         this.permission = config.getString(path + "permission","default");
         worldsLimit = config.getInt(path + "creating-world.limit",1);
         worldSize = config.getInt(path + "world.size",25);
+        codingPlatformsLimit = config.getInt(path + "world.limits.coding-platforms",1);
         genericCommandCooldown = config.getInt(path + "cooldown.generic",5);
         advertisementCooldown = config.getInt(path + "cooldown.advertisement",120);
         creativeChatCooldown = config.getInt(path + "cooldown.creative-chat",5);
@@ -123,5 +125,9 @@ public class Group {
             }
         }
         return new LimitModifier(0,0);
+    }
+
+    public int getCodingPlatformsLimit() {
+        return codingPlatformsLimit;
     }
 }

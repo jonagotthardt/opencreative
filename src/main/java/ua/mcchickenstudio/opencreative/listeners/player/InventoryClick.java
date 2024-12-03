@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.RecommendedWorldsMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.OwnWorldsMenu;
@@ -184,7 +185,7 @@ public class InventoryClick implements Listener {
                         player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%", newOwner));
                         return;
                     }
-                    if (PlotManager.getInstance().getPlayerPlots(Bukkit.getPlayer(newOwner)).size() >= PlayerUtils.getPlayerPlotsLimit(Bukkit.getPlayer(newOwner))) {
+                    if (PlotManager.getInstance().getPlayerPlots(Bukkit.getPlayer(newOwner)).size() >= OpenCreative.getSettings().getGroups().getGroup(Bukkit.getPlayer(newOwner)).getWorldsLimit()) {
                         player.sendMessage(getLocaleMessage("world.players.transfer-ownership.limit").replace("%player%", newOwner));
                         return;
                     }

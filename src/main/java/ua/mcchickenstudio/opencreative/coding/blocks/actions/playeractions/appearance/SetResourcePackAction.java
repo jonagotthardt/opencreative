@@ -45,7 +45,7 @@ public class SetResourcePackAction extends PlayerAction {
         String checkUrl = url.toLowerCase().replaceAll("^https?://(www.)?", "");
         Set<String> allowedLinks = OpenCreative.getSettings().getAllowedResourcePackLinks();
         for (String allowed : allowedLinks) {
-            if (allowed.startsWith(checkUrl)) {
+            if (checkUrl.startsWith(allowed)) {
                 player.setResourcePack(url);
                 return;
             }
