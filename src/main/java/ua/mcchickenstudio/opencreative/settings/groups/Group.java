@@ -62,9 +62,9 @@ public class Group {
         advertisementCooldown = config.getInt(path + "cooldown.advertisement",120);
         creativeChatCooldown = config.getInt(path + "cooldown.creative-chat",5);
         chatCooldown = config.getInt(path + "cooldown.chat",2);
-        playPermissions.addAll(config.getStringList(path + "play-permissions"));
-        buildPermissions.addAll(config.getStringList(path + "build-permissions"));
-        devPermissions.addAll(config.getStringList(path + "dev-permissions"));
+        playPermissions.addAll(config.getStringList(path + "world.play-permissions"));
+        buildPermissions.addAll(config.getStringList(path + "world.build-permissions"));
+        devPermissions.addAll(config.getStringList(path + "world.dev-permissions"));
         for (LimitType type : LimitType.values()) {
             limits.put(type,
                     new LimitModifier(
