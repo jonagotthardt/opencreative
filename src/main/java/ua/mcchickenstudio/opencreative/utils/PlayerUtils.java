@@ -33,10 +33,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.PermissionAttachment;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 import java.util.*;
@@ -195,8 +193,9 @@ public class PlayerUtils {
 
         PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
         Map<String, Boolean> permissions = permissionAttachment.getPermissions();
+        Set<Map.Entry<String, Boolean>> permissionsCopy = new HashSet<>(permissions.entrySet());
 
-        for (Map.Entry<String, Boolean> entry : permissions.entrySet()) {
+        for (Map.Entry<String, Boolean> entry : permissionsCopy) {
             String key = entry.getKey();
             permissionAttachment.unsetPermission(key);
         }
