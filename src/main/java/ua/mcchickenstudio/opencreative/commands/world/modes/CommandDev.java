@@ -43,6 +43,7 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.clearPlayer;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.giveDevPermissions;
 
 public class CommandDev implements CommandExecutor {
 
@@ -59,7 +60,7 @@ public class CommandDev implements CommandExecutor {
                 player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
                 return true;
             }
-            setCooldown(player, OpenCreative.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
+            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (args.length == 0 || args.length == 3) {
                 if (plot.getWorldPlayers().canDevelop(player) || plot.getWorldPlayers().isDeveloperGuest(player)) {
                     if (!plot.getWorldPlayers().isTrustedDeveloper(player)) {
@@ -99,6 +100,7 @@ public class CommandDev implements CommandExecutor {
                         player.setGameMode(GameMode.CREATIVE);
                         player.setAllowFlight(true);
                         player.setFlying(true);
+                        giveDevPermissions(player);
                     }
                     ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
                     if (plot.isOwner(player)) {

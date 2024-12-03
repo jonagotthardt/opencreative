@@ -259,7 +259,8 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
         event.setCancelled(true);
 
         if (!isClickedInMenuSlots(event)) return;
-        if (event.getCurrentItem().getType() == Material.AIR) return;
+        if (event.getCurrentItem() == null) return;
+        if (event.getCurrentItem().getType().isAir()) return;
 
         Plot plot = PlotManager.getInstance().getPlotByPlayer((Player) event.getWhoClicked());
         if (event.getCurrentItem().getType() == Material.SPECTRAL_ARROW) {

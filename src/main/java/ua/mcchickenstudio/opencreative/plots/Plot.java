@@ -23,6 +23,7 @@ import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.coding.variables.WorldVariables;
 import ua.mcchickenstudio.opencreative.events.plot.PlotConnectPlayerEvent;
+import ua.mcchickenstudio.opencreative.settings.groups.Group;
 import ua.mcchickenstudio.opencreative.utils.*;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.title.Title;
@@ -452,7 +453,7 @@ public class Plot {
             addPlayerInPlotList(this,player.getName(), PlayersType.UNIQUE);
         }
         if (this.isOwner(player.getName())) {
-            ownerGroup = PlayerUtils.getGroup(player);
+            ownerGroup = OpenCreative.getSettings().getGroups().getGroup(player).getName().toLowerCase();
             ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
             player.getInventory().setItem(8,worldSettingsItem);
             if (flags.getFlagValue(PlotFlags.PlotFlag.JOIN_MESSAGES) == 1) {
@@ -468,6 +469,11 @@ public class Plot {
         if (!wasLoaded) {
             territory.getScript().loadCode();
             EventRaiser.raiseWorldPlayEvent(this);
+        }
+        if (mode == Mode.PLAYING && worldPlayers.canDevelop(player)) {
+            givePlayPermissions(player);
+        } else if (mode == Mode.BUILD && worldPlayers.canBuild(player)) {
+            giveBuildPermissions(player);
         }
         EventRaiser.raiseJoinEvent(player);
         new PlotConnectPlayerEvent(this,player).callEvent();
@@ -554,5 +560,9 @@ public class Plot {
 
     public PlotExperiments getExperiments() {
         return experiments;
+    }
+
+    public Group getGroup() {
+        return OpenCreative.getSettings().getGroups().getGroup(ownerGroup);
     }
 }

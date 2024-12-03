@@ -18,14 +18,70 @@
 
 package ua.mcchickenstudio.opencreative.settings.groups;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
+
+/**
+ * <h1>Groups</h1>
+ * This class represents a set of groups, it's used
+ * when getting player's or world's owner group to
+ * get some limits or modifiers.
+ */
 public class Groups {
 
-    private final List<Group> groups = new ArrayList<>();
+    private final Set<Group> groups = new HashSet<>();
+
+    public void load() {
+        groups.clear();
+        FileConfiguration config = OpenCreative.getPlugin().getConfig();
+        ConfigurationSection section = config.getConfigurationSection("groups");
+        if (section == null) {
+            sendCriticalErrorMessage("Can't load player groups, section `groups` in config.yml is empty.");
+            return;
+        }
+        for (String group : section.getKeys(false)) {
+            registerGroup(new Group(group,config));
+        }
+    }
+
+    public @NotNull Group getDefaultGroup() {
+        for (Group group : groups) {
+            if (group.getPermission().equalsIgnoreCase("default")) {
+                return group;
+            }
+        }
+        return new Group("default",OpenCreative.getPlugin().getConfig());
+    }
+
+    public @NotNull Group getGroup(String name) {
+        for (Group group : groups) {
+            if (group.getName().equalsIgnoreCase(name)) {
+                return group;
+            }
+        }
+        return getDefaultGroup();
+    }
+
+    public @NotNull Group getGroup(Player player) {
+        Group currentGroup = getDefaultGroup();
+        for (Group group : groups) {
+            if (player.hasPermission(group.getPermission())) {
+                currentGroup = group;
+            }
+        }
+        return currentGroup;
+    }
 
     public void registerGroup(Group group) {
+        OpenCreative.getPlugin().getLogger().info("Registered player group " + group.getName());
         groups.add(group);
     }
 

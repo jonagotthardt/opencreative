@@ -36,13 +36,12 @@ import org.jetbrains.annotations.NotNull;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.removePlayerWithLocation;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.clearPlayer;
 
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlot;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
 
 public class CommandPlay implements CommandExecutor {
@@ -59,7 +58,7 @@ public class CommandPlay implements CommandExecutor {
                 player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.GENERIC_COMMAND))));
                 return true;
             }
-            setCooldown(player, OpenCreative.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
+            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             // Проверка на владельца мира
 
             DevPlot playerDevPlot = PlotManager.getInstance().getDevPlot(player);
@@ -82,6 +81,7 @@ public class CommandPlay implements CommandExecutor {
                         if (plot.isOwner(sender.getName())) {
                             player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
                         }
+                        givePlayPermissions(player);
                         EventRaiser.raiseJoinEvent(player);
                     }
                 } else {
@@ -110,6 +110,9 @@ public class CommandPlay implements CommandExecutor {
                     player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
                     if (plot.isOwner(sender.getName())) {
                         player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
+                    }
+                    if (plot.getWorldPlayers().canDevelop(player)) {
+                        givePlayPermissions(player);
                     }
                     EventRaiser.raiseJoinEvent(player);
                 }

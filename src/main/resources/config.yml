@@ -112,18 +112,17 @@ messages:
   cc-chat: "%cc-prefix%&7%player%&7: %message%" # You can use PAPI placeholders here
   world-chat: "&7 %player% &8» &f%message%" # and here
   version: "&f \n &fPowered by Open&7Creative&b+ &3%version%\n &f%codename% \n \n &fContibutors: &7McChicken Team\n &fTranslators: &7initzero, Nagibator6000Lol \n \n &cMcChicken Studio 2017-2025\n &c"
-cooldowns:
-  generic-command: 5 # /play, /build, /games
-  advertisement: 120 # /ad
-  creative-chat: 10 # /cc
-  world-chat: 2 # chat in world
-
 groups:
   #
   # Groups are made for specifying players permissions,
   # like world size, world limits, worlds amount.
   #
   default: # default - by default for any player, no permissions required
+    cooldowns:
+      generic-command: 5 # /play, /build, /games
+      advertisement: 120 # /ad
+      creative-chat: 10 # /cc
+      world-chat: 2 # chat in world
     creating-world:
       limit: 2
     world:
@@ -138,9 +137,9 @@ groups:
         redstone-changes: 100 # limit for redstone operations in world
         opening-inventories: 5 # limit for opening inventories per 5 seconds for preventing anti-exit
         variables-amount: 50 # limit for amount of all variables in world (saved, global, local)
-        scoreboards-amount: 50
-        bossbars-amount: 10
-        coding-platforms: 4
+        scoreboards-amount: 50 # limit for amount of all scoreboards
+        bossbars-amount: 10 # limit for amount of all bossbars
+        coding-platforms: 4 # limit for coding platforms
       per-player-limit-modifiers:
         #
         # When player joins a world or leaves from world,
@@ -155,24 +154,34 @@ groups:
         scoreboards-amount: 3
         bossbars-amount: 3
       build-permissions: # Permissions will be given when player types /build command
+        - "headdb.open"
         - "worldedit.wand"
         # If you want to add WorldEdit permissions please turn off
         # region-restrictions in WorldEdit/config.yml to make //set working
         #- "worldedit.region.set"
-        -
+      play-permissions: # Permissions will be given when player types /play command
+        - "headdb.open"
+      dev-permissions: # Permissions will be given when player types /dev command
+        - "headdb.open"
+        - "essentials.itemname"
   premium:
     permission: "creative.group.premium"
+    cooldowns:
+      generic-command: 3 # /play, /build, /games
+      advertisement: 100 # /ad
+      creative-chat: 4 # /cc
+      world-chat: 1 # chat in world
     creating-world:
       limit: 4
     world:
       size: 50
       limits:
-        executor-calls: 120 # limit of executor calls
-        entities-amount: 200 # limit for spawned entities in world
-        modifying-blocks: 7500 # limit for changing blocks with world actions per second
-        redstone-changes: 200 # limit for redstone operations in world
-        opening-inventories: 5 # limit for opening inventories per 5 seconds for preventing anti-exit
-        variables-amount: 500 # limit for amount of all variables in world (saved, global, local)
+        executor-calls: 120
+        entities-amount: 200
+        modifying-blocks: 7500
+        redstone-changes: 200
+        opening-inventories: 5
+        variables-amount: 500
         scoreboards-amount: 50
         bossbars-amount: 10
         coding-platforms: 4
@@ -186,9 +195,15 @@ groups:
         scoreboards-amount: 10
         bossbars-amount: 10
       build-permissions:
+        - "headdb.open"
         - "worldedit.wand"
         #- "worldedit.region.set"
         #- "worldedit.region.replace"
+      play-permissions:
+        - "headdb.open"
+      dev-permissions:
+        - "headdb.open"
+        - "essentials.itemname"
 
 #
 # Maintenance mode unloads all worlds and

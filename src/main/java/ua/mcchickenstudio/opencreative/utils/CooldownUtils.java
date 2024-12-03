@@ -69,7 +69,7 @@ public class CooldownUtils {
      **/
     public static int getCooldown(Player player, CooldownType type) {
 
-        if (player.hasPermission("opencreative.cooldownbypass")) return 0;
+        if (player.hasPermission("opencreative.cooldown.bypass")) return 0;
         long cooldownEndTime = getCooldownFromMap(player,type);
         if (cooldownEndTime == 0L) return 0;
 

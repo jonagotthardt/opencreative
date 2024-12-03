@@ -50,6 +50,8 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 
 public class ErrorUtils {
 
+
+
     private static String cutClassesName(String text) {
         String newText = text == null ? "null" : text;
         newText = newText.replace("ua.mcchickenstudio.opencreative.coding.","");

@@ -77,7 +77,7 @@ public class FileUtils {
         worldFile.createSection("owner");
         worldFile.set("owner", owner.getName());
         worldFile.createSection("owner-group");
-        worldFile.set("owner-group",PlayerUtils.getGroup(owner));
+        worldFile.set("owner-group",OpenCreative.getSettings().getGroups().getGroup(owner).getName().toLowerCase());
         worldFile.createSection("environment");
         worldFile.set("environment", environment.name());
         worldFile.createSection("world");

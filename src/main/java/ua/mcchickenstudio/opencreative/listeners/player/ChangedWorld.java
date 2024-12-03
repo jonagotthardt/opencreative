@@ -68,7 +68,7 @@ public class ChangedWorld implements Listener {
 
         Player player = event.getPlayer();
 
-        clearBuildPermissions(player);
+        clearWorldModePermissions(player);
         World oldWorld = event.getFrom();
         World newWorld = player.getWorld();
         PlayerChat.confirmation.remove(event.getPlayer());
@@ -130,7 +130,7 @@ public class ChangedWorld implements Listener {
                                 if (notTrustedBuilders.contains(p.getName())) {
                                     p.setGameMode(GameMode.ADVENTURE);
                                     p.sendMessage(getLocaleMessage("world.build-mode.cant-build-when-offline"));
-                                    clearBuildPermissions(p);
+                                    clearWorldModePermissions(p);
                                 }
                             }
                             if (PlotManager.getInstance().getDevPlot(p) != null) {

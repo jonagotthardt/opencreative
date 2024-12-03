@@ -60,7 +60,7 @@ public class CommandAd implements CommandExecutor, TabCompleter {
                     player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.GENERIC_COMMAND))));
                     return true;
                 }
-                setCooldown(player, OpenCreative.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
+                setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
                 if (!PlotManager.getInstance().getPlots().isEmpty()) {
                     Plot foundPlot = null;
                     for (Plot searchablePlot : PlotManager.getInstance().getPlots()) {
@@ -104,7 +104,7 @@ public class CommandAd implements CommandExecutor, TabCompleter {
                 PlotAdvertisementEvent event = new PlotAdvertisementEvent(plot,player);
                 event.callEvent();
                 if (event.isCancelled()) return true;
-                setCooldown(player, OpenCreative.getPlugin().getConfig().getInt("cooldowns.advertisement"), CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND);
+                setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getAdvertisementCooldown(), CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND);
                 EventRaiser.raiseAdvertisedEvent(player);
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     TextComponent advertisement = new TextComponent(getLocaleMessage("advertisement.message",player).replace("%world%",plot.getInformation().getDisplayName()));

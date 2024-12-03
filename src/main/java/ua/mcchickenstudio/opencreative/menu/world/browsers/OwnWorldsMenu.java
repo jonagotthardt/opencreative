@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.menu.world.browsers;
 
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menu.LegacyMenu;
 import ua.mcchickenstudio.opencreative.plots.Plot;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
@@ -105,7 +106,7 @@ public class OwnWorldsMenu extends LegacyMenu {
         }
 
         int plotsAmount = PlotManager.getInstance().getPlayerPlots(player).size();
-        int plotsLimit = PlayerUtils.getPlayerPlotsLimit(player);
+        int plotsLimit = OpenCreative.getSettings().getGroups().getGroup(player).getWorldsLimit();
 
         // Если у игрока созданных плотов меньше чем лимит
         if (plotsAmount < plotsLimit) {

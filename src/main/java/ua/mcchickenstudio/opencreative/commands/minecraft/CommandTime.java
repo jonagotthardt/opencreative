@@ -54,7 +54,7 @@ public class CommandTime implements CommandExecutor, TabCompleter {
             sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(cooldown)));
             return true;
         }
-        setCooldown(player, OpenCreative.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
+        setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
         if (!player.hasPermission("opencreative.time.bypass")) {
             /*
              * Checking is player owner, builder or developer of world.

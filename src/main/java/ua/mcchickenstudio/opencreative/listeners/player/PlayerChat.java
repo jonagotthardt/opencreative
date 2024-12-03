@@ -76,7 +76,7 @@ public class PlayerChat implements Listener {
         if (getCooldown(player, CooldownUtils.CooldownType.WORLD_CHAT) > 0) {
             player.sendMessage(getLocaleMessage("world.chat-cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.WORLD_CHAT))));
         } else {
-            setCooldown(player, OpenCreative.getPlugin().getConfig().getInt("cooldowns.world-chat"), CooldownUtils.CooldownType.WORLD_CHAT);
+            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getChatCooldown(), CooldownUtils.CooldownType.WORLD_CHAT);
             String message = ChatColor.translateAlternateColorCodes('&',parsePAPI(player, OpenCreative.getPlugin().getConfig().getString("messages.world-chat")).replace("%player%",player.getName()).replace("%message%",event.getMessage()));
             Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
             WorldChatEvent creativeEvent = new WorldChatEvent(player,event.getMessage(),message,player.getWorld(),plot);
@@ -386,7 +386,7 @@ public class PlayerChat implements Listener {
                                 player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%",newOwner));
                                 return;
                             }
-                            if (PlotManager.getInstance().getPlayerPlots(newOwnerPlayer).size() >= PlayerUtils.getPlayerPlotsLimit(newOwnerPlayer)) {
+                            if (PlotManager.getInstance().getPlayerPlots(newOwnerPlayer).size() >= OpenCreative.getSettings().getGroups().getGroup(newOwnerPlayer).getWorldsLimit()) {
                                 player.sendMessage(getLocaleMessage("world.players.transfer-ownership.limit").replace("%player%",newOwner));
                                 return;
                             }
@@ -412,7 +412,7 @@ public class PlayerChat implements Listener {
                                 player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%",player.getName()));
                                 return;
                             }
-                            if (PlotManager.getInstance().getPlayerPlots(player).size() >= PlayerUtils.getPlayerPlotsLimit(player)) {
+                            if (PlotManager.getInstance().getPlayerPlots(player).size() >= OpenCreative.getSettings().getGroups().getGroup(player).getWorldsLimit()) {
                                 player.sendMessage(getLocaleMessage("world.players.transfer-ownership.limit").replace("%player%",player.getName()));
                                 return;
                             }

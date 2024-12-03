@@ -27,6 +27,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.plots.Plot;
 import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.settings.groups.Groups;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -47,8 +48,14 @@ public class Settings {
     private BukkitRunnable announcer;
     private PlayerListChanger listChanger = PlayerListChanger.FULL;
 
+    private final Groups groups;
+
     private final Set<Integer> recommendedWorldsIDs = new HashSet<>();
     private final Set<String>  allowedResourcePackLinks = new HashSet<>();
+
+    public Settings() {
+        groups = new Groups();
+    }
 
     /**
      * Loads settings values from configuration file.
@@ -62,6 +69,7 @@ public class Settings {
         allowedResourcePackLinks.addAll(config.getStringList("allowed-links.resource-pack"));
         debug = config.getBoolean("debug",false);
         maintenance = config.getBoolean("maintenance",false);
+        groups.load();
         if (maintenance) {
             OpenCreative.getPlugin().getLogger().warning("Maintenance mode is still enabled in config.yml, to disable: /maintenance end");
         }
@@ -172,4 +180,7 @@ public class Settings {
         }
     }
 
+    public Groups getGroups() {
+        return groups;
+    }
 }
