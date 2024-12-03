@@ -154,11 +154,16 @@ groups:
         scoreboards-amount: 3
         bossbars-amount: 3
       build-permissions: # Permissions will be given when player types /build command
+        - "headdb.open"
         - "worldedit.wand"
         # If you want to add WorldEdit permissions please turn off
         # region-restrictions in WorldEdit/config.yml to make //set working
         #- "worldedit.region.set"
-        -
+      play-permissions: # Permissions will be given when player types /play command
+        - "headdb.open"
+      dev-permissions: # Permissions will be given when player types /dev command
+        - "headdb.open"
+        - "essentials.itemname"
   premium:
     permission: "creative.group.premium"
     cooldowns:
@@ -190,9 +195,15 @@ groups:
         scoreboards-amount: 10
         bossbars-amount: 10
       build-permissions:
+        - "headdb.open"
         - "worldedit.wand"
         #- "worldedit.region.set"
         #- "worldedit.region.replace"
+      play-permissions:
+        - "headdb.open"
+      dev-permissions:
+        - "headdb.open"
+        - "essentials.itemname"
 
 #
 # Maintenance mode unloads all worlds and
