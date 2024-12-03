@@ -52,7 +52,7 @@ public class CommandLike implements CommandExecutor {
                 player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.GENERIC_COMMAND))));
                 return true;
             }
-            setCooldown(player, OpenCreative.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
+            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (getPlayersFromPlotList(plot, Plot.PlayersType.LIKED).contains(sender.getName())) {
                 sender.sendMessage(getLocaleMessage("world.already-rated"));
             } else if (getPlayersFromPlotList(plot, Plot.PlayersType.DISLIKED).contains(sender.getName())) {

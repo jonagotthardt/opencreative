@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
+import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.commands.CreativeChat;
 import ua.mcchickenstudio.opencreative.plots.Plot;
@@ -39,6 +41,12 @@ public class PlayerQuit implements Listener {
         Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
         if (plot != null) {
             EventRaiser.raiseQuitEvent(player);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    plot.getInformation().updateIcon();
+                }
+            }.runTaskAsynchronously(OpenCreative.getPlugin());
             if (plot.getOnline() == 1) {
                 plot.getTerritory().unload();
             }

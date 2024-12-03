@@ -60,7 +60,7 @@ public class CommandDev implements CommandExecutor {
                 player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
                 return true;
             }
-            setCooldown(player, OpenCreative.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
+            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (args.length == 0 || args.length == 3) {
                 if (plot.getWorldPlayers().canDevelop(player) || plot.getWorldPlayers().isDeveloperGuest(player)) {
                     if (!plot.getWorldPlayers().isTrustedDeveloper(player)) {

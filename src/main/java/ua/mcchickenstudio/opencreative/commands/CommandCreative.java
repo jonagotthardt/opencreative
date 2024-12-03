@@ -67,7 +67,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(cooldown)));
                     return true;
                 }
-                setCooldown(player, OpenCreative.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
+                setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             }
             switch (args[0].toLowerCase()) {
                 case "reload" -> {

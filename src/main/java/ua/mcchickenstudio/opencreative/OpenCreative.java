@@ -110,10 +110,10 @@ public final class OpenCreative extends JavaPlugin {
         }
         registerCommands();
         registerEvents();
-
         saveDefaultConfig();
         settings = new Settings();
-        getSettings().load(getConfig());
+        settings.load(getConfig());
+
         FileUtils.loadLocales();
         PlayerUtils.loadPermissions();
         HookUtils.loadHooks();
@@ -121,7 +121,6 @@ public final class OpenCreative extends JavaPlugin {
 
         economy = HookUtils.getEconomy();
         economy.init();
-
 
         long loadedTime = System.currentTimeMillis()-startTime;
         for (Player player : Bukkit.getOnlinePlayers()) {

@@ -59,7 +59,7 @@ public class CommandBuild implements CommandExecutor {
                 player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.GENERIC_COMMAND))));
                 return true;
             }
-            setCooldown(player, OpenCreative.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
+            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (args.length == 0) {
                 removePlayerWithLocation(player);
                 if (plot.getMode() != Plot.Mode.BUILD) {
@@ -98,7 +98,7 @@ public class CommandBuild implements CommandExecutor {
                     clearPlayer(player);
                     player.showTitle(Title.title(
                             toComponent(getLocaleMessage("world.build-mode.title")), toComponent(getLocaleMessage("world.build-mode.subtitle")),
-                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(750))
+                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(3), Duration.ofMillis(750))
                     ));
                     player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
                     player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT,100,1.7f);

@@ -45,7 +45,7 @@ public class CommandDislike implements CommandExecutor {
                 player.sendMessage(MessageUtils.getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(CooldownUtils.getCooldown(player,CooldownUtils.CooldownType.GENERIC_COMMAND))));
                 return true;
             }
-            CooldownUtils.setCooldown(player, OpenCreative.getPlugin().getConfig().getInt("cooldowns.generic-command"), CooldownUtils.CooldownType.GENERIC_COMMAND);
+            CooldownUtils.setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.LIKED).contains(sender.getName())) {
                 sender.sendMessage(MessageUtils.getLocaleMessage("world.already-rated"));
             } else if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DISLIKED).contains(sender.getName())) {
