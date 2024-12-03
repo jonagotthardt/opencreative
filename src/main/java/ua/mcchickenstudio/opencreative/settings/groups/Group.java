@@ -58,10 +58,10 @@ public class Group {
         worldsLimit = config.getInt(path + "creating-world.limit",1);
         worldSize = config.getInt(path + "world.size",25);
         codingPlatformsLimit = config.getInt(path + "world.limits.coding-platforms",1);
-        genericCommandCooldown = config.getInt(path + "cooldown.generic",5);
-        advertisementCooldown = config.getInt(path + "cooldown.advertisement",120);
-        creativeChatCooldown = config.getInt(path + "cooldown.creative-chat",5);
-        chatCooldown = config.getInt(path + "cooldown.chat",2);
+        genericCommandCooldown = config.getInt(path + "cooldowns.generic-command",5);
+        advertisementCooldown = config.getInt(path + "cooldowns.advertisement",120);
+        creativeChatCooldown = config.getInt(path + "cooldowns.creative-chat",5);
+        chatCooldown = config.getInt(path + "cooldowns.world-chat",2);
         playPermissions.addAll(config.getStringList(path + "world.play-permissions"));
         buildPermissions.addAll(config.getStringList(path + "world.build-permissions"));
         devPermissions.addAll(config.getStringList(path + "world.dev-permissions"));
