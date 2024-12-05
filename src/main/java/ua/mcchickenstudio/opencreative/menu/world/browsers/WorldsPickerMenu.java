@@ -50,6 +50,7 @@ public class WorldsPickerMenu extends WorldsBrowserMenu{
             newPlot.getWorldPlayers().purgeData();
             PlotManager.getInstance().registerPlot(newPlot);
             FileUtils.deleteFolder(new File(FileUtils.getPlotFolder(newPlot).getPath() + File.separator + "playersData"));
+            FileUtils.deleteUnnecessaryWorldFiles(FileUtils.getPlotFolder(newPlot));
             newPlot.connectPlayer(player);
         }
     }

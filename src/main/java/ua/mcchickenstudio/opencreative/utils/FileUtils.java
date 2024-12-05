@@ -470,6 +470,23 @@ public class FileUtils {
     }
 
     /**
+     * Deletes Minecraft files, that are interrupting world copying process.
+     *
+     * @param worldFolder folder of world.
+     */
+    public static void deleteUnnecessaryWorldFiles(File worldFolder) {
+        try {
+            if (!worldFolder.exists()) return;
+            File uidFile = new File(worldFolder,"uid.dat");
+            File sessionFile = new File(worldFolder,"session.lock");
+            uidFile.delete();
+            sessionFile.delete();
+        } catch (Exception error) {
+            sendCriticalErrorMessage("Cannot delete uid.dat file.",error);
+        }
+    }
+
+    /**
      * Deletes directory and files inside it, if exists.
      * @param directory path of directory.
      */
