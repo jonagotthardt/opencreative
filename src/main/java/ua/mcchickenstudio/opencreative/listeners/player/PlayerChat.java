@@ -375,7 +375,7 @@ public class PlayerChat implements Listener {
                 case "transfer-ownership":
                     plot = PlotManager.getInstance().getPlotByPlayer(player);
                     if (plot != null && WorldSettingsPlayersMenu.playersSelected.get(player) != null && plot.getOwner().equalsIgnoreCase(player.getName())) {
-                        if (message.equals(plot.getId())) {
+                        if (message.equals(String.valueOf(plot.getId()))) {
                             String newOwner = WorldSettingsPlayersMenu.playersSelected.get(player);
                             Player newOwnerPlayer = Bukkit.getPlayer(newOwner);
                             if (newOwnerPlayer == null) {
