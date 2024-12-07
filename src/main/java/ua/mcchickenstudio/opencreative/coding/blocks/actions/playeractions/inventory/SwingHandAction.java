@@ -18,5 +18,30 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.inventory;
 
-public class SwingHandAction {
+import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+
+public class SwingHandAction extends PlayerAction {
+    public SwingHandAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
+    }
+
+    @Override
+    public void executePlayer(Player player) {
+        String hand = getArguments().getValue("hand","main",this);
+        if (hand.equalsIgnoreCase("off")) {
+            player.swingOffHand();
+        } else {
+            player.swingMainHand();
+        }
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return ActionType.PLAYER_SWING_HAND;
+    }
 }

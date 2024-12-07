@@ -21,6 +21,8 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines.WaitAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.RepeatAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.other.RepeatBlocksInRegionAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.other.RepeatForEachAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.other.RepeatForLoopAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
@@ -111,7 +113,7 @@ public class ActionsHandler {
                 if (action instanceof RepeatForLoopAction forLoopAction) {
                     VariableLink link = forLoopAction.getArguments().getVariableLink("variable",forLoopAction);
                     double add = forLoopAction.getArguments().getValue("add",1.0d,forLoopAction);
-                    String type = forLoopAction.getArguments().getValue("value","less",forLoopAction);
+                    String type = forLoopAction.getArguments().getValue("type","less",forLoopAction);
                     double untilValue = forLoopAction.getArguments().getValue("range",10.0d,forLoopAction);
                     if (link == null) {
                         return;
@@ -124,12 +126,20 @@ public class ActionsHandler {
                         case "greater-equals" -> currentValue >= untilValue;
                         default -> false;
                     };
-                    forLoopAction.setVarValue(link,currentValue+add);
                     if (execute) {
-                        forLoopAction.executeActions();
+                        forLoopAction.setVarValue(link,currentValue+add);
+                        repeatAction.prepareAndExecute(this);
                     }
+                } else if (action instanceof RepeatForEachAction forEachAction) {
+                    VariableLink link = action.getArguments().getVariableLink("variable",action);
+                    List<Object> list = action.getArguments().getList("list",action);
+                    if (list.isEmpty()) return;
+                    return;
+                }  else if (action instanceof RepeatBlocksInRegionAction forEachAction) {
+                    return;
+                } else {
+                    repeatAction.prepareAndExecute(this);
                 }
-                repeatAction.prepareAndExecute(this);
             }
             return;
         }

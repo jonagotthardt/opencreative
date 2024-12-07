@@ -16,35 +16,33 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.inventory;
 
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.other;
+
+import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.RepeatAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
 
-public class SetItemInHandAction extends PlayerAction {
-    public SetItemInHandAction(Executor executor, Target target, int x, Arguments args) {
-        super(executor, target, x, args);
+public class RepeatForEachAction extends RepeatAction {
+
+    public RepeatForEachAction(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
+        super(executor, target, x, args, actions);
     }
 
     @Override
-    public void executePlayer(Player player) {
-        ItemStack mainItem = getArguments().getValue("main",new ItemStack(Material.AIR),this);
-        ItemStack offItem = getArguments().getValue("off",new ItemStack(Material.AIR),this);
-        boolean replaceWithAir = getArguments().getValue("replace-with-air",false,this);
-        if (replaceWithAir || !mainItem.isEmpty()) player.getInventory().setItemInMainHand(mainItem);
-        if (replaceWithAir || !offItem.isEmpty()) player.getInventory().setItemInOffHand(offItem);
+    protected void execute(Entity entity) {
+        executeActions();
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.PLAYER_SET_ITEM_IN_HAND;
+        return ActionType.REPEAT_FOR_EACH;
     }
 }
+

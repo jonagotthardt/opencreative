@@ -42,9 +42,6 @@ public class ItemUtils {
     private final static NamespacedKey WORLD_ID = new NamespacedKey(OpenCreative.getPlugin(), "oc_world_id");
     private final static NamespacedKey ITEM_TYPE_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_item");
     private final static NamespacedKey CODING_VALUE_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_value_type");
-    private final static NamespacedKey CODING_POTION_EFFECT_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_potion_effect");
-    private final static NamespacedKey CODING_POTION_DURATION_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_potion_duration");
-    private final static NamespacedKey CODING_POTION_LEVEL_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_potion_level");
     private final static NamespacedKey CODING_PARTICLE_TYPE_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_particle_type");
     private final static NamespacedKey CODING_VARIABLE_TYPE_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_variable_type");
     private final static NamespacedKey CODING_DO_NOT_DROP_ME_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_do_not_drop_me");

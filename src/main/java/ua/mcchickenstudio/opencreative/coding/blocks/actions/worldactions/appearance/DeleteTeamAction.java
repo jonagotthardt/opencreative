@@ -16,35 +16,41 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.inventory;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appearance;
 
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.entity.Entity;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
-import java.util.List;
-
-public class SetItemInHandAction extends PlayerAction {
-    public SetItemInHandAction(Executor executor, Target target, int x, Arguments args) {
+public class DeleteTeamAction extends WorldAction {
+    public DeleteTeamAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
-    public void executePlayer(Player player) {
-        ItemStack mainItem = getArguments().getValue("main",new ItemStack(Material.AIR),this);
-        ItemStack offItem = getArguments().getValue("off",new ItemStack(Material.AIR),this);
-        boolean replaceWithAir = getArguments().getValue("replace-with-air",false,this);
-        if (replaceWithAir || !mainItem.isEmpty()) player.getInventory().setItemInMainHand(mainItem);
-        if (replaceWithAir || !offItem.isEmpty()) player.getInventory().setItemInOffHand(offItem);
+    protected void execute(Entity entity) {
+        if (!getArguments().pathExists("scoreboard") || !getArguments().pathExists("team")) {
+            return;
+        }
+        String scoreboardName = getArguments().getValue("scoreboard","board",this);
+        String teamName = getArguments().getValue("team","team",this);
+        Scoreboard scoreboard = getPlot().getTerritory().getScoreboards().get(scoreboardName.toLowerCase());
+        if (scoreboard == null) {
+            return;
+        }
+        Team team = scoreboard.getTeam(teamName);
+        if (team != null) {
+            team.unregister();
+        }
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.PLAYER_SET_ITEM_IN_HAND;
+        return ActionType.WORLD_DELETE_TEAM;
     }
 }

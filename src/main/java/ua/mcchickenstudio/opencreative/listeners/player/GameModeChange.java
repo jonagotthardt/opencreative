@@ -28,8 +28,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.hidePlayerInTab;
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
 public class GameModeChange implements Listener {
 
@@ -51,8 +50,6 @@ public class GameModeChange implements Listener {
             }
             return;
         }
-        if (!plot.isLoaded()) return;
-        // If player is in plot
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (!onlinePlayer.getWorld().equals(plot.getTerritory().getWorld()) && (plot.getDevPlot().getWorld() != null && !onlinePlayer.getWorld().equals(plot.getDevPlot().getWorld()))) {
                 hidePlayerInTab(onlinePlayer,player);
