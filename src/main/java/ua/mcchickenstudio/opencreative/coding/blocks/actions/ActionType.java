@@ -25,6 +25,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.handleractions.othe
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.handleractions.other.MeasureTimeAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.other.LaunchFunctionAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.other.LaunchMethodAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.other.RepeatBlocksInRegionAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.other.RepeatForEachAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.selectionactions.SelectionAddTargetAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.selectionactions.SelectionRemoveTargetAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.selectionactions.SelectionSetTargetAction;
@@ -115,7 +117,6 @@ public enum ActionType {
     PLAYER_SHOW_TITLE(                  ActionCategory.PLAYER_ACTION, MenusCategory.COMMUNICATION, ShowTitleAction.class, Material.OAK_SIGN, new ArgumentSlot("title", ValueType.TEXT),new ArgumentSlot("subtitle", ValueType.TEXT),new ArgumentSlot("fade-in", ValueType.NUMBER),new ArgumentSlot("stay", ValueType.NUMBER),new ArgumentSlot("fade-out", ValueType.NUMBER)),
     PLAYER_SHOW_ADVANCEMENT(            ActionCategory.PLAYER_ACTION, MenusCategory.COMMUNICATION, ShowAdvancementAction.class, Material.EMERALD, new ArgumentSlot("icon", ValueType.ITEM),new ParameterSlot("style",Arrays.asList("goal","task","challenge"),Material.EMERALD,Material.DIAMOND,Material.BEACON),new ArgumentSlot("title", ValueType.TEXT),new ArgumentSlot("message", ValueType.TEXT)),
     PLAYER_CLEAR_CHAT(                  ActionCategory.PLAYER_ACTION, MenusCategory.COMMUNICATION, ClearChatAction.class, Material.BUCKET         ),
-   // PLAYER_SEND_COMPONENT(              ActionCategory.PLAYER_ACTION, MenusCategory.COMMUNICATION, null, new ArgumentSlot("")),
     PLAYER_PLAY_SOUND(                  ActionCategory.PLAYER_ACTION, MenusCategory.COMMUNICATION, PlaySoundAction.class, Material.MUSIC_DISC_OTHERSIDE, new ArgumentSlot("sound", ValueType.TEXT),new ArgumentSlot("volume", ValueType.NUMBER),new ArgumentSlot("pitch", ValueType.NUMBER), new ArgumentSlot("location", ValueType.LOCATION),new ParameterSlot("category",Arrays.asList("ambient","blocks","hostile","master","music","neutral","players","records","voice","weather"), Material.CYAN_STAINED_GLASS,Material.GRASS_BLOCK,Material.ZOMBIE_HEAD,Material.GOLDEN_PICKAXE,Material.NOTE_BLOCK,Material.PIGLIN_HEAD,Material.PLAYER_HEAD,Material.MUSIC_DISC_CAT,Material.NAUTILUS_SHELL,Material.WATER_BUCKET)),
     PLAYER_STOP_SOUNDS(                 ActionCategory.PLAYER_ACTION, MenusCategory.COMMUNICATION, StopSoundsAction.class, Material.MUSIC_DISC_11,         new ArgumentSlot("sounds", ValueType.TEXT,(byte) 18)),
     PLAYER_SHOW_WIN_SCREEN(             ActionCategory.PLAYER_ACTION, MenusCategory.COMMUNICATION, ShowWinScreenAction.class, Material.DRAGON_EGG),
@@ -127,6 +128,10 @@ public enum ActionType {
     PLAYER_GIVE_ITEMS(                  ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, GiveItemsAction.class, Material.CHEST_MINECART,  new ArgumentSlot("items", ValueType.ITEM,(byte) 27)),
     PLAYER_SAVE_INVENTORY(              ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, SaveInventoryAction.class, Material.HOPPER),
     PLAYER_RESTORE_INVENTORY(           ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, RestoreInventoryAction.class, Material.DROPPER),
+    PLAYER_SET_ITEM_IN_HAND(                   ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, SetItemInHandAction.class, Material.NETHERITE_SWORD,          new ArgumentSlot("main", ValueType.ITEM), new ParameterSlot("replace-with-air"), new ArgumentSlot("off", ValueType.ITEM)),
+    PLAYER_SET_CURSOR_ITEM(                   ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, SetCursorItemAction.class, Material.TRIPWIRE_HOOK,           new ArgumentSlot("item", ValueType.ITEM)),
+
+    PLAYER_SWING_HAND(                   ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, SwingHandAction.class, Material.LEVER,           new ParameterSlot("hand", List.of("main","off"), Material.NETHERITE_SWORD, Material.SHIELD)),
     PLAYER_SET_ITEMS(                   ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, SetItemsAction.class, Material.DARK_OAK_CHEST_BOAT,          new ArgumentSlot("items", ValueType.ITEM,(byte) 27,true)),
     PLAYER_SET_ARMOR(                   ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, SetArmorAction.class, Material.NETHERITE_CHESTPLATE,          new ArgumentSlot("helmet", ValueType.ITEM),new ArgumentSlot("chestplate", ValueType.ITEM),new ArgumentSlot("leggings", ValueType.ITEM),new ArgumentSlot("boots", ValueType.ITEM),new ParameterSlot("replace-with-air")),
     PLAYER_GIVE_RANDOM_ITEM(            ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, GiveRandomItemAction.class, Material.LIME_SHULKER_BOX, new ArgumentSlot("items", ValueType.ITEM, (byte) 27)),
@@ -137,8 +142,6 @@ public enum ActionType {
     PLAYER_SET_COMPASS_TARGET(          ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, SetCompassTarget.class, Material.COMPASS,        new ArgumentSlot("location", ValueType.LOCATION)),
     PLAYER_SET_HOTBAR(                  ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, SetHotBarAction.class, Material.BIRCH_CHEST_BOAT,         new ArgumentSlot("items", ValueType.ITEM,(byte) 9,true),new ParameterSlot("replace-with-air")),
     PLAYER_SET_ITEM_COOLDOWN(           ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, SetItemCooldownAction.class, Material.CLOCK,         new ArgumentSlot("item", ValueType.ITEM),new ArgumentSlot("cooldown", ValueType.NUMBER)),
-    //PLAYER_SET_CURSOR_ITEM(             ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, null, Material.TRIPWIRE_HOOK,         new ArgumentSlot("item",VariableType.ITEM)),
-    //PLAYER_SWING_HAND(                  ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, null,Material.SHIELD),
     //PLAYER_DAMAGE_ITEM(                 ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, null, Material.NETHERITE_SCRAP,  new ArgumentSlot("item",VariableType.ITEM),new ArgumentSlot("damage",VariableType.NUMBER)),
     PLAYER_OPEN_SIGN(                   ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, OpenSignAction.class, Material.OAK_SIGN, new ArgumentSlot("location", ValueType.LOCATION), new ParameterSlot("side",Arrays.asList("front","back"),Material.OAK_SIGN,Material.WARPED_SIGN)),
     PLAYER_OPEN_CONTAINER(              ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, OpenContainerAction.class, Material.BARREL, new ArgumentSlot("location", ValueType.LOCATION), new ParameterSlot("save")),
@@ -150,11 +153,11 @@ public enum ActionType {
     //PLAYER_RANDOM_TELEPORT(             ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      null, Material.CHORUS_FRUIT,         new ArgumentSlot("locations",VariableType.LOCATION,(byte)18)),
     //PLAYER_TELEPORT_QUEUE(              ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      null, Material.ENDER_EYE,          new ArgumentSlot("locations",VariableType.LOCATION,(byte)18),new ArgumentSlot("cooldown",VariableType.NUMBER)),
     PLAYER_KICK(                        ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      KickPlayerAction.class, Material.BARRIER         ),
+    PLAYER_FIREWORK_BOOST(                   ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, FireworkBoostAction.class, Material.FIREWORK_ROCKET, new ArgumentSlot("firework", ValueType.ITEM)),
     PLAYER_SADDLE_ENTITY(               ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      SaddleEntityAction.class, Material.SADDLE,  new ArgumentSlot("entity", ValueType.TEXT)),
-    PLAYER_LAUNCH_VERTICAL(             ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      LaunchVerticalAction.class, Material.FIREWORK_ROCKET,new ArgumentSlot("power",ValueType.NUMBER)),
+    PLAYER_LAUNCH_VERTICAL(             ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      LaunchVerticalAction.class, Material.PRISMARINE_SHARD,new ArgumentSlot("power",ValueType.NUMBER)),
     PLAYER_LAUNCH_HORIZONTAL(           ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      LaunchHorizontalAction.class, Material.FEATHER,         new ArgumentSlot("power",ValueType.NUMBER)),
     PLAYER_LAUNCH_TO_LOCATION(          ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      LaunchToLocationAction.class, Material.MAP,         new ArgumentSlot("location",ValueType.LOCATION)),
-    //PLAYER_SET_ROTATION(                ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT, null, Material.PLAYER_HEAD, new ArgumentSlot("yaw",VariableType.NUMBER),new ArgumentSlot("pitch",VariableType.NUMBER)),
     //PLAYER_SET_SPECTATOR_TARGET(        ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT, null, Material.SKELETON_SKULL, new ArgumentSlot("entity",VariableType.TEXT)),
 
     // Params
@@ -291,6 +294,13 @@ public enum ActionType {
     WORLD_BOSS_BAR_DISPLAY_NAME(                 ActionCategory.WORLD_ACTION, MenusCategory.APPEARANCE, BossBarDisplayNameAction.class, Material.BOOK, new ArgumentSlot("name", ValueType.TEXT), new ArgumentSlot("display-name", ValueType.TEXT)),
     WORLD_BOSS_BAR_OVERLAY(                 ActionCategory.WORLD_ACTION, MenusCategory.APPEARANCE, BossBarOverlayAction.class, Material.BREEZE_ROD, new ArgumentSlot("name", ValueType.TEXT), new ParameterSlot("overlay", List.of("progress", "notched_6", "notched_10", "notched_12", "notched_20"), Material.BREEZE_ROD, Material.BLAZE_ROD, Material.STICK, Material.BONE, Material.AMETHYST_SHARD)),
     WORLD_DELETE_BOSS_BAR(                 ActionCategory.WORLD_ACTION, MenusCategory.APPEARANCE, DeleteBossBarAction.class, Material.POTION, new ArgumentSlot("name", ValueType.TEXT, (byte) 27)),
+    WORLD_CREATE_TEAM(                 ActionCategory.WORLD_ACTION, MenusCategory.APPEARANCE, CreateTeamAction.class, Material.LIME_BANNER, new ArgumentSlot("scoreboard", ValueType.TEXT), new ArgumentSlot("team", ValueType.TEXT)),
+    WORLD_TEAM_SET_COLOR(                 ActionCategory.WORLD_ACTION, MenusCategory.APPEARANCE, TeamSetColorAction.class, Material.BLUE_DYE, new ArgumentSlot("scoreboard", ValueType.TEXT), new ArgumentSlot("team", ValueType.TEXT), new ArgumentSlot("color", ValueType.COLOR)),
+    WORLD_TEAM_SET_COLLISION_RULE(                 ActionCategory.WORLD_ACTION, MenusCategory.APPEARANCE, TeamSetCollisionRuleAction.class, Material.PLAYER_HEAD, new ArgumentSlot("scoreboard", ValueType.TEXT), new ArgumentSlot("team", ValueType.TEXT), new ParameterSlot("option", List.of("always","for-own-team","for-other-teams","never"), Material.LIME_SHULKER_BOX,Material.BLUE_SHULKER_BOX,Material.ORANGE_SHULKER_BOX,Material.RED_SHULKER_BOX)),
+    WORLD_TEAM_SET_NAME_TAG_VISIBLE(                 ActionCategory.WORLD_ACTION, MenusCategory.APPEARANCE, TeamSetVisibleTagAction.class, Material.NAME_TAG, new ArgumentSlot("scoreboard", ValueType.TEXT), new ArgumentSlot("team", ValueType.TEXT), new ParameterSlot("option", List.of("always","for-own-team","for-other-teams","never"), Material.LIME_SHULKER_BOX,Material.BLUE_SHULKER_BOX,Material.ORANGE_SHULKER_BOX,Material.RED_SHULKER_BOX)),
+
+    WORLD_TEAM_SET_CAN_SEE_INVISIBLE(                 ActionCategory.WORLD_ACTION, MenusCategory.APPEARANCE, TeamSetCanSeeInvisibleAction.class, Material.GRAY_BANNER, new ArgumentSlot("scoreboard", ValueType.TEXT), new ArgumentSlot("team", ValueType.TEXT), new ParameterSlot("visible")),
+    WORLD_DELETE_TEAM(                 ActionCategory.WORLD_ACTION, MenusCategory.APPEARANCE, DeleteTeamAction.class, Material.RED_BANNER, new ArgumentSlot("scoreboard", ValueType.TEXT), new ArgumentSlot("team", ValueType.TEXT)),
 
     WORLD_SPAWN_ENTITY(                 ActionCategory.WORLD_ACTION, MenusCategory.ENTITY, SpawnEntityAction.class, Material.SPAWNER, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 9), new ArgumentSlot("type", ValueType.ITEM), new ArgumentSlot("name", ValueType.TEXT), new ParameterSlot("show-name", true, Material.NAME_TAG, Material.STRING), new ParameterSlot("gravity", true, Material.SAND, Material.COBWEB), new ParameterSlot("ai", true, Material.PLAYER_HEAD, Material.SKELETON_SKULL), new ParameterSlot("glowing", Material.GLASS, Material.WHITE_STAINED_GLASS), new ParameterSlot("invisible", Material.POTION, Material.GLASS_BOTTLE), new ParameterSlot("invulnerable", Material.REDSTONE, Material.TOTEM_OF_UNDYING), new ParameterSlot("visible-for-all", true, Material.GRASS_BLOCK, Material.GRAY_STAINED_GLASS)),
     WORLD_CREATE_EXPLOSION(                 ActionCategory.WORLD_ACTION, MenusCategory.ENTITY, CreateExplosionAction.class, Material.TNT, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ArgumentSlot("power", ValueType.NUMBER), new ParameterSlot("fire", Material.GUNPOWDER, Material.CAMPFIRE), new ParameterSlot("damage", Material.GRASS_BLOCK, Material.MAGMA_BLOCK)),
@@ -449,6 +459,9 @@ public enum ActionType {
      */
 
     ENTITY_REMOVE(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, RemoveEntityAction.class, Material.BARRIER),
+    ENTITY_SET_TEAM(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, SetTeamAction.class, Material.LIME_BANNER, new ArgumentSlot("scoreboard", ValueType.TEXT), new ArgumentSlot("team", ValueType.TEXT)),
+    ENTITY_UNSET_TEAM(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, UnsetTeamAction.class, Material.RED_BANNER, new ArgumentSlot("scoreboard", ValueType.TEXT), new ArgumentSlot("team", ValueType.TEXT)),
+
     ENTITY_SET_TARGET(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, SetEntityTargetAction.class, Material.NETHER_STAR, new ArgumentSlot("entity",ValueType.TEXT)),
     ENTITY_PATH_MOVE_TO_LOCATION(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, SetEntityPathMoveToLocationAction.class, Material.PAPER, new ArgumentSlot("location",ValueType.LOCATION)),
     ENTITY_SET_ARMOR_STAND_POSE(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, SetArmorStandPoseAction.class, Material.ARMOR_STAND, new ArgumentSlot("x",ValueType.NUMBER), new ArgumentSlot("y",ValueType.NUMBER), new ArgumentSlot("z",ValueType.NUMBER)),
@@ -466,6 +479,9 @@ public enum ActionType {
 
     REPEAT_ALWAYS(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatAlwaysAction.class, Material.BEACON),
     REPEAT_FOR_LOOP(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatForLoopAction.class, Material.SLIME_BALL, new ArgumentSlot("variable", ValueType.VARIABLE), new ParameterSlot("type", Arrays.asList("less","less-equals","greater","greater-equals"), Material.BRICK, Material.BRICKS, Material.NETHER_BRICK, Material.NETHER_BRICKS), new ArgumentSlot("range", ValueType.NUMBER), new ArgumentSlot("add", ValueType.NUMBER)),
+    REPEAT_FOR_EACH(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatForEachAction.class, Material.BOOKSHELF, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE)),
+    REPEAT_BLOCKS_IN_REGION(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatBlocksInRegionAction.class, Material.PAPER, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("first", ValueType.LOCATION), new ArgumentSlot("second", ValueType.LOCATION)),
+
 
     LAUNCH_FUNCTION(ActionCategory.LAUNCH_FUNCTION_ACTION, MenusCategory.OTHER, LaunchFunctionAction.class, Material.LAPIS_ORE),
     LAUNCH_METHOD(ActionCategory.LAUNCH_METHOD_ACTION, MenusCategory.OTHER, LaunchMethodAction.class, Material.EMERALD),
@@ -531,6 +547,8 @@ public enum ActionType {
     IF_ENTITY_IS_CREATURE(ActionCategory.ENTITY_CONDITION, MenusCategory.OTHER, IsEntityCreature.class, Material.PIGLIN_HEAD),
     IF_ENTITY_IS_MONSTER(ActionCategory.ENTITY_CONDITION, MenusCategory.OTHER, IsEntityMonster.class, Material.ZOMBIE_SPAWN_EGG),
     IF_ENTITY_IS_ENEMY(ActionCategory.ENTITY_CONDITION, MenusCategory.OTHER, IsEntityEnemy.class, Material.ENDER_DRAGON_SPAWN_EGG),
+
+    IF_ENTITY_IS_IN_TEAM(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, IsEntityInTeam.class, Material.LIME_BANNER, new ArgumentSlot("scoreboard",ValueType.TEXT), new ArgumentSlot("team",ValueType.TEXT)),
 
     IF_ENTITY_IS_DEAD(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, IsEntityDead.class, Material.REDSTONE),
     IF_ENTITY_IS_UNDERWATER(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, IsEntityUnderWater.class, Material.BLUE_STAINED_GLASS),

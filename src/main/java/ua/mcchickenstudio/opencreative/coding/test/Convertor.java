@@ -18,6 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.coding.test;
 
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,23 +36,26 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.utils.FileUtils;
+import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getSignLine;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getElapsedTime;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 
 /**
  * <h1>Convertor</h1>
  * This class represents a convertor, that changes coding blocks
  * in specified developer's plots to required one.
  */
-public abstract class Convertor {
+public abstract class Convertor implements Listener {
 
     private final List<Plot> plots;
     private final String description;
     private final BukkitRunnable runnable;
-    private final int MAX_AWAITING_TIME = 10;
+    private final int MAX_AWAITING_TIME = 5;
 
     private boolean isRunning;
     private int convertedPlotsAmount = 0;
@@ -57,13 +66,14 @@ public abstract class Convertor {
         this.description = description;
         this.runnable = new BukkitRunnable() {
 
-
             private Plot currentPlot = plots.getFirst();
+            private int size = plots.size();
             private int wastedTime = 0;
             private boolean converting = false;
 
             @Override
             public void run() {
+                Bukkit.getServer().sendActionBar(Component.text("§7Open§fCreative§b+ §3Converting dev worlds... §7" + (size-plots.size()+1) + "/" + size));
                 wastedTime += 1;
                 if (wastedTime > MAX_AWAITING_TIME) {
                     if (!next()) return;
@@ -73,7 +83,7 @@ public abstract class Convertor {
                 }
                 if (!converting) {
                     if (!currentPlot.getDevPlot().isLoaded()) {
-                        currentPlot.getTerritory().load();
+                        //currentPlot.getTerritory().load();
                         currentPlot.getDevPlot().loadDevPlotWorld();
                     }
                     converting = true;
@@ -100,6 +110,7 @@ public abstract class Convertor {
                 wastedTime = 0;
                 converting = false;
             }
+
         };
     }
 
@@ -122,13 +133,16 @@ public abstract class Convertor {
      */
     public void start() {
         if (isRunning) return;
+        if (!OpenCreative.getSettings().isMaintenance()) {
+            OpenCreative.getSettings().setMaintenance(true);
+        }
         isRunning = true;
         launchTime = System.currentTimeMillis();
-        OpenCreative.getPlugin().getLogger().info("Starting developers plots convertor process...");
-        OpenCreative.getPlugin().getLogger().info(" ");
-        OpenCreative.getPlugin().getLogger().info(" Description: " + description);
-        OpenCreative.getPlugin().getLogger().info(" Plots to be converted: " + plots.size());
-        OpenCreative.getPlugin().getLogger().info(" ");
+        Bukkit.getServer().broadcast(Component.text("§bStarting developers plots convertor process..."));
+        Bukkit.getServer().broadcast(Component.text((" ")));
+        Bukkit.getServer().broadcast(Component.text((" §7Description: §f" + description)));
+        Bukkit.getServer().broadcast(Component.text((" §7Plots to be converted: §b" + plots.size())));
+        Bukkit.getServer().broadcast(Component.text((" ")));
         runnable.runTaskTimer(OpenCreative.getPlugin(),20L,20L);
     }
 
@@ -136,11 +150,11 @@ public abstract class Convertor {
         if (!isRunning) return;
         isRunning = false;
         runnable.cancel();
-        OpenCreative.getPlugin().getLogger().info("Converting is finished.");
-        OpenCreative.getPlugin().getLogger().info(" ");
-        OpenCreative.getPlugin().getLogger().info(" Converted plots: " + convertedPlotsAmount);
-        OpenCreative.getPlugin().getLogger().info(" Time wasted: " + getElapsedTime(System.currentTimeMillis(),launchTime));
-        OpenCreative.getPlugin().getLogger().info(" ");
+        Bukkit.getServer().broadcast(Component.text(("§aConverting is finished.")));
+        Bukkit.getServer().broadcast(Component.text((" ")));
+        Bukkit.getServer().broadcast(Component.text((" §7Converted plots: §b" + convertedPlotsAmount)));
+        Bukkit.getServer().broadcast(Component.text((" §7Time wasted: §b" + MessageUtils.convertTime(System.currentTimeMillis()-launchTime))));
+        Bukkit.getServer().broadcast(Component.text((" ")));
     }
 
     public boolean convertDevPlot(DevPlot devPlot) {
@@ -157,13 +171,20 @@ public abstract class Convertor {
                     String thirdSignLine = getSignLine(signLocation,(byte) 3);
                     String fourthSignLine = getSignLine(signLocation,(byte) 4);
                     InventoryHolder container = (containerBlock.getState() instanceof InventoryHolder inventory ? inventory : null);
-                    converted = convertCodingBlock(codingBlock,containerBlock.getLocation(),container,signLocation,firstSignLine,secondSignLine,thirdSignLine,fourthSignLine);
+                    if (convertCodingBlock(codingBlock,containerBlock.getLocation(),container,signLocation,firstSignLine == null ? "" : firstSignLine,secondSignLine == null ? "" : secondSignLine,thirdSignLine == null ? "" : thirdSignLine,fourthSignLine == null ? "" : fourthSignLine)) {
+                        converted = true;
+                    }
                     devPlot.getPlot().getTerritory().getScript().clear();
                     devPlot.getPlot().getTerritory().getScript().saveCode();
                 }
             }
         }
-        devPlot.getPlot().getTerritory().unload();
+        for (Player player : devPlot.getWorld().getPlayers()) {
+            teleportToLobby(player);
+        }
+        if (Bukkit.unloadWorld(devPlot.getWorldName(),true)) {
+            FileUtils.unloadWorldFolder(devPlot.getWorldName(),true);
+        }
         return converted;
     }
 

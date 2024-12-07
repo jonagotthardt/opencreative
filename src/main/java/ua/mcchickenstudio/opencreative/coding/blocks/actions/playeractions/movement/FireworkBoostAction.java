@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.inventory;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.movement;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -27,24 +27,20 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
-import java.util.List;
-
-public class SetItemInHandAction extends PlayerAction {
-    public SetItemInHandAction(Executor executor, Target target, int x, Arguments args) {
+public class FireworkBoostAction extends PlayerAction {
+    public FireworkBoostAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     public void executePlayer(Player player) {
-        ItemStack mainItem = getArguments().getValue("main",new ItemStack(Material.AIR),this);
-        ItemStack offItem = getArguments().getValue("off",new ItemStack(Material.AIR),this);
-        boolean replaceWithAir = getArguments().getValue("replace-with-air",false,this);
-        if (replaceWithAir || !mainItem.isEmpty()) player.getInventory().setItemInMainHand(mainItem);
-        if (replaceWithAir || !offItem.isEmpty()) player.getInventory().setItemInOffHand(offItem);
+        ItemStack item = getArguments().getValue("firework", new ItemStack(Material.FIREWORK_ROCKET),this);
+        player.fireworkBoost(item);
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.PLAYER_SET_ITEM_IN_HAND;
+        return ActionType.PLAYER_FIREWORK_BOOST;
     }
+
 }

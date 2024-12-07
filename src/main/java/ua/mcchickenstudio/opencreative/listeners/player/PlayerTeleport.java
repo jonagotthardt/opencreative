@@ -47,7 +47,11 @@ public class PlayerTeleport implements Listener {
         if (plot != null) {
             if (event.getTo().getWorld().equals(event.getFrom().getWorld())) {
                 EventRaiser.raiseTeleportEvent(event.getPlayer(),event);
-            } else if (event.getCause() == PlayerTeleportEvent.TeleportCause.SPECTATE) {
+            } else if (event.getCause() == PlayerTeleportEvent.TeleportCause.SPECTATE
+                    || event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL
+                    || event.getCause() == PlayerTeleportEvent.TeleportCause.DISMOUNT
+                    || event.getCause() == PlayerTeleportEvent.TeleportCause.CHORUS_FRUIT
+                    || event.getCause() == PlayerTeleportEvent.TeleportCause.EXIT_BED) {
                 event.setCancelled(true);
             }
         }

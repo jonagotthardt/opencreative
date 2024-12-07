@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.arguments;
 
+import org.bukkit.block.Block;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
@@ -146,6 +147,10 @@ public class Argument {
             setEventVariable(action, EventValues.Variable.EYE_LOCATION, livingEntity.getEyeLocation());
             setEventVariable(action, EventValues.Variable.LAST_DAMAGE, livingEntity.getLastDamage());
             setEventVariable(action, EventValues.Variable.CAN_PICKUP_ITEM, livingEntity.getCanPickupItems());
+            Entity target = livingEntity.getTargetEntity(10);
+            Block targetBlock = livingEntity.getTargetBlockExact(10);
+            setEventVariable(action, EventValues.Variable.TARGET_ENTITY, target != null ? target.getUniqueId().toString() : null);
+            setEventVariable(action, EventValues.Variable.TARGET_BLOCK, targetBlock != null ? targetBlock.getLocation() : null);
         }
         if (action.getEntity() instanceof HumanEntity humanEntity) {
             setEventVariable(action, EventValues.Variable.GAME_MODE, humanEntity.getGameMode().name().toLowerCase());

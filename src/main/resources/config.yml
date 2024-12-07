@@ -165,12 +165,12 @@ groups:
         - "headdb.open"
         - "essentials.itemname"
   premium:
-    permission: "creative.group.premium"
+    permission: "opencreative.group.premium"
     cooldowns:
-      generic-command: 3 # /play, /build, /games
-      advertisement: 100 # /ad
-      creative-chat: 4 # /cc
-      world-chat: 1 # chat in world
+      generic-command: 3
+      advertisement: 100
+      creative-chat: 4
+      world-chat: 1
     creating-world:
       limit: 4
     world:

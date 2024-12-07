@@ -52,9 +52,6 @@ public class HookUtils {
         if (isProtocolLibEnabled) {
             ProtocolLibUtils.init();
         }
-        if (isVaultEnabled) {
-            VaultUtils.init();
-        }
     }
 
     public static boolean isPluginEnabled(String pluginName) {

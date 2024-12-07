@@ -73,50 +73,35 @@ public class FileUtils {
         }
     }
 
-    public static void fillDefaultSettings(FileConfiguration worldFile, int id, Player owner, World.Environment environment) {
-        worldFile.createSection("owner");
-        worldFile.set("owner", owner.getName());
-        worldFile.createSection("owner-group");
-        worldFile.set("owner-group",OpenCreative.getSettings().getGroups().getGroup(owner).getName().toLowerCase());
-        worldFile.createSection("environment");
-        worldFile.set("environment", environment.name());
-        worldFile.createSection("world");
-        worldFile.set("world","plot"+id);
-        worldFile.createSection("creation-time");
-        worldFile.set("creation-time",System.currentTimeMillis());
-        worldFile.createSection("last-activity-time");
-        worldFile.set("last-activity-time",System.currentTimeMillis());
-        worldFile.createSection("name");
-        worldFile.set("name", MessageUtils.getLocaleMessage("creating-world.default-world-name").replace("%player%", owner.getName()));
-        worldFile.createSection("description");
-        worldFile.set("description", MessageUtils.getLocaleMessage("creating-world.default-world-description").replace("%player%", owner.getName()));
-        worldFile.createSection("icon");
-        worldFile.set("icon", String.valueOf(Material.DIAMOND));
-        worldFile.createSection("sharing");
-        worldFile.set("sharing", String.valueOf(Plot.Sharing.PUBLIC));
-        worldFile.createSection("category");
-        worldFile.set("category", String.valueOf(PlotInfo.Category.SANDBOX));
-        worldFile.createSection("customID");
-        worldFile.set("customID",String.valueOf(id));
-        worldFile.createSection("players.unique");
-        worldFile.set("players.unique", new ArrayList<String>());
-        worldFile.createSection("players.liked");
-        worldFile.set("players.liked", new ArrayList<String>());
-        worldFile.createSection("players.builders.trusted");
-        worldFile.set("players.builders.trusted", new ArrayList<String>());
-        worldFile.createSection("players.builders.not-trusted");
-        worldFile.set("players.builders.not-trusted", new ArrayList<String>());
-        worldFile.createSection("players.developers.trusted");
-        worldFile.set("players.developers.trusted", new ArrayList<String>());
-        worldFile.createSection("players.developers.not-trusted");
-        worldFile.set("players.developers.not-trusted", new ArrayList<String>());
-        worldFile.createSection("players.whitelist");
-        worldFile.set("players.whitelist", new ArrayList<String>());
-        worldFile.createSection("players.blacklist");
-        worldFile.set("players.blacklist", new ArrayList<String>());
-        worldFile.createSection("flags");
-        Map<String,Integer> flags = new HashMap<>();
-        worldFile.set("flags",flags);
+    /**
+     * Fills world's settings configuration with default values.
+     * @param config settings configuration.
+     * @param id world's id.
+     * @param owner world's owner.
+     * @param environment environment on world creation.
+     */
+    public static void fillDefaultSettings(FileConfiguration config, int id, Player owner, World.Environment environment) {
+        config.set("owner", owner.getName());
+        config.set("owner-group",OpenCreative.getSettings().getGroups().getGroup(owner).getName().toLowerCase());
+        config.set("environment", environment.name());
+        config.set("world","plot"+id);
+        config.set("creation-time",System.currentTimeMillis());
+        config.set("last-activity-time",System.currentTimeMillis());
+        config.set("name", MessageUtils.getLocaleMessage("creating-world.default-world-name").replace("%player%", owner.getName()));
+        config.set("description", MessageUtils.getLocaleMessage("creating-world.default-world-description").replace("%player%", owner.getName()));
+        config.set("icon", String.valueOf(Material.DIAMOND));
+        config.set("sharing", String.valueOf(Plot.Sharing.PUBLIC));
+        config.set("category", String.valueOf(PlotInfo.Category.SANDBOX));
+        config.set("customID",String.valueOf(id));
+        config.set("players.unique", new ArrayList<String>());
+        config.set("players.liked", new ArrayList<String>());
+        config.set("players.builders.trusted", new ArrayList<String>());
+        config.set("players.builders.not-trusted", new ArrayList<String>());
+        config.set("players.developers.trusted", new ArrayList<String>());
+        config.set("players.developers.not-trusted", new ArrayList<String>());
+        config.set("players.whitelist", new ArrayList<String>());
+        config.set("players.blacklist", new ArrayList<String>());
+        config.set("flags",new HashMap<String,Integer>());
     }
 
     /**
@@ -133,11 +118,8 @@ public class FileUtils {
                 return;
             }
         }
-        worldFile.createSection("world");
         worldFile.set("world",worldName);
-        worldFile.createSection("creation-time");
         worldFile.set("creation-time",System.currentTimeMillis());
-        worldFile.createSection("last-activity-time");
         worldFile.set("last-activity-time",System.currentTimeMillis());
         worldFile.createSection("code");
         try {
@@ -303,17 +285,16 @@ public class FileUtils {
      Returns plot's variables.yml configuration.
      **/
     public static File getPlotVariablesJson(Plot plot) {
-        File variablesFile = new File((getPlotFolder(plot)),"variables.json");
-        if (variablesFile.exists()) {
-            return variablesFile;
-        } else {
+        File variablesFile = new File(getPlotFolder(plot),"variables.json");
+        if (!variablesFile.exists()) {
             try {
                 variablesFile.createNewFile();
-                return variablesFile;
-            } catch (IOException error) {
+            } catch (Exception error) {
+                sendCriticalErrorMessage("Failed to create world's variables file.",error);
                 return null;
             }
         }
+        return variablesFile;
     }
 
     /**
@@ -321,9 +302,6 @@ public class FileUtils {
      **/
     public static File getPlayerDataJson(Plot plot, Player player) {
         File plotFolder = getPlotFolder(plot);
-        if (plotFolder == null) {
-            return null;
-        }
         File folder = new File(plotFolder.getPath() + File.separator + "playersData");
         try {
             if (!folder.exists()) {
@@ -342,21 +320,22 @@ public class FileUtils {
     }
 
     /**
-     Returns plots folders. If "includeUnloadedWorlds" is true, then it will include unloaded plots.
-     **/
+     * Returns plots worlds folders.
+     * @param includeUnloadedWorlds if true - includes unloaded worlds too, false - only loaded worlds.
+     * @return plots worlds folders.
+     */
     public static File[] getWorldsFolders(boolean includeUnloadedWorlds) {
 
         ArrayList<File> worldsFolders = new ArrayList<>();
         File serverDirectory = Bukkit.getServer().getWorldContainer();
         File[] serverDirectoryFiles = serverDirectory.listFiles();
 
-        // Получаем загруженные миры
         if (serverDirectoryFiles != null) {
             for (File file : serverDirectoryFiles) {
                 if (file.isDirectory() && file.getName().startsWith("plot")) worldsFolders.add(file);
             }
         } else {
-            sendCriticalErrorMessage("При попытке получить файлы с директории сервера они оказались null.");
+            sendCriticalErrorMessage("World container of server is null.");
         }
 
         if (includeUnloadedWorlds) {
@@ -368,22 +347,24 @@ public class FileUtils {
 
             if (unloadedWorlds != null) {
                 File unloadedWorldFolder = new File(serverDirectory + File.separator + "unloadedWorlds" + File.separator);
-                if (!unloadedWorldFolder.exists()) if (!unloadedWorldFolder.mkdirs()) sendCriticalErrorMessage("Не получилось создать директорию " + unloadedWorldFolder.getPath());
+                if (!unloadedWorldFolder.exists())  {
+                    if (!unloadedWorldFolder.mkdirs()) sendCriticalErrorMessage("Can't create /unloadedWorlds/ folder");
+                }
                 for (File file : unloadedWorlds) {
                     if (file.isDirectory() && file.getName().startsWith("plot")) {
                         worldsFolders.add(file);
                     }
                 }
             } else {
-                sendCriticalErrorMessage("При попытке получить папки отгруженных миров они оказались null.");
+                sendCriticalErrorMessage(unloadedWorldsFolder.getPath() + " is null.");
             }
         }
         return worldsFolders.toArray(new File[0]);
     }
 
     /**
-     Unload all plots into /unloadedWorlds/ folder.
-     **/
+     * Unloads all loaded plots worlds into /unloadedWorlds/ directory.
+     */
     public static void unloadPlots() {
         OpenCreative.getPlugin().getLogger().info("Creative+ is unloading worlds, please wait...");
         try {
@@ -409,7 +390,7 @@ public class FileUtils {
     }
 
     /**
-     Loads plot folder from /unloadedWorlds/ to server storage.
+     * Loads plot folder from /unloadedWorlds/ to server storage.
      **/
     public static boolean loadWorldFolder(String worldName, boolean removeUnloadedFolder) {
         Path serverPath = Bukkit.getServer().getWorldContainer().toPath();
@@ -430,31 +411,30 @@ public class FileUtils {
     }
 
     /**
-     Unloads plot folder from server storage to /unloadedWorlds/ folder.
+     * Unloads plot folder from server storage to /unloadedWorlds/ folder.
      **/
     public static void unloadWorldFolder(String worldName, boolean removeWorldFolder) {
         Path serverPath = Bukkit.getServer().getWorldContainer().toPath();
         File worldFolder = new File(serverPath + File.separator + worldName);
         File unloadedWorldsFolder = new File(serverPath + File.separator + "unloadedWorlds" + File.separator + worldName);
-
         if (copyFilesToDirectory(worldFolder,unloadedWorldsFolder)) {
             if (!removeWorldFolder) return;
             try {
                 org.apache.commons.io.FileUtils.deleteDirectory(worldFolder);
             } catch (IOException error) {
-                sendCriticalErrorMessage("При попытке удалить папку мира произошла ошибка " + error.getMessage());
+                sendCriticalErrorMessage("Can't delete directory on unloading world folder " + worldFolder.getPath(), error);
             }
         }
     }
 
     /**
-     Copy input files into output directory.
+     * Copies input files into output directory.
      **/
     public static boolean copyFilesToDirectory(File input, File output) {
         try {
             File[] inputFiles = input.listFiles();
             if (!output.exists()) {
-                if (!output.mkdirs()) sendCriticalErrorMessage("Не удалось создать директорию " + output.getPath());
+                if (!output.mkdirs()) sendCriticalErrorMessage("Can't create a output directory " + output.getPath() + " for copying from input " + input.getPath());
             }
             if (inputFiles != null) {
                 for (File worldFile : inputFiles) {
@@ -464,7 +444,7 @@ public class FileUtils {
             }
             return true;
         } catch (IOException error) {
-            OpenCreative.getPlugin().getLogger().severe("При попытке скопировать файл произошла ошибка IOException. Файл откуда: " + input.getPath() + " Место куда: " + output.getPath() + " Ошибка: " + error.getMessage());
+            sendCriticalErrorMessage("Can't copy files from directory " + input.getPath() + " to directory: " + output.getPath(),error);
             return false;
         }
     }
@@ -508,12 +488,11 @@ public class FileUtils {
     public static void setPlotConfigParameter(Plot plot, String parameterPath, long parameterValue) {
         FileConfiguration plotConfig = getPlotConfig(plot);
         File plotConfigFile = getPlotConfigFile(plot);
-        plotConfig.createSection(parameterPath);
         plotConfig.set(parameterPath,String.valueOf(parameterValue));
         try {
             plotConfig.save(plotConfigFile);
         } catch (IOException error) {
-            sendCriticalErrorMessage("При сохранении конфига плота в файл произошла ошибка " + error.getMessage());
+            sendCriticalErrorMessage("Can't save plot's settings configuration to file.",error);
         }
     }
 
@@ -526,12 +505,11 @@ public class FileUtils {
     public static void setPlotConfigParameter(Plot plot, String parameterPath, int parameterValue) {
         FileConfiguration plotConfig = getPlotConfig(plot);
         File plotConfigFile = getPlotConfigFile(plot);
-        plotConfig.createSection(parameterPath);
         plotConfig.set(parameterPath,String.valueOf(parameterValue));
         try {
             plotConfig.save(plotConfigFile);
         } catch (IOException error) {
-            sendCriticalErrorMessage("При сохранении конфига плота в файл произошла ошибка " + error.getMessage());
+            sendCriticalErrorMessage("Can't save plot's settings configuration to file.",error);
         }
     }
 
@@ -544,12 +522,11 @@ public class FileUtils {
     public static void setPlotConfigParameter(Plot plot, String parameterPath, Object parameterValue) {
         FileConfiguration plotConfig = getPlotConfig(plot);
         File plotConfigFile = getPlotConfigFile(plot);
-        plotConfig.createSection(parameterPath);
         plotConfig.set(parameterPath,String.valueOf(parameterValue));
         try {
             plotConfig.save(plotConfigFile);
         } catch (IOException error) {
-            sendCriticalErrorMessage("При сохранении конфига плота в файл произошла ошибка " + error.getMessage());
+            sendCriticalErrorMessage("Can't save plot's settings configuration to file.",error);
         }
     }
 
@@ -562,12 +539,11 @@ public class FileUtils {
     public static void setPlotConfigParameter(Plot plot, String parameterPath, String parameterValue) {
         FileConfiguration plotConfig = getPlotConfig(plot);
         File plotConfigFile = getPlotConfigFile(plot);
-        plotConfig.createSection(parameterPath);
         plotConfig.set(parameterPath,parameterValue);
         try {
             plotConfig.save(plotConfigFile);
         } catch (IOException error) {
-            sendCriticalErrorMessage("При сохранении конфига плота в файл произошла ошибка " + error.getMessage());
+            sendCriticalErrorMessage("Can't save plot's settings configuration to file.",error);
         }
     }
 
@@ -580,12 +556,11 @@ public class FileUtils {
     public static void setPlotConfigParameter(Plot plot, String parameterPath, List<String> parameterValue) {
         FileConfiguration plotConfig = getPlotConfig(plot);
         File plotConfigFile = getPlotConfigFile(plot);
-        plotConfig.createSection(parameterPath);
         plotConfig.set(parameterPath,parameterValue);
         try {
             plotConfig.save(plotConfigFile);
         } catch (IOException error) {
-            sendCriticalErrorMessage("При сохранении конфига плота в файл произошла ошибка " + error.getMessage());
+            sendCriticalErrorMessage("Can't save plot's settings configuration to file.",error);
         }
     }
 
@@ -598,12 +573,11 @@ public class FileUtils {
     public static void setPlotConfigParameter(Plot plot, String parameterPath, Set<String> parameterValue) {
         FileConfiguration plotConfig = getPlotConfig(plot);
         File plotConfigFile = getPlotConfigFile(plot);
-        plotConfig.createSection(parameterPath);
         plotConfig.set(parameterPath,new ArrayList<>(parameterValue));
         try {
             plotConfig.save(plotConfigFile);
         } catch (IOException error) {
-            sendCriticalErrorMessage("При сохранении конфига плота в файл произошла ошибка " + error.getMessage());
+            sendCriticalErrorMessage("Can't save plot's settings configuration to file.",error);
         }
     }
 
@@ -674,5 +648,28 @@ public class FileUtils {
      */
     public static String getPlotFolderPath(Plot plot) {
         return Bukkit.getWorldContainer().getPath() + File.separator + (!plot.isLoaded() ? "unloadedWorlds" + File.separator : "") + "plot" + plot.getId() + File.separator;
+    }
+
+    /**
+     * Returns JSON file of player's profile.
+     * @param uuid uuid of player.
+     * @return json file.
+     */
+    public static File getProfileJson(String uuid) {
+        File folder = new File(OpenCreative.getPlugin().getDataFolder().getPath() + File.separator + "profiles");
+        try {
+            if (!folder.exists()) {
+                folder.mkdirs();
+            }
+            File profileFile = new File(folder,  uuid+ ".json");
+            if (profileFile.exists()) {
+                return profileFile;
+            } else {
+                profileFile.createNewFile();
+                return profileFile;
+            }
+        } catch (IOException error) {
+            return null;
+        }
     }
 }

@@ -36,9 +36,9 @@ public class LegacyConvertor extends Convertor {
     }
 
     @Override
-    public boolean convertCodingBlock(@NotNull Block mainBlock, @NotNull Location containerLocation, InventoryHolder container, Location signLocation, @NotNull String first, @NotNull String second, @NotNull String third, @NotNull String fourth) {
-        if ("action_player".equalsIgnoreCase(first)) {
-            setSignLine(signLocation,(byte) 1,"player_action");
+    public boolean convertCodingBlock(@NotNull Block mainBlock, @NotNull Location containerLocation, InventoryHolder container, @NotNull Location signLocation, @NotNull String first, @NotNull String second, @NotNull String third, @NotNull String fourth) {
+        if ("action_player".equalsIgnoreCase(second)) {
+            setSignLine(signLocation,(byte) 2,"player_action");
             return true;
         }
         return false;

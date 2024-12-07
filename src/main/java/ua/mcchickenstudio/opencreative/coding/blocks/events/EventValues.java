@@ -137,6 +137,9 @@ public class EventValues {
         BOOTS                   (Material.NETHERITE_BOOTS,          MenusCategory.ENTITY, ItemStack.class),
         HEALTH                  (Material.APPLE,                    MenusCategory.ENTITY, Double.class),
         EYE_LOCATION            (Material.ENDER_EYE,                MenusCategory.ENTITY, Location.class),
+        TARGET_ENTITY           (Material.ENDER_PEARL,              MenusCategory.ENTITY, String.class),
+        TARGET_BLOCK            (Material.END_PORTAL_FRAME,         MenusCategory.ENTITY, Location.class),
+
         WALK_SPEED              (Material.CHAINMAIL_BOOTS,          MenusCategory.ENTITY, Float.class),
         FLY_SPEED               (Material.FEATHER,                  MenusCategory.ENTITY, Float.class),
         LAST_DAMAGE             (Material.REDSTONE,                 MenusCategory.ENTITY, Double.class),

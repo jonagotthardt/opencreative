@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.commands;
 
 import ua.mcchickenstudio.opencreative.coding.test.LegacyConvertor;
+import ua.mcchickenstudio.opencreative.coding.test.PlayerToEntityConvertor;
 import ua.mcchickenstudio.opencreative.menu.CreativeMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsPickerMenu;
@@ -439,7 +440,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     player.sendMessage("Test of legacy convertor");
-                    new LegacyConvertor(new ArrayList<>(PlotManager.getInstance().getPlots())).start();
+                    //new PlayerToEntityConvertor(new ArrayList<>(PlotManager.getInstance().getPlots())).start();
                 }
                 case "template" -> {
                     if (!sender.hasPermission("opencreative.template")) {

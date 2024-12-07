@@ -18,5 +18,28 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.inventory;
 
-public class SetCursorItemAction {
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+
+public class SetCursorItemAction extends PlayerAction {
+    public SetCursorItemAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
+    }
+
+    @Override
+    public void executePlayer(Player player) {
+        ItemStack cursor = getArguments().getValue("item",new ItemStack(Material.AIR),this);
+        player.setItemOnCursor(cursor);
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return ActionType.PLAYER_SET_CURSOR_ITEM;
+    }
 }

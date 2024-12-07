@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative;
 
 import org.bukkit.event.Listener;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.CEListener;
+import ua.mcchickenstudio.opencreative.coding.test.Convertor;
 import ua.mcchickenstudio.opencreative.commands.*;
 import ua.mcchickenstudio.opencreative.commands.minecraft.*;
 import ua.mcchickenstudio.opencreative.commands.world.CommandAd;
@@ -148,12 +149,18 @@ public final class OpenCreative extends JavaPlugin {
      **/
     @Override
     public void onDisable() {
+        getLogger().info("Shutting down OpenCreative+, please wait...");
         for (Player player: Bukkit.getOnlinePlayers()) {
             player.sendMessage(Component.text("§f\n§f Shutting down §7Open§fCreative§b+ §7" + version + "§f, please wait...\n§f"));
             teleportToLobby(player);
         }
         FileUtils.unloadPlots();
-        this.getLogger().info("OpenCreative+ is disabled.");
+        getLogger().info(" ");
+        getLogger().info(" Goodbye from OpenCreative+");
+        getLogger().info(" ");
+        getLogger().info(" " + codename);
+        getLogger().info("  Made by McChicken Studio 2017-2024");
+        getLogger().info(" ");
     }
 
 
