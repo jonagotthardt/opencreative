@@ -72,21 +72,11 @@ public class ChangedWorld implements Listener {
         clearWorldModePermissions(player);
         World oldWorld = event.getFrom();
         World newWorld = player.getWorld();
-        PlayerChat.confirmation.remove(event.getPlayer());
-        CreativeChat.creativeChatOff.remove(event.getPlayer());
-        event.getPlayer().clearTitle();
+        PlayerChat.confirmation.remove(player);
+        player.clearTitle();
 
         Plot oldPlot = PlotManager.getInstance().getPlotByWorld(oldWorld);
         Plot newPlot = PlotManager.getInstance().getPlotByWorld(newWorld);
-
-        for (Player oldWorldPlayer : oldWorld.getPlayers()) {
-            hidePlayerInTab(player,oldWorldPlayer);
-            hidePlayerInTab(oldWorldPlayer,player);
-        }
-        for (Player newWorldPlayer : newWorld.getPlayers()) {
-            showPlayerFromTab(player,newWorldPlayer);
-            showPlayerFromTab(newWorldPlayer,player);
-        }
 
         if (oldPlot != null && oldPlot == newPlot) {
             if (isDevPlot(oldWorld)) {
@@ -108,6 +98,9 @@ public class ChangedWorld implements Listener {
                 }
             }
         } else {
+            if (!player.hasPermission("opencreative.ignore.world-change-clear")) {
+                clearPlayer(player);
+            }
             player.setLastDeathLocation(null);
             removePlayerWithLocation(player);
             if (oldPlot != null) {
@@ -193,6 +186,15 @@ public class ChangedWorld implements Listener {
                     }
                 }.runTaskAsynchronously(OpenCreative.getPlugin());
             }
+        }
+
+        for (Player oldWorldPlayer : oldWorld.getPlayers()) {
+            hidePlayerInTab(player,oldWorldPlayer);
+            hidePlayerInTab(oldWorldPlayer,player);
+        }
+        for (Player newWorldPlayer : newWorld.getPlayers()) {
+            showPlayerFromTab(player,newWorldPlayer);
+            showPlayerFromTab(newWorldPlayer,player);
         }
     }
 
