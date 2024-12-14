@@ -70,7 +70,7 @@ public class SendWebRequestAction extends WorldAction {
             @Override
             public void run() {
                 try {
-                    HttpURLConnection connection = getHttpURLConnection(url, request, media);
+                    HttpURLConnection connection = getHttpURLConnection(getPlot().getId(), url, request, media);
 
                     if ("POST".equalsIgnoreCase(request) && !body.isEmpty()) {
                         try (OutputStream os = connection.getOutputStream()) {
@@ -96,12 +96,13 @@ public class SendWebRequestAction extends WorldAction {
 
     }
 
-    private static HttpURLConnection getHttpURLConnection(String url, String request, String media) throws IOException {
+    private static HttpURLConnection getHttpURLConnection(int id, String url, String request, String media) throws IOException {
         URL requestUrl = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
         connection.setConnectTimeout(5000);
         connection.setReadTimeout(5000);
         connection.setRequestMethod(request);
+        connection.setRequestProperty("User-Agent", "OpenCreative+ Web Request, World ID: " + id);
         connection.setDoOutput("POST".equalsIgnoreCase(request));
 
         if ("json".equalsIgnoreCase(media)) {

@@ -83,7 +83,7 @@ public class ErrorUtils {
                 \\|/ _____ \\|/
                 "@'/ . .   \\`@"
                 /_| \\___/ |_\\
-                   \\___U_/""" : "") +
+                   \\___U_/\n""" : "") +
                 (colored ? "§4 " : " ") +
                 error.getClass().getSimpleName() +
                 ": " +
@@ -299,6 +299,13 @@ public class ErrorUtils {
      **/
     public static void sendWarningErrorMessage(String errorMessage) {
         OpenCreative.getPlugin().getLogger().warning("Warning! An error has occured: " + errorMessage);
+    }
+
+    /**
+     Sends warning message about problem with plugin.
+     **/
+    public static void sendWarningMessage(String errorMessage, Exception error) {
+        OpenCreative.getPlugin().getLogger().warning("Warning! " + errorMessage + " " + parseException(error,false));
     }
 
     /**
