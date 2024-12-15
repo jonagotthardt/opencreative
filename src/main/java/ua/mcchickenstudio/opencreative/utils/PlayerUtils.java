@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.utils;
 import org.bukkit.attribute.Attribute;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.settings.Settings;
+import ua.mcchickenstudio.opencreative.utils.core.AsyncScheduler;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.ProtocolLibUtils;
 import net.kyori.adventure.text.Component;
