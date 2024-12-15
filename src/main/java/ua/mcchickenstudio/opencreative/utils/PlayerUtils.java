@@ -38,6 +38,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
@@ -208,26 +209,25 @@ public class PlayerUtils {
     public static void translateBlockSign(Block block) {
         if (!block.getType().toString().contains("SIGN")) return;
         Sign sign = (Sign) block.getState();
-        List<Component> newLines = new ArrayList<>();
-        for (Component line : sign.lines()) {
-            String content = ((TextComponent) line).content();
-            String path = "blocks." + content;
-            if (content.isEmpty()) {
-                newLines.add(Component.text(""));
-            } else if (!messageExists(path)) {
-                newLines.add(Component.text(content));
-            } else {
-                newLines.add(toComponent(getLocaleMessage(path,false)));
+        AsyncScheduler.run(() -> {
+            List<Component> newLines = new ArrayList<>();
+            for (Component line : sign.lines()) {
+                String content = ((TextComponent) line).content();
+                String path = "blocks." + content;
+                if (content.isEmpty()) {
+                    newLines.add(Component.text(""));
+                } else if (!messageExists(path)) {
+                    newLines.add(Component.text(content));
+                } else {
+                    newLines.add(toComponent(getLocaleMessage(path,false)));
+                }
             }
-        }
-        new BukkitRunnable() {
-            @Override
-            public void run() {
+            AsyncScheduler.later(() -> {
                 for (Player player : block.getLocation().getWorld().getPlayers()) {
                     player.sendSignChange(block.getLocation(), newLines);
                 }
-            }
-        }.runTaskLater(OpenCreative.getPlugin(),2L);
+            }, 100, TimeUnit.MILLISECONDS);
+        });
     }
 
     /**
