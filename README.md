@@ -2,8 +2,9 @@
 
 <img src="https://i.imgur.com/CT436vR.png" alt="drawing" width="100"/>
 
-[![bStats Servers](https://img.shields.io/bstats/servers/22001?color=00695C)](https://bstats.org/plugin/bukkit/OpenCreative/22001)
-[![bStats Players](https://img.shields.io/bstats/players/22001?color=00695C)](https://bstats.org/plugin/bukkit/OpenCreative/22001)
+[![bStats Servers](https://img.shields.io/bstats/servers/22001?color=blue)](https://bstats.org/plugin/bukkit/OpenCreative/22001)
+[![bStats Players](https://img.shields.io/bstats/players/22001?=blue)](https://bstats.org/plugin/bukkit/OpenCreative/22001)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 </div>
 
@@ -178,6 +179,10 @@ To develop this plugin, simply download this project and use Intellij IDEA to co
 We use Maven to compile plugin into jar file.
 
 Contribute your code into [`development branch`](https://gitlab.com/eagles-creative/opencreative/-/tree/development), then we will check it and we create merge request to the Main branch.
+
+## Statistic
+
+[<img src="https://bstats.org/signatures/bukkit/OpenCreative.svg" height="250" />](https://bstats.org/plugin/bukkit/OpenCreative/22001)
 
 ## License
 
