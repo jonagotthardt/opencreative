@@ -51,6 +51,6 @@ public class LocationInAreaCondition extends VariableCondition {
 
     @Override
     public ActionType getActionType() {
-        return null;
+        return ActionType.IF_VAR_LOCATION_IN_AREA;
     }
 }
