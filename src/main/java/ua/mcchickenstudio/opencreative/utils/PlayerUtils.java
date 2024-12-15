@@ -106,7 +106,8 @@ public class PlayerUtils {
 
         World lobbyWorld = getLobbyWorld();
         if (lobbyWorld != null) {
-            player.teleport(lobbyWorld.getSpawnLocation());
+            Bukkit.getScheduler().runTask(OpenCreative.getPlugin(),
+                            () -> player.teleport(lobbyWorld.getSpawnLocation()));
         }
         clearPlayer(player);
 
@@ -191,16 +192,17 @@ public class PlayerUtils {
      * @param player player to remove permissions.
      */
     public static void clearWorldModePermissions(Player player) {
+        Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () -> {
+            PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
+            if (permissionAttachment == null) return;
+            Map<String, Boolean> permissions = permissionAttachment.getPermissions();
+            Set<Map.Entry<String, Boolean>> permissionsCopy = new HashSet<>(permissions.entrySet());
 
-        PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
-        Map<String, Boolean> permissions = permissionAttachment.getPermissions();
-        Set<Map.Entry<String, Boolean>> permissionsCopy = new HashSet<>(permissions.entrySet());
-
-        for (Map.Entry<String, Boolean> entry : permissionsCopy) {
-            String key = entry.getKey();
-            permissionAttachment.unsetPermission(key);
-        }
-
+            for (Map.Entry<String, Boolean> entry : permissionsCopy) {
+                String key = entry.getKey();
+                permissionAttachment.unsetPermission(key);
+            }
+        });
     }
 
     /**

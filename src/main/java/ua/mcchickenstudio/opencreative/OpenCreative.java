@@ -18,20 +18,28 @@
 
 package ua.mcchickenstudio.opencreative;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.CEListener;
-import ua.mcchickenstudio.opencreative.coding.test.Convertor;
 import ua.mcchickenstudio.opencreative.commands.*;
 import ua.mcchickenstudio.opencreative.commands.minecraft.*;
 import ua.mcchickenstudio.opencreative.commands.world.CommandAd;
 import ua.mcchickenstudio.opencreative.commands.world.CommandEnvironment;
 import ua.mcchickenstudio.opencreative.commands.world.CommandJoin;
+import ua.mcchickenstudio.opencreative.commands.world.CommandWorld;
 import ua.mcchickenstudio.opencreative.commands.world.modes.CommandBuild;
 import ua.mcchickenstudio.opencreative.commands.world.modes.CommandDev;
 import ua.mcchickenstudio.opencreative.commands.world.modes.CommandPlay;
 import ua.mcchickenstudio.opencreative.commands.world.reputation.CommandDislike;
 import ua.mcchickenstudio.opencreative.commands.world.reputation.CommandLike;
-import ua.mcchickenstudio.opencreative.commands.world.CommandWorld;
 import ua.mcchickenstudio.opencreative.listeners.entity.EntityDamage;
 import ua.mcchickenstudio.opencreative.listeners.entity.EntitySpawn;
 import ua.mcchickenstudio.opencreative.listeners.player.*;
@@ -41,18 +49,10 @@ import ua.mcchickenstudio.opencreative.managers.economy.Economy;
 import ua.mcchickenstudio.opencreative.menu.Menus;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
-import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
+import ua.mcchickenstudio.opencreative.utils.core.Ticker;
+import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.Metrics;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.title.Title;
-import org.bukkit.*;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -111,6 +111,7 @@ public final class OpenCreative extends JavaPlugin {
         }
         registerCommands();
         registerEvents();
+        Ticker.runTicker();
         saveDefaultConfig();
         settings = new Settings();
         settings.load(getConfig());

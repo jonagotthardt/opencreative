@@ -65,7 +65,7 @@ public class AsyncScheduler{
             try {
                 decoratedRunnable.run();
             } catch (Throwable e) {
-                log.severe("Ошибка во время выполнения асинхронной задачи " + AsyncScheduler.toString(originalRunnable));
+                log.severe("Error during execution of asynchronous task " + AsyncScheduler.toString(originalRunnable));
                 e.printStackTrace();
                 if (e instanceof InterruptedException)
                     throw e;
@@ -73,7 +73,7 @@ public class AsyncScheduler{
             } finally {
                 long after = System.currentTimeMillis() - start;
                 if (after > STOP_WATCH_TIME_MILLIS) {
-                    log.warning("Долгая задача " + AsyncScheduler.toString(originalRunnable) + ", она выполнялась " + after + "ms.");
+                    log.warning("Busy task " + AsyncScheduler.toString(originalRunnable) + ", it was performed " + after + "ms.");
                 }
             }
         }
@@ -98,7 +98,7 @@ public class AsyncScheduler{
             try {
                 return decoratedCallable.call();
             } catch (Throwable e) {
-                log.severe("Ошибка во время выполнения асинхронной задачи " + AsyncScheduler.toString(originalCallable));
+                log.severe("Error while accepting to call method: " + AsyncScheduler.toString(originalCallable));
                 e.printStackTrace();
                 throw e;
             } finally {

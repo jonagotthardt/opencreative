@@ -18,17 +18,20 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.blocks;
 
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.BlockActionCoverage;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.utils.core.Pair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SetBlocksAreaTypeAction extends WorldAction {
     public SetBlocksAreaTypeAction(Executor executor, Target target, int x, Arguments args) {
@@ -49,21 +52,14 @@ public class SetBlocksAreaTypeAction extends WorldAction {
         int maxX = Math.max(firstLocation.getBlockX(),secondLocation.getBlockX());
         int maxY = Math.max(firstLocation.getBlockY(),secondLocation.getBlockY());
         int maxZ = Math.max(firstLocation.getBlockZ(),secondLocation.getBlockZ());
-        BukkitRunnable runnable = new BukkitRunnable() {
-            @Override
-            public void run() {
-                getPlot().getLimits().setLastModifiedBlocksAmount(0);
-            }
-        };
-        getPlot().getTerritory().addBukkitRunnable(runnable);
+        List<Pair<Block, Material>> toAdd = new ArrayList<>();
+        if (!BlockActionCoverage.getPools().containsKey(getPlot().getId()))
+            BlockActionCoverage.getPools().put(getPlot().getId(), new BlockActionCoverage.ActionsPool());
+        if (BlockActionCoverage.getPools().get(getPlot().getId()).getActions().size() > Short.MAX_VALUE * 2)
+            return;
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
-                    if (getPlot().getLimits().getLastModifiedBlocksAmount() > getPlot().getLimits().getModifyingBlocksLimit()) {
-                        runnable.runTaskLater(OpenCreative.getPlugin(),20L);
-                        getPlot().getTerritory().removeBukkitRunnable(runnable);
-                        return;
-                    }
                     getPlot().getLimits().setLastModifiedBlocksAmount(getPlot().getLimits().getLastModifiedBlocksAmount()+1);
                     Block block = getWorld().getBlockAt(x,y,z);
                     type = switch (type) {
@@ -73,13 +69,12 @@ public class SetBlocksAreaTypeAction extends WorldAction {
                         default -> type;
                     };
                     if (type.isBlock()) {
-                        block.setType(type);
+                        toAdd.add(new Pair<>(block, type));
                     }
                 }
             }
         }
-        runnable.runTaskLater(OpenCreative.getPlugin(),20L);
-        getPlot().getTerritory().removeBukkitRunnable(runnable);
+        BlockActionCoverage.addBlockAction(getPlot(), toAdd);
     }
 
     @Override
