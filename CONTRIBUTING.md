@@ -2,6 +2,8 @@
 
 You can support OpenCreative+ project with: code contributing, bug reports and creating forks.
 
+![OpenCreative+ Development World](https://i.imgur.com/O9Ky4oH.png)
+
 # Bug reports 🪲
 
 Report exceptions, errors and bugs in [Issues site](https://gitlab.com/eagles-creative/opencreative/-/issues).
@@ -17,15 +19,23 @@ use built-in Gitlab code editing tools to make minor changes.
 
 Your Java code, as our code, should follow [guidelines by Google](https://google.github.io/styleguide/javaguide.html).
 Guide in a nutshell:
-1. Class names are written in UpperCamelCase.
+1. **Class names are written in UpperCamelCase.**
+
 ✅ It's good: PlayerUtils, OwnWorldsMenu, Profile
+
 ❌ It's bad: playerUtils, ownworldsmenu, PROFILE
-2. Method names are written in lowerCamelCase.
+
+2. **Method names are written in lowerCamelCase.**
+
 ✅ It's good: createWorld, clearPlayer, teleportAsync 
+
 ❌ It's bad: createworld, ClearPlayer, TELEPORTASYNC 
-3. Don't write a very long code, you can separate it in methods or classes.
-4. You should make code simple to understand.
-5. You can add comments to make easier to understand.
+
+3. **Don't write a very long code, you can separate it in methods or classes.**
+
+4. **You should make code simple to understand.**
+
+5. **You can add comments to make easier to understand.**
 
 ### Contributing
 
