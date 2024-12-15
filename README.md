@@ -1,17 +1,29 @@
+<div align="center">
+
+<img src="https://i.imgur.com/CT436vR.png" alt="drawing" width="100"/>
+
+[![bStats Servers](https://img.shields.io/bstats/servers/22001?color=00695C)](https://bstats.org/plugin/bukkit/OpenCreative/22001)
+[![bStats Players](https://img.shields.io/bstats/players/22001?color=00695C)](https://bstats.org/plugin/bukkit/OpenCreative/22001)
+
+</div>
+
 # OpenCreative+
 
 Minecraft plugin for PaperMC servers that allows players to create their worlds.
 
-![logo](https://i.imgur.com/4jzB4F9.png)
-
-This plugin is:
-- **Fast.** It uses RAM more often than hard drive.
-- **Translatable.** You can change every single message.
-- **Customizable.** Set world sizes and player's permissions.
-- **Open-sourced.** See code, add features, test and commit it.
-- **Free.** Download it without wasting any cent.
+![Screenshot](https://i.imgur.com/4jzB4F9.png)
 
 ## Features
+
+- **Let your players create entire worlds**, where they can build and even create mini-games with code.
+- **World Generators**. Players can create flat, normal, ocean and large biomes worlds with normal, nether, the end environment.
+- **World Settings**. World owners can change world's name, description, icon and other options. 
+- **Translatable**. You can change every single message for your server, and some of them has PlaceholderAPI support.
+- **Player Ranks**. Change world size, cooldowns, limits, modifiers, play/build/dev permissions for player groups.
+- **Open-source**. You can download source code and create similar plugins with your own features.
+
+
+## Usage
 
 ### Creating a world
 Players can create their worlds using 4 different generators:
@@ -22,11 +34,15 @@ Players can create their worlds using 4 different generators:
 
 You can change world's sizes with player's permissions in config.yml.
 
+![](https://i.imgur.com/sID0dxv.png)
+
 ### Worlds Browser
 Players can search, sort and like worlds. World can be found by name or ID. Also worlds list can be sorted by:
 - Categories (Fighting, Sandbox, Arcade...)
 - Amount of online players in world.
 - Creation time.
+
+![](https://i.imgur.com/mL6FS4o.png)
 
 ### World's settings
 Every owner of world can change in his world:
@@ -36,6 +52,8 @@ Every owner of world can change in his world:
 - ID
 - Flags
 - Icon Item
+
+![](https://i.imgur.com/iMJjFh0.png)
 
 ### Coding
 Players can create code for their worlds with coding blocks and run it.
