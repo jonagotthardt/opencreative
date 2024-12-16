@@ -27,7 +27,6 @@ import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import ua.mcchickenstudio.opencreative.utils.core.AsyncScheduler;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -275,11 +274,10 @@ public class FileUtils {
      **/
     public static File getPlotScriptFile(Plot plot) {
         File scriptFile = new File((getPlotFolder(plot)),"codeScript.yml");
-        if (scriptFile.exists()) return scriptFile;
-        else {
+        if (!scriptFile.exists()) {
             createCodeScript(getPlotFolder(plot).getPath(), plot.getWorldName());
-            return getPlotScriptFile(plot);
         }
+        return scriptFile;
     }
 
     /**

@@ -144,6 +144,12 @@
             <version>2.14.0</version>
         </dependency>
         <dependency>
+            <!-- Adds some annotations for classes -->
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.34</version>
+        </dependency>
+        <dependency>
             <!-- Addon: Adds placeholders support -->
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
@@ -169,11 +175,6 @@
             <artifactId>LibsDisguises</artifactId>
             <version>10.0.44</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.34</version>
         </dependency>
     </dependencies>
 </project>

@@ -1,4 +1,4 @@
-package ua.mcchickenstudio.opencreative.utils.core;
+package ua.mcchickenstudio.opencreative.utils.async;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

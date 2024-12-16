@@ -28,7 +28,7 @@ import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
-import static ua.mcchickenstudio.opencreative.utils.WorldUtils.isDevPlot;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlot;
 
 public class BlockChanged implements Listener {
 

@@ -9,7 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.utils.core.Pair;
+import ua.mcchickenstudio.opencreative.utils.async.Pair;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

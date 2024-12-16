@@ -33,7 +33,9 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
-import ua.mcchickenstudio.opencreative.utils.core.AsyncScheduler;
+import ua.mcchickenstudio.opencreative.utils.world.EmptyChunkGenerator;
+import ua.mcchickenstudio.opencreative.utils.world.WaterChunkGenerator;
+import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -139,30 +141,31 @@ public class PlotTerritory {
      * Saves plot's data and unloads plot's build and dev worlds into /unloadedWorlds/ directory.
      */
     public synchronized void unload() {
-        AsyncScheduler.run(() -> {
-            FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
-            FileUtils.setPlotConfigParameter(plot,"environment", plot.getTerritory().getEnvironment().name());
-            plot.getVariables().save();
-            for (Player player : plot.getPlayers()) {
-                teleportToLobby(player);
-            }
-            clearData();
-            Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () -> {
-                if (Bukkit.unloadWorld(plot.getWorldName(),autoSave)) {
-                    AsyncScheduler.run(() -> FileUtils.unloadWorldFolder(plot.getWorldName(),true));
-                    if (Bukkit.getWorld(plot.getDevPlot().getWorldName()) != null) {
-                        for (Player player : plot.getDevPlot().getWorld().getPlayers()) {
-                            teleportToLobby(player);
-                        }
-                        if (Bukkit.unloadWorld(plot.getDevPlot().getWorldName(),true)) {
-                            AsyncScheduler.run(() -> FileUtils.unloadWorldFolder(plot.getDevPlot().getWorldName(),true));
-                        }
-                    }
+        /*
+         * Currently don't use async, because
+         * it causes problems on world unloading
+         * when plugin is disabling!
+         */
+        FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
+        FileUtils.setPlotConfigParameter(plot,"environment", plot.getTerritory().getEnvironment().name());
+        plot.getVariables().save();
+        for (Player player : plot.getPlayers()) {
+            teleportToLobby(player);
+        }
+        clearData();
+        if (Bukkit.unloadWorld(plot.getWorldName(),autoSave)) {
+            FileUtils.unloadWorldFolder(plot.getWorldName(),true);
+            if (Bukkit.getWorld(plot.getDevPlot().getWorldName()) != null) {
+                for (Player player : plot.getDevPlot().getWorld().getPlayers()) {
+                    teleportToLobby(player);
                 }
-                this.world = null;
-                new PlotUnloadEvent(plot).callEvent();
-            });
-        });
+                if (Bukkit.unloadWorld(plot.getDevPlot().getWorldName(),true)) {
+                    FileUtils.unloadWorldFolder(plot.getDevPlot().getWorldName(),true);
+                }
+            }
+        }
+        this.world = null;
+        new PlotUnloadEvent(plot).callEvent();
     }
 
     public void clearData() {

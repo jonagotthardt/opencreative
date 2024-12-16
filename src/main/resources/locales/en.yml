@@ -816,207 +816,230 @@ items:
             - "&7entity spawn, transportation."
             - " "
             - "&eClick to choose category."
-        actions:
-          empty:
-            name: "&cNo actions"
-            lore:
-              - "&7No actions created for this"
-              - "&7category yet."
-          world:
-            name: "&bEnvironment Actions"
-            lore:
-              - "&7Set weather, change time,"
-              - "&7set world border."
-              - " "
-              - "&eClick to choose category."
-          entity:
-            name: "&6Entity Actions"
-            lore:
-              - "&7Summon mob, create lightning,"
-              - "&7show particle, explode."
-              - " "
-              - "&eClick to choose category."
-          blocks:
-            name: "&aBlock Manipulation"
-            lore:
-              - "&7Set block type, copy blocks,"
-              - "&7check block type."
-              - " "
-              - "&eClick to choose category."
-          other:
-            name: "&3Variable Operations"
-            lore:
-              - "&7Change variable value"
-              - "&7to specified or random."
-              - " "
-              - "&eClick to choose category."
-          list_operations:
-            name: "&fLists"
-            lore:
-              - "&7Contain many values."
-              - " "
-              - "&eClick to choose category."
-          vector_operations:
-            name: "&bVectors"
-            lore:
-              - "&7Add to vector, multiply,"
-              - "&7find distance between vectors."
-              - " "
-              - "&eClick to choose category."
-          text_operations:
-            name: "&6Text Manipulation"
-            lore:
-              - "&7Trim text, combine it,"
-              - "&7remove colors or split."
-              - " "
-              - "&eClick to choose category."
-          item_operations:
-            name: "&cItem Editing"
-            lore:
-              - "&7Change name, description,"
-              - "&7durability, and quantity."
-              - " "
-              - "&eClick to choose category."
-          number_operations:
-            name: "&aNumber Operations"
-            lore:
-              - "&7Add, multiply, divide"
-              - "&7and other math operations."
-              - " "
-              - "&eClick to choose category."
-          map_operations:
-            name: "&6Dictionaries"
-            lore:
-              - "&7Create dictionary, set"
-              - "&7value, get value by key."
-              - " "
-              - "&eClick to choose category."
-          location_operations:
-            name: "&fLocation"
-            lore:
-              - "&7Set location coordinates,"
-              - "&7get them, find distance."
-              - " "
-              - "&eClick to choose category."
-          lines:
-            name: "&5Code Lines"
-            lore:
-              - "&7Throw error, interrupt"
-              - "&7execution and wait."
-              - " "
-              - "&eClick to choose category."
-          communication:
-            name: "&6Communication"
-            lore:
-              - "&7Send message, display,"
-              - "&7title, or play sound."
-              - " "
-              - "&eClick to choose category."
-          movement:
-            name: "&cMovement"
-            lore:
-              - "&7Teleport player, throw"
-              - "&7them in a direction."
-              - " "
-              - "&eClick to choose category."
-          events:
-            name: "&cEvents"
-            lore:
-              - "&7Cancel event or"
-              - "&7resume event."
-              - " "
-              - "&eClick to choose category."
-          inventory:
-            name: "&6Inventory"
-            lore:
-              - "&7Clear inventory, give"
-              - "&7items or change them."
-              - " "
-              - "&eClick to choose category."
-          params:
-            name: "&7Player Parameters"
-            lore:
-              - "&7Set health, give"
-              - "&7effect, set experience level."
-              - " "
-              - "&eClick to choose category."
-          state:
-            name: "&ePlayer State"
-            lore:
-              - "&7Set game mode, flying mode,"
-              - "&7and glowing."
-              - " "
-              - "&eClick to choose category."
-          appearance:
-            name: "&6Appearance"
-            lore:
-              - "&7Change time or weather only"
-              - "&7for player, hide players,"
-              - "&7set world border, resource pack."
-              - " "
-              - "&eClick to choose category."
-        conditions:
-          no-conditions:
-            name: "&cNo conditions"
-            lore:
-              - "&7No conditions created for this"
-              - "&7category yet."
-          list_operations:
-            name: "&fLists"
-            lore:
-              - "&7Does list contain value,"
-              - "&7is list empty."
-              - " "
-              - "&eClick to choose category."
-          text_operations:
-            name: "&6Text"
-            lore:
-              - "&7Does text contain, start with,"
-              - "&7end with text."
-              - " "
-              - "&eClick to choose category."
-          inventory:
-            name: "&6Inventory"
-            lore:
-              - "&7Has item, is inventory full,"
-              - "&7wearing armor."
-              - " "
-              - "&eClick to choose category."
-          movement:
-            name: "&aBlocks"
-            lore:
-              - "&7Is on block, nearby,"
-              - "&7looking at block."
-              - " "
-              - "&eClick to choose category."
-          state:
-            name: "&eState"
-            lore:
-              - "&7Liked world, flying,"
-              - "&7game mode set."
-              - " "
-              - "&eClick to choose category."
-          params:
-            name: "&6Parameters"
-            lore:
-              - "&7Is nickname equal, is"
-              - "&7chat message equal."
-              - " "
-              - "&eClick to choose category."
-          other:
-            name: "&fMiscellaneous"
-            lore:
-              - "&7Are values equal, does"
-              - "&7variable exist, is it not empty."
-              - " "
-              - "&eClick to choose category."
-          number_operations:
-            name: "&aNumber Comparison"
-            lore:
-              - "&7Greater or equal, less or equal,"
-              - "&7in number range."
-              - " "
-              - "&eClick to choose category."
+      actions:
+        empty:
+          name: "&cNo actions"
+          lore:
+            - "&7No actions created for this"
+            - "&7category yet."
+        previous-page:
+          name: " "
+          lore:
+            - " &6← &eBack..."
+            - ""
+            - "&7  Click to show"
+            - "&7  previous actions."
+            - ""
+        next-page:
+          name: " "
+          lore:
+            - "&e Next... &6→"
+            - ""
+            - "&7  Click to show"
+            - "&7  more actions."
+            - ""
+        world:
+          name: "&bEnvironment Actions"
+          lore:
+            - "&7Set weather, change time,"
+            - "&7set world border."
+            - " "
+            - "&eClick to choose category."
+        entity:
+          name: "&6Entity Actions"
+          lore:
+            - "&7Summon mob, create lightning,"
+            - "&7show particle, explode."
+            - " "
+            - "&eClick to choose category."
+        blocks:
+          name: "&aBlock Manipulation"
+          lore:
+            - "&7Set block type, copy blocks,"
+            - "&7check block type."
+            - " "
+            - "&eClick to choose category."
+        other:
+          name: "&3Variable Operations"
+          lore:
+            - "&7Change variable value"
+            - "&7to specified or random."
+            - " "
+            - "&eClick to choose category."
+        list_operations:
+          name: "&fLists"
+          lore:
+            - "&7Contain many values."
+            - " "
+            - "&eClick to choose category."
+        vector_operations:
+          name: "&bVectors"
+          lore:
+            - "&7Add to vector, multiply,"
+            - "&7find distance between vectors."
+            - " "
+            - "&eClick to choose category."
+        text_operations:
+          name: "&6Text Manipulation"
+          lore:
+            - "&7Trim text, combine it,"
+            - "&7remove colors or split."
+            - " "
+            - "&eClick to choose category."
+        item_operations:
+          name: "&cItem Editing"
+          lore:
+            - "&7Change name, description,"
+            - "&7durability, and quantity."
+            - " "
+            - "&eClick to choose category."
+        number_operations:
+          name: "&aNumber Operations"
+          lore:
+            - "&7Add, multiply, divide"
+            - "&7and other math operations."
+            - " "
+            - "&eClick to choose category."
+        map_operations:
+          name: "&6Dictionaries"
+          lore:
+            - "&7Create dictionary, set"
+            - "&7value, get value by key."
+            - " "
+            - "&eClick to choose category."
+        location_operations:
+          name: "&fLocation"
+          lore:
+            - "&7Set location coordinates,"
+            - "&7get them, find distance."
+            - " "
+            - "&eClick to choose category."
+        lines:
+          name: "&5Code Lines"
+          lore:
+            - "&7Throw error, interrupt"
+            - "&7execution and wait."
+            - " "
+            - "&eClick to choose category."
+        communication:
+          name: "&6Communication"
+          lore:
+            - "&7Send message, display,"
+            - "&7title, or play sound."
+            - " "
+            - "&eClick to choose category."
+        movement:
+          name: "&cMovement"
+          lore:
+            - "&7Teleport player, throw"
+            - "&7them in a direction."
+            - " "
+            - "&eClick to choose category."
+        events:
+          name: "&cEvents"
+          lore:
+            - "&7Cancel event or"
+            - "&7resume event."
+            - " "
+            - "&eClick to choose category."
+        inventory:
+          name: "&6Inventory"
+          lore:
+            - "&7Clear inventory, give"
+            - "&7items or change them."
+            - " "
+            - "&eClick to choose category."
+        params:
+          name: "&7Player Parameters"
+          lore:
+            - "&7Set health, give"
+            - "&7effect, set experience level."
+            - " "
+            - "&eClick to choose category."
+        state:
+          name: "&ePlayer State"
+          lore:
+            - "&7Set game mode, flying mode,"
+            - "&7and glowing."
+            - " "
+            - "&eClick to choose category."
+        appearance:
+          name: "&6Appearance"
+          lore:
+            - "&7Change time or weather only"
+            - "&7for player, hide players,"
+            - "&7set world border, resource pack."
+            - " "
+            - "&eClick to choose category."
+      conditions:
+        no-conditions:
+          name: "&cNo conditions"
+          lore:
+            - "&7No conditions created for this"
+            - "&7category yet."
+        list_operations:
+          name: "&fLists"
+          lore:
+            - "&7Does list contain value,"
+            - "&7is list empty."
+            - " "
+            - "&eClick to choose category."
+        text_operations:
+          name: "&6Text"
+          lore:
+            - "&7Does text contain, start with,"
+            - "&7end with text."
+            - " "
+            - "&eClick to choose category."
+        inventory:
+          name: "&6Inventory"
+          lore:
+            - "&7Has item, is inventory full,"
+            - "&7wearing armor."
+            - " "
+            - "&eClick to choose category."
+        appearance:
+          name: "&6Appearance"
+          lore:
+            - "&7Has resource pack, can see"
+            - "&7player, has scoreboard."
+            - " "
+            - "&eClick to choose category."
+        movement:
+          name: "&aBlocks"
+          lore:
+            - "&7Is on block, nearby,"
+            - "&7looking at block."
+            - " "
+            - "&eClick to choose category."
+        state:
+          name: "&eState"
+          lore:
+            - "&7Liked world, flying,"
+            - "&7game mode set."
+            - " "
+            - "&eClick to choose category."
+        params:
+          name: "&6Parameters"
+          lore:
+            - "&7Is nickname equal, is"
+            - "&7chat message equal."
+            - " "
+            - "&eClick to choose category."
+        other:
+          name: "&fMiscellaneous"
+          lore:
+            - "&7Are values equal, does"
+            - "&7variable exist, is it not empty."
+            - " "
+            - "&eClick to choose category."
+        number_operations:
+          name: "&aNumber Comparison"
+          lore:
+            - "&7Greater or equal, less or equal,"
+            - "&7in number range."
+            - " "
+            - "&eClick to choose category."
     events:
       cancellable: "&c⌀ Can be cancelled"
       function:

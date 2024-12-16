@@ -1,4 +1,4 @@
-package ua.mcchickenstudio.opencreative.utils.core;
+package ua.mcchickenstudio.opencreative.utils.async;
 
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
@@ -9,9 +9,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.BlockA
 public class Ticker {
     public static void runTicker() {
         Bukkit.getScheduler().runTaskTimerAsynchronously(OpenCreative.getPlugin(), () -> {
-            AsyncScheduler.run(() -> {
-                BlockActionCoverage.tick();
-            });
+            AsyncScheduler.run(BlockActionCoverage::tick);
         }, 1L, 1L);
     }
 }

@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.utils;
 import org.bukkit.attribute.Attribute;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.settings.Settings;
-import ua.mcchickenstudio.opencreative.utils.core.AsyncScheduler;
+import ua.mcchickenstudio.opencreative.utils.async.AsyncScheduler;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.ProtocolLibUtils;
 import net.kyori.adventure.text.Component;
@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.WorldUtils.isDevPlot;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlot;
 
 public class PlayerUtils {
 
@@ -106,8 +106,7 @@ public class PlayerUtils {
 
         World lobbyWorld = getLobbyWorld();
         if (lobbyWorld != null) {
-            Bukkit.getScheduler().runTask(OpenCreative.getPlugin(),
-                            () -> player.teleport(lobbyWorld.getSpawnLocation()));
+            player.teleport(lobbyWorld.getSpawnLocation());
         }
         clearPlayer(player);
 
@@ -192,17 +191,15 @@ public class PlayerUtils {
      * @param player player to remove permissions.
      */
     public static void clearWorldModePermissions(Player player) {
-        Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () -> {
-            PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
-            if (permissionAttachment == null) return;
-            Map<String, Boolean> permissions = permissionAttachment.getPermissions();
-            Set<Map.Entry<String, Boolean>> permissionsCopy = new HashSet<>(permissions.entrySet());
+        PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
+        if (permissionAttachment == null) return;
+        Map<String, Boolean> permissions = permissionAttachment.getPermissions();
+        Set<Map.Entry<String, Boolean>> permissionsCopy = new HashSet<>(permissions.entrySet());
 
-            for (Map.Entry<String, Boolean> entry : permissionsCopy) {
-                String key = entry.getKey();
-                permissionAttachment.unsetPermission(key);
-            }
-        });
+        for (Map.Entry<String, Boolean> entry : permissionsCopy) {
+            String key = entry.getKey();
+            permissionAttachment.unsetPermission(key);
+        }
     }
 
     /**

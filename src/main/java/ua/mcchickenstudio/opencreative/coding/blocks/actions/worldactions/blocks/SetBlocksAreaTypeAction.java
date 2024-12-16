@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.BlockActionCoverage;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.utils.core.Pair;
+import ua.mcchickenstudio.opencreative.utils.async.Pair;
 
 import java.util.ArrayList;
 import java.util.List;

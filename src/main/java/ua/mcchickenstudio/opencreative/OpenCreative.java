@@ -50,7 +50,7 @@ import ua.mcchickenstudio.opencreative.menu.Menus;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
-import ua.mcchickenstudio.opencreative.utils.core.Ticker;
+import ua.mcchickenstudio.opencreative.utils.async.Ticker;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.Metrics;
 

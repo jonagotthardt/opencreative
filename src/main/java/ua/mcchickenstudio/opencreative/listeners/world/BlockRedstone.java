@@ -31,7 +31,7 @@ import ua.mcchickenstudio.opencreative.plots.PlotManager;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.sendMessageOnce;
-import static ua.mcchickenstudio.opencreative.utils.WorldUtils.isDevPlot;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlot;
 
 public class BlockRedstone implements Listener {
 

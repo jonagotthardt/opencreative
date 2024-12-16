@@ -1,29 +1,37 @@
-package ua.mcchickenstudio.opencreative.utils.core;
+package ua.mcchickenstudio.opencreative.utils.async;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.extern.java.Log;
+import ua.mcchickenstudio.opencreative.utils.ErrorUtils;
 
 import java.lang.reflect.Field;
 import java.util.concurrent.*;
 import java.util.function.Function;
-@Log
-public class AsyncScheduler{
+
+/**
+ * <h1>AsyncScheduler</h1>
+ * This class represents a scheduler, that executes
+ * runnables by asynchronous way.
+ * @author kireikosasha
+ * @since 5.0
+ */
+public class AsyncScheduler {
 
     private static final char INNER_CLASS_SEPARATOR_CHAR = '$';
-    public static int STOP_WATCH_TIME_MILLIS = 500;
+    private static final int STOP_WATCH_TIME_MILLIS = 500;
+
     @Getter
     private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(32,
-        new ThreadFactoryBuilder().setNameFormat("Schedule Libs Thread %d").build());
+        new ThreadFactoryBuilder().setNameFormat("opencreative-schedule-%d").build());
+
     public static void shutdown() {
         TryIgnore.ignore(() -> scheduler.shutdownNow());
     }
 
-    private AsyncScheduler() {
-        
-    }
+    private AsyncScheduler() {}
+
     public static Future<?> run(Runnable runnable) {
         return scheduler.submit(new DecoratedRunnable(runnable));
     }
@@ -64,22 +72,20 @@ public class AsyncScheduler{
             long start = System.currentTimeMillis();
             try {
                 decoratedRunnable.run();
-            } catch (Throwable e) {
-                log.severe("Error during execution of asynchronous task " + AsyncScheduler.toString(originalRunnable));
-                e.printStackTrace();
-                if (e instanceof InterruptedException)
-                    throw e;
-
+            } catch (Throwable throwable) {
+                ErrorUtils.sendCriticalErrorMessage("Asynchronous task error " + AsyncScheduler.toString(originalRunnable),new Exception(throwable));
             } finally {
                 long after = System.currentTimeMillis() - start;
                 if (after > STOP_WATCH_TIME_MILLIS) {
-                    log.warning("Busy task " + AsyncScheduler.toString(originalRunnable) + ", it was performed " + after + "ms.");
+                    ErrorUtils.sendCriticalErrorMessage("Asynchronous task took longer time (" + after + " ms) than expected. " + AsyncScheduler.toString(originalRunnable));
                 }
             }
         }
     }
+
     @ToString
     public static class DecoratedCallable<T> implements Callable<T> {
+
         @Setter
         private static Function<Callable<?>, Callable<?>> hotfixDecorator = callable -> callable;
 
@@ -97,14 +103,13 @@ public class AsyncScheduler{
             long start = System.currentTimeMillis();
             try {
                 return decoratedCallable.call();
-            } catch (Throwable e) {
-                log.severe("Error while accepting to call method: " + AsyncScheduler.toString(originalCallable));
-                e.printStackTrace();
-                throw e;
+            } catch (Throwable throwable) {
+                ErrorUtils.sendCriticalErrorMessage("Asynchronous task error " + AsyncScheduler.toString(decoratedCallable),new Exception(throwable));
+                throw throwable;
             } finally {
                 long after = System.currentTimeMillis() - start;
                 if (after > STOP_WATCH_TIME_MILLIS) {
-                    log.warning("Долгая задача " + AsyncScheduler.toString(originalCallable) + ", она выполнялась " + after + "ms.");
+                    ErrorUtils.sendCriticalErrorMessage("Asynchronous task took longer time (" + after + " ms) than expected. " + AsyncScheduler.toString(decoratedCallable));
                 }
             }
         }
@@ -113,15 +118,12 @@ public class AsyncScheduler{
         if (object == null) {
             return "null";
         }
-
         Class<?> clazz = object.getClass();
         StringBuilder sb = new StringBuilder(clazz.getSimpleName() + "{");
-
         Field[] fields = clazz.getDeclaredFields();
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
             field.setAccessible(true);
-
             try {
                 if (field.getName().indexOf(INNER_CLASS_SEPARATOR_CHAR) != -1) {
                     sb.append(field.getName()).append("=");
@@ -131,7 +133,6 @@ public class AsyncScheduler{
             } catch (IllegalAccessException e) {
                 sb.append(field.getName()).append("=<access denied>");
             }
-
             if (i < fields.length - 1) {
                 sb.append(", ");
             }
