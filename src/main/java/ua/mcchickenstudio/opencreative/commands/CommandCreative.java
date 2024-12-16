@@ -18,17 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.commands;
 
-import ua.mcchickenstudio.opencreative.coding.test.LegacyConvertor;
-import ua.mcchickenstudio.opencreative.coding.test.PlayerToEntityConvertor;
 import ua.mcchickenstudio.opencreative.menu.CreativeMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsPickerMenu;
 import ua.mcchickenstudio.opencreative.plots.DevPlot;
 import ua.mcchickenstudio.opencreative.plots.Plot;
 import ua.mcchickenstudio.opencreative.plots.PlotManager;
-import ua.mcchickenstudio.opencreative.settings.Settings;
-import ua.mcchickenstudio.opencreative.utils.MessageUtils;
-import ua.mcchickenstudio.opencreative.utils.WorldUtils;
+import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.*;

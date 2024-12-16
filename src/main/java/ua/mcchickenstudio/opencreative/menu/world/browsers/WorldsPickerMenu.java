@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.menu.world.browsers;
 import ua.mcchickenstudio.opencreative.plots.Plot;
 import ua.mcchickenstudio.opencreative.plots.PlotManager;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
-import ua.mcchickenstudio.opencreative.utils.WorldUtils;
+import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

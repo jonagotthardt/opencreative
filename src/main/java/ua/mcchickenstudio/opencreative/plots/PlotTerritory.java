@@ -33,6 +33,9 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
+import ua.mcchickenstudio.opencreative.utils.world.EmptyChunkGenerator;
+import ua.mcchickenstudio.opencreative.utils.world.WaterChunkGenerator;
+import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -138,6 +141,11 @@ public class PlotTerritory {
      * Saves plot's data and unloads plot's build and dev worlds into /unloadedWorlds/ directory.
      */
     public synchronized void unload() {
+        /*
+         * Currently don't use async, because
+         * it causes problems on world unloading
+         * when plugin is disabling!
+         */
         FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
         FileUtils.setPlotConfigParameter(plot,"environment", plot.getTerritory().getEnvironment().name());
         plot.getVariables().save();

@@ -21,9 +21,8 @@ package ua.mcchickenstudio.opencreative.plots;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
-import ua.mcchickenstudio.opencreative.utils.DevPlotChunkGenerator;
+import ua.mcchickenstudio.opencreative.utils.world.DevPlotChunkGenerator;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
-import net.kyori.adventure.util.TriState;
 import org.bukkit.*;
 
 import org.bukkit.block.Biome;

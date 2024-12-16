@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.utils;
 import org.bukkit.attribute.Attribute;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.settings.Settings;
+import ua.mcchickenstudio.opencreative.utils.async.AsyncScheduler;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.ProtocolLibUtils;
 import net.kyori.adventure.text.Component;
@@ -38,10 +39,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.WorldUtils.isDevPlot;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlot;
 
 public class PlayerUtils {
 
@@ -189,8 +191,8 @@ public class PlayerUtils {
      * @param player player to remove permissions.
      */
     public static void clearWorldModePermissions(Player player) {
-
         PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
+        if (permissionAttachment == null) return;
         Map<String, Boolean> permissions = permissionAttachment.getPermissions();
         Set<Map.Entry<String, Boolean>> permissionsCopy = new HashSet<>(permissions.entrySet());
 
@@ -198,7 +200,6 @@ public class PlayerUtils {
             String key = entry.getKey();
             permissionAttachment.unsetPermission(key);
         }
-
     }
 
     /**
@@ -208,26 +209,25 @@ public class PlayerUtils {
     public static void translateBlockSign(Block block) {
         if (!block.getType().toString().contains("SIGN")) return;
         Sign sign = (Sign) block.getState();
-        List<Component> newLines = new ArrayList<>();
-        for (Component line : sign.lines()) {
-            String content = ((TextComponent) line).content();
-            String path = "blocks." + content;
-            if (content.isEmpty()) {
-                newLines.add(Component.text(""));
-            } else if (!messageExists(path)) {
-                newLines.add(Component.text(content));
-            } else {
-                newLines.add(toComponent(getLocaleMessage(path,false)));
+        AsyncScheduler.run(() -> {
+            List<Component> newLines = new ArrayList<>();
+            for (Component line : sign.lines()) {
+                String content = ((TextComponent) line).content();
+                String path = "blocks." + content;
+                if (content.isEmpty()) {
+                    newLines.add(Component.text(""));
+                } else if (!messageExists(path)) {
+                    newLines.add(Component.text(content));
+                } else {
+                    newLines.add(toComponent(getLocaleMessage(path,false)));
+                }
             }
-        }
-        new BukkitRunnable() {
-            @Override
-            public void run() {
+            AsyncScheduler.later(() -> {
                 for (Player player : block.getLocation().getWorld().getPlayers()) {
                     player.sendSignChange(block.getLocation(), newLines);
                 }
-            }
-        }.runTaskLater(OpenCreative.getPlugin(),2L);
+            }, 100, TimeUnit.MILLISECONDS);
+        });
     }
 
     /**

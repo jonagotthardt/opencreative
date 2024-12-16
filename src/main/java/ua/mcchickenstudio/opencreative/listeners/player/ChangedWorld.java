@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.listeners.player;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.commands.CreativeChat;
 
 import ua.mcchickenstudio.opencreative.events.plot.PlotDisconnectPlayerEvent;
 import ua.mcchickenstudio.opencreative.plots.PlotFlags;
@@ -35,13 +34,12 @@ import ua.mcchickenstudio.opencreative.plots.Plot;
 import ua.mcchickenstudio.opencreative.plots.PlotManager;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import org.bukkit.scheduler.BukkitRunnable;
-import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.WorldUtils.isDevPlot;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlot;
 
 public class ChangedWorld implements Listener {
 

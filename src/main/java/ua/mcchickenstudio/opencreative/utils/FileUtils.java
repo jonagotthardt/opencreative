@@ -274,11 +274,10 @@ public class FileUtils {
      **/
     public static File getPlotScriptFile(Plot plot) {
         File scriptFile = new File((getPlotFolder(plot)),"codeScript.yml");
-        if (scriptFile.exists()) return scriptFile;
-        else {
+        if (!scriptFile.exists()) {
             createCodeScript(getPlotFolder(plot).getPath(), plot.getWorldName());
-            return getPlotScriptFile(plot);
         }
+        return scriptFile;
     }
 
     /**
@@ -672,4 +671,5 @@ public class FileUtils {
             return null;
         }
     }
+
 }
