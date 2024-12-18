@@ -65,6 +65,8 @@
 #    /creative unload [ID] - Unloads specified world.
 #    /creative maintenance - Maintenance mode settings (start, end).
 #    /creative creative-chat - Creative Chat settings (on, off)
+#    /creative template [folder] - Creates a new world from Minecraft
+#                                  save in plugins/OpenCreative/templates
 #
 
 #
@@ -106,7 +108,7 @@ allowed-links:
 
 messages:
   locale: en # Supported: en, ru - Для русского языка: ru
-  branding: "<white>Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+"
+  branding: "<white>Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+" # Branding uses minimessage (https://webui.advntr.dev/)
   prefix: "&6 Worlds &8| &f"
   cc-prefix: "&6 Creative Chat &8| &7"
   cc-chat: "%cc-prefix%&7%player%&7: %message%" # You can use PAPI placeholders here
