@@ -37,12 +37,12 @@ public class CatchErrorAction extends HandlerAction {
 
     @Override
     protected void execute(Entity entity) {
-        VariableLink link = getArguments().getVariableLink("variable",this);
+        /*VariableLink link = getArguments().getVariableLink("variable",this);
         try {
             executeActions();
         } catch (Exception error) {
             setVarValue(link,error.getClass().getSimpleName().toLowerCase());
-        }
+        }*/
     }
 
     @Override

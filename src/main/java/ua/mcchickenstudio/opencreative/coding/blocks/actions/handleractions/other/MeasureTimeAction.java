@@ -36,10 +36,10 @@ public class MeasureTimeAction extends HandlerAction {
 
     @Override
     protected void execute(Entity entity) {
-        VariableLink link = getArguments().getVariableLink("variable",this);
+        /*VariableLink link = getArguments().getVariableLink("variable",this);
         long time = System.currentTimeMillis();
         executeActions();
-        setVarValue(link,System.currentTimeMillis()-time);
+        setVarValue(link,System.currentTimeMillis()-time);*/
     }
 
     @Override

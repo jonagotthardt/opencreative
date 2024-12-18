@@ -57,8 +57,8 @@ public abstract class RepeatAction extends MultiAction {
 
     @Override
     public void executeActions() {
-        super.executeActions();
-        increaseCalls();
+        //super.executeActions();
+        //increaseCalls();
     }
 
     public void increaseCalls() {
