@@ -24,7 +24,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
@@ -37,7 +37,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalError
  */
 public class Groups {
 
-    private final Set<Group> groups = new HashSet<>();
+    private final Set<Group> groups = new LinkedHashSet<>();
 
     public void load() {
         groups.clear();

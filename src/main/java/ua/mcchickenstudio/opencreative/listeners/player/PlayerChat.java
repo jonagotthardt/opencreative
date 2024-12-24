@@ -50,6 +50,7 @@ import java.util.*;
 import static ua.mcchickenstudio.opencreative.utils.ColorUtils.parseRGB;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlot;
@@ -60,55 +61,59 @@ public class PlayerChat implements Listener {
 
     @EventHandler
     public void onChat(PlayerChatEvent event) {
-        Player player = event.getPlayer();
-        if (event.getMessage().startsWith("!")) {
+        try {
+            Player player = event.getPlayer();
+            if (event.getMessage().startsWith("!")) {
+                if (event.isCancelled()) return;
+                player.performCommand("cc " + event.getMessage().replaceFirst("!",""));
+                event.setCancelled(true);
+                return;
+            } else {
+                EventRaiser.raiseChatEvent(event.getPlayer(), event);
+            }
+            checkDevItems(player,event.getMessage());
+            checkConfirmation(player,event.getMessage());
             if (event.isCancelled()) return;
-            player.performCommand("cc " + event.getMessage().replaceFirst("!",""));
             event.setCancelled(true);
-            return;
-        } else {
-            EventRaiser.raiseChatEvent(event.getPlayer(), event);
-        }
-        checkDevItems(player,event.getMessage());
-        checkConfirmation(player,event.getMessage());
-        if (event.isCancelled()) return;
-        event.setCancelled(true);
-        if (getCooldown(player, CooldownUtils.CooldownType.WORLD_CHAT) > 0) {
-            player.sendMessage(getLocaleMessage("world.chat-cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.WORLD_CHAT))));
-        } else {
-            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getChatCooldown(), CooldownUtils.CooldownType.WORLD_CHAT);
-            String message = ChatColor.translateAlternateColorCodes('&',parsePAPI(player, OpenCreative.getPlugin().getConfig().getString("messages.world-chat")).replace("%player%",player.getName()).replace("%message%",event.getMessage()));
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            WorldChatEvent creativeEvent = new WorldChatEvent(player,event.getMessage(),message,player.getWorld(),plot);
-            creativeEvent.callEvent();
-            if (creativeEvent.isCancelled()) return;
-            message = creativeEvent.getFormattedMessage();
-            if (plot != null) {
-                DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-                if (devPlot != null) {
-                    // If player in dev world
-                    for (Player p : devPlot.getWorld().getPlayers()) {
-                        p.sendMessage(message);
-                    }
-                    for (Player p : plot.getTerritory().getWorld().getPlayers()) {
-                        if (plot.getWorldPlayers().canDevelop(p)) {
+            if (getCooldown(player, CooldownUtils.CooldownType.WORLD_CHAT) > 0) {
+                player.sendMessage(getLocaleMessage("world.chat-cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.WORLD_CHAT))));
+            } else {
+                setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getChatCooldown(), CooldownUtils.CooldownType.WORLD_CHAT);
+                String message = ChatColor.translateAlternateColorCodes('&',parsePAPI(player, OpenCreative.getPlugin().getConfig().getString("messages.world-chat")).replace("%player%",player.getName()).replace("%message%",event.getMessage()));
+                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                WorldChatEvent creativeEvent = new WorldChatEvent(player,event.getMessage(),message,player.getWorld(),plot);
+                creativeEvent.callEvent();
+                if (creativeEvent.isCancelled()) return;
+                message = creativeEvent.getFormattedMessage();
+                if (plot != null) {
+                    DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
+                    if (devPlot != null) {
+                        // If player in dev world
+                        for (Player p : devPlot.getWorld().getPlayers()) {
+                            p.sendMessage(message);
+                        }
+                        for (Player p : plot.getTerritory().getWorld().getPlayers()) {
+                            if (plot.getWorldPlayers().canDevelop(p)) {
+                                p.sendMessage(message);
+                            }
+                        }
+                    } else {
+                        // If player in build world
+                        for (Player p : plot.getPlayers()) {
                             p.sendMessage(message);
                         }
                     }
                 } else {
-                    // If player in build world
-                    for (Player p : plot.getPlayers()) {
+                    for (Player p : player.getWorld().getPlayers()) {
                         p.sendMessage(message);
                     }
                 }
-            } else {
-                for (Player p : player.getWorld().getPlayers()) {
-                    p.sendMessage(message);
-                }
+                OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: "+player.getWorld().getName()+"] "+player.getName()+": "+event.getMessage());
             }
-            OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: "+player.getWorld().getName()+"] "+player.getName()+": "+event.getMessage());
+        } catch (Exception error) {
+            event.setCancelled(true);
+            sendPlayerErrorMessage(event.getPlayer(),"Can't handle chat message: " + event.getMessage(),error);
         }
-
     }
 
     private void checkDevItems(Player player, String message) {
