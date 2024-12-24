@@ -23,7 +23,6 @@ Minecraft plugin for PaperMC servers that allows players to create their worlds.
 - **Player Ranks**. Change world size, cooldowns, limits, modifiers, play/build/dev permissions for player groups.
 - **Open-source**. You can download source code and create similar plugins with your own features.
 
-
 ## Usage
 
 ### Creating a world
