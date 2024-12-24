@@ -56,6 +56,7 @@ import ua.mcchickenstudio.opencreative.utils.hooks.Metrics;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -75,7 +76,7 @@ public final class OpenCreative extends JavaPlugin {
     private static Settings settings;
     private static Economy economy;
 
-    private static final String version = "5.0 Candidate 2";
+    private static final String version = "5.0 Candidate 3";
     private static final String codename = "Things will be different";
 
     /**
@@ -136,6 +137,11 @@ public final class OpenCreative extends JavaPlugin {
         getLogger().info(" ");
         getLogger().info("  Running on " + Bukkit.getMinecraftVersion() + " server");
         getLogger().info("  Current time " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()));
+        if (isChristmas()) {
+            getLogger().info("  Ho-ho-ho! Merry Christmas, server owners! :-) ❆");
+        } else if (isHalloween()) {
+            getLogger().info("  Spo-o-o-oky Halloween, server owners! O_o 🎃");
+        }
         getLogger().info(" ");
         getLogger().info("  " + codename);
         getLogger().info("  Made by McChicken Studio 2017-2024");
@@ -286,6 +292,34 @@ public final class OpenCreative extends JavaPlugin {
      */
     public static String getCodename() {
         return codename;
+    }
+
+    /**
+     * Checks if it's Christmas on plugin launch.
+     * @return true - it's Christmas, false - not.
+     */
+    private static boolean isChristmas() {
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            return calendar.get(Calendar.MONTH) == Calendar.DECEMBER && calendar.get(Calendar.DAY_OF_MONTH) == 25;
+        } catch (Exception error) {
+            return false;
+        }
+    }
+
+    /**
+     * Checks if it's Halloween on plugin launch.
+     * @return true - it's Halloween, false - not.
+     */
+    private static boolean isHalloween() {
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            return calendar.get(Calendar.MONTH) == Calendar.OCTOBER && calendar.get(Calendar.DAY_OF_MONTH) == 31;
+        } catch (Exception error) {
+            return false;
+        }
     }
 
 
