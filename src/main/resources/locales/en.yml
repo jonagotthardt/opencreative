@@ -697,6 +697,31 @@ items:
         - "&7> If the player's game mode is set"
         - " "
         - "&fCategory: &6Condition"
+    condition-world:
+      name: "&cWorld Condition"
+      lore:
+        - "&7Checks world parameters,"
+        - "&7blocks and executes code"
+        - "&7between pistons."
+        - " "
+        - "&fExamples:"
+        - "&7> If block is solid"
+        - "&7> If block is water"
+        - "&7> If world is opened"
+        - " "
+        - "&fCategory: &6Conditions"
+    condition-entity:
+      name: "&cEntity Condition"
+      lore:
+        - "&7Checks entity state and"
+        - "&7executes code in pistons."
+        - " "
+        - "&fExamples:"
+        - "&7> If entity is player"
+        - "&7> If entity is dead"
+        - "&7> If entity is under rain"
+        - " "
+        - "&fCategory: &6Conditions"
     condition-var:
       name: "&9Variable Condition"
       lore:
@@ -719,6 +744,22 @@ items:
         - "&7> Set a variable's value"
         - "&7> Increment a value by one"
         - "&7> Delete a variable"
+        - " "
+        - "&fCategory: &cAction"
+    action-selection:
+      name: "&dSelect Target"
+      lore:
+        - "&7Used for changing current"
+        - "&7targets that are used for"
+        - "&7actions with &dSelection&7."
+        - " "
+        - "&7It can set, add or remove"
+        - "&7targets by conditions."
+        - " "
+        - "&fExamples:"
+        - "&7> Select entities with name"
+        - "&7> Select entities by type"
+        - "&7> Select players with variable"
         - " "
         - "&fCategory: &cAction"
     categories:
@@ -2921,7 +2962,7 @@ items:
           - ""
           - "&fIn the chest:"
           - "&c Item(s) &7- Items to set"
-          - " in the hotbar"
+          - "&7 in the hotbar"
           - "&3 Option &7- Replace empty"
           - "&7 slots with air"
           - ""
@@ -3963,7 +4004,6 @@ items:
             choices:
               false: "Set"
               true: "Add"
-
       player-clear-potion-effects:
         name: "&fClear potion effects"
         lore:
@@ -3976,7 +4016,26 @@ items:
           - "&d Potion(s) &7- Potion effects"
           - " "
           - "&eClick to set action."
-
+      player-give-potion-effects:
+        name: "&9Give potion effects"
+        lore:
+          - "&7It will give all effects"
+          - "&7that potions have."
+          - " "
+          - "&fIn chest:"
+          - "&d Potion(s) &7- Potion effects"
+          - " "
+          - "&eClick to set action."
+      player-remove-potion-effects:
+        name: "&3Remove potion effects"
+        lore:
+          - "&7It will remove all effects"
+          - "&7that potions have from player."
+          - " "
+          - "&fIn chest:"
+          - "&d Potion(s) &7- Potion effects"
+          - " "
+          - "&eClick to set action."
       player-set-flying-fall-damage:
         name: "&fEnable fall damage while flying"
         lore:
@@ -8706,7 +8765,7 @@ blocks:
   player_item_break: "Broke an item"
   player_killed_player: "Killed a player"
   player_damage_player: "Hit a player"
-  
+
   world_play_mode: "&aPlay mode"
   world_variable_transfer: "Value receive"
   world_web_response: "Web response"
@@ -8960,4 +9019,3 @@ time:
   minutes: "min"
   seconds: "sec"
   less-second: "less than a second"
-

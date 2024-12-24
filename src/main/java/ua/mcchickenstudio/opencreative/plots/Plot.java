@@ -308,27 +308,23 @@ public class Plot {
         String ownerGroup = "default";
         Mode mode = Mode.BUILD;
         Sharing sharing = Sharing.PRIVATE;
-        if (config != null) {
-            if (config.getString("owner") != null) {
-                owner = config.getString("owner");
-            } else {
-                corrupted = true;
-            }
-            if (config.getString("owner-group") != null) {
-                ownerGroup = config.getString("owner-group");
-            }
-            if (config.getString("mode") != null) {
-                try {
-                    mode = Mode.valueOf(config.getString("mode"));
-                } catch (Exception ignored) {}
-            }
-            if (config.getString("sharing") != null) {
-                try {
-                    sharing = Sharing.valueOf(config.getString("sharing"));
-                } catch (Exception ignored) {}
-            }
+        if (config.getString("owner") != null) {
+            owner = config.getString("owner");
         } else {
             corrupted = true;
+        }
+        if (config.getString("owner-group") != null) {
+            ownerGroup = config.getString("owner-group");
+        }
+        if (config.getString("mode") != null) {
+            try {
+                mode = Mode.valueOf(config.getString("mode"));
+            } catch (Exception ignored) {}
+        }
+        if (config.getString("sharing") != null) {
+            try {
+                sharing = Sharing.valueOf(config.getString("sharing"));
+            } catch (Exception ignored) {}
         }
         if (corrupted) {
             sendCriticalErrorMessage("Plot " + getWorldName() + " lost it's config file, please check plot files in /unloadedWorlds/" + getWorldName());
