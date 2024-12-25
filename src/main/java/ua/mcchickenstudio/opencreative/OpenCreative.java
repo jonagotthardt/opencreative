@@ -76,7 +76,7 @@ public final class OpenCreative extends JavaPlugin {
     private static Settings settings;
     private static Economy economy;
 
-    private static final String version = "5.0 Candidate 3";
+    private static final String version = "5.0 Candidate 4";
     private static final String codename = "Things will be different";
 
     /**
