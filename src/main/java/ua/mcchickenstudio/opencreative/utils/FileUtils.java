@@ -332,7 +332,9 @@ public class FileUtils {
         if (serverDirectoryFiles != null) {
             for (File file : serverDirectoryFiles) {
                 if (file.getName().startsWith("plot")) {
-                    file.renameTo(new File(file.getParent() + File.separator + file.getName().replace("plot","planet")));
+                    File newFile = new File(file.getParent() + File.separator + file.getName().replace("plot","planet"));
+                    file.renameTo(newFile);
+                    file = newFile;
                 }
                 if (file.isDirectory() && file.getName().startsWith("planet")) worldsFolders.add(file);
             }
@@ -354,8 +356,9 @@ public class FileUtils {
                 }
                 for (File file : unloadedWorlds) {
                     if (file.getName().startsWith("plot")) {
-                        file.renameTo(new File(file.getParent() + File.separator + file.getName().replace("plot","planet")));
-                    }
+                        File newFile = new File(file.getParent() + File.separator + file.getName().replace("plot","planet"));
+                        file.renameTo(newFile);
+                        file = newFile;                    }
                     if (file.isDirectory() && file.getName().startsWith("planet")) {
                         worldsFolders.add(file);
                     }

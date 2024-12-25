@@ -37,6 +37,7 @@ import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -292,6 +293,10 @@ public class CodingBlockParser {
                 PersistentDataContainer container = itemMeta.getPersistentDataContainer();
                 String variableType = container.get(getCodingVariableTypeKey(), PersistentDataType.STRING);
                 if (variableType == null) break;
+                if (variableType.startsWith("PLOT")) {
+                    variableType = variableType.replace("PLOT","PLANET");
+                    ItemUtils.setPersistentData(item,getCodingVariableTypeKey(),variableType);
+                }
                 EventValues.Variable type;
                 Map<String, String> valueMap = new HashMap<>();
                 try {
