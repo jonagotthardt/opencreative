@@ -18,6 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.listeners.entity;
 
+import org.bukkit.World;
+import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.plots.PlotFlags;
 import org.bukkit.entity.Player;
@@ -42,7 +45,17 @@ public class EntityDamage implements Listener {
                 if (plot.getMode() == Plot.Mode.BUILD) {
                     event.setCancelled(true);
                     if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
-                        victim.teleport(victim.getWorld().getSpawnLocation().add(0,0.5,0));
+                        BukkitRunnable runnable = new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                if (plot.isLoaded() && plot.getTerritory().getWorld().equals(victim.getWorld()) && plot.getMode() == Plot.Mode.BUILD) {
+                                    victim.teleport(victim.getWorld().getSpawnLocation().add(0,0.5,0));
+                                }
+                                plot.getTerritory().removeBukkitRunnable(this);
+                            }
+                        };
+                        plot.getTerritory().addBukkitRunnable(runnable);
+                        runnable.runTaskLater(OpenCreative.getPlugin(),1L);
                     }
                 }
                 if (PlotManager.getInstance().getDevPlot(victim) != null) {

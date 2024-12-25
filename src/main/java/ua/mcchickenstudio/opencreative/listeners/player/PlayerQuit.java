@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
+import org.bukkit.GameMode;
 import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
@@ -52,6 +53,7 @@ public class PlayerQuit implements Listener {
                 plot.getTerritory().unload();
             }
         }
+        player.setGameMode(GameMode.ADVENTURE);
         teleportToLobby(player);
 
         PlayerChat.confirmation.remove(player);
