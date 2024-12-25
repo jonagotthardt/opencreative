@@ -19,7 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.events.world.other;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class WebResponseEvent extends WorldEvent {
 
@@ -27,8 +27,8 @@ public class WebResponseEvent extends WorldEvent {
     private final int code;
     private final String response;
 
-    public WebResponseEvent(Plot plot, String url, int code, String response) {
-        super(plot);
+    public WebResponseEvent(Planet planet, String url, int code, String response) {
+        super(planet);
         this.url = url;
         this.code = code;
         this.response = response;

@@ -18,7 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.listeners.world;
 
-import ua.mcchickenstudio.opencreative.plots.*;
+import ua.mcchickenstudio.opencreative.planets.*;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
@@ -28,16 +28,16 @@ import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
-import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlot;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 
 public class BlockChanged implements Listener {
 
     @EventHandler
     public void onBlockChanged(BlockFadeEvent event) {
         World world = event.getBlock().getWorld();
-        Plot plot = PlotManager.getInstance().getPlotByWorld(world);
-        if (plot != null) {
-            if (plot.getFlagValue(PlotFlags.PlotFlag.BLOCK_CHANGING) == 2) {
+        Planet planet = PlanetManager.getInstance().getPlanetByWorld(world);
+        if (planet != null) {
+            if (planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_CHANGING) == 2) {
                 event.setCancelled(true);
             }
         }
@@ -46,19 +46,19 @@ public class BlockChanged implements Listener {
     @EventHandler
     public void onBlockChanged(BlockFormEvent event) {
         World world = event.getBlock().getWorld();
-        if (isDevPlot(world)) {
-            DevPlot devPlot = PlotManager.getInstance().getDevPlot(world);
-            if (devPlot != null) {
-                DevPlatform platform = devPlot.getPlatformInLocation(event.getBlock().getLocation());
+        if (isDevPlanet(world)) {
+            DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(world);
+            if (devPlanet != null) {
+                DevPlatform platform = devPlanet.getPlatformInLocation(event.getBlock().getLocation());
                 if (platform == null) return;
                 if (platform.getEventMaterial() == event.getBlock().getRelative(BlockFace.DOWN).getType() || platform.getActionMaterial() == event.getBlock().getRelative(BlockFace.DOWN).getType()) {
                     event.setCancelled(true);
                 }
             }
         } else {
-            Plot plot = PlotManager.getInstance().getPlotByWorld(world);
-            if (plot != null) {
-                if (plot.getFlagValue(PlotFlags.PlotFlag.BLOCK_CHANGING) == 2) {
+            Planet planet = PlanetManager.getInstance().getPlanetByWorld(world);
+            if (planet != null) {
+                if (planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_CHANGING) == 2) {
                     event.setCancelled(true);
                 }
             }
@@ -70,13 +70,13 @@ public class BlockChanged implements Listener {
     @EventHandler
     public void onEntityExplosion(EntityExplodeEvent event) {
         World world = event.getLocation().getWorld();
-        Plot plot = PlotManager.getInstance().getPlotByWorld(world);
-        if (plot != null) {
-            if (plot.getFlagValue(PlotFlags.PlotFlag.BLOCK_EXPLOSION) == 2) {
+        Planet planet = PlanetManager.getInstance().getPlanetByWorld(world);
+        if (planet != null) {
+            if (planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_EXPLOSION) == 2) {
                 event.blockList().clear();
             }
         }
-        if (isDevPlot(world)) {
+        if (isDevPlanet(world)) {
             event.blockList().clear();
         }
     }
@@ -84,13 +84,13 @@ public class BlockChanged implements Listener {
     @EventHandler
     public void onBlockExplosion(BlockExplodeEvent event) {
         World world = event.getBlock().getLocation().getWorld();
-        Plot plot = PlotManager.getInstance().getPlotByWorld(world);
-        if (plot != null) {
-            if (plot.getFlagValue(PlotFlags.PlotFlag.BLOCK_EXPLOSION) == 2) {
+        Planet planet = PlanetManager.getInstance().getPlanetByWorld(world);
+        if (planet != null) {
+            if (planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_EXPLOSION) == 2) {
                 event.blockList().clear();
             }
         }
-        if (isDevPlot(world)) {
+        if (isDevPlanet(world)) {
             event.blockList().clear();
         }
     }

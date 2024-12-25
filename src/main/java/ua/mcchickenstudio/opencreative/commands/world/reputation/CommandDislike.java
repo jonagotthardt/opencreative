@@ -19,8 +19,8 @@
 package ua.mcchickenstudio.opencreative.commands.world.reputation;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
@@ -36,8 +36,8 @@ public class CommandDislike implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot == null) {
+            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            if (planet == null) {
                 player.sendMessage(MessageUtils.getLocaleMessage("only-in-world"));
                 return true;
             }
@@ -46,13 +46,13 @@ public class CommandDislike implements CommandExecutor {
                 return true;
             }
             CooldownUtils.setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
-            if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.LIKED).contains(sender.getName())) {
+            if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.LIKED).contains(sender.getName())) {
                 sender.sendMessage(MessageUtils.getLocaleMessage("world.already-rated"));
-            } else if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DISLIKED).contains(sender.getName())) {
+            } else if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.DISLIKED).contains(sender.getName())) {
                 sender.sendMessage(MessageUtils.getLocaleMessage("world.already-rated"));
             } else {
-                if (FileUtils.addPlayerInPlotList(plot,sender.getName(), Plot.PlayersType.DISLIKED)) {
-                    plot.getInformation().setPlotReputation(plot.getInformation().getReputation() -1);
+                if (FileUtils.addPlayerInPlanetList(planet,sender.getName(), Planet.PlayersType.DISLIKED)) {
+                    planet.getInformation().setPlanetReputation(planet.getInformation().getReputation() -1);
                     player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,0.7f);
                     sender.sendMessage(MessageUtils.getLocaleMessage("world.disliked",player));
                 }

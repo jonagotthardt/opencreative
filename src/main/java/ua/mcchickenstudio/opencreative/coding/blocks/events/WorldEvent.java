@@ -18,8 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events;
 
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
@@ -31,7 +31,7 @@ import java.util.List;
 
 /**
  * <h1>WorldEvent</h1>
- * This class represents event in Creative's plot.
+ * This class represents event in Creative's planet.
  */
 public abstract class WorldEvent extends Event  {
 
@@ -40,14 +40,14 @@ public abstract class WorldEvent extends Event  {
     protected boolean cancelled = false;
     protected final World world;
 
-    public WorldEvent(Plot plot, List<Entity> selection) {
+    public WorldEvent(Planet planet, List<Entity> selection) {
         this.selection = selection;
-        world = plot.getTerritory().getWorld();
+        world = planet.getTerritory().getWorld();
     }
 
-    public WorldEvent(Plot plot) {
-        this.selection.addAll(plot.getTerritory().getWorld().getPlayers());
-        world = plot.getTerritory().getWorld();
+    public WorldEvent(Planet planet) {
+        this.selection.addAll(planet.getTerritory().getWorld().getPlayers());
+        world = planet.getTerritory().getWorld();
     }
 
     public WorldEvent(Entity entity) {
@@ -71,9 +71,9 @@ public abstract class WorldEvent extends Event  {
         return world;
     }
 
-    public Plot getPlot() {
+    public Planet getPlanet() {
         if (getWorld() == null) return null;
-        return PlotManager.getInstance().getPlotByWorld(getWorld());
+        return PlanetManager.getInstance().getPlanetByWorld(getWorld());
     }
 
     public static HandlerList getHandlerList() {

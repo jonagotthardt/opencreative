@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.variables;
 import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
@@ -49,11 +49,11 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  */
 public class WorldVariables {
 
-    private final Plot plot;
+    private final Planet planet;
     private final Set<WorldVariable> variables = new HashSet<>();
 
-    public WorldVariables(Plot plot) {
-        this.plot = plot;
+    public WorldVariables(Planet planet) {
+        this.planet = planet;
     }
 
     public Set<WorldVariable> getSet() {
@@ -87,50 +87,50 @@ public class WorldVariables {
         WorldVariable variable = getVariable(link,action);
         String valueString = value.toString().substring(0, Math.min(20, value.toString().length()));
         if (variable != null) {
-            if (variable.getSize() + getTotalVariablesAmount() > plot.getLimits().getVariablesAmountLimit()) {
-                sendCodingDebugLog(getPlot(), "Reached limit of " + plot.getLimits().getVariablesAmountLimit() + " variables.");
+            if (variable.getSize() + getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
+                sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
                 return;
             }
             variable.setType(type);
             variable.setValue(value);
         } else {
-            if (getTotalVariablesAmount() > plot.getLimits().getVariablesAmountLimit()) {
-                sendCodingDebugLog(getPlot(), "Reached limit of " + plot.getLimits().getVariablesAmountLimit() + " variables.");
+            if (getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
+                sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
                 return;
             }
             WorldVariable newVariable = new WorldVariable(parseEntity(link.getName(),action.getHandler(),action), link.getVariableType(), type, value, handler);
-            if (newVariable.getSize() + getTotalVariablesAmount() > plot.getLimits().getVariablesAmountLimit()) {
-                sendCodingDebugLog(getPlot(), "Reached limit of " + plot.getLimits().getVariablesAmountLimit() + " variables.");
+            if (newVariable.getSize() + getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
+                sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
                 return;
             }
             variables.add(newVariable);
         }
-        sendCodingDebugLog(getPlot(),getLocaleMessage("plot-code-debug.variable." + (variable == null ? "created" : "set"),false).replace("%variable%", parseEntity(link.getName(),action.getHandler(),action)).replace("%value%",valueString));
+        sendCodingDebugLog(getPlanet(),getLocaleMessage("planet-code-debug.variable." + (variable == null ? "created" : "set"),false).replace("%variable%", parseEntity(link.getName(),action.getHandler(),action)).replace("%value%",valueString));
     }
 
     public boolean setVariableValue(VariableLink link, ValueType type, Object value) {
         WorldVariable variable = getVariable(link.getName(),link.getVariableType());
         String valueString = value.toString().substring(0, Math.min(20, value.toString().length()));
         if (variable != null) {
-            if (variable.getSize() + getTotalVariablesAmount() > plot.getLimits().getVariablesAmountLimit()) {
-                sendCodingDebugLog(getPlot(), "Reached limit of " + plot.getLimits().getVariablesAmountLimit() + " variables.");
+            if (variable.getSize() + getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
+                sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
                 return false;
             }
             variable.setType(type);
             variable.setValue(value);
         } else {
-            if (getTotalVariablesAmount() > plot.getLimits().getVariablesAmountLimit()) {
-                sendCodingDebugLog(getPlot(), "Reached limit of " + plot.getLimits().getVariablesAmountLimit() + " variables.");
+            if (getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
+                sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
                 return false;
             }
             WorldVariable newVariable = new WorldVariable(link.getName(), link.getVariableType(), type, value, null);
-            if (newVariable.getSize() + getTotalVariablesAmount() > plot.getLimits().getVariablesAmountLimit()) {
-                sendCodingDebugLog(getPlot(), "Reached limit of " + plot.getLimits().getVariablesAmountLimit() + " variables.");
+            if (newVariable.getSize() + getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
+                sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
                 return false;
             }
             variables.add(newVariable);
         }
-        sendCodingDebugLog(getPlot(),getLocaleMessage("plot-code-debug.variable." + (variable == null ? "created" : "set"),false).replace("%variable%", link.getName()).replace("%value%",valueString));
+        sendCodingDebugLog(getPlanet(),getLocaleMessage("planet-code-debug.variable." + (variable == null ? "created" : "set"),false).replace("%variable%", link.getName()).replace("%value%",valueString));
         return true;
     }
 
@@ -149,7 +149,7 @@ public class WorldVariables {
 
     public void load() {
         clearVariables();
-        File variablesJson = FileUtils.getPlotVariablesJson(plot);
+        File variablesJson = FileUtils.getPlanetVariablesJson(planet);
         if (variablesJson == null || variablesJson.length() <= 2) {
             return;
         }
@@ -162,7 +162,7 @@ public class WorldVariables {
                 ValueType type = ValueType.valueOf((String) jsonObject.get("type"));
                 Object value = jsonObject.get("value");
                 value = deserializeObject(value,type);
-                if (variables.size() < plot.getLimits().getVariablesAmountLimit()) {
+                if (variables.size() < planet.getLimits().getVariablesAmountLimit()) {
                     variables.add(new WorldVariable(name,VariableLink.VariableType.SAVED,type,value,null));
                 }
             }
@@ -172,7 +172,7 @@ public class WorldVariables {
     }
 
     public void save() {
-        File variablesJson = FileUtils.getPlotVariablesJson(plot);
+        File variablesJson = FileUtils.getPlanetVariablesJson(planet);
         if (variablesJson == null) {
             return;
         }
@@ -263,7 +263,7 @@ public class WorldVariables {
                 z = (Double) locationMap.get("z");
                 yaw = ((Double) locationMap.get("yaw")).floatValue();
                 pitch = ((Double) locationMap.get("pitch")).floatValue();
-                return new Location(plot.getTerritory().getWorld(),x,y,z,yaw,pitch);
+                return new Location(planet.getTerritory().getWorld(),x,y,z,yaw,pitch);
             } else if (type == ValueType.VECTOR) {
                 double x, y, z;
                 Map<?,?> vectorMap = (Map<?,?>) value;
@@ -317,8 +317,8 @@ public class WorldVariables {
         return size;
     }
 
-    public Plot getPlot() {
-        return plot;
+    public Planet getPlanet() {
+        return planet;
     }
 
     public void garbageCollector(ActionsHandler actionsHandler) {

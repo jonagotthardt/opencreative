@@ -72,7 +72,7 @@ public abstract class RepeatAction extends MultiAction {
                 calls--;
             }
         };
-        getPlot().getTerritory().addBukkitRunnable(runnable);
+        getPlanet().getTerritory().addBukkitRunnable(runnable);
         runnable.runTaskLater(OpenCreative.getPlugin(),20L);
     }
 

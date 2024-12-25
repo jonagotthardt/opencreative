@@ -19,14 +19,14 @@ not-owner: "%prefix%&cYou aren't owner of this world."
 not-builder: "%prefix%&cYou aren't builder of this world."
 only-in-world: "%prefix%&cThis can be used only in world."
 no-money: "%prefix%&cNot enough money: %money%!" #Is not used. Coming soon
-no-plot-found: "%prefix%&cThis world is not found."
-private-plot: "%prefix%This world is &6closed&f, so only owner can join it."
-blacklisted-in-plot: "%prefix%You can't join this world, because you're &6blocked&f in it."
+no-planet-found: "%prefix%&cThis world is not found."
+private-planet: "%prefix%This world is &6closed&f, so only owner can join it."
+blacklisted-in-planet: "%prefix%You can't join this world, because you're &6blocked&f in it."
 no-player-found: "%prefix%&cThis player is not found."
 same-player: "%prefix%&cYou can't type yourself."
 player-error: "&6 Error &8| &fA player error has occurred. Send this to plugin developer: &6%error%"
-plot-error: "&6 Error &8| &fA plot error has occurred. %plot%. Send this to plugin developer: &6%error%"
-plot-code-error:
+planet-error: "&6 Error &8| &fA planet error has occurred. %planet%. Send this to plugin developer: &6%error%"
+planet-code-error:
   message: "&6 Error &8| &fWhile executing code &f%event% &7-> &f%action% &7(%x%,%y%,%z%) &fan error has occured.\n &fDetails: &6%error%"
   message-event: "&6 Error &8| &fWhile executing code &f%event% &7(%x%,%y%,%z%) &fan error has occured.\n &fDetails: &6%error%"
   wrong-number: "Expected number, but item wasn't containing it. Recheck items in the chest of this action"
@@ -1066,17 +1066,17 @@ menus:
           - " "
           - "&eClick to see your worlds."
       world:
-        name: "&f%plotName%"
+        name: "&f%planetName%"
         id: "&7 ID: &a"
         lore:
-          - "&8Created by &7%plotOwner%"
+          - "&8Created by &7%planetOwner%"
           - " "
-          - "&7 %plotDescription%"
+          - "&7 %planetDescription%"
           - " "
           - "%id%" #!!! Don't add anything BEFORE and AFTER %id% !!!
-          - "&7 Reputation: &f%plotReputation%"
-          - "&7 Online: &a%plotOnline%"
-          - "&7 Category: &f%plotCategory%"
+          - "&7 Reputation: &f%planetReputation%"
+          - "&7 Online: &a%planetOnline%"
+          - "&7 Category: &f%planetCategory%"
           - " "
           - "&a▶ Click to join this world"
   own-worlds:
@@ -1101,7 +1101,7 @@ menus:
       limit:
         name: "&c&oYou reached limit of worlds!"
         lore:
-          - "&7You created &f&n%plots% worlds&7 of"
+          - "&7You created &f&n%planets% worlds&7 of"
           - "&7allowed &n%limit%&7. To create a new"
           - "&7world,&c delete&7 some useless."
       all-worlds:
@@ -1118,21 +1118,21 @@ menus:
           - " "
           - "&eClick to create."
       world:
-        name: "&f%plotName%"
+        name: "&f%planetName%"
         id: "&7 ID: &a"
         lore:
-          - "&8Created by &7%plotOwner%"
+          - "&8Created by &7%planetOwner%"
           - " "
-          - "&7 %plotDescription%"
+          - "&7 %planetDescription%"
           - " "
           - "%id%"
-          - "&7 Online: &a%plotOnline%"
-          - "&7 Category: &f%plotCategory%"
-          - "&7 Reputation: &a%plotReputation%"
-          - "&7 Uniques: &a%plotUniques%"
+          - "&7 Online: &a%planetOnline%"
+          - "&7 Category: &f%planetCategory%"
+          - "&7 Reputation: &a%planetReputation%"
+          - "&7 Uniques: &a%planetUniques%"
           - " "
-          - "&7 Last launch: &a%plotLastTime%"
-          - "&7 Created: &a%plotCreationTime%"
+          - "&7 Last launch: &a%planetLastTime%"
+          - "&7 Created: &a%planetCreationTime%"
           - " "
           - "&eLeft click &7- join the world."
           - "&eSHIFT+Right click &7- delete world."
@@ -1143,17 +1143,17 @@ menus:
     turned-off: "&7○ "
     items:
       world:
-        name: "&f%plotName%"
+        name: "&f%planetName%"
         id: "&7 ID: &a"
         lore:
-          - "&8Created by &7%plotOwner%"
+          - "&8Created by &7%planetOwner%"
           - " "
-          - "&7 %plotDescription%"
+          - "&7 %planetDescription%"
           - " "
           - "%id%"
-          - "&7 Reputation: &f%plotReputation%"
-          - "&7 Online: &a%plotOnline%"
-          - "&7 Category: &f%plotCategory%"
+          - "&7 Reputation: &f%planetReputation%"
+          - "&7 Online: &a%planetOnline%"
+          - "&7 Category: &f%planetCategory%"
           - " "
           - "&a▶ That how your world looks like"
       change-name:
@@ -1212,7 +1212,7 @@ menus:
           - "&7> &fParkour - &aAdventure"
           - " "
           - "&eClick to set."
-      plot-flags:
+      planet-flags:
         name: "&eFlags"
         lore:
           - " "
@@ -1225,7 +1225,7 @@ menus:
           - "&7> &fEnable &eplayer's invincibility"
           - " "
           - "&eClick to set."
-      plot-players:
+      planet-players:
         name: "&ePlayers Management"
         lore:
           - " "

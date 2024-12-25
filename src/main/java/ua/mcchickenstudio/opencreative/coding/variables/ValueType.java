@@ -59,7 +59,7 @@ public enum ValueType {
      */
     MAP(Material.CHEST_MINECART, Material.BROWN_STAINED_GLASS_PANE),
     /**
-     * Location stores Minecraft location in plot's world, for example: 31 4 10 -4.5 3.0. It contains X,Y,Z coordinates, yaw, pitch values.
+     * Location stores Minecraft location in planet's world, for example: 31 4 10 -4.5 3.0. It contains X,Y,Z coordinates, yaw, pitch values.
      */
     LOCATION(Material.PAPER, Material.WHITE_STAINED_GLASS_PANE),
     /**
@@ -83,7 +83,7 @@ public enum ValueType {
      */
     TEXT(Material.BOOK, Material.BROWN_STAINED_GLASS_PANE),
     /**
-     * Variable Link has name of real variable in plot. It stores value from real variable.
+     * Variable Link has name of real variable in planet. It stores value from real variable.
      */
     VARIABLE(Material.MAGMA_CREAM, Material.YELLOW_STAINED_GLASS_PANE),
     /**

@@ -21,12 +21,12 @@ package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.interacti
 import org.bukkit.event.Cancellable;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class MobInteractionExecutor extends PlayerExecutor implements Cancellable {
 
-    public MobInteractionExecutor(Plot plot, int x, int y, int z) {
-        super(plot, x, y, z);
+    public MobInteractionExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override

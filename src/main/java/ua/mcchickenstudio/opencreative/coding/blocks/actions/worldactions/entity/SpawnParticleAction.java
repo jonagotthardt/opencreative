@@ -40,7 +40,7 @@ public class SpawnParticleAction extends WorldAction {
         double offsetY = getArguments().getValue("offset-y",0.0d,this);
         double offsetZ = getArguments().getValue("offset-z",0.0d,this);
         for (Location location : getArguments().getLocationList("locations",this)) {
-            getPlot().getTerritory().getWorld().spawnParticle(particle,location,count,offsetX,offsetY,offsetZ);
+            getPlanet().getTerritory().getWorld().spawnParticle(particle,location,count,offsetX,offsetY,offsetZ);
         }
     }
 

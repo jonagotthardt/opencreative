@@ -16,50 +16,50 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.events.plot;
+package ua.mcchickenstudio.opencreative.events.planet;
 
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 
 /**
- * Called when plot's sharing mode will be changed.
+ * Called when planet's sharing mode will be changed.
  * <p>
- * If a Plot Sharing Change event is cancelled, it will not change plot's sharing.
+ * If a Planet Sharing Change event is cancelled, it will not change planet's sharing.
  * <p>
  * <b>NOTE:</b> It's not recommended to cancel event, when the {@link Cause} is WORLD,
  * because this cause is required to prevent world owner from joining the world while
  * it's being deleted.
  */
-public class PlotSharingChangeEvent extends PlotEvent implements Cancellable {
+public class PlanetSharingChangeEvent extends PlanetEvent implements Cancellable {
 
     private final Player player;
-    private final Plot.Sharing oldSharing;
-    private final Plot.Sharing newSharing;
+    private final Planet.Sharing oldSharing;
+    private final Planet.Sharing newSharing;
     private final Cause cause;
     private boolean cancel;
 
-    public PlotSharingChangeEvent(Plot plot, Plot.Sharing oldSharing, Plot.Sharing newSharing) {
-        super(plot);
+    public PlanetSharingChangeEvent(Planet planet, Planet.Sharing oldSharing, Planet.Sharing newSharing) {
+        super(planet);
         this.oldSharing = oldSharing;
         this.newSharing = newSharing;
         this.player = null;
         this.cause = Cause.WORLD;
     }
 
-    public PlotSharingChangeEvent(Plot plot, Plot.Sharing oldSharing, Plot.Sharing newSharing, Player player) {
-        super(plot);
+    public PlanetSharingChangeEvent(Planet planet, Planet.Sharing oldSharing, Planet.Sharing newSharing, Player player) {
+        super(planet);
         this.oldSharing = oldSharing;
         this.newSharing = newSharing;
         this.player = player;
         this.cause = Cause.PLAYER;
     }
 
-    public Plot.Sharing getOldSharing() {
+    public Planet.Sharing getOldSharing() {
         return oldSharing;
     }
 
-    public Plot.Sharing getNewSharing() {
+    public Planet.Sharing getNewSharing() {
         return newSharing;
     }
 

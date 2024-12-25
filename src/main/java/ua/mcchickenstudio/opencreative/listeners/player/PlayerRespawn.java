@@ -19,7 +19,8 @@
 package ua.mcchickenstudio.opencreative.listeners.player;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -27,7 +28,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityResurrectEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import ua.mcchickenstudio.opencreative.plots.Plot;
 import org.bukkit.inventory.ItemStack;
 
 
@@ -42,10 +42,10 @@ public class PlayerRespawn implements Listener {
         event.setRespawnLocation(deathLocation);
         event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.ENTITY_PLAYER_BREATH,100,2);
         PlayerDeath.deathLocations.remove(event.getPlayer());
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
-        if (plot != null) {
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        if (planet != null) {
             EventRaiser.raisePlayerRespawnEvent(event.getPlayer(),event);
-            if (plot.isOwner(event.getPlayer())) {
+            if (planet.isOwner(event.getPlayer())) {
                 ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
                 if (!event.getPlayer().getInventory().contains(worldSettingsItem)) {
                     event.getPlayer().getInventory().setItem(8,worldSettingsItem);
@@ -56,8 +56,8 @@ public class PlayerRespawn implements Listener {
 
     @EventHandler
     public void onTotemUsing(EntityResurrectEvent event) {
-        Plot plot = PlotManager.getInstance().getPlotByWorld((event.getEntity().getWorld()));
-        if (plot != null) EventRaiser.raisePlayerTotemRespawnEvent(event.getEntity(),event);
+        Planet planet = PlanetManager.getInstance().getPlanetByWorld((event.getEntity().getWorld()));
+        if (planet != null) EventRaiser.raisePlayerTotemRespawnEvent(event.getEntity(),event);
 
     }
 }

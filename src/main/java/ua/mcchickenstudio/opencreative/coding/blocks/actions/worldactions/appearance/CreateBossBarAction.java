@@ -54,12 +54,12 @@ public class CreateBossBarAction extends WorldAction {
             color = BossBar.Color.valueOf(colorString.toUpperCase());
         } catch (IllegalArgumentException ignored) {}
 
-        if (getPlot().getTerritory().getBossBars().size() >= getPlot().getLimits().getBossBarsLimit()) {
+        if (getPlanet().getTerritory().getBossBars().size() >= getPlanet().getLimits().getBossBarsLimit()) {
             // FIXME: Replace with hard-coded message, sendMessageOnce()
-            sendCodingDebugLog(getPlot(),"Limit of " + getPlot().getLimits().getBossBarsLimit() + " boss bars reached.");
+            sendCodingDebugLog(getPlanet(),"Limit of " + getPlanet().getLimits().getBossBarsLimit() + " boss bars reached.");
             return;
         }
-        BossBar bossBar = getPlot().getTerritory().getBossBars().get(name.toLowerCase());
+        BossBar bossBar = getPlanet().getTerritory().getBossBars().get(name.toLowerCase());
         if (bossBar == null) {
             bossBar = BossBar.bossBar(Component.text(displayName), progress, color, overlay);
         } else {
@@ -68,7 +68,7 @@ public class CreateBossBarAction extends WorldAction {
             bossBar.overlay(overlay);
             bossBar.color(color);
         }
-        getPlot().getTerritory().getBossBars().put(name.toLowerCase(),bossBar);
+        getPlanet().getTerritory().getBossBars().put(name.toLowerCase(),bossBar);
     }
 
     @Override

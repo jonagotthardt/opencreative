@@ -23,12 +23,12 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.VariableTransferEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.world.WorldExecutor;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class VariableTransferExecutor extends WorldExecutor {
 
-    public VariableTransferExecutor(Plot plot, int x, int y, int z) {
-        super(plot, x, y, z);
+    public VariableTransferExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override

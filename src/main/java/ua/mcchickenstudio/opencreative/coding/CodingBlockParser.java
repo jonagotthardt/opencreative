@@ -27,48 +27,49 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.ArgumentSlot;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import ua.mcchickenstudio.opencreative.plots.DevPlatform;
+import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import ua.mcchickenstudio.opencreative.plots.DevPlot;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlotCompileErrorMessage;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetCompileErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
  * <h1>BlockParser</h1>
  * This class represents parser of coding blocks. It has methods to
- * read coding block information and save it into plot's code script.
+ * read coding block information and save it into planet's code script.
  * @see CodeScript
  */
 public class CodingBlockParser {
 
     /**
-     * Checks every coding block on coding platform in developer's plot and saves them into codeScript.yml.
-     * @param devPlot Developer's plot to check blocks.
+     * Checks every coding block on coding platform in developer's planet and saves them into codeScript.yml.
+     * @param devPlanet Developer's planet to check blocks.
      */
-    public void parseCode(DevPlot devPlot) {
+    public void parseCode(DevPlanet devPlanet) {
 
-        World world = devPlot.getWorld();
-        devPlot.getPlot().getTerritory().stopBukkitRunnables();
-        CodeScript script = devPlot.getPlot().getTerritory().getScript();
+        World world = devPlanet.getWorld();
+        devPlanet.getPlanet().getTerritory().stopBukkitRunnables();
+        CodeScript script = devPlanet.getPlanet().getTerritory().getScript();
         script.clear();
 
         List<Block> unknownBlocks = new ArrayList<>();
         // For platforms
-        for (DevPlatform platform : devPlot.getPlatforms()) {
+        for (DevPlatform platform : devPlanet.getPlatforms()) {
             // For coding executors
             for (int z = platform.getBeginZ()+4; z <= platform.getEndZ()-4; z = z+4) {
 
@@ -119,7 +120,7 @@ public class CodingBlockParser {
                                 String last = multiActions.getLast();
                                 multiActions.remove(last);
                             } else {
-                                sendPlotCompileErrorMessage(devPlot.getPlot(),world.getBlockAt(x+1,1,z),getLocaleMessage("plot-code-error.bad-piston"));
+                                sendPlanetCompileErrorMessage(devPlanet.getPlanet(),world.getBlockAt(x+1,1,z),getLocaleMessage("planet-code-error.bad-piston"));
                                 continue;
                             }
                         }
@@ -175,10 +176,10 @@ public class CodingBlockParser {
              * Warns world developer about old or unknown
              * coding blocks that were found while parsing.
              */
-            sendPlotCompileErrorMessage(devPlot.getPlot(),unknownBlocks);
+            sendPlanetCompileErrorMessage(devPlanet.getPlanet(),unknownBlocks);
         }
         if (script.saveCode()) {
-            devPlot.getPlot().getTerritory().getScript().loadCode();
+            devPlanet.getPlanet().getTerritory().getScript().loadCode();
         }
     }
 
@@ -292,6 +293,10 @@ public class CodingBlockParser {
                 PersistentDataContainer container = itemMeta.getPersistentDataContainer();
                 String variableType = container.get(getCodingVariableTypeKey(), PersistentDataType.STRING);
                 if (variableType == null) break;
+                if (variableType.startsWith("PLOT")) {
+                    variableType = variableType.replace("PLOT","PLANET");
+                    ItemUtils.setPersistentData(item,getCodingVariableTypeKey(),variableType);
+                }
                 EventValues.Variable type;
                 Map<String, String> valueMap = new HashMap<>();
                 try {

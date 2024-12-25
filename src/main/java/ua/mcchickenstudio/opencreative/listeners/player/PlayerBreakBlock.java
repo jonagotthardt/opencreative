@@ -21,8 +21,9 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
-import ua.mcchickenstudio.opencreative.plots.DevPlatform;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.planets.DevPlatform;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -34,8 +35,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import ua.mcchickenstudio.opencreative.plots.DevPlot;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.PlayerPlaceBlock.move;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getClosingBracketX;
@@ -47,9 +47,9 @@ public class PlayerBreakBlock implements Listener {
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-        if (devPlot != null) {
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+        if (devPlanet != null) {
             Block block = event.getBlock();
 
             if (player.getInventory().getItemInMainHand().getType() == Material.COMPARATOR) {
@@ -57,13 +57,13 @@ public class PlayerBreakBlock implements Listener {
                 return;
             }
 
-            DevPlatform platform = devPlot.getPlatformInLocation(block.getLocation());
+            DevPlatform platform = devPlanet.getPlatformInLocation(block.getLocation());
             if (platform == null) {
                 event.setCancelled(true);
                 return;
             }
 
-            if (devPlot.getIndestructibleBlocks().contains(block.getType())
+            if (devPlanet.getIndestructibleBlocks().contains(block.getType())
                     || block.getType() == platform.getFloorMaterial()
                     || block.getType() == platform.getEventMaterial()
                     || block.getType() == platform.getActionMaterial()) {
@@ -71,7 +71,7 @@ public class PlayerBreakBlock implements Listener {
                 event.setCancelled(true);
             }
 
-            if (devPlot.getAllCodingBlocksForPlacing().contains(block.getType())) {
+            if (devPlanet.getAllCodingBlocksForPlacing().contains(block.getType())) {
                 if (ActionCategory.getByMaterial(block.getType()) != null) {
                     destroyAdditionalBlocks(platform,block);
                     block.setType(Material.AIR);
@@ -104,8 +104,8 @@ public class PlayerBreakBlock implements Listener {
                 translateBlockSign(block, player);
 
             }
-        } else if (plot != null) {
-            if (ChangedWorld.isPlayerWithLocation(player) && !plot.getWorldPlayers().canBuild(player)) {
+        } else if (planet != null) {
+            if (ChangedWorld.isPlayerWithLocation(player) && !planet.getWorldPlayers().canBuild(player)) {
                 player.sendActionBar(getLocaleMessage("not-builder"));
                 event.setCancelled(true);
                 return;
@@ -141,8 +141,8 @@ public class PlayerBreakBlock implements Listener {
 
     @EventHandler
     public void onStartDamaging(BlockDamageEvent event) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
-        if (plot != null) EventRaiser.raiseDamageBlockEvent(event.getPlayer(),event);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        if (planet != null) EventRaiser.raiseDamageBlockEvent(event.getPlayer(),event);
     }
 
 }

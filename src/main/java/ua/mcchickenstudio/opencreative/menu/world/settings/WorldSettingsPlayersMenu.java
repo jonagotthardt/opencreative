@@ -20,8 +20,8 @@ package ua.mcchickenstudio.opencreative.menu.world.settings;
 
 import ua.mcchickenstudio.opencreative.menu.LegacyMenu;
 import ua.mcchickenstudio.opencreative.menu.buttons.RadioButton;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import org.bukkit.Bukkit;
@@ -54,7 +54,7 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
 
         Map<Integer, ItemStack> items = new HashMap<>();
 
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
 
         for (int slot : decorationSlots) {
             ItemStack decorationItem = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
@@ -64,15 +64,15 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
             items.put(slot,decorationItem);
         }
 
-        items.put(10,getPlayerButton(plot));
-        items.put(12,getFlyButton(plot));
-        items.put(13,getBuildButton(plot));
-        items.put(14,getDevButton(plot));
-        items.put(15,getKickButton(plot));
-        items.put(16,getBanButton(plot));
-        items.put(6,getTransferOwnershipButton(plot));
+        items.put(10,getPlayerButton(planet));
+        items.put(12,getFlyButton(planet));
+        items.put(13,getBuildButton(planet));
+        items.put(14,getDevButton(planet));
+        items.put(15,getKickButton(planet));
+        items.put(16,getBanButton(planet));
+        items.put(6,getTransferOwnershipButton(planet));
 
-        Set<String> playersList = plot.getWorldPlayers().getAllPlayersFromConfig();
+        Set<String> playersList = planet.getWorldPlayers().getAllPlayersFromConfig();
 
         if (playersList == null || playersList.isEmpty()) {
             ItemStack noPlayersButton = getNoPlayersButton();
@@ -89,13 +89,13 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
                 items.put(52,getNextPageButton(page));
             }
             int slot = 0;
-            for (String plotPlayer: allPages.get(pageToOpen-1)) {
+            for (String planetPlayer: allPages.get(pageToOpen-1)) {
                 Material material = Material.PLAYER_HEAD;
                 ItemStack item = new ItemStack(material);
                 ItemMeta meta = item.getItemMeta();
                 SkullMeta skullMeta = (SkullMeta) meta;
-                skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(plotPlayer));
-                skullMeta.setDisplayName(MessageUtils.getLocaleItemName("menus.world-settings-players.items.player.name").replace("%player%",plotPlayer));
+                skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(planetPlayer));
+                skullMeta.setDisplayName(MessageUtils.getLocaleItemName("menus.world-settings-players.items.player.name").replace("%player%",planetPlayer));
                 List<String> lore = new ArrayList<>();
                 for (String loreLine : MessageUtils.getLocaleItemDescription("menus.world-settings-players.items.player.lore")) {
 
@@ -104,31 +104,31 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
                     String fly = MessageUtils.getLocaleMessage("menus.world-settings-players.items.fly.choices.1");
                     String online = MessageUtils.getLocaleMessage("menus.world-settings-players.not-in-world");
 
-                    if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.BUILDERS_TRUSTED).contains(plotPlayer)) {
+                    if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.BUILDERS_TRUSTED).contains(planetPlayer)) {
                         build = MessageUtils.getLocaleMessage("menus.world-settings-players.items.build.choices.3");
-                    } else if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.BUILDERS_NOT_TRUSTED).contains(plotPlayer)) {
+                    } else if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.BUILDERS_NOT_TRUSTED).contains(planetPlayer)) {
                         build = MessageUtils.getLocaleMessage("menus.world-settings-players.items.build.choices.2");
                     }
-                    if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_TRUSTED).contains(plotPlayer)) {
+                    if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.DEVELOPERS_TRUSTED).contains(planetPlayer)) {
                         dev = MessageUtils.getLocaleMessage("menus.world-settings-players.items.dev.choices.3");
-                    } else if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED).contains(plotPlayer)) {
+                    } else if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.DEVELOPERS_NOT_TRUSTED).contains(planetPlayer)) {
                         dev = MessageUtils.getLocaleMessage("menus.world-settings-players.items.dev.choices.2");
                     }
 
-                    Player plotPlayer_ = Bukkit.getPlayer(plotPlayer);
-                    if (plotPlayer_ != null) {
-                        if (PlotManager.getInstance().getPlotByPlayer(plotPlayer_) == plot) {
+                    Player planetPlayer_ = Bukkit.getPlayer(planetPlayer);
+                    if (planetPlayer_ != null) {
+                        if (PlanetManager.getInstance().getPlanetByPlayer(planetPlayer_) == planet) {
                             online = MessageUtils.getLocaleMessage("menus.world-settings-players.in-world");
                         }
-                        if (plotPlayer_.isFlying()) fly = MessageUtils.getLocaleMessage("menus.world-settings-players.items.fly.choices.2");
+                        if (planetPlayer_.isFlying()) fly = MessageUtils.getLocaleMessage("menus.world-settings-players.items.fly.choices.2");
                     }
-                    if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_TRUSTED).contains(plotPlayer)) {
+                    if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.DEVELOPERS_TRUSTED).contains(planetPlayer)) {
                         dev = MessageUtils.getLocaleMessage("menus.world-settings-players.items.dev.choices.3");
-                    } else if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED).contains(plotPlayer)) {
+                    } else if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.DEVELOPERS_NOT_TRUSTED).contains(planetPlayer)) {
                         dev = MessageUtils.getLocaleMessage("menus.world-settings-players.items.dev.choices.2");
                     }
 
-                    lore.add(MessageUtils.parsePAPI(Bukkit.getOfflinePlayer(plotPlayer),loreLine).replace("%build%",build).replace("%dev%",dev).replace("%fly%",fly).replace("%online%",online));
+                    lore.add(MessageUtils.parsePAPI(Bukkit.getOfflinePlayer(planetPlayer),loreLine).replace("%build%",build).replace("%dev%",dev).replace("%fly%",fly).replace("%online%",online));
                 }
                 skullMeta.setLore(lore);
                 item.setItemMeta(skullMeta);
@@ -185,11 +185,11 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
         return item;
     }
 
-    public ItemStack getBanButton(Plot plot) {
+    public ItemStack getBanButton(Planet planet) {
         if (playersSelected.get(player) == null) return null;
         ItemStack item;
-        String plotPlayer = playersSelected.get(player);
-        if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.BLACKLISTED).contains(plotPlayer)) {
+        String planetPlayer = playersSelected.get(player);
+        if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.BLACKLISTED).contains(planetPlayer)) {
             item = new ItemStack(Material.STRUCTURE_VOID);
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName(MessageUtils.getLocaleItemName("menus.world-settings-players.items.unban.name"));
@@ -205,12 +205,12 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
         return item;
     }
 
-    public ItemStack getKickButton(Plot plot) {
+    public ItemStack getKickButton(Planet planet) {
         if (playersSelected.get(player) == null) return null;
         String nickname = playersSelected.get(player);
         Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
-            if (PlotManager.getInstance().getPlotByPlayer(player) == plot) {
+            if (PlanetManager.getInstance().getPlanetByPlayer(player) == planet) {
                 ItemStack item = new ItemStack(Material.STRUCTURE_VOID);
                 ItemMeta meta = item.getItemMeta();
                 meta.setDisplayName(MessageUtils.getLocaleItemName("menus.world-settings-players.items.kick.name"));
@@ -223,27 +223,27 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
 
     }
 
-    public ItemStack getTransferOwnershipButton(Plot plot) {
+    public ItemStack getTransferOwnershipButton(Planet planet) {
         if (playersSelected.get(player) == null) return null;
-        String plotPlayer = playersSelected.get(player);
-        if (Bukkit.getPlayer(plotPlayer) == null) return null;
-        if (plot.getPlayers().contains(Bukkit.getPlayer(plotPlayer))) {
-            if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.BUILDERS_TRUSTED).contains(plotPlayer)
-            && FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_TRUSTED).contains(plotPlayer)
-            && !plot.isChangingOwner()) {
+        String planetPlayer = playersSelected.get(player);
+        if (Bukkit.getPlayer(planetPlayer) == null) return null;
+        if (planet.getPlayers().contains(Bukkit.getPlayer(planetPlayer))) {
+            if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.BUILDERS_TRUSTED).contains(planetPlayer)
+            && FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.DEVELOPERS_TRUSTED).contains(planetPlayer)
+            && !planet.isChangingOwner()) {
                 return createItem(Material.ENCHANTED_GOLDEN_APPLE,1, "menus.world-settings-players.items.transfer-ownership");
             }
         }
         return null;
     }
 
-    public ItemStack getFlyButton(Plot plot) {
+    public ItemStack getFlyButton(Planet planet) {
         if (playersSelected.get(player) == null) return null;
 
         String nickname = playersSelected.get(player);
         Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
-            if (PlotManager.getInstance().getPlotByPlayer(player) == plot) {
+            if (PlanetManager.getInstance().getPlanetByPlayer(player) == planet) {
 
                 List<Runnable> actions = new ArrayList<>();
                 actions.add(() -> {
@@ -266,16 +266,16 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
         return null;
     }
 
-    public ItemStack getDevButton(Plot plot) {
+    public ItemStack getDevButton(Planet planet) {
         if (playersSelected.get(player) == null) return null;
         String nickname = playersSelected.get(player);
-        List<Runnable> actions = getRunnableList(plot, nickname);
+        List<Runnable> actions = getRunnableList(planet, nickname);
         int canDev = 1;
-        if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_GUESTS).contains(nickname)) {
+        if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.DEVELOPERS_GUESTS).contains(nickname)) {
             canDev = 2;
-        } else if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED).contains(nickname)) {
+        } else if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.DEVELOPERS_NOT_TRUSTED).contains(nickname)) {
             canDev = 3;
-        } else if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_TRUSTED).contains(nickname)) {
+        } else if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.DEVELOPERS_TRUSTED).contains(nickname)) {
             canDev = 4;
         }
 
@@ -286,38 +286,38 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
         return radioButton.getButtonItem();
     }
 
-    private List<Runnable> getRunnableList(Plot plot, String nickname) {
+    private List<Runnable> getRunnableList(Planet planet, String nickname) {
         List<Runnable> actions = new ArrayList<>();
         actions.add(() -> {
             player.sendMessage(MessageUtils.getLocaleMessage("world.players.developers.removed").replace("%player%", nickname));
-            plot.getWorldPlayers().removeDeveloper(nickname);
+            planet.getWorldPlayers().removeDeveloper(nickname);
         });
         actions.add(() -> {
             player.sendMessage(MessageUtils.getLocaleMessage("world.players.developers.guest").replace("%player%", nickname));
-            plot.getWorldPlayers().addDeveloperGuest(nickname);
+            planet.getWorldPlayers().addDeveloperGuest(nickname);
         });
         actions.add(() -> {
             player.sendMessage(MessageUtils.getLocaleMessage("world.players.developers.added").replace("%player%", nickname));
-            plot.getWorldPlayers().addDeveloper(nickname, false);
+            planet.getWorldPlayers().addDeveloper(nickname, false);
         });
         actions.add(() -> {
             player.sendMessage(MessageUtils.getLocaleMessage("world.players.developers.trusted").replace("%player%", nickname));
-            plot.getWorldPlayers().addDeveloper(nickname, true);
+            planet.getWorldPlayers().addDeveloper(nickname, true);
         });
         return actions;
     }
 
-    public ItemStack getBuildButton(Plot plot) {
+    public ItemStack getBuildButton(Planet planet) {
         if (playersSelected.get(player) == null) return null;
 
         String nickname = playersSelected.get(player);
 
-        List<Runnable> actions = getRunnables(plot, nickname);
+        List<Runnable> actions = getRunnables(planet, nickname);
 
         int canBuild = 1;
-        if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.BUILDERS_NOT_TRUSTED).contains(nickname)) {
+        if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.BUILDERS_NOT_TRUSTED).contains(nickname)) {
             canBuild = 2;
-        } else if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.BUILDERS_TRUSTED).contains(nickname)) {
+        } else if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.BUILDERS_TRUSTED).contains(nickname)) {
             canBuild = 3;
         }
 
@@ -328,31 +328,31 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
         return radioButton.getButtonItem();
     }
 
-    private List<Runnable> getRunnables(Plot plot, String nickname) {
+    private List<Runnable> getRunnables(Planet planet, String nickname) {
         List<Runnable> actions = new ArrayList<>();
         actions.add(() -> {
             player.sendMessage(MessageUtils.getLocaleMessage("world.players.builders.removed").replace("%player%", nickname));
-            plot.getWorldPlayers().removeBuilder(nickname);
+            planet.getWorldPlayers().removeBuilder(nickname);
         });
         actions.add(() -> {
             player.sendMessage(MessageUtils.getLocaleMessage("world.players.builders.added").replace("%player%", nickname));
-            plot.getWorldPlayers().addBuilder(nickname, false);
+            planet.getWorldPlayers().addBuilder(nickname, false);
         });
         actions.add(() -> {
             player.sendMessage(MessageUtils.getLocaleMessage("world.players.builders.trusted").replace("%player%", nickname));
-            plot.getWorldPlayers().addBuilder(nickname, true);
+            planet.getWorldPlayers().addBuilder(nickname, true);
         });
         return actions;
     }
 
-    public ItemStack getPlayerButton(Plot plot) {
+    public ItemStack getPlayerButton(Planet planet) {
         if (playersSelected.get(player) == null) return null;
-        String plotPlayer = playersSelected.get(player);
+        String planetPlayer = playersSelected.get(player);
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
         ItemMeta meta = item.getItemMeta();
         SkullMeta skullMeta = (SkullMeta) meta;
-        skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(plotPlayer));
-        skullMeta.setDisplayName(MessageUtils.getLocaleItemName("menus.world-settings-players.items.selected-player.name").replace("%player%",plotPlayer));
+        skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(planetPlayer));
+        skullMeta.setDisplayName(MessageUtils.getLocaleItemName("menus.world-settings-players.items.selected-player.name").replace("%player%",planetPlayer));
 
         List<String> lore = new ArrayList<>();
         for (String loreLine : MessageUtils.getLocaleItemDescription("menus.world-settings-players.items.player.lore")) {
@@ -362,31 +362,31 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
             String fly = MessageUtils.getLocaleMessage("menus.world-settings-players.items.fly.choices.1");
             String online = MessageUtils.getLocaleMessage("menus.world-settings-players.not-in-world");
 
-            if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.BUILDERS_TRUSTED).contains(plotPlayer)) {
+            if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.BUILDERS_TRUSTED).contains(planetPlayer)) {
                 build = MessageUtils.getLocaleMessage("menus.world-settings-players.items.build.choices.3");
-            } else if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.BUILDERS_NOT_TRUSTED).contains(plotPlayer)) {
+            } else if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.BUILDERS_NOT_TRUSTED).contains(planetPlayer)) {
                 build = MessageUtils.getLocaleMessage("menus.world-settings-players.items.build.choices.2");
             }
-            if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_TRUSTED).contains(plotPlayer)) {
+            if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.DEVELOPERS_TRUSTED).contains(planetPlayer)) {
                 dev = MessageUtils.getLocaleMessage("menus.world-settings-players.items.dev.choices.3");
-            } else if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED).contains(plotPlayer)) {
+            } else if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.DEVELOPERS_NOT_TRUSTED).contains(planetPlayer)) {
                 dev = MessageUtils.getLocaleMessage("menus.world-settings-players.items.dev.choices.2");
             }
 
-            Player plotPlayer_ = Bukkit.getPlayer(plotPlayer);
-            if (plotPlayer_ != null) {
-                if (PlotManager.getInstance().getPlotByPlayer(plotPlayer_) == plot) {
+            Player planetPlayer_ = Bukkit.getPlayer(planetPlayer);
+            if (planetPlayer_ != null) {
+                if (PlanetManager.getInstance().getPlanetByPlayer(planetPlayer_) == planet) {
                     online = MessageUtils.getLocaleMessage("menus.world-settings-players.in-world");
                 }
-                if (plotPlayer_.isFlying()) fly = MessageUtils.getLocaleMessage("menus.world-settings-players.items.fly.choices.2");
+                if (planetPlayer_.isFlying()) fly = MessageUtils.getLocaleMessage("menus.world-settings-players.items.fly.choices.2");
             }
-            if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_TRUSTED).contains(plotPlayer)) {
+            if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.DEVELOPERS_TRUSTED).contains(planetPlayer)) {
                 dev = MessageUtils.getLocaleMessage("menus.world-settings-players.items.dev.choices.3");
-            } else if (FileUtils.getPlayersFromPlotList(plot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED).contains(plotPlayer)) {
+            } else if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.DEVELOPERS_NOT_TRUSTED).contains(planetPlayer)) {
                 dev = MessageUtils.getLocaleMessage("menus.world-settings-players.items.dev.choices.2");
             }
 
-            lore.add(MessageUtils.parsePAPI(Bukkit.getOfflinePlayer(plotPlayer),loreLine).replace("%build%",build).replace("%dev%",dev).replace("%fly%",fly).replace("%online%",online));
+            lore.add(MessageUtils.parsePAPI(Bukkit.getOfflinePlayer(planetPlayer),loreLine).replace("%build%",build).replace("%dev%",dev).replace("%fly%",fly).replace("%online%",online));
         }
 
         skullMeta.setLore(lore);

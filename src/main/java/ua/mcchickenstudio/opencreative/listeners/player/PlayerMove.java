@@ -22,7 +22,8 @@ import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -34,11 +35,10 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
-import ua.mcchickenstudio.opencreative.plots.Plot;
 import org.bukkit.util.Vector;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlot;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
 
 
 public class PlayerMove implements Listener {
@@ -46,7 +46,7 @@ public class PlayerMove implements Listener {
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        if (player.getY() < 0 && isEntityInDevPlot(player)) {
+        if (player.getY() < 0 && isEntityInDevPlanet(player)) {
             player.setVelocity(new Vector(0,0.6f * Math.ceil(Math.abs(player.getY())),0));
             if (player.getLocation().clone().toCenterLocation().add(0,1.5d,1).getBlock().isSolid()) {
                 player.teleport(player.getLocation().clone().toCenterLocation().add(0,2.5,1));
@@ -54,7 +54,7 @@ public class PlayerMove implements Listener {
         }
         if (isBlockChanged(event.getFrom(),event.getTo())) {
             EventRaiser.raiseMoveEvent(event.getPlayer(),event);
-            if (isEntityInDevPlot(player)) {
+            if (isEntityInDevPlanet(player)) {
                 if (player.getY() >= 0 && player.getY() <= 4) {
                     int radius = 10;
                     int minX = player.getLocation().getBlockX()-radius;
@@ -83,8 +83,8 @@ public class PlayerMove implements Listener {
 
     @EventHandler
     public void onJump(PlayerJumpEvent event) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
-        if (plot != null) EventRaiser.raiseJumpEvent(event.getPlayer(),event);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        if (planet != null) EventRaiser.raiseJumpEvent(event.getPlayer(),event);
     }
 
     @EventHandler
@@ -98,9 +98,9 @@ public class PlayerMove implements Listener {
 
     @EventHandler
     public void onFlying(PlayerToggleFlightEvent event) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
 
-        if (plot != null) {
+        if (planet != null) {
             if (event.isFlying())  EventRaiser.raiseStartFlyingEvent(event.getPlayer(),event);
             else  EventRaiser.raiseStopFlyingEvent(event.getPlayer(),event);
         }
@@ -108,8 +108,8 @@ public class PlayerMove implements Listener {
 
     @EventHandler
     public void onSprinting(PlayerToggleSprintEvent event) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
-        if (plot != null) {
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        if (planet != null) {
             if (event.isSprinting())  EventRaiser.raiseStartRunningEvent(event.getPlayer(),event);
             else  EventRaiser.raiseStopRunningEvent(event.getPlayer(),event);
         }
@@ -117,16 +117,16 @@ public class PlayerMove implements Listener {
 
     @EventHandler
     public void onChunkLoad(PlayerChunkLoadEvent event) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
-        if (plot != null) {
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        if (planet != null) {
             EventRaiser.raiseChunkLoadEvent(event);
         }
     }
 
     @EventHandler
     public void onChunkUnload(PlayerChunkUnloadEvent event) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
-        if (plot != null) {
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        if (planet != null) {
             EventRaiser.raiseChunkUnloadEvent(event);
         }
     }

@@ -38,9 +38,9 @@ public class HasWorldPermissionCondition extends PlayerCondition {
     public boolean checkPlayer(Player player) {
         String permission = getArguments().getValue("permission","owner",this);
         return switch (permission.toLowerCase()) {
-            case "owner" -> (getPlot().isOwner(player));
-            case "build" -> (getPlot().getWorldPlayers().canBuild(player));
-            case "develop" -> (getPlot().getWorldPlayers().canDevelop(player));
+            case "owner" -> (getPlanet().isOwner(player));
+            case "build" -> (getPlanet().getWorldPlayers().canBuild(player));
+            case "develop" -> (getPlanet().getWorldPlayers().canDevelop(player));
             default -> false;
         };
     }

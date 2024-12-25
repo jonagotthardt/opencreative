@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.menu.world.settings;
 
-import ua.mcchickenstudio.opencreative.events.plot.PlotSharingChangeEvent;
+import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
 import ua.mcchickenstudio.opencreative.listeners.player.PlayerChat;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menu.buttons.ParameterButton;
 import ua.mcchickenstudio.opencreative.menu.world.WorldDeleteMobsMenu;
 import ua.mcchickenstudio.opencreative.menu.world.WorldEnvironmentMenu;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotFlags;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import net.kyori.adventure.title.Title;
 import org.bukkit.ChatColor;
@@ -45,15 +45,15 @@ import java.util.List;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlot;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
 
 public class WorldSettingsMenu extends AbstractMenu {
 
-    private final Plot plot;
+    private final Planet planet;
     private final Player player;
 
-    private final ItemStack playersControl = createItem(Material.PLAYER_HEAD,1,"menus.world-settings.items.plot-players");
-    private final ItemStack parameters = createItem(Material.COMPARATOR,1,"menus.world-settings.items.plot-flags");
+    private final ItemStack playersControl = createItem(Material.PLAYER_HEAD,1,"menus.world-settings.items.planet-players");
+    private final ItemStack parameters = createItem(Material.COMPARATOR,1,"menus.world-settings.items.planet-flags");
     private final ItemStack name = createItem(Material.BIRCH_SIGN,1,"menus.world-settings.items.change-name");
     private final ItemStack description = createItem(Material.WRITABLE_BOOK,1,"menus.world-settings.items.change-description");
     private final ItemStack category = createItem(Material.NAME_TAG,1,"menus.world-settings.items.change-category");
@@ -73,19 +73,19 @@ public class WorldSettingsMenu extends AbstractMenu {
     private ItemStack worldIcon;
     private final ItemStack advertise = createItem(Material.BEACON,1,"menus.world-settings.items.advertisement");
 
-    public WorldSettingsMenu(Plot plot, Player player) {
+    public WorldSettingsMenu(Planet planet, Player player) {
         super((byte) 6, getLocaleMessage("menus.world-settings.title",false));
-        this.plot = plot;
+        this.planet = planet;
         this.player = player;
-        worldIcon = getPlotIcon();
-        access = new ParameterButton(plot.getSharing().name().toLowerCase(), List.of("public","private"),"access","menus.world-settings","menus.world-settings.items.change-sharing",List.of(Material.SPRUCE_DOOR,Material.IRON_DOOR));
-        Boolean isTimeChanging = plot.getTerritory().getWorld().getGameRuleValue(GameRule.DO_DAYLIGHT_CYCLE);
-        long currentTime = plot.getTerritory().getWorld().getTime();
+        worldIcon = getPlanetIcon();
+        access = new ParameterButton(planet.getSharing().name().toLowerCase(), List.of("public","private"),"access","menus.world-settings","menus.world-settings.items.change-sharing",List.of(Material.SPRUCE_DOOR,Material.IRON_DOOR));
+        Boolean isTimeChanging = planet.getTerritory().getWorld().getGameRuleValue(GameRule.DO_DAYLIGHT_CYCLE);
+        long currentTime = planet.getTerritory().getWorld().getTime();
         boolean isNight = currentTime >= 15000L && currentTime <= 23000;
         boolean isEvening = currentTime >= 12500 && currentTime < 15000;
         int timeValue = (isTimeChanging != null && isTimeChanging ? 4 : isNight ? 3 : isEvening ? 2 : 1);
         time = new ParameterButton(timeValue, List.of(1,2,3,4),"time","menus.world-settings","menus.world-settings.items.time",Material.CLOCK);
-        autoSave = new ParameterButton(plot.getTerritory().getWorld().isAutoSave(), List.of(true,false),"autosave","menus.world-settings","menus.world-settings.items.autosave",List.of(Material.CHEST_MINECART,Material.TNT_MINECART));
+        autoSave = new ParameterButton(planet.getTerritory().getWorld().isAutoSave(), List.of(true,false),"autosave","menus.world-settings","menus.world-settings.items.autosave",List.of(Material.CHEST_MINECART,Material.TNT_MINECART));
 
     }
 
@@ -119,19 +119,19 @@ public class WorldSettingsMenu extends AbstractMenu {
         setItem((byte) 53, DECORATION_PANE_ITEM);
     }
 
-    public ItemStack getPlotIcon() {
-        ItemStack item = createItem(plot.getSharing() == Plot.Sharing.PUBLIC ? plot.getInformation().getMaterial() : Material.BARRIER,1);
+    public ItemStack getPlanetIcon() {
+        ItemStack item = createItem(planet.getSharing() == Planet.Sharing.PUBLIC ? planet.getInformation().getMaterial() : Material.BARRIER,1);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(MessageUtils.getLocaleItemName("menus.world-settings.items.world.name").replace("%plotName%", plot.getInformation().getDisplayName()));
+        meta.setDisplayName(MessageUtils.getLocaleItemName("menus.world-settings.items.world.name").replace("%planetName%", planet.getInformation().getDisplayName()));
         List<String> lore = new ArrayList<>();
         for (String loreLine : MessageUtils.getLocaleItemDescription("menus.world-settings.items.world.lore")) {
-            if (loreLine.contains("%plotDescription%")) {
-                String[] newLines = plot.getInformation().getDescription().split("\\\\n");
+            if (loreLine.contains("%planetDescription%")) {
+                String[] newLines = planet.getInformation().getDescription().split("\\\\n");
                 for (String newLine : newLines) {
-                    lore.add(loreLine.replace("%plotDescription%", ChatColor.translateAlternateColorCodes('&',newLine)));
+                    lore.add(loreLine.replace("%planetDescription%", ChatColor.translateAlternateColorCodes('&',newLine)));
                 }
             } else {
-                lore.add(MessageUtils.parsePlotLines(plot,loreLine));
+                lore.add(MessageUtils.parsePlanetLines(planet,loreLine));
             }
         }
         meta.setLore(lore);
@@ -180,7 +180,7 @@ public class WorldSettingsMenu extends AbstractMenu {
                 PlayerChat.confirmation.put(player, "id");
             }
         } else if (itemEquals(currentItem,spawn)) {
-            if (isEntityInDevPlot(player)) {
+            if (isEntityInDevPlanet(player)) {
                 player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 100, 0.3f);
                 return;
             }
@@ -203,7 +203,7 @@ public class WorldSettingsMenu extends AbstractMenu {
         } else if (itemEquals(currentItem,parameters)) {
             new WorldSettingsFlagsMenu().open(player);
         } else if (itemEquals(currentItem,environment)) {
-            new WorldEnvironmentMenu(player, plot.getDevPlot()).open(player);
+            new WorldEnvironmentMenu(player, planet.getDevPlanet()).open(player);
         } else if (itemEquals(currentItem,advertise)) {
             player.performCommand("ad");
             player.closeInventory();
@@ -220,24 +220,24 @@ public class WorldSettingsMenu extends AbstractMenu {
             setItem((byte) event.getRawSlot(),access.getItem());
             updateSlot((byte) event.getRawSlot());
             if ("public".equals(access.getCurrentValue().toString())) {
-                PlotSharingChangeEvent plotEvent = new PlotSharingChangeEvent(plot,plot.getSharing(),Plot.Sharing.PUBLIC,player);
-                plotEvent.callEvent();
-                if (plotEvent.isCancelled()) return;
-                plot.setSharing(Plot.Sharing.PUBLIC);
+                PlanetSharingChangeEvent planetEvent = new PlanetSharingChangeEvent(planet, planet.getSharing(), Planet.Sharing.PUBLIC,player);
+                planetEvent.callEvent();
+                if (planetEvent.isCancelled()) return;
+                planet.setSharing(Planet.Sharing.PUBLIC);
                 player.sendMessage(getLocaleMessage("settings.world-sharing.enabled"));
                 player.playSound(player.getLocation(), Sound.BLOCK_IRON_DOOR_OPEN, 100, 1);
-                plot.getInformation().updateIcon();
+                planet.getInformation().updateIcon();
             } else {
-                PlotSharingChangeEvent plotEvent = new PlotSharingChangeEvent(plot,plot.getSharing(),Plot.Sharing.PRIVATE,player);
-                plotEvent.callEvent();
-                if (plotEvent.isCancelled()) return;
-                plot.setSharing(Plot.Sharing.PRIVATE);
+                PlanetSharingChangeEvent planetEvent = new PlanetSharingChangeEvent(planet, planet.getSharing(), Planet.Sharing.PRIVATE,player);
+                planetEvent.callEvent();
+                if (planetEvent.isCancelled()) return;
+                planet.setSharing(Planet.Sharing.PRIVATE);
                 player.sendMessage(getLocaleMessage("settings.world-sharing.disabled"));
                 player.playSound(player.getLocation(), Sound.ENTITY_EVOKER_FANGS_ATTACK, 100, 0.6f);
-                plot.getInformation().updateIcon();
+                planet.getInformation().updateIcon();
             }
-            worldIcon = getPlotIcon();
-            setItem((byte) 49,getPlotIcon());
+            worldIcon = getPlanetIcon();
+            setItem((byte) 49,getPlanetIcon());
             updateSlot((byte) 49);
         } else if (itemEquals(currentItem,time.getItem())) {
             time.next();
@@ -245,31 +245,31 @@ public class WorldSettingsMenu extends AbstractMenu {
             setItem((byte) event.getRawSlot(),time.getItem());
             updateSlot((byte) event.getRawSlot());
             if (time.getCurrentValue().equals(1)) {
-                plot.getTerritory().getWorld().setTime(1000L);
-                plot.getTerritory().getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-                plot.setFlagValue(PlotFlags.PlotFlag.DAY_CYCLE, (byte) 1);
+                planet.getTerritory().getWorld().setTime(1000L);
+                planet.getTerritory().getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+                planet.setFlagValue(PlanetFlags.PlanetFlag.DAY_CYCLE, (byte) 1);
             } else if (time.getCurrentValue().equals(2)) {
-                plot.getTerritory().getWorld().setTime(12500L);
-                plot.getTerritory().getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-                plot.setFlagValue(PlotFlags.PlotFlag.DAY_CYCLE, (byte) 2);
+                planet.getTerritory().getWorld().setTime(12500L);
+                planet.getTerritory().getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+                planet.setFlagValue(PlanetFlags.PlanetFlag.DAY_CYCLE, (byte) 2);
             } else if (time.getCurrentValue().equals(3)) {
-                plot.getTerritory().getWorld().setTime(15000L);
-                plot.getTerritory().getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-                plot.setFlagValue(PlotFlags.PlotFlag.DAY_CYCLE, (byte) 3);
+                planet.getTerritory().getWorld().setTime(15000L);
+                planet.getTerritory().getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+                planet.setFlagValue(PlanetFlags.PlanetFlag.DAY_CYCLE, (byte) 3);
             } else {
-                plot.getTerritory().getWorld().setTime(1000L);
-                plot.getTerritory().getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
-                plot.setFlagValue(PlotFlags.PlotFlag.DAY_CYCLE, (byte) 4);
+                planet.getTerritory().getWorld().setTime(1000L);
+                planet.getTerritory().getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
+                planet.setFlagValue(PlanetFlags.PlanetFlag.DAY_CYCLE, (byte) 4);
             }
         } else if (itemEquals(currentItem,autoSave.getItem())) {
             autoSave.next();
             setItem((byte) event.getRawSlot(),autoSave.getItem());
             updateSlot((byte) event.getRawSlot());
             if (autoSave.getCurrentValue().equals(true)) {
-                plot.getTerritory().setAutoSave(true);
+                planet.getTerritory().setAutoSave(true);
                 player.playSound(player.getLocation(),Sound.BLOCK_BEACON_ACTIVATE,100,0.7f);
             } else if (autoSave.getCurrentValue().equals(false)) {
-                plot.getTerritory().setAutoSave(false);
+                planet.getTerritory().setAutoSave(false);
                 player.playSound(player.getLocation(),Sound.BLOCK_RESPAWN_ANCHOR_DEPLETE,100,0.3f);
             }
         } else if (itemEquals(currentItem,worldIcon)) {
@@ -277,11 +277,11 @@ public class WorldSettingsMenu extends AbstractMenu {
                 player.sendMessage(getLocaleMessage("settings.world-icon.error"));
                 player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 100, 0.3f);
             } else {
-                plot.getInformation().setIconMaterial(event.getCursor().getType());
-                plot.getInformation().updateIcon();
+                planet.getInformation().setIconMaterial(event.getCursor().getType());
+                planet.getInformation().updateIcon();
                 player.sendMessage(getLocaleMessage("settings.world-icon.changed"));
-                worldIcon = getPlotIcon();
-                setItem((byte) 49,getPlotIcon());
+                worldIcon = getPlanetIcon();
+                setItem((byte) 49,getPlanetIcon());
                 updateSlot((byte) 49);
                 event.setCursor(null);
             }
@@ -291,7 +291,7 @@ public class WorldSettingsMenu extends AbstractMenu {
 
     @Override
     public void onOpen(InventoryOpenEvent event) {
-        if (!plot.isOwner(event.getPlayer().getName())) {
+        if (!planet.isOwner(event.getPlayer().getName())) {
             event.setCancelled(true);
             return;
         }

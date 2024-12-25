@@ -19,8 +19,8 @@
 package ua.mcchickenstudio.opencreative.commands.minecraft;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -30,7 +30,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,12 +61,12 @@ public class CommandGamemode implements CommandExecutor, TabCompleter {
              * Checking is player owner, builder or developer of world.
              * If not, he can't change his game mode.
              */
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot == null) {
+            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            if (planet == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
                 return true;
             }
-            if (!(plot.isOwner(player) || plot.getWorldPlayers().canDevelop(player) || plot.getWorldPlayers().canBuild(player))) {
+            if (!(planet.isOwner(player) || planet.getWorldPlayers().canDevelop(player) || planet.getWorldPlayers().canBuild(player))) {
                 player.sendMessage(getLocaleMessage("not-owner"));
                 return true;
             }
@@ -75,7 +74,7 @@ public class CommandGamemode implements CommandExecutor, TabCompleter {
              * Players should not change game mode in developer world,
              * because it's work depends on game mode.
              */
-            if (PlotManager.getInstance().getDevPlot(player) != null) {
+            if (PlanetManager.getInstance().getDevPlanet(player) != null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
                 return true;
             }
@@ -125,14 +124,14 @@ public class CommandGamemode implements CommandExecutor, TabCompleter {
                      * If players' world is not same as sender's world game mode
                      * will be not changed.
                      */
-                    Plot modePlot = PlotManager.getInstance().getPlotByPlayer(modePlayer);
+                    Planet modePlanet = PlanetManager.getInstance().getPlanetByPlayer(modePlayer);
                     if (!player.hasPermission("opencreative.game-mode.bypass")) {
-                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                        if (plot == null || !plot.equals(modePlot)) {
+                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        if (planet == null || !planet.equals(modePlanet)) {
                             player.sendMessage(getLocaleMessage("no-player-found"));
                             return true;
                         }
-                        if (PlotManager.getInstance().getDevPlot(modePlayer) != null) {
+                        if (PlanetManager.getInstance().getDevPlanet(modePlayer) != null) {
                             player.sendMessage(getLocaleMessage("only-in-world"));
                             return true;
                         }

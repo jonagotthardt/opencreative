@@ -26,7 +26,6 @@ import ua.mcchickenstudio.opencreative.menu.world.browsers.RecommendedWorldsMenu
 import ua.mcchickenstudio.opencreative.menu.world.browsers.OwnWorldsMenu;
 import ua.mcchickenstudio.opencreative.menu.world.*;
 import ua.mcchickenstudio.opencreative.menu.world.settings.*;
-import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,7 +37,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import ua.mcchickenstudio.opencreative.menu.buttons.RadioButton;
-import ua.mcchickenstudio.opencreative.plots.*;
+import ua.mcchickenstudio.opencreative.planets.*;
 
 import java.util.List;
 import java.util.Set;
@@ -52,14 +51,14 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 public class InventoryClick implements Listener {
 
-    final PlotManager plotManager = PlotManager.getInstance();
+    final PlanetManager planetManager = PlanetManager.getInstance();
 
     @EventHandler
     public void click(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
 
-        Plot plot1 = PlotManager.getInstance().getPlotByPlayer(player);
-        if (plot1 != null) {
+        Planet planet1 = PlanetManager.getInstance().getPlanetByPlayer(player);
+        if (planet1 != null) {
             if (event.getCurrentItem() != null) {
                 EventRaiser.raiseItemClickEvent((Player) event.getWhoClicked(), event);
                 if (event.getAction() == InventoryAction.PLACE_ALL) {
@@ -78,7 +77,7 @@ public class InventoryClick implements Listener {
                 if (!(event.getClickedInventory().getHolder() instanceof OwnWorldsMenu)) return;
                 try {
                     boolean worldClicked = false;
-                    if (!plotManager.getPlayerPlots(player).isEmpty()) {
+                    if (!planetManager.getPlayerPlanets(player).isEmpty()) {
                         for (int slot : OwnWorldsMenu.worldSlots) {
                             if (event.getSlot() == slot) {
                                 worldClicked = true;
@@ -92,16 +91,16 @@ public class InventoryClick implements Listener {
                             if (loreLine.startsWith(getLocaleMessage("menus.own-worlds.items.world.id"))) {
                                 String worldID = loreLine.replace(getLocaleMessage("menus.own-worlds.items.world.id"), "");
                                 player.closeInventory();
-                                if (PlotManager.getInstance().getPlotByCustomID(worldID) != null) {
+                                if (PlanetManager.getInstance().getPlanetByCustomID(worldID) != null) {
                                     if (!(event.getClick() == ClickType.SHIFT_RIGHT)) {
-                                        PlotManager.getInstance().getPlotByCustomID(worldID).connectPlayer(player);
+                                        PlanetManager.getInstance().getPlanetByCustomID(worldID).connectPlayer(player);
                                     } else {
-                                        PlotManager.getInstance().deletePlot(PlotManager.getInstance().getPlotByCustomID(worldID), player);
+                                        PlanetManager.getInstance().deletePlanet(PlanetManager.getInstance().getPlanetByCustomID(worldID), player);
                                     }
                                 } else {
                                     player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY, 100, 2);
                                     player.clearTitle();
-                                    player.sendMessage(getLocaleMessage("no-plot-found", player));
+                                    player.sendMessage(getLocaleMessage("no-planet-found", player));
                                 }
 
                             }
@@ -126,11 +125,11 @@ public class InventoryClick implements Listener {
                 }
         } else if (event.getInventory().getHolder() instanceof WorldSettingsPlayersMenu) {
             event.setCancelled(true);
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
 
             String selectedPlayer = WorldSettingsPlayersMenu.playersSelected.get(player);
 
-            if (plot == null) return;
+            if (planet == null) return;
             if (item.getType() == Material.SPECTRAL_ARROW) {
                 WorldSettingsPlayersMenu.openInventory(player, WorldSettingsPlayersMenu.openedPage.get(player) + 1);
             } else if (item.getType() == Material.ARROW) {
@@ -150,19 +149,19 @@ public class InventoryClick implements Listener {
             } else if (item.getType() == Material.BARRIER && event.getSlot() == 16) {
                 player.closeInventory();
                 player.sendMessage(getLocaleMessage("world.players.black-list.added").replace("%player%", selectedPlayer));
-                plot.getWorldPlayers().banPlayer(selectedPlayer);
+                planet.getWorldPlayers().banPlayer(selectedPlayer);
             } else if (item.getType() == Material.STRUCTURE_VOID) {
                 if (event.getSlot() == 16) {
                     player.closeInventory();
                     player.sendMessage(getLocaleMessage("world.players.black-list.removed").replace("%player%", selectedPlayer));
-                    plot.getWorldPlayers().unbanPlayer(selectedPlayer);
+                    planet.getWorldPlayers().unbanPlayer(selectedPlayer);
                 } else {
                     player.closeInventory();
                     player.sendMessage(getLocaleMessage("world.players.kick.kicked").replace("%player%", selectedPlayer));
-                    Player plotPlayer = Bukkit.getPlayer(selectedPlayer);
-                    if (plotPlayer != null) {
-                        if (plotManager.getPlotByPlayer(plotPlayer) == plot) {
-                            plot.getWorldPlayers().kickPlayer(plotPlayer);
+                    Player planetPlayer = Bukkit.getPlayer(selectedPlayer);
+                    if (planetPlayer != null) {
+                        if (planetManager.getPlanetByPlayer(planetPlayer) == planet) {
+                            planet.getWorldPlayers().kickPlayer(planetPlayer);
                         }
                     }
                 }
@@ -181,22 +180,22 @@ public class InventoryClick implements Listener {
                         player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%", newOwner));
                         return;
                     }
-                    if (!plot.getPlayers().contains(Bukkit.getPlayer(newOwner))) {
+                    if (!planet.getPlayers().contains(Bukkit.getPlayer(newOwner))) {
                         player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%", newOwner));
                         return;
                     }
-                    if (PlotManager.getInstance().getPlayerPlots(Bukkit.getPlayer(newOwner)).size() >= OpenCreative.getSettings().getGroups().getGroup(Bukkit.getPlayer(newOwner)).getWorldsLimit()) {
+                    if (PlanetManager.getInstance().getPlayerPlanets(Bukkit.getPlayer(newOwner)).size() >= OpenCreative.getSettings().getGroups().getGroup(Bukkit.getPlayer(newOwner)).getWorldsLimit()) {
                         player.sendMessage(getLocaleMessage("world.players.transfer-ownership.limit").replace("%player%", newOwner));
                         return;
                     }
-                    player.sendMessage(getLocaleMessage("world.players.transfer-ownership.confirm-old").replace("%player%", newOwner).replace("%id%", String.valueOf(plot.getId())));
+                    player.sendMessage(getLocaleMessage("world.players.transfer-ownership.confirm-old").replace("%player%", newOwner).replace("%id%", String.valueOf(planet.getId())));
                     player.closeInventory();
                     if (!(PlayerChat.confirmation.containsKey(player))) {
                         PlayerChat.confirmation.put(player, "transfer-ownership");
                     }
                 }
             }
-            if (!player.getWorld().getName().startsWith("plot")) {
+            if (!player.getWorld().getName().startsWith("planet")) {
                 if (item.hasItemMeta()) {
                     if (item.getItemMeta().displayName() != null) {
                         if (item.getItemMeta().getDisplayName().equals(getLocaleMessage("items.lobby.games.name")) || item.getItemMeta().getDisplayName().equals(getLocaleMessage("items.lobby.own.name"))) {
@@ -207,8 +206,8 @@ public class InventoryClick implements Listener {
             }
         }
 
-        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-        if (devPlot == null) return;
+        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+        if (devPlanet == null) return;
         if (player.getGameMode() == GameMode.ADVENTURE) {
             event.setCancelled(true);
             cantDev(player);
@@ -230,27 +229,27 @@ public class InventoryClick implements Listener {
 
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent event) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer((Player) event.getPlayer());
-        if (plot != null) EventRaiser.raiseOpenInventoryEvent((Player) event.getPlayer(),event);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer((Player) event.getPlayer());
+        if (planet != null) EventRaiser.raiseOpenInventoryEvent((Player) event.getPlayer(),event);
     }
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer((Player) event.getPlayer());
-        if (plot != null) EventRaiser.raiseCloseInventoryEvent((Player) event.getPlayer(),event);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer((Player) event.getPlayer());
+        if (planet != null) EventRaiser.raiseCloseInventoryEvent((Player) event.getPlayer(),event);
     }
 
     @EventHandler
     public void onSwap(PlayerSwapHandItemsEvent event) {
         Player player = event.getPlayer();
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
         ItemStack currentItem = event.getOffHandItem();
-        if (devPlot != null) {
+        if (devPlanet != null) {
             if (currentItem.getType() == Material.PAPER) {
                 event.setCancelled(true);
                 if (!player.hasCooldown(currentItem.getType())) {
-                    if (plot != null && plot.getTerritory().getWorld() != null) {
+                    if (planet != null && planet.getTerritory().getWorld() != null) {
                         addPlayerWithLocation(player);
                         if (currentItem.hasItemMeta()) {
                             ItemMeta meta = currentItem.getItemMeta();
@@ -265,13 +264,13 @@ public class InventoryClick implements Listener {
                                     z = Double.parseDouble(locCoords[2]);
                                     yaw = Float.parseFloat(locCoords[3]);
                                     pitch = Float.parseFloat(locCoords[4]);
-                                    player.teleport(new Location(plot.getTerritory().getWorld(),x,y,z,yaw,pitch));
+                                    player.teleport(new Location(planet.getTerritory().getWorld(),x,y,z,yaw,pitch));
                                 } catch (Exception error) {
-                                    player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
+                                    player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
                                 }
                             }
                         } else {
-                            player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
+                            player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
                         }
                         player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
                         player.setCooldown(currentItem.getType(),60);
@@ -279,7 +278,7 @@ public class InventoryClick implements Listener {
                 }
             }
         } else {
-            if (plot != null) {
+            if (planet != null) {
                 if (isPlayerWithLocation(player) && currentItem.getType() == Material.PAPER) {
                     event.setCancelled(true);
                     if (!player.hasCooldown(currentItem.getType())) {
@@ -296,12 +295,12 @@ public class InventoryClick implements Listener {
                                     z = Double.parseDouble(locCoords[2]);
                                     yaw = Float.parseFloat(locCoords[3]);
                                     pitch = Float.parseFloat(locCoords[4]);
-                                    player.teleport(new Location(plot.getTerritory().getWorld(),x,y,z,yaw,pitch));
+                                    player.teleport(new Location(planet.getTerritory().getWorld(),x,y,z,yaw,pitch));
                                 } catch (Exception error) {
-                                    player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
+                                    player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
                                 }
                             } else {
-                                player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
+                                player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
                             }
                         player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
                         player.setCooldown(currentItem.getType(),60);
@@ -316,26 +315,26 @@ public class InventoryClick implements Listener {
 
     @EventHandler
     public void onBookWrite(PlayerEditBookEvent event) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
-        if (plot != null) EventRaiser.raiseBookWriteEvent(event.getPlayer(),event);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        if (planet != null) EventRaiser.raiseBookWriteEvent(event.getPlayer(),event);
     }
 
     @EventHandler
     public void onItemConsume(PlayerItemConsumeEvent event) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
-        if (plot != null) EventRaiser.raiseItemConsumeEvent(event.getPlayer(),event);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        if (planet != null) EventRaiser.raiseItemConsumeEvent(event.getPlayer(),event);
     }
 
     @EventHandler
     public void onItemBreak(PlayerItemBreakEvent event) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
-        if (plot != null) EventRaiser.raiseItemBreakEvent(event.getPlayer(),event);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        if (planet != null) EventRaiser.raiseItemBreakEvent(event.getPlayer(),event);
     }
 
     @EventHandler
     public void onSlotChange(PlayerItemHeldEvent event) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
-        if (plot != null) EventRaiser.raiseSlotChangeEvent(event.getPlayer(),event);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        if (planet != null) EventRaiser.raiseSlotChangeEvent(event.getPlayer(),event);
     }
 
     private static ItemStack getHeadItem(String internal) {

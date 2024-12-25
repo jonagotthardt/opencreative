@@ -20,12 +20,12 @@ package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.world;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class ChunkUnloadExecutor extends PlayerExecutor {
 
-    public ChunkUnloadExecutor(Plot plot, int x, int y, int z) {
-        super(plot, x, y, z);
+    public ChunkUnloadExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override

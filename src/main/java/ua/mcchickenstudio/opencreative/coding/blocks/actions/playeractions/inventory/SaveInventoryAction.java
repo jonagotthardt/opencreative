@@ -32,7 +32,7 @@ public class SaveInventoryAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        getPlot().getWorldPlayers().getPlotPlayer(player).saveInventory(player.getInventory().getContents());
+        getPlanet().getWorldPlayers().getPlanetPlayer(player).saveInventory(player.getInventory().getContents());
     }
 
     @Override

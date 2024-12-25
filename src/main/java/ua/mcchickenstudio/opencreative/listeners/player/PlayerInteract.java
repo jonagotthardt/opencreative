@@ -37,7 +37,7 @@ import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.RecommendedWorldsMenu;
 import ua.mcchickenstudio.opencreative.menu.world.settings.WorldSettingsMenu;
-import ua.mcchickenstudio.opencreative.plots.*;
+import ua.mcchickenstudio.opencreative.planets.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -80,17 +80,17 @@ public class PlayerInteract implements Listener {
     public void onInteraction(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         ItemStack currentItem = player.getInventory().getItemInMainHand();
-        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-        if (devPlot == null) {
+        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+        if (devPlanet == null) {
             setPaperLocation(event, player,currentItem);
             return;
         }
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock != null) {
             if (clickedBlock.getType().toString().contains("WALL_SIGN")) {
-                handleSignClick(event,player,currentItem,clickedBlock,devPlot);
+                handleSignClick(event,player,currentItem,clickedBlock, devPlanet);
             } else if (clickedBlock.getState() instanceof InventoryHolder) {
-                handleContainerClick(event,player,devPlot,event.getClickedBlock());
+                handleContainerClick(event,player, devPlanet,event.getClickedBlock());
             }
         }
         if (currentItem.getItemMeta() != null) {
@@ -178,7 +178,7 @@ public class PlayerInteract implements Listener {
      * Handles event, when player clicks coding container block, like chest or barrel.
      * Used for creating and opening layout menu of action.
      */
-    private void handleContainerClick(PlayerInteractEvent event, Player player, DevPlot devPlot, Block clickedBlock) {
+    private void handleContainerClick(PlayerInteractEvent event, Player player, DevPlanet devPlanet, Block clickedBlock) {
         if ((!event.getPlayer().isSneaking()) && clickedBlock.getState() instanceof InventoryHolder) {
             Block actionBlock = clickedBlock.getRelative(BlockFace.DOWN);
             Block signBlock = actionBlock.getRelative(BlockFace.SOUTH);
@@ -188,17 +188,17 @@ public class PlayerInteract implements Listener {
                 String type = sign.getLine(2);
                 try {
                     ActionType action = ActionType.valueOf(type.toUpperCase());
-                    Layout layout = devPlot.getOpenedMenu(clickedBlock.getLocation());
+                    Layout layout = devPlanet.getOpenedMenu(clickedBlock.getLocation());
                     event.setCancelled(true);
                     if (layout == null) {
                         layout = new LayoutMaker(action,clickedBlock);
                         layout.open(player);
-                        devPlot.registerOpenedMenu(clickedBlock.getLocation(),layout);
+                        devPlanet.registerOpenedMenu(clickedBlock.getLocation(),layout);
                     } else {
                         player.openInventory(layout.getCurrentInventory());
                     }
                 } catch (IllegalArgumentException e) {
-                    player.sendActionBar(getLocaleMessage("plot-code-error.unknown-layout"));
+                    player.sendActionBar(getLocaleMessage("planet-code-error.unknown-layout"));
                     event.setCancelled(false);
                 }
             }
@@ -211,7 +211,7 @@ public class PlayerInteract implements Listener {
      * renaming (function, cycle), changing time (cycle),
      * reversing condition (if conditions).
      */
-    private void handleSignClick(PlayerInteractEvent event, Player player, ItemStack currentItem, Block clickedBlock, DevPlot devPlot) {
+    private void handleSignClick(PlayerInteractEvent event, Player player, ItemStack currentItem, Block clickedBlock, DevPlanet devPlanet) {
         event.setCancelled(true);
         if (currentItem.getType() == Material.COMPARATOR) {
             return;
@@ -290,9 +290,9 @@ public class PlayerInteract implements Listener {
             if (menu != null) {
                 menu.open(player);
             } else if (actionBlockCategory == ActionCategory.LAUNCH_FUNCTION_ACTION) {
-                new FunctionChooserMenu(player, devPlot,clickedBlock.getLocation()).open(player);
+                new FunctionChooserMenu(player, devPlanet,clickedBlock.getLocation()).open(player);
             } else if (actionBlockCategory == ActionCategory.LAUNCH_METHOD_ACTION) {
-                new MethodChooserMenu(player, devPlot,clickedBlock.getLocation()).open(player);
+                new MethodChooserMenu(player, devPlanet,clickedBlock.getLocation()).open(player);
             } else if (mainBlockCategory == ExecutorCategory.CYCLE) {
                 String cycleTicksString = getSignLine(clickedBlock.getLocation(),(byte) 3);
                 if (cycleTicksString != null && !cycleTicksString.isEmpty()) {
@@ -438,10 +438,10 @@ public class PlayerInteract implements Listener {
 
     private void handlePaperInteraction(PlayerInteractEvent event, Player player, ItemStack currentItem) {
         if (event.getAction() == Action.LEFT_CLICK_AIR && !player.hasCooldown(currentItem.getType())) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot != null && plot.getTerritory().getWorld() != null) {
+            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            if (planet != null && planet.getTerritory().getWorld() != null) {
                 addPlayerWithLocation(player);
-                player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
+                player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
                 player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
                 player.setCooldown(currentItem.getType(),60);
             }
@@ -533,8 +533,8 @@ public class PlayerInteract implements Listener {
     }
 
     private void setPaperLocation(PlayerInteractEvent event, Player player, ItemStack currentItem) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-        if (isPlayerWithLocation(player) && plot != null && !plot.getWorldPlayers().canBuild(player)) {
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        if (isPlayerWithLocation(player) && planet != null && !planet.getWorldPlayers().canBuild(player)) {
             event.setCancelled(true);
         }
         if (currentItem.getType() != Material.PAPER || !isPlayerWithLocation(player) || player.hasCooldown(currentItem.getType())) {
@@ -554,14 +554,14 @@ public class PlayerInteract implements Listener {
             ));
             player.playSound(player.getLocation(),Sound.ENTITY_EXPERIENCE_ORB_PICKUP,100,2);
         } else if (event.getAction() == Action.LEFT_CLICK_AIR) {
-            if (plot != null && plot.getDevPlot().isLoaded()) {
+            if (planet != null && planet.getDevPlanet().isLoaded()) {
                 player.teleport(getOldLocationPlayerWithLocation(player));
                 player.setCooldown(currentItem.getType(),60);
                 player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
-                for (Player developer : plot.getDevPlot().getWorld().getPlayers()) {
+                for (Player developer : planet.getDevPlanet().getWorld().getPlayers()) {
                     WorldBorder border = Bukkit.createWorldBorder();
-                    border.setCenter(plot.getDevPlot().getWorld().getWorldBorder().getCenter());
-                    border.setSize(plot.getDevPlot().getWorld().getWorldBorder().getSize()*5);
+                    border.setCenter(planet.getDevPlanet().getWorld().getWorldBorder().getCenter());
+                    border.setSize(planet.getDevPlanet().getWorld().getWorldBorder().getSize()*5);
                     developer.setWorldBorder(border);
                 }
             }
@@ -587,7 +587,7 @@ public class PlayerInteract implements Listener {
         if (player.hasCooldown(currentItem.getType())) {
             return;
         }
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
         if (isEntityInLobby(player)) {
             if (getItemType(currentItem).equals("worlds")) {
                 // Opens recommended worlds menu.
@@ -606,15 +606,15 @@ public class PlayerInteract implements Listener {
                 player.setCooldown(Material.NETHER_STAR,60);
                 OwnWorldsMenu.openInventory(player,1);
             }
-        } else if (plot != null && currentItem.getType() == Material.COMPASS) {
+        } else if (planet != null && currentItem.getType() == Material.COMPASS) {
             // Opens world settings menu.
             if (OpenCreative.getSettings().isMaintenance() && !player.hasPermission("opencreative.maintenance.bypass")) {
                 player.sendMessage(getLocaleMessage("maintenance"));
                 return;
             }
-            if (plot.isOwner(player)) {
+            if (planet.isOwner(player)) {
                 player.setCooldown(Material.COMPASS,60);
-                new WorldSettingsMenu(plot,player).open(player);
+                new WorldSettingsMenu(planet,player).open(player);
             }
         }
     }
@@ -622,11 +622,11 @@ public class PlayerInteract implements Listener {
     @EventHandler
     public void onUsing(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-        if (plot == null) {
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        if (planet == null) {
             return;
         }
-        if (PlotManager.getInstance().getDevPlot(player) != null) {
+        if (PlanetManager.getInstance().getDevPlanet(player) != null) {
             return;
         }
         switch (event.getAction()) {
@@ -652,10 +652,10 @@ public class PlayerInteract implements Listener {
             return;
         }
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.PHYSICAL) {
-            if (plot.getWorldPlayers().canBuild(player)) {
+            if (planet.getWorldPlayers().canBuild(player)) {
                 return;
             }
-            switch(plot.getFlagValue(PlotFlags.PlotFlag.BLOCK_INTERACT)) {
+            switch(planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_INTERACT)) {
                 // Disallow every block interact.
                 case 2 -> {
                     player.sendActionBar(getLocaleMessage("world.cant-block-interact"));
@@ -689,14 +689,14 @@ public class PlayerInteract implements Listener {
     @EventHandler
     public void onMobClick(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-        if (plot != null) {
-            if (plot.getFlagValue(PlotFlags.PlotFlag.MOB_INTERACT) == 2 && !plot.getWorldPlayers().canBuild(player)) {
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        if (planet != null) {
+            if (planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT) == 2 && !planet.getWorldPlayers().canBuild(player)) {
                 // Disallow entire mob interaction.
                 event.getPlayer().sendActionBar(getLocaleMessage("world.cant-mob-interact"));
                 event.setCancelled(true);
             }
-            if (plot.getFlagValue(PlotFlags.PlotFlag.MOB_INTERACT) == 3 && !plot.getWorldPlayers().canBuild(player)) {
+            if (planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT) == 3 && !planet.getWorldPlayers().canBuild(player)) {
                 // Disallow changing item frames and armor stands.
                 if (event.getRightClicked().getType() == EntityType.ITEM_FRAME || event.getRightClicked().getType() == EntityType.ARMOR_STAND) {
                     event.getPlayer().sendActionBar(getLocaleMessage("world.cant-mob-interact"));
@@ -709,17 +709,17 @@ public class PlayerInteract implements Listener {
     @EventHandler
     public void onMobClick(PlayerInteractAtEntityEvent event) {
         Player player = event.getPlayer();
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-        if (plot != null) {
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        if (planet != null) {
             if (event.getHand() == EquipmentSlot.HAND) {
                 EventRaiser.raiseMobInteractionEvent(player,event);
             }
-            if (plot.getFlagValue(PlotFlags.PlotFlag.MOB_INTERACT) == 2 && !plot.getWorldPlayers().canBuild(player)) {
+            if (planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT) == 2 && !planet.getWorldPlayers().canBuild(player)) {
                 // Disallow entire mob interaction.
                 event.getPlayer().sendActionBar(getLocaleMessage("world.cant-mob-interact"));
                 event.setCancelled(true);
             }
-            if (plot.getFlagValue(PlotFlags.PlotFlag.MOB_INTERACT) == 3 && !plot.getWorldPlayers().canBuild(player)) {
+            if (planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT) == 3 && !planet.getWorldPlayers().canBuild(player)) {
                 // Disallow changing item frames and armor stands.
                 if (event.getRightClicked().getType() == EntityType.ITEM_FRAME || event.getRightClicked().getType() == EntityType.ARMOR_STAND) {
                     event.getPlayer().sendActionBar(getLocaleMessage("world.cant-mob-interact"));
@@ -732,14 +732,14 @@ public class PlayerInteract implements Listener {
     @EventHandler
     public void onHang(HangingBreakByEntityEvent event) {
         if (!(event.getRemover() instanceof Player player)) return;
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-        if (plot != null) {
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        if (planet != null) {
             EventRaiser.raiseMobInteractionEvent(player,event);
-            if (plot.getFlagValue(PlotFlags.PlotFlag.MOB_INTERACT) == 2 && !plot.getWorldPlayers().canBuild(player)) {
+            if (planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT) == 2 && !planet.getWorldPlayers().canBuild(player)) {
                 player.sendActionBar(getLocaleMessage("world.cant-mob-interact"));
                 event.setCancelled(true);
             }
-            if (plot.getFlagValue(PlotFlags.PlotFlag.MOB_INTERACT) == 3 && !plot.getWorldPlayers().canBuild(player)) {
+            if (planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT) == 3 && !planet.getWorldPlayers().canBuild(player)) {
                 if (event.getEntity().getType() == EntityType.ITEM_FRAME) {
                     player.sendActionBar(getLocaleMessage("world.cant-mob-interact"));
                     event.setCancelled(true);
@@ -754,32 +754,32 @@ public class PlayerInteract implements Listener {
             return;
         }
         if (event.getCaught().getType() == EntityType.ITEM) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
-            if (plot != null) EventRaiser.raiseFishEvent(event.getPlayer(),event);
+            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+            if (planet != null) EventRaiser.raiseFishEvent(event.getPlayer(),event);
         }
     }
 
     @EventHandler
     public void onSpectating(PlayerStartSpectatingEntityEvent event) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
-        if (plot != null) EventRaiser.raiseStartSpectatingEvent(event.getPlayer(),event);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        if (planet != null) EventRaiser.raiseStartSpectatingEvent(event.getPlayer(),event);
     }
 
     @EventHandler
     public void onSpectatingStop(PlayerStopSpectatingEntityEvent event) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
-        if (plot != null) EventRaiser.raiseStopSpectatingEvent(event.getPlayer(),event);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        if (planet != null) EventRaiser.raiseStopSpectatingEvent(event.getPlayer(),event);
     }
 
     @EventHandler
     public void onBedInteract(PlayerBedEnterEvent event) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
-        if (plot != null) EventRaiser.raisePlayerBedEnterEvent(event.getPlayer(),event);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        if (planet != null) EventRaiser.raisePlayerBedEnterEvent(event.getPlayer(),event);
     }
 
     @EventHandler
     public void onBedInteract(PlayerBedLeaveEvent event) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(event.getPlayer());
-        if (plot != null) EventRaiser.raisePlayerBedLeaveEvent(event.getPlayer(),event);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        if (planet != null) EventRaiser.raisePlayerBedLeaveEvent(event.getPlayer(),event);
     }
 }

@@ -57,7 +57,7 @@ commands:
     stopped-all: "%prefix%&fStopped all sounds for player &6%player%&f."
 locate:
   help: "%prefix%To find the world where a player is playing, type in the chat: &6/locate Username"
-  found: "%prefix%&fPlayer &6%player%&f is currently playing in the world: \n&f %plotName%\n &f\n&a &a &n[Click to join]&f\n &f"
+  found: "%prefix%&fPlayer &6%player%&f is currently playing in the world: \n&f %planetName%\n &f\n&a &a &n[Click to join]&f\n &f"
   offline: "%prefix%&cThe player is not currently playing in any worlds."
 environment:
   help: "%prefix%Manage code, variables, and the world for developers.\n \n&6 /env variables clear &f- Clear variables\n&6 /env variables size &f- Number of variables\n&6 /env variables list &f- List of variables"
@@ -134,15 +134,15 @@ not-developer: "%prefix%&cYou are not the developer of this world."
 not-builder: "%prefix%&cYou are not the builder of this world."
 only-in-world: "%prefix%&cThis can only be used in the world."
 no-money: "%prefix%&cIt seems you don't have enough coins! You need at least %money% coins!"
-no-plot-found: "%prefix%&cThis world does not exist."
-private-plot: "%prefix%This world is currently &6private&f, only the owner can enter."
-blacklisted-in-plot: "%prefix%You cannot visit this world because you are &6blacklisted&f in it."
+no-planet-found: "%prefix%&cThis world does not exist."
+private-planet: "%prefix%This world is currently &6private&f, only the owner can enter."
+blacklisted-in-planet: "%prefix%You cannot visit this world because you are &6blacklisted&f in it."
 no-player-found: "%prefix%&cThis player was not found."
 same-player: "%prefix%&cYou cannot specify yourself."
 same-world: "%prefix%&cYou are already playing in this world."
 player-error: "&6 Worlds &8| &fA player error occurred. Please report this to the developer: &6%error%"
-plot-error: "&6 Worlds &8| &fAn error occurred in the world: &6%error%"
-plot-code-error:
+planet-error: "&6 Worlds &8| &fAn error occurred in the world: &6%error%"
+planet-code-error:
   message: "\n &c &m                   &c ☹ ERROR &m                   \n&f\n &fOops, it seems there was a problem executing &f%event% &7-> &f%action% &7(%x%,%y%,%z%)\n \n&f Information: &6%error%\n \n &c &m                                                    \n&f"
   message-event-critical: "\n &4 &m          &4 ☠ CRITICAL ERROR &m          \n&f\n &cATTENTION! &fThe world has been put into build mode because a serious issue occurred during the execution of the code &f%event% &7(%x%,%y%,%z%)...\n \n&f Information: &6%error%\n \n &4 &m                                                    \n&f"
   message-event: "&6 Error &8| &fAn error occurred during the execution of the code &f%event% &7(%x%,%y%,%z%).\n &fError information: &6%error%"
@@ -159,7 +159,7 @@ plot-code-error:
   unknown-layout: "&cThis block opened a menu without hints, as there is a problem loading them..."
   hover-message: "&fClick to teleport to the block."
   temp-var-not-exists: "The temporary value %variable% for this event was not found because the event is not compatible with this value. Replace the event with a more suitable one."
-plot-code-debug:
+planet-code-debug:
   condition:
     returned-true: "&fCondition %type%&f executed, &aTrue&f."
     returned-false: "&fCondition %type%&f did not execute, &cFalse&f."
@@ -354,7 +354,7 @@ creative-chat:
 join-usage: "%prefix%Use &6/join ID"
 advertisement:
   message: "%prefix%&6Invitation:\n&f &7%player% &f&ninvites&f you to the world: \n&f %world%\n &f\n&a &a &n[Click to join]&f\n &f"
-  hover: "&f%plotName%\n&8Created by %plotOwner%\n \n&a ☻ &7Online: &a%plotOnline%\n&e ⭐&7 Rating: &f%plotReputation%\n&3 ⚐&7 Category: &f%plotCategory%\n \n&aClick to join the world"
+  hover: "&f%planetName%\n&8Created by %planetOwner%\n \n&a ☻ &7Online: &a%planetOnline%\n&e ⭐&7 Rating: &f%planetReputation%\n&3 ⚐&7 Category: &f%planetCategory%\n \n&aClick to join the world"
   no-money: "%prefix%&cNot enough money for advertising!"
   cooldown: "%prefix%Please wait &6%cooldown% seconds&f before advertising again."
   closed-world: "%prefix%&fTo advertise your world, &6you need to first allow player entry&f in the world settings."
@@ -6162,15 +6162,15 @@ menus:
           - "&e  Click to view your worlds."
           - " "
       world:
-        name: "&f%plotName%"
+        name: "&f%planetName%"
         lore:
-          - "&8World created by &7%plotOwner%"
+          - "&8World created by &7%planetOwner%"
           - ""
-          - "&7 %plotDescription%"
+          - "&7 %planetDescription%"
           - ""
-          - "&a ☻ &7Online: &a%plotOnline%"
-          - "&e ⭐&7 Reputation: &f%plotReputation%"
-          - "&3 ⚐&7 Category: &f%plotCategory%"
+          - "&a ☻ &7Online: &a%planetOnline%"
+          - "&e ⭐&7 Reputation: &f%planetReputation%"
+          - "&3 ⚐&7 Category: &f%planetCategory%"
           - ""
           - "&2 ⏵ &a&nJoin the world&a! &e &e &e &e "
           - ""
@@ -6368,7 +6368,7 @@ menus:
             - "&7 Variables: &f%variables%&7/&f%variables-limit%"
             - ""
             - "&7 Call limit: &f%executor-calls-limit%"
-            - "&8 World ID: %plotID%"
+            - "&8 World ID: %planetID%"
             - "&8 Version: %version%"
             - ""
     selection:
@@ -6938,7 +6938,7 @@ menus:
             - "&a  1.0 &7- Half heart"
             - ""
             - "&eClick to set."
-        plot-online:
+        planet-online:
           name: "&aPlayers in world"
           lore:
             - "&7Type: &aNumber"
@@ -6952,7 +6952,7 @@ menus:
             - "&a  0 &7- No players"
             - ""
             - "&eClick to set."
-        plot-name:
+        planet-name:
           name: "&eWorld name"
           lore:
             - "&7Type: &6Text"
@@ -6965,7 +6965,7 @@ menus:
             - "&6  Big Parkour | New update!"
             - ""
             - "&eClick to set."
-        plot-description:
+        planet-description:
           name: "&6World description"
           lore:
             - "&7Type: &6Text"
@@ -6978,7 +6978,7 @@ menus:
             - "&6  Best\\n Among\\n the best"
             - ""
             - "&eClick to set."
-        plot-icon:
+        planet-icon:
           name: "&bWorld icon"
           lore:
             - "&7Type: &cItem"
@@ -6987,7 +6987,7 @@ menus:
             - "&7matches the world icon."
             - ""
             - "&eClick to set."
-        plot-custom-id:
+        planet-custom-id:
           name: "&2Letter ID"
           lore:
             - "&7Type: &6Text"
@@ -7001,7 +7001,7 @@ menus:
             - "&6  cantcraft2"
             - ""
             - "&eClick to set."
-        plot-id:
+        planet-id:
           name: "&2Numeric ID"
           lore:
             - "&7Type: &6Text"
@@ -7015,7 +7015,7 @@ menus:
             - "&6  83"
             - ""
             - "&eClick to set."
-        plot-variables-amount:
+        planet-variables-amount:
           name: "&eNumber of variables in world"
           lore:
             - "&7Type: &aNumber"
@@ -7024,7 +7024,7 @@ menus:
             - "&7in the code with a value."
             - ""
             - "&eClick to set."
-        plot-variables-amount-limit:
+        planet-variables-amount-limit:
           name: "&6Max variables limit"
           lore:
             - "&7Type: &aNumber"
@@ -7034,7 +7034,7 @@ menus:
             - "&7variables will not be created."
             - ""
             - "&eClick to set."
-        plot-redstone-operations-limit:
+        planet-redstone-operations-limit:
           name: "&4Redstone operations limit"
           lore:
             - "&7Type: &aNumber"
@@ -7044,7 +7044,7 @@ menus:
             - "&7of the mechanism will be removed."
             - ""
             - "&eClick to set."
-        plot-last-redstone-operations:
+        planet-last-redstone-operations:
           name: "&cLast redstone operations"
           lore:
             - "&7Type: &aNumber"
@@ -7053,7 +7053,7 @@ menus:
             - "&7redstone operations."
             - ""
             - "&eClick to set."
-        plot-entities-amount:
+        planet-entities-amount:
           name: "&eEntities in world"
           lore:
             - "&7Type: &aNumber"
@@ -7062,7 +7062,7 @@ menus:
             - "&7items, and entities in the world."
             - ""
             - "&eClick to set."
-        plot-entities-amount-limit:
+        planet-entities-amount-limit:
           name: "&5Max entities limit"
           lore:
             - "&7Type: &aNumber"
@@ -7072,7 +7072,7 @@ menus:
             - "&7cannot spawn."
             - ""
             - "&eClick to set."
-        plot-reputation:
+        planet-reputation:
           name: "&aWorld reputation"
           lore:
             - "&7Type: &aNumber"
@@ -7657,7 +7657,7 @@ menus:
       limit:
         name: "&c&oWorld Limit Reached!"
         lore:
-          - "&7You have created &f&n%plots% worlds&7 out of"
+          - "&7You have created &f&n%planets% worlds&7 out of"
           - "&7the allowed &n%limit%&7. To create a new"
           - "&7world, &cdelete&7 an unwanted one."
       all-worlds:
@@ -7684,21 +7684,21 @@ menus:
           - "&e  Click to create."
           - ""
       world:
-        name: "&f%plotName%"
+        name: "&f%planetName%"
         id: "&7 World ID: &a"
         lore:
-          - "&8World by &7%plotOwner%"
+          - "&8World by &7%planetOwner%"
           - " "
-          - "&7 %plotDescription%"
+          - "&7 %planetDescription%"
           - " "
           - "%id%"
-          - "&7 Online: &a%plotOnline%"
-          - "&7 Category: &f%plotCategory%"
-          - "&7 Reputation: &a%plotReputation%"
-          - "&7 Visitors: &a%plotUniques%"
+          - "&7 Online: &a%planetOnline%"
+          - "&7 Category: &f%planetCategory%"
+          - "&7 Reputation: &a%planetReputation%"
+          - "&7 Visitors: &a%planetUniques%"
           - " "
-          - "&7 Last Launch: &a%plotLastTime%"
-          - "&7 Creation Date: &a%plotCreationTime%"
+          - "&7 Last Launch: &a%planetLastTime%"
+          - "&7 Creation Date: &a%planetCreationTime%"
           - " "
           - "&eLeft-click &7- enter the world."
           - "&eSHIFT+Right-click &7- delete the world."
@@ -7708,18 +7708,18 @@ menus:
     turned-off: "&7 ○ "
     items:
       world:
-        name: "&f%plotName%"
+        name: "&f%planetName%"
         lore:
-          - "&8World created by &7%plotOwner%"
+          - "&8World created by &7%planetOwner%"
           - ""
-          - "&7 %plotDescription%"
+          - "&7 %planetDescription%"
           - ""
-          - "&a ☻ &7Online: &a%plotOnline%"
-          - "&e ⭐&7 Rating: &f%plotReputation%"
-          - "&3 ⚐&7 Category: &f%plotCategory%"
+          - "&a ☻ &7Online: &a%planetOnline%"
+          - "&e ⭐&7 Rating: &f%planetReputation%"
+          - "&3 ⚐&7 Category: &f%planetCategory%"
           - ""
           - "&2 ⏵ &a&nDrag an item here for an icon!&e &e &e &e "
-          - "&8 &8 &8 ID: %plotCustomID%"
+          - "&8 &8 &8 ID: %planetCustomID%"
           - ""
       change-name:
         name: " "
@@ -7784,7 +7784,7 @@ menus:
           - " "
           - "&e Click to set."
           - " "
-      plot-flags:
+      planet-flags:
         name: " "
         lore:
           - "&6 ⇄ World Options"
@@ -7801,7 +7801,7 @@ menus:
           - " "
           - "&e Click to configure."
           - ""
-      plot-players:
+      planet-players:
         name: " "
         lore:
           - "&6 🛡 Player Management"
@@ -8219,7 +8219,7 @@ menus:
         name: "&3Story-driven games"
         lore:
           - " "
-          - "&7The plot should interestingly"
+          - "&7The planet should interestingly"
           - "&7reveal the characters' personalities"
           - "&7and their actions."
           - ""

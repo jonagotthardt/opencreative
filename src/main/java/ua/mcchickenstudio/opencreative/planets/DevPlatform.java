@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.plots;
+package ua.mcchickenstudio.opencreative.planets;
 
 import org.bukkit.Location;
 import org.bukkit.Material;

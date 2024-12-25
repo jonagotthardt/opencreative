@@ -19,14 +19,14 @@
 package ua.mcchickenstudio.opencreative.listeners.player;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.inventory.ItemStack;
 
 
@@ -43,7 +43,7 @@ public class PlayerDropItem implements Listener {
             Component name = item.getItemMeta().displayName();
             if (name != null) {
                 String displayName = item.getItemMeta().getDisplayName();
-                if (!player.getWorld().getName().startsWith("plot")) {
+                if (!player.getWorld().getName().startsWith("planet")) {
                     if (displayName.equals(getLocaleItemName("items.lobby.games.name")) || displayName.equals(getLocaleMessage("items.lobby.own.name"))) {
                         event.setCancelled(true);
                     }
@@ -54,15 +54,15 @@ public class PlayerDropItem implements Listener {
                 }
             }
         }
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-        if (plot != null) EventRaiser.raiseItemDropEvent(event.getPlayer(),event);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        if (planet != null) EventRaiser.raiseItemDropEvent(event.getPlayer(),event);
     }
 
     @EventHandler
     public void onPlayerPickupItem(EntityPickupItemEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-        if (plot != null)  EventRaiser.raiseItemPickupEvent(player,event);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        if (planet != null)  EventRaiser.raiseItemPickupEvent(player,event);
     }
 
 }

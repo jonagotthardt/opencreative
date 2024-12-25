@@ -36,7 +36,7 @@ public class IsWorldDebugModeCondition extends WorldCondition {
 
     @Override
     public boolean check(Entity entity) {
-        return getPlot().isDebug();
+        return getPlanet().isDebug();
     }
 
     @Override

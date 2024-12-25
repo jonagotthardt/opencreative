@@ -7,7 +7,7 @@ name: 'OpenCreative'
 main: ua.mcchickenstudio.opencreative.OpenCreative
 api-version: 1.21
 
-version: '5.0 Release Candidate 3'
+version: '5.0 Release Candidate 4'
 description: 'Let players create the worlds'
 authors: [McChicken Studio]
 prefix: "OC+"

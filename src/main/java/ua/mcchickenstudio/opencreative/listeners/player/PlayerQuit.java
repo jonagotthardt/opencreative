@@ -18,17 +18,17 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
+import org.bukkit.GameMode;
 import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.commands.CreativeChat;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
-import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
 
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
@@ -39,19 +39,20 @@ public class PlayerQuit implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-        if (plot != null) {
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        if (planet != null) {
             EventRaiser.raiseQuitEvent(player);
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    plot.getInformation().updateIcon();
+                    planet.getInformation().updateIcon();
                 }
             }.runTaskAsynchronously(OpenCreative.getPlugin());
-            if (plot.getOnline() == 1) {
-                plot.getTerritory().unload();
+            if (planet.getOnline() == 1) {
+                planet.getTerritory().unload();
             }
         }
+        player.setGameMode(GameMode.ADVENTURE);
         teleportToLobby(player);
 
         PlayerChat.confirmation.remove(player);

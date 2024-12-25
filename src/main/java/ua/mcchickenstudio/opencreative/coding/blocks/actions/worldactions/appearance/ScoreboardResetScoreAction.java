@@ -39,7 +39,7 @@ public class ScoreboardResetScoreAction extends WorldAction {
         }
         String name = getArguments().getValue("name","board",this);
         String object = getArguments().getValue("object","board",this);
-        Scoreboard scoreboard = getPlot().getTerritory().getScoreboards().get(name.toLowerCase());
+        Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().get(name.toLowerCase());
         if (scoreboard == null) {
             return;
         }

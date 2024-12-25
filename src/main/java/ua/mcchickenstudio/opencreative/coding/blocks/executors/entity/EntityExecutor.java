@@ -38,12 +38,12 @@ package ua.mcchickenstudio.opencreative.coding.blocks.executors.entity;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public abstract class EntityExecutor extends Executor {
 
-    public EntityExecutor(Plot plot, int x, int y, int z) {
-        super(plot, x, y, z);
+    public EntityExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override

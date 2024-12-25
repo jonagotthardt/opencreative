@@ -19,8 +19,8 @@
 package ua.mcchickenstudio.opencreative.menu.world;
 
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -55,22 +55,22 @@ public class WorldDeleteMobsMenu extends AbstractMenu {
         event.setCancelled(true);
         if (!isPlayerClicked(event)) return;
         Player player = (Player) event.getWhoClicked();
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-        if (plot == null) return;
-        if (!plot.isOwner(player)) {
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        if (planet == null) return;
+        if (!planet.isOwner(player)) {
             player.closeInventory();
             return;
         }
         int count = 0;
         if (itemEquals(event.getCurrentItem(),DELETE_ITEMS_ITEM)) {
-            for (Entity entity : plot.getTerritory().getWorld().getEntities()) {
+            for (Entity entity : planet.getTerritory().getWorld().getEntities()) {
                 if (entity instanceof Item) {
                     entity.remove();
                     count++;
                 }
             }
-            if (plot.getDevPlot() != null && plot.getDevPlot().getWorld() != null) {
-                for (Entity entity : plot.getDevPlot().getWorld().getEntities()) {
+            if (planet.getDevPlanet() != null && planet.getDevPlanet().getWorld() != null) {
+                for (Entity entity : planet.getDevPlanet().getWorld().getEntities()) {
                     if (entity instanceof Item) {
                         entity.remove();
                         count++;
@@ -80,7 +80,7 @@ public class WorldDeleteMobsMenu extends AbstractMenu {
             player.closeInventory();
             player.sendMessage(getLocaleMessage("world.delete-mobs.items").replace("%count%", String.valueOf(count)));
         } else if (itemEquals(event.getCurrentItem(),DELETE_ENTITIES_ITEM)) {
-            for (Entity entity : plot.getTerritory().getWorld().getEntities()) {
+            for (Entity entity : planet.getTerritory().getWorld().getEntities()) {
                 if (!(entity instanceof LivingEntity)) {
                     entity.remove();
                     count++;
@@ -89,7 +89,7 @@ public class WorldDeleteMobsMenu extends AbstractMenu {
             player.closeInventory();
             player.sendMessage(getLocaleMessage("world.delete-mobs.entities").replace("%count%", String.valueOf(count)));
         } else if (itemEquals(event.getCurrentItem(),DELETE_MOBS_ITEM)) {
-            for (Entity entity : plot.getTerritory().getWorld().getEntities()) {
+            for (Entity entity : planet.getTerritory().getWorld().getEntities()) {
                 if (entity instanceof LivingEntity && !(entity instanceof Player)) {
                     entity.remove();
                     count++;

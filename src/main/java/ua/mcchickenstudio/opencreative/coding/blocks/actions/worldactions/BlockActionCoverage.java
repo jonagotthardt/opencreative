@@ -8,7 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.async.Pair;
 
 import java.util.*;
@@ -50,9 +50,9 @@ public class BlockActionCoverage {
             if (pool.total > 0) pool.total -= 10;
         });
     }
-    public static void addBlockAction(Plot plot, List<Pair<Block, Material>> pairs) {
-        if (!pools.containsKey(plot.getId())) pools.put(plot.getId(), new ActionsPool());
-        ActionsPool pool = pools.get(plot.getId());
+    public static void addBlockAction(Planet planet, List<Pair<Block, Material>> pairs) {
+        if (!pools.containsKey(planet.getId())) pools.put(planet.getId(), new ActionsPool());
+        ActionsPool pool = pools.get(planet.getId());
         for (Pair<Block, Material> pair : pairs)
             pool.getActions().add(new ActionsPool.Action(pair.getX(), pair.getY()));
     }

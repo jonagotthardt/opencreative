@@ -20,9 +20,9 @@ package ua.mcchickenstudio.opencreative.menu.world.browsers;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menu.LegacyMenu;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
-import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -32,7 +32,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
 
 import java.util.*;
 
@@ -52,12 +51,12 @@ public class OwnWorldsMenu extends LegacyMenu {
 
         items.put(46,getAllWorldsButton());
 
-        if (PlotManager.getInstance().getPlots() == null || PlotManager.getInstance().getPlots().isEmpty() || getPagesForPlots(player).isEmpty()) {
+        if (PlanetManager.getInstance().getPlanets() == null || PlanetManager.getInstance().getPlanets().isEmpty() || getPagesForPlanets(player).isEmpty()) {
             ItemStack noWorldsItem = getNoWorldsButton();
             items.put(13,noWorldsItem);
         } else {
 
-            List<List<Plot>> allPages = getPagesForPlots(player);
+            List<List<Planet>> allPages = getPagesForPlanets(player);
             int pageToOpen = page;
 
             if (page > allPages.size() || page < 1) pageToOpen = 1;
@@ -69,22 +68,22 @@ public class OwnWorldsMenu extends LegacyMenu {
             }
 
             int slot = 0;
-            for (Plot plot: allPages.get(pageToOpen-1)) {
-                if (plot.getOwner().equalsIgnoreCase(player.getName())) {
-                    Material material = plot.getInformation().getMaterial();
-                    if (!(plot.getSharing() == Plot.Sharing.PUBLIC)) material = Material.BARRIER;
+            for (Planet planet : allPages.get(pageToOpen-1)) {
+                if (planet.getOwner().equalsIgnoreCase(player.getName())) {
+                    Material material = planet.getInformation().getMaterial();
+                    if (!(planet.getSharing() == Planet.Sharing.PUBLIC)) material = Material.BARRIER;
                     ItemStack item = new ItemStack(material);
                     ItemMeta meta = item.getItemMeta();
-                    meta.displayName(Component.text(plot.getInformation().getDisplayName()));
+                    meta.displayName(Component.text(planet.getInformation().getDisplayName()));
                     List<String> lore = new ArrayList<>();
                     for (String loreLine : MessageUtils.getLocaleItemDescription("menus.own-worlds.items.world.lore")) {
-                        if (loreLine.contains("%plotDescription%")) {
-                            String[] newLines = plot.getInformation().getDescription().split("\\\\n");
+                        if (loreLine.contains("%planetDescription%")) {
+                            String[] newLines = planet.getInformation().getDescription().split("\\\\n");
                             for (String newLine : newLines) {
-                                lore.add(loreLine.replace("%plotDescription%", ChatColor.translateAlternateColorCodes('&',newLine)));
+                                lore.add(loreLine.replace("%planetDescription%", ChatColor.translateAlternateColorCodes('&',newLine)));
                             }
                         } else {
-                            lore.add(MessageUtils.parsePlotLines(plot,loreLine.replace("%id%", MessageUtils.getLocaleMessage("menus.own-worlds.items.world.id",false) + plot.getInformation().getCustomID())));
+                            lore.add(MessageUtils.parsePlanetLines(planet,loreLine.replace("%id%", MessageUtils.getLocaleMessage("menus.own-worlds.items.world.id",false) + planet.getInformation().getCustomID())));
                         }
                     }
                     meta.setLore(lore);
@@ -105,13 +104,13 @@ public class OwnWorldsMenu extends LegacyMenu {
             openedPage.put(player,pageToOpen);
         }
 
-        int plotsAmount = PlotManager.getInstance().getPlayerPlots(player).size();
-        int plotsLimit = OpenCreative.getSettings().getGroups().getGroup(player).getWorldsLimit();
+        int planetsAmount = PlanetManager.getInstance().getPlayerPlanets(player).size();
+        int planetsLimit = OpenCreative.getSettings().getGroups().getGroup(player).getWorldsLimit();
 
         // Если у игрока созданных плотов меньше чем лимит
-        if (plotsAmount < plotsLimit) {
+        if (planetsAmount < planetsLimit) {
 
-            int createWorldButtons = plotsLimit-plotsAmount;
+            int createWorldButtons = planetsLimit-planetsAmount;
             if (createWorldButtons > 7) createWorldButtons = 7;
 
             for (int createWorldButtonSlot = 0; createWorldButtonSlot < createWorldButtons; createWorldButtonSlot++) {
@@ -135,7 +134,7 @@ public class OwnWorldsMenu extends LegacyMenu {
             meta.setDisplayName(MessageUtils.getLocaleItemName("menus.own-worlds.items.limit.name"));
             List<String> lore = new ArrayList<>();
             for (String loreLine : MessageUtils.getLocaleItemDescription("menus.own-worlds.items.limit.lore")) {
-                lore.add(loreLine.replace("%plots%",String.valueOf(plotsAmount)).replace("%limit%",String.valueOf(plotsLimit)));
+                lore.add(loreLine.replace("%planets%",String.valueOf(planetsAmount)).replace("%limit%",String.valueOf(planetsLimit)));
             }
             meta.setLore(lore);
             item.setItemMeta(meta);
@@ -190,27 +189,27 @@ public class OwnWorldsMenu extends LegacyMenu {
         return item;
     }
 
-    private static List<List<Plot>> getPagesForPlots(Player player) {
+    private static List<List<Planet>> getPagesForPlanets(Player player) {
 
-        List<List<Plot>> pages = new ArrayList<>();
-        List<Plot> playerPlots = new ArrayList<>();
+        List<List<Planet>> pages = new ArrayList<>();
+        List<Planet> playerPlanets = new ArrayList<>();
 
-        for (Plot plot : PlotManager.getInstance().getPlots()) {
-            if (plot.getOwner().equalsIgnoreCase(player.getName())) playerPlots.add(plot);
+        for (Planet planet : PlanetManager.getInstance().getPlanets()) {
+            if (planet.getOwner().equalsIgnoreCase(player.getName())) playerPlanets.add(planet);
         }
 
         int pageSize = 24;
-        int pageCount = (int) Math.ceil((double) playerPlots.size() / pageSize);
+        int pageCount = (int) Math.ceil((double) playerPlanets.size() / pageSize);
 
-        Comparator<Plot> plotComparator = (plot1, plot2) -> Integer.compare(plot2.getOnline(), plot1.getOnline());
-        playerPlots.sort(plotComparator);
+        Comparator<Planet> planetComparator = (planet1, planet2) -> Integer.compare(planet2.getOnline(), planet1.getOnline());
+        playerPlanets.sort(planetComparator);
 
         for (int i = 0; i < pageCount; i++) {
             int fromIndex = i * pageSize;
-            int toIndex = Math.min((i + 1) * pageSize, playerPlots.size());
+            int toIndex = Math.min((i + 1) * pageSize, playerPlanets.size());
 
-            List<Plot> sublist = playerPlots.subList(fromIndex, toIndex);
-            ArrayList<Plot> page = new ArrayList<>(sublist);
+            List<Planet> sublist = playerPlanets.subList(fromIndex, toIndex);
+            ArrayList<Planet> page = new ArrayList<>(sublist);
 
             pages.add(page);
         }

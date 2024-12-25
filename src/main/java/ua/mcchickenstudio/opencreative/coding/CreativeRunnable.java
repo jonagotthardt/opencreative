@@ -19,9 +19,9 @@
 package ua.mcchickenstudio.opencreative.coding;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.plots.DevPlot;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -32,16 +32,16 @@ import java.util.List;
 /**
  * <h1>CreativeRunnable</h1>
  * This class represents BukkitRunnable with modifications that
- * stop executing code when plot is unloaded, or plot is not
+ * stop executing code when planet is unloaded, or planet is not
  * in Play mode anymore, or player is offline.
  */
 public abstract class CreativeRunnable {
 
-    private final Plot plot;
+    private final Planet planet;
     private int id;
 
-    public CreativeRunnable(Plot plot) {
-        this.plot = plot;
+    public CreativeRunnable(Planet planet) {
+        this.planet = planet;
     }
 
     public abstract void execute(Player player);
@@ -51,12 +51,12 @@ public abstract class CreativeRunnable {
         id = new BukkitRunnable() {
             @Override
             public void run() {
-                if (plot != null && plot.getMode() == Plot.Mode.PLAYING) {
+                if (planet != null && planet.getMode() == Planet.Mode.PLAYING) {
                     for (Player player : onlinePlayers) {
                         if (currentPlayers.isEmpty()) {
                             cancel();
                         }
-                        if (plot.getMode() != Plot.Mode.PLAYING) {
+                        if (planet.getMode() != Planet.Mode.PLAYING) {
                             cancel();
                         }
                         if (player == null) {
@@ -66,13 +66,13 @@ public abstract class CreativeRunnable {
                             currentPlayers.remove(player);
                             continue;
                         }
-                        Plot playerPlot = PlotManager.getInstance().getPlotByPlayer(player);
-                        if (!plot.equals(playerPlot)) {
+                        Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        if (!planet.equals(playerPlanet)) {
                             currentPlayers.remove(player);
                             continue;
                         }
-                        DevPlot playerDevPlot = PlotManager.getInstance().getDevPlot(player);
-                        if (playerDevPlot != null) {
+                        DevPlanet playerDevPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        if (playerDevPlanet != null) {
                             currentPlayers.remove(player);
                             continue;
                         }
@@ -90,12 +90,12 @@ public abstract class CreativeRunnable {
         id = new BukkitRunnable() {
             @Override
             public void run() {
-                if (plot != null && plot.getMode() == Plot.Mode.PLAYING) {
+                if (planet != null && planet.getMode() == Planet.Mode.PLAYING) {
                     for (Player player : onlinePlayers) {
                         if (currentPlayers.isEmpty()) {
                             cancel();
                         }
-                        if (plot.getMode() != Plot.Mode.PLAYING) {
+                        if (planet.getMode() != Planet.Mode.PLAYING) {
                             cancel();
                         }
                         if (player == null) {
@@ -105,13 +105,13 @@ public abstract class CreativeRunnable {
                             currentPlayers.remove(player);
                             continue;
                         }
-                        Plot playerPlot = PlotManager.getInstance().getPlotByPlayer(player);
-                        if (!plot.equals(playerPlot)) {
+                        Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        if (!planet.equals(playerPlanet)) {
                             currentPlayers.remove(player);
                             continue;
                         }
-                        DevPlot playerDevPlot = PlotManager.getInstance().getDevPlot(player);
-                        if (playerDevPlot != null) {
+                        DevPlanet playerDevPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        if (playerDevPlanet != null) {
                             currentPlayers.remove(player);
                             continue;
                         }

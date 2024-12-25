@@ -39,7 +39,7 @@ public class IsCurrentScoreboardCondition extends PlayerCondition {
     public boolean checkPlayer(Player player) {
         List<String> names = getArguments().getTextList("scoreboards",this);
         for (String name : names) {
-            Scoreboard scoreboard = getPlot().getTerritory().getScoreboards().get(name);
+            Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().get(name);
             if (player.getScoreboard().equals(scoreboard)) {
                 return true;
             }

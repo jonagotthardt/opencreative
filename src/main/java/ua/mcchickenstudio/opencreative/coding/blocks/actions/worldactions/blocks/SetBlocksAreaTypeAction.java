@@ -57,19 +57,19 @@ public class SetBlocksAreaTypeAction extends WorldAction {
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
-                getPlot().getLimits().setLastModifiedBlocksAmount(0);
+                getPlanet().getLimits().setLastModifiedBlocksAmount(0);
             }
         };
-        getPlot().getTerritory().addBukkitRunnable(runnable);
+        getPlanet().getTerritory().addBukkitRunnable(runnable);
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
-                    if (getPlot().getLimits().getLastModifiedBlocksAmount() > getPlot().getLimits().getModifyingBlocksLimit()) {
+                    if (getPlanet().getLimits().getLastModifiedBlocksAmount() > getPlanet().getLimits().getModifyingBlocksLimit()) {
                         runnable.runTaskLater(OpenCreative.getPlugin(),20L);
-                        getPlot().getTerritory().removeBukkitRunnable(runnable);
+                        getPlanet().getTerritory().removeBukkitRunnable(runnable);
                         return;
                     }
-                    getPlot().getLimits().setLastModifiedBlocksAmount(getPlot().getLimits().getLastModifiedBlocksAmount()+1);
+                    getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount()+1);
                     Block block = getWorld().getBlockAt(x,y,z);
                     type = switch (type) {
                         case WATER_BUCKET -> Material.WATER;
@@ -84,18 +84,18 @@ public class SetBlocksAreaTypeAction extends WorldAction {
             }
         }
         runnable.runTaskLater(OpenCreative.getPlugin(),20L);
-        getPlot().getTerritory().removeBukkitRunnable(runnable);
+        getPlanet().getTerritory().removeBukkitRunnable(runnable);
         /*
         Error!
         List<Pair<Block, Material>> toAdd = new ArrayList<>();
-        if (!BlockActionCoverage.getPools().containsKey(getPlot().getId()))
-            BlockActionCoverage.getPools().put(getPlot().getId(), new BlockActionCoverage.ActionsPool());
-        if (BlockActionCoverage.getPools().get(getPlot().getId()).getActions().size() > Short.MAX_VALUE * 2)
+        if (!BlockActionCoverage.getPools().containsKey(getPlanet().getId()))
+            BlockActionCoverage.getPools().put(getPlanet().getId(), new BlockActionCoverage.ActionsPool());
+        if (BlockActionCoverage.getPools().get(getPlanet().getId()).getActions().size() > Short.MAX_VALUE * 2)
             return;
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
-                    getPlot().getLimits().setLastModifiedBlocksAmount(getPlot().getLimits().getLastModifiedBlocksAmount()+1);
+                    getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount()+1);
                     Block block = getWorld().getBlockAt(x,y,z);
                     type = switch (type) {
                         case WATER_BUCKET -> Material.WATER;
@@ -109,7 +109,7 @@ public class SetBlocksAreaTypeAction extends WorldAction {
                 }
             }
         }
-        BlockActionCoverage.addBlockAction(getPlot(), toAdd);*/
+        BlockActionCoverage.addBlockAction(getPlanet(), toAdd);*/
     }
 
     @Override

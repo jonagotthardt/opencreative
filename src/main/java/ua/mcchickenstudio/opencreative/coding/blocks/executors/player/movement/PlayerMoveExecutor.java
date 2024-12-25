@@ -20,13 +20,13 @@ package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.movement;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.event.Cancellable;
 
 public class PlayerMoveExecutor extends PlayerExecutor implements Cancellable {
 
-    public PlayerMoveExecutor(Plot plot, int x, int y, int z) {
-        super(plot, x, y, z);
+    public PlayerMoveExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override

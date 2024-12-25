@@ -42,7 +42,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-public class DevPlotChunkGenerator extends ChunkGenerator {
+public class DevPlanetChunkGenerator extends ChunkGenerator {
 
     @Override
     public @NotNull ChunkData generateChunkData(@NotNull World world, @NotNull Random random, int x, int z, @NotNull BiomeGrid biome) {

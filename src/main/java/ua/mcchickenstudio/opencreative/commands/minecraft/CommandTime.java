@@ -19,8 +19,8 @@
 package ua.mcchickenstudio.opencreative.commands.minecraft;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -60,12 +60,12 @@ public class CommandTime implements CommandExecutor, TabCompleter {
              * Checking is player owner, builder or developer of world.
              * If not, he can't change world's time.
              */
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot == null) {
+            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            if (planet == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
                 return true;
             }
-            if (!(plot.isOwner(player) || plot.getWorldPlayers().canDevelop(player) || plot.getWorldPlayers().canBuild(player))) {
+            if (!(planet.isOwner(player) || planet.getWorldPlayers().canDevelop(player) || planet.getWorldPlayers().canBuild(player))) {
                 player.sendMessage(getLocaleMessage("not-owner"));
                 return true;
             }

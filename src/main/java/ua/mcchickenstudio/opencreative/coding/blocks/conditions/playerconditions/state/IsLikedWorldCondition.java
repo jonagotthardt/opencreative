@@ -24,7 +24,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import org.bukkit.entity.Player;
 
@@ -38,8 +38,8 @@ public class IsLikedWorldCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
-        //FIXME: Use liked players in plot.getWorldPlayers() instead of loading files
-        List<String> likedPlayers = FileUtils.getPlayersFromPlotList(getPlot(), Plot.PlayersType.LIKED);
+        //FIXME: Use liked players in planet.getWorldPlayers() instead of loading files
+        List<String> likedPlayers = FileUtils.getPlayersFromPlanetList(getPlanet(), Planet.PlayersType.LIKED);
         for (String nickname : likedPlayers) {
             if (nickname.equalsIgnoreCase(player.getName())) {
                 return true;

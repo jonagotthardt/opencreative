@@ -36,37 +36,37 @@
 
 package ua.mcchickenstudio.opencreative.coding.test;
 
-import ua.mcchickenstudio.opencreative.plots.DevPlot;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public abstract class DevPlatformRunnable extends BukkitRunnable {
 
-    private final DevPlot devPlot;
+    private final DevPlanet devPlanet;
     private final int numberX;
     private final int numberZ;
 
-    public DevPlatformRunnable(DevPlot devPlot, int x, int z) {
-        this.devPlot = devPlot;
+    public DevPlatformRunnable(DevPlanet devPlanet, int x, int z) {
+        this.devPlanet = devPlanet;
         this.numberX = x;
         this.numberZ = z;
     }
 
     @Override
     public void run() {
-        int beginX =  devPlot.getPlatformBeginCoordinate(numberX)+4;
-        int beginZ = devPlot.getPlatformBeginCoordinate(numberZ)+4;
-        int endX = devPlot.getPlatformEndCoordinate(numberZ)-4;
-        int endZ = devPlot.getPlatformEndCoordinate(numberZ)-4;
+        int beginX =  devPlanet.getPlatformBeginCoordinate(numberX)+4;
+        int beginZ = devPlanet.getPlatformBeginCoordinate(numberZ)+4;
+        int endX = devPlanet.getPlatformEndCoordinate(numberZ)-4;
+        int endZ = devPlanet.getPlatformEndCoordinate(numberZ)-4;
         // For executor block
         for (int z = beginZ; z <= endZ; z=z+3) {
 
-            Block executorBlock = devPlot.getWorld().getBlockAt(beginX,1,z);
+            Block executorBlock = devPlanet.getWorld().getBlockAt(beginX,1,z);
             parseExecutorBlock(executorBlock);
 
             // For action block
             for (int x = beginX; x <= endX; x=x+2) {
-                Block actionBlock = devPlot.getWorld().getBlockAt(x,1,z);
+                Block actionBlock = devPlanet.getWorld().getBlockAt(x,1,z);
                 parseActionBlock(executorBlock,actionBlock);
             }
         }

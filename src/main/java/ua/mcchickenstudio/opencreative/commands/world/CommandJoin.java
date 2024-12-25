@@ -19,14 +19,14 @@
 package ua.mcchickenstudio.opencreative.commands.world;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import ua.mcchickenstudio.opencreative.plots.Plot;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -53,28 +53,28 @@ public class CommandJoin implements CommandExecutor, TabCompleter {
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (args.length == 1) {
-                if (!PlotManager.getInstance().getPlots().isEmpty()) {
-                    Plot foundPlot = null;
-                    for (Plot searchablePlot : PlotManager.getInstance().getPlots()) {
-                        if (String.valueOf(searchablePlot.getId()).equals(args[0])) {
-                            foundPlot = searchablePlot;
+                if (!PlanetManager.getInstance().getPlanets().isEmpty()) {
+                    Planet foundPlanet = null;
+                    for (Planet searchablePlanet : PlanetManager.getInstance().getPlanets()) {
+                        if (String.valueOf(searchablePlanet.getId()).equals(args[0])) {
+                            foundPlanet = searchablePlanet;
                             break;
-                        } else if (searchablePlot.getInformation().getCustomID().equalsIgnoreCase(args[0])) {
-                            foundPlot = searchablePlot;
+                        } else if (searchablePlanet.getInformation().getCustomID().equalsIgnoreCase(args[0])) {
+                            foundPlanet = searchablePlanet;
                             break;
                         }
                     }
-                    if (foundPlot != null) {
-                        foundPlot.connectPlayer(player);
+                    if (foundPlanet != null) {
+                        foundPlanet.connectPlayer(player);
                     } else {
                         player.playSound(player.getLocation(),Sound.BLOCK_ANVIL_DESTROY,100,2);
                         player.clearTitle();
-                        player.sendMessage(getLocaleMessage("no-plot-found",player));
+                        player.sendMessage(getLocaleMessage("no-planet-found",player));
                     }
                 } else {
                     player.playSound(player.getLocation(),Sound.BLOCK_ANVIL_DESTROY,100,2);
                     player.clearTitle();
-                    player.sendMessage(getLocaleMessage("no-plot-found",player));
+                    player.sendMessage(getLocaleMessage("no-planet-found",player));
                 }
             } else {
                 player.sendMessage(getLocaleMessage("join-usage"));
@@ -87,8 +87,8 @@ public class CommandJoin implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         if (args.length == 1) {
             List<String> TabCompleter = new ArrayList<>();
-            for (Plot plot : PlotManager.getInstance().getPlots()) {
-                TabCompleter.add(plot.getInformation().getCustomID());
+            for (Planet planet : PlanetManager.getInstance().getPlanets()) {
+                TabCompleter.add(planet.getInformation().getCustomID());
             }
             return TabCompleter;
         }

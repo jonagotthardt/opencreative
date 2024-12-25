@@ -16,24 +16,17 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.events.plot;
+package ua.mcchickenstudio.opencreative.events.planet;
 
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 /**
- * Called when player connects to plot.
+ * Called when planet is going to be deleted.
  */
-public class PlotConnectPlayerEvent extends PlotEvent {
+public class PlanetDeletionEvent extends PlanetEvent {
 
-    private final Player player;
-
-    public PlotConnectPlayerEvent(Plot plot, Player player) {
-        super(plot);
-        this.player = player;
+    public PlanetDeletionEvent(Planet planet) {
+        super(planet);
     }
 
-    public Player getPlayer() {
-        return player;
-    }
 }

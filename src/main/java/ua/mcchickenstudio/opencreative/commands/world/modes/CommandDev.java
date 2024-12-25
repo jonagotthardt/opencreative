@@ -28,12 +28,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
-import ua.mcchickenstudio.opencreative.plots.Plot;
 import org.bukkit.inventory.meta.BookMeta;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
 import java.time.Duration;
 
@@ -52,8 +51,8 @@ public class CommandDev implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
         if (sender instanceof Player player) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot == null) {
+            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            if (planet == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
                 return true;
             }
@@ -63,22 +62,22 @@ public class CommandDev implements CommandExecutor {
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (args.length == 0 || args.length == 3) {
-                if (plot.getWorldPlayers().canDevelop(player) || plot.getWorldPlayers().isDeveloperGuest(player)) {
-                    if (!plot.getWorldPlayers().isTrustedDeveloper(player)) {
-                        Player plotOwner = Bukkit.getPlayer(plot.getOwner());
-                        if (plotOwner == null) {
+                if (planet.getWorldPlayers().canDevelop(player) || planet.getWorldPlayers().isDeveloperGuest(player)) {
+                    if (!planet.getWorldPlayers().isTrustedDeveloper(player)) {
+                        Player planetOwner = Bukkit.getPlayer(planet.getOwner());
+                        if (planetOwner == null) {
                             sender.sendMessage(getLocaleMessage("world.dev-mode.cant-dev-when-offline"));
                             return true;
                         }
-                        Plot ownerPlot = PlotManager.getInstance().getPlotByPlayer(plotOwner);
-                        if (!plot.equals(ownerPlot)) {
+                        Planet ownerPlanet = PlanetManager.getInstance().getPlanetByPlayer(planetOwner);
+                        if (!planet.equals(ownerPlanet)) {
                             sender.sendMessage(getLocaleMessage("world.dev-mode.cant-dev-when-offline"));
                             return true;
                         }
                     }
                     EventRaiser.raiseQuitEvent(player);
                     PlayerInventory playerInventory = player.getInventory();
-                    ItemStack[] playerInventoryItems = (PlotManager.getInstance().getDevPlot(player) == null ?  playerInventory.getContents() : new ItemStack[]{});
+                    ItemStack[] playerInventoryItems = (PlanetManager.getInstance().getDevPlanet(player) == null ?  playerInventory.getContents() : new ItemStack[]{});
                     clearPlayer(player);
                     sender.sendMessage(getLocaleMessage("world.dev-mode.help", player));
                     if (args.length == 3) {
@@ -86,14 +85,14 @@ public class CommandDev implements CommandExecutor {
                             double x = Double.parseDouble(args[0]);
                             double y = Double.parseDouble(args[1]);
                             double z = Double.parseDouble(args[2]);
-                            plot.connectToDevPlot(player,x,y,z);
+                            planet.connectToDevPlanet(player,x,y,z);
                         } catch (Exception error) {
-                            plot.connectToDevPlot(player);
+                            planet.connectToDevPlanet(player);
                         }
                     } else {
-                        plot.connectToDevPlot(player);
+                        planet.connectToDevPlanet(player);
                     }
-                    if (plot.getWorldPlayers().isDeveloperGuest(player)) {
+                    if (planet.getWorldPlayers().isDeveloperGuest(player)) {
                         player.setGameMode(GameMode.ADVENTURE);
                         player.setAllowFlight(true);
                         player.setFlying(true);
@@ -104,7 +103,7 @@ public class CommandDev implements CommandExecutor {
                         giveDevPermissions(player);
                     }
                     ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
-                    if (plot.isOwner(player)) {
+                    if (planet.isOwner(player)) {
                         player.getInventory().setItem(8, worldSettingsItem);
                     }
                     giveItems(player);
@@ -123,18 +122,18 @@ public class CommandDev implements CommandExecutor {
                     sender.sendMessage(getLocaleMessage("not-owner", player));
                 }
             } else {
-                if (!plot.isOwner(sender.getName())) {
+                if (!planet.isOwner(sender.getName())) {
                     sender.sendMessage(getLocaleMessage("not-owner"));
                     return true;
                 }
                 String nickname = args[0];
                 Player onlinePlayer = Bukkit.getPlayer(nickname);
-                if (!plot.getWorldPlayers().getAllDevelopers().contains(nickname)) {
+                if (!planet.getWorldPlayers().getAllDevelopers().contains(nickname)) {
                     if (onlinePlayer != null) {
                         nickname = onlinePlayer.getName();
                     }
                 }
-                if (plot.isOwner(nickname)) {
+                if (planet.isOwner(nickname)) {
                     sender.sendMessage(getLocaleMessage("same-player"));
                     return true;
                 }
@@ -142,13 +141,13 @@ public class CommandDev implements CommandExecutor {
                  * Checks if player's name contains in not trusted
                  * or trusted developers.
                  */
-                if (plot.getWorldPlayers().getDevelopersNotTrusted().contains(nickname)) {
-                    plot.getWorldPlayers().addDeveloper(nickname,true);
+                if (planet.getWorldPlayers().getDevelopersNotTrusted().contains(nickname)) {
+                    planet.getWorldPlayers().addDeveloper(nickname,true);
                     sender.sendMessage(getLocaleMessage("world.players.developers.trusted").replace("%player%", nickname));
                     return true;
                 }
-                if (plot.getWorldPlayers().getDevelopersTrusted().contains(nickname)) {
-                    plot.getWorldPlayers().removeDeveloper(nickname);
+                if (planet.getWorldPlayers().getDevelopersTrusted().contains(nickname)) {
+                    planet.getWorldPlayers().removeDeveloper(nickname);
                     sender.sendMessage(getLocaleMessage("world.players.developers.removed").replace("%player%", nickname));
                     return true;
                 }
@@ -157,10 +156,10 @@ public class CommandDev implements CommandExecutor {
                  * listed in developers.
                  */
                 if (onlinePlayer != null) {
-                    Plot playerPlot = PlotManager.getInstance().getPlotByPlayer(onlinePlayer);
-                    if (plot.equals(playerPlot)) {
+                    Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(onlinePlayer);
+                    if (planet.equals(playerPlanet)) {
                         sender.sendMessage(getLocaleMessage("world.players.developers.added").replace("%player%", onlinePlayer.getName()));
-                        plot.getWorldPlayers().addDeveloper(onlinePlayer.getName(),false);
+                        planet.getWorldPlayers().addDeveloper(onlinePlayer.getName(),false);
                     } else {
                         sender.sendMessage(getLocaleMessage("no-player-found"));
                     }

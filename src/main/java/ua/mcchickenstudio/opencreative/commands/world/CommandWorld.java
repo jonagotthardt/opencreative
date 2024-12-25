@@ -26,9 +26,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.menu.world.WorldDeleteMobsMenu;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
-import ua.mcchickenstudio.opencreative.plots.Plot;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -56,10 +56,10 @@ public class CommandWorld implements CommandExecutor {
             switch(args[0]) {
                 case "delete":
                     if (sender instanceof Player player) {
-                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
                         if (sender.hasPermission("opencreative.delete")) {
-                            if (plot.isOwner(player) || sender.hasPermission("opencreative.delete.bypass")) {
-                                PlotManager.getInstance().deletePlot(plot, player);
+                            if (planet.isOwner(player) || sender.hasPermission("opencreative.delete.bypass")) {
+                                PlanetManager.getInstance().deletePlanet(planet, player);
                             }
                         } else {
                             sender.sendMessage(getLocaleMessage("no-perms"));
@@ -69,10 +69,10 @@ public class CommandWorld implements CommandExecutor {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
                             return true;
                         }
-                        Plot plot = PlotManager.getInstance().getPlotByWorldName(args[1]);
-                        if (plot != null) {
+                        Planet planet = PlanetManager.getInstance().getPlanetByWorldName(args[1]);
+                        if (planet != null) {
                             OpenCreative.getPlugin().getLogger().info("Deleting a world " + args[1] + ", please wait...");
-                            PlotManager.getInstance().deletePlot(plot,null);
+                            PlanetManager.getInstance().deletePlanet(planet,null);
                         } else {
                             OpenCreative.getPlugin().getLogger().warning("This world doesn't exists" + args[1]);
                         }
@@ -80,35 +80,35 @@ public class CommandWorld implements CommandExecutor {
                     break;
                 case "deletemobs":
                     if (sender instanceof Player player) {
-                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                        if (plot != null && (plot.getOwner().equalsIgnoreCase(sender.getName()))) {
+                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        if (planet != null && (planet.getOwner().equalsIgnoreCase(sender.getName()))) {
                             new WorldDeleteMobsMenu().open(player);
                         }
                     }
                     break;
                 case "info":
                     if (sender instanceof Player player) {
-                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                        if (plot == null) return true;
+                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        if (planet == null) return true;
                         long now = System.currentTimeMillis();
-                        sender.sendMessage(getLocaleMessage("world.info").replace("%name%", plot.getInformation().getDisplayName())
-                                .replace("%id%", String.valueOf(plot.getId())).replace("%creation-time%", getElapsedTime(now, plot.getCreationTime()))
-                                .replace("%activity-time%", getElapsedTime(now, plot.getLastActivityTime())).replace("%online%", String.valueOf(plot.getOnline()))
-                                .replace("%builders%", plot.getWorldPlayers().getBuilders()).replace("%coders%", plot.getWorldPlayers().getDevelopers()).replace("%owner%", plot.getOwner())
-                                .replace("%sharing%", plot.getSharing().getName()).replace("%mode%", plot.getMode().getName()).replace("%description%", plot.getInformation().getDescription()));
+                        sender.sendMessage(getLocaleMessage("world.info").replace("%name%", planet.getInformation().getDisplayName())
+                                .replace("%id%", String.valueOf(planet.getId())).replace("%creation-time%", getElapsedTime(now, planet.getCreationTime()))
+                                .replace("%activity-time%", getElapsedTime(now, planet.getLastActivityTime())).replace("%online%", String.valueOf(planet.getOnline()))
+                                .replace("%builders%", planet.getWorldPlayers().getBuilders()).replace("%coders%", planet.getWorldPlayers().getDevelopers()).replace("%owner%", planet.getOwner())
+                                .replace("%sharing%", planet.getSharing().getName()).replace("%mode%", planet.getMode().getName()).replace("%description%", planet.getInformation().getDescription()));
                         break;
                     }
                 case "size":
                     if (sender instanceof Player player) {
                         if (!sender.hasPermission("opencreative.world.size")) return true;
-                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                        if (plot == null) return true;
-                        long settingsSize = getFileSize(new File(getPlotFolder(plot), "settings.yml"));
-                        long scriptSize = getFileSize(new File(getPlotFolder(plot), "codeScript.yml"));
-                        long variablesSize = getFileSize(new File(getPlotFolder(plot), "variables.json"));
-                        long dataSize = getFolderSize(new File(getPlotFolder(plot), "playersData"));
-                        long folderSize = getFolderSize(getPlotFolder(plot));
-                        long devWorldSize = getFolderSize(getDevPlotFolder(plot.getDevPlot()));
+                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        if (planet == null) return true;
+                        long settingsSize = getFileSize(new File(getPlanetFolder(planet), "settings.yml"));
+                        long scriptSize = getFileSize(new File(getPlanetFolder(planet), "codeScript.yml"));
+                        long variablesSize = getFileSize(new File(getPlanetFolder(planet), "variables.json"));
+                        long dataSize = getFolderSize(new File(getPlanetFolder(planet), "playersData"));
+                        long folderSize = getFolderSize(getPlanetFolder(planet));
+                        long devWorldSize = getFolderSize(getDevPlanetFolder(planet.getDevPlanet()));
                         long worldSize = folderSize-dataSize-variablesSize-scriptSize-settingsSize;
                         sender.sendMessage(getLocaleMessage("world.size")
                                 .replace("%total%",FileUtils.byteCountToDisplaySize(folderSize+devWorldSize))
@@ -123,13 +123,13 @@ public class CommandWorld implements CommandExecutor {
                 case "ram", "mem", "tps", "memory":
                     if (sender instanceof Player player) {
                         if (!sender.hasPermission("opencreative.world.memory")) return true;
-                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                        if (plot == null) return true;
-                        if (!plot.isLoaded()) return true;
-                        int chunks = plot.getTerritory().getWorld().getChunkCount()
-                                + (plot.getDevPlot().isLoaded() ? plot.getDevPlot().getWorld().getChunkCount() : 0);
-                        int entities = plot.getTerritory().getWorld().getEntityCount()
-                                + (plot.getDevPlot().isLoaded() ? plot.getDevPlot().getWorld().getEntityCount() : 0);
+                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        if (planet == null) return true;
+                        if (!planet.isLoaded()) return true;
+                        int chunks = planet.getTerritory().getWorld().getChunkCount()
+                                + (planet.getDevPlanet().isLoaded() ? planet.getDevPlanet().getWorld().getChunkCount() : 0);
+                        int entities = planet.getTerritory().getWorld().getEntityCount()
+                                + (planet.getDevPlanet().isLoaded() ? planet.getDevPlanet().getWorld().getEntityCount() : 0);
 
                         sender.sendMessage("");
                         sender.sendMessage(" Chunks: " + chunks);
@@ -140,29 +140,29 @@ public class CommandWorld implements CommandExecutor {
                 case "e", "experiment", "experiments":
                     if (sender instanceof Player player) {
                         if (!sender.hasPermission("opencreative.world.memory")) return true;
-                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                        if (plot == null) return true;
+                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        if (planet == null) return true;
                         if (args.length == 1) return true;
-                        plot.getExperiments().handle(player, Arrays.copyOfRange(args,1,args.length));
+                        planet.getExperiments().handle(player, Arrays.copyOfRange(args,1,args.length));
                     }
                     break;
             }
         } else {
             if (sender instanceof Player player) {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot == null) {
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                if (planet == null) {
                     player.sendMessage(getLocaleMessage("only-in-world"));
                     return true;
                 }
-                if (plot.getOwner().equalsIgnoreCase(sender.getName())) {
-                    new WorldSettingsMenu(plot,player).open(player);
+                if (planet.getOwner().equalsIgnoreCase(sender.getName())) {
+                    new WorldSettingsMenu(planet,player).open(player);
                 } else {
                     long now = System.currentTimeMillis();
-                    sender.sendMessage(getLocaleMessage("world.info").replace("%name%", plot.getInformation().getDisplayName())
-                            .replace("%id%", String.valueOf(plot.getId())).replace("%creation-time%",getElapsedTime(now,plot.getCreationTime()))
-                            .replace("%activity-time%",getElapsedTime(now,plot.getLastActivityTime())).replace("%online%",String.valueOf(plot.getOnline()))
-                            .replace("%builders%", plot.getWorldPlayers().getBuilders()).replace("%coders%", plot.getWorldPlayers().getDevelopers()).replace("%owner%",plot.getOwner())
-                            .replace("%sharing%", plot.getSharing().getName()).replace("%mode%", plot.getMode().getName()).replace("%description%", plot.getInformation().getDescription()));
+                    sender.sendMessage(getLocaleMessage("world.info").replace("%name%", planet.getInformation().getDisplayName())
+                            .replace("%id%", String.valueOf(planet.getId())).replace("%creation-time%",getElapsedTime(now, planet.getCreationTime()))
+                            .replace("%activity-time%",getElapsedTime(now, planet.getLastActivityTime())).replace("%online%",String.valueOf(planet.getOnline()))
+                            .replace("%builders%", planet.getWorldPlayers().getBuilders()).replace("%coders%", planet.getWorldPlayers().getDevelopers()).replace("%owner%", planet.getOwner())
+                            .replace("%sharing%", planet.getSharing().getName()).replace("%mode%", planet.getMode().getName()).replace("%description%", planet.getInformation().getDescription()));
                 }
             } else {
                 OpenCreative.getPlugin().getLogger().info("Worlds Commands: ");

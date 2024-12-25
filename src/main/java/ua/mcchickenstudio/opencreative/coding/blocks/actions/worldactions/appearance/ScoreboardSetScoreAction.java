@@ -40,7 +40,7 @@ public class ScoreboardSetScoreAction extends WorldAction {
         String name = getArguments().getValue("name","board",this);
         String object = getArguments().getValue("object","board",this);
         int score = getArguments().getValue("score",0,this);
-        Scoreboard scoreboard = getPlot().getTerritory().getScoreboards().get(name.toLowerCase());
+        Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().get(name.toLowerCase());
         if (scoreboard == null) {
             return;
         }

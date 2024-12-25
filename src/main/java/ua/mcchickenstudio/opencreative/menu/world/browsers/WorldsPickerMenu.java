@@ -18,8 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.menu.world.browsers;
 
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 import org.bukkit.Bukkit;
@@ -30,28 +30,28 @@ import java.util.Set;
 
 public class WorldsPickerMenu extends WorldsBrowserMenu{
 
-    public WorldsPickerMenu(Player player, Set<Plot> plots) {
-        super(player, plots, false);
+    public WorldsPickerMenu(Player player, Set<Planet> planets) {
+        super(player, planets, false);
     }
 
     @Override
-    protected void onPlotClick(Player player, Plot downloadablePlot) {
-        if (downloadablePlot.getInformation().isDownloadable()) {
+    protected void onPlanetClick(Player player, Planet downloadablePlanet) {
+        if (downloadablePlanet.getInformation().isDownloadable()) {
             int id = WorldUtils.generateWorldID();
-            FileUtils.copyFilesToDirectory(FileUtils.getPlotFolder(downloadablePlot),new File(Bukkit.getWorldContainer().getPath() + File.separator + "unloadedWorlds" + File.separator + "plot" + id));
-            if (downloadablePlot.getDevPlot().exists()) {
-                FileUtils.copyFilesToDirectory(FileUtils.getDevPlotFolder(downloadablePlot.getDevPlot()),new File(Bukkit.getWorldContainer().getPath() + File.separator + "unloadedWorlds" + File.separator + "plot" + id + "dev"));
+            FileUtils.copyFilesToDirectory(FileUtils.getPlanetFolder(downloadablePlanet),new File(Bukkit.getWorldContainer().getPath() + File.separator + "unloadedWorlds" + File.separator + "planet" + id));
+            if (downloadablePlanet.getDevPlanet().exists()) {
+                FileUtils.copyFilesToDirectory(FileUtils.getDevPlanetFolder(downloadablePlanet.getDevPlanet()),new File(Bukkit.getWorldContainer().getPath() + File.separator + "unloadedWorlds" + File.separator + "planet" + id + "dev"));
             }
-            Plot newPlot = new Plot(id);
-            FileUtils.setPlotConfigParameter(newPlot,"creation-time",System.currentTimeMillis());
-            newPlot.setOwner(player.getName());
-            newPlot.getInformation().setCustomID(String.valueOf(id));
-            newPlot.getInformation().setDownloadable(false);
-            newPlot.getWorldPlayers().purgeData();
-            PlotManager.getInstance().registerPlot(newPlot);
-            FileUtils.deleteFolder(new File(FileUtils.getPlotFolder(newPlot).getPath() + File.separator + "playersData"));
-            FileUtils.deleteUnnecessaryWorldFiles(FileUtils.getPlotFolder(newPlot));
-            newPlot.connectPlayer(player);
+            Planet newPlanet = new Planet(id);
+            FileUtils.setPlanetConfigParameter(newPlanet,"creation-time",System.currentTimeMillis());
+            newPlanet.setOwner(player.getName());
+            newPlanet.getInformation().setCustomID(String.valueOf(id));
+            newPlanet.getInformation().setDownloadable(false);
+            newPlanet.getWorldPlayers().purgeData();
+            PlanetManager.getInstance().registerPlanet(newPlanet);
+            FileUtils.deleteFolder(new File(FileUtils.getPlanetFolder(newPlanet).getPath() + File.separator + "playersData"));
+            FileUtils.deleteUnnecessaryWorldFiles(FileUtils.getPlanetFolder(newPlanet));
+            newPlanet.connectPlayer(player);
         }
     }
 }

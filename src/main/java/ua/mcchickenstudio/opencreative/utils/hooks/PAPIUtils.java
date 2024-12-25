@@ -19,8 +19,8 @@
 package ua.mcchickenstudio.opencreative.utils.hooks;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
@@ -45,57 +45,57 @@ class Placeholder extends PlaceholderExpansion {
     @Override
     public String onPlaceholderRequest(Player player, String identifier) {
         switch (identifier) {
-            case "plot_id" -> {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return String.valueOf(plot.getId());
+            case "planet_id" -> {
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                if (planet != null) return String.valueOf(planet.getId());
             }
-            case "plot_custom_id" -> {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return plot.getInformation().getCustomID();
+            case "planet_custom_id" -> {
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                if (planet != null) return planet.getInformation().getCustomID();
             }
-            case "plot_online" -> {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return String.valueOf(plot.getOnline());
+            case "planet_online" -> {
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                if (planet != null) return String.valueOf(planet.getOnline());
             }
-            case "plot_uniques" -> {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return String.valueOf(plot.getUniques());
+            case "planet_uniques" -> {
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                if (planet != null) return String.valueOf(planet.getUniques());
             }
-            case "plot_reputation" -> {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return String.valueOf(plot.getInformation().getReputation());
+            case "planet_reputation" -> {
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                if (planet != null) return String.valueOf(planet.getInformation().getReputation());
             }
-            case "is_in_plot" -> {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                return String.valueOf((plot != null));
+            case "is_in_planet" -> {
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                return String.valueOf((planet != null));
             }
-            case "plot_name" -> {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return plot.getInformation().getDisplayName();
+            case "planet_name" -> {
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                if (planet != null) return planet.getInformation().getDisplayName();
             }
-            case "plot_description" -> {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return plot.getInformation().getDescription();
+            case "planet_description" -> {
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                if (planet != null) return planet.getInformation().getDescription();
             }
-            case "plot_owner" -> {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return plot.getOwner();
+            case "planet_owner" -> {
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                if (planet != null) return planet.getOwner();
             }
-            case "plot_category" -> {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return String.valueOf(plot.getInformation().getCategory());
+            case "planet_category" -> {
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                if (planet != null) return String.valueOf(planet.getInformation().getCategory());
             }
-            case "plot_sharing" -> {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return String.valueOf(plot.getSharing());
+            case "planet_sharing" -> {
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                if (planet != null) return String.valueOf(planet.getSharing());
             }
-            case "plot_mode" -> {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return String.valueOf(plot.getMode());
+            case "planet_mode" -> {
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                if (planet != null) return String.valueOf(planet.getMode());
             }
-            case "plot_is_dev_plot_loaded" -> {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot != null) return String.valueOf(plot.getDevPlot() != null && plot.getDevPlot().isLoaded());
+            case "planet_is_dev_planet_loaded" -> {
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                if (planet != null) return String.valueOf(planet.getDevPlanet() != null && planet.getDevPlanet().isLoaded());
             }
         }
         return null;

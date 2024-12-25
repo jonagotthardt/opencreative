@@ -34,7 +34,7 @@ public class SetHealthAction extends PlayerAction {
 
     public void executePlayer(Player player) {
         if (player.isDead()) {
-            sendCodingDebugLog(getPlot(),"Can't set player's health, player is dead.");
+            sendCodingDebugLog(getPlanet(),"Can't set player's health, player is dead.");
             return;
         }
         boolean add = getArguments().getValue("add",false,this);

@@ -36,7 +36,7 @@ public class VectorToLocationAction extends VariableAction {
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
         Vector vector = getArguments().getValue("vector",new Vector(),this);
-        setVarValue(link,vector.toLocation(getPlot().getTerritory().getWorld()));
+        setVarValue(link,vector.toLocation(getPlanet().getTerritory().getWorld()));
     }
 
     @Override

@@ -19,15 +19,15 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.events.world.other;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class VariableTransferEvent extends WorldEvent {
 
     private final String key;
     private final Object value;
 
-    public VariableTransferEvent(Plot plot, String key, Object value) {
-        super(plot);
+    public VariableTransferEvent(Planet planet, String key, Object value) {
+        super(planet);
         this.key = key;
         this.value = value;
     }

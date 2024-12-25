@@ -24,8 +24,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.plots.WorldPlayer;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.planets.PlanetPlayer;
 
 import java.util.List;
 
@@ -39,9 +39,9 @@ public class HasSavedPurchaseCondition extends PlayerCondition {
     public boolean checkPlayer(Player player) {
         List<String> names = getArguments().getTextList("names",this);
         boolean check = false;
-        WorldPlayer worldPlayer = getPlot().getWorldPlayers().getPlotPlayer(player);
+        PlanetPlayer planetPlayer = getPlanet().getWorldPlayers().getPlanetPlayer(player);
         for (String name : names) {
-            if (worldPlayer.getPurchases().contains(name)) {
+            if (planetPlayer.getPurchases().contains(name)) {
                 check = true;
             } else {
                 return false;

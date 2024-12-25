@@ -19,8 +19,8 @@
 package ua.mcchickenstudio.opencreative.commands.minecraft;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -49,12 +49,12 @@ public class CommandStopSound implements CommandExecutor {
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (!player.hasPermission("opencreative.stop-sound.bypass")) {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot == null) {
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                if (planet == null) {
                     player.sendMessage(getLocaleMessage("only-in-world"));
                     return true;
                 }
-                if (!(plot.isOwner(player) || plot.getWorldPlayers().canDevelop(player))) {
+                if (!(planet.isOwner(player) || planet.getWorldPlayers().canDevelop(player))) {
                     player.sendMessage(getLocaleMessage("not-owner"));
                     return true;
                 }
@@ -74,10 +74,10 @@ public class CommandStopSound implements CommandExecutor {
                     sender.sendMessage(getLocaleMessage("no-player-found"));
                     return true;
                 } else if (!sender.hasPermission("opencreative.stop-sound.bypass")) {
-                    Plot targetPlot = PlotManager.getInstance().getPlotByPlayer(target);
+                    Planet targetPlanet = PlanetManager.getInstance().getPlanetByPlayer(target);
                     if (!player.hasPermission("opencreative.stop-sound.bypass")) {
-                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                        if (plot == null || !plot.equals(targetPlot)) {
+                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        if (planet == null || !planet.equals(targetPlanet)) {
                             player.sendMessage(getLocaleMessage("no-player-found"));
                             return true;
                         }

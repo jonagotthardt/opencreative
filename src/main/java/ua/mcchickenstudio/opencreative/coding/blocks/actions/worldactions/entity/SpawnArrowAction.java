@@ -38,12 +38,12 @@ public class SpawnArrowAction extends WorldAction {
         ItemStack arrowItem = getArguments().getValue("arrow",new ItemStack(Material.ARROW,1),this);
         for (Location location : getArguments().getLocationList("locations",this)) {
             if (arrowItem.getType() == Material.ARROW) {
-                Entity spawnedEntity = getPlot().getTerritory().getWorld().spawnEntity(location,EntityType.ARROW);
+                Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location,EntityType.ARROW);
                 if (spawnedEntity instanceof Arrow arrow) {
                     arrow.setItemStack(arrowItem);
                 }
             } else if (arrowItem.getType() == Material.SPECTRAL_ARROW) {
-                Entity spawnedEntity = getPlot().getTerritory().getWorld().spawnEntity(location,EntityType.SPECTRAL_ARROW);
+                Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location,EntityType.SPECTRAL_ARROW);
                 if (spawnedEntity instanceof SpectralArrow arrow) {
                     arrow.setItemStack(arrowItem);
                 }

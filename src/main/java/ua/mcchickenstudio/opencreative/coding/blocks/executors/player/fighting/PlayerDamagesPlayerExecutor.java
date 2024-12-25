@@ -23,13 +23,13 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDamagesPlayerEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.event.Cancellable;
 
 public class PlayerDamagesPlayerExecutor extends PlayerExecutor implements Cancellable {
 
-    public PlayerDamagesPlayerExecutor(Plot plot, int x, int y, int z) {
-        super(plot, x, y, z);
+    public PlayerDamagesPlayerExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override

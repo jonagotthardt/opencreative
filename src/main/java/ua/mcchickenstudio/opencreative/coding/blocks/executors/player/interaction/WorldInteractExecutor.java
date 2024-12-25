@@ -23,7 +23,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.WorldInteractEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.event.Cancellable;
 
 public class WorldInteractExecutor extends PlayerExecutor implements Cancellable {
@@ -37,8 +37,8 @@ public class WorldInteractExecutor extends PlayerExecutor implements Cancellable
         }
     }
 
-    public WorldInteractExecutor(Plot plot, int x, int y, int z) {
-        super(plot, x, y, z);
+    public WorldInteractExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override

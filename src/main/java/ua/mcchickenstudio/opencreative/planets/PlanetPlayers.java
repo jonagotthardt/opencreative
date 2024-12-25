@@ -16,15 +16,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.plots;
+package ua.mcchickenstudio.opencreative.planets;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -35,11 +33,11 @@ import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
-public class PlotPlayers {
+public class PlanetPlayers {
 
-    private final Plot plot;
+    private final Planet planet;
 
-    private final Set<WorldPlayer> worldPlayers = new HashSet<>();
+    private final Set<PlanetPlayer> planetPlayers = new HashSet<>();
 
     private final Set<String> buildersTrusted = new HashSet<>();
     private final Set<String> buildersNotTrusted = new HashSet<>();
@@ -50,31 +48,31 @@ public class PlotPlayers {
 
     private final Set<String> bannedPlayers = new HashSet<>();
 
-    public PlotPlayers(Plot plot) {
-        this.plot = plot;
+    public PlanetPlayers(Planet planet) {
+        this.planet = planet;
         loadPlayers();
     }
 
     public void registerPlayer(Player player) {
-        worldPlayers.add(new WorldPlayer(plot,player));
+        planetPlayers.add(new PlanetPlayer(planet,player));
     }
 
     public void unregisterPlayer(Player player) {
-        worldPlayers.removeIf(plotPlayer -> plotPlayer.getPlayer().equals(player));
-        plot.getDevPlot().getLastLocations().remove(player);
+        planetPlayers.removeIf(planetPlayer -> planetPlayer.getPlayer().equals(player));
+        planet.getDevPlanet().getLastLocations().remove(player);
     }
 
-    public WorldPlayer getPlotPlayer(Player player) {
-        for (WorldPlayer worldPlayer : worldPlayers) {
-            if (worldPlayer.getPlayer().equals(player)) {
-                return worldPlayer;
+    public PlanetPlayer getPlanetPlayer(Player player) {
+        for (PlanetPlayer planetPlayer : planetPlayers) {
+            if (planetPlayer.getPlayer().equals(player)) {
+                return planetPlayer;
             }
         }
         return null;
     }
 
     private void loadPlayers() {
-        FileConfiguration config = getPlotConfig(plot);
+        FileConfiguration config = getPlanetConfig(planet);
         buildersTrusted.addAll(config.getStringList("players.builders.trusted"));
         developersTrusted.addAll(config.getStringList("players.developers.trusted"));
 
@@ -99,7 +97,7 @@ public class PlotPlayers {
     }
 
     public boolean isTrustedDeveloper(Player player) {
-        if (plot.isOwner(player)) {
+        if (planet.isOwner(player)) {
             return true;
         }
         if (player.hasPermission("opencreative.world.dev.others")) {
@@ -132,7 +130,7 @@ public class PlotPlayers {
     }
 
     public boolean isTrustedBuilder(Player player) {
-        if (plot.isOwner(player)) {
+        if (planet.isOwner(player)) {
             return true;
         }
         if (player.hasPermission("opencreative.world.build.others")) {
@@ -156,7 +154,7 @@ public class PlotPlayers {
     }
 
     public boolean canDevelop(Player player) {
-        if (plot.isOwner(player)) {
+        if (planet.isOwner(player)) {
             return true;
         }
         if (player.hasPermission("opencreative.world.dev.others")) {
@@ -167,11 +165,11 @@ public class PlotPlayers {
                 return true;
             }
         }
-        Player owner = Bukkit.getPlayer(plot.getOwner());
+        Player owner = Bukkit.getPlayer(planet.getOwner());
         if (owner == null) {
             return false;
         }
-        if (!plot.equals(PlotManager.getInstance().getPlotByPlayer(owner))) {
+        if (!planet.equals(PlanetManager.getInstance().getPlanetByPlayer(owner))) {
             return false;
         }
         for (String nickname : developersNotTrusted) {
@@ -183,7 +181,7 @@ public class PlotPlayers {
     }
 
     public boolean canBuild(Player player) {
-        if (plot.isOwner(player)) {
+        if (planet.isOwner(player)) {
             return true;
         }
         if (player.hasPermission("opencreative.world.build.others")) {
@@ -194,11 +192,11 @@ public class PlotPlayers {
                 return true;
             }
         }
-        Player owner = Bukkit.getPlayer(plot.getOwner());
+        Player owner = Bukkit.getPlayer(planet.getOwner());
         if (owner == null) {
             return false;
         }
-        if (!plot.equals(PlotManager.getInstance().getPlotByPlayer(owner))) {
+        if (!planet.equals(PlanetManager.getInstance().getPlanetByPlayer(owner))) {
             return false;
         }
         for (String nickname : buildersNotTrusted) {
@@ -212,8 +210,8 @@ public class PlotPlayers {
     public void removeBuilder(String nickname) {
         Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
-            Plot playerPlot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot.equals(playerPlot)) {
+            Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            if (planet.equals(playerPlanet)) {
                 if (player.getGameMode() == GameMode.CREATIVE) {
                     player.setGameMode(GameMode.ADVENTURE);
                 }
@@ -221,35 +219,35 @@ public class PlotPlayers {
         }
         buildersNotTrusted.removeIf(builder -> builder.equalsIgnoreCase(nickname));
         buildersTrusted.removeIf(builder -> builder.equalsIgnoreCase(nickname));
-        setPlotConfigParameter(plot,"players.builders.not-trusted",buildersNotTrusted);
-        setPlotConfigParameter(plot,"players.builders.trusted",buildersTrusted);
+        setPlanetConfigParameter(planet,"players.builders.not-trusted",buildersNotTrusted);
+        setPlanetConfigParameter(planet,"players.builders.trusted",buildersTrusted);
     }
 
     public void removeDeveloper(String nickname) {
         Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
-            Plot playerPlot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot.equals(playerPlot)) {
+            Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            if (planet.equals(playerPlanet)) {
                 if (player.getGameMode() == GameMode.CREATIVE) {
                     player.setGameMode(GameMode.ADVENTURE);
                 }
-                if (isEntityInDevPlot(player)) {
+                if (isEntityInDevPlanet(player)) {
                     clearPlayer(player);
-                    player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
+                    player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
                 }
             }
         }
         developersNotTrusted.removeIf(developer -> developer.equalsIgnoreCase(nickname));
         developersTrusted.removeIf(developer -> developer.equalsIgnoreCase(nickname));
-        setPlotConfigParameter(plot,"players.developers.not-trusted",developersNotTrusted);
-        setPlotConfigParameter(plot,"players.developers.trusted",developersTrusted);
+        setPlanetConfigParameter(planet,"players.developers.not-trusted",developersNotTrusted);
+        setPlanetConfigParameter(planet,"players.developers.trusted",developersTrusted);
     }
 
     public void addDeveloperGuest(String nickname) {
         Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
-            Plot playerPlot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot.equals(playerPlot)) {
+            Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            if (planet.equals(playerPlanet)) {
                 player.sendMessage(getLocaleMessage("world.players.developers.player-guest").replace("%player%",player.getName()));
                 player.playSound(player.getLocation(),Sound.ENTITY_CAT_AMBIENT,100,1);
             }
@@ -257,19 +255,19 @@ public class PlotPlayers {
         developersGuests.add(nickname);
         developersNotTrusted.removeIf(developer -> developer.equalsIgnoreCase(nickname));
         developersTrusted.removeIf(developer -> developer.equalsIgnoreCase(nickname));
-        setPlotConfigParameter(plot,"players.developers.guests",developersGuests);
-        setPlotConfigParameter(plot,"players.developers.not-trusted",developersNotTrusted);
-        setPlotConfigParameter(plot,"players.developers.trusted",developersTrusted);    }
+        setPlanetConfigParameter(planet,"players.developers.guests",developersGuests);
+        setPlanetConfigParameter(planet,"players.developers.not-trusted",developersNotTrusted);
+        setPlanetConfigParameter(planet,"players.developers.trusted",developersTrusted);    }
 
     public void addDeveloper(String nickname, boolean trusted) {
         Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
-            Plot playerPlot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot.equals(playerPlot)) {
+            Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            if (planet.equals(playerPlanet)) {
                 if (!trusted) {
                     player.sendMessage(getLocaleMessage("world.players.developers.player").replace("%player%",player.getName()));
                     player.playSound(player.getLocation(),Sound.ENTITY_CAT_AMBIENT,100,1);
-                    if (PlotManager.getInstance().getDevPlot(player) != null) {
+                    if (PlanetManager.getInstance().getDevPlanet(player) != null) {
                         player.setGameMode(GameMode.CREATIVE);
                     }
                 }
@@ -283,21 +281,21 @@ public class PlotPlayers {
             developersNotTrusted.add(nickname);
         }
         developersGuests.removeIf(developer -> developer.equalsIgnoreCase(nickname));
-        setPlotConfigParameter(plot,"players.developers.guests",developersGuests);
-        setPlotConfigParameter(plot,"players.developers.not-trusted",developersNotTrusted);
-        setPlotConfigParameter(plot,"players.developers.trusted",developersTrusted);
+        setPlanetConfigParameter(planet,"players.developers.guests",developersGuests);
+        setPlanetConfigParameter(planet,"players.developers.not-trusted",developersNotTrusted);
+        setPlanetConfigParameter(planet,"players.developers.trusted",developersTrusted);
     }
 
 
     public void addBuilder(String nickname, boolean trusted) {
         Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
-            Plot playerPlot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot.equals(playerPlot)) {
+            Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            if (planet.equals(playerPlanet)) {
                 if (!trusted) {
                     player.sendMessage(getLocaleMessage("world.players.builders.player").replace("%player%",player.getName()));
                     player.playSound(player.getLocation(),Sound.ENTITY_CAT_AMBIENT,100,1);
-                    if (PlotManager.getInstance().getDevPlot(player) == null) {
+                    if (PlanetManager.getInstance().getDevPlanet(player) == null) {
                         player.setGameMode(GameMode.CREATIVE);
                     }
                 }
@@ -310,32 +308,32 @@ public class PlotPlayers {
             buildersTrusted.removeIf(builder -> builder.equalsIgnoreCase(nickname));
             buildersNotTrusted.add(nickname);
         }
-        setPlotConfigParameter(plot,"players.builders.not-trusted",buildersNotTrusted);
-        setPlotConfigParameter(plot,"players.builders.trusted",buildersTrusted);
+        setPlanetConfigParameter(planet,"players.builders.not-trusted",buildersNotTrusted);
+        setPlanetConfigParameter(planet,"players.builders.trusted",buildersTrusted);
     }
 
     public void unbanPlayer(String nickname) {
         this.bannedPlayers.removeIf(ban -> ban.equalsIgnoreCase(nickname));
-        setPlotConfigParameter(plot,"players.blacklist",bannedPlayers);
+        setPlanetConfigParameter(planet,"players.blacklist",bannedPlayers);
     }
 
     public void banPlayer(String nickname) {
         Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
-            Plot playerPlot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot.equals(playerPlot)) {
+            Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            if (planet.equals(playerPlanet)) {
                 teleportToLobby(player);
                 player.sendMessage(getLocaleMessage("world.players.black-list.player").replace("%player%",player.getName()));
                 player.playSound(player.getLocation(), Sound.ENTITY_CAT_HURT,100,1);
                 bannedPlayers.add(player.getName());
             }
         }
-        setPlotConfigParameter(plot,"players.blacklist",bannedPlayers);
+        setPlanetConfigParameter(planet,"players.blacklist",bannedPlayers);
     }
 
     public void kickPlayer(Player player) {
-        Plot playerPlot = PlotManager.getInstance().getPlotByPlayer(player);
-        if (plot.equals(playerPlot)) {
+        Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        if (planet.equals(playerPlanet)) {
             teleportToLobby(player);
             player.sendMessage(getLocaleMessage("world.players.kick.player").replace("%player%",player.getName()));
             player.playSound(player.getLocation(),Sound.ENTITY_CAT_HURT,100,1);
@@ -344,14 +342,14 @@ public class PlotPlayers {
 
     public Set<String> getAllPlayersFromConfig() {
         Set<String> allPlayers = new HashSet<>();
-        plot.getPlayers().forEach(player -> allPlayers.add(player.getName()));
+        planet.getPlayers().forEach(player -> allPlayers.add(player.getName()));
         allPlayers.addAll(buildersTrusted);
         allPlayers.addAll(buildersNotTrusted);
         allPlayers.addAll(developersTrusted);
         allPlayers.addAll(developersNotTrusted);
         allPlayers.addAll(developersGuests);
         allPlayers.addAll(bannedPlayers);
-        allPlayers.remove(plot.getOwner());
+        allPlayers.remove(planet.getOwner());
         return allPlayers;
     }
 
@@ -376,11 +374,11 @@ public class PlotPlayers {
     }
 
     public String getBuilders() {
-        return String.join(", ", plot.getWorldPlayers().getAllBuilders());
+        return String.join(", ", planet.getWorldPlayers().getAllBuilders());
     }
 
     public String getDevelopers() {
-        return String.join(", ", plot.getWorldPlayers().getAllDevelopers());
+        return String.join(", ", planet.getWorldPlayers().getAllDevelopers());
     }
 
     public boolean isBanned(String nickname) {
@@ -404,15 +402,15 @@ public class PlotPlayers {
         developersTrusted.clear();
         developersNotTrusted.clear();
         bannedPlayers.clear();
-        setPlotConfigParameter(plot,"players.unique",empty);
-        setPlotConfigParameter(plot,"players.liked",empty);
-        setPlotConfigParameter(plot,"players.disliked",empty);
-        setPlotConfigParameter(plot,"players.blacklist",empty);
-        setPlotConfigParameter(plot,"players.whitelist",empty);
-        setPlotConfigParameter(plot,"players.developers.trusted",empty);
-        setPlotConfigParameter(plot,"players.developers.not-trusted",empty);
-        setPlotConfigParameter(plot,"players.developers.guests",empty);
-        setPlotConfigParameter(plot,"players.builders.trusted",empty);
-        setPlotConfigParameter(plot,"players.builders.not-trusted",empty);
+        setPlanetConfigParameter(planet,"players.unique",empty);
+        setPlanetConfigParameter(planet,"players.liked",empty);
+        setPlanetConfigParameter(planet,"players.disliked",empty);
+        setPlanetConfigParameter(planet,"players.blacklist",empty);
+        setPlanetConfigParameter(planet,"players.whitelist",empty);
+        setPlanetConfigParameter(planet,"players.developers.trusted",empty);
+        setPlanetConfigParameter(planet,"players.developers.not-trusted",empty);
+        setPlanetConfigParameter(planet,"players.developers.guests",empty);
+        setPlanetConfigParameter(planet,"players.builders.trusted",empty);
+        setPlanetConfigParameter(planet,"players.builders.not-trusted",empty);
     }
 }

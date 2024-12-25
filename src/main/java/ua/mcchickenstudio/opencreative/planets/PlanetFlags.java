@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.plots;
+package ua.mcchickenstudio.opencreative.planets;
 
 import ua.mcchickenstudio.opencreative.menu.buttons.RadioButton;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
@@ -32,17 +32,17 @@ import java.util.Map;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemDescription;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemName;
 
-public class PlotFlags {
+public class PlanetFlags {
 
-    private final Plot plot;
-    private final Map<PlotFlag,Byte> flags = new HashMap<>();
+    private final Planet planet;
+    private final Map<PlanetFlag,Byte> flags = new HashMap<>();
 
-    public PlotFlags(Plot plot) {
-        this.plot = plot;
+    public PlanetFlags(Planet planet) {
+        this.planet = planet;
         loadFlags();
     }
 
-    public enum PlotFlag {
+    public enum PlanetFlag {
 
         PLAYER_DAMAGE("player-damage", Material.TOTEM_OF_UNDYING, (byte) 1,(byte) 5),
         DAY_CYCLE("day-cycle", Material.CLOCK, (byte) 1, (byte) 4, GameRule.DO_DAYLIGHT_CYCLE),
@@ -67,7 +67,7 @@ public class PlotFlags {
         private final GameRule<?> gameRule;
         private final Material material;
 
-        PlotFlag(String configPath, Material icon, byte defaultValue, byte maxChoices) {
+        PlanetFlag(String configPath, Material icon, byte defaultValue, byte maxChoices) {
             this.configPath = configPath;
             this.defaultValue = defaultValue;
             this.maxChoices = maxChoices;
@@ -75,7 +75,7 @@ public class PlotFlags {
             this.material = icon;
         }
 
-        PlotFlag(String configPath, Material icon, byte defaultValue, byte maxChoices, GameRule<?> gameRule) {
+        PlanetFlag(String configPath, Material icon, byte defaultValue, byte maxChoices, GameRule<?> gameRule) {
             this.configPath = configPath;
             this.defaultValue = defaultValue;
             this.maxChoices = maxChoices;
@@ -103,15 +103,15 @@ public class PlotFlags {
 
     }
 
-    public void setFlag(PlotFlag plotFlag, byte value) {
-        flags.put(plotFlag,value);
-        FileUtils.setPlotConfigParameter(plot,plotFlag.getConfigPath(),value);
+    public void setFlag(PlanetFlag planetFlag, byte value) {
+        flags.put(planetFlag,value);
+        FileUtils.setPlanetConfigParameter(planet,planetFlag.getConfigPath(),value);
     }
 
     public void loadFlags() {
 
-        final FileConfiguration configuration = FileUtils.getPlotConfig(plot);
-        for (PlotFlag flag : PlotFlag.values()) {
+        final FileConfiguration configuration = FileUtils.getPlanetConfig(planet);
+        for (PlanetFlag flag : PlanetFlag.values()) {
             if (configuration == null) {
                 flags.put(flag,flag.getDefaultValue());
             } else {
@@ -128,7 +128,7 @@ public class PlotFlags {
 
     }
 
-    public byte getFlagValue(PlotFlag flag) {
+    public byte getFlagValue(PlanetFlag flag) {
         if (flags.containsKey(flag)) {
             return (flags.get(flag));
         } else {
@@ -137,30 +137,30 @@ public class PlotFlags {
         }
     }
 
-    public Map<PlotFlag, Byte> getFlags() {
+    public Map<PlanetFlag, Byte> getFlags() {
         return flags;
     }
 
     public List<RadioButton> getIcons() {
         List<RadioButton> icons = new ArrayList<>();
-        for (PlotFlag plotFlag : PlotFlag.values()) {
-            if (plotFlag != PlotFlag.DAY_CYCLE) {
-                int value = flags.get(plotFlag);
-                RadioButton radioButton = new RadioButton(plotFlag.getMaterial(),getLocaleItemName("menus.world-settings-flags.items." + plotFlag.getConfigPath() + ".name"),
-                        getLocaleItemDescription("menus.world-settings-flags.items." + plotFlag.getConfigPath() + ".lore"),
-                        value,plotFlag.getMaxChoices(),getDefaultActions(plot,plotFlag,plotFlag.getMaxChoices()),"menus.world-settings-flags.items." + plotFlag.getConfigPath() + ".choices",
+        for (PlanetFlag planetFlag : PlanetFlag.values()) {
+            if (planetFlag != PlanetFlag.DAY_CYCLE) {
+                int value = flags.get(planetFlag);
+                RadioButton radioButton = new RadioButton(planetFlag.getMaterial(),getLocaleItemName("menus.world-settings-flags.items." + planetFlag.getConfigPath() + ".name"),
+                        getLocaleItemDescription("menus.world-settings-flags.items." + planetFlag.getConfigPath() + ".lore"),
+                        value,planetFlag.getMaxChoices(),getDefaultActions(planet,planetFlag,planetFlag.getMaxChoices()),"menus.world-settings-flags.items." + planetFlag.getConfigPath() + ".choices",
                         "menus.world-settings-flags");
             }
         }
         return icons;
     }
 
-    public static List<Runnable> getDefaultActions(Plot plot, PlotFlag flag, int maxActions) {
+    public static List<Runnable> getDefaultActions(Planet planet, PlanetFlag flag, int maxActions) {
         List<Runnable> choicesActions = new ArrayList<>();
 
         for (int value = 1; value <= maxActions; value++) {
             int finalValue = value;
-            choicesActions.add(() -> FileUtils.setPlotConfigParameter(plot,flag.getConfigPath(),finalValue));
+            choicesActions.add(() -> FileUtils.setPlanetConfigParameter(planet,flag.getConfigPath(),finalValue));
         }
 
         return choicesActions;

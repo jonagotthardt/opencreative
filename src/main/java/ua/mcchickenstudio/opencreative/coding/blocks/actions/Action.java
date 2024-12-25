@@ -30,7 +30,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.exceptions.TooLongTextException;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -64,7 +64,7 @@ public abstract class Action {
      * Creates an Action with linked executor and specified arguments.
      * @param executor Executor where this action will be added.
      * @param target Target, that will execute this action.
-     * @param x X coordinate from Action's block location in developers plot.
+     * @param x X coordinate from Action's block location in developers planet.
      * @param args List of arguments for action.
      */
     public Action(Executor executor, Target target, int x, Arguments args) {
@@ -86,7 +86,7 @@ public abstract class Action {
             execute(null);
         }
         for (Entity entity : getTargets()) {
-            if (!getActionType().isSelectionMustBeInWorld() || (entity != null && entity.getWorld() == getPlot().getTerritory().getWorld())) {
+            if (!getActionType().isSelectionMustBeInWorld() || (entity != null && entity.getWorld() == getPlanet().getTerritory().getWorld())) {
                 this.entity = entity;
                 execute(entity);
             }
@@ -133,7 +133,7 @@ public abstract class Action {
     protected Set<Entity> getEntitiesByNameOrUUID(String text) {
         Set<Entity> entities = new HashSet<>();
         if (getWorld() == null) return entities;
-        for (Entity entity : executor.getPlot().getTerritory().getWorld().getEntities()) {
+        for (Entity entity : executor.getPlanet().getTerritory().getWorld().getEntities()) {
             if (entity.getName().equalsIgnoreCase(text) || entity.getUniqueId().toString().equalsIgnoreCase(text)) {
                 entities.add(entity);
             }
@@ -153,15 +153,15 @@ public abstract class Action {
     }
 
     /**
-     * Returns plot's world, where action will be executed.
-     * @return Plot's world.
+     * Returns planet's world, where action will be executed.
+     * @return Planet's world.
      */
     protected World getWorld() {
-        return getPlot().getTerritory().getWorld();
+        return getPlanet().getTerritory().getWorld();
     }
 
-    protected Plot getPlot() {
-        return executor.getPlot();
+    protected Planet getPlanet() {
+        return executor.getPlanet();
     }
 
     /**
@@ -206,7 +206,7 @@ public abstract class Action {
         switch (target) {
             case RANDOM_PLAYER -> {
                 Player randomPlayer = null;
-                List<Player> playerList = this.getExecutor().getPlot().getTerritory().getWorld().getPlayers();
+                List<Player> playerList = this.getExecutor().getPlanet().getTerritory().getWorld().getPlayers();
                 if (!playerList.isEmpty()) {
                     Random r = new Random();
                     int i = r.nextInt(playerList.size());
@@ -217,7 +217,7 @@ public abstract class Action {
                 }
             }
             case ALL_PLAYERS -> {
-                List<Player> playerList = this.getExecutor().getPlot().getPlayers();
+                List<Player> playerList = this.getExecutor().getPlanet().getPlayers();
                 if (!playerList.isEmpty()) {
                     entities.addAll(playerList);
                 }
@@ -302,7 +302,7 @@ public abstract class Action {
                     throw new TooLongTextException(1024);
                 }
             }
-            getPlot().getVariables().setVariableValue(link, type, value, getHandler().getMainActionHandler(), this);
+            getPlanet().getVariables().setVariableValue(link, type, value, getHandler().getMainActionHandler(), this);
         }
     }
 

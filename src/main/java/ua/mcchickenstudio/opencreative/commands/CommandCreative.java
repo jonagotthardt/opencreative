@@ -21,9 +21,9 @@ package ua.mcchickenstudio.opencreative.commands;
 import ua.mcchickenstudio.opencreative.menu.CreativeMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsPickerMenu;
-import ua.mcchickenstudio.opencreative.plots.DevPlot;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -104,17 +104,17 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return true;
                     }
-                    Plot plot = PlotManager.getInstance().getPlotByWorldName("plot" + args[1]);
-                    if (plot == null) {
-                        sender.sendMessage(getLocaleMessage("no-plot-found"));
+                    Planet planet = PlanetManager.getInstance().getPlanetByWorldName("planet" + args[1]);
+                    if (planet == null) {
+                        sender.sendMessage(getLocaleMessage("no-planet-found"));
                         return true;
                     }
                     long now = System.currentTimeMillis();
-                    sender.sendMessage(getLocaleMessage("world.info").replace("%name%", plot.getInformation().getDisplayName())
-                            .replace("%id%", String.valueOf(plot.getId())).replace("%creation-time%",getElapsedTime(now,plot.getCreationTime()))
-                            .replace("%activity-time%",getElapsedTime(now,plot.getLastActivityTime())).replace("%online%",String.valueOf(plot.getOnline()))
-                            .replace("%builders%", plot.getWorldPlayers().getBuilders()).replace("%coders%", plot.getWorldPlayers().getDevelopers()).replace("%owner%",plot.getOwner())
-                            .replace("%sharing%", plot.getSharing().getName()).replace("%mode%", plot.getMode().getName()).replace("%description%", plot.getInformation().getDescription()));
+                    sender.sendMessage(getLocaleMessage("world.info").replace("%name%", planet.getInformation().getDisplayName())
+                            .replace("%id%", String.valueOf(planet.getId())).replace("%creation-time%",getElapsedTime(now, planet.getCreationTime()))
+                            .replace("%activity-time%",getElapsedTime(now, planet.getLastActivityTime())).replace("%online%",String.valueOf(planet.getOnline()))
+                            .replace("%builders%", planet.getWorldPlayers().getBuilders()).replace("%coders%", planet.getWorldPlayers().getDevelopers()).replace("%owner%", planet.getOwner())
+                            .replace("%sharing%", planet.getSharing().getName()).replace("%mode%", planet.getMode().getName()).replace("%description%", planet.getInformation().getDescription()));
                 }
                 case "load" -> {
                     if (!sender.hasPermission("opencreative.world.load")) {
@@ -125,13 +125,13 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return true;
                     }
-                    Plot plot = PlotManager.getInstance().getPlotByWorldName("plot" + args[1].replace("dev",""));
-                    if (plot == null) {
-                        sender.sendMessage(getLocaleMessage("no-plot-found"));
+                    Planet planet = PlanetManager.getInstance().getPlanetByWorldName("planet" + args[1].replace("dev",""));
+                    if (planet == null) {
+                        sender.sendMessage(getLocaleMessage("no-planet-found"));
                         return true;
                     }
-                    if (!plot.isLoaded()) {
-                        plot.getTerritory().load();
+                    if (!planet.isLoaded()) {
+                        planet.getTerritory().load();
                         sender.sendMessage(getLocaleMessage("world.loaded").replace("%id%",args[1]));
                     } else {
                         sender.sendMessage(getLocaleMessage("world.already-loaded").replace("%id%",args[1]));
@@ -146,19 +146,19 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return true;
                     }
-                    Plot plot = PlotManager.getInstance().getPlotByWorldName("plot" + args[1].replace("dev",""));
-                    if (plot == null) {
-                        sender.sendMessage(getLocaleMessage("no-plot-found"));
+                    Planet planet = PlanetManager.getInstance().getPlanetByWorldName("planet" + args[1].replace("dev",""));
+                    if (planet == null) {
+                        sender.sendMessage(getLocaleMessage("no-planet-found"));
                         return true;
                     }
-                    if (plot.getDevPlot().isLoaded()) {
+                    if (planet.getDevPlanet().isLoaded()) {
                         sender.sendMessage(getLocaleMessage("world.already-loaded").replace("%id%",args[1]));
                         return true;
                     }
-                    if (!plot.isLoaded()) {
-                        plot.getTerritory().load();
+                    if (!planet.isLoaded()) {
+                        planet.getTerritory().load();
                     }
-                    plot.connectToDevPlot(player);
+                    planet.connectToDevPlanet(player);
                     sender.sendMessage(getLocaleMessage("world.loaded").replace("%id%",args[1]));
                 }
                 case "creative-chat" -> {
@@ -322,13 +322,13 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return true;
                     }
-                    Plot plot = PlotManager.getInstance().getPlotByWorldName("plot" + args[1]);
-                    if (plot == null) {
-                        sender.sendMessage(getLocaleMessage("no-plot-found"));
+                    Planet planet = PlanetManager.getInstance().getPlanetByWorldName("planet" + args[1]);
+                    if (planet == null) {
+                        sender.sendMessage(getLocaleMessage("no-planet-found"));
                         return true;
                     }
-                    if (plot.isLoaded()) {
-                        plot.getTerritory().unload();
+                    if (planet.isLoaded()) {
+                        planet.getTerritory().unload();
                         sender.sendMessage(getLocaleMessage("world.unloaded").replace("%id%",args[1]));
                     } else {
                         sender.sendMessage(getLocaleMessage("world.already-unloaded").replace("%id%",args[1]));
@@ -341,7 +341,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                     List<String> worlds = Bukkit.getServer().getWorlds().stream()
                             .map(WorldInfo::getName)
-                            .filter(name -> name.startsWith("plot"))
+                            .filter(name -> name.startsWith("planet"))
                             .toList();
                     sender.sendMessage(getLocaleMessage("creative.loaded-worlds-list")
                             .replace("%amount%",String.valueOf(worlds.size()))
@@ -360,26 +360,26 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                     if (months < 1) months = 1;
                     long currentTime = System.currentTimeMillis();
-                    List<Plot> deprecatedWorlds = new ArrayList<>();
-                    for (Plot plot : PlotManager.getInstance().getPlots()) {
+                    List<Planet> deprecatedWorlds = new ArrayList<>();
+                    for (Planet planet : PlanetManager.getInstance().getPlanets()) {
                         long monthsInMillis = 2592000000L*months;
-                        if (currentTime-plot.getCreationTime() > monthsInMillis) {
-                            OfflinePlayer plotOwner = Bukkit.getOfflinePlayer(plot.getOwner());
-                            if (plotOwner.getLastSeen() == 0 || currentTime-plotOwner.getLastLogin() > monthsInMillis) {
-                                deprecatedWorlds.add(plot);
+                        if (currentTime- planet.getCreationTime() > monthsInMillis) {
+                            OfflinePlayer planetOwner = Bukkit.getOfflinePlayer(planet.getOwner());
+                            if (planetOwner.getLastSeen() == 0 || currentTime-planetOwner.getLastLogin() > monthsInMillis) {
+                                deprecatedWorlds.add(planet);
                             }
                         }
                     }
                     sender.sendMessage(getLocaleMessage("creative.deprecated-worlds.list")
                             .replace("%amount%",String.valueOf(deprecatedWorlds.size())));
                     String worldMessage = getLocaleMessage("creative.deprecated-worlds.world");
-                    for (Plot plot : deprecatedWorlds) {
+                    for (Planet planet : deprecatedWorlds) {
                         sender.sendMessage(Component.text(worldMessage
-                                .replace("%id%", String.valueOf(plot.getId()))
-                                .replace("%owner%",plot.getOwner())
-                                .replace("%created%",getElapsedTime(currentTime,plot.getCreationTime()))
-                                .replace("%seen%",getElapsedTime(currentTime,Bukkit.getOfflinePlayer(plot.getOwner()).getLastSeen())
-                                )).clickEvent(ClickEvent.runCommand("/join " + plot.getId()))
+                                .replace("%id%", String.valueOf(planet.getId()))
+                                .replace("%owner%", planet.getOwner())
+                                .replace("%created%",getElapsedTime(currentTime, planet.getCreationTime()))
+                                .replace("%seen%",getElapsedTime(currentTime,Bukkit.getOfflinePlayer(planet.getOwner()).getLastSeen())
+                                )).clickEvent(ClickEvent.runCommand("/join " + planet.getId()))
                         );
                     }
                 }
@@ -388,14 +388,14 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
-                    Set<Plot> corruptedPlots = PlotManager.getInstance().getCorruptedPlots();
+                    Set<Planet> corruptedPlanets = PlanetManager.getInstance().getCorruptedPlanets();
                     sender.sendMessage(getLocaleMessage("creative.corrupted-worlds.list")
-                            .replace("%amount%",String.valueOf(corruptedPlots.size())));
+                            .replace("%amount%",String.valueOf(corruptedPlanets.size())));
                     String worldMessage = getLocaleMessage("creative.corrupted-worlds.world");
-                    for (Plot plot : corruptedPlots) {
+                    for (Planet planet : corruptedPlanets) {
                         sender.sendMessage(Component.text(worldMessage
-                                .replace("%id%", String.valueOf(plot.getId()))
-                                ).clickEvent(ClickEvent.runCommand("/join " + plot.getId()))
+                                .replace("%id%", String.valueOf(planet.getId()))
+                                ).clickEvent(ClickEvent.runCommand("/join " + planet.getId()))
                         );
                     }
                 }
@@ -416,9 +416,9 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     if (player == null) return true;
-                    DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-                    if (devPlot == null) return true;
-                    player.sendMessage("Test of dev plot helper");
+                    DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                    if (devPlanet == null) return true;
+                    player.sendMessage("Test of dev planet helper");
                 }
                 case "test2" -> {
                     if (!sender.hasPermission("opencreative.test")) {
@@ -427,7 +427,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                     if (player == null) return true;
                     player.sendMessage("Test of worlds downloader");
-                    WorldsBrowserMenu menu = new WorldsPickerMenu(player, new HashSet<>(PlotManager.getInstance().getPlots().stream().filter(plot -> plot.getInformation().isDownloadable()).toList()));
+                    WorldsBrowserMenu menu = new WorldsPickerMenu(player, new HashSet<>(PlanetManager.getInstance().getPlanets().stream().filter(planet -> planet.getInformation().isDownloadable()).toList()));
                     menu.open(player);
                 }
                 case "test3" -> {
@@ -436,7 +436,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     player.sendMessage("Test of legacy convertor");
-                    //new PlayerToEntityConvertor(new ArrayList<>(PlotManager.getInstance().getPlots())).start();
+                    //new PlayerToEntityConvertor(new ArrayList<>(PlanetManager.getInstance().getPlanets())).start();
                 }
                 case "template" -> {
                     if (!sender.hasPermission("opencreative.template")) {
@@ -451,9 +451,9 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     int id = WorldUtils.generateWorldID();
-                    File world = new File(Bukkit.getWorldContainer().getPath()+File.separator+"unloadedWorlds"+File.separator+"plot"+id+File.separator);
+                    File world = new File(Bukkit.getWorldContainer().getPath()+File.separator+"unloadedWorlds"+File.separator+"planet"+id+File.separator);
                     FileUtils.copyFilesToDirectory(template,world);
-                    PlotManager.getInstance().createPlot(player, id, WorldUtils.WorldGenerator.FLAT);
+                    PlanetManager.getInstance().createPlanet(player, id, WorldUtils.WorldGenerator.FLAT);
                 }
             }
         } else {
@@ -501,7 +501,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");
             } else if ("load".equalsIgnoreCase(args[0]) || "unload".equalsIgnoreCase(args[0])) {
-                tabCompleter.addAll(PlotManager.getInstance().getPlots().stream().map(plot -> String.valueOf(plot.getId())).toList());
+                tabCompleter.addAll(PlanetManager.getInstance().getPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());
             }
         } else if (args.length == 3) {
             if ("start".equalsIgnoreCase(args[1])) {

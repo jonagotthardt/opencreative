@@ -33,7 +33,7 @@ import org.bukkit.event.Listener;
 
 /**
  * <h1>CEListener</h1>
- * This class represents listener of all Creative events in plot.
+ * This class represents listener of all Creative events in planet.
  * It activates executors on events listening.
  */
 public class CEListener implements Listener {

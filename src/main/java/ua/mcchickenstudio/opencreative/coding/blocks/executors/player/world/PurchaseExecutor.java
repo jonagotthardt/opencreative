@@ -23,12 +23,12 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.PlayerPurchaseEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class PurchaseExecutor extends PlayerExecutor{
 
-    public PurchaseExecutor(Plot plot, int x, int y, int z) {
-        super(plot, x, y, z);
+    public PurchaseExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override

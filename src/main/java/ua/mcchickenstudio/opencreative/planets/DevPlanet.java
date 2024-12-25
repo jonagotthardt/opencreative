@@ -16,12 +16,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.plots;
+package ua.mcchickenstudio.opencreative.planets;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
-import ua.mcchickenstudio.opencreative.utils.world.DevPlotChunkGenerator;
+import ua.mcchickenstudio.opencreative.utils.world.DevPlanetChunkGenerator;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import org.bukkit.*;
 
@@ -38,7 +38,7 @@ import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
- * <h1>DevPlot</h1>
+ * <h1>DevPlanet</h1>
  * This class represents developer's world, where players
  * can edit and change code with blocks on platform.
  * <p>
@@ -49,9 +49,9 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * on gray stained glass - actions and conditions.
  * </p>
  */
-public class DevPlot {
+public class DevPlanet {
 
-    private final Plot plot;
+    private final Planet planet;
 
     private Material containerMaterial = Material.CHEST;
 
@@ -62,14 +62,14 @@ public class DevPlot {
     private final static Material DEFAULT_ACTION_MATERIAL = Material.GRAY_STAINED_GLASS;
     private final static Material DEFAULT_FLOOR_MATERIAL = Material.WHITE_STAINED_GLASS;
 
-    public DevPlot(Plot plot) {
-        this.plot = plot;
+    public DevPlanet(Planet planet) {
+        this.planet = planet;
     }
 
-    public void loadDevPlotWorld() {
+    public void loadDevPlanetWorld() {
         if (this.exists()) {
             if (loadWorldFolder(this.getWorldName(), true)) {
-                Bukkit.createWorld(new WorldCreator(this.getWorldName()).type(WorldType.FLAT).generator(new DevPlotChunkGenerator()));
+                Bukkit.createWorld(new WorldCreator(this.getWorldName()).type(WorldType.FLAT).generator(new DevPlanetChunkGenerator()));
                 if (getWorld() != null) {
                     if (getWorld().getBlockAt(4,0,4).isEmpty()) {
                         createPlatform(1,1);
@@ -78,7 +78,7 @@ public class DevPlot {
                 }
             }
         } else {
-            Bukkit.createWorld(new WorldCreator(this.getWorldName()).type(WorldType.FLAT).generator(new DevPlotChunkGenerator()));
+            Bukkit.createWorld(new WorldCreator(this.getWorldName()).type(WorldType.FLAT).generator(new DevPlanetChunkGenerator()));
             createPlatform(1,1);
             this.getWorld().setTime(12500);
             setupWorld();
@@ -302,8 +302,8 @@ public class DevPlot {
         return Bukkit.getWorld(getWorldName()) != null;
     }
 
-    public Plot getPlot() {
-        return plot;
+    public Planet getPlanet() {
+        return planet;
     }
 
     public Layout getOpenedMenu(Location location) {
@@ -339,7 +339,7 @@ public class DevPlot {
     }
 
     public String getWorldName() {
-        return plot.getWorldName()+"dev";
+        return planet.getWorldName()+"dev";
     }
 
     public Set<DevPlatform> getPlatforms() {

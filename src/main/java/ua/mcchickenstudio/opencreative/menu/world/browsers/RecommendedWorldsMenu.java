@@ -20,8 +20,8 @@ package ua.mcchickenstudio.opencreative.menu.world.browsers;
 
 import ua.mcchickenstudio.opencreative.listeners.player.PlayerChat;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Material;
@@ -63,18 +63,18 @@ public class RecommendedWorldsMenu extends AbstractMenu {
         setItem((byte) 51, DECORATION_PANE_ITEM);
         setItem((byte) 52, DECORATION_PANE_ITEM);
         setItem((byte) 53, ALL_WORLDS);
-        List<Plot> featuredPlots = PlotManager.getInstance().getRecommendedPlots();
-        if (featuredPlots.isEmpty()) {
+        List<Planet> featuredPlanets = PlanetManager.getInstance().getRecommendedPlanets();
+        if (featuredPlanets.isEmpty()) {
             for (int slot : featuredWorldsSlots) {
                 setItem((byte) slot,DECORATION_ITEM);
             }
             return;
         }
-        Collections.shuffle(featuredPlots);
+        Collections.shuffle(featuredPlanets);
         byte index = 0;
         for (int slot : featuredWorldsSlots) {
-            if (index < featuredPlots.size()) {
-                setItem((byte) slot,featuredPlots.get(index).getInformation().getIcon());
+            if (index < featuredPlanets.size()) {
+                setItem((byte) slot, featuredPlanets.get(index).getInformation().getIcon());
                 index++;
             } else {
                 setItem((byte) slot,DECORATION_ITEM);
@@ -107,9 +107,9 @@ public class RecommendedWorldsMenu extends AbstractMenu {
             ));
             player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.usage", player).replace("%search%", getLocaleMessage("menus.all-worlds.items.search." + searchQuery)));
             player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_AMBIENT, 100, 1);
-            PlayerChat.confirmation.put(player, event.getClick() == ClickType.LEFT ? "searchPlotByPlotName" : "searchPlotByID");
+            PlayerChat.confirmation.put(player, event.getClick() == ClickType.LEFT ? "searchPlanetByPlanetName" : "searchPlanetByID");
         } else if (itemEquals(currentItem,ALL_WORLDS)) {
-            new WorldsBrowserMenu(player,PlotManager.getInstance().getPlots()).open(player);
+            new WorldsBrowserMenu(player, PlanetManager.getInstance().getPlanets()).open(player);
         } else if (itemEquals(currentItem,OWN_WORLDS)) {
             player.closeInventory();
             OwnWorldsMenu.openInventory(player,1);
@@ -118,10 +118,10 @@ public class RecommendedWorldsMenu extends AbstractMenu {
             if (worldID.isEmpty()) {
                 return;
             }
-            Plot plot = PlotManager.getInstance().getPlotByCustomID(worldID);
-            if (plot != null) {
+            Planet planet = PlanetManager.getInstance().getPlanetByCustomID(worldID);
+            if (planet != null) {
                 player.closeInventory();
-                plot.connectPlayer(player);
+                planet.connectPlayer(player);
             }
         }
     }

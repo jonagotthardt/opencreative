@@ -20,12 +20,12 @@ package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.world;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class AdvertisedExecutor extends PlayerExecutor {
 
-    public AdvertisedExecutor(Plot plot, int x, int y, int z) {
-        super(plot, x, y, z);
+    public AdvertisedExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override

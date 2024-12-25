@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.Play
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDamagesPlayerEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerKilledPlayerEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.MobInteractionEvent;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -89,7 +89,7 @@ public class Placeholders {
 
     private String parseRandom(String text, ActionsHandler handler) {
         Player randomPlayer = null;
-        List<Player> playerList = handler.getExecutor().getPlot().getTerritory().getWorld().getPlayers();
+        List<Player> playerList = handler.getExecutor().getPlanet().getTerritory().getWorld().getPlayers();
         if (!playerList.isEmpty()) {
             Random r = new Random();
             int i = r.nextInt(playerList.size());
@@ -134,11 +134,11 @@ public class Placeholders {
     }
 
     private String parseWorld(String text, ActionsHandler handler) {
-        Plot plot = handler.getExecutor().getPlot();
+        Planet planet = handler.getExecutor().getPlanet();
         text = text
                 .replace("%online%", String.valueOf(Bukkit.getOnlinePlayers().size()))
-                .replace("%players_amount%", String.valueOf(plot.getPlayers().size()))
-                .replace("%entities_amount%", String.valueOf(plot.getTerritory().getWorld().getEntityCount() + (plot.getDevPlot() != null && plot.getDevPlot().getWorld() != null ? plot.getDevPlot().getWorld().getEntityCount() : 0)));
+                .replace("%players_amount%", String.valueOf(planet.getPlayers().size()))
+                .replace("%entities_amount%", String.valueOf(planet.getTerritory().getWorld().getEntityCount() + (planet.getDevPlanet() != null && planet.getDevPlanet().getWorld() != null ? planet.getDevPlanet().getWorld().getEntityCount() : 0)));
         return text;
     }
 

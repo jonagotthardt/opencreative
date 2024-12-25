@@ -42,7 +42,7 @@ public class IsBlockEqualsCondition extends PlayerCondition {
     @Override
     public boolean checkPlayer(Player player) {
         if (getHandler().hasTempVariable(EventValues.Variable.BLOCK)) {
-            sendCodingNotFoundTempVar(getPlot(),getExecutor(), EventValues.Variable.BLOCK);
+            sendCodingNotFoundTempVar(getPlanet(),getExecutor(), EventValues.Variable.BLOCK);
             return false;
         }
         Block block = (Block) getHandler().getVarValue(EventValues.Variable.BLOCK);

@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Function;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Method;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -41,26 +41,26 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 
 /**
  * <h1>Executors</h1>
- * This class represents Executors in every plot code script.
+ * This class represents Executors in every planet code script.
  * @since 5.0
  * @version 5.0
  * @author McChicken Studio
  */
 public class Executors {
 
-    protected final Plot plot;
+    protected final Planet planet;
     private List<Executor> executorsList = new ArrayList<>();
 
     private final Map<Executor,Integer> lastExecutorsCallsAmount = new HashMap<>();
 
-    public Executors(Plot plot) {
-        this.plot = plot;
+    public Executors(Planet planet) {
+        this.planet = planet;
     }
 
     public static void activate(WorldEvent event) {
-        Plot plot = event.getPlot();
-        if (plot == null || plot.getTerritory().getScript() == null || plot.getTerritory().getScript().getExecutors() == null) return;
-        Executors executors = plot.getTerritory().getScript().getExecutors();
+        Planet planet = event.getPlanet();
+        if (planet == null || planet.getTerritory().getScript() == null || planet.getTerritory().getScript().getExecutors() == null) return;
+        Executors executors = planet.getTerritory().getScript().getExecutors();
         for (Executor executor : executors.executorsList) {
             if (executor.getExecutorType().getEventClass() == event.getClass()) {
                 activate(executor,event);
@@ -69,13 +69,13 @@ public class Executors {
     }
 
     public static void activate(Executor executor, WorldEvent event) {
-        Plot plot = executor.getPlot();
-        if (plot == null || plot.getTerritory().getScript() == null || plot.getTerritory().getScript().getExecutors() == null) return;
-        Executors executors = plot.getTerritory().getScript().getExecutors();
-        if (executors.getLastExecutorCallsAmount(executor) > plot.getLimits().getCodeOperationsLimit()) {
+        Planet planet = executor.getPlanet();
+        if (planet == null || planet.getTerritory().getScript() == null || planet.getTerritory().getScript().getExecutors() == null) return;
+        Executors executors = planet.getTerritory().getScript().getExecutors();
+        if (executors.getLastExecutorCallsAmount(executor) > planet.getLimits().getCodeOperationsLimit()) {
             executors.clearExecutionsAmount(executor);
-            stopPlotCode(plot);
-            sendPlotCodeCriticalErrorMessage(plot,executor,getLocaleMessage("plot-code-error.operations-limit",false).replace("%limit%",String.valueOf(plot.getLimits().getCodeOperationsLimit())));
+            stopPlanetCode(planet);
+            sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("planet-code-error.operations-limit",false).replace("%limit%",String.valueOf(planet.getLimits().getCodeOperationsLimit())));
         } else {
             executors.increaseCallsAmount(executor);
             executor.run(event);
@@ -89,12 +89,12 @@ public class Executors {
     }
 
     public static void simulateIncreaseCall(Executor executor) {
-        Plot plot = executor.getPlot();
-        Executors executors = plot.getTerritory().getScript().getExecutors();
-        if (executors.getLastExecutorCallsAmount(executor) > plot.getLimits().getCodeOperationsLimit()) {
+        Planet planet = executor.getPlanet();
+        Executors executors = planet.getTerritory().getScript().getExecutors();
+        if (executors.getLastExecutorCallsAmount(executor) > planet.getLimits().getCodeOperationsLimit()) {
             executors.clearExecutionsAmount(executor);
-            stopPlotCode(plot);
-            sendPlotCodeCriticalErrorMessage(plot,executor,getLocaleMessage("plot-code-error.operations-limit",false).replace("%limit%",String.valueOf(plot.getLimits().getCodeOperationsLimit())));
+            stopPlanetCode(planet);
+            sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("planet-code-error.operations-limit",false).replace("%limit%",String.valueOf(planet.getLimits().getCodeOperationsLimit())));
         } else {
             executors.increaseCallsAmount(executor);
             new BukkitRunnable() {
@@ -171,7 +171,7 @@ public class Executors {
                  * because it can't be called in code.
                  */
                 if (name != null) {
-                    executor = type.getExecutorClass().getConstructor(Plot.class,int.class,int.class,int.class,String.class,int.class).newInstance(plot,coords[0],coords[1],coords[2],name,(time >= 5 && time <= 3600 ? time : 20));
+                    executor = type.getExecutorClass().getConstructor(Planet.class,int.class,int.class,int.class,String.class,int.class).newInstance(planet,coords[0],coords[1],coords[2],name,(time >= 5 && time <= 3600 ? time : 20));
                 }
             } else if (type == ExecutorType.FUNCTION || type == ExecutorType.METHOD) {
                 String name = config.getString(path+".name");
@@ -180,10 +180,10 @@ public class Executors {
                  * because it can't be called in code.
                  */
                 if (name != null) {
-                    executor = type.getExecutorClass().getConstructor(Plot.class,int.class,int.class,int.class,String.class).newInstance(plot,coords[0],coords[1],coords[2],name);
+                    executor = type.getExecutorClass().getConstructor(Planet.class,int.class,int.class,int.class,String.class).newInstance(planet,coords[0],coords[1],coords[2],name);
                 }
             } else {
-                executor = type.getExecutorClass().getConstructor(Plot.class,int.class,int.class,int.class).newInstance(plot,coords[0],coords[1],coords[2]);
+                executor = type.getExecutorClass().getConstructor(Planet.class,int.class,int.class,int.class).newInstance(planet,coords[0],coords[1],coords[2]);
             }
             List<Action> allActionsList = createActionList(executor, path + ".actions",config);
             if (!allActionsList.isEmpty()) {
@@ -218,7 +218,7 @@ public class Executors {
 
         try {
             ActionType actionType = ActionType.valueOf(type);
-            Arguments args = new Arguments(executor.getPlot(),executor);
+            Arguments args = new Arguments(executor.getPlanet(),executor);
             Target target = Target.DEFAULT;
             String targetString = config.getString(path + ".target");
             if (targetString != null && !targetString.isEmpty()) {

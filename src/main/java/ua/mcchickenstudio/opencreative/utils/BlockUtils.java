@@ -20,7 +20,7 @@ package ua.mcchickenstudio.opencreative.utils;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
-import ua.mcchickenstudio.opencreative.plots.DevPlatform;
+import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Location;

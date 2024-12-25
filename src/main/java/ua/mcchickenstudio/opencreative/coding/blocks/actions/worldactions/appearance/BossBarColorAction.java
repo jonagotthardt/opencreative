@@ -42,11 +42,11 @@ public class BossBarColorAction extends WorldAction {
         try {
             color = BossBar.Color.valueOf(colorString.toUpperCase());
         } catch (IllegalArgumentException ignored) {}
-        BossBar bossBar = getPlot().getTerritory().getBossBars().get(name.toLowerCase());
+        BossBar bossBar = getPlanet().getTerritory().getBossBars().get(name.toLowerCase());
         if (bossBar != null) {
             bossBar.color(color);
         }
-        getPlot().getTerritory().getBossBars().put(name.toLowerCase(),bossBar);
+        getPlanet().getTerritory().getBossBars().put(name.toLowerCase(),bossBar);
     }
 
     @Override

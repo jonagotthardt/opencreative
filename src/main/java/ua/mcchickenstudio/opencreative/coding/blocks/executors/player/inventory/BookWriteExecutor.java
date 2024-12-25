@@ -23,7 +23,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.BookWriteEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.event.Cancellable;
 
 public class BookWriteExecutor extends PlayerExecutor implements Cancellable {
@@ -36,8 +36,8 @@ public class BookWriteExecutor extends PlayerExecutor implements Cancellable {
         }
     }
 
-    public BookWriteExecutor(Plot plot, int x, int y, int z) {
-        super(plot, x, y, z);
+    public BookWriteExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override

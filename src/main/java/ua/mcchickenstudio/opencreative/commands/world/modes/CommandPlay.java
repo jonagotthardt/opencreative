@@ -20,17 +20,17 @@ package ua.mcchickenstudio.opencreative.commands.world.modes;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
-import ua.mcchickenstudio.opencreative.events.plot.PlotModeChangeEvent;
-import ua.mcchickenstudio.opencreative.plots.DevPlot;
+import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -49,8 +49,8 @@ public class CommandPlay implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot == null) {
+            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            if (planet == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
                 return true;
             }
@@ -61,24 +61,24 @@ public class CommandPlay implements CommandExecutor {
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             // Проверка на владельца мира
 
-            DevPlot playerDevPlot = PlotManager.getInstance().getDevPlot(player);
-            if (playerDevPlot != null) {
-                playerDevPlot.getLastLocations().put(player,player.getLocation());
+            DevPlanet playerDevPlanet = PlanetManager.getInstance().getDevPlanet(player);
+            if (playerDevPlanet != null) {
+                playerDevPlanet.getLastLocations().put(player,player.getLocation());
             }
 
             removePlayerWithLocation(player);
-            if (plot.getMode() != Plot.Mode.PLAYING) {
-                if (plot.getWorldPlayers().canDevelop(player)) {
-                    PlotModeChangeEvent event = new PlotModeChangeEvent(plot,plot.getMode(), Plot.Mode.PLAYING,player);
+            if (planet.getMode() != Planet.Mode.PLAYING) {
+                if (planet.getWorldPlayers().canDevelop(player)) {
+                    PlanetModeChangeEvent event = new PlanetModeChangeEvent(planet, planet.getMode(), Planet.Mode.PLAYING,player);
                     event.callEvent();
                     if (event.isCancelled()) {
                         return true;
                     }
-                    plot.setMode(Plot.Mode.PLAYING);
-                    if (isEntityInDevPlot(player)) {
+                    planet.setMode(Planet.Mode.PLAYING);
+                    if (isEntityInDevPlanet(player)) {
                         clearPlayer(player);
-                        player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
-                        if (plot.isOwner(sender.getName())) {
+                        player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
+                        if (planet.isOwner(sender.getName())) {
                             player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
                         }
                         givePlayPermissions(player);
@@ -88,30 +88,30 @@ public class CommandPlay implements CommandExecutor {
                     sender.sendMessage(getLocaleMessage("not-owner", player));
                 }
             } else {
-                if (EventRaiser.raisePlayEvent(player) || plot.getWorldPlayers().canDevelop(player)) {
-                    if (plot.getWorldPlayers().canDevelop(player)) {
+                if (EventRaiser.raisePlayEvent(player) || planet.getWorldPlayers().canDevelop(player)) {
+                    if (planet.getWorldPlayers().canDevelop(player)) {
                         player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
-                        if (plot.getDevPlot().isLoaded()) {
-                            new CodingBlockParser().parseCode(plot.getDevPlot());
+                        if (planet.getDevPlanet().isLoaded()) {
+                            new CodingBlockParser().parseCode(planet.getDevPlanet());
                         } else {
-                            plot.getTerritory().getScript().loadCode();
+                            planet.getTerritory().getScript().loadCode();
                         }
                     } else {
                         player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
                     }
-                    plot.getTerritory().getWorld().getSpawnLocation().getChunk().load(true);
-                    DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-                    if (devPlot != null) {
+                    planet.getTerritory().getWorld().getSpawnLocation().getChunk().load(true);
+                    DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                    if (devPlanet != null) {
                         clearPlayer(player);
                     } else {
                         EventRaiser.raiseQuitEvent(player);
                     }
                     clearPlayer(player);
-                    player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
-                    if (plot.isOwner(sender.getName())) {
+                    player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
+                    if (planet.isOwner(sender.getName())) {
                         player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
                     }
-                    if (plot.getWorldPlayers().canDevelop(player)) {
+                    if (planet.getWorldPlayers().canDevelop(player)) {
                         givePlayPermissions(player);
                     }
                     EventRaiser.raiseJoinEvent(player);
