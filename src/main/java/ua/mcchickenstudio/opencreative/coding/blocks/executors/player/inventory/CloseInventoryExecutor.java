@@ -20,13 +20,13 @@ package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.inventory
 
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class CloseInventoryExecutor extends PlayerExecutor {
 
 
-    public CloseInventoryExecutor(Plot plot, int x, int y, int z) {
-        super(plot, x, y, z);
+    public CloseInventoryExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override

@@ -40,7 +40,7 @@ public class VariableExistsCondition extends VariableCondition {
         boolean requireAll = getArguments().getValue("all",false,this);
         boolean exists = false;
         for (VariableLink link : links) {
-            if (getPlot().getVariables().getVariable(link,this) != null) {
+            if (getPlanet().getVariables().getVariable(link,this) != null) {
                 if (!requireAll) {
                     return true;
                 }

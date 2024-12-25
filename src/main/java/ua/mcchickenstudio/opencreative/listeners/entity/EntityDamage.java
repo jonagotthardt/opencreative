@@ -18,19 +18,18 @@
 
 package ua.mcchickenstudio.opencreative.listeners.entity;
 
-import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
-import ua.mcchickenstudio.opencreative.plots.PlotFlags;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
+import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
 
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
 
@@ -40,31 +39,31 @@ public class EntityDamage implements Listener {
     public void onEntityDamage(EntityDamageEvent event) {
 
         if (event.getEntity() instanceof Player victim) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(victim);
-            if (plot != null) {
-                if (plot.getMode() == Plot.Mode.BUILD) {
+            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(victim);
+            if (planet != null) {
+                if (planet.getMode() == Planet.Mode.BUILD) {
                     event.setCancelled(true);
                     if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
                         BukkitRunnable runnable = new BukkitRunnable() {
                             @Override
                             public void run() {
-                                if (plot.isLoaded() && plot.getTerritory().getWorld().equals(victim.getWorld()) && plot.getMode() == Plot.Mode.BUILD) {
+                                if (planet.isLoaded() && planet.getTerritory().getWorld().equals(victim.getWorld()) && planet.getMode() == Planet.Mode.BUILD) {
                                     victim.teleport(victim.getWorld().getSpawnLocation().add(0,0.5,0));
                                 }
-                                plot.getTerritory().removeBukkitRunnable(this);
+                                planet.getTerritory().removeBukkitRunnable(this);
                             }
                         };
-                        plot.getTerritory().addBukkitRunnable(runnable);
+                        planet.getTerritory().addBukkitRunnable(runnable);
                         runnable.runTaskLater(OpenCreative.getPlugin(),1L);
                     }
                 }
-                if (PlotManager.getInstance().getDevPlot(victim) != null) {
+                if (PlanetManager.getInstance().getDevPlanet(victim) != null) {
                     event.setCancelled(true);
                 }
 
                 if (victim.getLocation().distance(victim.getWorld().getSpawnLocation()) < 5) event.setCancelled(true);
 
-                byte playerDamageFlag = plot.getFlagValue(PlotFlags.PlotFlag.PLAYER_DAMAGE);
+                byte playerDamageFlag = planet.getFlagValue(PlanetFlags.PlanetFlag.PLAYER_DAMAGE);
                 if (playerDamageFlag == 2) event.setCancelled(true);
                 if (playerDamageFlag == 3 && event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) event.setCancelled(true);
                 if (playerDamageFlag == 4 && event.getCause() == EntityDamageEvent.DamageCause.FALL) event.setCancelled(true);
@@ -84,22 +83,22 @@ public class EntityDamage implements Listener {
         if (event.getEntity() instanceof Player victim) {
             // Player damages player
             if (event.getDamager() instanceof Player damager) {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(damager);
-                if (plot != null) {
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(damager);
+                if (planet != null) {
                     EventRaiser.raisePlayerDamagesPlayerEvent(damager,victim,event);
                 }
             // Mob damages player
             } else {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(victim);
-                if (plot != null) {
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(victim);
+                if (planet != null) {
                     EventRaiser.raiseMobDamagesPlayerEvent(victim,event);
                 }
             }
         } else {
             // Player damages mob
             if (event.getDamager() instanceof Player damager) {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(damager);
-                if (plot != null) {
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(damager);
+                if (planet != null) {
                     EventRaiser.raisePlayerDamagedMobEvent(damager,event);
                 }
             }
@@ -108,7 +107,7 @@ public class EntityDamage implements Listener {
 
     @EventHandler
     public void onHungerChange(FoodLevelChangeEvent event) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer((Player) event.getEntity());
-        if (plot != null)  EventRaiser.raiseHungerChangeEvent((Player) event.getEntity(),event);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer((Player) event.getEntity());
+        if (planet != null)  EventRaiser.raiseHungerChangeEvent((Player) event.getEntity(),event);
     }
 }

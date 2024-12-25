@@ -20,12 +20,12 @@ package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.interacti
 
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class LeftClickExecutor extends PlayerExecutor {
 
-    public LeftClickExecutor(Plot plot, int x, int y, int z) {
-        super(plot, x, y, z);
+    public LeftClickExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override

@@ -20,7 +20,7 @@ package ua.mcchickenstudio.opencreative.commands.world;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
-import ua.mcchickenstudio.opencreative.events.plot.PlotAdvertisementEvent;
+import ua.mcchickenstudio.opencreative.events.planet.PlanetAdvertisementEvent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -33,9 +33,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
-import ua.mcchickenstudio.opencreative.plots.Plot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,14 +43,14 @@ import java.util.List;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.parsePlotLines;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.parsePlanetLines;
 
 public class CommandAd implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
             if (OpenCreative.getSettings().isMaintenance() && !player.hasPermission("opencreative.maintenance.bypass")) {
                 player.sendMessage(getLocaleMessage("maintenance"));
                 return true;
@@ -61,35 +61,35 @@ public class CommandAd implements CommandExecutor, TabCompleter {
                     return true;
                 }
                 setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
-                if (!PlotManager.getInstance().getPlots().isEmpty()) {
-                    Plot foundPlot = null;
-                    for (Plot searchablePlot : PlotManager.getInstance().getPlots()) {
-                        if (String.valueOf(searchablePlot.getId()).equals(args[0])) {
-                            foundPlot = searchablePlot;
+                if (!PlanetManager.getInstance().getPlanets().isEmpty()) {
+                    Planet foundPlanet = null;
+                    for (Planet searchablePlanet : PlanetManager.getInstance().getPlanets()) {
+                        if (String.valueOf(searchablePlanet.getId()).equals(args[0])) {
+                            foundPlanet = searchablePlanet;
                             break;
-                        } else if (searchablePlot.getInformation().getCustomID().equalsIgnoreCase(args[0])) {
-                            foundPlot = searchablePlot;
+                        } else if (searchablePlanet.getInformation().getCustomID().equalsIgnoreCase(args[0])) {
+                            foundPlanet = searchablePlanet;
                             break;
                         }
                     }
-                    if (foundPlot != null) {
-                        if (foundPlot.equals(PlotManager.getInstance().getPlotByPlayer(player))) {
+                    if (foundPlanet != null) {
+                        if (foundPlanet.equals(PlanetManager.getInstance().getPlanetByPlayer(player))) {
                             player.sendMessage(getLocaleMessage("same-world",player));
                         } else {
-                            foundPlot.connectPlayer(player);
+                            foundPlanet.connectPlayer(player);
                         }
                     } else {
                         player.playSound(player.getLocation(),Sound.BLOCK_ANVIL_DESTROY,100,2);
                         player.clearTitle();
-                        player.sendMessage(getLocaleMessage("no-plot-found",player));
+                        player.sendMessage(getLocaleMessage("no-planet-found",player));
                     }
                 } else {
                     player.playSound(player.getLocation(),Sound.BLOCK_ANVIL_DESTROY,100,2);
                     player.clearTitle();
-                    player.sendMessage(getLocaleMessage("no-plot-found",player));
+                    player.sendMessage(getLocaleMessage("no-planet-found",player));
                 }
             } else {
-                if (plot == null) {
+                if (planet == null) {
                     player.sendMessage(getLocaleMessage("only-in-world"));
                     return true;
                 }
@@ -97,19 +97,19 @@ public class CommandAd implements CommandExecutor, TabCompleter {
                     player.sendMessage(getLocaleMessage("advertisement.cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND))));
                     return true;
                 }
-                if (!(plot.getSharing() == Plot.Sharing.PUBLIC)) {
+                if (!(planet.getSharing() == Planet.Sharing.PUBLIC)) {
                     player.sendMessage(getLocaleMessage("advertisement.closed-world"));
                     return true;
                 }
-                PlotAdvertisementEvent event = new PlotAdvertisementEvent(plot,player);
+                PlanetAdvertisementEvent event = new PlanetAdvertisementEvent(planet,player);
                 event.callEvent();
                 if (event.isCancelled()) return true;
                 setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getAdvertisementCooldown(), CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND);
                 EventRaiser.raiseAdvertisedEvent(player);
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                    TextComponent advertisement = new TextComponent(getLocaleMessage("advertisement.message",player).replace("%world%",plot.getInformation().getDisplayName()));
-                    advertisement.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(parsePlotLines(plot,getLocaleMessage("advertisement.hover")))));
-                    advertisement.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ad " + plot.getId()));
+                    TextComponent advertisement = new TextComponent(getLocaleMessage("advertisement.message",player).replace("%world%", planet.getInformation().getDisplayName()));
+                    advertisement.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(parsePlanetLines(planet,getLocaleMessage("advertisement.hover")))));
+                    advertisement.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ad " + planet.getId()));
                         p.sendMessage(advertisement);
                 }
             }
@@ -122,8 +122,8 @@ public class CommandAd implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         if (args.length == 1) {
             List<String> TabCompleter = new ArrayList<>();
-            for (Plot plot : PlotManager.getInstance().getPlots()) {
-                TabCompleter.add(plot.getInformation().getCustomID());
+            for (Planet planet : PlanetManager.getInstance().getPlanets()) {
+                TabCompleter.add(planet.getInformation().getCustomID());
             }
             return TabCompleter;
         }

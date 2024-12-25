@@ -20,13 +20,13 @@ package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.fighting;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.event.Cancellable;
 
 public class PlayerKilledPlayerExecutor extends PlayerExecutor implements Cancellable {
 
-    public PlayerKilledPlayerExecutor(Plot plot, int x, int y, int z) {
-        super(plot, x, y, z);
+    public PlayerKilledPlayerExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override

@@ -38,11 +38,11 @@ public class BossBarProgressAction extends WorldAction {
         }
         String name = getArguments().getValue("name","boss",this);
         float progress = getArguments().getValue("progress",100.0f,this)/100;
-        BossBar bossBar = getPlot().getTerritory().getBossBars().get(name.toLowerCase());
+        BossBar bossBar = getPlanet().getTerritory().getBossBars().get(name.toLowerCase());
         if (bossBar != null) {
             bossBar.progress(progress);
         }
-        getPlot().getTerritory().getBossBars().put(name.toLowerCase(),bossBar);
+        getPlanet().getTerritory().getBossBars().put(name.toLowerCase(),bossBar);
     }
 
     @Override

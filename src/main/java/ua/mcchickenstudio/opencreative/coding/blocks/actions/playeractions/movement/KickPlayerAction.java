@@ -23,7 +23,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.entity.Player;
 
 public class KickPlayerAction extends PlayerAction {
@@ -33,10 +33,10 @@ public class KickPlayerAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        Plot plot = getPlot();
-        if (plot == null) return;
-        if (!plot.isOwner(player)) {
-            plot.getWorldPlayers().kickPlayer(player);
+        Planet planet = getPlanet();
+        if (planet == null) return;
+        if (!planet.isOwner(player)) {
+            planet.getWorldPlayers().kickPlayer(player);
         }
     }
 

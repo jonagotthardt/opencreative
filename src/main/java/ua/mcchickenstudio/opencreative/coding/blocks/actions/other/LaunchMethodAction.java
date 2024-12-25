@@ -38,7 +38,7 @@ public class LaunchMethodAction extends Action {
     protected void execute(Entity entity) {
         String name = getArguments().getValue("name","",this);
         if (name.isEmpty()) return;
-        for (Executor executor : getPlot().getTerritory().getScript().getExecutors().getExecutorsList()) {
+        for (Executor executor : getPlanet().getTerritory().getScript().getExecutors().getExecutorsList()) {
             if (executor instanceof Method method) {
                 if (method.getName().equalsIgnoreCase(name)) {
                     Executors.activate(method, getEvent());

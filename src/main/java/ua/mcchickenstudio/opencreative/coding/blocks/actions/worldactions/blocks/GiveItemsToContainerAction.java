@@ -44,22 +44,22 @@ public class GiveItemsToContainerAction extends WorldAction {
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
-                getPlot().getLimits().setLastModifiedBlocksAmount(0);
+                getPlanet().getLimits().setLastModifiedBlocksAmount(0);
             }
         };
         if (location.getBlock().getState() instanceof InventoryHolder container) {
-            if (getPlot().getLimits().getLastModifiedBlocksAmount() > getPlot().getLimits().getModifyingBlocksLimit()) {
+            if (getPlanet().getLimits().getLastModifiedBlocksAmount() > getPlanet().getLimits().getModifyingBlocksLimit()) {
                 runnable.runTaskLater(OpenCreative.getPlugin(),20L);
-                getPlot().getTerritory().removeBukkitRunnable(runnable);
+                getPlanet().getTerritory().removeBukkitRunnable(runnable);
                 return;
             }
             for (ItemStack item : items) {
                 container.getInventory().addItem(item);
             }
-            getPlot().getLimits().setLastModifiedBlocksAmount(getPlot().getLimits().getLastModifiedBlocksAmount()+1);
+            getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount()+1);
         }
         runnable.runTaskLater(OpenCreative.getPlugin(),20L);
-        getPlot().getTerritory().removeBukkitRunnable(runnable);
+        getPlanet().getTerritory().removeBukkitRunnable(runnable);
 
     }
 

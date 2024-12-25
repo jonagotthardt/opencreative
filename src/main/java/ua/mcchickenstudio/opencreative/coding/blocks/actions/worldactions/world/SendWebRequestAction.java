@@ -70,7 +70,7 @@ public class SendWebRequestAction extends WorldAction {
             @Override
             public void run() {
                 try {
-                    HttpURLConnection connection = getHttpURLConnection(getPlot().getId(), url, request, media);
+                    HttpURLConnection connection = getHttpURLConnection(getPlanet().getId(), url, request, media);
 
                     if ("POST".equalsIgnoreCase(request) && !body.isEmpty()) {
                         try (OutputStream os = connection.getOutputStream()) {
@@ -85,11 +85,11 @@ public class SendWebRequestAction extends WorldAction {
                         int read = reader.read(buffer);
                         String response = new String(buffer, 0, Math.max(0, read));
                         Bukkit.getScheduler().runTask(OpenCreative.getPlugin(),
-                                () -> EventRaiser.raiseWebResponseEvent(getPlot(), url, code, response));
+                                () -> EventRaiser.raiseWebResponseEvent(getPlanet(), url, code, response));
                     }
                 } catch (Exception e) {
                     Bukkit.getScheduler().runTask(OpenCreative.getPlugin(),
-                            () -> EventRaiser.raiseWebResponseEvent(getPlot(), url, 408, "Error: " + e.getMessage()));
+                            () -> EventRaiser.raiseWebResponseEvent(getPlanet(), url, 408, "Error: " + e.getMessage()));
                 }
             }
         }.runTaskAsynchronously(OpenCreative.getPlugin());

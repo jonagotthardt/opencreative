@@ -22,7 +22,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,14 +32,14 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugEx
 /**
  * <h1>Executor</h1>
  * This class represents Executor that has actions to run.
- * Executor will be executed on events in plot.
+ * Executor will be executed on events in planet.
  * @since 5.0
  * @version 5.0
  * @author McChicken Studio
  */
 public abstract class Executor {
 
-    private final Plot plot;
+    private final Planet planet;
     private final int x;
     private final int y;
     private final int z;
@@ -49,14 +49,14 @@ public abstract class Executor {
     private ActionsHandler handler;
 
     /**
-     * Creates an Executor with specified plot and block's location in developers plot.
-     * @param plot Plot where executor will work.
-     * @param x X from Executor's block location in developers plot.
-     * @param y Y from Executor's block location in developers plot.
-     * @param z Z from Executor's block location in developers plot.
+     * Creates an Executor with specified planet and block's location in developers planet.
+     * @param planet Planet where executor will work.
+     * @param x X from Executor's block location in developers planet.
+     * @param y Y from Executor's block location in developers planet.
+     * @param z Z from Executor's block location in developers planet.
      */
-    public Executor(Plot plot, int x, int y, int z) {
-        this.plot = plot;
+    public Executor(Planet planet, int x, int y, int z) {
+        this.planet = planet;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -64,7 +64,7 @@ public abstract class Executor {
 
     /**
      * Executes all actions with specified event.
-     * @param event Event that occurred in plot.
+     * @param event Event that occurred in planet.
      */
     public void run(WorldEvent event) {
         sendCodingDebugExecutor(this);
@@ -106,7 +106,7 @@ public abstract class Executor {
 
     @Override
     public String toString() {
-        return "Executor | Plot: " + getPlot().getWorldName() + " Coords: " + x + " " + y + " " + z;
+        return "Executor | Planet: " + getPlanet().getWorldName() + " Coords: " + x + " " + y + " " + z;
     }
 
     public final int getX() {
@@ -121,8 +121,8 @@ public abstract class Executor {
         return z;
     }
 
-    public final Plot getPlot() {
-        return plot;
+    public final Planet getPlanet() {
+        return planet;
     }
 
     public EventValues getVariables() {

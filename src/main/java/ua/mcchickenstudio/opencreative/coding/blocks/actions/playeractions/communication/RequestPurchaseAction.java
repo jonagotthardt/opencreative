@@ -25,9 +25,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.menu.ConfirmationMenu;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
-import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -48,8 +47,8 @@ public class RequestPurchaseAction extends PlayerAction {
         String name = getArguments().getValue("name","Example",this);
         boolean save = getArguments().getValue("save",false,this);
         int price = getArguments().getValue("price",100,this);
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-        if (plot == null) return;
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        if (planet == null) return;
         new ConfirmationMenu(
                 getLocaleMessage("menus.confirmation.request-money", false).replace("%name%", name),
                 Material.GOLD_INGOT,
@@ -60,8 +59,8 @@ public class RequestPurchaseAction extends PlayerAction {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        Plot currentPlot = PlotManager.getInstance().getPlotByPlayer(player);
-                        if (!plot.equals(currentPlot) || !OpenCreative.getEconomy().isEnabled()) {
+                        Planet currentPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        if (!planet.equals(currentPlanet) || !OpenCreative.getEconomy().isEnabled()) {
                             cancel();
                             return;
                         }
@@ -69,16 +68,16 @@ public class RequestPurchaseAction extends PlayerAction {
                             player.sendMessage(getLocaleMessage("no-money").replace("%money%",String.valueOf(price)));
                         } else {
                             if (save) {
-                                if (plot.getWorldPlayers().getPlotPlayer(player).getPurchases().contains(id.toLowerCase())) {
+                                if (planet.getWorldPlayers().getPlanetPlayer(player).getPurchases().contains(id.toLowerCase())) {
                                     return;
                                 } else {
-                                    plot.getWorldPlayers().getPlotPlayer(player).addPurchase(id.toLowerCase());
+                                    planet.getWorldPlayers().getPlanetPlayer(player).addPurchase(id.toLowerCase());
                                 }
                             }
                             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP,100,1.2f);
-                            if (!plot.isOwner(player)) {
+                            if (!planet.isOwner(player)) {
                                 OpenCreative.getEconomy().withdrawMoney(player,price);
-                                OpenCreative.getEconomy().depositMoney(Bukkit.getOfflinePlayer(plot.getOwner()),price);
+                                OpenCreative.getEconomy().depositMoney(Bukkit.getOfflinePlayer(planet.getOwner()),price);
                             }
                             raisePlayerPurchaseEvent(player,id,name,price,save);
                         }

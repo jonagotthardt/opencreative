@@ -19,8 +19,8 @@
 package ua.mcchickenstudio.opencreative.commands.minecraft;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -54,12 +54,12 @@ public class CommandGive implements CommandExecutor, TabCompleter {
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (!player.hasPermission("opencreative.give.bypass")) {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot == null) {
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                if (planet == null) {
                     player.sendMessage(getLocaleMessage("only-in-world"));
                     return true;
                 }
-                if (!(plot.isOwner(player) || plot.getWorldPlayers().canDevelop(player) || plot.getWorldPlayers().canBuild(player))) {
+                if (!(planet.isOwner(player) || planet.getWorldPlayers().canDevelop(player) || planet.getWorldPlayers().canBuild(player))) {
                     player.sendMessage(getLocaleMessage("not-owner"));
                     return true;
                 }
@@ -84,10 +84,10 @@ public class CommandGive implements CommandExecutor, TabCompleter {
                     player.sendMessage(getLocaleMessage("no-player-found"));
                     return true;
                 } else {
-                    Plot givePlot = PlotManager.getInstance().getPlotByPlayer(givePlayer);
+                    Planet givePlanet = PlanetManager.getInstance().getPlanetByPlayer(givePlayer);
                     if (!player.hasPermission("opencreative.give.bypass")) {
-                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                        if (plot == null || !plot.equals(givePlot)) {
+                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        if (planet == null || !planet.equals(givePlanet)) {
                             player.sendMessage(getLocaleMessage("no-player-found"));
                             return true;
                         }

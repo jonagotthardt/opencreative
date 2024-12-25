@@ -24,7 +24,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.worldconditions.WorldCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.entity.Entity;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class IsWorldPublicCondition extends WorldCondition {
 
     @Override
     public boolean check(Entity entity) {
-        return getPlot().getSharing() == Plot.Sharing.PUBLIC;
+        return getPlanet().getSharing() == Planet.Sharing.PUBLIC;
     }
 
     @Override

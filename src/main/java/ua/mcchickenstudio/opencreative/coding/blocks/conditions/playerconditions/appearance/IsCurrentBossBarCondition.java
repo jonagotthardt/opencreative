@@ -41,7 +41,7 @@ public class IsCurrentBossBarCondition extends PlayerCondition {
         boolean requireAll = getArguments().getValue("all",false,this);
         boolean seesBossBar = false;
         for (String name : names) {
-            BossBar bossBar = getPlot().getTerritory().getBossBars().get(name);
+            BossBar bossBar = getPlanet().getTerritory().getBossBars().get(name);
             for (BossBar playerBossBar : player.activeBossBars()) {
                 if (playerBossBar.equals(bossBar)) {
                     if (!requireAll) {

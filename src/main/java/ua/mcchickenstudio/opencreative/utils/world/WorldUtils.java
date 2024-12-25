@@ -56,12 +56,12 @@ public class WorldUtils {
 
     }
 
-    public static boolean isDevPlot(World world) {
+    public static boolean isDevPlanet(World world) {
         return world.getName().endsWith("dev");
     }
 
     /**
-     Returns still not used ID for new plot. It gets a value from config.yml and increases it.
+     Returns still not used ID for new planet. It gets a value from config.yml and increases it.
      @return Unique ID for new world.
      **/
     public static int generateWorldID() {
@@ -70,7 +70,7 @@ public class WorldUtils {
             newWorldID++;
             boolean exists = false;
             for (File folder : getWorldsFolders(true)) {
-                if (folder.getName().equalsIgnoreCase("plot" + newWorldID)) {
+                if (folder.getName().equalsIgnoreCase("planet" + newWorldID)) {
                     exists = true;
                     break;
                 }

@@ -16,17 +16,23 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.events.plot;
+package ua.mcchickenstudio.opencreative.events.planet;
 
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.events.CreativeEvent;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 /**
- * Called when plot is going to be deleted.
+ * Represents a planet related event.
  */
-public class PlotDeletionEvent extends PlotEvent {
+public class PlanetEvent extends CreativeEvent {
 
-    public PlotDeletionEvent(Plot plot) {
-        super(plot);
+    private final Planet planet;
+
+    public PlanetEvent(Planet planet) {
+        this.planet = planet;
     }
 
+    public Planet getPlanet() {
+        return planet;
+    }
 }

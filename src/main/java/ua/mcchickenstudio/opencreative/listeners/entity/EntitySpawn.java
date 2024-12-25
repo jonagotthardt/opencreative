@@ -19,7 +19,8 @@
 package ua.mcchickenstudio.opencreative.listeners.entity;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
-import ua.mcchickenstudio.opencreative.plots.PlotFlags;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -34,13 +35,12 @@ import org.bukkit.event.entity.EntityPlaceEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
-import ua.mcchickenstudio.opencreative.plots.Plot;
 
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.sendMessageOnce;
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlot;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isEntityHostile;
 
 public class EntitySpawn implements Listener {
@@ -48,25 +48,25 @@ public class EntitySpawn implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEntitySpawn(EntitySpawnEvent event) {
         World world = event.getLocation().getWorld();
-        Plot plot = PlotManager.getInstance().getPlotByWorld(world);
-        if (plot != null) {
-            int limit = plot.getLimits().getEntitiesLimit();
-            int count = plot.getTerritory().getWorld().getEntityCount();
+        Planet planet = PlanetManager.getInstance().getPlanetByWorld(world);
+        if (planet != null) {
+            int limit = planet.getLimits().getEntitiesLimit();
+            int count = planet.getTerritory().getWorld().getEntityCount();
             if (world.getName().contains("dev")) {
                 if (!(event.getEntity() instanceof Item)) {
                     event.setCancelled(true);
                 }
             }
-            if (plot.getDevPlot() != null && plot.getDevPlot().getWorld() != null) {
-                count += plot.getDevPlot().getWorld().getEntityCount();
+            if (planet.getDevPlanet() != null && planet.getDevPlanet().getWorld() != null) {
+                count += planet.getDevPlanet().getWorld().getEntityCount();
             }
             if (count > limit) {
                 event.setCancelled(true);
-                if (plot.getOnline() < 1) return;
+                if (planet.getOnline() < 1) return;
                 TextComponent warning = new TextComponent(getLocaleMessage("world.entity-limit").replace("%count%",String.valueOf(limit)));
                 warning.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(getLocaleMessage("world.entity-limit-hover"))));
                 warning.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/world deletemobs"));
-                sendMessageOnce(plot,warning,3);
+                sendMessageOnce(planet,warning,3);
             } else {
                 EventRaiser.raiseEntitySpawnEvent(event);
             }
@@ -76,16 +76,16 @@ public class EntitySpawn implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEntityPlace(EntityPlaceEvent event) {
         World world = event.getBlock().getWorld();
-        Plot plot = PlotManager.getInstance().getPlotByWorld(world);
-        if (plot != null) {
-            int limit = plot.getLimits().getEntitiesLimit();
+        Planet planet = PlanetManager.getInstance().getPlanetByWorld(world);
+        if (planet != null) {
+            int limit = planet.getLimits().getEntitiesLimit();
             if (world.getEntityCount() > limit) {
                 event.setCancelled(true);
-                if (plot.getOnline() < 1) return;
+                if (planet.getOnline() < 1) return;
                 TextComponent warning = new TextComponent(getLocaleMessage("world.entity-limit").replace("%count%",String.valueOf(limit)));
                 warning.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(getLocaleMessage("world.entity-limit-hover"))));
                 warning.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/world deletemobs"));
-                sendMessageOnce(plot,warning,3);
+                sendMessageOnce(planet,warning,3);
             }
         }
         String worldName = world.getName();
@@ -98,13 +98,13 @@ public class EntitySpawn implements Listener {
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         World world = event.getEntity().getWorld();
         Entity entity = event.getEntity();
-        Plot plot = PlotManager.getInstance().getPlotByWorld(world);
-        if (isEntityInDevPlot(entity) && !(event.getEntity() instanceof Item)) {
+        Planet planet = PlanetManager.getInstance().getPlanetByWorld(world);
+        if (isEntityInDevPlanet(entity) && !(event.getEntity() instanceof Item)) {
             event.setCancelled(true);
         }
-        if (plot != null) {
+        if (planet != null) {
             if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL) {
-                switch (plot.getFlagValue(PlotFlags.PlotFlag.MOB_SPAWN)) {
+                switch (planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_SPAWN)) {
                     case 3:
                         if (entity instanceof Slime) {
                             event.setCancelled(true);
@@ -121,13 +121,13 @@ public class EntitySpawn implements Listener {
                         }
                         break;
                 }
-                if (world.getEntityCount() >= plot.getLimits().getEntitiesLimit() /2) {
+                if (world.getEntityCount() >= planet.getLimits().getEntitiesLimit() /2) {
                     event.setCancelled(true);
                 }
             }
-            if (plot.getTerritory().getEnvironment() == World.Environment.THE_END) {
+            if (planet.getTerritory().getEnvironment() == World.Environment.THE_END) {
                 if (event.getEntity() instanceof EnderDragon dragon) {
-                    if (System.currentTimeMillis()-plot.getLastActivityTime() < 10000) {
+                    if (System.currentTimeMillis()- planet.getLastActivityTime() < 10000) {
                         dragon.setHealth(0);
                     }
                 }
@@ -139,7 +139,7 @@ public class EntitySpawn implements Listener {
     @EventHandler
     public void onVehicleCreation(VehicleCreateEvent event) {
         Entity entity = event.getVehicle();
-        if (isEntityInDevPlot(entity)) {
+        if (isEntityInDevPlanet(entity)) {
             event.setCancelled(true);
         }
     }
@@ -147,9 +147,9 @@ public class EntitySpawn implements Listener {
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
         World world = event.getWorld();
-        Plot plot = PlotManager.getInstance().getPlotByWorld(world);
-        if (plot != null && event.isNewChunk()) {
-            if (world.getEntityCount() >= plot.getLimits().getEntitiesLimit() /2) {
+        Planet planet = PlanetManager.getInstance().getPlanetByWorld(world);
+        if (planet != null && event.isNewChunk()) {
+            if (world.getEntityCount() >= planet.getLimits().getEntitiesLimit() /2) {
                 for (Entity entity : event.getChunk().getEntities()) {
                     entity.remove();
                 }

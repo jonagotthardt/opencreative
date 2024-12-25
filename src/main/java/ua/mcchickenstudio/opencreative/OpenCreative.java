@@ -120,7 +120,7 @@ public final class OpenCreative extends JavaPlugin {
         FileUtils.loadLocales();
         PlayerUtils.loadPermissions();
         HookUtils.loadHooks();
-        FileUtils.loadPlots();
+        FileUtils.loadPlanets();
 
         economy = HookUtils.getEconomy();
         economy.init();
@@ -161,7 +161,7 @@ public final class OpenCreative extends JavaPlugin {
             player.sendMessage(Component.text("§f\n§f Shutting down §7Open§fCreative§b+ §7" + version + "§f, please wait...\n§f"));
             teleportToLobby(player);
         }
-        FileUtils.unloadPlots();
+        FileUtils.unloadPlanets();
         getLogger().info(" ");
         getLogger().info(" Goodbye from OpenCreative+");
         getLogger().info(" ");

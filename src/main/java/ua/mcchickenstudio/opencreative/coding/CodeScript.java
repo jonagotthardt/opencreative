@@ -29,7 +29,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -41,21 +41,21 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 
 /**
  * <h1>CodeScript</h1>
- * This class represents configuration file that stores plot's code.
+ * This class represents configuration file that stores planet's code.
  * It has methods to load code and save coding blocks.
  * @see CodingBlockParser
  */
 public class CodeScript {
 
-    private final Plot plot;
+    private final Planet planet;
     private final File file;
     private final Executors executors;
     private final YamlConfiguration scriptConfig;
 
-    public CodeScript(Plot plot, File file) {
-        this.plot = plot;
+    public CodeScript(Planet planet, File file) {
+        this.planet = planet;
         this.file = file;
-        this.executors = new Executors(plot);
+        this.executors = new Executors(planet);
         this.scriptConfig = YamlConfiguration.loadConfiguration(file);
     }
 
@@ -99,7 +99,7 @@ public class CodeScript {
         try {
             scriptConfig.save(file);
         } catch (IOException exception) {
-            sendCriticalErrorMessage("An error has occurred while clearing and saving code script " + this.getPlot().getWorldName(),exception);
+            sendCriticalErrorMessage("An error has occurred while clearing and saving code script " + this.getPlanet().getWorldName(),exception);
         }
     }
 
@@ -238,8 +238,8 @@ public class CodeScript {
         return executors;
     }
 
-    public Plot getPlot() {
-        return plot;
+    public Planet getPlanet() {
+        return planet;
     }
 }
 

@@ -22,7 +22,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.util.List;
 
@@ -31,8 +31,8 @@ import static ua.mcchickenstudio.opencreative.utils.BlockUtils.setSignLine;
 public class LegacyConvertor extends Convertor {
 
 
-    public LegacyConvertor(List<Plot> plots) {
-        super("Converts legacy code from 1.4 version to 5.0",plots);
+    public LegacyConvertor(List<Planet> planets) {
+        super("Converts legacy code from 1.4 version to 5.0", planets);
     }
 
     @Override

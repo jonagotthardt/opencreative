@@ -19,8 +19,8 @@
 package ua.mcchickenstudio.opencreative.commands.minecraft;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -59,12 +59,12 @@ public class CommandTeleport implements CommandExecutor {
              * Checking is player owner, builder or developer of world.
              * If not, he can't teleport.
              */
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot == null) {
+            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            if (planet == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
                 return true;
             }
-            if (!(plot.isOwner(player) || plot.getWorldPlayers().canDevelop(player) || plot.getWorldPlayers().canBuild(player))) {
+            if (!(planet.isOwner(player) || planet.getWorldPlayers().canDevelop(player) || planet.getWorldPlayers().canBuild(player))) {
                 player.sendMessage(getLocaleMessage("not-owner"));
                 return true;
             }
@@ -72,7 +72,7 @@ public class CommandTeleport implements CommandExecutor {
              * Players should not teleport in developer world,
              * because it's work depends on game mode.
              */
-            if (PlotManager.getInstance().getDevPlot(player) != null) {
+            if (PlanetManager.getInstance().getDevPlanet(player) != null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
                 return true;
             }
@@ -86,14 +86,14 @@ public class CommandTeleport implements CommandExecutor {
                 player.sendMessage(getLocaleMessage("no-player-found"));
                 return true;
             }
-            Plot teleportPlot = PlotManager.getInstance().getPlotByPlayer(teleportToPlayer);
+            Planet teleportPlanet = PlanetManager.getInstance().getPlanetByPlayer(teleportToPlayer);
             if (!player.hasPermission("opencreative.teleport.bypass")) {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot == null || !plot.equals(teleportPlot)) {
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                if (planet == null || !planet.equals(teleportPlanet)) {
                     player.sendMessage(getLocaleMessage("no-player-found"));
                     return true;
                 }
-                if (PlotManager.getInstance().getDevPlot(teleportToPlayer) != null) {
+                if (PlanetManager.getInstance().getDevPlanet(teleportToPlayer) != null) {
                     player.sendMessage(getLocaleMessage("only-in-world"));
                     return true;
                 }
@@ -101,9 +101,9 @@ public class CommandTeleport implements CommandExecutor {
             }
             if (!player.hasPermission("opencreative.teleport.clear-bypass")) {
                 clearPlayer(player);
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot == null || !plot.equals(teleportPlot)) {
-                    teleportPlot.connectPlayer(player);
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                if (planet == null || !planet.equals(teleportPlanet)) {
+                    teleportPlanet.connectPlayer(player);
                 } else {
                     player.teleport(teleportToPlayer.getLocation());
                 }
@@ -128,15 +128,15 @@ public class CommandTeleport implements CommandExecutor {
                 player.sendMessage(getLocaleMessage("no-player-found"));
                 return true;
             }
-            Plot firstPlot = PlotManager.getInstance().getPlotByPlayer(firstPlayer);
-            Plot secondPlot = PlotManager.getInstance().getPlotByPlayer(secondPlayer);
+            Planet firstPlanet = PlanetManager.getInstance().getPlanetByPlayer(firstPlayer);
+            Planet secondPlanet = PlanetManager.getInstance().getPlanetByPlayer(secondPlayer);
             if (!player.hasPermission("opencreative.teleport.others-bypass")) {
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot == null || !plot.equals(firstPlot) || !plot.equals(secondPlot) || !firstPlot.equals(secondPlot)) {
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                if (planet == null || !planet.equals(firstPlanet) || !planet.equals(secondPlanet) || !firstPlanet.equals(secondPlanet)) {
                     player.sendMessage(getLocaleMessage("no-player-found"));
                     return true;
                 }
-                if (PlotManager.getInstance().getDevPlot(firstPlayer) != null || PlotManager.getInstance().getDevPlot(secondPlayer) != null) {
+                if (PlanetManager.getInstance().getDevPlanet(firstPlayer) != null || PlanetManager.getInstance().getDevPlanet(secondPlayer) != null) {
                     player.sendMessage(getLocaleMessage("only-in-world"));
                     return true;
                 }

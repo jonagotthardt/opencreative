@@ -20,8 +20,8 @@ package ua.mcchickenstudio.opencreative.menu.world.browsers;
 
 import ua.mcchickenstudio.opencreative.menu.AbstractListMenu;
 import ua.mcchickenstudio.opencreative.menu.buttons.ParameterButton;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -43,16 +43,16 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  */
 public class WorldsBrowserMenu extends AbstractListMenu {
 
-    private final List<Plot> plots;
+    private final List<Planet> planets;
     private final List<ParameterButton> buttons = new ArrayList<>();
     private final ItemStack RECOMMENDED;
     private byte sortType = 1;
 
-    public WorldsBrowserMenu(Player player, Set<Plot> plots) {
+    public WorldsBrowserMenu(Player player, Set<Planet> planets) {
         super(getLocaleMessage("menus.all-worlds.title",false), player);
-        this.plots = new ArrayList<>(plots);
-        Comparator<Plot> sortByOnline = (plot1, plot2) -> Integer.compare(plot2.getOnline(), plot1.getOnline());
-        this.plots.sort(sortByOnline);
+        this.planets = new ArrayList<>(planets);
+        Comparator<Planet> sortByOnline = (planet1, planet2) -> Integer.compare(planet2.getOnline(), planet1.getOnline());
+        this.planets.sort(sortByOnline);
         itemsSlots = new byte[]{10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34};
         noElementsPageButtonSlot = 13;
         decorationSlots = new byte[]{45,46,47,51,52,53};
@@ -61,11 +61,11 @@ public class WorldsBrowserMenu extends AbstractListMenu {
         RECOMMENDED = createItem(Material.WIND_CHARGE,1,"menus.all-worlds.items.recommended");
     }
 
-    public WorldsBrowserMenu(Player player, Set<Plot> plots, boolean withRecommendedButton) {
+    public WorldsBrowserMenu(Player player, Set<Planet> planets, boolean withRecommendedButton) {
         super(getLocaleMessage("menus.all-worlds.title",false), player);
-        this.plots = new ArrayList<>(plots);
-        Comparator<Plot> sortByOnline = (plot1, plot2) -> Integer.compare(plot2.getOnline(), plot1.getOnline());
-        this.plots.sort(sortByOnline);
+        this.planets = new ArrayList<>(planets);
+        Comparator<Planet> sortByOnline = (planet1, planet2) -> Integer.compare(planet2.getOnline(), planet1.getOnline());
+        this.planets.sort(sortByOnline);
         itemsSlots = new byte[]{10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34};
         noElementsPageButtonSlot = 13;
         decorationSlots = new byte[]{45,46,47,51,52,53};
@@ -76,8 +76,8 @@ public class WorldsBrowserMenu extends AbstractListMenu {
 
     @Override
     protected ItemStack getElementIcon(Object object) {
-        if (object instanceof Plot plot) {
-            return plot.getInformation().getIcon();
+        if (object instanceof Planet planet) {
+            return planet.getInformation().getIcon();
         }
         return null;
     }
@@ -131,7 +131,7 @@ public class WorldsBrowserMenu extends AbstractListMenu {
                     if (button.getCurrentValue().equals("all")) {
                         elements.addAll(getElements());
                     } else {
-                        elements.addAll(new ArrayList<>(plots).stream().filter(plot -> plot.getInformation().getCategory().name().equalsIgnoreCase(button.getCurrentValue().toString())).toList());
+                        elements.addAll(new ArrayList<>(planets).stream().filter(planet -> planet.getInformation().getCategory().name().equalsIgnoreCase(button.getCurrentValue().toString())).toList());
                     }
                     sortElements();
                     fillElements(getCurrentPage());
@@ -159,15 +159,15 @@ public class WorldsBrowserMenu extends AbstractListMenu {
         if (worldID.isEmpty()) {
             return;
         }
-        Plot plot = PlotManager.getInstance().getPlotByCustomID(worldID);
-        if (plot != null) {
-            onPlotClick(player,plot);
+        Planet planet = PlanetManager.getInstance().getPlanetByCustomID(worldID);
+        if (planet != null) {
+            onPlanetClick(player, planet);
         }
     }
 
-    protected void onPlotClick(Player player, Plot plot) {
+    protected void onPlanetClick(Player player, Planet planet) {
         player.closeInventory();
-        plot.connectPlayer(player);
+        planet.connectPlayer(player);
     }
 
     @Override
@@ -192,17 +192,17 @@ public class WorldsBrowserMenu extends AbstractListMenu {
     }
 
     private void sortElements() {
-        Comparator<Object> plotComparator = switch (sortType) {
-            case 2 -> (plot1, plot2) -> Integer.compare(((Plot) plot2).getInformation().getReputation(), ((Plot) plot1).getInformation().getReputation());
-            case 3 -> (plot1, plot2) -> Long.compare(((Plot) plot2).getCreationTime(), ((Plot) plot1).getCreationTime());
-            default -> (plot1, plot2) -> Integer.compare(((Plot) plot2).getOnline(), ((Plot) plot1).getOnline());
+        Comparator<Object> planetComparator = switch (sortType) {
+            case 2 -> (planet1, planet2) -> Integer.compare(((Planet) planet2).getInformation().getReputation(), ((Planet) planet1).getInformation().getReputation());
+            case 3 -> (planet1, planet2) -> Long.compare(((Planet) planet2).getCreationTime(), ((Planet) planet1).getCreationTime());
+            default -> (planet1, planet2) -> Integer.compare(((Planet) planet2).getOnline(), ((Planet) planet1).getOnline());
         };
-        elements.sort(plotComparator);
+        elements.sort(planetComparator);
     }
 
     @Override
     protected List<Object> getElements() {
-        return new ArrayList<>(plots);
+        return new ArrayList<>(planets);
     }
 
     @Override

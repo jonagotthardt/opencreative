@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlot;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 
 public class PlayerUtils {
 
@@ -137,8 +137,8 @@ public class PlayerUtils {
         return Bukkit.getWorld(spawnWorld);
     }
 
-    public static boolean isEntityInDevPlot(Entity entity) {
-        return isDevPlot(entity.getWorld());
+    public static boolean isEntityInDevPlanet(Entity entity) {
+        return isDevPlanet(entity.getWorld());
     }
 
     public static boolean isEntityInLobby(Entity entity) {

@@ -19,7 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.menus.blocks;
 
 import ua.mcchickenstudio.opencreative.menu.AbstractListMenu;
-import ua.mcchickenstudio.opencreative.plots.DevPlot;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
@@ -49,16 +49,16 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSi
 
 public class FunctionChooserMenu extends AbstractListMenu {
 
-    private final DevPlot devPlot;
+    private final DevPlanet devPlanet;
     private final Location signLocation;
 
-    public FunctionChooserMenu(Player player, DevPlot plot, Location location) {
+    public FunctionChooserMenu(Player player, DevPlanet planet, Location location) {
         super(getLocaleMessage("menus.developer.function-chooser.title"), player);
         itemsSlots = allowedSlots;
         charmsBarSlots = new byte[]{};
         previousPageButtonSlot = 45;
         noElementsPageButtonSlot = 22;
-        this.devPlot = plot;
+        this.devPlanet = planet;
         this.signLocation = location;
     }
 
@@ -156,7 +156,7 @@ public class FunctionChooserMenu extends AbstractListMenu {
 
     @Override
     protected List<Object> getElements() {
-        return new ArrayList<>(devPlot.getPlacedFunctions());
+        return new ArrayList<>(devPlanet.getPlacedFunctions());
     }
 
     @Override

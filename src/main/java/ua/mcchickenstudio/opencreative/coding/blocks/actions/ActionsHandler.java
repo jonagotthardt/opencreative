@@ -28,13 +28,13 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlotCodeErrorMessage;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetCodeErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.messageExists;
 
@@ -107,7 +107,7 @@ public class ActionsHandler {
     private void executeNextAction() {
         if (actionsQueue.isEmpty()) {
             if (getMainActionHandler() == this) {
-                executor.getPlot().getVariables().garbageCollector(this);
+                executor.getPlanet().getVariables().garbageCollector(this);
             }
             if (action instanceof RepeatAction repeatAction) {
                 if (action instanceof RepeatForLoopAction forLoopAction) {
@@ -156,16 +156,16 @@ public class ActionsHandler {
             BukkitRunnable executeActionLaterRunnable = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (action == null || action.getPlot() == null || action.getPlot().getMode() != Plot.Mode.PLAYING || !action.getPlot().isLoaded()) {
+                    if (action == null || action.getPlanet() == null || action.getPlanet().getMode() != Planet.Mode.PLAYING || !action.getPlanet().isLoaded()) {
                         cancel();
                     }
                     if (action != null) {
                         executeAction(action);
-                        action.getPlot().getTerritory().removeBukkitRunnable(this);
+                        action.getPlanet().getTerritory().removeBukkitRunnable(this);
                     }
                 }
             };
-            action.getPlot().getTerritory().addBukkitRunnable(executeActionLaterRunnable);
+            action.getPlanet().getTerritory().addBukkitRunnable(executeActionLaterRunnable);
             executeActionLaterRunnable.runTaskLater(OpenCreative.getPlugin(),waitDelay);
         }
     }
@@ -179,7 +179,7 @@ public class ActionsHandler {
                     action.prepareAndExecute(this);
                 } catch (Exception error) {
                     String id = error.getClass().getSimpleName().toLowerCase();
-                    sendPlotCodeErrorMessage(executor, action, getLocaleMessage("plot-code-error." + (messageExists("plot-code-error." + id) ? id : "unknown")) + (error.getMessage() == null ? error.getClass().getSimpleName() : error.getMessage()).replace("ua.mcchickenstudio.opencreative.coding.",""), error);
+                    sendPlanetCodeErrorMessage(executor, action, getLocaleMessage("planet-code-error." + (messageExists("planet-code-error." + id) ? id : "unknown")) + (error.getMessage() == null ? error.getClass().getSimpleName() : error.getMessage()).replace("ua.mcchickenstudio.opencreative.coding.",""), error);
                     removeAllActions();
                 }
             }
@@ -252,7 +252,7 @@ public class ActionsHandler {
 
     @Override
     public String toString() {
-        return "ActionsHandler. Plot: " + executor.getPlot() + " WaitDelay: " + waitDelay + " Stopped: " + stopped + " Queue Size: " + actionsQueue.size();
+        return "ActionsHandler. Planet: " + executor.getPlanet() + " WaitDelay: " + waitDelay + " Stopped: " + stopped + " Queue Size: " + actionsQueue.size();
     }
 
     public Set<Entity> getSelectedTargets() {

@@ -16,23 +16,24 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.events.plot;
+package ua.mcchickenstudio.opencreative.events.planet;
 
-import ua.mcchickenstudio.opencreative.events.CreativeEvent;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import org.bukkit.entity.Player;
 
 /**
- * Represents a plot related event.
+ * Called when player connects to planet.
  */
-public class PlotEvent extends CreativeEvent {
+public class PlanetConnectPlayerEvent extends PlanetEvent {
 
-    private final Plot plot;
+    private final Player player;
 
-    public PlotEvent(Plot plot) {
-        this.plot = plot;
+    public PlanetConnectPlayerEvent(Planet planet, Player player) {
+        super(planet);
+        this.player = player;
     }
 
-    public Plot getPlot() {
-        return plot;
+    public Player getPlayer() {
+        return player;
     }
 }

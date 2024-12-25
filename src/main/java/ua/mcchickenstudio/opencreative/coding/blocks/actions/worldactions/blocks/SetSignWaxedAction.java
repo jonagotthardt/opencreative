@@ -43,23 +43,23 @@ public class SetSignWaxedAction extends WorldAction {
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
-                getPlot().getLimits().setLastModifiedBlocksAmount(0);
+                getPlanet().getLimits().setLastModifiedBlocksAmount(0);
             }
         };
-        getPlot().getTerritory().addBukkitRunnable(runnable);
+        getPlanet().getTerritory().addBukkitRunnable(runnable);
         for (Location location : locations) {
-            if (getPlot().getLimits().getLastModifiedBlocksAmount() > getPlot().getLimits().getModifyingBlocksLimit()) {
+            if (getPlanet().getLimits().getLastModifiedBlocksAmount() > getPlanet().getLimits().getModifyingBlocksLimit()) {
                 runnable.runTaskLater(OpenCreative.getPlugin(),20L);
-                getPlot().getTerritory().removeBukkitRunnable(runnable);
+                getPlanet().getTerritory().removeBukkitRunnable(runnable);
                 return;
             }
             if (location.getBlock().getState() instanceof Sign sign) {
                 sign.setWaxed(waxed);
-                getPlot().getLimits().setLastModifiedBlocksAmount(getPlot().getLimits().getLastModifiedBlocksAmount()+1);
+                getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount()+1);
             }
         }
         runnable.runTaskLater(OpenCreative.getPlugin(),20L);
-        getPlot().getTerritory().removeBukkitRunnable(runnable);
+        getPlanet().getTerritory().removeBukkitRunnable(runnable);
 
     }
 

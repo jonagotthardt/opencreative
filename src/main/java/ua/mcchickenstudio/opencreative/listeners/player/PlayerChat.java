@@ -23,9 +23,9 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.events.player.WorldChatEvent;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.world.settings.WorldSettingsPlayersMenu;
-import ua.mcchickenstudio.opencreative.plots.DevPlot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
-import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.title.Title;
@@ -37,12 +37,10 @@ import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
-import ua.mcchickenstudio.opencreative.plots.Plot;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.lang.reflect.Array;
 import java.time.Duration;
 import java.util.*;
 
@@ -53,7 +51,7 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlot;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
 
 public class PlayerChat implements Listener {
 
@@ -80,26 +78,26 @@ public class PlayerChat implements Listener {
             } else {
                 setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getChatCooldown(), CooldownUtils.CooldownType.WORLD_CHAT);
                 String message = ChatColor.translateAlternateColorCodes('&',parsePAPI(player, OpenCreative.getPlugin().getConfig().getString("messages.world-chat")).replace("%player%",player.getName()).replace("%message%",event.getMessage()));
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                WorldChatEvent creativeEvent = new WorldChatEvent(player,event.getMessage(),message,player.getWorld(),plot);
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                WorldChatEvent creativeEvent = new WorldChatEvent(player,event.getMessage(),message,player.getWorld(), planet);
                 creativeEvent.callEvent();
                 if (creativeEvent.isCancelled()) return;
                 message = creativeEvent.getFormattedMessage();
-                if (plot != null) {
-                    DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-                    if (devPlot != null) {
+                if (planet != null) {
+                    DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                    if (devPlanet != null) {
                         // If player in dev world
-                        for (Player p : devPlot.getWorld().getPlayers()) {
+                        for (Player p : devPlanet.getWorld().getPlayers()) {
                             p.sendMessage(message);
                         }
-                        for (Player p : plot.getTerritory().getWorld().getPlayers()) {
-                            if (plot.getWorldPlayers().canDevelop(p)) {
+                        for (Player p : planet.getTerritory().getWorld().getPlayers()) {
+                            if (planet.getWorldPlayers().canDevelop(p)) {
                                 p.sendMessage(message);
                             }
                         }
                     } else {
                         // If player in build world
-                        for (Player p : plot.getPlayers()) {
+                        for (Player p : planet.getPlayers()) {
                             p.sendMessage(message);
                         }
                     }
@@ -117,7 +115,7 @@ public class PlayerChat implements Listener {
     }
 
     private void checkDevItems(Player player, String message) {
-        if (isEntityInDevPlot(player)) {
+        if (isEntityInDevPlanet(player)) {
             ItemStack itemInHand = player.getInventory().getItemInMainHand();
             if (itemInHand.getType() == Material.BOOK) {
                 ItemMeta meta = itemInHand.getItemMeta();
@@ -287,22 +285,22 @@ public class PlayerChat implements Listener {
     }
 
     private void checkConfirmation(Player player, String message) {
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
         if (confirmation.isEmpty()) return;
         if (confirmation.containsKey(player)) {
             player.clearTitle();
             switch(confirmation.get(player)) {
                 case "title":
                     String newName = "§f" + ChatColor.translateAlternateColorCodes('&',message);
-                    if (player.getName().equals(plot.getOwner())) {
+                    if (player.getName().equals(planet.getOwner())) {
                         if (!(ChatColor.stripColor(newName).length() > 30) && (ChatColor.stripColor(newName).length() > 4)) {
-                            plot.getInformation().setDisplayName(newName);
+                            planet.getInformation().setDisplayName(newName);
                             player.sendMessage(getLocaleMessage("settings.world-name.changed").replace("%name%",newName));
-                            Plot finalPlot = plot;
+                            Planet finalPlanet = planet;
                             new BukkitRunnable() {
                                 @Override
                                 public void run() {
-                                    finalPlot.getInformation().updateIcon();
+                                    finalPlanet.getInformation().updateIcon();
                                 }
                             }.runTaskAsynchronously(OpenCreative.getPlugin());
                         } else {
@@ -311,26 +309,26 @@ public class PlayerChat implements Listener {
                     }
                     break;
                 case "id":
-                    plot = PlotManager.getInstance().getPlotByPlayer(player);
+                    planet = PlanetManager.getInstance().getPlanetByPlayer(player);
                     String newID = message;
-                    if (player.getName().equals(plot.getOwner())) {
+                    if (player.getName().equals(planet.getOwner())) {
                         String pattern = "^[a-zA-Zа-яА-Я0-9]+$";
                         if (newID.length() > 2 && newID.length() < 16 && newID.matches(pattern) && !Character.isDigit(newID.charAt(0))) {
                             boolean existsID = false;
-                            for (Plot searchablePlot : PlotManager.getInstance().getPlots()) {
-                                if (searchablePlot.getInformation().getCustomID().equalsIgnoreCase(newID)) {
+                            for (Planet searchablePlanet : PlanetManager.getInstance().getPlanets()) {
+                                if (searchablePlanet.getInformation().getCustomID().equalsIgnoreCase(newID)) {
                                     existsID = true;
                                     break;
                                 }
                             }
                             if (!existsID) {
-                                plot.getInformation().setCustomID(newID);
+                                planet.getInformation().setCustomID(newID);
                                 player.sendMessage(getLocaleMessage("settings.world-id.changed").replace("%id%",newID));
-                                Plot finalPlot1 = plot;
+                                Planet finalPlanet1 = planet;
                                 new BukkitRunnable() {
                                     @Override
                                     public void run() {
-                                        finalPlot1.getInformation().updateIcon();
+                                        finalPlanet1.getInformation().updateIcon();
                                     }
                                 }.runTaskAsynchronously(OpenCreative.getPlugin());
                             } else {
@@ -342,18 +340,18 @@ public class PlayerChat implements Listener {
                     }
                     break;
                 case "description":
-                    plot = PlotManager.getInstance().getPlotByPlayer(player);
+                    planet = PlanetManager.getInstance().getPlanetByPlayer(player);
                     String newDescription = ChatColor.translateAlternateColorCodes('&',message);
-                    if (player.getName().equals(plot.getOwner())) {
+                    if (player.getName().equals(planet.getOwner())) {
                         if (!(ChatColor.stripColor(newDescription).length() > 256) && (ChatColor.stripColor(newDescription).length() > 4))  {
                             newDescription = String.join("\\n",splitDescription(newDescription,39));
-                            plot.getInformation().setDescription(newDescription);
+                            planet.getInformation().setDescription(newDescription);
                             player.sendMessage(getLocaleMessage("settings.world-description.changed").replace("%description%",newDescription));
-                            Plot finalPlot2 = plot;
+                            Planet finalPlanet2 = planet;
                             new BukkitRunnable() {
                                 @Override
                                 public void run() {
-                                    finalPlot2.getInformation().updateIcon();
+                                    finalPlanet2.getInformation().updateIcon();
                                 }
                             }.runTaskAsynchronously(OpenCreative.getPlugin());
                         } else {
@@ -361,43 +359,43 @@ public class PlayerChat implements Listener {
                         }
                     }
                     break;
-                case "searchPlotByPlotName":
-                    Set<Plot> foundPlotsByName = PlotManager.getInstance().getPlotsByPlotName(message);
-                    if (!foundPlotsByName.isEmpty()) {
-                        new WorldsBrowserMenu(player,foundPlotsByName).open(player);
+                case "searchPlanetByPlanetName":
+                    Set<Planet> foundPlanetsByName = PlanetManager.getInstance().getPlanetsByPlanetName(message);
+                    if (!foundPlanetsByName.isEmpty()) {
+                        new WorldsBrowserMenu(player,foundPlanetsByName).open(player);
                     } else {
                         player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.not-found"));
                     }
                     break;
-                case "searchPlotByID":
-                    Set<Plot> foundPlotsByID = PlotManager.getInstance().getPlotsByID(message);
-                    if (!foundPlotsByID.isEmpty()) {
-                        new WorldsBrowserMenu(player,foundPlotsByID).open(player);
+                case "searchPlanetByID":
+                    Set<Planet> foundPlanetsByID = PlanetManager.getInstance().getPlanetsByID(message);
+                    if (!foundPlanetsByID.isEmpty()) {
+                        new WorldsBrowserMenu(player,foundPlanetsByID).open(player);
                     } else {
                         player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.not-found"));
                     }
                     break;
                 case "transfer-ownership":
-                    plot = PlotManager.getInstance().getPlotByPlayer(player);
-                    if (plot != null && WorldSettingsPlayersMenu.playersSelected.get(player) != null && plot.getOwner().equalsIgnoreCase(player.getName())) {
-                        if (message.equals(String.valueOf(plot.getId()))) {
+                    planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                    if (planet != null && WorldSettingsPlayersMenu.playersSelected.get(player) != null && planet.getOwner().equalsIgnoreCase(player.getName())) {
+                        if (message.equals(String.valueOf(planet.getId()))) {
                             String newOwner = WorldSettingsPlayersMenu.playersSelected.get(player);
                             Player newOwnerPlayer = Bukkit.getPlayer(newOwner);
                             if (newOwnerPlayer == null) {
                                 player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%",newOwner));
                                 return;
                             }
-                            if (!plot.getPlayers().contains(newOwnerPlayer)) {
+                            if (!planet.getPlayers().contains(newOwnerPlayer)) {
                                 player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%",newOwner));
                                 return;
                             }
-                            if (PlotManager.getInstance().getPlayerPlots(newOwnerPlayer).size() >= OpenCreative.getSettings().getGroups().getGroup(newOwnerPlayer).getWorldsLimit()) {
+                            if (PlanetManager.getInstance().getPlayerPlanets(newOwnerPlayer).size() >= OpenCreative.getSettings().getGroups().getGroup(newOwnerPlayer).getWorldsLimit()) {
                                 player.sendMessage(getLocaleMessage("world.players.transfer-ownership.limit").replace("%player%",newOwner));
                                 return;
                             }
-                            plot.setChangingOwner(true);
+                            planet.setChangingOwner(true);
                             player.sendMessage(getLocaleMessage("world.players.transfer-ownership.awaiting").replace("%player%",newOwner));
-                            newOwnerPlayer.sendMessage(getLocaleMessage("world.players.transfer-ownership.confirm-new").replace("%player%",player.getName()).replace("%id%", String.valueOf(plot.getId())));
+                            newOwnerPlayer.sendMessage(getLocaleMessage("world.players.transfer-ownership.confirm-new").replace("%player%",player.getName()).replace("%id%", String.valueOf(planet.getId())));
                             confirmation.put(newOwnerPlayer,"get-ownership");
                         } else {
                             player.sendMessage(getLocaleMessage("world.players.transfer-ownership.wrong-id"));
@@ -405,34 +403,34 @@ public class PlayerChat implements Listener {
                     }
                     break;
                 case "get-ownership":
-                    plot = PlotManager.getInstance().getPlotByPlayer(player);
-                    if (plot != null) {
-                        Player oldOwner = Bukkit.getPlayer(plot.getOwner());
-                        if (message.equals(plot.getId())) {
+                    planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                    if (planet != null) {
+                        Player oldOwner = Bukkit.getPlayer(planet.getOwner());
+                        if (message.equals(planet.getId())) {
                             if (oldOwner == null) {
                                 player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%",player.getName()));
                                 return;
                             }
-                            if (!plot.getPlayers().contains(oldOwner)) {
+                            if (!planet.getPlayers().contains(oldOwner)) {
                                 player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%",player.getName()));
                                 return;
                             }
-                            if (PlotManager.getInstance().getPlayerPlots(player).size() >= OpenCreative.getSettings().getGroups().getGroup(player).getWorldsLimit()) {
+                            if (PlanetManager.getInstance().getPlayerPlanets(player).size() >= OpenCreative.getSettings().getGroups().getGroup(player).getWorldsLimit()) {
                                 player.sendMessage(getLocaleMessage("world.players.transfer-ownership.limit").replace("%player%",player.getName()));
                                 return;
                             }
                             oldOwner.sendMessage(getLocaleMessage("world.players.transfer-ownership.transferred-old").replace("%player%",player.getName()));
                             oldOwner.setGameMode(GameMode.ADVENTURE);
-                            plot.getWorldPlayers().removeBuilder(player.getName());
-                            plot.getWorldPlayers().removeDeveloper(player.getName());
-                            plot.setOwner(player.getName());
+                            planet.getWorldPlayers().removeBuilder(player.getName());
+                            planet.getWorldPlayers().removeDeveloper(player.getName());
+                            planet.setOwner(player.getName());
                             player.sendMessage(getLocaleMessage("world.players.transfer-ownership.transferred-new"));
                             player.playSound(player.getLocation(),Sound.UI_TOAST_CHALLENGE_COMPLETE,100,1.5f);
-                            plot.setChangingOwner(false);
+                            planet.setChangingOwner(false);
                         } else {
                             if (oldOwner != null) oldOwner.sendMessage(getLocaleMessage("world.players.transfer-ownership.cancelled"));
                             player.sendMessage(getLocaleMessage("world.players.transfer-ownership.wrong-id"));
-                            plot.setChangingOwner(false);
+                            planet.setChangingOwner(false);
                         }
                     }
             }

@@ -21,16 +21,14 @@ package ua.mcchickenstudio.opencreative.coding.test;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.plots.DevPlatform;
-import ua.mcchickenstudio.opencreative.plots.DevPlot;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.DevPlatform;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -42,67 +40,66 @@ import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getSignLine;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getElapsedTime;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 
 /**
  * <h1>Convertor</h1>
  * This class represents a convertor, that changes coding blocks
- * in specified developer's plots to required one.
+ * in specified developer's planets to required one.
  */
 public abstract class Convertor implements Listener {
 
-    private final List<Plot> plots;
+    private final List<Planet> planets;
     private final String description;
     private final BukkitRunnable runnable;
     private final int MAX_AWAITING_TIME = 5;
 
     private boolean isRunning;
-    private int convertedPlotsAmount = 0;
+    private int convertedPlanetsAmount = 0;
     private long launchTime;
 
-    public Convertor(String description, List<Plot> plots) {
-        this.plots = plots;
+    public Convertor(String description, List<Planet> planets) {
+        this.planets = planets;
         this.description = description;
         this.runnable = new BukkitRunnable() {
 
-            private Plot currentPlot = plots.getFirst();
-            private int size = plots.size();
+            private Planet currentPlanet = planets.getFirst();
+            private int size = planets.size();
             private int wastedTime = 0;
             private boolean converting = false;
 
             @Override
             public void run() {
-                Bukkit.getServer().sendActionBar(Component.text("§7Open§fCreative§b+ §3Converting dev worlds... §7" + (size-plots.size()+1) + "/" + size));
+                Bukkit.getServer().sendActionBar(Component.text("§7Open§fCreative§b+ §3Converting dev worlds... §7" + (size- planets.size()+1) + "/" + size));
                 wastedTime += 1;
                 if (wastedTime > MAX_AWAITING_TIME) {
                     if (!next()) return;
                 }
-                if (!currentPlot.getDevPlot().exists()) {
+                if (!currentPlanet.getDevPlanet().exists()) {
                     if (!next()) return;
                 }
                 if (!converting) {
-                    if (!currentPlot.getDevPlot().isLoaded()) {
-                        //currentPlot.getTerritory().load();
-                        currentPlot.getDevPlot().loadDevPlotWorld();
+                    if (!currentPlanet.getDevPlanet().isLoaded()) {
+                        //currentPlanet.getTerritory().load();
+                        currentPlanet.getDevPlanet().loadDevPlanetWorld();
                     }
                     converting = true;
-                    if (convertDevPlot(currentPlot.getDevPlot())) {
-                        convertedPlotsAmount++;
+                    if (convertDevPlanet(currentPlanet.getDevPlanet())) {
+                        convertedPlanetsAmount++;
                         if (!next()) return;
                     }
                 }
             }
 
             public boolean next() {
-                plots.remove(currentPlot);
-                if (plots.isEmpty()) {
+                planets.remove(currentPlanet);
+                if (planets.isEmpty()) {
                     end();
-                    currentPlot = null;
+                    currentPlanet = null;
                     return false;
                 }
                 resetValues();
-                currentPlot = plots.getFirst();
+                currentPlanet = planets.getFirst();
                 return true;
             }
 
@@ -138,10 +135,10 @@ public abstract class Convertor implements Listener {
         }
         isRunning = true;
         launchTime = System.currentTimeMillis();
-        Bukkit.getServer().broadcast(Component.text("§bStarting developers plots convertor process..."));
+        Bukkit.getServer().broadcast(Component.text("§bStarting developers planets convertor process..."));
         Bukkit.getServer().broadcast(Component.text((" ")));
         Bukkit.getServer().broadcast(Component.text((" §7Description: §f" + description)));
-        Bukkit.getServer().broadcast(Component.text((" §7Plots to be converted: §b" + plots.size())));
+        Bukkit.getServer().broadcast(Component.text((" §7Planets to be converted: §b" + planets.size())));
         Bukkit.getServer().broadcast(Component.text((" ")));
         runnable.runTaskTimer(OpenCreative.getPlugin(),20L,20L);
     }
@@ -152,15 +149,15 @@ public abstract class Convertor implements Listener {
         runnable.cancel();
         Bukkit.getServer().broadcast(Component.text(("§aConverting is finished.")));
         Bukkit.getServer().broadcast(Component.text((" ")));
-        Bukkit.getServer().broadcast(Component.text((" §7Converted plots: §b" + convertedPlotsAmount)));
+        Bukkit.getServer().broadcast(Component.text((" §7Converted planets: §b" + convertedPlanetsAmount)));
         Bukkit.getServer().broadcast(Component.text((" §7Time wasted: §b" + MessageUtils.convertTime(System.currentTimeMillis()-launchTime))));
         Bukkit.getServer().broadcast(Component.text((" ")));
     }
 
-    public boolean convertDevPlot(DevPlot devPlot) {
+    public boolean convertDevPlanet(DevPlanet devPlanet) {
         boolean converted = false;
-        World world = devPlot.getWorld();
-        for (DevPlatform platform : devPlot.getPlatforms()) {
+        World world = devPlanet.getWorld();
+        for (DevPlatform platform : devPlanet.getPlatforms()) {
             for (int z = platform.getBeginZ()+4; z <= platform.getEndZ()-4; z = z+4) {
                 for (int x = platform.getBeginX()+4; x <= platform.getEndZ()-4; x = x + 2) {
                     Block codingBlock = world.getBlockAt(x, 1, z);
@@ -174,21 +171,21 @@ public abstract class Convertor implements Listener {
                     if (convertCodingBlock(codingBlock,containerBlock.getLocation(),container,signLocation,firstSignLine == null ? "" : firstSignLine,secondSignLine == null ? "" : secondSignLine,thirdSignLine == null ? "" : thirdSignLine,fourthSignLine == null ? "" : fourthSignLine)) {
                         converted = true;
                     }
-                    devPlot.getPlot().getTerritory().getScript().clear();
-                    devPlot.getPlot().getTerritory().getScript().saveCode();
+                    devPlanet.getPlanet().getTerritory().getScript().clear();
+                    devPlanet.getPlanet().getTerritory().getScript().saveCode();
                 }
             }
         }
-        for (Player player : devPlot.getWorld().getPlayers()) {
+        for (Player player : devPlanet.getWorld().getPlayers()) {
             teleportToLobby(player);
         }
-        if (Bukkit.unloadWorld(devPlot.getWorldName(),true)) {
-            FileUtils.unloadWorldFolder(devPlot.getWorldName(),true);
+        if (Bukkit.unloadWorld(devPlanet.getWorldName(),true)) {
+            FileUtils.unloadWorldFolder(devPlanet.getWorldName(),true);
         }
         return converted;
     }
 
-    public int getConvertedPlotsAmount() {
-        return convertedPlotsAmount;
+    public int getConvertedPlanetsAmount() {
+        return convertedPlanetsAmount;
     }
 }

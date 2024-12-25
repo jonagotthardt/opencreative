@@ -18,20 +18,20 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import ua.mcchickenstudio.opencreative.plots.DevPlot;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 
 public class PlayerBucket implements Listener {
 
     @EventHandler
     public void onBucket(PlayerBucketEmptyEvent event) {
         Player player = event.getPlayer();
-        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-        if (devPlot != null) {
+        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+        if (devPlanet != null) {
             event.setCancelled(true);
         }
     }

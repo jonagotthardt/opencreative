@@ -16,19 +16,19 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.events.plot;
+package ua.mcchickenstudio.opencreative.events.planet;
 
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 /**
- * Called when plot is registered in plots base.
+ * Called when planet is registered in planets base.
  * <p>
- * Usually it happens on OpenCreative+ loading and on creating new plots.
+ * Usually it happens on OpenCreative+ loading and on creating new planets.
  */
-public class PlotRegisterEvent extends PlotEvent {
+public class PlanetRegisterEvent extends PlanetEvent {
 
-    public PlotRegisterEvent(Plot plot) {
-        super(plot);
+    public PlanetRegisterEvent(Planet planet) {
+        super(planet);
     }
 
 }

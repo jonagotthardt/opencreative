@@ -16,17 +16,17 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.events.plot;
+package ua.mcchickenstudio.opencreative.events.planet;
 
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 /**
- * Called when plot is unloaded.
+ * Called when planet is unloaded.
  */
-public class PlotUnloadEvent extends PlotEvent {
+public class PlanetUnloadEvent extends PlanetEvent {
 
-    public PlotUnloadEvent(Plot plot) {
-        super(plot);
+    public PlanetUnloadEvent(Planet planet) {
+        super(planet);
     }
     
 }

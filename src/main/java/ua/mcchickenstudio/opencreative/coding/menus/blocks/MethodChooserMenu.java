@@ -35,7 +35,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import ua.mcchickenstudio.opencreative.menu.AbstractListMenu;
-import ua.mcchickenstudio.opencreative.plots.DevPlot;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -50,16 +50,16 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSi
 
 public class MethodChooserMenu extends AbstractListMenu {
 
-    private final DevPlot devPlot;
+    private final DevPlanet devPlanet;
     private final Location signLocation;
 
-    public MethodChooserMenu(Player player, DevPlot plot, Location location) {
+    public MethodChooserMenu(Player player, DevPlanet planet, Location location) {
         super(getLocaleMessage("menus.developer.method-chooser.title"), player);
         itemsSlots = allowedSlots;
         charmsBarSlots = new byte[]{};
         previousPageButtonSlot = 45;
         noElementsPageButtonSlot = 22;
-        this.devPlot = plot;
+        this.devPlanet = planet;
         this.signLocation = location;
     }
 
@@ -157,7 +157,7 @@ public class MethodChooserMenu extends AbstractListMenu {
 
     @Override
     protected List<Object> getElements() {
-        return new ArrayList<>(devPlot.getPlacedMethods());
+        return new ArrayList<>(devPlanet.getPlacedMethods());
     }
 
     @Override

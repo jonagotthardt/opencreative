@@ -19,8 +19,9 @@
 package ua.mcchickenstudio.opencreative.commands.world.modes;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.events.plot.PlotModeChangeEvent;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -32,9 +33,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
-import ua.mcchickenstudio.opencreative.plots.Plot;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
 import java.time.Duration;
 
@@ -51,8 +50,8 @@ public class CommandBuild implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot == null) {
+            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            if (planet == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
                 return true;
             }
@@ -63,30 +62,30 @@ public class CommandBuild implements CommandExecutor {
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (args.length == 0) {
                 removePlayerWithLocation(player);
-                if (plot.getMode() != Plot.Mode.BUILD) {
-                    if (plot.getWorldPlayers().canBuild(player)) {
-                        Player plotOwner = Bukkit.getPlayer(plot.getOwner());
-                        if (!plot.getWorldPlayers().isTrustedBuilder(player)) {
-                            if (plotOwner == null) {
+                if (planet.getMode() != Planet.Mode.BUILD) {
+                    if (planet.getWorldPlayers().canBuild(player)) {
+                        Player planetOwner = Bukkit.getPlayer(planet.getOwner());
+                        if (!planet.getWorldPlayers().isTrustedBuilder(player)) {
+                            if (planetOwner == null) {
                                 sender.sendMessage(getLocaleMessage("world.build-mode.cant-build-when-offline"));
                                 return true;
                             }
-                            Plot ownerPlot = PlotManager.getInstance().getPlotByPlayer(plotOwner);
-                            if (!(ownerPlot == plot)) {
+                            Planet ownerPlanet = PlanetManager.getInstance().getPlanetByPlayer(planetOwner);
+                            if (!(ownerPlanet == planet)) {
                                 sender.sendMessage(getLocaleMessage("world.build-mode.cant-build-when-offline"));
                                 return true;
                             }
                         }
-                        PlotModeChangeEvent event = new PlotModeChangeEvent(plot,plot.getMode(), Plot.Mode.BUILD,player);
+                        PlanetModeChangeEvent event = new PlanetModeChangeEvent(planet, planet.getMode(), Planet.Mode.BUILD,player);
                         event.callEvent();
                         if (event.isCancelled()) {
                             return true;
                         }
-                        plot.setMode(Plot.Mode.BUILD);
-                        if (isEntityInDevPlot(player)) {
+                        planet.setMode(Planet.Mode.BUILD);
+                        if (isEntityInDevPlanet(player)) {
                             clearPlayer(player);
-                            player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
-                            if (plot.isOwner(sender.getName())) {
+                            player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
+                            if (planet.isOwner(sender.getName())) {
                                 player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
                             }
                             giveBuildPermissions(player);
@@ -101,29 +100,29 @@ public class CommandBuild implements CommandExecutor {
                             toComponent(getLocaleMessage("world.build-mode.title")), toComponent(getLocaleMessage("world.build-mode.subtitle")),
                             Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(3), Duration.ofMillis(750))
                     ));
-                    player.teleport(plot.getTerritory().getWorld().getSpawnLocation());
+                    player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
                     player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT,100,1.7f);
-                    if (plot.getWorldPlayers().canBuild(player)) {
-                        Player plotOwner = Bukkit.getPlayer(plot.getOwner());
-                        if (plot.getWorldPlayers().getBuildersNotTrusted().contains(sender.getName())) {
-                            if (plotOwner == null) {
+                    if (planet.getWorldPlayers().canBuild(player)) {
+                        Player planetOwner = Bukkit.getPlayer(planet.getOwner());
+                        if (planet.getWorldPlayers().getBuildersNotTrusted().contains(sender.getName())) {
+                            if (planetOwner == null) {
                                 sender.sendMessage(getLocaleMessage("world.build-mode.cant-build-when-offline"));
                                 return true;
                             }
-                            Plot ownerPlot = PlotManager.getInstance().getPlotByPlayer(plotOwner);
-                            if (!(ownerPlot == plot)) {
+                            Planet ownerPlanet = PlanetManager.getInstance().getPlanetByPlayer(planetOwner);
+                            if (!(ownerPlanet == planet)) {
                                 sender.sendMessage(getLocaleMessage("world.build-mode.cant-build-when-offline"));
                                 return true;
                             }
                         }
-                        if (plot.isOwner(sender.getName())) {
+                        if (planet.isOwner(sender.getName())) {
                             ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
                             player.getInventory().setItem(8,worldSettingsItem);
                         }
                         player.setGameMode(GameMode.CREATIVE);
                         giveBuildPermissions(player);
                         sender.sendMessage(getLocaleMessage("world.build-mode.message.owner"));
-                        if (!plot.getTerritory().isAutoSave()) {
+                        if (!planet.getTerritory().isAutoSave()) {
                             player.sendMessage(getLocaleMessage("settings.autosave.warning"));
                         }
                     } else {
@@ -131,18 +130,18 @@ public class CommandBuild implements CommandExecutor {
                     }
                 }
             } else {
-                if (!plot.isOwner(sender.getName())) {
+                if (!planet.isOwner(sender.getName())) {
                     sender.sendMessage(getLocaleMessage("not-owner"));
                     return true;
                 }
                 String nickname = args[0];
                 Player onlinePlayer = Bukkit.getPlayer(nickname);
-                if (!plot.getWorldPlayers().getAllBuilders().contains(nickname)) {
+                if (!planet.getWorldPlayers().getAllBuilders().contains(nickname)) {
                     if (onlinePlayer != null) {
                         nickname = onlinePlayer.getName();
                     }
                 }
-                if (plot.isOwner(nickname)) {
+                if (planet.isOwner(nickname)) {
                     sender.sendMessage(getLocaleMessage("same-player"));
                     return true;
                 }
@@ -150,13 +149,13 @@ public class CommandBuild implements CommandExecutor {
                  * Checks if player's name contains in not trusted
                  * or trusted builders.
                  */
-                if (plot.getWorldPlayers().getBuildersNotTrusted().contains(nickname)) {
-                    plot.getWorldPlayers().addBuilder(nickname,true);
+                if (planet.getWorldPlayers().getBuildersNotTrusted().contains(nickname)) {
+                    planet.getWorldPlayers().addBuilder(nickname,true);
                     sender.sendMessage(getLocaleMessage("world.players.builders.trusted").replace("%player%", nickname));
                     return true;
                 }
-                if (plot.getWorldPlayers().getBuildersTrusted().contains(nickname)) {
-                    plot.getWorldPlayers().removeBuilder(nickname);
+                if (planet.getWorldPlayers().getBuildersTrusted().contains(nickname)) {
+                    planet.getWorldPlayers().removeBuilder(nickname);
                     sender.sendMessage(getLocaleMessage("world.players.builders.removed").replace("%player%", nickname));
                     return true;
                 }
@@ -165,10 +164,10 @@ public class CommandBuild implements CommandExecutor {
                  * listed in builders.
                  */
                 if (onlinePlayer != null) {
-                    Plot playerPlot = PlotManager.getInstance().getPlotByPlayer(onlinePlayer);
-                    if (plot.equals(playerPlot)) {
+                    Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(onlinePlayer);
+                    if (planet.equals(playerPlanet)) {
                         sender.sendMessage(getLocaleMessage("world.players.builders.added").replace("%player%", onlinePlayer.getName()));
-                        plot.getWorldPlayers().addBuilder(onlinePlayer.getName(),false);
+                        planet.getWorldPlayers().addBuilder(onlinePlayer.getName(),false);
                     } else {
                         sender.sendMessage(getLocaleMessage("no-player-found"));
                     }

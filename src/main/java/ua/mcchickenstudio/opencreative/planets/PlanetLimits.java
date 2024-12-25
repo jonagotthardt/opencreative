@@ -16,47 +16,47 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.plots;
+package ua.mcchickenstudio.opencreative.planets;
 
 import ua.mcchickenstudio.opencreative.settings.groups.LimitType;
 
-public class PlotLimits {
+public class PlanetLimits {
 
-    private final Plot plot;
+    private final Planet planet;
 
     private int lastModifiedBlocksAmount;
     private int lastRedstoneOperationsAmount;
 
-    public PlotLimits(Plot plot) {
-        this.plot = plot;
+    public PlanetLimits(Planet planet) {
+        this.planet = planet;
     }
 
     public int getVariablesAmountLimit() {
-        return plot.getGroup().getLimit(LimitType.VARIABLES).calculateLimit(plot.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.VARIABLES).calculateLimit(planet.getPlayers().size());
     }
 
     public int getModifyingBlocksLimit() {
-        return plot.getGroup().getLimit(LimitType.MODIFYING_BLOCKS).calculateLimit(plot.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.MODIFYING_BLOCKS).calculateLimit(planet.getPlayers().size());
     }
 
     public int getRedstoneOperationsLimit() {
-        return plot.getGroup().getLimit(LimitType.REDSTONE_OPERATIONS).calculateLimit(plot.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.REDSTONE_OPERATIONS).calculateLimit(planet.getPlayers().size());
     }
 
     public int getCodeOperationsLimit() {
-        return plot.getGroup().getLimit(LimitType.CODE_OPERATIONS).calculateLimit(plot.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.CODE_OPERATIONS).calculateLimit(planet.getPlayers().size());
     }
 
     public int getEntitiesLimit() {
-        return plot.getGroup().getLimit(LimitType.ENTITIES).calculateLimit(plot.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.ENTITIES).calculateLimit(planet.getPlayers().size());
     }
 
     public int getScoreboardsLimit() {
-        return plot.getGroup().getLimit(LimitType.SCOREBOARDS).calculateLimit(plot.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.SCOREBOARDS).calculateLimit(planet.getPlayers().size());
     }
 
     public int getBossBarsLimit() {
-        return plot.getGroup().getLimit(LimitType.BOSSBARS).calculateLimit(plot.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.BOSSBARS).calculateLimit(planet.getPlayers().size());
     }
 
     public void setLastModifiedBlocksAmount(int lastModifiedBlocksAmount) {
@@ -76,7 +76,7 @@ public class PlotLimits {
     }
 
     public int getCodingPlatformsLimit() {
-        return plot.getGroup().getCodingPlatformsLimit();
+        return planet.getGroup().getCodingPlatformsLimit();
     }
 }
 

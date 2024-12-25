@@ -26,9 +26,9 @@ import ua.mcchickenstudio.opencreative.coding.blocks.conditions.Condition;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
-import ua.mcchickenstudio.opencreative.events.plot.PlotModeChangeEvent;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -114,32 +114,32 @@ public class ErrorUtils {
     }
 
     /**
-     Sends error message for plot's players.
+     Sends error message for planet's players.
      **/
-    public static void sendPlotErrorMessage(Plot plot, String errorMessage) {
-        OpenCreative.getPlugin().getLogger().warning("An error has occurred in plot " + plot.getWorldName() + ": " + errorMessage);
-        for (Player player : plot.getPlayers()) {
-            player.sendMessage(getLocaleMessage("plot-error").replace("%error%",errorMessage));
+    public static void sendPlanetErrorMessage(Planet planet, String errorMessage) {
+        OpenCreative.getPlugin().getLogger().warning("An error has occurred in planet " + planet.getWorldName() + ": " + errorMessage);
+        for (Player player : planet.getPlayers()) {
+            player.sendMessage(getLocaleMessage("planet-error").replace("%error%",errorMessage));
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY,100f,2f);
         }
     }
 
     /**
-     Sends error message about plot's code exception on running Action for plot's players.
+     Sends error message about planet's code exception on running Action for planet's players.
      **/
-    public static void sendPlotCodeWarningMessage(Executor executor, Action action, String warningMessage) {
-        Plot plot = executor.getPlot();
-        if (plot == null) return;
-        for (Player player : plot.getPlayers()) {
+    public static void sendPlanetCodeWarningMessage(Executor executor, Action action, String warningMessage) {
+        Planet planet = executor.getPlanet();
+        if (planet == null) return;
+        for (Player player : planet.getPlayers()) {
             Component message = Component
-                    .text(getLocaleMessage("plot-code-warning.message")
+                    .text(getLocaleMessage("planet-code-warning.message")
                             .replace("%event%", executor.getExecutorType().getLocaleName())
                             .replace("%action%",action.getActionType().getLocaleName())
                             .replace("%warning%",warningMessage)
                             .replace("%x%",String.valueOf(action.getX()))
                             .replace("%y%",String.valueOf(executor.getY()))
                             .replace("%z%",String.valueOf(executor.getZ())))
-                    .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("plot-code-error.hover-message"))))
+                    .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("planet-code-error.hover-message"))))
                     .clickEvent(ClickEvent.runCommand("/dev " + action.getX() + " " + executor.getY() + " " + executor.getZ()));
             player.sendMessage(message);
             player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE,100,1.7f);
@@ -147,21 +147,21 @@ public class ErrorUtils {
     }
 
     /**
-     Sends error message about plot's code exception on running Action for plot's players.
+     Sends error message about planet's code exception on running Action for planet's players.
      **/
-    public static void sendPlotCodeErrorMessage(Executor executor, Action action, String errorMessage, Exception error) {
-        Plot plot = executor.getPlot();
-        if (plot == null) return;
-        for (Player player : plot.getPlayers()) {
+    public static void sendPlanetCodeErrorMessage(Executor executor, Action action, String errorMessage, Exception error) {
+        Planet planet = executor.getPlanet();
+        if (planet == null) return;
+        for (Player player : planet.getPlayers()) {
             Component message = Component
-                    .text(getLocaleMessage("plot-code-error.message")
+                    .text(getLocaleMessage("planet-code-error.message")
                             .replace("%event%", executor.getExecutorType().getLocaleName())
                             .replace("%action%",action.getActionType().getLocaleName())
                             .replace("%error%",errorMessage)
                             .replace("%x%",String.valueOf(action.getX()))
                             .replace("%y%",String.valueOf(1))
                             .replace("%z%",String.valueOf(action.getExecutor().getZ())))
-                    .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("plot-code-error.hover-message") + "\n" + parseException(error,true))))
+                    .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("planet-code-error.hover-message") + "\n" + parseException(error,true))))
                     .clickEvent(ClickEvent.runCommand("/dev " + action.getX() + " " + 1 + " " + action.getExecutor().getZ()));
             player.sendMessage(message);
             player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE,100,1.7f);
@@ -169,51 +169,51 @@ public class ErrorUtils {
     }
 
     /**
-     Sends error message about plot's code exception on running Action for plot's players.
+     Sends error message about planet's code exception on running Action for planet's players.
      **/
-    public static void sendPlotCodeErrorMessage(Executor executor, Action action, Entity entity, String errorMessage) {
-        Plot plot = PlotManager.getInstance().getPlotByWorld(entity.getWorld());
-        if (plot == null) return;
-        for (Player player : plot.getPlayers()) {
-            player.sendMessage(getLocaleMessage("plot-code-error.message").replace("%event%",executor.getExecutorType().getLocaleName()).replace("%action%", action.getActionType().toString()).replace("%error%",errorMessage).replace("%x%",String.valueOf(action.getX())).replace("%y%",String.valueOf(executor.getY())).replace("%z%",String.valueOf(executor.getZ())));
+    public static void sendPlanetCodeErrorMessage(Executor executor, Action action, Entity entity, String errorMessage) {
+        Planet planet = PlanetManager.getInstance().getPlanetByWorld(entity.getWorld());
+        if (planet == null) return;
+        for (Player player : planet.getPlayers()) {
+            player.sendMessage(getLocaleMessage("planet-code-error.message").replace("%event%",executor.getExecutorType().getLocaleName()).replace("%action%", action.getActionType().toString()).replace("%error%",errorMessage).replace("%x%",String.valueOf(action.getX())).replace("%y%",String.valueOf(executor.getY())).replace("%z%",String.valueOf(executor.getZ())));
             player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE,100,1.7f);
         }
     }
 
     /**
-     Sends error message about plot's code exception on executing Executor for plot's players.
+     Sends error message about planet's code exception on executing Executor for planet's players.
      **/
-    public static void sendPlotCodeCriticalErrorMessage(Plot plot, Executor executor, String errorMessage) {
-        if (plot == null) return;
-        for (Player player : plot.getPlayers()) {
+    public static void sendPlanetCodeCriticalErrorMessage(Planet planet, Executor executor, String errorMessage) {
+        if (planet == null) return;
+        for (Player player : planet.getPlayers()) {
             player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_DEPLETE,100,0.5f);
             Component message = Component
-                    .text(getLocaleMessage("plot-code-error.message-event-critical")
+                    .text(getLocaleMessage("planet-code-error.message-event-critical")
                             .replace("%event%", executor.getExecutorType().getLocaleName())
                             .replace("%error%",errorMessage)
                             .replace("%x%",String.valueOf(executor.getX()))
                             .replace("%y%",String.valueOf(executor.getY()))
                             .replace("%z%",String.valueOf(executor.getZ())))
-                    .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("plot-code-error.hover-message"))))
+                    .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("planet-code-error.hover-message"))))
                     .clickEvent(ClickEvent.runCommand("/dev " + executor.getX() + " " + executor.getY() + " " + executor.getZ()));
             player.sendMessage(message);
         }
     }
 
     /**
-     Sends error message about plot's code exception on executing Executor for plot's players.
+     Sends error message about planet's code exception on executing Executor for planet's players.
      **/
-    public static void sendPlotCodeErrorMessage(Plot plot, Executor executor, String errorMessage) {
-        if (plot == null) return;
-        for (Player player : plot.getPlayers()) {
+    public static void sendPlanetCodeErrorMessage(Planet planet, Executor executor, String errorMessage) {
+        if (planet == null) return;
+        for (Player player : planet.getPlayers()) {
             Component message = Component
-                    .text(getLocaleMessage("plot-code-error.message-event")
+                    .text(getLocaleMessage("planet-code-error.message-event")
                             .replace("%event%", executor.getExecutorType().getLocaleName())
                             .replace("%error%",errorMessage)
                             .replace("%x%",String.valueOf(executor.getX()))
                             .replace("%y%",String.valueOf(executor.getY()))
                             .replace("%z%",String.valueOf(executor.getZ())))
-                    .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("plot-code-error.hover-message"))))
+                    .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("planet-code-error.hover-message"))))
                     .clickEvent(ClickEvent.runCommand("/dev " + executor.getX() + " " + executor.getY() + " " + executor.getZ()));
             player.sendMessage(message);
             player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE,100,1.7f);
@@ -222,18 +222,18 @@ public class ErrorUtils {
     }
 
     /**
-     Sends error message about plot's code exception on executing Executor for plot's players.
+     Sends error message about planet's code exception on executing Executor for planet's players.
      **/
-    public static void sendPlotCompileErrorMessage(Plot plot, Block block, String errorMessage) {
-        if (plot == null) return;
-        for (Player player : plot.getPlayers()) {
+    public static void sendPlanetCompileErrorMessage(Planet planet, Block block, String errorMessage) {
+        if (planet == null) return;
+        for (Player player : planet.getPlayers()) {
             Component message = Component
-                    .text(getLocaleMessage("plot-code-error.message-compile")
+                    .text(getLocaleMessage("planet-code-error.message-compile")
                             .replace("%error%",errorMessage)
                             .replace("%x%",String.valueOf(block.getX()))
                             .replace("%y%",String.valueOf(block.getY()))
                             .replace("%z%",String.valueOf(block.getZ())))
-                    .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("plot-code-error.hover-message"))))
+                    .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("planet-code-error.hover-message"))))
                     .clickEvent(ClickEvent.runCommand("/dev " + block.getX() + " " + block.getY() + " " + block.getZ()));
             player.sendMessage(message);
             player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE,100,1.7f);
@@ -241,12 +241,12 @@ public class ErrorUtils {
     }
 
     /**
-     Sends error message about plot's code exception on compiling unknown blocks
+     Sends error message about planet's code exception on compiling unknown blocks
      **/
-    public static void sendPlotCompileErrorMessage(Plot plot, List<Block> unknownBlocks) {
-        if (plot == null) return;
-        for (Player player : plot.getPlayers()) {
-            player.sendMessage(getLocaleMessage("plot-code-error.unknown-block-detected").replace("%error%",getLocaleMessage("plot-code-error.unknown-blocks",false)));
+    public static void sendPlanetCompileErrorMessage(Planet planet, List<Block> unknownBlocks) {
+        if (planet == null) return;
+        for (Player player : planet.getPlayers()) {
+            player.sendMessage(getLocaleMessage("planet-code-error.unknown-block-detected").replace("%error%",getLocaleMessage("planet-code-error.unknown-blocks",false)));
             for (Block block : unknownBlocks) {
                 NamedTextColor color = NamedTextColor.GRAY;
                 String category = "???";
@@ -264,14 +264,14 @@ public class ErrorUtils {
                 }
 
                 Component blockCoordinatesMessage = Component
-                        .text(getLocaleMessage("plot-code-error.unknown-block-coords")
+                        .text(getLocaleMessage("planet-code-error.unknown-block-coords")
                             .replace("%x%", String.valueOf(block.getLocation().getX()))
                             .replace("%y%", String.valueOf(block.getLocation().getY()))
                             .replace("%z%", String.valueOf(block.getLocation().getZ()))
                             .replace("%category%",category)
                             .replace("%type%",type))
                         .color(color)
-                        .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("plot-code-error.hover-message"))))
+                        .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("planet-code-error.hover-message"))))
                         .clickEvent(ClickEvent.runCommand("/dev " + block.getLocation().getX() + " " + block.getLocation().getY() + " " + block.getLocation().getZ()));
                 player.sendMessage(blockCoordinatesMessage);
             }
@@ -281,15 +281,15 @@ public class ErrorUtils {
     }
 
     /**
-     Stops plot's code execution and changes plot's mode to BUILD.
+     Stops planet's code execution and changes planet's mode to BUILD.
      **/
-    public static void stopPlotCode(Plot plot) {
-        OpenCreative.getPlugin().getLogger().info("Plot code has been stopped in " + plot.getWorldName() + " because of operations limit.");
-        if (plot.getMode() != Plot.Mode.BUILD) {
-            PlotModeChangeEvent event = new PlotModeChangeEvent(plot,plot.getMode(), Plot.Mode.BUILD);
+    public static void stopPlanetCode(Planet planet) {
+        OpenCreative.getPlugin().getLogger().info("Planet code has been stopped in " + planet.getWorldName() + " because of operations limit.");
+        if (planet.getMode() != Planet.Mode.BUILD) {
+            PlanetModeChangeEvent event = new PlanetModeChangeEvent(planet, planet.getMode(), Planet.Mode.BUILD);
             event.callEvent();
             if (!event.isCancelled()) {
-                plot.setMode(Plot.Mode.BUILD);
+                planet.setMode(Planet.Mode.BUILD);
             }
         }
     }
@@ -328,67 +328,67 @@ public class ErrorUtils {
         }
     }
 
-    public static void sendCodingDebugNotFoundVariable(Plot plot, String name) {
+    public static void sendCodingDebugNotFoundVariable(Planet planet, String name) {
         if (true) {
             return;
         }
-        if (!plot.isDebug()) return;
+        if (!planet.isDebug()) return;
         Object value = null;
         if (value == null) value = "null";
-        for (Player player : plot.getPlayers()) {
-            player.sendMessage(getLocaleMessage("plot-code-debug.variable-not-found",false).replace("%name%",name).replace("%value%", value.toString()));
+        for (Player player : planet.getPlayers()) {
+            player.sendMessage(getLocaleMessage("planet-code-debug.variable-not-found",false).replace("%name%",name).replace("%value%", value.toString()));
         }
     }
 
-    public static void sendCodingNotFoundTempVar(Plot plot, Executor executor, EventValues.Variable variable) {
-        if (plot == null) return;
-        sendPlotCodeErrorMessage(plot,executor,getLocaleMessage("plot-code-error.temp-var-not-exists",false).replace("%variable%", variable.getLocaleName()));
+    public static void sendCodingNotFoundTempVar(Planet planet, Executor executor, EventValues.Variable variable) {
+        if (planet == null) return;
+        sendPlanetCodeErrorMessage(planet,executor,getLocaleMessage("planet-code-error.temp-var-not-exists",false).replace("%variable%", variable.getLocaleName()));
     }
 
-    public static void sendCodingDebugLog(Plot plot, String log) {
-        if (!plot.isDebug()) return;
-        for (Player player : plot.getPlayers()) {
-            player.sendMessage(getLocaleMessage("plot-code-debug.log",false).replace("%log%",log));
+    public static void sendCodingDebugLog(Planet planet, String log) {
+        if (!planet.isDebug()) return;
+        for (Player player : planet.getPlayers()) {
+            player.sendMessage(getLocaleMessage("planet-code-debug.log",false).replace("%log%",log));
         }
     }
 
-    public static void sendCodingDebugVariable(Plot plot, String name, Object value) {
+    public static void sendCodingDebugVariable(Planet planet, String name, Object value) {
         if (true) {
             return;
         }
-        if (!plot.isDebug()) return;
+        if (!planet.isDebug()) return;
         if (value == null) value = "null";
-        for (Player player : plot.getPlayers()) {
-            player.sendMessage(getLocaleMessage("plot-code-debug.variable-found",false).replace("%name%",name).replace("%value%",value.toString()));
+        for (Player player : planet.getPlayers()) {
+            player.sendMessage(getLocaleMessage("planet-code-debug.variable-found",false).replace("%name%",name).replace("%value%",value.toString()));
         }
     }
 
     public static void sendCodingDebugExecutor(Executor executor) {
-        Plot plot = executor.getPlot();
-        if (plot == null || !plot.isDebug()) return;
-        for (Player player : plot.getPlayers()) {
-            player.sendMessage(getLocaleMessage("plot-code-debug.executor-message",false).replace("%type%",executor.getExecutorType().getLocaleName()).replace("%x%",String.valueOf(executor.getX())).replace("%y%",String.valueOf(executor.getY())).replace("%z%",String.valueOf(executor.getZ())));
+        Planet planet = executor.getPlanet();
+        if (planet == null || !planet.isDebug()) return;
+        for (Player player : planet.getPlayers()) {
+            player.sendMessage(getLocaleMessage("planet-code-debug.executor-message",false).replace("%type%",executor.getExecutorType().getLocaleName()).replace("%x%",String.valueOf(executor.getX())).replace("%y%",String.valueOf(executor.getY())).replace("%z%",String.valueOf(executor.getZ())));
         }
     }
 
     public static void sendCodingDebugAction(Action action) {
         if (action.getExecutor() == null) return;
-        Plot plot = action.getExecutor().getPlot();
-        if (plot == null || !plot.isDebug()) return;
+        Planet planet = action.getExecutor().getPlanet();
+        if (planet == null || !planet.isDebug()) return;
         List<Argument> arguments = action.getArgumentsList();
-        String message = getLocaleMessage("plot-code-debug.hover." + (action.getActionType().isCondition() ? "condition" : "action"));
+        String message = getLocaleMessage("planet-code-debug.hover." + (action.getActionType().isCondition() ? "condition" : "action"));
         message = message.replace("%category%",action.getActionCategory().getLocaleName());
         message = message.replace("%type%",action.getActionType().getLocaleName());
         if (action instanceof Condition condition) {
-            message = message.replace("%opposed%",getLocaleMessage("plot-code-debug.condition.opposed." + condition.isOpposed()));
+            message = message.replace("%opposed%",getLocaleMessage("planet-code-debug.condition.opposed." + condition.isOpposed()));
         }
         List<String> argumentsString = new ArrayList<>();
         for (Argument arg : arguments) {
-            argumentsString.add(getLocaleMessage("plot-code-debug.hover.argument").replace("%name%",arg.getPath()).replace("%type%",arg.getType().getLocaleName()).replace("%value%",arg.getValue(action).toString().substring(0, Math.min(30, arg.getValue(action).toString().length()))));
+            argumentsString.add(getLocaleMessage("planet-code-debug.hover.argument").replace("%name%",arg.getPath()).replace("%type%",arg.getType().getLocaleName()).replace("%value%",arg.getValue(action).toString().substring(0, Math.min(30, arg.getValue(action).toString().length()))));
         }
         message = message.replace("%arguments%",String.join(" \n",argumentsString));
-        String actionMessage = getLocaleMessage("plot-code-debug.action-message",false).replace("%type%",action.getActionType().getLocaleName()).replace("%x%",String.valueOf(action.getX())).replace("%y%",String.valueOf(action.getExecutor().getY())).replace("%z%",String.valueOf(action.getExecutor().getZ()));
-        for (Player player : plot.getPlayers()) {
+        String actionMessage = getLocaleMessage("planet-code-debug.action-message",false).replace("%type%",action.getActionType().getLocaleName()).replace("%x%",String.valueOf(action.getX())).replace("%y%",String.valueOf(action.getExecutor().getY())).replace("%z%",String.valueOf(action.getExecutor().getZ()));
+        for (Player player : planet.getPlayers()) {
             player.sendMessage(Component.text(actionMessage).hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(Component.text(message))));
         }
     }

@@ -22,8 +22,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menu.buttons.ParameterButton;
-import ua.mcchickenstudio.opencreative.plots.DevPlot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -136,9 +136,9 @@ public abstract class Layout extends AbstractMenu {
         ((Player) event.getPlayer()).playSound(event.getPlayer().getLocation(),containerBlock.getType() == Material.BARREL ? Sound.BLOCK_BARREL_CLOSE : Sound.BLOCK_ENDER_CHEST_CLOSE,100,containerBlock.getType() == Material.BARREL ? 0.6f : 1.0f);
         viewers.remove((Player) event.getPlayer());
         if (viewers.isEmpty()) {
-            DevPlot devPlot = PlotManager.getInstance().getDevPlot((Player) event.getPlayer());
-            if (devPlot != null) {
-                devPlot.unregisterOpenedMenu(containerBlock.getLocation());
+            DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet((Player) event.getPlayer());
+            if (devPlanet != null) {
+                devPlanet.unregisterOpenedMenu(containerBlock.getLocation());
                 for (Player onlinePlayer : event.getPlayer().getWorld().getPlayers()) {
                     sendClosedChestAnimation(onlinePlayer,containerBlock);
                 }

@@ -20,7 +20,7 @@
 package ua.mcchickenstudio.opencreative.listeners.player;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
-import ua.mcchickenstudio.opencreative.plots.PlotFlags;
+import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
@@ -34,9 +34,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -53,11 +53,11 @@ public class PlayerDeath implements Listener {
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getPlayer();
         event.deathMessage(null);
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-        if (plot != null) {
-            deathLocations.put(player, plot.getTerritory().getWorld().getSpawnLocation());
-            if (plot.getFlagValue(PlotFlags.PlotFlag.DEATH_MESSAGES) == 1) {
-                for (Player p : plot.getPlayers()) {
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        if (planet != null) {
+            deathLocations.put(player, planet.getTerritory().getWorld().getSpawnLocation());
+            if (planet.getFlagValue(PlanetFlags.PlanetFlag.DEATH_MESSAGES) == 1) {
+                for (Player p : planet.getPlayers()) {
                     p.sendMessage("§7 " + player.getName() + "§f " + translateDeathMessage(player));
                 }
             }

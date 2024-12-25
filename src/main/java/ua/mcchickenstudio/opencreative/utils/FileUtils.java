@@ -19,10 +19,10 @@
 package ua.mcchickenstudio.opencreative.utils;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.plots.DevPlot;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotInfo;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetInfo;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -44,13 +44,13 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 public class FileUtils {
 
     /**
-     * Creates plot's settings.yml file.
-     * @param id        Plot's ID.
-     * @param isLoaded  Create in plot's folder or in unloadedWorlds.
+     * Creates planet's settings.yml file.
+     * @param id        Planet's ID.
+     * @param isLoaded  Create in planet's folder or in unloadedWorlds.
      * @param owner     Owner of new world.
      */
     public static void createWorldSettings(int id, boolean isLoaded, Player owner, World.Environment environment) {
-        String worldFolderPath = Bukkit.getServer().getWorldContainer() + File.separator + (!isLoaded ? "unloadedWorlds" + File.separator : "") + "plot" + id + File.separator;
+        String worldFolderPath = Bukkit.getServer().getWorldContainer() + File.separator + (!isLoaded ? "unloadedWorlds" + File.separator : "") + "planet" + id + File.separator;
         File folder = new File(worldFolderPath);
         if (!folder.exists()) {
             folder.mkdir();
@@ -84,14 +84,14 @@ public class FileUtils {
         config.set("owner", owner.getName());
         config.set("owner-group",OpenCreative.getSettings().getGroups().getGroup(owner).getName().toLowerCase());
         config.set("environment", environment.name());
-        config.set("world","plot"+id);
+        config.set("world","planet"+id);
         config.set("creation-time",System.currentTimeMillis());
         config.set("last-activity-time",System.currentTimeMillis());
         config.set("name", MessageUtils.getLocaleMessage("creating-world.default-world-name").replace("%player%", owner.getName()));
         config.set("description", MessageUtils.getLocaleMessage("creating-world.default-world-description").replace("%player%", owner.getName()));
         config.set("icon", String.valueOf(Material.DIAMOND));
-        config.set("sharing", String.valueOf(Plot.Sharing.PUBLIC));
-        config.set("category", String.valueOf(PlotInfo.Category.SANDBOX));
+        config.set("sharing", String.valueOf(Planet.Sharing.PUBLIC));
+        config.set("category", String.valueOf(PlanetInfo.Category.SANDBOX));
         config.set("customID",String.valueOf(id));
         config.set("players.unique", new ArrayList<String>());
         config.set("players.liked", new ArrayList<String>());
@@ -105,7 +105,7 @@ public class FileUtils {
     }
 
     /**
-     * Creates plot's codeScript.yml file.
+     * Creates planet's codeScript.yml file.
      **/
     public static void createCodeScript(String path, String worldName) {
         File file = new File(path, "codeScript.yml");
@@ -183,23 +183,23 @@ public class FileUtils {
     }
 
     /**
-     Loads all plots to base. It contains plots from /unloadedWorlds/ and plots with loaded worlds.
+     Loads all planets to base. It contains planets from /unloadedWorlds/ and planets with loaded worlds.
      **/
-    public static void loadPlots() {
+    public static void loadPlanets() {
         OpenCreative.getPlugin().getLogger().info("Registering worlds to base...");
         try {
-            File[] plotsFolders = getWorldsFolders(true);
-            if (plotsFolders.length == 0) {
+            File[] planetsFolders = getWorldsFolders(true);
+            if (planetsFolders.length == 0) {
                 OpenCreative.getPlugin().getLogger().info("No worlds have been detected.");
                 return;
             }
-            OpenCreative.getPlugin().getLogger().info("Found " + plotsFolders.length + " worlds, adding...");
+            OpenCreative.getPlugin().getLogger().info("Found " + planetsFolders.length + " worlds, adding...");
             int corruptedWorlds = 0;
             int deprecatedWorlds = 0;
             long currentTime = System.currentTimeMillis();
-            for (File plotFolder : plotsFolders) {
-                String worldName = plotFolder.getPath().replace(Bukkit.getServer().getWorldContainer() + File.separator,"").replace("unloadedWorlds" + File.separator,"");
-                if (!plotFolder.getPath().contains("unloadedWorlds")) {
+            for (File planetFolder : planetsFolders) {
+                String worldName = planetFolder.getPath().replace(Bukkit.getServer().getWorldContainer() + File.separator,"").replace("unloadedWorlds" + File.separator,"");
+                if (!planetFolder.getPath().contains("unloadedWorlds")) {
                     OpenCreative.getPlugin().getLogger().info("Moving loaded world " + worldName + " to unloadedWorlds folder...");
                     World world = Bukkit.getWorld(worldName);
                     if (world != null) {
@@ -213,20 +213,20 @@ public class FileUtils {
                     OpenCreative.getPlugin().getLogger().info("Adding world " + worldName + " to base...");
                     int id = -1;
                     try {
-                        id = Integer.parseInt(worldName.replace("plot",""));
+                        id = Integer.parseInt(worldName.replace("planet",""));
                     } catch (NumberFormatException ignored) {}
-                    Plot plot = new Plot(id);
-                    if (plot.isCorrupted()) {
+                    Planet planet = new Planet(id);
+                    if (planet.isCorrupted()) {
                         corruptedWorlds++;
-                    } else if (currentTime-plot.getCreationTime() > 2592000000L) {
-                        OfflinePlayer plotOwner = Bukkit.getOfflinePlayer(plot.getOwner());
-                        if (plotOwner.getLastSeen() == 0 || currentTime-plotOwner.getLastSeen() > 2592000000L) {
+                    } else if (currentTime- planet.getCreationTime() > 2592000000L) {
+                        OfflinePlayer planetOwner = Bukkit.getOfflinePlayer(planet.getOwner());
+                        if (planetOwner.getLastSeen() == 0 || currentTime-planetOwner.getLastSeen() > 2592000000L) {
                             deprecatedWorlds++;
                         }
                     }
                 }
             }
-            OpenCreative.getPlugin().getLogger().info("Loaded " + PlotManager.getInstance().getPlots().size() + " worlds for " + (System.currentTimeMillis()-currentTime) + " ms.");
+            OpenCreative.getPlugin().getLogger().info("Loaded " + PlanetManager.getInstance().getPlanets().size() + " worlds for " + (System.currentTimeMillis()-currentTime) + " ms.");
             OpenCreative.getPlugin().getLogger().info(" Deprecated worlds: " + deprecatedWorlds);
             OpenCreative.getPlugin().getLogger().info(" Corrupted worlds: " + corruptedWorlds);
         } catch (Exception error) {
@@ -235,56 +235,56 @@ public class FileUtils {
     }
 
     /**
-     * Returns plot's folder, that stores plot's build world data, settings, script and players data.
-     * @param plot plot to get folder.
-     * @return plot's folder.
+     * Returns planet's folder, that stores planet's build world data, settings, script and players data.
+     * @param planet planet to get folder.
+     * @return planet's folder.
      */
-    public static File getPlotFolder(Plot plot) {
-        return new File(getPlotFolderPath(plot));
+    public static File getPlanetFolder(Planet planet) {
+        return new File(getPlanetFolderPath(planet));
     }
 
     /**
-     Returns development plot's folder. It contains world's map.
+     Returns development planet's folder. It contains world's map.
      **/
-    public static File getDevPlotFolder(DevPlot devPlot) {
-        if (devPlot.isLoaded()) {
-            return new File(Bukkit.getServer().getWorldContainer() + File.separator + devPlot.getWorldName() + File.separator);
+    public static File getDevPlanetFolder(DevPlanet devPlanet) {
+        if (devPlanet.isLoaded()) {
+            return new File(Bukkit.getServer().getWorldContainer() + File.separator + devPlanet.getWorldName() + File.separator);
         } else {
-            return new File(Bukkit.getServer().getWorldContainer() + File.separator + "unloadedWorlds" + File.separator + devPlot.getWorldName() + File.separator);
+            return new File(Bukkit.getServer().getWorldContainer() + File.separator + "unloadedWorlds" + File.separator + devPlanet.getWorldName() + File.separator);
         }
     }
 
     /**
-     Returns plot's settings.yml configuration.
+     Returns planet's settings.yml configuration.
      **/
-    public static FileConfiguration getPlotConfig(Plot plot) {
-        File file = getPlotConfigFile(plot);
+    public static FileConfiguration getPlanetConfig(Planet planet) {
+        File file = getPlanetConfigFile(planet);
         return YamlConfiguration.loadConfiguration(file);
     }
 
     /**
-     Returns plot's settings.yml file.
+     Returns planet's settings.yml file.
      **/
-    public static File getPlotConfigFile(Plot plot) {
-        return new File(getPlotFolder(plot),"settings.yml");
+    public static File getPlanetConfigFile(Planet planet) {
+        return new File(getPlanetFolder(planet),"settings.yml");
     }
 
     /**
-     Returns plot's codeScript.yml file.
+     Returns planet's codeScript.yml file.
      **/
-    public static File getPlotScriptFile(Plot plot) {
-        File scriptFile = new File((getPlotFolder(plot)),"codeScript.yml");
+    public static File getPlanetScriptFile(Planet planet) {
+        File scriptFile = new File((getPlanetFolder(planet)),"codeScript.yml");
         if (!scriptFile.exists()) {
-            createCodeScript(getPlotFolder(plot).getPath(), plot.getWorldName());
+            createCodeScript(getPlanetFolder(planet).getPath(), planet.getWorldName());
         }
         return scriptFile;
     }
 
     /**
-     Returns plot's variables.yml configuration.
+     Returns planet's variables.yml configuration.
      **/
-    public static File getPlotVariablesJson(Plot plot) {
-        File variablesFile = new File(getPlotFolder(plot),"variables.json");
+    public static File getPlanetVariablesJson(Planet planet) {
+        File variablesFile = new File(getPlanetFolder(planet),"variables.json");
         if (!variablesFile.exists()) {
             try {
                 variablesFile.createNewFile();
@@ -297,11 +297,11 @@ public class FileUtils {
     }
 
     /**
-     Returns player's data json from plot folder.
+     Returns player's data json from planet folder.
      **/
-    public static File getPlayerDataJson(Plot plot, Player player) {
-        File plotFolder = getPlotFolder(plot);
-        File folder = new File(plotFolder.getPath() + File.separator + "playersData");
+    public static File getPlayerDataJson(Planet planet, Player player) {
+        File planetFolder = getPlanetFolder(planet);
+        File folder = new File(planetFolder.getPath() + File.separator + "playersData");
         try {
             if (!folder.exists()) {
                 folder.mkdirs();
@@ -319,9 +319,9 @@ public class FileUtils {
     }
 
     /**
-     * Returns plots worlds folders.
+     * Returns planets worlds folders.
      * @param includeUnloadedWorlds if true - includes unloaded worlds too, false - only loaded worlds.
-     * @return plots worlds folders.
+     * @return planets worlds folders.
      */
     public static File[] getWorldsFolders(boolean includeUnloadedWorlds) {
 
@@ -331,7 +331,10 @@ public class FileUtils {
 
         if (serverDirectoryFiles != null) {
             for (File file : serverDirectoryFiles) {
-                if (file.isDirectory() && file.getName().startsWith("plot")) worldsFolders.add(file);
+                if (file.getName().startsWith("plot")) {
+                    file.renameTo(new File(file.getParent() + File.separator + file.getName().replace("plot","planet")));
+                }
+                if (file.isDirectory() && file.getName().startsWith("planet")) worldsFolders.add(file);
             }
         } else {
             sendCriticalErrorMessage("World container of server is null.");
@@ -350,7 +353,10 @@ public class FileUtils {
                     if (!unloadedWorldFolder.mkdirs()) sendCriticalErrorMessage("Can't create /unloadedWorlds/ folder");
                 }
                 for (File file : unloadedWorlds) {
-                    if (file.isDirectory() && file.getName().startsWith("plot")) {
+                    if (file.getName().startsWith("plot")) {
+                        file.renameTo(new File(file.getParent() + File.separator + file.getName().replace("plot","planet")));
+                    }
+                    if (file.isDirectory() && file.getName().startsWith("planet")) {
                         worldsFolders.add(file);
                     }
                 }
@@ -362,9 +368,9 @@ public class FileUtils {
     }
 
     /**
-     * Unloads all loaded plots worlds into /unloadedWorlds/ directory.
+     * Unloads all loaded planets worlds into /unloadedWorlds/ directory.
      */
-    public static void unloadPlots() {
+    public static void unloadPlanets() {
         OpenCreative.getPlugin().getLogger().info("Creative+ is unloading worlds, please wait...");
         try {
             File[] worldsFiles = getWorldsFolders(false);
@@ -382,14 +388,14 @@ public class FileUtils {
             } else {
                 OpenCreative.getPlugin().getLogger().info("No worlds been detected ;(");
             }
-            PlotManager.getInstance().clearPlots();
+            PlanetManager.getInstance().clearPlanets();
         } catch (NullPointerException error) {
             sendCriticalErrorMessage("Error while unloading worls: " + error.getMessage());
         }
     }
 
     /**
-     * Loads plot folder from /unloadedWorlds/ to server storage.
+     * Loads planet folder from /unloadedWorlds/ to server storage.
      **/
     public static boolean loadWorldFolder(String worldName, boolean removeUnloadedFolder) {
         Path serverPath = Bukkit.getServer().getWorldContainer().toPath();
@@ -410,7 +416,7 @@ public class FileUtils {
     }
 
     /**
-     * Unloads plot folder from server storage to /unloadedWorlds/ folder.
+     * Unloads planet folder from server storage to /unloadedWorlds/ folder.
      **/
     public static void unloadWorldFolder(String worldName, boolean removeWorldFolder) {
         Path serverPath = Bukkit.getServer().getWorldContainer().toPath();
@@ -479,127 +485,127 @@ public class FileUtils {
     }
 
     /**
-     * Sets parameter to Long value in plot's settings.
-     * @param plot plot to set.
+     * Sets parameter to Long value in planet's settings.
+     * @param planet planet to set.
      * @param parameterPath path of parameter in config.
      * @param parameterValue value.
      */
-    public static void setPlotConfigParameter(Plot plot, String parameterPath, long parameterValue) {
-        FileConfiguration plotConfig = getPlotConfig(plot);
-        File plotConfigFile = getPlotConfigFile(plot);
-        plotConfig.set(parameterPath,String.valueOf(parameterValue));
+    public static void setPlanetConfigParameter(Planet planet, String parameterPath, long parameterValue) {
+        FileConfiguration planetConfig = getPlanetConfig(planet);
+        File planetConfigFile = getPlanetConfigFile(planet);
+        planetConfig.set(parameterPath,String.valueOf(parameterValue));
         try {
-            plotConfig.save(plotConfigFile);
+            planetConfig.save(planetConfigFile);
         } catch (IOException error) {
-            sendCriticalErrorMessage("Can't save plot's settings configuration to file.",error);
+            sendCriticalErrorMessage("Can't save planet's settings configuration to file.",error);
         }
     }
 
     /**
-     * Sets parameter to Int value in plot's settings.
-     * @param plot plot to set.
+     * Sets parameter to Int value in planet's settings.
+     * @param planet planet to set.
      * @param parameterPath path of parameter in config.
      * @param parameterValue value.
      */
-    public static void setPlotConfigParameter(Plot plot, String parameterPath, int parameterValue) {
-        FileConfiguration plotConfig = getPlotConfig(plot);
-        File plotConfigFile = getPlotConfigFile(plot);
-        plotConfig.set(parameterPath,String.valueOf(parameterValue));
+    public static void setPlanetConfigParameter(Planet planet, String parameterPath, int parameterValue) {
+        FileConfiguration planetConfig = getPlanetConfig(planet);
+        File planetConfigFile = getPlanetConfigFile(planet);
+        planetConfig.set(parameterPath,String.valueOf(parameterValue));
         try {
-            plotConfig.save(plotConfigFile);
+            planetConfig.save(planetConfigFile);
         } catch (IOException error) {
-            sendCriticalErrorMessage("Can't save plot's settings configuration to file.",error);
+            sendCriticalErrorMessage("Can't save planet's settings configuration to file.",error);
         }
     }
 
     /**
-     * Sets parameter to Object value in plot's settings.
-     * @param plot plot to set.
+     * Sets parameter to Object value in planet's settings.
+     * @param planet planet to set.
      * @param parameterPath path of parameter in config.
      * @param parameterValue value.
      */
-    public static void setPlotConfigParameter(Plot plot, String parameterPath, Object parameterValue) {
-        FileConfiguration plotConfig = getPlotConfig(plot);
-        File plotConfigFile = getPlotConfigFile(plot);
-        plotConfig.set(parameterPath,String.valueOf(parameterValue));
+    public static void setPlanetConfigParameter(Planet planet, String parameterPath, Object parameterValue) {
+        FileConfiguration planetConfig = getPlanetConfig(planet);
+        File planetConfigFile = getPlanetConfigFile(planet);
+        planetConfig.set(parameterPath,parameterValue);
         try {
-            plotConfig.save(plotConfigFile);
+            planetConfig.save(planetConfigFile);
         } catch (IOException error) {
-            sendCriticalErrorMessage("Can't save plot's settings configuration to file.",error);
+            sendCriticalErrorMessage("Can't save planet's settings configuration to file.",error);
         }
     }
 
     /**
-     * Sets parameter to String value in plot's settings.
-     * @param plot plot to set.
+     * Sets parameter to String value in planet's settings.
+     * @param planet planet to set.
      * @param parameterPath path of parameter in config.
      * @param parameterValue value.
      */
-    public static void setPlotConfigParameter(Plot plot, String parameterPath, String parameterValue) {
-        FileConfiguration plotConfig = getPlotConfig(plot);
-        File plotConfigFile = getPlotConfigFile(plot);
-        plotConfig.set(parameterPath,parameterValue);
+    public static void setPlanetConfigParameter(Planet planet, String parameterPath, String parameterValue) {
+        FileConfiguration planetConfig = getPlanetConfig(planet);
+        File planetConfigFile = getPlanetConfigFile(planet);
+        planetConfig.set(parameterPath,parameterValue);
         try {
-            plotConfig.save(plotConfigFile);
+            planetConfig.save(planetConfigFile);
         } catch (IOException error) {
-            sendCriticalErrorMessage("Can't save plot's settings configuration to file.",error);
+            sendCriticalErrorMessage("Can't save planet's settings configuration to file.",error);
         }
     }
 
     /**
-     * Sets parameter to List value in plot's settings.
-     * @param plot plot to set.
+     * Sets parameter to List value in planet's settings.
+     * @param planet planet to set.
      * @param parameterPath path of parameter in config.
      * @param parameterValue value.
      */
-    public static void setPlotConfigParameter(Plot plot, String parameterPath, List<String> parameterValue) {
-        FileConfiguration plotConfig = getPlotConfig(plot);
-        File plotConfigFile = getPlotConfigFile(plot);
-        plotConfig.set(parameterPath,parameterValue);
+    public static void setPlanetConfigParameter(Planet planet, String parameterPath, List<String> parameterValue) {
+        FileConfiguration planetConfig = getPlanetConfig(planet);
+        File planetConfigFile = getPlanetConfigFile(planet);
+        planetConfig.set(parameterPath,parameterValue);
         try {
-            plotConfig.save(plotConfigFile);
+            planetConfig.save(planetConfigFile);
         } catch (IOException error) {
-            sendCriticalErrorMessage("Can't save plot's settings configuration to file.",error);
+            sendCriticalErrorMessage("Can't save planet's settings configuration to file.",error);
         }
     }
 
     /**
-     * Sets parameter to Set value in plot's settings.
-     * @param plot plot to set.
+     * Sets parameter to Set value in planet's settings.
+     * @param planet planet to set.
      * @param parameterPath path of parameter in config.
      * @param parameterValue value.
      */
-    public static void setPlotConfigParameter(Plot plot, String parameterPath, Set<String> parameterValue) {
-        FileConfiguration plotConfig = getPlotConfig(plot);
-        File plotConfigFile = getPlotConfigFile(plot);
-        plotConfig.set(parameterPath,new ArrayList<>(parameterValue));
+    public static void setPlanetConfigParameter(Planet planet, String parameterPath, Set<String> parameterValue) {
+        FileConfiguration planetConfig = getPlanetConfig(planet);
+        File planetConfigFile = getPlanetConfigFile(planet);
+        planetConfig.set(parameterPath,new ArrayList<>(parameterValue));
         try {
-            plotConfig.save(plotConfigFile);
+            planetConfig.save(planetConfigFile);
         } catch (IOException error) {
-            sendCriticalErrorMessage("Can't save plot's settings configuration to file.",error);
+            sendCriticalErrorMessage("Can't save planet's settings configuration to file.",error);
         }
     }
 
     /**
      * Returns a specified list of players nicknames.
-     * @param plot plot to get list.
+     * @param planet planet to get list.
      * @param type type of players list.
      * @return list of nicknames.
      */
-    public static List<String> getPlayersFromPlotList(Plot plot, Plot.PlayersType type) {
-        return new ArrayList<>(getPlotConfig(plot).getStringList(type.getPath()));
+    public static List<String> getPlayersFromPlanetList(Planet planet, Planet.PlayersType type) {
+        return new ArrayList<>(getPlanetConfig(planet).getStringList(type.getPath()));
     }
 
     /**
-     * Adds player to list, that located in plot's settings.yml file.
-     * @param plot plot to add player.
+     * Adds player to list, that located in planet's settings.yml file.
+     * @param planet planet to add player.
      * @param nickname nickname of player.
      * @param type type of player list.
      * @return true - if successfully added, false - if failed.
      */
-    public static boolean addPlayerInPlotList(Plot plot, String nickname, Plot.PlayersType type) {
-        FileConfiguration plotConfig = getPlotConfig(plot);
-        List<String> playersList = plotConfig.getStringList(type.getPath());
+    public static boolean addPlayerInPlanetList(Planet planet, String nickname, Planet.PlayersType type) {
+        FileConfiguration planetConfig = getPlanetConfig(planet);
+        List<String> playersList = planetConfig.getStringList(type.getPath());
         for (String player : playersList) {
             /*
              * We will not add player, if list
@@ -610,7 +616,7 @@ public class FileUtils {
             }
         }
         playersList.add(nickname);
-        setPlotConfigParameter(plot,type.getPath(),playersList);
+        setPlanetConfigParameter(planet,type.getPath(),playersList);
         return true;
     }
 
@@ -641,12 +647,12 @@ public class FileUtils {
     }
 
     /**
-     * Returns file path of plot's world folder.
-     * @param plot plot to get folder.
-     * @return plot's folder path.
+     * Returns file path of planet's world folder.
+     * @param planet planet to get folder.
+     * @return planet's folder path.
      */
-    public static String getPlotFolderPath(Plot plot) {
-        return Bukkit.getWorldContainer().getPath() + File.separator + (!plot.isLoaded() ? "unloadedWorlds" + File.separator : "") + "plot" + plot.getId() + File.separator;
+    public static String getPlanetFolderPath(Planet planet) {
+        return Bukkit.getWorldContainer().getPath() + File.separator + (!planet.isLoaded() ? "unloadedWorlds" + File.separator : "") + "planet" + planet.getId() + File.separator;
     }
 
     /**

@@ -19,12 +19,12 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.events.world.other;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class GamePlayEvent extends WorldEvent {
 
-    public GamePlayEvent(Plot plot) {
-        super(plot);
+    public GamePlayEvent(Planet planet) {
+        super(planet);
     }
 
 }

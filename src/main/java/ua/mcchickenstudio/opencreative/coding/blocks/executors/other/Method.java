@@ -21,14 +21,14 @@ package ua.mcchickenstudio.opencreative.coding.blocks.executors.other;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class Method extends Executor {
 
     private final String name;
 
-    public Method(Plot plot, int x, int y, int z, String name) {
-        super(plot, x, y, z);
+    public Method(Planet planet, int x, int y, int z, String name) {
+        super(planet, x, y, z);
         this.name = name;
     }
 

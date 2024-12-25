@@ -18,7 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.PAPIUtils;
 import net.kyori.adventure.text.Component;
@@ -314,58 +314,58 @@ public class MessageUtils {
     }
 
 
-    static final Map<Plot,Long> messagesOnce = new HashMap<>();
+    static final Map<Planet,Long> messagesOnce = new HashMap<>();
     /**
-     Sends message to plot players once. If cool down is not ended, it will not send message.
+     Sends message to planet players once. If cool down is not ended, it will not send message.
      **/
-    public static void sendMessageOnce(Plot plot, String message, int onceInSeconds) {
+    public static void sendMessageOnce(Planet planet, String message, int onceInSeconds) {
 
         long currentTime = System.currentTimeMillis();
 
-        if (messagesOnce.containsKey(plot)) {
-            long timeInMap = messagesOnce.get(plot);
+        if (messagesOnce.containsKey(planet)) {
+            long timeInMap = messagesOnce.get(planet);
             long elapsedTime = currentTime-timeInMap;
             long elapsedSeconds = elapsedTime/1000;
             if (elapsedSeconds < onceInSeconds) return;
         }
 
-        for (Player player : plot.getPlayers()) {
+        for (Player player : planet.getPlayers()) {
             player.sendMessage(message);
         }
-        messagesOnce.put(plot,currentTime);
+        messagesOnce.put(planet,currentTime);
 
     }
 
     /**
-     Sends TextComponent message to plot players once. If cool down is not ended, it will not send message.
+     Sends TextComponent message to planet players once. If cool down is not ended, it will not send message.
      **/
-    public static void sendMessageOnce(Plot plot, TextComponent message, int onceInSeconds) {
+    public static void sendMessageOnce(Planet planet, TextComponent message, int onceInSeconds) {
 
         long currentTime = System.currentTimeMillis();
 
-        if (messagesOnce.get(plot) != null) {
-            long timeInMap = messagesOnce.get(plot);
+        if (messagesOnce.get(planet) != null) {
+            long timeInMap = messagesOnce.get(planet);
             long elapsedTime = currentTime-timeInMap;
             long elapsedSeconds = elapsedTime/1000;
             if (elapsedSeconds < onceInSeconds) return;
         }
 
-        for (Player player : plot.getPlayers()) {
+        for (Player player : planet.getPlayers()) {
             player.sendMessage(message);
         }
-        messagesOnce.put(plot,currentTime);
+        messagesOnce.put(planet,currentTime);
 
     }
 
     /**
-     Returns string, that parsed plot lines: plot name, description, online, reputation, owner, id, category, uniques, last activity time, creation time.
+     Returns string, that parsed planet lines: planet name, description, online, reputation, owner, id, category, uniques, last activity time, creation time.
      **/
-    public static String parsePlotLines(Plot plot, String string) {
-        String plotReputation = String.valueOf(plot.getInformation().getReputation());
-        if (plot.getInformation().getReputation() >= 1) plotReputation = "§a+" + plotReputation;
-        else if (plot.getInformation().getReputation() <= -1) plotReputation = "§c" + plotReputation;
-        else plotReputation = "§e" + plotReputation;
-        return parsePAPI(Bukkit.getOfflinePlayer(plot.getOwner()),string.replace("%plotName%", plot.getInformation().getDisplayName()).replace("%plotOnline%",String.valueOf(plot.getOnline())).replace("%plotOwner%", plot.getOwner()).replace("%plotID%", String.valueOf(plot.getId())).replace("%plotCustomID%",plot.getInformation().getCustomID()).replace("%plotCategory%", plot.getInformation().getCategory().getName()).replace("%plotUniques%",String.valueOf(plot.getUniques())).replace("%plotReputation%",plotReputation).replace("%plotLastTime%",getElapsedTime(System.currentTimeMillis(),plot.getLastActivityTime())).replace("%plotCreationTime%",getElapsedTime(System.currentTimeMillis(), plot.getCreationTime())));
+    public static String parsePlanetLines(Planet planet, String string) {
+        String planetReputation = String.valueOf(planet.getInformation().getReputation());
+        if (planet.getInformation().getReputation() >= 1) planetReputation = "§a+" + planetReputation;
+        else if (planet.getInformation().getReputation() <= -1) planetReputation = "§c" + planetReputation;
+        else planetReputation = "§e" + planetReputation;
+        return parsePAPI(Bukkit.getOfflinePlayer(planet.getOwner()),string.replace("%planetName%", planet.getInformation().getDisplayName()).replace("%planetOnline%",String.valueOf(planet.getOnline())).replace("%planetOwner%", planet.getOwner()).replace("%planetID%", String.valueOf(planet.getId())).replace("%planetCustomID%", planet.getInformation().getCustomID()).replace("%planetCategory%", planet.getInformation().getCategory().getName()).replace("%planetUniques%",String.valueOf(planet.getUniques())).replace("%planetReputation%",planetReputation).replace("%planetLastTime%",getElapsedTime(System.currentTimeMillis(), planet.getLastActivityTime())).replace("%planetCreationTime%",getElapsedTime(System.currentTimeMillis(), planet.getCreationTime())));
     }
 
     /**

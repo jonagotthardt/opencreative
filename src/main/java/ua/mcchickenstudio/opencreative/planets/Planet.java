@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.plots;
+package ua.mcchickenstudio.opencreative.planets;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.title.Title;
@@ -31,7 +31,7 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.coding.variables.WorldVariables;
-import ua.mcchickenstudio.opencreative.events.plot.PlotConnectPlayerEvent;
+import ua.mcchickenstudio.opencreative.events.planet.PlanetConnectPlayerEvent;
 import ua.mcchickenstudio.opencreative.settings.groups.Group;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
@@ -49,33 +49,33 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
 /**
- * <h1>Plot</h1>
- * This class represents a Plot, the individual place for players that
+ * <h1>Planet</h1>
+ * This class represents a Planet, the individual place for players that
  * consists of two worlds: for building and for developing. It has owner,
  * world size, sharing, world mode, limits, flags, players data, variables
  * and states.
  *
- * <p>Plot has two file states: unloaded and loaded. Unloaded plots files
- * are stored in /unloadedWorlds/ directory, and loaded plots files are
+ * <p>Planet has two file states: unloaded and loaded. Unloaded planets files
+ * are stored in /unloadedWorlds/ directory, and loaded planets files are
  * stored in server's worlds storage directory.</p>
  * @author McChicken Studio
  * @since 1.0
  * @version 5.0
  */
-public class Plot {
+public class Planet {
 
     private final int id;
     private String owner;
     private String ownerGroup;
 
-    private final PlotInfo info;
-    private final DevPlot devPlot;
-    private final PlotFlags flags;
-    private final PlotLimits limits;
-    private final PlotTerritory territory;
-    private final PlotPlayers worldPlayers;
+    private final PlanetInfo info;
+    private final DevPlanet devPlanet;
+    private final PlanetFlags flags;
+    private final PlanetLimits limits;
+    private final PlanetTerritory territory;
+    private final PlanetPlayers worldPlayers;
     private final WorldVariables variables;
-    private final PlotExperiments experiments;
+    private final PlanetExperiments experiments;
 
     private Mode mode;
     private Sharing sharing;
@@ -85,25 +85,25 @@ public class Plot {
     private boolean changingOwner;
 
     /**
-     Loads a plot with world name.
+     Loads a planet with world name.
      **/
-    public Plot(int id) {
+    public Planet(int id) {
 
         this.id = id;
-        devPlot = new DevPlot(this);
-        info = new PlotInfo(this);
+        devPlanet = new DevPlanet(this);
+        info = new PlanetInfo(this);
 
         loadInfo();
 
-        worldPlayers = new PlotPlayers(this);
-        limits = new PlotLimits(this);
-        territory = new PlotTerritory(this);
+        worldPlayers = new PlanetPlayers(this);
+        limits = new PlanetLimits(this);
+        territory = new PlanetTerritory(this);
 
-        flags = new PlotFlags(this);
+        flags = new PlanetFlags(this);
         variables = new WorldVariables(this);
-        experiments = new PlotExperiments(this);
+        experiments = new PlanetExperiments(this);
 
-        PlotManager.getInstance().registerPlot(this);
+        PlanetManager.getInstance().registerPlanet(this);
 
         new BukkitRunnable() {
             @Override
@@ -113,11 +113,11 @@ public class Plot {
         }.runTaskAsynchronously(OpenCreative.getPlugin());
     }
 
-    public PlotInfo getInformation() {
+    public PlanetInfo getInformation() {
         return info;
     }
 
-    public PlotPlayers getWorldPlayers() {
+    public PlanetPlayers getWorldPlayers() {
         return worldPlayers;
     }
 
@@ -130,7 +130,7 @@ public class Plot {
     }
 
     /**
-     * Changes plot's mode to Play or Build.
+     * Changes planet's mode to Play or Build.
      * <p>In the Build mode players cannot get damaged, they only can look at builders which are creating a map.</p>
      * <p>In the Play mode code script will work, player damaging is enabled.</p>
      * @param mode Mode to set.
@@ -138,14 +138,14 @@ public class Plot {
     public void setMode(Mode mode) {
         if (this.mode == mode) return;
         this.mode = mode;
-        setPlotConfigParameter(this,"mode",mode);
+        setPlanetConfigParameter(this,"mode",mode.name());
         if (!isLoaded()) return;
         territory.stopBukkitRunnables();
         territory.getWorld().getSpawnLocation().getChunk().load(true);
         HookUtils.clearEntitiesHook(territory.getWorld());
         if (mode == Mode.BUILD) {
             for (Player player : getPlayers()){
-                if (!isEntityInDevPlot(player)) {
+                if (!isEntityInDevPlanet(player)) {
                     clearPlayer(player);
                     player.showTitle(Title.title(
                             toComponent(getLocaleMessage("world.build-mode.title")), toComponent(getLocaleMessage("world.build-mode.subtitle")),
@@ -169,7 +169,7 @@ public class Plot {
             }
         } else {
             for (Player player : getPlayers()) {
-                if (!isEntityInDevPlot(player)) {
+                if (!isEntityInDevPlanet(player)) {
                     clearPlayer(player);
                     player.teleport(territory.getWorld().getSpawnLocation());
                     if (worldPlayers.canDevelop(player)) {
@@ -181,14 +181,14 @@ public class Plot {
                     player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
                 }
             }
-            if (devPlot.isLoaded()) {
-                new CodingBlockParser().parseCode(devPlot);
+            if (devPlanet.isLoaded()) {
+                new CodingBlockParser().parseCode(devPlanet);
             } else {
                 territory.getScript().loadCode();
             }
             EventRaiser.raiseWorldPlayEvent(this);
             for (Player player : getPlayers()) {
-                if (PlotManager.getInstance().getDevPlot(player) == null) {
+                if (PlanetManager.getInstance().getDevPlanet(player) == null) {
                     EventRaiser.raiseJoinEvent(player);
                 }
             }
@@ -210,7 +210,7 @@ public class Plot {
     public void setSharing(Sharing sharing) {
         if (this.sharing == sharing) return;
         this.sharing = sharing;
-        setPlotConfigParameter(this,"sharing",sharing);
+        setPlanetConfigParameter(this,"sharing",sharing.name());
     }
 
     public void setDebug(boolean debug) {
@@ -218,15 +218,15 @@ public class Plot {
     }
 
     public String getWorldName() {
-        return "plot" + id;
+        return "planet" + id;
     }
 
     public int getId() {
         return id;
     }
 
-    public DevPlot getDevPlot() {
-        return devPlot;
+    public DevPlanet getDevPlanet() {
+        return devPlanet;
     }
 
     public boolean isChangingOwner() {
@@ -237,12 +237,12 @@ public class Plot {
         this.changingOwner = changingOwner;
     }
 
-    public PlotTerritory getTerritory() {
+    public PlanetTerritory getTerritory() {
         return territory;
     }
 
     /**
-     * Checks is loaded main world of plot.
+     * Checks is loaded main world of planet.
      * @return true - if loaded, false - unloaded.
      */
     public boolean isLoaded() {
@@ -251,12 +251,12 @@ public class Plot {
 
     public enum Mode {
         PLAYING() {
-            public void onPlayerConnect(Player player, Plot plot) {
-                player.setGameMode(plot.getOwner().equalsIgnoreCase(player.getName()) ? GameMode.CREATIVE : GameMode.ADVENTURE);
+            public void onPlayerConnect(Player player, Planet planet) {
+                player.setGameMode(planet.getOwner().equalsIgnoreCase(player.getName()) ? GameMode.CREATIVE : GameMode.ADVENTURE);
             }
         }, BUILD() {
-            public void onPlayerConnect(Player player, Plot plot) {
-                if (plot.getWorldPlayers().canBuild(player)) {
+            public void onPlayerConnect(Player player, Planet planet) {
+                if (planet.getWorldPlayers().canBuild(player)) {
                     player.setGameMode(GameMode.CREATIVE);
                     giveBuildPermissions(player);
                 }
@@ -267,7 +267,7 @@ public class Plot {
             return getLocaleMessage("world." + (this == PLAYING ? "play-mode" : "build-mode") + ".name",false);
         }
 
-        public void onPlayerConnect(Player player, Plot plot) {}
+        public void onPlayerConnect(Player player, Planet planet) {}
     }
 
     public enum Sharing {
@@ -303,7 +303,7 @@ public class Plot {
     }
 
     private void loadInfo() {
-        FileConfiguration config = getPlotConfig(this);
+        FileConfiguration config = getPlanetConfig(this);
         String owner = "Unknown owner";
         String ownerGroup = "default";
         Mode mode = Mode.BUILD;
@@ -327,7 +327,7 @@ public class Plot {
             } catch (Exception ignored) {}
         }
         if (corrupted) {
-            sendCriticalErrorMessage("Plot " + getWorldName() + " lost it's config file, please check plot files in /unloadedWorlds/" + getWorldName());
+            sendCriticalErrorMessage("Planet " + getWorldName() + " lost it's config file, please check planet files in /unloadedWorlds/" + getWorldName());
         }
         this.owner = owner;
         this.ownerGroup = ownerGroup;
@@ -335,11 +335,11 @@ public class Plot {
         this.sharing = sharing;
     }
 
-    public byte getFlagValue(PlotFlags.PlotFlag flag) {
+    public byte getFlagValue(PlanetFlags.PlanetFlag flag) {
         return (this.flags == null ? 1 : this.flags.getFlagValue(flag));
     }
 
-    public void setFlagValue(PlotFlags.PlotFlag flag, byte value) {
+    public void setFlagValue(PlanetFlags.PlanetFlag flag, byte value) {
         this.flags.setFlag(flag,value);
     }
 
@@ -353,7 +353,7 @@ public class Plot {
 
     public int getUniques() {
         try {
-            return (getPlayersFromPlotList(this, PlayersType.UNIQUE).size());
+            return (getPlayersFromPlanetList(this, PlayersType.UNIQUE).size());
         } catch (Exception error) {
             return 0;
         }
@@ -362,7 +362,7 @@ public class Plot {
     @SuppressWarnings("all")
     public long getCreationTime() {
         try {
-            return Long.parseLong(String.valueOf(getPlotConfig(this).get("creation-time")));
+            return Long.parseLong(String.valueOf(getPlanetConfig(this).get("creation-time")));
         } catch (Exception error) {
             return 0;
         }
@@ -371,7 +371,7 @@ public class Plot {
     @SuppressWarnings("all")
     public long getLastActivityTime() {
         try {
-            return Long.parseLong(String.valueOf(getPlotConfig(this).get("last-activity-time")));
+            return Long.parseLong(String.valueOf(getPlanetConfig(this).get("last-activity-time")));
         } catch (Exception error) {
             return 0;
         }
@@ -381,8 +381,8 @@ public class Plot {
         List<Player> playerList = new ArrayList<>();
         if (this.territory.getWorld() != null) {
             playerList.addAll(this.territory.getWorld().getPlayers());
-            if (getDevPlot() != null && getDevPlot().getWorld() != null) {
-                playerList.addAll(getDevPlot().getWorld().getPlayers());
+            if (getDevPlanet() != null && getDevPlanet().getWorld() != null) {
+                playerList.addAll(getDevPlanet().getWorld().getPlayers());
             }
         }
         return playerList;
@@ -392,8 +392,8 @@ public class Plot {
         Audience audience = Audience.empty();
         if (isLoaded()) {
             audience = Audience.audience(territory.getWorld());
-            if (devPlot.isLoaded()) {
-                audience = Audience.audience(territory.getWorld(), devPlot.getWorld());
+            if (devPlanet.isLoaded()) {
+                audience = Audience.audience(territory.getWorld(), devPlanet.getWorld());
             }
         }
         return audience;
@@ -411,18 +411,18 @@ public class Plot {
         if (getSharing() != Sharing.PUBLIC) {
             if (!isOwner(player)) {
                 if (!(player.hasPermission("opencreative.world.private.bypass"))) {
-                    player.sendMessage(getLocaleMessage("private-plot", player));
+                    player.sendMessage(getLocaleMessage("private-planet", player));
                     return;
                 }
             }
         }
         if (!isOwner(player.getName())) {
             if (getSharing() != Sharing.PUBLIC && !player.hasPermission("opencreative.world.private.bypass")) {
-                player.sendMessage(getLocaleMessage("private-plot", player));
+                player.sendMessage(getLocaleMessage("private-planet", player));
                 return;
             }
             if (worldPlayers.isBanned(player.getName()) && !player.hasPermission("opencreative.world.banned.bypass")) {
-                player.sendMessage(getLocaleMessage("blacklisted-in-plot", player));
+                player.sendMessage(getLocaleMessage("blacklisted-in-planet", player));
                 return;
             }
         }
@@ -442,21 +442,21 @@ public class Plot {
         player.teleport(territory.getWorld().getSpawnLocation());
         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE,100,2);
         mode.onPlayerConnect(player,this);
-        getWorldPlayers().getPlotPlayer(player).load();
+        getWorldPlayers().getPlanetPlayer(player).load();
         clearPlayer(player);
         player.clearTitle();
-        if (!getPlayersFromPlotList(this, PlayersType.UNIQUE).contains(player.getName())) {
-            addPlayerInPlotList(this,player.getName(), PlayersType.UNIQUE);
+        if (!getPlayersFromPlanetList(this, PlayersType.UNIQUE).contains(player.getName())) {
+            addPlayerInPlanetList(this,player.getName(), PlayersType.UNIQUE);
         }
         if (this.isOwner(player.getName())) {
             ownerGroup = OpenCreative.getSettings().getGroups().getGroup(player).getName().toLowerCase();
             ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
             player.getInventory().setItem(8,worldSettingsItem);
-            if (flags.getFlagValue(PlotFlags.PlotFlag.JOIN_MESSAGES) == 1) {
+            if (flags.getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
                 player.sendMessage(getLocaleMessage("world.connecting.owner-help",player));
             }
-            if (this.getDevPlot().isLoaded()) {
-                new CodingBlockParser().parseCode(this.getDevPlot());
+            if (this.getDevPlanet().isLoaded()) {
+                new CodingBlockParser().parseCode(this.getDevPlanet());
             }
         }
         if (!territory.isAutoSave() && worldPlayers.canBuild(player)) {
@@ -472,7 +472,7 @@ public class Plot {
             giveBuildPermissions(player);
         }
         EventRaiser.raiseJoinEvent(player);
-        new PlotConnectPlayerEvent(this,player).callEvent();
+        new PlanetConnectPlayerEvent(this,player).callEvent();
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -481,36 +481,36 @@ public class Plot {
         }.runTaskAsynchronously(OpenCreative.getPlugin());
     }
 
-    public void connectToDevPlot(Player player) {
+    public void connectToDevPlanet(Player player) {
         player.showTitle(Title.title(
                 toComponent(getLocaleMessage("world.dev-mode.connecting.title")), toComponent(getLocaleMessage("world.dev-mode.connecting.subtitle")),
                 Title.Times.times(Duration.ofSeconds(15), Duration.ofSeconds(9999), Duration.ofSeconds(10))
         ));
-        getDevPlot().loadDevPlotWorld();
-        getDevPlot().getWorld().getSpawnLocation().getChunk().load(true);
-        Location lastLocation = this.getDevPlot().getLastLocations().get(player);
-        if (!this.getDevPlot().isLoaded()) {
+        getDevPlanet().loadDevPlanetWorld();
+        getDevPlanet().getWorld().getSpawnLocation().getChunk().load(true);
+        Location lastLocation = this.getDevPlanet().getLastLocations().get(player);
+        if (!this.getDevPlanet().isLoaded()) {
             return;
         }
         if (lastLocation == null) {
-            lastLocation = getDevPlot().getWorld().getSpawnLocation();
+            lastLocation = getDevPlanet().getWorld().getSpawnLocation();
         }
         player.teleport(lastLocation);
-        getDevPlot().getLastLocations().put(player,player.getLocation());
+        getDevPlanet().getLastLocations().put(player,player.getLocation());
         clearPlayer(player);
         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,Integer.MAX_VALUE,0,false,false,false));
         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE,100,2);
-        for (Player developer : getDevPlot().getWorld().getPlayers()) {
+        for (Player developer : getDevPlanet().getWorld().getPlayers()) {
             WorldBorder border = Bukkit.createWorldBorder();
-            border.setCenter(getDevPlot().getWorld().getWorldBorder().getCenter());
-            border.setSize(getDevPlot().getWorld().getWorldBorder().getSize()*5);
+            border.setCenter(getDevPlanet().getWorld().getWorldBorder().getCenter());
+            border.setSize(getDevPlanet().getWorld().getWorldBorder().getSize()*5);
             developer.setWorldBorder(border);
         }
         BukkitRunnable translation = new BukkitRunnable() {
             @Override
             public void run() {
-                if (getDevPlot().getWorld() == null) return;
-                getDevPlot().translateCodingBlocks(player);
+                if (getDevPlanet().getWorld() == null) return;
+                getDevPlanet().translateCodingBlocks(player);
                 territory.removeBukkitRunnable(this);
             }
         };
@@ -518,18 +518,18 @@ public class Plot {
         translation.runTaskLater(OpenCreative.getPlugin(),5L);
     }
 
-    public void connectToDevPlot(Player player, double x, double y, double z) {
-        connectToDevPlot(player);
-        if (x > 0 && y > 0 && z > 0 && y < 30 && !isOutOfBorders(new Location(devPlot.getWorld(),x+1,y,z+2))) {
-            Location location = new Location(this.getDevPlot().getWorld(), x+1,y,z+2,180,5);
+    public void connectToDevPlanet(Player player, double x, double y, double z) {
+        connectToDevPlanet(player);
+        if (x > 0 && y > 0 && z > 0 && y < 30 && !isOutOfBorders(new Location(devPlanet.getWorld(),x+1,y,z+2))) {
+            Location location = new Location(this.getDevPlanet().getWorld(), x+1,y,z+2,180,5);
             player.teleport(location);
-            if (y == 1) spawnGlowingBlock(player,new Location(this.getDevPlot().getWorld(),x,y,z));
+            if (y == 1) spawnGlowingBlock(player,new Location(this.getDevPlanet().getWorld(),x,y,z));
         }
     }
 
     public void setOwner(String owner) {
         this.owner = owner;
-        FileUtils.setPlotConfigParameter(this,"owner",owner);
+        FileUtils.setPlanetConfigParameter(this,"owner",owner);
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -550,11 +550,11 @@ public class Plot {
         return corrupted;
     }
 
-    public PlotLimits getLimits() {
+    public PlanetLimits getLimits() {
         return limits;
     }
 
-    public PlotExperiments getExperiments() {
+    public PlanetExperiments getExperiments() {
         return experiments;
     }
 

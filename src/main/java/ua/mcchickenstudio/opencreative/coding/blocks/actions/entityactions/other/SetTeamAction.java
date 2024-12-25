@@ -41,7 +41,7 @@ public class SetTeamAction extends EntityAction {
         }
         String scoreboardName = getArguments().getValue("scoreboard","board",this);
         String teamName = getArguments().getValue("team","team",this);
-        Scoreboard scoreboard = getPlot().getTerritory().getScoreboards().get(scoreboardName.toLowerCase());
+        Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().get(scoreboardName.toLowerCase());
         if (scoreboard == null) {
             return;
         }

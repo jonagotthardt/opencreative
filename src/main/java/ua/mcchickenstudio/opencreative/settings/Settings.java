@@ -25,8 +25,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.settings.groups.Groups;
 
 import java.util.HashSet;
@@ -102,13 +102,13 @@ public class Settings {
         OpenCreative.getPlugin().getConfig().set("maintenance",maintenance);
         OpenCreative.getPlugin().saveConfig();
         if (maintenance) {
-            OpenCreative.getPlugin().getLogger().info("Maintenance mode started! Unloading plots, please wait...");
+            OpenCreative.getPlugin().getLogger().info("Maintenance mode started! Unloading planets, please wait...");
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT,100,0.5f);
                 onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.started"));
-                for (Plot plot : PlotManager.getInstance().getPlots()) {
-                    if (plot.isLoaded()) {
-                        for (Player player : plot.getPlayers()) {
+                for (Planet planet : PlanetManager.getInstance().getPlanets()) {
+                    if (planet.isLoaded()) {
+                        for (Player player : planet.getPlayers()) {
                             teleportToLobby(player);
                         }
                     }

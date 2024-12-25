@@ -20,9 +20,11 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
-import ua.mcchickenstudio.opencreative.events.plot.PlotDisconnectPlayerEvent;
-import ua.mcchickenstudio.opencreative.plots.PlotFlags;
-import ua.mcchickenstudio.opencreative.plots.WorldPlayer;
+import ua.mcchickenstudio.opencreative.events.planet.PlanetDisconnectPlayerEvent;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
+import ua.mcchickenstudio.opencreative.planets.PlanetPlayer;
+import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -30,8 +32,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -39,7 +39,7 @@ import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlot;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 
 public class ChangedWorld implements Listener {
 
@@ -73,17 +73,17 @@ public class ChangedWorld implements Listener {
         PlayerChat.confirmation.remove(player);
         player.clearTitle();
 
-        Plot oldPlot = PlotManager.getInstance().getPlotByWorld(oldWorld);
-        Plot newPlot = PlotManager.getInstance().getPlotByWorld(newWorld);
+        Planet oldPlanet = PlanetManager.getInstance().getPlanetByWorld(oldWorld);
+        Planet newPlanet = PlanetManager.getInstance().getPlanetByWorld(newWorld);
 
-        if (oldPlot != null && oldPlot == newPlot) {
-            if (isDevPlot(oldWorld)) {
+        if (oldPlanet != null && oldPlanet == newPlanet) {
+            if (isDevPlanet(oldWorld)) {
                 if (!isPlayerWithLocation(player)) {
                     for (Player onlinePlayer : oldWorld.getPlayers()) {
                         onlinePlayer.sendMessage(getLocaleMessage("world.dev-mode.left", player));
                     }
                 }
-            } else if (isDevPlot(newWorld)) {
+            } else if (isDevPlanet(newWorld)) {
                 if (!isPlayerWithLocation(player)) {
                     for (Player onlinePlayer : newWorld.getPlayers()) {
                         onlinePlayer.sendMessage(getLocaleMessage("world.dev-mode.joined", player));
@@ -91,7 +91,7 @@ public class ChangedWorld implements Listener {
                 } else {
                     removePlayerWithLocation(player);
                 }
-                for (Player onlinePlayer : newPlot.getPlayers()) {
+                for (Player onlinePlayer : newPlanet.getPlayers()) {
                     showPlayerFromTab(onlinePlayer,player);
                 }
             }
@@ -101,31 +101,31 @@ public class ChangedWorld implements Listener {
             }
             player.setLastDeathLocation(null);
             removePlayerWithLocation(player);
-            if (oldPlot != null) {
-                WorldPlayer worldPlayer = oldPlot.getWorldPlayers().getPlotPlayer(player);
-                worldPlayer.save();
-                oldPlot.getWorldPlayers().unregisterPlayer(player);
-                new PlotDisconnectPlayerEvent(oldPlot,player).callEvent();
-                if (oldPlot.getOnline() > 0) {
-                    if (oldPlot.getFlagValue(PlotFlags.PlotFlag.JOIN_MESSAGES) == 1) {
-                        for (Player onlinePlayer : oldPlot.getPlayers()) {
+            if (oldPlanet != null) {
+                PlanetPlayer planetPlayer = oldPlanet.getWorldPlayers().getPlanetPlayer(player);
+                planetPlayer.save();
+                oldPlanet.getWorldPlayers().unregisterPlayer(player);
+                new PlanetDisconnectPlayerEvent(oldPlanet,player).callEvent();
+                if (oldPlanet.getOnline() > 0) {
+                    if (oldPlanet.getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
+                        for (Player onlinePlayer : oldPlanet.getPlayers()) {
                             onlinePlayer.sendMessage(getLocaleMessage("world.left", player));
                             hidePlayerInTab(player,onlinePlayer);
                             hidePlayerInTab(onlinePlayer,player);
                         }
                     }
-                    if (oldPlot.isOwner(player)) {
-                        List<String> notTrustedDevelopers = FileUtils.getPlayersFromPlotList(oldPlot, Plot.PlayersType.DEVELOPERS_NOT_TRUSTED);
-                        List<String> notTrustedBuilders = FileUtils.getPlayersFromPlotList(oldPlot, Plot.PlayersType.BUILDERS_NOT_TRUSTED);
-                        for (Player p : oldPlot.getPlayers()) {
-                            if (oldPlot.getMode() == Plot.Mode.BUILD) {
+                    if (oldPlanet.isOwner(player)) {
+                        List<String> notTrustedDevelopers = FileUtils.getPlayersFromPlanetList(oldPlanet, Planet.PlayersType.DEVELOPERS_NOT_TRUSTED);
+                        List<String> notTrustedBuilders = FileUtils.getPlayersFromPlanetList(oldPlanet, Planet.PlayersType.BUILDERS_NOT_TRUSTED);
+                        for (Player p : oldPlanet.getPlayers()) {
+                            if (oldPlanet.getMode() == Planet.Mode.BUILD) {
                                 if (notTrustedBuilders.contains(p.getName())) {
                                     p.setGameMode(GameMode.ADVENTURE);
                                     p.sendMessage(getLocaleMessage("world.build-mode.cant-build-when-offline"));
                                     clearWorldModePermissions(p);
                                 }
                             }
-                            if (PlotManager.getInstance().getDevPlot(p) != null) {
+                            if (PlanetManager.getInstance().getDevPlanet(p) != null) {
                                 if (notTrustedDevelopers.contains(p.getName())) {
                                     p.setGameMode(GameMode.ADVENTURE);
                                     p.sendMessage(getLocaleMessage("world.dev-mode.cant-dev-when-offline"));
@@ -133,43 +133,43 @@ public class ChangedWorld implements Listener {
                             }
                         }
                     }
-                    for (Player plotPlayer : oldPlot.getPlayers()) {
-                        hidePlayerInTab(player,plotPlayer);
-                        hidePlayerInTab(plotPlayer,player);
+                    for (Player oldPlanetPlayer : oldPlanet.getPlayers()) {
+                        hidePlayerInTab(player,oldPlanetPlayer);
+                        hidePlayerInTab(oldPlanetPlayer,player);
                     }
                 } else {
-                    if (oldPlot.isLoaded()) {
-                        oldPlot.getTerritory().unload();
+                    if (oldPlanet.isLoaded()) {
+                        oldPlanet.getTerritory().unload();
                     }
                 }
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        oldPlot.getInformation().updateIcon();
+                        oldPlanet.getInformation().updateIcon();
                     }
                 }.runTaskAsynchronously(OpenCreative.getPlugin());
             }
-            if (newPlot != null) {
-                if (newPlot.getFlagValue(PlotFlags.PlotFlag.JOIN_MESSAGES) == 1) {
-                    for (Player onlinePlayer : newPlot.getPlayers()) {
+            if (newPlanet != null) {
+                if (newPlanet.getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
+                    for (Player onlinePlayer : newPlanet.getPlayers()) {
                         onlinePlayer.sendMessage(getLocaleMessage("world.joined", player));
                     }
                 }
-                for (Player onlinePlayer : newPlot.getPlayers()) {
+                for (Player onlinePlayer : newPlanet.getPlayers()) {
                     showPlayerFromTab(onlinePlayer,player);
                     showPlayerFromTab(player,onlinePlayer);
                 }
-                if (newPlot.isOwner(player)) {
-                    if (newPlot.getDevPlot().isLoaded()) {
-                        for (Player onlinePlayer : newPlot.getDevPlot().getWorld().getPlayers()) {
-                            if (newPlot.getWorldPlayers().isNotTrustedDeveloper(onlinePlayer)) {
+                if (newPlanet.isOwner(player)) {
+                    if (newPlanet.getDevPlanet().isLoaded()) {
+                        for (Player onlinePlayer : newPlanet.getDevPlanet().getWorld().getPlayers()) {
+                            if (newPlanet.getWorldPlayers().isNotTrustedDeveloper(onlinePlayer)) {
                                 onlinePlayer.setGameMode(GameMode.CREATIVE);
                             }
                         }
                     }
-                    if (newPlot.getMode() == Plot.Mode.BUILD) {
-                        for (Player onlinePlayer : newPlot.getTerritory().getWorld().getPlayers()) {
-                            if (newPlot.getWorldPlayers().isNotTrustedBuilder(onlinePlayer)) {
+                    if (newPlanet.getMode() == Planet.Mode.BUILD) {
+                        for (Player onlinePlayer : newPlanet.getTerritory().getWorld().getPlayers()) {
+                            if (newPlanet.getWorldPlayers().isNotTrustedBuilder(onlinePlayer)) {
                                 onlinePlayer.setGameMode(GameMode.CREATIVE);
                                 giveBuildPermissions(onlinePlayer);
                             }
@@ -180,7 +180,7 @@ public class ChangedWorld implements Listener {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        newPlot.getInformation().updateIcon();
+                        newPlanet.getInformation().updateIcon();
                     }
                 }.runTaskAsynchronously(OpenCreative.getPlugin());
             }

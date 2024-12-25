@@ -16,26 +16,38 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.events.plot;
+package ua.mcchickenstudio.opencreative.events.planet;
 
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 
 /**
- * Called when player disconnects from plot.
+ * Called when player tries to advertise planet.
  * <p>
- * Usually it happens, when player teleports to another world (not related to this plot) or quits the server.
+ * If a Planet Advertisement event is cancelled, the advertisement will not display for all players.
  */
-public class PlotDisconnectPlayerEvent extends PlotEvent {
+public class PlanetAdvertisementEvent extends PlanetEvent implements Cancellable {
 
     private final Player player;
+    private boolean cancel;
 
-    public PlotDisconnectPlayerEvent(Plot plot, Player player) {
-        super(plot);
+    public PlanetAdvertisementEvent(Planet planet, Player player) {
+        super(planet);
         this.player = player;
     }
 
     public Player getPlayer() {
         return player;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancel;
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        this.cancel = cancel;
     }
 }

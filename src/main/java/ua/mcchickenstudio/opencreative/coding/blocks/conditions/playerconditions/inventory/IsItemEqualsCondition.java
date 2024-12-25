@@ -42,7 +42,7 @@ public class IsItemEqualsCondition extends PlayerCondition {
     @Override
     public boolean checkPlayer(Player player) {
         if (getHandler().hasTempVariable(EventValues.Variable.ITEM)) {
-            sendCodingNotFoundTempVar(getPlot(),getExecutor(), EventValues.Variable.ITEM);
+            sendCodingNotFoundTempVar(getPlanet(),getExecutor(), EventValues.Variable.ITEM);
             return false;
         }
         boolean ignoreAmount = getArguments().getValue("ignore-amount",true,this);

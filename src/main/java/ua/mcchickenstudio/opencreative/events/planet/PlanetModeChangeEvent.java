@@ -16,50 +16,50 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.events.plot;
+package ua.mcchickenstudio.opencreative.events.planet;
 
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 
 /**
- * Called when plot's mode will be changed.
+ * Called when planet's mode will be changed.
  * <p>
- * If a Plot Mode Change event is cancelled, it will not change plot's mode.
+ * If a Planet Mode Change event is cancelled, it will not change planet's mode.
  * <p>
  * <b>NOTE:</b> It's not recommended to cancel event, when the {@link Cause} is CODE,
  * because this cause is required to stop code running due to critical errors in code.
- * Plugins should check is player a cause of Plot Mode Change event.
+ * Plugins should check is player a cause of Planet Mode Change event.
  */
-public class PlotModeChangeEvent extends PlotEvent implements Cancellable {
+public class PlanetModeChangeEvent extends PlanetEvent implements Cancellable {
 
     private final Player player;
-    private final Plot.Mode oldMode;
-    private final Plot.Mode newMode;
+    private final Planet.Mode oldMode;
+    private final Planet.Mode newMode;
     private final Cause cause;
     private boolean cancel;
 
-    public PlotModeChangeEvent(Plot plot, Plot.Mode oldMode, Plot.Mode newMode) {
-        super(plot);
+    public PlanetModeChangeEvent(Planet planet, Planet.Mode oldMode, Planet.Mode newMode) {
+        super(planet);
         this.oldMode = oldMode;
         this.newMode = newMode;
         this.player = null;
         this.cause = Cause.CODE;
     }
 
-    public PlotModeChangeEvent(Plot plot, Plot.Mode oldMode, Plot.Mode newMode, Player player) {
-        super(plot);
+    public PlanetModeChangeEvent(Planet planet, Planet.Mode oldMode, Planet.Mode newMode, Player player) {
+        super(planet);
         this.oldMode = oldMode;
         this.newMode = newMode;
         this.player = player;
         this.cause = Cause.PLAYER;
     }
 
-    public Plot.Mode getOldMode() {
+    public Planet.Mode getOldMode() {
         return oldMode;
     }
 
-    public Plot.Mode getNewMode() {
+    public Planet.Mode getNewMode() {
         return newMode;
     }
 

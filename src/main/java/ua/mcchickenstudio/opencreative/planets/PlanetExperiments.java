@@ -16,29 +16,29 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.plots;
+package ua.mcchickenstudio.opencreative.planets;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.entity.Player;
 
-public class PlotExperiments {
+public class PlanetExperiments {
 
-    private final Plot plot;
+    private final Planet planet;
 
-    public PlotExperiments(Plot plot) {
-        this.plot = plot;
+    public PlanetExperiments(Planet planet) {
+        this.planet = planet;
     }
 
     public void handle(Player player, String[] args) {
         if ("downloadable".equalsIgnoreCase(args[0])) {
-            plot.getInformation().setDownloadable(!plot.getInformation().isDownloadable());
-            announce("Now world " + (plot.getInformation().isDownloadable() ? "can be downloaded" : "can't be downloaded"));
+            planet.getInformation().setDownloadable(!planet.getInformation().isDownloadable());
+            announce("Now world " + (planet.getInformation().isDownloadable() ? "can be downloaded" : "can't be downloaded"));
         }
     }
 
     private void announce(String message) {
-        plot.getAudience().sendMessage(Component.text("[Experiment: " + message +"]").decorate(TextDecoration.ITALIC).color(TextColor.color(170,170,170)));
+        planet.getAudience().sendMessage(Component.text("[Experiment: " + message +"]").decorate(TextDecoration.ITALIC).color(TextColor.color(170,170,170)));
     }
 }

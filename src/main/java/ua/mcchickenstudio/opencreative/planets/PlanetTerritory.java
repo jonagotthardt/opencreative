@@ -16,12 +16,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.plots;
+package ua.mcchickenstudio.opencreative.planets;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodeScript;
-import ua.mcchickenstudio.opencreative.events.plot.PlotLoadEvent;
-import ua.mcchickenstudio.opencreative.events.plot.PlotUnloadEvent;
+import ua.mcchickenstudio.opencreative.events.planet.PlanetLoadEvent;
+import ua.mcchickenstudio.opencreative.events.planet.PlanetUnloadEvent;
 import ua.mcchickenstudio.opencreative.utils.*;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.util.TriState;
@@ -47,13 +47,13 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 
 /**
- * <h1>PlotTerritory</h1>
- * This class represents a territory, where plot players can build or play.
+ * <h1>PlanetTerritory</h1>
+ * This class represents a territory, where planet players can build or play.
  * It stores one-time information that will be removed on world unloading.
  */
-public class PlotTerritory {
+public class PlanetTerritory {
 
-    private final Plot plot;
+    private final Planet planet;
 
     private final Map<String, BossBar> bossBars = new HashMap<>();
     private final Map<String, Scoreboard> scoreboards = new HashMap<>();
@@ -65,9 +65,9 @@ public class PlotTerritory {
     private World.Environment environment;
     private boolean autoSave = true;
 
-    public PlotTerritory(Plot plot) {
-        this.plot = plot;
-        script = new CodeScript(plot,getPlotScriptFile(plot));
+    public PlanetTerritory(Planet planet) {
+        this.planet = planet;
+        script = new CodeScript(planet,getPlanetScriptFile(planet));
         loadInformation();
     }
 
@@ -79,18 +79,18 @@ public class PlotTerritory {
     public void setAutoSave(boolean autoSave) {
         if (this.autoSave == autoSave) return;
         this.autoSave = autoSave;
-        for (Player plotPlayer : plot.getPlayers()) {
-            plotPlayer.sendMessage(getLocaleMessage("settings.autosave." + (autoSave ? "enabled" : "disabled")));
+        for (Player planetPlayer : planet.getPlayers()) {
+            planetPlayer.sendMessage(getLocaleMessage("settings.autosave." + (autoSave ? "enabled" : "disabled")));
         }
         if (world != null) {
             world.setAutoSave(autoSave);
         }
-        FileUtils.setPlotConfigParameter(plot,"autosave",autoSave ? true : null);
+        FileUtils.setPlanetConfigParameter(planet,"autosave",!autoSave ? false : null);
     }
 
     private void loadInformation() {
-        worldSize = OpenCreative.getSettings().getGroups().getGroup(plot.getOwnerGroup()).getWorldSize();
-        FileConfiguration config = getPlotConfig(plot);
+        worldSize = OpenCreative.getSettings().getGroups().getGroup(planet.getOwnerGroup()).getWorldSize();
+        FileConfiguration config = getPlanetConfig(planet);
         World.Environment environment = World.Environment.NORMAL;
         if (config.getString("environment") != null) {
             try {
@@ -103,15 +103,15 @@ public class PlotTerritory {
     }
 
     /**
-     * Loads plot's files into worlds directory, loads and setups build world, loads script and variables.
+     * Loads planet's files into worlds directory, loads and setups build world, loads script and variables.
      */
     public synchronized void load() {
         loadInformation();
-        FileUtils.loadWorldFolder(plot.getWorldName(),true);
-        World world = new WorldCreator(plot.getWorldName()).environment(plot.getTerritory().getEnvironment()).keepSpawnLoaded(TriState.FALSE).createWorld();
+        FileUtils.loadWorldFolder(planet.getWorldName(),true);
+        World world = new WorldCreator(planet.getWorldName()).environment(planet.getTerritory().getEnvironment()).keepSpawnLoaded(TriState.FALSE).createWorld();
         if (world == null) return;
         this.world = world;
-        script = new CodeScript(plot,getPlotScriptFile(plot));
+        script = new CodeScript(planet,getPlanetScriptFile(planet));
         world.setAutoSave(autoSave);
         world.setGameRule(GameRule.SPAWN_CHUNK_RADIUS,1);
         if (world.getEnvironment() == World.Environment.THE_END) {
@@ -130,15 +130,15 @@ public class PlotTerritory {
                 }
             }.runTaskLater(OpenCreative.getPlugin(),10L);
         }
-        FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
+        FileUtils.setPlanetConfigParameter(planet,"last-activity-time",System.currentTimeMillis());
         world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS,false);
         world.getWorldBorder().setSize(worldSize);
-        plot.getVariables().load();
-        new PlotLoadEvent(plot).callEvent();
+        planet.getVariables().load();
+        new PlanetLoadEvent(planet).callEvent();
     }
 
     /**
-     * Saves plot's data and unloads plot's build and dev worlds into /unloadedWorlds/ directory.
+     * Saves planet's data and unloads planet's build and dev worlds into /unloadedWorlds/ directory.
      */
     public synchronized void unload() {
         /*
@@ -146,26 +146,26 @@ public class PlotTerritory {
          * it causes problems on world unloading
          * when plugin is disabling!
          */
-        FileUtils.setPlotConfigParameter(plot,"last-activity-time",System.currentTimeMillis());
-        FileUtils.setPlotConfigParameter(plot,"environment", plot.getTerritory().getEnvironment().name());
-        plot.getVariables().save();
-        for (Player player : plot.getPlayers()) {
+        FileUtils.setPlanetConfigParameter(planet,"last-activity-time",System.currentTimeMillis());
+        FileUtils.setPlanetConfigParameter(planet,"environment", planet.getTerritory().getEnvironment().name());
+        planet.getVariables().save();
+        for (Player player : planet.getPlayers()) {
             teleportToLobby(player);
         }
         clearData();
-        if (Bukkit.unloadWorld(plot.getWorldName(),autoSave)) {
-            FileUtils.unloadWorldFolder(plot.getWorldName(),true);
-            if (Bukkit.getWorld(plot.getDevPlot().getWorldName()) != null) {
-                for (Player player : plot.getDevPlot().getWorld().getPlayers()) {
+        if (Bukkit.unloadWorld(planet.getWorldName(),autoSave)) {
+            FileUtils.unloadWorldFolder(planet.getWorldName(),true);
+            if (Bukkit.getWorld(planet.getDevPlanet().getWorldName()) != null) {
+                for (Player player : planet.getDevPlanet().getWorld().getPlayers()) {
                     teleportToLobby(player);
                 }
-                if (Bukkit.unloadWorld(plot.getDevPlot().getWorldName(),true)) {
-                    FileUtils.unloadWorldFolder(plot.getDevPlot().getWorldName(),true);
+                if (Bukkit.unloadWorld(planet.getDevPlanet().getWorldName(),true)) {
+                    FileUtils.unloadWorldFolder(planet.getDevPlanet().getWorldName(),true);
                 }
             }
         }
         this.world = null;
-        new PlotUnloadEvent(plot).callEvent();
+        new PlanetUnloadEvent(planet).callEvent();
     }
 
     public void clearData() {
@@ -173,7 +173,7 @@ public class PlotTerritory {
         bossBars.clear();
         scoreboards.clear();
         script.getExecutors().getExecutorsList().clear();
-        plot.getVariables().clearVariables();
+        planet.getVariables().clearVariables();
     }
 
     public void addBukkitRunnable(BukkitRunnable runnable) {
@@ -223,7 +223,7 @@ public class PlotTerritory {
 
     public World generateWorld(WorldUtils.WorldGenerator worldGenerator, World.Environment environment, long seed, boolean generateStructures) {
 
-        WorldCreator worldCreator = new WorldCreator(plot.getWorldName());
+        WorldCreator worldCreator = new WorldCreator(planet.getWorldName());
         worldCreator.generateStructures(generateStructures);
         worldCreator.type(WorldType.FLAT);
         worldCreator.environment(environment);
@@ -273,7 +273,7 @@ public class PlotTerritory {
             }
 
             this.world = world;
-            script = new CodeScript(plot,getPlotScriptFile(plot));
+            script = new CodeScript(planet,getPlanetScriptFile(planet));
 
             for (Entity entity : world.getEntities()) {
                 if (entity.getType() != EntityType.PLAYER) entity.remove();

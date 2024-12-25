@@ -23,7 +23,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.util.List;
 
@@ -31,8 +31,8 @@ import static ua.mcchickenstudio.opencreative.utils.BlockUtils.setSignLine;
 
 public class PlayerToEntityConvertor extends Convertor {
 
-    public PlayerToEntityConvertor(List<Plot> plots) {
-        super("Converts player actions to entity actions",plots);
+    public PlayerToEntityConvertor(List<Planet> planets) {
+        super("Converts player actions to entity actions", planets);
     }
 
     @Override

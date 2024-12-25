@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.placeholders.Placeholders;
 import ua.mcchickenstudio.opencreative.coding.variables.EventValueLink;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
@@ -39,13 +39,13 @@ import java.util.Date;
 
 public class Argument {
 
-    protected final Plot plot;
+    protected final Planet planet;
     protected final String path;
     protected final ValueType type;
     protected final Object value;
 
-    public Argument(Plot plot, ValueType type, String path, Object value) {
-        this.plot = plot;
+    public Argument(Planet planet, ValueType type, String path, Object value) {
+        this.planet = planet;
         this.path = path;
         this.value = value;
         this.type = type;
@@ -62,7 +62,7 @@ public class Argument {
     public Object getValue(Action action) {
         if (value instanceof VariableLink link) {
             link.setHandler(action.getHandler().getMainActionHandler());
-            Object variableValue = plot.getVariables().getVariableValue(link,action);
+            Object variableValue = planet.getVariables().getVariableValue(link,action);
             if (variableValue != null) {
                 return variableValue;
             }
@@ -89,7 +89,7 @@ public class Argument {
             setEventVariable(action, EventValues.Variable.TYPE,entity.getType().name().toLowerCase());
             setEventVariable(action, EventValues.Variable.UUID,entity.getUniqueId().toString());
         }
-        setTempPlotVars(action);
+        setTempPlanetVars(action);
         setTempPlayerVars(action);
     }
 
@@ -97,7 +97,7 @@ public class Argument {
         action.getHandler().setVarValue(variable,value);
     }
 
-    private void setTempPlotVars(Action action) {
+    private void setTempPlanetVars(Action action) {
         long time = System.currentTimeMillis();
 
         SimpleDateFormat hoursFormat = new SimpleDateFormat("HH");
@@ -105,26 +105,26 @@ public class Argument {
         SimpleDateFormat secondsFormat = new SimpleDateFormat("ss");
         Date date = new Date(time);
 
-        setEventVariable(action, EventValues.Variable.PLOT_NAME,plot.getInformation().getDisplayName());
-        setEventVariable(action, EventValues.Variable.PLOT_DESCRIPTION,plot.getInformation().getDescription());
-        setEventVariable(action, EventValues.Variable.PLOT_ONLINE, plot.getTerritory().getWorld().getPlayerCount());
-        setEventVariable(action, EventValues.Variable.PLOT_ICON,new ItemStack(plot.getInformation().getMaterial(),1));
-        setEventVariable(action, EventValues.Variable.PLOT_REPUTATION, plot.getInformation().getReputation());
-        setEventVariable(action, EventValues.Variable.PLOT_ENTITIES_AMOUNT, plot.getTerritory().getWorld().getEntityCount() + ((plot.getDevPlot() != null && plot.getDevPlot().getWorld() != null) ? plot.getDevPlot().getWorld().getEntityCount() : 0));
-        setEventVariable(action, EventValues.Variable.PLOT_ENTITIES_AMOUNT_LIMIT, plot.getLimits().getEntitiesLimit());
-        setEventVariable(action, EventValues.Variable.PLOT_LAST_REDSTONE_OPERATIONS,plot.getLimits().getLastRedstoneOperationsAmount());
-        setEventVariable(action, EventValues.Variable.PLOT_REDSTONE_OPERATIONS_LIMIT, plot.getLimits().getRedstoneOperationsLimit());
-        setEventVariable(action, EventValues.Variable.PLOT_CUSTOM_ID,plot.getInformation().getCustomID());
-        setEventVariable(action, EventValues.Variable.PLOT_ID, plot.getId());
-        setEventVariable(action, EventValues.Variable.PLOT_VARIABLES_AMOUNT,plot.getVariables().getTotalVariablesAmount());
-        setEventVariable(action, EventValues.Variable.PLOT_VARIABLES_AMOUNT_LIMIT,plot.getLimits().getVariablesAmountLimit());
+        setEventVariable(action, EventValues.Variable.PLANET_NAME, planet.getInformation().getDisplayName());
+        setEventVariable(action, EventValues.Variable.PLANET_DESCRIPTION, planet.getInformation().getDescription());
+        setEventVariable(action, EventValues.Variable.PLANET_ONLINE, planet.getTerritory().getWorld().getPlayerCount());
+        setEventVariable(action, EventValues.Variable.PLANET_ICON,new ItemStack(planet.getInformation().getMaterial(),1));
+        setEventVariable(action, EventValues.Variable.PLANET_REPUTATION, planet.getInformation().getReputation());
+        setEventVariable(action, EventValues.Variable.PLANET_ENTITIES_AMOUNT, planet.getTerritory().getWorld().getEntityCount() + ((planet.getDevPlanet() != null && planet.getDevPlanet().getWorld() != null) ? planet.getDevPlanet().getWorld().getEntityCount() : 0));
+        setEventVariable(action, EventValues.Variable.PLANET_ENTITIES_AMOUNT_LIMIT, planet.getLimits().getEntitiesLimit());
+        setEventVariable(action, EventValues.Variable.PLANET_LAST_REDSTONE_OPERATIONS, planet.getLimits().getLastRedstoneOperationsAmount());
+        setEventVariable(action, EventValues.Variable.PLANET_REDSTONE_OPERATIONS_LIMIT, planet.getLimits().getRedstoneOperationsLimit());
+        setEventVariable(action, EventValues.Variable.PLANET_CUSTOM_ID, planet.getInformation().getCustomID());
+        setEventVariable(action, EventValues.Variable.PLANET_ID, planet.getId());
+        setEventVariable(action, EventValues.Variable.PLANET_VARIABLES_AMOUNT, planet.getVariables().getTotalVariablesAmount());
+        setEventVariable(action, EventValues.Variable.PLANET_VARIABLES_AMOUNT_LIMIT, planet.getLimits().getVariablesAmountLimit());
         setEventVariable(action, EventValues.Variable.UNIX_TIME,time);
         setEventVariable(action, EventValues.Variable.UNIX_TIME_HOURS,Integer.parseInt(hoursFormat.format(date)));
         setEventVariable(action, EventValues.Variable.UNIX_TIME_MINUTES,Integer.parseInt(minutesFormat.format(date)));
         setEventVariable(action, EventValues.Variable.UNIX_TIME_SECONDS,Integer.parseInt(secondsFormat.format(date)));
-        setEventVariable(action, EventValues.Variable.WORLD_TIME, plot.getTerritory().getWorld().getTime());
-        setEventVariable(action, EventValues.Variable.CLEAR_WEATHER_DURATION, plot.getTerritory().getWorld().getClearWeatherDuration());
-        setEventVariable(action, EventValues.Variable.THUNDER_WEATHER_DURATION, plot.getTerritory().getWorld().getThunderDuration());
+        setEventVariable(action, EventValues.Variable.WORLD_TIME, planet.getTerritory().getWorld().getTime());
+        setEventVariable(action, EventValues.Variable.CLEAR_WEATHER_DURATION, planet.getTerritory().getWorld().getClearWeatherDuration());
+        setEventVariable(action, EventValues.Variable.THUNDER_WEATHER_DURATION, planet.getTerritory().getWorld().getThunderDuration());
     }
 
     private void setTempPlayerVars(Action action) {

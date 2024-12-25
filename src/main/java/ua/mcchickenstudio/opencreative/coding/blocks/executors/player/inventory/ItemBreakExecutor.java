@@ -23,7 +23,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.ItemBreakEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class ItemBreakExecutor extends PlayerExecutor {
 
@@ -34,8 +34,8 @@ public class ItemBreakExecutor extends PlayerExecutor {
         }
     }
 
-    public ItemBreakExecutor(Plot plot, int x, int y, int z) {
-        super(plot, x, y, z);
+    public ItemBreakExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override

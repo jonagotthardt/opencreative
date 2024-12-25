@@ -23,7 +23,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.ItemDropEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.event.Cancellable;
 
 public class ItemDropExecutor extends PlayerExecutor implements Cancellable {
@@ -35,8 +35,8 @@ public class ItemDropExecutor extends PlayerExecutor implements Cancellable {
         }
     }
 
-    public ItemDropExecutor(Plot plot, int x, int y, int z) {
-        super(plot, x, y, z);
+    public ItemDropExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override

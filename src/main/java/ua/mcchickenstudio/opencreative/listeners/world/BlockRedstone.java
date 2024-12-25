@@ -26,12 +26,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.sendMessageOnce;
-import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlot;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 
 public class BlockRedstone implements Listener {
 
@@ -40,11 +40,11 @@ public class BlockRedstone implements Listener {
     public void onBlockRedstone(BlockRedstoneEvent event) {
         Location location = event.getBlock().getLocation();
 
-        Plot plot = PlotManager.getInstance().getPlotByWorld(location.getWorld());
-        if (plot != null) {
-            plot.getLimits().setLastRedstoneOperationsAmount(plot.getLimits().getLastRedstoneOperationsAmount()+1);
-            if (plot.getLimits().getLastRedstoneOperationsAmount() > plot.getLimits().getRedstoneOperationsLimit()) {
-                    sendMessageOnce(plot,getLocaleMessage("world.redstone-limit").replace("%count%",String.valueOf(plot.getLimits().getRedstoneOperationsLimit())),5);
+        Planet planet = PlanetManager.getInstance().getPlanetByWorld(location.getWorld());
+        if (planet != null) {
+            planet.getLimits().setLastRedstoneOperationsAmount(planet.getLimits().getLastRedstoneOperationsAmount()+1);
+            if (planet.getLimits().getLastRedstoneOperationsAmount() > planet.getLimits().getRedstoneOperationsLimit()) {
+                    sendMessageOnce(planet,getLocaleMessage("world.redstone-limit").replace("%count%",String.valueOf(planet.getLimits().getRedstoneOperationsLimit())),5);
                     if (location.getBlock().getType() == Material.OBSERVER) {
                         new BukkitRunnable() {
                             @Override
@@ -55,13 +55,13 @@ public class BlockRedstone implements Listener {
                     } else {
                         location.getBlock().setType(Material.CAVE_AIR);
                     }
-                    plot.getLimits().setLastRedstoneOperationsAmount(0);
+                    planet.getLimits().setLastRedstoneOperationsAmount(0);
             }
-            if (plot.getLimits().getLastRedstoneOperationsAmount() > 0) {
+            if (planet.getLimits().getLastRedstoneOperationsAmount() > 0) {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        plot.getLimits().setLastRedstoneOperationsAmount(plot.getLimits().getLastRedstoneOperationsAmount()-1);
+                        planet.getLimits().setLastRedstoneOperationsAmount(planet.getLimits().getLastRedstoneOperationsAmount()-1);
                     }
                 }.runTaskLater(OpenCreative.getPlugin(),5L);
             }
@@ -71,7 +71,7 @@ public class BlockRedstone implements Listener {
 
     @EventHandler
     public void onPiston(BlockPistonExtendEvent event) {
-        if (isDevPlot(event.getBlock().getWorld())) {
+        if (isDevPlanet(event.getBlock().getWorld())) {
             event.setCancelled(true);
         }
     }

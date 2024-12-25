@@ -25,7 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.EventValueLink;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.BlockUtils;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -45,15 +45,15 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 
 public class Arguments {
 
-    private final Plot plot;
+    private final Planet planet;
     private final Executor executor;
     private final List<Argument> argumentList = new ArrayList<>();
 
     private final static Pattern INT_PATTERN = Pattern.compile("^-?[0-9]*$");
     private final static Pattern FLOAT_PATTERN = Pattern.compile("^-?[0-9]*\\.?[0-9]+$");
 
-    public Arguments(Plot plot, Executor executor) {
-        this.plot = plot;
+    public Arguments(Planet planet, Executor executor) {
+        this.planet = planet;
         this.executor = executor;
     }
 
@@ -72,7 +72,7 @@ public class Arguments {
         }
         ValueType type = ValueType.parseString(configType.toUpperCase());
         Object value = parseValue(section,name,type,configValue);
-        return new Argument(plot,type,name,value);
+        return new Argument(planet,type,name,value);
     }
 
     private Object parseValue(ConfigurationSection section, String name, ValueType type, Object configValue) {
@@ -93,14 +93,14 @@ public class Arguments {
                 double x,y,z;
                 float yaw,pitch;
                 if (listSection == null) {
-                    return plot.getTerritory().getWorld().getSpawnLocation();
+                    return planet.getTerritory().getWorld().getSpawnLocation();
                 }
                 x = listSection.getDouble("x");
                 y = listSection.getDouble("y");
                 z = listSection.getDouble("z");
                 yaw = (float) listSection.getDouble("yaw");
                 pitch = (float) listSection.getDouble("pitch");
-                return new Location(plot.getTerritory().getWorld(),x,y,z,yaw,pitch);
+                return new Location(planet.getTerritory().getWorld(),x,y,z,yaw,pitch);
             case VECTOR:
                 if (listSection == null) {
                     return new Vector(0,0,0);
@@ -210,7 +210,7 @@ public class Arguments {
                 return map;
             }
         }
-        sendCodingDebugVariable(plot,path,map);
+        sendCodingDebugVariable(planet,path,map);
         return map;
     }
 
@@ -232,7 +232,7 @@ public class Arguments {
                 return list;
             }
         }
-        sendCodingDebugVariable(plot,path,list);
+        sendCodingDebugVariable(planet,path,list);
         return list;
     }
 
@@ -255,7 +255,7 @@ public class Arguments {
                 return list;
             }
         }
-        sendCodingDebugVariable(plot,path,list);
+        sendCodingDebugVariable(planet,path,list);
         return list;
     }
 
@@ -282,7 +282,7 @@ public class Arguments {
                 return list;
             }
         }
-        sendCodingDebugVariable(plot,path,list);
+        sendCodingDebugVariable(planet,path,list);
         return list;
     }
 
@@ -301,7 +301,7 @@ public class Arguments {
                 return list;
             }
         }
-        sendCodingDebugVariable(plot,path,list);
+        sendCodingDebugVariable(planet,path,list);
         return list;
     }
 
@@ -319,7 +319,7 @@ public class Arguments {
                 return list;
             }
         }
-        sendCodingDebugVariable(plot,path,list);
+        sendCodingDebugVariable(planet,path,list);
         return list;
     }
 
@@ -332,7 +332,7 @@ public class Arguments {
                 List<Argument> args = (List<Argument>) arg.getValue(action);
                 for (Argument itemArg : args) {
                     if (itemArg.getValue(action) instanceof Location loc) {
-                        loc.setWorld(plot.getTerritory().getWorld());
+                        loc.setWorld(planet.getTerritory().getWorld());
                         if (!BlockUtils.isOutOfBorders(loc)) {
                             list.add(loc);
                         }
@@ -342,60 +342,60 @@ public class Arguments {
                 return list;
             }
         }
-        sendCodingDebugVariable(plot,path,list);
+        sendCodingDebugVariable(planet,path,list);
         return list;
     }
 
     public VariableLink getVariableLink(String path, Action action) {
         Argument arg = getArg(path);
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path);
+            sendCodingDebugNotFoundVariable(planet,path);
             return null;
         }
         if (arg.value instanceof VariableLink link) {
             if (link.getVariableType() == VariableLink.VariableType.LOCAL) {
                 link.setHandler(action.getHandler().getMainActionHandler());
             }
-            sendCodingDebugVariable(plot,path,link);
+            sendCodingDebugVariable(planet,path,link);
             return link;
         }
-        sendCodingDebugNotFoundVariable(plot,path);
+        sendCodingDebugNotFoundVariable(planet,path);
         return null;
     }
 
     public Material getValue(String path, Material defaultValue, Action action) {
         Argument arg = getArg(path);
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path);
+            sendCodingDebugNotFoundVariable(planet,path);
             return defaultValue;
         }
         if (arg.getValue(action) instanceof ItemStack item) {
-            sendCodingDebugVariable(plot,path,item.getType());
+            sendCodingDebugVariable(planet,path,item.getType());
             return item.getType();
         }
         if (arg.getValue(action) instanceof Block block) {
-            sendCodingDebugVariable(plot,path,block.getType());
+            sendCodingDebugVariable(planet,path,block.getType());
             return block.getType();
         }
         if (arg.getValue(action) instanceof Location location) {
-            sendCodingDebugVariable(plot,path,location.getBlock().getType());
+            sendCodingDebugVariable(planet,path,location.getBlock().getType());
             return location.getBlock().getType();
         }
-        sendCodingDebugNotFoundVariable(plot,path);
+        sendCodingDebugNotFoundVariable(planet,path);
         return defaultValue;
     }
 
     public ItemStack getValue(String path, ItemStack defaultValue, Action action) {
         Argument arg = getArg(path);
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path);
+            sendCodingDebugNotFoundVariable(planet,path);
             return defaultValue;
         }
         if (arg.getValue(action) instanceof ItemStack) {
-            sendCodingDebugVariable(plot,path,arg.getValue(action));
+            sendCodingDebugVariable(planet,path,arg.getValue(action));
             return (ItemStack) arg.getValue(action);
         }
-        sendCodingDebugNotFoundVariable(plot,path);
+        sendCodingDebugNotFoundVariable(planet,path);
         return defaultValue;
     }
 
@@ -403,19 +403,19 @@ public class Arguments {
         Argument arg = getArg(path);
         boolean value = defaultValue;
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path);
+            sendCodingDebugNotFoundVariable(planet,path);
         } else if (arg.getValue(action) instanceof Boolean) {
             value = (boolean) arg.getValue(action);
-            sendCodingDebugVariable(plot,path,value);
+            sendCodingDebugVariable(planet,path,value);
         } else if (arg.getValue(action) instanceof Integer) {
             value = (getValue(path,(defaultValue ? 2 : 1), action) > 1);
-            sendCodingDebugVariable(plot,path,value);
+            sendCodingDebugVariable(planet,path,value);
         } else if (arg.getValue(action) instanceof Float) {
             value = (getValue(path,(defaultValue ? 2f : 1f), action) > 1f);
-            sendCodingDebugVariable(plot,path,value);
+            sendCodingDebugVariable(planet,path,value);
         } else if (arg.getValue(action) instanceof Double) {
             value = (getValue(path,(defaultValue ? 2d : 1d), action) > 1d);
-            sendCodingDebugVariable(plot,path,value);
+            sendCodingDebugVariable(planet,path,value);
         }
         return value;
     }
@@ -424,10 +424,10 @@ public class Arguments {
         Argument arg = getArg(path);
         Object value = "";
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path);
+            sendCodingDebugNotFoundVariable(planet,path);
         } else {
             value = arg.getValue(action);
-            sendCodingDebugVariable(plot,path,value);
+            sendCodingDebugVariable(planet,path,value);
         }
         return value;
     }
@@ -436,10 +436,10 @@ public class Arguments {
         Argument arg = getArg(path);
         byte value = defaultValue;
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path);
+            sendCodingDebugNotFoundVariable(planet,path);
         } else {
             value = parseObject(arg.getValue(action),defaultValue,action);
-            sendCodingDebugVariable(plot,path,value);
+            sendCodingDebugVariable(planet,path,value);
         }
         return value;
     }
@@ -448,19 +448,19 @@ public class Arguments {
         Argument arg = getArg(path);
         int value = defaultValue;
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot, path);
+            sendCodingDebugNotFoundVariable(planet, path);
         } else if (arg.getValue(action) instanceof Long l) {
             value = l.intValue();
-            sendCodingDebugVariable(plot,path,value);
+            sendCodingDebugVariable(planet,path,value);
         } else if (arg.getValue(action) instanceof Integer) {
             value = (int) arg.getValue(action);
-            sendCodingDebugVariable(plot,path,value);
+            sendCodingDebugVariable(planet,path,value);
         } else if (arg.getValue(action) instanceof Float) {
             value = Math.round((float) arg.getValue(action));
-            sendCodingDebugVariable(plot,path,value);
+            sendCodingDebugVariable(planet,path,value);
         } else if (arg.getValue(action) instanceof Double) {
             value = (int) Math.round((Double) arg.getValue(action));
-            sendCodingDebugVariable(plot,path,value);
+            sendCodingDebugVariable(planet,path,value);
         }
         return value;
     }
@@ -469,10 +469,10 @@ public class Arguments {
         Argument arg = getArg(path);
         Color value = defaultValue;
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path);
+            sendCodingDebugNotFoundVariable(planet,path);
         } else if (arg.getValue(action) instanceof Color color){
             value = color;
-            sendCodingDebugVariable(plot,path,color);
+            sendCodingDebugVariable(planet,path,color);
         }
         return value;
     }
@@ -481,10 +481,10 @@ public class Arguments {
         Argument arg = getArg(path);
         float value = defaultValue;
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path);
+            sendCodingDebugNotFoundVariable(planet,path);
         } else {
             value = parseObject(arg.getValue(action),defaultValue);
-            sendCodingDebugVariable(plot,path,value);
+            sendCodingDebugVariable(planet,path,value);
         }
         return value;
     }
@@ -493,10 +493,10 @@ public class Arguments {
         Argument arg = getArg(path);
         double value = defaultValue;
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot, path);
+            sendCodingDebugNotFoundVariable(planet, path);
         } else {
             value = parseObject(arg.getValue(action),defaultValue);
-            sendCodingDebugVariable(plot,path,value);
+            sendCodingDebugVariable(planet,path,value);
         }
         return value;
     }
@@ -504,20 +504,20 @@ public class Arguments {
     public String getValue(String path, String defaultValue, Action action) {
         Argument arg = getArg(path);
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path);
+            sendCodingDebugNotFoundVariable(planet,path);
             return defaultValue;
         }
-        sendCodingDebugVariable(plot,path,arg.getValue(action));
+        sendCodingDebugVariable(planet,path,arg.getValue(action));
         return arg.getValue(action).toString();
     }
 
     public Particle getValue(String path, Particle defaultValue, Action action) {
         Argument arg = getArg(path);
         if (arg != null && arg.getValue(action) instanceof Particle particle) {
-            sendCodingDebugVariable(plot,path,arg.getValue(action));
+            sendCodingDebugVariable(planet,path,arg.getValue(action));
             return particle;
         }
-        sendCodingDebugNotFoundVariable(plot,path);
+        sendCodingDebugNotFoundVariable(planet,path);
         return defaultValue;
     }
 
@@ -526,11 +526,11 @@ public class Arguments {
         if (arg != null && arg.getValue(action) != null) {
             String value = arg.getValue(action).toString();
             if (value != null && !value.isEmpty()) {
-                sendCodingDebugVariable(plot,path,value.charAt(0));
+                sendCodingDebugVariable(planet,path,value.charAt(0));
                 return value.charAt(0);
             }
         }
-        sendCodingDebugNotFoundVariable(plot,path);
+        sendCodingDebugNotFoundVariable(planet,path);
         return defaultValue;
     }
 
@@ -538,14 +538,14 @@ public class Arguments {
         Argument arg = getArg(path);
         Location locationValue = defaultValue;
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path);
+            sendCodingDebugNotFoundVariable(planet,path);
         } else if (arg.getValue(action) instanceof Location) {
             locationValue = (Location) arg.getValue(action);
-            sendCodingDebugVariable(plot,path,locationValue.getX()+" "+locationValue.getY()+" "+locationValue.getZ()+" "+locationValue.getYaw()+" "+locationValue.getPitch());
+            sendCodingDebugVariable(planet,path,locationValue.getX()+" "+locationValue.getY()+" "+locationValue.getZ()+" "+locationValue.getYaw()+" "+locationValue.getPitch());
         }
-        locationValue.setWorld(plot.getTerritory().getWorld());
+        locationValue.setWorld(planet.getTerritory().getWorld());
         if (BlockUtils.isOutOfBorders(locationValue)) {
-            sendCodingDebugLog(plot,"Location is out of borders! " + locationValue);
+            sendCodingDebugLog(planet,"Location is out of borders! " + locationValue);
             return defaultValue;
         }
         return locationValue;
@@ -555,16 +555,16 @@ public class Arguments {
         Argument arg = getArg(path);
         Vector vectionValue = defaultValue;
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(plot,path);
+            sendCodingDebugNotFoundVariable(planet,path);
         } else if (arg.getValue(action) instanceof Vector) {
             vectionValue = (Vector) arg.getValue(action);
-            sendCodingDebugVariable(plot,path,vectionValue.getX()+" "+vectionValue.getY()+" "+vectionValue.getZ());
+            sendCodingDebugVariable(planet,path,vectionValue.getX()+" "+vectionValue.getY()+" "+vectionValue.getZ());
         }
         return vectionValue;
     }
 
     private Object getVariableValue(VariableLink link, Action action) {
-        return plot.getVariables().getVariableValue(link,action);
+        return planet.getVariables().getVariableValue(link,action);
     }
 
     public float parseObject(Object object, float defaultValue) {
@@ -613,7 +613,7 @@ public class Arguments {
     }
 
     public void setArgumentValue(String path, ValueType type, Object value) {
-        argumentList.add(new Argument(plot,type,path,value));
+        argumentList.add(new Argument(planet,type,path,value));
     }
 
     public List<Argument> getArgumentList() {

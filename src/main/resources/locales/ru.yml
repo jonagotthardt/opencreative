@@ -62,7 +62,7 @@ commands:
     stopped-all: "%prefix%&fОстановлены все звуки игроку &6%player%&f."
 locate:
   help: "%prefix%Чтобы найти мир, в котором играет игрок, напишите в чат: &6/locate Никнейм"
-  found: "%prefix%&fИгрок &6%player%&f сейчас играет в мире: \n&f %plotName%\n &f\n&a &a &n[Нажми, чтобы присоединиться]&f\n &f"
+  found: "%prefix%&fИгрок &6%player%&f сейчас играет в мире: \n&f %planetName%\n &f\n&a &a &n[Нажми, чтобы присоединиться]&f\n &f"
   offline: "%prefix%&cИгрок сейчас не играет в мирах."
 environment:
   help: "%prefix%Управляйте кодом, переменными и миром для разработчиков.\n \n&6 /env variables clear &f- Очистка переменных\n&6 /env variables size &f- Количество переменных\n&6 /env variables list &f- Список переменных"
@@ -146,15 +146,15 @@ not-developer: "%prefix%&cТы не разработчик этого мира."
 not-builder: "%prefix%&cТы не строитель этого мира."
 only-in-world: "%prefix%&cЭто можно использовать только в мире."
 no-money: "%prefix%&cПохоже, что у вас не хватает монет! Нужно иметь всего %money% монет!"
-no-plot-found: "%prefix%&cТакого мира не существует."
-private-plot: "%prefix%Этот мир сейчас &6закрытый&f, только его владелец может зайти."
-blacklisted-in-plot: "%prefix%Вы не можете посещать этот мир, поскольку вы &6заблокированы&f в нём."
+no-planet-found: "%prefix%&cТакого мира не существует."
+private-planet: "%prefix%Этот мир сейчас &6закрытый&f, только его владелец может зайти."
+blacklisted-in-planet: "%prefix%Вы не можете посещать этот мир, поскольку вы &6заблокированы&f в нём."
 no-player-found: "%prefix%&cЭтого игрока не найдено."
 same-player: "%prefix%&cНельзя указывать себя же."
 same-world: "%prefix%&cВы уже играете в этом мире."
 player-error: "&6 Миры &8| &fПроизошла ошибка игрока. Отправь это разработчику: &6%error%"
-plot-error: "&6 Миры &8| &fВ мире произошла ошибка: &6%error%"
-plot-code-error:
+planet-error: "&6 Миры &8| &fВ мире произошла ошибка: &6%error%"
+planet-code-error:
   message: "\n &c &m                   &c ☹ ОШИБКА &m                   \n&f\n &fОй, кажется возникла проблема при исполнении &f%event% &7-> &f%action% &7(%x%,%y%,%z%)\n \n&f Информация: &6%error%\n \n &c &m                                                    \n&f"
   message-event-critical: "\n &4 &m          &4 ☠ КРИТИЧЕСКАЯ ОШИБКА &m          \n&f\n &cВНИМАНИЕ! &fМир переведён в режим строительства, поскольку во время исполнения кода &f%event% &7(%x%,%y%,%z%) &fпроизошла серьёзная проблема...\n \n&f Информация: &6%error%\n \n &4 &m                                                    \n&f"
   message-event: "&6 Ошибка &8| &fВо время исполнения кода &f%event% &7(%x%,%y%,%z%) &fпроизошла ошибка.\n &fИнформация о ней: &6%error%"
@@ -171,7 +171,7 @@ plot-code-error:
   unknown-layout: "&cЭтот блок открыл меню без подсказок, поскольку есть проблема при их загрузке..."
   hover-message: "&fНажми, чтобы телепортироваться к блоку."
   temp-var-not-exists: "Временное значение %variable% для этого события не найдено, поскольку событие не совместимо с этим значением. Замените событие на более подходящее."
-plot-code-debug:
+planet-code-debug:
   condition:
     returned-true: "&fУсловие %type%&f выполнилось,&a истинно&f."
     returned-false: "&fУсловие %type%&f не выполнилось,&c ложное&f."
@@ -367,7 +367,7 @@ creative-chat:
 join-usage: "%prefix%Используй &6/join ID"
 advertisement:
   message: "%prefix%&6Приглашение:\n&f &7%player% &f&nприглашает&f тебя в мир: \n&f %world%\n &f\n&a &a &n[Нажми, чтобы присоединиться]&f\n &f"
-  hover: "&f%plotName%\n&8Создано %plotOwner%\n \n&a ☻ &7Онлайн: &a%plotOnline%\n&e ⭐&7 Рейтинг: &f%plotReputation%\n&3 ⚐&7 Категория: &f%plotCategory%\n \n&aНажми, чтобы подключиться в мир"
+  hover: "&f%planetName%\n&8Создано %planetOwner%\n \n&a ☻ &7Онлайн: &a%planetOnline%\n&e ⭐&7 Рейтинг: &f%planetReputation%\n&3 ⚐&7 Категория: &f%planetCategory%\n \n&aНажми, чтобы подключиться в мир"
   no-money: "%prefix%&cНедостаточно денег для рекламы!"
   cooldown: "%prefix%Перед следующей рекламой подожди &6%cooldown% секунд."
   closed-world: "%prefix%&fЧтобы прорекламировать мир, &6нужно сначала разрешить вход игрокам&f в настройках мира."
@@ -6234,18 +6234,18 @@ menus:
           - "&e  Нажми, чтобы показать твои миры."
           - " "
       world:
-        name: "&f%plotName%"
+        name: "&f%planetName%"
         lore:
-          - "&8Мир создан &7%plotOwner%"
+          - "&8Мир создан &7%planetOwner%"
           - ""
-          - "&7 %plotDescription%"
+          - "&7 %planetDescription%"
           - ""
-          - "&a ☻ &7Онлайн: &a%plotOnline%"
-          - "&e ⭐&7 Рейтинг: &f%plotReputation%"
-          - "&3 ⚐&7 Категория: &f%plotCategory%"
+          - "&a ☻ &7Онлайн: &a%planetOnline%"
+          - "&e ⭐&7 Рейтинг: &f%planetReputation%"
+          - "&3 ⚐&7 Категория: &f%planetCategory%"
           - ""
           - "&2 ⏵ &a&nПрисоединиться к миру&a! &e &e &e &e "
-          - "&8 &8 &8 ID: %plotCustomID%"
+          - "&8 &8 &8 ID: %planetCustomID%"
           - ""
   developer:
     method-chooser:
@@ -6441,7 +6441,7 @@ menus:
             - "&7 Переменных: &f%variables%&7/&f%variables-limit%"
             - ""
             - "&7 Лимит вызовов: &f%executor-calls-limit%"
-            - "&8 ID мира: %plotID%"
+            - "&8 ID мира: %planetID%"
             - "&8 Версия: %version%"
             - ""
     selection:
@@ -7021,7 +7021,7 @@ menus:
             - "&a  1.0 &7- Половина сердечка"
             - ""
             - "&eНажми, чтобы установить."
-        plot-online:
+        planet-online:
           name: "&aКоличество игроков в мире"
           lore:
             - "&7Тип: &aЧисло"
@@ -7036,7 +7036,7 @@ menus:
             - "&a  0 &7- Игроков нет"
             - ""
             - "&eНажми, чтобы установить."
-        plot-name:
+        planet-name:
           name: "&eНазвание мира"
           lore:
             - "&7Тип: &6Текст"
@@ -7050,7 +7050,7 @@ menus:
             - "&6  Большой Паркур | Вышла обнова!"
             - ""
             - "&eНажми, чтобы установить."
-        plot-description:
+        planet-description:
           name: "&6Описание мира"
           lore:
             - "&7Тип: &6Текст"
@@ -7064,7 +7064,7 @@ menus:
             - "&6  Лучший\\n Среди\\n лучших"
             - ""
             - "&eНажми, чтобы установить."
-        plot-icon:
+        planet-icon:
           name: "&bЗначок мира"
           lore:
             - "&7Тип: &cПредмет"
@@ -7074,7 +7074,7 @@ menus:
             - "&7 отображается в браузере миров. "
             - ""
             - "&eНажми, чтобы установить."
-        plot-custom-id:
+        planet-custom-id:
           name: "&2Буквенный ID"
           lore:
             - "&7Тип: &6Текст"
@@ -7088,7 +7088,7 @@ menus:
             - "&6  cantcraft2"
             - ""
             - "&eНажми, чтобы установить."
-        plot-id:
+        planet-id:
           name: "&2Цифровой ID"
           lore:
             - "&7Тип: &6Текст"
@@ -7102,7 +7102,7 @@ menus:
             - "&6  83"
             - ""
             - "&eНажми, чтобы установить."
-        plot-variables-amount:
+        planet-variables-amount:
           name: "&eКоличество переменных в мире"
           lore:
             - "&7Тип: &aЧисло"
@@ -7112,7 +7112,7 @@ menus:
             - "&7 имеют значение."
             - ""
             - "&eНажми, чтобы установить."
-        plot-variables-amount-limit:
+        planet-variables-amount-limit:
           name: "&6Макс. количество переменных"
           lore:
             - "&7Тип: &aЧисло"
@@ -7123,7 +7123,7 @@ menus:
             - "&7 переменные не будут созданы."
             - ""
             - "&eНажми, чтобы установить."
-        plot-redstone-operations-limit:
+        planet-redstone-operations-limit:
           name: "&4Лимит операций с редстоуном"
           lore:
             - "&7Тип: &aЧисло"
@@ -7134,7 +7134,7 @@ menus:
             - "&7 механизма будут удалены."
             - ""
             - "&eНажми, чтобы установить."
-        plot-last-redstone-operations:
+        planet-last-redstone-operations:
           name: "&cКоличество операций с редстоуном"
           lore:
             - "&7Тип: &aЧисло"
@@ -7143,7 +7143,7 @@ menus:
             - "&7 операций с редстоуном."
             - ""
             - "&eНажми, чтобы установить."
-        plot-entities-amount:
+        planet-entities-amount:
           name: "&eКоличество сущностей в мире"
           lore:
             - "&7Тип: &aЧисло"
@@ -7152,7 +7152,7 @@ menus:
             - "&7 предметов и сущностей в мире."
             - ""
             - "&eНажми, чтобы установить."
-        plot-entities-amount-limit:
+        planet-entities-amount-limit:
           name: "&5Макс. количество сущностей"
           lore:
             - "&7Тип: &aЧисло"
@@ -7163,7 +7163,7 @@ menus:
             - "&7 появиться."
             - ""
             - "&eНажми, чтобы установить."
-        plot-reputation:
+        planet-reputation:
           name: "&aРепутация мира"
           lore:
             - "&7Тип: &aЧисло"
@@ -7760,7 +7760,7 @@ menus:
       limit:
         name: "&c&oМиры закончились!"
         lore:
-          - "&7Ты создал &f&n%plots% миров&7 из"
+          - "&7Ты создал &f&n%planets% миров&7 из"
           - "&7допустимых &n%limit%&7. Чтобы создать"
           - "&7мир,&c удали&7 какой-то ненужный."
       all-worlds:
@@ -7787,21 +7787,21 @@ menus:
           - "&e  Нажми, чтобы создать."
           - ""
       world:
-        name: "&f%plotName%"
+        name: "&f%planetName%"
         id: "&7 ID мира: &a"
         lore:
-          - "&8Мир от &7%plotOwner%"
+          - "&8Мир от &7%planetOwner%"
           - " "
-          - "&7 %plotDescription%"
+          - "&7 %planetDescription%"
           - " "
           - "%id%"
-          - "&7 Онлайн: &a%plotOnline%"
-          - "&7 Категория: &f%plotCategory%"
-          - "&7 Репутация: &a%plotReputation%"
-          - "&7 Посетителей: &a%plotUniques%"
+          - "&7 Онлайн: &a%planetOnline%"
+          - "&7 Категория: &f%planetCategory%"
+          - "&7 Репутация: &a%planetReputation%"
+          - "&7 Посетителей: &a%planetUniques%"
           - " "
-          - "&7 Последний запуск: &a%plotLastTime%"
-          - "&7 Дата создания: &a%plotCreationTime%"
+          - "&7 Последний запуск: &a%planetLastTime%"
+          - "&7 Дата создания: &a%planetCreationTime%"
           - " "
           - "&eЛевый клик &7- войти в мир."
           - "&eSHIFT+Правый клик &7- удалить мир."
@@ -7811,18 +7811,18 @@ menus:
     turned-off: "&7 ○ "
     items:
       world:
-        name: "&f%plotName%"
+        name: "&f%planetName%"
         lore:
-          - "&8Мир создан &7%plotOwner%"
+          - "&8Мир создан &7%planetOwner%"
           - ""
-          - "&7 %plotDescription%"
+          - "&7 %planetDescription%"
           - ""
-          - "&a ☻ &7Онлайн: &a%plotOnline%"
-          - "&e ⭐&7 Рейтинг: &f%plotReputation%"
-          - "&3 ⚐&7 Категория: &f%plotCategory%"
+          - "&a ☻ &7Онлайн: &a%planetOnline%"
+          - "&e ⭐&7 Рейтинг: &f%planetReputation%"
+          - "&3 ⚐&7 Категория: &f%planetCategory%"
           - ""
           - "&2 ⏵ &a&nПеретяни сюда предмет для значка!&e &e &e &e "
-          - "&8 &8 &8 ID: %plotCustomID%"
+          - "&8 &8 &8 ID: %planetCustomID%"
           - ""
       change-name:
         name: " "
@@ -7887,7 +7887,7 @@ menus:
           - " "
           - "&e Нажми, чтобы установить."
           - " "
-      plot-flags:
+      planet-flags:
         name: " "
         lore:
           - "&6 ⇄ Параметры мира"
@@ -7904,7 +7904,7 @@ menus:
           - " "
           - "&e Нажми, чтобы настроить."
           - ""
-      plot-players:
+      planet-players:
         name: " "
         lore:
           - "&6 🛡 Управление игроками"

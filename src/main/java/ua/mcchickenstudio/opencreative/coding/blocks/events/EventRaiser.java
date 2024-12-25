@@ -34,8 +34,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.GamePlay
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.VariableTransferEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.WebResponseEvent;
 import ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -50,7 +50,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlot;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
 
 public class EventRaiser {
 
@@ -58,22 +58,22 @@ public class EventRaiser {
     // World
 
     public static boolean cantRaiseEvent(Player player) {
-        if (PlotManager.getInstance().getPlotByPlayer(player) == null) return true;
-        if (PlotManager.getInstance().getDevPlot(player) != null) return true;
-        if (PlotManager.getInstance().getPlotByPlayer(player).getMode() == Plot.Mode.BUILD) return true;
+        if (PlanetManager.getInstance().getPlanetByPlayer(player) == null) return true;
+        if (PlanetManager.getInstance().getDevPlanet(player) != null) return true;
+        if (PlanetManager.getInstance().getPlanetByPlayer(player).getMode() == Planet.Mode.BUILD) return true;
         return ChangedWorld.isPlayerWithLocation(player);
     }
 
     public static boolean cantRaiseEvent(Entity entity) {
-        if (PlotManager.getInstance().getPlotByWorld(entity.getWorld()) == null) return true;
-        if (PlotManager.getInstance().getPlotByWorld(entity.getWorld()).getMode() == Plot.Mode.BUILD) return true;
-        if (isEntityInDevPlot(entity)) return true;
+        if (PlanetManager.getInstance().getPlanetByWorld(entity.getWorld()) == null) return true;
+        if (PlanetManager.getInstance().getPlanetByWorld(entity.getWorld()).getMode() == Planet.Mode.BUILD) return true;
+        if (isEntityInDevPlanet(entity)) return true;
         return false;
     }
 
-    public static boolean cantRaiseEvent(Plot plot) {
-        if (plot == null) return true;
-        return plot.getMode() == Plot.Mode.BUILD;
+    public static boolean cantRaiseEvent(Planet planet) {
+        if (planet == null) return true;
+        return planet.getMode() == Planet.Mode.BUILD;
     }
 
     public static void raiseChunkLoadEvent(PlayerChunkLoadEvent event) {
@@ -92,27 +92,27 @@ public class EventRaiser {
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
-    public static void raiseWorldPlayEvent(Plot plot) {
-        if (cantRaiseEvent(plot)) {
+    public static void raiseWorldPlayEvent(Planet planet) {
+        if (cantRaiseEvent(planet)) {
             return;
         }
-        WorldEvent creativeEvent = new GamePlayEvent(plot);
+        WorldEvent creativeEvent = new GamePlayEvent(planet);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
-    public static void raiseVariableTransferEvent(Plot plot, String key, Object value) {
-        if (cantRaiseEvent(plot)) {
+    public static void raiseVariableTransferEvent(Planet planet, String key, Object value) {
+        if (cantRaiseEvent(planet)) {
             return;
         }
-        WorldEvent creativeEvent = new VariableTransferEvent(plot,key,value);
+        WorldEvent creativeEvent = new VariableTransferEvent(planet,key,value);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
-    public static void raiseWebResponseEvent(Plot plot, String url, int code, String text) {
-        if (cantRaiseEvent(plot)) {
+    public static void raiseWebResponseEvent(Planet planet, String url, int code, String text) {
+        if (cantRaiseEvent(planet)) {
             return;
         }
-        WorldEvent creativeEvent = new WebResponseEvent(plot,url,code,text);
+        WorldEvent creativeEvent = new WebResponseEvent(planet,url,code,text);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 

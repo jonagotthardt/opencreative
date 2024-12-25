@@ -20,13 +20,13 @@ package ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.entities;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.EntityExecutor;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.event.Cancellable;
 
 public class EntitySpawnExecutor extends EntityExecutor implements Cancellable {
 
-    public EntitySpawnExecutor(Plot plot, int x, int y, int z) {
-        super(plot, x, y, z);
+    public EntitySpawnExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override

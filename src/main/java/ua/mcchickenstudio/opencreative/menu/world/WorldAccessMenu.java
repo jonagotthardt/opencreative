@@ -20,20 +20,16 @@ package ua.mcchickenstudio.opencreative.menu.world;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 public class WorldAccessMenu extends AbstractMenu {
@@ -54,7 +50,7 @@ public class WorldAccessMenu extends AbstractMenu {
         event.setCancelled(true);
         if (!isPlayerClicked(event)) return;
         Player player = (Player) event.getWhoClicked();
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
     }
 
     @Override

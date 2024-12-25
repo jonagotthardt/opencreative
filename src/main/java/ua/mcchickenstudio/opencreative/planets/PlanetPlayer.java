@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.plots;
+package ua.mcchickenstudio.opencreative.planets;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -39,14 +39,14 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalError
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.getPlayerDataJson;
 
 /**
- * <h1>WorldPlayer</h1>
- * This class represents a Player in plot, he has saved purchases,
+ * <h1>PlanetPlayer</h1>
+ * This class represents a Player in planet, he has saved purchases,
  * inventory, own ender chest and other required parameters.
- * Saved data stores in plot's world as /playersData/UUID.json.
+ * Saved data stores in planet's world as /playersData/UUID.json.
  */
-public class WorldPlayer {
+public class PlanetPlayer {
 
-    private final Plot currentPlot;
+    private final Planet currentPlanet;
     private final Player player;
 
     private final Set<String> purchases = new HashSet<>();
@@ -55,13 +55,13 @@ public class WorldPlayer {
 
     private final Map<Location, BlockData> codingBlocksBuffer = new HashMap<>();
 
-    public WorldPlayer(Plot currentPlot, Player player) {
-        this.currentPlot = currentPlot;
+    public PlanetPlayer(Planet currentPlanet, Player player) {
+        this.currentPlanet = currentPlanet;
         this.player = player;
     }
 
-    public Plot getCurrentPlot() {
-        return currentPlot;
+    public Planet getCurrentPlanet() {
+        return currentPlanet;
     }
 
     /**
@@ -106,12 +106,12 @@ public class WorldPlayer {
 
     /**
      * Loads saved player data from JSON file, that
-     * stored in plot's folder as /playerData/UUID.json.
+     * stored in planet's folder as /playerData/UUID.json.
      * @return True - if successfully loaded, false - if failed to load.
      */
     @SuppressWarnings("unchecked")
     public boolean load() {
-        File playerDataJson = getPlayerDataJson(currentPlot,player);
+        File playerDataJson = getPlayerDataJson(currentPlanet,player);
         if (playerDataJson == null) {
             return false;
         }
@@ -147,19 +147,19 @@ public class WorldPlayer {
             }
             return true;
         } catch (Exception e) {
-            sendCriticalErrorMessage("Couldn't read player data " + player.getName() + " " + currentPlot.getWorldName());
+            sendCriticalErrorMessage("Couldn't read player data " + player.getName() + " " + currentPlanet.getWorldName());
             return false;
         }
     }
 
     /**
      * Saves some required player data into JSON file
-     * in plot's folder as /playerData/UUID.json.
+     * in planet's folder as /playerData/UUID.json.
      * @return True - if successfully saved, false - if failed to save.
      */
     @SuppressWarnings("unchecked")
     public boolean save() {
-        File playerDataJson = getPlayerDataJson(currentPlot,player);
+        File playerDataJson = getPlayerDataJson(currentPlanet,player);
         if (playerDataJson == null) {
             return false;
         }
@@ -196,7 +196,7 @@ public class WorldPlayer {
             writer.close();
             return true;
         } catch (Exception e) {
-            sendCriticalErrorMessage("Couldn't save player data " + player.getName() + " " + currentPlot.getWorldName(),e);
+            sendCriticalErrorMessage("Couldn't save player data " + player.getName() + " " + currentPlanet.getWorldName(),e);
             return false;
         }
     }
@@ -211,7 +211,7 @@ public class WorldPlayer {
 
     /**
      * Returns map of buffered location and block data, that
-     * are used when player copies coding lines in development plot.
+     * are used when player copies coding lines in development planet.
      * @return Map of location and block data of coding blocks.
      */
     public Map<Location, BlockData> getCodingBlocksBuffer() {

@@ -19,7 +19,7 @@
 package ua.mcchickenstudio.opencreative.events.player;
 
 import ua.mcchickenstudio.opencreative.events.CreativeEvent;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -35,17 +35,17 @@ public class WorldChatEvent extends CreativeEvent implements Cancellable {
     private final Player player;
     private final String message;
     private final World world;
-    private final Plot plot;
+    private final Planet planet;
 
     private String formattedMessage;
     private boolean cancelled;
 
-    public WorldChatEvent(Player player, String message, String formattedMessage, World world, Plot plot) {
+    public WorldChatEvent(Player player, String message, String formattedMessage, World world, Planet planet) {
         this.player = player;
         this.message = message;
         this.formattedMessage = formattedMessage;
         this.world = world;
-        this.plot = plot;
+        this.planet = planet;
     }
 
     public Player getPlayer() {
@@ -60,8 +60,8 @@ public class WorldChatEvent extends CreativeEvent implements Cancellable {
         return world;
     }
 
-    public @Nullable Plot getPlot() {
-        return plot;
+    public @Nullable Planet getPlanet() {
+        return planet;
     }
 
     public String getFormattedMessage() {

@@ -24,8 +24,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.menu.AbstractListMenu;
-import ua.mcchickenstudio.opencreative.plots.DevPlot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -103,9 +103,9 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
         event.setCancelled(true);
         if (item == null) return;
         if (item.getItemMeta() == null) return;
-        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
+        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
         Block codingBlock = signLocation.getBlock().getRelative(BlockFace.NORTH);
-        if (signLocation.getWorld().getName().contains("dev") && devPlot != null) {
+        if (signLocation.getWorld().getName().contains("dev") && devPlanet != null) {
             String beginLocalizationPath = "items.developer." + codingBlockName + ".";
             String path = getPathFromMessage(beginLocalizationPath, item.getItemMeta().getDisplayName());
             if (path == null || !path.endsWith(".name")) {
@@ -154,7 +154,7 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
                     containerBlock.setType(Material.AIR);
                 }
                 if (actionType.isChestRequired()) {
-                    containerBlock.setType(devPlot.getContainerMaterial());
+                    containerBlock.setType(devPlanet.getContainerMaterial());
                     BlockData blockData = containerBlock.getBlockData();
                     ((Directional) blockData).setFacing(BlockFace.SOUTH);
                     containerBlock.setBlockData(blockData);

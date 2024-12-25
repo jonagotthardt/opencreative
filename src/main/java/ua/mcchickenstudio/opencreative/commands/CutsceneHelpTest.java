@@ -18,7 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.commands;
 
-import ua.mcchickenstudio.opencreative.plots.DevPlot;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -32,10 +32,10 @@ import org.bukkit.persistence.PersistentDataType;
 
 public class CutsceneHelpTest {
 
-    private final DevPlot devPlot;
+    private final DevPlanet devPlanet;
 
-    public CutsceneHelpTest(DevPlot devPlot) {
-        this.devPlot = devPlot;
+    public CutsceneHelpTest(DevPlanet devPlanet) {
+        this.devPlanet = devPlanet;
     }
 
     private ItemStack getChestPlate() {
@@ -73,8 +73,8 @@ public class CutsceneHelpTest {
     }
 
     public void clearEntities() {
-        if (!devPlot.isLoaded()) return;
-        for (Entity entity : devPlot.getWorld().getEntities()) {
+        if (!devPlanet.isLoaded()) return;
+        for (Entity entity : devPlanet.getWorld().getEntities()) {
             if (entity.getPersistentDataContainer().has(ItemUtils.getCodingValueKey())) {
                 entity.remove();
             }
@@ -82,9 +82,9 @@ public class CutsceneHelpTest {
     }
 
     public void start() {
-        if (!devPlot.isLoaded()) return;
-        Location location = new Location(devPlot.getWorld(),2,1,2);
-        ArmorStand stand = (ArmorStand) devPlot.getWorld().spawnEntity(location,EntityType.ARMOR_STAND);
+        if (!devPlanet.isLoaded()) return;
+        Location location = new Location(devPlanet.getWorld(),2,1,2);
+        ArmorStand stand = (ArmorStand) devPlanet.getWorld().spawnEntity(location,EntityType.ARMOR_STAND);
         setupArmorStand(stand);
     }
 }

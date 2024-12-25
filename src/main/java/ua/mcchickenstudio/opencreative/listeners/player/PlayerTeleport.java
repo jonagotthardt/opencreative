@@ -20,7 +20,7 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 
 import io.papermc.paper.event.entity.EntityInsideBlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -29,10 +29,7 @@ import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-
-
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.stopPlotCode;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class PlayerTeleport implements Listener {
 
@@ -43,8 +40,8 @@ public class PlayerTeleport implements Listener {
                 || event.getCause() == PlayerTeleportEvent.TeleportCause.NETHER_PORTAL) {
             event.setCancelled(true);
         }
-        Plot plot = PlotManager.getInstance().getPlotByWorld(event.getFrom().getWorld());
-        if (plot != null) {
+        Planet planet = PlanetManager.getInstance().getPlanetByWorld(event.getFrom().getWorld());
+        if (planet != null) {
             if (event.getTo().getWorld().equals(event.getFrom().getWorld())) {
                 EventRaiser.raiseTeleportEvent(event.getPlayer(),event);
             } else if (event.getCause() == PlayerTeleportEvent.TeleportCause.SPECTATE

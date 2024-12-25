@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.plots;
+package ua.mcchickenstudio.opencreative.planets;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -27,24 +27,24 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ua.mcchickenstudio.opencreative.plots.Plot.Sharing.PUBLIC;
+import static ua.mcchickenstudio.opencreative.planets.Planet.Sharing.PUBLIC;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 /**
- * <h1>PlotInfo</h1>
- * This class represents an information of plot. It contains
+ * <h1>PlanetInfo</h1>
+ * This class represents an information of planet. It contains
  * display name, description, custom ID, category, reputation
- * and icon of plot.
+ * and icon of planet.
  *
  * <p>This information will be displayed in worlds browser
  * or in advertisement messages.
  * </p>
  */
-public class PlotInfo {
+public class PlanetInfo {
 
-    private final Plot plot;
+    private final Planet planet;
 
     private String displayName;
     private String description;
@@ -56,20 +56,20 @@ public class PlotInfo {
     private ItemStack icon;
     private boolean downloadable;
 
-    public PlotInfo(Plot plot) {
-        this.plot = plot;
+    public PlanetInfo(Planet planet) {
+        this.planet = planet;
         loadInformation();
     }
 
     private void loadInformation() {
-        FileConfiguration config = getPlotConfig(plot);
+        FileConfiguration config = getPlanetConfig(planet);
         String name = "Unknown name";
         String description = "World data is corrupted,\\nplease report server admin\\nabout this world.";
-        String customID = String.valueOf(plot.getId());
+        String customID = String.valueOf(planet.getId());
         Category category = Category.SANDBOX;
         Material material = Material.REDSTONE;
         boolean downloadable = false;
-        reputation = getPlayersFromPlotList(plot, Plot.PlayersType.LIKED).size()- getPlayersFromPlotList(plot, Plot.PlayersType.DISLIKED).size();
+        reputation = getPlayersFromPlanetList(planet, Planet.PlayersType.LIKED).size()- getPlayersFromPlanetList(planet, Planet.PlayersType.DISLIKED).size();
         if (config != null) {
             if (config.getString("name") != null) {
                 name = config.getString("name");
@@ -110,21 +110,21 @@ public class PlotInfo {
     }
 
     public void updateIcon() {
-        ItemStack item = new ItemStack(plot.getSharing() == PUBLIC ? material : Material.BARRIER);
+        ItemStack item = new ItemStack(planet.getSharing() == PUBLIC ? material : Material.BARRIER);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(getLocaleItemName("menus.all-worlds.items.world.name").replace("%plotName%", displayName));
+        meta.setDisplayName(getLocaleItemName("menus.all-worlds.items.world.name").replace("%planetName%", displayName));
         List<String> lore = new ArrayList<>();
         for (String loreLine : getLocaleItemDescription("menus.all-worlds.items.world.lore")) {
-            if (loreLine.contains("%plotDescription%")) {
+            if (loreLine.contains("%planetDescription%")) {
                 String[] newLines = this.description.split("\\\\n");
                 for (String newLine : newLines) {
-                    lore.add(loreLine.replace("%plotDescription%", ChatColor.translateAlternateColorCodes('&',newLine)));
+                    lore.add(loreLine.replace("%planetDescription%", ChatColor.translateAlternateColorCodes('&',newLine)));
                 }
             } else {
-                lore.add(parsePlotLines(this.plot,loreLine));
+                lore.add(parsePlanetLines(this.planet,loreLine));
             }
         }
-        item.setAmount((Math.max(plot.getOnline(), 1)));
+        item.setAmount((Math.max(planet.getOnline(), 1)));
         meta.setLore(lore);
         item.setItemMeta(meta);
         clearItemFlags(item);
@@ -134,27 +134,27 @@ public class PlotInfo {
 
     public void setCategory(Category category) {
         this.category = category;
-        setPlotConfigParameter(plot,"category",category.toString());
+        setPlanetConfigParameter(planet,"category",category.toString());
     }
 
     public void setDisplayName(String name) {
         this.displayName = name;
-        setPlotConfigParameter(plot,"name",name);
+        setPlanetConfigParameter(planet,"name",name);
     }
 
     public void setDescription(String description) {
         this.description = description;
-        setPlotConfigParameter(plot,"description",description);
+        setPlanetConfigParameter(planet,"description",description);
     }
 
     public void setIconMaterial(Material material) {
         this.material = material;
-        setPlotConfigParameter(plot,"icon",material.name());
+        setPlanetConfigParameter(planet,"icon",material.name());
     }
 
     public void setCustomID(String customID) {
         this.customID = customID;
-        setPlotConfigParameter(plot,"customID",customID);
+        setPlanetConfigParameter(planet,"customID",customID);
     }
 
     public String getDisplayName() {
@@ -185,7 +185,7 @@ public class PlotInfo {
         return reputation;
     }
 
-    public void setPlotReputation(int reputation) {
+    public void setPlanetReputation(int reputation) {
         this.reputation = reputation;
     }
 
@@ -216,6 +216,6 @@ public class PlotInfo {
 
     public void setDownloadable(boolean downloadable) {
         this.downloadable = downloadable;
-        setPlotConfigParameter(plot,"downloadable",downloadable);
+        setPlanetConfigParameter(planet,"downloadable",downloadable);
     }
 }

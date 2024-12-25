@@ -22,8 +22,9 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
-import ua.mcchickenstudio.opencreative.plots.DevPlatform;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.planets.DevPlatform;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -34,8 +35,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
-import ua.mcchickenstudio.opencreative.plots.DevPlot;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -51,22 +51,22 @@ public class PlayerPlaceBlock implements Listener {
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
 
-        if (devPlot != null) {
+        if (devPlanet != null) {
 
             Block block = event.getBlock();
             Block blockAgainst = event.getBlockAgainst();
 
-            DevPlatform platform = devPlot.getPlatformInLocation(event.getBlock().getLocation());
+            DevPlatform platform = devPlanet.getPlatformInLocation(event.getBlock().getLocation());
             if (platform == null) {
                 event.setCancelled(true);
                 return;
             }
 
             if (blockAgainst.getType() == platform.getFloorMaterial()) {
-                if ((!(block.getType() == Material.PISTON && (blockAgainst.getZ() % 4) == 0 && blockAgainst.getRelative(BlockFace.WEST).getType() == platform.getActionMaterial())) && (!(block.getType().name().contains("SIGN") &&  blockAgainst.getX() >= 4 && (blockAgainst.getX() % 2) == 0)) && (!devPlot.getAllowedBlocks().contains(block.getType())) || block.getY() <= 0) {
+                if ((!(block.getType() == Material.PISTON && (blockAgainst.getZ() % 4) == 0 && blockAgainst.getRelative(BlockFace.WEST).getType() == platform.getActionMaterial())) && (!(block.getType().name().contains("SIGN") &&  blockAgainst.getX() >= 4 && (blockAgainst.getX() % 2) == 0)) && (!devPlanet.getAllowedBlocks().contains(block.getType())) || block.getY() <= 0) {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-on-floor"));
                     player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 100, 1.2f);
                     event.setCancelled(true);
@@ -81,7 +81,7 @@ public class PlayerPlaceBlock implements Listener {
                     player.playSound(player.getLocation(),Sound.ENTITY_WITCH_CELEBRATE,100,1f);
                     return;
                 }
-                if (devPlot.getEventsBlocks().contains(block.getType())) {
+                if (devPlanet.getEventsBlocks().contains(block.getType())) {
                     Material additionalBlockMaterial = Material.REDSTONE_ORE;
                     String signText = "unknown";
                     ExecutorCategory executorCategory = ExecutorCategory.getByMaterial(block.getType());
@@ -100,7 +100,7 @@ public class PlayerPlaceBlock implements Listener {
                     event.setCancelled(true);
                 }
             } else if (blockAgainst.getType() == platform.getActionMaterial()) {
-                if (devPlot.getActionsBlocks().contains(block.getType())) {
+                if (devPlanet.getActionsBlocks().contains(block.getType())) {
                     Material additionalBlockMaterial = Material.REDSTONE_ORE;
                     String signText = "unknown";
                     ExecutorCategory executorCategory = ExecutorCategory.getByMaterial(block.getType());
@@ -127,8 +127,8 @@ public class PlayerPlaceBlock implements Listener {
                 }
                 event.setCancelled(true);
             }
-        } else if (plot != null) {
-            if (ChangedWorld.isPlayerWithLocation(player) && !plot.getWorldPlayers().canBuild(player)) {
+        } else if (planet != null) {
+            if (ChangedWorld.isPlayerWithLocation(player) && !planet.getWorldPlayers().canBuild(player)) {
                 player.sendActionBar(getLocaleMessage("not-builder"));
                 event.setCancelled(true);
                 return;
@@ -174,9 +174,9 @@ public class PlayerPlaceBlock implements Listener {
     }
 
     public static boolean move(Location location, BlockFace face) {
-        DevPlot devPlot = PlotManager.getInstance().getDevPlot(location.getWorld());
-        if (devPlot == null) return false;
-        DevPlatform platform = devPlot.getPlatformInLocation(location);
+        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(location.getWorld());
+        if (devPlanet == null) return false;
+        DevPlatform platform = devPlanet.getPlatformInLocation(location);
         if (platform == null) return false;
         if (face == BlockFace.EAST) {
             /*
@@ -244,9 +244,9 @@ public class PlayerPlaceBlock implements Listener {
         if (oldContainerBlock.getState() instanceof InventoryHolder container) {
             newContainerBlock.setType(oldContainerBlock.getType());
             newContainerBlock.setBlockData(oldContainerBlock.getBlockData());
-            DevPlot devPlot = PlotManager.getInstance().getDevPlot(oldContainerBlock.getWorld());
-            if (devPlot != null) {
-                Layout layout = devPlot.getOpenedMenu(oldContainerBlock.getLocation());
+            DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(oldContainerBlock.getWorld());
+            if (devPlanet != null) {
+                Layout layout = devPlanet.getOpenedMenu(oldContainerBlock.getLocation());
                 if (layout != null) {
                     for (Player player : layout.getViewers()) {
                         player.closeInventory();

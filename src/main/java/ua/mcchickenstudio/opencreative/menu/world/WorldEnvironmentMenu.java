@@ -22,8 +22,8 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menu.buttons.ParameterButton;
 import ua.mcchickenstudio.opencreative.menu.world.settings.WorldSettingsMenu;
-import ua.mcchickenstudio.opencreative.plots.DevPlatform;
-import ua.mcchickenstudio.opencreative.plots.DevPlot;
+import ua.mcchickenstudio.opencreative.planets.DevPlatform;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -35,12 +35,12 @@ import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
-import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlot;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 
 public class WorldEnvironmentMenu extends AbstractMenu {
 
     private final Player player;
-    private final DevPlot devPlot;
+    private final DevPlanet devPlanet;
     private final DevPlatform devPlatform;
 
     private final ItemStack back = createItem(Material.ARROW,1,"menus.developer.environment.items.back");
@@ -60,32 +60,32 @@ public class WorldEnvironmentMenu extends AbstractMenu {
     private final ItemStack actionMaterial;
 
 
-    public WorldEnvironmentMenu(Player player, DevPlot devPlot) {
+    public WorldEnvironmentMenu(Player player, DevPlanet devPlanet) {
         super((byte) 6, getLocaleMessage("menus.developer.environment.title"));
         this.player = player;
-        this.devPlot = devPlot;
-        this.devPlatform = isDevPlot(player.getWorld()) ? devPlot.getPlatformInLocation(player.getLocation()) : null;
-        debug = new ParameterButton(devPlot.getPlot().isDebug() ? "all" : "disabled", List.of("disabled","all"),"debug","menus.developer.environment","menus.developer.environment.items.debug",List.of(Material.PUFFERFISH_BUCKET,Material.PUFFERFISH));
-        containers = new ParameterButton(devPlot.getContainerMaterial() == Material.CHEST ? "chest" : "barrel", List.of("chest","barrel"),"containers","menus.developer.environment","menus.developer.environment.items.containers",List.of(Material.CHEST,Material.BARREL));
+        this.devPlanet = devPlanet;
+        this.devPlatform = isDevPlanet(player.getWorld()) ? devPlanet.getPlatformInLocation(player.getLocation()) : null;
+        debug = new ParameterButton(devPlanet.getPlanet().isDebug() ? "all" : "disabled", List.of("disabled","all"),"debug","menus.developer.environment","menus.developer.environment.items.debug",List.of(Material.PUFFERFISH_BUCKET,Material.PUFFERFISH));
+        containers = new ParameterButton(devPlanet.getContainerMaterial() == Material.CHEST ? "chest" : "barrel", List.of("chest","barrel"),"containers","menus.developer.environment","menus.developer.environment.items.containers",List.of(Material.CHEST,Material.BARREL));
         info = createItem(Material.AMETHYST_CLUSTER,1,"menus.developer.environment.items.info");
-        replacePlaceholderInLore(info,"%executors%", devPlot.getPlot().getTerritory().getScript().getExecutors().getExecutorsList().size());
-        replacePlaceholderInLore(info,"%scoreboards%", devPlot.getPlot().getTerritory().getScoreboards().size());
-        replacePlaceholderInLore(info,"%scoreboards-limit%",devPlot.getPlot().getLimits().getScoreboardsLimit());
-        replacePlaceholderInLore(info,"%bossbars%", devPlot.getPlot().getTerritory().getBossBars().size());
-        replacePlaceholderInLore(info,"%bossbars-limit%",devPlot.getPlot().getLimits().getBossBarsLimit());
-        replacePlaceholderInLore(info,"%variables%",devPlot.getPlot().getVariables().getTotalVariablesAmount());
-        replacePlaceholderInLore(info,"%variables-limit%",devPlot.getPlot().getLimits().getVariablesAmountLimit());
-        replacePlaceholderInLore(info,"%executor-calls-limit%",devPlot.getPlot().getLimits().getCodeOperationsLimit());
-        replacePlaceholderInLore(info,"%plotID%", devPlot.getPlot().getId());
+        replacePlaceholderInLore(info,"%executors%", devPlanet.getPlanet().getTerritory().getScript().getExecutors().getExecutorsList().size());
+        replacePlaceholderInLore(info,"%scoreboards%", devPlanet.getPlanet().getTerritory().getScoreboards().size());
+        replacePlaceholderInLore(info,"%scoreboards-limit%", devPlanet.getPlanet().getLimits().getScoreboardsLimit());
+        replacePlaceholderInLore(info,"%bossbars%", devPlanet.getPlanet().getTerritory().getBossBars().size());
+        replacePlaceholderInLore(info,"%bossbars-limit%", devPlanet.getPlanet().getLimits().getBossBarsLimit());
+        replacePlaceholderInLore(info,"%variables%", devPlanet.getPlanet().getVariables().getTotalVariablesAmount());
+        replacePlaceholderInLore(info,"%variables-limit%", devPlanet.getPlanet().getLimits().getVariablesAmountLimit());
+        replacePlaceholderInLore(info,"%executor-calls-limit%", devPlanet.getPlanet().getLimits().getCodeOperationsLimit());
+        replacePlaceholderInLore(info,"%planetID%", devPlanet.getPlanet().getId());
         replacePlaceholderInLore(info,"%version%", OpenCreative.getVersion());
-        long currentTime = devPlot.getWorld() == null ? 0 : devPlot.getWorld().getTime();
+        long currentTime = devPlanet.getWorld() == null ? 0 : devPlanet.getWorld().getTime();
         boolean isMorning = currentTime >= 0L && currentTime < 6000L;
         boolean isNight = currentTime >= 15000L && currentTime <= 23000L;
         boolean isEvening = currentTime >= 12500L && currentTime < 15000L;
         time = new ParameterButton(isMorning ? "morning" : isNight ? "night" : isEvening ? "evening" : "day", List.of("morning","day","evening","night"),"time","menus.developer.environment","menus.developer.environment.items.time",Material.CLOCK);
-        floorMaterial = createItem(devPlatform != null ? devPlatform.getFloorMaterial() : DevPlot.getDefaultFloorMaterial(),1,"menus.developer.environment.items.floor-material");
-        eventMaterial = createItem(devPlatform != null ? devPlatform.getEventMaterial() : DevPlot.getDefaultEventMaterial(),1,"menus.developer.environment.items.event-material");
-        actionMaterial = createItem(devPlatform != null ? devPlatform.getActionMaterial() : DevPlot.getDefaultActionMaterial(),1,"menus.developer.environment.items.action-material");
+        floorMaterial = createItem(devPlatform != null ? devPlatform.getFloorMaterial() : DevPlanet.getDefaultFloorMaterial(),1,"menus.developer.environment.items.floor-material");
+        eventMaterial = createItem(devPlatform != null ? devPlatform.getEventMaterial() : DevPlanet.getDefaultEventMaterial(),1,"menus.developer.environment.items.event-material");
+        actionMaterial = createItem(devPlatform != null ? devPlatform.getActionMaterial() : DevPlanet.getDefaultActionMaterial(),1,"menus.developer.environment.items.action-material");
     }
 
     @Override
@@ -96,13 +96,13 @@ public class WorldEnvironmentMenu extends AbstractMenu {
         setItem((byte) 14,variablesList);
         setItem((byte) 16,clearVariables);
 
-        setItem((byte) 28, devPlot.getWorld() != null ? containers.getItem() : DECORATION_ITEM);
-        setItem((byte) 30, devPlot.getWorld() != null ? time.getItem() : DECORATION_ITEM);
-        setItem((byte) 32, devPlot.getWorld() != null ? floorMaterial : DECORATION_ITEM);
-        setItem((byte) 33, devPlot.getWorld() != null ? eventMaterial : DECORATION_ITEM);
-        setItem((byte) 34, devPlot.getWorld() != null ? actionMaterial : DECORATION_ITEM);
+        setItem((byte) 28, devPlanet.getWorld() != null ? containers.getItem() : DECORATION_ITEM);
+        setItem((byte) 30, devPlanet.getWorld() != null ? time.getItem() : DECORATION_ITEM);
+        setItem((byte) 32, devPlanet.getWorld() != null ? floorMaterial : DECORATION_ITEM);
+        setItem((byte) 33, devPlanet.getWorld() != null ? eventMaterial : DECORATION_ITEM);
+        setItem((byte) 34, devPlanet.getWorld() != null ? actionMaterial : DECORATION_ITEM);
 
-        setItem((byte) 45,devPlot.getPlot().isOwner(player) ? back : DECORATION_PANE_ITEM);
+        setItem((byte) 45, devPlanet.getPlanet().isOwner(player) ? back : DECORATION_PANE_ITEM);
         setItem((byte) 46,DECORATION_PANE_ITEM);
 
         setItem((byte) 47,createItem(Material.MAGENTA_STAINED_GLASS_PANE,1));
@@ -130,37 +130,37 @@ public class WorldEnvironmentMenu extends AbstractMenu {
             player.performCommand("env vars clear");
             player.closeInventory();
         } else if (itemEquals(currentItem,time.getItem())) {
-            if (devPlot.getWorld() == null) return;
+            if (devPlanet.getWorld() == null) return;
             time.next();
             player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_CHARGE,100,1.2f);
             setItem((byte) event.getRawSlot(),time.getItem());
             updateSlot((byte) event.getRawSlot());
             if ("night".equals(time.getCurrentValue().toString())) {
-                devPlot.getWorld().setTime(15000L);
+                devPlanet.getWorld().setTime(15000L);
             } else if ("evening".equals(time.getCurrentValue().toString())) {
-                devPlot.getWorld().setTime(12500L);
+                devPlanet.getWorld().setTime(12500L);
             } else if ("day".equals(time.getCurrentValue().toString())) {
-                devPlot.getWorld().setTime(6000L);
+                devPlanet.getWorld().setTime(6000L);
             } else {
-                devPlot.getWorld().setTime(0L);
+                devPlanet.getWorld().setTime(0L);
             }
         } else if (itemEquals(currentItem,containers.getItem())) {
-            if (devPlot.getWorld() == null) return;
+            if (devPlanet.getWorld() == null) return;
             player.performCommand("env barrel");
             player.closeInventory();
         } else if (itemEquals(currentItem,debug.getItem())) {
             player.performCommand("env debug " + (debug.getCurrentValue().toString().equals("all") ? "disable" : "enable"));
             player.closeInventory();
         } else if (itemEquals(currentItem,back)) {
-            if (devPlot.getPlot().isOwner(player)) {
-                new WorldSettingsMenu(devPlot.getPlot(),player).open(player);
+            if (devPlanet.getPlanet().isOwner(player)) {
+                new WorldSettingsMenu(devPlanet.getPlanet(),player).open(player);
             }
         } else if (itemEquals(currentItem,eventMaterial)) {
-            new WorldEnvironmentColorMenu(player,devPlot,devPlatform,"event").open(player);
+            new WorldEnvironmentColorMenu(player, devPlanet,devPlatform,"event").open(player);
         } else if (itemEquals(currentItem,actionMaterial)) {
-            new WorldEnvironmentColorMenu(player,devPlot,devPlatform,"action").open(player);
+            new WorldEnvironmentColorMenu(player, devPlanet,devPlatform,"action").open(player);
         } else if (itemEquals(currentItem,floorMaterial)) {
-            new WorldEnvironmentColorMenu(player,devPlot,devPlatform,"floor").open(player);
+            new WorldEnvironmentColorMenu(player, devPlanet,devPlatform,"floor").open(player);
         }
     }
 

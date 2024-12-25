@@ -19,9 +19,9 @@
 package ua.mcchickenstudio.opencreative.menu.world.settings;
 
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotInfo;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetInfo;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -67,20 +67,20 @@ public class WorldSettingsCategoryMenu extends AbstractMenu {
     public void onClick(InventoryClickEvent event) {
         event.setCancelled(true);
         if (!isPlayerClicked(event)) return;
-        Plot plot = PlotManager.getInstance().getPlotByPlayer((Player) event.getWhoClicked());
-        if (plot == null) return;
-        if (!plot.isOwner(event.getWhoClicked().getName())) return;
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer((Player) event.getWhoClicked());
+        if (planet == null) return;
+        if (!planet.isOwner(event.getWhoClicked().getName())) return;
         if (event.getCurrentItem() == null) return;
         if (event.getCurrentItem().getItemMeta() == null) return;
         if (getItems().contains(event.getCurrentItem())) {
             if (!itemEquals(event.getCurrentItem(),BACK_ITEM)) {
                 final String category = MessageUtils.getPathFromMessage("menus.world-settings-categories.items",event.getCurrentItem().getItemMeta().getDisplayName()).replace("menus.world-settings-categories.items.","").replace(".name","").toUpperCase();
                 event.getWhoClicked().closeInventory();
-                plot.getInformation().setCategory(PlotInfo.Category.valueOf(category));
+                planet.getInformation().setCategory(PlanetInfo.Category.valueOf(category));
                 ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ENTITY_PLAYER_LEVELUP,100,1.6f);
                 event.getWhoClicked().sendMessage(getLocaleMessage("settings.world-category.changed").replace("%category%",getLocaleMessage("world.categories." + category.toLowerCase())));
             } else {
-                new WorldSettingsMenu(plot,(Player) event.getWhoClicked()).open((Player) event.getWhoClicked());
+                new WorldSettingsMenu(planet,(Player) event.getWhoClicked()).open((Player) event.getWhoClicked());
             }
         }
     }

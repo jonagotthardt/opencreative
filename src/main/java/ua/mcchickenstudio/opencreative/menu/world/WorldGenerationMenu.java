@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.menu.world;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menu.buttons.ParameterButton;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 import org.bukkit.Material;
@@ -88,10 +88,10 @@ public class WorldGenerationMenu extends AbstractMenu {
                 player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_CHARGE,100,2);
             }
             case 16 -> {
-                if (PlotManager.getInstance().getPlayerPlots(player).size() < OpenCreative.getSettings().getGroups().getGroup(player).getWorldsLimit()) {
+                if (PlanetManager.getInstance().getPlayerPlanets(player).size() < OpenCreative.getSettings().getGroups().getGroup(player).getWorldsLimit()) {
                     player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_SET_SPAWN,100,0.1f);
                     player.closeInventory();
-                    PlotManager.getInstance().createPlot(player, WorldUtils.generateWorldID(), WorldUtils.WorldGenerator.valueOf(generatorButton.getCurrentValue().toString().toUpperCase()), World.Environment.valueOf(environmentButton.getCurrentValue().toString().toUpperCase()),new Random().nextInt(),Boolean.parseBoolean(generateStructures.getCurrentValue().toString()));
+                    PlanetManager.getInstance().createPlanet(player, WorldUtils.generateWorldID(), WorldUtils.WorldGenerator.valueOf(generatorButton.getCurrentValue().toString().toUpperCase()), World.Environment.valueOf(environmentButton.getCurrentValue().toString().toUpperCase()),new Random().nextInt(),Boolean.parseBoolean(generateStructures.getCurrentValue().toString()));
                 }
                 player.closeInventory();
             }

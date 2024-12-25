@@ -23,7 +23,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
-import ua.mcchickenstudio.opencreative.plots.Plot;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugExecutor;
@@ -35,8 +35,8 @@ public class Cycle extends Executor {
     private boolean enabled = false;
     private BukkitRunnable runnable = null;
 
-    public Cycle(Plot plot, int x, int y, int z, String name, int repeatTime) {
-        super(plot, x, y, z);
+    public Cycle(Planet planet, int x, int y, int z, String name, int repeatTime) {
+        super(planet, x, y, z);
         this.name = name;
         this.repeatTime = repeatTime;
     }
@@ -53,7 +53,7 @@ public class Cycle extends Executor {
                     executeActions(event);
                 }
             };
-            getPlot().getTerritory().addBukkitRunnable(runnable);
+            getPlanet().getTerritory().addBukkitRunnable(runnable);
             runnable.runTaskTimer(OpenCreative.getPlugin(),0,repeatTime);
         }
     }

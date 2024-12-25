@@ -24,8 +24,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.entity.Entity;
 
 public class TransferVariableAction extends WorldAction {
@@ -37,13 +37,13 @@ public class TransferVariableAction extends WorldAction {
     protected void execute(Entity entity) {
         if (!getArguments().pathExists("world") || !getArguments().pathExists("key") || !getArguments().pathExists("value")) return;
         String worldId = getArguments().getValue("world","0",this);
-        Plot plot = PlotManager.getInstance().getPlotById(worldId);
-        if (plot == null) return;
-        if (!plot.isLoaded()) return;
-        if (!plot.isOwner(getPlot().getOwner())) return;
+        Planet planet = PlanetManager.getInstance().getPlanetById(worldId);
+        if (planet == null) return;
+        if (!planet.isLoaded()) return;
+        if (!planet.isOwner(getPlanet().getOwner())) return;
         String key = getArguments().getValue("key","key",this);
         String value = getArguments().getValue("value","value",this);
-        EventRaiser.raiseVariableTransferEvent(plot,key,value);
+        EventRaiser.raiseVariableTransferEvent(planet,key,value);
     }
 
     @Override

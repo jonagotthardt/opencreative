@@ -21,8 +21,8 @@ package ua.mcchickenstudio.opencreative.coding.menus.blocks;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
-import ua.mcchickenstudio.opencreative.plots.DevPlot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -126,17 +126,17 @@ public class SelectionActionsMenu extends AbstractMenu {
         setSignLine(signLocation, (byte) 3,"");
         translateBlockSign(signLocation.getBlock());
         Block containerBlock = signLocation.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.NORTH);
-        DevPlot devPlot = PlotManager.getInstance().getDevPlot(signLocation.getWorld());
-        if (devPlot == null) {
+        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(signLocation.getWorld());
+        if (devPlanet == null) {
             containerBlock.setType(Material.AIR);
             return;
         }
-        Layout layout = devPlot.getOpenedMenu(containerBlock.getLocation());
+        Layout layout = devPlanet.getOpenedMenu(containerBlock.getLocation());
         if (layout != null) {
             for (Player viewer : layout.getViewers()) {
                 viewer.closeInventory();
             }
-            devPlot.unregisterOpenedMenu(containerBlock.getLocation());
+            devPlanet.unregisterOpenedMenu(containerBlock.getLocation());
         }
         containerBlock.setType(Material.AIR);
     }

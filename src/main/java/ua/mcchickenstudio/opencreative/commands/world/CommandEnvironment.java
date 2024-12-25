@@ -22,19 +22,17 @@ import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.GamePlayEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Function;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Method;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.WorldVariable;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import ua.mcchickenstudio.opencreative.coding.variables.WorldVariables;
 import ua.mcchickenstudio.opencreative.menu.world.WorldEnvironmentMenu;
-import ua.mcchickenstudio.opencreative.plots.DevPlatform;
-import ua.mcchickenstudio.opencreative.plots.DevPlot;
-import ua.mcchickenstudio.opencreative.plots.Plot;
-import ua.mcchickenstudio.opencreative.plots.PlotManager;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.planets.DevPlatform;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -71,17 +69,17 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                 return true;
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
-            Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-            if (plot == null) {
+            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            if (planet == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
                 return true;
             }
-            if (!plot.getWorldPlayers().canDevelop(player)) {
+            if (!planet.getWorldPlayers().canDevelop(player)) {
                 player.sendMessage(getLocaleMessage("not-developer"));
                 return true;
             }
             if (args.length == 0) {
-                new WorldEnvironmentMenu(player, plot.getDevPlot()).open(player);
+                new WorldEnvironmentMenu(player, planet.getDevPlanet()).open(player);
             } else {
                 switch (args[0].toLowerCase()) {
                     case "vars", "variables", "var":
@@ -89,7 +87,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             return true;
                         }
                         if (args[1].equalsIgnoreCase("size")) {
-                            player.sendMessage(getLocaleMessage("environment.variables.size").replace("%count%", String.valueOf(plot.getVariables().getTotalVariablesAmount())));
+                            player.sendMessage(getLocaleMessage("environment.variables.size").replace("%count%", String.valueOf(planet.getVariables().getTotalVariablesAmount())));
                         } else if (args[1].equalsIgnoreCase("set")) {
                             if (args.length <= 4) {
                                 player.sendMessage(getLocaleMessage("environment.variables.set.help"));
@@ -137,7 +135,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                                         if (args.length >= 10) {
                                             pitch = parseCoordinate(args[9],player.getPitch());
                                         }
-                                        value = new Location(plot.getTerritory().getWorld(),x,y,z,yaw,pitch);
+                                        value = new Location(planet.getTerritory().getWorld(),x,y,z,yaw,pitch);
                                         valueType = ValueType.LOCATION;
                                     } catch (NumberFormatException ignored) {}
                                 }
@@ -153,13 +151,13 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                                 }
                             }
                             if (value != null) {
-                                if (plot.getVariables().setVariableValue(new VariableLink(varName,type),valueType,value)) {
+                                if (planet.getVariables().setVariableValue(new VariableLink(varName,type),valueType,value)) {
                                     player.sendMessage(getLocaleMessage("environment.variables.set.message")
                                             .replace("%variable%",varName)
                                             .replace("%value%",value.toString().length() > 100 ? value.toString().substring(0,100) + "..." : value.toString()));
                                 } else {
                                     player.sendMessage(getLocaleMessage("environment.variables.set.limit")
-                                            .replace("%limit%",String.valueOf(plot.getLimits().getVariablesAmountLimit())));
+                                            .replace("%limit%",String.valueOf(planet.getLimits().getVariablesAmountLimit())));
                                 }
                             }
                         } else if (args[1].equalsIgnoreCase("get")) {
@@ -170,7 +168,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                                 type = VariableLink.VariableType.getEnum(args[3]);
                                 if (type == null || type == VariableLink.VariableType.LOCAL) type = VariableLink.VariableType.GLOBAL;
                             }
-                            WorldVariable var = plot.getVariables().getVariable(varName,type);
+                            WorldVariable var = planet.getVariables().getVariable(varName,type);
                             if (var == null) {
                                 player.sendMessage(getLocaleMessage("environment.variables.get.empty"));
                             } else {
@@ -183,11 +181,11 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             }
                         }
                         else if (args[1].equalsIgnoreCase("clear")) {
-                            plot.getVariables().clearVariables();
+                            planet.getVariables().clearVariables();
                             player.sendMessage(getLocaleMessage("environment.variables.cleared"));
                         } else if (args[1].equalsIgnoreCase("list")) {
                             int page = 0;
-                            List<WorldVariable> allVariables = new ArrayList<>(plot.getVariables().getSet());
+                            List<WorldVariable> allVariables = new ArrayList<>(planet.getVariables().getSet());
                             if (allVariables.isEmpty()) {
                                 player.sendMessage(getLocaleMessage("environment.variables.list.empty"));
                                 return true;
@@ -231,19 +229,19 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         }
                         break;
                     case "containers", "barrel", "barrels", "container": {
-                        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-                        if (devPlot == null) {
+                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        if (devPlanet == null) {
                             player.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
                         }
-                        devPlot.setContainerMaterial(devPlot.getContainerMaterial() == Material.CHEST ? Material.BARREL : Material.CHEST);
-                        for (DevPlatform platform : devPlot.getPlatforms()) {
+                        devPlanet.setContainerMaterial(devPlanet.getContainerMaterial() == Material.CHEST ? Material.BARREL : Material.CHEST);
+                        for (DevPlatform platform : devPlanet.getPlatforms()) {
                             for (int z = platform.getBeginZ()+4; z < platform.getEndZ()-4; z = z + 4) {
                                 for (int x = platform.getBeginX()+6; x <= platform.getEndX()-4; x = x + 2) {
-                                    Block containerBlock = new Location(devPlot.getWorld(), x, 2, z).getBlock();
+                                    Block containerBlock = new Location(devPlanet.getWorld(), x, 2, z).getBlock();
                                     if (containerBlock.getState() instanceof InventoryHolder container) {
                                         ItemStack[] data = container.getInventory().getContents();
-                                        containerBlock.setType(devPlot.getContainerMaterial());
+                                        containerBlock.setType(devPlanet.getContainerMaterial());
                                         ((Container) containerBlock.getState()).getInventory().setContents(data);
                                         BlockData blockData = containerBlock.getBlockData();
                                         ((Directional) blockData).setFacing(BlockFace.SOUTH);
@@ -264,8 +262,8 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
                             return true;
                         }
-                        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-                        if (devPlot == null) {
+                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
                         }
@@ -277,19 +275,19 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         try {
                             z = Integer.parseInt(args[2]);
                         } catch (Exception ignored) {}
-                        if (devPlot.createPlatform(x,z)) {
+                        if (devPlanet.createPlatform(x,z)) {
                             sender.sendMessage("Created platform " + x + " " + z);
                         }
                         break;
                     }
                     case "platform", "p": {
-                        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-                        if (devPlot == null) {
+                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
                         }
-                        if (devPlot.getPlatforms().size() >= devPlot.getPlot().getLimits().getCodingPlatformsLimit()) {
-                            sender.sendMessage(getLocaleMessage("environment.platform.limit").replace("%amount%",String.valueOf(devPlot.getPlot().getLimits().getCodingPlatformsLimit())));
+                        if (devPlanet.getPlatforms().size() >= devPlanet.getPlanet().getLimits().getCodingPlatformsLimit()) {
+                            sender.sendMessage(getLocaleMessage("environment.platform.limit").replace("%amount%",String.valueOf(devPlanet.getPlanet().getLimits().getCodingPlatformsLimit())));
                             return true;
                         }
                         int[][] platformCoordinates = {
@@ -297,12 +295,12 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         };
                         DevPlatform platform = null;
                         for (int[] coords : platformCoordinates) {
-                            platform = new DevPlatform(devPlot.getWorld(), coords[0], coords[1]);
+                            platform = new DevPlatform(devPlanet.getWorld(), coords[0], coords[1]);
                             if (!platform.exists()) {
                                 break;
                             }
                         }
-                        devPlot.claimPlatform(platform, player);
+                        devPlanet.claimPlatform(platform, player);
                         break;
                     }
                     case "floor": {
@@ -310,8 +308,8 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
                             return true;
                         }
-                        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-                        if (devPlot == null) {
+                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
                         }
@@ -319,9 +317,9 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         try {
                             material = Material.valueOf(args[1].equalsIgnoreCase("barrier") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
                         } catch (Exception ignored) {}
-                        DevPlatform currentPlatform = devPlot.getPlatformInLocation(player.getX(),player.getZ());
+                        DevPlatform currentPlatform = devPlanet.getPlatformInLocation(player.getX(),player.getZ());
                         if (currentPlatform == null) {
-                            for (DevPlatform platform : devPlot.getPlatforms()) {
+                            for (DevPlatform platform : devPlanet.getPlatforms()) {
                                 platform.setFloorMaterial(material);
                             }
                         } else {
@@ -335,8 +333,8 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
                             return true;
                         }
-                        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-                        if (devPlot == null) {
+                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
                         }
@@ -344,9 +342,9 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         try {
                             material = Material.valueOf(args[1].equalsIgnoreCase("barrier") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
                         } catch (Exception ignored) {}
-                        DevPlatform currentPlatform = devPlot.getPlatformInLocation(player.getX(),player.getZ());
+                        DevPlatform currentPlatform = devPlanet.getPlatformInLocation(player.getX(),player.getZ());
                         if (currentPlatform == null) {
-                            for (DevPlatform platform : devPlot.getPlatforms()) {
+                            for (DevPlatform platform : devPlanet.getPlatforms()) {
                                 platform.setActionMaterial(material);
                             }
                         } else {
@@ -360,8 +358,8 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
                             return true;
                         }
-                        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-                        if (devPlot == null) {
+                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
                         }
@@ -369,9 +367,9 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         try {
                             material = Material.valueOf(args[1].equalsIgnoreCase("barrier") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
                         } catch (Exception ignored) {}
-                        DevPlatform currentPlatform = devPlot.getPlatformInLocation(player.getX(),player.getZ());
+                        DevPlatform currentPlatform = devPlanet.getPlatformInLocation(player.getX(),player.getZ());
                         if (currentPlatform == null) {
-                            for (DevPlatform platform : devPlot.getPlatforms()) {
+                            for (DevPlatform platform : devPlanet.getPlatforms()) {
                                 platform.setEventMaterial(material);
                             }
                         } else {
@@ -385,12 +383,12 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
                             return true;
                         }
-                        DevPlot devPlot = PlotManager.getInstance().getDevPlot(player);
-                        if (devPlot == null) {
+                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
                         }
-                        DevPlatform platform = devPlot.getPlatformInLocation(player.getX(),player.getZ());
+                        DevPlatform platform = devPlanet.getPlatformInLocation(player.getX(),player.getZ());
                         if (platform == null) {
                             return true;
                         }
@@ -411,7 +409,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         break;
                     }
                     case "execute", "exec", "launch", "run": {
-                        if (plot.getMode() != Plot.Mode.PLAYING) {
+                        if (planet.getMode() != Planet.Mode.PLAYING) {
                             sender.sendMessage(getLocaleMessage("world.not-in-play-mode"));
                             return true;
                         }
@@ -426,7 +424,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         switch (eventName.toLowerCase()) {
                             case "join", "player_join" -> {
                                 Player eventPlayer = Bukkit.getPlayer(argument);
-                                if (eventPlayer == null || !plot.getTerritory().getWorld().getPlayers().contains(eventPlayer)) {
+                                if (eventPlayer == null || !planet.getTerritory().getWorld().getPlayers().contains(eventPlayer)) {
                                     sender.sendMessage(getLocaleMessage("environment.execute.offline"));
                                     return true;
                                 }
@@ -434,7 +432,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             }
                             case "quit", "player_quit" -> {
                                 Player eventPlayer = Bukkit.getPlayer(argument);
-                                if (eventPlayer == null || !plot.getTerritory().getWorld().getPlayers().contains(eventPlayer)) {
+                                if (eventPlayer == null || !planet.getTerritory().getWorld().getPlayers().contains(eventPlayer)) {
                                     sender.sendMessage(getLocaleMessage("environment.execute.offline"));
                                     return true;
                                 }
@@ -442,7 +440,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             }
                             case "liked", "like", "player_like", "player_liked" -> {
                                 Player eventPlayer = Bukkit.getPlayer(argument);
-                                if (eventPlayer == null || !plot.getTerritory().getWorld().getPlayers().contains(eventPlayer)) {
+                                if (eventPlayer == null || !planet.getTerritory().getWorld().getPlayers().contains(eventPlayer)) {
                                     sender.sendMessage(getLocaleMessage("environment.execute.offline"));
                                     return true;
                                 }
@@ -450,16 +448,16 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             }
                             case "play", "player_play" -> {
                                 Player eventPlayer = Bukkit.getPlayer(argument);
-                                if (eventPlayer == null || !plot.getTerritory().getWorld().getPlayers().contains(eventPlayer)) {
+                                if (eventPlayer == null || !planet.getTerritory().getWorld().getPlayers().contains(eventPlayer)) {
                                     sender.sendMessage(getLocaleMessage("environment.execute.offline"));
                                     return true;
                                 }
                                 new PlayEvent(player).callEvent();
                             }
-                            case "world_play" -> new GamePlayEvent(plot).callEvent();
+                            case "world_play" -> new GamePlayEvent(planet).callEvent();
                             case "function", "func" -> {
                                 boolean found = false;
-                                for (Function function : plot.getTerritory().getScript().getExecutors().getFunctionsList()) {
+                                for (Function function : planet.getTerritory().getScript().getExecutors().getFunctionsList()) {
                                     if (argument.equalsIgnoreCase(function.getName())) {
                                         if (!found) {
                                             /*
@@ -476,7 +474,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             }
                             case "method", "meth" -> {
                                 boolean found = false;
-                                for (Method method : plot.getTerritory().getScript().getExecutors().getMethodsList()) {
+                                for (Method method : planet.getTerritory().getScript().getExecutors().getMethodsList()) {
                                     if (argument.equalsIgnoreCase(method.getName())) {
                                         if (!found) {
                                             found = true;
@@ -497,17 +495,17 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             return true;
                         }
                         if (args[1].equalsIgnoreCase("enable")) {
-                            for (Player plotPlayer : plot.getPlayers()){
-                                plotPlayer.sendMessage(getLocaleMessage("environment.debug.enabled",player));
+                            for (Player planetPlayer : planet.getPlayers()){
+                                planetPlayer.sendMessage(getLocaleMessage("environment.debug.enabled",player));
                             }
                             player.playSound(player.getLocation(),Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM,100,1);
-                            plot.setDebug(true);
+                            planet.setDebug(true);
                         } else if (args[1].equalsIgnoreCase("disable")) {
-                            for (Player plotPlayer : plot.getPlayers()){
-                                plotPlayer.sendMessage(getLocaleMessage("environment.debug.disabled",player));
+                            for (Player planetPlayer : planet.getPlayers()){
+                                planetPlayer.sendMessage(getLocaleMessage("environment.debug.disabled",player));
                             }
                             player.playSound(player.getLocation(),Sound.ENTITY_ALLAY_AMBIENT_WITH_ITEM,100,1);
-                            plot.setDebug(false);
+                            planet.setDebug(false);
                         }
                     }
 
@@ -549,14 +547,14 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
         if (List.of("execute", "exec", "run").contains(args[0].toLowerCase())) {
             if (sender instanceof Player player) {
                 if (PlayerUtils.isEntityInLobby(player)) return tabCompleter;
-                Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                if (plot == null || !plot.getWorldPlayers().canDevelop(player)) return tabCompleter;
+                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                if (planet == null || !planet.getWorldPlayers().canDevelop(player)) return tabCompleter;
                 if (List.of("join", "quit", "player_join", "player_quit", "player_play", "play", "player_liked", "liked").contains(args[1].toLowerCase())) {
-                    tabCompleter.addAll(plot.getTerritory().getWorld().getPlayers().stream().map(Player::getName).toList());
+                    tabCompleter.addAll(planet.getTerritory().getWorld().getPlayers().stream().map(Player::getName).toList());
                 } else if (args[1].equalsIgnoreCase("function")) {
-                    tabCompleter.addAll(plot.getTerritory().getScript().getExecutors().getFunctionsList().stream().map(Function::getName).toList());
+                    tabCompleter.addAll(planet.getTerritory().getScript().getExecutors().getFunctionsList().stream().map(Function::getName).toList());
                 } else if (args[1].equalsIgnoreCase("method")) {
-                    tabCompleter.addAll(plot.getTerritory().getScript().getExecutors().getMethodsList().stream().map(Method::getName).toList());
+                    tabCompleter.addAll(planet.getTerritory().getScript().getExecutors().getMethodsList().stream().map(Method::getName).toList());
                 }
             }
         }
@@ -565,9 +563,9 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                 if (args.length == 3) {
                     if (sender instanceof Player player) {
                         if (PlayerUtils.isEntityInLobby(player)) return tabCompleter;
-                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                        if (plot == null || !plot.getWorldPlayers().canDevelop(player)) return tabCompleter;
-                        List<WorldVariable> allVariables = new ArrayList<>(plot.getVariables().getSet());
+                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        if (planet == null || !planet.getWorldPlayers().canDevelop(player)) return tabCompleter;
+                        List<WorldVariable> allVariables = new ArrayList<>(planet.getVariables().getSet());
                         if (allVariables.isEmpty()) return tabCompleter;
                         List<WorldVariable> vars = allVariables.subList(Math.max(0,allVariables.size()-10),allVariables.size());
                         tabCompleter.addAll(vars.stream().map(WorldVariable::getName).toList());
@@ -590,9 +588,9 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                 if (args.length == 3) {
                     if (sender instanceof Player player) {
                         if (PlayerUtils.isEntityInLobby(player)) return tabCompleter;
-                        Plot plot = PlotManager.getInstance().getPlotByPlayer(player);
-                        if (plot == null || !plot.getWorldPlayers().canDevelop(player)) return tabCompleter;
-                        List<WorldVariable> allVariables = new ArrayList<>(plot.getVariables().getSet());
+                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        if (planet == null || !planet.getWorldPlayers().canDevelop(player)) return tabCompleter;
+                        List<WorldVariable> allVariables = new ArrayList<>(planet.getVariables().getSet());
                         if (allVariables.isEmpty()) return tabCompleter;
                         List<WorldVariable> vars = allVariables.subList(Math.max(0,allVariables.size()-10),allVariables.size());
                         tabCompleter.addAll(vars.stream().map(WorldVariable::getName).toList());
