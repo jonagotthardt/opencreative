@@ -100,7 +100,9 @@ public class CommandTeleport implements CommandExecutor {
 
             }
             if (!player.hasPermission("opencreative.teleport.clear-bypass")) {
-                clearPlayer(player);
+                if (!player.getWorld().equals(teleportToPlayer.getWorld())) {
+                    clearPlayer(player);
+                }
                 Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
                 if (planet == null || !planet.equals(teleportPlanet)) {
                     teleportPlanet.connectPlayer(player);
@@ -111,7 +113,7 @@ public class CommandTeleport implements CommandExecutor {
                 player.teleport(teleportToPlayer.getLocation());
             }
             player.playSound(player.getLocation(), Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100,0.1f);
-            if (!player.hasPermission("opencreative.teleport.clear-bypass")) {
+            if (!player.getWorld().equals(teleportToPlayer.getWorld()) && !player.hasPermission("opencreative.teleport.clear-bypass")) {
                 clearPlayer(player);
             }
         } else if (args.length == 2) {
@@ -141,12 +143,12 @@ public class CommandTeleport implements CommandExecutor {
                     return true;
                 }
             }
-            if (!player.hasPermission("opencreative.teleport.clear-bypass")) {
+            if (!firstPlayer.getWorld().equals(secondPlayer.getWorld()) && !player.hasPermission("opencreative.teleport.clear-bypass")) {
                 clearPlayer(firstPlayer);
             }
             firstPlayer.teleport(secondPlayer.getLocation());
             firstPlayer.playSound(firstPlayer.getLocation(), Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100,0.1f);
-            if (!player.hasPermission("opencreative.teleport.clear-bypass")) {
+            if (!firstPlayer.getWorld().equals(secondPlayer.getWorld()) && !firstPlayer.hasPermission("opencreative.teleport.clear-bypass")) {
                 clearPlayer(firstPlayer);
             }
         } else if (args.length >= 3) {
