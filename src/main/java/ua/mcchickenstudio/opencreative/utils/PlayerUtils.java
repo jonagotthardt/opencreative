@@ -19,6 +19,8 @@
 package ua.mcchickenstudio.opencreative.utils;
 
 import org.bukkit.attribute.Attribute;
+import org.bukkit.boss.KeyedBossBar;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.utils.async.AsyncScheduler;
@@ -62,6 +64,30 @@ public class PlayerUtils {
         for (PotionEffect effect : player.getActivePotionEffects()) {
             player.removePotionEffect(effect.getType());
         }
+        resetAttributes(player);
+        player.resetPlayerTime();
+        player.resetPlayerWeather();
+        player.removeResourcePacks();
+        for (Sound sound : Sound.values()) {
+            player.stopSound(sound);
+        }
+        for (Entity entity : player.getWorld().getEntities()) {
+            player.showEntity(OpenCreative.getPlugin(),entity);
+        }
+        for (Player p : player.getWorld().getPlayers()) {
+            player.showEntity(OpenCreative.getPlugin(),p);
+        }
+        player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
+        clearBossBars(player);
+        HookUtils.clearPlayerHook(player);
+        player.setGameMode(GameMode.ADVENTURE);
+    }
+
+    /**
+     * Resets changeable attributes for player.
+     * @param player player to clear attributes.
+     */
+    public static void resetAttributes(Player player) {
         player.setFireTicks(0);
         player.setFreezeTicks(0);
         player.setNoDamageTicks(20);
@@ -78,24 +104,22 @@ public class PlayerUtils {
         player.setWalkSpeed(0.2f);
         player.setCanPickupItems(true);
         player.setGlowing(false);
-        player.resetPlayerTime();
-        player.resetPlayerWeather();
-        player.removeResourcePacks();
         player.getAttribute(Attribute.GENERIC_SCALE).setBaseValue(1);
         player.getAttribute(Attribute.GENERIC_STEP_HEIGHT).setBaseValue(0.6f);
-        player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
-        player.activeBossBars().forEach(player::hideBossBar);
-        for (Entity entity : player.getWorld().getEntities()) {
-            player.showEntity(OpenCreative.getPlugin(),entity);
-        }
-        for (Player p : player.getWorld().getPlayers()) {
-            player.showEntity(OpenCreative.getPlugin(),p);
-        }
-        for (Sound sound : Sound.values()) {
-            player.stopSound(sound);
-        }
-        HookUtils.clearPlayerHook(player);
-        player.setGameMode(GameMode.ADVENTURE);
+    }
+
+    /**
+     * Clears and removes displayed bossbars for player.
+     * @param player player to clear boss bars.
+     */
+    public static void clearBossBars(Player player) {
+        try {
+            for (@NotNull Iterator<KeyedBossBar> it = Bukkit.getBossBars(); it.hasNext(); ) {
+                KeyedBossBar bar = it.next();
+                bar.removePlayer(player);
+            }
+            player.activeBossBars().forEach(player::hideBossBar);
+        } catch (Exception ignored) {}
     }
 
     /**

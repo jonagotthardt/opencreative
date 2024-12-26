@@ -18,8 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appearance;
 
-import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.scoreboard.*;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
@@ -27,8 +25,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 
 public class CreateTeamAction extends WorldAction {
     public CreateTeamAction(Executor executor, Target target, int x, Arguments args) {

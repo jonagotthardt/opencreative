@@ -34,7 +34,6 @@ import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +42,6 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.getCodingVariableTypeKey;
 
 public class Arguments {
 
