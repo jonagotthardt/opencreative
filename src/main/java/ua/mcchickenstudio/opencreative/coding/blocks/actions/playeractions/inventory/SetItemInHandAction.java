@@ -27,8 +27,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
-import java.util.List;
-
 public class SetItemInHandAction extends PlayerAction {
     public SetItemInHandAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);

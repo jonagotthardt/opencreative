@@ -38,10 +38,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getSignLine;
 
@@ -50,10 +47,8 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 
 public class ErrorUtils {
 
-
-
     private static String cutClassesName(String text) {
-        String newText = text == null ? "null" : text;
+        String newText = text == null ? "Error message is not available" : text;
         newText = newText.replace("ua.mcchickenstudio.opencreative.coding.","");
         newText = newText.replace("ua.mcchickenstudio.opencreative.","");
         newText = newText.replace("org.bukkit.","");
@@ -81,15 +76,28 @@ public class ErrorUtils {
                 (!colored ?
                 """
                 \\|/ _____ \\|/
-                "@'/ . .   \\`@"
-                /_| \\___/ |_\\
-                   \\___U_/\n""" : "") +
+                "@'/ . . \\`@"\s""" + OpenCreative.getVersion() + """
+                \n/_| \\___/ |_\\\s""" + getRandomPhrase() + """
+                \n   \\___U_/\n""" : "") +
                 (colored ? "§4 " : " ") +
                 error.getClass().getSimpleName() +
                 ": " +
                 cutClassesName(error.getMessage()) +
                 "\n \n" +
                 String.join("\n", lastStacks);
+    }
+
+    private static String getRandomPhrase() {
+        String[] phrases = new String[]{
+                "Things aren't so different..", "Seems like we messed up..",
+                "We never gonna give console up..", "We'll meet again, some sunny day..",
+                "We're fine, We won't lose our mind..", "Oops!", "Kernel Panic.. are we kernel?",
+                "We'll see.. if you will report it.", "It is fine..", "I don't like errors, okay?",
+                "At least not memory leak, yes?", "Don't be mad, be happy that something works.",
+                "Totally OpenCreative+.", "My final message - goodbye!", "And here's we hanging out.",
+                "This plugin ate a sparc! Gah!", "I blame PEOPLE BELOW for this."
+        };
+        return phrases[new Random().nextInt(phrases.length)];
     }
 
     /**
