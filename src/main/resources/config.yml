@@ -4,14 +4,6 @@
 #
 
 #
-# Pre-release version!
-#
-#   Config can be changed in next updates,
-#   please always check update notes before
-#   updating a plugin to next version.
-#
-
-#
 # This plugin allows players to create their worlds,
 # where they can build, play and even make a code.
 #
@@ -102,6 +94,7 @@ execute-console-commands: # These commands will be executed on some Creative eve
     #- "discordsrv broadcast Creative Chat | %player%: %message%"
 
 allowed-links:
+  # These links are allowed to use in Request Resource Pack action.
   resource-pack:
     - "dropbox.com"
     - "drive.google.com"
