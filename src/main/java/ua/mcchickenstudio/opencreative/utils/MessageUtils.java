@@ -362,10 +362,23 @@ public class MessageUtils {
      **/
     public static String parsePlanetLines(Planet planet, String string) {
         String planetReputation = String.valueOf(planet.getInformation().getReputation());
+
         if (planet.getInformation().getReputation() >= 1) planetReputation = "§a+" + planetReputation;
         else if (planet.getInformation().getReputation() <= -1) planetReputation = "§c" + planetReputation;
         else planetReputation = "§e" + planetReputation;
-        return parsePAPI(Bukkit.getOfflinePlayer(planet.getOwner()),string.replace("%planetName%", planet.getInformation().getDisplayName()).replace("%planetOnline%",String.valueOf(planet.getOnline())).replace("%planetOwner%", planet.getOwner()).replace("%planetID%", String.valueOf(planet.getId())).replace("%planetCustomID%", planet.getInformation().getCustomID()).replace("%planetCategory%", planet.getInformation().getCategory().getName()).replace("%planetUniques%",String.valueOf(planet.getUniques())).replace("%planetReputation%",planetReputation).replace("%planetLastTime%",getElapsedTime(System.currentTimeMillis(), planet.getLastActivityTime())).replace("%planetCreationTime%",getElapsedTime(System.currentTimeMillis(), planet.getCreationTime())));
+
+        return parsePAPI(Bukkit.getOfflinePlayer(planet.getOwner()), string
+                .replace("%planetName%", planet.getInformation().getDisplayName())
+                .replace("%planetOnline%", String.valueOf(planet.getOnline()))
+                .replace("%planetOwner%", planet.getOwner())
+                .replace("%planetID%", String.valueOf(planet.getId()))
+                .replace("%planetCustomID%", planet.getInformation().getCustomID())
+                .replace("%planetCategory%", planet.getInformation().getCategory().getName())
+                .replace("%planetUniques%", String.valueOf(planet.getUniques()))
+                .replace("%planetReputation%", planetReputation)
+                .replace("%planetLastTime%", getElapsedTime(System.currentTimeMillis(), planet.getLastActivityTime()))
+                .replace("%planetCreationTime%", getElapsedTime(System.currentTimeMillis(), planet.getCreationTime()))
+        );
     }
 
     /**
