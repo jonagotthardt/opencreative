@@ -38,8 +38,12 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import java.io.File;
 import java.util.*;
 
+/**
+ * <h1>MessageUtils</h1>
+ * This class contains utils, that can return messages,
+ * modify and format them. Uses translation files.
+ */
 public class MessageUtils {
-
 
     @NotNull private static final Plugin plugin = OpenCreative.getPlugin();
 
@@ -386,7 +390,11 @@ public class MessageUtils {
      **/
     public static String parsePAPI(OfflinePlayer player, String string) {
         if (HookUtils.isPlaceholderAPIEnabled) {
-            return PAPIUtils.parsePlaceholdersAPI(player,string);
+            try {
+                return PAPIUtils.parsePlaceholdersAPI(player,string);
+            } catch (Exception ignored) {
+                return string;
+            }
         } else {
             return string;
         }

@@ -107,6 +107,7 @@ public class PlanetManager {
                     toComponent(getLocaleMessage("creating-world.welcome-title",owner)), toComponent(getLocaleMessage("creating-world.welcome-subtitle",owner)),
                     Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(9), Duration.ofSeconds(2))
             ));
+            owner.sendMessage(getLocaleMessage("creating-world.welcome"));
             owner.playSound(owner.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE,100,0.1f);
             owner.setGameMode(GameMode.CREATIVE);
             ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
