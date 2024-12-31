@@ -45,6 +45,8 @@ public class Settings {
     private boolean maintenance = false;
     private boolean creativeChatEnabled = true;
 
+    private boolean lobbyClearInventory = true;
+
     private BukkitRunnable announcer;
     private PlayerListChanger listChanger = PlayerListChanger.FULL;
 
@@ -69,6 +71,7 @@ public class Settings {
         allowedResourcePackLinks.addAll(config.getStringList("allowed-links.resource-pack"));
         debug = config.getBoolean("debug",false);
         maintenance = config.getBoolean("maintenance",false);
+        lobbyClearInventory = config.getBoolean("lobby.clear-inventory",true);
         groups.load();
         if (maintenance) {
             OpenCreative.getPlugin().getLogger().warning("Maintenance mode is still enabled in config.yml, to disable: /maintenance end");
@@ -94,6 +97,10 @@ public class Settings {
 
     public boolean isMaintenance() {
         return maintenance;
+    }
+
+    public boolean isLobbyClearInventory() {
+        return lobbyClearInventory;
     }
 
     public void setMaintenance(boolean maintenance) {

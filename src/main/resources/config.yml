@@ -86,6 +86,7 @@ lobby:
   sound:
     name: "music_disc.creator_music_box"
     pitch: 0.7
+  clear-inventory: true # Inventory will be cleared on server join, world change, should be enabled due to security reasons.
 
 recommended-worlds: [1,2,3,4,5] # List of featured worlds in /games, type world number IDs here.
 

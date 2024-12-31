@@ -60,7 +60,9 @@ public class PlayerUtils {
         player.setGameMode(GameMode.ADVENTURE);
         PlayerUtils.clearWorldModePermissions(player);
         player.closeInventory();
-        player.getInventory().clear();
+        if (OpenCreative.getSettings().isLobbyClearInventory()) {
+            player.getInventory().clear();
+        }
         for (PotionEffect effect : player.getActivePotionEffects()) {
             player.removePotionEffect(effect.getType());
         }
