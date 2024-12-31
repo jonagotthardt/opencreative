@@ -38,8 +38,12 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import java.io.File;
 import java.util.*;
 
+/**
+ * <h1>MessageUtils</h1>
+ * This class contains utils, that can return messages,
+ * modify and format them. Uses translation files.
+ */
 public class MessageUtils {
-
 
     @NotNull private static final Plugin plugin = OpenCreative.getPlugin();
 
@@ -362,10 +366,23 @@ public class MessageUtils {
      **/
     public static String parsePlanetLines(Planet planet, String string) {
         String planetReputation = String.valueOf(planet.getInformation().getReputation());
+
         if (planet.getInformation().getReputation() >= 1) planetReputation = "§a+" + planetReputation;
         else if (planet.getInformation().getReputation() <= -1) planetReputation = "§c" + planetReputation;
         else planetReputation = "§e" + planetReputation;
-        return parsePAPI(Bukkit.getOfflinePlayer(planet.getOwner()),string.replace("%planetName%", planet.getInformation().getDisplayName()).replace("%planetOnline%",String.valueOf(planet.getOnline())).replace("%planetOwner%", planet.getOwner()).replace("%planetID%", String.valueOf(planet.getId())).replace("%planetCustomID%", planet.getInformation().getCustomID()).replace("%planetCategory%", planet.getInformation().getCategory().getName()).replace("%planetUniques%",String.valueOf(planet.getUniques())).replace("%planetReputation%",planetReputation).replace("%planetLastTime%",getElapsedTime(System.currentTimeMillis(), planet.getLastActivityTime())).replace("%planetCreationTime%",getElapsedTime(System.currentTimeMillis(), planet.getCreationTime())));
+
+        return parsePAPI(Bukkit.getOfflinePlayer(planet.getOwner()), string
+                .replace("%planetName%", planet.getInformation().getDisplayName())
+                .replace("%planetOnline%", String.valueOf(planet.getOnline()))
+                .replace("%planetOwner%", planet.getOwner())
+                .replace("%planetID%", String.valueOf(planet.getId()))
+                .replace("%planetCustomID%", planet.getInformation().getCustomID())
+                .replace("%planetCategory%", planet.getInformation().getCategory().getName())
+                .replace("%planetUniques%", String.valueOf(planet.getUniques()))
+                .replace("%planetReputation%", planetReputation)
+                .replace("%planetLastTime%", getElapsedTime(System.currentTimeMillis(), planet.getLastActivityTime()))
+                .replace("%planetCreationTime%", getElapsedTime(System.currentTimeMillis(), planet.getCreationTime()))
+        );
     }
 
     /**
@@ -373,7 +390,11 @@ public class MessageUtils {
      **/
     public static String parsePAPI(OfflinePlayer player, String string) {
         if (HookUtils.isPlaceholderAPIEnabled) {
-            return PAPIUtils.parsePlaceholdersAPI(player,string);
+            try {
+                return PAPIUtils.parsePlaceholdersAPI(player,string);
+            } catch (Exception ignored) {
+                return string;
+            }
         } else {
             return string;
         }

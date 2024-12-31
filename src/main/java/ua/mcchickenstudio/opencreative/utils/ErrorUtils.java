@@ -95,7 +95,10 @@ public class ErrorUtils {
                 "We'll see.. if you will report it.", "It is fine..", "I don't like errors, okay?",
                 "At least not memory leak, yes?", "Don't be mad, be happy that something works.",
                 "Totally OpenCreative+.", "My final message - goodbye!", "And here's we hanging out.",
-                "This plugin ate a sparc! Gah!", "I blame PEOPLE BELOW for this."
+                "This plugin ate a sparc! Gah!", "I blame PEOPLE BELOW for this.", "Well, it's possible. <-- (our catchphrase)",
+                "Bug after bug, after bug, it never ends.", "I'll get out of this problem tonight.",
+                "Try not to think about how long bug was here.", "You'll get one bug instead of zero.",
+                "Totally powered by Java.", "Totally Minecraft plugin."
         };
         return phrases[new Random().nextInt(phrases.length)];
     }
@@ -327,7 +330,7 @@ public class ErrorUtils {
      Sends critical error message about problem with plugin.
      **/
     public static void sendCriticalErrorMessage(String errorMessage, Exception error) {
-        OpenCreative.getPlugin().getLogger().severe("CRITICAL ERROR has occured: " + errorMessage + " " + parseException(error,false));
+        OpenCreative.getPlugin().getLogger().severe("CRITICAL ERROR has occurred: " + errorMessage + " " + parseException(error,false));
     }
 
     public static void sendDebug(String message) {

@@ -76,7 +76,7 @@ public final class OpenCreative extends JavaPlugin {
     private static Settings settings;
     private static Economy economy;
 
-    private static final String version = "5.0 Candidate 4";
+    private static final String version = "5.0";
     private static final String codename = "Things will be different";
 
     /**
@@ -90,7 +90,7 @@ public final class OpenCreative extends JavaPlugin {
         getLogger().info("We're AGAINST THE WAR. This software IS NOT DESIGNED for people, who support killing and robbing another country.");
         getLogger().info(" ");
         getLogger().info("Let us having fun, like players that create their worlds...");
-        getLogger().info("McChicken Studio 2017-2024");
+        getLogger().info("McChicken Studio 2017-2025");
         getLogger().info(" ");
     }
 
@@ -144,7 +144,7 @@ public final class OpenCreative extends JavaPlugin {
         }
         getLogger().info(" ");
         getLogger().info("  " + codename);
-        getLogger().info("  Made by McChicken Studio 2017-2024");
+        getLogger().info("  Made by McChicken Studio 2017-2025");
         getLogger().info(" ");
         new Metrics(this, 22001);
 

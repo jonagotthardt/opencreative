@@ -57,6 +57,10 @@ public class Executors {
         this.planet = planet;
     }
 
+    /**
+     * Finds executor for world event and activates it, if found.
+     * @param event event to activate executor.
+     */
     public static void activate(WorldEvent event) {
         Planet planet = event.getPlanet();
         if (planet == null || planet.getTerritory().getScript() == null || planet.getTerritory().getScript().getExecutors() == null) return;
@@ -68,6 +72,11 @@ public class Executors {
         }
     }
 
+    /**
+     * Calls executor that executes actions.
+     * @param executor executor to call.
+     * @param event event of executor.
+     */
     public static void activate(Executor executor, WorldEvent event) {
         Planet planet = executor.getPlanet();
         if (planet == null || planet.getTerritory().getScript() == null || planet.getTerritory().getScript().getExecutors() == null) return;
@@ -106,6 +115,10 @@ public class Executors {
         }
     }
 
+    /**
+     * Loads executors from script file.
+     * @param file script file.
+     */
     public void load(File file) {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
         ConfigurationSection section = config.getConfigurationSection("code.blocks");
@@ -158,6 +171,12 @@ public class Executors {
         return coords;
     }
 
+    /**
+     * Creates an instance of executor.
+     * @param config script file.
+     * @param path path of executor.
+     * @return instance of executor, or null.
+     */
     private Executor createExecutor(YamlConfiguration config, String path) {
         Executor executor = null;
         try {
@@ -189,12 +208,17 @@ public class Executors {
             if (!allActionsList.isEmpty()) {
                 executor.setActions(allActionsList);
             }
-        } catch (Exception e) {
-            sendCriticalErrorMessage("Failed to create an executor",e);
-        }
+        } catch (Exception ignored) {}
         return executor;
     }
 
+    /**
+     * Creates a list of actions for executor.
+     * @param executor executor that will store actions.
+     * @param path path of actions inside executor.
+     * @param config script file.
+     * @return list of actions, or empty list.
+     */
     private List<Action> createActionList(Executor executor, String path, YamlConfiguration config) {
         List<Action> actionList = new ArrayList<>();
         ConfigurationSection actions = config.getConfigurationSection(path);
@@ -211,6 +235,13 @@ public class Executors {
         return actionList;
     }
 
+    /**
+     * Creates an instance of action from script.
+     * @param executor executor that stores action.
+     * @param path path of action inside executor.
+     * @param config script file.
+     * @return instance of action, or null.
+     */
     private Action createAction(Executor executor, String path, YamlConfiguration config) {
 
         String type = config.getString(path + ".type");

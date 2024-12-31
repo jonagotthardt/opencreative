@@ -18,7 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.managers.updater;
 
-public interface Updater {
+import ua.mcchickenstudio.opencreative.managers.Manager;
+
+public interface Updater extends Manager {
 
     /**
      * Sends web request and checks if new updates

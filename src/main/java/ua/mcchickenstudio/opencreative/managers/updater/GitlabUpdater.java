@@ -26,6 +26,7 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.utils.ErrorUtils;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -40,14 +41,7 @@ public class GitlabUpdater implements Updater {
     public void checkUpdates() {
         Bukkit.getScheduler().runTaskAsynchronously(OpenCreative.getPlugin(),() -> {
             try {
-                String url = "https://gitlab.com/api/v4/projects/58168569/packages?opencreative=&order_by=created_at&sort=desc";
-                URL requestUrl = new URL(url);
-                HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
-                connection.setConnectTimeout(3000);
-                connection.setReadTimeout(5000);
-                connection.setRequestMethod("POST");
-                connection.setDoOutput(true);
-                connection.setRequestProperty("Content-Type", "application/json");
+                HttpURLConnection connection = getHttpURLConnection();
                 int code = connection.getResponseCode();
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(
                         code >= 400 ? connection.getErrorStream() : connection.getInputStream()))) {
@@ -67,6 +61,18 @@ public class GitlabUpdater implements Updater {
             }
         });
 
+    }
+
+    private static HttpURLConnection getHttpURLConnection() throws IOException {
+        String url = "https://gitlab.com/api/v4/projects/58168569/packages?opencreative=&order_by=created_at&sort=desc";
+        URL requestUrl = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
+        connection.setConnectTimeout(3000);
+        connection.setReadTimeout(5000);
+        connection.setRequestMethod("POST");
+        connection.setDoOutput(true);
+        connection.setRequestProperty("Content-Type", "application/json");
+        return connection;
     }
 
     @Override
@@ -105,5 +111,20 @@ public class GitlabUpdater implements Updater {
         } catch (Exception exception) {
             return 0;
         }
+    }
+
+    @Override
+    public void init() {
+        checkUpdates();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
+
+    @Override
+    public String getName() {
+        return "Gitlab Updater";
     }
 }
