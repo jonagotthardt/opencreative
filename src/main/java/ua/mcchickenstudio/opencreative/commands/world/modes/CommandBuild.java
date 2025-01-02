@@ -98,7 +98,7 @@ public class CommandBuild implements CommandExecutor {
                     clearPlayer(player);
                     player.showTitle(Title.title(
                             toComponent(getLocaleMessage("world.build-mode.title")), toComponent(getLocaleMessage("world.build-mode.subtitle")),
-                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(3), Duration.ofMillis(750))
+                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                     ));
                     player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
                     player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT,100,1.7f);
