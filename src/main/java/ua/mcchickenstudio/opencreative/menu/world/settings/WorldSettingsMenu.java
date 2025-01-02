@@ -189,7 +189,7 @@ public class WorldSettingsMenu extends AbstractMenu {
                 player.getWorld().setSpawnLocation(player.getLocation());
                 player.showTitle(Title.title(
                         toComponent(getLocaleMessage("settings.world-spawn.title")), toComponent(getLocaleMessage("settings.world-spawn.subtitle")),
-                        Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(30), Duration.ofMillis(130))
+                        Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(2), Duration.ofMillis(130))
                 ));
                 player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_CAST_SPELL,100,0.8f);
             } else {
