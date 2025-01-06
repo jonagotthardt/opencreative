@@ -2017,7 +2017,6 @@ items:
           - "&7be &nreset when the world unloads&7."
           - " "
           - "&fIn the chest:"
-          - "&f Location &7- Center of the border"
           - "&a Number &7- Border size"
           - "&a Number &7- Change time (seconds)"
           - "&a Number &7- Damage beyond the border"
@@ -2027,15 +2026,6 @@ items:
           - " "
           - "&eClick to set action."
         placeholders:
-          center:
-            name: "&fBorder center"
-            lore:
-              - "&7Place a location here as the"
-              - "&7center of the border. The size"
-              - "&7will be calculated from this point."
-              - ""
-              - "&7Default: "
-              - "&f Current world border center"
           radius:
             name: "&aBorder size"
             lore:
@@ -2080,7 +2070,7 @@ items:
               - ""
               - "&7Default: &a5 (blocks)"
       player-set-world-border:
-        name: "&dSet personal border"
+        name: "&dSet personal world border"
         lore:
           - "&7A new border will appear for the"
           - "&7player. Other players will not"

@@ -82,6 +82,7 @@ public class FileUtils {
      */
     public static void fillDefaultSettings(FileConfiguration config, int id, Player owner, World.Environment environment) {
         config.set("owner", owner.getName());
+        config.set("owner-uuid", owner.getUniqueId().toString());
         config.set("owner-group",OpenCreative.getSettings().getGroups().getGroup(owner).getName().toLowerCase());
         config.set("environment", environment.name());
         config.set("world","planet"+id);
@@ -669,13 +670,11 @@ public class FileUtils {
             if (!folder.exists()) {
                 folder.mkdirs();
             }
-            File profileFile = new File(folder,  uuid+ ".json");
-            if (profileFile.exists()) {
-                return profileFile;
-            } else {
+            File profileFile = new File(folder,uuid+ ".json");
+            if (!profileFile.exists()) {
                 profileFile.createNewFile();
-                return profileFile;
             }
+            return profileFile;
         } catch (IOException error) {
             return null;
         }

@@ -71,7 +71,7 @@
 # Discord: https://discord.gg/sSFCXUeq63
 #
 
-version: 5.0
+version: 5.0.1
 last-world-id: 0
 hide-from-tab: spectator # Hides players, that aren't in same world: spectator - Transparent nickname (requires ProtocolLib), full - Full hide from tab list, none - Not hide.
 
@@ -108,6 +108,9 @@ messages:
   cc-chat: "%cc-prefix%&7%player%&7: %message%" # You can use PAPI placeholders here
   world-chat: "&7 %player% &8» &f%message%" # and here
   version: "&f \n &fPowered by Open&7Creative&b+ &3%version%\n &f%codename% \n \n &fContibutors: &7McChicken Team\n &fTranslators: &7initzero, Nagibator6000Lol \n \n &cMcChicken Studio 2017-2025\n &c"
+  critical-errors: true # Will send critical errors in console
+  warnings: true # Will send warning in console
+  not-found: true # Will send not found message in console
 groups:
   #
   # Groups are made for specifying players permissions,

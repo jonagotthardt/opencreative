@@ -46,8 +46,6 @@ public class SetWorldBorderAction extends WorldAction {
         border.setWarningDistance(warningDistance);
         border.setDamageAmount(damage);
         border.setDamageBuffer(safeDistance);
-        Location center = getArguments().getValue("center",getWorld().getSpawnLocation(),this);
-        border.setCenter(center);
     }
 
     @Override

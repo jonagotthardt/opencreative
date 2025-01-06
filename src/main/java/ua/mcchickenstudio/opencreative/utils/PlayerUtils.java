@@ -70,6 +70,9 @@ public class PlayerUtils {
         player.resetPlayerTime();
         player.resetPlayerWeather();
         player.removeResourcePacks();
+        player.releaseLeftShoulderEntity();
+        player.releaseRightShoulderEntity();
+        player.setWorldBorder(player.getWorld().getWorldBorder());
         for (Sound sound : Sound.values()) {
             player.stopSound(sound);
         }
