@@ -35,27 +35,29 @@ public class GameModeChange implements Listener {
     @EventHandler
     public void onGameModeChange(PlayerGameModeChangeEvent event) {
         Player player = event.getPlayer();
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-        if (planet == null) {
-            // If player is not in planet
-            if (isEntityInLobby(player) && event.getNewGameMode() == GameMode.CREATIVE && !player.hasPermission("opencreative.gamemode.change")) {
-                OpenCreative.getPlugin().getLogger().warning("Player " + player.getName() + " tried to get Creative mode in lobby, but he doesn't have permission.");
-                event.setCancelled(true);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(OpenCreative.getPlugin(),() -> {
+            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            if (planet == null) {
+                // If player is not in planet
+                if (isEntityInLobby(player) && event.getNewGameMode() == GameMode.CREATIVE && !player.hasPermission("opencreative.gamemode.change")) {
+                    OpenCreative.getPlugin().getLogger().warning("Player " + player.getName() + " tried to get Creative mode in lobby, but he doesn't have permission.");
+                    event.setCancelled(true);
+                }
+                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                    if (!player.getWorld().equals(onlinePlayer.getWorld())) {
+                        hidePlayerInTab(onlinePlayer,player);
+                        hidePlayerInTab(player,onlinePlayer);
+                    }
+                }
+                return;
             }
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                if (!player.getWorld().equals(onlinePlayer.getWorld())) {
+                if (!onlinePlayer.getWorld().equals(planet.getTerritory().getWorld()) && !onlinePlayer.getWorld().equals(planet.getDevPlanet().getWorld())) {
                     hidePlayerInTab(onlinePlayer,player);
                     hidePlayerInTab(player,onlinePlayer);
                 }
             }
-            return;
-        }
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (!onlinePlayer.getWorld().equals(planet.getTerritory().getWorld()) && (planet.getDevPlanet().getWorld() != null && !onlinePlayer.getWorld().equals(planet.getDevPlanet().getWorld()))) {
-                hidePlayerInTab(onlinePlayer,player);
-                hidePlayerInTab(player,onlinePlayer);
-            }
-        }
+        },5L);
     }
 
 }

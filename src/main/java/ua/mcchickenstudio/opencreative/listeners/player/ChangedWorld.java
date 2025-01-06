@@ -110,8 +110,6 @@ public class ChangedWorld implements Listener {
                     if (oldPlanet.getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
                         for (Player onlinePlayer : oldPlanet.getPlayers()) {
                             onlinePlayer.sendMessage(getLocaleMessage("world.left", player));
-                            hidePlayerInTab(player,onlinePlayer);
-                            hidePlayerInTab(onlinePlayer,player);
                         }
                     }
                     if (oldPlanet.isOwner(player)) {

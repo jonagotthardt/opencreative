@@ -45,6 +45,10 @@ public class Settings {
     private boolean maintenance = false;
     private boolean creativeChatEnabled = true;
 
+    private boolean consoleCriticalErrors = true;
+    private boolean consoleNotFoundMessage = true;
+    private boolean consoleWarnings = true;
+
     private boolean lobbyClearInventory = true;
 
     private BukkitRunnable announcer;
@@ -71,6 +75,9 @@ public class Settings {
         allowedResourcePackLinks.addAll(config.getStringList("allowed-links.resource-pack"));
         debug = config.getBoolean("debug",false);
         maintenance = config.getBoolean("maintenance",false);
+        consoleCriticalErrors = config.getBoolean("messages.critical-errors",true);
+        consoleNotFoundMessage = config.getBoolean("messages.not-found",true);
+        consoleWarnings = config.getBoolean("messages.warnings",true);
         lobbyClearInventory = config.getBoolean("lobby.clear-inventory",true);
         groups.load();
         if (maintenance) {
@@ -189,5 +196,17 @@ public class Settings {
 
     public Groups getGroups() {
         return groups;
+    }
+
+    public boolean isConsoleCriticalErrors() {
+        return consoleCriticalErrors;
+    }
+
+    public boolean isConsoleWarnings() {
+        return consoleWarnings;
+    }
+
+    public boolean isConsoleNotFoundMessage() {
+        return consoleNotFoundMessage;
     }
 }

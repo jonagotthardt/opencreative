@@ -116,7 +116,7 @@ public class ErrorUtils {
      Sends error message to player.
      **/
     public static void sendPlayerErrorMessage(Player player, String errorMessage, Exception error) {
-        OpenCreative.getPlugin().getLogger().warning("An player error has occurred for " + player.getName() + ": " + errorMessage + " " + parseException(error,false));
+        if (OpenCreative.getSettings().isConsoleWarnings()) OpenCreative.getPlugin().getLogger().warning("An player error has occurred for " + player.getName() + ": " + errorMessage + " " + parseException(error,false));
         Component message = Component
                 .text(getLocaleMessage("player-error").replace("%error%",errorMessage))
                 .hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(Component.text(parseException(error,true))));
@@ -128,7 +128,7 @@ public class ErrorUtils {
      Sends error message for planet's players.
      **/
     public static void sendPlanetErrorMessage(Planet planet, String errorMessage) {
-        OpenCreative.getPlugin().getLogger().warning("An error has occurred in planet " + planet.getWorldName() + ": " + errorMessage);
+        if (OpenCreative.getSettings().isConsoleWarnings()) OpenCreative.getPlugin().getLogger().warning("An error has occurred in planet " + planet.getWorldName() + ": " + errorMessage);
         for (Player player : planet.getPlayers()) {
             player.sendMessage(getLocaleMessage("planet-error").replace("%error%",errorMessage));
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY,100f,2f);
@@ -309,28 +309,28 @@ public class ErrorUtils {
      Sends warning message about problem with plugin.
      **/
     public static void sendWarningErrorMessage(String errorMessage) {
-        OpenCreative.getPlugin().getLogger().warning("Warning! An error has occured: " + errorMessage);
+        if (OpenCreative.getSettings().isConsoleWarnings()) OpenCreative.getPlugin().getLogger().warning("Warning! An error has occured: " + errorMessage);
     }
 
     /**
      Sends warning message about problem with plugin.
      **/
     public static void sendWarningMessage(String errorMessage, Exception error) {
-        OpenCreative.getPlugin().getLogger().warning("Warning! " + errorMessage + " " + parseException(error,false));
+        if (OpenCreative.getSettings().isConsoleWarnings()) OpenCreative.getPlugin().getLogger().warning("Warning! " + errorMessage + " " + parseException(error,false));
     }
 
     /**
      Sends critical error message about problem with plugin.
      **/
     public static void sendCriticalErrorMessage(String errorMessage) {
-        OpenCreative.getPlugin().getLogger().severe("CRITICAL ERROR has occured: " + errorMessage);
+        if (OpenCreative.getSettings().isConsoleCriticalErrors()) OpenCreative.getPlugin().getLogger().severe("CRITICAL ERROR has occured: " + errorMessage);
     }
 
     /**
      Sends critical error message about problem with plugin.
      **/
     public static void sendCriticalErrorMessage(String errorMessage, Exception error) {
-        OpenCreative.getPlugin().getLogger().severe("CRITICAL ERROR has occurred: " + errorMessage + " " + parseException(error,false));
+        if (OpenCreative.getSettings().isConsoleCriticalErrors()) OpenCreative.getPlugin().getLogger().severe("CRITICAL ERROR has occurred: " + errorMessage + " " + parseException(error,false));
     }
 
     public static void sendDebug(String message) {

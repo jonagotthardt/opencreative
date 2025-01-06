@@ -33,4 +33,8 @@ public class Profile {
     public Profile(UUID uuid) {
         this.uuid = uuid;
     }
+
+    public void loadInfo() {
+
+    }
 }
