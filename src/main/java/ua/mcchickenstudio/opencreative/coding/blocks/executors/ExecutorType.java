@@ -225,7 +225,7 @@ public enum ExecutorType {
             icon.setType(Material.LIGHT_GRAY_STAINED_GLASS);
             icon = addLoreAtEnd(icon,getLocaleMessage("disabled"));
         }
-        setPersistentData(icon,getCodingVariableTypeKey(),name());
+        setPersistentData(icon,getCodingValueKey(),name());
         return icon;
     }
 
