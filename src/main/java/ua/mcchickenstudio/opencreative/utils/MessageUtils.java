@@ -377,7 +377,7 @@ public class MessageUtils {
                 .replace("%planetOwner%", planet.getOwner())
                 .replace("%planetID%", String.valueOf(planet.getId()))
                 .replace("%planetCustomID%", planet.getInformation().getCustomID())
-                .replace("%planetCategory%", planet.getInformation().getCategory().getName())
+                .replace("%planetCategory%", planet.getInformation().getCategory().getLocaleName())
                 .replace("%planetUniques%", String.valueOf(planet.getUniques()))
                 .replace("%planetReputation%", planetReputation)
                 .replace("%planetLastTime%", getElapsedTime(System.currentTimeMillis(), planet.getLastActivityTime()))

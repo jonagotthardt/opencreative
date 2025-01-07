@@ -55,8 +55,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.addLoreAtEnd;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
@@ -226,6 +225,7 @@ public enum ExecutorType {
             icon.setType(Material.LIGHT_GRAY_STAINED_GLASS);
             icon = addLoreAtEnd(icon,getLocaleMessage("disabled"));
         }
+        setPersistentData(icon,getCodingVariableTypeKey(),name());
         return icon;
     }
 

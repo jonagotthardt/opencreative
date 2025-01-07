@@ -49,7 +49,9 @@ public class EventValuesMenu extends AbstractListMenu {
     @Override
     protected ItemStack getElementIcon(Object object) {
         if (object instanceof EventValues.Variable variable) {
-            return createItem(variable.getIcon(),1,"menus.developer.event-values.items." + variable.name().toLowerCase().replace("_","-"));
+            ItemStack icon = createItem(variable.getIcon(),1,"menus.developer.event-values.items." + variable.name().toLowerCase().replace("_","-"));
+            setPersistentData(icon,getCodingValueKey(),variable.name());
+            return icon;
         }
         return ItemStack.empty();
     }
@@ -91,12 +93,7 @@ public class EventValuesMenu extends AbstractListMenu {
         if (item == null) return;
         if (item.getItemMeta() == null) return;
         ItemMeta meta = itemInHand.getItemMeta();
-        String beginLocalizationPath = "menus.developer.event-values.items.";
-        String path = getPathFromMessage(beginLocalizationPath, item.getItemMeta().getDisplayName());
-        if (path == null || !path.endsWith(".name")) {
-            return;
-        }
-        String typeString = path.replace(beginLocalizationPath,"").replace(".name","").replace("-","_");
+        String typeString = getPersistentData(item,getCodingVariableTypeKey());
         meta.displayName(Component.text(item.getItemMeta().getDisplayName()));
         itemInHand.setItemMeta(meta);
         setPersistentData(itemInHand,getCodingValueKey(),"EVENT_VALUE");

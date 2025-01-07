@@ -70,36 +70,34 @@ public class PlanetInfo {
         Material material = Material.REDSTONE;
         boolean downloadable = false;
         reputation = getPlayersFromPlanetList(planet, Planet.PlayersType.LIKED).size()- getPlayersFromPlanetList(planet, Planet.PlayersType.DISLIKED).size();
-        if (config != null) {
-            if (config.getString("name") != null) {
-                name = config.getString("name");
+        if (config.getString("name") != null) {
+            name = config.getString("name");
+        }
+        if (config.getString("description") != null) {
+            description = config.getString("description");
+        }
+        if (config.getString("customID") != null) {
+            customID = config.getString("customID");
+        }
+        if (config.getString("category") != null) {
+            try {
+                category = Category.valueOf(config.getString("category"));
+            } catch (Exception error) {
+                category = Category.SANDBOX;
             }
-            if (config.getString("description") != null) {
-                description = config.getString("description");
-            }
-            if (config.getString("customID") != null) {
-                customID = config.getString("customID");
-            }
-            if (config.getString("category") != null) {
-                try {
-                    category = Category.valueOf(config.getString("category"));
-                } catch (Exception error) {
-                    category = Category.SANDBOX;
-                }
-            }
-            if (config.getString("icon") != null) {
-                try {
-                    material = Material.valueOf(config.getString("icon"));
-                    if (material == Material.AIR) {
-                        material = Material.REDSTONE;
-                    }
-                } catch (Exception error) {
+        }
+        if (config.getString("icon") != null) {
+            try {
+                material = Material.valueOf(config.getString("icon"));
+                if (material == Material.AIR) {
                     material = Material.REDSTONE;
                 }
+            } catch (Exception error) {
+                material = Material.REDSTONE;
             }
-            if (config.getString("customID") != null) {
-                downloadable = config.getBoolean("downloadable");
-            }
+        }
+        if (config.getString("downloadable") != null) {
+            downloadable = config.getBoolean("downloadable");
         }
         this.displayName = name;
         this.description = description;
@@ -190,23 +188,18 @@ public class PlanetInfo {
     }
 
     public enum Category {
-        SANDBOX(getLocaleMessage("world.categories.sandbox")),
-        ADVENTURE(getLocaleMessage("world.categories.adventure")),
-        STRATEGY(getLocaleMessage("world.categories.strategy")),
-        ARCADE(getLocaleMessage("world.categories.arcade")),
-        ROLEPLAY(getLocaleMessage("world.categories.roleplay")),
-        STORY(getLocaleMessage("world.categories.story")),
-        SIMULATOR(getLocaleMessage("world.categories.simulator")),
-        EXPERIMENT(getLocaleMessage("world.categories.experiment"));
 
-        private final String name;
+        SANDBOX,
+        ADVENTURE,
+        STRATEGY,
+        ARCADE,
+        ROLEPLAY,
+        STORY,
+        SIMULATOR,
+        EXPERIMENT;
 
-        Category(String localeMessage) {
-            this.name = localeMessage;
-        }
-
-        public String getName() {
-            return name;
+        public String getLocaleName() {
+            return getLocaleMessage("world.categories."+name().toLowerCase());
         }
     }
 

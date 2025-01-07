@@ -29,22 +29,21 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static org.bukkit.Material.*;
 
 public class WorldSettingsCategoryMenu extends AbstractMenu {
 
     private final ItemStack BACK_ITEM = createItem(SPECTRAL_ARROW,1,"menus.world-settings-categories.items.back");
-    private final ItemStack CATEGORY_SANDBOX_ITEM = createItem(BRICKS,1,"menus.world-settings-categories.items.sandbox");
-    private final ItemStack CATEGORY_ADVENTURE_ITEM = createItem(LEATHER_BOOTS,1,"menus.world-settings-categories.items.adventure");
-    private final ItemStack CATEGORY_STRATEGY_ITEM = createItem(SHIELD,1,"menus.world-settings-categories.items.strategy");
-    private final ItemStack CATEGORY_ARCADE_ITEM = createItem(REPEATING_COMMAND_BLOCK,1,"menus.world-settings-categories.items.arcade");
-    private final ItemStack CATEGORY_ROLEPLAY_ITEM = createItem(CHEST_MINECART,1,"menus.world-settings-categories.items.roleplay");
-    private final ItemStack CATEGORY_STORY_ITEM = createItem(WRITABLE_BOOK,1,"menus.world-settings-categories.items.story");
-    private final ItemStack CATEGORY_SIMULATOR_ITEM = createItem(GOLDEN_PICKAXE,1,"menus.world-settings-categories.items.simulator");
-    private final ItemStack CATEGORY_EXPERIMENT_ITEM = createItem(TNT,1,"menus.world-settings-categories.items.experiment");
+    private final ItemStack CATEGORY_SANDBOX_ITEM = setPersistentData(createItem(BRICKS,1,"menus.world-settings-categories.items.sandbox"),getItemTypeKey(),"SANDBOX");
+    private final ItemStack CATEGORY_ADVENTURE_ITEM = setPersistentData(createItem(LEATHER_BOOTS,1,"menus.world-settings-categories.items.adventure"),getItemTypeKey(),"ADVENTURE");
+    private final ItemStack CATEGORY_STRATEGY_ITEM = setPersistentData(createItem(SHIELD,1,"menus.world-settings-categories.items.strategy"),getItemTypeKey(),"STRATEGY");
+    private final ItemStack CATEGORY_ARCADE_ITEM = setPersistentData(createItem(REPEATING_COMMAND_BLOCK,1,"menus.world-settings-categories.items.arcade"),getItemTypeKey(),"ARCADE");
+    private final ItemStack CATEGORY_ROLEPLAY_ITEM = setPersistentData(createItem(CHEST_MINECART,1,"menus.world-settings-categories.items.roleplay"),getItemTypeKey(),"ROLEPLAY");
+    private final ItemStack CATEGORY_STORY_ITEM = setPersistentData(createItem(WRITABLE_BOOK,1,"menus.world-settings-categories.items.story"),getItemTypeKey(),"STORY");
+    private final ItemStack CATEGORY_SIMULATOR_ITEM = setPersistentData(createItem(GOLDEN_PICKAXE,1,"menus.world-settings-categories.items.simulator"),getItemTypeKey(),"SIMULATOR");
+    private final ItemStack CATEGORY_EXPERIMENT_ITEM = setPersistentData(createItem(TNT,1,"menus.world-settings-categories.items.experiment"),getItemTypeKey(),"EXPERIMENT");
 
     public WorldSettingsCategoryMenu() {
         super((byte) 6, MessageUtils.getLocaleMessage("menus.world-settings.title"));
@@ -74,11 +73,16 @@ public class WorldSettingsCategoryMenu extends AbstractMenu {
         if (event.getCurrentItem().getItemMeta() == null) return;
         if (getItems().contains(event.getCurrentItem())) {
             if (!itemEquals(event.getCurrentItem(),BACK_ITEM)) {
-                final String category = MessageUtils.getPathFromMessage("menus.world-settings-categories.items",event.getCurrentItem().getItemMeta().getDisplayName()).replace("menus.world-settings-categories.items.","").replace(".name","").toUpperCase();
+                String categoryString = getPersistentData(event.getCurrentItem(),getItemTypeKey());
+                try {
+                    PlanetInfo.Category category = PlanetInfo.Category.valueOf(categoryString);
+                    planet.getInformation().setCategory(category);
+                    event.getWhoClicked().sendMessage(getLocaleMessage("settings.world-category.changed").replace("%category%",category.getLocaleName()));
+                } catch (IllegalArgumentException ignored) {
+                    return;
+                }
                 event.getWhoClicked().closeInventory();
-                planet.getInformation().setCategory(PlanetInfo.Category.valueOf(category));
                 ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ENTITY_PLAYER_LEVELUP,100,1.6f);
-                event.getWhoClicked().sendMessage(getLocaleMessage("settings.world-category.changed").replace("%category%",getLocaleMessage("world.categories." + category.toLowerCase())));
             } else {
                 new WorldSettingsMenu(planet,(Player) event.getWhoClicked()).open((Player) event.getWhoClicked());
             }
