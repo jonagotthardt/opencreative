@@ -38,6 +38,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import ua.mcchickenstudio.opencreative.menu.buttons.RadioButton;
 import ua.mcchickenstudio.opencreative.planets.*;
+import ua.mcchickenstudio.opencreative.utils.PlayerConfirmation;
 
 import java.util.List;
 import java.util.Set;
@@ -191,7 +192,7 @@ public class InventoryClick implements Listener {
                     player.sendMessage(getLocaleMessage("world.players.transfer-ownership.confirm-old").replace("%player%", newOwner).replace("%id%", String.valueOf(planet.getId())));
                     player.closeInventory();
                     if (!(PlayerChat.confirmation.containsKey(player))) {
-                        PlayerChat.confirmation.put(player, "transfer-ownership");
+                        PlayerChat.confirmation.put(player, PlayerConfirmation.TRANSFER_OWNERSHIP);
                     }
                 }
             }

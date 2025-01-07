@@ -54,10 +54,19 @@ public class Settings {
     private BukkitRunnable announcer;
     private PlayerListChanger listChanger = PlayerListChanger.FULL;
 
-    private final Groups groups;
+    private String customIdPattern = "^[a-zA-Zа-яА-Я0-9_]+$";
+    private int customIdMinLength = 2;
+    private int customIdMaxLength = 16;
 
+    private int worldNameMinLength = 4;
+    private int worldNameMaxLength = 30;
+
+    private int worldDescriptionMinLength = 4;
+    private int worldDescriptionMaxLength = 256;
+
+    private final Groups groups;
     private final Set<Integer> recommendedWorldsIDs = new HashSet<>();
-    private final Set<String>  allowedResourcePackLinks = new HashSet<>();
+    private final Set<String> allowedResourcePackLinks = new HashSet<>();
 
     public Settings() {
         groups = new Groups();
@@ -68,17 +77,31 @@ public class Settings {
      * @param config Configuration file.
      */
     public void load(FileConfiguration config) {
+
         allowedResourcePackLinks.clear();
         recommendedWorldsIDs.clear();
+
         listChanger = PlayerListChanger.fromString(config.getString("hide-from-tab","full"));
         recommendedWorldsIDs.addAll(config.getIntegerList("recommended-worlds"));
         allowedResourcePackLinks.addAll(config.getStringList("allowed-links.resource-pack"));
+
         debug = config.getBoolean("debug",false);
         maintenance = config.getBoolean("maintenance",false);
         consoleCriticalErrors = config.getBoolean("messages.critical-errors",true);
         consoleNotFoundMessage = config.getBoolean("messages.not-found",true);
         consoleWarnings = config.getBoolean("messages.warnings",true);
         lobbyClearInventory = config.getBoolean("lobby.clear-inventory",true);
+
+        customIdPattern = config.getString("requirements.world-custom-id.pattern","^[a-zA-Zа-яА-Я0-9_]+$");
+        customIdMinLength = config.getInt("requirements.world-custom-id.min-length",2);
+        customIdMaxLength = config.getInt("requirements.world-custom-id.max-length",16);
+
+        worldNameMinLength = config.getInt("requirements.world-name.min-length",2);
+        worldNameMaxLength = config.getInt("requirements.world-name.max-length",16);
+
+        worldDescriptionMinLength = config.getInt("requirements.world-description.min-length",2);
+        worldDescriptionMaxLength = config.getInt("requirements.world-description.max-length",256);
+
         groups.load();
         if (maintenance) {
             OpenCreative.getPlugin().getLogger().warning("Maintenance mode is still enabled in config.yml, to disable: /maintenance end");
@@ -208,5 +231,33 @@ public class Settings {
 
     public boolean isConsoleNotFoundMessage() {
         return consoleNotFoundMessage;
+    }
+
+    public String getCustomIdPattern() {
+        return customIdPattern;
+    }
+
+    public int getCustomIdMaxLength() {
+        return customIdMaxLength;
+    }
+
+    public int getCustomIdMinLength() {
+        return customIdMinLength;
+    }
+
+    public int getWorldDescriptionMaxLength() {
+        return worldDescriptionMaxLength;
+    }
+
+    public int getWorldDescriptionMinLength() {
+        return worldDescriptionMinLength;
+    }
+
+    public int getWorldNameMaxLength() {
+        return worldNameMaxLength;
+    }
+
+    public int getWorldNameMinLength() {
+        return worldNameMinLength;
     }
 }

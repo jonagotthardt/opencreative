@@ -31,6 +31,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.utils.PlayerConfirmation;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -94,8 +95,15 @@ public class RecommendedWorldsMenu extends AbstractMenu {
             return;
         }
         if (itemEquals(currentItem,SEARCH)) {
+            PlayerConfirmation request = switch (event.getClick()) {
+                case LEFT -> PlayerConfirmation.FIND_PLANETS_BY_NAME;
+                case RIGHT, SHIFT_RIGHT -> PlayerConfirmation.FIND_PLANETS_BY_ID;
+                case SHIFT_LEFT -> PlayerConfirmation.FIND_PLANETS_BY_OWNER;
+                default -> null;
+            };
+            if (request == null) return;
             player.closeInventory();
-            String searchQuery = event.getClick() == ClickType.LEFT ? "world-name" : "id";
+            String searchQuery = request == PlayerConfirmation.FIND_PLANETS_BY_NAME ? "world-name" : request == PlayerConfirmation.FIND_PLANETS_BY_ID ? "id" : "owner";
             player.showTitle(Title.title(
                     Component.text(
                             getLocaleMessage("menus.all-worlds.items.search.title")
@@ -107,7 +115,7 @@ public class RecommendedWorldsMenu extends AbstractMenu {
             ));
             player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.usage", player).replace("%search%", getLocaleMessage("menus.all-worlds.items.search." + searchQuery)));
             player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_AMBIENT, 100, 1);
-            PlayerChat.confirmation.put(player, event.getClick() == ClickType.LEFT ? "searchPlanetByPlanetName" : "searchPlanetByID");
+            PlayerChat.confirmation.put(player,request);
         } else if (itemEquals(currentItem,ALL_WORLDS)) {
             new WorldsBrowserMenu(player, PlanetManager.getInstance().getPlanets()).open(player);
         } else if (itemEquals(currentItem,OWN_WORLDS)) {

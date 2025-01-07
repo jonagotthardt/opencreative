@@ -32,7 +32,9 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemDescription;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemName;
@@ -171,6 +173,19 @@ public class ItemUtils {
         );
         if (!meta.hasAttributeModifiers()) {
             meta.addAttributeModifier(Attribute.GENERIC_ARMOR,new AttributeModifier(new NamespacedKey(OpenCreative.getPlugin(),"hide_attributes"),0.0d, AttributeModifier.Operation.ADD_NUMBER));
+        }
+        itemStack.setItemMeta(meta);
+        return itemStack;
+    }
+
+    public static ItemStack clearItemMeta(ItemStack itemStack) {
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.displayName(null);
+        meta.lore(null);
+        meta.removeEnchantments();
+        Set<NamespacedKey> persistentKeys = new HashSet<>(meta.getPersistentDataContainer().getKeys());
+        for (NamespacedKey key : persistentKeys) {
+            meta.getPersistentDataContainer().remove(key);
         }
         itemStack.setItemMeta(meta);
         return itemStack;

@@ -108,7 +108,7 @@ public class Argument {
         setEventVariable(action, EventValues.Variable.PLANET_NAME, planet.getInformation().getDisplayName());
         setEventVariable(action, EventValues.Variable.PLANET_DESCRIPTION, planet.getInformation().getDescription());
         setEventVariable(action, EventValues.Variable.PLANET_ONLINE, planet.getTerritory().getWorld().getPlayerCount());
-        setEventVariable(action, EventValues.Variable.PLANET_ICON,new ItemStack(planet.getInformation().getMaterial(),1));
+        setEventVariable(action, EventValues.Variable.PLANET_ICON,new ItemStack(planet.getInformation().getIcon().getType(),1));
         setEventVariable(action, EventValues.Variable.PLANET_REPUTATION, planet.getInformation().getReputation());
         setEventVariable(action, EventValues.Variable.PLANET_ENTITIES_AMOUNT, planet.getTerritory().getWorld().getEntityCount() + ((planet.getDevPlanet() != null && planet.getDevPlanet().getWorld() != null) ? planet.getDevPlanet().getWorld().getEntityCount() : 0));
         setEventVariable(action, EventValues.Variable.PLANET_ENTITIES_AMOUNT_LIMIT, planet.getLimits().getEntitiesLimit());

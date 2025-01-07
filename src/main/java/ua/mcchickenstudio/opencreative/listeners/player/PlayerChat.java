@@ -40,6 +40,7 @@ import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.utils.PlayerConfirmation;
 
 import java.time.Duration;
 import java.util.*;
@@ -55,7 +56,7 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPla
 
 public class PlayerChat implements Listener {
 
-    public static final Map<Player, String> confirmation = new HashMap<>();
+    public static final Map<Player, PlayerConfirmation> confirmation = new HashMap<>();
 
     @EventHandler
     public void onChat(PlayerChatEvent event) {
@@ -284,157 +285,162 @@ public class PlayerChat implements Listener {
         }
     }
 
-    private void checkConfirmation(Player player, String message) {
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+    private void checkConfirmation(Player player, String input) {
         if (confirmation.isEmpty()) return;
-        if (confirmation.containsKey(player)) {
-            player.clearTitle();
-            switch(confirmation.get(player)) {
-                case "title":
-                    String newName = "§f" + ChatColor.translateAlternateColorCodes('&',message);
-                    if (player.getName().equals(planet.getOwner())) {
-                        if (!(ChatColor.stripColor(newName).length() > 30) && (ChatColor.stripColor(newName).length() > 4)) {
-                            planet.getInformation().setDisplayName(newName);
-                            player.sendMessage(getLocaleMessage("settings.world-name.changed").replace("%name%",newName));
-                            Planet finalPlanet = planet;
-                            new BukkitRunnable() {
-                                @Override
-                                public void run() {
-                                    finalPlanet.getInformation().updateIcon();
-                                }
-                            }.runTaskAsynchronously(OpenCreative.getPlugin());
-                        } else {
-                            player.sendMessage(getLocaleMessage("settings.world-name.error"));
-                        }
+        if (!confirmation.containsKey(player)) return;
+        PlayerConfirmation confirm = confirmation.get(player);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        player.clearTitle();
+        confirmation.remove(player);
+        switch(confirm) {
+            case WORLD_NAME_CHANGE -> {
+                if (planet == null || !planet.isOwner(player)) return;
+                String newName = "§f" + ChatColor.translateAlternateColorCodes('&',input);
+                String uncoloredName = ChatColor.stripColor(newName);
+                if (uncoloredName.length() > OpenCreative.getSettings().getWorldNameMaxLength() || uncoloredName.length() < OpenCreative.getSettings().getWorldNameMinLength()) {
+                    player.sendMessage(getLocaleMessage("settings.world-name.error")
+                            .replace("%min%",String.valueOf(OpenCreative.getSettings().getWorldNameMinLength()))
+                            .replace("%max%",String.valueOf(OpenCreative.getSettings().getWorldNameMaxLength())));
+                    return;
+                }
+                planet.getInformation().setDisplayName(newName);
+                player.sendMessage(getLocaleMessage("settings.world-name.changed").replace("%name%",newName));
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        planet.getInformation().updateIcon();
                     }
-                    break;
-                case "id":
-                    planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-                    String newID = message;
-                    if (player.getName().equals(planet.getOwner())) {
-                        String pattern = "^[a-zA-Zа-яА-Я0-9]+$";
-                        if (newID.length() > 2 && newID.length() < 16 && newID.matches(pattern) && !Character.isDigit(newID.charAt(0))) {
-                            boolean existsID = false;
-                            for (Planet searchablePlanet : PlanetManager.getInstance().getPlanets()) {
-                                if (searchablePlanet.getInformation().getCustomID().equalsIgnoreCase(newID)) {
-                                    existsID = true;
-                                    break;
-                                }
-                            }
-                            if (!existsID) {
-                                planet.getInformation().setCustomID(newID);
-                                player.sendMessage(getLocaleMessage("settings.world-id.changed").replace("%id%",newID));
-                                Planet finalPlanet1 = planet;
-                                new BukkitRunnable() {
-                                    @Override
-                                    public void run() {
-                                        finalPlanet1.getInformation().updateIcon();
-                                    }
-                                }.runTaskAsynchronously(OpenCreative.getPlugin());
-                            } else {
-                                player.sendMessage(getLocaleMessage("settings.world-id.taken"));
-                            }
-                        } else {
-                            player.sendMessage(getLocaleMessage("settings.world-id.error"));
-                        }
-                    }
-                    break;
-                case "description":
-                    planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-                    String newDescription = ChatColor.translateAlternateColorCodes('&',message);
-                    if (player.getName().equals(planet.getOwner())) {
-                        if (!(ChatColor.stripColor(newDescription).length() > 256) && (ChatColor.stripColor(newDescription).length() > 4))  {
-                            newDescription = String.join("\\n",splitDescription(newDescription,39));
-                            planet.getInformation().setDescription(newDescription);
-                            player.sendMessage(getLocaleMessage("settings.world-description.changed").replace("%description%",newDescription));
-                            Planet finalPlanet2 = planet;
-                            new BukkitRunnable() {
-                                @Override
-                                public void run() {
-                                    finalPlanet2.getInformation().updateIcon();
-                                }
-                            }.runTaskAsynchronously(OpenCreative.getPlugin());
-                        } else {
-                            player.sendMessage(getLocaleMessage("settings.world-description.error"));
-                        }
-                    }
-                    break;
-                case "searchPlanetByPlanetName":
-                    Set<Planet> foundPlanetsByName = PlanetManager.getInstance().getPlanetsByPlanetName(message);
-                    if (!foundPlanetsByName.isEmpty()) {
-                        new WorldsBrowserMenu(player,foundPlanetsByName).open(player);
-                    } else {
-                        player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.not-found"));
-                    }
-                    break;
-                case "searchPlanetByID":
-                    Set<Planet> foundPlanetsByID = PlanetManager.getInstance().getPlanetsByID(message);
-                    if (!foundPlanetsByID.isEmpty()) {
-                        new WorldsBrowserMenu(player,foundPlanetsByID).open(player);
-                    } else {
-                        player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.not-found"));
-                    }
-                    break;
-                case "transfer-ownership":
-                    planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-                    if (planet != null && WorldSettingsPlayersMenu.playersSelected.get(player) != null && planet.getOwner().equalsIgnoreCase(player.getName())) {
-                        if (message.equals(String.valueOf(planet.getId()))) {
-                            String newOwner = WorldSettingsPlayersMenu.playersSelected.get(player);
-                            Player newOwnerPlayer = Bukkit.getPlayer(newOwner);
-                            if (newOwnerPlayer == null) {
-                                player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%",newOwner));
-                                return;
-                            }
-                            if (!planet.getPlayers().contains(newOwnerPlayer)) {
-                                player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%",newOwner));
-                                return;
-                            }
-                            if (PlanetManager.getInstance().getPlayerPlanets(newOwnerPlayer).size() >= OpenCreative.getSettings().getGroups().getGroup(newOwnerPlayer).getWorldsLimit()) {
-                                player.sendMessage(getLocaleMessage("world.players.transfer-ownership.limit").replace("%player%",newOwner));
-                                return;
-                            }
-                            planet.setChangingOwner(true);
-                            player.sendMessage(getLocaleMessage("world.players.transfer-ownership.awaiting").replace("%player%",newOwner));
-                            newOwnerPlayer.sendMessage(getLocaleMessage("world.players.transfer-ownership.confirm-new").replace("%player%",player.getName()).replace("%id%", String.valueOf(planet.getId())));
-                            confirmation.put(newOwnerPlayer,"get-ownership");
-                        } else {
-                            player.sendMessage(getLocaleMessage("world.players.transfer-ownership.wrong-id"));
-                        }
-                    }
-                    break;
-                case "get-ownership":
-                    planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-                    if (planet != null) {
-                        Player oldOwner = Bukkit.getPlayer(planet.getOwner());
-                        if (message.equals(planet.getId())) {
-                            if (oldOwner == null) {
-                                player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%",player.getName()));
-                                return;
-                            }
-                            if (!planet.getPlayers().contains(oldOwner)) {
-                                player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%",player.getName()));
-                                return;
-                            }
-                            if (PlanetManager.getInstance().getPlayerPlanets(player).size() >= OpenCreative.getSettings().getGroups().getGroup(player).getWorldsLimit()) {
-                                player.sendMessage(getLocaleMessage("world.players.transfer-ownership.limit").replace("%player%",player.getName()));
-                                return;
-                            }
-                            oldOwner.sendMessage(getLocaleMessage("world.players.transfer-ownership.transferred-old").replace("%player%",player.getName()));
-                            oldOwner.setGameMode(GameMode.ADVENTURE);
-                            planet.getWorldPlayers().removeBuilder(player.getName());
-                            planet.getWorldPlayers().removeDeveloper(player.getName());
-                            planet.setOwner(player.getName());
-                            player.sendMessage(getLocaleMessage("world.players.transfer-ownership.transferred-new"));
-                            player.playSound(player.getLocation(),Sound.UI_TOAST_CHALLENGE_COMPLETE,100,1.5f);
-                            planet.setChangingOwner(false);
-                        } else {
-                            if (oldOwner != null) oldOwner.sendMessage(getLocaleMessage("world.players.transfer-ownership.cancelled"));
-                            player.sendMessage(getLocaleMessage("world.players.transfer-ownership.wrong-id"));
-                            planet.setChangingOwner(false);
-                        }
-                    }
+                }.runTaskAsynchronously(OpenCreative.getPlugin());
             }
-            confirmation.remove(player);
+            case WORLD_CUSTOM_ID_CHANGE -> {
+                if (planet == null || !planet.isOwner(player)) return;
+                String pattern = OpenCreative.getSettings().getCustomIdPattern();
+                if (input.length() > OpenCreative.getSettings().getCustomIdMaxLength()
+                        || input.length() < OpenCreative.getSettings().getCustomIdMinLength()
+                        || Character.isDigit(input.charAt(0)) || input.matches(pattern)) {
+                    player.sendMessage(getLocaleMessage("settings.world-id.error")
+                            .replace("%min%",String.valueOf(OpenCreative.getSettings().getCustomIdMinLength()))
+                            .replace("%max%",String.valueOf(OpenCreative.getSettings().getCustomIdMaxLength())));
+                    return;
+                }
+                for (Planet searchablePlanet : PlanetManager.getInstance().getPlanets()) {
+                    if (searchablePlanet.getInformation().getCustomID().equalsIgnoreCase(input)) {
+                        player.sendMessage(getLocaleMessage("settings.world-id.taken"));
+                        return;
+                    }
+                }
+                planet.getInformation().setCustomID(input);
+                player.sendMessage(getLocaleMessage("settings.world-id.changed").replace("%id%", input));
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        planet.getInformation().updateIcon();
+                    }
+                }.runTaskAsynchronously(OpenCreative.getPlugin());
+            }
+            case WORLD_DESCRIPTION_CHANGE -> {
+                if (planet == null || !planet.isOwner(player)) return;
+                String newDescription = "§f" + ChatColor.translateAlternateColorCodes('&',input);
+                String uncoloredDescription = ChatColor.stripColor(newDescription);
+                if (uncoloredDescription.length() > OpenCreative.getSettings().getWorldDescriptionMaxLength() ||
+                        uncoloredDescription.length() < OpenCreative.getSettings().getWorldDescriptionMinLength()) {
+                    player.sendMessage(getLocaleMessage("settings.world-description.error")
+                            .replace("%min%",String.valueOf(OpenCreative.getSettings().getWorldDescriptionMinLength()))
+                            .replace("%max%",String.valueOf(OpenCreative.getSettings().getWorldDescriptionMaxLength())));
+                    return;
+                }
+                newDescription = String.join("\\n", splitDescription(newDescription, 39));
+                planet.getInformation().setDescription(newDescription);
+                player.sendMessage(getLocaleMessage("settings.world-description.changed").replace("%description%", newDescription));
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        planet.getInformation().updateIcon();
+                    }
+                }.runTaskAsynchronously(OpenCreative.getPlugin());
+            }
+            case FIND_PLANETS_BY_NAME -> {
+                Set<Planet> foundPlanetsByName = PlanetManager.getInstance().getPlanetsByPlanetName(input);
+                if (!foundPlanetsByName.isEmpty()) {
+                    new WorldsBrowserMenu(player, foundPlanetsByName).open(player);
+                } else {
+                    player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.not-found"));
+                }
+            }
+            case FIND_PLANETS_BY_ID -> {
+                Set<Planet> foundPlanetsByID = PlanetManager.getInstance().getPlanetsByID(input);
+                if (!foundPlanetsByID.isEmpty()) {
+                    new WorldsBrowserMenu(player, foundPlanetsByID).open(player);
+                } else {
+                    player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.not-found"));
+                }
+            }
+            case FIND_PLANETS_BY_OWNER -> {
+                Set<Planet> foundPlanets = PlanetManager.getInstance().getPlanetsByOwner(input);
+                if (!foundPlanets.isEmpty()) {
+                    new WorldsBrowserMenu(player, foundPlanets).open(player);
+                } else {
+                    player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.not-found"));
+                }
+            }
+            case TRANSFER_OWNERSHIP -> {
+                if (planet != null && WorldSettingsPlayersMenu.playersSelected.get(player) != null && planet.isOwner(player)) {
+                    if (input.equals(String.valueOf(planet.getId()))) {
+                        String newOwner = WorldSettingsPlayersMenu.playersSelected.get(player);
+                        Player newOwnerPlayer = Bukkit.getPlayer(newOwner);
+                        if (newOwnerPlayer == null) {
+                            player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%", newOwner));
+                            return;
+                        }
+                        if (!planet.getPlayers().contains(newOwnerPlayer)) {
+                            player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%", newOwner));
+                            return;
+                        }
+                        if (PlanetManager.getInstance().getPlayerPlanets(newOwnerPlayer).size() >= OpenCreative.getSettings().getGroups().getGroup(newOwnerPlayer).getWorldsLimit()) {
+                            player.sendMessage(getLocaleMessage("world.players.transfer-ownership.limit").replace("%player%", newOwner));
+                            return;
+                        }
+                        planet.setChangingOwner(true);
+                        player.sendMessage(getLocaleMessage("world.players.transfer-ownership.awaiting").replace("%player%", newOwner));
+                        newOwnerPlayer.sendMessage(getLocaleMessage("world.players.transfer-ownership.confirm-new").replace("%player%", player.getName()).replace("%id%", String.valueOf(planet.getId())));
+                        confirmation.put(newOwnerPlayer, PlayerConfirmation.GET_OWNERSHIP);
+                    } else {
+                        player.sendMessage(getLocaleMessage("world.players.transfer-ownership.wrong-id"));
+                    }
+                }
+            }
+            case GET_OWNERSHIP -> {
+                if (planet != null) {
+                    Player oldOwner = Bukkit.getPlayer(planet.getOwner());
+                    if (input.equals(String.valueOf(planet.getId()))) {
+                        if (oldOwner == null) {
+                            player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%", player.getName()));
+                            return;
+                        }
+                        if (!planet.getPlayers().contains(oldOwner)) {
+                            player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%", player.getName()));
+                            return;
+                        }
+                        if (PlanetManager.getInstance().getPlayerPlanets(player).size() >= OpenCreative.getSettings().getGroups().getGroup(player).getWorldsLimit()) {
+                            player.sendMessage(getLocaleMessage("world.players.transfer-ownership.limit").replace("%player%", player.getName()));
+                            return;
+                        }
+                        oldOwner.sendMessage(getLocaleMessage("world.players.transfer-ownership.transferred-old").replace("%player%", player.getName()));
+                        oldOwner.setGameMode(GameMode.ADVENTURE);
+                        planet.getWorldPlayers().removeBuilder(player.getName());
+                        planet.getWorldPlayers().removeDeveloper(player.getName());
+                        planet.setOwner(player.getName());
+                        player.sendMessage(getLocaleMessage("world.players.transfer-ownership.transferred-new"));
+                        player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 100, 1.5f);
+                        planet.setChangingOwner(false);
+                    } else {
+                        if (oldOwner != null)
+                            oldOwner.sendMessage(getLocaleMessage("world.players.transfer-ownership.cancelled"));
+                        player.sendMessage(getLocaleMessage("world.players.transfer-ownership.wrong-id"));
+                        planet.setChangingOwner(false);
+                    }
+                }
+            }
         }
     }
 

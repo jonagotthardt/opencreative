@@ -201,6 +201,19 @@ public class PlanetManager {
     }
 
     /**
+     Returns planets that are owned by specified player.
+     **/
+    public Set<Planet> getPlanetsByOwner(String owner) {
+        Set<Planet> foundPlanets = new HashSet<>();
+        for (Planet planet : planets) {
+            if (planet.isOwner(owner)) {
+                foundPlanets.add(planet);
+            }
+        }
+        return foundPlanets;
+    }
+
+    /**
      Returns planets that has specified category.
      **/
     public Set<Planet> getPlanetsByCategory(PlanetInfo.Category category) {
