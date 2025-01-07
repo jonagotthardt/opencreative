@@ -97,6 +97,7 @@ public class InventoryClick implements Listener {
                                         PlanetManager.getInstance().getPlanetByCustomID(worldID).connectPlayer(player);
                                     } else {
                                         PlanetManager.getInstance().deletePlanet(PlanetManager.getInstance().getPlanetByCustomID(worldID), player);
+                                        player.updateInventory();
                                     }
                                 } else {
                                     player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY, 100, 2);

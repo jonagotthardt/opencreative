@@ -103,6 +103,7 @@ public class RecommendedWorldsMenu extends AbstractMenu {
             };
             if (request == null) return;
             player.closeInventory();
+            player.updateInventory();
             String searchQuery = request == PlayerConfirmation.FIND_PLANETS_BY_NAME ? "world-name" : request == PlayerConfirmation.FIND_PLANETS_BY_ID ? "id" : "owner";
             player.showTitle(Title.title(
                     Component.text(
