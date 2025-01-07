@@ -52,7 +52,6 @@ public class PlanetInfo {
 
     private int reputation;
     private Category category;
-    private Material material;
     private ItemStack icon;
     private boolean downloadable;
 
@@ -67,50 +66,47 @@ public class PlanetInfo {
         String description = "World data is corrupted,\\nplease report server admin\\nabout this world.";
         String customID = String.valueOf(planet.getId());
         Category category = Category.SANDBOX;
-        Material material = Material.REDSTONE;
+        ItemStack icon = new ItemStack(Material.REDSTONE);
         boolean downloadable = false;
         reputation = getPlayersFromPlanetList(planet, Planet.PlayersType.LIKED).size()- getPlayersFromPlanetList(planet, Planet.PlayersType.DISLIKED).size();
-        if (config != null) {
-            if (config.getString("name") != null) {
-                name = config.getString("name");
+        if (config.getString("name") != null) {
+            name = config.getString("name");
+        }
+        if (config.getString("description") != null) {
+            description = config.getString("description");
+        }
+        if (config.getString("customID") != null) {
+            customID = config.getString("customID");
+        }
+        if (config.getString("category") != null) {
+            try {
+                category = Category.valueOf(config.getString("category"));
+            } catch (Exception error) {
+                category = Category.SANDBOX;
             }
-            if (config.getString("description") != null) {
-                description = config.getString("description");
-            }
-            if (config.getString("customID") != null) {
-                customID = config.getString("customID");
-            }
-            if (config.getString("category") != null) {
-                try {
-                    category = Category.valueOf(config.getString("category"));
-                } catch (Exception error) {
-                    category = Category.SANDBOX;
+        }
+        if (config.get("icon") != null) {
+            try {
+                if (config.isString("icon")) {
+                    icon = new ItemStack(Material.valueOf(config.getString("icon")));
+                } else {
+                    icon = ItemStack.deserialize(config.getConfigurationSection("icon").getValues(true));
                 }
-            }
-            if (config.getString("icon") != null) {
-                try {
-                    material = Material.valueOf(config.getString("icon"));
-                    if (material == Material.AIR) {
-                        material = Material.REDSTONE;
-                    }
-                } catch (Exception error) {
-                    material = Material.REDSTONE;
-                }
-            }
-            if (config.getString("customID") != null) {
-                downloadable = config.getBoolean("downloadable");
-            }
+            } catch (Exception ignored) {}
+        }
+        if (config.getString("downloadable") != null) {
+            downloadable = config.getBoolean("downloadable");
         }
         this.displayName = name;
         this.description = description;
         this.category = category;
-        this.material = material;
         this.customID = customID;
         this.downloadable = downloadable;
+        this.icon = icon;
     }
 
     public void updateIcon() {
-        ItemStack item = new ItemStack(planet.getSharing() == PUBLIC ? material : Material.BARRIER);
+        ItemStack item = icon.clone();
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(getLocaleItemName("menus.all-worlds.items.world.name").replace("%planetName%", displayName));
         List<String> lore = new ArrayList<>();
@@ -147,9 +143,12 @@ public class PlanetInfo {
         setPlanetConfigParameter(planet,"description",description);
     }
 
-    public void setIconMaterial(Material material) {
-        this.material = material;
-        setPlanetConfigParameter(planet,"icon",material.name());
+    public void setIcon(ItemStack itemStack) {
+        ItemStack newIcon = clearItemMeta(itemStack.clone());
+        newIcon.setAmount(1);
+        setPlanetConfigParameter(planet,"icon",newIcon.serialize());
+        this.icon = newIcon;
+        updateIcon();
     }
 
     public void setCustomID(String customID) {
@@ -174,11 +173,10 @@ public class PlanetInfo {
     }
 
     public ItemStack getIcon() {
-        return icon;
-    }
-
-    public Material getMaterial() {
-        return material;
+        if (planet.getSharing() == PUBLIC) return icon;
+        else {
+            return icon.clone().withType(Material.BARRIER);
+        }
     }
 
     public int getReputation() {
@@ -190,23 +188,18 @@ public class PlanetInfo {
     }
 
     public enum Category {
-        SANDBOX(getLocaleMessage("world.categories.sandbox")),
-        ADVENTURE(getLocaleMessage("world.categories.adventure")),
-        STRATEGY(getLocaleMessage("world.categories.strategy")),
-        ARCADE(getLocaleMessage("world.categories.arcade")),
-        ROLEPLAY(getLocaleMessage("world.categories.roleplay")),
-        STORY(getLocaleMessage("world.categories.story")),
-        SIMULATOR(getLocaleMessage("world.categories.simulator")),
-        EXPERIMENT(getLocaleMessage("world.categories.experiment"));
 
-        private final String name;
+        SANDBOX,
+        ADVENTURE,
+        STRATEGY,
+        ARCADE,
+        ROLEPLAY,
+        STORY,
+        SIMULATOR,
+        EXPERIMENT;
 
-        Category(String localeMessage) {
-            this.name = localeMessage;
-        }
-
-        public String getName() {
-            return name;
+        public String getLocaleName() {
+            return getLocaleMessage("world.categories."+name().toLowerCase());
         }
     }
 

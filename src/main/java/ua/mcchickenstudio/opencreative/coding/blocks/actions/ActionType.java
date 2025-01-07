@@ -705,6 +705,7 @@ public enum ActionType {
             icon.setType(Material.RED_STAINED_GLASS);
             addLoreAtEnd(icon,getLocaleMessage("disabled"));
         }
+        setPersistentData(icon,getCodingValueKey(),name());
         return icon;
     }
 

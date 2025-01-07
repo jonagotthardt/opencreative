@@ -1,5 +1,5 @@
 #
-# OpenCreative+ 5.0 - Things will be different.
+# OpenCreative+ 5.1 - Things will be different.
 # (C) McChicken Studio 2017-2025.
 #
 
@@ -71,7 +71,7 @@
 # Discord: https://discord.gg/sSFCXUeq63
 #
 
-version: 5.0.1
+version: 5.1.0
 last-world-id: 0
 hide-from-tab: spectator # Hides players, that aren't in same world: spectator - Transparent nickname (requires ProtocolLib), full - Full hide from tab list, none - Not hide.
 
@@ -90,16 +90,6 @@ lobby:
 
 recommended-worlds: [1,2,3,4,5] # List of featured worlds in /games, type world number IDs here.
 
-execute-console-commands: # These commands will be executed on some Creative events
-  creative-chat: [] # Remove [] if there are some commands
-    #- "discordsrv broadcast Creative Chat | %player%: %message%"
-
-allowed-links:
-  # These links are allowed to use in Request Resource Pack action.
-  resource-pack:
-    - "dropbox.com"
-    - "drive.google.com"
-
 messages:
   locale: en # Supported: en, ru - Для русского языка: ru
   branding: "<white>Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+" # Branding uses minimessage (https://webui.advntr.dev/)
@@ -111,6 +101,34 @@ messages:
   critical-errors: true # Will send critical errors in console
   warnings: true # Will send warning in console
   not-found: true # Will send not found message in console
+
+execute-console-commands: # These commands will be executed on some Creative events
+  creative-chat: [] # Remove [] if there are some commands
+  #- "discordsrv broadcast Creative Chat | %player%: %message%"
+
+allowed-links:
+  # These links are allowed to use in Request Resource Pack action.
+  resource-pack:
+    - "dropbox.com"
+    - "drive.google.com"
+
+requirements:
+  #
+  # If player's input new text will not follow
+  # these requirements, then world's setting
+  # will be not changed.
+  #
+  world-name:
+    min-length: 4
+    max-length: 30
+  world-description:
+    min-length: 4
+    max-length: 256
+  world-custom-id:
+    pattern: "^[a-zA-Zа-яА-Я0-9_]+$"
+    min-length: 2
+    max-length: 16
+
 groups:
   #
   # Groups are made for specifying players permissions,

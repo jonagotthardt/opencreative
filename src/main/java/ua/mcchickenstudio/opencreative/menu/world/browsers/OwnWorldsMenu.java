@@ -35,6 +35,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.clearItemMeta;
+
 public class OwnWorldsMenu extends LegacyMenu {
 
     public static final Map<Player,Integer> openedPage = new HashMap<>();
@@ -70,9 +72,7 @@ public class OwnWorldsMenu extends LegacyMenu {
             int slot = 0;
             for (Planet planet : allPages.get(pageToOpen-1)) {
                 if (planet.getOwner().equalsIgnoreCase(player.getName())) {
-                    Material material = planet.getInformation().getMaterial();
-                    if (!(planet.getSharing() == Planet.Sharing.PUBLIC)) material = Material.BARRIER;
-                    ItemStack item = new ItemStack(material);
+                    ItemStack item = clearItemMeta(planet.getInformation().getIcon().clone());
                     ItemMeta meta = item.getItemMeta();
                     meta.displayName(Component.text(planet.getInformation().getDisplayName()));
                     List<String> lore = new ArrayList<>();

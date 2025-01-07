@@ -37,6 +37,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import ua.mcchickenstudio.opencreative.utils.PlayerConfirmation;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -120,7 +121,7 @@ public class WorldSettingsMenu extends AbstractMenu {
     }
 
     public ItemStack getPlanetIcon() {
-        ItemStack item = createItem(planet.getSharing() == Planet.Sharing.PUBLIC ? planet.getInformation().getMaterial() : Material.BARRIER,1);
+        ItemStack item = clearItemMeta(planet.getInformation().getIcon().clone());
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(MessageUtils.getLocaleItemName("menus.world-settings.items.world.name").replace("%planetName%", planet.getInformation().getDisplayName()));
         List<String> lore = new ArrayList<>();
@@ -158,7 +159,7 @@ public class WorldSettingsMenu extends AbstractMenu {
             player.sendMessage(getLocaleMessage("settings.world-name.usage").replace("%player%", player.getName()));
             player.closeInventory();
             if (!(PlayerChat.confirmation.containsKey(player))) {
-                PlayerChat.confirmation.put(player, "title");
+                PlayerChat.confirmation.put(player, PlayerConfirmation.WORLD_NAME_CHANGE);
             }
         } else if (itemEquals(currentItem,description)) {
             player.showTitle(Title.title(
@@ -167,7 +168,7 @@ public class WorldSettingsMenu extends AbstractMenu {
             ));            player.sendMessage(getLocaleMessage("settings.world-description.usage"));
             player.closeInventory();
             if (!(PlayerChat.confirmation.containsKey(player))) {
-                PlayerChat.confirmation.put(player, "description");
+                PlayerChat.confirmation.put(player, PlayerConfirmation.WORLD_DESCRIPTION_CHANGE);
             }
         } else if (itemEquals(currentItem,customID)) {
             player.showTitle(Title.title(
@@ -177,7 +178,7 @@ public class WorldSettingsMenu extends AbstractMenu {
             player.sendMessage(getLocaleMessage("settings.world-id.usage").replace("%player%", player.getName()));
             player.closeInventory();
             if (!(PlayerChat.confirmation.containsKey(player))) {
-                PlayerChat.confirmation.put(player, "id");
+                PlayerChat.confirmation.put(player, PlayerConfirmation.WORLD_CUSTOM_ID_CHANGE);
             }
         } else if (itemEquals(currentItem,spawn)) {
             if (isEntityInDevPlanet(player)) {
@@ -277,8 +278,7 @@ public class WorldSettingsMenu extends AbstractMenu {
                 player.sendMessage(getLocaleMessage("settings.world-icon.error"));
                 player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 100, 0.3f);
             } else {
-                planet.getInformation().setIconMaterial(event.getCursor().getType());
-                planet.getInformation().updateIcon();
+                planet.getInformation().setIcon(event.getCursor());
                 player.sendMessage(getLocaleMessage("settings.world-icon.changed"));
                 worldIcon = getPlanetIcon();
                 setItem((byte) 49,getPlanetIcon());

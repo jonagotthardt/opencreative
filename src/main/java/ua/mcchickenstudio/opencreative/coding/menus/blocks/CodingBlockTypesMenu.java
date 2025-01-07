@@ -106,19 +106,14 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
         DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
         Block codingBlock = signLocation.getBlock().getRelative(BlockFace.NORTH);
         if (signLocation.getWorld().getName().contains("dev") && devPlanet != null) {
-            String beginLocalizationPath = "items.developer." + codingBlockName + ".";
-            String path = getPathFromMessage(beginLocalizationPath, item.getItemMeta().getDisplayName());
-            if (path == null || !path.endsWith(".name")) {
-                return;
-            }
-            String typeString = path.replace(beginLocalizationPath,"").replace(".name","").replace("-","_");
+            String typeString = getPersistentData(item,getCodingValueKey());
             ExecutorType executorType = null;
             ActionType actionType = null;
             try {
-                actionType = ActionType.valueOf(typeString.toUpperCase());
+                actionType = ActionType.valueOf(typeString);
             } catch (Exception ignored) {}
             try {
-                executorType = ExecutorType.valueOf(typeString.toUpperCase());
+                executorType = ExecutorType.valueOf(typeString);
             } catch (Exception ignored) {}
             ActionCategory actionCategory = actionType == null ? null : actionType.getCategory();
             ExecutorCategory executorCategory = executorType == null ? null : ExecutorCategory.getByMaterial(codingBlock.getType());
@@ -128,7 +123,7 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
             if (executorCategory != null) {
                 setSignLine(signLocation,(byte) 2, executorCategory.name().toLowerCase());
             }
-            if (setSignLine(signLocation,(byte) 3,typeString)) {
+            if (setSignLine(signLocation,(byte) 3,typeString.toLowerCase())) {
                 translateBlockSign(signLocation.getBlock());
                 player.closeInventory();
                 player.showTitle(Title.title(
@@ -139,7 +134,7 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
             }
             /*
              Setting a chest block if action requires container.
-             Executors don't have arguments, neither chests...
+             Executors don't have arguments, neither chests.
             */
             if (actionCategory != null && executorCategory == null)  {
                 Block containerBlock = codingBlock.getRelative(BlockFace.UP);

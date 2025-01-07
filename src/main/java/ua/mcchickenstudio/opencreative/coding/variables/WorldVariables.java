@@ -18,9 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.coding.variables;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.Particle;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import org.bukkit.Location;
@@ -31,6 +37,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
+import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -40,6 +47,7 @@ import java.util.*;
 import static ua.mcchickenstudio.opencreative.coding.arguments.Argument.parseEntity;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.getCodingVariableTypeKey;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
@@ -241,6 +249,25 @@ public class WorldVariables {
                     //newMap.put(newKey,newValue);
                 }
                 return newMap;
+            } else if (value instanceof Color color) {
+                Map<String, Integer> colorMap = new HashMap<>();
+                colorMap.put("red",color.getRed());
+                colorMap.put("green",color.getGreen());
+                colorMap.put("blue",color.getBlue());
+                return colorMap;
+            } else if (value instanceof Particle particle) {
+                Map<String, String> particleMap = new HashMap<>();
+                particleMap.put("type",particle.name());
+                return particleMap;
+            } else if (value instanceof EventValueLink link) {
+                Map<String, String> valueMap = new HashMap<>();
+                valueMap.put("name",link.type().name());
+                return valueMap;
+            } else if (value instanceof VariableLink link) {
+                Map<String, String> variableMap = new HashMap<>();
+                variableMap.put("name",link.getName());
+                variableMap.put("type",link.getVariableType().name());
+                return variableMap;
             }
         } catch (Exception e) {
             return value;
@@ -302,6 +329,25 @@ public class WorldVariables {
                     newMap.put(newKey,newValue);
                 }
                 return newMap;
+            } else if (type == ValueType.COLOR) {
+                int red, green, blue;
+                Map<?,?> colorMap = (Map<?,?>) value;
+                red = (int) colorMap.get("red");
+                green = (int) colorMap.get("green");
+                blue = (int) colorMap.get("blue");
+                return Color.fromRGB(red,green,blue);
+            } else if (type == ValueType.PARTICLE) {
+                Map<?,?> particleMap = (Map<?,?>) value;
+                String particleType = (String) particleMap.get("type");
+                return Particle.valueOf(particleType);
+            } else if (type == ValueType.EVENT_VALUE) {
+                Map<?,?> eventValueMap = (Map<?,?>) value;
+                String eventValueType = (String) eventValueMap.get("name");
+                return EventValues.Variable.valueOf(eventValueType);
+            } else if (type == ValueType.VARIABLE) {
+                Map<?,?> varMap = (Map<?,?>) value;
+                String varName = (String) varMap.get("name");
+                return new VariableLink(varName, VariableLink.VariableType.SAVED);
             }
         } catch (Exception e) {
             return value;
