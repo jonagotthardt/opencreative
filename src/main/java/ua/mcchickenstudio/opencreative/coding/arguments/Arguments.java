@@ -551,7 +551,7 @@ public class Arguments {
             sendCodingDebugLog(planet,"Location is out of borders! " + locationValue);
             return defaultValue;
         }
-        return locationValue;
+        return locationValue.clone();
     }
 
     public Vector getValue(String path, Vector defaultValue, Action action) {

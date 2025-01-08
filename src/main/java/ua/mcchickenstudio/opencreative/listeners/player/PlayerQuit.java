@@ -38,8 +38,9 @@ public class PlayerQuit implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        player.spigot().respawn();
 
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet planet = PlanetManager.getInstance().getPlanetByWorld(player.getWorld());
         if (planet != null) {
             EventRaiser.raiseQuitEvent(player);
             new BukkitRunnable() {
@@ -48,7 +49,7 @@ public class PlayerQuit implements Listener {
                     planet.getInformation().updateIcon();
                 }
             }.runTaskAsynchronously(OpenCreative.getPlugin());
-            if (planet.getOnline() == 1) {
+            if (planet.getOnline() <= 1) {
                 planet.getTerritory().unload();
             }
         }

@@ -1,5 +1,5 @@
 #
-# OpenCreative+ 5.1 - Things will be different.
+# OpenCreative+ 5.2 - Things will be different.
 # (C) McChicken Studio 2017-2025.
 #
 
@@ -71,7 +71,7 @@
 # Discord: https://discord.gg/sSFCXUeq63
 #
 
-version: 5.1.1
+version: 5.2.0
 last-world-id: 0
 hide-from-tab: spectator # Hides players, that aren't in same world: spectator - Transparent nickname (requires ProtocolLib), full - Full hide from tab list, none - Not hide.
 
