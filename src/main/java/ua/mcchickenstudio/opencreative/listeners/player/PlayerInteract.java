@@ -471,7 +471,7 @@ public class PlayerInteract implements Listener {
         setPersistentData(currentItem,getCodingValueKey(),"VARIABLE");
         setPersistentData(currentItem,getCodingVariableTypeKey(),type.name());
         player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.7f);
-        player.sendMessage(Component.text(meta.getDisplayName()).clickEvent(ClickEvent.copyToClipboard(meta.getDisplayName())));
+        player.sendMessage(Component.text(meta.getDisplayName()).clickEvent(ClickEvent.copyToClipboard(ChatColor.stripColor(meta.getDisplayName()))));
     }
 
     private static VariableLink.VariableType getVariableType(ItemMeta meta) {

@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser.raiseQuitEvent;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
@@ -59,7 +60,6 @@ public class PlanetTerritory {
     private final Map<String, Scoreboard> scoreboards = new HashMap<>();
     private final List<BukkitRunnable> runningBukkitRunnables = new ArrayList<>();
 
-    private World world;
     private CodeScript script;
     private int worldSize = 25;
     private World.Environment environment;
@@ -82,8 +82,8 @@ public class PlanetTerritory {
         for (Player planetPlayer : planet.getPlayers()) {
             planetPlayer.sendMessage(getLocaleMessage("settings.autosave." + (autoSave ? "enabled" : "disabled")));
         }
-        if (world != null) {
-            world.setAutoSave(autoSave);
+        if (getWorld() != null) {
+            getWorld().setAutoSave(autoSave);
         }
         FileUtils.setPlanetConfigParameter(planet,"autosave",!autoSave ? false : null);
     }
@@ -110,7 +110,6 @@ public class PlanetTerritory {
         FileUtils.loadWorldFolder(planet.getWorldName(),true);
         World world = new WorldCreator(planet.getWorldName()).environment(planet.getTerritory().getEnvironment()).keepSpawnLoaded(TriState.FALSE).createWorld();
         if (world == null) return;
-        this.world = world;
         script = new CodeScript(planet,getPlanetScriptFile(planet));
         world.setAutoSave(autoSave);
         world.setGameRule(GameRule.SPAWN_CHUNK_RADIUS,1);
@@ -146,6 +145,9 @@ public class PlanetTerritory {
          * it causes problems on world unloading
          * when plugin is disabling!
          */
+        for (Player player : planet.getPlayers()) {
+            raiseQuitEvent(player);
+        }
         FileUtils.setPlanetConfigParameter(planet,"last-activity-time",System.currentTimeMillis());
         FileUtils.setPlanetConfigParameter(planet,"environment", planet.getTerritory().getEnvironment().name());
         planet.getVariables().save();
@@ -155,16 +157,15 @@ public class PlanetTerritory {
         clearData();
         if (Bukkit.unloadWorld(planet.getWorldName(),autoSave)) {
             FileUtils.unloadWorldFolder(planet.getWorldName(),true);
-            if (Bukkit.getWorld(planet.getDevPlanet().getWorldName()) != null) {
-                for (Player player : planet.getDevPlanet().getWorld().getPlayers()) {
-                    teleportToLobby(player);
-                }
-                if (Bukkit.unloadWorld(planet.getDevPlanet().getWorldName(),true)) {
-                    FileUtils.unloadWorldFolder(planet.getDevPlanet().getWorldName(),true);
-                }
+        }
+        if (planet.getDevPlanet().isLoaded()) {
+            for (Player player : planet.getDevPlanet().getWorld().getPlayers()) {
+                teleportToLobby(player);
+            }
+            if (Bukkit.unloadWorld(planet.getDevPlanet().getWorldName(),true)) {
+                FileUtils.unloadWorldFolder(planet.getDevPlanet().getWorldName(),true);
             }
         }
-        this.world = null;
         new PlanetUnloadEvent(planet).callEvent();
     }
 
@@ -206,11 +207,7 @@ public class PlanetTerritory {
     }
 
     public World getWorld() {
-        return world;
-    }
-
-    public void setWorld(World world) {
-        this.world = world;
+        return Bukkit.getWorld(planet.getWorldName());
     }
 
     public int getWorldSize() {
@@ -272,7 +269,6 @@ public class PlanetTerritory {
                 world.setSpawnLocation(0, 8, 0);
             }
 
-            this.world = world;
             script = new CodeScript(planet,getPlanetScriptFile(planet));
 
             for (Entity entity : world.getEntities()) {

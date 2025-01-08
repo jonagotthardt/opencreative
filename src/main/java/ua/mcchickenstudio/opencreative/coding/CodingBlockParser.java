@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetCompileErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
@@ -62,10 +63,12 @@ public class CodingBlockParser {
      */
     public void parseCode(DevPlanet devPlanet) {
 
+        sendCodingDebugLog(devPlanet.getPlanet(),"Parsing code... Clearing");
         World world = devPlanet.getWorld();
         devPlanet.getPlanet().getTerritory().stopBukkitRunnables();
         CodeScript script = devPlanet.getPlanet().getTerritory().getScript();
         script.clear();
+        sendCodingDebugLog(devPlanet.getPlanet(),"Parsing blocks... Reading");
 
         List<Block> unknownBlocks = new ArrayList<>();
         // For platforms
@@ -178,6 +181,7 @@ public class CodingBlockParser {
              */
             sendPlanetCompileErrorMessage(devPlanet.getPlanet(),unknownBlocks);
         }
+        sendCodingDebugLog(devPlanet.getPlanet(),"Saving code...");
         if (script.saveCode()) {
             devPlanet.getPlanet().getTerritory().getScript().loadCode();
         }

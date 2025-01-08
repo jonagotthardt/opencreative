@@ -40,8 +40,10 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser.raiseQuitEvent;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
@@ -137,63 +139,71 @@ public class Planet {
      */
     public void setMode(Mode mode) {
         if (this.mode == mode) return;
-        this.mode = mode;
         setPlanetConfigParameter(this,"mode",mode.name());
         if (!isLoaded()) return;
-        territory.stopBukkitRunnables();
-        territory.getWorld().getSpawnLocation().getChunk().load(true);
-        HookUtils.clearEntitiesHook(territory.getWorld());
-        if (mode == Mode.BUILD) {
-            for (Player player : getPlayers()){
-                if (!isEntityInDevPlanet(player)) {
-                    clearPlayer(player);
-                    player.showTitle(Title.title(
-                            toComponent(getLocaleMessage("world.build-mode.title")), toComponent(getLocaleMessage("world.build-mode.subtitle")),
-                            Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(30), Duration.ofMillis(130))
-                    ));
-                    player.teleport(territory.getWorld().getSpawnLocation());
-                    player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT,100,1.7f);
-                    if (worldPlayers.canBuild(player)) {
-                        player.setGameMode(GameMode.CREATIVE);
-                        giveBuildPermissions(player);
-                        player.sendMessage(getLocaleMessage("world.build-mode.message.owner"));
-                        if (!territory.isAutoSave()) {
-                            player.sendMessage(getLocaleMessage("settings.autosave.warning"));
+        try {
+            territory.getWorld().getSpawnLocation().getChunk().load(true);
+            if (mode == Mode.BUILD) {
+                for (Player player : getPlayers()){
+                    if (!isEntityInDevPlanet(player)) {
+                        raiseQuitEvent(player);
+                        player.showTitle(Title.title(
+                                toComponent(getLocaleMessage("world.build-mode.title")), toComponent(getLocaleMessage("world.build-mode.subtitle")),
+                                Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(2), Duration.ofMillis(130))
+                        ));
+                        clearPlayer(player);
+                        player.teleport(territory.getWorld().getSpawnLocation());
+                        player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT,100,1.7f);
+                        if (worldPlayers.canBuild(player)) {
+                            player.setGameMode(GameMode.CREATIVE);
+                            giveBuildPermissions(player);
+                            player.sendMessage(getLocaleMessage("world.build-mode.message.owner"));
+                            if (!territory.isAutoSave()) {
+                                player.sendMessage(getLocaleMessage("settings.autosave.warning"));
+                            }
+                        } else {
+                            player.sendMessage(getLocaleMessage("world.build-mode.message.players"));
                         }
                     } else {
                         player.sendMessage(getLocaleMessage("world.build-mode.message.players"));
                     }
-                } else {
-                    player.sendMessage(getLocaleMessage("world.build-mode.message.players"));
                 }
-            }
-        } else {
-            for (Player player : getPlayers()) {
-                if (!isEntityInDevPlanet(player)) {
-                    clearPlayer(player);
-                    player.teleport(territory.getWorld().getSpawnLocation());
-                    if (worldPlayers.canDevelop(player)) {
-                        player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
-                    } else {
-                        player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
-                    }
-                } else {
-                    player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
-                }
-            }
-            if (devPlanet.isLoaded()) {
-                new CodingBlockParser().parseCode(devPlanet);
+                territory.stopBukkitRunnables();
+                HookUtils.clearEntitiesHook(territory.getWorld());
             } else {
-                territory.getScript().loadCode();
-            }
-            EventRaiser.raiseWorldPlayEvent(this);
-            for (Player player : getPlayers()) {
-                if (PlanetManager.getInstance().getDevPlanet(player) == null) {
-                    EventRaiser.raiseJoinEvent(player);
+                this.mode = mode;
+                territory.stopBukkitRunnables();
+                HookUtils.clearEntitiesHook(territory.getWorld());
+                for (Player player : getPlayers()) {
+                    if (!isEntityInDevPlanet(player)) {
+                        clearPlayer(player);
+                        player.clearTitle();
+                        player.teleport(territory.getWorld().getSpawnLocation());
+                        if (worldPlayers.canDevelop(player)) {
+                            player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
+                        } else {
+                            player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
+                        }
+                    } else {
+                        player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
+                    }
+                }
+                if (devPlanet.isLoaded()) {
+                    new CodingBlockParser().parseCode(devPlanet);
+                } else {
+                    territory.getScript().loadCode();
+                }
+                EventRaiser.raiseWorldPlayEvent(this);
+                for (Player player : getPlayers()) {
+                    if (PlanetManager.getInstance().getDevPlanet(player) == null) {
+                        EventRaiser.raiseJoinEvent(player);
+                    }
                 }
             }
+        } catch (Exception error) {
+            sendPlanetErrorMessage(this,"Failed to change mode to " + mode.name());
         }
-
+        this.mode = mode;
     }
 
     public Sharing getSharing() {
@@ -426,7 +436,6 @@ public class Planet {
                 return;
             }
         }
-        getWorldPlayers().registerPlayer(player);
         player.showTitle(Title.title(
                 toComponent(getLocaleMessage("world.connecting.title")), toComponent(getLocaleMessage("world.connecting.subtitle")),
                 Title.Times.times(Duration.ofMillis(710), Duration.ofSeconds(30), Duration.ofMillis(130))

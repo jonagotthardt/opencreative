@@ -18,31 +18,34 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.params;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
 
-public class SetFreezeTicksAction extends PlayerAction {
-    public SetFreezeTicksAction(Executor executor, Target target, int x, Arguments args) {
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+
+public class SetViewDistanceAction extends PlayerAction {
+    public SetViewDistanceAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
-    @Override
     public void executePlayer(Player player) {
         boolean add = getArguments().getValue("add",false,this);
-        int ticks = getArguments().getValue("ticks",0,this);
-        if (!add) {
-            player.setFreezeTicks(ticks);
-        } else {
-            player.setFreezeTicks(player.getFreezeTicks()+ticks);
+        int distance = getArguments().getValue("distance",player.getClientViewDistance(),this);
+        if (add) {
+            distance = distance + player.getViewDistance();
         }
+        if (distance > Bukkit.getViewDistance()) distance = Bukkit.getViewDistance();
+        else if (distance < -2) distance = -1;
+        player.setViewDistance(distance);
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.PLAYER_SET_FREEZE_TICKS;
+        return ActionType.PLAYER_SET_VIEW_DISTANCE;
     }
 }

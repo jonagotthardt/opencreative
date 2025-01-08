@@ -16,33 +16,31 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.params;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.params;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
 
-public class SetFreezeTicksAction extends PlayerAction {
-    public SetFreezeTicksAction(Executor executor, Target target, int x, Arguments args) {
+public final class DamageEntityAction extends EntityAction {
+    public DamageEntityAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
-    public void executePlayer(Player player) {
-        boolean add = getArguments().getValue("add",false,this);
-        int ticks = getArguments().getValue("ticks",0,this);
-        if (!add) {
-            player.setFreezeTicks(ticks);
-        } else {
-            player.setFreezeTicks(player.getFreezeTicks()+ticks);
+    protected void execute(Entity entity) {
+        if (!(entity instanceof LivingEntity livingEntity)) return;
+        if (livingEntity.isDead()) {
+            return;
         }
+        livingEntity.damage(getArguments().getValue("damage",2.0d,this));
     }
-
     @Override
     public ActionType getActionType() {
-        return ActionType.PLAYER_SET_FREEZE_TICKS;
+        return ActionType.ENTITY_ADD_DAMAGE;
     }
 }

@@ -72,6 +72,8 @@ public class PlayerUtils {
         player.removeResourcePacks();
         player.releaseLeftShoulderEntity();
         player.releaseRightShoulderEntity();
+        player.setSimulationDistance(Bukkit.getSimulationDistance());
+        player.setViewDistance(player.getClientViewDistance());
         player.setWorldBorder(player.getWorld().getWorldBorder());
         for (Sound sound : Sound.values()) {
             player.stopSound(sound);
@@ -109,6 +111,7 @@ public class PlayerUtils {
         player.setWalkSpeed(0.2f);
         player.setCanPickupItems(true);
         player.setGlowing(false);
+        player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.1f);
         player.getAttribute(Attribute.GENERIC_SCALE).setBaseValue(1);
         player.getAttribute(Attribute.GENERIC_STEP_HEIGHT).setBaseValue(0.6f);
     }

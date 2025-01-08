@@ -123,6 +123,7 @@ public class Executors {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
         ConfigurationSection section = config.getConfigurationSection("code.blocks");
         if (section != null) {
+            sendCodingDebugLog(planet,"Loading codeScript...");
             List<Executor> executors = new ArrayList<>();
             Set<String> keys = section.getKeys(false);
             String path;
@@ -136,6 +137,9 @@ public class Executors {
                 }
             }
             this.executorsList = executors;
+            sendCodingDebugLog(planet,"Loaded codeScript, executors: " + executorsList.size());
+        } else {
+            sendCodingDebugLog(planet,"No code found to load.");
         }
     }
 

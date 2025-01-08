@@ -18,31 +18,29 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.params;
 
+import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
 
-public class SetFreezeTicksAction extends PlayerAction {
-    public SetFreezeTicksAction(Executor executor, Target target, int x, Arguments args) {
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+
+public class DamagePlayerAction extends PlayerAction {
+    public DamagePlayerAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
-    @Override
     public void executePlayer(Player player) {
-        boolean add = getArguments().getValue("add",false,this);
-        int ticks = getArguments().getValue("ticks",0,this);
-        if (!add) {
-            player.setFreezeTicks(ticks);
-        } else {
-            player.setFreezeTicks(player.getFreezeTicks()+ticks);
+        if (player.isDead()) {
+            return;
         }
+        player.damage(getArguments().getValue("damage",2.0d,this));
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.PLAYER_SET_FREEZE_TICKS;
+        return ActionType.PLAYER_ADD_DAMAGE;
     }
 }

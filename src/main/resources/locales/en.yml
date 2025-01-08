@@ -1928,6 +1928,568 @@ items:
             choices:
               false: "Set"
               true: "Add"
+      entity-set-armor:
+        name: "&5Equip Armor"
+        lore:
+          - "&7Equip mob with your items as:"
+          - "&7Helmet, Chestplate, Leggings, Boots."
+          - ""
+          - "&fIn Chest:"
+          - "&c Item &7- Helmet"
+          - "&c Item &7- Chestplate"
+          - "&c Item &7- Leggings"
+          - "&c Item &7- Boots"
+          - "&3 Option &7- Replace empty slots with air."
+          - ""
+          - "&eClick to set action."
+        arguments:
+          replace-with-air:
+            name: "&fReplace empty slots with air"
+            lore:
+              - "&7If selected, empty slots in the"
+              - "&7mob's inventory will be filled with air."
+              - ""
+              - "&eClick to toggle."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Don't Replace"
+              true: "Replace with Air"
+        placeholders:
+          helmet:
+            name: "&6Helmet"
+          chestplate:
+            name: "&6Chestplate"
+          leggings:
+            name: "&6Leggings"
+          boots:
+            name: "&6Boots"
+      entity-set-items:
+        name: "&6Set Items"
+        lore:
+          - "&7Set mob inventory items."
+          - ""
+          - "&fIn Chest:"
+          - "&c Item(s) &7- Items for inventory."
+          - ""
+          - "&eClick to set action."
+      entity-set-item-in-hand:
+        name: "&9Set Item in Hand"
+        lore:
+          - "&7Changes main/off-hand items."
+          - ""
+          - "&fIn Chest:"
+          - "&c Item &7- For main hand"
+          - "&3 Option &7- Replace with air"
+          - "&c Item &7- For off-hand"
+          - ""
+          - "&eClick to set action."
+      entity-get-item-by-slot:
+        name: "&eGet Item from Slot"
+        lore:
+          - "&7Assign the item from a mob's"
+          - "&7inventory slot to a variable."
+          - ""
+          - "&fIn Chest:"
+          - "&e Variable &7- To save the item"
+          - "&a Number &7- Slot with the item"
+          - ""
+          - "&eClick to set action."
+        placeholders:
+          slot:
+            name: "&aSlot with Item"
+            lore:
+              - "&7Set the slot number containing"
+              - "&7the desired item."
+              - ""
+              - "&a 1-9 &7- Hotbar slots"
+              - "&a 10-18 &7- Inventory row 1"
+              - "&a 19-27 &7- Inventory row 2"
+              - "&a 28-36 &7- Inventory row 3"
+              - "&a 37 &7- Boots"
+              - "&a 38 &7- Leggings"
+              - "&a 39 &7- Chestplate"
+              - "&a 40 &7- Helmet"
+              - "&a 41 &7- Off-hand"
+              - ""
+              - "&7Default: &a1"
+              - "&cValue: 1-50"
+      entity-clear-inventory:
+        name: "&cClear Mob Inventory"
+        lore:
+          - "&7Removes all items from"
+          - "&7the mob's inventory."
+          - ""
+          - "&eClick to set action."
+      entity-remove-items:
+        name: "&cRemove Items"
+        lore:
+          - "&7Removes specific items from mob."
+          - ""
+          - "&fIn Chest:"
+          - "&c Item(s) &7- Your item(s)"
+          - ""
+          - "&eClick to set action."
+      entity-give-items:
+        name: "&6Give Items to Mob"
+        lore:
+          - "&7Gives the mob items"
+          - "&7stored in the chest."
+          - ""
+          - "&fIn Chest:"
+          - "&c Item(s) &7- Your item(s)"
+          - ""
+          - "&eClick to set action."
+      entity-add-damage:
+        name: "&4Damage entity"
+        lore:
+          - "&7It will decrease entity's"
+          - "&7current health (HP)"
+          - " "
+          - "&fIn the chest:"
+          - "&a Number &7- Damage amount"
+          - " &7(20 damage = 10 hearts)"
+          - " &7(2 damage = 1 hearts)"
+          - " "
+          - "&eClick to set the action."
+      entity-set-health:
+        name: "&dSet Mob Health"
+        lore:
+          - "&7Change the mob's health (HP)."
+          - ""
+          - "&fIn Chest:"
+          - "&a Number &7- Health amount"
+          - "&7 (20 HP = 10 hearts)"
+          - "&7 (2 HP = 1 heart)"
+          - "&3 Option &7- Set or add value"
+          - ""
+          - "&eClick to set action."
+        arguments:
+          add:
+            name: "&fSet or Add"
+            lore:
+              - "&7Choose to add the value to"
+              - "&7the current health."
+              - ""
+              - "&eClick to toggle."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
+      entity-set-walk-speed:
+        name: "&eSet Walk Speed"
+        lore:
+          - "&7The higher the walk speed, the"
+          - "&7faster the mob will walk."
+          - " "
+          - "&fIn the chest:"
+          - "&a Number &7- Walk Speed"
+          - "&3 Parameter &7- Set or Add"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or Add"
+            lore:
+              - "&7If Add is selected, your value"
+              - "&7will be added to the current"
+              - "&7value of the entity."
+              - " "
+              - "&eClick to change."
+              - " "
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
+      entity-set-max-health:
+        name: "&6Set Max Health"
+        lore:
+          - "&7Useful for making entities stronger"
+          - "&7(bosses) or weaker than normal."
+          - " "
+          - "&fIn the chest:"
+          - "&a Number &7- Max Health (HP)"
+          - "&3 Parameter &7- Set or Add"
+          - " "
+          - "&eClick to set the action."
+      entity-set-fire-ticks:
+        name: "&cSet Fire Duration"
+        lore:
+          - "&7Adjust the duration a mob is on fire."
+          - "&7If less than 20 ticks, the fire will extinguish."
+          - " "
+          - "&fIn the chest:"
+          - "&a Number &7- Fire duration (ticks)"
+          - "&3 Option &7- Set or Add"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or Add"
+            lore:
+              - "&7Choosing 'Add' will add your value"
+              - "&7to the entity's current value."
+              - " "
+              - "&eClick to toggle."
+              - " "
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
+      entity-set-freeze-ticks:
+        name: "&3Set Freeze Duration"
+        lore:
+          - "&7Set how long the mob freezes."
+          - "&7Below 20 ticks, freezing stops."
+          - " "
+          - "&fIn the chest:"
+          - "&a Number &7- Freeze duration (ticks)"
+          - "&3 Option &7- Set or Add"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or Add"
+            lore:
+              - "&7Choosing 'Add' will add your value"
+              - "&7to the entity's current value."
+              - " "
+              - "&eClick to toggle."
+              - " "
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
+      entity-clear-potion-effects:
+        name: "&fClear Potion Effects"
+        lore:
+          - "&7If the chest is empty, all effects"
+          - "&7will be removed from the entity."
+          - "&7Otherwise, only the selected effects"
+          - "&7will be removed."
+          - " "
+          - "&fIn the chest:"
+          - "&d Potion(s) &7- Effects to remove"
+          - " "
+          - "&eClick to set the action."
+      entity-give-potion-effects:
+        name: "&9Apply Potion Effects"
+        lore:
+          - "&7Applies all effects contained in"
+          - "&7the potions in the chest."
+          - " "
+          - "&fIn the chest:"
+          - "&d Potion(s) &7- Effects to apply"
+          - " "
+          - "&eClick to set the action."
+      entity-remove-potion-effects:
+        name: "&3Remove Potion Effects"
+        lore:
+          - "&7Removes all potion effects"
+          - "&7from the entity."
+          - " "
+          - "&fIn the chest:"
+          - "&d Potion(s) &7- Effects to remove"
+          - " "
+          - "&eClick to set the action."
+      entity-set-fall-distance:
+        name: "&6Set Fall Distance"
+        lore:
+          - "&7Adjust the entity's fall distance"
+          - "&7when landing."
+          - " "
+          - "&fIn the chest:"
+          - "&a Number &7- Fall distance (blocks)"
+          - "&3 Option &7- Set or Add"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or Add"
+            lore:
+              - "&7Choosing 'Add' will add your value"
+              - "&7to the entity's current value."
+              - " "
+              - "&eClick to toggle."
+              - " "
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
+      entity-set-last-damage:
+        name: "&cSet Last Damage"
+        lore:
+          - "&7Adjust the last damage value"
+          - "&7the mob received."
+          - " "
+          - "&fIn the chest:"
+          - "&a Number &7- Damage value (HP)"
+          - "&3 Option &7- Set or Add"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or Add"
+            lore:
+              - "&7Choosing 'Add' will add your value"
+              - "&7to the entity's current value."
+              - " "
+              - "&eClick to toggle."
+              - " "
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
+      entity-set-can-pickup-item:
+        name: "&eAllow Mob to Pickup Items"
+        lore:
+          - "&7Mobs can pick up items from the"
+          - "&7ground by default."
+          - " "
+          - "&fIn the chest:"
+          - "&3 Option &7- Allow or Restrict"
+          - "&7 item pickup."
+          - " "
+          - "&eClick to set the action."
+      entity-set-arrows-in-body:
+        name: "&eModify Arrows in Body"
+        lore:
+          - "&7You can change the number of arrows"
+          - "&7stuck in the entity. To clear the arrows,"
+          - "&7set the count to 0."
+          - " "
+          - "&fIn the chest:"
+          - "&a Number &7- Arrow count"
+          - "&3 Option &7- Set or Add"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or Add"
+            lore:
+              - "&7Choosing 'Add' will add your value"
+              - "&7to the entity's current value."
+              - ""
+              - "&eClick to toggle."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
+      entity-set-shield-blocking-delay:
+        name: "&6Set Shield Delay"
+        lore:
+          - "&7This adjusts the shield delay"
+          - "&7for blocking damage."
+          - " "
+          - "&fIn the chest:"
+          - "&a Number &7- Delay (ticks)"
+          - "&3 Option &7- Set or Add"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or Add"
+            lore:
+              - "&7Choosing 'Add' will add your value"
+              - "&7to the entity's current value."
+              - ""
+              - "&eClick to toggle."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
+      entity-set-bee-stinger-cooldown:
+        name: "&eSet Bee Stinger Cooldown"
+        lore:
+          - "&7Set the cooldown before"
+          - "&7the next stinger can be used."
+          - " "
+          - "&fIn the chest:"
+          - "&a Number &7- Cooldown (ticks)"
+          - "&3 Option &7- Set or Add"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or Add"
+            lore:
+              - "&7Choosing 'Add' will add your value"
+              - "&7to the entity's current value."
+              - ""
+              - "&eClick to toggle."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
+      entity-set-no-damage-ticks:
+        name: "&eSet No Damage Time"
+        lore:
+          - "&7By default, a mob can only take"
+          - "&7damage if a second has passed"
+          - "&7since the last damage was dealt."
+          - " "
+          - "&fIn the chest:"
+          - "&a Number &7- No-damage time (ticks)"
+          - "&3 Option &7- Set or Add"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or Add"
+            lore:
+              - "&7Choosing 'Add' will add your value"
+              - "&7to the entity's current value."
+              - ""
+              - "&eClick to toggle."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
+      entity-set-maximum-no-damage-ticks:
+        name: "&6Set Max No Damage Time"
+        lore:
+          - "&7This sets the maximum time"
+          - "&7before the next damage can be"
+          - "&7applied to the mob."
+          - " "
+          - "&fIn the chest:"
+          - "&a Number &7- No-damage time (ticks)"
+          - "&3 Option &7- Set or Add"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or Add"
+            lore:
+              - "&7Choosing 'Add' will add your value"
+              - "&7to the entity's current value."
+              - ""
+              - "&eClick to toggle."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
+      entity-launch-vertical:
+        name: "&aLaunch Vertically"
+        lore:
+          - "&7The mob will be launched upward"
+          - "&7or downward to the ground."
+          - " "
+          - "&fIn the chest:"
+          - "&a Number &7- Launch force"
+          - " "
+          - "&eClick to set the action."
+      entity-launch-horizontal:
+        name: "&cLaunch Horizontally"
+        lore:
+          - "&7The mob will be launched forward"
+          - "&7or backward from its location."
+          - " "
+          - "&fIn the chest:"
+          - "&a Number &7- Launch force"
+          - " "
+          - "&eClick to set the action."
+      entity-launch-to-location:
+        name: "&eLaunch to Location"
+        lore:
+          - "&7The mob will be launched directly"
+          - "&7to a specified location."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location &7- Target destination"
+          - " "
+          - "&eClick to set the action."
+      entity-teleport:
+        name: "&3Teleport Entities"
+        lore:
+          - "&7The mob will be moved to"
+          - "&7specified coordinates."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location &7- Target position"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          consider:
+            name: "&3Consider Location Options"
+            lore:
+              - ""
+              - "&7Choose what to consider when"
+              - "&7teleporting the entity."
+              - ""
+              - "&7Selecting Only Rotation will not"
+              - "&7move the mob, but will adjust its"
+              - "&7camera angle."
+              - ""
+              - "&eClick to toggle."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+            choices:
+              all: "Consider All"
+              only-coordinates: "Coordinates Only"
+              only-rotation: "Rotation Only"
+      entity-saddle-entity:
+        name: "&6Saddle an Entity"
+        lore:
+          - "&7Let a mob ride a pig,"
+          - "&7dragon, or another mob."
+          - " "
+          - "&fIn the chest:"
+          - "&6 Text &7- Mob name"
+          - " &7or its UUID."
+          - " "
+          - "&eClick to set the action."
+        placeholders:
+          entity:
+            name: "&6Mob Name or UUID"
+            lore:
+              - "&7Place the name or UUID"
+              - "&7of the mob that should"
+              - "&7be ridden here."
+      entity-set-glowing:
+        name: "&aSet Entity Glowing"
+        lore:
+          - "&7Make an entity glow or stop glowing."
+          - "&7Useful for shooters or hide-and-seek."
+          - " "
+          - "&fIn the chest:"
+          - "&3 Option &7- Enable or disable"
+          - " &7glowing."
+          - " "
+          - "&eClick to set the action."
       world-send-web-request:
         name: "&bSend a Request to a Website"
         lore:
@@ -2728,6 +3290,76 @@ items:
               survival: "Survival"
               creative: "Creative"
               spectator: "Spectator"
+      player-add-damage:
+        name: "&4Damage player"
+        lore:
+          - "&7It will decrease player's"
+          - "&7current health (HP)"
+          - " "
+          - "&fIn the chest:"
+          - "&a Number &7- Damage amount"
+          - " &7(20 damage = 10 hearts)"
+          - " &7(2 damage = 1 hearts)"
+          - " "
+          - "&eClick to set the action."
+      player-set-simulation-distance:
+        name: "&eSet simulation distance"
+        lore:
+          - "&7Decreases or increases simulation"
+          - "&7distance for chunks loading."
+          - " "
+          - "&fIn the chest:"
+          - "&a Number &7- Distance"
+          - "&3 Option &7- Set or add value"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or Add Value"
+            lore:
+              - "&7If set to add, the current"
+              - "&7health will increase by the"
+              - "&7specified amount."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
+      player-set-view-distance:
+        name: "&eSet view distance"
+        lore:
+          - "&7It will increase or decrease"
+          - "&7player's view distance for"
+          - "&7blocks that are far away."
+          - ""
+          - "&7If 0 player can see blocks"
+          - "&7around him, if -1 no blocks."
+          - " "
+          - "&fIn the chest:"
+          - "&a Number &7- Distance"
+          - "&3 Option &7- Set or add value"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or Add Value"
+            lore:
+              - "&7If set to add, the current"
+              - "&7health will increase by the"
+              - "&7specified amount."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
       player-set-health:
         name: "&dSet Player Health"
         lore:
@@ -3101,7 +3733,29 @@ items:
             choices:
               front: "Front"
               back: "Back"
-
+      world-copy-blocks:
+        name: "&5Copy and paste blocks"
+        lore:
+          - "&7This will copy blocks area"
+          - "&7from one location and paste"
+          - "&7in another."
+          - ""
+          - "&fIn the chest:"
+          - "&f Location &7- First position"
+          - "&f Location &7- Second position"
+          - "&f Location &7- From"
+          - "&f Location &7- To"
+          - ""
+          - "&eClick to set the action."
+        placeholders:
+          first:
+            name: "&fFirst position"
+          second:
+            name: "&fSecond position"
+          from:
+            name: "&fFrom location"
+          where:
+            name: "&fTo location"
       world-set-time:
         name: "&eSet World Time"
         lore:
@@ -3122,7 +3776,6 @@ items:
               - ""
               - "&7Default: &a6"
               - "&cNumber from 0 to 24"
-
       world-spawn-particle:
         name: "&5Show Particle to All"
         lore:
@@ -8904,6 +9557,9 @@ blocks:
 
   # Actions
   player_kick: "Kick from world"
+  player_launch_vertical: "Launch vertic."
+  player_launch_horizontal: "Launch horiz."
+  player_launch_to_location: "Launch to loc."
   player_set_world_border: "Set world border"
   player_show_boss_bar: "Show boss bar"
   player_hide_boss_bar: "Hide boss bar"
@@ -8913,15 +9569,16 @@ blocks:
   player_play_sound: "Play sound"
   player_clear_chat: "Clear chat"
   player_stop_sounds: "Stop sounds"
-  player_show_win_screen: "Minecraft ending screen"
-  player_show_demo_screen: "Demo version screen"
-  player_show_advancement: "Show advancement"
+  player_show_win_screen: "Ending screen"
+  player_show_demo_screen: "Demo screen"
+  player_show_advancement: "Advancement"
   player_show_title: "Show title"
   player_send_dialog: "Dialog"
   player_show_actionbar: "Action bar"
   player_saddle_entity: "Saddle entity"
   player_give_items: "Give item"
   player_set_items: "Set item"
+  player_remove_items: "Remove item"
   player_set_armor: "Set armor"
   player_give_random_item: "Random item"
   player_set_slot: "Set slot"
@@ -8941,6 +9598,9 @@ blocks:
   player_clear_inventory: "Clear inventory"
   player_set_gamemode: "Set game mode"
   player_set_health: "Set health"
+  player_set_view_distance: "View distance"
+  player_set_simulation_distance: "Simul. distance"
+  player_add_damage: "Damage"
   player_set_walk_speed: "Set walk speed"
   player_set_fly_speed: "Set fly speed"
   player_set_max_health: "Set max health"
@@ -8956,7 +9616,6 @@ blocks:
   player_set_cursor_item: "Set cursor item"
   player_set_item_in_hand: "Set item in hand"
   player_swing_hand: "Swing hand"
-  player_close_inventory: "Close inventory"
   player_firework_boost: "Firework boost"
   player_set_flying_fall_damage: "Falling in flight"
   player_set_fall_distance: "Set fall distance"
@@ -8989,6 +9648,36 @@ blocks:
   entity_path_move_to_location: "Path location"
   entity_set_armor_stand_pose: "Stand Pose"
   entity_set_velocity: "Set Velocity"
+  entity_set_items: "Set Items"
+  entity_set_armor: "Set Armor"
+  entity_set_slot: "Set Slot"
+  entity_clear_inventory: "Clear Inventory"
+  entity_get_item_by_slot: "Get Item"
+  entity_give_items: "Give Items"
+  entity_remove_items: "Remove Items"
+  entity_add_damage: "Damage"
+  entity_set_health: "Set Health"
+  entity_set_walk_speed: "Walk Speed"
+  entity_set_max_health: "Max Health"
+  entity_set_fire_ticks: "Set Fire Duration"
+  entity_set_freeze_ticks: "Set Freeze Duration"
+  entity_set_no_damage_ticks: "Set No Damage Time"
+  entity_give_potion_effects: "Give Effects"
+  entity_remove_potion_effects: "Remove Effects"
+  entity_clear_potion_effects: "Clear Effects"
+  entity_set_fall_distance: "Fall Distance"
+  entity_set_last_damage: "Last Damage"
+  entity_set_can_pickup_items: "Pickup Items"
+  entity_set_arrows_in_body: "Arrows in Body"
+  entity_set_shield_blocking_delay: "Shield Delay"
+  entity_set_bee_stinger_cooldown: "Bee Stinger Cooldown"
+  entity_set_maximum_no_damage_ticks: "Max No Damage"
+  entity_set_glowing: "Set Glowing"
+  entity_teleport: "Teleport"
+  entity_launch_vertical: "Launch Vertically"
+  entity_launch_horizontal: "Launch Horizontally"
+  entity_launch_to_location: "Launch to Location"
+  entity_saddle_entity: "Saddle Entity"
 
   handler_catch_error: "Catch error"
   handler_measure_time: "Measure time"
@@ -9103,6 +9792,7 @@ blocks:
   world_set_weather: "World weather"
   world_spawn_entity: "Spawn entity"
   world_spawn_particle: "Spawn particle"
+  world_copy_blocks: "Copy blocks"
   world_strike_lightning: "Summon lightning"
   world_create_explosion: "Create explosion"
   world_set_block_type: "Set block"

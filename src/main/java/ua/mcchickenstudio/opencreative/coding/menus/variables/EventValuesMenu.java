@@ -50,7 +50,7 @@ public class EventValuesMenu extends AbstractListMenu {
     protected ItemStack getElementIcon(Object object) {
         if (object instanceof EventValues.Variable variable) {
             ItemStack icon = createItem(variable.getIcon(),1,"menus.developer.event-values.items." + variable.name().toLowerCase().replace("_","-"));
-            setPersistentData(icon,getCodingValueKey(),variable.name());
+            setPersistentData(icon,getCodingVariableTypeKey(),variable.name());
             return icon;
         }
         return ItemStack.empty();
