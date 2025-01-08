@@ -72,6 +72,8 @@ public class PlayerUtils {
         player.removeResourcePacks();
         player.releaseLeftShoulderEntity();
         player.releaseRightShoulderEntity();
+        player.setSimulationDistance(Bukkit.getSimulationDistance());
+        player.setViewDistance(player.getClientViewDistance());
         player.setWorldBorder(player.getWorld().getWorldBorder());
         for (Sound sound : Sound.values()) {
             player.stopSound(sound);
