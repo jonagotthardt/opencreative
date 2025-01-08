@@ -136,6 +136,20 @@ public class ErrorUtils {
     }
 
     /**
+     Sends error message for planet's players.
+     **/
+    public static void sendPlanetErrorMessage(Planet planet, String errorMessage, Exception error) {
+        if (OpenCreative.getSettings().isConsoleWarnings()) OpenCreative.getPlugin().getLogger().warning("An error has occurred in planet " + planet.getWorldName() + ": " + errorMessage + " " + parseException(error,false));
+        for (Player player : planet.getPlayers()) {
+            Component message = Component
+                    .text(getLocaleMessage("planet-error").replace("%error%",errorMessage))
+                    .hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(Component.text(parseException(error,true))));
+            player.sendMessage(message);
+            player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK,100f,0.1f);
+        }
+    }
+
+    /**
      Sends error message about planet's code exception on running Action for planet's players.
      **/
     public static void sendPlanetCodeWarningMessage(Executor executor, Action action, String warningMessage) {

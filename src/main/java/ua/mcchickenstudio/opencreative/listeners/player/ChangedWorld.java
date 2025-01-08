@@ -148,6 +148,7 @@ public class ChangedWorld implements Listener {
                 }.runTaskAsynchronously(OpenCreative.getPlugin());
             }
             if (newPlanet != null) {
+                newPlanet.getWorldPlayers().registerPlayer(player);
                 if (newPlanet.getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
                     for (Player onlinePlayer : newPlanet.getPlayers()) {
                         onlinePlayer.sendMessage(getLocaleMessage("world.joined", player));

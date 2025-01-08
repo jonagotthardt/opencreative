@@ -63,6 +63,7 @@ public class CodeScript {
      * Loads code from codeScript.yml file.
      */
     public void loadCode() {
+        sendCodingDebugLog(planet,"Loading code...");
         new BukkitRunnable() {
             @Override
             public void run() {

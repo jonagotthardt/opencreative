@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser.raiseQuitEvent;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
@@ -146,6 +147,9 @@ public class PlanetTerritory {
          * it causes problems on world unloading
          * when plugin is disabling!
          */
+        for (Player player : planet.getPlayers()) {
+            raiseQuitEvent(player);
+        }
         FileUtils.setPlanetConfigParameter(planet,"last-activity-time",System.currentTimeMillis());
         FileUtils.setPlanetConfigParameter(planet,"environment", planet.getTerritory().getEnvironment().name());
         planet.getVariables().save();

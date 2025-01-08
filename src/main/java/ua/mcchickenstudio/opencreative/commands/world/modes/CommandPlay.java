@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.commands.world.modes;
 
+import org.bukkit.command.TabCompleter;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
@@ -34,6 +36,9 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.jetbrains.annotations.NotNull;
 
 
+import java.util.Arrays;
+import java.util.List;
+
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.removePlayerWithLocation;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 
@@ -43,8 +48,7 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
-
-public class CommandPlay implements CommandExecutor {
+public class CommandPlay implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
@@ -91,10 +95,12 @@ public class CommandPlay implements CommandExecutor {
                 if (EventRaiser.raisePlayEvent(player) || planet.getWorldPlayers().canDevelop(player)) {
                     if (planet.getWorldPlayers().canDevelop(player)) {
                         player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
-                        if (planet.getDevPlanet().isLoaded()) {
-                            new CodingBlockParser().parseCode(planet.getDevPlanet());
-                        } else {
-                            planet.getTerritory().getScript().loadCode();
+                        if (!Arrays.asList(args).contains("--no-compile")) {
+                            if (planet.getDevPlanet().isLoaded()) {
+                                new CodingBlockParser().parseCode(planet.getDevPlanet());
+                            } else {
+                                planet.getTerritory().getScript().loadCode();
+                            }
                         }
                     } else {
                         player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
@@ -119,5 +125,16 @@ public class CommandPlay implements CommandExecutor {
             }
         }
         return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (!(sender instanceof Player player)) return null;
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        if (planet == null) return null;
+        if (planet.getMode() == Planet.Mode.PLAYING && planet.getWorldPlayers().canDevelop(player) && args.length <= 1) {
+            return List.of("--no-compile");
+        }
+        return null;
     }
 }
