@@ -29,7 +29,7 @@ import org.bukkit.entity.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CloneListAction extends VariableAction {
+public final class CloneListAction extends VariableAction {
     public CloneListAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

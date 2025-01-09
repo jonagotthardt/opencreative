@@ -25,7 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.Playe
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
 
-public class ShowDemoScreenAction extends PlayerAction {
+public final class ShowDemoScreenAction extends PlayerAction {
     public ShowDemoScreenAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

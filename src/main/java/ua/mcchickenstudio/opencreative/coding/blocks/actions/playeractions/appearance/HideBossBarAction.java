@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.entity.Player;
 
-public class HideBossBarAction extends PlayerAction {
+public final class HideBossBarAction extends PlayerAction {
     public HideBossBarAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

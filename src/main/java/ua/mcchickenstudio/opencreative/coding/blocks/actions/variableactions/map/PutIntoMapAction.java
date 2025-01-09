@@ -28,7 +28,7 @@ import org.bukkit.entity.Entity;
 
 import java.util.Map;
 
-public class PutIntoMapAction extends VariableAction {
+public final class PutIntoMapAction extends VariableAction {
     public PutIntoMapAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

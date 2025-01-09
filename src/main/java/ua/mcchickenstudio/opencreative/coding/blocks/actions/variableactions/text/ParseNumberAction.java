@@ -28,7 +28,7 @@ import org.bukkit.entity.Entity;
 
 import java.util.regex.Pattern;
 
-public class ParseNumberAction extends VariableAction {
+public final class ParseNumberAction extends VariableAction {
 
     private final static Pattern INT_PATTERN = Pattern.compile("^-?[0-9]*$");
     private final static Pattern FLOAT_PATTERN = Pattern.compile("^-?[0-9]*\\.?[0-9]+$");

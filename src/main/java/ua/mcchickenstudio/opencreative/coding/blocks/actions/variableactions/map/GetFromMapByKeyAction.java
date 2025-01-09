@@ -28,7 +28,7 @@ import org.bukkit.entity.Entity;
 
 import java.util.Map;
 
-public class GetFromMapByKeyAction extends VariableAction {
+public final class GetFromMapByKeyAction extends VariableAction {
     public GetFromMapByKeyAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

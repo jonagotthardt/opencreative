@@ -27,7 +27,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.EulerAngle;
 
-public class SetArmorStandPoseAction extends EntityAction {
+public final class SetArmorStandPoseAction extends EntityAction {
     public SetArmorStandPoseAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

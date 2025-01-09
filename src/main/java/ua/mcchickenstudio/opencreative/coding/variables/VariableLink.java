@@ -33,16 +33,10 @@ public class VariableLink {
 
     private final String name;
     private final VariableType type;
-    private ActionsHandler handler;
 
     public VariableLink(String name, VariableType type) {
         this.name = name;
         this.type = type;
-        this.handler = null;
-    }
-
-    public void setHandler(ActionsHandler handler) {
-        this.handler = handler;
     }
 
     public VariableType getVariableType() {
@@ -53,14 +47,19 @@ public class VariableLink {
         return name;
     }
 
-    public ActionsHandler getHandler() {
-        return handler;
-    }
-
     public enum VariableType {
 
+        /**
+         * Local variables are stored per code line (main action handler).
+         */
         LOCAL(1,ChatColor.RED),
+        /**
+         * Global variables are stored when world is loaded.
+         */
         GLOBAL(2,ChatColor.YELLOW),
+        /**
+         * Saved variables will be stored forever.
+         */
         SAVED(3,ChatColor.GREEN);
 
         private final ChatColor color;

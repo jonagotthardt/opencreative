@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @UtilityClass
-public class BlockActionCoverage {
+public final class BlockActionCoverage {
 
     private static final int LIMIT_PER_TICK = 90;
     private static final int LIMIT_TO_PREVENT = 400;

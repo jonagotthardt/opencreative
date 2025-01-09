@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.entity.Entity;
 
-public class BossBarOverlayAction extends WorldAction {
+public final class BossBarOverlayAction extends WorldAction {
     public BossBarOverlayAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

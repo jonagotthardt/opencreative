@@ -31,7 +31,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
-public class ApplyBoneMealAction extends WorldAction {
+public final class ApplyBoneMealAction extends WorldAction {
     public ApplyBoneMealAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

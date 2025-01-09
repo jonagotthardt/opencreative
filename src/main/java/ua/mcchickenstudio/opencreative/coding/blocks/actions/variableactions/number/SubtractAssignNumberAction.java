@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import org.bukkit.entity.Entity;
 
-public class SubtractAssignNumberAction extends VariableAction {
+public final class SubtractAssignNumberAction extends VariableAction {
     public SubtractAssignNumberAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

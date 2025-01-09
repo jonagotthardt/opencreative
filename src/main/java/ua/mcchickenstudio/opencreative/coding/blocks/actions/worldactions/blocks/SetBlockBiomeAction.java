@@ -31,7 +31,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
-public class SetBlockBiomeAction extends WorldAction {
+public final class SetBlockBiomeAction extends WorldAction {
     public SetBlockBiomeAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

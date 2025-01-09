@@ -27,7 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
-public class DeleteTeamAction extends WorldAction {
+public final class DeleteTeamAction extends WorldAction {
     public DeleteTeamAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

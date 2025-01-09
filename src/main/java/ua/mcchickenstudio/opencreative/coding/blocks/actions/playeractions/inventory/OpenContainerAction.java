@@ -33,7 +33,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class OpenContainerAction extends PlayerAction {
+public final class OpenContainerAction extends PlayerAction {
     public OpenContainerAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

@@ -36,7 +36,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 
-public class SendWebRequestAction extends WorldAction {
+public final class SendWebRequestAction extends WorldAction {
     public SendWebRequestAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

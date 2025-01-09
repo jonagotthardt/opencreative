@@ -27,7 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.Var
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
-public class LocationToVectorAction extends VariableAction {
+public final class LocationToVectorAction extends VariableAction {
     public LocationToVectorAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

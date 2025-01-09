@@ -29,7 +29,7 @@ import org.bukkit.entity.Entity;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 
-public class CreateBossBarAction extends WorldAction {
+public final class CreateBossBarAction extends WorldAction {
     public CreateBossBarAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

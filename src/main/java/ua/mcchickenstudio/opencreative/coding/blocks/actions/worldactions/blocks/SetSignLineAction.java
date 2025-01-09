@@ -31,7 +31,7 @@ import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class SetSignLineAction extends WorldAction {
+public final class SetSignLineAction extends WorldAction {
     public SetSignLineAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

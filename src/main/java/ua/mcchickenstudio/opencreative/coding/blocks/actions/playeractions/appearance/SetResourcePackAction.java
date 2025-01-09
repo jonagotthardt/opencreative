@@ -28,7 +28,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Set;
 
-public class SetResourcePackAction extends PlayerAction {
+public final class SetResourcePackAction extends PlayerAction {
     public SetResourcePackAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

@@ -29,7 +29,7 @@ import org.bukkit.entity.Entity;
 
 import java.util.List;
 
-public class RepeatForLoopAction extends RepeatAction {
+public final class RepeatForLoopAction extends RepeatAction {
 
     public RepeatForLoopAction(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
         super(executor, target, x, args, actions);

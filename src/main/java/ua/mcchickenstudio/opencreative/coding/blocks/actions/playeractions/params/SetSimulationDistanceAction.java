@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
-public class SetSimulationDistanceAction extends PlayerAction {
+public final class SetSimulationDistanceAction extends PlayerAction {
     public SetSimulationDistanceAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

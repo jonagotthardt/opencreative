@@ -28,7 +28,7 @@ import org.bukkit.entity.Entity;
 
 import java.util.List;
 
-public class DeleteVariableAction extends VariableAction {
+public final class DeleteVariableAction extends VariableAction {
 
     public DeleteVariableAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);

@@ -27,7 +27,7 @@ import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Entity;
 
-public class BossBarDisplayNameAction extends WorldAction {
+public final class BossBarDisplayNameAction extends WorldAction {
     public BossBarDisplayNameAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

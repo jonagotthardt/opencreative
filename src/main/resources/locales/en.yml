@@ -1455,6 +1455,18 @@ items:
           - "&7> Get item info"
           - " "
           - "&eClick to set event."
+      player-item-craft:
+        name: "&6Player crafted an item"
+        lore:
+          - "&7Triggered when a player crafts"
+          - "&7item in crafting table or inventory."
+          - " "
+          - "&fUse for:"
+          - "&7> Cancel event"
+          - "&7> Change result item"
+          - "&7> Play sound"
+          - " "
+          - "&eClick to set event."
       player-item-consume:
         name: "&6Player consumed an item"
         lore:
@@ -9543,9 +9555,10 @@ blocks:
   player_chunk_unload: "Unloaded chunk"
   player_bed_enter: "Entered bed"
   player_bed_leave: "Left bed"
-  player_purchase: "&ePurchased an item"
-  player_item_consume: "Consumed an item"
-  player_item_break: "Broke an item"
+  player_purchase: "&ePurchased"
+  player_item_consume: "Consumed item"
+  player_item_craft: "Crafted item"
+  player_item_break: "Broke item"
   player_killed_player: "Killed a player"
   player_damage_player: "Hit a player"
 

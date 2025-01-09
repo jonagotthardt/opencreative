@@ -16,25 +16,23 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction;
+package ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
-public class FishEvent extends WorldEvent {
+public class PlayerItemCraftEvent extends WorldEvent {
 
-    private final PlayerFishEvent event;
-    private ItemStack caughtItem = null;
+    private final CraftItemEvent event;
+    private final ItemStack item;
 
-    public FishEvent(Player player, PlayerFishEvent event) {
+    public PlayerItemCraftEvent(Player player, CraftItemEvent event) {
         super(player);
         this.event = event;
-        if (event.getCaught() instanceof Item) {
-            caughtItem = ((Item) event.getCaught()).getItemStack();
-        }
+        this.item = event.getRecipe().getResult();
     }
 
     @Override
@@ -42,7 +40,8 @@ public class FishEvent extends WorldEvent {
         event.setCancelled(cancelled);
     }
 
-    public ItemStack getCaughtItem() {
-        return caughtItem;
+    public ItemStack getItem() {
+        return item;
     }
+
 }

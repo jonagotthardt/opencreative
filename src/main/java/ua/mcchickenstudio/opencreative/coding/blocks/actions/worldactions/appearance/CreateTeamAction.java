@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
-public class CreateTeamAction extends WorldAction {
+public final class CreateTeamAction extends WorldAction {
     public CreateTeamAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

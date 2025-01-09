@@ -37,7 +37,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
-public class SetBlockPoweredAction extends WorldAction {
+public final class SetBlockPoweredAction extends WorldAction {
     public SetBlockPoweredAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

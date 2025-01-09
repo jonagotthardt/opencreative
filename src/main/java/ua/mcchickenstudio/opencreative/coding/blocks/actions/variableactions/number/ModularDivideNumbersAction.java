@@ -28,7 +28,7 @@ import org.bukkit.entity.Entity;
 
 import java.util.List;
 
-public class ModularDivideNumbersAction extends VariableAction {
+public final class ModularDivideNumbersAction extends VariableAction {
     public ModularDivideNumbersAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

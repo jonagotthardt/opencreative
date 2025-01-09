@@ -30,7 +30,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateListAction extends VariableAction {
+public final class CreateListAction extends VariableAction {
     public CreateListAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

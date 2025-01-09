@@ -27,7 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.utils.hooks.DisguiseUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 
-public class DisguiseAsPlayerAction extends EntityAction {
+public final class DisguiseAsPlayerAction extends EntityAction {
     public DisguiseAsPlayerAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

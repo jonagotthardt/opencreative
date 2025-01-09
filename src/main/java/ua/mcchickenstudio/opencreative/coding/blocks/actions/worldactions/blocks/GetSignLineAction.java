@@ -30,7 +30,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Entity;
 
-public class GetSignLineAction extends WorldAction {
+public final class GetSignLineAction extends WorldAction {
     public GetSignLineAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

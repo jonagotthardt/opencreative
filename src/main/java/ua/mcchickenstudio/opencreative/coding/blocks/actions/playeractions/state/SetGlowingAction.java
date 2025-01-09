@@ -25,7 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.Playe
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
 
-public class SetGlowingAction extends PlayerAction {
+public final class SetGlowingAction extends PlayerAction {
     public SetGlowingAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

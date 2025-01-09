@@ -29,7 +29,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SendDialogAction extends PlayerAction {
+public final class SendDialogAction extends PlayerAction {
     public SendDialogAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

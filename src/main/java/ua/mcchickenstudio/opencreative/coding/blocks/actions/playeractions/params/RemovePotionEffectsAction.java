@@ -31,7 +31,7 @@ import org.bukkit.potion.PotionEffect;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RemovePotionEffectsAction extends PlayerAction {
+public final class RemovePotionEffectsAction extends PlayerAction {
     public RemovePotionEffectsAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

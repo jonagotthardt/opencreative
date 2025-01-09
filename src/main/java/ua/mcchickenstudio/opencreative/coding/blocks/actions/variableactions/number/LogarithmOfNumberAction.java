@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import org.bukkit.entity.Entity;
 
-public class LogarithmOfNumberAction extends VariableAction {
+public final class LogarithmOfNumberAction extends VariableAction {
     public LogarithmOfNumberAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

@@ -27,7 +27,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class StopSoundsAction extends PlayerAction {
+public final class StopSoundsAction extends PlayerAction {
     public StopSoundsAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

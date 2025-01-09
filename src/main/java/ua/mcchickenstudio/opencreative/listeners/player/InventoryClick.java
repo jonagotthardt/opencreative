@@ -55,6 +55,12 @@ public class InventoryClick implements Listener {
     final PlanetManager planetManager = PlanetManager.getInstance();
 
     @EventHandler
+    public void onCraft(CraftItemEvent event) {
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+        EventRaiser.raiseItemCraftEvent(player,event);
+    }
+
+    @EventHandler
     public void click(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
 

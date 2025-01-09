@@ -29,7 +29,7 @@ import org.bukkit.entity.Entity;
 import java.util.List;
 import java.util.Random;
 
-public class SetVariableRandomValueAction extends VariableAction {
+public final class SetVariableRandomValueAction extends VariableAction {
     public SetVariableRandomValueAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

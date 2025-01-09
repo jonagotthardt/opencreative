@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
-public class SetGameModeAction extends PlayerAction {
+public final class SetGameModeAction extends PlayerAction {
     public SetGameModeAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

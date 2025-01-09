@@ -32,7 +32,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public class AddToListAction extends VariableAction {
+public final class AddToListAction extends VariableAction {
     public AddToListAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

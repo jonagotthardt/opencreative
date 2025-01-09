@@ -29,7 +29,7 @@ import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class PlaySoundAction extends PlayerAction {
+public final class PlaySoundAction extends PlayerAction {
 
     public PlaySoundAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);

@@ -168,7 +168,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                                 type = VariableLink.VariableType.getEnum(args[3]);
                                 if (type == null || type == VariableLink.VariableType.LOCAL) type = VariableLink.VariableType.GLOBAL;
                             }
-                            WorldVariable var = planet.getVariables().getVariable(varName,type);
+                            WorldVariable var = planet.getVariables().getVariable(varName,type,null);
                             if (var == null) {
                                 player.sendMessage(getLocaleMessage("environment.variables.get.empty"));
                             } else {

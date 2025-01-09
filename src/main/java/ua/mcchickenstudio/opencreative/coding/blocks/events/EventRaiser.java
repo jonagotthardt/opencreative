@@ -22,6 +22,7 @@ import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.entities.EntitySpawnEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerRespawnEvent;
@@ -534,4 +535,11 @@ public class EventRaiser {
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
+    public static void raiseItemCraftEvent(Player player, CraftItemEvent event) {
+        if (cantRaiseEvent(player)) {
+            return;
+        }
+        WorldEvent creativeEvent = new PlayerItemCraftEvent(player,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
 }

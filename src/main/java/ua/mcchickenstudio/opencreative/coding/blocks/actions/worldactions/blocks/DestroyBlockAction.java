@@ -32,7 +32,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
-public class DestroyBlockAction extends WorldAction {
+public final class DestroyBlockAction extends WorldAction {
     public DestroyBlockAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

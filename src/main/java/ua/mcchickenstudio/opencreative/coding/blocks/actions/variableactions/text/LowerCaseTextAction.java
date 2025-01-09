@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import org.bukkit.entity.Entity;
 
-public class LowerCaseTextAction extends VariableAction {
+public final class LowerCaseTextAction extends VariableAction {
     public LowerCaseTextAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

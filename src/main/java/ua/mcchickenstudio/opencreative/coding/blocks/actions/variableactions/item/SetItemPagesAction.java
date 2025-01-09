@@ -32,7 +32,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-public class SetItemPagesAction extends VariableAction {
+public final class SetItemPagesAction extends VariableAction {
     public SetItemPagesAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

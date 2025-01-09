@@ -28,7 +28,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 
-public class SpawnArrowAction extends WorldAction {
+public final class SpawnArrowAction extends WorldAction {
     public SpawnArrowAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

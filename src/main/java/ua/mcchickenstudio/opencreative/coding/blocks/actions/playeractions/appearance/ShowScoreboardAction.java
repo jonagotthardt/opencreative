@@ -27,7 +27,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 
-public class ShowScoreboardAction extends PlayerAction {
+public final class ShowScoreboardAction extends PlayerAction {
     public ShowScoreboardAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

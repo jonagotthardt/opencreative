@@ -28,7 +28,7 @@ import org.bukkit.entity.Entity;
 
 import java.util.List;
 
-public class StopCyclesAction extends ControlAction {
+public final class StopCyclesAction extends ControlAction {
 
     public StopCyclesAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);

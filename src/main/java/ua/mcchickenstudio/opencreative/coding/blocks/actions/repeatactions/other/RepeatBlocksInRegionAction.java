@@ -29,7 +29,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
 
-public class RepeatBlocksInRegionAction extends RepeatAction {
+public final class RepeatBlocksInRegionAction extends RepeatAction {
 
     public RepeatBlocksInRegionAction(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
         super(executor, target, x, args, actions);

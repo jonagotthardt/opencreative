@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
 import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Method;
 
-public class LaunchMethodAction extends Action {
+public final class LaunchMethodAction extends Action {
 
     public LaunchMethodAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);

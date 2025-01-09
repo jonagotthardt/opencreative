@@ -28,7 +28,7 @@ import org.bukkit.entity.Entity;
 import java.util.List;
 import java.util.Set;
 
-public class SelectionAddTargetAction extends SelectionAction {
+public final class SelectionAddTargetAction extends SelectionAction {
 
     public SelectionAddTargetAction(Executor executor, int x, Arguments args, ActionCategory condition, ActionType conditionType, boolean isOpposed) {
         super(executor, x, args, condition, conditionType, isOpposed);

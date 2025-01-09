@@ -36,7 +36,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import static ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser.raisePlayerPurchaseEvent;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
-public class RequestPurchaseAction extends PlayerAction {
+public final class RequestPurchaseAction extends PlayerAction {
     public RequestPurchaseAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

@@ -28,7 +28,7 @@ import org.bukkit.entity.Player;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.sendSignChange;
 
-public class SendSignChangeAction extends PlayerAction {
+public final class SendSignChangeAction extends PlayerAction {
     public SendSignChangeAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

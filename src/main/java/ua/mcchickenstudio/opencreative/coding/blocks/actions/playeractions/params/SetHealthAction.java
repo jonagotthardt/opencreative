@@ -27,7 +27,7 @@ import org.bukkit.entity.Player;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 
-public class SetHealthAction extends PlayerAction {
+public final class SetHealthAction extends PlayerAction {
     public SetHealthAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

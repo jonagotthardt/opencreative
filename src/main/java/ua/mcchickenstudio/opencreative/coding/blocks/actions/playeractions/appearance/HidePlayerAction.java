@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.Playe
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
 
-public class HidePlayerAction extends PlayerAction {
+public final class HidePlayerAction extends PlayerAction {
     public HidePlayerAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

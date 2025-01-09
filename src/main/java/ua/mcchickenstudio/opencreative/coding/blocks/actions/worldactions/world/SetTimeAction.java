@@ -25,7 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldA
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
 
-public class SetTimeAction extends WorldAction {
+public final class SetTimeAction extends WorldAction {
     public SetTimeAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

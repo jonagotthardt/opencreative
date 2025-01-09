@@ -30,7 +30,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class SetItemMaxDamageAction extends VariableAction {
+public final class SetItemMaxDamageAction extends VariableAction {
     public SetItemMaxDamageAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

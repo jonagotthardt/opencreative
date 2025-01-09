@@ -28,7 +28,7 @@ import org.bukkit.entity.Entity;
 
 import java.util.Map;
 
-public class RemoveFromMapByKeyAction extends VariableAction {
+public final class RemoveFromMapByKeyAction extends VariableAction {
     public RemoveFromMapByKeyAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

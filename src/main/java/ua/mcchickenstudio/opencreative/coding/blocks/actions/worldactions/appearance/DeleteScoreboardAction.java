@@ -31,7 +31,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.List;
 
-public class DeleteScoreboardAction extends WorldAction {
+public final class DeleteScoreboardAction extends WorldAction {
     public DeleteScoreboardAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

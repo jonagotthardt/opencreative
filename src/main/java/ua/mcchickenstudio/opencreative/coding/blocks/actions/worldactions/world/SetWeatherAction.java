@@ -25,7 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldA
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
 
-public class SetWeatherAction extends WorldAction {
+public final class SetWeatherAction extends WorldAction {
     public SetWeatherAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

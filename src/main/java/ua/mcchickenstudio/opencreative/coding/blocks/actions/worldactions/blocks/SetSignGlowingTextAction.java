@@ -32,7 +32,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
-public class SetSignGlowingTextAction extends WorldAction {
+public final class SetSignGlowingTextAction extends WorldAction {
     public SetSignGlowingTextAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

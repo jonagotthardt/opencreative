@@ -18,5 +18,5 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.movement;
 
-public class SetSpectatorTargetAction {
+public final class SetSpectatorTargetAction {
 }

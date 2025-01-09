@@ -27,7 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-public class ShowEntityAction extends PlayerAction {
+public final class ShowEntityAction extends PlayerAction {
     public ShowEntityAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

@@ -28,7 +28,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
-public class SetItemAmountAction extends VariableAction {
+public final class SetItemAmountAction extends VariableAction {
     public SetItemAmountAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

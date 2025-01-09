@@ -28,7 +28,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
-public class GetItemAmountAction extends VariableAction {
+public final class GetItemAmountAction extends VariableAction {
     public GetItemAmountAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

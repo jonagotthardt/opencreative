@@ -28,7 +28,7 @@ import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
-public class SpawnParticlesLineAction extends WorldAction {
+public final class SpawnParticlesLineAction extends WorldAction {
     public SpawnParticlesLineAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

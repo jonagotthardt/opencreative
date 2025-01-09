@@ -24,6 +24,16 @@ import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * <h1>WorldVariable</h1>
+ * This class represents a variable in world, that
+ * has type and stores value.
+ *
+ * <p>Variables can be <b>local, global, saved</b>.
+ * <p>Local - stores only in ActionsHandler
+ * <p>Global - stores in world while it's loaded
+ * <p>Saved - stores in world forever
+ */
 public class WorldVariable {
 
     private final String name;
@@ -73,8 +83,7 @@ public class WorldVariable {
         if (value instanceof List<?> list) {
             size += list.size();
         } else if (value instanceof Map<?,?> map) {
-            size += map.size();
-            size += map.size();
+            size += 2*map.size();
         }
         return size;
     }

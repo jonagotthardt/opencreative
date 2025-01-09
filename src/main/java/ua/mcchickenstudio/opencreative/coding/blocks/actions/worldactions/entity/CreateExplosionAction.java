@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
-public class CreateExplosionAction extends WorldAction {
+public final class CreateExplosionAction extends WorldAction {
     public CreateExplosionAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

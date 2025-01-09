@@ -29,7 +29,7 @@ import org.bukkit.entity.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SplitTextAction extends VariableAction {
+public final class SplitTextAction extends VariableAction {
     public SplitTextAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

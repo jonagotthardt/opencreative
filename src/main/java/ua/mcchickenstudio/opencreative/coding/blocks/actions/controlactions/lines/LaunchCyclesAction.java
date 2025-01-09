@@ -28,7 +28,7 @@ import org.bukkit.entity.Entity;
 
 import java.util.List;
 
-public class LaunchCyclesAction extends ControlAction {
+public final class LaunchCyclesAction extends ControlAction {
 
     public LaunchCyclesAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);

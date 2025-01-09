@@ -61,7 +61,6 @@ public class Argument {
 
     public Object getValue(Action action) {
         if (value instanceof VariableLink link) {
-            link.setHandler(action.getHandler().getMainActionHandler());
             Object variableValue = planet.getVariables().getVariableValue(link,action);
             if (variableValue != null) {
                 return variableValue;

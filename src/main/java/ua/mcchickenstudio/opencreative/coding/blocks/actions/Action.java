@@ -292,7 +292,6 @@ public abstract class Action {
      */
     protected void setVarValue(VariableLink link, Object value) {
         if (link != null) {
-            link.setHandler(getHandler().getMainActionHandler());
             ValueType type = ValueType.getByObject(value);
             if (type == null) {
                 type = ValueType.TEXT;
