@@ -27,7 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 
-public class StripColorAction extends VariableAction {
+public final class StripColorAction extends VariableAction {
     public StripColorAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

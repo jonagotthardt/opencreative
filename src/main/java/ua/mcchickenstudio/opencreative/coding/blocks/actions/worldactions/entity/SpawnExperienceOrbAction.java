@@ -28,7 +28,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
 
-public class SpawnExperienceOrbAction extends WorldAction {
+public final class SpawnExperienceOrbAction extends WorldAction {
     public SpawnExperienceOrbAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

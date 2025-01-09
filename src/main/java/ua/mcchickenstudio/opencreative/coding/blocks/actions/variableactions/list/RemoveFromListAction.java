@@ -18,5 +18,5 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.list;
 
-public class RemoveFromListAction {
+public final class RemoveFromListAction {
 }

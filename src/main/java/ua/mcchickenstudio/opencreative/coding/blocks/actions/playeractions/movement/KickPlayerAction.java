@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.entity.Player;
 
-public class KickPlayerAction extends PlayerAction {
+public final class KickPlayerAction extends PlayerAction {
     public KickPlayerAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

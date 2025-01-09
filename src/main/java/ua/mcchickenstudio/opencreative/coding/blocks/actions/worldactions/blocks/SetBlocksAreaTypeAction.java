@@ -32,7 +32,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 
-public class SetBlocksAreaTypeAction extends WorldAction {
+public final class SetBlocksAreaTypeAction extends WorldAction {
     public SetBlocksAreaTypeAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

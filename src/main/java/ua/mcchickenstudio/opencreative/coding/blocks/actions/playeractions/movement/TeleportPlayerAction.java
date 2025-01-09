@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-public class TeleportPlayerAction extends PlayerAction {
+public final class TeleportPlayerAction extends PlayerAction {
     public TeleportPlayerAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

@@ -29,7 +29,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 
-public class OpenSignAction extends PlayerAction {
+public final class OpenSignAction extends PlayerAction {
     public OpenSignAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

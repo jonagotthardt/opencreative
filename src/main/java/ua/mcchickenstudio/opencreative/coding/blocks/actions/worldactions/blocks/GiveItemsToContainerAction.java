@@ -32,7 +32,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
-public class GiveItemsToContainerAction extends WorldAction {
+public final class GiveItemsToContainerAction extends WorldAction {
     public GiveItemsToContainerAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

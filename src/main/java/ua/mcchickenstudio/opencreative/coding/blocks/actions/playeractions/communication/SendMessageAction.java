@@ -30,7 +30,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class SendMessageAction extends PlayerAction {
+public final class SendMessageAction extends PlayerAction {
 
     public SendMessageAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);

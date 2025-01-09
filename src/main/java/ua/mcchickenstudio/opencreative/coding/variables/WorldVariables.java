@@ -18,12 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.coding.variables;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Particle;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
@@ -37,7 +36,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
-import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -47,7 +45,6 @@ import java.util.*;
 import static ua.mcchickenstudio.opencreative.coding.arguments.Argument.parseEntity;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.getCodingVariableTypeKey;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
@@ -55,106 +52,120 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * This class represents set of world variables. It includes
  * methods for finding and editing variables value.
  */
-public class WorldVariables {
+public final class WorldVariables {
 
     private final Planet planet;
-    private final Set<WorldVariable> variables = new HashSet<>();
+    private final Set<WorldVariable> variables = new LinkedHashSet<>();
 
     public WorldVariables(Planet planet) {
         this.planet = planet;
+    }
+
+    public @Nullable WorldVariable getVariable(@NotNull VariableLink link, @NotNull Action action) {
+        return getVariable(parseEntity(link.getName(),action.getHandler(),action),link.getVariableType(),action.getHandler().getMainActionHandler());
+    }
+
+    public @Nullable WorldVariable getVariable(@NotNull String name, @NotNull VariableLink.VariableType type, @Nullable ActionsHandler handler) {
+        return variables.stream()
+                .filter(var -> var.getName().equalsIgnoreCase(name))
+                .filter(var -> type == var.getVarType())
+                .filter(var -> type != VariableLink.VariableType.LOCAL || (handler != null && handler.equals(var.getHandler())))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private boolean handleVariableValue(VariableLink link, ValueType type, Object value, ActionsHandler handler, Action action) {
+        WorldVariable variable = (action != null) ? getVariable(link, action) : getVariable(link.getName(), link.getVariableType(), null);
+        String valueString = value.toString().substring(0, Math.min(20, value.toString().length()));
+
+        if (variable != null) {
+            if (variable.getSize() + getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
+                sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
+                return false;
+            }
+            variable.setType(type);
+            variable.setValue(value);
+        } else {
+            if (getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
+                sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
+                return false;
+            }
+
+            WorldVariable newVariable = (action != null)
+                    ? new WorldVariable(parseEntity(link.getName(), action.getHandler(), action), link.getVariableType(), type, value, handler)
+                    : new WorldVariable(link.getName(), link.getVariableType(), type, value, null);
+
+            if (newVariable.getSize() + getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
+                sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
+                return false;
+            }
+            variables.add(newVariable);
+        }
+
+        sendCodingDebugLog(getPlanet(), getLocaleMessage("planet-code-debug.variable." + (variable == null ? "created" : "set"), false)
+                .replace("%variable%", action != null ? parseEntity(link.getName(), action.getHandler(), action) : link.getName())
+                .replace("%value%", valueString));
+
+        return true;
+    }
+
+    /**
+     * Sets variable value to new specified one. Used in actions.
+     * @param link variable link to set.
+     * @param type new type of value.
+     * @param value new value.
+     * @param handler handler of setting.
+     * @param action action of setting.
+     */
+    public void setVariableValue(VariableLink link, ValueType type, Object value, ActionsHandler handler, Action action) {
+        handleVariableValue(link, type, value, handler, action);
+    }
+
+    /**
+     * Sets variable value to new specified one.
+     * @param link variable link to set.
+     * @param type new type of value.
+     * @param value new value.
+     * @return true - if successfully set, false - failed.
+     */
+    public boolean setVariableValue(VariableLink link, ValueType type, Object value) {
+        return handleVariableValue(link, type, value, null, null);
+    }
+
+    /**
+     * Gets variable value by variable link.
+     * @param link link for variable.
+     * @param action action.
+     * @return variable - if found, null - variable not exists.
+     */
+    public Object getVariableValue(VariableLink link, Action action) {
+        WorldVariable variable = getVariable(link,action);
+        return variable != null ? variable.getValue() : null;
+    }
+
+    /**
+     * Removes variable by variable link.
+     * @param link link for variable.
+     * @param action action.
+     */
+    public void removeVariable(VariableLink link, Action action) {
+        variables.removeIf(var -> var.equals(getVariable(link,action)));
     }
 
     public Set<WorldVariable> getSet() {
         return variables;
     }
 
-    public WorldVariable getVariable(VariableLink link, Action action) {
-        return getVariable(parseEntity(link.getName(),action.getHandler(),action),link.getVariableType(),link.getHandler());
-    }
-
-    public WorldVariable getVariable(String name, VariableLink.VariableType type, ActionsHandler handler) {
-        return variables.stream()
-                .filter(var -> var.getName().equalsIgnoreCase(name))
-                .filter(var -> type == var.getVarType())
-                .filter(var -> type != VariableLink.VariableType.LOCAL || handler.equals(var.getHandler()))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public WorldVariable getVariable(String name, VariableLink.VariableType type) {
-        return variables.stream()
-                .filter(var -> var.getName().equalsIgnoreCase(name))
-                .filter(var -> type == var.getVarType())
-                .filter(var -> type != VariableLink.VariableType.LOCAL)
-                .findFirst()
-                .orElse(null);
-    }
-
-    public void setVariableValue(VariableLink link, ValueType type, Object value, ActionsHandler handler, Action action) {
-        link.setHandler(handler.getMainActionHandler());
-        WorldVariable variable = getVariable(link,action);
-        String valueString = value.toString().substring(0, Math.min(20, value.toString().length()));
-        if (variable != null) {
-            if (variable.getSize() + getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
-                sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
-                return;
-            }
-            variable.setType(type);
-            variable.setValue(value);
-        } else {
-            if (getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
-                sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
-                return;
-            }
-            WorldVariable newVariable = new WorldVariable(parseEntity(link.getName(),action.getHandler(),action), link.getVariableType(), type, value, handler);
-            if (newVariable.getSize() + getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
-                sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
-                return;
-            }
-            variables.add(newVariable);
-        }
-        sendCodingDebugLog(getPlanet(),getLocaleMessage("planet-code-debug.variable." + (variable == null ? "created" : "set"),false).replace("%variable%", parseEntity(link.getName(),action.getHandler(),action)).replace("%value%",valueString));
-    }
-
-    public boolean setVariableValue(VariableLink link, ValueType type, Object value) {
-        WorldVariable variable = getVariable(link.getName(),link.getVariableType());
-        String valueString = value.toString().substring(0, Math.min(20, value.toString().length()));
-        if (variable != null) {
-            if (variable.getSize() + getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
-                sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
-                return false;
-            }
-            variable.setType(type);
-            variable.setValue(value);
-        } else {
-            if (getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
-                sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
-                return false;
-            }
-            WorldVariable newVariable = new WorldVariable(link.getName(), link.getVariableType(), type, value, null);
-            if (newVariable.getSize() + getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
-                sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
-                return false;
-            }
-            variables.add(newVariable);
-        }
-        sendCodingDebugLog(getPlanet(),getLocaleMessage("planet-code-debug.variable." + (variable == null ? "created" : "set"),false).replace("%variable%", link.getName()).replace("%value%",valueString));
-        return true;
-    }
-
-    public Object getVariableValue(VariableLink link, Action action) {
-        WorldVariable variable = getVariable(link,action);
-        return variable != null ? variable.getValue() : null;
-    }
-
-    public void removeVariable(VariableLink link, Action action) {
-        variables.removeIf(var -> var.equals(getVariable(link,action)));
-    }
-
+    /**
+     * Clears all current variables in world.
+     */
     public void clearVariables() {
         variables.clear();
     }
 
+    /**
+     * Loads variables from /planet/variables.json file.
+     */
     public void load() {
         clearVariables();
         File variablesJson = FileUtils.getPlanetVariablesJson(planet);
@@ -179,6 +190,9 @@ public class WorldVariables {
         }
     }
 
+    /**
+     * Saves variables with type saved into /planet/variables.json file.
+     */
     public void save() {
         File variablesJson = FileUtils.getPlanetVariablesJson(planet);
         if (variablesJson == null) {
@@ -246,7 +260,6 @@ public class WorldVariables {
                     newValue.put("value",serializeObject(map.get(key)));
                     String serializedKey = new JSONObject(newKey).toString();
                     newMap.put(serializedKey, newValue);
-                    //newMap.put(newKey,newValue);
                 }
                 return newMap;
             } else if (value instanceof Color color) {
@@ -355,10 +368,14 @@ public class WorldVariables {
         return value;
     }
 
+    /**
+     * Returns total size of variables. It includes list and maps elements.
+     * @return total size of variables.
+     */
     public int getTotalVariablesAmount() {
         int size = 0;
         for (WorldVariable var : variables) {
-            size += var.getValue() instanceof List ? ((List<?>) var.getValue()).size() : 1;
+            size += var.getSize();
         }
         return size;
     }
@@ -367,6 +384,10 @@ public class WorldVariables {
         return planet;
     }
 
+    /**
+     * Clears local variables with action handler type.
+     * @param actionsHandler handler.
+     */
     public void garbageCollector(ActionsHandler actionsHandler) {
         variables.removeIf(var -> var.getVarType() == VariableLink.VariableType.LOCAL && var.getHandler() != null && var.getHandler().equals(actionsHandler));
     }

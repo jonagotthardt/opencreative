@@ -31,7 +31,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-public class SetItemLoreAction extends VariableAction {
+public final class SetItemLoreAction extends VariableAction {
     public SetItemLoreAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

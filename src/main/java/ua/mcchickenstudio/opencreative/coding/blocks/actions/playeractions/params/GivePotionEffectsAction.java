@@ -31,7 +31,7 @@ import org.bukkit.potion.PotionEffect;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GivePotionEffectsAction extends PlayerAction {
+public final class GivePotionEffectsAction extends PlayerAction {
     public GivePotionEffectsAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

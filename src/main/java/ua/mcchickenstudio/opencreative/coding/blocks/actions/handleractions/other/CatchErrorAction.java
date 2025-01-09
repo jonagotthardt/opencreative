@@ -28,7 +28,7 @@ import org.bukkit.entity.Entity;
 
 import java.util.List;
 
-public class CatchErrorAction extends HandlerAction {
+public final class CatchErrorAction extends HandlerAction {
 
     public CatchErrorAction(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
         super(executor, target, x, args, actions);

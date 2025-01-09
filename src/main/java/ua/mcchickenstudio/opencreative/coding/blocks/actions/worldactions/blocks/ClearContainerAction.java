@@ -31,7 +31,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
-public class ClearContainerAction extends WorldAction {
+public final class ClearContainerAction extends WorldAction {
     public ClearContainerAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

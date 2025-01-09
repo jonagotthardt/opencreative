@@ -30,7 +30,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
-public class SpawnEntityAction extends WorldAction {
+public final class SpawnEntityAction extends WorldAction {
     public SpawnEntityAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

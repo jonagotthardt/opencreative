@@ -30,7 +30,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.inventory.ItemStack;
 
-public class CreateFireworkExplosionAction extends WorldAction {
+public final class CreateFireworkExplosionAction extends WorldAction {
     public CreateFireworkExplosionAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

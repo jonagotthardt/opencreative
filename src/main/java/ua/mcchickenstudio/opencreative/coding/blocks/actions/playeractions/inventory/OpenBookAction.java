@@ -27,7 +27,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class OpenBookAction extends PlayerAction {
+public final class OpenBookAction extends PlayerAction {
     public OpenBookAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

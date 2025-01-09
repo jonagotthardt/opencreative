@@ -248,9 +248,6 @@ public class Arguments {
                 List<Argument> args = (List<Argument>) arg.getValue(action);
                 for (Argument argument : args) {
                     if (argument.value instanceof VariableLink link) {
-                        if (link.getVariableType() == VariableLink.VariableType.LOCAL) {
-                            link.setHandler(action.getHandler().getMainActionHandler());
-                        }
                         list.add(link);
                     }
                 }
@@ -356,9 +353,6 @@ public class Arguments {
             return null;
         }
         if (arg.value instanceof VariableLink link) {
-            if (link.getVariableType() == VariableLink.VariableType.LOCAL) {
-                link.setHandler(action.getHandler().getMainActionHandler());
-            }
             sendCodingDebugVariable(planet,path,link);
             return link;
         }

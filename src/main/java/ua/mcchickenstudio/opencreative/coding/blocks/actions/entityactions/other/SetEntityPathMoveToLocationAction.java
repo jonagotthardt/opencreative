@@ -27,7 +27,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
 
-public class SetEntityPathMoveToLocationAction extends EntityAction {
+public final class SetEntityPathMoveToLocationAction extends EntityAction {
     public SetEntityPathMoveToLocationAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

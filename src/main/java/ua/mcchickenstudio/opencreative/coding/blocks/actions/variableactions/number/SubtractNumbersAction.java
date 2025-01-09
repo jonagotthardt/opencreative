@@ -28,7 +28,7 @@ import org.bukkit.entity.Entity;
 
 import java.util.List;
 
-public class SubtractNumbersAction extends VariableAction {
+public final class SubtractNumbersAction extends VariableAction {
     public SubtractNumbersAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

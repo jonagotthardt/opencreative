@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory;
 
+import org.bukkit.inventory.meta.BookMeta;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerEditBookEvent;
@@ -32,8 +33,10 @@ public class BookWriteEvent extends WorldEvent {
     public BookWriteEvent(Player player, PlayerEditBookEvent event) {
         super(player);
         this.event = event;
-        this.oldBook = event.getPlayer().getActiveItem();
-        this.newBook = event.getPlayer().getActiveItem();
+        this.oldBook = event.getPlayer().getActiveItem().clone();
+        oldBook.setItemMeta(event.getPreviousBookMeta());
+        this.newBook = event.getPlayer().getActiveItem().clone();
+        newBook.setItemMeta(event.getNewBookMeta());
     }
 
     public ItemStack getOldBook() {

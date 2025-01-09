@@ -27,7 +27,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class SetItemCooldownAction extends PlayerAction {
+public final class SetItemCooldownAction extends PlayerAction {
     public SetItemCooldownAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

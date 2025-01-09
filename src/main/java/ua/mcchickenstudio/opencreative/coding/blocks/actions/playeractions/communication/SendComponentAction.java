@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 
-public class SendComponentAction extends PlayerAction {
+public final class SendComponentAction extends PlayerAction {
 
     public SendComponentAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);

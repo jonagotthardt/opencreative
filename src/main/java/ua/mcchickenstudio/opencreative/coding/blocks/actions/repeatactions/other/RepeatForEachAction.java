@@ -29,7 +29,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
 
-public class RepeatForEachAction extends RepeatAction {
+public final class RepeatForEachAction extends RepeatAction {
 
     public RepeatForEachAction(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
         super(executor, target, x, args, actions);

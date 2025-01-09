@@ -25,7 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.Playe
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
 
-public class SetCanPickupItem extends PlayerAction {
+public final class SetCanPickupItem extends PlayerAction {
     public SetCanPickupItem(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

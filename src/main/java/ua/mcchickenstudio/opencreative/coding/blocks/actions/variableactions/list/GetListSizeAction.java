@@ -28,7 +28,7 @@ import org.bukkit.entity.Entity;
 
 import java.util.List;
 
-public class GetListSizeAction extends VariableAction {
+public final class GetListSizeAction extends VariableAction {
     public GetListSizeAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

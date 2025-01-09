@@ -32,7 +32,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-public class SetItemLoreLineAction extends VariableAction {
+public final class SetItemLoreLineAction extends VariableAction {
     public SetItemLoreLineAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

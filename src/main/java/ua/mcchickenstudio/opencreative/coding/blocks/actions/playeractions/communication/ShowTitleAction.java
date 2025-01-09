@@ -29,7 +29,7 @@ import org.bukkit.entity.Player;
 
 import java.time.Duration;
 
-public class ShowTitleAction extends PlayerAction {
+public final class ShowTitleAction extends PlayerAction {
     public ShowTitleAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

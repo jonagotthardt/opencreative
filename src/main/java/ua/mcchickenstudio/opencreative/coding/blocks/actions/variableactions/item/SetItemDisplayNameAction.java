@@ -31,7 +31,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class SetItemDisplayNameAction extends VariableAction {
+public final class SetItemDisplayNameAction extends VariableAction {
     public SetItemDisplayNameAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

@@ -29,7 +29,7 @@ import org.bukkit.entity.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SetInListAction extends VariableAction {
+public final class SetInListAction extends VariableAction {
     public SetInListAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

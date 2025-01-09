@@ -29,7 +29,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.Random;
 
-public class GiveRandomItemAction extends PlayerAction {
+public final class GiveRandomItemAction extends PlayerAction {
     public GiveRandomItemAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

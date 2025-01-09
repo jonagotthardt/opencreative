@@ -29,7 +29,7 @@ import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
 import java.util.List;
 
-public class AddVectorsAction extends VariableAction {
+public final class AddVectorsAction extends VariableAction {
     public AddVectorsAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

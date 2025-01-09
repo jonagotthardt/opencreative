@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Function;
 import org.bukkit.entity.Entity;
 
-public class LaunchFunctionAction extends Action {
+public final class LaunchFunctionAction extends Action {
 
     public LaunchFunctionAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);

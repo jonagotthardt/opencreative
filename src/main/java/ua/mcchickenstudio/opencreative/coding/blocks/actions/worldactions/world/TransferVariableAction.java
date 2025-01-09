@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.entity.Entity;
 
-public class TransferVariableAction extends WorldAction {
+public final class TransferVariableAction extends WorldAction {
     public TransferVariableAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

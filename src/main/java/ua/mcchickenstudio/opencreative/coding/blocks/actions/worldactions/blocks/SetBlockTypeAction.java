@@ -31,7 +31,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
-public class SetBlockTypeAction extends WorldAction {
+public final class SetBlockTypeAction extends WorldAction {
     public SetBlockTypeAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import net.kyori.adventure.util.TriState;
 import org.bukkit.entity.Player;
 
-public class SetFlyingFallDamageAction extends PlayerAction {
+public final class SetFlyingFallDamageAction extends PlayerAction {
 
     public SetFlyingFallDamageAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);

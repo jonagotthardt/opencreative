@@ -28,7 +28,7 @@ import org.bukkit.entity.Entity;
 
 import java.util.List;
 
-public class GetByIdFromListAction extends VariableAction {
+public final class GetByIdFromListAction extends VariableAction {
     public GetByIdFromListAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

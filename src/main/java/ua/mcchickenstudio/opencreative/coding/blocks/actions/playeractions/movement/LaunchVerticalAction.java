@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-public class LaunchVerticalAction extends PlayerAction {
+public final class LaunchVerticalAction extends PlayerAction {
     public LaunchVerticalAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

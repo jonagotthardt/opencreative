@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class SetArmorAction extends PlayerAction {
+public final class SetArmorAction extends PlayerAction {
     public SetArmorAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

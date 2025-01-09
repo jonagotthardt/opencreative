@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
-public class ShowActionbarAction extends PlayerAction {
+public final class ShowActionbarAction extends PlayerAction {
     public ShowActionbarAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

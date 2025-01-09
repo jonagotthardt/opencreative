@@ -27,7 +27,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
-public class ScoreboardResetScoreAction extends WorldAction {
+public final class ScoreboardResetScoreAction extends WorldAction {
     public ScoreboardResetScoreAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

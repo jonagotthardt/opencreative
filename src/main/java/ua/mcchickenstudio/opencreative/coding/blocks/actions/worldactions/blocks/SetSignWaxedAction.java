@@ -31,7 +31,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
-public class SetSignWaxedAction extends WorldAction {
+public final class SetSignWaxedAction extends WorldAction {
     public SetSignWaxedAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

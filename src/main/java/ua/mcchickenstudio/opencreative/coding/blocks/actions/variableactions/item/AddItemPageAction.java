@@ -30,7 +30,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class AddItemPageAction extends VariableAction {
+public final class AddItemPageAction extends VariableAction {
     public AddItemPageAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

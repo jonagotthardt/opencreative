@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import org.bukkit.entity.Player;
 
-public class GetItemAction extends PlayerAction {
+public final class GetItemAction extends PlayerAction {
     public GetItemAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

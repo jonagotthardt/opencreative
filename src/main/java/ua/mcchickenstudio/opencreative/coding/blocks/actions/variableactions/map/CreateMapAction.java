@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CreateMapAction extends VariableAction {
+public final class CreateMapAction extends VariableAction {
 
     public CreateMapAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);

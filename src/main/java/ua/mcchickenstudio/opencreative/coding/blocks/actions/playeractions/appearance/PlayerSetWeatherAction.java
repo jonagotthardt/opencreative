@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
 
-public class PlayerSetWeatherAction extends PlayerAction {
+public final class PlayerSetWeatherAction extends PlayerAction {
     public PlayerSetWeatherAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

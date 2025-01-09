@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-public class SaddleEntityAction extends PlayerAction {
+public final class SaddleEntityAction extends PlayerAction {
     public SaddleEntityAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

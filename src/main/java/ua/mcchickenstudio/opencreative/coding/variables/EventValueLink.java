@@ -27,5 +27,4 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
  * @param type
  * @param executor
  */
-public record EventValueLink(EventValues.Variable type, Executor executor)  {
-}
+public record EventValueLink(EventValues.Variable type, Executor executor)  {}

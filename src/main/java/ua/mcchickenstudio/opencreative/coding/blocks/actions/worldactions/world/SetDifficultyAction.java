@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.Difficulty;
 import org.bukkit.entity.Entity;
 
-public class SetDifficultyAction extends WorldAction {
+public final class SetDifficultyAction extends WorldAction {
     public SetDifficultyAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.entity.Entity;
 
-public class DeleteBossBarAction extends WorldAction {
+public final class DeleteBossBarAction extends WorldAction {
     public DeleteBossBarAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

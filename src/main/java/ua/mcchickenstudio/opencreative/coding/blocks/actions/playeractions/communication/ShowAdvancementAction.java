@@ -28,7 +28,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class ShowAdvancementAction extends PlayerAction {
+public final class ShowAdvancementAction extends PlayerAction {
     public ShowAdvancementAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

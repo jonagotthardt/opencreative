@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import org.bukkit.entity.Entity;
 
-public class ModularDivideAssignNumberAction extends VariableAction {
+public final class ModularDivideAssignNumberAction extends VariableAction {
     public ModularDivideAssignNumberAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

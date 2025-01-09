@@ -33,7 +33,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 
-public class CreateScoreboardAction extends WorldAction {
+public final class CreateScoreboardAction extends WorldAction {
     public CreateScoreboardAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

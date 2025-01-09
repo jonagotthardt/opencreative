@@ -27,7 +27,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-public class LaunchToLocationAction extends PlayerAction {
+public final class LaunchToLocationAction extends PlayerAction {
     public LaunchToLocationAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

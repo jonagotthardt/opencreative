@@ -151,6 +151,7 @@ public enum ExecutorType {
     PLAYER_PICKUP_ITEM(     ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, ItemPickupExecutor.class, ItemPickupEvent.class, Material.GLOWSTONE_DUST),
     PLAYER_CLOSE_INVENTORY( ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, CloseInventoryExecutor.class, CloseInventoryEvent.class, Material.STRUCTURE_VOID),
     PLAYER_ITEM_CONSUME(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, ItemConsumeExecutor.class, ItemConsumeEvent.class, Material.BREAD),
+    PLAYER_ITEM_CRAFT(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, ItemCraftExecutor.class, PlayerItemCraftEvent.class, Material.CRAFTING_TABLE),
     PLAYER_ITEM_BREAK(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, ItemBreakExecutor.class, ItemBreakEvent.class, Material.GOLDEN_PICKAXE),
 
     PLAYER_GET_DAMAGED(     ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerDamagedExecutor.class, PlayerDamagedEvent.class, Material.DEAD_BUSH),

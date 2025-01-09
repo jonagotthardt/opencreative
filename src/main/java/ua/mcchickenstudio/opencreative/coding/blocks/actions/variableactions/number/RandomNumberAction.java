@@ -28,7 +28,7 @@ import org.bukkit.entity.Entity;
 
 import java.util.Random;
 
-public class RandomNumberAction extends VariableAction {
+public final class RandomNumberAction extends VariableAction {
     public RandomNumberAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

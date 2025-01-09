@@ -28,7 +28,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-public class SetItemsAction extends PlayerAction {
+public final class SetItemsAction extends PlayerAction {
     public SetItemsAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

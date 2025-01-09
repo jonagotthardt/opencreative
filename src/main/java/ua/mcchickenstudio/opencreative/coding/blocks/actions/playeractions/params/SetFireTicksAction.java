@@ -25,7 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.Playe
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
 
-public class SetFireTicksAction extends PlayerAction {
+public final class SetFireTicksAction extends PlayerAction {
     public SetFireTicksAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

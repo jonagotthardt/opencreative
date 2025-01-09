@@ -25,7 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.Playe
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
 
-public class SaveInventoryAction extends PlayerAction {
+public final class SaveInventoryAction extends PlayerAction {
     public SaveInventoryAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

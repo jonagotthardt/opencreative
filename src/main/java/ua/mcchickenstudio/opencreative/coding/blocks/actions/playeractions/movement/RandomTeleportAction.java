@@ -18,5 +18,5 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.movement;
 
-public class RandomTeleportAction {
+public final class RandomTeleportAction {
 }

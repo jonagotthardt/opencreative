@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import org.bukkit.entity.Entity;
 
-public class SumAssignNumberAction extends VariableAction {
+public final class SumAssignNumberAction extends VariableAction {
     public SumAssignNumberAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

@@ -27,7 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
-public class SetStepHeightAction extends EntityAction {
+public final class SetStepHeightAction extends EntityAction {
     public SetStepHeightAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

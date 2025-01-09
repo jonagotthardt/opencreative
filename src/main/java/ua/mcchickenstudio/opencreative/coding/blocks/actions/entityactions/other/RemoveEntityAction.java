@@ -25,7 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.Entit
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
 
-public class RemoveEntityAction extends EntityAction {
+public final class RemoveEntityAction extends EntityAction {
     public RemoveEntityAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

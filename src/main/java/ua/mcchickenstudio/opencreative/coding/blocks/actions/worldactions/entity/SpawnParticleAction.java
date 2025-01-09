@@ -27,7 +27,7 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 
-public class SpawnParticleAction extends WorldAction {
+public final class SpawnParticleAction extends WorldAction {
     public SpawnParticleAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

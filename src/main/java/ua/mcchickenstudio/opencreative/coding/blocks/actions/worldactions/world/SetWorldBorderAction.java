@@ -27,7 +27,7 @@ import org.bukkit.Location;
 import org.bukkit.WorldBorder;
 import org.bukkit.entity.Entity;
 
-public class SetWorldBorderAction extends WorldAction {
+public final class SetWorldBorderAction extends WorldAction {
     public SetWorldBorderAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }

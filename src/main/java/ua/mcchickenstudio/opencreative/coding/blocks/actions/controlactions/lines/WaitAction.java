@@ -25,7 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.Cont
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
 
-public class WaitAction extends ControlAction {
+public final class WaitAction extends ControlAction {
 
     private long time = 20;
 

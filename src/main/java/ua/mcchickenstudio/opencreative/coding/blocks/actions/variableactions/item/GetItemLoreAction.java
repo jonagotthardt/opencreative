@@ -29,7 +29,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class GetItemLoreAction extends VariableAction {
+public final class GetItemLoreAction extends VariableAction {
     public GetItemLoreAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
