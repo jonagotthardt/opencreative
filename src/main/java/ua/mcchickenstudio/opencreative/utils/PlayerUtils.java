@@ -73,7 +73,7 @@ public class PlayerUtils {
         player.releaseLeftShoulderEntity();
         player.releaseRightShoulderEntity();
         player.setSimulationDistance(Bukkit.getSimulationDistance());
-        player.setViewDistance(player.getClientViewDistance());
+        player.setViewDistance(Math.min(player.getClientViewDistance(),Bukkit.getViewDistance()));
         player.setWorldBorder(player.getWorld().getWorldBorder());
         for (Sound sound : Sound.values()) {
             player.stopSound(sound);
