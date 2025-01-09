@@ -61,6 +61,11 @@ public class InventoryClick implements Listener {
     }
 
     @EventHandler
+    public void onCraft(PlayerItemDamageEvent event) {
+        EventRaiser.raiseItemDamageEvent(event.getPlayer(),event);
+    }
+
+    @EventHandler
     public void click(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
 

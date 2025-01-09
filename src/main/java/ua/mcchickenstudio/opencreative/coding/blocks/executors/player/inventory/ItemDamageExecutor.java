@@ -21,37 +21,38 @@ package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.inventory
 import org.bukkit.event.Cancellable;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.SlotChangeEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.PlayerItemCraftEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.PlayerItemDamagedEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public class SlotChangeExecutor extends PlayerExecutor implements Cancellable {
+public class ItemDamageExecutor extends PlayerExecutor implements Cancellable {
 
     @Override
     protected void setTempVars(WorldEvent event) {
-        if (event instanceof SlotChangeEvent slotChangeEvent) {
-            setTempVar(EventValues.Variable.OLD_SLOT,slotChangeEvent.getOldSlot());
-            setTempVar(EventValues.Variable.NEW_SLOT,slotChangeEvent.getNewSlot());
+        if (event instanceof PlayerItemDamagedEvent craftEvent) {
+            setTempVar(EventValues.Variable.ITEM,craftEvent.getItem());
+            setTempVar(EventValues.Variable.DAMAGE,craftEvent.getItem());
         }
     }
 
-    public SlotChangeExecutor(Planet planet, int x, int y, int z) {
+    public ItemDamageExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
     }
 
     @Override
     public ExecutorType getExecutorType() {
-        return ExecutorType.PLAYER_CHANGE_SLOT;
-    }
-
-    @Override
-    public boolean isCancelled() {
-        return getEvent().isCancelled();
+        return ExecutorType.PLAYER_ITEM_CRAFT;
     }
 
     @Override
     public void setCancelled(boolean cancel) {
         getEvent().setCancelled(cancel);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return getEvent().isCancelled();
     }
 }

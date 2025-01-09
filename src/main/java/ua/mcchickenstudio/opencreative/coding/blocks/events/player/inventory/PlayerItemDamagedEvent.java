@@ -18,33 +18,36 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory;
 
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
+import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
-public class SlotChangeEvent extends WorldEvent {
+public class PlayerItemDamagedEvent extends WorldEvent {
 
-    private final PlayerItemHeldEvent event;
-    private final int oldSlot;
-    private final int newSlot;
+    private final PlayerItemDamageEvent event;
+    private final ItemStack item;
+    private final int damage;
 
-    public SlotChangeEvent(Player player, PlayerItemHeldEvent event) {
+    public PlayerItemDamagedEvent(Player player, PlayerItemDamageEvent event) {
         super(player);
         this.event = event;
-        this.oldSlot = event.getPreviousSlot();
-        this.newSlot = event.getNewSlot();
-    }
-
-    public int getOldSlot() {
-        return oldSlot;
-    }
-
-    public int getNewSlot() {
-        return newSlot;
+        this.item = event.getItem();
+        this.damage = event.getDamage();
     }
 
     @Override
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
     }
+
+    public ItemStack getItem() {
+        return item;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
 }

@@ -22,8 +22,6 @@ import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
 import ua.mcchickenstudio.opencreative.listeners.player.PlayerChat;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menu.buttons.ParameterButton;
-import ua.mcchickenstudio.opencreative.menu.world.WorldDeleteMobsMenu;
-import ua.mcchickenstudio.opencreative.menu.world.WorldEnvironmentMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
@@ -66,7 +64,7 @@ public class WorldSettingsMenu extends AbstractMenu {
 
     private final ItemStack spawn = createItem(Material.ENDER_PEARL,1,"menus.world-settings.items.change-spawn");
     private final ParameterButton time;
-    private final ItemStack removeMobs = createItem(Material.BRUSH,1,"menus.world-settings.items.remove-mobs");
+    private final ItemStack controlMobs = createItem(Material.BRUSH,1,"menus.world-settings.items.entities-control");
     private final ItemStack environment = createItem(Material.AMETHYST_CLUSTER,1,"menus.world-settings.items.environment");
     private final ParameterButton autoSave;
 
@@ -101,7 +99,7 @@ public class WorldSettingsMenu extends AbstractMenu {
 
         setItem((byte) 15, spawn);
         setItem((byte) 16, time.getItem());
-        setItem((byte) 24, removeMobs);
+        setItem((byte) 24, controlMobs);
         setItem((byte) 25, environment);
         setItem((byte) 33, autoSave.getItem());
 
@@ -198,7 +196,7 @@ public class WorldSettingsMenu extends AbstractMenu {
                 player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100,0.8f);
             }
         } else if (itemEquals(currentItem,category)) {
-            new WorldSettingsCategoryMenu().open(player);
+            new WorldSettingsCategoryMenu(planet.getInformation().getCategory()).open(player);
         } else if (itemEquals(currentItem,playersControl)) {
             WorldSettingsPlayersMenu.openInventory(player);
         } else if (itemEquals(currentItem,parameters)) {
@@ -208,8 +206,8 @@ public class WorldSettingsMenu extends AbstractMenu {
         } else if (itemEquals(currentItem,advertise)) {
             player.performCommand("ad");
             player.closeInventory();
-        } else if (itemEquals(currentItem,removeMobs)) {
-            new WorldDeleteMobsMenu().open(player);
+        } else if (itemEquals(currentItem, controlMobs)) {
+            new EntitiesBrowserMenu(player,planet).open(player);
         } else if (itemEquals(currentItem,buildMode)) {
             player.performCommand("build");
         }  else if (itemEquals(currentItem,playMode)) {

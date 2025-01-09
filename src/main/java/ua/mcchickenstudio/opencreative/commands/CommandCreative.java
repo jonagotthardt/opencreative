@@ -19,9 +19,9 @@
 package ua.mcchickenstudio.opencreative.commands;
 
 import ua.mcchickenstudio.opencreative.menu.CreativeMenu;
+import ua.mcchickenstudio.opencreative.menu.world.settings.EntitiesBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsPickerMenu;
-import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
@@ -416,9 +416,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     if (player == null) return true;
-                    DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
-                    if (devPlanet == null) return true;
-                    player.sendMessage("Test of dev planet helper");
+                    new EntitiesBrowserMenu(player,PlanetManager.getInstance().getPlanetByPlayer(player)).open(player);
                 }
                 case "test2" -> {
                     if (!sender.hasPermission("opencreative.test")) {

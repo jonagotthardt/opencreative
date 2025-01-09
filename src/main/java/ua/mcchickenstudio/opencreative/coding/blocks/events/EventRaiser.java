@@ -23,6 +23,7 @@ import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.entities.EntitySpawnEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerRespawnEvent;
@@ -303,11 +304,11 @@ public class EventRaiser {
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
-    public static void raiseSlotChangeEvent(Player player, Event bukkitEvent) {
+    public static void raiseSlotChangeEvent(Player player, PlayerItemHeldEvent bukkitEvent) {
         if (cantRaiseEvent(player)) {
             return;
         }
-        SlotChangeEvent creativeEvent = new SlotChangeEvent(player);
+        SlotChangeEvent creativeEvent = new SlotChangeEvent(player,bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
@@ -540,6 +541,14 @@ public class EventRaiser {
             return;
         }
         WorldEvent creativeEvent = new PlayerItemCraftEvent(player,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseItemDamageEvent(@NotNull Player player, PlayerItemDamageEvent event) {
+        if (cantRaiseEvent(player)) {
+            return;
+        }
+        WorldEvent creativeEvent = new PlayerItemDamagedEvent(player,event);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 }

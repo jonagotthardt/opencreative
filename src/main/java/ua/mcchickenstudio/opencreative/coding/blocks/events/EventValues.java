@@ -90,6 +90,8 @@ public class EventValues {
         CLICK_TYPE              (Material.LEVER,                     MenusCategory.EVENTS, String.class),
         CLICKED_SLOT            (Material.SLIME_BALL,                     MenusCategory.EVENTS, Integer.class),
         EQUIPMENT_SLOT          (Material.NETHERITE_SWORD,                     MenusCategory.EVENTS, String.class),
+        OLD_SLOT                (Material.SLIME_BALL,                     MenusCategory.EVENTS, Integer.class),
+        NEW_SLOT                (Material.SLIME_BALL,                     MenusCategory.EVENTS, Integer.class),
 
         MESSAGE                 (Material.BOOK,                     MenusCategory.EVENTS, String.class),
         BLOCK                   (Material.GRASS_BLOCK,              MenusCategory.EVENTS, Block.class),

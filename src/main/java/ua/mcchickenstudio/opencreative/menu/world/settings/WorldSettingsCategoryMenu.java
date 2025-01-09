@@ -35,31 +35,35 @@ import static org.bukkit.Material.*;
 
 public class WorldSettingsCategoryMenu extends AbstractMenu {
 
+    private final PlanetInfo.Category currentCategory;
     private final ItemStack BACK_ITEM = createItem(SPECTRAL_ARROW,1,"menus.world-settings-categories.items.back");
-    private final ItemStack CATEGORY_SANDBOX_ITEM = setPersistentData(createItem(BRICKS,1,"menus.world-settings-categories.items.sandbox"),getItemTypeKey(),"SANDBOX");
-    private final ItemStack CATEGORY_ADVENTURE_ITEM = setPersistentData(createItem(LEATHER_BOOTS,1,"menus.world-settings-categories.items.adventure"),getItemTypeKey(),"ADVENTURE");
-    private final ItemStack CATEGORY_STRATEGY_ITEM = setPersistentData(createItem(SHIELD,1,"menus.world-settings-categories.items.strategy"),getItemTypeKey(),"STRATEGY");
-    private final ItemStack CATEGORY_ARCADE_ITEM = setPersistentData(createItem(REPEATING_COMMAND_BLOCK,1,"menus.world-settings-categories.items.arcade"),getItemTypeKey(),"ARCADE");
-    private final ItemStack CATEGORY_ROLEPLAY_ITEM = setPersistentData(createItem(CHEST_MINECART,1,"menus.world-settings-categories.items.roleplay"),getItemTypeKey(),"ROLEPLAY");
-    private final ItemStack CATEGORY_STORY_ITEM = setPersistentData(createItem(WRITABLE_BOOK,1,"menus.world-settings-categories.items.story"),getItemTypeKey(),"STORY");
-    private final ItemStack CATEGORY_SIMULATOR_ITEM = setPersistentData(createItem(GOLDEN_PICKAXE,1,"menus.world-settings-categories.items.simulator"),getItemTypeKey(),"SIMULATOR");
-    private final ItemStack CATEGORY_EXPERIMENT_ITEM = setPersistentData(createItem(TNT,1,"menus.world-settings-categories.items.experiment"),getItemTypeKey(),"EXPERIMENT");
 
-    public WorldSettingsCategoryMenu() {
+    public WorldSettingsCategoryMenu(PlanetInfo.Category currentCategory) {
         super((byte) 6, MessageUtils.getLocaleMessage("menus.world-settings.title"));
+        this.currentCategory = currentCategory;
     }
 
     @Override
     public void fillItems(Player player) {
-        setItem((byte) 10,CATEGORY_SANDBOX_ITEM);
-        setItem((byte) 11,CATEGORY_ADVENTURE_ITEM);
-        setItem((byte) 12,CATEGORY_STRATEGY_ITEM);
-        setItem((byte) 13,CATEGORY_ARCADE_ITEM);
-        setItem((byte) 14,CATEGORY_ROLEPLAY_ITEM);
-        setItem((byte) 15,CATEGORY_STORY_ITEM);
-        setItem((byte) 16,CATEGORY_SIMULATOR_ITEM);
-        setItem((byte) 19,CATEGORY_EXPERIMENT_ITEM);
-        setItem((byte) 46,BACK_ITEM);
+        setItem((byte) 10,createButton(PlanetInfo.Category.SANDBOX));
+        setItem((byte) 12,createButton(PlanetInfo.Category.ADVENTURE));
+        setItem((byte) 14,createButton(PlanetInfo.Category.STRATEGY));
+        setItem((byte) 16,createButton(PlanetInfo.Category.ARCADE));
+        setItem((byte) 28,createButton(PlanetInfo.Category.ROLEPLAY));
+        setItem((byte) 30,createButton(PlanetInfo.Category.STORY));
+        setItem((byte) 32,createButton(PlanetInfo.Category.SIMULATOR));
+        setItem((byte) 34,createButton(PlanetInfo.Category.EXPERIMENT));
+        setItem((byte) 45,BACK_ITEM);
+        setItem((byte) 46,DECORATION_PANE_ITEM);
+        setItem((byte) 47,new ItemStack(GREEN_STAINED_GLASS_PANE));
+        setItem((byte) 49,setPersistentData(
+                createItem(currentCategory.getMaterial(),1,
+                        "menus.world-settings-categories.items." +
+                                currentCategory.name().toLowerCase()),
+                getItemTypeKey(),currentCategory.name()));
+        setItem((byte) 51,new ItemStack(GREEN_STAINED_GLASS_PANE));
+        setItem((byte) 52,DECORATION_PANE_ITEM);
+        setItem((byte) 53,DECORATION_PANE_ITEM);
     }
 
     @Override
@@ -74,6 +78,7 @@ public class WorldSettingsCategoryMenu extends AbstractMenu {
         if (getItems().contains(event.getCurrentItem())) {
             if (!itemEquals(event.getCurrentItem(),BACK_ITEM)) {
                 String categoryString = getPersistentData(event.getCurrentItem(),getItemTypeKey());
+                if (categoryString.isEmpty()) return;
                 try {
                     PlanetInfo.Category category = PlanetInfo.Category.valueOf(categoryString);
                     planet.getInformation().setCategory(category);
@@ -87,6 +92,15 @@ public class WorldSettingsCategoryMenu extends AbstractMenu {
                 new WorldSettingsMenu(planet,(Player) event.getWhoClicked()).open((Player) event.getWhoClicked());
             }
         }
+    }
+
+    private ItemStack createButton(PlanetInfo.Category category) {
+        if (category == currentCategory) return DECORATION_ITEM;
+        return setPersistentData(
+                createItem(category.getMaterial(),1,
+                        "menus.world-settings-categories.items." +
+                                category.name().toLowerCase()),
+                getItemTypeKey(),category.name());
     }
 
     @Override
