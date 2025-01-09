@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -77,7 +77,7 @@ public final class OpenCreative extends JavaPlugin {
     private static Economy economy;
 
     private static final String version = "5.2.0";
-    private static final String codename = "Things will be different";
+    private static final String codename = "Well, it's possible";
 
     /**
      * Plugin load operations.
@@ -166,7 +166,7 @@ public final class OpenCreative extends JavaPlugin {
         getLogger().info(" Goodbye from OpenCreative+");
         getLogger().info(" ");
         getLogger().info(" " + codename);
-        getLogger().info("  Made by McChicken Studio 2017-2024");
+        getLogger().info("  Made by McChicken Studio 2017-2025");
         getLogger().info(" ");
     }
 

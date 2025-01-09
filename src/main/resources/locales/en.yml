@@ -1,6 +1,6 @@
 #
-# OpenCreative+ 5.0 - Things will be different.
-# (C) McChicken Studio 2017-2024.
+# OpenCreative+ 5.2 - Well, it's possible.
+# (C) McChicken Studio 2017-2025.
 #
 
 #
@@ -186,7 +186,7 @@ planet-code-debug:
 lobby:
   title: "%branding%"
   subtitle: "&fLet's &acreate&f in your worlds!"
-  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.0\n<green> Things will be different..\n <white>\n<gold> ⭐ <white>Explore all <gold>worlds<white> using the compass!\n<light_purple> ❤ <white>Create your own world and <light_purple>invite <white>your friends!\n <yellow>⌚<white> Have fun and <yellow>create <white>whatever you want!\n \n<white>\n <white>"
+  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.0\n<green> Well, it's possible!\n <white>\n<gold> ⭐ <white>Explore all <gold>worlds<white> using the compass!\n<light_purple> ❤ <white>Create your own world and <light_purple>invite <white>your friends!\n <yellow>⌚<white> Have fun and <yellow>create <white>whatever you want!\n \n<white>\n <white>"
 creating-world:
   title: "&eCreating World ◌"
   subtitle: "&fPlease wait a few seconds..."
@@ -6797,7 +6797,7 @@ menus:
           - "&7 source code, which &aallows&7 players"
           - "&7 to &bcreate&7 their own worlds."
           - ""
-          - "&c McChicken Studio 2017-2024"
+          - "&c McChicken Studio 2017-2025"
           - "&3 Translators: &7initzero, Nagibator6000LoL"
           - ""
       reload:

@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -124,6 +124,10 @@ public enum ActionType {
     PLAYER_OPEN_CONTAINER(              ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, OpenContainerAction.class, Material.BARREL, new ArgumentSlot("location", ValueType.LOCATION), new ParameterSlot("save")),
     PLAYER_OPEN_BOOK(                   ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, OpenBookAction.class, Material.BOOK, new ArgumentSlot("book", ValueType.ITEM)),
     PLAYER_GET_ITEM_BY_SLOT(            ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, GetItemAction.class, Material.MAGMA_CREAM, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("slot", ValueType.NUMBER)),
+    PLAYER_OPEN_INVENTORY_VIEW(              ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, OpenInventoryAction.class, Material.CHEST, new ParameterSlot("type", Arrays.asList("chest","dispenser","dropper","furnace","workbench","enchanting","brewing","player","ender_chest","anvil","smithing","beacon","hopper","shulker_box","barrel","blast_furnace","lectern","smoker","loom","cartography","grindstone","stonecutter","crafter"),Material.CHEST,Material.DISPENSER,Material.DROPPER,Material.FURNACE,Material.CRAFTING_TABLE,Material.ENCHANTING_TABLE,Material.BREWING_STAND,Material.PLAYER_HEAD,Material.ENDER_CHEST,Material.ANVIL,Material.SMITHING_TABLE,Material.BEACON,Material.HOPPER,Material.SHULKER_BOX,Material.BARREL,Material.BLAST_FURNACE,Material.LECTERN,Material.SMOKER,Material.LOOM,Material.CARTOGRAPHY_TABLE,Material.GRINDSTONE,Material.STONECUTTER,Material.CRAFTER)),
+    PLAYER_SET_INVENTORY_VIEW_ITEMS(            ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, SetMenuItemsAction.class, Material.PAINTING, new ArgumentSlot("items", ValueType.VARIABLE)),
+    PLAYER_SET_INVENTORY_VIEW_SIZE(            ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, SetMenuSizeAction.class, Material.ITEM_FRAME, new ArgumentSlot("size", ValueType.NUMBER)),
+    PLAYER_SET_INVENTORY_VIEW_TITLE(            ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, SetMenuTitleAction.class, Material.GLOW_ITEM_FRAME, new ArgumentSlot("title", ValueType.TEXT)),
 
     // Movement
     PLAYER_TELEPORT(                    ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT, TeleportPlayerAction.class, Material.ENDER_PEARL,  new ArgumentSlot("location", ValueType.LOCATION), new ParameterSlot("consider",Arrays.asList("all","only-coordinates","only-rotation"),Material.ENDER_EYE,Material.PAPER,Material.PLAYER_HEAD)),
@@ -299,8 +303,11 @@ public enum ActionType {
     WORLD_SET_SIGN_LINE(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, SetSignLineAction.class, Material.BIRCH_SIGN, new ArgumentSlot("location", ValueType.LOCATION), new ParameterSlot("side",Arrays.asList("front","back"),Material.OAK_SIGN,Material.WARPED_SIGN), new ArgumentSlot("number", ValueType.NUMBER), new ArgumentSlot("text",ValueType.TEXT)),
     WORLD_SET_SIGN_WAXED(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, SetSignWaxedAction.class, Material.HONEYCOMB, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ParameterSlot("waxed", true, Material.HONEYCOMB, Material.GLASS_BOTTLE)),
     WORLD_SET_SIGN_GLOWING_TEXT(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, SetSignGlowingTextAction.class, Material.GLOW_INK_SAC, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ParameterSlot("side",Arrays.asList("front","back"),Material.OAK_SIGN,Material.WARPED_SIGN), new ParameterSlot("glowing", true, Material.GLOW_INK_SAC, Material.INK_SAC)),
-    WORLD_CLEAR_CONTAINER(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, ClearContainerAction.class, Material.HOPPER, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 27)),
+    WORLD_CLEAR_CONTAINER(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, ClearContainerAction.class, Material.BARRIER, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 27)),
     WORLD_GIVE_CONTAINER_ITEMS(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, GiveItemsToContainerAction.class, Material.CHEST, new ArgumentSlot("items", ValueType.ITEM, (byte) 18), new ArgumentSlot("location",ValueType.LOCATION)),
+    WORLD_PUT_ITEM_IN_CONTAINER(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, SetItemBySlotInContainerAction.class, Material.HOPPER, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ArgumentSlot("slot",ValueType.NUMBER), new ArgumentSlot("item", ValueType.ITEM)),
+    WORLD_GET_CONTAINER_ITEMS(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, SetItemBySlotInContainerAction.class, Material.HOPPER, new ArgumentSlot("variable",ValueType.VARIABLE), new ArgumentSlot("location",ValueType.LOCATION)),
+
     WORLD_APPLY_BONE_MEAL(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, ApplyBoneMealAction.class, Material.BONE_MEAL, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 27)),
     WORLD_SET_BLOCK_BIOME(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, SetBlockBiomeAction.class, Material.MYCELIUM, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18),new ArgumentSlot("biome",ValueType.TEXT)),
 
