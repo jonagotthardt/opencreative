@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,13 +18,33 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory;
 
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
 public class SlotChangeEvent extends WorldEvent {
 
-    public SlotChangeEvent(Player player) {
+    private final PlayerItemHeldEvent event;
+    private final int oldSlot;
+    private final int newSlot;
+
+    public SlotChangeEvent(Player player, PlayerItemHeldEvent event) {
         super(player);
+        this.event = event;
+        this.oldSlot = event.getPreviousSlot();
+        this.newSlot = event.getNewSlot();
     }
 
+    public int getOldSlot() {
+        return oldSlot;
+    }
+
+    public int getNewSlot() {
+        return newSlot;
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
+    }
 }

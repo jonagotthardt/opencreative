@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,13 +19,13 @@
 package ua.mcchickenstudio.opencreative.commands.world;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.menu.world.settings.EntitiesBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.world.settings.WorldSettingsMenu;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import ua.mcchickenstudio.opencreative.menu.world.WorldDeleteMobsMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
@@ -78,11 +78,11 @@ public class CommandWorld implements CommandExecutor {
                         }
                     }
                     break;
-                case "deletemobs":
+                case "deletemobs", "mobs", "entities":
                     if (sender instanceof Player player) {
                         Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-                        if (planet != null && (planet.getOwner().equalsIgnoreCase(sender.getName()))) {
-                            new WorldDeleteMobsMenu().open(player);
+                        if (planet != null && planet.getWorldPlayers().canBuild(player)) {
+                            new EntitiesBrowserMenu(player,planet).open(player);
                         }
                     }
                     break;

@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,13 +39,11 @@ public final class PlayerSetWorldBorderAction extends PlayerAction {
         int time = getArguments().getValue("time",0,this);
         int warningDistance = getArguments().getValue("warning-distance",5,this);
         int warningTime = getArguments().getValue("warning-time",15,this);
-        double damage = getArguments().getValue("damage",0.2d,this);
         int safeDistance = getArguments().getValue("safe-distance",5,this);
         WorldBorder border = Bukkit.createWorldBorder();
         border.setSize(radius,time);
         border.setWarningTime(warningTime);
         border.setWarningDistance(warningDistance);
-        border.setDamageAmount(damage);
         border.setDamageBuffer(safeDistance);
         Location center = getArguments().getValue("center",player.getLocation(),this);
         border.setCenter(center);

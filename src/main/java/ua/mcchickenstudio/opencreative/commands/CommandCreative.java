@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,9 @@
 package ua.mcchickenstudio.opencreative.commands;
 
 import ua.mcchickenstudio.opencreative.menu.CreativeMenu;
+import ua.mcchickenstudio.opencreative.menu.world.settings.EntitiesBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsPickerMenu;
-import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
@@ -416,9 +416,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     if (player == null) return true;
-                    DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
-                    if (devPlanet == null) return true;
-                    player.sendMessage("Test of dev planet helper");
+                    new EntitiesBrowserMenu(player,PlanetManager.getInstance().getPlanetByPlayer(player)).open(player);
                 }
                 case "test2" -> {
                     if (!sender.hasPermission("opencreative.test")) {
@@ -457,7 +455,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 }
             }
         } else {
-            String copyright = OpenCreative.getPlugin().getConfig().getString("messages.version","\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2024\n ");
+            String copyright = OpenCreative.getPlugin().getConfig().getString("messages.version","\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2025\n ");
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', copyright.replace("%version%", OpenCreative.getVersion()).replace("%codename%", OpenCreative.getCodename())));
             if (sender instanceof Player player) {
                 player.playSound(player.getLocation(),Sound.BLOCK_BEACON_ACTIVATE,100,2f);

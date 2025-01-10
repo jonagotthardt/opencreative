@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2024, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -189,14 +189,24 @@ public class PlanetInfo {
 
     public enum Category {
 
-        SANDBOX,
-        ADVENTURE,
-        STRATEGY,
-        ARCADE,
-        ROLEPLAY,
-        STORY,
-        SIMULATOR,
-        EXPERIMENT;
+        SANDBOX(Material.YELLOW_CONCRETE_POWDER),
+        ADVENTURE(Material.NETHERITE_BOOTS),
+        STRATEGY(Material.ZOMBIE_HEAD),
+        ARCADE(Material.HEART_OF_THE_SEA),
+        ROLEPLAY(Material.CHERRY_CHEST_BOAT),
+        STORY(Material.WRITABLE_BOOK),
+        SIMULATOR(Material.NETHERITE_PICKAXE),
+        EXPERIMENT(Material.TNT_MINECART);
+
+        private final Material material;
+
+        Category(Material material) {
+            this.material = material;
+        }
+
+        public Material getMaterial() {
+            return material;
+        }
 
         public String getLocaleName() {
             return getLocaleMessage("world.categories."+name().toLowerCase());
