@@ -329,4 +329,9 @@ public class CEListener implements Listener {
     public void onCraftEvent(PlayerItemCraftEvent event) {
         Executors.activate(event);
     }
+
+    @EventHandler
+    public void onItemDamage(PlayerItemDamagedEvent event) {
+        Executors.activate(event);
+    }
 }

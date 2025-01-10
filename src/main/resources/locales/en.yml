@@ -1446,13 +1446,25 @@ items:
       player-change-slot:
         name: "&aPlayer changed slot"
         lore:
-          - "&7Triggered when a player switches slots"
-          - "&7in their hotbar."
+          - "&7Triggered when a player switches"
+          - "&7slot in their hotbar."
           - " "
           - "&fUse for:"
           - "&7> Prevent slot change"
           - "&7> Set a specific slot"
           - "&7> Get item info"
+          - " "
+          - "&eClick to set event."
+      player-item-damage:
+        name: "&6Player damaged item"
+        lore:
+          - "&7Triggered when a player damages"
+          - "&7his armor or tool when he uses it."
+          - " "
+          - "&fUse for:"
+          - "&7> Cancel item break"
+          - "&7> Sound of damage"
+          - "&7> Message of item break"
           - " "
           - "&eClick to set event."
       player-item-craft:
@@ -9634,6 +9646,7 @@ blocks:
   player_bed_enter: "Entered bed"
   player_bed_leave: "Left bed"
   player_purchase: "&ePurchased"
+  player_item_damaged: "Damaged item"
   player_item_consume: "Consumed item"
   player_item_craft: "Crafted item"
   player_item_break: "Broke item"

@@ -55,7 +55,7 @@ public class CommandAd implements CommandExecutor, TabCompleter {
                 player.sendMessage(getLocaleMessage("maintenance"));
                 return true;
             }
-            if (args.length == 1) {
+            if (args.length >= 1) {
                 if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
                     player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.GENERIC_COMMAND))));
                     return true;
@@ -73,7 +73,30 @@ public class CommandAd implements CommandExecutor, TabCompleter {
                         }
                     }
                     if (foundPlanet != null) {
-                        if (foundPlanet.equals(PlanetManager.getInstance().getPlanetByPlayer(player))) {
+                        if (args.length == 2) {
+                            Player inviteReceiver = Bukkit.getPlayer(args[1]);
+                            if (inviteReceiver == null) {
+                                player.sendMessage(getLocaleMessage("no-player-found",player));
+                                return true;
+                            }
+                            if (player.equals(inviteReceiver)) {
+                                player.sendMessage(getLocaleMessage("same-world",player));
+                                return true;
+                            }
+                            if (getCooldown(player, CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND) > 0) {
+                                player.sendMessage(getLocaleMessage("advertisement.cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND))));
+                                return true;
+                            }
+                            PlanetAdvertisementEvent event = new PlanetAdvertisementEvent(planet,player);
+                            event.callEvent();
+                            if (event.isCancelled()) return true;
+                            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getAdvertisementCooldown(), CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND);
+                            TextComponent advertisement = new TextComponent(getLocaleMessage("advertisement.message",player).replace("%world%", planet.getInformation().getDisplayName()));
+                            advertisement.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(parsePlanetLines(planet,getLocaleMessage("advertisement.hover")))));
+                            advertisement.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ad " + planet.getId()));
+                            inviteReceiver.sendMessage(advertisement);
+                            player.sendMessage(advertisement);
+                        } else if (foundPlanet.equals(PlanetManager.getInstance().getPlanetByPlayer(player))) {
                             player.sendMessage(getLocaleMessage("same-world",player));
                         } else {
                             foundPlanet.connectPlayer(player);
