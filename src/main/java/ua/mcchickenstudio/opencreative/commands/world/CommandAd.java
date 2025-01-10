@@ -83,17 +83,21 @@ public class CommandAd implements CommandExecutor, TabCompleter {
                                 player.sendMessage(getLocaleMessage("same-world",player));
                                 return true;
                             }
+                            if (planet.getSharing() != Planet.Sharing.PUBLIC) {
+                                player.sendMessage(getLocaleMessage("advertisement.closed-world"));
+                                return true;
+                            }
                             if (getCooldown(player, CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND) > 0) {
                                 player.sendMessage(getLocaleMessage("advertisement.cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND))));
                                 return true;
                             }
-                            PlanetAdvertisementEvent event = new PlanetAdvertisementEvent(planet,player);
+                            PlanetAdvertisementEvent event = new PlanetAdvertisementEvent(foundPlanet,player);
                             event.callEvent();
                             if (event.isCancelled()) return true;
                             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getAdvertisementCooldown(), CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND);
-                            TextComponent advertisement = new TextComponent(getLocaleMessage("advertisement.message",player).replace("%world%", planet.getInformation().getDisplayName()));
-                            advertisement.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(parsePlanetLines(planet,getLocaleMessage("advertisement.hover")))));
-                            advertisement.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ad " + planet.getId()));
+                            TextComponent advertisement = new TextComponent(getLocaleMessage("advertisement.message",player).replace("%world%", foundPlanet.getInformation().getDisplayName()));
+                            advertisement.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(parsePlanetLines(foundPlanet,getLocaleMessage("advertisement.hover")))));
+                            advertisement.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ad " + foundPlanet.getId()));
                             inviteReceiver.sendMessage(advertisement);
                             player.sendMessage(advertisement);
                         } else if (foundPlanet.equals(PlanetManager.getInstance().getPlanetByPlayer(player))) {

@@ -6773,6 +6773,7 @@ menus:
   entities-browser:
     title: "&4🍖 Entities control"
     removed: "%prefix%&fEntity &6%name%&f (%x%,%y%,%z%) was removed by %player%"
+    removed-all: "%prefix%&6%count%&f entities were removed by %player%"
     items:
       entity:
         name: " "
@@ -6819,6 +6820,16 @@ menus:
           - ""
           - "&7  Click to open"
           - "&7  world's settings."
+          - ""
+      remove-all:
+        name: " "
+        lore:
+          - " &c⌀ Remove entities with type"
+          - ""
+          - "&7  Deletes every entity"
+          - "&7  that listed here."
+          - ""
+          - "&e  Click to remove."
           - ""
       previous-page:
         name: " "

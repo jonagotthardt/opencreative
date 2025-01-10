@@ -62,6 +62,7 @@ public class EntitiesBrowserMenu extends AbstractListMenu {
 
     private final Planet planet;
     private final List<ParameterButton> buttons = new ArrayList<>();
+    private final ItemStack REMOVE_ALL = createItem(Material.BARRIER,1,"menus.entities-browser.items.remove-all");
     private final ItemStack BACK_TO_SETTINGS = createItem(Material.SPECTRAL_ARROW,1,"menus.entities-browser.items.back");
 
     public EntitiesBrowserMenu(Player player, Planet planet) {
@@ -70,7 +71,7 @@ public class EntitiesBrowserMenu extends AbstractListMenu {
         itemsSlots = new byte[]{10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34};
         noElementsPageButtonSlot = 13;
         decorationSlots = new byte[]{46,52};
-        charmsBarSlots = new byte[]{45,49};
+        charmsBarSlots = new byte[]{45,48,50};
         previousPageButtonSlot = 45;
     }
 
@@ -117,7 +118,8 @@ public class EntitiesBrowserMenu extends AbstractListMenu {
         );
         buttons.add(type);
         setItem((byte) 47,createItem(Material.RED_STAINED_GLASS_PANE,1));
-        setItem((byte) 49,type.getItem());
+        setItem((byte) 48,type.getItem());
+        setItem((byte) 50,REMOVE_ALL);
         setItem((byte) 51,createItem(Material.RED_STAINED_GLASS_PANE,1));
     }
 
@@ -130,7 +132,7 @@ public class EntitiesBrowserMenu extends AbstractListMenu {
         }
         for (ParameterButton button : buttons) {
             if (itemEquals(item,button.getItem(true))) {
-                if (event.getRawSlot() == 49) {
+                if (event.getRawSlot() == 48) {
                     button.next();
                     elements.clear();
                     switch (button.getCurrentChoice()) {
@@ -144,8 +146,8 @@ public class EntitiesBrowserMenu extends AbstractListMenu {
                     }
                     fillElements(getCurrentPage());
                     fillArrowsItems(getCurrentPage());
-                    setItem((byte) 49, button.getItem());
-                    updateSlot((byte) 49);
+                    setItem((byte) 48, button.getItem());
+                    updateSlot((byte) 48);
                     player.playSound(player.getLocation(), Sound.BLOCK_TRIAL_SPAWNER_DETECT_PLAYER,100,1.2F);
                     return;
                 }
@@ -153,6 +155,23 @@ public class EntitiesBrowserMenu extends AbstractListMenu {
         }
         if (itemEquals(item,BACK_TO_SETTINGS) && planet.isOwner(player)) {
             new WorldSettingsMenu(planet,player).open(player);
+        } else if (itemEquals(item,REMOVE_ALL)) {
+            if (elements.isEmpty()) return;
+            int count = elements.size();
+            for (Object element : new ArrayList<>(elements)) {
+                if (element instanceof Entity entity) {
+                    elements.remove(entity);
+                    entity.remove();
+                }
+            }
+            for (Player p : planet.getPlayers()) {
+                if (planet.getWorldPlayers().canBuild(p)) {
+                    p.sendMessage(getLocaleMessage("menus.entities-browser.removed-all",player).replace("%count%",String.valueOf(count)));
+                }
+            }
+            elements.removeIf(e -> ((Entity) e).isDead());
+            fillElements(currentPage);
+            fillArrowsItems(currentPage);
         }
     }
 
@@ -203,9 +222,9 @@ public class EntitiesBrowserMenu extends AbstractListMenu {
                 }
             }
             case SHIFT_LEFT -> {
-                for (Player player : planet.getPlayers()) {
-                    if (planet.getWorldPlayers().canBuild(player)) {
-                        player.sendMessage(getLocaleMessage("menus.entities-browser.removed",(Player) event.getWhoClicked())
+                for (Player p : planet.getPlayers()) {
+                    if (planet.getWorldPlayers().canBuild(p)) {
+                        p.sendMessage(getLocaleMessage("menus.entities-browser.removed",player)
                                 .replace("%name%",entity.getName().substring(0,Math.min(20,entity.getName().length())))
                                 .replace("%x%",String.valueOf(entity.getLocation().getBlockX()))
                                 .replace("%y%",String.valueOf(entity.getLocation().getBlockY()))
@@ -218,6 +237,7 @@ public class EntitiesBrowserMenu extends AbstractListMenu {
                 elements.removeIf(e -> ((Entity) e).isDead());
                 fillElements(currentPage);
                 fillArrowsItems(currentPage);
+                player.updateInventory();
             }
         }
     }
@@ -228,9 +248,11 @@ public class EntitiesBrowserMenu extends AbstractListMenu {
             setItem(noElementsPageButtonSlot, getNoElementsButton());
             setItem(previousPageButtonSlot, planet.isOwner(player) ? BACK_TO_SETTINGS : DECORATION_ITEM);
             setItem(nextPageButtonSlot, DECORATION_ITEM);
+            setItem((byte) 50, DECORATION_ITEM);
             updateSlot(noElementsPageButtonSlot);
             updateSlot(previousPageButtonSlot);
             updateSlot(nextPageButtonSlot);
+            updateSlot((byte) 50);
         } else {
             int maxPagesAmount = getPages();
             if (currentPage > maxPagesAmount || currentPage < 1) {
@@ -240,6 +262,8 @@ public class EntitiesBrowserMenu extends AbstractListMenu {
             updateSlot(previousPageButtonSlot);
             setItem(nextPageButtonSlot,currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_ITEM);
             updateSlot(nextPageButtonSlot);
+            setItem((byte) 50, REMOVE_ALL);
+            updateSlot((byte) 50);
         }
     }
 
