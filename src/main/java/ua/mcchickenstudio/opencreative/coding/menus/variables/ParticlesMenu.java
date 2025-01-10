@@ -35,7 +35,7 @@ import java.util.Map;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class ParticlesMenu extends AbstractListMenu {
+public class ParticlesMenu extends AbstractListMenu<Particle> {
 
     private static final Map<Particle,Material> particles = new HashMap<>();
 
@@ -164,15 +164,12 @@ public class ParticlesMenu extends AbstractListMenu {
     }
 
     @Override
-    protected ItemStack getElementIcon(Object object) {
-        if (object instanceof Particle type) {
-            ItemStack itemStack = createItem(getMaterial(type),1);
-            setDisplayName(itemStack,type.name());
-            setPersistentData(itemStack,getCodingValueKey(),"PARTICLE");
-            setPersistentData(itemStack,getCodingParticleTypeKey(),type.name());
-            return itemStack;
-        }
-        return null;
+    protected ItemStack getElementIcon(Particle particle) {
+        ItemStack itemStack = createItem(getMaterial(particle),1);
+        setDisplayName(itemStack,particle.name());
+        setPersistentData(itemStack,getCodingValueKey(),"PARTICLE");
+        setPersistentData(itemStack,getCodingParticleTypeKey(),particle.name());
+        return itemStack;
     }
 
     @Override
@@ -197,7 +194,7 @@ public class ParticlesMenu extends AbstractListMenu {
     }
 
     @Override
-    protected List<Object> getElements() {
+    protected List<Particle> getElements() {
         return Arrays.asList(Particle.values());
     }
 

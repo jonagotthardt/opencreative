@@ -38,7 +38,7 @@ import java.util.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
-public class EventValuesMenu extends AbstractListMenu {
+public class EventValuesMenu extends AbstractListMenu<EventValues.Variable> {
 
     protected MenusCategory currentCategory = MenusCategory.WORLD;
 
@@ -47,13 +47,10 @@ public class EventValuesMenu extends AbstractListMenu {
     }
 
     @Override
-    protected ItemStack getElementIcon(Object object) {
-        if (object instanceof EventValues.Variable variable) {
-            ItemStack icon = createItem(variable.getIcon(),1,"menus.developer.event-values.items." + variable.name().toLowerCase().replace("_","-"));
-            setPersistentData(icon,getCodingVariableTypeKey(),variable.name());
-            return icon;
-        }
-        return ItemStack.empty();
+    protected ItemStack getElementIcon(EventValues.Variable variable) {
+        ItemStack icon = createItem(variable.getIcon(),1,"menus.developer.event-values.items." + variable.name().toLowerCase().replace("_","-"));
+        setPersistentData(icon,getCodingVariableTypeKey(),variable.name());
+        return icon;
     }
 
     @Override
@@ -107,7 +104,7 @@ public class EventValuesMenu extends AbstractListMenu {
     }
 
     @Override
-    protected List<Object> getElements() {
+    protected List<EventValues.Variable> getElements() {
         if (currentCategory == null) currentCategory = MenusCategory.ENTITY;
         return new ArrayList<>(EventValues.Variable.getByCategories(currentCategory));
     }

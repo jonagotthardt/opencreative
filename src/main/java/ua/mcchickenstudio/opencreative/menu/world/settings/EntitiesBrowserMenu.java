@@ -58,7 +58,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * This class represents a menu, that displays specified list of entities in world.
  * Player can teleport to entity or remove it.
  */
-public class EntitiesBrowserMenu extends AbstractListMenu {
+public class EntitiesBrowserMenu extends AbstractListMenu<Entity> {
 
     private final Planet planet;
     private final List<ParameterButton> buttons = new ArrayList<>();
@@ -76,7 +76,7 @@ public class EntitiesBrowserMenu extends AbstractListMenu {
     }
 
     @Override
-    protected ItemStack getElementIcon(Object object) {
+    protected ItemStack getElementIcon(Entity object) {
         if (object instanceof Entity entity) {
             return createEntityItem(entity);
         }
@@ -158,7 +158,7 @@ public class EntitiesBrowserMenu extends AbstractListMenu {
         } else if (itemEquals(item,REMOVE_ALL)) {
             if (elements.isEmpty()) return;
             int count = elements.size();
-            for (Object element : new ArrayList<>(elements)) {
+            for (Entity element : new ArrayList<>(elements)) {
                 if (element instanceof Entity entity) {
                     elements.remove(entity);
                     entity.remove();
@@ -268,7 +268,7 @@ public class EntitiesBrowserMenu extends AbstractListMenu {
     }
 
     @Override
-    protected List<Object> getElements() {
+    protected List<Entity> getElements() {
         if (!planet.isLoaded()) {
             return List.of();
         }

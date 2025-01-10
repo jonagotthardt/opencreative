@@ -47,7 +47,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
-public class FunctionChooserMenu extends AbstractListMenu {
+public class FunctionChooserMenu extends AbstractListMenu<Location> {
 
     private final DevPlanet devPlanet;
     private final Location signLocation;
@@ -63,27 +63,25 @@ public class FunctionChooserMenu extends AbstractListMenu {
     }
 
     @Override
-    protected ItemStack getElementIcon(Object object) {
-        if (object instanceof Location location) {
-            Block signBlock = location.getBlock().getRelative(BlockFace.SOUTH);
-            String line = getSignLine(signBlock.getLocation(),(byte) 3);
-            if (line != null && !line.isEmpty()) {
-                ItemStack itemStack = createItem(Material.LAPIS_LAZULI,1,"menus.developer.function-chooser.items.function");
-                ItemMeta meta = itemStack.getItemMeta();
-                if (meta != null) {
-                    meta.setDisplayName(ChatColor.BLUE + line);
-                }
-                itemStack.setItemMeta(meta);
-                setPersistentData(itemStack,getCodingLocationX(),location.getX());
-                setPersistentData(itemStack,getCodingLocationY(),location.getY());
-                setPersistentData(itemStack,getCodingLocationZ(),location.getZ());
-                replacePlaceholderInLore(itemStack,"%x%",location.getX());
-                replacePlaceholderInLore(itemStack,"%y%",location.getY());
-                replacePlaceholderInLore(itemStack,"%z%",location.getZ());
-                return itemStack;
+    protected ItemStack getElementIcon(Location location) {
+        Block signBlock = location.getBlock().getRelative(BlockFace.SOUTH);
+        String line = getSignLine(signBlock.getLocation(),(byte) 3);
+        if (line != null && !line.isEmpty()) {
+            ItemStack itemStack = createItem(Material.LAPIS_LAZULI,1,"menus.developer.function-chooser.items.function");
+            ItemMeta meta = itemStack.getItemMeta();
+            if (meta != null) {
+                meta.setDisplayName(ChatColor.BLUE + line);
             }
+            itemStack.setItemMeta(meta);
+            setPersistentData(itemStack,getCodingLocationX(),location.getX());
+            setPersistentData(itemStack,getCodingLocationY(),location.getY());
+            setPersistentData(itemStack,getCodingLocationZ(),location.getZ());
+            replacePlaceholderInLore(itemStack,"%x%",location.getX());
+            replacePlaceholderInLore(itemStack,"%y%",location.getY());
+            replacePlaceholderInLore(itemStack,"%z%",location.getZ());
+            return itemStack;
         }
-        return null;
+        return ItemStack.empty();
     }
 
     @Override
@@ -155,7 +153,7 @@ public class FunctionChooserMenu extends AbstractListMenu {
     }
 
     @Override
-    protected List<Object> getElements() {
+    protected List<Location> getElements() {
         return new ArrayList<>(devPlanet.getPlacedFunctions());
     }
 

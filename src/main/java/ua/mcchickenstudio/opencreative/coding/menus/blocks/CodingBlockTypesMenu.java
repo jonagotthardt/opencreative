@@ -50,7 +50,7 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSi
  * This class represents a menu where player can select type of coding block.
  * Every category of coding blocks has this menu.
  */
-public abstract class CodingBlockTypesMenu extends AbstractListMenu {
+public abstract class CodingBlockTypesMenu extends AbstractListMenu<Object> {
 
     private final String codingBlockName;
     private final Location signLocation;

@@ -41,7 +41,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * This class represents a menu, that displays specified list of worlds.
  * Player can sort worlds and change pages.
  */
-public class WorldsBrowserMenu extends AbstractListMenu {
+public class WorldsBrowserMenu extends AbstractListMenu<Planet> {
 
     private final List<Planet> planets;
     private final List<ParameterButton> buttons = new ArrayList<>();
@@ -75,11 +75,8 @@ public class WorldsBrowserMenu extends AbstractListMenu {
     }
 
     @Override
-    protected ItemStack getElementIcon(Object object) {
-        if (object instanceof Planet planet) {
-            return planet.getInformation().getIcon();
-        }
-        return null;
+    protected ItemStack getElementIcon(Planet planet) {
+        return planet.getInformation().getIcon();
     }
 
     @Override
@@ -201,7 +198,7 @@ public class WorldsBrowserMenu extends AbstractListMenu {
     }
 
     @Override
-    protected List<Object> getElements() {
+    protected List<Planet> getElements() {
         return new ArrayList<>(planets);
     }
 

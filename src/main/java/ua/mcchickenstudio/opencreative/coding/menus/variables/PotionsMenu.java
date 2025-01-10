@@ -38,7 +38,7 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemName;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class PotionsMenu extends AbstractListMenu {
+public class PotionsMenu extends AbstractListMenu<PotionEffectType> {
 
     private final Material potionMaterial;
 
@@ -54,24 +54,21 @@ public class PotionsMenu extends AbstractListMenu {
     }
 
     @Override
-    protected ItemStack getElementIcon(Object object) {
-        if (object instanceof PotionEffectType type) {
-            ItemStack itemStack = new ItemStack(potionMaterial,1);
-            PotionMeta meta = (PotionMeta) itemStack.getItemMeta();
-            PotionType potionType = PotionType.getByEffect(type);
-            String name = type.getName().toLowerCase().replace("minecraft:","");
-            meta.displayName(Component.text(getLocaleItemName("menus.developer.potions-list.potions." + name)));
-            if (potionType != null) {
-                meta.setBasePotionType(potionType);
-            } else {
-                meta.setBasePotionType(PotionType.WATER);
-                meta.addCustomEffect(new PotionEffect(type,3600,0),true);
-            }
-            meta.setColor(type.getColor());
-            itemStack.setItemMeta(meta);
-            return itemStack;
+    protected ItemStack getElementIcon(PotionEffectType type) {
+        ItemStack itemStack = new ItemStack(potionMaterial,1);
+        PotionMeta meta = (PotionMeta) itemStack.getItemMeta();
+        PotionType potionType = PotionType.getByEffect(type);
+        String name = type.getName().toLowerCase().replace("minecraft:","");
+        meta.displayName(Component.text(getLocaleItemName("menus.developer.potions-list.potions." + name)));
+        if (potionType != null) {
+            meta.setBasePotionType(potionType);
+        } else {
+            meta.setBasePotionType(PotionType.WATER);
+            meta.addCustomEffect(new PotionEffect(type,3600,0),true);
         }
-        return null;
+        meta.setColor(type.getColor());
+        itemStack.setItemMeta(meta);
+        return itemStack;
     }
 
     @Override
@@ -94,7 +91,7 @@ public class PotionsMenu extends AbstractListMenu {
     }
 
     @Override
-    protected List<Object> getElements() {
+    protected List<PotionEffectType> getElements() {
         return Arrays.asList(PotionEffectType.values());
     }
 

@@ -34,13 +34,13 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
  * of elements. It creates pages and arrows to change current page.
  * @see ua.mcchickenstudio.opencreative.menu.AbstractMenu
  */
-public abstract class AbstractListMenu extends AbstractMenu {
+public abstract class AbstractListMenu<T> extends AbstractMenu {
 
     protected final Player player;
     protected Inventory inventory;
     protected byte currentPage;
 
-    protected final List<Object> elements = new ArrayList<>();
+    protected final List<T> elements = new ArrayList<>();
 
     protected byte previousPageButtonSlot = 47;
     protected byte nextPageButtonSlot = 53;
@@ -95,9 +95,9 @@ public abstract class AbstractListMenu extends AbstractMenu {
         if (elements.isEmpty()) {
             setItem(noElementsPageButtonSlot,getNoElementsButton());
         } else {
-            List<Object> content = getElementsFromPage(page);
+            List<T> content = getElementsFromPage(page);
             byte slot = 0;
-            for (Object object : content) {
+            for (T object : content) {
                 setItem(itemsSlots[slot], getElementIcon(object));
                 updateSlot(itemsSlots[slot]);
                 slot++;
@@ -116,7 +116,7 @@ public abstract class AbstractListMenu extends AbstractMenu {
         updateSlot(previousPageButtonSlot);
     }
     
-    protected abstract ItemStack getElementIcon(Object object);
+    protected abstract ItemStack getElementIcon(T element);
     protected abstract void fillOtherItems();
 
     public byte getCurrentPage() {
@@ -126,12 +126,12 @@ public abstract class AbstractListMenu extends AbstractMenu {
     protected abstract void onCharmsBarClick(InventoryClickEvent event);
     protected abstract void onElementClick(InventoryClickEvent event);
 
-    protected abstract List<Object> getElements();
+    protected abstract List<T> getElements();
     protected abstract ItemStack getNextPageButton();
     protected abstract ItemStack getPreviousPageButton();
     protected abstract ItemStack getNoElementsButton();
 
-    protected List<Object> getElementsFromPage(byte page) {
+    protected List<T> getElementsFromPage(byte page) {
         if (page < 1 || page > getPages()) {
             page = 1;
         }

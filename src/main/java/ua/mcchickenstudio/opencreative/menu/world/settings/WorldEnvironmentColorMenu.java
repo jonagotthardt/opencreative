@@ -54,7 +54,7 @@ import java.util.Set;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class WorldEnvironmentColorMenu extends AbstractListMenu {
+public class WorldEnvironmentColorMenu extends AbstractListMenu<Material> {
 
     private final Set<Material> materials = new HashSet<>();
     private final String type;
@@ -113,11 +113,8 @@ public class WorldEnvironmentColorMenu extends AbstractListMenu {
     }
 
     @Override
-    protected ItemStack getElementIcon(Object object) {
-        if (object instanceof Material material) {
-            return new ItemStack(material,1);
-        }
-        return null;
+    protected ItemStack getElementIcon(Material material) {
+        return new ItemStack(material,1);
     }
 
     @Override
@@ -174,7 +171,7 @@ public class WorldEnvironmentColorMenu extends AbstractListMenu {
     }
 
     @Override
-    protected List<Object> getElements() {
+    protected List<Material> getElements() {
         return new ArrayList<>(materials);
     }
 
