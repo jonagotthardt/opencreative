@@ -1,5 +1,5 @@
 #
-# OpenCreative+ 5.0 - Well, it's possible.
+# OpenCreative+ 5.3 - Well, it's possible.
 # (C) McChicken Studio 2017-2025.
 #
 
@@ -198,7 +198,7 @@ planet-code-debug:
 lobby:
   title: "%branding%"
   subtitle: "&fДавайте &aтворить&f в своих мирах!"
-  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.0\n<green> Всё будет по другому..\n <white>\n<gold> ⭐ <white>Осмотри все <gold>миры<white> с помощью компаса!\n<light_purple> ❤ <white>Создай свой мир и <light_purple>пригласи <white>друзей!\n <yellow>⌚<white> Веселись и <yellow>твори <white>что угодно!\n \n<white>\n <white>"
+  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.3\n<green> Что-ж, это возможно!\n <white>\n<gold> ⭐ <white>Осмотри все <gold>миры<white> с помощью компаса!\n<light_purple> ❤ <white>Создай свой мир и <light_purple>пригласи <white>друзей!\n <yellow>⌚<white> Веселись и <yellow>твори <white>что угодно!\n \n<white>\n <white>"
 creating-world:
   title: "&eСоздание мира ◌"
   subtitle: "&fПодождите несколько секунд..."
@@ -7013,7 +7013,7 @@ menus:
         name: "&f"
         lore:
           - "&f Open&7Creative&b+"
-          - "&a Всё будет по другому"
+          - "&a Что-ж, это возможно!"
           - ""
           - "&7 Этот сервер &3использует&7 плагин"
           - "&7 OpenCreative+ с открытым исходным"

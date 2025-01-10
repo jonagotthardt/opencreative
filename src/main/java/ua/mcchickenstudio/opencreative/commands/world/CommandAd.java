@@ -83,7 +83,7 @@ public class CommandAd implements CommandExecutor, TabCompleter {
                                 player.sendMessage(getLocaleMessage("same-world",player));
                                 return true;
                             }
-                            if (planet.getSharing() != Planet.Sharing.PUBLIC) {
+                            if (foundPlanet.getSharing() != Planet.Sharing.PUBLIC) {
                                 player.sendMessage(getLocaleMessage("advertisement.closed-world"));
                                 return true;
                             }
