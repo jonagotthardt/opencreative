@@ -18,9 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.inventory;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -35,6 +33,13 @@ public final class SetMenuTitleAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
+        if (!(player.getOpenInventory().getTopInventory().getHolder() instanceof CustomMenu)) {
+            /*
+             * This check prevents from modifying server
+             * menus and OpenCreative+ menus too.
+             */
+            return;
+        }
         InventoryView inventory = player.getOpenInventory();
         String title = getArguments().getValue("title",inventory.getOriginalTitle(),this);
         inventory.setTitle(title);
@@ -42,6 +47,6 @@ public final class SetMenuTitleAction extends PlayerAction {
 
     @Override
     public ActionType getActionType() {
-        return ActionType.PLAYER_SET_INVENTORY_VIEW_SIZE;
+        return ActionType.PLAYER_SET_INVENTORY_VIEW_TITLE;
     }
 }

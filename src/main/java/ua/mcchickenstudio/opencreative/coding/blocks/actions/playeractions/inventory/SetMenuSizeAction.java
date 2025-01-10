@@ -18,18 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.inventory;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
-import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-
-import java.util.List;
 
 public final class SetMenuSizeAction extends PlayerAction {
     public SetMenuSizeAction(Executor executor, Target target, int x, Arguments args) {
@@ -38,9 +34,18 @@ public final class SetMenuSizeAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
+        if (!(player.getOpenInventory().getTopInventory().getHolder() instanceof CustomMenu)) {
+            /*
+             * This check prevents from modifying server
+             * menus and OpenCreative+ menus too.
+             */
+            return;
+        }
         InventoryView oldInventory = player.getOpenInventory();
-        int size = getArguments().getValue("size",9,this);
-        Inventory newInventory = Bukkit.createInventory(null,size,oldInventory.title());
+        int rows = getArguments().getValue("rows",6,this);
+        if (rows > 6) rows = 6;
+        else if (rows < 1) rows = 1;
+        Inventory newInventory = new CustomMenu(rows*9,oldInventory.getTitle()).getInventory();
         for (int i = 0; i < newInventory.getSize(); i++) {
             if (i >= oldInventory.getTopInventory().getSize()) break;
             newInventory.setItem(i,oldInventory.getTopInventory().getItem(i));
@@ -50,6 +55,6 @@ public final class SetMenuSizeAction extends PlayerAction {
 
     @Override
     public ActionType getActionType() {
-        return ActionType.PLAYER_SET_INVENTORY_VIEW_SIZE;
+        return ActionType.PLAYER_SET_INVENTORY_VIEW_ROWS;
     }
 }

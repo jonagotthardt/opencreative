@@ -18,7 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.inventory;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
@@ -29,24 +31,43 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
 
-public final class SetMenuItemsAction extends PlayerAction {
-    public SetMenuItemsAction(Executor executor, Target target, int x, Arguments args) {
+public final class SetMenuItemsRowAction extends PlayerAction {
+    public SetMenuItemsRowAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     public void executePlayer(Player player) {
+        if (!(player.getOpenInventory().getTopInventory().getHolder() instanceof CustomMenu)) {
+            /*
+             * This check prevents from modifying server
+             * menus and OpenCreative+ menus too.
+             */
+            return;
+        }
         List<ItemStack> items = getArguments().getItemList("items",this);
         Inventory inventory = player.getOpenInventory().getTopInventory();
-        for (int i = 0; i < inventory.getSize(); i++) {
-            if (i >= items.size()) break;
-            inventory.setItem(i,items.get(i));
+        if (inventory.getType() != InventoryType.CHEST && inventory.getType() != InventoryType.ENDER_CHEST) return;
+        int row = getArguments().getValue("row",1,this);
+        if (row > 6) row = 6;
+        else if (row < 1) row = 1;
+        if (inventory.getSize() < row*9) {
+            inventory = new CustomMenu(row*9,player.getOpenInventory().getTitle()).getInventory();
+            player.openInventory(inventory);
         }
-        player.getOpenInventory().getTopInventory().setContents(items.toArray(new ItemStack[0]));
+        boolean replaceWithAir = getArguments().getValue("replace-with-air",true,this);
+        for (int slot = row-1; slot < row*9; slot++) {
+            int i = slot%9;
+            if (i > items.size()) break;
+            ItemStack item = items.get(slot%9);
+            if (replaceWithAir || !item.isEmpty()) {
+                player.getOpenInventory().getTopInventory().setItem(slot,item);
+            }
+        }
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.PLAYER_SET_INVENTORY_VIEW_ITEMS;
+        return ActionType.PLAYER_SET_INVENTORY_VIEW_ROW_ITEMS;
     }
 }

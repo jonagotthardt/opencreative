@@ -71,7 +71,21 @@ public class LayoutMaker extends Layout {
                                 setArgSlotHorizontal((byte) 3,(byte)49);
                             }
                         } else {
-                            setArgSlotHorizontal((byte) 2,(byte) 22);
+                            setRows((byte) 4);
+                            for (byte slot = 27; slot < 36; slot++) {
+                                setItem(slot,DECORATION_PANE_ITEM);
+                            }
+                            int remainingSlots = actionType.getArgumentsSlots().length-1;
+                            byte i = 2;
+                            for (byte slot : getCentredSlots((byte) remainingSlots,(byte) 4)) {
+                                if (remainingSlots > 3) {
+                                    setGlass(i,(byte) (slot-9));
+                                    setArgSlot(i,slot);
+                                } else {
+                                    setArgSlotHorizontal(i,slot);
+                                }
+                                i++;
+                            }
                         }
                     }
                     break;
