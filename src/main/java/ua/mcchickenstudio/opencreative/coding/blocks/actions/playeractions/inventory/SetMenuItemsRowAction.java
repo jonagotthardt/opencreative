@@ -56,7 +56,7 @@ public final class SetMenuItemsRowAction extends PlayerAction {
             player.openInventory(inventory);
         }
         boolean replaceWithAir = getArguments().getValue("replace-with-air",true,this);
-        for (int slot = row-1; slot < row*9; slot++) {
+        for (int slot = (row*9)-9; slot < row*9; slot++) {
             int i = slot%9;
             if (i > items.size()) break;
             ItemStack item = items.get(slot%9);
