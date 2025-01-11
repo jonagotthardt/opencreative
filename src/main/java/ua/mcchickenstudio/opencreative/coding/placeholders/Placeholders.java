@@ -20,147 +20,67 @@ package ua.mcchickenstudio.opencreative.coding.placeholders;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.MobDamagesPlayerEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDamagesMobEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDamagesPlayerEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerKilledPlayerEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.MobInteractionEvent;
-import ua.mcchickenstudio.opencreative.planets.Planet;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 
 public class Placeholders {
 
     private static Placeholders instance;
-    private static final String PATTERN_PLACEHOLDER = "%[A-Za-z0-9]+%";
+
+    private final int limit = 20;
+    private final List<Placeholder> placeholders = new ArrayList<>();
 
     public synchronized static Placeholders getInstance() {
         if (instance == null) {
             instance = new Placeholders();
+            instance.registerPlaceholder(new SymbolPlaceholder());
+            instance.registerPlaceholder(new PlayerPlaceholder());
+            instance.registerPlaceholder(new TargetPlaceholder());
+            instance.registerPlaceholder(new EntityPlaceholder());
+            instance.registerPlaceholder(new RandomPlaceholder());
+            instance.registerPlaceholder(new EventPlaceholder());
+            instance.registerPlaceholder(new PlanetPlaceholder());
+            instance.registerPlaceholder(new VarPlaceholder());
         }
         return instance;
     }
 
+    public void registerPlaceholder(Placeholder placeholder) {
+        if (placeholder instanceof KeyPlaceholder key) {
+            if (key.getKeys().length == 0) {
+                sendWarningErrorMessage("[PLACEHOLDERS] " + placeholder + " will be not registered, because has 0 keys.");
+                return;
+            }
+            for (Placeholder listedPlaceholder : placeholders) {
+                if (listedPlaceholder instanceof KeyPlaceholder key2) {
+                    Set<String> sameKeys = getSameKeys(key,key2);
+                    if (sameKeys.isEmpty()) break;
+                    sendWarningErrorMessage("[PLACEHOLDERS] Same placeholders keys conflict " + key + ", " + key2 +" in: " + String.join(", ",sameKeys));
+                }
+            }
+        }
+        sendDebug("[PLACEHOLDERS] Registered " + placeholder);
+        placeholders.add(placeholder);
+    }
+
+    private Set<String> getSameKeys(KeyPlaceholder first, KeyPlaceholder second) {
+        Set<String> sameKeys = new HashSet<>();
+        for (String key : first.getKeys()) {
+            if (Arrays.asList(second.getKeys()).contains(key)) {
+                sameKeys.add(key);
+            }
+        }
+        return sameKeys;
+    }
+
     public String parseAction(String text, ActionsHandler handler, Action action) {
-        String result = parseEvent(text,handler);
-        result = result.replace("%space%"," ");
-        result = result.replace("%empty%","");
-        result = result.replace("%new-line%","\n");
-        result = result.replace("%nl%","\n");
-        result = result.replace("\\n","\n");
-        result = parseWorld(result,handler);
-        if (result.contains("%random")) {
-            result = parseRandom(text,handler);
-        }
-        if (result.contains("%target") || result.contains("%select")) {
-            result = parseTarget(text,action);
-        }
-        if (result.contains("%player")) {
-            result = parsePlayer(text,handler);
-        }
-        if (result.contains("%entity")) {
-            result = parseEntity(text,handler);
-        }
-        return result;
-    }
-
-    private String parseTarget(String text, Action action) {
-        Entity entity = action.getEntity();
-        if (entity != null) {
-            text = text
-                    .replace("%selected%",entity.getName())
-                    .replace("%selected_uuid%",entity.getUniqueId().toString())
-                    .replace("%target%",entity.getName())
-                    .replace("%target_uuid%",entity.getUniqueId().toString());
-        }
-        if (text.contains("%targets") || text.contains("%selection")) {
-            List<String> names = action.getHandler().getSelectedTargets().stream().map(CommandSender::getName).toList();
-            text = text.replace("%targets%",String.join(", ",names));
-            text = text.replace("%selection%",String.join(", ",names));
-        }
-        return text;
-    }
-
-    private String parseRandom(String text, ActionsHandler handler) {
-        Player randomPlayer = null;
-        List<Player> playerList = handler.getExecutor().getPlanet().getTerritory().getWorld().getPlayers();
-        if (!playerList.isEmpty()) {
-            Random r = new Random();
-            int i = r.nextInt(playerList.size());
-            randomPlayer = playerList.get(i);
-        }
-        if (randomPlayer != null) {
-            text = text.replace("%random%",randomPlayer.getName()).replace("%random_uuid%",randomPlayer.getUniqueId().toString());
-        }
-        return text;
-    }
-
-    private String parseEvent(String text, ActionsHandler handler) {
-        WorldEvent worldEvent = handler.getEvent();
-        Entity killer = null;
-        Entity victim = null;
-        if (worldEvent instanceof PlayerDamagesMobEvent event) {
-            killer = event.getDamager();
-            victim = event.getVictim();
-        } else if (worldEvent instanceof PlayerDamagesPlayerEvent event) {
-            killer = event.getDamager();
-            victim = event.getVictim();
-        } if (worldEvent instanceof MobDamagesPlayerEvent event) {
-            killer = event.getDamager();
-            victim = event.getVictim();
-        } if (worldEvent instanceof PlayerKilledPlayerEvent event) {
-            killer = event.getKiller();
-            victim = event.getVictim();
-        }
-        if (killer != null) {
-            text = text
-                    .replace("%killer%",killer.getName())
-                    .replace("%killer_uuid%",killer.getUniqueId().toString())
-                    .replace("%damager%",killer.getName())
-                    .replace("%damager_uuid%",killer.getUniqueId().toString());
-        }
-        if (victim != null) {
-            text = text
-                    .replace("%victim%",victim.getName())
-                    .replace("%victim_uuid%",victim.getUniqueId().toString());
-        }
-        return text;
-    }
-
-    private String parseWorld(String text, ActionsHandler handler) {
-        Planet planet = handler.getExecutor().getPlanet();
-        text = text
-                .replace("%online%", String.valueOf(Bukkit.getOnlinePlayers().size()))
-                .replace("%players_amount%", String.valueOf(planet.getPlayers().size()))
-                .replace("%entities_amount%", String.valueOf(planet.getTerritory().getWorld().getEntityCount() + (planet.getDevPlanet() != null && planet.getDevPlanet().getWorld() != null ? planet.getDevPlanet().getWorld().getEntityCount() : 0)));
-        return text;
-    }
-
-    private String parsePlayer(String text, ActionsHandler handler) {
-        if (handler.getEvent().getSelection().getFirst() instanceof Player player) {
-            text = text
-                    .replace("%player%",player.getName())
-                    .replace("%player_uuid%",player.getUniqueId().toString())
-                    .replace("%display_name%",player.getDisplayName());
-        }
-        return text;
-    }
-
-    private String parseEntity(String text, ActionsHandler handler) {
-        if (handler.getEvent() instanceof MobInteractionEvent event) {
-            text = text
-                    .replace("%entity%", event.getEntity().getName())
-                    .replace("%entity_uuid%", event.getEntity().getUniqueId().toString());
-        } else if (handler.getEvent().getSelection().getFirst() instanceof Entity entity) {
-            text = text
-                    .replace("%entity%", entity.getName())
-                    .replace("%entity_uuid%", entity.getUniqueId().toString());
+        text = text.replace("\\n","\n");
+        for (Placeholder placeholder : placeholders) {
+            if (placeholder.matches(text)) {
+                text = placeholder.parse(text,handler,action);
+            }
         }
         return text;
     }

@@ -29,6 +29,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import ua.mcchickenstudio.opencreative.planets.PlanetPlayer;
 
 
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
@@ -43,6 +44,9 @@ public class PlayerQuit implements Listener {
         Planet planet = PlanetManager.getInstance().getPlanetByWorld(player.getWorld());
         if (planet != null) {
             EventRaiser.raiseQuitEvent(player);
+            PlanetPlayer planetPlayer = planet.getWorldPlayers().getPlanetPlayer(player);
+            planetPlayer.save();
+            planet.getWorldPlayers().unregisterPlayer(player);
             new BukkitRunnable() {
                 @Override
                 public void run() {
