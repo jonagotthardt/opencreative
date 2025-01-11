@@ -51,18 +51,21 @@ public class VarPlaceholder extends Placeholder {
         while (matcher.find()) {
             count++;
             if (count >= limit) break;
-            String type = matcher.group(1);
+            String key = matcher.group(1);
             String name = matcher.group(2);
-            WorldVariable variable = switch (type) {
+
+            VariableLink link = switch (key) {
                 case "var_local" ->
-                        variables.getVariable(new VariableLink(name, VariableLink.VariableType.LOCAL), action);
+                        new VariableLink(name, VariableLink.VariableType.LOCAL);
                 case "var", "var_game", "var_global" ->
-                        variables.getVariable(new VariableLink(name, VariableLink.VariableType.GLOBAL), action);
+                        new VariableLink(name, VariableLink.VariableType.GLOBAL);
                 case "var_save", "var_saved" ->
-                        variables.getVariable(new VariableLink(name, VariableLink.VariableType.SAVED), action);
+                        new VariableLink(name, VariableLink.VariableType.SAVED);
                 default -> null;
             };
-            String replacement = "null! " + name + " - " + type.toUpperCase();
+            if (link == null) continue;
+            WorldVariable variable = variables.getVariable(link,action);
+            String replacement = "null! " + name + " - " + link.getVariableType().name();
             if (variable != null) {
                 replacement = String.valueOf(variable.getValue()).substring(0,Math.min(100,String.valueOf(variable.getValue()).length()));
             }
