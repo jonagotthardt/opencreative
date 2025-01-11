@@ -63,7 +63,7 @@ public abstract class CodingBlockTypesMenu extends ListBrowserMenu<Object> {
     }
 
     public CodingBlockTypesMenu(Player player, Location location, String codingBlockName, String titleName, boolean bottom) {
-        super(player,ChatColor.stripColor(getLocaleMessage("blocks." + titleName)),bottom ? PlacementLayout.BOTTOM_NO_DECORATION : PlacementLayout.LEFT_CHARMS_BAR);
+        super(player,ChatColor.stripColor(getLocaleMessage("blocks." + titleName)),bottom ? PlacementLayout.BOTTOM_CHARMS_BAR : PlacementLayout.LEFT_CHARMS_BAR);
         this.codingBlockName = codingBlockName;
         signLocation = location;
     }

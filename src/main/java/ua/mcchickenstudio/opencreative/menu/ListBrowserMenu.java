@@ -77,6 +77,14 @@ public abstract class ListBrowserMenu<T> extends AbstractListMenu<T> {
     protected abstract ItemStack getPreviousPageButton();
     protected abstract ItemStack getNoElementsButton();
 
+    protected ItemStack getNextPageEmptyButton() {
+        return ItemStack.empty();
+    }
+
+    protected ItemStack getPreviousPageEmptyButton() {
+        return ItemStack.empty();
+    }
+
     protected void fillArrowsItems(int currentPage) {
         if (elements.isEmpty()) {
             setItem(noElementsPageButtonSlot,getNoElementsButton());
@@ -114,8 +122,8 @@ public abstract class ListBrowserMenu<T> extends AbstractListMenu<T> {
         for (int slot : getElementsSlots()) {
             setItem(slot, AIR_ITEM);
         }
-        setItem(nextPageButtonSlot,AIR_ITEM);
-        setItem(previousPageButtonSlot,AIR_ITEM);
+        setItem(nextPageButtonSlot,getNextPageEmptyButton());
+        setItem(previousPageButtonSlot,getPreviousPageEmptyButton());
     }
 
     @Override
@@ -135,7 +143,7 @@ public abstract class ListBrowserMenu<T> extends AbstractListMenu<T> {
         }
         if (isElementClicked(event.getSlot()) && isEmpty(event.getCurrentItem()) && !itemEquals(event.getCurrentItem(),getNoElementsButton())) {
             onElementClick(event);
-        } else if (itemEquals(event.getCurrentItem(),DECORATION_ITEM)) {
+        } else if (itemEquals(event.getCurrentItem(),DECORATION_ITEM) || itemEquals(event.getCurrentItem(),DECORATION_PANE_ITEM)) {
             event.setCancelled(true);
         } else if (itemEquals(event.getCurrentItem(),getNextPageButton())) {
             ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ITEM_BOOK_PAGE_TURN,100f,1f);

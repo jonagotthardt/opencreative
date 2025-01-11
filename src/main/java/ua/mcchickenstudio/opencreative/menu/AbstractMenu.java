@@ -76,9 +76,9 @@ public abstract class AbstractMenu implements InventoryHolder {
     }
 
     public @NotNull Inventory getInventory() {
-        if (inventory == null) {
-            rows = Math.clamp(1,rows,6);
-            inventory = Bukkit.createInventory(this, this.rows * 9, Component.text(this.title));
+        rows = Math.clamp(1,rows,6);
+        if (inventory == null || inventory.getSize() != rows*9) {
+            inventory = Bukkit.createInventory(this, rows * 9, Component.text(this.title));
         }
         return inventory;
     }
@@ -86,8 +86,8 @@ public abstract class AbstractMenu implements InventoryHolder {
     public void open(Player player) {
         Menus.addMenu(this);
         try {
-            fillItems(player);
             inventory = getInventory();
+            fillItems(player);
             player.openInventory(inventory);
         } catch (Exception e) {
             sendPlayerErrorMessage(player,"Failed to open AbstractMenu with title " + title + ". ",e);
@@ -123,6 +123,14 @@ public abstract class AbstractMenu implements InventoryHolder {
 
     protected void setRows(int rows) {
         this.rows = rows;
+        if (inventory != null) {
+            ItemStack[] oldItems = inventory.getContents();
+            inventory = Bukkit.createInventory(this, rows * 9, Component.text(this.title));
+            for (int slot = 0; slot < oldItems.length; slot++) {
+                if (slot >= inventory.getSize()) break;
+                inventory.setItem(slot,oldItems[slot]);
+            }
+        }
     }
 
     protected boolean isEmpty(ItemStack item) {

@@ -52,6 +52,16 @@ public class VariableActionsMenu extends CodingBlockTypesMenu {
     }
 
     @Override
+    protected ItemStack getNextPageEmptyButton() {
+        return DECORATION_PANE_ITEM;
+    }
+
+    @Override
+    protected ItemStack getPreviousPageEmptyButton() {
+        return DECORATION_PANE_ITEM;
+    }
+
+    @Override
     protected Set<MenusCategory> getMenusCategories() {
         return ActionType.getMenusCategories(ActionCategory.VARIABLE_ACTION);
     }
