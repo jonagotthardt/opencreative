@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 public abstract class KeyValuePlaceholder extends Placeholder {
 
     private final String[] keys;
-    private static final Pattern PATTERN = Pattern.compile("%([A-Za-z0-9]+)\\(([^)]+)\\)");
+    private static final Pattern PATTERN = Pattern.compile("%([A-Za-z0-9_]+)\\(([^)]+)\\)");
     private static final int limit = 20;
 
     public KeyValuePlaceholder(String... keys) {
