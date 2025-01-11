@@ -18,15 +18,36 @@
 
 package ua.mcchickenstudio.opencreative.coding.placeholders;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.CodingPackContent;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 
+/**
+ * <h1>Placeholder</h1>
+ * This class represents a special text, that will be replaced
+ * while parsing text coding values.
+ * @see Placeholders
+ * @see KeyPlaceholder
+ */
 public abstract class Placeholder implements CodingPackContent {
 
+    /**
+     * Returns <code>true</code> if specified text contains
+     * placeholders that can be parsed with this class.
+     * @param text text to check.
+     * @return true - placeholders detected, false - not detected.
+     */
     public abstract boolean matches(String text);
 
-    public abstract String parse(String text, ActionsHandler handler, Action action);
+    /**
+     * Returns text with parsed placeholders from this class.
+     * @param text text to parse.
+     * @param handler action handler.
+     * @param action action.
+     * @return parsed text
+     */
+    public abstract @NotNull String parse(String text, ActionsHandler handler, Action action);
 
     @Override
     public String toString() {

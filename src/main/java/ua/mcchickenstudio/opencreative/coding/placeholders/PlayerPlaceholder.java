@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.placeholders;
 
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 
@@ -29,7 +30,7 @@ public class PlayerPlaceholder extends KeyPlaceholder {
     }
 
     @Override
-    public String parseKey(String key, ActionsHandler handler, Action action) {
+    public @Nullable String parseKey(String key, ActionsHandler handler, Action action) {
         if (handler.getEvent().getSelection().getFirst() instanceof Player player) {
             switch (key) {
                 case "player" -> {

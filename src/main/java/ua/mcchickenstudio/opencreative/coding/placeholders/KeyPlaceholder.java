@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.placeholders;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
@@ -27,6 +29,13 @@ import ua.mcchickenstudio.opencreative.coding.variables.WorldVariables;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * <h1>KeyPlaceholder</h1>
+ * This class represents a key placeholder, that
+ * has keys that will be replaced, if text will contain
+ * them in "percents format": <code>%example%</code>
+ * Should be used for creation.
+ */
 public abstract class KeyPlaceholder extends Placeholder {
 
     private final String[] keys;
@@ -56,14 +65,25 @@ public abstract class KeyPlaceholder extends Placeholder {
         return false;
     }
 
+    /**
+     * Returns array of keys that can be replaced, without %.
+     * @return array of keys.
+     */
     public String[] getKeys() {
         return keys;
     }
 
-    public abstract String parseKey(String key, ActionsHandler handler, Action action);
+    /**
+     * Parses placeholder key, without %.
+     * @param key key to replace.
+     * @param handler action handler.
+     * @param action action
+     * @return string - if parsed, or null - nothing parsed.
+     */
+    public abstract @Nullable String parseKey(String key, ActionsHandler handler, Action action);
 
     @Override
-    public final String parse(String text, ActionsHandler handler, Action action) {
+    public @NotNull String parse(String text, ActionsHandler handler, Action action) {
         Matcher matcher = PATTERN_PLACEHOLDER.matcher(text);
         StringBuilder result = new StringBuilder();
         int count = 0;

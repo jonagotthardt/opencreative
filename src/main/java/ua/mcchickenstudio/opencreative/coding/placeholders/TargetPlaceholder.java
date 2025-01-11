@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.placeholders;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.MobInteractionEvent;
@@ -35,7 +36,7 @@ public class TargetPlaceholder extends KeyPlaceholder {
     }
 
     @Override
-    public String parseKey(String key, ActionsHandler handler, Action action) {
+    public @Nullable String parseKey(String key, ActionsHandler handler, Action action) {
         Entity entity = action.getEntity();
         return switch (key) {
             case "selected", "target" -> entity == null ? null : entity.getName();

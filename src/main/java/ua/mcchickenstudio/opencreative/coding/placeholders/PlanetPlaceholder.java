@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.placeholders;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.MobInteractionEvent;
@@ -32,7 +33,7 @@ public class PlanetPlaceholder extends KeyPlaceholder {
     }
 
     @Override
-    public String parseKey(String key, ActionsHandler handler, Action action) {
+    public @Nullable String parseKey(String key, ActionsHandler handler, Action action) {
         Planet planet = handler.getExecutor().getPlanet();
         return switch (key) {
             case "online" -> String.valueOf(Bukkit.getOnlinePlayers().size());

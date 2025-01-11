@@ -25,12 +25,21 @@ import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 
+/**
+ * <h1>Placeholders</h1>
+ * This class represents a placeholders storage, that
+ * has methods to register custom placeholders.
+ * @see Placeholder
+ */
 public class Placeholders {
 
     private static Placeholders instance;
-
     private final List<Placeholder> placeholders = new ArrayList<>();
 
+    /**
+     * Returns instance of placeholders controller class.
+     * @return instance of placeholders.
+     */
     public synchronized static Placeholders getInstance() {
         if (instance == null) {
             instance = new Placeholders();
@@ -46,6 +55,10 @@ public class Placeholders {
         return instance;
     }
 
+    /**
+     * Registers placeholder, that will be parsed in text coding values.
+     * @param placeholder placeholder to register.
+     */
     public void registerPlaceholder(Placeholder placeholder) {
         if (placeholder instanceof KeyPlaceholder key) {
             if (key.getKeys().length == 0) {
@@ -64,6 +77,22 @@ public class Placeholders {
         placeholders.add(placeholder);
     }
 
+    /**
+     * Unregisters placeholder if list contains it.
+     * @param placeholder placeholder to unregister.
+     */
+    public void unregisterPlaceholder(Placeholder placeholder) {
+        placeholders.remove(placeholder);
+    }
+
+    /**
+     * Returns a copy of list that contains all registered placeholders.
+     * @return placeholders list.
+     */
+    public List<Placeholder> getPlaceholders() {
+        return new ArrayList<>(placeholders);
+    }
+
     private Set<String> getSameKeys(KeyPlaceholder first, KeyPlaceholder second) {
         Set<String> sameKeys = new HashSet<>();
         for (String key : first.getKeys()) {
@@ -74,7 +103,24 @@ public class Placeholders {
         return sameKeys;
     }
 
-    public String parseAction(String text, ActionsHandler handler, Action action) {
+    private Set<String> getSameKeys(KeyValuePlaceholder first, KeyValuePlaceholder second) {
+        Set<String> sameKeys = new HashSet<>();
+        for (String key : first.getKeys()) {
+            if (Arrays.asList(second.getKeys()).contains(key)) {
+                sameKeys.add(key);
+            }
+        }
+        return sameKeys;
+    }
+
+    /**
+     * Returns text with parsed placeholders.
+     * @param text text to parse.
+     * @param handler action handler.
+     * @param action action.
+     * @return parsed text.
+     */
+    public String parsePlaceholders(String text, ActionsHandler handler, Action action) {
         text = text.replace("\\n","\n");
         try {
             for (Placeholder placeholder : placeholders) {
@@ -85,7 +131,6 @@ public class Placeholders {
         } catch (Exception error) {
             sendCriticalErrorMessage("[PLACEHOLDERS] Can't parse placeholder",error);
         }
-
         return text;
     }
 

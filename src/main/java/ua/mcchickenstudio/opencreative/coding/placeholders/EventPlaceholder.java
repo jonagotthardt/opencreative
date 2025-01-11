@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.placeholders;
 
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
@@ -35,7 +36,7 @@ public class EventPlaceholder extends KeyPlaceholder {
     }
 
     @Override
-    public String parseKey(String key, ActionsHandler handler, Action action) {
+    public @Nullable String parseKey(String key, ActionsHandler handler, Action action) {
         WorldEvent worldEvent = handler.getEvent();
         Entity killer = null;
         Entity victim = null;

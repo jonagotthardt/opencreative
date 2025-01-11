@@ -18,63 +18,38 @@
 
 package ua.mcchickenstudio.opencreative.coding.placeholders;
 
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import ua.mcchickenstudio.opencreative.coding.variables.WorldVariable;
 import ua.mcchickenstudio.opencreative.coding.variables.WorldVariables;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+public class VarPlaceholder extends KeyValuePlaceholder {
 
-public class VarPlaceholder extends Placeholder {
-
-    private static final Pattern PATTERN = Pattern.compile("%(var|var_local|var_game|var_global|var_save|var_saved)\\(([^)]+)\\)");
-    private static final int limit = 20;
-
-    @Override
-    public boolean matches(String text) {
-        Matcher matcher = PATTERN.matcher(text);
-        return matcher.find();
-    }
-
-    public static Pattern getPattern() {
-        return PATTERN;
+    public VarPlaceholder() {
+        super("var","var_local","var_game","var_global","var_save","var_saved");
     }
 
     @Override
-    public String parse(String text, ActionsHandler handler, Action action) {
-        Matcher matcher = PATTERN.matcher(text);
-        StringBuilder result = new StringBuilder();
+    public @Nullable String parseKeyValue(String type, String name, ActionsHandler handler, Action action) {
         WorldVariables variables = action.getExecutor().getPlanet().getVariables();
-        int count = 0;
-        while (matcher.find()) {
-            count++;
-            if (count >= limit) break;
-            String key = matcher.group(1);
-            String name = matcher.group(2);
-
-            VariableLink link = switch (key) {
-                case "var_local" ->
-                        new VariableLink(name, VariableLink.VariableType.LOCAL);
-                case "var", "var_game", "var_global" ->
-                        new VariableLink(name, VariableLink.VariableType.GLOBAL);
-                case "var_save", "var_saved" ->
-                        new VariableLink(name, VariableLink.VariableType.SAVED);
-                default -> null;
-            };
-            if (link == null) continue;
-            WorldVariable variable = variables.getVariable(link,action);
-            String replacement = "null! " + name + " - " + link.getVariableType().name();
-            if (variable != null) {
-                replacement = String.valueOf(variable.getValue()).substring(0,Math.min(100,String.valueOf(variable.getValue()).length()));
-            }
-
-            matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
+        VariableLink link = switch (type) {
+            case "var_local" ->
+                    new VariableLink(name, VariableLink.VariableType.LOCAL);
+            case "var", "var_game", "var_global" ->
+                    new VariableLink(name, VariableLink.VariableType.GLOBAL);
+            case "var_save", "var_saved" ->
+                    new VariableLink(name, VariableLink.VariableType.SAVED);
+            default -> null;
+        };
+        if (link == null) return null;
+        WorldVariable variable = variables.getVariable(link,action);
+        String replacement = "null! " + name + " - " + link.getVariableType().name();
+        if (variable != null) {
+            replacement = String.valueOf(variable.getValue()).substring(0,Math.min(100,String.valueOf(variable.getValue()).length()));
         }
-
-        matcher.appendTail(result);
-        return result.toString();
+        return replacement;
     }
 
     @Override
