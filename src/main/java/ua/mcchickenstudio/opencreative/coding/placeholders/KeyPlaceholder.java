@@ -37,6 +37,10 @@ public abstract class KeyPlaceholder extends Placeholder {
         this.keys = keys;
     }
 
+    public static Pattern getPatternPlaceholder() {
+        return PATTERN_PLACEHOLDER;
+    }
+
     @Override
     public boolean matches(String text) {
         Matcher matcher = PATTERN_PLACEHOLDER.matcher(text);
