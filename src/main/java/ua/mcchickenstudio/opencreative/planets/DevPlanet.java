@@ -68,14 +68,12 @@ public class DevPlanet {
 
     public void loadDevPlanetWorld() {
         if (this.exists()) {
-            if (loadWorldFolder(this.getWorldName(), true)) {
-                Bukkit.createWorld(new WorldCreator(this.getWorldName()).type(WorldType.FLAT).generator(new DevPlanetChunkGenerator()));
-                if (getWorld() != null) {
-                    if (getWorld().getBlockAt(4,0,4).isEmpty()) {
-                        createPlatform(1,1);
-                    }
-                    setupWorld();
+            Bukkit.createWorld(new WorldCreator(this.getWorldName()).type(WorldType.FLAT).generator(new DevPlanetChunkGenerator()));
+            if (getWorld() != null) {
+                if (getWorld().getBlockAt(4,0,4).isEmpty()) {
+                    createPlatform(1,1);
                 }
+                setupWorld();
             }
         } else {
             Bukkit.createWorld(new WorldCreator(this.getWorldName()).type(WorldType.FLAT).generator(new DevPlanetChunkGenerator()));

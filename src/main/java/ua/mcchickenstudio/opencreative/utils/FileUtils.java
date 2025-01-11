@@ -116,11 +116,11 @@ public class FileUtils {
             try {
                 file.createNewFile();
             } catch (IOException error) {
-                sendCriticalErrorMessage("Couldn't create a codeScript.yml for world " + worldName + " because of IOException. Maybe it is already exists? " + error.getMessage());
+                sendCriticalErrorMessage("Couldn't create a codeScript.yml for planet " + getPlanetIdFromName(worldName) + " because of IOException. Maybe it is already exists? " + error.getMessage());
                 return;
             }
         }
-        worldFile.set("world",worldName);
+        worldFile.set("world",getPlanetIdFromName(worldName));
         worldFile.set("creation-time",System.currentTimeMillis());
         worldFile.set("last-activity-time",System.currentTimeMillis());
         worldFile.createSection("code");
@@ -417,18 +417,6 @@ public class FileUtils {
             sendCriticalErrorMessage("Error while unloading worlds.",error);
         }
     }
-
-    /**
-     * Loads planet folder.
-     **/
-    public static boolean loadWorldFolder(String worldName, boolean removeUnloadedFolder) {
-        return true;
-    }
-
-    /**
-     * Unloads planet folder.
-     **/
-    public static void unloadWorldFolder(String worldName, boolean removeWorldFolder) {}
 
     /**
      * Copies input files into output directory.

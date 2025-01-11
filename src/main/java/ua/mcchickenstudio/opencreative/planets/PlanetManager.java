@@ -99,7 +99,6 @@ public class PlanetManager {
         createWorldSettings(id, owner, environment);
         Planet planet = new Planet(id);
 
-        FileUtils.loadWorldFolder(planet.getWorldName(),true);
         if (planet.getTerritory().generateWorld(generator,environment,seed,generateStructures) != null) {
             planet.connectPlayer(owner);
             planet.getTerritory().getWorld().getSpawnLocation().getChunk().load(true);

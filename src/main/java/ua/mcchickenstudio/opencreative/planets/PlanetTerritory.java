@@ -107,7 +107,6 @@ public class PlanetTerritory {
      */
     public synchronized void load() {
         loadInformation();
-        FileUtils.loadWorldFolder(planet.getWorldName(),true);
         World world = new WorldCreator(planet.getWorldName()).environment(planet.getTerritory().getEnvironment()).keepSpawnLoaded(TriState.FALSE).createWorld();
         if (world == null) return;
         script = new CodeScript(planet,getPlanetScriptFile(planet));
@@ -140,11 +139,6 @@ public class PlanetTerritory {
      * Saves planet's data and unloads planet's build and dev world.
      */
     public synchronized void unload() {
-        /*
-         * Currently don't use async, because
-         * it causes problems on world unloading
-         * when plugin is disabling!
-         */
         for (Player player : planet.getPlayers()) {
             raiseQuitEvent(player);
         }
@@ -155,16 +149,12 @@ public class PlanetTerritory {
             teleportToLobby(player);
         }
         clearData();
-        if (Bukkit.unloadWorld(planet.getWorldName(),autoSave)) {
-            FileUtils.unloadWorldFolder(planet.getWorldName(),true);
-        }
+        Bukkit.unloadWorld(planet.getWorldName(),autoSave);
         if (planet.getDevPlanet().isLoaded()) {
             for (Player player : planet.getDevPlanet().getWorld().getPlayers()) {
                 teleportToLobby(player);
             }
-            if (Bukkit.unloadWorld(planet.getDevPlanet().getWorldName(),true)) {
-                FileUtils.unloadWorldFolder(planet.getDevPlanet().getWorldName(),true);
-            }
+            Bukkit.unloadWorld(planet.getDevPlanet().getWorldName(),true);
         }
         new PlanetUnloadEvent(planet).callEvent();
     }

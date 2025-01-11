@@ -103,7 +103,7 @@ public class ChangedWorld implements Listener {
             removePlayerWithLocation(player);
             if (oldPlanet != null) {
                 PlanetPlayer planetPlayer = oldPlanet.getWorldPlayers().getPlanetPlayer(player);
-                planetPlayer.save();
+                if (planetPlayer != null) planetPlayer.save();
                 oldPlanet.getWorldPlayers().unregisterPlayer(player);
                 new PlanetDisconnectPlayerEvent(oldPlanet,player).callEvent();
                 if (oldPlanet.getOnline() > 0) {
