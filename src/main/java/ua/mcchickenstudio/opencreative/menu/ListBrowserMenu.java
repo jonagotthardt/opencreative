@@ -23,7 +23,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
@@ -141,7 +140,7 @@ public abstract class ListBrowserMenu<T> extends AbstractListMenu<T> {
             event.setCancelled(true);
             return;
         }
-        if (isElementClicked(event.getSlot()) && isEmpty(event.getCurrentItem()) && !itemEquals(event.getCurrentItem(),getNoElementsButton())) {
+        if (isElementClicked(event.getSlot()) && isNotEmpty(event.getCurrentItem()) && !itemEquals(event.getCurrentItem(),getNoElementsButton())) {
             onElementClick(event);
         } else if (itemEquals(event.getCurrentItem(),DECORATION_ITEM) || itemEquals(event.getCurrentItem(),DECORATION_PANE_ITEM)) {
             event.setCancelled(true);
@@ -153,7 +152,7 @@ public abstract class ListBrowserMenu<T> extends AbstractListMenu<T> {
             ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 100f, 1f);
             previousPage();
             event.setCancelled(true);
-        } else if (isCharmsBarClicked(event.getSlot()) && isEmpty(event.getCurrentItem()) && !event.getCurrentItem().equals(DECORATION_ITEM)) {
+        } else if (isCharmsBarClicked(event.getSlot()) && isNotEmpty(event.getCurrentItem()) && !event.getCurrentItem().equals(DECORATION_ITEM)) {
             onCharmsBarClick(event);
         } else {
             event.setCancelled(true);

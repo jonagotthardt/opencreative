@@ -30,8 +30,6 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
-
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 
@@ -133,7 +131,7 @@ public abstract class AbstractMenu implements InventoryHolder {
         }
     }
 
-    protected boolean isEmpty(ItemStack item) {
+    protected boolean isNotEmpty(ItemStack item) {
         return (item != null && item.getType() != Material.AIR);
     }
 

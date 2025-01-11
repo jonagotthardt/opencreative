@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.menu;
 
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -42,10 +41,6 @@ public abstract class AbstractListMenu<T> extends AbstractMenu {
     private int currentPage = 1;
 
     protected final List<T> elements = new ArrayList<>();
-
-    public AbstractListMenu(Player player, String title) {
-        this(player,title,PlacementLayout.LEFT_CHARMS_BAR);
-    }
 
     public AbstractListMenu(Player player, String title, PlacementLayout layout) {
         this(player,title,layout.getElementsSlots(),layout.getCharmsBarSlots(),layout.getDecorationSlots());
@@ -124,11 +119,11 @@ public abstract class AbstractListMenu<T> extends AbstractMenu {
             event.setCancelled(true);
             return;
         }
-        if (isElementClicked(event.getSlot()) && isEmpty(event.getCurrentItem())) {
+        if (isElementClicked(event.getSlot()) && isNotEmpty(event.getCurrentItem())) {
             onElementClick(event);
         } else if (itemEquals(event.getCurrentItem(),DECORATION_ITEM)) {
             event.setCancelled(true);
-        } else if (isCharmsBarClicked(event.getSlot()) && isEmpty(event.getCurrentItem()) && !event.getCurrentItem().equals(DECORATION_ITEM)) {
+        } else if (isCharmsBarClicked(event.getSlot()) && isNotEmpty(event.getCurrentItem()) && !event.getCurrentItem().equals(DECORATION_ITEM)) {
             onCharmsBarClick(event);
         } else {
             event.setCancelled(true);
@@ -221,15 +216,15 @@ public abstract class AbstractListMenu<T> extends AbstractMenu {
             this.decorationSlots = decorationSlots;
         }
 
-        protected int[] getCharmsBarSlots() {
+        private int[] getCharmsBarSlots() {
             return charmsBarSlots;
         }
 
-        protected int[] getElementsSlots() {
+        private int[] getElementsSlots() {
             return elementsSlots;
         }
 
-        protected int[] getDecorationSlots() {
+        private int[] getDecorationSlots() {
             return decorationSlots;
         }
     }
