@@ -96,7 +96,7 @@ public class PlanetManager {
         ));
         OpenCreative.getPlugin().getLogger().info("Creating new planet " + id + " by " + owner.getName() + "...");
 
-        createWorldSettings(id, false, owner, environment);
+        createWorldSettings(id, owner, environment);
         Planet planet = new Planet(id);
 
         FileUtils.loadWorldFolder(planet.getWorldName(),true);

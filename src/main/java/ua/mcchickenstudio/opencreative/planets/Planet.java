@@ -36,6 +36,7 @@ import ua.mcchickenstudio.opencreative.settings.groups.Group;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 
+import java.io.File;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,9 +58,7 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
  * world size, sharing, world mode, limits, flags, players data, variables
  * and states.
  *
- * <p>Planet has two file states: unloaded and loaded. Unloaded planets files
- * are stored in /unloadedWorlds/ directory, and loaded planets files are
- * stored in server's worlds storage directory.</p>
+ * <p>Planet files are stored in ./planets/planetID folder.</p>
  * @author McChicken Studio
  * @since 1.0
  * @version 5.0
@@ -228,7 +227,7 @@ public class Planet {
     }
 
     public String getWorldName() {
-        return "planet" + id;
+        return getPlanetsStorageFolder().getPath() + File.separator + "planet" + id;
     }
 
     public int getId() {
@@ -337,7 +336,7 @@ public class Planet {
             } catch (Exception ignored) {}
         }
         if (corrupted) {
-            sendCriticalErrorMessage("Planet " + getWorldName() + " lost it's config file, please check planet files in /unloadedWorlds/" + getWorldName());
+            sendCriticalErrorMessage("Planet " + id + " lost it's config file, please check planet files in " + getWorldName());
         }
         this.owner = owner;
         this.ownerGroup = ownerGroup;
@@ -443,7 +442,7 @@ public class Planet {
         player.playSound(player.getLocation(), Sound.BLOCK_TRIAL_SPAWNER_ABOUT_TO_SPAWN_ITEM,100,1);
         boolean wasLoaded = isLoaded();
         if (!isLoaded()) {
-            OpenCreative.getPlugin().getLogger().info("Loading " + this.getWorldName() + " and teleporting " + player.getName());
+            OpenCreative.getPlugin().getLogger().info("Loading planet " + id + " and teleporting " + player.getName());
             territory.load();
         }
         clearPlayer(player);

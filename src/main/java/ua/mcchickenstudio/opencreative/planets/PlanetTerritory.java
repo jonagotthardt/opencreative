@@ -137,7 +137,7 @@ public class PlanetTerritory {
     }
 
     /**
-     * Saves planet's data and unloads planet's build and dev worlds into /unloadedWorlds/ directory.
+     * Saves planet's data and unloads planet's build and dev world.
      */
     public synchronized void unload() {
         /*

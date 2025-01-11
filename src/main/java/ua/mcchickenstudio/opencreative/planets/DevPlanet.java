@@ -101,7 +101,7 @@ public class DevPlanet {
 
     public boolean exists() {
         boolean exists = false;
-        for (File folder : getWorldsFolders(true)) {
+        for (File folder : getWorldsFolders()) {
             if (folder.getName().equalsIgnoreCase(this.getWorldName())) {
                 exists = true;
                 break;

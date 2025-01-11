@@ -39,6 +39,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import ua.mcchickenstudio.opencreative.menu.buttons.RadioButton;
 import ua.mcchickenstudio.opencreative.planets.*;
 import ua.mcchickenstudio.opencreative.utils.PlayerConfirmation;
+import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 import java.util.List;
 import java.util.Set;
@@ -208,7 +209,7 @@ public class InventoryClick implements Listener {
                     }
                 }
             }
-            if (!player.getWorld().getName().startsWith("planet")) {
+            if (!WorldUtils.isPlanet(player.getWorld())) {
                 if (item.hasItemMeta()) {
                     if (item.getItemMeta().displayName() != null) {
                         if (item.getItemMeta().getDisplayName().equals(getLocaleMessage("items.lobby.games.name")) || item.getItemMeta().getDisplayName().equals(getLocaleMessage("items.lobby.own.name"))) {

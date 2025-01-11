@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
+import org.apache.commons.lang3.ArrayUtils;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -27,14 +28,15 @@ import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 import java.io.*;
-import java.nio.file.Path;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isPlanet;
 
 /**
  * <h1>FileUtils</h1>
@@ -46,11 +48,10 @@ public class FileUtils {
     /**
      * Creates planet's settings.yml file.
      * @param id        Planet's ID.
-     * @param isLoaded  Create in planet's folder or in unloadedWorlds.
      * @param owner     Owner of new world.
      */
-    public static void createWorldSettings(int id, boolean isLoaded, Player owner, World.Environment environment) {
-        String worldFolderPath = Bukkit.getServer().getWorldContainer() + File.separator + (!isLoaded ? "unloadedWorlds" + File.separator : "") + "planet" + id + File.separator;
+    public static void createWorldSettings(int id, Player owner, World.Environment environment) {
+        String worldFolderPath = getPlanetsStorageFolder().getPath() + File.separator  + "planet" + id + File.separator;
         File folder = new File(worldFolderPath);
         if (!folder.exists()) {
             folder.mkdir();
@@ -184,12 +185,13 @@ public class FileUtils {
     }
 
     /**
-     Loads all planets to base. It contains planets from /unloadedWorlds/ and planets with loaded worlds.
+     Loads all planets to base.
      **/
     public static void loadPlanets() {
         OpenCreative.getPlugin().getLogger().info("Registering worlds to base...");
         try {
-            File[] planetsFolders = getWorldsFolders(true);
+            convertOldPlanetFolders();
+            File[] planetsFolders = getWorldsFolders();
             if (planetsFolders.length == 0) {
                 OpenCreative.getPlugin().getLogger().info("No worlds have been detected.");
                 return;
@@ -199,17 +201,7 @@ public class FileUtils {
             int deprecatedWorlds = 0;
             long currentTime = System.currentTimeMillis();
             for (File planetFolder : planetsFolders) {
-                String worldName = planetFolder.getPath().replace(Bukkit.getServer().getWorldContainer() + File.separator,"").replace("unloadedWorlds" + File.separator,"");
-                if (!planetFolder.getPath().contains("unloadedWorlds")) {
-                    OpenCreative.getPlugin().getLogger().info("Moving loaded world " + worldName + " to unloadedWorlds folder...");
-                    World world = Bukkit.getWorld(worldName);
-                    if (world != null) {
-                        for (Player player : world.getPlayers()) {
-                            teleportToLobby(player);
-                        }
-                    }
-                    unloadWorldFolder(worldName,true);
-                }
+                String worldName = planetFolder.getPath().replace(Bukkit.getServer().getWorldContainer() + File.separator,"").replace("planets" + File.separator,"");
                 if (!worldName.endsWith("dev")) {
                     OpenCreative.getPlugin().getLogger().info("Adding world " + worldName + " to base...");
                     int id = -1;
@@ -248,11 +240,7 @@ public class FileUtils {
      Returns development planet's folder. It contains world's map.
      **/
     public static File getDevPlanetFolder(DevPlanet devPlanet) {
-        if (devPlanet.isLoaded()) {
-            return new File(Bukkit.getServer().getWorldContainer() + File.separator + devPlanet.getWorldName() + File.separator);
-        } else {
-            return new File(Bukkit.getServer().getWorldContainer() + File.separator + "unloadedWorlds" + File.separator + devPlanet.getWorldName() + File.separator);
-        }
+        return new File(devPlanet.getWorldName() + File.separator);
     }
 
     /**
@@ -320,121 +308,127 @@ public class FileUtils {
     }
 
     /**
-     * Returns planets worlds folders.
-     * @param includeUnloadedWorlds if true - includes unloaded worlds too, false - only loaded worlds.
+     * Returns folders of all planets worlds.
      * @return planets worlds folders.
      */
-    public static File[] getWorldsFolders(boolean includeUnloadedWorlds) {
-
-        ArrayList<File> worldsFolders = new ArrayList<>();
-        File serverDirectory = Bukkit.getServer().getWorldContainer();
-        File[] serverDirectoryFiles = serverDirectory.listFiles();
-
-        if (serverDirectoryFiles != null) {
-            for (File file : serverDirectoryFiles) {
-                if (file.getName().startsWith("plot")) {
-                    File newFile = new File(file.getParent() + File.separator + file.getName().replace("plot","planet"));
-                    file.renameTo(newFile);
-                    file = newFile;
-                }
-                if (file.isDirectory() && file.getName().startsWith("planet")) worldsFolders.add(file);
-            }
-        } else {
-            sendCriticalErrorMessage("World container of server is null.");
+    public static File[] getWorldsFolders() {
+        List<File> worldsFolders = new ArrayList<>();
+        File planetsFolder = getPlanetsStorageFolder();
+        if (!planetsFolder.exists()) {
+            planetsFolder.mkdirs();
         }
-
-        if (includeUnloadedWorlds) {
-            File unloadedWorldsFolder = new File(serverDirectory + File.separator + "unloadedWorlds" + File.separator);
-            if (!unloadedWorldsFolder.exists()) {
-                unloadedWorldsFolder.mkdirs();
-            }
-            File[] unloadedWorlds = unloadedWorldsFolder.listFiles();
-
-            if (unloadedWorlds != null) {
-                File unloadedWorldFolder = new File(serverDirectory + File.separator + "unloadedWorlds" + File.separator);
-                if (!unloadedWorldFolder.exists())  {
-                    if (!unloadedWorldFolder.mkdirs()) sendCriticalErrorMessage("Can't create /unloadedWorlds/ folder");
-                }
-                for (File file : unloadedWorlds) {
-                    if (file.getName().startsWith("plot")) {
-                        File newFile = new File(file.getParent() + File.separator + file.getName().replace("plot","planet"));
-                        file.renameTo(newFile);
-                        file = newFile;                    }
-                    if (file.isDirectory() && file.getName().startsWith("planet")) {
-                        worldsFolders.add(file);
-                    }
-                }
-            } else {
-                sendCriticalErrorMessage(unloadedWorldsFolder.getPath() + " is null.");
-            }
+        File[] planetsWorlds = planetsFolder.listFiles();
+        if (planetsWorlds == null) {
+            return worldsFolders.toArray(new File[0]);
+        }
+        for (File file : planetsWorlds) {
+            if (isPlanetFolder(file)) worldsFolders.add(file);
         }
         return worldsFolders.toArray(new File[0]);
     }
 
     /**
-     * Unloads all loaded planets worlds into /unloadedWorlds/ directory.
+     * Returns folders of planets worlds that are
+     * stored in server container or /unloadedWorlds/ folder.
+     * @return planets worlds folders.
      */
-    public static void unloadPlanets() {
-        OpenCreative.getPlugin().getLogger().info("Creative+ is unloading worlds, please wait...");
-        try {
-            File[] worldsFiles = getWorldsFolders(false);
-            if (worldsFiles.length > 0) {
-                for (File file : worldsFiles) {
-                    String worldName = file.getPath().replace(Bukkit.getServer().getWorldContainer() + File.separator,"");
-                        try {
-                            OpenCreative.getPlugin().getLogger().info("Unloading Creative world " + worldName + "...");
-                            Bukkit.unloadWorld(worldName,true);
-                            unloadWorldFolder(worldName,true);
-                        } catch (Exception error) {
-                            OpenCreative.getPlugin().getLogger().severe("An error has occurred when unloading world " + worldName + ": " + error.getMessage());
-                        }
-                }
-            } else {
-                OpenCreative.getPlugin().getLogger().info("No worlds been detected ;(");
+    public static void convertOldPlanetFolders() {
+        File serverDirectory = Bukkit.getServer().getWorldContainer();
+        File[] serverDirectoryFiles = serverDirectory.listFiles();
+        int count = 0;
+        if (serverDirectoryFiles != null) {
+            for (File file : serverDirectoryFiles) {
+                if (convertOldPlanetFolder(file)) count++;
             }
-            PlanetManager.getInstance().clearPlanets();
-        } catch (NullPointerException error) {
-            sendCriticalErrorMessage("Error while unloading worls: " + error.getMessage());
         }
+        File unloadedWorldsFolder = new File(serverDirectory + File.separator + "unloadedWorlds" + File.separator);
+        if (unloadedWorldsFolder.exists()) {
+            File[] unloadedWorlds = unloadedWorldsFolder.listFiles();
+            if (unloadedWorlds != null) {
+                for (File file : unloadedWorlds) {
+                    if (convertOldPlanetFolder(file)) count++;
+                }
+                unloadedWorlds = unloadedWorldsFolder.listFiles();
+            }
+            if (unloadedWorlds.length == 0) {
+                unloadedWorldsFolder.delete();
+            }
+        }
+        if (count > 0) {
+            OpenCreative.getPlugin().getLogger().info("Converted " + count + " old worlds!");
+        }
+
     }
 
     /**
-     * Loads planet folder from /unloadedWorlds/ to server storage.
-     **/
-    public static boolean loadWorldFolder(String worldName, boolean removeUnloadedFolder) {
-        Path serverPath = Bukkit.getServer().getWorldContainer().toPath();
-        File unloadedWorldFolder = new File(serverPath + File.separator + "unloadedWorlds" + File.separator + worldName);
-        File worldFolder = new File(serverPath + File.separator + worldName);
-
-        if (copyFilesToDirectory(unloadedWorldFolder,worldFolder)) {
-            if (!removeUnloadedFolder) return true;
-            try {
-                org.apache.commons.io.FileUtils.deleteDirectory(unloadedWorldFolder);
-                return true;
-            } catch (IOException error) {
-                return false;
+     * Returns a new renamed folder if planet is "plot",
+     * otherwise it will return same folder.
+     * @param folder planet folder to convert.
+     * @return renamed or same planet folder.
+     */
+    public static boolean convertOldPlanetFolder(File folder) {
+        try {
+            boolean converted = false;
+            if (folder.getName().startsWith("plot")) {
+                OpenCreative.getPlugin().getLogger().info("Renaming " + folder.getName() + " to " + folder.getName().replace("plot","planet") + "...");
+                File newFile = new File(folder.getParent() + File.separator + folder.getName().replace("plot","planet"));
+                folder.renameTo(newFile);
+                folder = newFile;
+                converted = true;
             }
-        } else {
+            if (folder.getPath().contains("planet") && !folder.getPath().contains("planets")) {
+                OpenCreative.getPlugin().getLogger().info("Moving " + folder.getName() + " to planets folder...");
+                File newFolder = new File(getPlanetsStorageFolder().getPath() + File.separator + folder.getName());
+                copyFilesToDirectory(folder,newFolder);
+                deleteFolder(folder);
+                folder = newFolder;
+                converted = true;
+            }
+            return converted;
+        } catch (Exception error) {
+            sendCriticalErrorMessage("Can't rename from plot to planet: " + folder.getName(),error);
             return false;
         }
     }
 
     /**
-     * Unloads planet folder from server storage to /unloadedWorlds/ folder.
-     **/
-    public static void unloadWorldFolder(String worldName, boolean removeWorldFolder) {
-        Path serverPath = Bukkit.getServer().getWorldContainer().toPath();
-        File worldFolder = new File(serverPath + File.separator + worldName);
-        File unloadedWorldsFolder = new File(serverPath + File.separator + "unloadedWorlds" + File.separator + worldName);
-        if (copyFilesToDirectory(worldFolder,unloadedWorldsFolder)) {
-            if (!removeWorldFolder) return;
-            try {
-                org.apache.commons.io.FileUtils.deleteDirectory(worldFolder);
-            } catch (IOException error) {
-                sendCriticalErrorMessage("Can't delete directory on unloading world folder " + worldFolder.getPath(), error);
+     * Checks if specified folder is directory of planet world.
+     * @param folder folder to check.
+     * @return true - if folder is planet world, false - not.
+     */
+    public static boolean isPlanetFolder(File folder) {
+        return folder.isDirectory() && folder.getName().startsWith("planet") && folder.getPath().contains(getPlanetsStorageFolder().getPath());
+    }
+
+    /**
+     * Unloads all loaded planets worlds.
+     */
+    public static void unloadPlanets() {
+        OpenCreative.getPlugin().getLogger().info("Unloading worlds, please wait...");
+        try {
+            for (Planet planet : PlanetManager.getInstance().getPlanets()) {
+                if (planet.isLoaded()) {
+                    OpenCreative.getPlugin().getLogger().info("Unloading planet " + planet.getId() + "...");
+                    planet.getTerritory().unload();
+                }
             }
+            PlanetManager.getInstance().clearPlanets();
+        } catch (Exception error) {
+            sendCriticalErrorMessage("Error while unloading worlds.",error);
         }
     }
+
+    /**
+     * Loads planet folder.
+     **/
+    public static boolean loadWorldFolder(String worldName, boolean removeUnloadedFolder) {
+        return true;
+    }
+
+    /**
+     * Unloads planet folder.
+     **/
+    public static void unloadWorldFolder(String worldName, boolean removeWorldFolder) {}
 
     /**
      * Copies input files into output directory.
@@ -460,7 +454,6 @@ public class FileUtils {
 
     /**
      * Deletes Minecraft files, that are interrupting world copying process.
-     *
      * @param worldFolder folder of world.
      */
     public static void deleteUnnecessaryWorldFiles(File worldFolder) {
@@ -656,7 +649,15 @@ public class FileUtils {
      * @return planet's folder path.
      */
     public static String getPlanetFolderPath(Planet planet) {
-        return Bukkit.getWorldContainer().getPath() + File.separator + (!planet.isLoaded() ? "unloadedWorlds" + File.separator : "") + "planet" + planet.getId() + File.separator;
+        return getPlanetsStorageFolder().getPath() + File.separator + "planet" + planet.getId() + File.separator;
+    }
+
+    /**
+     * Returns folder that stores all planets folders.
+     * @return planets folder.
+     */
+    public static File getPlanetsStorageFolder() {
+        return new File(Bukkit.getWorldContainer().getPath() + File.separator + "planets" + File.separator);
     }
 
     /**
@@ -678,6 +679,12 @@ public class FileUtils {
         } catch (IOException error) {
             return null;
         }
+    }
+
+    public static String getPlanetIdFromName(String name) {
+        return name
+                .replace(Bukkit.getServer().getWorldContainer() + File.separator,"")
+                .replace("planets" + File.separator + "planet","");
     }
 
 }
