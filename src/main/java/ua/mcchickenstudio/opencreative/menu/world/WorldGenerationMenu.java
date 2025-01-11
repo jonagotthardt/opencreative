@@ -46,7 +46,7 @@ public class WorldGenerationMenu extends AbstractMenu {
     private final ItemStack createButton = createItem(Material.PUFFERFISH_BUCKET,1,"menus.world-creation.items.create");
 
     public WorldGenerationMenu(Player player) {
-        super((byte) 3, MessageUtils.getLocaleMessage("menus.world-creation.title",false));
+        super(3, MessageUtils.getLocaleMessage("menus.world-creation.title",false));
         this.player = player;
         this.generatorButton = new ParameterButton("flat", List.of("flat","empty","water","survival","large_biomes"), "type", "menus.world-creation", "menus.world-creation.items.type", List.of(Material.MOSS_BLOCK, Material.GLASS, Material.WATER_BUCKET, Material.OAK_SAPLING, Material.MYCELIUM));
         this.environmentButton = new ParameterButton("normal", List.of("normal","nether","the_end"), "environment", "menus.world-creation", "menus.world-creation.items.environment", List.of(Material.GRASS_BLOCK, Material.NETHERRACK, Material.END_STONE));
@@ -56,10 +56,10 @@ public class WorldGenerationMenu extends AbstractMenu {
 
     @Override
     public void fillItems(Player player) {
-        setItem((byte) 10,generatorButton.getItem());
-        setItem((byte) 11,environmentButton.getItem());
-        setItem((byte) 12,generateStructures.getItem());
-        setItem((byte) 16,createButton);
+        setItem(10,generatorButton.getItem());
+        setItem(11,environmentButton.getItem());
+        setItem(12,generateStructures.getItem());
+        setItem(16,createButton);
     }
 
     @Override
@@ -71,20 +71,17 @@ public class WorldGenerationMenu extends AbstractMenu {
         switch (event.getRawSlot()) {
             case 10 -> {
                 generatorButton.next();
-                setItem((byte) event.getRawSlot(),generatorButton.getItem());
-                updateSlot((byte) event.getRawSlot());
+                setItem(event.getRawSlot(),generatorButton.getItem());
                 player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_RESONATE,100,1f);
             }
             case 11 -> {
                 environmentButton.next();
-                setItem((byte) event.getRawSlot(),environmentButton.getItem());
-                updateSlot((byte) event.getRawSlot());
+                setItem(event.getRawSlot(),environmentButton.getItem());
                 player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_STEP,100,0.1f);
             }
             case 12 -> {
                 generateStructures.next();
-                setItem((byte) event.getRawSlot(),generateStructures.getItem());
-                updateSlot((byte) event.getRawSlot());
+                setItem(event.getRawSlot(),generateStructures.getItem());
                 player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_CHARGE,100,2);
             }
             case 16 -> {

@@ -31,6 +31,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import ua.mcchickenstudio.opencreative.menu.ListBrowserMenu;
 
 import java.time.Duration;
 import java.util.*;
@@ -38,12 +39,12 @@ import java.util.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
-public class EventValuesMenu extends AbstractListMenu<EventValues.Variable> {
+public class EventValuesMenu extends ListBrowserMenu<EventValues.Variable> {
 
     protected MenusCategory currentCategory = MenusCategory.WORLD;
 
     public EventValuesMenu(Player player) {
-        super(ChatColor.stripColor(getLocaleMessage("menus.developer.event-values.title",false)), player);
+        super(player,ChatColor.stripColor(getLocaleMessage("menus.developer.event-values.title",false)));
     }
 
     @Override
@@ -55,9 +56,9 @@ public class EventValuesMenu extends AbstractListMenu<EventValues.Variable> {
 
     @Override
     protected void fillOtherItems() {
-        byte slot = 0;
+        int slot = 0;
         for (MenusCategory category : getMenusCategories()) {
-            setItem(charmsBarSlots[slot],category.getItem("event-values"));
+            setItem(getCharmsBarSlots()[slot],category.getItem("event-values"));
             slot++;
         }
     }
@@ -77,15 +78,15 @@ public class EventValuesMenu extends AbstractListMenu<EventValues.Variable> {
             currentCategory = category;
             elements.clear();
             elements.addAll(getElements());
-            fillElements((byte) 1);
-            fillArrowsItems((byte) 1);
+            fillElements(1);
+            fillArrowsItems(1);
         }
     }
 
     @Override
     protected void onElementClick(InventoryClickEvent event) {
         ItemStack item = event.getCurrentItem();
-        ItemStack itemInHand = player.getInventory().getItemInMainHand();
+        ItemStack itemInHand = getPlayer().getInventory().getItemInMainHand();
         event.setCancelled(true);
         if (item == null) return;
         if (item.getItemMeta() == null) return;
@@ -95,12 +96,12 @@ public class EventValuesMenu extends AbstractListMenu<EventValues.Variable> {
         itemInHand.setItemMeta(meta);
         setPersistentData(itemInHand,getCodingValueKey(),"EVENT_VALUE");
         setPersistentData(itemInHand,getCodingVariableTypeKey(),typeString.toUpperCase());
-        player.closeInventory();
-        player.showTitle(Title.title(
+        getPlayer().closeInventory();
+        getPlayer().showTitle(Title.title(
                 toComponent(getLocaleMessage("world.dev-mode.set-variable")), item.displayName(),
                 Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
         ));
-        player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.7f);
+        getPlayer().playSound(getPlayer().getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.7f);
     }
 
     @Override

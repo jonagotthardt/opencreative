@@ -37,13 +37,13 @@ public class TargetSelectionMenu extends AbstractMenu {
     private final Location signLocation;
 
     public TargetSelectionMenu(Location location) {
-        super((byte) 1, getLocaleMessage("menus.developer.selection.title"));
+        super(1, getLocaleMessage("menus.developer.selection.title"));
         signLocation = location;
     }
 
     @Override
     public void fillItems(Player player) {
-        byte slot = 0;
+        int slot = 0;
         for (Target target : Target.values()) {
             setItem(slot,createItem(target.getIcon(),1,"menus.developer.selection.items."+ target.name().toLowerCase().replace("_","-")));
             slot++;
@@ -65,9 +65,9 @@ public class TargetSelectionMenu extends AbstractMenu {
             if (item != null && !item.equals(DECORATION_ITEM)) {
                 Target selection = Target.getByMaterial(item.getType());
                 if (selection == Target.DEFAULT) {
-                    setSignLine(signLocation,(byte) 4,"");
+                    setSignLine(signLocation,4,"");
                 } else {
-                    setSignLine(signLocation,(byte) 4,selection.name().toLowerCase());
+                    setSignLine(signLocation,4,selection.name().toLowerCase());
                 }
                 translateBlockSign(signLocation.getBlock());
                 player.closeInventory();

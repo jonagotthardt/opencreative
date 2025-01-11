@@ -63,16 +63,14 @@ public class WorldEnvironmentColorMenu extends AbstractListMenu<Material> {
     private final DevPlatform platform;
 
     public WorldEnvironmentColorMenu(Player player, DevPlanet devPlanet, DevPlatform devPlatform, String type) {
-        super(getLocaleMessage("menus.developer.environment.colors.title"), player);
+        super(player, getLocaleMessage("menus.developer.environment.colors.title"),
+                new int[]{10,11,12,13,14,15,16,19,20,21,22,23,24,25}, new int[]{36},
+                new int[]{37,38,42,43,44}
+        );
         this.devPlanet = devPlanet;
         this.platform = devPlatform;
         this.type = type;
-        setRows((byte) 5);
-        itemsSlots = new byte[]{10,11,12,13,14,15,16,19,20,21,22,23,24,25};
-        charmsBarSlots = new byte[]{36};
-        previousPageButtonSlot = -1;
-        nextPageButtonSlot = -1;
-        decorationSlots = new byte[]{37,38,42,43,44};
+        setRows(5);
         materials.add(Material.RED_STAINED_GLASS);
         materials.add(Material.ORANGE_STAINED_GLASS);
         materials.add(Material.YELLOW_STAINED_GLASS);
@@ -119,13 +117,13 @@ public class WorldEnvironmentColorMenu extends AbstractListMenu<Material> {
 
     @Override
     protected void fillOtherItems() {
-        setItem((byte) 36,createItem(Material.ARROW,1,"menus.developer.environment.items.back"));
-        setItem((byte) 40,createItem(currentMaterial,1));
+        setItem(36,createItem(Material.ARROW,1,"menus.developer.environment.items.back"));
+        setItem(40,createItem(currentMaterial,1));
     }
 
     @Override
     protected void onCharmsBarClick(InventoryClickEvent event) {
-        new WorldEnvironmentMenu(player, devPlanet).open(player);
+        new WorldEnvironmentMenu(getPlayer(), devPlanet).open(getPlayer());
     }
 
     @Override
@@ -133,7 +131,7 @@ public class WorldEnvironmentColorMenu extends AbstractListMenu<Material> {
         ItemStack currentItem = event.getCurrentItem();
         if (currentItem == null) return;
         Material material = currentItem.getType();
-        if (devPlanet != null && devPlanet.isLoaded() && devPlanet.getPlanet().getWorldPlayers().canDevelop(player)) {
+        if (devPlanet != null && devPlanet.isLoaded() && devPlanet.getPlanet().getWorldPlayers().canDevelop(getPlayer())) {
             switch (type.toLowerCase()) {
                 case "floor" -> {
                     if (platform == null) {
@@ -143,7 +141,7 @@ public class WorldEnvironmentColorMenu extends AbstractListMenu<Material> {
                     } else {
                         platform.setFloorMaterial(material);
                     }
-                    player.playSound(player.getLocation(), Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+                    getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
                 }
                 case "event" -> {
                     if (platform == null) {
@@ -153,7 +151,7 @@ public class WorldEnvironmentColorMenu extends AbstractListMenu<Material> {
                     } else {
                         platform.setEventMaterial(material);
                     }
-                    player.playSound(player.getLocation(), Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+                    getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
                 }
                 case "action" -> {
                     if (platform == null) {
@@ -163,31 +161,16 @@ public class WorldEnvironmentColorMenu extends AbstractListMenu<Material> {
                     } else {
                         platform.setActionMaterial(material);
                     }
-                    player.playSound(player.getLocation(), Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+                    getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
                 }
             }
         }
-        player.closeInventory();
+        getPlayer().closeInventory();
     }
 
     @Override
     protected List<Material> getElements() {
         return new ArrayList<>(materials);
-    }
-
-    @Override
-    protected ItemStack getNextPageButton() {
-        return null;
-    }
-
-    @Override
-    protected ItemStack getPreviousPageButton() {
-        return null;
-    }
-
-    @Override
-    protected ItemStack getNoElementsButton() {
-        return null;
     }
 
     @Override

@@ -30,6 +30,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
+import ua.mcchickenstudio.opencreative.menu.ListBrowserMenu;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,15 +39,12 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemName;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class PotionsMenu extends AbstractListMenu<PotionEffectType> {
+public class PotionsMenu extends ListBrowserMenu<PotionEffectType> {
 
     private final Material potionMaterial;
 
     public PotionsMenu(Player player, Material material) {
-        super(getLocaleMessage("menus.developer.potions-list.title"), player);
-        itemsSlots = allowedSlots;
-        charmsBarSlots = new byte[]{};
-        previousPageButtonSlot = 45;
+        super(player,getLocaleMessage("menus.developer.potions-list.title"),PlacementLayout.VALUE_CHOOSER);
         if (material != Material.POTION && material != Material.LINGERING_POTION && material != Material.SPLASH_POTION) {
             material = Material.POTION;
         }
@@ -111,7 +109,5 @@ public class PotionsMenu extends AbstractListMenu<PotionEffectType> {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {
-
-    }
+    public void onOpen(InventoryOpenEvent event) {}
 }

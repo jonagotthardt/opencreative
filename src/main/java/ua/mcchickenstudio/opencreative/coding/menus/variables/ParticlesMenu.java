@@ -26,6 +26,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.menu.ListBrowserMenu;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -35,15 +36,12 @@ import java.util.Map;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class ParticlesMenu extends AbstractListMenu<Particle> {
+public class ParticlesMenu extends ListBrowserMenu<Particle> {
 
     private static final Map<Particle,Material> particles = new HashMap<>();
 
     public ParticlesMenu(Player player) {
-        super(getLocaleMessage("menus.developer.particles-list.title"), player);
-        itemsSlots = allowedSlots;
-        charmsBarSlots = new byte[]{};
-        previousPageButtonSlot = 45;
+        super(player,getLocaleMessage("menus.developer.particles-list.title"),PlacementLayout.VALUE_CHOOSER);
     }
 
     static {

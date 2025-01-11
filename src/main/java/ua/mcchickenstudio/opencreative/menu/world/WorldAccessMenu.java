@@ -36,7 +36,7 @@ public class WorldAccessMenu extends AbstractMenu {
     private final ItemStack JOIN_WORLD_ITEM = createItem(Material.POTATO,1,"menus.delete-mobs.items.items");
 
     public WorldAccessMenu() {
-        super((byte) 3, MessageUtils.getLocaleMessage("menus.delete-mobs.title",false));
+        super(3, MessageUtils.getLocaleMessage("menus.delete-mobs.title",false));
     }
 
     @Override

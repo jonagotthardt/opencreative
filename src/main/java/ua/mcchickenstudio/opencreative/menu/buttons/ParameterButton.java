@@ -35,7 +35,7 @@ public class ParameterButton {
 
     private final ItemStack item;
     private Object currentValue;
-    private byte currentChoice;
+    private int currentChoice;
     private final String turnedPath;
     private final String localizationPath;
     private final List<String> originalLore;
@@ -48,14 +48,14 @@ public class ParameterButton {
         materialList.addAll(materials);
         valueList.addAll(values);
         if (currentChoice == materialList.size() || currentChoice == valueList.size()) {
-            currentChoice = (byte) 1;
+            currentChoice = 1;
         }
         if (currentChoice == 0) {
-            currentChoice = (byte) 1;
+            currentChoice = 1;
         }
-        for (byte i = 0; i < valueList.size(); i++) {
+        for (int i = 0; i < valueList.size(); i++) {
             if (currentValue.equals(valueList.get(i)))  {
-                currentChoice = (byte) (i+1);
+                currentChoice = (i+1);
                 break;
             }
         }
@@ -74,7 +74,7 @@ public class ParameterButton {
             notFoundLore.add(" ");
             notFoundLore.add(ChatColor.translateAlternateColorCodes('&',"&7" + localizationPath));
             notFoundLore.add(ChatColor.translateAlternateColorCodes('&',"&fValues:"));
-            for (byte i = 1; i < valueList.size()+1; i++) {
+            for (int i = 1; i < valueList.size()+1; i++) {
                 notFoundLore.add("%" + i + "%");
             }
             meta.setLore(notFoundLore);
@@ -90,14 +90,14 @@ public class ParameterButton {
         materialList.add(material);
         valueList.addAll(values);
         if (currentChoice == materialList.size() || currentChoice == valueList.size()) {
-            currentChoice = (byte) 1;
+            currentChoice = 1;
         }
         if (currentChoice == 0) {
-            currentChoice = (byte) 1;
+            currentChoice = 1;
         }
-        for (byte i = 0; i < valueList.size(); i++) {
+        for (int i = 0; i < valueList.size(); i++) {
             if (currentValue.equals(valueList.get(i)))  {
-                currentChoice = (byte) (i+1);
+                currentChoice = (i+1);
                 break;
             }
         }
@@ -116,7 +116,7 @@ public class ParameterButton {
             notFoundLore.add(" ");
             notFoundLore.add(ChatColor.translateAlternateColorCodes('&',"&7" + localizationPath));
             notFoundLore.add(ChatColor.translateAlternateColorCodes('&',"&fValues:"));
-            for (byte i = 1; i < valueList.size()+1; i++) {
+            for (int i = 1; i < valueList.size()+1; i++) {
                 notFoundLore.add("%" + i + "%");
             }
             meta.setLore(notFoundLore);
@@ -128,7 +128,7 @@ public class ParameterButton {
 
     public void previous() {
         if (currentChoice <= 1) {
-            currentChoice = (byte) valueList.size();
+            currentChoice = valueList.size();
         } else {
             currentChoice--;
         }
@@ -141,7 +141,7 @@ public class ParameterButton {
 
     public void next() {
         if (currentChoice >= valueList.size()) {
-            currentChoice = (byte) 1;
+            currentChoice = 1;
         } else {
             currentChoice++;
         }
@@ -161,15 +161,15 @@ public class ParameterButton {
         for (String loreLine : originalLore) {
             String content = loreLine;
             if (content.matches("%[0-9]+%")) {
-                byte choiceNumber = Byte.parseByte(content.replace("%",""));
+                int choiceNumber = Byte.parseByte(content.replace("%",""));
                 if (choiceNumber == currentChoice) {
                     turned = turnedOn;
                 } else {
                     turned = turnedOff;
                 }
                 Object value = valueList.get(choiceNumber-1);
-                String choicePath = localizationPath + ".choices." + (value instanceof Byte ? ((byte) value+1) : value).toString();
-                String choiceMessage = (value instanceof Byte ? ((byte) value+1) : value).toString();
+                String choicePath = localizationPath + ".choices." + (value instanceof Integer i ? (i+1) : value).toString();
+                String choiceMessage = (value instanceof Integer i ? (i+1) : value).toString();
                 if (messageExists(choicePath)) {
                     choiceMessage = getLocaleMessage(choicePath, false);
                 }
@@ -195,7 +195,7 @@ public class ParameterButton {
         return itemStack;
     }
 
-    public byte getCurrentChoice() {
+    public int getCurrentChoice() {
         return currentChoice;
     }
 
