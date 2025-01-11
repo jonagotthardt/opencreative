@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.menus.blocks;
 
 import ua.mcchickenstudio.opencreative.menu.AbstractListMenu;
+import ua.mcchickenstudio.opencreative.menu.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -47,51 +48,45 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
-public class FunctionChooserMenu extends AbstractListMenu {
+public class FunctionChooserMenu extends ListBrowserMenu<Location> {
 
     private final DevPlanet devPlanet;
     private final Location signLocation;
 
     public FunctionChooserMenu(Player player, DevPlanet planet, Location location) {
-        super(getLocaleMessage("menus.developer.function-chooser.title"), player);
-        itemsSlots = allowedSlots;
-        charmsBarSlots = new byte[]{};
-        previousPageButtonSlot = 45;
-        noElementsPageButtonSlot = 22;
+        super(player,getLocaleMessage("menus.developer.function-chooser.title"),PlacementLayout.LOCATION_CHOOSER);
         this.devPlanet = planet;
         this.signLocation = location;
     }
 
     @Override
-    protected ItemStack getElementIcon(Object object) {
-        if (object instanceof Location location) {
-            Block signBlock = location.getBlock().getRelative(BlockFace.SOUTH);
-            String line = getSignLine(signBlock.getLocation(),(byte) 3);
-            if (line != null && !line.isEmpty()) {
-                ItemStack itemStack = createItem(Material.LAPIS_LAZULI,1,"menus.developer.function-chooser.items.function");
-                ItemMeta meta = itemStack.getItemMeta();
-                if (meta != null) {
-                    meta.setDisplayName(ChatColor.BLUE + line);
-                }
-                itemStack.setItemMeta(meta);
-                setPersistentData(itemStack,getCodingLocationX(),location.getX());
-                setPersistentData(itemStack,getCodingLocationY(),location.getY());
-                setPersistentData(itemStack,getCodingLocationZ(),location.getZ());
-                replacePlaceholderInLore(itemStack,"%x%",location.getX());
-                replacePlaceholderInLore(itemStack,"%y%",location.getY());
-                replacePlaceholderInLore(itemStack,"%z%",location.getZ());
-                return itemStack;
+    protected ItemStack getElementIcon(Location location) {
+        Block signBlock = location.getBlock().getRelative(BlockFace.SOUTH);
+        String line = getSignLine(signBlock.getLocation(),3);
+        if (line != null && !line.isEmpty()) {
+            ItemStack itemStack = createItem(Material.LAPIS_LAZULI,1,"menus.developer.function-chooser.items.function");
+            ItemMeta meta = itemStack.getItemMeta();
+            if (meta != null) {
+                meta.setDisplayName(ChatColor.BLUE + line);
             }
+            itemStack.setItemMeta(meta);
+            setPersistentData(itemStack,getCodingLocationX(),location.getX());
+            setPersistentData(itemStack,getCodingLocationY(),location.getY());
+            setPersistentData(itemStack,getCodingLocationZ(),location.getZ());
+            replacePlaceholderInLore(itemStack,"%x%",location.getX());
+            replacePlaceholderInLore(itemStack,"%y%",location.getY());
+            replacePlaceholderInLore(itemStack,"%z%",location.getZ());
+            return itemStack;
         }
-        return null;
+        return ItemStack.empty();
     }
 
     @Override
     protected void fillDecorationItems() {
-        for (byte slot = 0; slot <= 8; slot++) {
+        for (int slot = 0; slot <= 8; slot++) {
             setItem(slot,DECORATION_PANE_ITEM);
         }
-        for (byte slot = 45; slot <= 53; slot++) {
+        for (int slot = 45; slot <= 53; slot++) {
             setItem(slot,DECORATION_PANE_ITEM);
         }
     }
@@ -121,9 +116,9 @@ public class FunctionChooserMenu extends AbstractListMenu {
                     } catch (NullPointerException ignored) {}
                 }
             } else {
-                setSignLine(signLocation,(byte) 3,name);
+                setSignLine(signLocation,3,name);
                 translateBlockSign(signLocation.getBlock());
-                player.showTitle(Title.title(
+                getPlayer().showTitle(Title.title(
                         toComponent(getLocaleMessage("menus.developer.function-chooser.chosen")), Component.text(name).color(NamedTextColor.BLUE),
                         Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
@@ -134,28 +129,23 @@ public class FunctionChooserMenu extends AbstractListMenu {
     }
 
     @Override
-    protected void fillArrowsItems(byte currentPage) {
+    protected void fillArrowsItems(int currentPage) {
         if (elements.isEmpty()) {
-            setItem(noElementsPageButtonSlot, getNoElementsButton());
-            setItem(previousPageButtonSlot, DECORATION_PANE_ITEM);
-            setItem(nextPageButtonSlot, DECORATION_PANE_ITEM);
-            updateSlot(noElementsPageButtonSlot);
-            updateSlot(previousPageButtonSlot);
-            updateSlot(nextPageButtonSlot);
+            setItem(getNoElementsPageButtonSlot(), getNoElementsButton());
+            setItem(getPreviousPageButtonSlot(), DECORATION_PANE_ITEM);
+            setItem(getNextPageButtonSlot(), DECORATION_PANE_ITEM);
         } else {
             int maxPagesAmount = getPages();
             if (currentPage > maxPagesAmount || currentPage < 1) {
                 currentPage = 1;
             }
-            setItem(previousPageButtonSlot,currentPage > 1 ? getPreviousPageButton() : DECORATION_PANE_ITEM);
-            updateSlot(previousPageButtonSlot);
-            setItem(nextPageButtonSlot,currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_PANE_ITEM);
-            updateSlot(nextPageButtonSlot);
+            setItem(getPreviousPageButtonSlot(),currentPage > 1 ? getPreviousPageButton() : DECORATION_PANE_ITEM);
+            setItem(getNextPageButtonSlot(),currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_PANE_ITEM);
         }
     }
 
     @Override
-    protected List<Object> getElements() {
+    protected List<Location> getElements() {
         return new ArrayList<>(devPlanet.getPlacedFunctions());
     }
 

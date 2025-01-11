@@ -96,10 +96,9 @@ public class PlanetManager {
         ));
         OpenCreative.getPlugin().getLogger().info("Creating new planet " + id + " by " + owner.getName() + "...");
 
-        createWorldSettings(id, false, owner, environment);
+        createWorldSettings(id, owner, environment);
         Planet planet = new Planet(id);
 
-        FileUtils.loadWorldFolder(planet.getWorldName(),true);
         if (planet.getTerritory().generateWorld(generator,environment,seed,generateStructures) != null) {
             planet.connectPlayer(owner);
             planet.getTerritory().getWorld().getSpawnLocation().getChunk().load(true);
@@ -128,7 +127,7 @@ public class PlanetManager {
     public List<Planet> getPlayerPlanets(Player player) {
         List<Planet> playerPlanets = new ArrayList<>();
         for (Planet planet : PlanetManager.getInstance().getPlanets()) {
-            if (planet.getOwner().equalsIgnoreCase(player.getName())) {
+            if (planet.isOwner(player)) {
                 playerPlanets.add(planet);
             }
         }
@@ -165,7 +164,7 @@ public class PlanetManager {
         List<Planet> featuredPlanets = new ArrayList<>();
         Set<Integer> featuredIds = OpenCreative.getSettings().getRecommendedWorldsIDs();
         for (int id : featuredIds) {
-            Planet planet = getPlanetByWorldName("planet"+id);
+            Planet planet = getPlanetById(String.valueOf(id));
             if (planet != null) {
                 featuredPlanets.add(planet);
             }

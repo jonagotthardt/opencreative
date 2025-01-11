@@ -50,35 +50,35 @@ public class RecommendedWorldsMenu extends AbstractMenu {
     private final ItemStack ALL_WORLDS = createItem(Material.SPECTRAL_ARROW,1,"menus.recommended-worlds.items.all-worlds");
 
     public RecommendedWorldsMenu() {
-        super((byte) 6, getLocaleMessage("menus.recommended-worlds.title",false));
+        super(6, getLocaleMessage("menus.recommended-worlds.title",false));
     }
 
     @Override
     public void fillItems(Player player) {
-        setItem((byte) 45, SEARCH);
-        setItem((byte) 46, DECORATION_PANE_ITEM);
-        setItem((byte) 47, DECORATION_PANE_ITEM);
-        setItem((byte) 48, DECORATION_OWN_WORLDS);
-        setItem((byte) 49, OWN_WORLDS);
-        setItem((byte) 50, DECORATION_OWN_WORLDS);
-        setItem((byte) 51, DECORATION_PANE_ITEM);
-        setItem((byte) 52, DECORATION_PANE_ITEM);
-        setItem((byte) 53, ALL_WORLDS);
+        setItem(45, SEARCH);
+        setItem(46, DECORATION_PANE_ITEM);
+        setItem(47, DECORATION_PANE_ITEM);
+        setItem(48, DECORATION_OWN_WORLDS);
+        setItem(49, OWN_WORLDS);
+        setItem(50, DECORATION_OWN_WORLDS);
+        setItem(51, DECORATION_PANE_ITEM);
+        setItem(52, DECORATION_PANE_ITEM);
+        setItem(53, ALL_WORLDS);
         List<Planet> featuredPlanets = PlanetManager.getInstance().getRecommendedPlanets();
         if (featuredPlanets.isEmpty()) {
             for (int slot : featuredWorldsSlots) {
-                setItem((byte) slot,DECORATION_ITEM);
+                setItem(slot,DECORATION_ITEM);
             }
             return;
         }
         Collections.shuffle(featuredPlanets);
-        byte index = 0;
+        int index = 0;
         for (int slot : featuredWorldsSlots) {
             if (index < featuredPlanets.size()) {
-                setItem((byte) slot, featuredPlanets.get(index).getInformation().getIcon());
+                setItem(slot, featuredPlanets.get(index).getInformation().getIcon());
                 index++;
             } else {
-                setItem((byte) slot,DECORATION_ITEM);
+                setItem(slot,DECORATION_ITEM);
             }
         }
     }

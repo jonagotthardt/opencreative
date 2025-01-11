@@ -33,7 +33,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.*;
-import org.bukkit.generator.WorldInfo;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
@@ -340,8 +339,8 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     List<String> worlds = Bukkit.getServer().getWorlds().stream()
-                            .map(WorldInfo::getName)
-                            .filter(name -> name.startsWith("planet"))
+                            .filter(WorldUtils::isPlanet)
+                            .map(WorldUtils::getPlanetIdFromName)
                             .toList();
                     sender.sendMessage(getLocaleMessage("creative.loaded-worlds-list")
                             .replace("%amount%",String.valueOf(worlds.size()))
@@ -449,7 +448,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     int id = WorldUtils.generateWorldID();
-                    File world = new File(Bukkit.getWorldContainer().getPath()+File.separator+"unloadedWorlds"+File.separator+"planet"+id+File.separator);
+                    File world = new File(Bukkit.getWorldContainer().getPath()+File.separator+"planets"+File.separator+"planet"+id+File.separator);
                     FileUtils.copyFilesToDirectory(template,world);
                     PlanetManager.getInstance().createPlanet(player, id, WorldUtils.WorldGenerator.FLAT);
                 }

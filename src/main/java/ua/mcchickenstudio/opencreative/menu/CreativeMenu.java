@@ -35,25 +35,25 @@ public class CreativeMenu extends AbstractMenu {
     private final ItemStack RESET_LOCALE_ITEM = createItem(Material.BOOKSHELF,1,"menus.creative.items.reset-locale");
 
     public CreativeMenu() {
-        super((byte) 3, getLocaleMessage("menus.creative.title",false).replace("%version%", OpenCreative.getVersion()).replace("%codename%", OpenCreative.getCodename()));
+        super(3, getLocaleMessage("menus.creative.title",false).replace("%version%", OpenCreative.getVersion()).replace("%codename%", OpenCreative.getCodename()));
     }
 
     @Override
     public void fillItems(Player player) {
-        setItem((byte) 13,createItem(Material.BEACON,1,"menus.creative.items.info"));
-        setItem((byte) 0,DECORATION_PANE_ITEM);
-        setItem((byte) 8,DECORATION_PANE_ITEM);
-        setItem((byte) 9,DECORATION_PANE_ITEM);
-        setItem((byte) 10,DECORATION_ITEM);
-        setItem((byte) 16,DECORATION_ITEM);
-        setItem((byte) 17,DECORATION_PANE_ITEM);
-        setItem((byte) 29,DECORATION_ITEM);
-        setItem((byte) 18,DECORATION_PANE_ITEM);
-        setItem((byte) 19,DECORATION_ITEM);
-        setItem((byte) 25,DECORATION_ITEM);
-        setItem((byte) 26,DECORATION_PANE_ITEM);
-        setItem((byte) 1,player.hasPermission("opencreative.reload") ? RELOAD_ITEM : DECORATION_ITEM);
-        setItem((byte) 7,player.hasPermission("opencreative.resetlocale") ? RESET_LOCALE_ITEM : DECORATION_ITEM);
+        setItem(13,createItem(Material.BEACON,1,"menus.creative.items.info"));
+        setItem(0,DECORATION_PANE_ITEM);
+        setItem(8,DECORATION_PANE_ITEM);
+        setItem(9,DECORATION_PANE_ITEM);
+        setItem(10,DECORATION_ITEM);
+        setItem(16,DECORATION_ITEM);
+        setItem(17,DECORATION_PANE_ITEM);
+        setItem(29,DECORATION_ITEM);
+        setItem(18,DECORATION_PANE_ITEM);
+        setItem(19,DECORATION_ITEM);
+        setItem(25,DECORATION_ITEM);
+        setItem(26,DECORATION_PANE_ITEM);
+        setItem(1,player.hasPermission("opencreative.reload") ? RELOAD_ITEM : DECORATION_ITEM);
+        setItem(7,player.hasPermission("opencreative.resetlocale") ? RESET_LOCALE_ITEM : DECORATION_ITEM);
     }
 
     @Override

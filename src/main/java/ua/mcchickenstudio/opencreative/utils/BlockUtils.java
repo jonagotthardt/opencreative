@@ -51,7 +51,7 @@ public class BlockUtils {
      * @param text Text to set in sign
      * @return true - if sign line changed successful, false - if failed
      */
-    public static boolean setSignLine(Location location, byte line, String text) {
+    public static boolean setSignLine(Location location, int line, String text) {
         Block block = location.getBlock();
         if (line < 1 || line > 4) return false;
         if (!(block.getState() instanceof Sign sign)) return false;
@@ -61,7 +61,7 @@ public class BlockUtils {
         return true;
     }
 
-    public static boolean isSignLineEmpty(Location location, byte line) {
+    public static boolean isSignLineEmpty(Location location, int line) {
         Block block = location.getBlock();
         if (line < 1 || line > 4) return true;
         if (!(block.getState() instanceof Sign sign)) return true;
@@ -76,7 +76,7 @@ public class BlockUtils {
      * @param line Number of sign line (1-4)
      * @return Text from sign line
      */
-    public static String getSignLine(Location location, byte line) {
+    public static String getSignLine(Location location, int line) {
         Block block = location.getBlock();
         if (line < 1 || line > 4) return null;
         if (!(block.getState() instanceof Sign sign)) return null;
@@ -85,7 +85,7 @@ public class BlockUtils {
         return textComponent.content();
     }
 
-    public static void sendSignChange(Location location, Player player, byte lineNumber, String newLine) {
+    public static void sendSignChange(Location location, Player player, int lineNumber, String newLine) {
         Block block = location.getBlock();
         if (!(block.getState() instanceof Sign sign)) return;
         List<Component> newLines = sign.getSide(Side.FRONT).lines();
@@ -149,7 +149,7 @@ public class BlockUtils {
         Location location = firstBlock.getLocation();
         World world = location.getWorld();
         List<String> conditions = new ArrayList<>();
-        for (byte x = (byte) (location.getX()-2); x >= 6; x= (byte) (x-2)) {
+        for (int x = location.getBlockX()-2; x >= 6; x= x-2) {
             Block block = world.getBlockAt(new Location(world,x,location.getBlockY(),location.getBlockZ()));
             ActionCategory category = ActionCategory.getByMaterial(block.getType());
             if (block.getType() == Material.AIR) {

@@ -38,7 +38,7 @@ public class ConfirmationMenu extends AbstractMenu{
     private final BukkitRunnable yesRunnable;
 
     public ConfirmationMenu(String title, Material infoMaterial, String infoName, List<String> infoLore, BukkitRunnable yesRunnable) {
-        super((byte) 6, title);
+        super(6, title);
         this.infoMaterial = infoMaterial;
         this.infoName = infoName;
         this.infoLore = infoLore;
@@ -50,10 +50,10 @@ public class ConfirmationMenu extends AbstractMenu{
         ItemStack info = createItem(infoMaterial,1);
         setDisplayName(info,infoName);
         setLore(info,infoLore);
-        setItem((byte) 13,info);
-        setItem((byte) 37,createItem(Material.RED_STAINED_GLASS,1,"menus.confirmation.items.cancel"));
+        setItem(13,info);
+        setItem(37,createItem(Material.RED_STAINED_GLASS,1,"menus.confirmation.items.cancel"));
         player.setCooldown(Material.LIME_SHULKER_BOX,60);
-        setItem((byte) 43,createItem(Material.LIME_SHULKER_BOX,1,"menus.confirmation.items.confirm"));
+        setItem(43,createItem(Material.LIME_SHULKER_BOX,1,"menus.confirmation.items.confirm"));
 
     }
 

@@ -179,7 +179,7 @@ public class Argument {
     }
 
     public static String parseEntity(String text, ActionsHandler handler, Action action) {
-        return Placeholders.getInstance().parseAction(text,handler,action);
+        return Placeholders.getInstance().parsePlaceholders(text,handler,action);
     }
 
     @Override

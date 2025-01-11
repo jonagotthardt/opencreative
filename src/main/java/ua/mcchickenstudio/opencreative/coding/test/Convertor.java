@@ -179,9 +179,7 @@ public abstract class Convertor implements Listener {
         for (Player player : devPlanet.getWorld().getPlayers()) {
             teleportToLobby(player);
         }
-        if (Bukkit.unloadWorld(devPlanet.getWorldName(),true)) {
-            FileUtils.unloadWorldFolder(devPlanet.getWorldName(),true);
-        }
+        Bukkit.unloadWorld(devPlanet.getWorldName(),true);
         return converted;
     }
 

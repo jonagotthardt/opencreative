@@ -30,6 +30,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
+import ua.mcchickenstudio.opencreative.menu.ListBrowserMenu;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,15 +39,12 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemName;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class PotionsMenu extends AbstractListMenu {
+public class PotionsMenu extends ListBrowserMenu<PotionEffectType> {
 
     private final Material potionMaterial;
 
     public PotionsMenu(Player player, Material material) {
-        super(getLocaleMessage("menus.developer.potions-list.title"), player);
-        itemsSlots = allowedSlots;
-        charmsBarSlots = new byte[]{};
-        previousPageButtonSlot = 45;
+        super(player,getLocaleMessage("menus.developer.potions-list.title"),PlacementLayout.VALUE_CHOOSER);
         if (material != Material.POTION && material != Material.LINGERING_POTION && material != Material.SPLASH_POTION) {
             material = Material.POTION;
         }
@@ -54,24 +52,21 @@ public class PotionsMenu extends AbstractListMenu {
     }
 
     @Override
-    protected ItemStack getElementIcon(Object object) {
-        if (object instanceof PotionEffectType type) {
-            ItemStack itemStack = new ItemStack(potionMaterial,1);
-            PotionMeta meta = (PotionMeta) itemStack.getItemMeta();
-            PotionType potionType = PotionType.getByEffect(type);
-            String name = type.getName().toLowerCase().replace("minecraft:","");
-            meta.displayName(Component.text(getLocaleItemName("menus.developer.potions-list.potions." + name)));
-            if (potionType != null) {
-                meta.setBasePotionType(potionType);
-            } else {
-                meta.setBasePotionType(PotionType.WATER);
-                meta.addCustomEffect(new PotionEffect(type,3600,0),true);
-            }
-            meta.setColor(type.getColor());
-            itemStack.setItemMeta(meta);
-            return itemStack;
+    protected ItemStack getElementIcon(PotionEffectType type) {
+        ItemStack itemStack = new ItemStack(potionMaterial,1);
+        PotionMeta meta = (PotionMeta) itemStack.getItemMeta();
+        PotionType potionType = PotionType.getByEffect(type);
+        String name = type.getName().toLowerCase().replace("minecraft:","");
+        meta.displayName(Component.text(getLocaleItemName("menus.developer.potions-list.potions." + name)));
+        if (potionType != null) {
+            meta.setBasePotionType(potionType);
+        } else {
+            meta.setBasePotionType(PotionType.WATER);
+            meta.addCustomEffect(new PotionEffect(type,3600,0),true);
         }
-        return null;
+        meta.setColor(type.getColor());
+        itemStack.setItemMeta(meta);
+        return itemStack;
     }
 
     @Override
@@ -94,7 +89,7 @@ public class PotionsMenu extends AbstractListMenu {
     }
 
     @Override
-    protected List<Object> getElements() {
+    protected List<PotionEffectType> getElements() {
         return Arrays.asList(PotionEffectType.values());
     }
 
@@ -114,7 +109,5 @@ public class PotionsMenu extends AbstractListMenu {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {
-
-    }
+    public void onOpen(InventoryOpenEvent event) {}
 }

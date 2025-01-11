@@ -62,9 +62,9 @@ public class ParameterSlot extends ArgumentSlot {
         this.icons.add(firstValue ? falseMaterial : trueMaterial);
     }
 
-    public ParameterSlot(String path, byte maxNumber, Material... materials) {
+    public ParameterSlot(String path, int maxNumber, Material... materials) {
         super(path, ValueType.PARAMETER);
-        for (byte i = 0; i < maxNumber; i++) {
+        for (int i = 0; i < maxNumber; i++) {
             this.values.add(i);
         }
         this.icons.addAll(Arrays.asList(materials));

@@ -29,7 +29,7 @@ public class ArgumentSlot {
 
     private final String path;
     private final ValueType varType;
-    private final byte listSize;
+    private final int listSize;
     private final boolean acceptEmptyItems;
 
     public ArgumentSlot(String path, ValueType varType) {
@@ -39,14 +39,14 @@ public class ArgumentSlot {
         this.acceptEmptyItems = false;
     }
 
-    public ArgumentSlot(String path, ValueType varType, byte listSize) {
+    public ArgumentSlot(String path, ValueType varType, int listSize) {
         this.varType = varType;
         this.listSize = listSize;
         this.path = path;
         this.acceptEmptyItems = false;
     }
 
-    public ArgumentSlot(String path, ValueType varType, byte listSize, boolean acceptEmptyItems) {
+    public ArgumentSlot(String path, ValueType varType, int listSize, boolean acceptEmptyItems) {
         this.varType = varType;
         this.listSize = listSize;
         this.path = path;
@@ -67,7 +67,7 @@ public class ArgumentSlot {
         return acceptEmptyItems;
     }
 
-    public byte getListSize() {
+    public int getListSize() {
         return listSize;
     }
 

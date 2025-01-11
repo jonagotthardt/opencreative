@@ -78,7 +78,7 @@ public class WorldEnvironmentMenu extends AbstractMenu {
 
 
     public WorldEnvironmentMenu(Player player, DevPlanet devPlanet) {
-        super((byte) 6, getLocaleMessage("menus.developer.environment.title"));
+        super(6, getLocaleMessage("menus.developer.environment.title"));
         this.player = player;
         this.devPlanet = devPlanet;
         this.devPlatform = isDevPlanet(player.getWorld()) ? devPlanet.getPlatformInLocation(player.getLocation()) : null;
@@ -108,25 +108,25 @@ public class WorldEnvironmentMenu extends AbstractMenu {
     @Override
     public void fillItems(Player player) {
 
-        setItem((byte) 10,debug.getItem());
-        setItem((byte) 12,variablesSize);
-        setItem((byte) 14,variablesList);
-        setItem((byte) 16,clearVariables);
+        setItem(10,debug.getItem());
+        setItem(12,variablesSize);
+        setItem(14,variablesList);
+        setItem(16,clearVariables);
 
-        setItem((byte) 28, devPlanet.getWorld() != null ? containers.getItem() : DECORATION_ITEM);
-        setItem((byte) 30, devPlanet.getWorld() != null ? time.getItem() : DECORATION_ITEM);
-        setItem((byte) 32, devPlanet.getWorld() != null ? floorMaterial : DECORATION_ITEM);
-        setItem((byte) 33, devPlanet.getWorld() != null ? eventMaterial : DECORATION_ITEM);
-        setItem((byte) 34, devPlanet.getWorld() != null ? actionMaterial : DECORATION_ITEM);
+        setItem(28, devPlanet.getWorld() != null ? containers.getItem() : DECORATION_ITEM);
+        setItem(30, devPlanet.getWorld() != null ? time.getItem() : DECORATION_ITEM);
+        setItem(32, devPlanet.getWorld() != null ? floorMaterial : DECORATION_ITEM);
+        setItem(33, devPlanet.getWorld() != null ? eventMaterial : DECORATION_ITEM);
+        setItem(34, devPlanet.getWorld() != null ? actionMaterial : DECORATION_ITEM);
 
-        setItem((byte) 45, devPlanet.getPlanet().isOwner(player) ? back : DECORATION_PANE_ITEM);
-        setItem((byte) 46,DECORATION_PANE_ITEM);
+        setItem(45, devPlanet.getPlanet().isOwner(player) ? back : DECORATION_PANE_ITEM);
+        setItem(46,DECORATION_PANE_ITEM);
 
-        setItem((byte) 47,createItem(Material.MAGENTA_STAINED_GLASS_PANE,1));
-        setItem((byte) 49,info);
-        setItem((byte) 51,createItem(Material.MAGENTA_STAINED_GLASS_PANE,1));
-        setItem((byte) 52,DECORATION_PANE_ITEM);
-        setItem((byte) 53,DECORATION_PANE_ITEM);
+        setItem(47,createItem(Material.MAGENTA_STAINED_GLASS_PANE,1));
+        setItem(49,info);
+        setItem(51,createItem(Material.MAGENTA_STAINED_GLASS_PANE,1));
+        setItem(52,DECORATION_PANE_ITEM);
+        setItem(53,DECORATION_PANE_ITEM);
     }
 
     @Override
@@ -150,8 +150,7 @@ public class WorldEnvironmentMenu extends AbstractMenu {
             if (devPlanet.getWorld() == null) return;
             time.next();
             player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_CHARGE,100,1.2f);
-            setItem((byte) event.getRawSlot(),time.getItem());
-            updateSlot((byte) event.getRawSlot());
+            setItem(event.getRawSlot(),time.getItem());
             if ("night".equals(time.getCurrentValue().toString())) {
                 devPlanet.getWorld().setTime(15000L);
             } else if ("evening".equals(time.getCurrentValue().toString())) {

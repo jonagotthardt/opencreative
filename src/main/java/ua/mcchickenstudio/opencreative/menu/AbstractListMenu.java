@@ -18,10 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.menu;
 
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -34,26 +32,77 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
  * of elements. It creates pages and arrows to change current page.
  * @see ua.mcchickenstudio.opencreative.menu.AbstractMenu
  */
-public abstract class AbstractListMenu extends AbstractMenu {
+public abstract class AbstractListMenu<T> extends AbstractMenu {
 
-    protected final Player player;
-    protected Inventory inventory;
-    protected byte currentPage;
+    private final Player player;
+    private final int[] charmsBarSlots;
+    private final int[] decorationSlots;
+    private final int[] elementsSlots;
+    private int currentPage = 1;
 
-    protected final List<Object> elements = new ArrayList<>();
+    protected final List<T> elements = new ArrayList<>();
 
-    protected byte previousPageButtonSlot = 47;
-    protected byte nextPageButtonSlot = 53;
-    protected byte noElementsPageButtonSlot = 23;
+    public AbstractListMenu(Player player, String title, PlacementLayout layout) {
+        this(player,title,layout.getElementsSlots(),layout.getCharmsBarSlots(),layout.getDecorationSlots());
+    }
 
-    protected byte[] charmsBarSlots = {0,9,18,27,36,45};
-    protected byte[] decorationSlots = {1,10,19,28,37,46};
-    protected byte[] itemsSlots = {12,13,14,15,16,21,22,23,24,25,30,31,32,33,34,39,40,41,42,43};
-
-    public AbstractListMenu(String title, Player player) {
-        super((byte) 6, title);
+    public AbstractListMenu(Player player, String title,
+                            int[] elementsSlots, int[] charmsBarSlots,
+                            int[] decorationSlots)
+    {
+        super(6, title);
         this.player = player;
-        this.currentPage = 1;
+        this.elementsSlots = elementsSlots;
+        this.charmsBarSlots = charmsBarSlots;
+        this.decorationSlots = decorationSlots;
+    }
+
+    public int getCurrentPage() {
+        return currentPage;
+    }
+
+    protected abstract ItemStack getElementIcon(T element);
+    protected abstract void fillOtherItems();
+
+    protected abstract void onCharmsBarClick(InventoryClickEvent event);
+    protected abstract void onElementClick(InventoryClickEvent event);
+    protected abstract List<T> getElements();
+
+    protected void fillDecorationItems() {
+        for (int slot : decorationSlots) {
+            setItem(slot,DECORATION_PANE_ITEM);
+        }
+    }
+
+    protected void fillElements(int page) {
+        fillEmpty();
+        if (!elements.isEmpty()) {
+            List<T> content = getElementsFromPage(page);
+            int slot = 0;
+            for (T object : content) {
+                setItem(elementsSlots[slot], getElementIcon(object));
+                slot++;
+            }
+        }
+    }
+
+    protected void fillEmpty() {
+        for (int slot : elementsSlots) {
+            setItem(slot, AIR_ITEM);
+        }
+    }
+
+    protected List<T> getElementsFromPage(int page) {
+        if (page < 1 || page > getPages()) {
+            page = 1;
+        }
+        int fromIndex = (page-1)*elementsSlots.length;
+        int toIndex = Math.min(elements.size(),(page)*elementsSlots.length);
+        return elements.subList(fromIndex,toIndex);
+    }
+
+    protected final int getPages() {
+        return (elements.size() + elementsSlots.length - 1) / elementsSlots.length;
     }
 
     @Override
@@ -61,87 +110,7 @@ public abstract class AbstractListMenu extends AbstractMenu {
         elements.addAll(getElements());
         fillDecorationItems();
         fillElements(getCurrentPage());
-        fillArrowsItems(getCurrentPage());
         fillOtherItems();
-    }
-
-    protected void fillDecorationItems() {
-        for (byte slot : decorationSlots) {
-            setItem(slot,DECORATION_PANE_ITEM);
-        }
-    }
-
-    protected void fillArrowsItems(byte currentPage) {
-        if (elements.isEmpty()) {
-            setItem(noElementsPageButtonSlot,getNoElementsButton());
-        } else {
-            int maxPagesAmount = getPages();
-            if (currentPage > maxPagesAmount || currentPage < 1) {
-                currentPage = 1;
-            }
-            if (currentPage > 1) {
-                setItem(previousPageButtonSlot,getPreviousPageButton());
-                updateSlot(previousPageButtonSlot);
-            }
-            if (currentPage < maxPagesAmount) {
-                setItem(nextPageButtonSlot,getNextPageButton());
-                updateSlot(nextPageButtonSlot);
-            }
-        }
-    }
-
-    protected void fillElements(byte page) {
-        fillEmpty();
-        if (elements.isEmpty()) {
-            setItem(noElementsPageButtonSlot,getNoElementsButton());
-        } else {
-            List<Object> content = getElementsFromPage(page);
-            byte slot = 0;
-            for (Object object : content) {
-                setItem(itemsSlots[slot], getElementIcon(object));
-                updateSlot(itemsSlots[slot]);
-                slot++;
-            }
-        }
-    }
-
-    protected void fillEmpty() {
-        for (byte slot : itemsSlots) {
-            setItem(slot, AIR_ITEM);
-            updateSlot(slot);
-        }
-        setItem(nextPageButtonSlot,AIR_ITEM);
-        setItem(previousPageButtonSlot,AIR_ITEM);
-        updateSlot(nextPageButtonSlot);
-        updateSlot(previousPageButtonSlot);
-    }
-    
-    protected abstract ItemStack getElementIcon(Object object);
-    protected abstract void fillOtherItems();
-
-    public byte getCurrentPage() {
-        return currentPage;
-    }
-
-    protected abstract void onCharmsBarClick(InventoryClickEvent event);
-    protected abstract void onElementClick(InventoryClickEvent event);
-
-    protected abstract List<Object> getElements();
-    protected abstract ItemStack getNextPageButton();
-    protected abstract ItemStack getPreviousPageButton();
-    protected abstract ItemStack getNoElementsButton();
-
-    protected List<Object> getElementsFromPage(byte page) {
-        if (page < 1 || page > getPages()) {
-            page = 1;
-        }
-        int fromIndex = (page-1)*itemsSlots.length;
-        int toIndex = Math.min(elements.size(),(page)*itemsSlots.length);
-        return elements.subList(fromIndex,toIndex);
-    }
-
-    protected int getPages() {
-        return (elements.size() + itemsSlots.length - 1) / itemsSlots.length;
     }
 
     @Override
@@ -150,19 +119,11 @@ public abstract class AbstractListMenu extends AbstractMenu {
             event.setCancelled(true);
             return;
         }
-        if (isElementClicked((byte) event.getSlot()) && isEmpty(event.getCurrentItem()) && !itemEquals(event.getCurrentItem(),getNoElementsButton())) {
+        if (isElementClicked(event.getSlot()) && isNotEmpty(event.getCurrentItem())) {
             onElementClick(event);
         } else if (itemEquals(event.getCurrentItem(),DECORATION_ITEM)) {
             event.setCancelled(true);
-        } else if (itemEquals(event.getCurrentItem(),getNextPageButton())) {
-            ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ITEM_BOOK_PAGE_TURN,100f,1f);
-            nextPage();
-            event.setCancelled(true);
-        } else if (itemEquals(event.getCurrentItem(),getPreviousPageButton())) {
-            ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 100f, 1f);
-            previousPage();
-            event.setCancelled(true);
-        } else if (isCharmsBarClicked((byte) event.getSlot()) && isEmpty(event.getCurrentItem()) && !event.getCurrentItem().equals(DECORATION_ITEM)) {
+        } else if (isCharmsBarClicked(event.getSlot()) && isNotEmpty(event.getCurrentItem()) && !event.getCurrentItem().equals(DECORATION_ITEM)) {
             onCharmsBarClick(event);
         } else {
             event.setCancelled(true);
@@ -170,19 +131,25 @@ public abstract class AbstractListMenu extends AbstractMenu {
     }
 
     protected void nextPage() {
-        currentPage = getNextPage();
-        fillElements(currentPage);
-        fillArrowsItems(currentPage);
+        setCurrentPage(getNextPage());
+        fillElements(getCurrentPage());
     }
 
     protected void previousPage() {
-        currentPage = getPreviousPage();
-        fillElements(currentPage);
-        fillArrowsItems(currentPage);
+        setCurrentPage(getPreviousPage());
+        fillElements(getCurrentPage());
     }
 
-    private byte getPreviousPage() {
-        byte previousPage = (byte) (currentPage-1);
+    protected Player getPlayer() {
+        return player;
+    }
+
+    protected void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
+    }
+
+    protected int getPreviousPage() {
+        int previousPage = (getCurrentPage() -1);
         int maxPagesAmount = getPages();
         if (previousPage > maxPagesAmount || previousPage < 1) {
             previousPage = 1;
@@ -190,8 +157,8 @@ public abstract class AbstractListMenu extends AbstractMenu {
         return previousPage;
     }
 
-    private byte getNextPage() {
-        byte nextPage = (byte) (currentPage+1);
+    protected int getNextPage() {
+        int nextPage = getCurrentPage()+1;
         int maxPagesAmount = getPages();
         if (nextPage > maxPagesAmount || nextPage < 1) {
             nextPage = 1;
@@ -199,8 +166,8 @@ public abstract class AbstractListMenu extends AbstractMenu {
         return nextPage;
     }
 
-    private boolean isCharmsBarClicked(byte clickedSlot) {
-        for (byte itemSlot : charmsBarSlots) {
+    private boolean isCharmsBarClicked(int clickedSlot) {
+        for (int itemSlot : charmsBarSlots) {
             if (itemSlot == clickedSlot) {
                 return true;
             }
@@ -208,12 +175,57 @@ public abstract class AbstractListMenu extends AbstractMenu {
         return false;
     }
 
-    private boolean isElementClicked(byte clickedSlot) {
-        for (byte itemSlot : itemsSlots) {
+    private boolean isElementClicked(int clickedSlot) {
+        for (int itemSlot : elementsSlots) {
             if (itemSlot == clickedSlot) {
                 return true;
             }
         }
         return false;
+    }
+
+    protected int[] getElementsSlots() {
+        return elementsSlots;
+    }
+
+    protected int[] getCharmsBarSlots() {
+        return charmsBarSlots;
+    }
+
+    protected int[] getDecorationSlots() {
+        return decorationSlots;
+    }
+
+    public enum PlacementLayout {
+        LEFT_CHARMS_BAR(
+                new int[] {12,13,14,15,16,21,22,23,24,25,30,31,32,33,34,39,40,41,42,43},
+                new int[] {0,9,18,27,36,45},
+                new int[] {1,10,19,28,37,46}),
+        BOTTOM_CHARMS_BAR(
+                new int[] {10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34},
+                new int[] {45,46,47,48,49,50,51,52,53},
+                new int[] {36,37,38,39,40,41,42,43,44});
+
+        private final int[] elementsSlots;
+        private final int[] charmsBarSlots;
+        private final int[] decorationSlots;
+
+        PlacementLayout(int[] elementsSlots, int[] charmsBarSlots, int[] decorationSlots) {
+            this.elementsSlots = elementsSlots;
+            this.charmsBarSlots = charmsBarSlots;
+            this.decorationSlots = decorationSlots;
+        }
+
+        private int[] getCharmsBarSlots() {
+            return charmsBarSlots;
+        }
+
+        private int[] getElementsSlots() {
+            return elementsSlots;
+        }
+
+        private int[] getDecorationSlots() {
+            return decorationSlots;
+        }
     }
 }

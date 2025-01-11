@@ -24,7 +24,7 @@ import org.bukkit.block.Block;
 public class LayoutMaker extends Layout {
 
     public LayoutMaker(ActionType action, Block chestBlock) {
-        super((byte) 3, action, chestBlock);
+        super(3, action, chestBlock);
     }
 
     @Override
@@ -32,22 +32,22 @@ public class LayoutMaker extends Layout {
         if (actionType.getArgumentsSlots().length > 0 && actionType.getArgumentsSlots()[0].isList()) {
             switch (actionType.getArgumentsSlots()[0].getListSize()) {
                 case 9: {
-                    setRows((byte) 3);
+                    setRows(3);
                     if (actionType == ActionType.WORLD_SPAWN_ENTITY) {
-                        setRows((byte) 6);
+                        setRows(6);
                     }
-                    for (byte slot = 0; slot < 9; slot++) {
-                        setGlass((byte) 1,slot);
+                    for (int slot = 0; slot < 9; slot++) {
+                        setGlass(1,slot);
                     }
-                    for (byte slot = 9; slot < 18; slot++) {
-                        setArgSlot((byte) 1,slot);
+                    for (int slot = 9; slot < 18; slot++) {
+                        setArgSlot(1,slot);
                     }
-                    for (byte slot = 18; slot < 27; slot++) {
-                        setGlass((byte) 1,slot);
+                    for (int slot = 18; slot < 27; slot++) {
+                        setGlass(1,slot);
                     }
                     if (actionType == ActionType.WORLD_SPAWN_ENTITY) {
-                        byte slot = 36;
-                        for (byte argNumber = 2; argNumber <= actionType.getArgumentsSlots().length; argNumber++) {
+                        int slot = 36;
+                        for (int argNumber = 2; argNumber <= actionType.getArgumentsSlots().length; argNumber++) {
                             if (slot <= 44) {
                                 setArgSlotVertical(argNumber,slot);
                                 slot++;
@@ -57,29 +57,29 @@ public class LayoutMaker extends Layout {
                     }
                     if (actionType.getArgumentsSlots().length > 1) {
                         if (actionType.getArgumentsSlots()[1].isList()) {
-                            setRows((byte) 6);
-                            for (byte slot = 27; slot < 36; slot++) {
-                                setGlass((byte) 2,slot);
+                            setRows(6);
+                            for (int slot = 27; slot < 36; slot++) {
+                                setGlass(2,slot);
                             }
-                            for (byte slot = 36; slot < 45; slot++) {
-                                setArgSlot((byte) 2,slot);
+                            for (int slot = 36; slot < 45; slot++) {
+                                setArgSlot(2,slot);
                             }
-                            for (byte slot = 45; slot < 54; slot++) {
-                                setGlass((byte) 2,slot);
+                            for (int slot = 45; slot < 54; slot++) {
+                                setGlass(2,slot);
                             }
                             if (actionType.getArgumentsSlots().length > 2) {
-                                setArgSlotHorizontal((byte) 3,(byte)49);
+                                setArgSlotHorizontal(3,49);
                             }
                         } else {
-                            setRows((byte) 4);
-                            for (byte slot = 27; slot < 36; slot++) {
+                            setRows(4);
+                            for (int slot = 27; slot < 36; slot++) {
                                 setItem(slot,DECORATION_PANE_ITEM);
                             }
                             int remainingSlots = actionType.getArgumentsSlots().length-1;
-                            byte i = 2;
-                            for (byte slot : getCentredSlots((byte) remainingSlots,(byte) 4)) {
+                            int i = 2;
+                            for (int slot : getCentredSlots(remainingSlots,4)) {
                                 if (remainingSlots > 3) {
-                                    setGlass(i,(byte) (slot-9));
+                                    setGlass(i,(slot-9));
                                     setArgSlot(i,slot);
                                 } else {
                                     setArgSlotHorizontal(i,slot);
@@ -91,26 +91,26 @@ public class LayoutMaker extends Layout {
                     break;
                 }
                 case 18: {
-                    setRows((byte) 4);
-                    for (byte slot = 0; slot < 9; slot++) {
-                        setGlass((byte) 1,slot);
+                    setRows(4);
+                    for (int slot = 0; slot < 9; slot++) {
+                        setGlass(1,slot);
                     }
-                    for (byte slot = 9; slot < 27; slot++) {
-                        setArgSlot((byte) 1,slot);
+                    for (int slot = 9; slot < 27; slot++) {
+                        setArgSlot(1,slot);
                     }
-                    for (byte slot = 27; slot < 36; slot++) {
-                        setGlass((byte) 1,slot);
+                    for (int slot = 27; slot < 36; slot++) {
+                        setGlass(1,slot);
                     }
                     if (actionType.getArgumentsSlots().length > 1 && !actionType.getArgumentsSlots()[1].isList()) {
-                        setRows((byte) 6);
-                        for (byte slot = 36; slot < 54; slot++) {
+                        setRows(6);
+                        for (int slot = 36; slot < 54; slot++) {
                             setItem(slot,DECORATION_PANE_ITEM);
                         }
                         int remainingSlots = actionType.getArgumentsSlots().length-1;
-                        byte i = 2;
-                        for (byte slot : getCentredSlots((byte) remainingSlots,(byte) 6)) {
+                        int i = 2;
+                        for (int slot : getCentredSlots(remainingSlots,6)) {
                             if (remainingSlots > 3) {
-                                setGlass(i,(byte) (slot-9));
+                                setGlass(i,(slot-9));
                                 setArgSlot(i,slot);
                             } else {
                                 setArgSlotHorizontal(i,slot);
@@ -121,29 +121,29 @@ public class LayoutMaker extends Layout {
                     break;
                 }
                 case 27: {
-                    setRows((byte) 5);
-                    for (byte slot = 0; slot < 9; slot++) {
-                        setGlass((byte) 1,slot);
+                    setRows(5);
+                    for (int slot = 0; slot < 9; slot++) {
+                        setGlass(1,slot);
                     }
-                    for (byte slot = 9; slot < 36; slot++) {
-                        setArgSlot((byte) 1,slot);
+                    for (int slot = 9; slot < 36; slot++) {
+                        setArgSlot(1,slot);
                     }
-                    for (byte slot = 36; slot < 45; slot++) {
-                        setGlass((byte) 1,slot);
+                    for (int slot = 36; slot < 45; slot++) {
+                        setGlass(1,slot);
                     }
                     if (actionType.getArgumentsSlots().length > 1 && !actionType.getArgumentsSlots()[1].isList()) {
-                        setArgSlotHorizontal((byte) 2,(byte) 40);
+                        setArgSlotHorizontal(2,40);
                     }
                     break;
                 }
                 case 45: {
-                    setRows((byte) 6);
-                    byte number = 1;
-                    for (byte slot = 9; slot < 45; slot++) {
+                    setRows(6);
+                    int number = 1;
+                    for (int slot = 9; slot < 45; slot++) {
                         setArgSlot(number++,slot);
                     }
-                    for (byte slot = 45; slot < 54; slot++) {
-                        setGlass((byte) 1,slot);
+                    for (int slot = 45; slot < 54; slot++) {
+                        setGlass(1,slot);
                     }
                 }
             }
@@ -151,67 +151,67 @@ public class LayoutMaker extends Layout {
         }
         switch (getRequiredSlots().length) {
             case 1:
-                setArgSlotVertical((byte) 1,(byte) 13);
+                setArgSlotVertical(1,13);
                 break;
             case 2:
-                setArgSlotVertical((byte) 1,(byte) 12);
-                setArgSlotVertical((byte) 2,(byte) 14);
+                setArgSlotVertical(1,12);
+                setArgSlotVertical(2,14);
                 break;
             case 3:
-                setArgSlotVertical((byte) 1,(byte) 11);
-                setArgSlotVertical((byte) 2,(byte) 13);
-                setArgSlotVertical((byte) 3,(byte) 15);
+                setArgSlotVertical(1,11);
+                setArgSlotVertical(2,13);
+                setArgSlotVertical(3,15);
                 break;
             case 4:
-                setArgSlotVertical((byte) 1,(byte) 10);
-                setArgSlotVertical((byte) 2,(byte) 12);
-                setArgSlotVertical((byte) 3,(byte) 14);
-                setArgSlotVertical((byte) 4,(byte) 16);
+                setArgSlotVertical(1,10);
+                setArgSlotVertical(2,12);
+                setArgSlotVertical(3,14);
+                setArgSlotVertical(4,16);
                 break;
             case 5:
-                setArgSlotVertical((byte) 1,(byte) 9);
-                setArgSlotVertical((byte) 2,(byte) 11);
-                setArgSlotVertical((byte) 3,(byte) 13);
-                setArgSlotVertical((byte) 4,(byte) 15);
-                setArgSlotVertical((byte) 5,(byte) 17);
+                setArgSlotVertical(1,9);
+                setArgSlotVertical(2,11);
+                setArgSlotVertical(3,13);
+                setArgSlotVertical(4,15);
+                setArgSlotVertical(5,17);
                 break;
             case 6:
-                setArgSlotVertical((byte) 1,(byte) 10);
-                setArgSlotVertical((byte) 2,(byte) 11);
-                setArgSlotVertical((byte) 3,(byte) 12);
-                setArgSlotVertical((byte) 4,(byte) 14);
-                setArgSlotVertical((byte) 5,(byte) 15);
-                setArgSlotVertical((byte) 6,(byte) 16);
+                setArgSlotVertical(1,10);
+                setArgSlotVertical(2,11);
+                setArgSlotVertical(3,12);
+                setArgSlotVertical(4,14);
+                setArgSlotVertical(5,15);
+                setArgSlotVertical(6,16);
                 break;
             case 7:
-                setArgSlotVertical((byte) 1,(byte) 10);
-                setArgSlotVertical((byte) 2,(byte) 11);
-                setArgSlotVertical((byte) 3,(byte) 12);
-                setArgSlotVertical((byte) 4,(byte) 13);
-                setArgSlotVertical((byte) 5,(byte) 14);
-                setArgSlotVertical((byte) 6,(byte) 15);
-                setArgSlotVertical((byte) 7,(byte) 16);
+                setArgSlotVertical(1,10);
+                setArgSlotVertical(2,11);
+                setArgSlotVertical(3,12);
+                setArgSlotVertical(4,13);
+                setArgSlotVertical(5,14);
+                setArgSlotVertical(6,15);
+                setArgSlotVertical(7,16);
                 break;
             case 8:
-                setArgSlotVertical((byte) 1,(byte) 9);
-                setArgSlotVertical((byte) 2,(byte) 10);
-                setArgSlotVertical((byte) 3,(byte) 11);
-                setArgSlotVertical((byte) 4,(byte) 12);
-                setArgSlotVertical((byte) 5,(byte) 14);
-                setArgSlotVertical((byte) 6,(byte) 15);
-                setArgSlotVertical((byte) 7,(byte) 16);
-                setArgSlotVertical((byte) 8,(byte) 17);
+                setArgSlotVertical(1,9);
+                setArgSlotVertical(2,10);
+                setArgSlotVertical(3,11);
+                setArgSlotVertical(4,12);
+                setArgSlotVertical(5,14);
+                setArgSlotVertical(6,15);
+                setArgSlotVertical(7,16);
+                setArgSlotVertical(8,17);
                 break;
             case 9:
-                setArgSlotVertical((byte) 1,(byte) 9);
-                setArgSlotVertical((byte) 2,(byte) 10);
-                setArgSlotVertical((byte) 3,(byte) 11);
-                setArgSlotVertical((byte) 4,(byte) 12);
-                setArgSlotVertical((byte) 5,(byte) 13);
-                setArgSlotVertical((byte) 6,(byte) 14);
-                setArgSlotVertical((byte) 7,(byte) 15);
-                setArgSlotVertical((byte) 8,(byte) 16);
-                setArgSlotVertical((byte) 9,(byte) 17);
+                setArgSlotVertical(1,9);
+                setArgSlotVertical(2,10);
+                setArgSlotVertical(3,11);
+                setArgSlotVertical(4,12);
+                setArgSlotVertical(5,13);
+                setArgSlotVertical(6,14);
+                setArgSlotVertical(7,15);
+                setArgSlotVertical(8,16);
+                setArgSlotVertical(9,17);
                 break;
         }
     }

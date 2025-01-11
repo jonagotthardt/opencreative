@@ -21,6 +21,9 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.player.world;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
+import ua.mcchickenstudio.opencreative.coding.placeholders.KeyPlaceholder;
+import ua.mcchickenstudio.opencreative.coding.placeholders.KeyValuePlaceholder;
+import ua.mcchickenstudio.opencreative.coding.placeholders.VarPlaceholder;
 
 public class ChatEvent extends WorldEvent {
 
@@ -29,8 +32,14 @@ public class ChatEvent extends WorldEvent {
 
     public ChatEvent(Player player, PlayerChatEvent event) {
         super(player);
-        this.message = event.getMessage();
+        this.message = filter(event.getMessage());
         this.event = event;
+    }
+
+    private String filter(String string) {
+        string = string.replace("\\n"," ");
+        string = KeyPlaceholder.getPatternPlaceholder().matcher(string).replaceAll(" ");
+        return KeyValuePlaceholder.getPattern().matcher(string).replaceAll(" ");
     }
 
     public String getMessage() {

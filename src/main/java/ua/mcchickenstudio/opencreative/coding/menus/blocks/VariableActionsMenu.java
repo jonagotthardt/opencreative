@@ -33,13 +33,7 @@ import java.util.Set;
 public class VariableActionsMenu extends CodingBlockTypesMenu {
 
     public VariableActionsMenu(Player player, Location location) {
-        super(player, location, "actions","variable_action");
-        previousPageButtonSlot = 27;
-        nextPageButtonSlot = 35;
-        noElementsPageButtonSlot = 13;
-        charmsBarSlots = new byte[]{45, 46, 47, 48, 49, 50, 51, 52, 53};
-        decorationSlots = new byte[]{36, 37, 38, 39, 40, 41, 42, 43, 44};
-        itemsSlots = new byte[]{10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34};
+        super(player, location, "actions","variable_action",true);
     }
 
     @Override
@@ -55,6 +49,16 @@ public class VariableActionsMenu extends CodingBlockTypesMenu {
         } else {
             return new ItemStack(Material.AIR);
         }
+    }
+
+    @Override
+    protected ItemStack getNextPageEmptyButton() {
+        return DECORATION_PANE_ITEM;
+    }
+
+    @Override
+    protected ItemStack getPreviousPageEmptyButton() {
+        return DECORATION_PANE_ITEM;
     }
 
     @Override

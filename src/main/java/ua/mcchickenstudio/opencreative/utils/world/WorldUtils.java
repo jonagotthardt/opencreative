@@ -28,6 +28,16 @@ import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 
 public class WorldUtils {
 
+    public static String getPlanetIdFromName(World world) {
+        return world.getName()
+                .replace(Bukkit.getServer().getWorldContainer() + File.separator,"")
+                .replace("planets" + File.separator + "planet","");
+    }
+
+    public static boolean isPlanet(World world) {
+        return world.getName().contains("planets" + File.separator + "planet");
+    }
+
     public enum WorldGenerator {
 
         FLAT,
@@ -51,7 +61,7 @@ public class WorldUtils {
         while (true) {
             newWorldID++;
             boolean exists = false;
-            for (File folder : getWorldsFolders(true)) {
+            for (File folder : getWorldsFolders()) {
                 if (folder.getName().equalsIgnoreCase("planet" + newWorldID)) {
                     exists = true;
                     break;

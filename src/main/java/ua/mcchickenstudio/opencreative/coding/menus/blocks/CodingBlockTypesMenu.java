@@ -23,7 +23,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
-import ua.mcchickenstudio.opencreative.menu.AbstractListMenu;
+import ua.mcchickenstudio.opencreative.menu.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import net.kyori.adventure.title.Title;
@@ -50,14 +50,20 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSi
  * This class represents a menu where player can select type of coding block.
  * Every category of coding blocks has this menu.
  */
-public abstract class CodingBlockTypesMenu extends AbstractListMenu {
+public abstract class CodingBlockTypesMenu extends ListBrowserMenu<Object> {
 
     private final String codingBlockName;
     private final Location signLocation;
     protected MenusCategory currentCategory;
 
     public CodingBlockTypesMenu(Player player, Location location, String codingBlockName, String titleName) {
-        super(ChatColor.stripColor(getLocaleMessage("blocks." + titleName)),player);
+        super(player,ChatColor.stripColor(getLocaleMessage("blocks." + titleName)));
+        this.codingBlockName = codingBlockName;
+        signLocation = location;
+    }
+
+    public CodingBlockTypesMenu(Player player, Location location, String codingBlockName, String titleName, boolean bottom) {
+        super(player,ChatColor.stripColor(getLocaleMessage("blocks." + titleName)),bottom ? PlacementLayout.BOTTOM_CHARMS_BAR : PlacementLayout.LEFT_CHARMS_BAR);
         this.codingBlockName = codingBlockName;
         signLocation = location;
     }
@@ -66,14 +72,14 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
 
     @Override
     protected void fillOtherItems() {
-        byte slot = 0;
+        int slot = 0;
         for (MenusCategory category : getMenusCategories()) {
-            setItem(charmsBarSlots[slot],category.getItem(codingBlockName));
+            setItem(getCharmsBarSlots()[slot],category.getItem(codingBlockName));
             slot++;
         }
-        if (slot < charmsBarSlots.length) {
-            while (slot < charmsBarSlots.length) {
-                setItem(charmsBarSlots[slot],DECORATION_ITEM);
+        if (slot < getCharmsBarSlots().length) {
+            while (slot < getCharmsBarSlots().length) {
+                setItem(getCharmsBarSlots()[slot],DECORATION_ITEM);
                 slot++;
             }
         }
@@ -91,8 +97,8 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
             currentCategory = category;
             elements.clear();
             elements.addAll(getElements());
-            fillElements((byte) 1);
-            fillArrowsItems((byte) 1);
+            fillElements(1);
+            fillArrowsItems(1);
         }
 
     }
@@ -103,7 +109,7 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
         event.setCancelled(true);
         if (item == null) return;
         if (item.getItemMeta() == null) return;
-        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(getPlayer());
         Block codingBlock = signLocation.getBlock().getRelative(BlockFace.NORTH);
         if (signLocation.getWorld().getName().contains("dev") && devPlanet != null) {
             String typeString = getPersistentData(item,getCodingValueKey());
@@ -118,19 +124,19 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
             ActionCategory actionCategory = actionType == null ? null : actionType.getCategory();
             ExecutorCategory executorCategory = executorType == null ? null : ExecutorCategory.getByMaterial(codingBlock.getType());
             if (actionCategory != null) {
-                setSignLine(signLocation,(byte) 2, actionCategory.name().toLowerCase());
+                setSignLine(signLocation,2, actionCategory.name().toLowerCase());
             }
             if (executorCategory != null) {
-                setSignLine(signLocation,(byte) 2, executorCategory.name().toLowerCase());
+                setSignLine(signLocation,2, executorCategory.name().toLowerCase());
             }
-            if (setSignLine(signLocation,(byte) 3,typeString.toLowerCase())) {
+            if (setSignLine(signLocation,3,typeString.toLowerCase())) {
                 translateBlockSign(signLocation.getBlock());
-                player.closeInventory();
-                player.showTitle(Title.title(
+                getPlayer().closeInventory();
+                getPlayer().showTitle(Title.title(
                         toComponent(getLocaleMessage("world.dev-mode.set-" + codingBlockName)), item.getItemMeta().displayName(),
                         Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(1), Duration.ofMillis(750))
                 ));
-                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 100, 1.7f);
+                getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 100, 1.7f);
             }
             /*
              Setting a chest block if action requires container.
@@ -153,8 +159,8 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
                     BlockData blockData = containerBlock.getBlockData();
                     ((Directional) blockData).setFacing(BlockFace.SOUTH);
                     containerBlock.setBlockData(blockData);
-                    player.spawnParticle(Particle.BLOCK,containerBlock.getLocation(),1,0,0.5f,0.5f,containerBlock.getBlockData());
-                    player.playSound(player.getLocation(),Sound.BLOCK_ENDER_CHEST_CLOSE,100f,1.2f);
+                    getPlayer().spawnParticle(Particle.BLOCK,containerBlock.getLocation(),1,0,0.5f,0.5f,containerBlock.getBlockData());
+                    getPlayer().playSound(getPlayer().getLocation(),Sound.BLOCK_ENDER_CHEST_CLOSE,100f,1.2f);
                 }
             }
         }
@@ -162,12 +168,12 @@ public abstract class CodingBlockTypesMenu extends AbstractListMenu {
 
     @Override
     protected ItemStack getNextPageButton() {
-        return replacePlaceholderInName(createItem(Material.SPECTRAL_ARROW,1,"items.developer.categories." + codingBlockName + ".next-page"),"%page%",currentPage+1);
+        return replacePlaceholderInName(createItem(Material.SPECTRAL_ARROW,1,"items.developer.categories." + codingBlockName + ".next-page"),"%page%", getCurrentPage() +1);
     }
 
     @Override
     protected ItemStack getPreviousPageButton() {
-        return replacePlaceholderInName(createItem(Material.SPECTRAL_ARROW,1,"items.developer.categories." + codingBlockName + ".previous-page"),"%page%",currentPage-1);
+        return replacePlaceholderInName(createItem(Material.SPECTRAL_ARROW,1,"items.developer.categories." + codingBlockName + ".previous-page"),"%page%", getCurrentPage() -1);
     }
 
     @Override

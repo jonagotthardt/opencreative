@@ -18,43 +18,47 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.item;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.List;
+import java.util.UUID;
 
-public final class SetItemPagesAction extends VariableAction {
-    public SetItemPagesAction(Executor executor, Target target, int x, Arguments args) {
+public final class SetSkullOwnerAction extends VariableAction {
+    public SetSkullOwnerAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        ItemStack item = getArguments().getValue("item",getArguments().getValue("variable",new ItemStack(Material.WRITABLE_BOOK),this),this);
+        String owner = getArguments().getValue("owner","Notch",this);
+        ItemStack item = getArguments().getValue("item",getArguments().getValue("variable",new ItemStack(Material.PLAYER_HEAD),this),this);
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
             return;
         }
-        List<String> pages = getArguments().getTextList("list",this);
-        if (meta instanceof BookMeta bookMeta) {
-            bookMeta.setPages(pages);
-            item.setItemMeta(bookMeta);
+        if (meta instanceof SkullMeta skullMeta) {
+            PlayerProfile profile = Bukkit.createProfile(owner);
+            skullMeta.setPlayerProfile(profile);
+            item.setItemMeta(skullMeta);
         }
         setVarValue(link,item);
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.VAR_SET_ITEM_PAGES;
+        return ActionType.VAR_SET_ITEM_SKULL_OWNER;
     }
 }

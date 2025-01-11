@@ -56,13 +56,13 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.sendOpenedChestA
 public abstract class Layout extends AbstractMenu {
 
     protected final ActionType actionType;
-    protected final List<Byte> argsSlots = new ArrayList<>();
+    protected final List<Integer> argsSlots = new ArrayList<>();
     protected final List<ParameterButton> parameterButtons = new ArrayList<>();
     protected final ArgumentSlot[] requiredSlots;
     private final Block containerBlock;
     private final Set<Player> viewers = new HashSet<>();
 
-    public Layout(byte rows, ActionType actionType, Block chestBlock) {
+    public Layout(int rows, ActionType actionType, Block chestBlock) {
         super(rows, ChatColor.stripColor(actionType.getLocaleName()));
         this.actionType = actionType;
         this.containerBlock = chestBlock;
@@ -70,7 +70,7 @@ public abstract class Layout extends AbstractMenu {
     }
 
     protected void fillDecorationItems() {
-        for (byte slot = 0; slot < (byte) (getRows()*9); slot++) {
+        for (int slot = 0; slot < (getRows()*9); slot++) {
             setItem(slot,DECORATION_PANE_ITEM);
         }
     }
@@ -83,7 +83,7 @@ public abstract class Layout extends AbstractMenu {
 
     protected abstract void fillVarsItems();
 
-    protected ItemStack getFromContent(byte slot) {
+    protected ItemStack getFromContent(int slot) {
         if (!(containerBlock.getState() instanceof InventoryHolder container)) return ItemStack.empty();
         if (slot < 0 || slot >= container.getInventory().getContents().length) return ItemStack.empty();
         return container.getInventory().getContents()[slot];
@@ -95,7 +95,7 @@ public abstract class Layout extends AbstractMenu {
             return;
         }
         ItemStack currentItem = event.getCursor();
-        if (argsSlots.contains((byte) event.getRawSlot())) {
+        if (argsSlots.contains(event.getRawSlot())) {
             ItemStack argItem = inventory.getItem(event.getRawSlot());
             for (ParameterButton parameter : parameterButtons) {
                 if (itemEquals(argItem,parameter.getItem())) {
@@ -150,7 +150,7 @@ public abstract class Layout extends AbstractMenu {
     private void saveArgumentsItems(Inventory inventory) {
         if (!(containerBlock.getState() instanceof InventoryHolder container)) return;
         int chestSlot = 0;
-        for (byte argSlot : argsSlots) {
+        for (int argSlot : argsSlots) {
             ItemStack argItem = inventory.getItem(argSlot);
             container.getInventory().setItem(chestSlot,argItem);
             for (ParameterButton rb : parameterButtons) {
@@ -162,7 +162,7 @@ public abstract class Layout extends AbstractMenu {
                 if (itemStack.equals(rb.getItem(true))) {
                     if (itemStack.hasItemMeta()) {
                         ItemMeta itemMeta;
-                        if (rb.getCurrentValue() instanceof Byte) {
+                        if (rb.getCurrentValue() instanceof Integer) {
                             itemStack.setType(Material.SLIME_BALL);
                             itemMeta = itemStack.getItemMeta();
                             itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&a")+ rb.getCurrentValue()+".0");
@@ -193,39 +193,39 @@ public abstract class Layout extends AbstractMenu {
         return requiredSlots;
     }
 
-    protected void setArgSlotVertical(byte argNumber, byte slot) {
+    protected void setArgSlotVertical(int argNumber, int slot) {
         ArgumentSlot argumentSlot = getRequiredSlots()[argNumber-1];
-        setItem((byte) (slot-9), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
+        setItem((slot-9), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
         setArgSlot(argNumber,slot);
-        setItem((byte) (slot+9), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
+        setItem((slot+9), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
     }
 
-    protected void setArgSlotHorizontal(byte argNumber, byte slot) {
+    protected void setArgSlotHorizontal(int argNumber, int slot) {
         ArgumentSlot argumentSlot = getRequiredSlots()[argNumber-1];
-        setItem((byte) (slot-1), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
+        setItem((slot-1), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
         setArgSlot(argumentSlot,slot);
-        setItem((byte) (slot+1), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
+        setItem((slot+1), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
     }
 
-    protected void setGlass(byte argNumber, byte slot) {
+    protected void setGlass(int argNumber, int slot) {
         ArgumentSlot argumentSlot = getRequiredSlots()[argNumber-1];
         setItem(slot, argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
     }
 
-    protected void setArgSlot(byte argNumber, byte slot) {
+    protected void setArgSlot(int argNumber, int slot) {
         ArgumentSlot argumentSlot = getRequiredSlots()[argNumber-1];
         setArgSlot(argumentSlot,slot);
     }
 
-    private byte currentSlot = 0;
-    private void setArgSlot(ArgumentSlot argumentSlot, byte slot) {
+    private int currentSlot = 0;
+    private void setArgSlot(ArgumentSlot argumentSlot, int slot) {
         ItemStack contentItem = getFromContent(currentSlot++);
         if (argumentSlot.isParameter()) {
             Object value = "";
             if (contentItem != null && contentItem.hasItemMeta()) {
                 String display = ChatColor.stripColor(contentItem.getItemMeta().getDisplayName());
                 if (contentItem.getType() == Material.SLIME_BALL) {
-                    value = Byte.parseByte(display.replace(".0",""));
+                    value = Integer.parseInt(display.replace(".0",""));
                 } else if (contentItem.getType() == Material.CLOCK) {
                     value = Boolean.parseBoolean(display);
                 } else {
@@ -251,97 +251,97 @@ public abstract class Layout extends AbstractMenu {
         return new ParameterButton(value, argumentSlot.getValues(),argumentSlot.getPath(),"items.developer",path,argumentSlot.getIcons());
     }
 
-    protected byte getRow(byte slot) {
-        if (slot < 9) return (byte) 1;
-        else if (slot < 18) return (byte) 2;
+    protected int getRow(int slot) {
+        if (slot < 9) return 1;
+        else if (slot < 18) return 2;
 
-        else if (slot < 27) return (byte) 3;
-        else if (slot < 36) return (byte) 4;
-        else if (slot < 45) return (byte) 5;
-        else if (slot < 54) return (byte) 6;
-        else return (byte) 0;
+        else if (slot < 27) return 3;
+        else if (slot < 36) return 4;
+        else if (slot < 45) return 5;
+        else if (slot < 54) return 6;
+        else return 0;
     }
 
-    protected List<Byte> getRowSlots(byte row) {
-        byte lastSlot = (byte) (row * 9 - 1);
-        byte firstSlot = (byte) (lastSlot-8);
-        List<Byte> slots = new ArrayList<>();
-        for (byte slot = firstSlot; slot < lastSlot; slot++) {
+    protected List<Integer> getRowSlots(int row) {
+        int lastSlot = (row * 9 - 1);
+        int firstSlot = (lastSlot-8);
+        List<Integer> slots = new ArrayList<>();
+        for (int slot = firstSlot; slot < lastSlot; slot++) {
             slots.add(slot);
         }
         return slots;
     }
 
-    protected List<Byte> getFreeSlots(byte row) {
-        List<Byte> slots = new ArrayList<>();
-        for (byte slot : getRowSlots(row)) {
+    protected List<Integer> getFreeSlots(int row) {
+        List<Integer> slots = new ArrayList<>();
+        for (int slot : getRowSlots(row)) {
             if (getItem(slot) == DECORATION_PANE_ITEM) slots.add(slot);
         }
         return slots;
     }
 
-    protected List<Byte> getCentredSlots(byte count, byte row) {
-        List<Byte> slots = new ArrayList<>();
+    protected List<Integer> getCentredSlots(int count, int row) {
+        List<Integer> slots = new ArrayList<>();
         switch (count) {
             case 1:
-                slots.add((byte) (row*9-5));
+                slots.add((row*9-5));
                 break;
             case 2:
-                slots.add((byte) (row*9-7));
-                slots.add((byte) (row*9-3));
+                slots.add((row*9-7));
+                slots.add((row*9-3));
                 break;
             case 3:
-                slots.add((byte) (row*9-8));
-                slots.add((byte) (row*9-5));
-                slots.add((byte) (row*9-2));
+                slots.add((row*9-8));
+                slots.add((row*9-5));
+                slots.add((row*9-2));
                 break;
             case 4:
-                slots.add((byte) (row*9-8));
-                slots.add((byte) (row*9-6));
-                slots.add((byte) (row*9-4));
-                slots.add((byte) (row*9-2));
+                slots.add((row*9-8));
+                slots.add((row*9-6));
+                slots.add((row*9-4));
+                slots.add((row*9-2));
                 break;
             case 5:
-                slots.add((byte) (row*9-9));
-                slots.add((byte) (row*9-7));
-                slots.add((byte) (row*9-5));
-                slots.add((byte) (row*9-3));
-                slots.add((byte) (row*9-1));
+                slots.add((row*9-9));
+                slots.add((row*9-7));
+                slots.add((row*9-5));
+                slots.add((row*9-3));
+                slots.add((row*9-1));
                 break;
             case 6:
-                slots.add((byte) (row*9-8));
-                slots.add((byte) (row*9-7));
-                slots.add((byte) (row*9-6));
-                slots.add((byte) (row*9-4));
-                slots.add((byte) (row*9-3));
-                slots.add((byte) (row*9-2));
+                slots.add((row*9-8));
+                slots.add((row*9-7));
+                slots.add((row*9-6));
+                slots.add((row*9-4));
+                slots.add((row*9-3));
+                slots.add((row*9-2));
                 break;
             case 7:
-                slots.add((byte) (row*9-8));
-                slots.add((byte) (row*9-7));
-                slots.add((byte) (row*9-6));
-                slots.add((byte) (row*9-5));
-                slots.add((byte) (row*9-4));
-                slots.add((byte) (row*9-3));
-                slots.add((byte) (row*9-2));
+                slots.add((row*9-8));
+                slots.add((row*9-7));
+                slots.add((row*9-6));
+                slots.add((row*9-5));
+                slots.add((row*9-4));
+                slots.add((row*9-3));
+                slots.add((row*9-2));
                 break;
             default:
-                slots.add((byte) (row*9-9));
-                slots.add((byte) (row*9-8));
-                slots.add((byte) (row*9-7));
-                slots.add((byte) (row*9-6));
-                slots.add((byte) (row*9-5));
-                slots.add((byte) (row*9-4));
-                slots.add((byte) (row*9-3));
-                slots.add((byte) (row*9-2));
-                slots.add((byte) (row*9-1));
+                slots.add((row*9-9));
+                slots.add((row*9-8));
+                slots.add((row*9-7));
+                slots.add((row*9-6));
+                slots.add((row*9-5));
+                slots.add((row*9-4));
+                slots.add((row*9-3));
+                slots.add((row*9-2));
+                slots.add((row*9-1));
                 break;
         }
         return slots;
     }
 
-    protected byte getArgSlotsSize() {
-        byte count = 0;
+    protected int getArgSlotsSize() {
+        int count = 0;
         for (ArgumentSlot slot : actionType.getArgumentsSlots()) {
             count += slot.getListSize();
         }

@@ -73,7 +73,7 @@ public class WorldSettingsMenu extends AbstractMenu {
     private final ItemStack advertise = createItem(Material.BEACON,1,"menus.world-settings.items.advertisement");
 
     public WorldSettingsMenu(Planet planet, Player player) {
-        super((byte) 6, getLocaleMessage("menus.world-settings.title",false));
+        super(6, getLocaleMessage("menus.world-settings.title",false));
         this.planet = planet;
         this.player = player;
         worldIcon = getPlanetIcon();
@@ -90,32 +90,32 @@ public class WorldSettingsMenu extends AbstractMenu {
 
     @Override
     public void fillItems(Player player) {
-        setItem((byte) 10, playersControl);
-        setItem((byte) 11, parameters);
-        setItem((byte) 19, name);
-        setItem((byte) 20, description);
-        setItem((byte) 28, category);
-        setItem((byte) 29, customID);
+        setItem(10, playersControl);
+        setItem(11, parameters);
+        setItem(19, name);
+        setItem(20, description);
+        setItem(28, category);
+        setItem(29, customID);
 
-        setItem((byte) 15, spawn);
-        setItem((byte) 16, time.getItem());
-        setItem((byte) 24, controlMobs);
-        setItem((byte) 25, environment);
-        setItem((byte) 33, autoSave.getItem());
+        setItem(15, spawn);
+        setItem(16, time.getItem());
+        setItem(24, controlMobs);
+        setItem(25, environment);
+        setItem(33, autoSave.getItem());
 
-        setItem((byte) 13, buildMode);
-        setItem((byte) 22, playMode);
-        setItem((byte) 31, devMode);
+        setItem(13, buildMode);
+        setItem(22, playMode);
+        setItem(31, devMode);
 
-        setItem((byte) 45, DECORATION_PANE_ITEM);
-        setItem((byte) 46, createItem(Material.LIGHT_BLUE_STAINED_GLASS_PANE,1));
+        setItem(45, DECORATION_PANE_ITEM);
+        setItem(46, createItem(Material.LIGHT_BLUE_STAINED_GLASS_PANE,1));
 
-        setItem((byte) 47, access.getItem());
-        setItem((byte) 49, worldIcon);
-        setItem((byte) 51, advertise);
+        setItem(47, access.getItem());
+        setItem(49, worldIcon);
+        setItem(51, advertise);
 
-        setItem((byte) 52, createItem(Material.LIGHT_BLUE_STAINED_GLASS_PANE,1));
-        setItem((byte) 53, DECORATION_PANE_ITEM);
+        setItem(52, createItem(Material.LIGHT_BLUE_STAINED_GLASS_PANE,1));
+        setItem(53, DECORATION_PANE_ITEM);
     }
 
     public ItemStack getPlanetIcon() {
@@ -216,8 +216,7 @@ public class WorldSettingsMenu extends AbstractMenu {
             player.performCommand("dev");
         } else if (itemEquals(currentItem,access.getItem())) {
             access.next();
-            setItem((byte) event.getRawSlot(),access.getItem());
-            updateSlot((byte) event.getRawSlot());
+            setItem(event.getRawSlot(),access.getItem());
             if ("public".equals(access.getCurrentValue().toString())) {
                 PlanetSharingChangeEvent planetEvent = new PlanetSharingChangeEvent(planet, planet.getSharing(), Planet.Sharing.PUBLIC,player);
                 planetEvent.callEvent();
@@ -236,13 +235,11 @@ public class WorldSettingsMenu extends AbstractMenu {
                 planet.getInformation().updateIcon();
             }
             worldIcon = getPlanetIcon();
-            setItem((byte) 49,getPlanetIcon());
-            updateSlot((byte) 49);
+            setItem(49,getPlanetIcon());
         } else if (itemEquals(currentItem,time.getItem())) {
             time.next();
             player.playSound(player.getLocation(),Sound.BLOCK_RESPAWN_ANCHOR_CHARGE,100,1.2f);
-            setItem((byte) event.getRawSlot(),time.getItem());
-            updateSlot((byte) event.getRawSlot());
+            setItem(event.getRawSlot(),time.getItem());
             if (time.getCurrentValue().equals(1)) {
                 planet.getTerritory().getWorld().setTime(1000L);
                 planet.getTerritory().getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
@@ -262,8 +259,7 @@ public class WorldSettingsMenu extends AbstractMenu {
             }
         } else if (itemEquals(currentItem,autoSave.getItem())) {
             autoSave.next();
-            setItem((byte) event.getRawSlot(),autoSave.getItem());
-            updateSlot((byte) event.getRawSlot());
+            setItem(event.getRawSlot(),autoSave.getItem());
             if (autoSave.getCurrentValue().equals(true)) {
                 planet.getTerritory().setAutoSave(true);
                 player.playSound(player.getLocation(),Sound.BLOCK_BEACON_ACTIVATE,100,0.7f);
@@ -279,8 +275,7 @@ public class WorldSettingsMenu extends AbstractMenu {
                 planet.getInformation().setIcon(event.getCursor());
                 player.sendMessage(getLocaleMessage("settings.world-icon.changed"));
                 worldIcon = getPlanetIcon();
-                setItem((byte) 49,getPlanetIcon());
-                updateSlot((byte) 49);
+                setItem(49,getPlanetIcon());
                 event.setCursor(null);
             }
         }

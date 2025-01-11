@@ -195,7 +195,7 @@ public class PlayerInteract implements Listener {
                         layout.open(player);
                         devPlanet.registerOpenedMenu(clickedBlock.getLocation(),layout);
                     } else {
-                        player.openInventory(layout.getCurrentInventory());
+                        player.openInventory(layout.getInventory());
                     }
                 } catch (IllegalArgumentException e) {
                     player.sendActionBar(getLocaleMessage("planet-code-error.unknown-layout"));

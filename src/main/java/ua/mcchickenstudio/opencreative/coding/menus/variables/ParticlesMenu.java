@@ -26,6 +26,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.menu.ListBrowserMenu;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -35,15 +36,12 @@ import java.util.Map;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class ParticlesMenu extends AbstractListMenu {
+public class ParticlesMenu extends ListBrowserMenu<Particle> {
 
     private static final Map<Particle,Material> particles = new HashMap<>();
 
     public ParticlesMenu(Player player) {
-        super(getLocaleMessage("menus.developer.particles-list.title"), player);
-        itemsSlots = allowedSlots;
-        charmsBarSlots = new byte[]{};
-        previousPageButtonSlot = 45;
+        super(player,getLocaleMessage("menus.developer.particles-list.title"),PlacementLayout.VALUE_CHOOSER);
     }
 
     static {
@@ -164,15 +162,12 @@ public class ParticlesMenu extends AbstractListMenu {
     }
 
     @Override
-    protected ItemStack getElementIcon(Object object) {
-        if (object instanceof Particle type) {
-            ItemStack itemStack = createItem(getMaterial(type),1);
-            setDisplayName(itemStack,type.name());
-            setPersistentData(itemStack,getCodingValueKey(),"PARTICLE");
-            setPersistentData(itemStack,getCodingParticleTypeKey(),type.name());
-            return itemStack;
-        }
-        return null;
+    protected ItemStack getElementIcon(Particle particle) {
+        ItemStack itemStack = createItem(getMaterial(particle),1);
+        setDisplayName(itemStack,particle.name());
+        setPersistentData(itemStack,getCodingValueKey(),"PARTICLE");
+        setPersistentData(itemStack,getCodingParticleTypeKey(),particle.name());
+        return itemStack;
     }
 
     @Override
@@ -197,7 +192,7 @@ public class ParticlesMenu extends AbstractListMenu {
     }
 
     @Override
-    protected List<Object> getElements() {
+    protected List<Particle> getElements() {
         return Arrays.asList(Particle.values());
     }
 

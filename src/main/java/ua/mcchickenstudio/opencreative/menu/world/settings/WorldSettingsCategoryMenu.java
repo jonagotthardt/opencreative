@@ -39,31 +39,31 @@ public class WorldSettingsCategoryMenu extends AbstractMenu {
     private final ItemStack BACK_ITEM = createItem(SPECTRAL_ARROW,1,"menus.world-settings-categories.items.back");
 
     public WorldSettingsCategoryMenu(PlanetInfo.Category currentCategory) {
-        super((byte) 6, MessageUtils.getLocaleMessage("menus.world-settings.title"));
+        super(6, MessageUtils.getLocaleMessage("menus.world-settings.title"));
         this.currentCategory = currentCategory;
     }
 
     @Override
     public void fillItems(Player player) {
-        setItem((byte) 10,createButton(PlanetInfo.Category.SANDBOX));
-        setItem((byte) 12,createButton(PlanetInfo.Category.ADVENTURE));
-        setItem((byte) 14,createButton(PlanetInfo.Category.STRATEGY));
-        setItem((byte) 16,createButton(PlanetInfo.Category.ARCADE));
-        setItem((byte) 28,createButton(PlanetInfo.Category.ROLEPLAY));
-        setItem((byte) 30,createButton(PlanetInfo.Category.STORY));
-        setItem((byte) 32,createButton(PlanetInfo.Category.SIMULATOR));
-        setItem((byte) 34,createButton(PlanetInfo.Category.EXPERIMENT));
-        setItem((byte) 45,BACK_ITEM);
-        setItem((byte) 46,DECORATION_PANE_ITEM);
-        setItem((byte) 47,new ItemStack(GREEN_STAINED_GLASS_PANE));
-        setItem((byte) 49,setPersistentData(
+        setItem(10,createButton(PlanetInfo.Category.SANDBOX));
+        setItem(12,createButton(PlanetInfo.Category.ADVENTURE));
+        setItem(14,createButton(PlanetInfo.Category.STRATEGY));
+        setItem(16,createButton(PlanetInfo.Category.ARCADE));
+        setItem(28,createButton(PlanetInfo.Category.ROLEPLAY));
+        setItem(30,createButton(PlanetInfo.Category.STORY));
+        setItem(32,createButton(PlanetInfo.Category.SIMULATOR));
+        setItem(34,createButton(PlanetInfo.Category.EXPERIMENT));
+        setItem(45,BACK_ITEM);
+        setItem(46,DECORATION_PANE_ITEM);
+        setItem(47,new ItemStack(GREEN_STAINED_GLASS_PANE));
+        setItem(49,setPersistentData(
                 createItem(currentCategory.getMaterial(),1,
                         "menus.world-settings-categories.items." +
                                 currentCategory.name().toLowerCase()),
                 getItemTypeKey(),currentCategory.name()));
-        setItem((byte) 51,new ItemStack(GREEN_STAINED_GLASS_PANE));
-        setItem((byte) 52,DECORATION_PANE_ITEM);
-        setItem((byte) 53,DECORATION_PANE_ITEM);
+        setItem(51,new ItemStack(GREEN_STAINED_GLASS_PANE));
+        setItem(52,DECORATION_PANE_ITEM);
+        setItem(53,DECORATION_PANE_ITEM);
     }
 
     @Override
@@ -75,23 +75,22 @@ public class WorldSettingsCategoryMenu extends AbstractMenu {
         if (!planet.isOwner(event.getWhoClicked().getName())) return;
         if (event.getCurrentItem() == null) return;
         if (event.getCurrentItem().getItemMeta() == null) return;
-        if (getItems().contains(event.getCurrentItem())) {
-            if (!itemEquals(event.getCurrentItem(),BACK_ITEM)) {
-                String categoryString = getPersistentData(event.getCurrentItem(),getItemTypeKey());
-                if (categoryString.isEmpty()) return;
-                try {
-                    PlanetInfo.Category category = PlanetInfo.Category.valueOf(categoryString);
-                    planet.getInformation().setCategory(category);
-                    event.getWhoClicked().sendMessage(getLocaleMessage("settings.world-category.changed").replace("%category%",category.getLocaleName()));
-                } catch (IllegalArgumentException ignored) {
-                    return;
-                }
-                event.getWhoClicked().closeInventory();
-                ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ENTITY_PLAYER_LEVELUP,100,1.6f);
-            } else {
-                new WorldSettingsMenu(planet,(Player) event.getWhoClicked()).open((Player) event.getWhoClicked());
+        if (!itemEquals(event.getCurrentItem(),BACK_ITEM)) {
+            String categoryString = getPersistentData(event.getCurrentItem(),getItemTypeKey());
+            if (categoryString.isEmpty()) return;
+            try {
+                PlanetInfo.Category category = PlanetInfo.Category.valueOf(categoryString);
+                planet.getInformation().setCategory(category);
+                event.getWhoClicked().sendMessage(getLocaleMessage("settings.world-category.changed").replace("%category%",category.getLocaleName()));
+            } catch (IllegalArgumentException ignored) {
+                return;
             }
+            event.getWhoClicked().closeInventory();
+            ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ENTITY_PLAYER_LEVELUP,100,1.6f);
+        } else {
+            new WorldSettingsMenu(planet,(Player) event.getWhoClicked()).open((Player) event.getWhoClicked());
         }
+
     }
 
     private ItemStack createButton(PlanetInfo.Category category) {

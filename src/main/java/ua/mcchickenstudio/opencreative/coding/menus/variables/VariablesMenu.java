@@ -43,20 +43,20 @@ public class VariablesMenu extends AbstractMenu  {
     private final ItemStack VECTOR_ITEM = createItem(Material.PRISMARINE_SHARD,1,"menus.developer.variables.items.vector");
 
     public VariablesMenu() {
-        super((byte) 1, getLocaleMessage("menus.developer.variables.title"));
+        super(1, getLocaleMessage("menus.developer.variables.title"));
     }
 
     @Override
     public void fillItems(Player player) {
-        setItem((byte) 0,TEXT_ITEM);
-        setItem((byte) 1,NUMBER_ITEM);
-        setItem((byte) 2,LOCATION_ITEM);
-        setItem((byte) 3,POTION_ITEM);
-        setItem((byte) 4,PARTICLE_ITEM);
-        setItem((byte) 5,EVENT_VALUE_ITEM);
-        setItem((byte) 6,VARIABLE_ITEM);
-        setItem((byte) 7,VECTOR_ITEM);
-        setItem((byte) 8,BOOLEAN_ITEM);
+        setItem(0,TEXT_ITEM);
+        setItem(1,NUMBER_ITEM);
+        setItem(2,LOCATION_ITEM);
+        setItem(3,POTION_ITEM);
+        setItem(4,PARTICLE_ITEM);
+        setItem(5,EVENT_VALUE_ITEM);
+        setItem(6,VARIABLE_ITEM);
+        setItem(7,VECTOR_ITEM);
+        setItem(8,BOOLEAN_ITEM);
     }
 
     @Override

@@ -30,8 +30,6 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
-
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 
@@ -43,57 +41,32 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
  */
 public abstract class AbstractMenu implements InventoryHolder {
 
-    private byte rows;
+    private int rows;
     private String title;
-    private Map<Byte, ItemStack> items = new HashMap<>();
 
-    protected final byte[] defaultIgnoredSlots = new byte[]{0,1,2,3,4,5,6,7,8,9,17,18,26,27,35,36,44,45,46,47,48,49,50,51,52,53};
-    protected final byte[] allowedSlots = new byte[]{10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34,37,38,39,40,41,42,43};
+    protected final int[] allowedSlots = new int[]{10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34,37,38,39,40,41,42,43};
+
     protected final ItemStack AIR_ITEM = new ItemStack(Material.AIR);
     protected final ItemStack NO_PERMS_ITEM = createItem(Material.RED_STAINED_GLASS,1);
     protected final ItemStack DECORATION_ITEM = createItem(Material.LIGHT_GRAY_STAINED_GLASS,1);
     protected final ItemStack DECORATION_PANE_ITEM = createItem(Material.GRAY_STAINED_GLASS_PANE,1);
+
     protected Inventory inventory;
 
-    public AbstractMenu(byte rows, String title) {
+    public AbstractMenu(int rows, String title) {
         this.rows = rows;
         this.title = title;
     }
 
-    public boolean addItem(ItemStack item) {
-        for (byte i = 0; i < rows*9; i++) {
-            if (items.get(i) == null) {
-                items.put(i,item);
-                return true;
-            }
-        }
-        return false;
+    public void setItem(int slot, ItemStack item) {
+        slot = Math.clamp(0,slot,getSize());
+        if (item == null) item = ItemStack.empty();
+        getInventory().setItem(slot,item);
     }
 
-    public void setItem(byte slot, ItemStack item) {
-        if (item == null) item = new ItemStack(Material.AIR);
-        if (!(slot >= rows*9) && !(slot<0)) {
-            items.put(slot,item);
-        }
-    }
-
-    public void updateSlot(byte slot) {
-        if (inventory != null && slot < rows*9 && slot >= 0) {
-            inventory.setItem(slot,items.get(slot));
-        }
-    }
-
-    public ItemStack getItem(byte slot) {
-        if (slot < 0 || slot >= getItems().size()) return new ItemStack(Material.AIR);
-        return getItems().get(slot);
-    }
-
-    public void setItems(Map<Byte, ItemStack> items) {
-        this.items = items;
-    }
-
-    public List<ItemStack> getItems() {
-        return new ArrayList<>(items.values());
+    public ItemStack getItem(int slot) {
+        if (slot < 0 || slot >= getInventory().getSize()) return new ItemStack(Material.AIR);
+        return getInventory().getItem(slot);
     }
 
     public void setTitle(String title) {
@@ -101,17 +74,9 @@ public abstract class AbstractMenu implements InventoryHolder {
     }
 
     public @NotNull Inventory getInventory() {
-        if (rows > 6 || rows < 1) rows = 6;
-        Inventory inventory = Bukkit.createInventory(this, this.rows * 9, Component.text(this.title));
-        for (Map.Entry<Byte,ItemStack> item : items.entrySet()) {
-            inventory.setItem(item.getKey(),item.getValue());
-        }
-        return inventory;
-    }
-
-    public @NotNull Inventory getCurrentInventory() {
-        if (inventory == null) {
-            return getInventory();
+        rows = Math.clamp(1,rows,6);
+        if (inventory == null || inventory.getSize() != rows*9) {
+            inventory = Bukkit.createInventory(this, rows * 9, Component.text(this.title));
         }
         return inventory;
     }
@@ -119,13 +84,12 @@ public abstract class AbstractMenu implements InventoryHolder {
     public void open(Player player) {
         Menus.addMenu(this);
         try {
-            fillItems(player);
             inventory = getInventory();
+            fillItems(player);
             player.openInventory(inventory);
         } catch (Exception e) {
             sendPlayerErrorMessage(player,"Failed to open AbstractMenu with title " + title + ". ",e);
         }
-
     }
 
     public abstract void fillItems(Player player);
@@ -147,19 +111,27 @@ public abstract class AbstractMenu implements InventoryHolder {
     }
 
 
-    public byte getSize() {
-        return (byte) (rows*9);
+    public int getSize() {
+        return rows*9;
     }
 
-    public byte getRows() {
+    public int getRows() {
         return rows;
     }
 
-    protected void setRows(byte rows) {
+    protected void setRows(int rows) {
         this.rows = rows;
+        if (inventory != null) {
+            ItemStack[] oldItems = inventory.getContents();
+            inventory = Bukkit.createInventory(this, rows * 9, Component.text(this.title));
+            for (int slot = 0; slot < oldItems.length; slot++) {
+                if (slot >= inventory.getSize()) break;
+                inventory.setItem(slot,oldItems[slot]);
+            }
+        }
     }
 
-    protected boolean isEmpty(ItemStack item) {
+    protected boolean isNotEmpty(ItemStack item) {
         return (item != null && item.getType() != Material.AIR);
     }
 

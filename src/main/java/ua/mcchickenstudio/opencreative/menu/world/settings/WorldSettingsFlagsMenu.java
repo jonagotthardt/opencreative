@@ -42,7 +42,7 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
     private final ItemStack BACK_ITEM = createItem(Material.SPECTRAL_ARROW,1,"menus.world-settings-flags.items.back");
 
     public WorldSettingsFlagsMenu() {
-        super((byte) 6, MessageUtils.getLocaleMessage("menus.world-settings.title"));
+        super(6, MessageUtils.getLocaleMessage("menus.world-settings.title"));
     }
 
     public static RadioButton getPlayerDamageFlagButton(Planet planet) {
@@ -52,88 +52,88 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
         choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.PLAYER_DAMAGE,(byte)3));
         choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.PLAYER_DAMAGE,(byte)4));
         choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.PLAYER_DAMAGE,(byte)5));
-        return new RadioButton(Material.TOTEM_OF_UNDYING, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.player-damage.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.player-damage.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.PLAYER_DAMAGE), 5, choicesActions, "menus.world-settings-flags.items.player-damage.choices", "menus.world-settings-flags");
+        return new RadioButton(Material.TOTEM_OF_UNDYING, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.player-damage.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.player-damage.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.PLAYER_DAMAGE),5, choicesActions, "menus.world-settings-flags.items.player-damage.choices", "menus.world-settings-flags");
     }
 
     public static RadioButton getMobInteractFlagButton(Planet planet) {
         List<Runnable> choicesActions = new ArrayList<>();
-        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT, (byte) 1));
-        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT, (byte) 2));
-        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT, (byte) 3));
-        return new RadioButton(Material.VILLAGER_SPAWN_EGG, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.mob-interact.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.mob-interact.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT), 3, choicesActions, "menus.world-settings-flags.items.mob-interact.choices", "menus.world-settings-flags");
+        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT, (byte)1));
+        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT, (byte)2));
+        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT, (byte)3));
+        return new RadioButton(Material.VILLAGER_SPAWN_EGG, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.mob-interact.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.mob-interact.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT),3, choicesActions, "menus.world-settings-flags.items.mob-interact.choices", "menus.world-settings-flags");
     }
 
     public static RadioButton getMobLootFlagButton(Planet planet) {
         List<Runnable> choicesActions = new ArrayList<>();
         choicesActions.add(() -> {
             planet.getTerritory().getWorld().setGameRule(GameRule.DO_MOB_LOOT, true);
-            planet.setFlagValue(PlanetFlags.PlanetFlag.MOB_LOOT,(byte) 1);
+            planet.setFlagValue(PlanetFlags.PlanetFlag.MOB_LOOT,(byte)1);
         });
         choicesActions.add(() -> {
             planet.getTerritory().getWorld().setGameRule(GameRule.DO_MOB_LOOT, false);
-            planet.setFlagValue(PlanetFlags.PlanetFlag.MOB_LOOT, (byte) 2);
+            planet.setFlagValue(PlanetFlags.PlanetFlag.MOB_LOOT, (byte)2);
         });
-        return new RadioButton(Material.FEATHER, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.mob-loot.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.mob-loot.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_LOOT), 2, choicesActions, "menus.world-settings-flags.items.mob-loot.choices", "menus.world-settings-flags");
+        return new RadioButton(Material.FEATHER, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.mob-loot.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.mob-loot.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_LOOT),2, choicesActions, "menus.world-settings-flags.items.mob-loot.choices", "menus.world-settings-flags");
     }
 
     public static RadioButton getKeepInventoryFlagButton(Planet planet) {
         List<Runnable> choicesActions = new ArrayList<>();
         choicesActions.add(() -> {
             planet.getTerritory().getWorld().setGameRule(GameRule.KEEP_INVENTORY, false);
-            planet.setFlagValue(PlanetFlags.PlanetFlag.KEEP_INVENTORY, (byte) 1);
+            planet.setFlagValue(PlanetFlags.PlanetFlag.KEEP_INVENTORY, (byte)1);
         });
         choicesActions.add(() -> {
             planet.getTerritory().getWorld().setGameRule(GameRule.KEEP_INVENTORY, true);
-            planet.setFlagValue(PlanetFlags.PlanetFlag.KEEP_INVENTORY, (byte) 2);
+            planet.setFlagValue(PlanetFlags.PlanetFlag.KEEP_INVENTORY, (byte)2);
         });
-        return new RadioButton(Material.CHEST_MINECART, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.keep-inventory.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.keep-inventory.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.KEEP_INVENTORY), 2, choicesActions, "menus.world-settings-flags.items.keep-inventory.choices", "menus.world-settings-flags");
+        return new RadioButton(Material.CHEST_MINECART, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.keep-inventory.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.keep-inventory.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.KEEP_INVENTORY),2, choicesActions, "menus.world-settings-flags.items.keep-inventory.choices", "menus.world-settings-flags");
     }
 
     public static RadioButton getNaturalRegenerationFlagButton(Planet planet) {
         List<Runnable> choicesActions = new ArrayList<>();
         choicesActions.add(() -> {
             planet.getTerritory().getWorld().setGameRule(GameRule.NATURAL_REGENERATION, true);
-            planet.setFlagValue(PlanetFlags.PlanetFlag.NATURAL_REGENERATION, (byte) 1);
+            planet.setFlagValue(PlanetFlags.PlanetFlag.NATURAL_REGENERATION, (byte)1);
         });
         choicesActions.add(() -> {
             planet.getTerritory().getWorld().setGameRule(GameRule.NATURAL_REGENERATION, false);
-            planet.setFlagValue(PlanetFlags.PlanetFlag.NATURAL_REGENERATION, (byte) 2);
+            planet.setFlagValue(PlanetFlags.PlanetFlag.NATURAL_REGENERATION, (byte)2);
         });
-        return new RadioButton(Material.POTION, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.natural-regeneration.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.natural-regeneration.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.NATURAL_REGENERATION), 2, choicesActions, "menus.world-settings-flags.items.natural-regeneration.choices", "menus.world-settings-flags");
+        return new RadioButton(Material.POTION, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.natural-regeneration.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.natural-regeneration.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.NATURAL_REGENERATION),2, choicesActions, "menus.world-settings-flags.items.natural-regeneration.choices", "menus.world-settings-flags");
     }
 
     public static RadioButton getBlockChangingFlagButton(Planet planet) {
         List<Runnable> choicesActions = new ArrayList<>();
-        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.BLOCK_CHANGING, (byte) 1));
-        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.BLOCK_CHANGING, (byte) 2));
-        return new RadioButton(Material.ICE, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.block-changing.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.block-changing.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_CHANGING), 2, choicesActions, "menus.world-settings-flags.items.block-changing.choices", "menus.world-settings-flags");
+        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.BLOCK_CHANGING, (byte)1));
+        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.BLOCK_CHANGING, (byte)2));
+        return new RadioButton(Material.ICE, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.block-changing.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.block-changing.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_CHANGING),2, choicesActions, "menus.world-settings-flags.items.block-changing.choices", "menus.world-settings-flags");
     }
 
     public static RadioButton getImmediateRespawnFlagButton(Planet planet) {
         List<Runnable> choicesActions = new ArrayList<>();
         choicesActions.add(() -> {
             planet.getTerritory().getWorld().setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, false);
-            planet.setFlagValue(PlanetFlags.PlanetFlag.IMMEDIATE_RESPAWN, (byte) 1);
+            planet.setFlagValue(PlanetFlags.PlanetFlag.IMMEDIATE_RESPAWN, (byte)1);
         });
         choicesActions.add(() -> {
             planet.getTerritory().getWorld().setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
-            planet.setFlagValue(PlanetFlags.PlanetFlag.IMMEDIATE_RESPAWN, (byte) 2);
+            planet.setFlagValue(PlanetFlags.PlanetFlag.IMMEDIATE_RESPAWN, (byte)2);
         });
-        return new RadioButton(Material.SKELETON_SKULL, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.immediate-respawn.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.immediate-respawn.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.IMMEDIATE_RESPAWN), 2, choicesActions, "menus.world-settings-flags.items.immediate-respawn.choices", "menus.world-settings-flags");
+        return new RadioButton(Material.SKELETON_SKULL, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.immediate-respawn.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.immediate-respawn.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.IMMEDIATE_RESPAWN),2, choicesActions, "menus.world-settings-flags.items.immediate-respawn.choices", "menus.world-settings-flags");
     }
 
     public static RadioButton getDeathMessagesFlagButton(Planet planet) {
         List<Runnable> choicesActions = new ArrayList<>();
-        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.DEATH_MESSAGES, (byte) 1));
-        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.DEATH_MESSAGES, (byte) 2));
-        return new RadioButton(Material.WITHER_SKELETON_SKULL, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.death-messages.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.death-messages.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.DEATH_MESSAGES), 2, choicesActions, "menus.world-settings-flags.items.death-messages.choices", "menus.world-settings-flags");
+        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.DEATH_MESSAGES, (byte)1));
+        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.DEATH_MESSAGES, (byte)2));
+        return new RadioButton(Material.WITHER_SKELETON_SKULL, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.death-messages.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.death-messages.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.DEATH_MESSAGES),2, choicesActions, "menus.world-settings-flags.items.death-messages.choices", "menus.world-settings-flags");
     }
 
     public static RadioButton getLikeMessagesFlagButton(Planet planet) {
         List<Runnable> choicesActions = new ArrayList<>();
-        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.LIKE_MESSAGES, (byte) 1));
-        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.LIKE_MESSAGES, (byte) 2));
-        return new RadioButton(Material.KNOWLEDGE_BOOK, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.like-messages.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.like-messages.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.LIKE_MESSAGES), 2, choicesActions, "menus.world-settings-flags.items.like-messages.choices", "menus.world-settings-flags");
+        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.LIKE_MESSAGES, (byte)1));
+        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.LIKE_MESSAGES, (byte)2));
+        return new RadioButton(Material.KNOWLEDGE_BOOK, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.like-messages.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.like-messages.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.LIKE_MESSAGES),2, choicesActions, "menus.world-settings-flags.items.like-messages.choices", "menus.world-settings-flags");
     }
 
     public static RadioButton getMobSpawnFlagButton(Planet planet) {
@@ -158,56 +158,56 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
             planet.getTerritory().getWorld().setGameRule(GameRule.DO_MOB_SPAWNING, true);
             planet.setFlagValue(PlanetFlags.PlanetFlag.MOB_SPAWN, (byte)5);
         });
-        return new RadioButton(Material.EGG, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.mob-spawn.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.mob-spawn.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_SPAWN), 5, choicesActions, "menus.world-settings-flags.items.mob-spawn.choices", "menus.world-settings-flags");
+        return new RadioButton(Material.EGG, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.mob-spawn.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.mob-spawn.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_SPAWN),5, choicesActions, "menus.world-settings-flags.items.mob-spawn.choices", "menus.world-settings-flags");
     }
 
     public static RadioButton getBlockExplosionFlagButton(Planet planet) {
         List<Runnable> choicesActions = new ArrayList<>();
         choicesActions.add(() -> {
             planet.getTerritory().getWorld().setGameRule(GameRule.MOB_GRIEFING, true);
-            planet.setFlagValue(PlanetFlags.PlanetFlag.BLOCK_EXPLOSION,(byte) 1);
+            planet.setFlagValue(PlanetFlags.PlanetFlag.BLOCK_EXPLOSION,(byte)1);
         });
         choicesActions.add(() -> {
             planet.getTerritory().getWorld().setGameRule(GameRule.MOB_GRIEFING, false);
-            planet.setFlagValue(PlanetFlags.PlanetFlag.BLOCK_EXPLOSION,(byte) 2);
+            planet.setFlagValue(PlanetFlags.PlanetFlag.BLOCK_EXPLOSION,(byte)2);
         });
-        return new RadioButton(Material.TNT, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.block-explosion.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.block-explosion.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_EXPLOSION), 2, choicesActions, "menus.world-settings-flags.items.block-explosion.choices", "menus.world-settings-flags");
+        return new RadioButton(Material.TNT, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.block-explosion.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.block-explosion.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_EXPLOSION),2, choicesActions, "menus.world-settings-flags.items.block-explosion.choices", "menus.world-settings-flags");
     }
 
     public static RadioButton FireSpreadButton(Planet planet) {
         List<Runnable> choicesActions = new ArrayList<>();
         choicesActions.add(() -> {
             planet.getTerritory().getWorld().setGameRule(GameRule.DO_FIRE_TICK, true);
-            planet.setFlagValue(PlanetFlags.PlanetFlag.FIRE_SPREAD,(byte) 1);
+            planet.setFlagValue(PlanetFlags.PlanetFlag.FIRE_SPREAD,(byte)1);
         });
         choicesActions.add(() -> {
             planet.getTerritory().getWorld().setGameRule(GameRule.DO_FIRE_TICK, false);
-            planet.setFlagValue(PlanetFlags.PlanetFlag.FIRE_SPREAD,(byte) 2);
+            planet.setFlagValue(PlanetFlags.PlanetFlag.FIRE_SPREAD,(byte)2);
         });
-        return new RadioButton(Material.CAMPFIRE, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.fire-spread.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.fire-spread.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.FIRE_SPREAD), 2, choicesActions, "menus.world-settings-flags.items.fire-spread.choices", "menus.world-settings-flags");
+        return new RadioButton(Material.CAMPFIRE, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.fire-spread.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.fire-spread.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.FIRE_SPREAD),2, choicesActions, "menus.world-settings-flags.items.fire-spread.choices", "menus.world-settings-flags");
     }
 
     public static RadioButton getJoinQuitMessagesFlagButton(Planet planet) {
         List<Runnable> choicesActions = new ArrayList<>();
-        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES,(byte) 1));
-        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES,(byte) 2));
-        return new RadioButton(Material.OAK_SIGN, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.join-messages.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.join-messages.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES), 2, choicesActions, "menus.world-settings-flags.items.join-messages.choices", "menus.world-settings-flags");
+        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES,(byte)1));
+        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES,(byte)2));
+        return new RadioButton(Material.OAK_SIGN, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.join-messages.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.join-messages.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES),2, choicesActions, "menus.world-settings-flags.items.join-messages.choices", "menus.world-settings-flags");
     }
 
     public static RadioButton getBlockInteractFlagButton(Planet planet) {
         List<Runnable> choicesActions = new ArrayList<>();
-        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.BLOCK_INTERACT, (byte) 1));
-        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.BLOCK_INTERACT, (byte) 2));
-        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.BLOCK_INTERACT, (byte) 3));
-        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.BLOCK_INTERACT, (byte) 4));
-        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.BLOCK_INTERACT, (byte) 5));
-        return new RadioButton(Material.CHEST, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.block-interact.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.block-interact.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_INTERACT), 5, choicesActions, "menus.world-settings-flags.items.block-interact.choices", "menus.world-settings-flags");
+        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.BLOCK_INTERACT, (byte)1));
+        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.BLOCK_INTERACT, (byte)2));
+        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.BLOCK_INTERACT, (byte)3));
+        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.BLOCK_INTERACT, (byte)4));
+        choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.BLOCK_INTERACT, (byte)5));
+        return new RadioButton(Material.CHEST, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.block-interact.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.block-interact.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_INTERACT),5, choicesActions, "menus.world-settings-flags.items.block-interact.choices", "menus.world-settings-flags");
     }
 
     public static RadioButton getWeatherFlagButton(Planet planet) {
         List<Runnable> choicesActions = getRunnables(planet);
         Boolean isWeatherChanging = planet.getTerritory().getWorld().getGameRuleValue(GameRule.DO_WEATHER_CYCLE);
-        byte currentValue = (byte) (isWeatherChanging != null && isWeatherChanging ? 3 : planet.getTerritory().getWorld().hasStorm() ? 2 : 1);
+        int currentValue = (isWeatherChanging != null && isWeatherChanging ? 3 : planet.getTerritory().getWorld().hasStorm() ? 2 : 1);
         return new RadioButton(Material.WATER_BUCKET, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.weather.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.weather.lore"), currentValue, 3, choicesActions, "menus.world-settings-flags.items.weather.choices", "menus.world-settings-flags");
     }
 
@@ -234,24 +234,24 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
     @Override
     public void fillItems(Player player) {
         Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-        setItem((byte) 46,BACK_ITEM);
+        setItem(46,BACK_ITEM);
         if (planet == null) return;
         if (!planet.isOwner(player.getName())) return;
-        setItem((byte) 10, getPlayerDamageFlagButton(planet).getButtonItem());
-        setItem((byte) 11, getBlockExplosionFlagButton(planet).getButtonItem());
-        setItem((byte) 12, getBlockInteractFlagButton(planet).getButtonItem());
-        setItem((byte) 13, FireSpreadButton(planet).getButtonItem());
-        setItem((byte) 14, getMobInteractFlagButton(planet).getButtonItem());
-        setItem((byte) 15, getWeatherFlagButton(planet).getButtonItem());
-        setItem((byte) 16, getKeepInventoryFlagButton(planet).getButtonItem());
-        setItem((byte) 19, getMobSpawnFlagButton(planet).getButtonItem());
-        setItem((byte) 20, getImmediateRespawnFlagButton(planet).getButtonItem());
-        setItem((byte) 21, getJoinQuitMessagesFlagButton(planet).getButtonItem());
-        setItem((byte) 22, getDeathMessagesFlagButton(planet).getButtonItem());
-        setItem((byte) 23, getLikeMessagesFlagButton(planet).getButtonItem());
-        setItem((byte) 24, getBlockChangingFlagButton(planet).getButtonItem());
-        setItem((byte) 25, getNaturalRegenerationFlagButton(planet).getButtonItem());
-        setItem((byte) 28, getMobLootFlagButton(planet).getButtonItem());
+        setItem(10, getPlayerDamageFlagButton(planet).getButtonItem());
+        setItem(11, getBlockExplosionFlagButton(planet).getButtonItem());
+        setItem(12, getBlockInteractFlagButton(planet).getButtonItem());
+        setItem(13, FireSpreadButton(planet).getButtonItem());
+        setItem(14, getMobInteractFlagButton(planet).getButtonItem());
+        setItem(15, getWeatherFlagButton(planet).getButtonItem());
+        setItem(16, getKeepInventoryFlagButton(planet).getButtonItem());
+        setItem(19, getMobSpawnFlagButton(planet).getButtonItem());
+        setItem(20, getImmediateRespawnFlagButton(planet).getButtonItem());
+        setItem(21, getJoinQuitMessagesFlagButton(planet).getButtonItem());
+        setItem(22, getDeathMessagesFlagButton(planet).getButtonItem());
+        setItem(23, getLikeMessagesFlagButton(planet).getButtonItem());
+        setItem(24, getBlockChangingFlagButton(planet).getButtonItem());
+        setItem(25, getNaturalRegenerationFlagButton(planet).getButtonItem());
+        setItem(28, getMobLootFlagButton(planet).getButtonItem());
     }
 
     @Override

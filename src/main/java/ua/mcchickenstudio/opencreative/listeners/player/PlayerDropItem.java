@@ -28,6 +28,7 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemName;
@@ -43,7 +44,7 @@ public class PlayerDropItem implements Listener {
             Component name = item.getItemMeta().displayName();
             if (name != null) {
                 String displayName = item.getItemMeta().getDisplayName();
-                if (!player.getWorld().getName().startsWith("planet")) {
+                if (!WorldUtils.isPlanet(player.getWorld())) {
                     if (displayName.equals(getLocaleItemName("items.lobby.games.name")) || displayName.equals(getLocaleMessage("items.lobby.own.name"))) {
                         event.setCancelled(true);
                     }

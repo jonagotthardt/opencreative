@@ -32,8 +32,8 @@ import java.util.*;
  */
 public class RadioButton {
 
-    private byte currentChoice;
-    private byte maxChoicesAmount;
+    private int currentChoice;
+    private int maxChoicesAmount;
 
     private List<Runnable> choiceActions;
     private ItemStack buttonItem;
@@ -57,12 +57,12 @@ public class RadioButton {
     public RadioButton(Material material, String name, List<String> lore, int currentChoice,
                        int maxChoicesAmount, List<Runnable> choicesActions, String itemLocalePath,
                        String turnedPath) {
-        setChoices((byte) currentChoice, (byte) maxChoicesAmount, choicesActions);
+        setChoices(currentChoice, maxChoicesAmount, choicesActions);
         setItemButton(material, name, lore, itemLocalePath, turnedPath);
         radioButtonList.put(getButtonItem(),this);
     }
 
-    private void setChoices(byte currentChoice, byte maxChoicesAmount, List<Runnable> choicesActions) {
+    private void setChoices(int currentChoice, int maxChoicesAmount, List<Runnable> choicesActions) {
         this.currentChoice = currentChoice;
         this.maxChoicesAmount = maxChoicesAmount;
         this.choiceActions = choicesActions;
@@ -104,7 +104,7 @@ public class RadioButton {
         buttonItem.setItemMeta(buttonItemMeta);
     }
 
-    public byte getCurrentChoice() {
+    public int getCurrentChoice() {
         return currentChoice;
     }
 
@@ -123,7 +123,7 @@ public class RadioButton {
             actions.run();
         }
 
-        this.currentChoice = (byte) nextChoice;
+        this.currentChoice = nextChoice;
         radioButtonList.remove(buttonItem);
         updateItem();
         radioButtonList.put(buttonItem,this);

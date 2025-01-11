@@ -58,25 +58,25 @@ public class SelectionActionsMenu extends AbstractMenu {
 
 
     public SelectionActionsMenu(Player player, Location location) {
-        super((byte) 5, getLocaleMessage("blocks.selection_action",false));
+        super(5, getLocaleMessage("blocks.selection_action",false));
         this.player = player;
         this.signLocation = location;
     }
 
     @Override
     public void fillItems(Player player) {
-        setItem((byte) 10,defaultItem);
-        setItem((byte) 12,randomTarget);
-        setItem((byte) 13,randomPlayer);
-        setItem((byte) 16,playerCondition);
+        setItem(10,defaultItem);
+        setItem(12,randomTarget);
+        setItem(13,randomPlayer);
+        setItem(16,playerCondition);
 
-        setItem((byte) 19,allPlayers);
-        setItem((byte) 25,entityCondition);
+        setItem(19,allPlayers);
+        setItem(25,entityCondition);
 
-        setItem((byte) 28,allEntities);
-        setItem((byte) 30,killer);
-        setItem((byte) 31,victim);
-        setItem((byte) 34,varCondition);
+        setItem(28,allEntities);
+        setItem(30,killer);
+        setItem(31,victim);
+        setItem(34,varCondition);
     }
 
     @Override
@@ -121,9 +121,9 @@ public class SelectionActionsMenu extends AbstractMenu {
     }
 
     private void setLine(String text) {
-        setSignLine(signLocation, (byte) 1,"");
-        setSignLine(signLocation, (byte) 2,text);
-        setSignLine(signLocation, (byte) 3,"");
+        setSignLine(signLocation, 1,"");
+        setSignLine(signLocation, 2,text);
+        setSignLine(signLocation, 3,"");
         translateBlockSign(signLocation.getBlock());
         Block containerBlock = signLocation.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.NORTH);
         DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(signLocation.getWorld());
