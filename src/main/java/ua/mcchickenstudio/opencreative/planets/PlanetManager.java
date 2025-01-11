@@ -164,7 +164,7 @@ public class PlanetManager {
         List<Planet> featuredPlanets = new ArrayList<>();
         Set<Integer> featuredIds = OpenCreative.getSettings().getRecommendedWorldsIDs();
         for (int id : featuredIds) {
-            Planet planet = getPlanetByWorldName("planet"+id);
+            Planet planet = getPlanetById(String.valueOf(id));
             if (planet != null) {
                 featuredPlanets.add(planet);
             }
