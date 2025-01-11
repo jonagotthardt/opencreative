@@ -31,17 +31,24 @@ public class EntityPlaceholder extends KeyPlaceholder {
     }
 
     @Override
-    public String parse(String text, ActionsHandler handler, Action action) {
-        if (handler.getEvent() instanceof MobInteractionEvent event) {
-            text = text
-                    .replace("%entity%", event.getEntity().getName())
-                    .replace("%entity_uuid%", event.getEntity().getUniqueId().toString());
-        } else if (handler.getEvent().getSelection().getFirst() instanceof Entity entity) {
-            text = text
-                    .replace("%entity%", entity.getName())
-                    .replace("%entity_uuid%", entity.getUniqueId().toString());
-        }
-        return text;
+    public String parseKey(String key, ActionsHandler handler, Action action) {
+        switch (key) {
+            case "entity" -> {
+                if (handler.getEvent() instanceof MobInteractionEvent event) {
+                    return event.getEntity().getName();
+                } else if (handler.getEvent().getSelection().getFirst() instanceof Entity entity) {
+                    return entity.getName();
+                }
+            }
+            case "entity_uuid" -> {
+                if (handler.getEvent() instanceof MobInteractionEvent event) {
+                    return event.getEntity().getUniqueId().toString();
+                } else if (handler.getEvent().getSelection().getFirst() instanceof Entity entity) {
+                    return entity.getUniqueId().toString();
+                }
+            }
+        };
+        return null;
     }
 
     @Override

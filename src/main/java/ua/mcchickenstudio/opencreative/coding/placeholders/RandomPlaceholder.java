@@ -34,18 +34,21 @@ public class RandomPlaceholder extends KeyPlaceholder {
     }
 
     @Override
-    public String parse(String text, ActionsHandler handler, Action action) {
+    public String parseKey(String key, ActionsHandler handler, Action action) {
         Player randomPlayer = null;
         List<Player> playerList = handler.getExecutor().getPlanet().getTerritory().getWorld().getPlayers();
-        if (!playerList.isEmpty()) {
-            Random r = new Random();
-            int i = r.nextInt(playerList.size());
-            randomPlayer = playerList.get(i);
-        }
+        if (playerList.isEmpty()) return null;
+        Random r = new Random();
+        int i = r.nextInt(playerList.size());
+        randomPlayer = playerList.get(i);
         if (randomPlayer != null) {
-            text = text.replace("%random%",randomPlayer.getName()).replace("%random_uuid%",randomPlayer.getUniqueId().toString());
+            if (key.equals("random")) {
+                return randomPlayer.getName();
+            } else if (key.equals("random_uuid")) {
+                return randomPlayer.getUniqueId().toString();
+            }
         }
-        return text;
+        return null;
     }
 
     @Override

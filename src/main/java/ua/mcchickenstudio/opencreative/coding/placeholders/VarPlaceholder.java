@@ -29,13 +29,17 @@ import java.util.regex.Pattern;
 
 public class VarPlaceholder extends Placeholder {
 
-    private static final Pattern PATTERN = Pattern.compile("%(var_local|var_global|var_saved)\\(([^)]+)\\)%");
+    private static final Pattern PATTERN = Pattern.compile("%(var|var_local|var_game|var_global|var_save|var_saved)\\(([^)]+)\\)");
     private static final int limit = 20;
 
     @Override
     public boolean matches(String text) {
         Matcher matcher = PATTERN.matcher(text);
         return matcher.find();
+    }
+
+    public static Pattern getPattern() {
+        return PATTERN;
     }
 
     @Override
@@ -52,13 +56,13 @@ public class VarPlaceholder extends Placeholder {
             WorldVariable variable = switch (type) {
                 case "var_local" ->
                         variables.getVariable(new VariableLink(name, VariableLink.VariableType.LOCAL), action);
-                case "var_global" ->
+                case "var", "var_game", "var_global" ->
                         variables.getVariable(new VariableLink(name, VariableLink.VariableType.GLOBAL), action);
-                case "var_saved" ->
+                case "var_save", "var_saved" ->
                         variables.getVariable(new VariableLink(name, VariableLink.VariableType.SAVED), action);
                 default -> null;
             };
-            String replacement = "";
+            String replacement = "null! " + name + " - " + type.toUpperCase();
             if (variable != null) {
                 replacement = String.valueOf(variable.getValue()).substring(0,Math.min(100,String.valueOf(variable.getValue()).length()));
             }

@@ -32,12 +32,13 @@ public class SymbolPlaceholder extends KeyPlaceholder {
     }
 
     @Override
-    public String parse(String text, ActionsHandler handler, Action action) {
-        text = text.replace("%space%"," ");
-        text = text.replace("%empty%","");
-        text = text.replace("%new-line%","\n");
-        text = text.replace("%nl%","\n");
-        return text;
+    public String parseKey(String key, ActionsHandler handler, Action action) {
+        return switch (key) {
+            case "space" -> " ";
+            case "empty" -> "";
+            case "new-line", "nl" -> "\n";
+            default -> null;
+        };
     }
 
     @Override

@@ -20,6 +20,9 @@ package ua.mcchickenstudio.opencreative.coding.placeholders;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
+import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
+import ua.mcchickenstudio.opencreative.coding.variables.WorldVariable;
+import ua.mcchickenstudio.opencreative.coding.variables.WorldVariables;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,6 +30,7 @@ import java.util.regex.Pattern;
 public abstract class KeyPlaceholder extends Placeholder {
 
     private final String[] keys;
+    private final static int limit = 20;
     private final static Pattern PATTERN_PLACEHOLDER = Pattern.compile("%[A-Za-z0-9]+%");
 
     public KeyPlaceholder(String... keys) {
@@ -52,6 +56,24 @@ public abstract class KeyPlaceholder extends Placeholder {
         return keys;
     }
 
-    public abstract String parse(String text, ActionsHandler handler, Action action);
+    public abstract String parseKey(String key, ActionsHandler handler, Action action);
+
+    @Override
+    public final String parse(String text, ActionsHandler handler, Action action) {
+        Matcher matcher = PATTERN_PLACEHOLDER.matcher(text);
+        StringBuilder result = new StringBuilder();
+        int count = 0;
+        while (matcher.find()) {
+            count++;
+            if (count >= limit) break;
+            String key = matcher.group();
+            key = key.substring(1,key.length()-1);
+            String replacement = parseKey(key, handler, action);
+            if (replacement == null) replacement = "%"+key+"%";
+            matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
+        }
+        matcher.appendTail(result);
+        return result.toString();
+    }
 
 }

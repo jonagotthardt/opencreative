@@ -161,15 +161,15 @@ public class ParameterButton {
         for (String loreLine : originalLore) {
             String content = loreLine;
             if (content.matches("%[0-9]+%")) {
-                int choiceNumber = Byte.parseByte(content.replace("%",""));
+                int choiceNumber = Integer.parseInt(content.replace("%",""));
                 if (choiceNumber == currentChoice) {
                     turned = turnedOn;
                 } else {
                     turned = turnedOff;
                 }
                 Object value = valueList.get(choiceNumber-1);
-                String choicePath = localizationPath + ".choices." + (value instanceof Integer i ? (i+1) : value).toString();
-                String choiceMessage = (value instanceof Integer i ? (i+1) : value).toString();
+                String choicePath = localizationPath + ".choices." + (value instanceof Integer i ? (i) : value).toString();
+                String choiceMessage = (value instanceof Integer i ? (i) : value).toString();
                 if (messageExists(choicePath)) {
                     choiceMessage = getLocaleMessage(choicePath, false);
                 }

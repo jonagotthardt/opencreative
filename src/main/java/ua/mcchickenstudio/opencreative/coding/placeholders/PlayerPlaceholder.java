@@ -29,14 +29,21 @@ public class PlayerPlaceholder extends KeyPlaceholder {
     }
 
     @Override
-    public String parse(String text, ActionsHandler handler, Action action) {
+    public String parseKey(String key, ActionsHandler handler, Action action) {
         if (handler.getEvent().getSelection().getFirst() instanceof Player player) {
-            text = text
-                    .replace("%player%",player.getName())
-                    .replace("%player_uuid%",player.getUniqueId().toString())
-                    .replace("%display_name%",player.getDisplayName());
+            switch (key) {
+                case "player" -> {
+                    return player.getName();
+                }
+                case "player_uuid" -> {
+                    return player.getUniqueId().toString();
+                }
+                case "display_name" -> {
+                    return player.getDisplayName();
+                }
+            }
         }
-        return text;
+        return null;
     }
 
     @Override

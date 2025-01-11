@@ -31,11 +31,11 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.M
 public class EventPlaceholder extends KeyPlaceholder {
 
     public EventPlaceholder() {
-        super("killer","damager","killer_uuid","damager_uuid","victim","victim_uuid");
+        super("killer","damager","killer_uuid","damager_uuid","victim","victim_uuid","shooter","shooter_uuid");
     }
 
     @Override
-    public String parse(String text, ActionsHandler handler, Action action) {
+    public String parseKey(String key, ActionsHandler handler, Action action) {
         WorldEvent worldEvent = handler.getEvent();
         Entity killer = null;
         Entity victim = null;
@@ -52,19 +52,13 @@ public class EventPlaceholder extends KeyPlaceholder {
             killer = event.getKiller();
             victim = event.getVictim();
         }
-        if (killer != null) {
-            text = text
-                    .replace("%killer%",killer.getName())
-                    .replace("%killer_uuid%",killer.getUniqueId().toString())
-                    .replace("%damager%",killer.getName())
-                    .replace("%damager_uuid%",killer.getUniqueId().toString());
-        }
-        if (victim != null) {
-            text = text
-                    .replace("%victim%",victim.getName())
-                    .replace("%victim_uuid%",victim.getUniqueId().toString());
-        }
-        return text;
+        return switch (key) {
+            case "killer", "damager", "shooter" -> killer != null ? killer.getName() : null;
+            case "killer_uuid", "damager_uuid", "shooter_uuid" -> killer != null ? killer.getUniqueId().toString() : null;
+            case "victim" -> victim != null ? victim.getName() : null;
+            case "victim_uuid" -> victim != null ? victim.getUniqueId().toString() : null;
+            default -> null;
+        };
     }
 
     @Override

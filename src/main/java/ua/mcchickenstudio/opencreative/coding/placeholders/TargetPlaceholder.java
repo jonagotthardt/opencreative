@@ -35,21 +35,14 @@ public class TargetPlaceholder extends KeyPlaceholder {
     }
 
     @Override
-    public String parse(String text, ActionsHandler handler, Action action) {
+    public String parseKey(String key, ActionsHandler handler, Action action) {
         Entity entity = action.getEntity();
-        if (entity != null) {
-            text = text
-                    .replace("%selected%",entity.getName())
-                    .replace("%selected_uuid%",entity.getUniqueId().toString())
-                    .replace("%target%",entity.getName())
-                    .replace("%target_uuid%",entity.getUniqueId().toString());
-        }
-        if (text.contains("%targets") || text.contains("%selection")) {
-            List<String> names = action.getHandler().getSelectedTargets().stream().map(CommandSender::getName).toList();
-            text = text.replace("%targets%",String.join(", ",names));
-            text = text.replace("%selection%",String.join(", ",names));
-        }
-        return text;
+        return switch (key) {
+            case "selected", "target" -> entity == null ? null : entity.getName();
+            case "selected_uuid", "target_uuid" -> entity == null ? null : entity.getUniqueId().toString();
+            case "targets", "selection" -> String.join(", ",action.getHandler().getSelectedTargets().stream().map(CommandSender::getName).toList());
+            default -> null;
+        };
     }
 
     @Override

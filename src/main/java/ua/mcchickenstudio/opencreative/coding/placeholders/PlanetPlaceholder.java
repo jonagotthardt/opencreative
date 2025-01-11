@@ -32,13 +32,14 @@ public class PlanetPlaceholder extends KeyPlaceholder {
     }
 
     @Override
-    public String parse(String text, ActionsHandler handler, Action action) {
+    public String parseKey(String key, ActionsHandler handler, Action action) {
         Planet planet = handler.getExecutor().getPlanet();
-        text = text
-                .replace("%online%", String.valueOf(Bukkit.getOnlinePlayers().size()))
-                .replace("%players_amount%", String.valueOf(planet.getPlayers().size()))
-                .replace("%entities_amount%", String.valueOf(planet.getTerritory().getWorld().getEntityCount() + (planet.getDevPlanet() != null && planet.getDevPlanet().getWorld() != null ? planet.getDevPlanet().getWorld().getEntityCount() : 0)));
-        return text;
+        return switch (key) {
+            case "online" -> String.valueOf(Bukkit.getOnlinePlayers().size());
+            case "players_amount" -> String.valueOf(planet.getPlayers().size());
+            case "entities_amount" -> String.valueOf(planet.getTerritory().getWorld().getEntityCount() + (planet.getDevPlanet() != null && planet.getDevPlanet().getWorld() != null ? planet.getDevPlanet().getWorld().getEntityCount() : 0));
+            default -> null;
+        };
     }
 
     @Override

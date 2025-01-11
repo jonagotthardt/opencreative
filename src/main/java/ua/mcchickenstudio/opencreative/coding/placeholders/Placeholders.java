@@ -29,7 +29,6 @@ public class Placeholders {
 
     private static Placeholders instance;
 
-    private final int limit = 20;
     private final List<Placeholder> placeholders = new ArrayList<>();
 
     public synchronized static Placeholders getInstance() {
@@ -77,11 +76,16 @@ public class Placeholders {
 
     public String parseAction(String text, ActionsHandler handler, Action action) {
         text = text.replace("\\n","\n");
-        for (Placeholder placeholder : placeholders) {
-            if (placeholder.matches(text)) {
-                text = placeholder.parse(text,handler,action);
+        try {
+            for (Placeholder placeholder : placeholders) {
+                if (placeholder.matches(text)) {
+                    text = placeholder.parse(text,handler,action);
+                }
             }
+        } catch (Exception error) {
+            sendCriticalErrorMessage("[PLACEHOLDERS] Can't parse placeholder",error);
         }
+
         return text;
     }
 
