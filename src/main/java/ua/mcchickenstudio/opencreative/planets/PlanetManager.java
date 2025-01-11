@@ -127,7 +127,7 @@ public class PlanetManager {
     public List<Planet> getPlayerPlanets(Player player) {
         List<Planet> playerPlanets = new ArrayList<>();
         for (Planet planet : PlanetManager.getInstance().getPlanets()) {
-            if (planet.getOwner().equalsIgnoreCase(player.getName())) {
+            if (planet.isOwner(player)) {
                 playerPlanets.add(planet);
             }
         }
