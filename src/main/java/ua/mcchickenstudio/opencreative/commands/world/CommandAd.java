@@ -33,6 +33,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.events.planet.PlanetInviteEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
@@ -91,7 +92,7 @@ public class CommandAd implements CommandExecutor, TabCompleter {
                                 player.sendMessage(getLocaleMessage("advertisement.cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND))));
                                 return true;
                             }
-                            PlanetAdvertisementEvent event = new PlanetAdvertisementEvent(foundPlanet,player);
+                            PlanetInviteEvent event = new PlanetInviteEvent(foundPlanet,player,inviteReceiver);
                             event.callEvent();
                             if (event.isCancelled()) return true;
                             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getAdvertisementCooldown(), CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND);
