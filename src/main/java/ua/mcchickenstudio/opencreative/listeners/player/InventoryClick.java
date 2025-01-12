@@ -54,7 +54,6 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 public class InventoryClick implements Listener {
 
     final PlanetManager planetManager = PlanetManager.getInstance();
-
     @EventHandler
     public void onCraft(CraftItemEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) return;
