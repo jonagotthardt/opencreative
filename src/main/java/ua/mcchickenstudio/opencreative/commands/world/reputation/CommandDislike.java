@@ -31,6 +31,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.convertTime;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+
 public class CommandDislike implements CommandExecutor {
 
     @Override
@@ -46,6 +49,12 @@ public class CommandDislike implements CommandExecutor {
                 return true;
             }
             CooldownUtils.setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
+            long createdSeconds = (System.currentTimeMillis()-planet.getCreationTime())/1000;
+            if (OpenCreative.getSettings().getWorldReputationMinSeconds() > createdSeconds) {
+                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 100, 1);
+                player.sendMessage(getLocaleMessage("world.cant-rate",player).replace("%time%",convertTime(OpenCreative.getSettings().getWorldReputationMinSeconds()-createdSeconds)));
+                return true;
+            }
             if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.LIKED).contains(sender.getName())) {
                 sender.sendMessage(MessageUtils.getLocaleMessage("world.already-rated"));
             } else if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.DISLIKED).contains(sender.getName())) {

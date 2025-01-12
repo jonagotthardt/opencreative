@@ -55,6 +55,7 @@ public class Settings {
     private PlayerListChanger listChanger = PlayerListChanger.FULL;
 
     private int worldCreationMinSeconds = 30;
+    private int worldReputationMinSeconds = 300;
 
     private String customIdPattern = "^[a-zA-Zа-яА-Я0-9_]+$";
     private int customIdMinLength = 2;
@@ -67,11 +68,13 @@ public class Settings {
     private int worldDescriptionMaxLength = 256;
 
     private final Groups groups;
+    private final Commands commands;
     private final Set<Integer> recommendedWorldsIDs = new HashSet<>();
     private final Set<String> allowedResourcePackLinks = new HashSet<>();
 
     public Settings() {
         groups = new Groups();
+        commands = new Commands();
     }
 
     /**
@@ -95,6 +98,7 @@ public class Settings {
         lobbyClearInventory = config.getBoolean("lobby.clear-inventory",true);
 
         worldCreationMinSeconds = config.getInt("requirements.world-creation.played-seconds",30);
+        worldReputationMinSeconds = config.getInt("requirements.world-reputation.creation-seconds",300);
 
         customIdPattern = config.getString("requirements.world-custom-id.pattern","^[a-zA-Zа-яА-Я0-9_]+$");
         customIdMinLength = config.getInt("requirements.world-custom-id.min-length",2);
@@ -107,6 +111,7 @@ public class Settings {
         worldDescriptionMaxLength = config.getInt("requirements.world-description.max-length",256);
 
         groups.load();
+        commands.load();
         if (maintenance) {
             OpenCreative.getPlugin().getLogger().warning("Maintenance mode is still enabled in config.yml, to disable: /maintenance end");
         }
@@ -225,6 +230,10 @@ public class Settings {
         return groups;
     }
 
+    public Commands getCommands() {
+        return commands;
+    }
+
     public boolean isConsoleCriticalErrors() {
         return consoleCriticalErrors;
     }
@@ -267,5 +276,9 @@ public class Settings {
 
     public int getWorldCreationMinSeconds() {
         return worldCreationMinSeconds;
+    }
+
+    public int getWorldReputationMinSeconds() {
+        return worldReputationMinSeconds;
     }
 }

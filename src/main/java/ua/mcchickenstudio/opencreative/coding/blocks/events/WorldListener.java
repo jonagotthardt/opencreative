@@ -32,11 +32,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 /**
- * <h1>CEListener</h1>
+ * <h1>WorldListener</h1>
  * This class represents listener of all Creative events in planet.
  * It activates executors on events listening.
  */
-public class CEListener implements Listener {
+public class WorldListener implements Listener {
 
     // Player Events
     // World

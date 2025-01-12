@@ -18,8 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.commands.world.reputation;
 
+import org.bukkit.Bukkit;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+import ua.mcchickenstudio.opencreative.menu.world.WorldGenerationMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import org.bukkit.Sound;
@@ -36,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.convertTime;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 public class CommandLike implements CommandExecutor {
@@ -53,6 +56,12 @@ public class CommandLike implements CommandExecutor {
                 return true;
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
+            long createdSeconds = (System.currentTimeMillis()-planet.getCreationTime())/1000;
+            if (OpenCreative.getSettings().getWorldReputationMinSeconds() > createdSeconds) {
+                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 100, 1);
+                player.sendMessage(getLocaleMessage("world.cant-rate",player).replace("%time%",convertTime(OpenCreative.getSettings().getWorldReputationMinSeconds()-createdSeconds)));
+                return true;
+            }
             if (getPlayersFromPlanetList(planet, Planet.PlayersType.LIKED).contains(sender.getName())) {
                 sender.sendMessage(getLocaleMessage("world.already-rated"));
             } else if (getPlayersFromPlanetList(planet, Planet.PlayersType.DISLIKED).contains(sender.getName())) {
@@ -66,6 +75,9 @@ public class CommandLike implements CommandExecutor {
                         for (Player p : planet.getPlayers()) {
                             p.sendMessage(getLocaleMessage("world.liked").replace("%player%",sender.getName()));
                         }
+                    }
+                    if (OpenCreative.getEconomy().isEnabled() && !planet.isOwner(player)) {
+                        OpenCreative.getEconomy().depositMoney(Bukkit.getOfflinePlayer(planet.getOwner()),planet.getGroup().getLikeReward());
                     }
                 }
             }

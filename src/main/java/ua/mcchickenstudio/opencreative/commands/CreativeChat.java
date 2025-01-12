@@ -84,9 +84,6 @@ public class CreativeChat implements CommandExecutor {
             }
         }
         OpenCreative.getPlugin().getLogger().info("[CREATIVE-CHAT] "+sender.getName()+": "+String.join(" ",args));
-        for (String executeCommand : OpenCreative.getPlugin().getConfig().getStringList("execute-console-commands.creative-chat")) {
-            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),parsePAPI(Bukkit.getOfflinePlayer(sender.getName()),executeCommand.replace("%player%",sender.getName()).replace("%message%",String.join(" ",args))));
-        }
         String formattedMessage = OpenCreative.getPlugin().getConfig().getString("messages.cc-chat","&6%cc-prefix% &7%player%: %message%");
         formattedMessage = formattedMessage.replace("%player%",sender.getName());
         formattedMessage = formattedMessage.replace("%cc-prefix%", OpenCreative.getPlugin().getConfig().getString("messages.cc-prefix","&6 Chat &8| &7"));

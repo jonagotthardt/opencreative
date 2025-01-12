@@ -318,6 +318,7 @@ world:
   disliked: "%prefix%Тебе &6не понравился&f этот мир :("
   unliked: "%prefix%&fТы &6убрал оценку&f игре."
   already-rated: "%prefix%Вы &6уже&f оценили этот мир."
+  cant-rate: "%prefix%&cЭтот мир ещё нельзя оценить, поскольку его создали недавно. Может вы поможете владельцу мира?"
   players:
     kick:
       kicked: "%prefix%Вы выгнали игрока &6%player%&f из мира, однако он сможет зайти позже в ваш мир."
@@ -366,7 +367,7 @@ join-usage: "%prefix%Используй &6/join ID"
 advertisement:
   message: "%prefix%&6Приглашение:\n&f &7%player% &f&nприглашает&f тебя в мир: \n&f %world%\n &f\n&a &a &n[Нажми, чтобы присоединиться]&f\n &f"
   hover: "&f%planetName%\n&8Создано %planetOwner%\n \n&a ☻ &7Онлайн: &a%planetOnline%\n&e ⭐&7 Рейтинг: &f%planetReputation%\n&3 ⚐&7 Категория: &f%planetCategory%\n \n&aНажми, чтобы подключиться в мир"
-  no-money: "%prefix%&cНедостаточно денег для рекламы!"
+  no-money: "%prefix%&cНужно собрать ещё %money% монет для рекламы мира."
   cooldown: "%prefix%Перед следующей рекламой подожди &6%cooldown% секунд."
   closed-world: "%prefix%&fЧтобы прорекламировать мир, &6нужно сначала разрешить вход игрокам&f в настройках мира."
 items:
