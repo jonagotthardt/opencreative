@@ -96,18 +96,21 @@ public class PlayerChat implements Listener {
                                 p.sendMessage(message);
                             }
                         }
+                        OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + planet.getId() + "dev] "+player.getName()+": "+event.getMessage());
                     } else {
                         // If player in build world
                         for (Player p : planet.getPlayers()) {
                             p.sendMessage(message);
                         }
+                        OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + planet.getId() + "] "+player.getName()+": "+event.getMessage());
                     }
+
                 } else {
                     for (Player p : player.getWorld().getPlayers()) {
                         p.sendMessage(message);
                     }
+                    OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + player.getWorld().getName()+ "] "+player.getName()+": "+event.getMessage());
                 }
-                OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: "+player.getWorld().getName()+"] "+player.getName()+": "+event.getMessage());
             }
         } catch (Exception error) {
             event.setCancelled(true);

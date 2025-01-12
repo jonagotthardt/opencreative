@@ -48,6 +48,7 @@ import java.util.Set;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.loadLocales;
+import static ua.mcchickenstudio.opencreative.utils.FileUtils.setPlanetConfigParameter;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 public class CommandCreative implements CommandExecutor, TabCompleter {
@@ -383,19 +384,67 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                 }
                 case "corrupted" -> {
-                    if (!sender.hasPermission("opencreative.list.corrupted")) {
+                    if (args.length < 3) {
+                        if (!sender.hasPermission("opencreative.list.corrupted")) {
+                            sender.sendMessage(getLocaleMessage("no-perms"));
+                            return true;
+                        }
+                        Set<Planet> corruptedPlanets = PlanetManager.getInstance().getCorruptedPlanets();
+                        sender.sendMessage(getLocaleMessage("creative.corrupted-worlds.list")
+                                .replace("%amount%",String.valueOf(corruptedPlanets.size())));
+                        String worldMessage = getLocaleMessage("creative.corrupted-worlds.world");
+                        for (Planet planet : corruptedPlanets) {
+                            sender.sendMessage(Component.text(worldMessage
+                                            .replace("%id%", String.valueOf(planet.getId()))
+                                    ).clickEvent(ClickEvent.runCommand("/oc corrupted " + planet.getId() + " join"))
+                            );
+                        }
+                        return true;
+                    }
+                    if (!sender.hasPermission("opencreative.corrupted.recovery")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
-                    Set<Planet> corruptedPlanets = PlanetManager.getInstance().getCorruptedPlanets();
-                    sender.sendMessage(getLocaleMessage("creative.corrupted-worlds.list")
-                            .replace("%amount%",String.valueOf(corruptedPlanets.size())));
-                    String worldMessage = getLocaleMessage("creative.corrupted-worlds.world");
-                    for (Planet planet : corruptedPlanets) {
-                        sender.sendMessage(Component.text(worldMessage
-                                .replace("%id%", String.valueOf(planet.getId()))
-                                ).clickEvent(ClickEvent.runCommand("/join " + planet.getId()))
-                        );
+                    int id = -1;
+                    try {
+                        id = Integer.parseInt(args[1]);
+                    } catch (NumberFormatException ignored) {}
+                    if (id < 0) return true;
+                    Planet foundPlanet = null;
+                    for (Planet planet : PlanetManager.getInstance().getCorruptedPlanets()) {
+                        if (planet.getId() == id) {
+                            foundPlanet = planet;
+                            break;
+                        }
+                    }
+                    if (foundPlanet == null) {
+                        sender.sendMessage(getLocaleMessage("no-planet-found"));
+                        return true;
+                    }
+                    String action = args[2];
+                    switch (action.toLowerCase()) {
+                        case "teleport", "tp", "join", "load" -> {
+                            if (player == null) return true;
+                            foundPlanet.getTerritory().load();
+                            foundPlanet.connectPlayer(player);
+                        }
+                        case "unload" -> {
+                            if (player == null) return true;
+                            foundPlanet.getTerritory().unload();
+                        }
+                        case "owner", "setowner" -> {
+                            if (args.length < 4) {
+                                sender.sendMessage(getLocaleMessage("too-few-args"));
+                                return true;
+                            }
+                            sender.sendMessage(getLocaleMessage("creative.corrupted-worlds.set-owner").replace("%replace%",args[3]));
+                            if (foundPlanet.getCreationTime() == 0) setPlanetConfigParameter(foundPlanet,"creation-time",System.currentTimeMillis());
+                            if (foundPlanet.getLastActivityTime() == 0) setPlanetConfigParameter(foundPlanet,"last-activity-time",System.currentTimeMillis());
+                            foundPlanet.setOwner(args[3]);
+                            PlanetManager.getInstance().getCorruptedPlanets().remove(foundPlanet);
+                            Planet planet = new Planet(foundPlanet.getId());
+                            PlanetManager.getInstance().registerPlanet(planet);
+                        }
                     }
                 }
                 case "print" -> {
@@ -499,6 +548,8 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 tabCompleter.add("disable");
             } else if ("load".equalsIgnoreCase(args[0]) || "unload".equalsIgnoreCase(args[0])) {
                 tabCompleter.addAll(PlanetManager.getInstance().getPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());
+            } else if ("corrupted".equalsIgnoreCase(args[0])) {
+                tabCompleter.addAll(PlanetManager.getInstance().getCorruptedPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());
             }
         } else if (args.length == 3) {
             if ("start".equalsIgnoreCase(args[1])) {
@@ -506,6 +557,10 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 tabCompleter.add("60");
                 tabCompleter.add("30");
                 tabCompleter.add("15");
+            } else if ("corrupted".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("owner");
+                tabCompleter.add("join");
+                tabCompleter.add("unload");
             }
         }
         return tabCompleter;

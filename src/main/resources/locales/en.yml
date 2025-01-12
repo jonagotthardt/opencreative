@@ -113,6 +113,13 @@ creative:
   resetting-locale: "%prefix%Loading default localization files, please wait..."
   reset-locale: "%prefix%Plugin has &6successfully&f reset the localization files to defaults!"
   loaded-worlds-list: "%prefix%List of loaded worlds, total %amount%: &6"
+  deprecated-worlds:
+    list: "%prefix%List of old worlds (total %amount%): "
+    world: "&f ID: &6%id% &fOwner: &6%owner% &fCreated: &6%created% &fLast owner join: &6%seen%"
+  corrupted-worlds:
+    list: "%prefix%List of corrupted worlds (total %amount%): "
+    world: "&f ID: &6%id% &3[Click to connect]"
+    set-owner: "%prefix%Changed planet's owner to &6%player%&f, now it will be listed in worlds browser."
   creative-chat:
     cleared: "%prefix%The chat has been cleared by the server administration..."
     off: "%prefix%Creative chat is currently &6unavailable&f for communication, as it has been &6disabled&f by the server administration for all players. Please wait for the administration's decision..."
@@ -188,6 +195,7 @@ lobby:
   subtitle: "&fLet's &acreate&f in your worlds!"
   message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.3\n<green> Well, it's possible!\n <white>\n<gold> ⭐ <white>Explore all <gold>worlds<white> using the compass!\n<light_purple> ❤ <white>Create your own world and <light_purple>invite <white>your friends!\n <yellow>⌚<white> Have fun and <yellow>create <white>whatever you want!\n \n<white>\n <white>"
 creating-world:
+  not-enough-played: "%prefix%&fYou need to play &6%time%&f in other worlds before creating a new world."
   title: "&eCreating World ◌"
   subtitle: "&fPlease wait a few seconds..."
   default-world-name: "&7Player %player%'s World"

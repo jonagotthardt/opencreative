@@ -30,6 +30,7 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 
 import java.io.File;
@@ -55,27 +56,34 @@ public class CommandWorld implements CommandExecutor {
             }
             switch(args[0]) {
                 case "delete":
+                    if (!sender.hasPermission("opencreative.delete")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
+                    }
                     if (sender instanceof Player player) {
                         Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-                        if (sender.hasPermission("opencreative.delete")) {
-                            if (planet.isOwner(player) || sender.hasPermission("opencreative.delete.bypass")) {
-                                PlanetManager.getInstance().deletePlanet(planet, player);
-                            }
-                        } else {
-                            sender.sendMessage(getLocaleMessage("no-perms"));
+                        if (planet == null) planet = PlanetManager.getInstance().getCorruptedPlanetById(WorldUtils.getPlanetIdFromName(player.getWorld()));
+                        if (planet == null) {
+                            sender.sendMessage(getLocaleMessage("no-planet-found"));
+                            return true;
                         }
+                        if (planet.isOwner(player) || sender.hasPermission("opencreative.delete.bypass")) {
+                            PlanetManager.getInstance().deletePlanet(planet, player);
+                        }
+
                     } else {
                         if (args.length == 1) {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
                             return true;
                         }
-                        Planet planet = PlanetManager.getInstance().getPlanetByWorldName(args[1]);
-                        if (planet != null) {
-                            OpenCreative.getPlugin().getLogger().info("Deleting a world " + args[1] + ", please wait...");
-                            PlanetManager.getInstance().deletePlanet(planet,null);
-                        } else {
-                            OpenCreative.getPlugin().getLogger().warning("This world doesn't exists" + args[1]);
+                        Planet planet = PlanetManager.getInstance().getPlanetById(args[1]);
+                        if (planet == null) planet = PlanetManager.getInstance().getCorruptedPlanetById(args[1]);
+                        if (planet == null) {
+                            sender.sendMessage(getLocaleMessage("no-planet-found"));
+                            return true;
                         }
+                        OpenCreative.getPlugin().getLogger().info("Deleting a world " + args[1] + ", please wait...");
+                        PlanetManager.getInstance().deletePlanet(planet,sender);
                     }
                     break;
                 case "deletemobs", "mobs", "entities":

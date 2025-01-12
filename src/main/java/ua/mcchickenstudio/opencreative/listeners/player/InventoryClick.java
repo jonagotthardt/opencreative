@@ -131,7 +131,14 @@ public class InventoryClick implements Listener {
                             player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 100, 1);
                             OwnWorldsMenu.openInventory(player, OwnWorldsMenu.openedPage.get(player) - 1);
                         } else if (item.getType() == Material.WHITE_STAINED_GLASS) {
-                            new WorldGenerationMenu(player).open(player);
+                            long playedSeconds = (System.currentTimeMillis()-player.getFirstPlayed())/1000;
+                            if (OpenCreative.getSettings().getWorldCreationMinSeconds() > playedSeconds) {
+                                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 100, 1);
+                                player.closeInventory();
+                                player.sendMessage(getLocaleMessage("creating-world.not-enough.played",player).replace("%time%",convertTime(OpenCreative.getSettings().getWorldCreationMinSeconds()-playedSeconds)));
+                            } else {
+                                new WorldGenerationMenu(player).open(player);
+                            }
                         }
                     }
                 } catch (Exception error) {

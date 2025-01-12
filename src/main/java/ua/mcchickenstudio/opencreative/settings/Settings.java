@@ -54,6 +54,8 @@ public class Settings {
     private BukkitRunnable announcer;
     private PlayerListChanger listChanger = PlayerListChanger.FULL;
 
+    private int worldCreationMinSeconds = 30;
+
     private String customIdPattern = "^[a-zA-Zа-яА-Я0-9_]+$";
     private int customIdMinLength = 2;
     private int customIdMaxLength = 16;
@@ -91,6 +93,8 @@ public class Settings {
         consoleNotFoundMessage = config.getBoolean("messages.not-found",true);
         consoleWarnings = config.getBoolean("messages.warnings",true);
         lobbyClearInventory = config.getBoolean("lobby.clear-inventory",true);
+
+        worldCreationMinSeconds = config.getInt("requirements.world-creation.played-seconds",30);
 
         customIdPattern = config.getString("requirements.world-custom-id.pattern","^[a-zA-Zа-яА-Я0-9_]+$");
         customIdMinLength = config.getInt("requirements.world-custom-id.min-length",2);
@@ -259,5 +263,9 @@ public class Settings {
 
     public int getWorldNameMinLength() {
         return worldNameMinLength;
+    }
+
+    public int getWorldCreationMinSeconds() {
+        return worldCreationMinSeconds;
     }
 }

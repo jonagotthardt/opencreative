@@ -45,7 +45,7 @@ public class PlayerQuit implements Listener {
         if (planet != null) {
             EventRaiser.raiseQuitEvent(player);
             PlanetPlayer planetPlayer = planet.getWorldPlayers().getPlanetPlayer(player);
-            planetPlayer.save();
+            if (planetPlayer != null) planetPlayer.save();
             planet.getWorldPlayers().unregisterPlayer(player);
             new BukkitRunnable() {
                 @Override

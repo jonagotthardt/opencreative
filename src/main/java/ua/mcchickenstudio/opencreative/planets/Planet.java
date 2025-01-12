@@ -227,7 +227,7 @@ public class Planet {
     }
 
     public String getWorldName() {
-        return getPlanetsStorageFolder().getPath() + File.separator + "planet" + id;
+        return getPlanetsStorageFolder().getPath().replace("\\","/") + "/planet" + id;
     }
 
     public int getId() {
@@ -373,7 +373,7 @@ public class Planet {
         try {
             return Long.parseLong(String.valueOf(getPlanetConfig(this).get("creation-time")));
         } catch (Exception error) {
-            return 0;
+            return 1670573410000L;
         }
     }
 
@@ -382,7 +382,7 @@ public class Planet {
         try {
             return Long.parseLong(String.valueOf(getPlanetConfig(this).get("last-activity-time")));
         } catch (Exception error) {
-            return 0;
+            return 1670573410000L;
         }
     }
 
@@ -538,6 +538,7 @@ public class Planet {
     public void setOwner(String owner) {
         this.owner = owner;
         FileUtils.setPlanetConfigParameter(this,"owner",owner);
+        FileUtils.setPlanetConfigParameter(this,"owner-uuid",Bukkit.getOfflinePlayer(owner).getUniqueId().toString());
         new BukkitRunnable() {
             @Override
             public void run() {

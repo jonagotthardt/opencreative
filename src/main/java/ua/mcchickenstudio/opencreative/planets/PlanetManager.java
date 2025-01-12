@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.planets;
 
+import org.bukkit.command.CommandSender;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetDeletionEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetRegisterEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
@@ -137,7 +138,8 @@ public class PlanetManager {
     /**
      Delete planet on player request. It teleports planet players to spawn, closes planet, unloads world and deletes world folder.
      **/
-    public void deletePlanet(Planet planet, Player player) {
+    public void deletePlanet(Planet planet, CommandSender player) {
+        OpenCreative.getPlugin().getLogger().info("Deleting planet " + planet.getId());
         new PlanetDeletionEvent(planet).callEvent();
         try {
             for (Player p : planet.getPlayers()) {
@@ -149,12 +151,17 @@ public class PlanetManager {
                 planet.setSharing(Planet.Sharing.CLOSED);
             }
             planets.remove(planet);
-            FileUtils.deleteFolder(FileUtils.getPlanetFolder(planet));
-            FileUtils.deleteFolder(FileUtils.getDevPlanetFolder(planet.getDevPlanet()));
             Bukkit.getServer().getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
-                Bukkit.unloadWorld(planet.getWorldName(),false);
                 player.sendMessage(MessageUtils.getLocaleMessage("deleting-world.message"));
             }, 60);
+            if (planet.isLoaded()) {
+                Bukkit.unloadWorld(planet.getWorldName(),false);
+                if (planet.getDevPlanet().isLoaded()) {
+                    Bukkit.unloadWorld(planet.getDevPlanet().getWorldName(),false);
+                }
+            }
+            FileUtils.deleteFolder(FileUtils.getPlanetFolder(planet));
+            FileUtils.deleteFolder(FileUtils.getDevPlanetFolder(planet.getDevPlanet()));
         } catch (NullPointerException error) {
             ErrorUtils.sendCriticalErrorMessage("Error while deleting world " + planet.getId(), error);
         }
@@ -283,6 +290,15 @@ public class PlanetManager {
     public Planet getPlanetByWorldName(String worldName) {
         for (Planet planet : planets) {
             if (planet.getWorldName().equalsIgnoreCase(worldName)) {
+                return planet;
+            }
+        }
+        return null;
+    }
+
+    public Planet getCorruptedPlanetById(String id) {
+        for (Planet planet : corruptedPlanets) {
+            if (id.equalsIgnoreCase(String.valueOf(planet.getId()))) {
                 return planet;
             }
         }

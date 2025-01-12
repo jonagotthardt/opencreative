@@ -118,6 +118,8 @@ requirements:
   # these requirements, then world's setting
   # will be not changed.
   #
+  world-creation:
+    played-seconds: 30
   world-name:
     min-length: 4
     max-length: 30
