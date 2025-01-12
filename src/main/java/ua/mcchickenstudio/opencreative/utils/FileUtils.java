@@ -462,6 +462,7 @@ public class FileUtils {
      */
     public static void deleteFolder(File directory) {
         if (!directory.exists()) return;
+        if (directory.equals(Bukkit.getWorldContainer())) return;
         try {
             org.apache.commons.io.FileUtils.deleteDirectory(directory);
         } catch (IOException error) {

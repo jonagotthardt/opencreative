@@ -371,18 +371,18 @@ public class Planet {
     @SuppressWarnings("all")
     public long getCreationTime() {
         try {
-            return Long.parseLong(String.valueOf(getPlanetConfig(this).get("creation-time")));
+            return getPlanetConfig(this).getLong("creation-time",1670573410000L);
         } catch (Exception error) {
-            return 0;
+            return 1670573410000L;
         }
     }
 
     @SuppressWarnings("all")
     public long getLastActivityTime() {
         try {
-            return Long.parseLong(String.valueOf(getPlanetConfig(this).get("last-activity-time")));
+            return getPlanetConfig(this).getLong("last-activity-time",1670573410000L);
         } catch (Exception error) {
-            return 0;
+            return 1670573410000L;
         }
     }
 

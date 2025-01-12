@@ -139,6 +139,7 @@ public class PlanetManager {
      Delete planet on player request. It teleports planet players to spawn, closes planet, unloads world and deletes world folder.
      **/
     public void deletePlanet(Planet planet, CommandSender player) {
+        OpenCreative.getPlugin().getLogger().info("Deleting planet " + planet.getId());
         new PlanetDeletionEvent(planet).callEvent();
         try {
             for (Player p : planet.getPlayers()) {
@@ -289,6 +290,15 @@ public class PlanetManager {
     public Planet getPlanetByWorldName(String worldName) {
         for (Planet planet : planets) {
             if (planet.getWorldName().equalsIgnoreCase(worldName)) {
+                return planet;
+            }
+        }
+        return null;
+    }
+
+    public Planet getCorruptedPlanetById(String id) {
+        for (Planet planet : corruptedPlanets) {
+            if (id.equalsIgnoreCase(String.valueOf(planet.getId()))) {
                 return planet;
             }
         }

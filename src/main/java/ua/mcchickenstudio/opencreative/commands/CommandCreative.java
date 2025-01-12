@@ -437,7 +437,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                                 sender.sendMessage(getLocaleMessage("too-few-args"));
                                 return true;
                             }
-                            sender.sendMessage("Set owner to " + args[3]);
+                            sender.sendMessage(getLocaleMessage("creative.corrupted-worlds.set-owner").replace("%replace%",args[3]));
                             if (foundPlanet.getCreationTime() == 0) setPlanetConfigParameter(foundPlanet,"creation-time",System.currentTimeMillis());
                             if (foundPlanet.getLastActivityTime() == 0) setPlanetConfigParameter(foundPlanet,"last-activity-time",System.currentTimeMillis());
                             foundPlanet.setOwner(args[3]);
@@ -557,7 +557,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 tabCompleter.add("60");
                 tabCompleter.add("30");
                 tabCompleter.add("15");
-            } else if ("corrupted".equalsIgnoreCase(args[1])) {
+            } else if ("corrupted".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("owner");
                 tabCompleter.add("join");
                 tabCompleter.add("unload");
