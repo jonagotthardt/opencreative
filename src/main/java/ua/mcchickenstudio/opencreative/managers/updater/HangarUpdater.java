@@ -48,11 +48,11 @@ public class HangarUpdater implements Updater {
                     int latestVersion = getLatestVersion(response);
                     int currentVersion = getCurrentVersion();
                     if (latestVersion > currentVersion) {
-                        OpenCreative.getPlugin().getLogger().info("A new build (" + latestVersion + ") is available for downloading! Current: " + currentVersion);
+                        OpenCreative.getPlugin().getLogger().info("A new version (" + getSemVer(response) + ") is available for downloading! Current: " + getSemVer(OpenCreative.getPlugin().getPluginMeta().getVersion()));
                         OpenCreative.getPlugin().getLogger().info("Visit this site, select latest version, read changelogs and replace OpenCreative.jar with new one.");
                         OpenCreative.getPlugin().getLogger().info("https://hangar.papermc.io/mcchickenstudio/OpenCreative");
                     } else {
-                        OpenCreative.getPlugin().getLogger().info("No updates detected. (" + currentVersion + " - " + latestVersion + ")");
+                        OpenCreative.getPlugin().getLogger().info("No updates detected, probably it's latest version :) (" + currentVersion + " - " + latestVersion + ")");
                     }
                 }
             } catch (Exception error) {
@@ -101,7 +101,6 @@ public class HangarUpdater implements Updater {
 
     private int getLatestVersion(String text) {
         try {
-            System.out.println(text);
             String lastVersion = getSemVer(text);
             String[] lastVersionSplit = lastVersion.split("\\.");
             if (lastVersionSplit.length < 2) {
