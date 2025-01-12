@@ -102,15 +102,27 @@ messages:
   warnings: true # Will send warning in console
   not-found: true # Will send not found message in console
 
-execute-console-commands: # These commands will be executed on some Creative events
-  creative-chat: [] # Remove [] if there are some commands
-  #- "discordsrv broadcast Creative Chat | %player%: %message%"
-
 allowed-links:
   # These links are allowed to use in Request Resource Pack action.
   resource-pack:
     - "dropbox.com"
     - "drive.google.com"
+
+commands:
+  #
+  # These commands will be executed on
+  # some events. You can add functionality,
+  # like sending with DiscordSRV
+  #
+  onLobby: # Event (%player%)
+    first: # Command name
+      command: "" # Command to execute, without slashes /
+      delay: 0 # Delay (in ticks, 1 second = 20 ticks)
+      console: true # true - Execute as console, false - as player
+  onPlanetConnect: {} # %planet% %player%
+  onPlanetDisconnect: {} # %planet% %player%
+  onWorldChat: {} # %world% %player% %message% %formatted%
+  onCreativeChat: {} # %player% %message% %formatted%
 
 requirements:
   #
