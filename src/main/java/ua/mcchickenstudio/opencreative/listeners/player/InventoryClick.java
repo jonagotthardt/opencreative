@@ -135,7 +135,7 @@ public class InventoryClick implements Listener {
                             if (OpenCreative.getSettings().getWorldCreationMinSeconds() > playedSeconds) {
                                 player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 100, 1);
                                 player.closeInventory();
-                                player.sendMessage(getLocaleMessage("creating-world.not-enough.played",player).replace("%time%",convertTime(OpenCreative.getSettings().getWorldCreationMinSeconds()-playedSeconds)));
+                                player.sendMessage(getLocaleMessage("creating-world.not-enough-played",player).replace("%time%",convertTime(OpenCreative.getSettings().getWorldCreationMinSeconds()-playedSeconds)));
                             } else {
                                 new WorldGenerationMenu(player).open(player);
                             }

@@ -36,14 +36,17 @@ public class Group {
     private final String name;
     private final String permission;
 
-    private final int worldsLimit;
     private final int worldSize;
+    private final int worldsLimit;
     private final int codingPlatformsLimit;
 
     private final int genericCommandCooldown;
     private final int creativeChatCooldown;
     private final int advertisementCooldown;
     private final int chatCooldown;
+
+    private final double likeReward;
+    private final double advertisementPrice;
 
     private final Set<String> playPermissions = new HashSet<>();
     private final Set<String> buildPermissions = new HashSet<>();
@@ -57,6 +60,8 @@ public class Group {
         this.permission = config.getString(path + "permission","default");
         worldsLimit = config.getInt(path + "creating-world.limit",1);
         worldSize = config.getInt(path + "world.size",25);
+        likeReward = config.getInt(path + "world.like-reward",1);
+        advertisementPrice = config.getInt(path + "world.advertisement-cost",0);
         codingPlatformsLimit = config.getInt(path + "world.limits.coding-platforms",1);
         genericCommandCooldown = config.getInt(path + "cooldowns.generic-command",5);
         advertisementCooldown = config.getInt(path + "cooldowns.advertisement",120);
@@ -129,5 +134,13 @@ public class Group {
 
     public int getCodingPlatformsLimit() {
         return codingPlatformsLimit;
+    }
+
+    public double getAdvertisementPrice() {
+        return advertisementPrice;
+    }
+
+    public double getLikeReward() {
+        return likeReward;
     }
 }

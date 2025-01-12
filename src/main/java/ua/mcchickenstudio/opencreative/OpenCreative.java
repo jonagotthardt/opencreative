@@ -28,7 +28,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.CEListener;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldListener;
 import ua.mcchickenstudio.opencreative.commands.*;
 import ua.mcchickenstudio.opencreative.commands.minecraft.*;
 import ua.mcchickenstudio.opencreative.commands.world.CommandAd;
@@ -40,6 +40,7 @@ import ua.mcchickenstudio.opencreative.commands.world.modes.CommandDev;
 import ua.mcchickenstudio.opencreative.commands.world.modes.CommandPlay;
 import ua.mcchickenstudio.opencreative.commands.world.reputation.CommandDislike;
 import ua.mcchickenstudio.opencreative.commands.world.reputation.CommandLike;
+import ua.mcchickenstudio.opencreative.listeners.CreativeListener;
 import ua.mcchickenstudio.opencreative.listeners.entity.EntityDamage;
 import ua.mcchickenstudio.opencreative.listeners.entity.EntitySpawn;
 import ua.mcchickenstudio.opencreative.listeners.player.*;
@@ -49,6 +50,7 @@ import ua.mcchickenstudio.opencreative.managers.economy.Economy;
 import ua.mcchickenstudio.opencreative.managers.updater.HangarUpdater;
 import ua.mcchickenstudio.opencreative.managers.updater.Updater;
 import ua.mcchickenstudio.opencreative.menu.Menus;
+import ua.mcchickenstudio.opencreative.settings.Commands;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
@@ -242,7 +244,8 @@ public final class OpenCreative extends JavaPlugin {
                 PlayerChat.class,       PlayerInteract.class,   PlayerDropItem.class,
                 PlayerPlaceBlock.class, PlayerBreakBlock.class, PlayerBucket.class,
                 InventoryClick.class,   BlockRedstone.class,    BlockChanged.class,
-                Menus.class,            CEListener.class,       GameModeChange.class,
+                Menus.class,            WorldListener.class,       GameModeChange.class,
+                CreativeListener.class
         };
         for (Class<?> listenerClass : listeners) {
             try {

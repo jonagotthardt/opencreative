@@ -95,6 +95,16 @@ public class CommandAd implements CommandExecutor, TabCompleter {
                             PlanetInviteEvent event = new PlanetInviteEvent(foundPlanet,player,inviteReceiver);
                             event.callEvent();
                             if (event.isCancelled()) return true;
+                            if (OpenCreative.getEconomy().isEnabled()) {
+                                double playerBalance = OpenCreative.getEconomy().getBalance(player).doubleValue();
+                                double advertisementPrice = OpenCreative.getSettings().getGroups().getGroup(player).getAdvertisementPrice();
+                                if (playerBalance < advertisementPrice) {
+                                    player.sendMessage(getLocaleMessage("advertisement.no-money",player).replace("%money%",String.valueOf(Math.round(advertisementPrice-playerBalance))));
+                                    return true;
+                                } else {
+                                    OpenCreative.getEconomy().withdrawMoney(player,advertisementPrice);
+                                }
+                            }
                             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getAdvertisementCooldown(), CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND);
                             TextComponent advertisement = new TextComponent(getLocaleMessage("advertisement.message",player).replace("%world%", foundPlanet.getInformation().getDisplayName()));
                             advertisement.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(parsePlanetLines(foundPlanet,getLocaleMessage("advertisement.hover")))));

@@ -22,6 +22,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.KeyedBossBar;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.events.player.PlayerLobbyEvent;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.utils.async.AsyncScheduler;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
@@ -155,6 +156,9 @@ public class PlayerUtils {
 
         ItemStack myWorldsItem = createItem(Material.NETHER_STAR,1,"items.lobby.own","own_worlds");
         player.getInventory().setItem(5, myWorldsItem);
+
+        PlayerLobbyEvent event = new PlayerLobbyEvent(player);
+        event.callEvent();
     }
 
     /**
