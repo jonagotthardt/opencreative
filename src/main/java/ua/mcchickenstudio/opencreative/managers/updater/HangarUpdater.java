@@ -19,21 +19,18 @@
 package ua.mcchickenstudio.opencreative.managers.updater;
 
 import org.bukkit.Bukkit;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.utils.ErrorUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
 
-public class GitlabUpdater implements Updater {
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
+
+public class HangarUpdater implements Updater {
 
     private boolean updatesAvailable;
 
@@ -45,77 +42,98 @@ public class GitlabUpdater implements Updater {
                 int code = connection.getResponseCode();
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(
                         code >= 400 ? connection.getErrorStream() : connection.getInputStream()))) {
-                    char[] buffer = new char[512];
+                    char[] buffer = new char[64];
                     int read = reader.read(buffer);
                     String response = new String(buffer, 0, Math.max(0, read));
-                    int lastBuild = getLastBuildNumber(response);
-                    int currentBuild = getCurrentBuildNumber();
-                    if (lastBuild > currentBuild) {
-                        OpenCreative.getPlugin().getLogger().info("A new build (" + lastBuild + ") is available for downloading! Current: " + currentBuild);
+                    int latestVersion = getLatestVersion(response);
+                    int currentVersion = getCurrentVersion();
+                    if (latestVersion > currentVersion) {
+                        OpenCreative.getPlugin().getLogger().info("A new build (" + latestVersion + ") is available for downloading! Current: " + currentVersion);
                         OpenCreative.getPlugin().getLogger().info("Visit this site, select latest version, read changelogs and replace OpenCreative.jar with new one.");
-                        OpenCreative.getPlugin().getLogger().info("https://gitlab.com/eagles-creative/opencreative/-/packages");
+                        OpenCreative.getPlugin().getLogger().info("https://hangar.papermc.io/mcchickenstudio/OpenCreative");
+                    } else {
+                        OpenCreative.getPlugin().getLogger().info("No updates detected. (" + currentVersion + " - " + latestVersion + ")");
                     }
                 }
             } catch (Exception error) {
-                ErrorUtils.sendWarningMessage("Can't check updates",error);
+                sendDebugError("Can't check updates",error);
             }
         });
-
     }
 
     private static HttpURLConnection getHttpURLConnection() throws IOException {
-        String url = "https://gitlab.com/api/v4/projects/58168569/packages?opencreative=&order_by=created_at&sort=desc";
+        String url = "https://hangar.papermc.io/api/v1/projects/OpenCreative/latestrelease";
         URL requestUrl = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
         connection.setConnectTimeout(3000);
         connection.setReadTimeout(5000);
-        connection.setRequestMethod("POST");
-        connection.setDoOutput(true);
-        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Content-Type", "text/plain");
         return connection;
     }
 
     @Override
     public boolean canBeUpdated() {
-        return false;
+        return updatesAvailable;
     }
 
-    private int getCurrentBuildNumber() {
-        String currentVersion = OpenCreative.getPlugin().getPluginMeta().getVersion();
+    private int getCurrentVersion() {
+        String currentVersion = getSemVer(OpenCreative.getPlugin().getPluginMeta().getVersion());
         if (currentVersion.isEmpty()) {
             updatesAvailable = false;
             return 0;
         }
-        String[] currentVersionSplit = currentVersion.split(" ");
-        if (currentVersionSplit.length == 0) {
+        String[] currentVersionSplit = currentVersion.split("\\.");
+        if (currentVersionSplit.length < 2) {
             updatesAvailable = false;
             return 0;
         }
-        List<String> lastBuildList = Arrays.asList(currentVersionSplit);
-        return Integer.parseInt(lastBuildList.getLast());
+        /*
+         * Example:
+         * 5.3.0 -> 530
+         * 5.2 -> 520
+         * 5.3.2 Technical Preview -> 532
+         */
+        String semVer = currentVersion.replaceAll("\\D","")
+                + (currentVersionSplit.length == 2 ? "0" : "");
+        return Integer.parseInt(semVer);
     }
 
-    private int getLastBuildNumber(String json) {
+    private int getLatestVersion(String text) {
         try {
-            JSONParser parser = new JSONParser();
-            JSONArray array = (JSONArray) parser.parse(json);
-            JSONObject object = (JSONObject) array.getFirst();
-            String lastVersion = (String) object.get("version");
-            String[] lastVersionSplit = lastVersion.split("-");
-            if (lastVersionSplit.length == 0) {
+            System.out.println(text);
+            String lastVersion = getSemVer(text);
+            String[] lastVersionSplit = lastVersion.split("\\.");
+            if (lastVersionSplit.length < 2) {
                 updatesAvailable = false;
                 return 0;
             }
-            List<String> lastBuildList = Arrays.asList(lastVersionSplit);
-            return Integer.parseInt(lastBuildList.getLast());
+            /*
+             * Example:
+             * 5.3.0 -> 530
+             * 5.2 -> 520
+             * 5.3.2 Technical Preview -> 532
+             */
+            String semVer = lastVersion.replace(".","")
+                    + (lastVersionSplit.length == 2 ? "0" : "");
+            return Integer.parseInt(semVer);
         } catch (Exception exception) {
             return 0;
         }
     }
 
+    private String getSemVer(String version) {
+        return version.replaceAll("[^\\d.]","");
+    }
+
     @Override
     public void init() {
-        checkUpdates();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                checkUpdates();
+            }
+        }.runTaskLaterAsynchronously(OpenCreative.getPlugin(),60L);
     }
 
     @Override

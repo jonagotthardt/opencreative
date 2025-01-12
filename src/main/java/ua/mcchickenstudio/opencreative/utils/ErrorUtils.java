@@ -353,6 +353,12 @@ public class ErrorUtils {
         }
     }
 
+    public static void sendDebugError(String errorMessage, Exception error) {
+        if (OpenCreative.getSettings().isDebug()) {
+            OpenCreative.getPlugin().getLogger().severe("CRITICAL ERROR has occurred: " + errorMessage + " " + parseException(error,false));
+        }
+    }
+
     public static void sendCodingDebugNotFoundVariable(Planet planet, String name) {
         if (true) {
             return;

@@ -46,6 +46,8 @@ import ua.mcchickenstudio.opencreative.listeners.player.*;
 import ua.mcchickenstudio.opencreative.listeners.world.BlockChanged;
 import ua.mcchickenstudio.opencreative.listeners.world.BlockRedstone;
 import ua.mcchickenstudio.opencreative.managers.economy.Economy;
+import ua.mcchickenstudio.opencreative.managers.updater.HangarUpdater;
+import ua.mcchickenstudio.opencreative.managers.updater.Updater;
 import ua.mcchickenstudio.opencreative.menu.Menus;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
@@ -75,6 +77,7 @@ public final class OpenCreative extends JavaPlugin {
     private static OpenCreative plugin;
     private static Settings settings;
     private static Economy economy;
+    private static Updater updater;
 
     private static final String version = "5.3.0";
     private static final String codename = "Well, it's possible";
@@ -124,6 +127,8 @@ public final class OpenCreative extends JavaPlugin {
 
         economy = HookUtils.getEconomy();
         economy.init();
+        updater = new HangarUpdater();
+        updater.init();
 
         long loadedTime = System.currentTimeMillis()-startTime;
         for (Player player : Bukkit.getOnlinePlayers()) {
