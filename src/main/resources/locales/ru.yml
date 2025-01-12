@@ -367,7 +367,7 @@ join-usage: "%prefix%Используй &6/join ID"
 advertisement:
   message: "%prefix%&6Приглашение:\n&f &7%player% &f&nприглашает&f тебя в мир: \n&f %world%\n &f\n&a &a &n[Нажми, чтобы присоединиться]&f\n &f"
   hover: "&f%planetName%\n&8Создано %planetOwner%\n \n&a ☻ &7Онлайн: &a%planetOnline%\n&e ⭐&7 Рейтинг: &f%planetReputation%\n&3 ⚐&7 Категория: &f%planetCategory%\n \n&aНажми, чтобы подключиться в мир"
-  no-money: "%prefix%&cНужно собрать ещё %money% для рекламы мира."
+  no-money: "%prefix%&cНужно собрать ещё %money% монет для рекламы мира."
   cooldown: "%prefix%Перед следующей рекламой подожди &6%cooldown% секунд."
   closed-world: "%prefix%&fЧтобы прорекламировать мир, &6нужно сначала разрешить вход игрокам&f в настройках мира."
 items:
