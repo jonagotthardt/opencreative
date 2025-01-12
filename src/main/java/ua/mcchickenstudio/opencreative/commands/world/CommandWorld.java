@@ -72,7 +72,7 @@ public class CommandWorld implements CommandExecutor {
                         Planet planet = PlanetManager.getInstance().getPlanetByWorldName(args[1]);
                         if (planet != null) {
                             OpenCreative.getPlugin().getLogger().info("Deleting a world " + args[1] + ", please wait...");
-                            PlanetManager.getInstance().deletePlanet(planet,null);
+                            PlanetManager.getInstance().deletePlanet(planet,sender);
                         } else {
                             OpenCreative.getPlugin().getLogger().warning("This world doesn't exists" + args[1]);
                         }

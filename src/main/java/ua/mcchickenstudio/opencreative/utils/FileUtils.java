@@ -671,8 +671,8 @@ public class FileUtils {
 
     public static String getPlanetIdFromName(String name) {
         return name
-                .replace(Bukkit.getServer().getWorldContainer() + File.separator,"")
-                .replace("planets" + File.separator + "planet","");
+                .replace(Bukkit.getServer().getWorldContainer().getPath().replace("\\","/") + "/","")
+                .replace("planets/planet","");
     }
 
 }

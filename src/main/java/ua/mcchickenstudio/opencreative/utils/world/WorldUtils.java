@@ -30,12 +30,12 @@ public class WorldUtils {
 
     public static String getPlanetIdFromName(World world) {
         return world.getName()
-                .replace(Bukkit.getServer().getWorldContainer() + File.separator,"")
-                .replace("planets" + File.separator + "planet","");
+                .replace(Bukkit.getServer().getWorldContainer() + "/","")
+                .replace("planets/planet","");
     }
 
     public static boolean isPlanet(World world) {
-        return world.getName().contains("planets" + File.separator + "planet");
+        return world.getName().contains("planets/planet");
     }
 
     public enum WorldGenerator {
