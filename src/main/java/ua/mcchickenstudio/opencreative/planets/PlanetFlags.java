@@ -39,7 +39,10 @@ public class PlanetFlags {
 
     public PlanetFlags(Planet planet) {
         this.planet = planet;
-        loadFlags();
+    }
+
+    public void clear() {
+        flags.clear();
     }
 
     public enum PlanetFlag {
@@ -109,20 +112,18 @@ public class PlanetFlags {
     }
 
     public void loadFlags() {
-
-        final FileConfiguration configuration = FileUtils.getPlanetConfig(planet);
+        FileConfiguration configuration = FileUtils.getPlanetConfig(planet);
         for (PlanetFlag flag : PlanetFlag.values()) {
-            if (configuration == null) {
+            String configValue = configuration.getString(flag.getConfigPath());
+            if (configValue == null || configValue.isEmpty()) {
                 flags.put(flag,flag.getDefaultValue());
             } else {
-                String configValue = configuration.getString(flag.getConfigPath());
-                if (configValue == null || configValue.isEmpty()) {
-                    flags.put(flag,flag.getDefaultValue());
-                } else {
-                    byte value = Byte.parseByte(configValue);
-                    if (value < 1 || value > 10) value = 1;
-                    flags.put(flag, value);
-                }
+                byte value = flag.getDefaultValue();
+                try {
+                    value = Byte.parseByte(configValue);
+                } catch (NumberFormatException ignored) {}
+                if (value < 1 || value > 10) value = 1;
+                flags.put(flag, value);
             }
         }
 
@@ -139,31 +140,6 @@ public class PlanetFlags {
 
     public Map<PlanetFlag, Byte> getFlags() {
         return flags;
-    }
-
-    public List<RadioButton> getIcons() {
-        List<RadioButton> icons = new ArrayList<>();
-        for (PlanetFlag planetFlag : PlanetFlag.values()) {
-            if (planetFlag != PlanetFlag.DAY_CYCLE) {
-                int value = flags.get(planetFlag);
-                RadioButton radioButton = new RadioButton(planetFlag.getMaterial(),getLocaleItemName("menus.world-settings-flags.items." + planetFlag.getConfigPath() + ".name"),
-                        getLocaleItemDescription("menus.world-settings-flags.items." + planetFlag.getConfigPath() + ".lore"),
-                        value,planetFlag.getMaxChoices(),getDefaultActions(planet,planetFlag,planetFlag.getMaxChoices()),"menus.world-settings-flags.items." + planetFlag.getConfigPath() + ".choices",
-                        "menus.world-settings-flags");
-            }
-        }
-        return icons;
-    }
-
-    public static List<Runnable> getDefaultActions(Planet planet, PlanetFlag flag, int maxActions) {
-        List<Runnable> choicesActions = new ArrayList<>();
-
-        for (int value = 1; value <= maxActions; value++) {
-            int finalValue = value;
-            choicesActions.add(() -> FileUtils.setPlanetConfigParameter(planet,flag.getConfigPath(),finalValue));
-        }
-
-        return choicesActions;
     }
 
 }

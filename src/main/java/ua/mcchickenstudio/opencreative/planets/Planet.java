@@ -71,7 +71,6 @@ public class Planet {
 
     private final PlanetInfo info;
     private final DevPlanet devPlanet;
-    private final PlanetFlags flags;
     private final PlanetLimits limits;
     private final PlanetTerritory territory;
     private final PlanetPlayers worldPlayers;
@@ -100,7 +99,6 @@ public class Planet {
         limits = new PlanetLimits(this);
         territory = new PlanetTerritory(this);
 
-        flags = new PlanetFlags(this);
         variables = new WorldVariables(this);
         experiments = new PlanetExperiments(this);
 
@@ -345,11 +343,11 @@ public class Planet {
     }
 
     public byte getFlagValue(PlanetFlags.PlanetFlag flag) {
-        return (this.flags == null ? 1 : this.flags.getFlagValue(flag));
+        return territory.getFlags().getFlagValue(flag);
     }
 
     public void setFlagValue(PlanetFlags.PlanetFlag flag, byte value) {
-        this.flags.setFlag(flag,value);
+        territory.getFlags().setFlag(flag,value);
     }
 
     public Mode getMode() {
@@ -460,7 +458,7 @@ public class Planet {
             ownerGroup = OpenCreative.getSettings().getGroups().getGroup(player).getName().toLowerCase();
             ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
             player.getInventory().setItem(8,worldSettingsItem);
-            if (flags.getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
+            if (getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
                 player.sendMessage(getLocaleMessage("world.connecting.owner-help",player));
             }
             if (this.getDevPlanet().isLoaded()) {

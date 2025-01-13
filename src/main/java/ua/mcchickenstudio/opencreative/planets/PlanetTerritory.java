@@ -55,6 +55,7 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 public class PlanetTerritory {
 
     private final Planet planet;
+    private final PlanetFlags flags;
 
     private final Map<String, BossBar> bossBars = new HashMap<>();
     private final Map<String, Scoreboard> scoreboards = new HashMap<>();
@@ -67,6 +68,7 @@ public class PlanetTerritory {
 
     public PlanetTerritory(Planet planet) {
         this.planet = planet;
+        flags = new PlanetFlags(planet);
         script = new CodeScript(planet,getPlanetScriptFile(planet));
         loadInformation();
     }
@@ -107,6 +109,8 @@ public class PlanetTerritory {
      */
     public synchronized void load() {
         loadInformation();
+        flags.loadFlags();
+        planet.getWorldPlayers().loadPlayers();
         World world = new WorldCreator(planet.getWorldName()).environment(planet.getTerritory().getEnvironment()).keepSpawnLoaded(TriState.FALSE).createWorld();
         if (world == null) return;
         script = new CodeScript(planet,getPlanetScriptFile(planet));
@@ -163,8 +167,10 @@ public class PlanetTerritory {
         stopBukkitRunnables();
         bossBars.clear();
         scoreboards.clear();
+        flags.clear();
         script.getExecutors().getExecutorsList().clear();
         planet.getVariables().clearVariables();
+        planet.getWorldPlayers().clear();
     }
 
     public void addBukkitRunnable(BukkitRunnable runnable) {
@@ -182,6 +188,10 @@ public class PlanetTerritory {
             } catch (IllegalStateException ignored) {}
         }
         runningBukkitRunnables.clear();
+    }
+
+    public PlanetFlags getFlags() {
+        return flags;
     }
 
     public Map<String, Scoreboard> getScoreboards() {
