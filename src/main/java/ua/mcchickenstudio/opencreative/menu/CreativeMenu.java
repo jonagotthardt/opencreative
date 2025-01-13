@@ -47,7 +47,6 @@ public class CreativeMenu extends AbstractMenu {
         setItem(10,DECORATION_ITEM);
         setItem(16,DECORATION_ITEM);
         setItem(17,DECORATION_PANE_ITEM);
-        setItem(29,DECORATION_ITEM);
         setItem(18,DECORATION_PANE_ITEM);
         setItem(19,DECORATION_ITEM);
         setItem(25,DECORATION_ITEM);
