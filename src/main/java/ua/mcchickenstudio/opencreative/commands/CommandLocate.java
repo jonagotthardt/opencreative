@@ -20,10 +20,9 @@ package ua.mcchickenstudio.opencreative.commands;
 
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -41,27 +40,44 @@ public class CommandLocate implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (args.length > 0) {
-            String nickname = args[0];
-            Player player = Bukkit.getPlayer(nickname);
-            if (player != null) {
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-                if (planet != null) {
-                    String message = parsePlanetLines(planet,parsePAPI(player,getLocaleMessage("locate.found").replace("%player%",player.getName())));
-                    TextComponent advertisement = new TextComponent(message);
-                    advertisement.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(parsePlanetLines(planet,getLocaleMessage("advertisement.hover")))));
-                    advertisement.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ad " + planet.getId()));
-                    sender.sendMessage(advertisement);
-                } else {
-                    sender.sendMessage(getLocaleMessage("locate.offline"));
-                }
-            } else {
-                sender.sendMessage(getLocaleMessage("locate.offline"));
-            }
-        } else {
+        if (args.length == 0) {
             sender.sendMessage(getLocaleMessage("locate.help"));
+            return true;
         }
+
+        String nickname = args[0];
+        Player player = Bukkit.getPlayer(nickname);
+
+        if (player == null) {
+            sender.sendMessage(getLocaleMessage("locate.offline"));
+            return true;
+        }
+
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+
+        if (planet == null) {
+            sender.sendMessage(getLocaleMessage("locate.offline"));
+            return true;
+        }
+
+        sendLocateMessage(sender, player, planet);
         return true;
+    }
+
+    private void sendLocateMessage(CommandSender sender, Player player, Planet planet) {
+        String locateMessage = parsePlanetLines(planet, parsePAPI(player,
+                getLocaleMessage("locate.found").replace("%player%", player.getName())));
+        String hoverText = parsePlanetLines(planet, getLocaleMessage("advertisement.hover"));
+        String clickCommand = "/ad " + planet.getId();
+
+        Component messageComponent = toComponent(locateMessage);
+        Component hoverComponent = toComponent(hoverText);
+
+        Component message = messageComponent
+                .hoverEvent(HoverEvent.showText(hoverComponent))
+                .clickEvent(ClickEvent.runCommand(clickCommand));
+
+        sender.sendMessage(message);
     }
 
     @Override
