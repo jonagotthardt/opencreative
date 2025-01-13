@@ -33,6 +33,12 @@ import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
+/**
+ * <h1>PlanetPlayers</h1>
+ * This class represents a planet players with
+ * data and statuses, like building or development
+ * permissions.
+ */
 public class PlanetPlayers {
 
     private final Planet planet;
@@ -50,7 +56,6 @@ public class PlanetPlayers {
 
     public PlanetPlayers(Planet planet) {
         this.planet = planet;
-        loadPlayers();
     }
 
     public void registerPlayer(Player player) {
@@ -71,8 +76,19 @@ public class PlanetPlayers {
         return null;
     }
 
-    private void loadPlayers() {
+    public void clear() {
+        buildersTrusted.clear();
+        developersTrusted.clear();
+        buildersNotTrusted.clear();
+        developersNotTrusted.clear();
+        developersGuests.clear();
+        bannedPlayers.clear();
+    }
+
+    public void loadPlayers() {
+        clear();
         FileConfiguration config = getPlanetConfig(planet);
+
         buildersTrusted.addAll(config.getStringList("players.builders.trusted"));
         developersTrusted.addAll(config.getStringList("players.developers.trusted"));
 
@@ -84,15 +100,15 @@ public class PlanetPlayers {
     }
 
     public Set<String> getAllBuilders() {
-        Set<String> builders = new HashSet<>(buildersTrusted);
-        builders.addAll(buildersNotTrusted);
+        Set<String> builders = new HashSet<>(getBuildersTrusted());
+        builders.addAll(getBuildersNotTrusted());
         return builders;
     }
 
     public Set<String> getAllDevelopers() {
-        Set<String> developers = new HashSet<>(developersTrusted);
-        developers.addAll(developersNotTrusted);
-        developers.addAll(developersGuests);
+        Set<String> developers = new HashSet<>(getDevelopersTrusted());
+        developers.addAll(getDevelopersNotTrusted());
+        developers.addAll(getDevelopersGuests());
         return developers;
     }
 
@@ -103,7 +119,7 @@ public class PlanetPlayers {
         if (player.hasPermission("opencreative.world.dev.others")) {
             return true;
         }
-        for (String nickname : developersTrusted) {
+        for (String nickname : getDevelopersTrusted()) {
             if (nickname.equalsIgnoreCase(player.getName())) {
                 return true;
             }
@@ -112,7 +128,7 @@ public class PlanetPlayers {
     }
 
     public boolean isNotTrustedDeveloper(Player player) {
-        for (String nickname : developersNotTrusted) {
+        for (String nickname : getDevelopersNotTrusted()) {
             if (nickname.equalsIgnoreCase(player.getName())) {
                 return true;
             }
@@ -121,7 +137,7 @@ public class PlanetPlayers {
     }
 
     public boolean isNotTrustedBuilder(Player player) {
-        for (String nickname : buildersNotTrusted) {
+        for (String nickname : getBuildersNotTrusted()) {
             if (nickname.equalsIgnoreCase(player.getName())) {
                 return true;
             }
@@ -136,7 +152,7 @@ public class PlanetPlayers {
         if (player.hasPermission("opencreative.world.build.others")) {
             return true;
         }
-        for (String nickname : buildersTrusted) {
+        for (String nickname : getBuildersTrusted()) {
             if (nickname.equalsIgnoreCase(player.getName())) {
                 return true;
             }
@@ -145,7 +161,7 @@ public class PlanetPlayers {
     }
 
     public boolean isDeveloperGuest(Player player) {
-        for (String nickname : developersGuests) {
+        for (String nickname : getDevelopersGuests()) {
             if (nickname.equalsIgnoreCase(player.getName())) {
                 return true;
             }
@@ -160,7 +176,7 @@ public class PlanetPlayers {
         if (player.hasPermission("opencreative.world.dev.others")) {
             return true;
         }
-        for (String nickname : developersTrusted) {
+        for (String nickname : getDevelopersTrusted()) {
             if (nickname.equalsIgnoreCase(player.getName())) {
                 return true;
             }
@@ -172,7 +188,7 @@ public class PlanetPlayers {
         if (!planet.equals(PlanetManager.getInstance().getPlanetByPlayer(owner))) {
             return false;
         }
-        for (String nickname : developersNotTrusted) {
+        for (String nickname : getDevelopersNotTrusted()) {
             if (nickname.equalsIgnoreCase(player.getName())) {
                 return true;
             }
@@ -187,7 +203,7 @@ public class PlanetPlayers {
         if (player.hasPermission("opencreative.world.build.others")) {
             return true;
         }
-        for (String nickname : buildersTrusted) {
+        for (String nickname : getBuildersTrusted()) {
             if (nickname.equalsIgnoreCase(player.getName())) {
                 return true;
             }
@@ -199,7 +215,7 @@ public class PlanetPlayers {
         if (!planet.equals(PlanetManager.getInstance().getPlanetByPlayer(owner))) {
             return false;
         }
-        for (String nickname : buildersNotTrusted) {
+        for (String nickname : getBuildersNotTrusted()) {
             if (nickname.equalsIgnoreCase(player.getName())) {
                 return true;
             }
@@ -217,6 +233,7 @@ public class PlanetPlayers {
                 }
             }
         }
+        if (!planet.isLoaded()) loadPlayers();
         buildersNotTrusted.removeIf(builder -> builder.equalsIgnoreCase(nickname));
         buildersTrusted.removeIf(builder -> builder.equalsIgnoreCase(nickname));
         setPlanetConfigParameter(planet,"players.builders.not-trusted",buildersNotTrusted);
@@ -237,6 +254,7 @@ public class PlanetPlayers {
                 }
             }
         }
+        if (!planet.isLoaded()) loadPlayers();
         developersNotTrusted.removeIf(developer -> developer.equalsIgnoreCase(nickname));
         developersTrusted.removeIf(developer -> developer.equalsIgnoreCase(nickname));
         setPlanetConfigParameter(planet,"players.developers.not-trusted",developersNotTrusted);
@@ -252,6 +270,7 @@ public class PlanetPlayers {
                 player.playSound(player.getLocation(),Sound.ENTITY_CAT_AMBIENT,100,1);
             }
         }
+        if (!planet.isLoaded()) loadPlayers();
         developersGuests.add(nickname);
         developersNotTrusted.removeIf(developer -> developer.equalsIgnoreCase(nickname));
         developersTrusted.removeIf(developer -> developer.equalsIgnoreCase(nickname));
@@ -273,6 +292,7 @@ public class PlanetPlayers {
                 }
             }
         }
+        if (!planet.isLoaded()) loadPlayers();
         if (trusted) {
             developersNotTrusted.removeIf(developer -> developer.equalsIgnoreCase(nickname));
             developersTrusted.add(nickname);
@@ -301,6 +321,7 @@ public class PlanetPlayers {
                 }
             }
         }
+        if (!planet.isLoaded()) loadPlayers();
         if (trusted) {
             buildersNotTrusted.removeIf(builder -> builder.equalsIgnoreCase(nickname));
             buildersTrusted.add(nickname);
@@ -310,11 +331,14 @@ public class PlanetPlayers {
         }
         setPlanetConfigParameter(planet,"players.builders.not-trusted",buildersNotTrusted);
         setPlanetConfigParameter(planet,"players.builders.trusted",buildersTrusted);
+        if (!planet.isLoaded()) clear();
     }
 
     public void unbanPlayer(String nickname) {
+        if (!planet.isLoaded()) loadPlayers();
         this.bannedPlayers.removeIf(ban -> ban.equalsIgnoreCase(nickname));
         setPlanetConfigParameter(planet,"players.blacklist",bannedPlayers);
+        if (!planet.isLoaded()) clear();
     }
 
     public void banPlayer(String nickname) {
@@ -328,7 +352,9 @@ public class PlanetPlayers {
                 bannedPlayers.add(player.getName());
             }
         }
+        if (!planet.isLoaded()) loadPlayers();
         setPlanetConfigParameter(planet,"players.blacklist",bannedPlayers);
+        if (!planet.isLoaded()) clear();
     }
 
     public void kickPlayer(Player player) {
@@ -343,33 +369,48 @@ public class PlanetPlayers {
     public Set<String> getAllPlayersFromConfig() {
         Set<String> allPlayers = new HashSet<>();
         planet.getPlayers().forEach(player -> allPlayers.add(player.getName()));
-        allPlayers.addAll(buildersTrusted);
-        allPlayers.addAll(buildersNotTrusted);
-        allPlayers.addAll(developersTrusted);
-        allPlayers.addAll(developersNotTrusted);
-        allPlayers.addAll(developersGuests);
-        allPlayers.addAll(bannedPlayers);
+        allPlayers.addAll(getBuildersTrusted());
+        allPlayers.addAll(getBuildersNotTrusted());
+        allPlayers.addAll(getDevelopersTrusted());
+        allPlayers.addAll(getDevelopersNotTrusted());
+        allPlayers.addAll(getDevelopersGuests());
+        allPlayers.addAll(getBannedPlayers());
         allPlayers.remove(planet.getOwner());
         return allPlayers;
     }
 
     public Set<String> getBuildersTrusted() {
+        if (!planet.isLoaded()) {
+            return new HashSet<>(getPlanetConfig(planet).getStringList("players.builders.trusted"));
+        }
         return new HashSet<>(buildersTrusted);
     }
 
     public Set<String> getBuildersNotTrusted() {
+        if (!planet.isLoaded()) {
+            return new HashSet<>(getPlanetConfig(planet).getStringList("players.builders.not-trusted"));
+        }
         return new HashSet<>(buildersNotTrusted);
     }
 
     public Set<String> getDevelopersGuests() {
+        if (!planet.isLoaded()) {
+            return new HashSet<>(getPlanetConfig(planet).getStringList("players.developers.guests"));
+        }
         return new HashSet<>(developersGuests);
     }
 
     public Set<String> getDevelopersTrusted() {
+        if (!planet.isLoaded()) {
+            return new HashSet<>(getPlanetConfig(planet).getStringList("players.developers.trusted"));
+        }
         return new HashSet<>(developersTrusted);
     }
 
     public Set<String> getDevelopersNotTrusted() {
+        if (!planet.isLoaded()) {
+            return new HashSet<>(getPlanetConfig(planet).getStringList("players.developers.not-trusted"));
+        }
         return new HashSet<>(developersNotTrusted);
     }
 
@@ -382,7 +423,7 @@ public class PlanetPlayers {
     }
 
     public boolean isBanned(String nickname) {
-        for (String banned : bannedPlayers) {
+        for (String banned : getBannedPlayers()) {
             if (banned.equalsIgnoreCase(nickname)) {
                 return true;
             }
@@ -391,17 +432,15 @@ public class PlanetPlayers {
     }
 
     public Set<String> getBannedPlayers() {
+        if (!planet.isLoaded()) {
+            return new HashSet<>(getPlanetConfig(planet).getStringList("players.blacklist"));
+        }
         return bannedPlayers;
     }
 
     public void purgeData() {
         List<String> empty = new ArrayList<>();
-        buildersTrusted.clear();
-        buildersNotTrusted.clear();
-        developersGuests.clear();
-        developersTrusted.clear();
-        developersNotTrusted.clear();
-        bannedPlayers.clear();
+        clear();
         setPlanetConfigParameter(planet,"players.unique",empty);
         setPlanetConfigParameter(planet,"players.liked",empty);
         setPlanetConfigParameter(planet,"players.disliked",empty);
