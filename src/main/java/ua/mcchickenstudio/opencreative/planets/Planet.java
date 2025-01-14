@@ -225,7 +225,7 @@ public class Planet {
     }
 
     public String getWorldName() {
-        return getPlanetsStorageFolder().getPath().replace("\\","/") + "/planet" + id;
+        return "./planets/planet" + id;
     }
 
     public int getId() {
@@ -386,11 +386,10 @@ public class Planet {
 
     public List<Player> getPlayers() {
         List<Player> playerList = new ArrayList<>();
-        if (this.territory.getWorld() != null) {
-            playerList.addAll(this.territory.getWorld().getPlayers());
-            if (getDevPlanet() != null && getDevPlanet().getWorld() != null) {
-                playerList.addAll(getDevPlanet().getWorld().getPlayers());
-            }
+        if (!isLoaded()) return playerList;
+        playerList.addAll(territory.getWorld().getPlayers());
+        if (getDevPlanet().isLoaded()) {
+            playerList.addAll(getDevPlanet().getWorld().getPlayers());
         }
         return playerList;
     }

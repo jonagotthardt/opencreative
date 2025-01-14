@@ -238,14 +238,24 @@ public class PlanetManager {
      Returns planet where specified player in.
      **/
     public Planet getPlanetByPlayer(Player player) {
-        return getPlanetByWorld(player.getWorld());
+        World world = player.getWorld();
+        if (!isPlanet(world)) return null;
+        String id = world.getName().replace("./planets/planet","");
+        for (Planet planet : planets) {
+            if (id.equals(String.valueOf(planet.getId()))) {
+                return planet;
+            }
+        }
+        return null;
     }
 
     /**
      Returns developer planet where specified player in.
      **/
     public DevPlanet getDevPlanet(Player player) {
-        return getDevPlanet(player.getWorld());
+        if (!isDevPlanet(player.getWorld())) return null;
+        Planet planet = getPlanetByPlayer(player);
+        return planet != null ? planet.getDevPlanet() : null;
     }
 
     public DevPlanet getDevPlanet(World world) {
