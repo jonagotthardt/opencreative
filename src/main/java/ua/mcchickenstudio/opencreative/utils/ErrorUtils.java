@@ -98,7 +98,10 @@ public class ErrorUtils {
                 "This plugin ate a sparc! Gah!", "I blame PEOPLE BELOW for this.", "Well, it's possible. <-- (our catchphrase)",
                 "Bug after bug, after bug, it never ends.", "I'll get out of this problem tonight.",
                 "Try not to think about how long bug was here.", "You'll get one bug instead of zero.",
-                "Totally powered by Java.", "Totally Minecraft plugin."
+                "Totally powered by Java.", "Totally Minecraft plugin.", "Can someone just show me the fix?",
+                "Errors in the plugin that never ends", "It might just work if we can try not to go insane",
+                "Try not to panic when you see this", "This is not supposed to be here",
+                ":( Your PLUGIN ran into a problem."
         };
         return phrases[new Random().nextInt(phrases.length)];
     }

@@ -38,6 +38,8 @@ import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isPlanet;
 
 public class PlanetManager {
 
@@ -236,33 +238,20 @@ public class PlanetManager {
      Returns planet where specified player in.
      **/
     public Planet getPlanetByPlayer(Player player) {
-        for (Planet planet : planets) {
-            if (planet.getPlayers().contains(player)) {
-                return planet;
-            }
-        }
-        return null;
+        return getPlanetByWorld(player.getWorld());
     }
 
     /**
      Returns developer planet where specified player in.
      **/
     public DevPlanet getDevPlanet(Player player) {
-        for (Planet planet : planets) {
-            if (planet.getDevPlanet() != null && planet.getDevPlanet().getWorld() != null) {
-                if (planet.getPlayers().contains(player)) {
-                    if (planet.getDevPlanet().getWorld().getPlayers().contains(player)) {
-                        return planet.getDevPlanet();
-                    }
-                }
-            }
-        }
-        return null;
+        return getDevPlanet(player.getWorld());
     }
 
     public DevPlanet getDevPlanet(World world) {
+        if (!isDevPlanet(world)) return null;
         for (Planet planet : planets) {
-            if (planet.getDevPlanet() != null && world.equals(planet.getDevPlanet().getWorld())) {
+            if (world.equals(planet.getDevPlanet().getWorld())) {
                 return planet.getDevPlanet();
             }
         }
@@ -273,6 +262,7 @@ public class PlanetManager {
      Returns planet that has same specified world.
      **/
     public Planet getPlanetByWorld(World world) {
+        if (!isPlanet(world)) return null;
         for (Planet planet : planets) {
             if (world.equals(planet.getTerritory().getWorld())) {
                 return planet;
