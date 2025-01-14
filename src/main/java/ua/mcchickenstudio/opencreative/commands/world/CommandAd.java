@@ -27,9 +27,7 @@ import ua.mcchickenstudio.opencreative.events.planet.PlanetAdvertisementEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetInviteEvent;
@@ -44,7 +42,7 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
-public class CommandAd implements CommandExecutor, TabCompleter {
+public class CommandAd extends CommandJoin {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
@@ -118,30 +116,6 @@ public class CommandAd implements CommandExecutor, TabCompleter {
         }
     }
 
-    private void handlePlayerConnection(Player player, String planetId) {
-        if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-            player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
-            return;
-        }
-        setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
-
-        Planet foundPlanet = findPlanet(planetId);
-
-        if (foundPlanet == null) {
-            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY, 100, 2);
-            player.clearTitle();
-            player.sendMessage(getLocaleMessage("no-planet-found", player));
-            return;
-        }
-
-        if (foundPlanet.equals(PlanetManager.getInstance().getPlanetByPlayer(player))) {
-            player.sendMessage(getLocaleMessage("same-world", player));
-            return;
-        }
-
-        foundPlanet.connectPlayer(player);
-    }
-
     private void handlePlanetInvitation(Player player, String planetId, String inviteeName) {
         Player inviteReceiver = Bukkit.getPlayer(inviteeName);
 
@@ -200,18 +174,6 @@ public class CommandAd implements CommandExecutor, TabCompleter {
                 .clickEvent(ClickEvent.runCommand(clickCommand));
 
         return advertisement;
-    }
-
-    private Planet findPlanet(String planetId) {
-        if (PlanetManager.getInstance().getPlanets().isEmpty()) return null;
-
-        for (Planet searchablePlanet : PlanetManager.getInstance().getPlanets()) {
-            if (String.valueOf(searchablePlanet.getId()).equals(planetId) ||
-                    searchablePlanet.getInformation().getCustomID().equalsIgnoreCase(planetId)) {
-                return searchablePlanet;
-            }
-        }
-        return null;
     }
 
     @Override
