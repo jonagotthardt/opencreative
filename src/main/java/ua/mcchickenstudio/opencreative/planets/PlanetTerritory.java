@@ -61,7 +61,7 @@ public class PlanetTerritory {
     private final Map<String, Scoreboard> scoreboards = new HashMap<>();
     private final List<BukkitRunnable> runningBukkitRunnables = new ArrayList<>();
 
-    private CodeScript script;
+    private final CodeScript script;
     private int worldSize = 25;
     private World.Environment environment;
     private boolean autoSave = true;
@@ -69,7 +69,7 @@ public class PlanetTerritory {
     public PlanetTerritory(Planet planet) {
         this.planet = planet;
         flags = new PlanetFlags(planet);
-        script = new CodeScript(planet,getPlanetScriptFile(planet));
+        script = new CodeScript(planet);
         loadInformation();
     }
 
@@ -113,7 +113,6 @@ public class PlanetTerritory {
         planet.getWorldPlayers().loadPlayers();
         World world = new WorldCreator(planet.getWorldName()).environment(planet.getTerritory().getEnvironment()).keepSpawnLoaded(TriState.FALSE).createWorld();
         if (world == null) return;
-        script = new CodeScript(planet,getPlanetScriptFile(planet));
         world.setAutoSave(autoSave);
         world.setGameRule(GameRule.SPAWN_CHUNK_RADIUS,1);
         if (world.getEnvironment() == World.Environment.THE_END) {
@@ -155,10 +154,7 @@ public class PlanetTerritory {
         clearData();
         Bukkit.unloadWorld(planet.getWorldName(),autoSave);
         if (planet.getDevPlanet().isLoaded()) {
-            for (Player player : planet.getDevPlanet().getWorld().getPlayers()) {
-                teleportToLobby(player);
-            }
-            Bukkit.unloadWorld(planet.getDevPlanet().getWorldName(),true);
+            planet.getDevPlanet().unload();
         }
         new PlanetUnloadEvent(planet).callEvent();
     }
@@ -171,6 +167,7 @@ public class PlanetTerritory {
         script.getExecutors().getExecutorsList().clear();
         planet.getVariables().clearVariables();
         planet.getWorldPlayers().clear();
+        script.unload();
     }
 
     public void addBukkitRunnable(BukkitRunnable runnable) {
@@ -268,8 +265,6 @@ public class PlanetTerritory {
             } else if (worldGenerator == WorldUtils.WorldGenerator.WATER) {
                 world.setSpawnLocation(0, 8, 0);
             }
-
-            script = new CodeScript(planet,getPlanetScriptFile(planet));
 
             for (Entity entity : world.getEntities()) {
                 if (entity.getType() != EntityType.PLAYER) entity.remove();

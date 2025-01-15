@@ -36,6 +36,7 @@ import java.util.*;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getSignLine;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 
 /**
  * <h1>DevPlanet</h1>
@@ -68,7 +69,9 @@ public class DevPlanet {
 
     public void loadDevPlanetWorld() {
         if (this.exists()) {
-            Bukkit.createWorld(new WorldCreator(this.getWorldName()).type(WorldType.FLAT).generator(new DevPlanetChunkGenerator()));
+            Bukkit.createWorld(new WorldCreator(this.getWorldName())
+                    .type(WorldType.FLAT)
+                    .generator(new DevPlanetChunkGenerator()));
             if (getWorld() != null) {
                 if (getWorld().getBlockAt(4,0,4).isEmpty()) {
                     createPlatform(1,1);
@@ -435,5 +438,13 @@ public class DevPlanet {
 
     public World getWorld() {
         return Bukkit.getWorld(getWorldName());
+    }
+
+    public void unload() {
+        if (!isLoaded()) return;
+        for (Player player : getWorld().getPlayers()) {
+            teleportToLobby(player);
+        }
+        Bukkit.unloadWorld(getWorldName(),true);
     }
 }

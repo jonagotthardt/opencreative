@@ -26,8 +26,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.BlockA
 @UtilityClass
 public class Ticker {
     public static void runTicker() {
-        Bukkit.getScheduler().runTaskTimerAsynchronously(OpenCreative.getPlugin(), () -> {
+        /*Bukkit.getScheduler().runTaskTimerAsynchronously(OpenCreative.getPlugin(), () -> {
             AsyncScheduler.run(BlockActionCoverage::tick);
-        }, 1L, 1L);
+        }, 1L, 1L);*/
     }
 }

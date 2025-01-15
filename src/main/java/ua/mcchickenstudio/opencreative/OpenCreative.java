@@ -117,7 +117,7 @@ public final class OpenCreative extends JavaPlugin {
         }
         registerCommands();
         registerEvents();
-        Ticker.runTicker();
+        //Ticker.runTicker();
         saveDefaultConfig();
         settings = new Settings();
         settings.load(getConfig());

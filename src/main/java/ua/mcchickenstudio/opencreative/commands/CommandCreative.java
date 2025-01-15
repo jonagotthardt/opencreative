@@ -104,7 +104,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return true;
                     }
-                    Planet planet = PlanetManager.getInstance().getPlanetByWorldName("planet" + args[1]);
+                    Planet planet = PlanetManager.getInstance().getPlanetByWorldName("./planets/planet" + args[1]);
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
                         return true;
@@ -125,13 +125,16 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return true;
                     }
-                    Planet planet = PlanetManager.getInstance().getPlanetByWorldName("planet" + args[1].replace("dev",""));
+                    Planet planet = PlanetManager.getInstance().getPlanetByWorldName("./planets/planet" + args[1].replace("dev",""));
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
                         return true;
                     }
                     if (!planet.isLoaded()) {
                         planet.getTerritory().load();
+                        sender.sendMessage(getLocaleMessage("world.loaded").replace("%id%",args[1]));
+                    } else if (args[1].contains("dev") && !planet.getDevPlanet().isLoaded()) {
+                        planet.getDevPlanet().loadDevPlanetWorld();
                         sender.sendMessage(getLocaleMessage("world.loaded").replace("%id%",args[1]));
                     } else {
                         sender.sendMessage(getLocaleMessage("world.already-loaded").replace("%id%",args[1]));
@@ -146,7 +149,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return true;
                     }
-                    Planet planet = PlanetManager.getInstance().getPlanetByWorldName("planet" + args[1].replace("dev",""));
+                    Planet planet = PlanetManager.getInstance().getPlanetByWorldName("./planets/planet" + args[1].replace("dev",""));
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
                         return true;
@@ -322,13 +325,16 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return true;
                     }
-                    Planet planet = PlanetManager.getInstance().getPlanetByWorldName("planet" + args[1]);
+                    Planet planet = PlanetManager.getInstance().getPlanetByWorldName("./planets/planet" + args[1]);
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
                         return true;
                     }
                     if (planet.isLoaded()) {
                         planet.getTerritory().unload();
+                        sender.sendMessage(getLocaleMessage("world.unloaded").replace("%id%",args[1]));
+                    } else if (args[1].contains("dev") && planet.getDevPlanet().isLoaded()) {
+                        planet.getDevPlanet().unload();
                         sender.sendMessage(getLocaleMessage("world.unloaded").replace("%id%",args[1]));
                     } else {
                         sender.sendMessage(getLocaleMessage("world.already-unloaded").replace("%id%",args[1]));

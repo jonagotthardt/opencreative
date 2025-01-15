@@ -136,29 +136,28 @@ public class PlayerUtils {
      * @param player specified player to teleport.
      **/
     public static void teleportToLobby(Player player) {
-
         World lobbyWorld = getLobbyWorld();
-        if (lobbyWorld != null) {
-            player.teleport(lobbyWorld.getSpawnLocation());
-        }
-        clearPlayer(player);
+        player.teleportAsync(lobbyWorld != null ? lobbyWorld.getSpawnLocation() : player.getLocation()).thenAccept(success -> {
+            clearPlayer(player);
+            if (success) {
+                player.showTitle(Title.title(
+                        toComponent(getLocaleMessage("lobby.title")), toComponent(getLocaleMessage("lobby.subtitle")),
+                        Title.Times.times(Duration.ofSeconds(1), Duration.ofSeconds(3), Duration.ofSeconds(1))
+                ));
+                player.sendMessage(toComponent(getLocaleMessage("lobby.message")));
+                player.playSound(player.getLocation(),Sound.BLOCK_BEACON_DEACTIVATE,100,1.5f);
+                player.playSound(player.getLocation(), OpenCreative.getPlugin().getConfig().getString("lobby.sound.name","music_disc.precipice") ,100,(float) OpenCreative.getPlugin().getConfig().getDouble("lobby.sound.pitch",0.1f));
 
-        player.showTitle(Title.title(
-                toComponent(getLocaleMessage("lobby.title")), toComponent(getLocaleMessage("lobby.subtitle")),
-                Title.Times.times(Duration.ofSeconds(1), Duration.ofSeconds(3), Duration.ofSeconds(1))
-        ));
-        player.sendMessage(toComponent(getLocaleMessage("lobby.message")));
-        player.playSound(player.getLocation(),Sound.BLOCK_BEACON_DEACTIVATE,100,1.5f);
-        player.playSound(player.getLocation(), OpenCreative.getPlugin().getConfig().getString("lobby.sound.name","music_disc.precipice") ,100,(float) OpenCreative.getPlugin().getConfig().getDouble("lobby.sound.pitch",0.1f));
+                ItemStack gamesItem = createItem(Material.COMPASS,1,"items.lobby.games","worlds");
+                player.getInventory().setItem(3, gamesItem);
 
-        ItemStack gamesItem = createItem(Material.COMPASS,1,"items.lobby.games","worlds");
-        player.getInventory().setItem(3, gamesItem);
+                ItemStack myWorldsItem = createItem(Material.NETHER_STAR,1,"items.lobby.own","own_worlds");
+                player.getInventory().setItem(5, myWorldsItem);
 
-        ItemStack myWorldsItem = createItem(Material.NETHER_STAR,1,"items.lobby.own","own_worlds");
-        player.getInventory().setItem(5, myWorldsItem);
-
-        PlayerLobbyEvent event = new PlayerLobbyEvent(player);
-        event.callEvent();
+                PlayerLobbyEvent event = new PlayerLobbyEvent(player);
+                event.callEvent();
+            }
+        });
     }
 
     /**
