@@ -320,7 +320,7 @@ public class PlayerChat implements Listener {
                 String pattern = OpenCreative.getSettings().getCustomIdPattern();
                 if (input.length() > OpenCreative.getSettings().getCustomIdMaxLength()
                         || input.length() < OpenCreative.getSettings().getCustomIdMinLength()
-                        || Character.isDigit(input.charAt(0)) || input.matches(pattern)) {
+                        || Character.isDigit(input.charAt(0)) || !input.matches(pattern)) {
                     player.sendMessage(getLocaleMessage("settings.world-id.error")
                             .replace("%min%",String.valueOf(OpenCreative.getSettings().getCustomIdMinLength()))
                             .replace("%max%",String.valueOf(OpenCreative.getSettings().getCustomIdMaxLength())));

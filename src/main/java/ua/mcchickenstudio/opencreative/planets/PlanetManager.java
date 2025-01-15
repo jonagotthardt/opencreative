@@ -240,7 +240,9 @@ public class PlanetManager {
     public Planet getPlanetByPlayer(Player player) {
         World world = player.getWorld();
         if (!isPlanet(world)) return null;
-        String id = world.getName().replace("./planets/planet","");
+        String id = world.getName()
+                .replace("./planets/planet","")
+                .replace("dev","");
         for (Planet planet : planets) {
             if (id.equals(String.valueOf(planet.getId()))) {
                 return planet;
