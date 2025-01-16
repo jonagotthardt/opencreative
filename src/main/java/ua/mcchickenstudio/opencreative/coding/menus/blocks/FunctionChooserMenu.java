@@ -37,6 +37,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.time.Duration;
 import java.util.*;
@@ -122,7 +123,7 @@ public class FunctionChooserMenu extends ListBrowserMenu<Location> {
                         toComponent(getLocaleMessage("menus.developer.function-chooser.chosen")), Component.text(name).color(NamedTextColor.BLUE),
                         Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
-                ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE,100,1.2f);
+                Sounds.DEV_SET_FUNCTION.playSound(event.getWhoClicked());
             }
         }
         event.setCancelled(true);

@@ -22,6 +22,7 @@ import org.bukkit.command.CommandSender;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetDeletionEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetRegisterEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.*;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
@@ -110,7 +111,7 @@ public class PlanetManager {
                     Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(9), Duration.ofSeconds(2))
             ));
             owner.sendMessage(getLocaleMessage("creating-world.welcome"));
-            owner.playSound(owner.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE,100,0.1f);
+            Sounds.WELCOME_TO_NEW_WORLD.playSound(owner);
             owner.setGameMode(GameMode.CREATIVE);
             ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
             owner.getInventory().setItem(8,worldSettingsItem);
@@ -274,7 +275,7 @@ public class PlanetManager {
      Returns planet that has same specified world.
      **/
     public Planet getPlanetByWorld(World world) {
-        if (!isPlanet(world)) return null;
+        if (!isPlanet(world) && !isDevPlanet(world)) return null;
         for (Planet planet : planets) {
             if (world.equals(planet.getTerritory().getWorld())) {
                 return planet;

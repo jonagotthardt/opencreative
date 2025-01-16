@@ -37,6 +37,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.time.Duration;
 import java.util.*;
@@ -93,7 +94,7 @@ public abstract class CodingBlockTypesMenu extends ListBrowserMenu<Object> {
         event.setCancelled(true);
         MenusCategory category = MenusCategory.getByMaterial(clicked.getType());
         if (category != null) {
-            ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ITEM_BOOK_PAGE_TURN,100f,0.5f);
+            Sounds.DEV_CHANGE_CATEGORY.playSound(event.getWhoClicked());
             currentCategory = category;
             elements.clear();
             elements.addAll(getElements());
@@ -136,7 +137,11 @@ public abstract class CodingBlockTypesMenu extends ListBrowserMenu<Object> {
                         toComponent(getLocaleMessage("world.dev-mode.set-" + codingBlockName)), item.getItemMeta().displayName(),
                         Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(1), Duration.ofMillis(750))
                 ));
-                getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 100, 1.7f);
+                switch (codingBlockName) {
+                    case "events" -> Sounds.DEV_SET_EVENT.playSound(event.getWhoClicked());
+                    case "actions" -> Sounds.DEV_SET_ACTION.playSound(event.getWhoClicked());
+                    case "conditions" -> Sounds.DEV_SET_CONDITION.playSound(event.getWhoClicked());
+                }
             }
             /*
              Setting a chest block if action requires container.

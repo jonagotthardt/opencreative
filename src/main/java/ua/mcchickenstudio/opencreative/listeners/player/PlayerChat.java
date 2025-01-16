@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
+import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.events.player.WorldChatEvent;
@@ -59,62 +61,69 @@ public class PlayerChat implements Listener {
     public static final Map<Player, PlayerConfirmation> confirmation = new HashMap<>();
 
     @EventHandler
-    public void onChat(PlayerChatEvent event) {
+    public void onChat(AsyncChatEvent event) {
+        String message = LegacyComponentSerializer.legacyAmpersand().serialize(event.message());
         try {
             Player player = event.getPlayer();
-            if (event.getMessage().startsWith("!")) {
+            if (message.startsWith("!")) {
                 if (event.isCancelled()) return;
-                player.performCommand("cc " + event.getMessage().replaceFirst("!",""));
+                String creativeChatCommand = "cc " + message.replaceFirst("!","");
+                Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () -> player.performCommand(creativeChatCommand));
                 event.setCancelled(true);
                 return;
-            } else {
-                EventRaiser.raiseChatEvent(event.getPlayer(), event);
             }
-            checkDevItems(player,event.getMessage());
-            checkConfirmation(player,event.getMessage());
+            checkDevItems(player,message);
+            checkConfirmation(player,message);
             if (event.isCancelled()) return;
             event.setCancelled(true);
             if (getCooldown(player, CooldownUtils.CooldownType.WORLD_CHAT) > 0) {
                 player.sendMessage(getLocaleMessage("world.chat-cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.WORLD_CHAT))));
-            } else {
-                setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getChatCooldown(), CooldownUtils.CooldownType.WORLD_CHAT);
-                String message = ChatColor.translateAlternateColorCodes('&',parsePAPI(player, OpenCreative.getPlugin().getConfig().getString("messages.world-chat")).replace("%player%",player.getName()).replace("%message%",event.getMessage()));
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-                WorldChatEvent creativeEvent = new WorldChatEvent(player,event.getMessage(),message,player.getWorld(), planet);
+                return;
+            }
+            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getChatCooldown(), CooldownUtils.CooldownType.WORLD_CHAT);
+            String formatted = ChatColor.translateAlternateColorCodes('&',parsePAPI(player, OpenCreative.getPlugin().getConfig().getString("messages.world-chat")).replace("%player%",player.getName()).replace("%message%",message));
+            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            WorldChatEvent creativeEvent = new WorldChatEvent(player, message,formatted,player.getWorld(), planet);
+            Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
                 creativeEvent.callEvent();
                 if (creativeEvent.isCancelled()) return;
-                message = creativeEvent.getFormattedMessage();
+                String finalMessage = formatted;
+                // фикс это
+                 // фикс отгрузку дев планет
                 if (planet != null) {
                     DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
                     if (devPlanet != null) {
                         // If player in dev world
                         for (Player p : devPlanet.getWorld().getPlayers()) {
-                            p.sendMessage(message);
+                            p.sendMessage(finalMessage);
                         }
                         for (Player p : planet.getTerritory().getWorld().getPlayers()) {
                             if (planet.getWorldPlayers().canDevelop(p)) {
-                                p.sendMessage(message);
+                                p.sendMessage(finalMessage);
                             }
                         }
-                        OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + planet.getId() + "dev] "+player.getName()+": "+event.getMessage());
+                        OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + planet.getId() + "dev] " + player.getName() + ": " + message);
                     } else {
                         // If player in build world
-                        for (Player p : planet.getPlayers()) {
-                            p.sendMessage(message);
+                        if (!EventRaiser.raiseChatEvent(event.getPlayer(), message)) {
+                            event.setCancelled(true);
+                            return;
                         }
-                        OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + planet.getId() + "] "+player.getName()+": "+event.getMessage());
+                        for (Player p : planet.getPlayers()) {
+                            p.sendMessage(finalMessage);
+                        }
+                        OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + planet.getId() + "] " + player.getName() + ": " + message);
                     }
-
                 } else {
                     for (Player p : player.getWorld().getPlayers()) {
-                        p.sendMessage(message);
+                        p.sendMessage(finalMessage);
                     }
-                    OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + player.getWorld().getName()+ "] "+player.getName()+": "+event.getMessage());
+                    OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + player.getWorld().getName() + "] " + player.getName() + ": " + message);
                 }
-            }
+            },1L);
         } catch (Exception error) {
             event.setCancelled(true);
-            sendPlayerErrorMessage(event.getPlayer(),"Can't handle chat message: " + event.getMessage(),error);
+            sendPlayerErrorMessage(event.getPlayer(),"Can't handle chat message: " + message,error);
         }
     }
 
@@ -365,7 +374,7 @@ public class PlayerChat implements Listener {
             case FIND_PLANETS_BY_NAME -> {
                 Set<Planet> foundPlanetsByName = PlanetManager.getInstance().getPlanetsByPlanetName(input);
                 if (!foundPlanetsByName.isEmpty()) {
-                    new WorldsBrowserMenu(player, foundPlanetsByName).open(player);
+                    Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () -> new WorldsBrowserMenu(player, foundPlanetsByName).open(player));
                 } else {
                     player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.not-found"));
                 }
@@ -373,7 +382,7 @@ public class PlayerChat implements Listener {
             case FIND_PLANETS_BY_ID -> {
                 Set<Planet> foundPlanetsByID = PlanetManager.getInstance().getPlanetsByID(input);
                 if (!foundPlanetsByID.isEmpty()) {
-                    new WorldsBrowserMenu(player, foundPlanetsByID).open(player);
+                    Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () -> new WorldsBrowserMenu(player, foundPlanetsByID).open(player));
                 } else {
                     player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.not-found"));
                 }
@@ -381,7 +390,7 @@ public class PlayerChat implements Listener {
             case FIND_PLANETS_BY_OWNER -> {
                 Set<Planet> foundPlanets = PlanetManager.getInstance().getPlanetsByOwner(input);
                 if (!foundPlanets.isEmpty()) {
-                    new WorldsBrowserMenu(player, foundPlanets).open(player);
+                    Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () ->new WorldsBrowserMenu(player, foundPlanets).open(player));
                 } else {
                     player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.not-found"));
                 }

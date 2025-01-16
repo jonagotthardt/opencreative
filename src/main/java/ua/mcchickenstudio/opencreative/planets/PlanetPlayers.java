@@ -23,6 +23,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -267,7 +268,7 @@ public class PlanetPlayers {
             Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
             if (planet.equals(playerPlanet)) {
                 player.sendMessage(getLocaleMessage("world.players.developers.player-guest").replace("%player%",player.getName()));
-                player.playSound(player.getLocation(),Sound.ENTITY_CAT_AMBIENT,100,1);
+                Sounds.WORLD_NOW_DEVELOPER_GUEST.playSound(player);
             }
         }
         if (!planet.isLoaded()) loadPlayers();
@@ -285,7 +286,7 @@ public class PlanetPlayers {
             if (planet.equals(playerPlanet)) {
                 if (!trusted) {
                     player.sendMessage(getLocaleMessage("world.players.developers.player").replace("%player%",player.getName()));
-                    player.playSound(player.getLocation(),Sound.ENTITY_CAT_AMBIENT,100,1);
+                    Sounds.WORLD_NOW_DEVELOPER.playSound(player);
                     if (PlanetManager.getInstance().getDevPlanet(player) != null) {
                         player.setGameMode(GameMode.CREATIVE);
                     }
@@ -314,7 +315,7 @@ public class PlanetPlayers {
             if (planet.equals(playerPlanet)) {
                 if (!trusted) {
                     player.sendMessage(getLocaleMessage("world.players.builders.player").replace("%player%",player.getName()));
-                    player.playSound(player.getLocation(),Sound.ENTITY_CAT_AMBIENT,100,1);
+                    Sounds.WORLD_NOW_BUILDER.playSound(player);
                     if (PlanetManager.getInstance().getDevPlanet(player) == null) {
                         player.setGameMode(GameMode.CREATIVE);
                     }
@@ -348,7 +349,7 @@ public class PlanetPlayers {
             if (planet.equals(playerPlanet)) {
                 teleportToLobby(player);
                 player.sendMessage(getLocaleMessage("world.players.black-list.player").replace("%player%",player.getName()));
-                player.playSound(player.getLocation(), Sound.ENTITY_CAT_HURT,100,1);
+                Sounds.WORLD_BANNED.playSound(player);
                 bannedPlayers.add(player.getName());
             }
         }
@@ -362,7 +363,7 @@ public class PlanetPlayers {
         if (planet.equals(playerPlanet)) {
             teleportToLobby(player);
             player.sendMessage(getLocaleMessage("world.players.kick.player").replace("%player%",player.getName()));
-            player.playSound(player.getLocation(),Sound.ENTITY_CAT_HURT,100,1);
+            Sounds.WORLD_KICKED.playSound(player);
         }
     }
 

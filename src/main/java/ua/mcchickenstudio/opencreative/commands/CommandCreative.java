@@ -19,11 +19,13 @@
 package ua.mcchickenstudio.opencreative.commands;
 
 import ua.mcchickenstudio.opencreative.menu.CreativeMenu;
+import ua.mcchickenstudio.opencreative.menu.world.WorldModerationMenu;
 import ua.mcchickenstudio.opencreative.menu.world.settings.EntitiesBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsPickerMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -74,14 +76,14 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                     sender.sendMessage(getLocaleMessage("creative.reloading"));
                     if (player != null) {
-                        player.playSound(player.getLocation(), Sound.BLOCK_BEACON_AMBIENT, 100, 2);
+                        Sounds.RELOADING.playSound(player);
                     }
                     OpenCreative.getPlugin().reloadConfig();
                     OpenCreative.getSettings().load(OpenCreative.getPlugin().getConfig());
                     loadLocales();
                     sender.sendMessage(getLocaleMessage("creative.reloaded"));
                     if (player != null) {
-                        player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 100, 2);
+                        Sounds.RELOADED.playSound(player);
                     }
                 }
                 case "resetlocale" -> {
@@ -91,12 +93,12 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                     sender.sendMessage(getLocaleMessage("creative.resetting-locale"));
                     if (player != null) {
-                        player.playSound(player.getLocation(), Sound.BLOCK_BEACON_AMBIENT, 100, 2);
+                        Sounds.RELOADING.playSound(player);
                     }
                     FileUtils.resetLocales();
                     sender.sendMessage(getLocaleMessage("creative.reset-locale"));
                     if (player != null) {
-                        player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 100, 2);
+                        Sounds.RELOADED.playSound(player);
                     }
                 }
                 case "info" -> {
@@ -287,7 +289,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         }
                         OpenCreative.getPlugin().getLogger().info("Maintenance mode will be enabled after " + seconds + " seconds by " + sender.getName());
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                            onlinePlayer.playSound(onlinePlayer.getLocation(),Sound.BLOCK_BELL_USE,100,0.1f);
+                            Sounds.MAINTENANCE_NOTIFY.playSound(onlinePlayer);
                             onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.starting-notification").replace("%time%",String.valueOf(seconds)));
                         }
                         int time = seconds;
@@ -301,7 +303,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                                     }
                                     if (seconds <= 3) {
                                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                                            onlinePlayer.playSound(onlinePlayer.getLocation(),Sound.BLOCK_END_PORTAL_FRAME_FILL,100,2);
+                                            Sounds.MAINTENANCE_COUNT.playSound(onlinePlayer);
                                             onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.starting-in").replace("%time%",String.valueOf(seconds)));
                                         }
                                     }
@@ -470,7 +472,12 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     if (player == null) return true;
-                    new EntitiesBrowserMenu(player,PlanetManager.getInstance().getPlanetByPlayer(player)).open(player);
+                    Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                    if (planet == null) {
+                        player.sendMessage("Current planet is null");
+                        return true;
+                    }
+                    new WorldModerationMenu(planet).open(player);
                 }
                 case "test2" -> {
                     if (!sender.hasPermission("opencreative.test")) {
@@ -512,7 +519,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
             String copyright = OpenCreative.getPlugin().getConfig().getString("messages.version","\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2025\n ");
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', copyright.replace("%version%", OpenCreative.getVersion()).replace("%codename%", OpenCreative.getCodename())));
             if (sender instanceof Player player) {
-                player.playSound(player.getLocation(),Sound.BLOCK_BEACON_ACTIVATE,100,2f);
+                Sounds.OPENCREATIVE.playSound(player);
                 new CreativeMenu().open(player);
             }
         }

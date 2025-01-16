@@ -26,6 +26,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
@@ -71,11 +72,11 @@ public class VariablesMenu extends AbstractMenu  {
         setPersistentData(currentItem,getCodingValueKey(),ValueType.getByMaterial(currentItem.getType()).name());
         event.getWhoClicked().getInventory().addItem(currentItem);
         event.setCursor(null);
-        ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(),Sound.ENTITY_ALLAY_ITEM_THROWN,100f,2f);
+        Sounds.DEV_TAKE_VALUE.playSound(event.getWhoClicked());
     }
 
     @Override
     public void onOpen(InventoryOpenEvent event) {
-        ((Player) event.getPlayer()).playSound(event.getPlayer().getLocation(), Sound.UI_LOOM_SELECT_PATTERN, 100f, 1f);
+        Sounds.MENU_OPEN_VALUES_BROWSER.playSound(event.getPlayer());
     }
 }

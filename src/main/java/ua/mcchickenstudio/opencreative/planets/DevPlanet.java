@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.planets;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.world.DevPlanetChunkGenerator;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import org.bukkit.*;
@@ -187,7 +188,7 @@ public class DevPlanet {
             developer.setWorldBorder(border);
         }
         player.sendMessage(getLocaleMessage("environment.platform.claimed"));
-        player.playSound(player.getLocation(),Sound.UI_TOAST_CHALLENGE_COMPLETE,100,1.7f);
+        Sounds.DEV_PLATFORM_CLAIM.playSound(player);
         return true;
     }
 

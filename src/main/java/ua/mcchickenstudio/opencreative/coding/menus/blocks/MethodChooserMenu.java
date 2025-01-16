@@ -36,6 +36,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import ua.mcchickenstudio.opencreative.menu.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -122,7 +123,7 @@ public class MethodChooserMenu extends ListBrowserMenu<Location> {
                         toComponent(getLocaleMessage("menus.developer.method-chooser.chosen")), Component.text(name).color(NamedTextColor.GREEN),
                         Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
-                ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE,100,1.2f);
+                Sounds.DEV_SET_METHOD.playSound(event.getWhoClicked());
             }
         }
         event.setCancelled(true);

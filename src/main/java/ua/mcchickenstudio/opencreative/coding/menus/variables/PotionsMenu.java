@@ -31,6 +31,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import ua.mcchickenstudio.opencreative.menu.ListBrowserMenu;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.Arrays;
 import java.util.List;
@@ -83,7 +84,7 @@ public class PotionsMenu extends ListBrowserMenu<PotionEffectType> {
         if (isPlayerClicked(event) && isClickedInMenuSlots(event)) {
             if (event.getCurrentItem() == null) return;
             event.getWhoClicked().getInventory().setItemInMainHand(event.getCurrentItem());
-            ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.BLOCK_BREWING_STAND_BREW,100,1.2f);
+            Sounds.DEV_POTION_SET.playSound(event.getWhoClicked());
         }
         event.setCancelled(true);
     }

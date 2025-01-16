@@ -27,6 +27,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -71,7 +72,7 @@ public class CommandJoin implements CommandExecutor, TabCompleter {
         Planet foundPlanet = findPlanet(planetId);
 
         if (foundPlanet == null) {
-            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY, 100, 2);
+            Sounds.PLAYER_FAIL.playSound(player);
             player.clearTitle();
             player.sendMessage(getLocaleMessage("no-planet-found", player));
             return;

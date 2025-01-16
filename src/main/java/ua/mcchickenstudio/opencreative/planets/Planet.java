@@ -32,6 +32,7 @@ import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.coding.variables.WorldVariables;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetConnectPlayerEvent;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.groups.Group;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
@@ -149,7 +150,7 @@ public class Planet {
                         ));
                         clearPlayer(player);
                         player.teleport(territory.getWorld().getSpawnLocation());
-                        player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT,100,1.7f);
+                        Sounds.WORLD_MODE_BUILD.playSound(player);
                         if (worldPlayers.canBuild(player)) {
                             player.setGameMode(GameMode.CREATIVE);
                             giveBuildPermissions(player);
@@ -435,7 +436,7 @@ public class Planet {
                 toComponent(getLocaleMessage("world.connecting.title")), toComponent(getLocaleMessage("world.connecting.subtitle")),
                 Title.Times.times(Duration.ofMillis(710), Duration.ofSeconds(30), Duration.ofMillis(130))
         ));
-        player.playSound(player.getLocation(), Sound.BLOCK_TRIAL_SPAWNER_ABOUT_TO_SPAWN_ITEM,100,1);
+        Sounds.WORLD_CONNECTION.playSound(player);
         boolean wasLoaded = isLoaded();
         if (!isLoaded()) {
             OpenCreative.getPlugin().getLogger().info("Loading planet " + id + " and teleporting " + player.getName());
@@ -444,7 +445,7 @@ public class Planet {
         player.teleportAsync(territory.getWorld().getSpawnLocation()).thenAccept(success -> {
             clearPlayer(player);
             if (success) {
-                player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE,100,2);
+                Sounds.WORLD_CONNECTED.playSound(player);
                 mode.onPlayerConnect(player,this);
                 getWorldPlayers().getPlanetPlayer(player).load();
                 clearPlayer(player);
@@ -507,9 +508,8 @@ public class Planet {
         player.teleportAsync(lastLocation).thenAccept(success -> {
             if (success) {
                 getDevPlanet().getLastLocations().put(player,player.getLocation());
-                clearPlayer(player);
                 player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,Integer.MAX_VALUE,0,false,false,false));
-                player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE,100,2);
+                Sounds.DEV_CONNECTED.playSound(player);
                 for (Player developer : getDevPlanet().getWorld().getPlayers()) {
                     WorldBorder border = Bukkit.createWorldBorder();
                     border.setCenter(getDevPlanet().getWorld().getWorldBorder().getCenter());

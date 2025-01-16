@@ -27,6 +27,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.menu.ListBrowserMenu;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -186,7 +187,7 @@ public class ParticlesMenu extends ListBrowserMenu<Particle> {
             ItemStack item = event.getCurrentItem().clone();
             item.setType(Material.NETHER_STAR);
             event.getWhoClicked().getInventory().setItemInMainHand(item);
-            ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST_FAR,100,1.2f);
+            Sounds.DEV_PARTICLE_SET.playSound(event.getWhoClicked());
         }
         event.setCancelled(true);
     }

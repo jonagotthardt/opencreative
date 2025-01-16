@@ -36,6 +36,7 @@ import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.PlayerPlaceBlock.move;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getClosingBracketX;
@@ -67,7 +68,7 @@ public class PlayerBreakBlock implements Listener {
                     || block.getType() == platform.getFloorMaterial()
                     || block.getType() == platform.getEventMaterial()
                     || block.getType() == platform.getActionMaterial()) {
-                player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 100, 1.2f);
+                Sounds.DEV_NOT_ALLOWED.playSound(player);
                 event.setCancelled(true);
             }
 

@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.settings;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -29,9 +30,9 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.settings.groups.Groups;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 
@@ -72,6 +73,8 @@ public class Settings {
     private final Set<Integer> recommendedWorldsIDs = new HashSet<>();
     private final Set<String> allowedResourcePackLinks = new HashSet<>();
 
+    private final Map<Sounds,SettingsSound> sounds = new HashMap<>();
+
     public Settings() {
         groups = new Groups();
         commands = new Commands();
@@ -85,6 +88,7 @@ public class Settings {
 
         allowedResourcePackLinks.clear();
         recommendedWorldsIDs.clear();
+        sounds.clear();
 
         listChanger = PlayerListChanger.fromString(config.getString("hide-from-tab","full"));
         recommendedWorldsIDs.addAll(config.getIntegerList("recommended-worlds"));
@@ -112,6 +116,24 @@ public class Settings {
 
         groups.load();
         commands.load();
+
+        ConfigurationSection soundsSection = config.getConfigurationSection("sounds");
+        if (soundsSection != null ) {
+            for (String key : soundsSection.getKeys(false)) {
+                try {
+                    Sounds type = Sounds.valueOf(key.toUpperCase());
+                    String sound = soundsSection.getString(key+".name","");
+                    float pitch = (float) soundsSection.getDouble(key+".name",1.0f);
+                    sounds.put(type,new SettingsSound(sound,pitch));
+                } catch (Exception ignored) {
+                    sendWarningErrorMessage("Sound " + key.toLowerCase() + " doesn't exists.");
+                }
+            }
+        }
+        if (!sounds.isEmpty()) {
+            OpenCreative.getPlugin().getLogger().info("Added " + sounds.size() + " custom sounds");
+        }
+
         if (maintenance) {
             OpenCreative.getPlugin().getLogger().warning("Maintenance mode is still enabled in config.yml, to disable: /maintenance end");
         }
@@ -150,7 +172,7 @@ public class Settings {
         if (maintenance) {
             OpenCreative.getPlugin().getLogger().info("Maintenance mode started! Unloading planets, please wait...");
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT,100,0.5f);
+                Sounds.MAINTENANCE_START.playSound(onlinePlayer);
                 onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.started"));
                 for (Planet planet : PlanetManager.getInstance().getPlanets()) {
                     if (planet.isLoaded()) {
@@ -163,7 +185,7 @@ public class Settings {
         } else {
             OpenCreative.getPlugin().getLogger().info("Maintenance mode ended, now players can play in worlds.");
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                onlinePlayer.playSound(onlinePlayer.getLocation(),Sound.BLOCK_BEACON_POWER_SELECT,100,0.7f);
+                Sounds.MAINTENANCE_END.playSound(onlinePlayer);
                 onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.ended"));
             }
         }
@@ -280,5 +302,9 @@ public class Settings {
 
     public int getWorldReputationMinSeconds() {
         return worldReputationMinSeconds;
+    }
+
+    public Map<Sounds, SettingsSound> getSounds() {
+        return sounds;
     }
 }

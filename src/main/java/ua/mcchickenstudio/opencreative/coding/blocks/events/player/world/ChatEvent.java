@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.world;
 
+import io.papermc.paper.event.player.AsyncChatEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
@@ -28,12 +29,10 @@ import ua.mcchickenstudio.opencreative.coding.placeholders.VarPlaceholder;
 public class ChatEvent extends WorldEvent {
 
     private final String message;
-    private final PlayerChatEvent event;
 
-    public ChatEvent(Player player, PlayerChatEvent event) {
+    public ChatEvent(Player player, String message) {
         super(player);
-        this.message = filter(event.getMessage());
-        this.event = event;
+        this.message = filter(message);
     }
 
     private String filter(String string) {
@@ -48,6 +47,6 @@ public class ChatEvent extends WorldEvent {
 
     @Override
     public void setCancelled(boolean cancelled) {
-        event.setCancelled(cancelled);
+        super.setCancelled(cancelled);
     }
 }

@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetInviteEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 
 import java.util.Collections;
@@ -132,7 +133,7 @@ public class CommandAd extends CommandJoin {
         Planet foundPlanet = findPlanet(planetId);
 
         if (foundPlanet == null) {
-            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY, 100, 2);
+            Sounds.PLAYER_FAIL.playSound(player);
             player.clearTitle();
             player.sendMessage(getLocaleMessage("no-planet-found", player));
             return;
