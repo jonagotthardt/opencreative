@@ -31,6 +31,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -58,7 +59,7 @@ public class CommandLike implements CommandExecutor {
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             long createdSeconds = (System.currentTimeMillis()-planet.getCreationTime())/1000;
             if (OpenCreative.getSettings().getWorldReputationMinSeconds() > createdSeconds) {
-                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 100, 1);
+                Sounds.PLAYER_CANCEL.playSound(player);
                 player.sendMessage(getLocaleMessage("world.cant-rate",player).replace("%time%",convertTime(OpenCreative.getSettings().getWorldReputationMinSeconds()-createdSeconds)));
                 return true;
             }
@@ -68,7 +69,7 @@ public class CommandLike implements CommandExecutor {
                 sender.sendMessage(getLocaleMessage("world.already-rated"));
             } else {
                 if (addPlayerInPlanetList(planet,sender.getName(), Planet.PlayersType.LIKED)) {
-                    player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.3f);
+                    Sounds.WORLD_LIKED.playSound(player);
                     planet.getInformation().setPlanetReputation(planet.getInformation().getReputation() +1);
                     EventRaiser.raiseLikeEvent(player);
                     if (planet.getFlagValue(PlanetFlags.PlanetFlag.LIKE_MESSAGES) == 1) {

@@ -22,6 +22,7 @@ import org.bukkit.command.CommandSender;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetDeletionEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetRegisterEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.*;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
@@ -38,6 +39,8 @@ import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isPlanet;
 
 public class PlanetManager {
 
@@ -108,7 +111,7 @@ public class PlanetManager {
                     Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(9), Duration.ofSeconds(2))
             ));
             owner.sendMessage(getLocaleMessage("creating-world.welcome"));
-            owner.playSound(owner.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE,100,0.1f);
+            Sounds.WELCOME_TO_NEW_WORLD.playSound(owner);
             owner.setGameMode(GameMode.CREATIVE);
             ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
             owner.getInventory().setItem(8,worldSettingsItem);
@@ -236,8 +239,13 @@ public class PlanetManager {
      Returns planet where specified player in.
      **/
     public Planet getPlanetByPlayer(Player player) {
+        World world = player.getWorld();
+        if (!isPlanet(world)) return null;
+        String id = world.getName()
+                .replace("./planets/planet","")
+                .replace("dev","");
         for (Planet planet : planets) {
-            if (planet.getPlayers().contains(player)) {
+            if (id.equals(String.valueOf(planet.getId()))) {
                 return planet;
             }
         }
@@ -248,21 +256,15 @@ public class PlanetManager {
      Returns developer planet where specified player in.
      **/
     public DevPlanet getDevPlanet(Player player) {
-        for (Planet planet : planets) {
-            if (planet.getDevPlanet() != null && planet.getDevPlanet().getWorld() != null) {
-                if (planet.getPlayers().contains(player)) {
-                    if (planet.getDevPlanet().getWorld().getPlayers().contains(player)) {
-                        return planet.getDevPlanet();
-                    }
-                }
-            }
-        }
-        return null;
+        if (!isDevPlanet(player.getWorld())) return null;
+        Planet planet = getPlanetByPlayer(player);
+        return planet != null ? planet.getDevPlanet() : null;
     }
 
     public DevPlanet getDevPlanet(World world) {
+        if (!isDevPlanet(world)) return null;
         for (Planet planet : planets) {
-            if (planet.getDevPlanet() != null && world.equals(planet.getDevPlanet().getWorld())) {
+            if (world.equals(planet.getDevPlanet().getWorld())) {
                 return planet.getDevPlanet();
             }
         }
@@ -273,6 +275,7 @@ public class PlanetManager {
      Returns planet that has same specified world.
      **/
     public Planet getPlanetByWorld(World world) {
+        if (!isPlanet(world) && !isDevPlanet(world)) return null;
         for (Planet planet : planets) {
             if (world.equals(planet.getTerritory().getWorld())) {
                 return planet;

@@ -32,6 +32,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import static ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser.raisePlayerPurchaseEvent;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
@@ -74,7 +75,7 @@ public final class RequestPurchaseAction extends PlayerAction {
                                     planet.getWorldPlayers().getPlanetPlayer(player).addPurchase(id.toLowerCase());
                                 }
                             }
-                            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP,100,1.2f);
+                            Sounds.WORLD_PURCHASE.playSound(player);
                             if (!planet.isOwner(player)) {
                                 OpenCreative.getEconomy().withdrawMoney(player,price);
                                 OpenCreative.getEconomy().depositMoney(Bukkit.getOfflinePlayer(planet.getOwner()),price);

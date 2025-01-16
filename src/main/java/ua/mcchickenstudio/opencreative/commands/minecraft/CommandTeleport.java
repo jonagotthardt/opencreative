@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.commands.minecraft;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -112,7 +113,7 @@ public class CommandTeleport implements CommandExecutor {
             } else {
                 player.teleport(teleportToPlayer.getLocation());
             }
-            player.playSound(player.getLocation(), Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100,0.1f);
+            Sounds.PLAYER_TELEPORT.playSound(player);
             if (!player.getWorld().equals(teleportToPlayer.getWorld()) && !player.hasPermission("opencreative.teleport.clear-bypass")) {
                 clearPlayer(player);
             }
@@ -147,7 +148,7 @@ public class CommandTeleport implements CommandExecutor {
                 clearPlayer(firstPlayer);
             }
             firstPlayer.teleport(secondPlayer.getLocation());
-            firstPlayer.playSound(firstPlayer.getLocation(), Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100,0.1f);
+            Sounds.PLAYER_TELEPORT.playSound(firstPlayer);
             if (!firstPlayer.getWorld().equals(secondPlayer.getWorld()) && !firstPlayer.hasPermission("opencreative.teleport.clear-bypass")) {
                 clearPlayer(firstPlayer);
             }
@@ -173,7 +174,7 @@ public class CommandTeleport implements CommandExecutor {
                 Location newLocation = new Location(location.getWorld(),x,y,z,yaw,pitch);
                 if (!isOutOfBorders(newLocation)) {
                     player.teleport(newLocation);
-                    player.playSound(player.getLocation(), Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100,0.1f);
+                    Sounds.PLAYER_TELEPORT.playSound(player);
                 } else {
                     sender.sendMessage(getLocaleMessage("commands.teleport.out-of-borders"));
                 }

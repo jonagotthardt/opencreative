@@ -29,6 +29,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -204,7 +205,7 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
 
     @Override
     public void onOpen(InventoryOpenEvent event) {
-        getPlayer().playSound(getPlayer().getLocation(),Sound.BLOCK_VAULT_ACTIVATE,100,1);
+        Sounds.MENU_OPEN_WORLDS_BROWSER.playSound(event.getPlayer());
     }
 
 }

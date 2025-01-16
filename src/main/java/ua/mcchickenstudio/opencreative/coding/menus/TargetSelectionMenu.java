@@ -26,6 +26,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.setSignLine;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
@@ -71,7 +72,7 @@ public class TargetSelectionMenu extends AbstractMenu {
                 }
                 translateBlockSign(signLocation.getBlock());
                 player.closeInventory();
-                player.playSound(player.getLocation(), Sound.BLOCK_END_PORTAL_FRAME_FILL,100,0.2f);
+                Sounds.DEV_SET_TARGET.playSound(player);
             }
         }
     }

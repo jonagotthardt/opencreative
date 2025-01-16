@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.commands.world.reputation;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
@@ -51,7 +52,7 @@ public class CommandDislike implements CommandExecutor {
             CooldownUtils.setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             long createdSeconds = (System.currentTimeMillis()-planet.getCreationTime())/1000;
             if (OpenCreative.getSettings().getWorldReputationMinSeconds() > createdSeconds) {
-                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 100, 1);
+                Sounds.PLAYER_CANCEL.playSound(player);
                 player.sendMessage(getLocaleMessage("world.cant-rate",player).replace("%time%",convertTime(OpenCreative.getSettings().getWorldReputationMinSeconds()-createdSeconds)));
                 return true;
             }
@@ -62,7 +63,7 @@ public class CommandDislike implements CommandExecutor {
             } else {
                 if (FileUtils.addPlayerInPlanetList(planet,sender.getName(), Planet.PlayersType.DISLIKED)) {
                     planet.getInformation().setPlanetReputation(planet.getInformation().getReputation() -1);
-                    player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,0.7f);
+                    Sounds.WORLD_DISLIKED.playSound(player);
                     sender.sendMessage(MessageUtils.getLocaleMessage("world.disliked",player));
                 }
             }

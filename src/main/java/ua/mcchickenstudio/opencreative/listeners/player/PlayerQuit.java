@@ -41,7 +41,7 @@ public class PlayerQuit implements Listener {
         Player player = event.getPlayer();
         player.spigot().respawn();
 
-        Planet planet = PlanetManager.getInstance().getPlanetByWorld(player.getWorld());
+        Planet planet = PlanetManager.getInstance().getPlanetByWorldName(player.getWorld().getName().replace("dev",""));
         if (planet != null) {
             EventRaiser.raiseQuitEvent(player);
             PlanetPlayer planetPlayer = planet.getWorldPlayers().getPlanetPlayer(player);

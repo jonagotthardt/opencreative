@@ -16,18 +16,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.utils.async;
+package ua.mcchickenstudio.opencreative.settings;
 
-import lombok.experimental.UtilityClass;
-import org.bukkit.Bukkit;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.BlockActionCoverage;
-
-@UtilityClass
-public class Ticker {
-    public static void runTicker() {
-        /*Bukkit.getScheduler().runTaskTimerAsynchronously(OpenCreative.getPlugin(), () -> {
-            AsyncScheduler.run(BlockActionCoverage::tick);
-        }, 1L, 1L);*/
-    }
-}
+public record SettingsSound(String sound, float pitch) {}

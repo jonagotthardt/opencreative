@@ -38,6 +38,7 @@ import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getSignLine;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.FileUtils.getPlanetScriptFile;
 
 /**
  * <h1>CodeScript</h1>
@@ -48,26 +49,25 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 public class CodeScript {
 
     private final Planet planet;
-    private final File file;
     private final Executors executors;
-    private final YamlConfiguration scriptConfig;
+    private YamlConfiguration scriptConfig;
 
-    public CodeScript(Planet planet, File file) {
+    public CodeScript(Planet planet) {
         this.planet = planet;
-        this.file = file;
         this.executors = new Executors(planet);
-        this.scriptConfig = YamlConfiguration.loadConfiguration(file);
+        this.scriptConfig = new YamlConfiguration();
     }
 
     /**
      * Loads code from codeScript.yml file.
      */
     public void loadCode() {
+        scriptConfig = YamlConfiguration.loadConfiguration(getPlanetScriptFile(planet));
         sendCodingDebugLog(planet,"Loading code...");
         new BukkitRunnable() {
             @Override
             public void run() {
-                executors.load(file);
+                executors.load(getPlanetScriptFile(planet));
             }
         }.run();
     }
@@ -78,7 +78,7 @@ public class CodeScript {
      */
     public boolean saveCode() {
         try {
-            scriptConfig.save(file);
+            scriptConfig.save(getPlanetScriptFile(planet));
             return true;
         } catch (IOException error) {
             sendCriticalErrorMessage("An IO Exception has occurred while saving code.", error);
@@ -98,10 +98,14 @@ public class CodeScript {
         scriptConfig.set("old-code.blocks", newCode);
         scriptConfig.set("code.blocks", null);
         try {
-            scriptConfig.save(file);
+            scriptConfig.save(getPlanetScriptFile(planet));
         } catch (IOException exception) {
             sendCriticalErrorMessage("An error has occurred while clearing and saving code script " + this.getPlanet().getWorldName(),exception);
         }
+    }
+
+    public void unload() {
+        scriptConfig = new YamlConfiguration();
     }
 
     /**

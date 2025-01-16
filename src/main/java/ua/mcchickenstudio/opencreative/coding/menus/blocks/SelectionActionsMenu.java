@@ -32,6 +32,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.setSignLine;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
@@ -95,27 +96,27 @@ public class SelectionActionsMenu extends AbstractMenu {
             new VariableConditionsMenu(player,signLocation).open(player);
         } else if (itemEquals(currentItem, allPlayers)) {
             setLine("all_players");
-            player.playSound(player.getLocation(), Sound.BLOCK_END_PORTAL_FRAME_FILL,100,0.2f);
+            Sounds.DEV_SET_TARGET.playSound(player);
             player.closeInventory();
         } else if (itemEquals(currentItem, randomPlayer)) {
             setLine("random_player");
-            player.playSound(player.getLocation(), Sound.BLOCK_END_PORTAL_FRAME_FILL,100,0.2f);
+            Sounds.DEV_SET_TARGET.playSound(player);
             player.closeInventory();
         } else if (itemEquals(currentItem, killer)) {
             setLine("killer");
-            player.playSound(player.getLocation(), Sound.BLOCK_END_PORTAL_FRAME_FILL,100,0.2f);
+            Sounds.DEV_SET_TARGET.playSound(player);
             player.closeInventory();
         } else if (itemEquals(currentItem, victim)) {
             setLine("victim");
-            player.playSound(player.getLocation(), Sound.BLOCK_END_PORTAL_FRAME_FILL,100,0.2f);
+            Sounds.DEV_SET_TARGET.playSound(player);
             player.closeInventory();
         } else if (itemEquals(currentItem, randomTarget)) {
             setLine("random_target");
-            player.playSound(player.getLocation(), Sound.BLOCK_END_PORTAL_FRAME_FILL,100,0.2f);
+            Sounds.DEV_SET_TARGET.playSound(player);
             player.closeInventory();
         } else if (itemEquals(currentItem, allEntities)) {
             setLine("all_entities");
-            player.playSound(player.getLocation(), Sound.BLOCK_END_PORTAL_FRAME_FILL,100,0.2f);
+            Sounds.DEV_SET_TARGET.playSound(player);
             player.closeInventory();
         }
     }

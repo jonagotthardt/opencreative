@@ -81,7 +81,7 @@ public final class OpenCreative extends JavaPlugin {
     private static Economy economy;
     private static Updater updater;
 
-    private static final String version = "5.3.0";
+    private static final String version = "5.3.2";
     private static final String codename = "Well, it's possible";
 
     /**
@@ -117,7 +117,7 @@ public final class OpenCreative extends JavaPlugin {
         }
         registerCommands();
         registerEvents();
-        Ticker.runTicker();
+        //Ticker.runTicker();
         saveDefaultConfig();
         settings = new Settings();
         settings.load(getConfig());

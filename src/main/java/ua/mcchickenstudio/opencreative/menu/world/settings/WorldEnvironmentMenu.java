@@ -47,6 +47,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.List;
 
@@ -183,6 +184,6 @@ public class WorldEnvironmentMenu extends AbstractMenu {
     @Override
     public void onOpen(InventoryOpenEvent event) {
         Player player = (Player) event.getPlayer();
-        player.playSound(player.getLocation(),Sound.BLOCK_AMETHYST_BLOCK_CHIME,100,0.1f);
+        Sounds.MENU_OPEN_ENVIRONMENT.playSound(player);
     }
 }

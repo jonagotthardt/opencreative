@@ -33,6 +33,7 @@ import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -201,7 +202,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             }
                             int current = Math.min(((page + 1) * 20), allVariables.size());
                             List<WorldVariable> variables = new ArrayList<>(allVariables.subList(page * 20, current));
-                            player.playSound(player.getLocation(), Sound.UI_LOOM_SELECT_PATTERN, 100, 0.7f);
+                            Sounds.DEV_VAR_LIST.playSound(player);
                             player.sendMessage(getLocaleMessage("environment.variables.list.header").replace("%current%", String.valueOf(current)).replace("%amount%", String.valueOf(variables.size())));
                             for (WorldVariable variable : variables) {
                                 String name = variable.getName();
@@ -325,7 +326,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         } else {
                             currentPlatform.setFloorMaterial(material);
                         }
-                        player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+                        Sounds.DEV_PLATFORM_COLOR.playSound(player);
                         break;
                     }
                     case "action": {
@@ -350,7 +351,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         } else {
                             currentPlatform.setActionMaterial(material);
                         }
-                        player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+                        Sounds.DEV_PLATFORM_COLOR.playSound(player);
                         break;
                     }
                     case "event", "executor": {
@@ -375,7 +376,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         } else {
                             currentPlatform.setEventMaterial(material);
                         }
-                        player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+                        Sounds.DEV_PLATFORM_COLOR.playSound(player);
                         break;
                     }
                     case "theme", "settheme", "themes": {
@@ -404,7 +405,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             case "cloud" -> platform.setMaterials(Material.WHITE_STAINED_GLASS,Material.CYAN_STAINED_GLASS,Material.GRAY_STAINED_GLASS);
                             default -> false;
                         }) {
-                            player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+                            Sounds.DEV_PLATFORM_COLOR.playSound(player);
                         }
                         break;
                     }
@@ -498,13 +499,13 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             for (Player planetPlayer : planet.getPlayers()){
                                 planetPlayer.sendMessage(getLocaleMessage("environment.debug.enabled",player));
                             }
-                            player.playSound(player.getLocation(),Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM,100,1);
+                            Sounds.DEV_DEBUG_ON.playSound(player);
                             planet.setDebug(true);
                         } else if (args[1].equalsIgnoreCase("disable")) {
                             for (Player planetPlayer : planet.getPlayers()){
                                 planetPlayer.sendMessage(getLocaleMessage("environment.debug.disabled",player));
                             }
-                            player.playSound(player.getLocation(),Sound.ENTITY_ALLAY_AMBIENT_WITH_ITEM,100,1);
+                            Sounds.DEV_DEBUG_OFF.playSound(player);
                             planet.setDebug(false);
                         }
                     }

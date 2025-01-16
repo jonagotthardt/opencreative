@@ -34,6 +34,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -104,7 +105,7 @@ public class CommandBuild implements CommandExecutor {
                             Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                     ));
                     player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
-                    player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT,100,1.7f);
+                    Sounds.WORLD_MODE_BUILD.playSound(player);
                     if (planet.getWorldPlayers().canBuild(player)) {
                         Player planetOwner = Bukkit.getPlayer(planet.getOwner());
                         if (planet.getWorldPlayers().getBuildersNotTrusted().contains(sender.getName())) {

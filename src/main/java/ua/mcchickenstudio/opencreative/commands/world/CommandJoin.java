@@ -27,11 +27,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
 
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
@@ -42,56 +43,68 @@ public class CommandJoin implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (sender instanceof Player player) {
-            if (OpenCreative.getSettings().isMaintenance() && !player.hasPermission("opencreative.maintenance.bypass")) {
-                player.sendMessage(getLocaleMessage("maintenance"));
-                return true;
-            }
-            if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-                player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.GENERIC_COMMAND))));
-                return true;
-            }
-            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
-            if (args.length == 1) {
-                if (!PlanetManager.getInstance().getPlanets().isEmpty()) {
-                    Planet foundPlanet = null;
-                    for (Planet searchablePlanet : PlanetManager.getInstance().getPlanets()) {
-                        if (String.valueOf(searchablePlanet.getId()).equals(args[0])) {
-                            foundPlanet = searchablePlanet;
-                            break;
-                        } else if (searchablePlanet.getInformation().getCustomID().equalsIgnoreCase(args[0])) {
-                            foundPlanet = searchablePlanet;
-                            break;
-                        }
-                    }
-                    if (foundPlanet != null) {
-                        foundPlanet.connectPlayer(player);
-                    } else {
-                        player.playSound(player.getLocation(),Sound.BLOCK_ANVIL_DESTROY,100,2);
-                        player.clearTitle();
-                        player.sendMessage(getLocaleMessage("no-planet-found",player));
-                    }
-                } else {
-                    player.playSound(player.getLocation(),Sound.BLOCK_ANVIL_DESTROY,100,2);
-                    player.clearTitle();
-                    player.sendMessage(getLocaleMessage("no-planet-found",player));
-                }
-            } else {
-                player.sendMessage(getLocaleMessage("join-usage"));
+        if (!(sender instanceof Player player)) {
+            return true;
+        }
+
+        if (OpenCreative.getSettings().isMaintenance() && !player.hasPermission("opencreative.maintenance.bypass")) {
+            player.sendMessage(getLocaleMessage("maintenance"));
+            return true;
+        }
+
+        if (args.length != 1) {
+            player.sendMessage(getLocaleMessage("join-usage"));
+            return true;
+        }
+
+        handlePlayerConnection(player, args[0]);
+
+        return true;
+    }
+
+    protected void handlePlayerConnection(Player player, String planetId) {
+        if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
+            player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
+            return;
+        }
+        setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
+
+        Planet foundPlanet = findPlanet(planetId);
+
+        if (foundPlanet == null) {
+            Sounds.PLAYER_FAIL.playSound(player);
+            player.clearTitle();
+            player.sendMessage(getLocaleMessage("no-planet-found", player));
+            return;
+        }
+
+        if (foundPlanet.equals(PlanetManager.getInstance().getPlanetByPlayer(player))) {
+            player.sendMessage(getLocaleMessage("same-world", player));
+            return;
+        }
+
+        foundPlanet.connectPlayer(player);
+    }
+
+    protected Planet findPlanet(String planetId) {
+        if (PlanetManager.getInstance().getPlanets().isEmpty()) return null;
+
+        for (Planet searchablePlanet : PlanetManager.getInstance().getPlanets()) {
+            if (String.valueOf(searchablePlanet.getId()).equals(planetId) ||
+                    searchablePlanet.getInformation().getCustomID().equalsIgnoreCase(planetId)) {
+                return searchablePlanet;
             }
         }
-        return true;
+        return null;
     }
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         if (args.length == 1) {
-            List<String> TabCompleter = new ArrayList<>();
-            for (Planet planet : PlanetManager.getInstance().getPlanets()) {
-                TabCompleter.add(planet.getInformation().getCustomID());
-            }
-            return TabCompleter;
+            return PlanetManager.getInstance().getPlanets().stream()
+                    .map(planet -> planet.getInformation().getCustomID())
+                    .toList();
         }
-        return null;
+        return Collections.emptyList();
     }
 }

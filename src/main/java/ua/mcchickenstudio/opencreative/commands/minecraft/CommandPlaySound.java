@@ -18,6 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.commands.minecraft;
 
+import io.papermc.paper.registry.set.RegistrySet;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.key.Namespaced;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
@@ -134,7 +139,7 @@ public class CommandPlaySound implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 tabCompleter.addAll(player.getWorld().getPlayers().stream().map(Player::getName).toList());
             } else if (args.length == 2) {
-                tabCompleter.addAll(Arrays.stream(Sound.values()).map(sound -> sound.name().toLowerCase()).toList());
+                tabCompleter.addAll(Registry.SOUNDS.stream().filter(s -> s.getKey().asMinimalString().startsWith(args[1])).map(sound -> sound.getKey().asMinimalString()).toList());
             } else if (args.length == 3) {
                 tabCompleter.add("100");
                 tabCompleter.add("50");

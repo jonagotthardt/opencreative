@@ -38,6 +38,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import ua.mcchickenstudio.opencreative.menu.buttons.RadioButton;
 import ua.mcchickenstudio.opencreative.planets.*;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.PlayerConfirmation;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
@@ -111,7 +112,7 @@ public class InventoryClick implements Listener {
                                         player.updateInventory();
                                     }
                                 } else {
-                                    player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY, 100, 2);
+                                    Sounds.PLAYER_FAIL.playSound(player);
                                     player.clearTitle();
                                     player.sendMessage(getLocaleMessage("no-planet-found", player));
                                 }
@@ -123,16 +124,16 @@ public class InventoryClick implements Listener {
                             if (item.getItemMeta().getDisplayName().equalsIgnoreCase(getLocaleItemName("menus.own-worlds.items.all-worlds.name"))) {
                                 new RecommendedWorldsMenu().open(player);
                             } else {
-                                player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 100, 1);
+                                Sounds.MENU_NEXT_PAGE.playSound(player);
                                 OwnWorldsMenu.openInventory(player, OwnWorldsMenu.openedPage.get(player) + 1);
                             }
                         } else if (item.getType() == Material.ARROW) {
-                            player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 100, 1);
+                            Sounds.MENU_PREVIOUS_PAGE.playSound(player);
                             OwnWorldsMenu.openInventory(player, OwnWorldsMenu.openedPage.get(player) - 1);
                         } else if (item.getType() == Material.WHITE_STAINED_GLASS) {
                             long playedSeconds = (System.currentTimeMillis()-player.getFirstPlayed())/1000;
                             if (OpenCreative.getSettings().getWorldCreationMinSeconds() > playedSeconds) {
-                                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 100, 1);
+                                Sounds.PLAYER_CANCEL.playSound(player);
                                 player.closeInventory();
                                 player.sendMessage(getLocaleMessage("creating-world.not-enough-played",player).replace("%time%",convertTime(OpenCreative.getSettings().getWorldCreationMinSeconds()-playedSeconds)));
                             } else {
@@ -189,7 +190,7 @@ public class InventoryClick implements Listener {
                 RadioButton rd = RadioButton.getRadioButtonByItemStack(item);
                     if (rd != null) {
                         rd.onChoice();
-                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 100, 1);
+                        Sounds.MENU_NEXT_CHOICE.playSound(player);
                         WorldSettingsPlayersMenu.openInventory(player);
                     }
                 } else if (item.getType() == Material.ENCHANTED_GOLDEN_APPLE) {
@@ -292,7 +293,7 @@ public class InventoryClick implements Listener {
                         } else {
                             player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
                         }
-                        player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
+                        Sounds.DEV_LOCATION_TELEPORT.playSound(player);
                         player.setCooldown(currentItem.getType(),60);
                     }
                 }
@@ -322,7 +323,7 @@ public class InventoryClick implements Listener {
                             } else {
                                 player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
                             }
-                        player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
+                        Sounds.DEV_LOCATION_TELEPORT.playSound(player);
                         player.setCooldown(currentItem.getType(),60);
                         }
                     }

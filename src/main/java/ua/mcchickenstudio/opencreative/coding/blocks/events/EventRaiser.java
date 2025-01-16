@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
+import io.papermc.paper.event.player.AsyncChatEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.jetbrains.annotations.NotNull;
@@ -164,12 +165,13 @@ public class EventRaiser {
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
-    public static void raiseChatEvent(Player player, PlayerChatEvent bukkitEvent) {
+    public static boolean raiseChatEvent(Player player, String message) {
         if (cantRaiseEvent(player)) {
-            return;
+            return true;
         }
-        ChatEvent creativeEvent = new ChatEvent(player, bukkitEvent);
+        ChatEvent creativeEvent = new ChatEvent(player, message);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+        return !creativeEvent.isCancelled();
     }
 
     // Movement

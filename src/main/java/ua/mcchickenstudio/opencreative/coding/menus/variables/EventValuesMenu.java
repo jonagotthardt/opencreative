@@ -32,6 +32,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ua.mcchickenstudio.opencreative.menu.ListBrowserMenu;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.time.Duration;
 import java.util.*;
@@ -74,7 +75,7 @@ public class EventValuesMenu extends ListBrowserMenu<EventValues.Variable> {
         event.setCancelled(true);
         MenusCategory category = MenusCategory.getByMaterial(clicked.getType());
         if (category != null) {
-            ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ITEM_BOOK_PAGE_TURN,100f,0.5f);
+            Sounds.DEV_CHANGE_CATEGORY.playSound(event.getWhoClicked());
             currentCategory = category;
             elements.clear();
             elements.addAll(getElements());
@@ -101,7 +102,7 @@ public class EventValuesMenu extends ListBrowserMenu<EventValues.Variable> {
                 toComponent(getLocaleMessage("world.dev-mode.set-variable")), item.displayName(),
                 Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
         ));
-        getPlayer().playSound(getPlayer().getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.7f);
+        Sounds.DEV_EVENT_VALUE_SET.playSound(event.getWhoClicked());
     }
 
     @Override

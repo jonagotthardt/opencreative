@@ -410,6 +410,9 @@ public class FileUtils {
                 if (planet.isLoaded()) {
                     OpenCreative.getPlugin().getLogger().info("Unloading planet " + planet.getId() + "...");
                     planet.getTerritory().unload();
+                } else if (planet.getDevPlanet().isLoaded()) {
+                    OpenCreative.getPlugin().getLogger().info("Unloading planet dev " + planet.getId() + "...");
+                    planet.getDevPlanet().unload();
                 }
             }
             PlanetManager.getInstance().clearPlanets();
