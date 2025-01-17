@@ -56,7 +56,7 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
 
-public class ChatListener implements Listener {
+public final class ChatListener implements Listener {
 
     public static final Map<Player, PlayerConfirmation> confirmation = new HashMap<>();
 

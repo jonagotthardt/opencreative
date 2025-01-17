@@ -52,7 +52,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMe
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
-public class ClickListener implements Listener {
+public final class ClickListener implements Listener {
 
     final PlanetManager planetManager = PlanetManager.getInstance();
     @EventHandler

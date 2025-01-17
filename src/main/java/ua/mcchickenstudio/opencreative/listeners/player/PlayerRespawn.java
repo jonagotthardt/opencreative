@@ -34,7 +34,7 @@ import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 
-public class PlayerRespawn implements Listener {
+public final class PlayerRespawn implements Listener {
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {

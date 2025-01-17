@@ -43,7 +43,7 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.getCodingDoNotDrop
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
-public class DestroyBlockListener implements Listener {
+public final class DestroyBlockListener implements Listener {
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();

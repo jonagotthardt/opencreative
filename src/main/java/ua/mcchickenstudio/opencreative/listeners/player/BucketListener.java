@@ -25,7 +25,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 
-public class BucketListener implements Listener {
+public final class BucketListener implements Listener {
 
     @EventHandler
     public void onBucket(PlayerBucketEmptyEvent event) {

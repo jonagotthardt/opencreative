@@ -75,7 +75,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
-public class InteractListener implements Listener {
+public final class InteractListener implements Listener {
 
     @EventHandler
     public void onInteraction(PlayerInteractEvent event) {

@@ -35,7 +35,7 @@ import java.util.List;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.hidePlayerInTab;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.loadPermissions;
 
-public class JoinListener implements Listener {
+public final class JoinListener implements Listener {
 
     private final List<String> blockedPlayers = new ArrayList<>();
 

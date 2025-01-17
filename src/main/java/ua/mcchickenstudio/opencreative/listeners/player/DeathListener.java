@@ -45,7 +45,7 @@ import java.util.Map;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
-public class DeathListener implements Listener {
+public final class DeathListener implements Listener {
 
     public static final Map<Player, Location> deathLocations = new HashMap<>();
 

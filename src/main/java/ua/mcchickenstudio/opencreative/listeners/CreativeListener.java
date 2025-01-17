@@ -31,7 +31,7 @@ import ua.mcchickenstudio.opencreative.events.player.WorldChatEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CreativeListener implements Listener {
+public final class CreativeListener implements Listener {
 
     @EventHandler
     public void onEvent(PlayerLobbyEvent event) {

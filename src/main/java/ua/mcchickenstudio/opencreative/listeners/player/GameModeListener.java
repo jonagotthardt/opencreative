@@ -30,7 +30,7 @@ import org.bukkit.event.player.PlayerGameModeChangeEvent;
 
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
-public class GameModeListener implements Listener {
+public final class GameModeListener implements Listener {
 
     @EventHandler
     public void onGameModeChange(PlayerGameModeChangeEvent event) {

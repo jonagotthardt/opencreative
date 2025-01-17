@@ -41,7 +41,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 
-public class ChangedWorld implements Listener {
+public final class ChangedWorld implements Listener {
 
     private static final Map<UUID, Location> developerSetLocation = new HashMap<>();
 

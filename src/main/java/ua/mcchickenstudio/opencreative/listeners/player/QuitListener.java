@@ -34,7 +34,7 @@ import ua.mcchickenstudio.opencreative.planets.PlanetPlayer;
 
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
-public class QuitListener implements Listener {
+public final class QuitListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
