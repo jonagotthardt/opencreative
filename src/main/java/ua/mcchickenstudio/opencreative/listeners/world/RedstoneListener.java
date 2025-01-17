@@ -33,7 +33,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.sendMessageOnce;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 
-public class BlockRedstone implements Listener {
+public class RedstoneListener implements Listener {
 
 
     @EventHandler

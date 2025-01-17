@@ -52,7 +52,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMe
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
-public class InventoryClick implements Listener {
+public class ClickListener implements Listener {
 
     final PlanetManager planetManager = PlanetManager.getInstance();
     @EventHandler
@@ -211,8 +211,8 @@ public class InventoryClick implements Listener {
                     }
                     player.sendMessage(getLocaleMessage("world.players.transfer-ownership.confirm-old").replace("%player%", newOwner).replace("%id%", String.valueOf(planet.getId())));
                     player.closeInventory();
-                    if (!(PlayerChat.confirmation.containsKey(player))) {
-                        PlayerChat.confirmation.put(player, PlayerConfirmation.TRANSFER_OWNERSHIP);
+                    if (!(ChatListener.confirmation.containsKey(player))) {
+                        ChatListener.confirmation.put(player, PlayerConfirmation.TRANSFER_OWNERSHIP);
                     }
                 }
             }

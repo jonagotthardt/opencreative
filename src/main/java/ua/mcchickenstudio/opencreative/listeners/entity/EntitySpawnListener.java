@@ -43,7 +43,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.sendMessageOnce
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isEntityHostile;
 
-public class EntitySpawn implements Listener {
+public class EntitySpawnListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEntitySpawn(EntitySpawnEvent event) {

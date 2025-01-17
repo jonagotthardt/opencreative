@@ -150,7 +150,7 @@ public class WorldEnvironmentMenu extends AbstractMenu {
         } else if (itemEquals(currentItem,time.getItem())) {
             if (devPlanet.getWorld() == null) return;
             time.next();
-            player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_CHARGE,100,1.2f);
+            Sounds.WORLD_SETTINGS_TIME_CHANGE.playSound(player);
             setItem(event.getRawSlot(),time.getItem());
             if ("night".equals(time.getCurrentValue().toString())) {
                 devPlanet.getWorld().setTime(15000L);

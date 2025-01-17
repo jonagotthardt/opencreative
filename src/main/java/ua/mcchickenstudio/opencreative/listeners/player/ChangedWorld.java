@@ -70,7 +70,7 @@ public class ChangedWorld implements Listener {
         clearWorldModePermissions(player);
         World oldWorld = event.getFrom();
         World newWorld = player.getWorld();
-        PlayerChat.confirmation.remove(player);
+        ChatListener.confirmation.remove(player);
         player.clearTitle();
 
         Planet oldPlanet = PlanetManager.getInstance().getPlanetByWorld(oldWorld);

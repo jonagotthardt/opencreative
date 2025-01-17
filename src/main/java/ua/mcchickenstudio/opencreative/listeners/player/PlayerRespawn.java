@@ -37,11 +37,11 @@ public class PlayerRespawn implements Listener {
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
-        if (!PlayerDeath.deathLocations.containsKey(event.getPlayer())) return;
-        Location deathLocation = PlayerDeath.deathLocations.get(event.getPlayer());
+        if (!DeathListener.deathLocations.containsKey(event.getPlayer())) return;
+        Location deathLocation = DeathListener.deathLocations.get(event.getPlayer());
         event.setRespawnLocation(deathLocation);
         event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.ENTITY_PLAYER_BREATH,100,2);
-        PlayerDeath.deathLocations.remove(event.getPlayer());
+        DeathListener.deathLocations.remove(event.getPlayer());
         Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
         if (planet != null) {
             EventRaiser.raisePlayerRespawnEvent(event.getPlayer(),event);

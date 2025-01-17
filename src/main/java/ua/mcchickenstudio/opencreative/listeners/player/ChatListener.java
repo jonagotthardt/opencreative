@@ -35,7 +35,6 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
@@ -56,7 +55,7 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
 
-public class PlayerChat implements Listener {
+public class ChatListener implements Listener {
 
     public static final Map<Player, PlayerConfirmation> confirmation = new HashMap<>();
 

@@ -67,14 +67,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.*;
-import static ua.mcchickenstudio.opencreative.listeners.player.PlayerPlaceBlock.move;
+import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.move;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
-public class PlayerInteract implements Listener {
+public class InteractListener implements Listener {
 
     @EventHandler
     public void onInteraction(PlayerInteractEvent event) {

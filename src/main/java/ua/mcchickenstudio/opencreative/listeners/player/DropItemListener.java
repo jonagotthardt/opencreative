@@ -34,7 +34,7 @@ import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemName;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class PlayerDropItem implements Listener {
+public class DropItemListener implements Listener {
 
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {

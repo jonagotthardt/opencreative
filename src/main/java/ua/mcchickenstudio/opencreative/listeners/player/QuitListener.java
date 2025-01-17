@@ -34,7 +34,7 @@ import ua.mcchickenstudio.opencreative.planets.PlanetPlayer;
 
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
-public class PlayerQuit implements Listener {
+public class QuitListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
@@ -60,7 +60,7 @@ public class PlayerQuit implements Listener {
         player.setGameMode(GameMode.ADVENTURE);
         teleportToLobby(player);
 
-        PlayerChat.confirmation.remove(player);
+        ChatListener.confirmation.remove(player);
         CreativeChat.creativeChatOff.remove(player);
 
         removeFromPermissionsMap(player);

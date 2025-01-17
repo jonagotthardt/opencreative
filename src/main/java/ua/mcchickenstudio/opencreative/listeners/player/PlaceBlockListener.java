@@ -46,7 +46,7 @@ import java.util.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
-public class PlayerPlaceBlock implements Listener {
+public class PlaceBlockListener implements Listener {
 
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {

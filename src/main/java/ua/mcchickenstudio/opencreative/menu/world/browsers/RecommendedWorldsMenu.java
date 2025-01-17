@@ -18,7 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.menu.world.browsers;
 
-import ua.mcchickenstudio.opencreative.listeners.player.PlayerChat;
+import ua.mcchickenstudio.opencreative.listeners.player.ChatListener;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
@@ -27,7 +27,6 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
@@ -116,7 +115,7 @@ public class RecommendedWorldsMenu extends AbstractMenu {
             ));
             player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.usage", player).replace("%search%", getLocaleMessage("menus.all-worlds.items.search." + searchQuery)));
             player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_AMBIENT, 100, 1);
-            PlayerChat.confirmation.put(player,request);
+            ChatListener.confirmation.put(player,request);
         } else if (itemEquals(currentItem,ALL_WORLDS)) {
             new WorldsBrowserMenu(player, PlanetManager.getInstance().getPlanets()).open(player);
         } else if (itemEquals(currentItem,OWN_WORLDS)) {

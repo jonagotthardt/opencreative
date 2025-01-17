@@ -41,7 +41,7 @@ import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
 
 
-public class PlayerMove implements Listener {
+public class MoveListener implements Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent event) {

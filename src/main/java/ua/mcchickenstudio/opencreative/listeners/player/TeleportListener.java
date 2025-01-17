@@ -31,7 +31,7 @@ import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public class PlayerTeleport implements Listener {
+public class TeleportListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onTeleport(PlayerTeleportEvent event) {
