@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.settings;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -172,7 +171,7 @@ public class Settings {
         if (maintenance) {
             OpenCreative.getPlugin().getLogger().info("Maintenance mode started! Unloading planets, please wait...");
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                Sounds.MAINTENANCE_START.playSound(onlinePlayer);
+                Sounds.MAINTENANCE_START.play(onlinePlayer);
                 onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.started"));
                 for (Planet planet : PlanetManager.getInstance().getPlanets()) {
                     if (planet.isLoaded()) {
@@ -185,7 +184,7 @@ public class Settings {
         } else {
             OpenCreative.getPlugin().getLogger().info("Maintenance mode ended, now players can play in worlds.");
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                Sounds.MAINTENANCE_END.playSound(onlinePlayer);
+                Sounds.MAINTENANCE_END.play(onlinePlayer);
                 onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.ended"));
             }
         }

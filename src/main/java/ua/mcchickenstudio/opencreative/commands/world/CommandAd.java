@@ -25,7 +25,6 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetAdvertisementEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -133,7 +132,7 @@ public class CommandAd extends CommandJoin {
         Planet foundPlanet = findPlanet(planetId);
 
         if (foundPlanet == null) {
-            Sounds.PLAYER_FAIL.playSound(player);
+            Sounds.PLAYER_FAIL.play(player);
             player.clearTitle();
             player.sendMessage(getLocaleMessage("no-planet-found", player));
             return;

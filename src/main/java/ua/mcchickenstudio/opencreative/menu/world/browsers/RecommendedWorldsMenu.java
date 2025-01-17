@@ -25,11 +25,11 @@ import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.PlayerConfirmation;
 
 import java.time.Duration;
@@ -114,7 +114,7 @@ public class RecommendedWorldsMenu extends AbstractMenu {
                     Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(20), Duration.ofMillis(750))
             ));
             player.sendMessage(getLocaleMessage("menus.all-worlds.items.search.usage", player).replace("%search%", getLocaleMessage("menus.all-worlds.items.search." + searchQuery)));
-            player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_AMBIENT, 100, 1);
+            Sounds.MENU_WORLD_SEARCH.play(player);
             ChatListener.confirmation.put(player,request);
         } else if (itemEquals(currentItem,ALL_WORLDS)) {
             new WorldsBrowserMenu(player, PlanetManager.getInstance().getPlanets()).open(player);
@@ -136,6 +136,6 @@ public class RecommendedWorldsMenu extends AbstractMenu {
 
     @Override
     public void onOpen(InventoryOpenEvent event) {
-        ((Player) event.getPlayer()).playSound(event.getPlayer().getLocation(),Sound.BLOCK_ENDER_CHEST_OPEN,100,0.1F);
+        Sounds.MENU_OPEN_RECOMMENDATIONS.play(event.getPlayer());
     }
 }

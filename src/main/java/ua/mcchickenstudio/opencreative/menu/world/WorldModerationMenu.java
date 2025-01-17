@@ -76,6 +76,5 @@ public class WorldModerationMenu extends AbstractMenu {
     @Override
     public void onOpen(InventoryOpenEvent event) {
         Player player = (Player) event.getPlayer();
-        player.playSound(player.getLocation(), Sound.ENTITY_PANDA_WORRIED_AMBIENT,100,0.1f);
     }
 }

@@ -19,12 +19,12 @@
 package ua.mcchickenstudio.opencreative.menu;
 
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.List;
 
@@ -76,7 +76,7 @@ public class ConfirmationMenu extends AbstractMenu{
     @Override
     public void onOpen(InventoryOpenEvent event) {
         if (event.getPlayer() instanceof Player player) {
-            player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_RESONATE,100,0.5f);
+            Sounds.MENU_OPEN_CONFIRMATION.play(player);
         }
     }
 }

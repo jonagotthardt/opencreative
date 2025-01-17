@@ -27,7 +27,6 @@ import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.block.*;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.sign.Side;
@@ -37,9 +36,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.*;
 
@@ -68,19 +65,10 @@ public class PlaceBlockListener implements Listener {
             if (blockAgainst.getType() == platform.getFloorMaterial()) {
                 if ((!(block.getType() == Material.PISTON && (blockAgainst.getZ() % 4) == 0 && blockAgainst.getRelative(BlockFace.WEST).getType() == platform.getActionMaterial())) && (!(block.getType().name().contains("SIGN") &&  blockAgainst.getX() >= 4 && (blockAgainst.getX() % 2) == 0)) && (!devPlanet.getAllowedBlocks().contains(block.getType())) || block.getY() <= 0) {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-on-floor"));
-                    player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 100, 1.2f);
+                    Sounds.DEV_NOT_ALLOWED.play(player);
                     event.setCancelled(true);
                 }
             } else if (blockAgainst.getType() == platform.getEventMaterial()) {
-                // Easter egg :)
-                if (block.getType() == Material.PUMPKIN) {
-                    event.setCancelled(true);
-                    block.getLocation().getWorld().strikeLightningEffect(block.getLocation());
-                    player.getInventory().setHelmet(new ItemStack(Material.PUMPKIN,1));
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,40,0));
-                    player.playSound(player.getLocation(),Sound.ENTITY_WITCH_CELEBRATE,100,1f);
-                    return;
-                }
                 if (devPlanet.getEventsBlocks().contains(block.getType())) {
                     Material additionalBlockMaterial = Material.REDSTONE_ORE;
                     String signText = "unknown";
@@ -96,7 +84,7 @@ public class PlaceBlockListener implements Listener {
                     placeDevBlock(block, additionalBlockMaterial, signText);
                 } else {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-action-on-event"));
-                    player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 100, 1.2f);
+                    Sounds.DEV_NOT_ALLOWED.play(player);
                     event.setCancelled(true);
                 }
             } else if (blockAgainst.getType() == platform.getActionMaterial()) {
@@ -118,12 +106,12 @@ public class PlaceBlockListener implements Listener {
                     placeDevBlock(block, additionalBlockMaterial, signText);
                 } else {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-event-on-action"));
-                    player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 100, 1.2f);
+                    Sounds.DEV_NOT_ALLOWED.play(player);
                     event.setCancelled(true);
                 }
             } else {
                 if (block.getType() != Material.COMPARATOR) {
-                    player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 100, 1.2f);
+                    Sounds.DEV_NOT_ALLOWED.play(player);
                 }
                 event.setCancelled(true);
             }

@@ -25,7 +25,6 @@ import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -113,7 +112,7 @@ public class CommandTeleport implements CommandExecutor {
             } else {
                 player.teleport(teleportToPlayer.getLocation());
             }
-            Sounds.PLAYER_TELEPORT.playSound(player);
+            Sounds.PLAYER_TELEPORT.play(player);
             if (!player.getWorld().equals(teleportToPlayer.getWorld()) && !player.hasPermission("opencreative.teleport.clear-bypass")) {
                 clearPlayer(player);
             }
@@ -148,7 +147,7 @@ public class CommandTeleport implements CommandExecutor {
                 clearPlayer(firstPlayer);
             }
             firstPlayer.teleport(secondPlayer.getLocation());
-            Sounds.PLAYER_TELEPORT.playSound(firstPlayer);
+            Sounds.PLAYER_TELEPORT.play(firstPlayer);
             if (!firstPlayer.getWorld().equals(secondPlayer.getWorld()) && !firstPlayer.hasPermission("opencreative.teleport.clear-bypass")) {
                 clearPlayer(firstPlayer);
             }
@@ -174,7 +173,7 @@ public class CommandTeleport implements CommandExecutor {
                 Location newLocation = new Location(location.getWorld(),x,y,z,yaw,pitch);
                 if (!isOutOfBorders(newLocation)) {
                     player.teleport(newLocation);
-                    Sounds.PLAYER_TELEPORT.playSound(player);
+                    Sounds.PLAYER_TELEPORT.play(player);
                 } else {
                     sender.sendMessage(getLocaleMessage("commands.teleport.out-of-borders"));
                 }

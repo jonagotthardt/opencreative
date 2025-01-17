@@ -188,7 +188,7 @@ public class DevPlanet {
             developer.setWorldBorder(border);
         }
         player.sendMessage(getLocaleMessage("environment.platform.claimed"));
-        Sounds.DEV_PLATFORM_CLAIM.playSound(player);
+        Sounds.DEV_PLATFORM_CLAIM.play(player);
         return true;
     }
 

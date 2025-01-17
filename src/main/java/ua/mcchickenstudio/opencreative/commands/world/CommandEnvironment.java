@@ -202,7 +202,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             }
                             int current = Math.min(((page + 1) * 20), allVariables.size());
                             List<WorldVariable> variables = new ArrayList<>(allVariables.subList(page * 20, current));
-                            Sounds.DEV_VAR_LIST.playSound(player);
+                            Sounds.DEV_VAR_LIST.play(player);
                             player.sendMessage(getLocaleMessage("environment.variables.list.header").replace("%current%", String.valueOf(current)).replace("%amount%", String.valueOf(variables.size())));
                             for (WorldVariable variable : variables) {
                                 String name = variable.getName();
@@ -326,7 +326,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         } else {
                             currentPlatform.setFloorMaterial(material);
                         }
-                        Sounds.DEV_PLATFORM_COLOR.playSound(player);
+                        Sounds.DEV_PLATFORM_COLOR.play(player);
                         break;
                     }
                     case "action": {
@@ -351,7 +351,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         } else {
                             currentPlatform.setActionMaterial(material);
                         }
-                        Sounds.DEV_PLATFORM_COLOR.playSound(player);
+                        Sounds.DEV_PLATFORM_COLOR.play(player);
                         break;
                     }
                     case "event", "executor": {
@@ -376,7 +376,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         } else {
                             currentPlatform.setEventMaterial(material);
                         }
-                        Sounds.DEV_PLATFORM_COLOR.playSound(player);
+                        Sounds.DEV_PLATFORM_COLOR.play(player);
                         break;
                     }
                     case "theme", "settheme", "themes": {
@@ -405,7 +405,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             case "cloud" -> platform.setMaterials(Material.WHITE_STAINED_GLASS,Material.CYAN_STAINED_GLASS,Material.GRAY_STAINED_GLASS);
                             default -> false;
                         }) {
-                            Sounds.DEV_PLATFORM_COLOR.playSound(player);
+                            Sounds.DEV_PLATFORM_COLOR.play(player);
                         }
                         break;
                     }
@@ -499,13 +499,13 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             for (Player planetPlayer : planet.getPlayers()){
                                 planetPlayer.sendMessage(getLocaleMessage("environment.debug.enabled",player));
                             }
-                            Sounds.DEV_DEBUG_ON.playSound(player);
+                            Sounds.DEV_DEBUG_ON.play(player);
                             planet.setDebug(true);
                         } else if (args[1].equalsIgnoreCase("disable")) {
                             for (Player planetPlayer : planet.getPlayers()){
                                 planetPlayer.sendMessage(getLocaleMessage("environment.debug.disabled",player));
                             }
-                            Sounds.DEV_DEBUG_OFF.playSound(player);
+                            Sounds.DEV_DEBUG_OFF.play(player);
                             planet.setDebug(false);
                         }
                     }

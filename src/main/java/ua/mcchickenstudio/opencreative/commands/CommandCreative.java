@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.commands;
 
 import ua.mcchickenstudio.opencreative.menu.CreativeMenu;
 import ua.mcchickenstudio.opencreative.menu.world.WorldModerationMenu;
-import ua.mcchickenstudio.opencreative.menu.world.settings.EntitiesBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsPickerMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -76,14 +75,14 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                     sender.sendMessage(getLocaleMessage("creative.reloading"));
                     if (player != null) {
-                        Sounds.RELOADING.playSound(player);
+                        Sounds.RELOADING.play(player);
                     }
                     OpenCreative.getPlugin().reloadConfig();
                     OpenCreative.getSettings().load(OpenCreative.getPlugin().getConfig());
                     loadLocales();
                     sender.sendMessage(getLocaleMessage("creative.reloaded"));
                     if (player != null) {
-                        Sounds.RELOADED.playSound(player);
+                        Sounds.RELOADED.play(player);
                     }
                 }
                 case "resetlocale" -> {
@@ -93,12 +92,12 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                     sender.sendMessage(getLocaleMessage("creative.resetting-locale"));
                     if (player != null) {
-                        Sounds.RELOADING.playSound(player);
+                        Sounds.RELOADING.play(player);
                     }
                     FileUtils.resetLocales();
                     sender.sendMessage(getLocaleMessage("creative.reset-locale"));
                     if (player != null) {
-                        Sounds.RELOADED.playSound(player);
+                        Sounds.RELOADED.play(player);
                     }
                 }
                 case "info" -> {
@@ -289,7 +288,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         }
                         OpenCreative.getPlugin().getLogger().info("Maintenance mode will be enabled after " + seconds + " seconds by " + sender.getName());
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                            Sounds.MAINTENANCE_NOTIFY.playSound(onlinePlayer);
+                            Sounds.MAINTENANCE_NOTIFY.play(onlinePlayer);
                             onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.starting-notification").replace("%time%",String.valueOf(seconds)));
                         }
                         int time = seconds;
@@ -303,7 +302,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                                     }
                                     if (seconds <= 3) {
                                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                                            Sounds.MAINTENANCE_COUNT.playSound(onlinePlayer);
+                                            Sounds.MAINTENANCE_COUNT.play(onlinePlayer);
                                             onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.starting-in").replace("%time%",String.valueOf(seconds)));
                                         }
                                     }
@@ -519,7 +518,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
             String copyright = OpenCreative.getPlugin().getConfig().getString("messages.version","\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2025\n ");
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', copyright.replace("%version%", OpenCreative.getVersion()).replace("%codename%", OpenCreative.getCodename())));
             if (sender instanceof Player player) {
-                Sounds.OPENCREATIVE.playSound(player);
+                Sounds.OPENCREATIVE.play(player);
                 new CreativeMenu().open(player);
             }
         }

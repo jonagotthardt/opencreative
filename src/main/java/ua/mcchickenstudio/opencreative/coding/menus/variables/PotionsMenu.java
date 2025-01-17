@@ -18,10 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.menus.variables;
 
-import ua.mcchickenstudio.opencreative.menu.AbstractListMenu;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -84,7 +82,7 @@ public class PotionsMenu extends ListBrowserMenu<PotionEffectType> {
         if (isPlayerClicked(event) && isClickedInMenuSlots(event)) {
             if (event.getCurrentItem() == null) return;
             event.getWhoClicked().getInventory().setItemInMainHand(event.getCurrentItem());
-            Sounds.DEV_POTION_SET.playSound(event.getWhoClicked());
+            Sounds.DEV_POTION_SET.play(event.getWhoClicked());
         }
         event.setCancelled(true);
     }

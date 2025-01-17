@@ -67,7 +67,7 @@ public class DestroyBlockListener implements Listener {
                     || block.getType() == platform.getFloorMaterial()
                     || block.getType() == platform.getEventMaterial()
                     || block.getType() == platform.getActionMaterial()) {
-                Sounds.DEV_NOT_ALLOWED.playSound(player);
+                Sounds.DEV_NOT_ALLOWED.play(player);
                 event.setCancelled(true);
             }
 

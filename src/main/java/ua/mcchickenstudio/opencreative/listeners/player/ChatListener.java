@@ -37,6 +37,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
@@ -133,7 +134,7 @@ public class ChatListener implements Listener {
                 ItemMeta meta = itemInHand.getItemMeta();
                 meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',message.replace("%space%", " ").replace("%empty%","").replace("&&","§")));
                 itemInHand.setItemMeta(meta);
-                player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.4f);
+                Sounds.DEV_TEXT_SET.play(player);
                 setPersistentData(itemInHand,getCodingValueKey(),"TEXT");
                 player.setItemInHand(itemInHand);
                 player.showTitle(Title.title(
@@ -151,7 +152,7 @@ public class ChatListener implements Listener {
                     meta.setDisplayName("§a" + number);
                     itemInHand.setItemMeta(meta);
                     setPersistentData(itemInHand,getCodingValueKey(),"NUMBER");
-                    player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.7f);
+                    Sounds.DEV_NUMBER_SET.play(player);
                     player.setItemInHand(itemInHand);
                     player.showTitle(Title.title(
                             toComponent(getLocaleMessage("world.dev-mode.set-variable")), meta.displayName(),
@@ -178,7 +179,7 @@ public class ChatListener implements Listener {
                 itemInHand.setItemMeta(meta);
                 setPersistentData(itemInHand,getCodingValueKey(),"VARIABLE");
                 setPersistentData(itemInHand,getCodingVariableTypeKey(),insert == 'a' ? "SAVED" : insert == 'e' ? "GLOBAL" : "LOCAL");
-                player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.4f);
+                Sounds.DEV_VARIABLE_SET.play(player);
                 player.getInventory().setItemInMainHand(itemInHand);
                 player.showTitle(Title.title(
                         toComponent(getLocaleMessage("world.dev-mode.set-variable")), meta.displayName(),
@@ -199,7 +200,7 @@ public class ChatListener implements Listener {
                         toComponent(getLocaleMessage("world.dev-mode.set-variable")), meta.displayName(),
                         Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
-                player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.4f);
+                Sounds.DEV_VALUE_SET.play(player);
                 player.getInventory().setItemInMainHand(itemInHand);
             } else if (itemInHand.getType() == Material.POTION || itemInHand.getType() == Material.LINGERING_POTION || itemInHand.getType() == Material.SPLASH_POTION) {
                 if (!(itemInHand.getItemMeta() instanceof PotionMeta oldMeta)) {
@@ -254,7 +255,7 @@ public class ChatListener implements Listener {
                         Component.empty(), toComponent(getLocaleMessage("world.dev-mode.set-potion").replace("%duration%", convertTime(duration * 50L)).replace("%amplifier%",""+amplifier)),
                         Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(2), Duration.ofMillis(500))
                 ));
-                player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.4f);
+                Sounds.DEV_POTION_SET.play(player);
                 itemInHand.setItemMeta(newMeta);
             } else if (itemInHand.getType() == Material.PRISMARINE_SHARD) {
                 ItemMeta meta = itemInHand.getItemMeta();
@@ -291,7 +292,7 @@ public class ChatListener implements Listener {
                         toComponent(getLocaleMessage("world.dev-mode.set-variable")), meta.displayName(),
                         Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(2), Duration.ofMillis(500))
                 ));
-                player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.4f);
+                Sounds.DEV_VECTOR_SET.play(player);
             }
         }
     }
@@ -442,7 +443,7 @@ public class ChatListener implements Listener {
                         planet.getWorldPlayers().removeDeveloper(player.getName());
                         planet.setOwner(player.getName());
                         player.sendMessage(getLocaleMessage("world.players.transfer-ownership.transferred-new"));
-                        player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 100, 1.5f);
+                        Sounds.WORLD_SETTINGS_OWNER_SET.play(player);
                         planet.setChangingOwner(false);
                     } else {
                         if (oldOwner != null)

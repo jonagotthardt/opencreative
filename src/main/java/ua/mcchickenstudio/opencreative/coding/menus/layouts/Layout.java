@@ -26,7 +26,6 @@ import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -103,10 +102,10 @@ public abstract class Layout extends AbstractMenu {
                     event.setCancelled(true);
                     if (getValueType(currentItem) == ValueType.VARIABLE) {
                         inventory.setItem(event.getRawSlot(),currentItem);
-                        Sounds.DEV_VARIABLE_PARAMETER.playSound(event.getWhoClicked());
+                        Sounds.DEV_VARIABLE_PARAMETER.play(event.getWhoClicked());
                     } else {
                         parameter.next();
-                        Sounds.DEV_NEXT_PARAMETER.playSound(event.getWhoClicked());
+                        Sounds.DEV_NEXT_PARAMETER.play(event.getWhoClicked());
                         inventory.setItem(event.getRawSlot(),parameter.getItem());
                     }
                 }
@@ -125,7 +124,7 @@ public abstract class Layout extends AbstractMenu {
     @Override
     public void onOpen(InventoryOpenEvent event) {
         viewers.add((Player) event.getPlayer());
-        (containerBlock.getType() == Material.BARREL ? Sounds.DEV_OPEN_BARREL : Sounds.DEV_OPEN_CHEST).playSound(event.getPlayer());
+        (containerBlock.getType() == Material.BARREL ? Sounds.DEV_OPEN_BARREL : Sounds.DEV_OPEN_CHEST).play(event.getPlayer());
         for (Player onlinePlayer : event.getPlayer().getWorld().getPlayers()) {
             sendOpenedChestAnimation(onlinePlayer,containerBlock);
         }
@@ -134,7 +133,7 @@ public abstract class Layout extends AbstractMenu {
     @Override
     public final void onClose(InventoryCloseEvent event) {
         saveArgumentsItems(event.getInventory());
-        (containerBlock.getType() == Material.BARREL ? Sounds.DEV_CLOSED_BARREL : Sounds.DEV_CLOSED_CHEST).playSound(event.getPlayer());
+        (containerBlock.getType() == Material.BARREL ? Sounds.DEV_CLOSED_BARREL : Sounds.DEV_CLOSED_CHEST).play(event.getPlayer());
         viewers.remove((Player) event.getPlayer());
         if (viewers.isEmpty()) {
             DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet((Player) event.getPlayer());

@@ -25,7 +25,6 @@ import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -96,27 +95,27 @@ public class SelectionActionsMenu extends AbstractMenu {
             new VariableConditionsMenu(player,signLocation).open(player);
         } else if (itemEquals(currentItem, allPlayers)) {
             setLine("all_players");
-            Sounds.DEV_SET_TARGET.playSound(player);
+            Sounds.DEV_SET_TARGET.play(player);
             player.closeInventory();
         } else if (itemEquals(currentItem, randomPlayer)) {
             setLine("random_player");
-            Sounds.DEV_SET_TARGET.playSound(player);
+            Sounds.DEV_SET_TARGET.play(player);
             player.closeInventory();
         } else if (itemEquals(currentItem, killer)) {
             setLine("killer");
-            Sounds.DEV_SET_TARGET.playSound(player);
+            Sounds.DEV_SET_TARGET.play(player);
             player.closeInventory();
         } else if (itemEquals(currentItem, victim)) {
             setLine("victim");
-            Sounds.DEV_SET_TARGET.playSound(player);
+            Sounds.DEV_SET_TARGET.play(player);
             player.closeInventory();
         } else if (itemEquals(currentItem, randomTarget)) {
             setLine("random_target");
-            Sounds.DEV_SET_TARGET.playSound(player);
+            Sounds.DEV_SET_TARGET.play(player);
             player.closeInventory();
         } else if (itemEquals(currentItem, allEntities)) {
             setLine("all_entities");
-            Sounds.DEV_SET_TARGET.playSound(player);
+            Sounds.DEV_SET_TARGET.play(player);
             player.closeInventory();
         }
     }

@@ -180,7 +180,7 @@ public class WorldSettingsMenu extends AbstractMenu {
             }
         } else if (itemEquals(currentItem,spawn)) {
             if (isEntityInDevPlanet(player)) {
-                Sounds.PLAYER_FAIL.playSound(player);
+                Sounds.PLAYER_FAIL.play(player);
                 return;
             }
             player.closeInventory();
@@ -190,10 +190,10 @@ public class WorldSettingsMenu extends AbstractMenu {
                         toComponent(getLocaleMessage("settings.world-spawn.title")), toComponent(getLocaleMessage("settings.world-spawn.subtitle")),
                         Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(2), Duration.ofMillis(130))
                 ));
-                Sounds.WORLD_SETTINGS_SPAWN_SET.playSound(player);
+                Sounds.WORLD_SETTINGS_SPAWN_SET.play(player);
             } else {
                 player.teleport(player.getWorld().getSpawnLocation());
-                Sounds.WORLD_SETTINGS_SPAWN_TELEPORT.playSound(player);
+                Sounds.WORLD_SETTINGS_SPAWN_TELEPORT.play(player);
             }
         } else if (itemEquals(currentItem,category)) {
             new WorldSettingsCategoryMenu(planet.getInformation().getCategory()).open(player);
@@ -223,7 +223,7 @@ public class WorldSettingsMenu extends AbstractMenu {
                 if (planetEvent.isCancelled()) return;
                 planet.setSharing(Planet.Sharing.PUBLIC);
                 player.sendMessage(getLocaleMessage("settings.world-sharing.enabled"));
-                Sounds.WORLD_SETTINGS_SHARING_PUBLIC.playSound(player);
+                Sounds.WORLD_SETTINGS_SHARING_PUBLIC.play(player);
                 planet.getInformation().updateIcon();
             } else {
                 PlanetSharingChangeEvent planetEvent = new PlanetSharingChangeEvent(planet, planet.getSharing(), Planet.Sharing.PRIVATE,player);
@@ -231,14 +231,14 @@ public class WorldSettingsMenu extends AbstractMenu {
                 if (planetEvent.isCancelled()) return;
                 planet.setSharing(Planet.Sharing.PRIVATE);
                 player.sendMessage(getLocaleMessage("settings.world-sharing.disabled"));
-                Sounds.WORLD_SETTINGS_SHARING_PRIVATE.playSound(player);
+                Sounds.WORLD_SETTINGS_SHARING_PRIVATE.play(player);
                 planet.getInformation().updateIcon();
             }
             worldIcon = getPlanetIcon();
             setItem(49,getPlanetIcon());
         } else if (itemEquals(currentItem,time.getItem())) {
             time.next();
-            Sounds.WORLD_SETTINGS_TIME_CHANGE.playSound(player);
+            Sounds.WORLD_SETTINGS_TIME_CHANGE.play(player);
             setItem(event.getRawSlot(),time.getItem());
             if (time.getCurrentValue().equals(1)) {
                 planet.getTerritory().getWorld().setTime(1000L);
@@ -262,15 +262,15 @@ public class WorldSettingsMenu extends AbstractMenu {
             setItem(event.getRawSlot(),autoSave.getItem());
             if (autoSave.getCurrentValue().equals(true)) {
                 planet.getTerritory().setAutoSave(true);
-                Sounds.WORLD_SETTINGS_AUTOSAVE_ON.playSound(player);
+                Sounds.WORLD_SETTINGS_AUTOSAVE_ON.play(player);
             } else if (autoSave.getCurrentValue().equals(false)) {
                 planet.getTerritory().setAutoSave(false);
-                Sounds.WORLD_SETTINGS_AUTOSAVE_OFF.playSound(player);
+                Sounds.WORLD_SETTINGS_AUTOSAVE_OFF.play(player);
             }
         } else if (itemEquals(currentItem,worldIcon)) {
             if (event.getCursor().isEmpty()) {
                 player.sendMessage(getLocaleMessage("settings.world-icon.error"));
-                Sounds.PLAYER_FAIL.playSound(player);
+                Sounds.PLAYER_FAIL.play(player);
             } else {
                 planet.getInformation().setIcon(event.getCursor());
                 player.sendMessage(getLocaleMessage("settings.world-icon.changed"));
@@ -288,6 +288,6 @@ public class WorldSettingsMenu extends AbstractMenu {
             event.setCancelled(true);
             return;
         }
-        Sounds.MENU_OPEN_WORLD_SETTINGS.playSound(player);
+        Sounds.MENU_OPEN_WORLD_SETTINGS.play(player);
     }
 }

@@ -21,10 +21,8 @@ package ua.mcchickenstudio.opencreative.commands.world.reputation;
 import org.bukkit.Bukkit;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
-import ua.mcchickenstudio.opencreative.menu.world.WorldGenerationMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -59,7 +57,7 @@ public class CommandLike implements CommandExecutor {
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             long createdSeconds = (System.currentTimeMillis()-planet.getCreationTime())/1000;
             if (OpenCreative.getSettings().getWorldReputationMinSeconds() > createdSeconds) {
-                Sounds.PLAYER_CANCEL.playSound(player);
+                Sounds.PLAYER_CANCEL.play(player);
                 player.sendMessage(getLocaleMessage("world.cant-rate",player).replace("%time%",convertTime(OpenCreative.getSettings().getWorldReputationMinSeconds()-createdSeconds)));
                 return true;
             }
@@ -69,7 +67,7 @@ public class CommandLike implements CommandExecutor {
                 sender.sendMessage(getLocaleMessage("world.already-rated"));
             } else {
                 if (addPlayerInPlanetList(planet,sender.getName(), Planet.PlayersType.LIKED)) {
-                    Sounds.WORLD_LIKED.playSound(player);
+                    Sounds.WORLD_LIKED.play(player);
                     planet.getInformation().setPlanetReputation(planet.getInformation().getReputation() +1);
                     EventRaiser.raiseLikeEvent(player);
                     if (planet.getFlagValue(PlanetFlags.PlanetFlag.LIKE_MESSAGES) == 1) {

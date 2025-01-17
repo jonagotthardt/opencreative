@@ -29,7 +29,6 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
@@ -75,7 +74,7 @@ public final class RequestPurchaseAction extends PlayerAction {
                                     planet.getWorldPlayers().getPlanetPlayer(player).addPurchase(id.toLowerCase());
                                 }
                             }
-                            Sounds.WORLD_PURCHASE.playSound(player);
+                            Sounds.WORLD_PURCHASE.play(player);
                             if (!planet.isOwner(player)) {
                                 OpenCreative.getEconomy().withdrawMoney(player,price);
                                 OpenCreative.getEconomy().depositMoney(Bukkit.getOfflinePlayer(planet.getOwner()),price);
