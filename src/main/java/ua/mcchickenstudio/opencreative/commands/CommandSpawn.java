@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.commands;
 
+import org.bukkit.command.TabCompleter;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import org.bukkit.Bukkit;
@@ -29,36 +31,52 @@ import org.bukkit.plugin.Plugin;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class CommandSpawn implements CommandExecutor {
+public class CommandSpawn implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (args.length > 0) {
-            if (!(sender instanceof Player) || sender.hasPermission("opencreative.spawnothers")) {
-                if (!(Bukkit.getPlayer(args[0]) == null)) {
-                    EventRaiser.raiseQuitEvent(Bukkit.getPlayer(args[0]));
-                    teleportToLobby((Bukkit.getPlayer(args[0])));
-                } else {
-                    sender.sendMessage(getLocaleMessage("not-found-player"));
-                }
-            } else {
-                sender.sendMessage(getLocaleMessage("no-perms"));
+        if (sender instanceof Player player) {
+            if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
+                sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
+                return true;
             }
-        } else {
-            if (sender instanceof Player player) {
-                if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-                    sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
-                    return true;
-                }
-                setCooldown(player,OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
-                EventRaiser.raiseQuitEvent(player);
-                teleportToLobby(player);
-            }
+            setCooldown(player,OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
         }
+        if (args.length == 0) {
+            if (!(sender instanceof Player player)) {
+                // Console cannot be teleported to lobby
+                sender.sendMessage("Only player can be teleported to lobby");
+                return true;
+            }
+            EventRaiser.raiseQuitEvent(player);
+            teleportToLobby(player);
+            return true;
+        }
+        if (!sender.hasPermission("opencreative.spawn.others")) {
+            sender.sendMessage(getLocaleMessage("no-perms"));
+            return true;
+        }
+        Player player = Bukkit.getPlayer(args[0]);
+        if (player == null) {
+            sender.sendMessage(getLocaleMessage("not-found-player"));
+            return true;
+        }
+        EventRaiser.raiseQuitEvent(player);
+        teleportToLobby(player);
         return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (!sender.hasPermission("opencreative.spawn.others") || args.length > 1) {
+            return null;
+        }
+        return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
     }
 }
