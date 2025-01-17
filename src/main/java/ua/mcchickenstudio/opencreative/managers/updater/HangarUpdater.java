@@ -142,6 +142,6 @@ public class HangarUpdater implements Updater {
 
     @Override
     public String getName() {
-        return "Gitlab Updater";
+        return "Hangar Updater";
     }
 }

@@ -21,6 +21,12 @@ package ua.mcchickenstudio.opencreative.managers.economy;
 import ua.mcchickenstudio.opencreative.managers.Manager;
 import org.bukkit.OfflinePlayer;
 
+/**
+ * <h1>Economy</h1>
+ * This interface represents economy manager
+ * that has operations with server's economy,
+ * like taking, giving and getting player's money.
+ */
 public interface Economy extends Manager {
 
     /**

@@ -20,6 +20,11 @@ package ua.mcchickenstudio.opencreative.managers.updater;
 
 import ua.mcchickenstudio.opencreative.managers.Manager;
 
+/**
+ * <h1>Updater</h1>
+ * This interface represents a update manager,
+ * that tells server to update or not.
+ */
 public interface Updater extends Manager {
 
     /**

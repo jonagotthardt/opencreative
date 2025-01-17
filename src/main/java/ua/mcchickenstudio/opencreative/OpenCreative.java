@@ -47,6 +47,7 @@ import ua.mcchickenstudio.opencreative.listeners.player.*;
 import ua.mcchickenstudio.opencreative.listeners.world.BlockChangeListener;
 import ua.mcchickenstudio.opencreative.listeners.world.RedstoneListener;
 import ua.mcchickenstudio.opencreative.managers.economy.Economy;
+import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
 import ua.mcchickenstudio.opencreative.managers.updater.HangarUpdater;
 import ua.mcchickenstudio.opencreative.managers.updater.Updater;
 import ua.mcchickenstudio.opencreative.menu.Menus;
@@ -75,9 +76,11 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 public final class OpenCreative extends JavaPlugin {
 
     private static OpenCreative plugin;
+
     private static Settings settings;
     private static Economy economy;
     private static Updater updater;
+    private static PacketManager packet;
 
     private static final String version = "5.3.2";
     private static final String codename = "Well, it's possible";
@@ -129,6 +132,8 @@ public final class OpenCreative extends JavaPlugin {
         economy.init();
         updater = new HangarUpdater();
         updater.init();
+        packet = HookUtils.getPacketManager();
+        packet.init();
 
         long loadedTime = System.currentTimeMillis()-startTime;
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -282,6 +287,24 @@ public final class OpenCreative extends JavaPlugin {
      */
     public static Economy getEconomy() {
         return economy;
+    }
+
+    /**
+     * Sets custom packet manager.
+     * @param packetManager packet manager.
+     */
+    @SuppressWarnings("unused")
+    public static void setPacketManager(PacketManager packetManager) {
+        getPlugin().getLogger().info("Now using packet manager: " + packetManager.getName());
+        OpenCreative.packet = packetManager;
+    }
+
+    /**
+     * Gets packet manager, that has packets modifiers methods.
+     * @return packet manager.
+     */
+    public static PacketManager getPacketManager() {
+        return packet;
     }
 
     /**
