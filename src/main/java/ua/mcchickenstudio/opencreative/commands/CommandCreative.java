@@ -225,7 +225,21 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     } else {
                         sender.sendMessage(getLocaleMessage("creative.locale.not-found"));
                     }
-
+                }
+                case "sound", "sounds", "soundtheme", "soundstheme" -> {
+                    if (!sender.hasPermission("opencreative.sounds")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return true;
+                    }
+                    if (OpenCreative.getSettings().setSoundsTheme(args[1])) {
+                        sender.sendMessage(getLocaleMessage("creative.sounds.set").replace("%theme%",args[1]));
+                    } else {
+                        sender.sendMessage(getLocaleMessage("creative.sounds.not-found").replace("%theme%",args[1]));
+                    }
                 }
                 case "kick-all" -> {
                     if (!sender.hasPermission("opencreative.kick-all")) {

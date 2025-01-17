@@ -7,6 +7,8 @@
 # This plugin allows players to create their worlds,
 # where they can build, play and even make a code.
 #
+
+#
 # Commands:
 #
 #  /spawn - Teleports to spawn world.
@@ -57,6 +59,7 @@
 #    /creative unload [ID] - Unloads specified world.
 #    /creative maintenance - Maintenance mode settings (start, end).
 #    /creative creative-chat - Creative Chat settings (on, off)
+#    /creative sounds [theme] - Sets current sounds theme.
 #    /creative template [folder] - Creates a new world from Minecraft
 #                                  save in plugins/OpenCreative/templates
 #
@@ -83,9 +86,6 @@ lobby:
   # /setworldspawn command.
   #
   world: "world"
-  sound:
-    name: "music_disc.creator_music_box"
-    pitch: 0.7
   clear-inventory: true # Inventory will be cleared on server join, world change, should be enabled due to security reasons.
 
 recommended-worlds: [1,2,3,4,5] # List of featured worlds in /games, type world number IDs here.
@@ -241,6 +241,48 @@ groups:
       dev-permissions:
         - "headdb.open"
         - "essentials.itemname"
+
+sounds:
+  #
+  # This section allows you to set custom
+  # sounds. If sound is not listed here,
+  # build-in sound will be used instead.
+  # Themes are useful for special days
+  # or holidays.
+  #
+  # Themes can be changed with:
+  # /oc sounds [theme name]
+  #
+  # To add sound from resource pack use
+  # name: "resource_pack_name:sound.id"
+  #
+  # lobby, lobby-music, opencreative, reloading, reloaded, menu-next-page, menu-previous-page,
+  # menu-next-choice, menu-open, menu-open-generation, menu-open-environment, menu-open-world-settings,
+  # menu-open-recommendations, menu-open-own-worlds-browser, menu-open-worlds-browser, menu-open-entities-browser,
+  # menu-open-events-browser, menu-open-actions-browser, menu-open-conditions-browser, menu-open-values-browser,
+  # menu-open-confirmation, menu-generation-change, menu-environment-change, menu-world-search, menu-generate-structures-change,
+  # world-generation, world-connection, world-connected, world-liked, world-disliked, world-advertised, welcome-to-new-world,
+  # world-mode-build, world-mode-dev, world-mode-play, world-now-builder, world-now-developer, world-now-developer-guest,
+  # world-kicked, world-banned, player-cancel, player-fail, player-error, player-teleport, world-code-error, world-code-compile-error,
+  # world-code-critical-error, world-notification, world-settings-fail, world-settings-success, world-settings-time-change, world-settings-autosave-on,
+  # world-settings-autosave-off, world-settings-sharing-public, world-settings-sharing-private, world-settings-spawn-teleport, world-settings-spawn-set,
+  # world-settings-owner-set, world-purchase, dev-connected, dev-not-allowed, dev-open-chest, dev-open-barrel, dev-closed-chest, dev-closed-barrel, dev-set-event,
+  # dev-set-action, dev-set-condition, dev-set-target, dev-set-method, dev-set-function, dev-var-list, dev-platform-color, dev-platform-claim, dev-action-target,
+  # dev-condition-not, dev-condition-default, dev-cycle-delay-decrease, dev-cycle-delay-increase, dev-cycle-delay-set, dev-cycle-named, dev-function-named,
+  # dev-method-named, dev-variable-parameter, dev-next-parameter, dev-change-category, dev-take-value, dev-value-set, dev-text-set, dev-number-set, dev-particle-set,
+  # dev-variable-set, dev-variable-change, dev-fly-speed-change, dev-potion-set, dev-potion-apply, dev-potion-remove, dev-location-set, dev-location-teleport,
+  # dev-location-teleport-back, dev-event-value-set, dev-vector-set, dev-vector-apply, dev-boolean-true, dev-boolean-false, dev-move-blocks-right,
+  # dev-move-blocks-left, dev-debug-on, dev-debug-off, maintenance-notify, maintenance-count, maintenance-start, maintenance-end
+  #
+  theme: "default"
+  default:
+    lobby-music:
+      name: "music_disc.precipice"
+      pitch: 0.1
+  christmas:
+    lobby-music:
+      name: "music_disc.chirp"
+      pitch: 1.7
 
 #
 # Maintenance mode unloads all worlds and

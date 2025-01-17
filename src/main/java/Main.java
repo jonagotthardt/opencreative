@@ -1,7 +1,9 @@
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 /**
  * This Main class is called when user executes .jar file.
