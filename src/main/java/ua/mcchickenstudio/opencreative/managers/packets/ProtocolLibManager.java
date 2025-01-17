@@ -44,7 +44,7 @@ import static com.comphenix.protocol.wrappers.EnumWrappers.PlayerInfoAction.UPDA
  * This class represents an implementation of ProtocolLib
  * for packets actions.
  */
-public class ProtocolLibManager implements PacketManager {
+public final class ProtocolLibManager implements PacketManager {
 
     private ProtocolManager manager;
 

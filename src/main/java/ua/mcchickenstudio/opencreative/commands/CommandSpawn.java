@@ -35,8 +35,6 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 
 public class CommandSpawn implements CommandExecutor {
 
-    final static Plugin plugin = OpenCreative.getPlugin();
-
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length > 0) {

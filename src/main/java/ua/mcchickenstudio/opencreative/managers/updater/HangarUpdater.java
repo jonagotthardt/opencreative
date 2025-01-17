@@ -30,7 +30,7 @@ import java.net.URL;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 
-public class HangarUpdater implements Updater {
+public final class HangarUpdater implements Updater {
 
     private boolean updatesAvailable;
 

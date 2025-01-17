@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
  * when other plugins implementation is not detected. It will
  * not do anything on methods usage.
  */
-public class DisabledPacketManager implements PacketManager {
+public final class DisabledPacketManager implements PacketManager {
 
     @Override
     public void displayGlowingBlock(@NotNull Player player, @NotNull Location location) {}

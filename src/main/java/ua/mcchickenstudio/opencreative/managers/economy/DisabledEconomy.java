@@ -25,7 +25,7 @@ import org.bukkit.OfflinePlayer;
  * used by default, if Vault will be not detected. It will not
  * do any money operation and will be disabled forever.
  */
-public class DisabledEconomy implements Economy {
+public final class DisabledEconomy implements Economy {
 
     @Override
     public boolean depositMoney(OfflinePlayer offlinePlayer, Number money) {
