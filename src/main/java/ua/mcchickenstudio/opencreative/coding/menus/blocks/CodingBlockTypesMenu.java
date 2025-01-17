@@ -165,7 +165,7 @@ public abstract class CodingBlockTypesMenu extends ListBrowserMenu<Object> {
                     ((Directional) blockData).setFacing(BlockFace.SOUTH);
                     containerBlock.setBlockData(blockData);
                     getPlayer().spawnParticle(Particle.BLOCK,containerBlock.getLocation(),1,0,0.5f,0.5f,containerBlock.getBlockData());
-                    getPlayer().playSound(getPlayer().getLocation(),Sound.BLOCK_ENDER_CHEST_CLOSE,100f,1.2f);
+                    Sounds.WORLD_SETTINGS_FLAG_CHANGE.play(getPlayer());
                 }
             }
         }

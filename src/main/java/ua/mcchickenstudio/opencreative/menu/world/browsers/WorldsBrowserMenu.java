@@ -112,7 +112,7 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
                     fillElements(getCurrentPage());
                     fillArrowsItems(getCurrentPage());
                     setItem(50, button.getItem());
-                    getPlayer().playSound(getPlayer().getLocation(), Sound.BLOCK_TRIAL_SPAWNER_SPAWN_ITEM,100,0.6F);
+                    Sounds.MENU_WORLDS_BROWSER_SORT.play(getPlayer());
                 } else if (event.getRawSlot() == 48) {
                     button.next();
                     elements.clear();
@@ -125,7 +125,7 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
                     fillElements(getCurrentPage());
                     fillArrowsItems(getCurrentPage());
                     setItem(48, button.getItem());
-                    getPlayer().playSound(getPlayer().getLocation(), Sound.BLOCK_TRIAL_SPAWNER_DETECT_PLAYER,100,1.2F);
+                    Sounds.MENU_WORLDS_BROWSER_CATEGORY.play(getPlayer());
                 }
             }
         }

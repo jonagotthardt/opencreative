@@ -257,22 +257,25 @@ sounds:
   # name: "resource_pack_name:sound.id"
   #
   # lobby, lobby-music, opencreative, reloading, reloaded, menu-next-page, menu-previous-page,
-  # menu-next-choice, menu-open, menu-open-generation, menu-open-environment, menu-open-world-settings,
+  # menu-next-choice, menu-open-generation, menu-open-environment, menu-open-world-settings,
   # menu-open-recommendations, menu-open-own-worlds-browser, menu-open-worlds-browser, menu-open-entities-browser,
-  # menu-open-events-browser, menu-open-actions-browser, menu-open-conditions-browser, menu-open-values-browser,
-  # menu-open-confirmation, menu-generation-change, menu-environment-change, menu-world-search, menu-generate-structures-change,
-  # world-generation, world-connection, world-connected, world-liked, world-disliked, world-advertised, welcome-to-new-world,
-  # world-mode-build, world-mode-dev, world-mode-play, world-now-builder, world-now-developer, world-now-developer-guest,
-  # world-kicked, world-banned, player-cancel, player-fail, player-error, player-teleport, world-code-error, world-code-compile-error,
-  # world-code-critical-error, world-notification, world-settings-fail, world-settings-success, world-settings-time-change, world-settings-autosave-on,
-  # world-settings-autosave-off, world-settings-sharing-public, world-settings-sharing-private, world-settings-spawn-teleport, world-settings-spawn-set,
-  # world-settings-owner-set, world-purchase, dev-connected, dev-not-allowed, dev-open-chest, dev-open-barrel, dev-closed-chest, dev-closed-barrel, dev-set-event,
-  # dev-set-action, dev-set-condition, dev-set-target, dev-set-method, dev-set-function, dev-var-list, dev-platform-color, dev-platform-claim, dev-action-target,
-  # dev-condition-not, dev-condition-default, dev-cycle-delay-decrease, dev-cycle-delay-increase, dev-cycle-delay-set, dev-cycle-named, dev-function-named,
-  # dev-method-named, dev-variable-parameter, dev-next-parameter, dev-change-category, dev-take-value, dev-value-set, dev-text-set, dev-number-set, dev-particle-set,
-  # dev-variable-set, dev-variable-change, dev-fly-speed-change, dev-potion-set, dev-potion-apply, dev-potion-remove, dev-location-set, dev-location-teleport,
-  # dev-location-teleport-back, dev-event-value-set, dev-vector-set, dev-vector-apply, dev-boolean-true, dev-boolean-false, dev-move-blocks-right,
-  # dev-move-blocks-left, dev-debug-on, dev-debug-off, maintenance-notify, maintenance-count, maintenance-start, maintenance-end
+  # menu-open-values-browser, menu-open-confirmation, menu-generation-change, menu-environment-change, menu-entities-browser-sort,
+  # menu-worlds-browser-sort, menu-worlds-browser-category, menu-world-search, menu-generate-structures-change, world-generation,
+  # world-connection, world-connected, world-liked, world-disliked, welcome-to-new-world, world-mode-build, world-mode-dev,
+  # world-now-builder, world-now-developer, world-now-developer-guest, world-kicked, world-banned, player-cancel, player-fail,
+  # player-error, player-teleport, player-respawn, world-code-error, world-code-compile-error, world-code-critical-error,
+  # world-settings-flag-change, world-settings-category-set, world-settings-time-change, world-settings-autosave-on,
+  # world-settings-autosave-off, world-settings-sharing-public, world-settings-sharing-private, world-settings-spawn-teleport,
+  # world-settings-spawn-set, world-settings-owner-set, world-purchase, world-remove-entity, world-teleport-to-entity,
+  # world-teleport-entity-to-me, dev-connected, dev-not-allowed, dev-open-chest, dev-open-barrel, dev-closed-chest,
+  # dev-closed-barrel, dev-set-event, dev-set-action, dev-set-condition, dev-set-target, dev-set-method, dev-set-function,
+  # dev-var-list, dev-platform-color, dev-platform-claim, dev-action-target, dev-action-with-chest, dev-condition-not,
+  # dev-condition-default, dev-cycle-delay-decrease, dev-cycle-delay-increase, dev-cycle-delay-set, dev-cycle-named,
+  # dev-function-named, dev-method-named, dev-variable-parameter, dev-next-parameter, dev-change-category, dev-take-value,
+  # dev-value-set, dev-text-set, dev-number-set, dev-particle-set, dev-variable-set, dev-variable-change, dev-fly-speed-change, d
+  # ev-potion-set, dev-location-set, dev-location-teleport, dev-location-teleport-back, dev-event-value-set, dev-vector-set,
+  # dev-boolean-true, dev-boolean-false, dev-move-blocks-right, dev-move-blocks-left, dev-debug-on, dev-debug-off, maintenance-notify,
+  # maintenance-count, maintenance-start, maintenance-end
   #
   theme: "default"
   default:

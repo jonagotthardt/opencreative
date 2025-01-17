@@ -19,6 +19,7 @@ public class Main {
     public static void main(String[] args) {
         String message = "This is OpenCreative+, a plugin for Minecraft servers.\nMade by McChicken Studio 2025. \n \nInstallation:\n To install plugin please download PaperMC server, then load it and accept EULA.\n After that put this .jar file into server's /plugins/ folder and launch a server.\n \nPress OK to close.";
         Toolkit.getDefaultToolkit().beep();
+        System.out.println(Arrays.stream(Sounds.values()).map(m -> m.name().toLowerCase().replace("_","-")).toList());
         JOptionPane.showMessageDialog(new JFrame(), message, "OpenCreative+", JOptionPane.WARNING_MESSAGE);
         System.exit(0);
     }

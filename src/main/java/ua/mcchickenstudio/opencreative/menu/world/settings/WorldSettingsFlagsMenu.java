@@ -23,6 +23,7 @@ import ua.mcchickenstudio.opencreative.menu.buttons.RadioButton;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import org.bukkit.GameRule;
 import org.bukkit.Material;
@@ -270,7 +271,7 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
             RadioButton rd = RadioButton.getRadioButtonByItemStack(event.getCurrentItem());
             if (rd != null) {
                 rd.onChoice();
-                ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.UI_LOOM_SELECT_PATTERN, 100, 1f);
+                Sounds.WORLD_SETTINGS_FLAG_CHANGE.play(event.getWhoClicked());
                 new WorldSettingsFlagsMenu().open((Player) event.getWhoClicked());
             }
         }

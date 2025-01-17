@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.commands;
 
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import ua.mcchickenstudio.opencreative.menu.CreativeMenu;
 import ua.mcchickenstudio.opencreative.menu.world.WorldModerationMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsBrowserMenu;
@@ -527,6 +529,14 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     FileUtils.copyFilesToDirectory(template,world);
                     PlanetManager.getInstance().createPlanet(player, id, WorldUtils.WorldGenerator.FLAT);
                 }
+                default -> {
+                    String copyright = OpenCreative.getPlugin().getConfig().getString("messages.version","\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2025\n ");
+                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', copyright.replace("%version%", OpenCreative.getVersion()).replace("%codename%", OpenCreative.getCodename())));
+                    if (player != null) {
+                        Sounds.OPENCREATIVE.play(player);
+                        new CreativeMenu().open(player);
+                    }
+                }
             }
         } else {
             String copyright = OpenCreative.getPlugin().getConfig().getString("messages.version","\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2025\n ");
@@ -576,6 +586,14 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 tabCompleter.addAll(PlanetManager.getInstance().getPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());
             } else if ("corrupted".equalsIgnoreCase(args[0])) {
                 tabCompleter.addAll(PlanetManager.getInstance().getCorruptedPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());
+            } else if ("locale".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("en");
+                tabCompleter.add("ru");
+            } else if ("sound".equalsIgnoreCase(args[0])) {
+                ConfigurationSection config = OpenCreative.getPlugin().getConfig().getConfigurationSection("sounds");
+                if (config == null) return null;
+                tabCompleter.addAll(config.getKeys(false));
+                tabCompleter.remove("theme");
             }
         } else if (args.length == 3) {
             if ("start".equalsIgnoreCase(args[1])) {

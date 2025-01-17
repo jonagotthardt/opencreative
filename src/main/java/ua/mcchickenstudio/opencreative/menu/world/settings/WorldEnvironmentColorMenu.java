@@ -45,6 +45,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -141,7 +142,7 @@ public class WorldEnvironmentColorMenu extends AbstractListMenu<Material> {
                     } else {
                         platform.setFloorMaterial(material);
                     }
-                    getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+                    Sounds.DEV_PLATFORM_COLOR.play(getPlayer());
                 }
                 case "event" -> {
                     if (platform == null) {
@@ -151,7 +152,7 @@ public class WorldEnvironmentColorMenu extends AbstractListMenu<Material> {
                     } else {
                         platform.setEventMaterial(material);
                     }
-                    getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+                    Sounds.DEV_PLATFORM_COLOR.play(getPlayer());
                 }
                 case "action" -> {
                     if (platform == null) {
@@ -161,7 +162,7 @@ public class WorldEnvironmentColorMenu extends AbstractListMenu<Material> {
                     } else {
                         platform.setActionMaterial(material);
                     }
-                    getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR,100,1);
+                    Sounds.DEV_PLATFORM_COLOR.play(getPlayer());
                 }
             }
         }

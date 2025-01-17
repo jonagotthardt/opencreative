@@ -29,6 +29,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityResurrectEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
@@ -40,7 +41,7 @@ public class PlayerRespawn implements Listener {
         if (!DeathListener.deathLocations.containsKey(event.getPlayer())) return;
         Location deathLocation = DeathListener.deathLocations.get(event.getPlayer());
         event.setRespawnLocation(deathLocation);
-        event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.ENTITY_PLAYER_BREATH,100,2);
+        Sounds.PLAYER_RESPAWN.play(event.getPlayer());
         DeathListener.deathLocations.remove(event.getPlayer());
         Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
         if (planet != null) {

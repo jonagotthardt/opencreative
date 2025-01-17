@@ -142,6 +142,9 @@ creative:
   locale:
     changed: "%prefix%&fУспешно изменён язык на &6русский&f!"
     not-found: "%prefix%&cНе найден файл локализации для такого языка О_о"
+  sounds:
+    set: "%prefix%&fИзменена тема звуков на &6%theme%&f, приятного звучания!"
+    not-found: "%prefix%&cТакой темы звуков не найдено О_о"
 not-owner: "%prefix%&cТы не владелец этого мира."
 not-developer: "%prefix%&cТы не разработчик этого мира."
 not-builder: "%prefix%&cТы не строитель этого мира."
