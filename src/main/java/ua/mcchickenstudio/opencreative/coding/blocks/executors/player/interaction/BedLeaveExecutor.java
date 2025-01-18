@@ -41,7 +41,7 @@ public class BedLeaveExecutor extends PlayerExecutor implements Cancellable {
 
     @Override
     public ExecutorType getExecutorType() {
-        return ExecutorType.PLAYER_BED_ENTER;
+        return ExecutorType.PLAYER_BED_LEAVE;
     }
 
     @Override
