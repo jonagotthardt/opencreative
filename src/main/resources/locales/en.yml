@@ -8679,7 +8679,6 @@ menus:
             - "&7Some values may be &3empty&7."
   own-worlds:
     title: "&2☄ My Worlds"
-    title-pages: "My Worlds (%page% of %pages%)"
     items:
       previous-page:
         name: " "
@@ -8723,25 +8722,32 @@ menus:
           - ""
           - "&e  Click to create."
           - ""
+      recommended:
+        name: " "
+        lore:
+          - "&e ⭐ Recommended Worlds"
+          - ""
+          - "&7  Click to view"
+          - "&7  worlds that many"
+          - "&7  server players liked."
+          - ""
       world:
         name: "&f%planetName%"
-        id: "&7 World ID: &a"
         lore:
-          - "&8World by &7%planetOwner%"
           - " "
           - "&7 %planetDescription%"
           - " "
-          - "%id%"
-          - "&7 Online: &a%planetOnline%"
-          - "&7 Category: &f%planetCategory%"
-          - "&7 Reputation: &a%planetReputation%"
-          - "&7 Visitors: &a%planetUniques%"
+          - "&a ☻ &7Online: &a%planetOnline%"
+          - "&3 ⚐ &7Category: &f%planetCategory%"
+          - "&e ⭐ &7Rating: &a%planetReputation%"
+          - "&6 🍖 &7Visits: &a%planetUniques%"
           - " "
-          - "&7 Last Launch: &a%planetLastTime%"
-          - "&7 Creation Date: &a%planetCreationTime%"
+          - "&2 ⌚ &7Last played: &a%planetLastTime%"
+          - "&5 ⌛ &7Created: &d%planetCreationTime%"
           - " "
-          - "&eLeft-click &7- enter the world."
-          - "&eSHIFT+Right-click &7- delete the world."
+          - "&e Left-click &7- enter the world."
+          - "&c SHIFT+Right-click &7- delete the world."
+          - " "
   world-settings:
     title: "&1✎ Your World Settings"
     turned-on: "&a ● &n"

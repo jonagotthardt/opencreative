@@ -79,7 +79,7 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
                     lore.add(loreLine.replace("%planetDescription%", ChatColor.translateAlternateColorCodes('&',newLine)));
                 }
             } else {
-                lore.add(MessageUtils.parsePlanetLines(planet,loreLine.replace("%id%", MessageUtils.getLocaleMessage("menus.own-worlds.items.world.id",false) + planet.getInformation().getCustomID())));
+                lore.add(MessageUtils.parsePlanetLines(planet,loreLine));
             }
         }
         meta.setLore(lore);
