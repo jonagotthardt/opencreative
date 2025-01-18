@@ -1,5 +1,5 @@
 #
-# OpenCreative+ 5.3 - Well, it's possible.
+# OpenCreative+ 5.4 - Well, it's possible.
 # (C) McChicken Studio 2017-2025.
 #
 
@@ -74,7 +74,7 @@
 # Discord: https://discord.gg/sSFCXUeq63
 #
 
-version: 5.3.0
+version: 5.4.0
 last-world-id: 0
 hide-from-tab: spectator # Hides players, that aren't in same world: spectator - Transparent nickname (requires ProtocolLib), full - Full hide from tab list, none - Not hide.
 
