@@ -150,6 +150,7 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
         Planet planet = PlanetManager.getInstance().getPlanetByCustomID(worldID);
         if (planet != null) {
             if (event.getClick() != ClickType.SHIFT_RIGHT) {
+                getPlayer().closeInventory();
                 planet.connectPlayer(getPlayer());
             } else {
                 getPlayer().closeInventory();
