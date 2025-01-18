@@ -136,7 +136,7 @@ public enum Sounds {
     DEV_POTION_SET("block.brewing_stand.brew",1.2f),
     DEV_LOCATION_SET("entity.experience_orb.pickup",2),
     DEV_LOCATION_TELEPORT("entity.illusioner.mirror_move",0.7f),
-    DEV_LOCATION_TELEPORT_BACK("entity.illusioner.mirror_move",1.7f),
+    DEV_LOCATION_TELEPORT_BACK("entity.illusioner.mirror_move",0.9f),
     DEV_EVENT_VALUE_SET("item.bottle.fill_dragonbreath",1.7f),
     DEV_VECTOR_SET("item.bottle.fill_dragonbreath",1.4f),
     DEV_BOOLEAN_TRUE("item.bottle.fill_dragonbreath",1.7f),

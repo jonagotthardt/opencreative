@@ -255,6 +255,14 @@ public class Planet {
         return Bukkit.getWorld(getWorldName()) != null;
     }
 
+    /**
+     * Returns world if planet is loaded, null - planet is unloaded.
+     * @return world, or null.
+     */
+    public World getWorld() {
+        return Bukkit.getWorld(getWorldName());
+    }
+
     public enum Mode {
         PLAYING() {
             public void onPlayerConnect(Player player, Planet planet) {
@@ -509,6 +517,7 @@ public class Planet {
                 getDevPlanet().getLastLocations().put(player,player.getLocation());
                 player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,Integer.MAX_VALUE,0,false,false,false));
                 Sounds.DEV_CONNECTED.play(player);
+                Sounds.WORLD_MODE_DEV.play(player);
                 for (Player developer : getDevPlanet().getWorld().getPlayers()) {
                     WorldBorder border = Bukkit.createWorldBorder();
                     border.setCenter(getDevPlanet().getWorld().getWorldBorder().getCenter());

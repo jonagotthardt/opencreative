@@ -179,7 +179,7 @@ public class EventValues {
         }
 
         public String getLocaleName() {
-            return getLocaleMessage("menus.developer.event-values.items." + this.name().toLowerCase() + ".name" ,false);
+            return getLocaleMessage("menus.developer.event-values.items." + this.name().toLowerCase().replace("_","-") + ".name" ,false);
         }
 
         public static List<Variable> getByCategories(MenusCategory menusCategory) {

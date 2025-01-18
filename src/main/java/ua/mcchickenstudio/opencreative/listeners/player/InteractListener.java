@@ -570,7 +570,7 @@ public final class InteractListener implements Listener {
         }
     }
 
-    private String formatLocation(Location location) {
+    public static String formatLocation(Location location) {
         double x = Math.round(location.getX() * 100.0)/100.0;
         double y = Math.round(location.getY() * 100.0)/100.0;
         double z = Math.round(location.getZ() * 100.0)/100.0;

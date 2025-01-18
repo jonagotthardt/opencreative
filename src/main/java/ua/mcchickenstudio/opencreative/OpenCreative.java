@@ -218,6 +218,7 @@ public final class OpenCreative extends JavaPlugin {
         commands.put("stopsound",   CommandStopSound.class);
         commands.put("time",        CommandTime.class);
         commands.put("weather",     CommandWeather.class);
+        commands.put("value",       CommandValue.class);
         for (String commandName : commands.keySet()) {
             PluginCommand command = getCommand(commandName);
             if (command != null) {

@@ -73,6 +73,10 @@ commands:
   environment:
     description: 'Opens environment`s settings menu.'
     aliases: [env, утм, утмшкщтьуте, editor, увшещк]
+  value:
+    description: 'Gives coding value item to player.'
+    aliases: [text, number, num, boolean, bool, location, loc,
+              vector, eventvalue, gamevalue, worldvalue, variable, var]
   gamemode:
     description: 'Changes current player`s gamemode.'
     aliases: [gm, гм, пь, пфьуьщву]
