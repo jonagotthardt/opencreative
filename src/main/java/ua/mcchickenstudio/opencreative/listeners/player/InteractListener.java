@@ -35,6 +35,7 @@ import ua.mcchickenstudio.opencreative.coding.menus.variables.VariablesMenu;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.LayoutMaker;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
+import ua.mcchickenstudio.opencreative.menu.world.browsers.OwnWorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.RecommendedWorldsMenu;
 import ua.mcchickenstudio.opencreative.menu.world.settings.WorldSettingsMenu;
 import ua.mcchickenstudio.opencreative.planets.*;
@@ -606,7 +607,7 @@ public final class InteractListener implements Listener {
                     return;
                 }
                 player.setCooldown(Material.NETHER_STAR,60);
-                OwnWorldsMenu.openInventory(player,1);
+                new OwnWorldsBrowserMenu(player).open(player);
             }
         } else if (planet != null && currentItem.getType() == Material.COMPASS) {
             // Opens world settings menu.

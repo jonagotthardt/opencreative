@@ -105,16 +105,6 @@ public class PlanetManager {
 
         if (planet.getTerritory().generateWorld(generator,environment,seed,generateStructures) != null) {
             planet.connectPlayer(owner);
-            planet.getTerritory().getWorld().getSpawnLocation().getChunk().load(true);
-            owner.showTitle(Title.title(
-                    toComponent(getLocaleMessage("creating-world.welcome-title",owner)), toComponent(getLocaleMessage("creating-world.welcome-subtitle",owner)),
-                    Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(9), Duration.ofSeconds(2))
-            ));
-            owner.sendMessage(getLocaleMessage("creating-world.welcome"));
-            Sounds.WELCOME_TO_NEW_WORLD.play(owner);
-            owner.setGameMode(GameMode.CREATIVE);
-            ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
-            owner.getInventory().setItem(8,worldSettingsItem);
         } else {
             sendPlayerErrorMessage(owner,"Failed to create world, world is null.");
         }

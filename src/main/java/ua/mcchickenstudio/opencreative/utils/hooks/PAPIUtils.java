@@ -113,7 +113,7 @@ class Placeholder extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "5.3";
+        return "5.4";
     }
 
     @Override
