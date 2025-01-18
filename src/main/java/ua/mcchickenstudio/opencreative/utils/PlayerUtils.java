@@ -18,17 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
-import io.papermc.paper.entity.TeleportFlag;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.KeyedBossBar;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.player.PlayerLobbyEvent;
 import ua.mcchickenstudio.opencreative.settings.Settings;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.async.AsyncScheduler;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
-import ua.mcchickenstudio.opencreative.utils.hooks.ProtocolLibUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.title.Title;
@@ -146,9 +144,8 @@ public class PlayerUtils {
                 Title.Times.times(Duration.ofSeconds(1), Duration.ofSeconds(3), Duration.ofSeconds(1))
         ));
         player.sendMessage(toComponent(getLocaleMessage("lobby.message")));
-        player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 100, 1.5f);
-        player.playSound(player.getLocation(), OpenCreative.getPlugin().getConfig().getString("lobby.sound.name", "music_disc.precipice"), 100, (float) OpenCreative.getPlugin().getConfig().getDouble("lobby.sound.pitch", 0.1f));
-
+        Sounds.LOBBY.play(player);
+        Sounds.LOBBY_MUSIC.play(player);
         ItemStack gamesItem = createItem(Material.COMPASS, 1, "items.lobby.games", "worlds");
         player.getInventory().setItem(3, gamesItem);
 
@@ -316,20 +313,20 @@ public class PlayerUtils {
     }
 
     public static void spawnGlowingBlock(Player player, Location location) {
-        if (HookUtils.isProtocolLibEnabled) {
-            ProtocolLibUtils.spawnGlowingFallingBlock(player,location);
+        if (OpenCreative.getPacketManager().isEnabled()) {
+            OpenCreative.getPacketManager().displayGlowingBlock(player, location);
         }
     }
 
     public static void sendOpenedChestAnimation(Player player, Block block) {
-        if (HookUtils.isProtocolLibEnabled && (block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST)) {
-            ProtocolLibUtils.sendOpenedChestAnimation(player,block);
+        if (OpenCreative.getPacketManager().isEnabled()) {
+            OpenCreative.getPacketManager().sendChestOpenAnimation(player, block);
         }
     }
 
     public static void sendClosedChestAnimation(Player player, Block block) {
-        if (HookUtils.isProtocolLibEnabled && (block.getType() == Material.CHEST || block.getType() == Material.TRAPPED_CHEST)) {
-            ProtocolLibUtils.sendClosedChestAnimation(player,block);
+        if (OpenCreative.getPacketManager().isEnabled()) {
+            OpenCreative.getPacketManager().sendChestCloseAnimation(player, block);
         }
     }
 
@@ -337,8 +334,8 @@ public class PlayerUtils {
         if (spectator == receiver) return;
         Settings.PlayerListChanger changer = OpenCreative.getSettings().getListChanger();
         if (changer == Settings.PlayerListChanger.SPECTATOR) {
-            if (HookUtils.isProtocolLibEnabled) {
-                ProtocolLibUtils.sendSpectatorColoredNickname(spectator,receiver);
+            if (OpenCreative.getPacketManager().isEnabled()) {
+                OpenCreative.getPacketManager().displayAsSpectatorName(spectator, receiver);
             } else {
                 receiver.hidePlayer(OpenCreative.getPlugin(),spectator);
             }
@@ -349,8 +346,8 @@ public class PlayerUtils {
 
     public static void showPlayerFromTab(Player spectator, Player receiver) {
         if (spectator == receiver) return;
-        if (HookUtils.isProtocolLibEnabled && OpenCreative.getSettings().getListChanger() == Settings.PlayerListChanger.SPECTATOR) {
-            ProtocolLibUtils.sendSpectatorUncoloredNickname(spectator,receiver);
+        if (OpenCreative.getPacketManager().isEnabled() && OpenCreative.getSettings().getListChanger() == Settings.PlayerListChanger.SPECTATOR) {
+            OpenCreative.getPacketManager().removeSpectatorName(spectator, receiver);
         } else {
             receiver.showPlayer(OpenCreative.getPlugin(),spectator);
         }

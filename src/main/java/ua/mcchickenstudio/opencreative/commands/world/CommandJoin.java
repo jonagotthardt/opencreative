@@ -21,7 +21,6 @@ package ua.mcchickenstudio.opencreative.commands.world;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -72,7 +71,7 @@ public class CommandJoin implements CommandExecutor, TabCompleter {
         Planet foundPlanet = findPlanet(planetId);
 
         if (foundPlanet == null) {
-            Sounds.PLAYER_FAIL.playSound(player);
+            Sounds.PLAYER_FAIL.play(player);
             player.clearTitle();
             player.sendMessage(getLocaleMessage("no-planet-found", player));
             return;

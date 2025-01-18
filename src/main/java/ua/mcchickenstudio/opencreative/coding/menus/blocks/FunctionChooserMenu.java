@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.menus.blocks;
 
-import ua.mcchickenstudio.opencreative.menu.AbstractListMenu;
 import ua.mcchickenstudio.opencreative.menu.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import net.kyori.adventure.text.Component;
@@ -27,7 +26,6 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -123,7 +121,7 @@ public class FunctionChooserMenu extends ListBrowserMenu<Location> {
                         toComponent(getLocaleMessage("menus.developer.function-chooser.chosen")), Component.text(name).color(NamedTextColor.BLUE),
                         Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
-                Sounds.DEV_SET_FUNCTION.playSound(event.getWhoClicked());
+                Sounds.DEV_SET_FUNCTION.play(event.getWhoClicked());
             }
         }
         event.setCancelled(true);

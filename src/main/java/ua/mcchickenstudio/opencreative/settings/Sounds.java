@@ -27,7 +27,8 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningMessag
 
 public enum Sounds {
 
-    LOBBY,
+    LOBBY("block.beacon.deactivate",1.5f),
+    LOBBY_MUSIC("music_disc.precipice",0.1f),
     OPENCREATIVE("block.beacon.activate",2),
     RELOADING("block.beacon.ambient",2),
     RELOADED("block.beacon.deactivate",2),
@@ -35,30 +36,32 @@ public enum Sounds {
     MENU_NEXT_PAGE("item.book.page_turn"),
     MENU_PREVIOUS_PAGE("item.book.page_turn"),
     MENU_NEXT_CHOICE("ui.button.click"),
-    MENU_OPEN,
-    MENU_OPEN_GENERATION,
+    MENU_OPEN_GENERATION("block.portal.ambient"),
     MENU_OPEN_ENVIRONMENT("block.amethyst_block.chime",0.1f),
-    MENU_OPEN_WORLD_SETTINGS,
-    MENU_OPEN_RECOMMENDATIONS,
+    MENU_OPEN_WORLD_SETTINGS("block.amethyst_block.resonate",0.1f),
+    MENU_OPEN_RECOMMENDATIONS("block.ender_chest.open",0.1f),
+    MENU_OPEN_OWN_WORLDS_BROWSER("block.enchantment_table.use",1.4f),
     MENU_OPEN_WORLDS_BROWSER("block.vault.activate"),
-    MENU_OPEN_ENTITIES_BROWSER,
-    MENU_OPEN_EVENTS_BROWSER,
-    MENU_OPEN_ACTIONS_BROWSER,
-    MENU_OPEN_CONDITIONS_BROWSER,
+    MENU_OPEN_ENTITIES_BROWSER("entity.panda.worried_ambient",0.1f),
     MENU_OPEN_VALUES_BROWSER("ui.loom.select_pattern"),
-    MENU_OPEN_CONFIRMATION,
+    MENU_OPEN_CONFIRMATION("block.amethyst_block.resonate",0.5f),
+    MENU_GENERATION_CHANGE("block.amethyst_block.resonate"),
+    MENU_ENVIRONMENT_CHANGE("block.amethyst_block.step",0.1f),
+    MENU_ENTITIES_BROWSER_SORT("block.trial_spawner.spawn_item",1.2f),
+    MENU_WORLDS_BROWSER_SORT("block.trial_spawner.spawn_item",0.6f),
+    MENU_WORLDS_BROWSER_CATEGORY("block.trial_spawner.detect_player",1.2f),
+    MENU_WORLD_SEARCH("block.respawn_anchor.ambient"),
+    MENU_GENERATE_STRUCTURES_CHANGE("block.respawn_anchor.charge",2),
 
-    WORLD_GENERATION,
+    WORLD_GENERATION("block.respawn_anchor.set_spawn",0.1f),
     WORLD_CONNECTION("block.trial_spawner.about_to_spawn_item"),
     WORLD_CONNECTED("block.beacon.activate",2),
     WORLD_LIKED("item.bottle.fill_dragonbreath",1.3f),
     WORLD_DISLIKED("item.bottle.fill_dragonbreath",0.7f),
-    WORLD_ADVERTISED,
     WELCOME_TO_NEW_WORLD("ui.toast.challenge_complete",0.1f),
 
     WORLD_MODE_BUILD("block.beacon.power_select",1.7f),
     WORLD_MODE_DEV("entity.illusioner.prepare_mirror",0.5f),
-    WORLD_MODE_PLAY,
 
     WORLD_NOW_BUILDER("entity.cat.ambient"),
     WORLD_NOW_DEVELOPER("entity.cat.ambient"),
@@ -70,19 +73,27 @@ public enum Sounds {
     PLAYER_FAIL("block.amethyst_block.break",0.1f),
     PLAYER_ERROR("block.amethyst_block.break",0.1f),
     PLAYER_TELEPORT("entity.illusioner.mirror_move",0.1f),
+    PLAYER_RESPAWN("entity.player.breath",2f),
 
     WORLD_CODE_ERROR("block.beacon.deactivate",1.7f),
     WORLD_CODE_COMPILE_ERROR("block.beacon.deactivate",1.7f),
     WORLD_CODE_CRITICAL_ERROR("block.respawn_anchor.deplete",0.5f),
-    WORLD_NOTIFICATION,
 
-    WORLD_SETTINGS_FAIL,
-    WORLD_SETTINGS_SUCCESS,
-    WORLD_SETTINGS_TIME_CHANGE,
-    WORLD_SETTINGS_SPAWN_TELEPORT,
-    WORLD_SETTINGS_SPAWN_SET,
-    WORLD_SETTINGS_OWNER_SET,
+    WORLD_SETTINGS_FLAG_CHANGE("ui.loom.select_pattern"),
+    WORLD_SETTINGS_CATEGORY_SET("entity.player.levelup",1.6f),
+    WORLD_SETTINGS_TIME_CHANGE("block.respawn_anchor.charge",1.2f),
+    WORLD_SETTINGS_AUTOSAVE_ON("block.beacon.activate",0.7f),
+    WORLD_SETTINGS_AUTOSAVE_OFF("block.respawn_anchor.deplete",0.3f),
+    WORLD_SETTINGS_SHARING_PUBLIC("block.iron_door.open"),
+    WORLD_SETTINGS_SHARING_PRIVATE("entity.evoker.fangs",0.6f),
+    WORLD_SETTINGS_SPAWN_TELEPORT("entity.illusioner.mirror_move",0.8f),
+    WORLD_SETTINGS_SPAWN_SET("entity.illusioner.cast_spell",0.8f),
+    WORLD_SETTINGS_OWNER_SET("ui.toast.challenge_complete",1.5f),
     WORLD_PURCHASE("entity.player.levelup", 1.2f),
+
+    WORLD_REMOVE_ENTITY("entity.illusioner.prepare_blindness",1.6f),
+    WORLD_TELEPORT_TO_ENTITY("entity.illusioner.mirror_move",0.8f),
+    WORLD_TELEPORT_ENTITY_TO_ME("entity.illusioner.cast_spell",0.8f),
 
     DEV_CONNECTED("block.beacon.activate",2),
     DEV_NOT_ALLOWED("block.amethyst_block.break",1.2f),
@@ -100,37 +111,45 @@ public enum Sounds {
     DEV_PLATFORM_COLOR("entity.illusioner.prepare_mirror"),
     DEV_PLATFORM_CLAIM("ui.toast.challenge_complete",1.7f),
 
+    DEV_ACTION_TARGET("block.amethyst_block.resonate"),
+    DEV_ACTION_WITH_CHEST("block.ender_chest.close",1.2f),
+    DEV_CONDITION_NOT("block.trial_spawner.close_shutter"),
+    DEV_CONDITION_DEFAULT("block.trial_spawner.close_shutter",0.1f),
+    DEV_CYCLE_DELAY_DECREASE("block.chain.fall",0.1f),
+    DEV_CYCLE_DELAY_INCREASE("block.chain.fall"),
+    DEV_CYCLE_DELAY_SET("block.chain.fall",0.5f),
+    DEV_CYCLE_NAMED("block.chain.fall",0.7f),
+    DEV_FUNCTION_NAMED("block.enchantment_table.use",0.7f),
+    DEV_METHOD_NAMED("block.enchantment_table.use",0.7f),
+
     DEV_VARIABLE_PARAMETER("block.vault.activate",0.7f),
     DEV_NEXT_PARAMETER("block.amethyst_block.resonate",1.7f),
     DEV_CHANGE_CATEGORY("item.book.page_turn",0.5f),
-    DEV_NAMED_METHOD,
-    DEV_NAMED_FUNCTION,
-    DEV_NAMED_CYCLE,
     DEV_TAKE_VALUE("entity.allay.item_thrown",2f),
-    DEV_VALUE_SET,
-    DEV_TEXT_SET,
+    DEV_VALUE_SET("item.bottle.fill_dragonbreath",1.4f),
+    DEV_TEXT_SET("item.bottle.fill_dragonbreath",1.4f),
+    DEV_NUMBER_SET("item.bottle.fill_dragonbreath",1.7f),
     DEV_PARTICLE_SET("entity.firework_rocket.large_blast_far",1.2f),
+    DEV_VARIABLE_SET("item.bottle.fill_dragonbreath",1.4f),
+    DEV_VARIABLE_CHANGE("item.bottle.fill_dragonbreath",1.7f),
+    DEV_FLY_SPEED_CHANGE("entity.player.levelup",1.9f),
     DEV_POTION_SET("block.brewing_stand.brew",1.2f),
-    DEV_POTION_APPLY,
-    DEV_POTION_REMOVE,
-    DEV_LOCATION_SET,
+    DEV_LOCATION_SET("entity.experience_orb.pickup",2),
     DEV_LOCATION_TELEPORT("entity.illusioner.mirror_move",0.7f),
-    DEV_LOCATION_TELEPORT_BACK,
+    DEV_LOCATION_TELEPORT_BACK("entity.illusioner.mirror_move",1.7f),
     DEV_EVENT_VALUE_SET("item.bottle.fill_dragonbreath",1.7f),
-    DEV_VECTOR_SET,
-    DEV_VECTOR_APPLY,
-    DEV_BOOLEAN_TRUE,
-    DEV_BOOLEAN_FALSE,
-    DEV_MOVE_BLOCKS_RIGHT,
-    DEV_MOVE_BLOCKS_LEFT,
+    DEV_VECTOR_SET("item.bottle.fill_dragonbreath",1.4f),
+    DEV_BOOLEAN_TRUE("item.bottle.fill_dragonbreath",1.7f),
+    DEV_BOOLEAN_FALSE("item.bottle.fill_dragonbreath",1.3f),
+    DEV_MOVE_BLOCKS_RIGHT("block.barrel.close",1.3f),
+    DEV_MOVE_BLOCKS_LEFT("block.barrel.close",1.5f),
     DEV_DEBUG_ON("entity.allay.ambient_without_item"),
     DEV_DEBUG_OFF("entity.allay.ambient_with_item"),
 
     MAINTENANCE_NOTIFY("block.bell.use",0.1f),
     MAINTENANCE_COUNT("block.end_portal_frame.fill",2),
     MAINTENANCE_START("block.beacon.power_select",0.5f),
-    MAINTENANCE_END("block.beacon.power_select",0.7f),
-    ;
+    MAINTENANCE_END("block.beacon.power_select",0.7f);
 
     private final String name;
     private final float pitch;
@@ -140,17 +159,12 @@ public enum Sounds {
         this.pitch = pitch;
     }
 
-    Sounds() {
-        this.name = "entity.player.levelup";
-        this.pitch = 1;
-    }
-
     Sounds(String name) {
         this.name = name;
         this.pitch = 1;
     }
 
-    public void playSound(Audience audience) {
+    public void play(Audience audience) {
         String nameSpace = "minecraft";
         String soundName = this.name;
         float pitch = this.pitch;

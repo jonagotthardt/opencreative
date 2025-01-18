@@ -22,6 +22,7 @@ import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetInfo;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -86,7 +87,7 @@ public class WorldSettingsCategoryMenu extends AbstractMenu {
                 return;
             }
             event.getWhoClicked().closeInventory();
-            ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ENTITY_PLAYER_LEVELUP,100,1.6f);
+            Sounds.WORLD_SETTINGS_CATEGORY_SET.play(event.getWhoClicked());
         } else {
             new WorldSettingsMenu(planet,(Player) event.getWhoClicked()).open((Player) event.getWhoClicked());
         }

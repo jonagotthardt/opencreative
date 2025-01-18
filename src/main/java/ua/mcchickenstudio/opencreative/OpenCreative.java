@@ -41,20 +41,19 @@ import ua.mcchickenstudio.opencreative.commands.world.modes.CommandPlay;
 import ua.mcchickenstudio.opencreative.commands.world.reputation.CommandDislike;
 import ua.mcchickenstudio.opencreative.commands.world.reputation.CommandLike;
 import ua.mcchickenstudio.opencreative.listeners.CreativeListener;
-import ua.mcchickenstudio.opencreative.listeners.entity.EntityDamage;
-import ua.mcchickenstudio.opencreative.listeners.entity.EntitySpawn;
+import ua.mcchickenstudio.opencreative.listeners.entity.EntityDamageListener;
+import ua.mcchickenstudio.opencreative.listeners.entity.EntitySpawnListener;
 import ua.mcchickenstudio.opencreative.listeners.player.*;
-import ua.mcchickenstudio.opencreative.listeners.world.BlockChanged;
-import ua.mcchickenstudio.opencreative.listeners.world.BlockRedstone;
+import ua.mcchickenstudio.opencreative.listeners.world.BlockChangeListener;
+import ua.mcchickenstudio.opencreative.listeners.world.RedstoneListener;
 import ua.mcchickenstudio.opencreative.managers.economy.Economy;
+import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
 import ua.mcchickenstudio.opencreative.managers.updater.HangarUpdater;
 import ua.mcchickenstudio.opencreative.managers.updater.Updater;
 import ua.mcchickenstudio.opencreative.menu.Menus;
-import ua.mcchickenstudio.opencreative.settings.Commands;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
-import ua.mcchickenstudio.opencreative.utils.async.Ticker;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.Metrics;
 
@@ -77,11 +76,13 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 public final class OpenCreative extends JavaPlugin {
 
     private static OpenCreative plugin;
+
     private static Settings settings;
     private static Economy economy;
     private static Updater updater;
+    private static PacketManager packet;
 
-    private static final String version = "5.3.2";
+    private static final String version = "5.4.0";
     private static final String codename = "Well, it's possible";
 
     /**
@@ -131,6 +132,8 @@ public final class OpenCreative extends JavaPlugin {
         economy.init();
         updater = new HangarUpdater();
         updater.init();
+        packet = HookUtils.getPacketManager();
+        packet.init();
 
         long loadedTime = System.currentTimeMillis()-startTime;
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -238,13 +241,13 @@ public final class OpenCreative extends JavaPlugin {
         this.getLogger().info("Registering OpenCreative+ event listeners...");
         int registeredListeners = 0;
         Class<?>[] listeners = new Class[] {
-                ChangedWorld.class,     EntitySpawn.class,      EntityDamage.class,
-                PlayerJoin.class,       PlayerQuit.class,       PlayerRespawn.class,
-                PlayerDeath.class,      PlayerTeleport.class,   PlayerMove.class,
-                PlayerChat.class,       PlayerInteract.class,   PlayerDropItem.class,
-                PlayerPlaceBlock.class, PlayerBreakBlock.class, PlayerBucket.class,
-                InventoryClick.class,   BlockRedstone.class,    BlockChanged.class,
-                Menus.class,            WorldListener.class,       GameModeChange.class,
+                ChangedWorld.class,     EntitySpawnListener.class,      EntityDamageListener.class,
+                JoinListener.class,       QuitListener.class,       PlayerRespawn.class,
+                DeathListener.class,      TeleportListener.class,   MoveListener.class,
+                ChatListener.class,       InteractListener.class,   DropItemListener.class,
+                PlaceBlockListener.class, DestroyBlockListener.class, BucketListener.class,
+                ClickListener.class,   RedstoneListener.class,    BlockChangeListener.class,
+                Menus.class,            WorldListener.class,       GameModeListener.class,
                 CreativeListener.class, PotionListener.class
         };
         for (Class<?> listenerClass : listeners) {
@@ -284,6 +287,24 @@ public final class OpenCreative extends JavaPlugin {
      */
     public static Economy getEconomy() {
         return economy;
+    }
+
+    /**
+     * Sets custom packet manager.
+     * @param packetManager packet manager.
+     */
+    @SuppressWarnings("unused")
+    public static void setPacketManager(PacketManager packetManager) {
+        getPlugin().getLogger().info("Now using packet manager: " + packetManager.getName());
+        OpenCreative.packet = packetManager;
+    }
+
+    /**
+     * Gets packet manager, that has packets modifiers methods.
+     * @return packet manager.
+     */
+    public static PacketManager getPacketManager() {
+        return packet;
     }
 
     /**

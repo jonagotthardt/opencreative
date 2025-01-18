@@ -22,11 +22,11 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menu.LegacyMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -145,7 +145,7 @@ public class OwnWorldsMenu extends LegacyMenu {
     }
 
     public static void openInventory(Player player, int page) {
-        player.playSound(player.getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, 100, 1.4f);
+        Sounds.MENU_OPEN_OWN_WORLDS_BROWSER.play(player);
         player.openInventory(new OwnWorldsMenu(player,page).getInventory());
     }
 

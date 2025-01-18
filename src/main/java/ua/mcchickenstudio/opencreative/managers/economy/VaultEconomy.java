@@ -26,7 +26,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
  * Implementation of Vault economy,
  * the most used on servers.
  */
-public class VaultEconomy implements Economy {
+public final class VaultEconomy implements Economy {
 
     private net.milkbowl.vault.economy.Economy vaultEconomy;
 

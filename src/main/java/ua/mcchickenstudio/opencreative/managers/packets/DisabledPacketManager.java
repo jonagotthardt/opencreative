@@ -16,31 +16,34 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.managers.economy;
+package ua.mcchickenstudio.opencreative.managers.packets;
 
-import org.bukkit.OfflinePlayer;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * This class represents a disabled economy manager, that will be
- * used by default, if Vault will be not detected. It will not
- * do any money operation and will be disabled forever.
+ * This class represents a disabled packet manager is used,
+ * when other plugins implementation is not detected. It will
+ * not do anything on methods usage.
  */
-public final class DisabledEconomy implements Economy {
+public final class DisabledPacketManager implements PacketManager {
 
     @Override
-    public boolean depositMoney(OfflinePlayer offlinePlayer, Number money) {
-        return false;
-    }
+    public void displayGlowingBlock(@NotNull Player player, @NotNull Location location) {}
 
     @Override
-    public boolean withdrawMoney(OfflinePlayer offlinePlayer, Number money) {
-        return false;
-    }
+    public void sendChestOpenAnimation(@NotNull Player player, @NotNull Block block) {}
 
     @Override
-    public Number getBalance(OfflinePlayer offlinePlayer) {
-        return 0;
-    }
+    public void sendChestCloseAnimation(@NotNull Player player, @NotNull Block block) {}
+
+    @Override
+    public void displayAsSpectatorName(@NotNull Player player, @NotNull Player receiver) {}
+
+    @Override
+    public void removeSpectatorName(@NotNull Player player, @NotNull Player receiver) {}
 
     @Override
     public void init() {}
@@ -52,6 +55,6 @@ public final class DisabledEconomy implements Economy {
 
     @Override
     public String getName() {
-        return "Disabled Economy";
+        return "Disabled Packet Manager";
     }
 }

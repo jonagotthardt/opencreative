@@ -18,10 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.menus.variables;
 
-import ua.mcchickenstudio.opencreative.menu.AbstractListMenu;
 import org.bukkit.Material;
 import org.bukkit.Particle;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -187,7 +185,7 @@ public class ParticlesMenu extends ListBrowserMenu<Particle> {
             ItemStack item = event.getCurrentItem().clone();
             item.setType(Material.NETHER_STAR);
             event.getWhoClicked().getInventory().setItemInMainHand(item);
-            Sounds.DEV_PARTICLE_SET.playSound(event.getWhoClicked());
+            Sounds.DEV_PARTICLE_SET.play(event.getWhoClicked());
         }
         event.setCancelled(true);
     }

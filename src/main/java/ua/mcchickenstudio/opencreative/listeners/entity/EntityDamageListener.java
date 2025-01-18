@@ -33,7 +33,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
 
-public class EntityDamage implements Listener {
+public final class EntityDamageListener implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {

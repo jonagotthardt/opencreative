@@ -33,7 +33,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -113,7 +112,7 @@ public class ErrorUtils {
     public static void sendPlayerErrorMessage(Player player, String errorMessage) {
         OpenCreative.getPlugin().getLogger().warning("An player error has occurred for " + player.getName() + ": " + errorMessage);
         player.sendMessage(getLocaleMessage("player-error").replace("%error%",errorMessage));
-        Sounds.PLAYER_ERROR.playSound(player);
+        Sounds.PLAYER_ERROR.play(player);
     }
 
     /**
@@ -125,7 +124,7 @@ public class ErrorUtils {
                 .text(getLocaleMessage("player-error").replace("%error%",errorMessage))
                 .hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(Component.text(parseException(error,true))));
         player.sendMessage(message);
-        Sounds.PLAYER_ERROR.playSound(player);
+        Sounds.PLAYER_ERROR.play(player);
     }
 
     /**
@@ -135,7 +134,7 @@ public class ErrorUtils {
         if (OpenCreative.getSettings().isConsoleWarnings()) OpenCreative.getPlugin().getLogger().warning("An error has occurred in planet " + planet.getWorldName() + ": " + errorMessage);
         for (Player player : planet.getPlayers()) {
             player.sendMessage(getLocaleMessage("planet-error").replace("%error%",errorMessage));
-            Sounds.PLAYER_ERROR.playSound(player);
+            Sounds.PLAYER_ERROR.play(player);
         }
     }
 
@@ -149,7 +148,7 @@ public class ErrorUtils {
                     .text(getLocaleMessage("planet-error").replace("%error%",errorMessage))
                     .hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(Component.text(parseException(error,true))));
             player.sendMessage(message);
-            Sounds.PLAYER_ERROR.playSound(player);
+            Sounds.PLAYER_ERROR.play(player);
         }
     }
 
@@ -171,7 +170,7 @@ public class ErrorUtils {
                     .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("planet-code-error.hover-message"))))
                     .clickEvent(ClickEvent.runCommand("/dev " + action.getX() + " " + executor.getY() + " " + executor.getZ()));
             player.sendMessage(message);
-            Sounds.WORLD_CODE_ERROR.playSound(player);
+            Sounds.WORLD_CODE_ERROR.play(player);
         }
     }
 
@@ -193,7 +192,7 @@ public class ErrorUtils {
                     .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("planet-code-error.hover-message") + "\n" + parseException(error,true))))
                     .clickEvent(ClickEvent.runCommand("/dev " + action.getX() + " " + 1 + " " + action.getExecutor().getZ()));
             player.sendMessage(message);
-            Sounds.WORLD_CODE_ERROR.playSound(player);
+            Sounds.WORLD_CODE_ERROR.play(player);
         }
     }
 
@@ -205,7 +204,7 @@ public class ErrorUtils {
         if (planet == null) return;
         for (Player player : planet.getPlayers()) {
             player.sendMessage(getLocaleMessage("planet-code-error.message").replace("%event%",executor.getExecutorType().getLocaleName()).replace("%action%", action.getActionType().toString()).replace("%error%",errorMessage).replace("%x%",String.valueOf(action.getX())).replace("%y%",String.valueOf(executor.getY())).replace("%z%",String.valueOf(executor.getZ())));
-            Sounds.WORLD_CODE_ERROR.playSound(player);
+            Sounds.WORLD_CODE_ERROR.play(player);
         }
     }
 
@@ -215,7 +214,7 @@ public class ErrorUtils {
     public static void sendPlanetCodeCriticalErrorMessage(Planet planet, Executor executor, String errorMessage) {
         if (planet == null) return;
         for (Player player : planet.getPlayers()) {
-            Sounds.WORLD_CODE_CRITICAL_ERROR.playSound(player);
+            Sounds.WORLD_CODE_CRITICAL_ERROR.play(player);
             Component message = Component
                     .text(getLocaleMessage("planet-code-error.message-event-critical")
                             .replace("%event%", executor.getExecutorType().getLocaleName())
@@ -245,7 +244,7 @@ public class ErrorUtils {
                     .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("planet-code-error.hover-message"))))
                     .clickEvent(ClickEvent.runCommand("/dev " + executor.getX() + " " + executor.getY() + " " + executor.getZ()));
             player.sendMessage(message);
-            Sounds.WORLD_CODE_ERROR.playSound(player);
+            Sounds.WORLD_CODE_ERROR.play(player);
         }
     }
 
@@ -264,7 +263,7 @@ public class ErrorUtils {
                     .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("planet-code-error.hover-message"))))
                     .clickEvent(ClickEvent.runCommand("/dev " + block.getX() + " " + block.getY() + " " + block.getZ()));
             player.sendMessage(message);
-            Sounds.WORLD_CODE_COMPILE_ERROR.playSound(player);
+            Sounds.WORLD_CODE_COMPILE_ERROR.play(player);
         }
     }
 
@@ -303,7 +302,7 @@ public class ErrorUtils {
                         .clickEvent(ClickEvent.runCommand("/dev " + block.getLocation().getX() + " " + block.getLocation().getY() + " " + block.getLocation().getZ()));
                 player.sendMessage(blockCoordinatesMessage);
             }
-            Sounds.WORLD_CODE_COMPILE_ERROR.playSound(player);
+            Sounds.WORLD_CODE_COMPILE_ERROR.play(player);
             player.sendMessage(" ");
         }
     }

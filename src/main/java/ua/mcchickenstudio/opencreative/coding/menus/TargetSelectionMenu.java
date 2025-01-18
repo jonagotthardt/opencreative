@@ -21,7 +21,6 @@ package ua.mcchickenstudio.opencreative.coding.menus;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -72,7 +71,7 @@ public class TargetSelectionMenu extends AbstractMenu {
                 }
                 translateBlockSign(signLocation.getBlock());
                 player.closeInventory();
-                Sounds.DEV_SET_TARGET.playSound(player);
+                Sounds.DEV_SET_TARGET.play(player);
             }
         }
     }

@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.settings;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -117,11 +116,25 @@ public class Settings {
         groups.load();
         commands.load();
 
-        ConfigurationSection soundsSection = config.getConfigurationSection("sounds");
+        String soundsTheme = config.getString("sounds.theme","default");
+        loadSounds(config, soundsTheme);
+
+        if (maintenance) {
+            OpenCreative.getPlugin().getLogger().warning("Maintenance mode is still enabled in config.yml, to disable: /maintenance end");
+        }
+        if (debug) {
+            OpenCreative.getPlugin().getLogger().warning("Debug Mode is enabled in config.yml, some logs will appear in console.");
+        }
+        checkDebugAnnouncer();
+    }
+
+    private void loadSounds(FileConfiguration config, String soundsTheme) {
+        sounds.clear();
+        ConfigurationSection soundsSection = config.getConfigurationSection("sounds." + soundsTheme);
         if (soundsSection != null ) {
             for (String key : soundsSection.getKeys(false)) {
                 try {
-                    Sounds type = Sounds.valueOf(key.toUpperCase());
+                    Sounds type = Sounds.valueOf(key.toUpperCase().replace("-","_"));
                     String sound = soundsSection.getString(key+".name","");
                     float pitch = (float) soundsSection.getDouble(key+".name",1.0f);
                     sounds.put(type,new SettingsSound(sound,pitch));
@@ -133,14 +146,15 @@ public class Settings {
         if (!sounds.isEmpty()) {
             OpenCreative.getPlugin().getLogger().info("Added " + sounds.size() + " custom sounds");
         }
+    }
 
-        if (maintenance) {
-            OpenCreative.getPlugin().getLogger().warning("Maintenance mode is still enabled in config.yml, to disable: /maintenance end");
+    public boolean setSoundsTheme(String theme) {
+        FileConfiguration config = OpenCreative.getPlugin().getConfig();
+        if (config.getConfigurationSection("sounds."+theme) == null) {
+            return false;
         }
-        if (debug) {
-            OpenCreative.getPlugin().getLogger().warning("Debug Mode is enabled in config.yml, some logs will appear in console.");
-        }
-        checkDebugAnnouncer();
+        loadSounds(config, theme);
+        return true;
     }
 
     public boolean isDebug() {
@@ -172,7 +186,7 @@ public class Settings {
         if (maintenance) {
             OpenCreative.getPlugin().getLogger().info("Maintenance mode started! Unloading planets, please wait...");
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                Sounds.MAINTENANCE_START.playSound(onlinePlayer);
+                Sounds.MAINTENANCE_START.play(onlinePlayer);
                 onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.started"));
                 for (Planet planet : PlanetManager.getInstance().getPlanets()) {
                     if (planet.isLoaded()) {
@@ -185,7 +199,7 @@ public class Settings {
         } else {
             OpenCreative.getPlugin().getLogger().info("Maintenance mode ended, now players can play in worlds.");
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                Sounds.MAINTENANCE_END.playSound(onlinePlayer);
+                Sounds.MAINTENANCE_END.play(onlinePlayer);
                 onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.ended"));
             }
         }

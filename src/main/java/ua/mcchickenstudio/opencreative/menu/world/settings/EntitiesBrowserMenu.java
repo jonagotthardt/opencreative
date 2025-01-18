@@ -47,6 +47,7 @@ import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.menu.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.buttons.ParameterButton;
 import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
 import java.util.*;
@@ -143,7 +144,7 @@ public class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
                     fillElements(getCurrentPage());
                     fillArrowsItems(getCurrentPage());
                     setItem(48, button.getItem());
-                    getPlayer().playSound(getPlayer().getLocation(), Sound.BLOCK_TRIAL_SPAWNER_DETECT_PLAYER,100,1.2F);
+                    Sounds.MENU_ENTITIES_BROWSER_SORT.play(getPlayer());
                     return;
                 }
             }
@@ -197,19 +198,19 @@ public class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
         switch (event.getClick()) {
             case LEFT -> {
                 if (PlayerUtils.isEntityInDevPlanet(getPlayer())) {
-                    getPlayer().playSound(getPlayer().getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 100, 0.3f);
+                    Sounds.PLAYER_FAIL.play(getPlayer());
                     return;
                 }
                 getPlayer().closeInventory();
-                getPlayer().playSound(getPlayer().getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100,0.8f);
+                Sounds.WORLD_TELEPORT_TO_ENTITY.play(getPlayer());
                 getPlayer().teleport(entity.getLocation());
             }
             case RIGHT -> {
                 if (PlayerUtils.isEntityInDevPlanet(getPlayer())) {
-                    getPlayer().playSound(getPlayer().getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 100, 0.3f);
+                    Sounds.PLAYER_FAIL.play(getPlayer());
                     return;
                 }
-                getPlayer().playSound(getPlayer().getLocation(),Sound.ENTITY_ILLUSIONER_CAST_SPELL,100,0.8f);
+                Sounds.WORLD_TELEPORT_ENTITY_TO_ME.play(getPlayer());
                 entity.teleport(getPlayer().getLocation());
                 if (elements.removeIf(e -> ((Entity) e).isDead())) {
                     fillElements(getCurrentPage());
@@ -226,7 +227,7 @@ public class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
                                 .replace("%z%",String.valueOf(entity.getLocation().getBlockZ())));
                     }
                 }
-                getPlayer().playSound(getPlayer().getLocation(),Sound.ENTITY_ILLUSIONER_PREPARE_BLINDNESS,100f,1.6f);
+                Sounds.WORLD_REMOVE_ENTITY.play(getPlayer());
                 elements.remove(entity);
                 entity.remove();
                 elements.removeIf(e -> ((Entity) e).isDead());
@@ -282,7 +283,7 @@ public class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
 
     @Override
     public void onOpen(InventoryOpenEvent event) {
-        getPlayer().playSound(getPlayer().getLocation(), Sound.ENTITY_PANDA_WORRIED_AMBIENT,100,0.1f);
+        Sounds.MENU_OPEN_ENTITIES_BROWSER.play(getPlayer());
     }
 
 }

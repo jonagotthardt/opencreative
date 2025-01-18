@@ -42,7 +42,6 @@ import ua.mcchickenstudio.opencreative.menu.buttons.ParameterButton;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -150,7 +149,7 @@ public class WorldEnvironmentMenu extends AbstractMenu {
         } else if (itemEquals(currentItem,time.getItem())) {
             if (devPlanet.getWorld() == null) return;
             time.next();
-            player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_CHARGE,100,1.2f);
+            Sounds.WORLD_SETTINGS_TIME_CHANGE.play(player);
             setItem(event.getRawSlot(),time.getItem());
             if ("night".equals(time.getCurrentValue().toString())) {
                 devPlanet.getWorld().setTime(15000L);
@@ -184,6 +183,6 @@ public class WorldEnvironmentMenu extends AbstractMenu {
     @Override
     public void onOpen(InventoryOpenEvent event) {
         Player player = (Player) event.getPlayer();
-        Sounds.MENU_OPEN_ENVIRONMENT.playSound(player);
+        Sounds.MENU_OPEN_ENVIRONMENT.play(player);
     }
 }

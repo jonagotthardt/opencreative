@@ -94,7 +94,7 @@ public abstract class CodingBlockTypesMenu extends ListBrowserMenu<Object> {
         event.setCancelled(true);
         MenusCategory category = MenusCategory.getByMaterial(clicked.getType());
         if (category != null) {
-            Sounds.DEV_CHANGE_CATEGORY.playSound(event.getWhoClicked());
+            Sounds.DEV_CHANGE_CATEGORY.play(event.getWhoClicked());
             currentCategory = category;
             elements.clear();
             elements.addAll(getElements());
@@ -138,9 +138,9 @@ public abstract class CodingBlockTypesMenu extends ListBrowserMenu<Object> {
                         Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(1), Duration.ofMillis(750))
                 ));
                 switch (codingBlockName) {
-                    case "events" -> Sounds.DEV_SET_EVENT.playSound(event.getWhoClicked());
-                    case "actions" -> Sounds.DEV_SET_ACTION.playSound(event.getWhoClicked());
-                    case "conditions" -> Sounds.DEV_SET_CONDITION.playSound(event.getWhoClicked());
+                    case "events" -> Sounds.DEV_SET_EVENT.play(event.getWhoClicked());
+                    case "actions" -> Sounds.DEV_SET_ACTION.play(event.getWhoClicked());
+                    case "conditions" -> Sounds.DEV_SET_CONDITION.play(event.getWhoClicked());
                 }
             }
             /*
@@ -165,7 +165,7 @@ public abstract class CodingBlockTypesMenu extends ListBrowserMenu<Object> {
                     ((Directional) blockData).setFacing(BlockFace.SOUTH);
                     containerBlock.setBlockData(blockData);
                     getPlayer().spawnParticle(Particle.BLOCK,containerBlock.getLocation(),1,0,0.5f,0.5f,containerBlock.getBlockData());
-                    getPlayer().playSound(getPlayer().getLocation(),Sound.BLOCK_ENDER_CHEST_CLOSE,100f,1.2f);
+                    Sounds.WORLD_SETTINGS_FLAG_CHANGE.play(getPlayer());
                 }
             }
         }

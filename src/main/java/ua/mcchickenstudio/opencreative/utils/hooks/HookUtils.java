@@ -26,6 +26,9 @@ import org.bukkit.plugin.Plugin;
 import ua.mcchickenstudio.opencreative.managers.economy.DisabledEconomy;
 import ua.mcchickenstudio.opencreative.managers.economy.Economy;
 import ua.mcchickenstudio.opencreative.managers.economy.VaultEconomy;
+import ua.mcchickenstudio.opencreative.managers.packets.DisabledPacketManager;
+import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
+import ua.mcchickenstudio.opencreative.managers.packets.ProtocolLibManager;
 
 public class HookUtils {
 
@@ -48,9 +51,6 @@ public class HookUtils {
         OpenCreative.getPlugin().getLogger().info((isLibsDisguisesEnabled ? "Creative+ hooked into LibsDisguises." : "Creative+ didn't detect LibsDisguises or ProtocolLib, disguise actions will be not available."));
         if (isPlaceholderAPIEnabled) {
             PAPIUtils.registerPlaceholder();
-        }
-        if (isProtocolLibEnabled) {
-            ProtocolLibUtils.init();
         }
     }
 
@@ -75,4 +75,11 @@ public class HookUtils {
         }
     }
 
+    public static PacketManager getPacketManager() {
+        if (isProtocolLibEnabled) {
+            return new ProtocolLibManager();
+        } else {
+            return new DisabledPacketManager();
+        }
+    }
 }

@@ -18,8 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.commands.world.modes;
 
-import org.bukkit.command.TabCompleter;
-import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -28,7 +26,6 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,7 +36,6 @@ import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
-import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.removePlayerWithLocation;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
@@ -105,7 +101,7 @@ public class CommandBuild implements CommandExecutor {
                             Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                     ));
                     player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
-                    Sounds.WORLD_MODE_BUILD.playSound(player);
+                    Sounds.WORLD_MODE_BUILD.play(player);
                     if (planet.getWorldPlayers().canBuild(player)) {
                         Player planetOwner = Bukkit.getPlayer(planet.getOwner());
                         if (planet.getWorldPlayers().getBuildersNotTrusted().contains(sender.getName())) {

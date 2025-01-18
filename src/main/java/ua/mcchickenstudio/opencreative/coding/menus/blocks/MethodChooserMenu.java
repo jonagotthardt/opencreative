@@ -24,7 +24,6 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -123,7 +122,7 @@ public class MethodChooserMenu extends ListBrowserMenu<Location> {
                         toComponent(getLocaleMessage("menus.developer.method-chooser.chosen")), Component.text(name).color(NamedTextColor.GREEN),
                         Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
-                Sounds.DEV_SET_METHOD.playSound(event.getWhoClicked());
+                Sounds.DEV_SET_METHOD.play(event.getWhoClicked());
             }
         }
         event.setCancelled(true);

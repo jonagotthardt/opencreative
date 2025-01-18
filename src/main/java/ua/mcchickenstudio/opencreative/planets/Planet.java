@@ -37,7 +37,6 @@ import ua.mcchickenstudio.opencreative.settings.groups.Group;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 
-import java.io.File;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -150,7 +149,7 @@ public class Planet {
                         ));
                         clearPlayer(player);
                         player.teleport(territory.getWorld().getSpawnLocation());
-                        Sounds.WORLD_MODE_BUILD.playSound(player);
+                        Sounds.WORLD_MODE_BUILD.play(player);
                         if (worldPlayers.canBuild(player)) {
                             player.setGameMode(GameMode.CREATIVE);
                             giveBuildPermissions(player);
@@ -436,7 +435,7 @@ public class Planet {
                 toComponent(getLocaleMessage("world.connecting.title")), toComponent(getLocaleMessage("world.connecting.subtitle")),
                 Title.Times.times(Duration.ofMillis(710), Duration.ofSeconds(30), Duration.ofMillis(130))
         ));
-        Sounds.WORLD_CONNECTION.playSound(player);
+        Sounds.WORLD_CONNECTION.play(player);
         boolean wasLoaded = isLoaded();
         if (!isLoaded()) {
             OpenCreative.getPlugin().getLogger().info("Loading planet " + id + " and teleporting " + player.getName());
@@ -445,7 +444,7 @@ public class Planet {
         player.teleportAsync(territory.getWorld().getSpawnLocation()).thenAccept(success -> {
             clearPlayer(player);
             if (success) {
-                Sounds.WORLD_CONNECTED.playSound(player);
+                Sounds.WORLD_CONNECTED.play(player);
                 mode.onPlayerConnect(player,this);
                 getWorldPlayers().getPlanetPlayer(player).load();
                 clearPlayer(player);
@@ -509,7 +508,7 @@ public class Planet {
             if (success) {
                 getDevPlanet().getLastLocations().put(player,player.getLocation());
                 player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,Integer.MAX_VALUE,0,false,false,false));
-                Sounds.DEV_CONNECTED.playSound(player);
+                Sounds.DEV_CONNECTED.play(player);
                 for (Player developer : getDevPlanet().getWorld().getPlayers()) {
                     WorldBorder border = Bukkit.createWorldBorder();
                     border.setCenter(getDevPlanet().getWorld().getWorldBorder().getCenter());

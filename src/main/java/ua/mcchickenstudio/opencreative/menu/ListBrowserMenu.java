@@ -22,6 +22,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.List;
 
@@ -145,11 +146,11 @@ public abstract class ListBrowserMenu<T> extends AbstractListMenu<T> {
         } else if (itemEquals(event.getCurrentItem(),DECORATION_ITEM) || itemEquals(event.getCurrentItem(),DECORATION_PANE_ITEM)) {
             event.setCancelled(true);
         } else if (itemEquals(event.getCurrentItem(),getNextPageButton())) {
-            ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ITEM_BOOK_PAGE_TURN,100f,1f);
+            Sounds.MENU_NEXT_PAGE.play(event.getWhoClicked());
             nextPage();
             event.setCancelled(true);
         } else if (itemEquals(event.getCurrentItem(),getPreviousPageButton())) {
-            ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 100f, 1f);
+            Sounds.MENU_PREVIOUS_PAGE.play(event.getWhoClicked());
             previousPage();
             event.setCancelled(true);
         } else if (isCharmsBarClicked(event.getSlot()) && isNotEmpty(event.getCurrentItem()) && !event.getCurrentItem().equals(DECORATION_ITEM)) {

@@ -30,7 +30,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 
-public class BlockChanged implements Listener {
+public final class BlockChangeListener implements Listener {
 
     @EventHandler
     public void onBlockChanged(BlockFadeEvent event) {

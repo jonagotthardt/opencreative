@@ -41,7 +41,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 
-public class ChangedWorld implements Listener {
+public final class ChangedWorld implements Listener {
 
     private static final Map<UUID, Location> developerSetLocation = new HashMap<>();
 
@@ -70,7 +70,7 @@ public class ChangedWorld implements Listener {
         clearWorldModePermissions(player);
         World oldWorld = event.getFrom();
         World newWorld = player.getWorld();
-        PlayerChat.confirmation.remove(player);
+        ChatListener.confirmation.remove(player);
         player.clearTitle();
 
         Planet oldPlanet = PlanetManager.getInstance().getPlanetByWorld(oldWorld);

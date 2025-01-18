@@ -26,7 +26,7 @@ import org.bukkit.potion.PotionEffect;
 
 import java.util.List;
 
-public class PotionListener implements Listener {
+public final class PotionListener implements Listener {
 
     private final static int POTION_AMPLIFIER_LIMIT = 100;
 

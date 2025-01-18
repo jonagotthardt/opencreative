@@ -20,12 +20,10 @@ package ua.mcchickenstudio.opencreative.coding.menus.variables;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
-import ua.mcchickenstudio.opencreative.menu.AbstractListMenu;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -75,7 +73,7 @@ public class EventValuesMenu extends ListBrowserMenu<EventValues.Variable> {
         event.setCancelled(true);
         MenusCategory category = MenusCategory.getByMaterial(clicked.getType());
         if (category != null) {
-            Sounds.DEV_CHANGE_CATEGORY.playSound(event.getWhoClicked());
+            Sounds.DEV_CHANGE_CATEGORY.play(event.getWhoClicked());
             currentCategory = category;
             elements.clear();
             elements.addAll(getElements());
@@ -102,7 +100,7 @@ public class EventValuesMenu extends ListBrowserMenu<EventValues.Variable> {
                 toComponent(getLocaleMessage("world.dev-mode.set-variable")), item.displayName(),
                 Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
         ));
-        Sounds.DEV_EVENT_VALUE_SET.playSound(event.getWhoClicked());
+        Sounds.DEV_EVENT_VALUE_SET.play(event.getWhoClicked());
     }
 
     @Override

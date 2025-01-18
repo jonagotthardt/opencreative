@@ -25,7 +25,6 @@ import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -38,13 +37,13 @@ import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
-import static ua.mcchickenstudio.opencreative.listeners.player.PlayerPlaceBlock.move;
+import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.move;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getClosingBracketX;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.getCodingDoNotDropMeKey;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
-public class PlayerBreakBlock implements Listener {
+public final class DestroyBlockListener implements Listener {
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
@@ -68,7 +67,7 @@ public class PlayerBreakBlock implements Listener {
                     || block.getType() == platform.getFloorMaterial()
                     || block.getType() == platform.getEventMaterial()
                     || block.getType() == platform.getActionMaterial()) {
-                Sounds.DEV_NOT_ALLOWED.playSound(player);
+                Sounds.DEV_NOT_ALLOWED.play(player);
                 event.setCancelled(true);
             }
 

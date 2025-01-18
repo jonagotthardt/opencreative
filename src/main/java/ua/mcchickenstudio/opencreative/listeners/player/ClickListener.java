@@ -52,7 +52,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMe
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
-public class InventoryClick implements Listener {
+public final class ClickListener implements Listener {
 
     final PlanetManager planetManager = PlanetManager.getInstance();
     @EventHandler
@@ -112,7 +112,7 @@ public class InventoryClick implements Listener {
                                         player.updateInventory();
                                     }
                                 } else {
-                                    Sounds.PLAYER_FAIL.playSound(player);
+                                    Sounds.PLAYER_FAIL.play(player);
                                     player.clearTitle();
                                     player.sendMessage(getLocaleMessage("no-planet-found", player));
                                 }
@@ -124,16 +124,16 @@ public class InventoryClick implements Listener {
                             if (item.getItemMeta().getDisplayName().equalsIgnoreCase(getLocaleItemName("menus.own-worlds.items.all-worlds.name"))) {
                                 new RecommendedWorldsMenu().open(player);
                             } else {
-                                Sounds.MENU_NEXT_PAGE.playSound(player);
+                                Sounds.MENU_NEXT_PAGE.play(player);
                                 OwnWorldsMenu.openInventory(player, OwnWorldsMenu.openedPage.get(player) + 1);
                             }
                         } else if (item.getType() == Material.ARROW) {
-                            Sounds.MENU_PREVIOUS_PAGE.playSound(player);
+                            Sounds.MENU_PREVIOUS_PAGE.play(player);
                             OwnWorldsMenu.openInventory(player, OwnWorldsMenu.openedPage.get(player) - 1);
                         } else if (item.getType() == Material.WHITE_STAINED_GLASS) {
                             long playedSeconds = (System.currentTimeMillis()-player.getFirstPlayed())/1000;
                             if (OpenCreative.getSettings().getWorldCreationMinSeconds() > playedSeconds) {
-                                Sounds.PLAYER_CANCEL.playSound(player);
+                                Sounds.PLAYER_CANCEL.play(player);
                                 player.closeInventory();
                                 player.sendMessage(getLocaleMessage("creating-world.not-enough-played",player).replace("%time%",convertTime(OpenCreative.getSettings().getWorldCreationMinSeconds()-playedSeconds)));
                             } else {
@@ -190,7 +190,7 @@ public class InventoryClick implements Listener {
                 RadioButton rd = RadioButton.getRadioButtonByItemStack(item);
                     if (rd != null) {
                         rd.onChoice();
-                        Sounds.MENU_NEXT_CHOICE.playSound(player);
+                        Sounds.MENU_NEXT_CHOICE.play(player);
                         WorldSettingsPlayersMenu.openInventory(player);
                     }
                 } else if (item.getType() == Material.ENCHANTED_GOLDEN_APPLE) {
@@ -211,8 +211,8 @@ public class InventoryClick implements Listener {
                     }
                     player.sendMessage(getLocaleMessage("world.players.transfer-ownership.confirm-old").replace("%player%", newOwner).replace("%id%", String.valueOf(planet.getId())));
                     player.closeInventory();
-                    if (!(PlayerChat.confirmation.containsKey(player))) {
-                        PlayerChat.confirmation.put(player, PlayerConfirmation.TRANSFER_OWNERSHIP);
+                    if (!(ChatListener.confirmation.containsKey(player))) {
+                        ChatListener.confirmation.put(player, PlayerConfirmation.TRANSFER_OWNERSHIP);
                     }
                 }
             }
@@ -293,7 +293,7 @@ public class InventoryClick implements Listener {
                         } else {
                             player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
                         }
-                        Sounds.DEV_LOCATION_TELEPORT.playSound(player);
+                        Sounds.DEV_LOCATION_TELEPORT.play(player);
                         player.setCooldown(currentItem.getType(),60);
                     }
                 }
@@ -323,7 +323,7 @@ public class InventoryClick implements Listener {
                             } else {
                                 player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
                             }
-                        Sounds.DEV_LOCATION_TELEPORT.playSound(player);
+                        Sounds.DEV_LOCATION_TELEPORT.play(player);
                         player.setCooldown(currentItem.getType(),60);
                         }
                     }

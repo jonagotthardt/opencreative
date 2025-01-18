@@ -22,10 +22,10 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menu.buttons.ParameterButton;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -72,21 +72,21 @@ public class WorldGenerationMenu extends AbstractMenu {
             case 10 -> {
                 generatorButton.next();
                 setItem(event.getRawSlot(),generatorButton.getItem());
-                player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_RESONATE,100,1f);
+                Sounds.MENU_GENERATION_CHANGE.play(player);
             }
             case 11 -> {
                 environmentButton.next();
                 setItem(event.getRawSlot(),environmentButton.getItem());
-                player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_STEP,100,0.1f);
+                Sounds.MENU_ENVIRONMENT_CHANGE.play(player);
             }
             case 12 -> {
                 generateStructures.next();
                 setItem(event.getRawSlot(),generateStructures.getItem());
-                player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_CHARGE,100,2);
+                Sounds.MENU_GENERATE_STRUCTURES_CHANGE.play(player);
             }
             case 16 -> {
                 if (PlanetManager.getInstance().getPlayerPlanets(player).size() < OpenCreative.getSettings().getGroups().getGroup(player).getWorldsLimit()) {
-                    player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_SET_SPAWN,100,0.1f);
+                    Sounds.WORLD_GENERATION.play(player);
                     player.closeInventory();
                     PlanetManager.getInstance().createPlanet(player, WorldUtils.generateWorldID(), WorldUtils.WorldGenerator.valueOf(generatorButton.getCurrentValue().toString().toUpperCase()), World.Environment.valueOf(environmentButton.getCurrentValue().toString().toUpperCase()),new Random().nextInt(),Boolean.parseBoolean(generateStructures.getCurrentValue().toString()));
                 }
@@ -97,6 +97,6 @@ public class WorldGenerationMenu extends AbstractMenu {
 
     @Override
     public void onOpen(InventoryOpenEvent event) {
-        player.playSound(player.getLocation(), Sound.BLOCK_PORTAL_AMBIENT,100,1);
+        Sounds.MENU_OPEN_GENERATION.play(player);
     }
 }

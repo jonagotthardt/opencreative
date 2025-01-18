@@ -21,7 +21,6 @@ package ua.mcchickenstudio.opencreative.coding.menus.variables;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -72,11 +71,11 @@ public class VariablesMenu extends AbstractMenu  {
         setPersistentData(currentItem,getCodingValueKey(),ValueType.getByMaterial(currentItem.getType()).name());
         event.getWhoClicked().getInventory().addItem(currentItem);
         event.setCursor(null);
-        Sounds.DEV_TAKE_VALUE.playSound(event.getWhoClicked());
+        Sounds.DEV_TAKE_VALUE.play(event.getWhoClicked());
     }
 
     @Override
     public void onOpen(InventoryOpenEvent event) {
-        Sounds.MENU_OPEN_VALUES_BROWSER.playSound(event.getPlayer());
+        Sounds.MENU_OPEN_VALUES_BROWSER.play(event.getPlayer());
     }
 }

@@ -136,6 +136,9 @@ creative:
   locale:
     changed: "%prefix%&fChanged language to &6English&f!"
     not-found: "%prefix%&cNot found localization file for this language O_o"
+  sounds:
+    set: "%prefix%&fChanged sound theme to &6%theme%&f, have a good listening!"
+    not-found: "%prefix%&cNot found this sound theme in configuration О_о"
 not-owner: "%prefix%&cYou are not the owner of this world."
 not-developer: "%prefix%&cYou are not the developer of this world."
 not-builder: "%prefix%&cYou are not the builder of this world."

@@ -61,20 +61,21 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.*;
-import static ua.mcchickenstudio.opencreative.listeners.player.PlayerPlaceBlock.move;
+import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.move;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
-public class PlayerInteract implements Listener {
+public final class InteractListener implements Listener {
 
     @EventHandler
     public void onInteraction(PlayerInteractEvent event) {
@@ -232,10 +233,10 @@ public class PlayerInteract implements Listener {
                 }
                 if (isSignLineEmpty(clickedBlock.getLocation(),(byte) 1)) {
                     setSignLine(clickedBlock.getLocation(),(byte) 1,"not");
-                    player.playSound(player.getLocation(),Sound.BLOCK_TRIAL_SPAWNER_CLOSE_SHUTTER,100, 1);
+                    Sounds.DEV_CONDITION_NOT.play(player);
                 } else {
                     setSignLine(clickedBlock.getLocation(),(byte) 1,"");
-                    player.playSound(player.getLocation(),Sound.BLOCK_TRIAL_SPAWNER_CLOSE_SHUTTER,100, 0.1f);
+                    Sounds.DEV_CONDITION_DEFAULT.play(player);
                 }
                 translateBlockSign(clickedBlock);
             }
@@ -245,15 +246,15 @@ public class PlayerInteract implements Listener {
                 switch (selectionAction) {
                     case "selection_set" -> {
                         setSignLine(clickedBlock.getLocation(),(byte) 4,"selection_add");
-                        player.playSound(player.getLocation(),Sound.BLOCK_AMETHYST_BLOCK_RESONATE,100f,0.5f);
+                        Sounds.DEV_ACTION_TARGET.play(player);
                     }
                     case "selection_add" -> {
                         setSignLine(clickedBlock.getLocation(),(byte) 4,"selection_remove");
-                        player.playSound(player.getLocation(),Sound.BLOCK_AMETHYST_BLOCK_RESONATE,100f,0.1f);
+                        Sounds.DEV_ACTION_TARGET.play(player);
                     }
                     case null, default -> {
                         setSignLine(clickedBlock.getLocation(),(byte) 4,"selection_set");
-                        player.playSound(player.getLocation(),Sound.BLOCK_AMETHYST_BLOCK_RESONATE,100f,1f);
+                        Sounds.DEV_ACTION_TARGET.play(player);
                     }
                 }
                 translateBlockSign(clickedBlock);
@@ -305,7 +306,7 @@ public class PlayerInteract implements Listener {
                     if (event.getAction().isRightClick()) {
                         if (event.getPlayer().isSneaking()) {
                             cycleTicks -= 1;
-                            player.playSound(player.getLocation(),Sound.BLOCK_CHAIN_FALL,100f,0.1f);
+                            Sounds.DEV_CYCLE_DELAY_DECREASE.play(player);
                         } else {
                             ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
                             if (!item.isEmpty() && item.hasItemMeta()) {
@@ -314,14 +315,14 @@ public class PlayerInteract implements Listener {
                                     try {
                                         cycleTicks = Math.round(Float.parseFloat(displayName));
                                     } catch (NumberFormatException ignored) {}
-                                    player.playSound(player.getLocation(),Sound.BLOCK_CHAIN_FALL,100f,0.5f);
+                                    Sounds.DEV_CYCLE_DELAY_SET.play(player);
                                 } else if (displayName.length() < 15) {
                                     setSignLine(clickedBlock.getLocation(),(byte) 1,displayName);
-                                    player.playSound(player.getLocation(),Sound.BLOCK_CHAIN_FALL,100f,0.7f);
+                                    Sounds.DEV_CYCLE_NAMED.play(player);
                                 }
                             } else {
                                 cycleTicks += 1;
-                                player.playSound(player.getLocation(),Sound.BLOCK_CHAIN_FALL,100f,1f);
+                                Sounds.DEV_CYCLE_DELAY_INCREASE.play(player);
                             }
                         }
                     }
@@ -340,7 +341,8 @@ public class PlayerInteract implements Listener {
                     String displayName = ChatColor.stripColor(item.getItemMeta().getDisplayName());
                     if (displayName.length() < 15) {
                         setSignLine(clickedBlock.getLocation(),(byte) 3,displayName);
-                        player.playSound(player.getLocation(),Sound.BLOCK_ENCHANTMENT_TABLE_USE,100f,0.7f);
+                        (mainBlockCategory == ExecutorCategory.FUNCTION ?
+                                Sounds.DEV_FUNCTION_NAMED : Sounds.DEV_METHOD_NAMED).play(player);
                         translateBlockSign(clickedBlock);
                     }
                 }
@@ -422,15 +424,15 @@ public class PlayerInteract implements Listener {
         if (ActionCategory.getByMaterial(clickedBlock.getType()) != null) {
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if (move(clickedBlock.getRelative(BlockFace.WEST).getLocation(),BlockFace.EAST)) {
-                    player.playSound(player.getLocation(), Sound.BLOCK_BARREL_CLOSE, 100, 1.3f);
+                    Sounds.DEV_MOVE_BLOCKS_RIGHT.play(player);
                 } else {
-                    player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 100, 1.2f);
+                    Sounds.DEV_NOT_ALLOWED.play(player);
                 }
             } else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
                 if (move(clickedBlock.getRelative(-2,0,0).getLocation(),BlockFace.WEST)) {
-                    player.playSound(player.getLocation(), Sound.BLOCK_BARREL_CLOSE, 100, 1.3f);
+                    Sounds.DEV_MOVE_BLOCKS_LEFT.play(player);
                 } else {
-                    player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 100, 1.2f);
+                    Sounds.DEV_NOT_ALLOWED.play(player);
                 }
             }
         }
@@ -442,7 +444,7 @@ public class PlayerInteract implements Listener {
             if (planet != null && planet.getTerritory().getWorld() != null) {
                 addPlayerWithLocation(player);
                 player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
-                player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
+                Sounds.DEV_LOCATION_TELEPORT.play(player);
                 player.setCooldown(currentItem.getType(),60);
             }
         }
@@ -470,7 +472,7 @@ public class PlayerInteract implements Listener {
         currentItem.setItemMeta(meta);
         setPersistentData(currentItem,getCodingValueKey(),"VARIABLE");
         setPersistentData(currentItem,getCodingVariableTypeKey(),type.name());
-        player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH,100,1.7f);
+        Sounds.DEV_VARIABLE_CHANGE.play(player);
         player.sendMessage(Component.text(meta.getDisplayName()).clickEvent(ClickEvent.copyToClipboard(ChatColor.stripColor(meta.getDisplayName()))));
     }
 
@@ -507,7 +509,7 @@ public class PlayerInteract implements Listener {
         player.setFlying(true);
         player.setFlySpeed(speed);
         player.sendActionBar(getLocaleMessage("world.dev-mode.changed-fly-speed").replace("%speed%", String.valueOf(currentItem.getAmount())));
-        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100, 1.9f);
+        Sounds.DEV_FLY_SPEED_CHANGE.play(player);
     }
 
     private void handleClockInteraction(PlayerInteractEvent event, Player player, ItemStack currentItem) {
@@ -525,7 +527,7 @@ public class PlayerInteract implements Listener {
         }
         String displayName = ChatColor.translateAlternateColorCodes('&',!value ? "&atrue" : "&cfalse");
         setDisplayName(currentItem,displayName);
-        player.playSound(player.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH, 100, 1.7f);
+        (!value ? Sounds.DEV_BOOLEAN_TRUE : Sounds.DEV_BOOLEAN_FALSE).play(player);
         player.showTitle(Title.title(
                 toComponent(getLocaleMessage("world.dev-mode.set-variable")), Component.text(displayName),
                 Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
@@ -552,12 +554,12 @@ public class PlayerInteract implements Listener {
                     toComponent(getLocaleMessage("world.dev-mode.set-variable")), Component.text(locationString),
                     Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
             ));
-            player.playSound(player.getLocation(),Sound.ENTITY_EXPERIENCE_ORB_PICKUP,100,2);
+            Sounds.DEV_LOCATION_SET.play(player);
         } else if (event.getAction() == Action.LEFT_CLICK_AIR) {
             if (planet != null && planet.getDevPlanet().isLoaded()) {
                 player.teleport(getOldLocationPlayerWithLocation(player));
                 player.setCooldown(currentItem.getType(),60);
-                player.playSound(player.getLocation(),Sound.ENTITY_ILLUSIONER_MIRROR_MOVE,100f,0.7f);
+                Sounds.DEV_LOCATION_TELEPORT_BACK.play(player);
                 for (Player developer : planet.getDevPlanet().getWorld().getPlayers()) {
                     WorldBorder border = Bukkit.createWorldBorder();
                     border.setCenter(planet.getDevPlanet().getWorld().getWorldBorder().getCenter());
