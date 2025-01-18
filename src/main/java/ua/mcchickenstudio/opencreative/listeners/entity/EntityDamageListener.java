@@ -80,6 +80,7 @@ public final class EntityDamageListener implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageByEntityEvent event) {
+
         if (event.getEntity() instanceof Player victim) {
             // Player damages player
             if (event.getDamager() instanceof Player damager) {

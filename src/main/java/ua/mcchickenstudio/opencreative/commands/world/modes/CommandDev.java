@@ -117,7 +117,6 @@ public class CommandDev implements CommandExecutor {
                             toComponent(getLocaleMessage("world.dev-mode.title")), toComponent(getLocaleMessage("world.dev-mode.subtitle")),
                             Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(2), Duration.ofMillis(750))
                     ));
-                    Sounds.WORLD_MODE_DEV.play(player);
                 } else {
                     sender.sendMessage(getLocaleMessage("not-owner", player));
                 }

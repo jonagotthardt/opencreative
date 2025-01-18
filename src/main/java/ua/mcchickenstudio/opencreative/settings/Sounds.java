@@ -28,7 +28,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningMessag
 public enum Sounds {
 
     LOBBY("block.beacon.deactivate",1.5f),
-    LOBBY_MUSIC("music_disc.precipice",0.1f),
+    LOBBY_MUSIC("music_disc.creator",0.3f),
     OPENCREATIVE("block.beacon.activate",2),
     RELOADING("block.beacon.ambient",2),
     RELOADED("block.beacon.deactivate",2),
@@ -136,7 +136,7 @@ public enum Sounds {
     DEV_POTION_SET("block.brewing_stand.brew",1.2f),
     DEV_LOCATION_SET("entity.experience_orb.pickup",2),
     DEV_LOCATION_TELEPORT("entity.illusioner.mirror_move",0.7f),
-    DEV_LOCATION_TELEPORT_BACK("entity.illusioner.mirror_move",1.7f),
+    DEV_LOCATION_TELEPORT_BACK("entity.illusioner.mirror_move",0.9f),
     DEV_EVENT_VALUE_SET("item.bottle.fill_dragonbreath",1.7f),
     DEV_VECTOR_SET("item.bottle.fill_dragonbreath",1.4f),
     DEV_BOOLEAN_TRUE("item.bottle.fill_dragonbreath",1.7f),

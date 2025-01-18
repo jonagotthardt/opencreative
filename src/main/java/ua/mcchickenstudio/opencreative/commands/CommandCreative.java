@@ -239,6 +239,9 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                     if (OpenCreative.getSettings().setSoundsTheme(args[1])) {
                         sender.sendMessage(getLocaleMessage("creative.sounds.set").replace("%theme%",args[1]));
+                        if (player != null) {
+                            Sounds.LOBBY.play(player);
+                        }
                     } else {
                         sender.sendMessage(getLocaleMessage("creative.sounds.not-found").replace("%theme%",args[1]));
                     }
@@ -566,6 +569,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
             tabCompleter.add("list");
             tabCompleter.add("deprecated");
             tabCompleter.add("corrupted");
+            tabCompleter.add("sounds");
         } else if (args.length == 2) {
             if ("maintenance".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("start");
