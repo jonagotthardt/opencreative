@@ -98,15 +98,17 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
     @Override
     protected void fillOtherItems() {
         setItem(45,RECOMMENDED);
-        setItem(47,createItem(Material.LIME_STAINED_GLASS_PANE,1));
-        setItem(51,createItem(Material.LIME_STAINED_GLASS_PANE,1));
         int amount = PlanetManager.getInstance().getPlayerPlanets(getPlayer()).size();
         int limit = OpenCreative.getSettings().getGroups().getGroup(getPlayer()).getWorldsLimit();
         if (amount >= limit) {
+            setItem(47,createItem(Material.RED_STAINED_GLASS_PANE,1));
+            setItem(51,createItem(Material.RED_STAINED_GLASS_PANE,1));
             replacePlaceholderInLore(WORLDS_LIMIT,"%limit%",limit);
             replacePlaceholderInLore(WORLDS_LIMIT,"%planets%",amount);
             setItem(49, WORLDS_LIMIT);
         } else {
+            setItem(47,createItem(Material.LIME_STAINED_GLASS_PANE,1));
+            setItem(51,createItem(Material.LIME_STAINED_GLASS_PANE,1));
             setItem(49, CREATE_WORLD);
         }
     }
@@ -121,9 +123,7 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
         if (itemEquals(item,RECOMMENDED)) {
             new RecommendedWorldsMenu().open(getPlayer());
         } else if (itemEquals(item,CREATE_WORLD)) {
-            int planetsAmount = PlanetManager.getInstance().getPlayerPlanets(getPlayer()).size();
-            int planetsLimit = OpenCreative.getSettings().getGroups().getGroup(getPlayer()).getWorldsLimit();
-            if (planetsAmount < planetsLimit) {
+            if (isLimitReached()) {
                 long playedSeconds = (System.currentTimeMillis()-getPlayer().getFirstPlayed())/1000;
                 if (OpenCreative.getSettings().getWorldCreationMinSeconds() > playedSeconds) {
                     Sounds.PLAYER_CANCEL.play(getPlayer());
@@ -134,7 +134,6 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
                 new WorldGenerationMenu(getPlayer()).open(getPlayer());
             }
         }
-
     }
 
     @Override
@@ -201,6 +200,12 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
     @Override
     public void onOpen(InventoryOpenEvent event) {
         Sounds.MENU_OPEN_OWN_WORLDS_BROWSER.play(event.getPlayer());
+    }
+
+    private boolean isLimitReached() {
+        int planetsAmount = PlanetManager.getInstance().getPlayerPlanets(getPlayer()).size();
+        int planetsLimit = OpenCreative.getSettings().getGroups().getGroup(getPlayer()).getWorldsLimit();
+        return planetsAmount < planetsLimit;
     }
 
 }

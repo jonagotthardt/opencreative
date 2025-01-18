@@ -76,6 +76,9 @@ public class Planet {
     private final WorldVariables variables;
     private final PlanetExperiments experiments;
 
+    private long creationTime;
+    private long lastActivityTime;
+
     private Mode mode;
     private Sharing sharing;
 
@@ -340,6 +343,20 @@ public class Planet {
                 sharing = Sharing.valueOf(config.getString("sharing"));
             } catch (Exception ignored) {}
         }
+        if (config.get("creation-time") != null) {
+            try {
+                creationTime = Long.parseLong(String.valueOf(config.get("creation-time")));
+            } catch (Exception error) {
+                creationTime = 1670573410000L;
+            }
+        }
+        if (config.get("last-activity-time") != null) {
+            try {
+                lastActivityTime = Long.parseLong(String.valueOf(config.get("last-activity-time")));
+            } catch (Exception error) {
+                lastActivityTime = 1670573410000L;
+            }
+        }
         if (corrupted) {
             sendCriticalErrorMessage("Planet " + id + " lost it's config file, please check planet files in " + getWorldName());
         }
@@ -375,20 +392,18 @@ public class Planet {
 
     @SuppressWarnings("all")
     public long getCreationTime() {
-        try {
-            return Long.parseLong(String.valueOf(getPlanetConfig(this).get("creation-time")));
-        } catch (Exception error) {
+        if (creationTime == 0) {
             return 1670573410000L;
         }
+        return creationTime;
     }
 
     @SuppressWarnings("all")
     public long getLastActivityTime() {
-        try {
-            return Long.parseLong(String.valueOf(getPlanetConfig(this).get("last-activity-time")));
-        } catch (Exception error) {
+        if (lastActivityTime == 0) {
             return 1670573410000L;
         }
+        return lastActivityTime;
     }
 
     public List<Player> getPlayers() {
