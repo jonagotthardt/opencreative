@@ -76,9 +76,7 @@ public class PlayerUtils {
         player.setSimulationDistance(Bukkit.getSimulationDistance());
         player.setViewDistance(Math.min(player.getClientViewDistance(),Bukkit.getViewDistance()));
         player.setWorldBorder(player.getWorld().getWorldBorder());
-        for (Sound sound : Sound.values()) {
-            player.stopSound(sound);
-        }
+        player.stopAllSounds();
         for (Entity entity : player.getWorld().getEntities()) {
             player.showEntity(OpenCreative.getPlugin(),entity);
         }
