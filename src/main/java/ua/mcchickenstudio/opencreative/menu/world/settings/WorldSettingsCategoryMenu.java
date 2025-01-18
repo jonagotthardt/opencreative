@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.menu.world.settings;
 
+import org.bukkit.Material;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetInfo;
@@ -56,13 +57,13 @@ public class WorldSettingsCategoryMenu extends AbstractMenu {
         setItem(34,createButton(PlanetInfo.Category.EXPERIMENT));
         setItem(45,BACK_ITEM);
         setItem(46,DECORATION_PANE_ITEM);
-        setItem(47,new ItemStack(GREEN_STAINED_GLASS_PANE));
+        setItem(47,createItem(Material.GREEN_STAINED_GLASS_PANE,1));
         setItem(49,setPersistentData(
                 createItem(currentCategory.getMaterial(),1,
                         "menus.world-settings-categories.items." +
                                 currentCategory.name().toLowerCase()),
                 getItemTypeKey(),currentCategory.name()));
-        setItem(51,new ItemStack(GREEN_STAINED_GLASS_PANE));
+        setItem(51,createItem(Material.GREEN_STAINED_GLASS_PANE,1));
         setItem(52,DECORATION_PANE_ITEM);
         setItem(53,DECORATION_PANE_ITEM);
     }

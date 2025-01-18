@@ -459,6 +459,17 @@ public class Planet {
                 player.clearTitle();
                 if (!getPlayersFromPlanetList(this, PlayersType.UNIQUE).contains(player.getName())) {
                     addPlayerInPlanetList(this,player.getName(), PlayersType.UNIQUE);
+                    if (this.isOwner(player)) {
+                        player.showTitle(Title.title(
+                                toComponent(getLocaleMessage("creating-world.welcome-title",player)), toComponent(getLocaleMessage("creating-world.welcome-subtitle",player)),
+                                Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(9), Duration.ofSeconds(2))
+                        ));
+                        player.sendMessage(getLocaleMessage("creating-world.welcome"));
+                        Sounds.WELCOME_TO_NEW_WORLD.play(player);
+                        player.setGameMode(GameMode.CREATIVE);
+                        ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
+                        player.getInventory().setItem(8,worldSettingsItem);
+                    }
                 }
                 if (this.isOwner(player.getName())) {
                     ownerGroup = OpenCreative.getSettings().getGroups().getGroup(player).getName().toLowerCase();

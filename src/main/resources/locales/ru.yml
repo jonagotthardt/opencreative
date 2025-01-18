@@ -1,5 +1,5 @@
 #
-# OpenCreative+ 5.3 - Well, it's possible.
+# OpenCreative+ 5.4 - Well, it's possible.
 # (C) McChicken Studio 2017-2025.
 #
 
@@ -202,7 +202,7 @@ planet-code-debug:
 lobby:
   title: "%branding%"
   subtitle: "&fДавайте &aтворить&f в своих мирах!"
-  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.3\n<green> Что-ж, это возможно!\n <white>\n<gold> ⭐ <white>Осмотри все <gold>миры<white> с помощью компаса!\n<light_purple> ❤ <white>Создай свой мир и <light_purple>пригласи <white>друзей!\n <yellow>⌚<white> Веселись и <yellow>твори <white>что угодно!\n \n<white>\n <white>"
+  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.4\n<green> Что-ж, это возможно!\n <white>\n<gold> ⭐ <white>Осмотри все <gold>миры<white> с помощью компаса!\n<light_purple> ❤ <white>Создай свой мир и <light_purple>пригласи <white>друзей!\n <yellow>⌚<white> Веселись и <yellow>твори <white>что угодно!\n \n<white>\n <white>"
 creating-world:
   not-enough-played: "%prefix%&fПеред созданием мира сыграйте &6%time%&f в мирах других игроков."
   title: "&eСоздание мира ◌"
@@ -8836,16 +8836,31 @@ menus:
     title: "&2☄ Мои миры"
     title-pages: "Мои миры (%page% из %pages%)"
     items:
-      next-page:
-        name: "&c▶ &aВперёд #%page% &c▶"
+      recommended:
+        name: " "
         lore:
-          - "&7Нажми, чтобы показать"
-          - "&7следующие %count% миров."
+          - "&e ⭐ Рекомендованные миры"
+          - ""
+          - "&7  Нажми, чтобы показать"
+          - "&7  миры, которые понравились"
+          - "&7  многим игрокам сервера."
+          - ""
       previous-page:
-        name: "&c◀ &aНазад #%page% &c◀"
+        name: " "
         lore:
-          - "&7Нажми, чтобы показать"
-          - "&7предыдущие 20 миров."
+          - " &6← &eНазад... #%page%"
+          - ""
+          - "&7  Нажми, чтобы показать"
+          - "&7  предыдущие миры."
+          - ""
+      next-page:
+        name: " "
+        lore:
+          - "&e Дальше... #%page% &6→"
+          - ""
+          - "&7  Нажми, чтобы показать"
+          - "&7  следующие миры."
+          - ""
       no-worlds:
         name: "&c&oМиров нет!"
         lore:
@@ -8857,14 +8872,6 @@ menus:
           - "&7Ты создал &f&n%planets% миров&7 из"
           - "&7допустимых &n%limit%&7. Чтобы создать"
           - "&7мир,&c удали&7 какой-то ненужный."
-      all-worlds:
-        name: " "
-        lore:
-          - " &6← &eНазад..."
-          - ""
-          - "&7  Нажми, чтобы показать"
-          - "&7  все миры от игроков."
-          - ""
       create-world:
         name: " "
         lore:

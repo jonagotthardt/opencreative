@@ -1,5 +1,5 @@
 #
-# OpenCreative+ 5.3 - Well, it's possible.
+# OpenCreative+ 5.4 - Well, it's possible.
 # (C) McChicken Studio 2017-2025.
 #
 
@@ -196,7 +196,7 @@ planet-code-debug:
 lobby:
   title: "%branding%"
   subtitle: "&fLet's &acreate&f in your worlds!"
-  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.3\n<green> Well, it's possible!\n <white>\n<gold> ⭐ <white>Explore all <gold>worlds<white> using the compass!\n<light_purple> ❤ <white>Create your own world and <light_purple>invite <white>your friends!\n <yellow>⌚<white> Have fun and <yellow>create <white>whatever you want!\n \n<white>\n <white>"
+  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.4\n<green> Well, it's possible!\n <white>\n<gold> ⭐ <white>Explore all <gold>worlds<white> using the compass!\n<light_purple> ❤ <white>Create your own world and <light_purple>invite <white>your friends!\n <yellow>⌚<white> Have fun and <yellow>create <white>whatever you want!\n \n<white>\n <white>"
 creating-world:
   not-enough-played: "%prefix%&fYou need to play &6%time%&f in other worlds before creating a new world."
   title: "&eCreating World ◌"
@@ -8681,16 +8681,22 @@ menus:
     title: "&2☄ My Worlds"
     title-pages: "My Worlds (%page% of %pages%)"
     items:
-      next-page:
-        name: "&c▶ &aNext #%page% &c▶"
-        lore:
-          - "&7Click to view"
-          - "&7the next %count% worlds."
       previous-page:
-        name: "&c◀ &aBack #%page% &c◀"
+        name: " "
         lore:
-          - "&7Click to view"
-          - "&7the previous 20 worlds."
+          - " &6← &eBack... #%page%"
+          - ""
+          - "&7  Click to see"
+          - "&7  previous worlds."
+          - ""
+      next-page:
+        name: " "
+        lore:
+          - "&e Next... #%page% &6→"
+          - ""
+          - "&7  Click to see"
+          - "&7  next worlds."
+          - ""
       no-worlds:
         name: "&c&oNo Worlds!"
         lore:
@@ -8702,14 +8708,6 @@ menus:
           - "&7You have created &f&n%planets% worlds&7 out of"
           - "&7the allowed &n%limit%&7. To create a new"
           - "&7world, &cdelete&7 an unwanted one."
-      all-worlds:
-        name: " "
-        lore:
-          - " &6← &eBack..."
-          - ""
-          - "&7  Click to view"
-          - "&7  all worlds created by players."
-          - ""
       create-world:
         name: " "
         lore:
