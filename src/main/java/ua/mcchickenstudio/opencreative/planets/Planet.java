@@ -436,6 +436,10 @@ public class Planet {
     }
 
     public void connectPlayer(Player player) {
+        connectPlayer(player,false);
+    }
+
+    public void connectPlayer(Player player, boolean hideConnectMessage) {
         if (getSharing() != Sharing.PUBLIC) {
             if (!isOwner(player)) {
                 if (!(player.hasPermission("opencreative.world.private.bypass"))) {
@@ -467,6 +471,11 @@ public class Planet {
         player.teleportAsync(territory.getWorld().getSpawnLocation()).thenAccept(success -> {
             clearPlayer(player);
             if (success) {
+                if (!hideConnectMessage && getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
+                    for (Player onlinePlayer : getPlayers()) {
+                        onlinePlayer.sendMessage(getLocaleMessage("world.joined", player));
+                    }
+                }
                 Sounds.WORLD_CONNECTED.play(player);
                 mode.onPlayerConnect(player,this);
                 getWorldPlayers().getPlanetPlayer(player).load();

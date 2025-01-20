@@ -57,6 +57,11 @@ public class Executors {
         this.planet = planet;
     }
 
+    public void clear() {
+        executorsList.clear();
+        lastExecutorsCallsAmount.clear();
+    }
+
     /**
      * Finds executor for world event and activates it, if found.
      * @param event event to activate executor.
@@ -136,7 +141,8 @@ public class Executors {
                     }
                 }
             }
-            this.executorsList = executors;
+            clear();
+            executorsList.addAll(executors);
             sendCodingDebugLog(planet,"Loaded codeScript, executors: " + executorsList.size());
         } else {
             sendCodingDebugLog(planet,"No code found to load.");

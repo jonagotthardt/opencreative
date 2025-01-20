@@ -40,15 +40,18 @@ public class WorldModerationMenu extends AbstractMenu {
     private final ItemStack CLOSE_WORLD = createItem(Material.BOOK,1,"menus.world-moderation.close-world","close-world");
 
     public WorldModerationMenu(Planet planet) {
-        super(3, MessageUtils.getLocaleMessage("menus.world-moderation.title",false));
+        super(4, MessageUtils.getLocaleMessage("menus.world-moderation.title",false));
         this.planet = planet;
     }
 
     @Override
     public void fillItems(Player player) {
-        setItem(10,CLEAR_NAME);
-        setItem(11,CLEAR_DESCRIPTION);
-        setItem(12,CLOSE_WORLD);
+        setItem(DECORATION_PANE_ITEM,27,28,34,35);
+        setItem(createItem(Material.YELLOW_STAINED_GLASS_PANE,1),29,33);
+        setItem(31,planet.getInformation().getIcon());
+        setItem(11,CLEAR_NAME);
+        setItem(12,CLEAR_DESCRIPTION);
+        setItem(13,CLOSE_WORLD);
     }
 
     @Override
