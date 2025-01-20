@@ -79,7 +79,7 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
                     lore.add(loreLine.replace("%planetDescription%", ChatColor.translateAlternateColorCodes('&',newLine)));
                 }
             } else {
-                lore.add(MessageUtils.parsePlanetLines(planet,loreLine.replace("%id%", MessageUtils.getLocaleMessage("menus.own-worlds.items.world.id",false) + planet.getInformation().getCustomID())));
+                lore.add(MessageUtils.parsePlanetLines(planet,loreLine));
             }
         }
         meta.setLore(lore);
@@ -150,6 +150,7 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
         Planet planet = PlanetManager.getInstance().getPlanetByCustomID(worldID);
         if (planet != null) {
             if (event.getClick() != ClickType.SHIFT_RIGHT) {
+                getPlayer().closeInventory();
                 planet.connectPlayer(getPlayer());
             } else {
                 getPlayer().closeInventory();

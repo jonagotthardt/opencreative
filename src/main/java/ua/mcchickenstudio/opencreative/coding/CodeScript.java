@@ -90,7 +90,7 @@ public class CodeScript {
      * Moves stored code in old-code section to prevent being overwritten by new code.
      */
     public void clear() {
-        executors.getExecutorsList().clear();
+        executors.clear();
         ConfigurationSection section = scriptConfig.getConfigurationSection("code.blocks");
         if (section == null) return;
         scriptConfig.set("old-code.blocks", null);
@@ -106,6 +106,7 @@ public class CodeScript {
 
     public void unload() {
         scriptConfig = new YamlConfiguration();
+        executors.clear();
     }
 
     /**

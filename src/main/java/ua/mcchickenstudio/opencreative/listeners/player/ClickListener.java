@@ -22,9 +22,7 @@ import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
-import ua.mcchickenstudio.opencreative.menu.world.browsers.RecommendedWorldsMenu;
-import ua.mcchickenstudio.opencreative.menu.world.browsers.OwnWorldsMenu;
-import ua.mcchickenstudio.opencreative.menu.world.*;
+
 import ua.mcchickenstudio.opencreative.menu.world.settings.*;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -84,67 +82,7 @@ public final class ClickListener implements Listener {
             ItemStack item = event.getCurrentItem();
             ItemMeta meta = item.getItemMeta();
 
-            if (event.getInventory().getHolder() instanceof OwnWorldsMenu) {
-                event.setCancelled(true);
-                if (item.getType() == Material.AIR) return;
-                if (!(event.getClickedInventory().getHolder() instanceof OwnWorldsMenu)) return;
-                try {
-                    boolean worldClicked = false;
-                    if (!planetManager.getPlayerPlanets(player).isEmpty()) {
-                        for (int slot : OwnWorldsMenu.worldSlots) {
-                            if (event.getSlot() == slot) {
-                                worldClicked = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (worldClicked) {
-                        List<String> lore = meta.getLore();
-                        for (String loreLine : lore) {
-                            if (loreLine.startsWith(getLocaleMessage("menus.own-worlds.items.world.id"))) {
-                                String worldID = loreLine.replace(getLocaleMessage("menus.own-worlds.items.world.id"), "");
-                                player.closeInventory();
-                                if (PlanetManager.getInstance().getPlanetByCustomID(worldID) != null) {
-                                    if (!(event.getClick() == ClickType.SHIFT_RIGHT)) {
-                                        PlanetManager.getInstance().getPlanetByCustomID(worldID).connectPlayer(player);
-                                    } else {
-                                        PlanetManager.getInstance().deletePlanet(PlanetManager.getInstance().getPlanetByCustomID(worldID), player);
-                                        player.updateInventory();
-                                    }
-                                } else {
-                                    Sounds.PLAYER_FAIL.play(player);
-                                    player.clearTitle();
-                                    player.sendMessage(getLocaleMessage("no-planet-found", player));
-                                }
-
-                            }
-                        }
-                    } else {
-                        if (item.getType() == Material.SPECTRAL_ARROW) {
-                            if (item.getItemMeta().getDisplayName().equalsIgnoreCase(getLocaleItemName("menus.own-worlds.items.all-worlds.name"))) {
-                                new RecommendedWorldsMenu().open(player);
-                            } else {
-                                Sounds.MENU_NEXT_PAGE.play(player);
-                                OwnWorldsMenu.openInventory(player, OwnWorldsMenu.openedPage.get(player) + 1);
-                            }
-                        } else if (item.getType() == Material.ARROW) {
-                            Sounds.MENU_PREVIOUS_PAGE.play(player);
-                            OwnWorldsMenu.openInventory(player, OwnWorldsMenu.openedPage.get(player) - 1);
-                        } else if (item.getType() == Material.WHITE_STAINED_GLASS) {
-                            long playedSeconds = (System.currentTimeMillis()-player.getFirstPlayed())/1000;
-                            if (OpenCreative.getSettings().getWorldCreationMinSeconds() > playedSeconds) {
-                                Sounds.PLAYER_CANCEL.play(player);
-                                player.closeInventory();
-                                player.sendMessage(getLocaleMessage("creating-world.not-enough-played",player).replace("%time%",convertTime(OpenCreative.getSettings().getWorldCreationMinSeconds()-playedSeconds)));
-                            } else {
-                                new WorldGenerationMenu(player).open(player);
-                            }
-                        }
-                    }
-                } catch (Exception error) {
-                    sendPlayerErrorMessage(player, "An error has occurred while clicking item in inventory",error);
-                }
-        } else if (event.getInventory().getHolder() instanceof WorldSettingsPlayersMenu) {
+           if (event.getInventory().getHolder() instanceof WorldSettingsPlayersMenu) {
             event.setCancelled(true);
             Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
 
@@ -238,9 +176,6 @@ public final class ClickListener implements Listener {
     @EventHandler
     public void onDrag(InventoryDragEvent event) {
         InventoryHolder inventoryHolder = event.getInventory().getHolder();
-        if (inventoryHolder instanceof OwnWorldsMenu) {
-            event.setCancelled(true);
-        }
     }
 
     private static void cantDev(Player player) {

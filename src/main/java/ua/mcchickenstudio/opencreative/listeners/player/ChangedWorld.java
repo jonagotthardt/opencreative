@@ -149,11 +149,6 @@ public final class ChangedWorld implements Listener {
             }
             if (newPlanet != null) {
                 newPlanet.getWorldPlayers().registerPlayer(player);
-                if (newPlanet.getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
-                    for (Player onlinePlayer : newPlanet.getPlayers()) {
-                        onlinePlayer.sendMessage(getLocaleMessage("world.joined", player));
-                    }
-                }
                 for (Player onlinePlayer : newPlanet.getPlayers()) {
                     showPlayerFromTab(onlinePlayer,player);
                     showPlayerFromTab(player,onlinePlayer);

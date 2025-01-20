@@ -43,6 +43,7 @@ public abstract class AbstractMenu implements InventoryHolder {
 
     private int rows;
     private String title;
+    private boolean rightToLeft;
 
     protected final int[] allowedSlots = new int[]{10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34,37,38,39,40,41,42,43};
 
@@ -62,6 +63,14 @@ public abstract class AbstractMenu implements InventoryHolder {
         slot = Math.clamp(0,slot,getSize());
         if (item == null) item = ItemStack.empty();
         getInventory().setItem(slot,item);
+    }
+
+    public void setItem(ItemStack item, int... slots) {
+        for (int slot : slots) {
+            slot = Math.clamp(0,slot,getSize());
+            if (item == null) item = ItemStack.empty();
+            getInventory().setItem(slot,item);
+        }
     }
 
     public ItemStack getItem(int slot) {
@@ -129,6 +138,15 @@ public abstract class AbstractMenu implements InventoryHolder {
                 inventory.setItem(slot,oldItems[slot]);
             }
         }
+    }
+
+    protected int reverse(int slot) {
+        // 0  1  2  3   4    5  6  7  8
+        // 9 10 11 12  13   14 15 16 17
+        while (slot > 8) {
+            slot = slot-9;
+        }
+        return 8-slot;
     }
 
     protected boolean isNotEmpty(ItemStack item) {

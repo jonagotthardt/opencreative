@@ -164,7 +164,7 @@ public class PlanetTerritory {
         bossBars.clear();
         scoreboards.clear();
         flags.clear();
-        script.getExecutors().getExecutorsList().clear();
+        script.getExecutors().clear();
         planet.getVariables().clearVariables();
         planet.getWorldPlayers().clear();
         script.unload();
