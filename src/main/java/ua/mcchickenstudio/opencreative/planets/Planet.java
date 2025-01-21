@@ -382,14 +382,6 @@ public class Planet {
         return this.getPlayers().size();
     }
 
-    public int getUniques() {
-        try {
-            return (getPlayersFromPlanetList(this, PlayersType.UNIQUE).size());
-        } catch (Exception error) {
-            return 0;
-        }
-    }
-
     @SuppressWarnings("all")
     public long getCreationTime() {
         if (creationTime == 0) {
@@ -483,6 +475,7 @@ public class Planet {
                 player.clearTitle();
                 if (!getPlayersFromPlanetList(this, PlayersType.UNIQUE).contains(player.getName())) {
                     addPlayerInPlanetList(this,player.getName(), PlayersType.UNIQUE);
+                    info.setUniques(info.getUniques()+1);
                     if (this.isOwner(player)) {
                         player.showTitle(Title.title(
                                 toComponent(getLocaleMessage("creating-world.welcome-title",player)), toComponent(getLocaleMessage("creating-world.welcome-subtitle",player)),

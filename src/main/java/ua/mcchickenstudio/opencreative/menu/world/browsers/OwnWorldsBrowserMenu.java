@@ -147,7 +147,7 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
         if (worldID.isEmpty()) {
             return;
         }
-        Planet planet = PlanetManager.getInstance().getPlanetByCustomID(worldID);
+        Planet planet = PlanetManager.getInstance().getPlanetById(worldID);
         if (planet != null) {
             if (event.getClick() != ClickType.SHIFT_RIGHT) {
                 getPlayer().closeInventory();
@@ -155,7 +155,7 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
             } else {
                 getPlayer().closeInventory();
                 if (planet.isOwner(getPlayer())) {
-                    PlanetManager.getInstance().deletePlanet(PlanetManager.getInstance().getPlanetByCustomID(worldID), getPlayer());
+                    PlanetManager.getInstance().deletePlanet(planet, getPlayer());
                 }
                 getPlayer().updateInventory();
             }
