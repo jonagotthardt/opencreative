@@ -126,11 +126,16 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
+                    Planet planet;
                     if (args.length < 2) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return true;
+                        planet = PlanetManager.getInstance().getPlanetById(args[1]);
+                        if (planet == null) {
+                            sender.sendMessage(getLocaleMessage("too-few-args"));
+                            return true;
+                        }
+                    } else {
+                        planet = PlanetManager.getInstance().getPlanetById(args[1]);
                     }
-                    Planet planet = PlanetManager.getInstance().getPlanetById(args[1]);
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
                         return true;
@@ -576,6 +581,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
         List<String> tabCompleter = new ArrayList<>();
         if (!sender.hasPermission("opencreative.admin")) return null;
         if (args.length == 1) {
+            tabCompleter.add("moderation");
             tabCompleter.add("reload");
             tabCompleter.add("locale");
             tabCompleter.add("debug");
@@ -605,7 +611,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
             }  else if ("debug".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");
-            } else if ("load".equalsIgnoreCase(args[0]) || "unload".equalsIgnoreCase(args[0])) {
+            } else if ("load".equalsIgnoreCase(args[0]) || "unload".equalsIgnoreCase(args[0]) || "moderation".equalsIgnoreCase(args[0])) {
                 tabCompleter.addAll(PlanetManager.getInstance().getPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());
             } else if ("corrupted".equalsIgnoreCase(args[0])) {
                 tabCompleter.addAll(PlanetManager.getInstance().getCorruptedPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());
