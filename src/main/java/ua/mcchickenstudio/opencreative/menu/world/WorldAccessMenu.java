@@ -18,30 +18,47 @@
 
 package ua.mcchickenstudio.opencreative.menu.world;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.substring;
 
 public class WorldAccessMenu extends AbstractMenu {
 
-    private final ItemStack JOIN_WORLD_ITEM = createItem(Material.POTATO,1,"menus.delete-mobs.items.items");
+    private final Planet planet;
+    private final ItemStack CONNECT = createItem(Material.NETHER_STAR,1,"menus.world-access.items.connect");
 
-    public WorldAccessMenu() {
-        super(3, MessageUtils.getLocaleMessage("menus.delete-mobs.title",false));
+    private final ItemStack PLAY_MODE = createItem(Material.DIAMOND_BLOCK,1,"menus.world-access.items.play-mode");
+    private final ItemStack BUILD_MODE = createItem(Material.BRICKS,1,"menus.world-access.items.build-mode");
+    private final ItemStack ADVERTISEMENT = createItem(Material.BEACON,1,"menus.world-access.items.advertisement");
+
+    private final ItemStack OPENED = createItem(Material.LIME_STAINED_GLASS,1,"menus.world-access.items.opened");
+    private final ItemStack CLOSED = createItem(Material.RED_STAINED_GLASS,1,"menus.world-access.items.closed");
+    private final ItemStack DELETE = createItem(Material.TNT_MINECART,1,"menus.world-access.items.delete");
+
+    public WorldAccessMenu(Planet planet) {
+        super(4, MessageUtils.getLocaleMessage("menus.world-access.title",false).replace("%name%",substring(ChatColor.stripColor(planet.getInformation().getDisplayName()),25)));
+        this.planet = planet;
     }
 
     @Override
     public void fillItems(Player player) {
-
+        setItem(DECORATION_PANE_ITEM,28,34);
+        setItem(createItem(Material.BLUE_STAINED_GLASS_PANE,1),29,33);
+        setItem(31,planet.getInformation().getIcon());
+        setItem(13, CONNECT);
+        setItem(10,planet.getMode() == Planet.Mode.PLAYING ? PLAY_MODE : BUILD_MODE);
+        setItem(27,ADVERTISEMENT);
+        setItem(16,planet.getSharing() == Planet.Sharing.PUBLIC ? OPENED : CLOSED);
+        setItem(35,DELETE);
     }
 
     @Override
@@ -49,7 +66,6 @@ public class WorldAccessMenu extends AbstractMenu {
         event.setCancelled(true);
         if (!isPlayerClicked(event)) return;
         Player player = (Player) event.getWhoClicked();
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
     }
 
     @Override

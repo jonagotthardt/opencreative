@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.commands;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import ua.mcchickenstudio.opencreative.menu.CreativeMenu;
+import ua.mcchickenstudio.opencreative.menu.world.WorldAccessMenu;
 import ua.mcchickenstudio.opencreative.menu.world.WorldModerationMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsPickerMenu;
@@ -118,6 +119,23 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                             .replace("%activity-time%",getElapsedTime(now, planet.getLastActivityTime())).replace("%online%",String.valueOf(planet.getOnline()))
                             .replace("%builders%", planet.getWorldPlayers().getBuilders()).replace("%coders%", planet.getWorldPlayers().getDevelopers()).replace("%owner%", planet.getOwner())
                             .replace("%sharing%", planet.getSharing().getName()).replace("%mode%", planet.getMode().getName()).replace("%description%", planet.getInformation().getDescription()));
+                }
+                case "moderate", "moderation" -> {
+                    if (player == null) return true;
+                    if (!sender.hasPermission("opencreative.moderation.menu")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return true;
+                    }
+                    Planet planet = PlanetManager.getInstance().getPlanetById(args[1]);
+                    if (planet == null) {
+                        sender.sendMessage(getLocaleMessage("no-planet-found"));
+                        return true;
+                    }
+                    new WorldModerationMenu(planet).open(player);
                 }
                 case "load" -> {
                     if (!sender.hasPermission("opencreative.world.load")) {
@@ -490,12 +508,13 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     if (player == null) return true;
-                    Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                    if (args.length == 1) return true;
+                    Planet planet = PlanetManager.getInstance().getPlanetById(args[1]);
                     if (planet == null) {
-                        player.sendMessage("Current planet is null");
+                        player.sendMessage("planet is null");
                         return true;
                     }
-                    new WorldModerationMenu(planet).open(player);
+                    new WorldAccessMenu(planet).open(player);
                 }
                 case "test2" -> {
                     if (!sender.hasPermission("opencreative.test")) {
