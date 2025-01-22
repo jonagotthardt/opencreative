@@ -57,7 +57,7 @@ public class CommandAd extends CommandJoin {
 
         switch (args.length) {
             case 0:  // /ad
-                handlePlanetAdvertisement(player);
+                handlePlanetAdvertisement(player, PlanetManager.getInstance().getPlanetByPlayer(player));
                 break;
             case 1:  // /ad [planet id]
                 handlePlayerConnection(player, args[0]);
@@ -70,9 +70,7 @@ public class CommandAd extends CommandJoin {
         return true;
     }
 
-    private void handlePlanetAdvertisement(Player player) {
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-
+    public static void handlePlanetAdvertisement(Player player, Planet planet) {
         if (planet == null) {
             player.sendMessage(getLocaleMessage("only-in-world"));
             return;
@@ -160,7 +158,7 @@ public class CommandAd extends CommandJoin {
         player.sendMessage(advertisementMessage);
     }
 
-    private Component createAdvertisementMessage(Player player, Planet planet) {
+    private static Component createAdvertisementMessage(Player player, Planet planet) {
         String advertisementText = getLocaleMessage("advertisement.message", player)
                 .replace("%world%", planet.getInformation().getDisplayName());
         String hoverText = parsePlanetLines(planet, getLocaleMessage("advertisement.hover"));

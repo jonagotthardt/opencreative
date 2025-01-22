@@ -7005,6 +7005,74 @@ menus:
         lore:
           - "&7In this world air is clean.."
           - "&7Maybe you can spawn a mob?"
+  world-access:
+    title: "&0%name%"
+    items:
+      advertisement:
+        name: " "
+        lore:
+          - "&b ✉ Advertise the world"
+          - " "
+          - "&7  It will invite every player"
+          - "&7  from server to this world."
+          - " "
+          - "&e Click to advertise."
+          - ""
+      play-mode:
+        name: " "
+        lore:
+          - "&b ⏻ Play mode"
+          - "&7 We're playing now!"
+          - " "
+          - "&7  Currently code works fine"
+          - "&7  and visitors play a game."
+          - " "
+          - "&e Click to change mode."
+          - ""
+      build-mode:
+        name: " "
+        lore:
+          - "&c ⛏ Build mode"
+          - "&7 We will build a map.."
+          - " "
+          - "&7  Players will spectate you"
+          - "&7  when you're building a map."
+          - " "
+          - "&e Click to change mode."
+          - ""
+      delete:
+        name: " "
+        lore:
+          - "&4 ☠ Delete this world"
+          - "&c This action is irreversible!"
+          - " "
+          - "&7  This will erase a world's"
+          - "&7  data, map, variables and"
+          - "&7  even your code.."
+          - " "
+          - "&c Click to delete..."
+          - ""
+      connect:
+        name: " "
+        lore:
+          - "&d ⏵ &nConnect to world&d..."
+          - ""
+      opened:
+        name: " "
+        lore:
+          - "&a ☻ Public access"
+          - "&7 Everyone can join this world"
+          - ""
+          - "&e Click to close world."
+          - ""
+      closed:
+        name: " "
+        lore:
+          - "&c ☹ Closed access"
+          - "&7 Only you can join this world"
+          - ""
+          - "&e &nClick to open world&e."
+          - ""
   confirmation:
     items:
       confirm:
@@ -7029,6 +7097,19 @@ menus:
           - "&7If you’ve decided to buy it,"
           - "&7click the &aConfirm&7 button."
           - ""
+      delete-world:
+        name: "&cYou're about to &4delete world&c."
+        lore:
+          - ""
+          - "&7This &4&nworld will be lost&7: map"
+          - "&7will be &cdestroyed&7, all your code"
+          - "&cerases&7, all variables &cdisappear&7.."
+          - ""
+          - "&7You're about to &cdestroy&7 whole"
+          - "&7universe, that was created by you.."
+          - "&7Are you sure? Yes? Click &aConfirm&7."
+          - ""
+    delete-world: "&4Delete %name%?"
     request-money: "&8Buy &0%name%&8?"
   creative:
     title: "&8Open&0Creative&3+ &8%version%"
@@ -7215,6 +7296,7 @@ menus:
           - "&3 ⚐&7 Category: &f%planetCategory%"
           - ""
           - "&2 ⏵ &a&nJoin the world&a! &e &e &e &e "
+          - "&8 &8 &8 ID: %planetCustomID%"
           - ""
   developer:
     method-chooser:
