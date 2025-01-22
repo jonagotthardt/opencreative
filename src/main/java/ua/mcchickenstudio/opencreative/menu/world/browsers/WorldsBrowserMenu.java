@@ -18,8 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.menu.world.browsers;
 
+import org.bukkit.event.inventory.ClickType;
 import ua.mcchickenstudio.opencreative.menu.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.buttons.ParameterButton;
+import ua.mcchickenstudio.opencreative.menu.world.WorldModerationMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Material;
@@ -148,7 +150,15 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
         }
         Planet planet = PlanetManager.getInstance().getPlanetByCustomID(worldID);
         if (planet != null) {
-            onPlanetClick(getPlayer(), planet);
+            if (event.getClick() == ClickType.SHIFT_LEFT) {
+                if (!getPlayer().hasPermission("opencreative.moderation.menu")) {
+                    onPlanetClick(getPlayer(), planet);
+                    return;
+                }
+                new WorldModerationMenu(planet).open(getPlayer());
+            } else {
+                onPlanetClick(getPlayer(), planet);
+            }
         }
     }
 

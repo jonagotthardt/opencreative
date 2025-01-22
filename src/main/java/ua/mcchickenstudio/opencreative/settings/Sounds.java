@@ -54,6 +54,7 @@ public enum Sounds {
     MENU_WORLDS_BROWSER_CATEGORY("block.trial_spawner.detect_player",1.2f),
     MENU_WORLD_SEARCH("block.respawn_anchor.ambient"),
     MENU_GENERATE_STRUCTURES_CHANGE("block.respawn_anchor.charge",2),
+    MENU_CLEAR_DATA("item.brush.brushing.generic",0.1f),
 
     WORLD_GENERATION("block.respawn_anchor.set_spawn",0.1f),
     WORLD_CONNECTION("block.trial_spawner.about_to_spawn_item"),
@@ -70,6 +71,10 @@ public enum Sounds {
     WORLD_NOW_DEVELOPER_GUEST("entity.cat.ambient"),
     WORLD_KICKED("entity.cat.hurt"),
     WORLD_BANNED("entity.cat.hurt"),
+
+    WORLD_LOAD("entity.allay.ambient_without_item",0.1f),
+    WORLD_UNLOAD("entity.allay.ambient_without_item",0.5f),
+    WORLD_DELETION("entity.wither.spawn",0.1f),
 
     PLAYER_CANCEL("entity.villager.no"),
     PLAYER_FAIL("block.amethyst_block.break",0.1f),

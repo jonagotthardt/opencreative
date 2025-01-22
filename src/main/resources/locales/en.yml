@@ -7005,6 +7005,109 @@ menus:
         lore:
           - "&7In this world air is clean.."
           - "&7Maybe you can spawn a mob?"
+  world-moderation:
+    title: "&1⚠ World Control"
+    items:
+      clear-name:
+        name: " "
+        lore:
+          - "&e ✂ Clear name"
+          - "&7 Resets current world's name"
+          - ""
+          - "&7  It will replace current world's"
+          - "&7  name with default name, that"
+          - "&7  world had on creation."
+          - ""
+          - "&e Click to reset."
+          - ""
+      clear-description:
+        name: " "
+        lore:
+          - "&6 ✎ Clear description"
+          - "&7 Replaces current description"
+          - ""
+          - "&7  It will reset world's current"
+          - "&7  description, that can be seen "
+          - "&7  in worlds browser, and replace"
+          - "&7  with default one."
+          - ""
+          - "&e Click to reset."
+          - ""
+      clear-icon:
+        name: " "
+        lore:
+          - "&b 🔥 Clear icon"
+          - "&7 Replaces with default icon"
+          - ""
+          - "&7  Current icon may be indecent"
+          - "&7  because of head, banner or"
+          - "&7  shield with banner."
+          - ""
+          - "&e Click to reset."
+          - ""
+      close-world:
+        name: " "
+        lore:
+          - "&4 ✘ Close the world"
+          - "&7 Disallows players to join world"
+          - ""
+          - "&7  After closing world players"
+          - "&7  can't join world until world"
+          - "&7  owner will open his world in"
+          - "&7  world's settings."
+          - ""
+          - "&e Click to close."
+          - ""
+      load:
+        name: " "
+        lore:
+          - "&d ⏻ Load the world"
+          - "&7 World will be loaded"
+          - ""
+          - "&7  Map, players data, variables"
+          - "&7  and world's code will be loaded."
+          - ""
+          - "&e Click to load."
+          - ""
+      unload:
+        name: " "
+        lore:
+          - "&5 ⏼ Unload the world"
+          - "&7 Unloads world from memory"
+          - ""
+          - "&7  By default, world unloads"
+          - "&7  when all players left it."
+          - "&7  You can unload it by yourself."
+          - ""
+          - "&7  Unloads map, saves players"
+          - "&7  data and current variables."
+          - ""
+          - "&e Click to unload."
+          - ""
+      connect-silent:
+        name: " "
+        lore:
+          - "&a ⏵ Connect to world"
+          - "&7 Doesn't send join message"
+          - ""
+          - "&7  You will be moved to world,"
+          - "&7  but join message will not"
+          - "&7  appear in chat."
+          - ""
+          - "&a Click to connect."
+          - ""
+      connect-dev-silent:
+        name: " "
+        lore:
+          - "&b ⌘ Connect to developers world"
+          - "&7 Teleports to coding world"
+          - ""
+          - "&7  You will be moved to world"
+          - "&7  for developers, but message"
+          - "&7  about join will not appear."
+          - ""
+          - "&e Click to connect."
+          - ""
   world-access:
     title: "&0%name%"
     items:

@@ -84,11 +84,7 @@ public final class ChangedWorld implements Listener {
                     }
                 }
             } else if (isDevPlanet(newWorld)) {
-                if (!isPlayerWithLocation(player)) {
-                    for (Player onlinePlayer : newWorld.getPlayers()) {
-                        onlinePlayer.sendMessage(getLocaleMessage("world.dev-mode.joined", player));
-                    }
-                } else {
+                if (isPlayerWithLocation(player)) {
                     removePlayerWithLocation(player);
                 }
                 for (Player onlinePlayer : newPlanet.getPlayers()) {

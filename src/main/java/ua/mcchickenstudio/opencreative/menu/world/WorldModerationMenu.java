@@ -18,12 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.menu.world;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
@@ -31,8 +34,9 @@ import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class WorldModerationMenu extends AbstractMenu {
+public class WorldModerationMenu extends AbstractMenu implements WorldMenu {
 
     private final Planet planet;
     private final ItemStack CLEAR_NAME = createItem(Material.NAME_TAG,1,"menus.world-moderation.items.clear-name","clear-name");
@@ -47,22 +51,22 @@ public class WorldModerationMenu extends AbstractMenu {
     private final ItemStack CLOSE_WORLD = createItem(Material.BARRIER,1,"menus.world-moderation.items.close-world","close-world");
 
     public WorldModerationMenu(Planet planet) {
-        super(6, MessageUtils.getLocaleMessage("menus.world-moderation.title",false));
+        super(4, MessageUtils.getLocaleMessage("menus.world-moderation.title",false));
         this.planet = planet;
     }
 
     @Override
     public void fillItems(Player player) {
-        setItem(DECORATION_PANE_ITEM,45,46,52,53);
-        setItem(createItem(Material.YELLOW_STAINED_GLASS_PANE,1),47,51);
-        setItem(49,setPersistentData(planet.getInformation().getIcon().clone(),getItemTypeKey(),"connect"));
-        setItem(10,CLEAR_NAME);
-        setItem(19,CLEAR_DESCRIPTION);
-        setItem(28,CLEAR_ICON);
-        setItem(12,planet.isLoaded() ? CONNECT_SILENT : DECORATION_ITEM);
-        setItem(13,planet.isLoaded() ? CONNECT_DEV_SILENT : DECORATION_ITEM);
-        setItem(16,planet.isLoaded() ? UNLOAD : LOAD);
-        setItem(34,planet.getSharing() == Planet.Sharing.PUBLIC ? CLOSE_WORLD : DECORATION_ITEM);
+        setItem(DECORATION_PANE_ITEM,28,34);
+        setItem(createItem(Material.LIGHT_BLUE_STAINED_GLASS_PANE,1),29,33);
+        setItem(31,setPersistentData(planet.getInformation().getIcon().clone(),getItemTypeKey(),"connect"));
+        setItem(10,player.hasPermission("opencreative.moderation.clear-name") ? CLEAR_NAME : NO_PERMS_ITEM);
+        setItem(11,player.hasPermission("opencreative.moderation.clear-description") ? CLEAR_DESCRIPTION : NO_PERMS_ITEM);
+        setItem(12,player.hasPermission("opencreative.moderation.clear-icon") ? CLEAR_ICON : NO_PERMS_ITEM);
+        setItem(15,player.hasPermission("opencreative.moderation.connect-silent") ? (planet.isLoaded() ? CONNECT_SILENT : DECORATION_ITEM) : NO_PERMS_ITEM);
+        setItem(16,player.hasPermission("opencreative.moderation.connect-dev-silent") ? (planet.isLoaded() ? CONNECT_DEV_SILENT : DECORATION_ITEM) : NO_PERMS_ITEM);
+        setItem(27,planet.isLoaded() ? (player.hasPermission("opencreative.world.unload") ? UNLOAD : NO_PERMS_ITEM) : (player.hasPermission("opencreative.world.load") ? LOAD : NO_PERMS_ITEM));
+        setItem(35,player.hasPermission("opencreative.moderation.close-world") ? (planet.getSharing() == Planet.Sharing.PUBLIC ? CLOSE_WORLD : DECORATION_ITEM) : NO_PERMS_ITEM) ;
     }
 
     @Override
@@ -71,18 +75,110 @@ public class WorldModerationMenu extends AbstractMenu {
         ItemStack item = event.getCurrentItem();
         if (!isPlayerClicked(event) || !isClickedInMenuSlots(event)) return;
         if (item == null) return;
+        Player player = (Player) event.getWhoClicked();
         switch (getItemType(item)) {
+            case "connect" -> {
+                player.closeInventory();
+                if (planet.equals(PlanetManager.getInstance().getPlanetByPlayer(player))) {
+                    player.sendMessage(getLocaleMessage("same-world", player));
+                    Sounds.PLAYER_FAIL.play(player);
+                    return;
+                }
+                planet.connectPlayer(player);
+            }
+            case "connect-silent" -> {
+                player.closeInventory();
+                if (planet.equals(PlanetManager.getInstance().getPlanetByPlayer(player))) {
+                    player.sendMessage(getLocaleMessage("same-world", player));
+                    Sounds.PLAYER_FAIL.play(player);
+                    return;
+                }
+                planet.connectPlayer(player,true);
+            }
+            case "connect-dev-silent" -> {
+                player.closeInventory();
+                planet.connectToDevPlanet(player,true);
+            }
             case "clear-name" -> {
-                planet.getInformation().setDisplayName("[content deleted]");
-                event.getWhoClicked().closeInventory();
+                if (player.hasCooldown(item.getType())) {
+                    Sounds.PLAYER_FAIL.play(player);
+                    return;
+                }
+                player.setCooldown(item.getType(),20);
+                planet.getInformation().setDisplayName(getLocaleMessage("creating-world.default-world-name").replace("%player%", planet.getOwner()));
+                Sounds.MENU_CLEAR_DATA.play(player);
+                planet.getInformation().updateIcon();
+                fillItems(player);
             }
             case "clear-description" -> {
-                planet.getInformation().setDescription("[content deleted]");
-                event.getWhoClicked().closeInventory();
+                if (player.hasCooldown(item.getType())) {
+                    Sounds.PLAYER_FAIL.play(player);
+                    return;
+                }
+                player.setCooldown(item.getType(),20);
+                planet.getInformation().setDescription(getLocaleMessage("creating-world.default-world-description").replace("%player%", planet.getOwner()));
+                Sounds.MENU_CLEAR_DATA.play(player);
+                planet.getInformation().updateIcon();
+                fillItems(player);
+            }
+            case "clear-icon" -> {
+                if (player.hasCooldown(item.getType())) {
+                    Sounds.PLAYER_FAIL.play(player);
+                    return;
+                }
+                player.setCooldown(item.getType(),20);
+                planet.getInformation().setIcon(new ItemStack(Material.DIAMOND));
+                Sounds.MENU_CLEAR_DATA.play(player);
+                planet.getInformation().updateIcon();
+                fillItems(player);
             }
             case "close-world" -> {
+                if (player.hasCooldown(item.getType())) {
+                    Sounds.PLAYER_FAIL.play(player);
+                    return;
+                }
+                player.setCooldown(item.getType(),20);
+                PlanetSharingChangeEvent planetEvent = new PlanetSharingChangeEvent(planet, planet.getSharing(), Planet.Sharing.PRIVATE);
+                planetEvent.callEvent();
+                if (planetEvent.isCancelled()) {
+                    Sounds.PLAYER_FAIL.play(player);
+                    return;
+                }
+                Sounds.WORLD_SETTINGS_SHARING_PRIVATE.play(player);
                 planet.setSharing(Planet.Sharing.PRIVATE);
-                event.getWhoClicked().closeInventory();
+                fillItems(player);
+            }
+            case "load" -> {
+                if (player.hasCooldown(item.getType())) {
+                    Sounds.PLAYER_FAIL.play(player);
+                    return;
+                }
+                player.setCooldown(LOAD.getType(),300);
+                player.setCooldown(UNLOAD.getType(),300);
+                Sounds.WORLD_LOAD.play(player);
+                OpenCreative.getPlugin().getLogger().info("Player " + player.getName() + " loads planet " + planet.getId());
+                planet.getTerritory().load();
+                Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
+                    if (player.isOnline() && equals(player.getOpenInventory().getTopInventory().getHolder())) {
+                        fillItems(player);
+                    }
+                },10L);
+            }
+            case "unload" -> {
+                if (player.hasCooldown(item.getType())) {
+                    Sounds.PLAYER_FAIL.play(player);
+                    return;
+                }
+                player.setCooldown(LOAD.getType(),300);
+                player.setCooldown(UNLOAD.getType(),300);
+                Sounds.WORLD_UNLOAD.play(player);
+                OpenCreative.getPlugin().getLogger().info("Player " + player.getName() + " unloads planet " + planet.getId());
+                planet.getTerritory().unload();
+                Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
+                    if (player.isOnline() && equals(player.getOpenInventory().getTopInventory().getHolder())) {
+                        fillItems(player);
+                    }
+                },10L);
             }
         };
     }
@@ -90,5 +186,10 @@ public class WorldModerationMenu extends AbstractMenu {
     @Override
     public void onOpen(InventoryOpenEvent event) {
         Sounds.MENU_OPEN_WORLD_MODERATION.play(event.getPlayer());
+    }
+
+    @Override
+    public Planet getPlanet() {
+        return planet;
     }
 }
