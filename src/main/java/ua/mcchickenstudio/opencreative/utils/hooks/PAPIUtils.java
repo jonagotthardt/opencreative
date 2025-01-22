@@ -59,7 +59,7 @@ class Placeholder extends PlaceholderExpansion {
             }
             case "planet_uniques" -> {
                 Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-                if (planet != null) return String.valueOf(planet.getUniques());
+                if (planet != null) return String.valueOf(planet.getInformation().getUniques());
             }
             case "planet_reputation" -> {
                 Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);

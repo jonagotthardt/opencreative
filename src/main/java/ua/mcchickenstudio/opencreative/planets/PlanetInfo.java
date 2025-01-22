@@ -50,6 +50,7 @@ public class PlanetInfo {
     private String description;
     private String customID;
 
+    private int uniques;
     private int reputation;
     private Category category;
     private ItemStack icon;
@@ -69,6 +70,7 @@ public class PlanetInfo {
         ItemStack icon = new ItemStack(Material.REDSTONE);
         boolean downloadable = false;
         reputation = getPlayersFromPlanetList(planet, Planet.PlayersType.LIKED).size()- getPlayersFromPlanetList(planet, Planet.PlayersType.DISLIKED).size();
+        uniques = getPlayersFromPlanetList(planet, Planet.PlayersType.UNIQUE).size();
         if (config.getString("name") != null) {
             name = config.getString("name");
         }
@@ -177,6 +179,14 @@ public class PlanetInfo {
         else {
             return icon.clone().withType(Material.BARRIER);
         }
+    }
+
+    public int getUniques() {
+        return uniques;
+    }
+
+    public void setUniques(int uniques) {
+        this.uniques = uniques;
     }
 
     public int getReputation() {

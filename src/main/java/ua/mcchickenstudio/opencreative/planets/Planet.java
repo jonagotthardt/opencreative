@@ -139,7 +139,10 @@ public class Planet {
     public void setMode(Mode mode) {
         if (this.mode == mode) return;
         setPlanetConfigParameter(this,"mode",mode.name());
-        if (!isLoaded()) return;
+        if (!isLoaded()) {
+            this.mode = mode;
+            return;
+        }
         try {
             territory.getWorld().getSpawnLocation().getChunk().load(true);
             if (mode == Mode.BUILD) {
@@ -382,14 +385,6 @@ public class Planet {
         return this.getPlayers().size();
     }
 
-    public int getUniques() {
-        try {
-            return (getPlayersFromPlanetList(this, PlayersType.UNIQUE).size());
-        } catch (Exception error) {
-            return 0;
-        }
-    }
-
     @SuppressWarnings("all")
     public long getCreationTime() {
         if (creationTime == 0) {
@@ -476,13 +471,14 @@ public class Planet {
                         onlinePlayer.sendMessage(getLocaleMessage("world.joined", player));
                     }
                 }
+                clearPlayer(player);
                 Sounds.WORLD_CONNECTED.play(player);
                 mode.onPlayerConnect(player,this);
                 getWorldPlayers().getPlanetPlayer(player).load();
-                clearPlayer(player);
                 player.clearTitle();
                 if (!getPlayersFromPlanetList(this, PlayersType.UNIQUE).contains(player.getName())) {
                     addPlayerInPlanetList(this,player.getName(), PlayersType.UNIQUE);
+                    info.setUniques(info.getUniques()+1);
                     if (this.isOwner(player)) {
                         player.showTitle(Title.title(
                                 toComponent(getLocaleMessage("creating-world.welcome-title",player)), toComponent(getLocaleMessage("creating-world.welcome-subtitle",player)),
@@ -494,14 +490,15 @@ public class Planet {
                         ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
                         player.getInventory().setItem(8,worldSettingsItem);
                     }
+                } else {
+                    if (isOwner(player) && getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
+                        player.sendMessage(getLocaleMessage("world.connecting.owner-help",player));
+                    }
                 }
                 if (this.isOwner(player.getName())) {
                     ownerGroup = OpenCreative.getSettings().getGroups().getGroup(player).getName().toLowerCase();
                     ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
                     player.getInventory().setItem(8,worldSettingsItem);
-                    if (getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
-                        player.sendMessage(getLocaleMessage("world.connecting.owner-help",player));
-                    }
                     if (this.getDevPlanet().isLoaded()) {
                         new CodingBlockParser().parseCode(this.getDevPlanet());
                     }
@@ -518,7 +515,7 @@ public class Planet {
                 } else if (mode == Mode.BUILD && worldPlayers.canBuild(player)) {
                     giveBuildPermissions(player);
                 }
-                EventRaiser.raiseJoinEvent(player);
+                if (!hideConnectMessage) EventRaiser.raiseJoinEvent(player);
                 new PlanetConnectPlayerEvent(this,player).callEvent();
                 new BukkitRunnable() {
                     @Override

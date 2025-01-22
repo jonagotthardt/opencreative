@@ -27,31 +27,42 @@ import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.getItemType;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 
 public class WorldModerationMenu extends AbstractMenu {
 
     private final Planet planet;
-    private final ItemStack CLEAR_NAME = createItem(Material.NAME_TAG,1,"menus.world-moderation.clear-name","clear-name");
-    private final ItemStack CLEAR_DESCRIPTION = createItem(Material.BOOK,1,"menus.world-moderation.clear-description","clear-description");
-    private final ItemStack CLOSE_WORLD = createItem(Material.BOOK,1,"menus.world-moderation.close-world","close-world");
+    private final ItemStack CLEAR_NAME = createItem(Material.NAME_TAG,1,"menus.world-moderation.items.clear-name","clear-name");
+    private final ItemStack CLEAR_DESCRIPTION = createItem(Material.BOOK,1,"menus.world-moderation.items.clear-description","clear-description");
+    private final ItemStack CLEAR_ICON = createItem(Material.DIAMOND,1,"menus.world-moderation.items.clear-icon","clear-icon");
+
+    private final ItemStack CONNECT_SILENT = createItem(Material.ENDER_EYE,1,"menus.world-moderation.items.connect-silent","connect-silent");
+    private final ItemStack CONNECT_DEV_SILENT = createItem(Material.ENDER_PEARL,1,"menus.world-moderation.items.connect-dev-silent","connect-dev-silent");
+    private final ItemStack LOAD = createItem(Material.CHERRY_CHEST_BOAT,1,"menus.world-moderation.items.load","load");
+    private final ItemStack UNLOAD = createItem(Material.CHEST_MINECART,1,"menus.world-moderation.items.unload","unload");
+
+    private final ItemStack CLOSE_WORLD = createItem(Material.BARRIER,1,"menus.world-moderation.items.close-world","close-world");
 
     public WorldModerationMenu(Planet planet) {
-        super(4, MessageUtils.getLocaleMessage("menus.world-moderation.title",false));
+        super(6, MessageUtils.getLocaleMessage("menus.world-moderation.title",false));
         this.planet = planet;
     }
 
     @Override
     public void fillItems(Player player) {
-        setItem(DECORATION_PANE_ITEM,27,28,34,35);
-        setItem(createItem(Material.YELLOW_STAINED_GLASS_PANE,1),29,33);
-        setItem(31,planet.getInformation().getIcon());
-        setItem(11,CLEAR_NAME);
-        setItem(12,CLEAR_DESCRIPTION);
-        setItem(13,CLOSE_WORLD);
+        setItem(DECORATION_PANE_ITEM,45,46,52,53);
+        setItem(createItem(Material.YELLOW_STAINED_GLASS_PANE,1),47,51);
+        setItem(49,setPersistentData(planet.getInformation().getIcon().clone(),getItemTypeKey(),"connect"));
+        setItem(10,CLEAR_NAME);
+        setItem(19,CLEAR_DESCRIPTION);
+        setItem(28,CLEAR_ICON);
+        setItem(12,planet.isLoaded() ? CONNECT_SILENT : DECORATION_ITEM);
+        setItem(13,planet.isLoaded() ? CONNECT_DEV_SILENT : DECORATION_ITEM);
+        setItem(16,planet.isLoaded() ? UNLOAD : LOAD);
+        setItem(34,planet.getSharing() == Planet.Sharing.PUBLIC ? CLOSE_WORLD : DECORATION_ITEM);
     }
 
     @Override
@@ -78,6 +89,6 @@ public class WorldModerationMenu extends AbstractMenu {
 
     @Override
     public void onOpen(InventoryOpenEvent event) {
-        Player player = (Player) event.getPlayer();
+        Sounds.MENU_OPEN_WORLD_MODERATION.play(event.getPlayer());
     }
 }

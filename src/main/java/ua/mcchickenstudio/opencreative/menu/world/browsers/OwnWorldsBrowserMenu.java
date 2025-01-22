@@ -31,6 +31,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menu.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.buttons.ParameterButton;
+import ua.mcchickenstudio.opencreative.menu.world.WorldAccessMenu;
 import ua.mcchickenstudio.opencreative.menu.world.WorldGenerationMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
@@ -147,18 +148,9 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
         if (worldID.isEmpty()) {
             return;
         }
-        Planet planet = PlanetManager.getInstance().getPlanetByCustomID(worldID);
+        Planet planet = PlanetManager.getInstance().getPlanetById(worldID);
         if (planet != null) {
-            if (event.getClick() != ClickType.SHIFT_RIGHT) {
-                getPlayer().closeInventory();
-                planet.connectPlayer(getPlayer());
-            } else {
-                getPlayer().closeInventory();
-                if (planet.isOwner(getPlayer())) {
-                    PlanetManager.getInstance().deletePlanet(PlanetManager.getInstance().getPlanetByCustomID(worldID), getPlayer());
-                }
-                getPlayer().updateInventory();
-            }
+            new WorldAccessMenu(planet).open(getPlayer());
         }
     }
 

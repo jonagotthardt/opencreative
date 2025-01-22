@@ -66,6 +66,11 @@ public class MessageUtils {
         return text.indexOf(LegacyComponentSerializer.AMPERSAND_CHAR) != -1 || text.indexOf(LegacyComponentSerializer.SECTION_CHAR) != -1;
     }
 
+    public static String substring(String text, int length) {
+        if (text.length() <= length) return text;
+        return text.substring(0,length-3) + "...";
+    }
+
     /**
      Loads localization file (.yml) from Creative/locales/ folder. If localization file is not found, then it creates a new one.
      **/
@@ -378,7 +383,7 @@ public class MessageUtils {
                 .replace("%planetID%", String.valueOf(planet.getId()))
                 .replace("%planetCustomID%", planet.getInformation().getCustomID())
                 .replace("%planetCategory%", planet.getInformation().getCategory().getLocaleName())
-                .replace("%planetUniques%", String.valueOf(planet.getUniques()))
+                .replace("%planetUniques%", String.valueOf(planet.getInformation().getUniques()))
                 .replace("%planetReputation%", planetReputation)
                 .replace("%planetLastTime%", getElapsedTime(System.currentTimeMillis(), planet.getLastActivityTime()))
                 .replace("%planetCreationTime%", getElapsedTime(System.currentTimeMillis(), planet.getCreationTime()))
