@@ -8913,7 +8913,7 @@ menus:
           - "&e &nНажми, чтобы открыть мир&e."
           - ""
   world-moderation:
-    title: "&4⚠ Управление миром"
+    title: "&1⚠ Управление миром"
     items:
       clear-name:
         name: " "

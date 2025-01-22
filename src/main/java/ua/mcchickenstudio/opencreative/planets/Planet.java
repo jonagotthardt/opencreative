@@ -32,6 +32,7 @@ import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.coding.variables.WorldVariables;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetConnectPlayerEvent;
+import ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.groups.Group;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
@@ -434,7 +435,7 @@ public class Planet {
         connectPlayer(player,false);
     }
 
-    public void connectPlayer(Player player, boolean hideConnectMessage) {
+    public void connectPlayer(Player player, boolean hidePlayer) {
         if (getSharing() != Sharing.PUBLIC) {
             if (!isOwner(player)) {
                 if (!(player.hasPermission("opencreative.world.private.bypass"))) {
@@ -466,7 +467,7 @@ public class Planet {
         player.teleportAsync(territory.getWorld().getSpawnLocation()).thenAccept(success -> {
             clearPlayer(player);
             if (success) {
-                if (!hideConnectMessage && getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
+                if (!hidePlayer && getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
                     for (Player onlinePlayer : getPlayers()) {
                         onlinePlayer.sendMessage(getLocaleMessage("world.joined", player));
                     }
@@ -515,7 +516,15 @@ public class Planet {
                 } else if (mode == Mode.BUILD && worldPlayers.canBuild(player)) {
                     giveBuildPermissions(player);
                 }
-                if (!hideConnectMessage) EventRaiser.raiseJoinEvent(player);
+                if (!hidePlayer) {
+                    EventRaiser.raiseJoinEvent(player);
+                } else {
+                    player.setGameMode(GameMode.SPECTATOR);
+                    ChangedWorld.addPlayerWithLocation(player);
+                    for (Player onlinePlayer : getPlayers()) {
+                        onlinePlayer.hidePlayer(OpenCreative.getPlugin(),player);
+                    }
+                }
                 new PlanetConnectPlayerEvent(this,player).callEvent();
                 new BukkitRunnable() {
                     @Override
@@ -531,6 +540,10 @@ public class Planet {
     }
 
     public void connectToDevPlanet(Player player) {
+        connectToDevPlanet(player,false);
+    }
+
+    public void connectToDevPlanet(Player player, boolean hidePlayer) {
         player.showTitle(Title.title(
                 toComponent(getLocaleMessage("world.dev-mode.connecting.title")), toComponent(getLocaleMessage("world.dev-mode.connecting.subtitle")),
                 Title.Times.times(Duration.ofSeconds(15), Duration.ofSeconds(9999), Duration.ofSeconds(10))
@@ -546,6 +559,16 @@ public class Planet {
         }
         player.teleportAsync(lastLocation).thenAccept(success -> {
             if (success) {
+                if (!hidePlayer) {
+                    for (Player onlinePlayer : player.getWorld().getPlayers()) {
+                        onlinePlayer.sendMessage(getLocaleMessage("world.dev-mode.joined", player));
+                    }
+                } else {
+                    player.setGameMode(GameMode.SPECTATOR);
+                    for (Player onlinePlayer : player.getWorld().getPlayers()) {
+                        onlinePlayer.hidePlayer(OpenCreative.getPlugin(),player);
+                    }
+                }
                 getDevPlanet().getLastLocations().put(player,player.getLocation());
                 player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,Integer.MAX_VALUE,0,false,false,false));
                 Sounds.DEV_CONNECTED.play(player);

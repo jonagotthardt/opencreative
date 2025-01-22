@@ -46,7 +46,7 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.getItemTypeKey;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemDescription;
 
-public class WorldAccessMenu extends AbstractMenu {
+public class WorldAccessMenu extends AbstractMenu implements WorldMenu {
 
     private final Planet planet;
     private final ItemStack CONNECT = createItem(Material.NETHER_STAR,1,"menus.world-access.items.connect","connect");
@@ -210,6 +210,11 @@ public class WorldAccessMenu extends AbstractMenu {
                                     new BukkitRunnable() {
                                         @Override
                                         public void run() {
+                                            player.closeInventory();
+                                            if (PlanetManager.getInstance().getPlanets().contains(planet)) {
+                                                cancel();
+                                                return;
+                                            }
                                             if (!planet.isOwner(player)) {
                                                 cancel();
                                                 return;
@@ -226,5 +231,10 @@ public class WorldAccessMenu extends AbstractMenu {
     @Override
     public void onOpen(InventoryOpenEvent event) {
         Sounds.MENU_OPEN_WORLD_ACCESS.play(event.getPlayer());
+    }
+
+    @Override
+    public Planet getPlanet() {
+        return planet;
     }
 }

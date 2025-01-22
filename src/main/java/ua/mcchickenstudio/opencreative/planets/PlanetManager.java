@@ -22,6 +22,7 @@ import org.bukkit.command.CommandSender;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetDeletionEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetRegisterEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
+import ua.mcchickenstudio.opencreative.menu.world.WorldMenu;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.*;
 import net.kyori.adventure.title.Title;
@@ -137,12 +138,16 @@ public class PlanetManager {
         try {
             for (Player p : planet.getPlayers()) {
                 PlayerUtils.teleportToLobby(p);
+                if (p.getOpenInventory().getTopInventory().getHolder() instanceof WorldMenu) {
+                    p.closeInventory();
+                }
             }
             PlanetSharingChangeEvent planetEvent = new PlanetSharingChangeEvent(planet, planet.getSharing(), Planet.Sharing.PUBLIC);
             planetEvent.callEvent();
             if (!planetEvent.isCancelled()) {
                 planet.setSharing(Planet.Sharing.CLOSED);
             }
+            Sounds.WORLD_DELETION.play(player);
             planets.remove(planet);
             Bukkit.getServer().getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
                 player.sendMessage(MessageUtils.getLocaleMessage("deleting-world.message"));
