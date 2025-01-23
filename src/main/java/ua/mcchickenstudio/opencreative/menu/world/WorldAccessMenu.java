@@ -211,7 +211,7 @@ public class WorldAccessMenu extends AbstractMenu implements WorldMenu {
                                         @Override
                                         public void run() {
                                             player.closeInventory();
-                                            if (PlanetManager.getInstance().getPlanets().contains(planet)) {
+                                            if (!PlanetManager.getInstance().getPlanets().contains(planet)) {
                                                 cancel();
                                                 return;
                                             }

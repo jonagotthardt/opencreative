@@ -59,7 +59,9 @@ public class WorldGenerationMenu extends AbstractMenu {
         setItem(10,generatorButton.getItem());
         setItem(11,environmentButton.getItem());
         setItem(12,generateStructures.getItem());
+        setItem(7,createItem(Material.LIME_STAINED_GLASS_PANE,1));
         setItem(16,createButton);
+        setItem(25,createItem(Material.LIME_STAINED_GLASS_PANE,1));
     }
 
     @Override

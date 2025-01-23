@@ -44,7 +44,7 @@ public class RecommendedWorldsMenu extends AbstractMenu {
 
     private final int[] featuredWorldsSlots = {10,11,12,13,14,15,16, 19,20,21,22,23,24,25, 28,29,30,31,32,33,34};
     private final ItemStack OWN_WORLDS = createItem(Material.REPEATING_COMMAND_BLOCK,1,"menus.all-worlds.items.own-worlds");
-    private final ItemStack DECORATION_OWN_WORLDS = createItem(Material.CYAN_STAINED_GLASS_PANE,1);
+    private final ItemStack DECORATION_OWN_WORLDS = createItem(Material.PURPLE_STAINED_GLASS_PANE,1);
     private final ItemStack SEARCH = createItem(Material.SPYGLASS,1,"menus.all-worlds.items.search");
     private final ItemStack ALL_WORLDS = createItem(Material.SPECTRAL_ARROW,1,"menus.recommended-worlds.items.all-worlds");
 
@@ -56,11 +56,9 @@ public class RecommendedWorldsMenu extends AbstractMenu {
     public void fillItems(Player player) {
         setItem(45, SEARCH);
         setItem(46, DECORATION_PANE_ITEM);
-        setItem(47, DECORATION_PANE_ITEM);
-        setItem(48, DECORATION_OWN_WORLDS);
+        setItem(47, DECORATION_OWN_WORLDS);
         setItem(49, OWN_WORLDS);
-        setItem(50, DECORATION_OWN_WORLDS);
-        setItem(51, DECORATION_PANE_ITEM);
+        setItem(51, DECORATION_OWN_WORLDS);
         setItem(52, DECORATION_PANE_ITEM);
         setItem(53, ALL_WORLDS);
         List<Planet> featuredPlanets = PlanetManager.getInstance().getRecommendedPlanets();

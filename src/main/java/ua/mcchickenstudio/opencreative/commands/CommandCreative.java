@@ -127,8 +127,8 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     Planet planet;
-                    if (args.length < 2) {
-                        planet = PlanetManager.getInstance().getPlanetById(args[1]);
+                    if (args.length == 1) {
+                        planet = PlanetManager.getInstance().getPlanetByPlayer(player);
                         if (planet == null) {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
                             return true;
