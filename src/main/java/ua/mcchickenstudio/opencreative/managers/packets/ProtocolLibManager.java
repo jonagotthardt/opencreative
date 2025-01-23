@@ -64,7 +64,6 @@ public final class ProtocolLibManager implements PacketManager {
                 .write(0, location.getX())
                 .write(1, location.getY())
                 .write(2, location.getZ());
-
         PacketContainer entityDataPacket = manager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
         WrappedDataWatcher watcher = new WrappedDataWatcher();
         watcher.setObject(0, WrappedDataWatcher.Registry.get(Byte.class), (byte) (0x40 | 0x20));

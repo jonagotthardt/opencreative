@@ -53,7 +53,7 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
 
     public WorldsBrowserMenu(Player player, Set<Planet> planets) {
         super(player,getLocaleMessage("menus.all-worlds.title",false),PlacementLayout.BOTTOM_NO_DECORATION,
-                new int[]{45,48,50},new int[]{45,46,47,51,52,53});
+                new int[]{45,48,50},new int[]{45,46,52,53});
         this.planets = new ArrayList<>(planets);
         Comparator<Planet> sortByOnline = (planet1, planet2) -> Integer.compare(planet2.getOnline(), planet1.getOnline());
         this.planets.sort(sortByOnline);
@@ -62,7 +62,8 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
 
     public WorldsBrowserMenu(Player player, Set<Planet> planets, boolean withRecommendedButton) {
         super(player,getLocaleMessage("menus.all-worlds.title",false),PlacementLayout.BOTTOM_NO_DECORATION,
-                new int[]{45,48,50},new int[]{45,46,47,51,52,53});        this.planets = new ArrayList<>(planets);
+                new int[]{45,48,50},new int[]{45,46,52,53});
+        this.planets = new ArrayList<>(planets);
         Comparator<Planet> sortByOnline = (planet1, planet2) -> Integer.compare(planet2.getOnline(), planet1.getOnline());
         this.planets.sort(sortByOnline);
         RECOMMENDED = withRecommendedButton ? createItem(Material.WIND_CHARGE,1,"menus.all-worlds.items.recommended") : DECORATION_ITEM;
@@ -94,8 +95,10 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
         buttons.add(sort);
         buttons.add(category);
         setItem(45,RECOMMENDED);
+        setItem(47,createItem(Material.CYAN_STAINED_GLASS_PANE,1));
         setItem(48,category.getItem());
         setItem(50,sort.getItem());
+        setItem(51,createItem(Material.CYAN_STAINED_GLASS_PANE,1));
     }
 
     @Override
