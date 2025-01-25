@@ -256,8 +256,8 @@ sounds:
   # To add sound from resource pack use
   # name: "resource_pack_name:sound.id"
   #
-  # lobby, lobby-music, opencreative, reloading, reloaded, menu-next-page, menu-previous-page,
-  # menu-next-choice, menu-open-generation, menu-open-environment, menu-open-world-settings,
+  # lobby, lobby-music, opencreative, reloading, reloaded, menu-next-page, menu-previous-page, menu-open-world-access,
+  # menu-next-choice, menu-open-generation, menu-open-environment, menu-open-world-settings, menu-open-world-moderation,
   # menu-open-recommendations, menu-open-own-worlds-browser, menu-open-worlds-browser, menu-open-entities-browser,
   # menu-open-values-browser, menu-open-confirmation, menu-generation-change, menu-environment-change, menu-entities-browser-sort,
   # menu-worlds-browser-sort, menu-worlds-browser-category, menu-world-search, menu-generate-structures-change, world-generation,
@@ -275,7 +275,7 @@ sounds:
   # dev-value-set, dev-text-set, dev-number-set, dev-particle-set, dev-variable-set, dev-variable-change, dev-fly-speed-change, d
   # ev-potion-set, dev-location-set, dev-location-teleport, dev-location-teleport-back, dev-event-value-set, dev-vector-set,
   # dev-boolean-true, dev-boolean-false, dev-move-blocks-right, dev-move-blocks-left, dev-debug-on, dev-debug-off, maintenance-notify,
-  # maintenance-count, maintenance-start, maintenance-end
+  # maintenance-count, maintenance-start, maintenance-end, world-load, world-unload, world-deletion
   #
   theme: "default"
   default:
