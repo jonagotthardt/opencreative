@@ -137,7 +137,7 @@ public final class HangarUpdater implements Updater {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 
     @Override

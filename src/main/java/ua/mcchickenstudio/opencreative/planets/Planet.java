@@ -273,7 +273,7 @@ public class Planet {
     public enum Mode {
         PLAYING() {
             public void onPlayerConnect(Player player, Planet planet) {
-                player.setGameMode(planet.getOwner().equalsIgnoreCase(player.getName()) ? GameMode.CREATIVE : GameMode.ADVENTURE);
+                player.setGameMode(GameMode.ADVENTURE);
             }
         }, BUILD() {
             public void onPlayerConnect(Player player, Planet planet) {
@@ -579,6 +579,10 @@ public class Planet {
                     border.setSize(getDevPlanet().getWorld().getWorldBorder().getSize()*5);
                     developer.setWorldBorder(border);
                 }
+                player.showTitle(Title.title(
+                        toComponent(getLocaleMessage("world.dev-mode.title")), toComponent(getLocaleMessage("world.dev-mode.subtitle")),
+                        Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(2), Duration.ofMillis(750))
+                ));
                 BukkitRunnable translation = new BukkitRunnable() {
                     @Override
                     public void run() {
@@ -603,6 +607,22 @@ public class Planet {
                 }
             });
         }
+    }
+
+    public void setLastActivityTime(long activityTime) {
+        this.lastActivityTime = activityTime;
+        FileUtils.setPlanetConfigParameter(this,"last-activity-time",activityTime);
+    }
+
+    public void setCreationTime(long creationTime) {
+        this.creationTime = creationTime;
+        FileUtils.setPlanetConfigParameter(this,"creation-time",creationTime);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                getInformation().updateIcon();
+            }
+        }.runTaskAsynchronously(OpenCreative.getPlugin());
     }
 
     public void setOwner(String owner) {

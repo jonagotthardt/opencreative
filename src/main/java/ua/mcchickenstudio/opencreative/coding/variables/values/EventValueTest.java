@@ -36,6 +36,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.variables.values;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -56,8 +57,17 @@ public abstract class EventValueTest implements CodingPackContent {
     private final ItemStack displayIcon;
     private final MenusCategory category;
 
+    /**
+     * Constructor of event value.
+     * @param id short id of event value that will be used in signs and translations.
+     *           <p>
+     *           It must be lower-snake-cased, for example: "nickname", "entity_health".
+     *           If some of registered event values has same ID as new, it will be not added.
+     * @param displayIcon icon of event value that will be displayed in event values list.
+     * @param category category of event value for event values list.
+     */
     public EventValueTest(String id, ItemStack displayIcon, MenusCategory category) {
-        this.id = id;
+        this.id = id.replace("-","_");
         this.displayIcon = displayIcon;
         this.category = category;
     }
@@ -89,4 +99,8 @@ public abstract class EventValueTest implements CodingPackContent {
      */
     public abstract @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action);
 
+    @Override
+    public String getName() {
+        return StringUtils.capitalize(id);
+    }
 }

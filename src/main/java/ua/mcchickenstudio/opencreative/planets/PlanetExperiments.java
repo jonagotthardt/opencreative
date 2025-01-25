@@ -21,7 +21,11 @@ package ua.mcchickenstudio.opencreative.planets;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Bukkit;
+import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
+
+import java.util.concurrent.TimeUnit;
 
 public class PlanetExperiments {
 
@@ -32,9 +36,23 @@ public class PlanetExperiments {
     }
 
     public void handle(Player player, String[] args) {
-        if ("downloadable".equalsIgnoreCase(args[0])) {
-            planet.getInformation().setDownloadable(!planet.getInformation().isDownloadable());
-            announce("Now world " + (planet.getInformation().isDownloadable() ? "can be downloaded" : "can't be downloaded"));
+        switch (args[0].toLowerCase()) {
+            case "downloadable" -> {
+                planet.getInformation().setDownloadable(!planet.getInformation().isDownloadable());
+                announce("Now world " + (planet.getInformation().isDownloadable() ? "can be downloaded" : "can't be downloaded"));
+            }
+            case "border" -> {
+                if (!player.hasPermission("opencreative.test")) return;
+                if (args.length == 1) return;
+                WorldBorder border = Bukkit.createWorldBorder();
+                border.setSize(player.getWorld().getWorldBorder().getSize());
+                if ("green".equalsIgnoreCase(args[1])) {
+                    border.setSize(border.getSize()+0.1,3600);
+                } else if ("red".equalsIgnoreCase(args[1])) {
+                    border.setSize(border.getSize()-0.1, 3600);
+                }
+                player.setWorldBorder(border);
+            }
         }
     }
 

@@ -131,7 +131,7 @@ public class PlanetTerritory {
                 }
             }.runTaskLater(OpenCreative.getPlugin(),10L);
         }
-        FileUtils.setPlanetConfigParameter(planet,"last-activity-time",System.currentTimeMillis());
+        planet.setLastActivityTime(System.currentTimeMillis());
         world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS,false);
         world.getWorldBorder().setSize(worldSize);
         planet.getVariables().load();
@@ -145,7 +145,7 @@ public class PlanetTerritory {
         for (Player player : planet.getPlayers()) {
             raiseQuitEvent(player);
         }
-        FileUtils.setPlanetConfigParameter(planet,"last-activity-time",System.currentTimeMillis());
+        planet.setLastActivityTime(System.currentTimeMillis());
         FileUtils.setPlanetConfigParameter(planet,"environment", planet.getTerritory().getEnvironment().name());
         planet.getVariables().save();
         for (Player player : planet.getPlayers()) {

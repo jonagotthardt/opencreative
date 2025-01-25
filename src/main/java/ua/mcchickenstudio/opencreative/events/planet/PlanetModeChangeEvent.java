@@ -30,6 +30,7 @@ import org.bukkit.event.Cancellable;
  * <b>NOTE:</b> It's not recommended to cancel event, when the {@link Cause} is CODE,
  * because this cause is required to stop code running due to critical errors in code.
  * Plugins should check is player a cause of Planet Mode Change event.
+ * Planet can be unloaded at the moment of mode change.
  */
 public class PlanetModeChangeEvent extends PlanetEvent implements Cancellable {
 

@@ -44,12 +44,7 @@ public class EntityNameValue extends TextEventValue {
     }
 
     @Override
-    public String getName() {
-        return "Entity's name";
-    }
-
-    @Override
     public String getDescription() {
-        return "Returns an entity's name";
+        return "Returns entity name";
     }
 }
