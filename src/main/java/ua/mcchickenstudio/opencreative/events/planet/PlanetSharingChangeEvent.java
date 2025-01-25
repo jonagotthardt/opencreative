@@ -29,7 +29,7 @@ import org.bukkit.event.Cancellable;
  * <p>
  * <b>NOTE:</b> It's not recommended to cancel event, when the {@link Cause} is WORLD,
  * because this cause is required to prevent world owner from joining the world while
- * it's being deleted.
+ * it's being deleted. World can be unloaded at the moment of sharing mode change.
  */
 public class PlanetSharingChangeEvent extends PlanetEvent implements Cancellable {
 

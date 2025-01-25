@@ -26,6 +26,8 @@ import org.bukkit.event.Cancellable;
  * Called when player tries to advertise planet.
  * <p>
  * If a Planet Advertisement event is cancelled, the advertisement will not display for all players.
+ * <p>
+ * <b>NOTE:</b> Planet can be unloaded at the moment of advertisement.
  */
 public class PlanetAdvertisementEvent extends PlanetEvent implements Cancellable {
 
