@@ -1,10 +1,11 @@
 <div align="center">
 
-<img src="https://i.imgur.com/CT436vR.png" alt="drawing" width="100"/>
+<img src="https://i.imgur.com/rcYzFd2.png" alt="drawing" width="600"/>
 
 [![bStats Servers](https://img.shields.io/bstats/servers/22001?color=blue)](https://bstats.org/plugin/bukkit/OpenCreative/22001)
 [![bStats Players](https://img.shields.io/bstats/players/22001?=blue)](https://bstats.org/plugin/bukkit/OpenCreative/22001)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Discord](https://img.shields.io/discord/1300864436076286069.svg?label=Discord&color=purple)](https://discord.com/invite/sSFCXUeq63)
 
 </div>
 
