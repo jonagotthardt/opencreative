@@ -8931,7 +8931,6 @@ menus:
           - "&5 ⌛ &7Created: &d%planetCreationTime%"
           - " "
           - "&e Left-click &7- enter the world."
-          - "&c SHIFT+Right-click &7- delete the world."
           - " "
   world-settings:
     title: "&1✎ Your World Settings"
