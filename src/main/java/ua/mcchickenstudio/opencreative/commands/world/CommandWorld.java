@@ -22,6 +22,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
 import ua.mcchickenstudio.opencreative.menu.world.settings.EntitiesBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.world.settings.WorldSettingsMenu;
 import org.apache.commons.io.FileUtils;
@@ -31,6 +32,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
@@ -74,6 +76,42 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
                     sender.sendMessage(getLocaleMessage("not-owner"));
                 }
             }
+            case "close" -> {
+                if (!planet.isOwner(player)) {
+                    sender.sendMessage(getLocaleMessage("not-owner"));
+                    return true;
+                }
+                if (planet.getSharing() != Planet.Sharing.PUBLIC) {
+                    Sounds.PLAYER_FAIL.play(player);
+                    return true;
+                }
+                PlanetSharingChangeEvent planetEvent = new PlanetSharingChangeEvent(planet, planet.getSharing(), Planet.Sharing.PRIVATE);
+                planetEvent.callEvent();
+                if (planetEvent.isCancelled()) {
+                    Sounds.PLAYER_FAIL.play(player);
+                    return true;
+                }
+                Sounds.WORLD_SETTINGS_SHARING_PRIVATE.play(player);
+                planet.setSharing(Planet.Sharing.PRIVATE);
+            }
+            case "open" -> {
+                if (!planet.isOwner(player)) {
+                    sender.sendMessage(getLocaleMessage("not-owner"));
+                    return true;
+                }
+                if (planet.getSharing() == Planet.Sharing.PUBLIC) {
+                    Sounds.PLAYER_FAIL.play(player);
+                    return true;
+                }
+                PlanetSharingChangeEvent planetEvent = new PlanetSharingChangeEvent(planet, planet.getSharing(), Planet.Sharing.PUBLIC);
+                planetEvent.callEvent();
+                if (planetEvent.isCancelled()) {
+                    Sounds.PLAYER_FAIL.play(player);
+                    return true;
+                }
+                Sounds.WORLD_SETTINGS_SHARING_PUBLIC.play(player);
+                planet.setSharing(Planet.Sharing.PUBLIC);
+            }
             case "ban", "block", "blacklist" -> {
                 if (!planet.isOwner(player)) {
                     sender.sendMessage(getLocaleMessage("not-owner"));
@@ -103,16 +141,25 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
                     sender.sendMessage(getLocaleMessage("too-few-args"));
                     return true;
                 }
-                if (planet.isOwner(args[1])) {
-                    sender.sendMessage(getLocaleMessage("same-player"));
-                    return true;
+                List<Player> playersToKick = new ArrayList<>();
+                if (List.of("*","@a").contains(args[1].toLowerCase())) {
+                    playersToKick.addAll(planet.getPlayers());
+                    playersToKick.remove(player);
+                } else {
+                    if (planet.isOwner(args[1])) {
+                        sender.sendMessage(getLocaleMessage("same-player"));
+                        return true;
+                    }
+                    Player playerToKick = Bukkit.getPlayer(args[1]);
+                    if (playerToKick == null || !planet.getPlayers().contains(playerToKick)) {
+                        sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
+                        return true;
+                    }
+                    playersToKick.add(player);
                 }
-                Player playerToKick = Bukkit.getPlayer(args[1]);
-                if (playerToKick == null || !planet.getPlayers().contains(playerToKick)) {
-                    sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
-                    return true;
+                for (Player playerToKick : playersToKick) {
+                    planet.getWorldPlayers().kickPlayer(playerToKick);
                 }
-                planet.getWorldPlayers().kickPlayer(playerToKick);
             }
             case "unban", "unblacklist" -> {
                 if (!planet.isOwner(player)) {
@@ -212,9 +259,13 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
         if (planet == null) return null;
         if (!planet.isOwner(player)) return null;
         if (args.length == 1) {
+            tabCompleter.addAll(List.of((planet.getSharing() == Planet.Sharing.PUBLIC ? "close" : "open"),
+                    "kick","ban","unban"));
+        } else if (args.length == 2) {
             if (List.of("unban","unblacklist").contains(args[0].toLowerCase())) {
                 tabCompleter.addAll(planet.getWorldPlayers().getBannedPlayers());
             } else if (List.of("ban","blacklist","kick").contains(args[0].toLowerCase())) {
+                if (args[0].equalsIgnoreCase("kick")) tabCompleter.add("*");
                 tabCompleter.addAll(planet.getPlayers().stream().filter(p -> !planet.isOwner(p)).map(Player::getName).toList());
             }
         }
