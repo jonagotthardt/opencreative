@@ -104,6 +104,10 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                 }
                 case "info" -> {
+                    if (!sender.hasPermission("opencreative.info")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
+                    }
                     if (args.length < 2) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return true;
@@ -119,6 +123,23 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                             .replace("%activity-time%",getElapsedTime(now, planet.getLastActivityTime())).replace("%online%",String.valueOf(planet.getOnline()))
                             .replace("%builders%", planet.getWorldPlayers().getBuilders()).replace("%coders%", planet.getWorldPlayers().getDevelopers()).replace("%owner%", planet.getOwner())
                             .replace("%sharing%", planet.getSharing().getName()).replace("%mode%", planet.getMode().getName()).replace("%description%", planet.getInformation().getDescription()));
+                }
+                case "delete" -> {
+                    if (!sender.hasPermission("opencreative.delete")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return true;
+                    }
+                    Planet planet = PlanetManager.getInstance().getPlanetByWorldName("./planets/planet" + args[1]);
+                    if (planet == null) {
+                        sender.sendMessage(getLocaleMessage("no-planet-found"));
+                        return true;
+                    }
+                    OpenCreative.getPlugin().getLogger().info("Deleting a world " + args[1] + ", please wait...");
+                    PlanetManager.getInstance().deletePlanet(planet,sender);
                 }
                 case "moderate", "moderation" -> {
                     if (player == null) return true;

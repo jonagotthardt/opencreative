@@ -124,7 +124,7 @@ public class DevPlanet {
         Bukkit.unloadWorld(getWorldName(),true);
     }
 
-    private void setupWorld() {
+    public void setupWorld() {
         this.getWorld().setSpawnLocation(2,1,2);
         this.getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
         this.getWorld().setGameRule(GameRule.DO_WEATHER_CYCLE,false);
@@ -135,7 +135,6 @@ public class DevPlanet {
         this.getWorld().setGameRule(GameRule.DO_PATROL_SPAWNING,false);
         this.getWorld().setGameRule(GameRule.DO_FIRE_TICK,false);
         setWorldBorder();
-
     }
 
     public boolean exists() {

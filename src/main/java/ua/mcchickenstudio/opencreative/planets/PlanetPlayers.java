@@ -342,6 +342,7 @@ public class PlanetPlayers {
     }
 
     public void banPlayer(String nickname) {
+        if (planet.isOwner(nickname)) return;
         Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
             Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
