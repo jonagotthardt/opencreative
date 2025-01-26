@@ -80,7 +80,7 @@ public class CommandPlaySound implements CommandExecutor, TabCompleter {
             float pitch = 1f;
             // playsound entity.villager.yes
             if (args.length <= 3) {
-                soundString = args[0];
+                soundString = args[args.length == 1 ? 0 : 1];
                 if (args.length > 1) {
                     try {
                         volume = Float.parseFloat(args[1]);
@@ -120,6 +120,8 @@ public class CommandPlaySound implements CommandExecutor, TabCompleter {
             try {
                 sound = Sound.valueOf(soundString.toUpperCase());
             } catch (IllegalArgumentException ignored) {}
+            volume = Math.clamp(volume,1,100);
+            pitch = Math.clamp(pitch,0.1f,2.0f);
             if (sound == null) {
                 try {
                     target.playSound(target.getLocation(),soundString,volume,pitch);

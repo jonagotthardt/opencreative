@@ -116,6 +116,10 @@ public enum Sounds {
     DEV_SET_FUNCTION("block.enchantment_table.use",1.2f),
     DEV_VAR_LIST("ui.loom.select_pattern",0.7f),
     DEV_PLATFORM_COLOR("entity.illusioner.prepare_mirror"),
+    DEV_PLATFORM_SIGN("entity.illusioner.prepare_mirror",0.7f),
+    DEV_SETTINGS_NIGHT_VISION("entity.illusioner.prepare_mirror",0.7f),
+    DEV_SETTINGS_SAVE_LOCATION("entity.illusioner.prepare_mirror",0.7f),
+    DEV_SETTINGS_DROP_ITEMS("entity.illusioner.prepare_mirror",0.7f),
     DEV_PLATFORM_CLAIM("ui.toast.challenge_complete",1.7f),
 
     DEV_ACTION_TARGET("block.amethyst_block.resonate"),

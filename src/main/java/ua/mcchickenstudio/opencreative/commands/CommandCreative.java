@@ -225,10 +225,10 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return true;
                     }
-                    if ("disable".equalsIgnoreCase(args[1])) {
+                    if ("disable".equalsIgnoreCase(args[1]) || "off".equalsIgnoreCase(args[1])) {
                         OpenCreative.getSettings().setDebug(false);
                         sender.sendMessage(getLocaleMessage("creative.debug.disabled").replace("%player%",sender.getName()));
-                    } else if ("enable".equalsIgnoreCase(args[1])) {
+                    } else if ("enable".equalsIgnoreCase(args[1]) || "on".equalsIgnoreCase(args[1])) {
                         OpenCreative.getSettings().setDebug(true);
                         sender.sendMessage(getLocaleMessage("creative.debug.enabled").replace("%player%",sender.getName()));
                     }

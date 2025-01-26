@@ -78,6 +78,15 @@ environment:
       help: "%prefix%To change variable value type in chat:\n &6/env var set [Variable Name] [global/saved] [text,number,item,location] (Value)\n&f Item, that will be used in setting item is from main hand."
       limit: "%prefix%&cReached limit of variables (%limit%)!"
       message: "%prefix%Assigned variable %variable%&f: &7%value%"
+  save-location:
+    enabled: "%prefix%Now when you join coding world you &6will be teleported&f to the last location."
+    disabled: "%prefix%You &6disabled teleportation &fto the last location on coding world join."
+  night-vision:
+    enabled: "%prefix%Now when you join coding world you &6will get night vision&f!"
+    disabled: "%prefix%You &6disabled night vision&f on coding world join."
+  drops:
+    enabled: "%prefix%Now coding items will be &6dropped &fwhen you destroy a chest."
+    disabled: "%prefix%You &6disabled coding items drop&f on chest destroy."
   debug:
     help: "%prefix%Debug mode sends event, action, and condition execution to the chat, along with their internal values.\n &6/env debug enable &f- Enable debug mode\n &6/env debug disable &f- Disable debug mode"
     enabled: "%prefix%&fWorld developer &6%player% &fenabled debug mode."

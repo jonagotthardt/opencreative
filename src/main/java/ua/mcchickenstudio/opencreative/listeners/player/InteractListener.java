@@ -418,7 +418,7 @@ public final class InteractListener implements Listener {
     }
 
     private void handleComparatorInteraction(PlayerInteractEvent event, Player player, Block clickedBlock) {
-        if (clickedBlock.getType() == Material.OAK_WALL_SIGN) {
+        if (clickedBlock.getType().name().contains("WALL_SIGN")) {
             clickedBlock = clickedBlock.getRelative(BlockFace.NORTH);
         }
         if (ActionCategory.getByMaterial(clickedBlock.getType()) != null) {

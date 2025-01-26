@@ -64,7 +64,7 @@ public final class MoveListener implements Listener {
                     for (int x = minX; x <= maxX; x++) {
                         for (int z = minZ; z <= maxZ; z++) {
                             Block block = player.getWorld().getBlockAt(x,1,z);
-                            if (block.getType() == Material.OAK_WALL_SIGN) {
+                            if (block.getType().name().contains("WALL_SIGN")) {
                                 PlayerUtils.translateSign(block,player);
                             }
                         }

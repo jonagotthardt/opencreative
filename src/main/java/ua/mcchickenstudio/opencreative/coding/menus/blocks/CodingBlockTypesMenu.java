@@ -150,10 +150,12 @@ public abstract class CodingBlockTypesMenu extends ListBrowserMenu<Object> {
             if (actionCategory != null && executorCategory == null)  {
                 Block containerBlock = codingBlock.getRelative(BlockFace.UP);
                 if (containerBlock.getState() instanceof InventoryHolder container) {
-                    for (ItemStack chestItem : container.getInventory().getContents()) {
-                        if (chestItem != null) {
-                            if (chestItem.getItemMeta() == null || !chestItem.getItemMeta().getPersistentDataContainer().has(getCodingDoNotDropMeKey())) {
-                                containerBlock.getWorld().dropItem(containerBlock.getLocation(),chestItem);
+                    if (devPlanet.isDropItems()) {
+                        for (ItemStack chestItem : container.getInventory().getContents()) {
+                            if (chestItem != null) {
+                                if (chestItem.getItemMeta() == null || !chestItem.getItemMeta().getPersistentDataContainer().has(getCodingDoNotDropMeKey())) {
+                                    containerBlock.getWorld().dropItem(containerBlock.getLocation(),chestItem);
+                                }
                             }
                         }
                     }
