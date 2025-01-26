@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.commands.world;
 
+import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.Nullable;
@@ -39,6 +40,7 @@ import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 
 import java.io.File;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,8 +48,9 @@ import java.util.List;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getElapsedTime;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
 
 public class CommandWorld implements CommandExecutor, TabCompleter {
 
@@ -75,6 +78,34 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
                 } else {
                     sender.sendMessage(getLocaleMessage("not-owner"));
                 }
+            }
+            case "setspawn" -> {
+                if (!planet.isOwner(player)) {
+                    sender.sendMessage(getLocaleMessage("not-owner"));
+                    return true;
+                }
+                if (isEntityInDevPlanet(player)) {
+                    Sounds.PLAYER_FAIL.play(player);
+                    return true;
+                }
+                player.getWorld().setSpawnLocation(player.getLocation());
+                player.showTitle(Title.title(
+                        toComponent(getLocaleMessage("settings.world-spawn.title")), toComponent(getLocaleMessage("settings.world-spawn.subtitle")),
+                        Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(2), Duration.ofMillis(130))
+                ));
+                Sounds.WORLD_SETTINGS_SPAWN_SET.play(player);
+            }
+            case "spawn" -> {
+                if (!planet.isOwner(player)) {
+                    sender.sendMessage(getLocaleMessage("not-owner"));
+                    return true;
+                }
+                if (isEntityInDevPlanet(player)) {
+                    Sounds.PLAYER_FAIL.play(player);
+                    return true;
+                }
+                player.teleport(player.getWorld().getSpawnLocation());
+                Sounds.WORLD_SETTINGS_SPAWN_TELEPORT.play(player);
             }
             case "close" -> {
                 if (!planet.isOwner(player)) {
@@ -260,7 +291,7 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
         if (!planet.isOwner(player)) return null;
         if (args.length == 1) {
             tabCompleter.addAll(List.of((planet.getSharing() == Planet.Sharing.PUBLIC ? "close" : "open"),
-                    "kick","ban","unban"));
+                    "kick","ban","unban","spawn","setspawn"));
         } else if (args.length == 2) {
             if (List.of("unban","unblacklist").contains(args[0].toLowerCase())) {
                 tabCompleter.addAll(planet.getWorldPlayers().getBannedPlayers());
