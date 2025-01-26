@@ -224,7 +224,7 @@ public class DevPlanet {
             border.setSize(getWorld().getWorldBorder().getSize()*5);
             developer.setWorldBorder(border);
         }
-        player.sendMessage(getLocaleMessage("dev.platform.claimed"));
+        player.sendMessage(getLocaleMessage("environment.platform.claimed"));
         Sounds.DEV_PLATFORM_CLAIM.play(player);
         return true;
     }
