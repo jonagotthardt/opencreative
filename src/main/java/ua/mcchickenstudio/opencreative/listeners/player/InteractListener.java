@@ -72,8 +72,7 @@ import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListene
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
 public final class InteractListener implements Listener {
 
@@ -441,7 +440,7 @@ public final class InteractListener implements Listener {
     private void handlePaperInteraction(PlayerInteractEvent event, Player player, ItemStack currentItem) {
         if (event.getAction() == Action.LEFT_CLICK_AIR && !player.hasCooldown(currentItem.getType())) {
             Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-            if (planet != null && planet.getTerritory().getWorld() != null) {
+            if (planet != null) {
                 addPlayerWithLocation(player);
                 player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
                 Sounds.DEV_LOCATION_TELEPORT.play(player);
@@ -554,6 +553,7 @@ public final class InteractListener implements Listener {
                     toComponent(getLocaleMessage("world.dev-mode.set-variable")), Component.text(locationString),
                     Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
             ));
+            spawnGlowingBlock(player,location);
             Sounds.DEV_LOCATION_SET.play(player);
         } else if (event.getAction() == Action.LEFT_CLICK_AIR) {
             if (planet != null && planet.getDevPlanet().isLoaded()) {

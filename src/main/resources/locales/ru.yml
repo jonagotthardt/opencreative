@@ -10111,7 +10111,7 @@ blocks:
   cycle: "&bЦикл"
   method: "&2Метод"
   function: "&1Функция"
-  player_action: "&7Действие игрока"
+  player_action: "&8Действие игрока"
   entity_action: "&aДействие моба"
   variable_action: "&fУст. переменную"
   world_action: "&cДействие мира"

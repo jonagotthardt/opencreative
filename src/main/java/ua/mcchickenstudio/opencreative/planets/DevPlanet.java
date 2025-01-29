@@ -59,7 +59,7 @@ public class DevPlanet {
 
     private final Planet planet;
 
-    private Material signMaterial = Material.OAK_WALL_SIGN;
+    private Material signMaterial = Material.BIRCH_WALL_SIGN;
     private Material containerMaterial = Material.CHEST;
 
     private boolean dropItems = true;
@@ -87,9 +87,9 @@ public class DevPlanet {
             }
         } catch (Exception ignored) {}
         try {
-            signMaterial = Material.getMaterial(config.getString("dev.sign","OAK_WALL_SIGN"));
+            signMaterial = Material.getMaterial(config.getString("dev.sign","BIRCH_WALL_SIGN"));
             if (signMaterial == null || !signMaterial.isBlock()) {
-                signMaterial = Material.OAK_WALL_SIGN;
+                signMaterial = Material.BIRCH_WALL_SIGN;
             }
         } catch (Exception ignored) {}
         dropItems = config.getBoolean("dev.drops",true);
@@ -374,6 +374,7 @@ public class DevPlanet {
                         ((Directional) blockData).setFacing(BlockFace.SOUTH);
                         sign.setBlockData(blockData);
                         sign.update();
+                        PlayerUtils.translateBlockSign(signBlock);
                     }
                 }
             }

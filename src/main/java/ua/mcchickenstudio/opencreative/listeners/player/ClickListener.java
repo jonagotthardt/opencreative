@@ -46,9 +46,11 @@ import java.util.UUID;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.addPlayerWithLocation;
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.isPlayerWithLocation;
+import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMessage;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.spawnGlowingBlock;
 
 public final class ClickListener implements Listener {
 
@@ -220,7 +222,10 @@ public final class ClickListener implements Listener {
                                     z = Double.parseDouble(locCoords[2]);
                                     yaw = Float.parseFloat(locCoords[3]);
                                     pitch = Float.parseFloat(locCoords[4]);
-                                    player.teleport(new Location(planet.getTerritory().getWorld(),x,y,z,yaw,pitch));
+                                    Location location = new Location(planet.getTerritory().getWorld(),x,y,z,yaw,pitch);
+                                    if (isOutOfBorders(location)) location = planet.getTerritory().getWorld().getSpawnLocation();
+                                    player.teleport(location);
+                                    spawnGlowingBlock(player,location);
                                 } catch (Exception error) {
                                     player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
                                 }

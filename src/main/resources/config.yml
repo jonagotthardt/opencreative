@@ -112,7 +112,7 @@ commands:
   #
   # These commands will be executed on
   # some events. You can add functionality,
-  # like sending with DiscordSRV
+  # like sending message with DiscordSRV.
   #
   onLobby: # Event (%player%)
     first: # Command name

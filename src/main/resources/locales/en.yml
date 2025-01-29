@@ -9945,7 +9945,7 @@ blocks:
   cycle: "&aCycle"
   function: "&1Function"
   method: "&2Method"
-  player_action: "&7Player action"
+  player_action: "&8Player action"
   variable_action: "&fSet variable"
   world_action: "&cWorld action"
   control_action: "Code control"
