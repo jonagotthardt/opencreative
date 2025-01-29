@@ -29,7 +29,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.*;
 import org.bukkit.block.data.Directional;
-import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -40,6 +39,7 @@ import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.*;
 
+import static ua.mcchickenstudio.opencreative.utils.BlockUtils.copySignData;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
@@ -81,7 +81,7 @@ public final class PlaceBlockListener implements Listener {
                         signText = actionCategory.name().toLowerCase();
                         additionalBlockMaterial = actionCategory.getAdditionalBlock();
                     }
-                    placeDevBlock(block, additionalBlockMaterial, signText);
+                    placeDevBlock(block, additionalBlockMaterial, devPlanet.getSignMaterial(), signText);
                 } else {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-action-on-event"));
                     Sounds.DEV_NOT_ALLOWED.play(player);
@@ -103,7 +103,7 @@ public final class PlaceBlockListener implements Listener {
                     if (block.getRelative(BlockFace.EAST).getType() == Material.PISTON) {
                         move(block.getLocation(), BlockFace.EAST);
                     }
-                    placeDevBlock(block, additionalBlockMaterial, signText);
+                    placeDevBlock(block, additionalBlockMaterial, devPlanet.getSignMaterial(), signText);
                 } else {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-event-on-action"));
                     Sounds.DEV_NOT_ALLOWED.play(player);
@@ -125,7 +125,7 @@ public final class PlaceBlockListener implements Listener {
         }
     }
 
-    public static void placeDevBlock(Block block, Material additionalBlockMaterial, String signText) {
+    public static void placeDevBlock(Block block, Material additionalBlockMaterial, Material signMaterial, String signText) {
         Block eastBlock = block.getRelative(BlockFace.EAST);
         eastBlock.setType(additionalBlockMaterial);
         if (eastBlock.getType() == Material.PISTON) {
@@ -141,7 +141,7 @@ public final class PlaceBlockListener implements Listener {
         }
 
         Block wallSign = block.getRelative(BlockFace.SOUTH);
-        wallSign.setType(Material.OAK_WALL_SIGN);
+        wallSign.setType(signMaterial);
 
         Sign sign = (Sign) wallSign.getState();
         sign.setLine(1, signText);
@@ -218,15 +218,8 @@ public final class PlaceBlockListener implements Listener {
         newBlock.setBlockData(oldBlock.getBlockData());
 
         if (oldSignBlock.getType().toString().contains("WALL_SIGN")) {
-            Sign oldSign = (Sign) oldSignBlock.getState();
-            newSignBlock.setType(Material.OAK_WALL_SIGN);
-            Sign sign = (Sign) newSignBlock.getState();
-            for (byte i = 0; i < oldSign.getSide(Side.FRONT).lines().size(); i++) {
-                sign.getSide(Side.FRONT).line(i,oldSign.getSide(Side.FRONT).line(i));
-            }
-            sign.getSide(Side.FRONT).setGlowingText(oldSign.getSide(Side.FRONT).isGlowingText());
-            sign.setBlockData(oldSign.getBlockData());
-            sign.update();
+            newSignBlock.setType(oldSignBlock.getType());
+            copySignData((Sign) oldSignBlock.getState(),(Sign) newSignBlock.getState());
             translateBlockSign(newSignBlock);
         }
         if (oldContainerBlock.getState() instanceof InventoryHolder container) {

@@ -18,7 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.commands.world;
 
+import net.kyori.adventure.title.Title;
+import org.bukkit.Bukkit;
+import org.bukkit.command.TabCompleter;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
 import ua.mcchickenstudio.opencreative.menu.world.settings.EntitiesBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.world.settings.WorldSettingsMenu;
 import org.apache.commons.io.FileUtils;
@@ -28,155 +33,273 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 
 import java.io.File;
+import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getElapsedTime;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
 
-public class CommandWorld implements CommandExecutor {
+public class CommandWorld implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (args.length > 0) {
-            if (sender instanceof Player player) {
-                if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-                    player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.GENERIC_COMMAND))));
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage("Only players can use command");
+            return true;
+        }
+        if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
+            player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.GENERIC_COMMAND))));
+            return true;
+        }
+        setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        if (planet == null) {
+            player.sendMessage(getLocaleMessage("only-in-world"));
+            return true;
+        }
+        String arg = args.length == 0 ? "" : args[0].toLowerCase();
+        switch (arg) {
+            case "deletemobs", "mobs", "entities" -> {
+                if (planet.getWorldPlayers().canBuild(player)) {
+                    new EntitiesBrowserMenu(player,planet).open(player);
+                } else {
+                    sender.sendMessage(getLocaleMessage("not-owner"));
+                }
+            }
+            case "setspawn" -> {
+                if (!planet.isOwner(player)) {
+                    sender.sendMessage(getLocaleMessage("not-owner"));
                     return true;
                 }
-                setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
+                if (isEntityInDevPlanet(player)) {
+                    Sounds.PLAYER_FAIL.play(player);
+                    return true;
+                }
+                player.getWorld().setSpawnLocation(player.getLocation());
+                player.showTitle(Title.title(
+                        toComponent(getLocaleMessage("settings.world-spawn.title")), toComponent(getLocaleMessage("settings.world-spawn.subtitle")),
+                        Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(2), Duration.ofMillis(130))
+                ));
+                Sounds.WORLD_SETTINGS_SPAWN_SET.play(player);
             }
-            switch(args[0]) {
-                case "delete":
-                    if (!sender.hasPermission("opencreative.delete")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
+            case "spawn" -> {
+                if (!planet.isOwner(player)) {
+                    sender.sendMessage(getLocaleMessage("not-owner"));
+                    return true;
+                }
+                if (isEntityInDevPlanet(player)) {
+                    Sounds.PLAYER_FAIL.play(player);
+                    return true;
+                }
+                player.teleport(player.getWorld().getSpawnLocation());
+                Sounds.WORLD_SETTINGS_SPAWN_TELEPORT.play(player);
+            }
+            case "close" -> {
+                if (!planet.isOwner(player)) {
+                    sender.sendMessage(getLocaleMessage("not-owner"));
+                    return true;
+                }
+                if (planet.getSharing() != Planet.Sharing.PUBLIC) {
+                    Sounds.PLAYER_FAIL.play(player);
+                    return true;
+                }
+                PlanetSharingChangeEvent planetEvent = new PlanetSharingChangeEvent(planet, planet.getSharing(), Planet.Sharing.PRIVATE);
+                planetEvent.callEvent();
+                if (planetEvent.isCancelled()) {
+                    Sounds.PLAYER_FAIL.play(player);
+                    return true;
+                }
+                Sounds.WORLD_SETTINGS_SHARING_PRIVATE.play(player);
+                planet.setSharing(Planet.Sharing.PRIVATE);
+            }
+            case "open" -> {
+                if (!planet.isOwner(player)) {
+                    sender.sendMessage(getLocaleMessage("not-owner"));
+                    return true;
+                }
+                if (planet.getSharing() == Planet.Sharing.PUBLIC) {
+                    Sounds.PLAYER_FAIL.play(player);
+                    return true;
+                }
+                PlanetSharingChangeEvent planetEvent = new PlanetSharingChangeEvent(planet, planet.getSharing(), Planet.Sharing.PUBLIC);
+                planetEvent.callEvent();
+                if (planetEvent.isCancelled()) {
+                    Sounds.PLAYER_FAIL.play(player);
+                    return true;
+                }
+                Sounds.WORLD_SETTINGS_SHARING_PUBLIC.play(player);
+                planet.setSharing(Planet.Sharing.PUBLIC);
+            }
+            case "ban", "block", "blacklist" -> {
+                if (!planet.isOwner(player)) {
+                    sender.sendMessage(getLocaleMessage("not-owner"));
+                    return true;
+                }
+                if (args.length == 1) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return true;
+                }
+                if (planet.isOwner(args[1])) {
+                    sender.sendMessage(getLocaleMessage("same-player"));
+                    return true;
+                }
+                Player playerToBan = Bukkit.getPlayer(args[1]);
+                if (playerToBan == null || !planet.getPlayers().contains(playerToBan)) {
+                    sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
+                    return true;
+                }
+                planet.getWorldPlayers().banPlayer(args[1]);
+            }
+            case "kick" -> {
+                if (!planet.isOwner(player)) {
+                    sender.sendMessage(getLocaleMessage("not-owner"));
+                    return true;
+                }
+                if (args.length == 1) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return true;
+                }
+                List<Player> playersToKick = new ArrayList<>();
+                if (List.of("*","@a").contains(args[1].toLowerCase())) {
+                    playersToKick.addAll(planet.getPlayers());
+                    playersToKick.remove(player);
+                } else {
+                    if (planet.isOwner(args[1])) {
+                        sender.sendMessage(getLocaleMessage("same-player"));
                         return true;
                     }
-                    if (sender instanceof Player player) {
-                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-                        if (planet == null) planet = PlanetManager.getInstance().getCorruptedPlanetById(WorldUtils.getPlanetIdFromName(player.getWorld()));
-                        if (planet == null) {
-                            sender.sendMessage(getLocaleMessage("no-planet-found"));
-                            return true;
-                        }
-                        if (planet.isOwner(player) || sender.hasPermission("opencreative.delete.bypass")) {
-                            PlanetManager.getInstance().deletePlanet(planet, player);
-                        }
-
-                    } else {
-                        if (args.length == 1) {
-                            sender.sendMessage(getLocaleMessage("too-few-args"));
-                            return true;
-                        }
-                        Planet planet = PlanetManager.getInstance().getPlanetById(args[1]);
-                        if (planet == null) planet = PlanetManager.getInstance().getCorruptedPlanetById(args[1]);
-                        if (planet == null) {
-                            sender.sendMessage(getLocaleMessage("no-planet-found"));
-                            return true;
-                        }
-                        OpenCreative.getPlugin().getLogger().info("Deleting a world " + args[1] + ", please wait...");
-                        PlanetManager.getInstance().deletePlanet(planet,sender);
+                    Player playerToKick = Bukkit.getPlayer(args[1]);
+                    if (playerToKick == null || !planet.getPlayers().contains(playerToKick)) {
+                        sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
+                        return true;
                     }
-                    break;
-                case "deletemobs", "mobs", "entities":
-                    if (sender instanceof Player player) {
-                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-                        if (planet != null && planet.getWorldPlayers().canBuild(player)) {
-                            new EntitiesBrowserMenu(player,planet).open(player);
-                        }
-                    }
-                    break;
-                case "info":
-                    if (sender instanceof Player player) {
-                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-                        if (planet == null) return true;
-                        long now = System.currentTimeMillis();
-                        sender.sendMessage(getLocaleMessage("world.info").replace("%name%", planet.getInformation().getDisplayName())
-                                .replace("%id%", String.valueOf(planet.getId())).replace("%creation-time%", getElapsedTime(now, planet.getCreationTime()))
-                                .replace("%activity-time%", getElapsedTime(now, planet.getLastActivityTime())).replace("%online%", String.valueOf(planet.getOnline()))
-                                .replace("%builders%", planet.getWorldPlayers().getBuilders()).replace("%coders%", planet.getWorldPlayers().getDevelopers()).replace("%owner%", planet.getOwner())
-                                .replace("%sharing%", planet.getSharing().getName()).replace("%mode%", planet.getMode().getName()).replace("%description%", planet.getInformation().getDescription()));
-                        break;
-                    }
-                case "size":
-                    if (sender instanceof Player player) {
-                        if (!sender.hasPermission("opencreative.world.size")) return true;
-                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-                        if (planet == null) return true;
-                        long settingsSize = getFileSize(new File(getPlanetFolder(planet), "settings.yml"));
-                        long scriptSize = getFileSize(new File(getPlanetFolder(planet), "codeScript.yml"));
-                        long variablesSize = getFileSize(new File(getPlanetFolder(planet), "variables.json"));
-                        long dataSize = getFolderSize(new File(getPlanetFolder(planet), "playersData"));
-                        long folderSize = getFolderSize(getPlanetFolder(planet));
-                        long devWorldSize = getFolderSize(getDevPlanetFolder(planet.getDevPlanet()));
-                        long worldSize = folderSize-dataSize-variablesSize-scriptSize-settingsSize;
-                        sender.sendMessage(getLocaleMessage("world.size")
-                                .replace("%total%",FileUtils.byteCountToDisplaySize(folderSize+devWorldSize))
-                                .replace("%world%",FileUtils.byteCountToDisplaySize(worldSize))
-                                .replace("%script%",FileUtils.byteCountToDisplaySize(scriptSize))
-                                .replace("%variables%",FileUtils.byteCountToDisplaySize(variablesSize))
-                                .replace("%dev%",FileUtils.byteCountToDisplaySize(devWorldSize))
-                                .replace("%data%",FileUtils.byteCountToDisplaySize(dataSize))
-                                .replace("%settings%",FileUtils.byteCountToDisplaySize(settingsSize)));
-                    }
-                    break;
-                case "ram", "mem", "tps", "memory":
-                    if (sender instanceof Player player) {
-                        if (!sender.hasPermission("opencreative.world.memory")) return true;
-                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-                        if (planet == null) return true;
-                        if (!planet.isLoaded()) return true;
-                        int chunks = planet.getTerritory().getWorld().getChunkCount()
-                                + (planet.getDevPlanet().isLoaded() ? planet.getDevPlanet().getWorld().getChunkCount() : 0);
-                        int entities = planet.getTerritory().getWorld().getEntityCount()
-                                + (planet.getDevPlanet().isLoaded() ? planet.getDevPlanet().getWorld().getEntityCount() : 0);
-
-                        sender.sendMessage("");
-                        sender.sendMessage(" Chunks: " + chunks);
-                        sender.sendMessage(" Entities: " + entities);
-                        sender.sendMessage("");
-                    }
-                    break;
-                case "e", "experiment", "experiments":
-                    if (sender instanceof Player player) {
-                        if (!sender.hasPermission("opencreative.world.memory")) return true;
-                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-                        if (planet == null) return true;
-                        if (args.length == 1) return true;
-                        planet.getExperiments().handle(player, Arrays.copyOfRange(args,1,args.length));
-                    }
-                    break;
+                    playersToKick.add(player);
+                }
+                for (Player playerToKick : playersToKick) {
+                    planet.getWorldPlayers().kickPlayer(playerToKick);
+                }
             }
-        } else {
-            if (sender instanceof Player player) {
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-                if (planet == null) {
-                    player.sendMessage(getLocaleMessage("only-in-world"));
+            case "unban", "unblacklist" -> {
+                if (!planet.isOwner(player)) {
+                    sender.sendMessage(getLocaleMessage("not-owner"));
                     return true;
                 }
-                if (planet.getOwner().equalsIgnoreCase(sender.getName())) {
+                if (args.length == 1) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return true;
+                }
+                if (planet.isOwner(args[1])) {
+                    sender.sendMessage(getLocaleMessage("same-player"));
+                    return true;
+                }
+                if (!planet.getWorldPlayers().isBanned(args[1])) {
+                    sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
+                    return true;
+                }
+                planet.getWorldPlayers().unbanPlayer(args[1]);
+            }
+            case "exp", "e", "experiment", "experiments" -> {
+                if (!planet.isOwner(player)) {
+                    sender.sendMessage(getLocaleMessage("not-owner"));
+                    return true;
+                }
+                if (!sender.hasPermission("opencreative.world.experiments")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return true;
+                }
+                if (args.length == 1) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return true;
+                }
+                planet.getExperiments().handle(player, Arrays.copyOfRange(args,1,args.length));
+            }
+            case "size" -> {
+                if (!sender.hasPermission("opencreative.world.size")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return true;
+                }
+                long settingsSize = getFileSize(new File(getPlanetFolder(planet), "settings.yml"));
+                long scriptSize = getFileSize(new File(getPlanetFolder(planet), "codeScript.yml"));
+                long variablesSize = getFileSize(new File(getPlanetFolder(planet), "variables.json"));
+                long dataSize = getFolderSize(new File(getPlanetFolder(planet), "playersData"));
+                long folderSize = getFolderSize(getPlanetFolder(planet));
+                long devWorldSize = getFolderSize(getDevPlanetFolder(planet.getDevPlanet()));
+                long worldSize = folderSize-dataSize-variablesSize-scriptSize-settingsSize;
+                sender.sendMessage(getLocaleMessage("world.size")
+                        .replace("%total%",FileUtils.byteCountToDisplaySize(folderSize+devWorldSize))
+                        .replace("%world%",FileUtils.byteCountToDisplaySize(worldSize))
+                        .replace("%script%",FileUtils.byteCountToDisplaySize(scriptSize))
+                        .replace("%variables%",FileUtils.byteCountToDisplaySize(variablesSize))
+                        .replace("%dev%",FileUtils.byteCountToDisplaySize(devWorldSize))
+                        .replace("%data%",FileUtils.byteCountToDisplaySize(dataSize))
+                        .replace("%settings%",FileUtils.byteCountToDisplaySize(settingsSize)));
+            }
+            case "mem", "tps", "memory" -> {
+                if (!sender.hasPermission("opencreative.world.memory")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return true;
+                }
+                int chunks = planet.getTerritory().getWorld().getChunkCount()
+                        + (planet.getDevPlanet().isLoaded() ? planet.getDevPlanet().getWorld().getChunkCount() : 0);
+                int entities = planet.getTerritory().getWorld().getEntityCount()
+                        + (planet.getDevPlanet().isLoaded() ? planet.getDevPlanet().getWorld().getEntityCount() : 0);
+
+                sender.sendMessage("");
+                sender.sendMessage(" Chunks: " + chunks);
+                sender.sendMessage(" Entities: " + entities);
+                sender.sendMessage("");
+            }
+            default -> {
+                if (planet.isOwner(player)) {
                     new WorldSettingsMenu(planet,player).open(player);
                 } else {
-                    long now = System.currentTimeMillis();
-                    sender.sendMessage(getLocaleMessage("world.info").replace("%name%", planet.getInformation().getDisplayName())
-                            .replace("%id%", String.valueOf(planet.getId())).replace("%creation-time%",getElapsedTime(now, planet.getCreationTime()))
-                            .replace("%activity-time%",getElapsedTime(now, planet.getLastActivityTime())).replace("%online%",String.valueOf(planet.getOnline()))
-                            .replace("%builders%", planet.getWorldPlayers().getBuilders()).replace("%coders%", planet.getWorldPlayers().getDevelopers()).replace("%owner%", planet.getOwner())
-                            .replace("%sharing%", planet.getSharing().getName()).replace("%mode%", planet.getMode().getName()).replace("%description%", planet.getInformation().getDescription()));
+                    sendPlanetInfo(player,planet);
                 }
-            } else {
-                OpenCreative.getPlugin().getLogger().info("Worlds Commands: ");
-                OpenCreative.getPlugin().getLogger().info(" Delete a world: /world delete WorldID ");
             }
         }
         return true;
+    }
+
+    private void sendPlanetInfo(CommandSender sender, Planet planet) {
+        long now = System.currentTimeMillis();
+        sender.sendMessage(getLocaleMessage("world.info").replace("%name%", planet.getInformation().getDisplayName())
+                .replace("%id%", String.valueOf(planet.getId())).replace("%creation-time%",getElapsedTime(now, planet.getCreationTime()))
+                .replace("%activity-time%",getElapsedTime(now, planet.getLastActivityTime())).replace("%online%",String.valueOf(planet.getOnline()))
+                .replace("%builders%", planet.getWorldPlayers().getBuilders()).replace("%coders%", planet.getWorldPlayers().getDevelopers()).replace("%owner%", planet.getOwner())
+                .replace("%sharing%", planet.getSharing().getName()).replace("%mode%", planet.getMode().getName()).replace("%description%", planet.getInformation().getDescription()));
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (!(sender instanceof Player player)) return null;
+        List<String> tabCompleter = new ArrayList<>();
+        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        if (planet == null) return null;
+        if (!planet.isOwner(player)) return null;
+        if (args.length == 1) {
+            tabCompleter.addAll(List.of((planet.getSharing() == Planet.Sharing.PUBLIC ? "close" : "open"),
+                    "kick","ban","unban","spawn","setspawn"));
+        } else if (args.length == 2) {
+            if (List.of("unban","unblacklist").contains(args[0].toLowerCase())) {
+                tabCompleter.addAll(planet.getWorldPlayers().getBannedPlayers());
+            } else if (List.of("ban","blacklist","kick").contains(args[0].toLowerCase())) {
+                if (args[0].equalsIgnoreCase("kick")) tabCompleter.add("*");
+                tabCompleter.addAll(planet.getPlayers().stream().filter(p -> !planet.isOwner(p)).map(Player::getName).toList());
+            }
+        }
+        return tabCompleter;
     }
 }

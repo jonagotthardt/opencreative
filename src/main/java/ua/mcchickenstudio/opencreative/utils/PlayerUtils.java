@@ -44,6 +44,7 @@ import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
@@ -312,19 +313,31 @@ public class PlayerUtils {
 
     public static void spawnGlowingBlock(Player player, Location location) {
         if (OpenCreative.getPacketManager().isEnabled()) {
-            OpenCreative.getPacketManager().displayGlowingBlock(player, location);
+            try {
+                OpenCreative.getPacketManager().displayGlowingBlock(player, location);
+            } catch (Exception error) {
+                sendPlayerErrorMessage(player,"Failed to spawn glowing block",error);
+            }
         }
     }
 
     public static void sendOpenedChestAnimation(Player player, Block block) {
         if (OpenCreative.getPacketManager().isEnabled()) {
-            OpenCreative.getPacketManager().sendChestOpenAnimation(player, block);
+            try {
+                OpenCreative.getPacketManager().sendChestOpenAnimation(player, block);
+            } catch (Exception error) {
+                sendPlayerErrorMessage(player,"Failed to display opened chest animation",error);
+            }
         }
     }
 
     public static void sendClosedChestAnimation(Player player, Block block) {
         if (OpenCreative.getPacketManager().isEnabled()) {
-            OpenCreative.getPacketManager().sendChestCloseAnimation(player, block);
+            try {
+                OpenCreative.getPacketManager().sendChestCloseAnimation(player, block);
+            } catch (Exception error) {
+                sendPlayerErrorMessage(player,"Failed to display closed chest animation",error);
+            }
         }
     }
 
@@ -333,7 +346,11 @@ public class PlayerUtils {
         Settings.PlayerListChanger changer = OpenCreative.getSettings().getListChanger();
         if (changer == Settings.PlayerListChanger.SPECTATOR) {
             if (OpenCreative.getPacketManager().isEnabled()) {
-                OpenCreative.getPacketManager().displayAsSpectatorName(spectator, receiver);
+                    try {
+                        OpenCreative.getPacketManager().displayAsSpectatorName(spectator, receiver);
+                    } catch (Exception error) {
+                        sendWarningMessage("Failed to mark player " + spectator.getName() + "as hidden in tab",error);
+                    }
             } else {
                 receiver.hidePlayer(OpenCreative.getPlugin(),spectator);
             }
@@ -345,7 +362,11 @@ public class PlayerUtils {
     public static void showPlayerFromTab(Player spectator, Player receiver) {
         if (spectator == receiver) return;
         if (OpenCreative.getPacketManager().isEnabled() && OpenCreative.getSettings().getListChanger() == Settings.PlayerListChanger.SPECTATOR) {
-            OpenCreative.getPacketManager().removeSpectatorName(spectator, receiver);
+            try {
+                OpenCreative.getPacketManager().removeSpectatorName(spectator, receiver);
+            } catch (Exception error) {
+                sendWarningMessage("Failed send uncolored spectator name " + spectator.getName(),error);
+            }
         } else {
             receiver.showPlayer(OpenCreative.getPlugin(),spectator);
         }

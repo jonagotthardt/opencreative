@@ -554,7 +554,7 @@ public class Planet {
         if (!this.getDevPlanet().isLoaded()) {
             return;
         }
-        if (lastLocation == null) {
+        if (lastLocation == null || !devPlanet.isSaveLocation()) {
             lastLocation = getDevPlanet().getWorld().getSpawnLocation();
         }
         player.teleportAsync(lastLocation).thenAccept(success -> {
@@ -569,8 +569,8 @@ public class Planet {
                         onlinePlayer.hidePlayer(OpenCreative.getPlugin(),player);
                     }
                 }
-                getDevPlanet().getLastLocations().put(player,player.getLocation());
-                player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,Integer.MAX_VALUE,0,false,false,false));
+                if (devPlanet.isSaveLocation()) devPlanet.getLastLocations().put(player,player.getLocation());
+                if (devPlanet.isNightVision()) player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,Integer.MAX_VALUE,0,false,false,false));
                 Sounds.DEV_CONNECTED.play(player);
                 Sounds.WORLD_MODE_DEV.play(player);
                 for (Player developer : getDevPlanet().getWorld().getPlayers()) {

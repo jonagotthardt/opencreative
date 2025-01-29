@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Directional;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
@@ -37,6 +39,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
 /**
  * <h1>BlockUtils</h1>
@@ -143,6 +147,15 @@ public class BlockUtils {
         if (!(borderCenterX1 > playerX && playerX > borderCenterX2)) {
             return true;
         } else return !(borderCenterZ1 > playerZ && playerZ > borderCenterZ2);
+    }
+
+    public static void copySignData(Sign oldSign, Sign sign) {
+        for (byte i = 0; i < oldSign.getSide(Side.FRONT).lines().size(); i++) {
+            sign.getSide(Side.FRONT).line(i,oldSign.getSide(Side.FRONT).line(i));
+        }
+        sign.getSide(Side.FRONT).setGlowingText(oldSign.getSide(Side.FRONT).isGlowingText());
+        sign.setBlockData(oldSign.getBlockData());
+        sign.update();
     }
 
     public static int getBeginningBracketX(Block firstBlock) {

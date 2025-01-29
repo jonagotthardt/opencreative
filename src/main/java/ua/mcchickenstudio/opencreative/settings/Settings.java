@@ -154,6 +154,8 @@ public class Settings {
             return false;
         }
         loadSounds(config, theme);
+        OpenCreative.getPlugin().getConfig().set("sounds.theme",theme);
+        OpenCreative.getPlugin().saveConfig();
         return true;
     }
 

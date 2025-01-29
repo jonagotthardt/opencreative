@@ -37,7 +37,7 @@ public class DevPlatform {
     }
 
     public boolean exists() {
-        if (!world.isChunkLoaded(getBeginX() >> 4,getBeginZ() >> 4)) {
+        if (!world.isChunkGenerated(getBeginX() >> 4,getBeginZ() >> 4)) {
             return false;
         }
         return world.getBlockAt(getBeginX(),0,getBeginZ()).isSolid();

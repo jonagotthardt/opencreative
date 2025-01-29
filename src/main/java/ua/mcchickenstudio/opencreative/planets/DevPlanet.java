@@ -18,6 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.planets;
 
+import org.bukkit.block.*;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Directional;
+import org.bukkit.block.sign.Side;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
@@ -26,9 +33,6 @@ import ua.mcchickenstudio.opencreative.utils.world.DevPlanetChunkGenerator;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import org.bukkit.*;
 
-import org.bukkit.block.Biome;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -55,7 +59,12 @@ public class DevPlanet {
 
     private final Planet planet;
 
+    private Material signMaterial = Material.BIRCH_WALL_SIGN;
     private Material containerMaterial = Material.CHEST;
+
+    private boolean dropItems = true;
+    private boolean saveLocation = true;
+    private boolean nightVision = true;
 
     private final Map<Player, Location> lastLocations = new HashMap<>();
     private final Map<Location, Layout> openedBlocksMenus = new HashMap<>();
@@ -66,6 +75,26 @@ public class DevPlanet {
 
     public DevPlanet(Planet planet) {
         this.planet = planet;
+        loadInformation();
+    }
+
+    private void loadInformation() {
+        FileConfiguration config = getPlanetConfig(planet);
+        try {
+            containerMaterial = Material.getMaterial(config.getString("dev.container","CHEST"));
+            if (containerMaterial == null || !containerMaterial.isBlock()) {
+                containerMaterial = Material.CHEST;
+            }
+        } catch (Exception ignored) {}
+        try {
+            signMaterial = Material.getMaterial(config.getString("dev.sign","BIRCH_WALL_SIGN"));
+            if (signMaterial == null || !signMaterial.isBlock()) {
+                signMaterial = Material.BIRCH_WALL_SIGN;
+            }
+        } catch (Exception ignored) {}
+        dropItems = config.getBoolean("dev.drops",true);
+        saveLocation = config.getBoolean("dev.save-location",true);
+        nightVision = config.getBoolean("dev.night-vision",true);
     }
 
     public void loadDevPlanetWorld() {
@@ -87,7 +116,15 @@ public class DevPlanet {
         }
     }
 
-    private void setupWorld() {
+    public void unload() {
+        if (!isLoaded()) return;
+        for (Player player : getWorld().getPlayers()) {
+            teleportToLobby(player);
+        }
+        Bukkit.unloadWorld(getWorldName(),true);
+    }
+
+    public void setupWorld() {
         this.getWorld().setSpawnLocation(2,1,2);
         this.getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
         this.getWorld().setGameRule(GameRule.DO_WEATHER_CYCLE,false);
@@ -98,7 +135,6 @@ public class DevPlanet {
         this.getWorld().setGameRule(GameRule.DO_PATROL_SPAWNING,false);
         this.getWorld().setGameRule(GameRule.DO_FIRE_TICK,false);
         setWorldBorder();
-
     }
 
     public boolean exists() {
@@ -300,12 +336,53 @@ public class DevPlanet {
         return locations;
     }
 
-    public boolean isLoaded() {
-        return Bukkit.getWorld(getWorldName()) != null;
+    public void updateContainers() {
+        if (!isLoaded()) return;
+        for (DevPlatform platform : getPlatforms()) {
+            for (int z = platform.getBeginZ()+4; z < platform.getEndZ()-4; z = z + 4) {
+                for (int x = platform.getBeginX()+6; x <= platform.getEndX()-4; x = x + 2) {
+                    Block containerBlock = new Location(getWorld(), x, 2, z).getBlock();
+                    if (containerBlock.getState() instanceof InventoryHolder container) {
+                        ItemStack[] data = container.getInventory().getContents();
+                        containerBlock.setType(containerMaterial);
+                        ((Container) containerBlock.getState()).getInventory().setContents(data);
+                        BlockData blockData = containerBlock.getBlockData();
+                        ((Directional) blockData).setFacing(BlockFace.SOUTH);
+                        containerBlock.setBlockData(blockData);
+                        containerBlock.getState().update();
+                    }
+                }
+            }
+        }
     }
 
-    public Planet getPlanet() {
-        return planet;
+    public void updateSigns() {
+        if (!isLoaded()) return;
+        for (DevPlatform platform : getPlatforms()) {
+            for (int z = platform.getBeginZ()+5; z < platform.getEndZ()-4; z = z + 4) {
+                for (int x = platform.getBeginX()+4; x <= platform.getEndX()-4; x = x + 2) {
+                    Block signBlock = new Location(getWorld(), x, 1, z).getBlock();
+                    if (signBlock.getType().name().contains("WALL_SIGN")) {
+                        Sign oldSign = (Sign) signBlock.getState();
+                        signBlock.setType(signMaterial);
+                        Sign sign = (Sign) signBlock.getState();
+                        for (byte i = 0; i < oldSign.getSide(Side.FRONT).lines().size(); i++) {
+                            sign.getSide(Side.FRONT).line(i,oldSign.getSide(Side.FRONT).line(i));
+                        }
+                        sign.getSide(Side.FRONT).setGlowingText(oldSign.getSide(Side.FRONT).isGlowingText());
+                        BlockData blockData = signBlock.getBlockData();
+                        ((Directional) blockData).setFacing(BlockFace.SOUTH);
+                        sign.setBlockData(blockData);
+                        sign.update();
+                        PlayerUtils.translateBlockSign(signBlock);
+                    }
+                }
+            }
+        }
+    }
+
+    public boolean isLoaded() {
+        return Bukkit.getWorld(getWorldName()) != null;
     }
 
     public Layout getOpenedMenu(Location location) {
@@ -324,9 +401,41 @@ public class DevPlanet {
         return containerMaterial;
     }
 
+    public Material getSignMaterial() {
+        return signMaterial;
+    }
+
+    public boolean isNightVision() {
+        return nightVision;
+    }
+
+    public boolean isSaveLocation() {
+        return saveLocation;
+    }
+
+    public boolean isDropItems() {
+        return dropItems;
+    }
+
+    public void setNightVision(boolean nightVision) {
+        this.nightVision = nightVision;
+        setPlanetConfigParameter(planet,"dev.night-vision",nightVision);
+    }
+
+    public void setSaveLocation(boolean saveLocation) {
+        this.saveLocation = saveLocation;
+        setPlanetConfigParameter(planet,"dev.save-location",saveLocation);
+    }
+
+    public void setDropItems(boolean dropItems) {
+        this.dropItems = dropItems;
+        setPlanetConfigParameter(planet,"dev.drops",dropItems);
+    }
+
     public boolean setContainerMaterial(Material containerMaterial) {
-        if (containerMaterial == Material.BARREL || containerMaterial == Material.CHEST || containerMaterial == Material.TRAPPED_CHEST) {
+        if (containerMaterial == Material.BARREL || containerMaterial == Material.CHEST || containerMaterial.name().endsWith("SHULKER_BOX")) {
             this.containerMaterial = containerMaterial;
+            setPlanetConfigParameter(planet,"dev.container",containerMaterial.name());
             return true;
         }
         return false;
@@ -334,7 +443,8 @@ public class DevPlanet {
 
     public boolean setSignMaterial(Material signMaterial) {
         if (signMaterial == Material.OAK_WALL_SIGN || signMaterial == Material.ACACIA_WALL_SIGN || signMaterial == Material.BAMBOO_WALL_SIGN || signMaterial == Material.CHERRY_WALL_SIGN || signMaterial == Material.BIRCH_WALL_SIGN || signMaterial == Material.JUNGLE_WALL_SIGN) {
-            this.containerMaterial = signMaterial;
+            this.signMaterial = signMaterial;
+            setPlanetConfigParameter(planet,"dev.sign",signMaterial.name());
             return true;
         }
         return false;
@@ -441,11 +551,7 @@ public class DevPlanet {
         return Bukkit.getWorld(getWorldName());
     }
 
-    public void unload() {
-        if (!isLoaded()) return;
-        for (Player player : getWorld().getPlayers()) {
-            teleportToLobby(player);
-        }
-        Bukkit.unloadWorld(getWorldName(),true);
+    public Planet getPlanet() {
+        return planet;
     }
 }

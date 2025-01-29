@@ -73,7 +73,7 @@ public final class DestroyBlockListener implements Listener {
 
             if (devPlanet.getAllCodingBlocksForPlacing().contains(block.getType())) {
                 if (ActionCategory.getByMaterial(block.getType()) != null) {
-                    destroyAdditionalBlocks(platform,block);
+                    destroyAdditionalBlocks(platform,block,devPlanet.isDropItems());
                     block.setType(Material.AIR);
                     move(block.getLocation(), BlockFace.WEST);
                 } else {
@@ -81,12 +81,12 @@ public final class DestroyBlockListener implements Listener {
                         if (event.getPlayer().isSneaking()) {
                             for (byte x = (byte) block.getX(); x < platform.getEndX()-1; x = (byte) (x + 2)) {
                                 Block actionBlock = block.getWorld().getBlockAt(x, block.getY(), block.getZ());
-                                destroyAdditionalBlocks(platform,actionBlock);
+                                destroyAdditionalBlocks(platform,actionBlock,devPlanet.isDropItems());
                                 actionBlock.setType(Material.AIR);
                             }
                         }
                     }
-                    destroyAdditionalBlocks(platform,block);
+                    destroyAdditionalBlocks(platform,block,devPlanet.isDropItems());
                     block.setType(Material.AIR);
                 }
                 event.setCancelled(true);
@@ -99,10 +99,9 @@ public final class DestroyBlockListener implements Listener {
                 }
             }
 
-            if (block.getType() == Material.OAK_WALL_SIGN) {
+            if (block.getType().name().contains("WALL_SIGN")) {
                 event.setCancelled(true);
                 translateBlockSign(block, player);
-
             }
         } else if (planet != null) {
             if (ChangedWorld.isPlayerWithLocation(player) && !planet.getWorldPlayers().canBuild(player)) {
@@ -114,7 +113,7 @@ public final class DestroyBlockListener implements Listener {
         }
     }
 
-    private void destroyAdditionalBlocks(DevPlatform platform, Block block) {
+    private void destroyAdditionalBlocks(DevPlatform platform, Block block, boolean dropItems) {
         Block containerBlock = block.getRelative(BlockFace.UP);
         Block additionalBlock = block.getRelative(BlockFace.EAST);
         Block signBlock = block.getRelative(BlockFace.SOUTH);
@@ -127,7 +126,7 @@ public final class DestroyBlockListener implements Listener {
         }
         additionalBlock.setType(Material.AIR);
         signBlock.setType(Material.AIR);
-        if (containerBlock.getState() instanceof InventoryHolder container) {
+        if (dropItems && containerBlock.getState() instanceof InventoryHolder container) {
             for (ItemStack item : container.getInventory().getContents()) {
                 if (item != null) {
                     if (item.getItemMeta() == null || !item.getItemMeta().getPersistentDataContainer().has(getCodingDoNotDropMeKey())) {

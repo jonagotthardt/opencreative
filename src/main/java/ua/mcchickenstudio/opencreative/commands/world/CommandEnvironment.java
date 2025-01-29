@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.commands.world;
 
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.*;
@@ -38,18 +40,11 @@ import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Container;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Directional;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
@@ -229,29 +224,93 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             player.sendMessage(" ");
                         }
                         break;
-                    case "containers", "barrel", "barrels", "container": {
+                    case "containers", "barrel", "barrels": {
                         DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
                         if (devPlanet == null) {
                             player.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
                         }
                         devPlanet.setContainerMaterial(devPlanet.getContainerMaterial() == Material.CHEST ? Material.BARREL : Material.CHEST);
-                        for (DevPlatform platform : devPlanet.getPlatforms()) {
-                            for (int z = platform.getBeginZ()+4; z < platform.getEndZ()-4; z = z + 4) {
-                                for (int x = platform.getBeginX()+6; x <= platform.getEndX()-4; x = x + 2) {
-                                    Block containerBlock = new Location(devPlanet.getWorld(), x, 2, z).getBlock();
-                                    if (containerBlock.getState() instanceof InventoryHolder container) {
-                                        ItemStack[] data = container.getInventory().getContents();
-                                        containerBlock.setType(devPlanet.getContainerMaterial());
-                                        ((Container) containerBlock.getState()).getInventory().setContents(data);
-                                        BlockData blockData = containerBlock.getBlockData();
-                                        ((Directional) blockData).setFacing(BlockFace.SOUTH);
-                                        containerBlock.setBlockData(blockData);
-                                        containerBlock.getState().update();
-                                    }
-                                }
-                            }
+                        devPlanet.updateContainers();
+                        break;
+                    }
+                    case "container": {
+                        if (args.length < 2) {
+                            sender.sendMessage(getLocaleMessage("too-few-args"));
+                            return true;
                         }
+                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        if (devPlanet == null) {
+                            sender.sendMessage(getLocaleMessage("only-in-dev-world"));
+                            return true;
+                        }
+                        Material material = Material.CHEST;
+                        try {
+                            material = Material.valueOf((args[1].equalsIgnoreCase("chest") || (args[1].equalsIgnoreCase("barrel") || args[1].equalsIgnoreCase("shulker_box")) ? args[1].toUpperCase() : args[1].toUpperCase()+"_SHULKER_BOX"));
+                        } catch (Exception ignored) {}
+                        if (devPlanet.setContainerMaterial(material)) {
+                            devPlanet.updateContainers();
+                        }
+                        break;
+
+                    }
+                    case "drops", "drop", "drop-items": {
+                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        if (devPlanet == null) {
+                            player.sendMessage(getLocaleMessage("only-in-dev-world"));
+                            return true;
+                        }
+                        boolean value = !devPlanet.isDropItems();
+                        if (args.length >= 2) {
+                            value = switch (args[1].toLowerCase()) {
+                                case "on", "enable" -> true;
+                                default -> false;
+                            };
+                        }
+                        player.sendMessage(getLocaleMessage("environment.drops." + (value ? "enabled" : "disabled")));
+                        devPlanet.setDropItems(value);
+                        Sounds.DEV_SETTINGS_DROP_ITEMS.play(player);
+                        break;
+                    }
+                    case "night-vision": {
+                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        if (devPlanet == null) {
+                            player.sendMessage(getLocaleMessage("only-in-dev-world"));
+                            return true;
+                        }
+                        boolean value = !devPlanet.isNightVision();
+                        if (args.length >= 2) {
+                            value = switch (args[1].toLowerCase()) {
+                                case "on", "enable" -> true;
+                                default -> false;
+                            };
+                        }
+                        devPlanet.setNightVision(value);
+                        if (value) {
+                            player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,Integer.MAX_VALUE,0,false,false,false));
+                        } else {
+                            player.removePotionEffect(PotionEffectType.NIGHT_VISION);
+                        }
+                        player.sendMessage(getLocaleMessage("environment.night-vision." + (value ? "enabled" : "disabled")));
+                        Sounds.DEV_SETTINGS_NIGHT_VISION.play(player);
+                        break;
+                    }
+                    case "save-location": {
+                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        if (devPlanet == null) {
+                            player.sendMessage(getLocaleMessage("only-in-dev-world"));
+                            return true;
+                        }
+                        boolean value = !devPlanet.isSaveLocation();
+                        if (args.length >= 2) {
+                            value = switch (args[1].toLowerCase()) {
+                                case "on", "enable" -> true;
+                                default -> false;
+                            };
+                        }
+                        player.sendMessage(getLocaleMessage("environment.save-location." + (value ? "enabled" : "disabled")));
+                        devPlanet.setSaveLocation(value);
+                        Sounds.DEV_SETTINGS_SAVE_LOCATION.play(player);
                         break;
                     }
                     case "createplatform": {
@@ -302,6 +361,26 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             }
                         }
                         devPlanet.claimPlatform(platform, player);
+                        break;
+                    }
+                    case "sign": {
+                        if (args.length < 2) {
+                            sender.sendMessage(getLocaleMessage("too-few-args"));
+                            return true;
+                        }
+                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        if (devPlanet == null) {
+                            sender.sendMessage(getLocaleMessage("only-in-dev-world"));
+                            return true;
+                        }
+                        Material material = Material.OAK_WALL_SIGN;
+                        try {
+                            material = Material.valueOf(args[1].toUpperCase()+"_WALL_SIGN");
+                        } catch (Exception ignored) {}
+                        if (devPlanet.setSignMaterial(material)) {
+                            Sounds.DEV_PLATFORM_SIGN.play(player);
+                            devPlanet.updateSigns();
+                        }
                         break;
                     }
                     case "floor": {
@@ -495,13 +574,13 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             player.sendMessage(getLocaleMessage("environment.debug.help"));
                             return true;
                         }
-                        if (args[1].equalsIgnoreCase("enable")) {
+                        if (args[1].equalsIgnoreCase("enable") || args[1].equalsIgnoreCase("on")) {
                             for (Player planetPlayer : planet.getPlayers()){
                                 planetPlayer.sendMessage(getLocaleMessage("environment.debug.enabled",player));
                             }
                             Sounds.DEV_DEBUG_ON.play(player);
                             planet.setDebug(true);
-                        } else if (args[1].equalsIgnoreCase("disable")) {
+                        } else if (args[1].equalsIgnoreCase("disable") || args[1].equalsIgnoreCase("off")) {
                             for (Player planetPlayer : planet.getPlayers()){
                                 planetPlayer.sendMessage(getLocaleMessage("environment.debug.disabled",player));
                             }
@@ -520,7 +599,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         List<String> tabCompleter = new ArrayList<>();
         if (args.length == 1) {
-            Collections.addAll(tabCompleter,"platform","variables","debug","execute","barrel","floor","action","theme","event");
+            Collections.addAll(tabCompleter,"platform","variables","debug","execute","barrel","floor","action","theme","event","sign","save-location","night-vision","drops");
             return tabCompleter;
         }
         if (args.length == 2) {
@@ -528,8 +607,8 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                 Collections.addAll(tabCompleter, "set", "get", "size", "clear", "list");
             } else if (List.of("execute", "exec", "run").contains(args[0].toLowerCase())) {
                 Collections.addAll(tabCompleter, "function", "method", "player_join", "player_quit", "player_liked", "player_play", "world_play");
-            } else if ("debug".equalsIgnoreCase(args[0])) {
-                Collections.addAll(tabCompleter, "enable", "disable");
+            } else if ("debug".equalsIgnoreCase(args[0]) || "drops".equalsIgnoreCase(args[0]) || "night-vision".equalsIgnoreCase(args[0]) || "save-location".equalsIgnoreCase(args[0])) {
+                Collections.addAll(tabCompleter, "on", "off");
             } else if ("floor".equalsIgnoreCase(args[0]) || "event".equalsIgnoreCase(args[0]) || "action".equalsIgnoreCase(args[0])) {
                 Collections.addAll(tabCompleter,
                         "barrier", "black", "blue"
@@ -542,6 +621,17 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         "default", "dark", "light",
                         "legacy", "cloud", "art", "ukraine",
                         "blue", "purple");
+            } else if ("sign".equalsIgnoreCase(args[0])) {
+                Collections.addAll(tabCompleter,
+                        "oak","acacia","bamboo","cherry",
+                        "birch", "jungle");
+            } else if ("container".equalsIgnoreCase(args[0])) {
+                Collections.addAll(tabCompleter,
+                        "barrel", "chest", "black", "blue"
+                        , "light_blue", "light_gray", "white"
+                        , "red", "orange", "yellow", "purple"
+                        , "green", "lime", "magenta", "brown"
+                        , "cyan", "pink");
             }
             return tabCompleter;
         }
