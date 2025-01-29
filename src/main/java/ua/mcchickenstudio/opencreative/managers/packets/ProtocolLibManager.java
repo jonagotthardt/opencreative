@@ -24,12 +24,10 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.*;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -69,8 +67,8 @@ public final class ProtocolLibManager implements PacketManager {
         watcher.setObject(0, WrappedDataWatcher.Registry.get(Byte.class), (byte) (0x40 | 0x20));
         entityDataPacket.getIntegers().write(0, 83);
         List<WrappedDataValue> wrappedDataValueList = new ArrayList<>();
-        for(final WrappedWatchableObject entry : watcher.getWatchableObjects()) {
-            if(entry == null) continue;
+        for (final WrappedWatchableObject entry : watcher.getWatchableObjects()) {
+            if (entry == null) continue;
             final WrappedDataWatcher.WrappedDataWatcherObject watcherObject = entry.getWatcherObject();
             wrappedDataValueList.add(
                     new WrappedDataValue(
@@ -83,34 +81,34 @@ public final class ProtocolLibManager implements PacketManager {
         entityDataPacket.getDataValueCollectionModifier().write(0, wrappedDataValueList);
         PacketContainer hideGlowingPacket = manager.createPacket(ENTITY_DESTROY);
         hideGlowingPacket.getModifier().write(0, new IntArrayList(new int[]{83}));
-        manager.sendServerPacket(player,spawnEntityPacket);
-        manager.sendServerPacket(player,entityDataPacket);
+        manager.sendServerPacket(player, spawnEntityPacket);
+        manager.sendServerPacket(player, entityDataPacket);
         new BukkitRunnable() {
             @Override
             public void run() {
                 if (player.getWorld() == world) {
-                    manager.sendServerPacket(player,hideGlowingPacket);
+                    manager.sendServerPacket(player, hideGlowingPacket);
                 }
             }
-        }.runTaskLater(OpenCreative.getPlugin(),60L);
+        }.runTaskLater(OpenCreative.getPlugin(), 60L);
     }
 
     @Override
     public void sendChestOpenAnimation(@NotNull Player player, @NotNull Block block) {
         PacketContainer blockActionPacket = manager.createPacket(BLOCK_ACTION);
         blockActionPacket.getBlockPositionModifier().write(0, new BlockPosition(block.getLocation().toVector()));
-        blockActionPacket.getIntegers().write(0,1);
-        blockActionPacket.getIntegers().write(1,1);
-        manager.sendServerPacket(player,blockActionPacket);
+        blockActionPacket.getIntegers().write(0, 1);
+        blockActionPacket.getIntegers().write(1, 1);
+        manager.sendServerPacket(player, blockActionPacket);
     }
 
     @Override
     public void sendChestCloseAnimation(@NotNull Player player, @NotNull Block block) {
         PacketContainer blockActionPacket = manager.createPacket(BLOCK_ACTION);
         blockActionPacket.getBlockPositionModifier().write(0, new BlockPosition(block.getLocation().toVector()));
-        blockActionPacket.getIntegers().write(0,1);
-        blockActionPacket.getIntegers().write(1,0);
-        manager.sendServerPacket(player,blockActionPacket);
+        blockActionPacket.getIntegers().write(0, 1);
+        blockActionPacket.getIntegers().write(1, 0);
+        manager.sendServerPacket(player, blockActionPacket);
     }
 
     @Override
@@ -124,9 +122,9 @@ public final class ProtocolLibManager implements PacketManager {
                     EnumWrappers.NativeGameMode.SPECTATOR,
                     WrappedChatComponent.fromText(player.getName())
             )));
-            manager.sendServerPacket(receiver,packet);
+            manager.sendServerPacket(receiver, packet);
         } catch (Exception error) {
-            ErrorUtils.sendCriticalErrorMessage("Can't send spectator colored packet",error);
+            ErrorUtils.sendCriticalErrorMessage("Can't send spectator colored packet", error);
         }
     }
 
@@ -142,9 +140,9 @@ public final class ProtocolLibManager implements PacketManager {
                     EnumWrappers.NativeGameMode.valueOf(player.getGameMode().name()),
                     WrappedChatComponent.fromText(player.getName())
             )));
-            manager.sendServerPacket(receiver,packet);
+            manager.sendServerPacket(receiver, packet);
         } catch (Exception error) {
-            ErrorUtils.sendCriticalErrorMessage("Can't send spectator uncolored packet",error);
+            ErrorUtils.sendCriticalErrorMessage("Can't send spectator uncolored packet", error);
         }
     }
 
@@ -156,5 +154,93 @@ public final class ProtocolLibManager implements PacketManager {
     @Override
     public String getName() {
         return "ProtocolLib Packet Manager";
+    }
+
+    public void spawnBlockDisplay(Player player, @NotNull Location location) {
+        World world = player.getWorld();
+        UUID uuid = UUID.randomUUID();
+        PacketContainer spawnEntityPacket = getSpawnFallingBlockPacket(uuid,location);
+        PacketContainer entityDataPacket = getFallingBlockDataPacket();
+        PacketContainer createTeamPacket = getTeamCreationPacket(uuid, EnumWrappers.ChatFormatting.GOLD);
+        PacketContainer hideGlowingPacket = getRemoveEntityPacket();
+        manager.sendServerPacket(player, createTeamPacket);
+        manager.sendServerPacket(player, spawnEntityPacket);
+        manager.sendServerPacket(player, entityDataPacket);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (player.getWorld() == world) {
+                    manager.sendServerPacket(player, hideGlowingPacket);
+                    manager.sendServerPacket(player, getTeamDeletionPacket());
+                }
+            }
+        }.runTaskLater(OpenCreative.getPlugin(), 60L);
+    }
+
+    private PacketContainer getRemoveEntityPacket() {
+        PacketContainer hideGlowingPacket = manager.createPacket(ENTITY_DESTROY);
+        hideGlowingPacket.getModifier().write(0, new IntArrayList(new int[]{15}));
+        return hideGlowingPacket;
+    }
+
+    private PacketContainer getTeamCreationPacket(UUID uuid, EnumWrappers.ChatFormatting color) {
+        PacketContainer createTeamPacket = manager.createPacket(SCOREBOARD_TEAM);
+        createTeamPacket.getIntegers().write(0, 0);
+        createTeamPacket.getStrings().write(0, "oc_block_display");
+        createTeamPacket.getOptionalTeamParameters().write(0,
+                Optional.of(WrappedTeamParameters.newBuilder()
+                        .displayName(WrappedChatComponent.fromText("oc_block_display"))
+                        .prefix(WrappedChatComponent.fromText("oc"))
+                        .suffix(WrappedChatComponent.fromText("oc"))
+                        .nametagVisibility("never")
+                        .collisionRule("never")
+                        .color(color)
+                        .build()));
+        createTeamPacket.getSpecificModifier(Collection.class).write(0, Collections.singletonList(uuid.toString()));
+        return createTeamPacket;
+    }
+
+    private PacketContainer getTeamDeletionPacket() {
+        PacketContainer deletionTeamPacket = manager.createPacket(SCOREBOARD_TEAM);
+        deletionTeamPacket.getIntegers().write(0, 1);
+        deletionTeamPacket.getStrings().write(0, "oc_block_display");
+        return deletionTeamPacket;
+    }
+
+    private PacketContainer getFallingBlockDataPacket() {
+        PacketContainer entityDataPacket = manager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
+        entityDataPacket.getIntegers().write(0, 15);
+        WrappedDataWatcher watcher = new WrappedDataWatcher();
+        watcher.setByte(0, (byte) (0x20 | 0x40), true); // Glowing and Invisible
+        watcher.setInteger(16,2,true);
+        watcher.setBoolean(5,true,true); // No gravity
+
+        List<WrappedDataValue> wrappedDataValueList = new ArrayList<>();
+        for (final WrappedWatchableObject entry : watcher.getWatchableObjects()) {
+            if (entry == null) continue;
+            final WrappedDataWatcher.WrappedDataWatcherObject watcherObject = entry.getWatcherObject();
+            wrappedDataValueList.add(
+                    new WrappedDataValue(
+                            watcherObject.getIndex(),
+                            watcherObject.getSerializer(),
+                            entry.getRawValue()
+                    )
+            );
+        }
+        entityDataPacket.getDataValueCollectionModifier().write(0, wrappedDataValueList);
+        return entityDataPacket;
+    }
+
+    private PacketContainer getSpawnFallingBlockPacket(UUID uuid, Location location) {
+        PacketContainer spawnEntityPacket = manager.createPacket(SPAWN_ENTITY);
+        spawnEntityPacket.getIntegers().write(0, 15);
+        spawnEntityPacket.getUUIDs().write(0, uuid);
+        spawnEntityPacket.getEntityTypeModifier().write(0, EntityType.SLIME);
+        spawnEntityPacket.getDoubles()
+                .write(0, location.getX())
+                .write(1, location.getY())
+                .write(2, location.getZ());
+        //spawnEntityPacket.getModifier().write(12,1);
+        return spawnEntityPacket;
     }
 }

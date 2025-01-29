@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.commands;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import ua.mcchickenstudio.opencreative.managers.packets.ProtocolLibManager;
 import ua.mcchickenstudio.opencreative.menu.CreativeMenu;
 import ua.mcchickenstudio.opencreative.menu.world.WorldAccessMenu;
 import ua.mcchickenstudio.opencreative.menu.world.WorldModerationMenu;
@@ -557,7 +558,10 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
-                    player.sendMessage("Test of legacy convertor");
+                    player.sendMessage("Test of display block entity");
+                    if (OpenCreative.getPacketManager() instanceof ProtocolLibManager manager) {
+                        manager.spawnBlockDisplay(player,player.getLocation());
+                    }
                     //new PlayerToEntityConvertor(new ArrayList<>(PlanetManager.getInstance().getPlanets())).start();
                 }
                 case "template" -> {

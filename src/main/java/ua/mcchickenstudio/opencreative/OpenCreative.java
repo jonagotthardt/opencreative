@@ -82,7 +82,7 @@ public final class OpenCreative extends JavaPlugin {
     private static Updater updater;
     private static PacketManager packet;
 
-    private static final String version = "5.4.0";
+    private static final String version = "5.4.1";
     private static final String codename = "Well, it's possible";
 
     /**
