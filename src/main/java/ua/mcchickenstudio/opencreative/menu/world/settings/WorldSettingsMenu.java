@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.menu.world.settings;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
 import ua.mcchickenstudio.opencreative.listeners.player.ChatListener;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
@@ -140,7 +141,7 @@ public class WorldSettingsMenu extends AbstractMenu {
     }
 
     @Override
-    public void onClick(InventoryClickEvent event) {
+    public void onClick(@NotNull InventoryClickEvent event) {
         if (!isClickedInMenuSlots(event) || !isPlayerClicked(event)) {
             return;
         }
@@ -283,7 +284,7 @@ public class WorldSettingsMenu extends AbstractMenu {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {
+    public void onOpen(@NotNull InventoryOpenEvent event) {
         if (!planet.isOwner(event.getPlayer().getName())) {
             event.setCancelled(true);
             return;

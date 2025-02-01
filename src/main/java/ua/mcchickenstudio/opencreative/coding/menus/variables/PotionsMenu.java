@@ -28,6 +28,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.menu.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
@@ -108,5 +109,5 @@ public class PotionsMenu extends ListBrowserMenu<PotionEffectType> {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {}
+    public void onOpen(@NotNull InventoryOpenEvent event) {}
 }

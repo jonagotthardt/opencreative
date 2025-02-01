@@ -26,6 +26,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.commands.world.CommandAd;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetAdvertisementEvent;
@@ -87,7 +88,7 @@ public class WorldAccessMenu extends AbstractMenu implements WorldMenu {
     }
 
     @Override
-    public void onClick(InventoryClickEvent event) {
+    public void onClick(@NotNull InventoryClickEvent event) {
         event.setCancelled(true);
         if (!isPlayerClicked(event) || !isClickedInMenuSlots(event)) return;
         ItemStack item = event.getCurrentItem();
@@ -229,7 +230,7 @@ public class WorldAccessMenu extends AbstractMenu implements WorldMenu {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {
+    public void onOpen(@NotNull InventoryOpenEvent event) {
         Sounds.MENU_OPEN_WORLD_ACCESS.play(event.getPlayer());
     }
 

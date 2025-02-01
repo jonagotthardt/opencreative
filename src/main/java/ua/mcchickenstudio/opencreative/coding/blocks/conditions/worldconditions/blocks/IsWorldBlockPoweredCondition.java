@@ -31,8 +31,8 @@ import java.util.List;
 
 public class IsWorldBlockPoweredCondition extends WorldCondition {
 
-    public IsWorldBlockPoweredCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, boolean isOpposed) {
-        super(executor, target, x, args, actions, isOpposed);
+    public IsWorldBlockPoweredCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
+        super(executor, target, x, args, actions, reactions, isOpposed);
     }
 
     @Override

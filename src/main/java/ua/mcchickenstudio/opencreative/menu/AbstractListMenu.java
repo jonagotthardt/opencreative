@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.menu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -114,7 +115,7 @@ public abstract class AbstractListMenu<T> extends AbstractMenu {
     }
 
     @Override
-    public void onClick(InventoryClickEvent event) {
+    public void onClick(@NotNull InventoryClickEvent event) {
         if (!isPlayerClicked(event) || !isClickedInMenuSlots(event)) {
             event.setCancelled(true);
             return;

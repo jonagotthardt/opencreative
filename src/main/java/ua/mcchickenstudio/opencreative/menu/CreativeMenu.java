@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.menu;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -56,7 +57,7 @@ public class CreativeMenu extends AbstractMenu {
     }
 
     @Override
-    public void onClick(InventoryClickEvent event) {
+    public void onClick(@NotNull InventoryClickEvent event) {
         ItemStack clickedItem = event.getCurrentItem();
         event.setCancelled(true);
         if (event.getClickedInventory() != event.getInventory()) return;
@@ -71,5 +72,5 @@ public class CreativeMenu extends AbstractMenu {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {}
+    public void onOpen(@NotNull InventoryOpenEvent event) {}
 }

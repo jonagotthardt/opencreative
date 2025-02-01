@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.menu.world.settings;
 
 import org.bukkit.Material;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetInfo;
@@ -69,7 +70,7 @@ public class WorldSettingsCategoryMenu extends AbstractMenu {
     }
 
     @Override
-    public void onClick(InventoryClickEvent event) {
+    public void onClick(@NotNull InventoryClickEvent event) {
         event.setCancelled(true);
         if (!isPlayerClicked(event)) return;
         Planet planet = PlanetManager.getInstance().getPlanetByPlayer((Player) event.getWhoClicked());
@@ -105,5 +106,5 @@ public class WorldSettingsCategoryMenu extends AbstractMenu {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {}
+    public void onOpen(@NotNull InventoryOpenEvent event) {}
 }

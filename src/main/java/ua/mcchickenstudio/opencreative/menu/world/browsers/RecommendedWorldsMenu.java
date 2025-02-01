@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.menu.world.browsers;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.listeners.player.ChatListener;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -81,7 +82,7 @@ public class RecommendedWorldsMenu extends AbstractMenu {
     }
 
     @Override
-    public void onClick(InventoryClickEvent event) {
+    public void onClick(@NotNull InventoryClickEvent event) {
         if (!isClickedInMenuSlots(event) || !isPlayerClicked(event)) {
             return;
         }
@@ -132,7 +133,7 @@ public class RecommendedWorldsMenu extends AbstractMenu {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {
+    public void onOpen(@NotNull InventoryOpenEvent event) {
         Sounds.MENU_OPEN_RECOMMENDATIONS.play(event.getPlayer());
     }
 }

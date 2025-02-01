@@ -40,16 +40,17 @@ public abstract class Condition extends Action {
     private final boolean isOpposed;
 
     /**
-     * Creates an Condition with linked executor and specified arguments.
+     * Creates a Condition with linked executor and specified arguments.
      *
      * @param executor Executor where this action will be added.
      * @param x        X from Action's block location in developers planet.
      * @param args     List of arguments for action.
      */
-    public Condition(Executor executor, Target target, int x, Arguments args, List<Action> actions, boolean isOpposed) {
+    public Condition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
         super(executor, target, x, args);
         this.isOpposed = isOpposed;
         this.actions.addAll(actions);
+        this.reactions.addAll(reactions);
     }
 
     public abstract boolean check(Entity entity);

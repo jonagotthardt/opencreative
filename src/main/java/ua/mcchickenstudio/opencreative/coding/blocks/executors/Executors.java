@@ -293,7 +293,7 @@ public class Executors {
                 if (config.getConfigurationSection(path+".actions") != null) {
                     if (actionType.getCategory().isCondition()) {
                         boolean isOpposed = config.getBoolean(path+".opposed",false);
-                        return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class,boolean.class).newInstance(executor,target,config.getInt(path+".location.x"),args,createActionList(executor,path+".actions",config),isOpposed);
+                        return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class,List.class,boolean.class).newInstance(executor,target,config.getInt(path+".location.x"),args,createActionList(executor,path+".actions",config),createActionList(executor,path+".else",config),isOpposed);
                     } else {
                         return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class).newInstance(executor,target,config.getInt(path+".location.x"),args,createActionList(executor,path+".actions",config));
                     }

@@ -262,6 +262,7 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
                 sender.sendMessage(" Entities: " + entities);
                 sender.sendMessage("");
             }
+            case "info" -> sendPlanetInfo(player,planet);
             default -> {
                 if (planet.isOwner(player)) {
                     new WorldSettingsMenu(planet,player).open(player);

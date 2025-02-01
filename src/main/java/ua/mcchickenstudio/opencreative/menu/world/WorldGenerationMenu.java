@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.menu.world;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menu.buttons.ParameterButton;
@@ -45,13 +46,16 @@ public class WorldGenerationMenu extends AbstractMenu {
     private final ParameterButton generateStructures;
     private final ItemStack createButton = createItem(Material.PUFFERFISH_BUCKET,1,"menus.world-creation.items.create");
 
-    public WorldGenerationMenu(Player player) {
+    public WorldGenerationMenu(Player player, String generator, String environment, boolean generateStructures) {
         super(3, MessageUtils.getLocaleMessage("menus.world-creation.title",false));
         this.player = player;
-        this.generatorButton = new ParameterButton("flat", List.of("flat","empty","water","survival","large_biomes"), "type", "menus.world-creation", "menus.world-creation.items.type", List.of(Material.MOSS_BLOCK, Material.GLASS, Material.WATER_BUCKET, Material.OAK_SAPLING, Material.MYCELIUM));
-        this.environmentButton = new ParameterButton("normal", List.of("normal","nether","the_end"), "environment", "menus.world-creation", "menus.world-creation.items.environment", List.of(Material.GRASS_BLOCK, Material.NETHERRACK, Material.END_STONE));
-        this.generateStructures = new ParameterButton(false, List.of(false,true), "generate-structures", "menus.world-creation", "menus.world-creation.items.generate-structures", List.of(Material.DECORATED_POT, Material.BOOKSHELF));
+        this.generatorButton = new ParameterButton(generator, List.of("flat","empty","water","survival","large_biomes"), "type", "menus.world-creation", "menus.world-creation.items.type", List.of(Material.MOSS_BLOCK, Material.GLASS, Material.WATER_BUCKET, Material.OAK_SAPLING, Material.MYCELIUM));
+        this.environmentButton = new ParameterButton(environment, List.of("normal","nether","the_end"), "environment", "menus.world-creation", "menus.world-creation.items.environment", List.of(Material.GRASS_BLOCK, Material.NETHERRACK, Material.END_STONE));
+        this.generateStructures = new ParameterButton(generateStructures, List.of(false,true), "generate-structures", "menus.world-creation", "menus.world-creation.items.generate-structures", List.of(Material.DECORATED_POT, Material.BOOKSHELF));
+    }
 
+    public WorldGenerationMenu(Player player) {
+        this(player,"flat","normal",true);
     }
 
     @Override
@@ -65,7 +69,7 @@ public class WorldGenerationMenu extends AbstractMenu {
     }
 
     @Override
-    public void onClick(InventoryClickEvent event) {
+    public void onClick(@NotNull InventoryClickEvent event) {
         if (!isPlayerClicked(event) || !isClickedInMenuSlots(event)) {
             return;
         }
@@ -98,7 +102,7 @@ public class WorldGenerationMenu extends AbstractMenu {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {
+    public void onOpen(@NotNull InventoryOpenEvent event) {
         Sounds.MENU_OPEN_GENERATION.play(player);
     }
 }

@@ -31,8 +31,8 @@ import java.util.List;
 
 public class IsWorldBlockLiquidCondition extends WorldCondition {
 
-    public IsWorldBlockLiquidCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, boolean isOpposed) {
-        super(executor, target, x, args, actions, isOpposed);
+    public IsWorldBlockLiquidCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
+        super(executor, target, x, args, actions, reactions, isOpposed);
     }
 
     @Override

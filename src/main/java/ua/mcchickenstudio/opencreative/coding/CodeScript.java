@@ -218,7 +218,9 @@ public class CodeScript {
         int z = actionBlock.getZ();
         StringBuilder conditionsPath = new StringBuilder();
         for (String condition : multiActions) {
-            conditionsPath.append(condition).append(".actions.");
+            conditionsPath
+                    .append(condition.endsWith(".else") ? condition.replace(".else","") : condition)
+                    .append(condition.endsWith(".else") ? ".else." : ".actions.");
         }
         String path = "code.blocks.exec_block_";
         StringBuilder builder = new StringBuilder(path);

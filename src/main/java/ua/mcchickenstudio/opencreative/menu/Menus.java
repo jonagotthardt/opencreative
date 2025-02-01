@@ -29,17 +29,17 @@ import java.util.List;
 
 public class Menus implements Listener {
 
-    private static final List<AbstractMenu> activeMenus = new ArrayList<>();
-    public static void addMenu(AbstractMenu menu) {
+    private static final List<InventoryMenu> activeMenus = new ArrayList<>();
+    public static void addMenu(InventoryMenu menu) {
         activeMenus.add(menu);
     }
-    public static void removeMenu(AbstractMenu menu) {
+    public static void removeMenu(InventoryMenu menu) {
         activeMenus.remove(menu);
     }
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        for (AbstractMenu menu : activeMenus) {
+        for (InventoryMenu menu : activeMenus) {
             if (event.getInventory().getHolder() == menu.getInventory().getHolder()) {
                 menu.onClick(event);
                 return;
@@ -49,7 +49,7 @@ public class Menus implements Listener {
 
     @EventHandler
     public void onOpen(InventoryOpenEvent event) {
-        for (AbstractMenu menu : activeMenus) {
+        for (InventoryMenu menu : activeMenus) {
             if (event.getInventory().getHolder() == menu.getInventory().getHolder()) {
                 menu.onOpen(event);
                 return;
@@ -59,7 +59,7 @@ public class Menus implements Listener {
 
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
-        for (AbstractMenu menu : activeMenus) {
+        for (InventoryMenu menu : activeMenus) {
             if (event.getInventory().getHolder() == menu.getInventory().getHolder()) {
                 menu.onClose(event);
                 return;

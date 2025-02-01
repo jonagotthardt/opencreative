@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.menus.layouts;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
@@ -90,7 +91,7 @@ public abstract class Layout extends AbstractMenu {
     }
 
     @Override
-    public void onClick(InventoryClickEvent event) {
+    public void onClick(@NotNull InventoryClickEvent event) {
         if (!isClickedInMenuSlots(event) || !isPlayerClicked(event)) {
             return;
         }
@@ -122,7 +123,7 @@ public abstract class Layout extends AbstractMenu {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {
+    public void onOpen(@NotNull InventoryOpenEvent event) {
         viewers.add((Player) event.getPlayer());
         (containerBlock.getType() == Material.BARREL ? Sounds.DEV_OPEN_BARREL : Sounds.DEV_OPEN_CHEST).play(event.getPlayer());
         for (Player onlinePlayer : event.getPlayer().getWorld().getPlayers()) {
@@ -131,7 +132,7 @@ public abstract class Layout extends AbstractMenu {
     }
 
     @Override
-    public final void onClose(InventoryCloseEvent event) {
+    public final void onClose(@NotNull InventoryCloseEvent event) {
         saveArgumentsItems(event.getInventory());
         (containerBlock.getType() == Material.BARREL ? Sounds.DEV_CLOSED_BARREL : Sounds.DEV_CLOSED_CHEST).play(event.getPlayer());
         viewers.remove((Player) event.getPlayer());
