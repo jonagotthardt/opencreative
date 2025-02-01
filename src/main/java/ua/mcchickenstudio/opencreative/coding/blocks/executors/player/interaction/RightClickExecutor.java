@@ -18,11 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.interaction;
 
+import org.bukkit.event.Cancellable;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public class RightClickExecutor extends PlayerExecutor {
+public class RightClickExecutor extends PlayerExecutor implements Cancellable {
 
     public RightClickExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
@@ -31,5 +32,15 @@ public class RightClickExecutor extends PlayerExecutor {
     @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_RIGHT_CLICK;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return getEvent().isCancelled();
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        getEvent().setCancelled(cancel);
     }
 }
