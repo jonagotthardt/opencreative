@@ -183,7 +183,7 @@ public class CodeScript {
             scriptConfig.set(path + ".target", target.name());
         }
 
-        if (category.isCondition()) {
+        if (category.isCondition() && category != ActionCategory.ELSE_CONDITION) {
             String firstSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(),(byte) 1);
             if (firstSignLine != null && firstSignLine.equalsIgnoreCase("not")) {
                 scriptConfig.set(path + ".opposed",true);
