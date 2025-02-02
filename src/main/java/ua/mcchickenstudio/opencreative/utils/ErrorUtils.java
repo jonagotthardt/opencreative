@@ -101,7 +101,7 @@ public class ErrorUtils {
                 "Totally powered by Java.", "Totally Minecraft plugin.", "Can someone just show me the fix?",
                 "Errors in the plugin that never ends", "It might just work if we can try not to go insane",
                 "Try not to panic when you see this", "This is not supposed to be here",
-                ":( Your PLUGIN ran into a problem."
+                ":( Your PLUGIN ran into a problem.", "Why is this happening?", "Dum dum, this sucks.."
         };
         return phrases[new Random().nextInt(phrases.length)];
     }

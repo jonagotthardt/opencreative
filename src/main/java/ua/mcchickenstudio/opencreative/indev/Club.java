@@ -16,22 +16,29 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.variables.values;
+package ua.mcchickenstudio.opencreative.indev;
 
-import java.util.ArrayList;
+import org.bukkit.inventory.ItemStack;
+
 import java.util.List;
+import java.util.UUID;
 
-public class EventValuesConcept {
+/**
+ * In development.
+ */
+public class Club {
 
-    private static EventValuesConcept instance;
-    private final List<EventValueTest> eventValues = new ArrayList<>();
+    private final UUID uuid;
+    private UUID owner;
 
-    public static EventValuesConcept getInstance() {
-        if (instance == null) {
-            instance = new EventValuesConcept();
-        }
-        return instance;
+    private String name;
+    private String description;
+    private ItemStack icon;
+
+    private List<UUID> builders;
+    private List<UUID> developers;
+
+    public Club(UUID uuid) {
+        this.uuid = uuid;
     }
-
-
 }

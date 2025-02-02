@@ -16,25 +16,18 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.profiles;
+package ua.mcchickenstudio.opencreative.indev.blocks;
 
-import java.util.UUID;
+import org.bukkit.Material;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
-/**
- * In development.
- */
-public class Profile {
+public abstract class PlayerActionBlock extends ActionBlock {
 
-    private final UUID uuid;
-
-    private String name;
-    private String description;
-
-    public Profile(UUID uuid) {
-        this.uuid = uuid;
+    public PlayerActionBlock(boolean hasContainer) {
+        super("player_action", Material.COBBLESTONE, Material.STONE, hasContainer);
     }
 
-    public void loadInfo() {
-
+    @Override
+    public void execute(WorldEvent event) {
     }
 }

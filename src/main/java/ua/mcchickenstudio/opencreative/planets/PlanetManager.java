@@ -271,11 +271,11 @@ public class PlanetManager {
      **/
     public Planet getPlanetByWorld(World world) {
         if (!isPlanet(world) && !isDevPlanet(world)) return null;
+        String id = world.getName()
+                .replace("./planets/planet","")
+                .replace("dev","");
         for (Planet planet : planets) {
-            if (world.equals(planet.getTerritory().getWorld())) {
-                return planet;
-            }
-            if (world.equals(planet.getDevPlanet().getWorld())) {
+            if (id.equals(String.valueOf(planet.getId()))) {
                 return planet;
             }
         }

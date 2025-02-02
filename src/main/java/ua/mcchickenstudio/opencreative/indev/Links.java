@@ -16,29 +16,16 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.profiles;
-
-import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
-import java.util.UUID;
+package ua.mcchickenstudio.opencreative.indev;
 
 /**
  * In development.
  */
-public class Club {
+public class Links {
 
-    private final UUID uuid;
-    private UUID owner;
+    private String x;
+    private String facebook;
+    private String youtube;
+    private String tiktok;
 
-    private String name;
-    private String description;
-    private ItemStack icon;
-
-    private List<UUID> builders;
-    private List<UUID> developers;
-
-    public Club(UUID uuid) {
-        this.uuid = uuid;
-    }
 }

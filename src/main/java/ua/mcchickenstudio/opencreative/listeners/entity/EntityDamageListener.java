@@ -109,6 +109,15 @@ public final class EntityDamageListener implements Listener {
     @EventHandler
     public void onHungerChange(FoodLevelChangeEvent event) {
         Planet planet = PlanetManager.getInstance().getPlanetByPlayer((Player) event.getEntity());
-        if (planet != null)  EventRaiser.raiseHungerChangeEvent((Player) event.getEntity(),event);
+        if (isEntityInLobby(event.getEntity())) {
+            event.setCancelled(true);
+        }
+        if (planet != null) {
+            if (planet.getMode() == Planet.Mode.BUILD) {
+                event.setCancelled(true);
+            } else {
+                EventRaiser.raiseHungerChangeEvent((Player) event.getEntity(),event);
+            }
+        }
     }
 }

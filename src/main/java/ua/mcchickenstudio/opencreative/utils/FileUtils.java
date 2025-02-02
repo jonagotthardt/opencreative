@@ -658,7 +658,7 @@ public class FileUtils {
      * @return json file.
      */
     public static File getProfileJson(String uuid) {
-        File folder = new File(OpenCreative.getPlugin().getDataFolder().getPath() + File.separator + "profiles");
+        File folder = new File(OpenCreative.getPlugin().getDataFolder().getPath() + File.separator + "indev");
         try {
             if (!folder.exists()) {
                 folder.mkdirs();

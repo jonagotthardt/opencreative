@@ -16,35 +16,36 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.variables.values.entity;
+package ua.mcchickenstudio.opencreative.indev.blocks;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
-import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
-import ua.mcchickenstudio.opencreative.coding.variables.values.TextEventValue;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
-public class EntityNameValue extends TextEventValue {
+import java.util.Map;
 
-    public EntityNameValue() {
-        super("nickname", new ItemStack(Material.NAME_TAG), MenusCategory.ENTITY);
+public abstract class ActionBlock extends CodingBlock {
+
+    public ActionBlock(@NotNull String id, @NotNull Material mainBlock, @NotNull Material offBlock, boolean hasContainer) {
+        super(id, mainBlock, offBlock, hasContainer);
+    }
+
+    public abstract void execute(WorldEvent event);
+
+    @Override
+    public void onSignClick(PlayerInteractEvent event) {
+
     }
 
     @Override
-    public @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action) {
-        return action.getEntity() != null ? action.getEntity().getName() : null;
+    public @Nullable CodingBlock deserialize(Map<String, Object> args) {
+        return null;
     }
 
     @Override
-    public String getCodingPackId() {
-        return "default";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Returns entity name";
+    public @NotNull Map<String, Object> serialize() {
+        return Map.of();
     }
 }
