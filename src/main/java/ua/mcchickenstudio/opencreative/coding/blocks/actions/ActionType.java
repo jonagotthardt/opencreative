@@ -100,7 +100,6 @@ public enum ActionType {
     PLAYER_SHOW_DEMO_SCREEN(            ActionCategory.PLAYER_ACTION, MenusCategory.COMMUNICATION, ShowDemoScreenAction.class, Material.FARMLAND),
     PLAYER_REQUEST_PURCHASE(            ActionCategory.PLAYER_ACTION, MenusCategory.COMMUNICATION, RequestPurchaseAction.class, Material.GOLD_INGOT, "Vault",  new ArgumentSlot("id", ValueType.TEXT), new ArgumentSlot("name", ValueType.TEXT), new ParameterSlot("save"), new ArgumentSlot("price", ValueType.NUMBER)),
 
-
     // Inventory
     PLAYER_GIVE_ITEMS(                  ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, GiveItemsAction.class, Material.CHEST_MINECART,  new ArgumentSlot("items", ValueType.ITEM,(byte) 27)),
     PLAYER_SAVE_INVENTORY(              ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, SaveInventoryAction.class, Material.HOPPER),
