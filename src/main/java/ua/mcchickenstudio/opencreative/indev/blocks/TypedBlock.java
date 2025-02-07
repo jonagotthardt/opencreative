@@ -18,34 +18,20 @@
 
 package ua.mcchickenstudio.opencreative.indev.blocks;
 
-import org.bukkit.Material;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
-import java.util.Map;
+/**
+ * <h1>TypedBlock</h1>
+ * This interface represents a coding block, that
+ * has specified type. Coding block execution will
+ * depend on type.
+ */
+public interface TypedBlock {
 
-public abstract class ActionBlock extends CodingBlock {
+    /**
+     * Returns a specific type of block.
+     * @return type of coding block.
+     */
+    @NotNull String getType();
 
-    public ActionBlock(@NotNull String id, @NotNull Material mainBlock, @NotNull Material offBlock, boolean hasContainer) {
-        super(id, mainBlock, offBlock, hasContainer);
-    }
-
-    public abstract void execute(WorldEvent event);
-
-    @Override
-    public void onSignClick(PlayerInteractEvent event) {
-
-    }
-
-    @Override
-    public @Nullable CodingBlock deserialize(Map<String, Object> args) {
-        return null;
-    }
-
-    @Override
-    public @NotNull Map<String, Object> serialize() {
-        return Map.of();
-    }
 }

@@ -34,51 +34,40 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.indev.blocks;
+package ua.mcchickenstudio.opencreative.indev.blocks.actions;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.coding.CodingPackContent;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
+import ua.mcchickenstudio.opencreative.indev.blocks.CodingBlock;
 
 import java.util.Map;
 
-public abstract class CodingBlock implements ConfigurationSerializable, CodingPackContent {
+public abstract class ActionBlock extends CodingBlock {
 
-    private final @NotNull String id;
-    private final @NotNull Material mainBlock;
-    private final @NotNull Material offBlock;
-
-    public CodingBlock(@NotNull String id, @NotNull Material mainBlock, @NotNull Material offBlock) {
-        if (!mainBlock.isBlock()) throw new IllegalArgumentException("Main block material needs to be a block.");
-        if (!offBlock.isBlock()) throw new IllegalArgumentException("Off block material needs to be a block.");
-        this.id = id;
-        this.mainBlock = mainBlock;
-        this.offBlock = offBlock;
+    public ActionBlock(@NotNull String id, @NotNull Material mainBlock, @NotNull Material offBlock ) {
+        super(id, mainBlock, offBlock);
     }
 
-    public abstract void onSignClick(PlayerInteractEvent event);
-    public abstract @Nullable CodingBlock deserialize(Map<String,Object> args);
-    public abstract @NotNull Map<String,Object> serialize();
+    public abstract void execute(@Nullable Entity target, @NotNull ActionsHandler actionsHandler, @NotNull Arguments arguments);
 
-    public final void placeBlocks(@NotNull Location mainLocation, @NotNull Location offLocation, @NotNull Location containerLocation, @NotNull Location signLocation, @NotNull Material containerMaterial, @NotNull Material signMaterial) {
-        mainLocation.getBlock().setType(mainBlock);
-        offLocation.getBlock().setType(offBlock);
+    @Override
+    public void onSignClick(PlayerInteractEvent event) {
+
     }
 
-    public @NotNull Material getMainBlock() {
-        return mainBlock;
+    @Override
+    public @Nullable CodingBlock deserialize(Map<String, Object> args) {
+        return null;
     }
 
-    public @NotNull Material getOffBlock() {
-        return offBlock;
+    @Override
+    public @NotNull Map<String, Object> serialize() {
+        return Map.of();
     }
-
-    public @NotNull String getId() {
-        return id;
-    }
-
 }

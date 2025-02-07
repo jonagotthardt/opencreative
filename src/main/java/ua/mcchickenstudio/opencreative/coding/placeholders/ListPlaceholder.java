@@ -64,7 +64,7 @@ public class ListPlaceholder extends KeyValuePlaceholder {
         if (listIndex > list.size()) return replacement;
         Object listValue = list.get(listIndex-1);
         return String.valueOf(listValue)
-                .substring(0,Math.min(100,String.valueOf(list).length()));
+                .substring(0,Math.min(100,String.valueOf(listValue).length()));
     }
 
     @Override

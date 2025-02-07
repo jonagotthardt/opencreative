@@ -18,41 +18,32 @@
 
 package ua.mcchickenstudio.opencreative.indev.blocks;
 
-import org.bukkit.Material;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class ExecutorBlock extends CodingBlock {
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningErrorMessage;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningMessage;
 
-    private final List<ActionBlock> actions = new ArrayList<>();
+public class CodingBlocks {
 
-    public ExecutorBlock(@NotNull String id, @NotNull Material mainBlock, @NotNull Material offBlock, boolean hasContainer) {
-        super(id, mainBlock, offBlock, hasContainer);
-    }
+    private final List<CodingBlock> codingBlocks = new ArrayList<>();
 
-    public void execute(WorldEvent event) {
-        for (ActionBlock actionBlock : actions) {
+    public @Nullable CodingBlock getBlock(@NotNull String id) {
+        for (CodingBlock block : codingBlocks) {
+            if (block.getId().equalsIgnoreCase(id)) {
+                return block;
+            }
         }
-    }
-
-    @Override
-    public void onSignClick(PlayerInteractEvent event) {
-
-    }
-
-    @Override
-    public @Nullable CodingBlock deserialize(Map<String, Object> args) {
         return null;
     }
 
-    @Override
-    public @NotNull Map<String, Object> serialize() {
-        return Map.of();
+    public void registerBlock(@NotNull CodingBlock block) {
+        if (getBlock(block.getId()) != null) {
+            sendWarningErrorMessage("[CODING] Tried to register block with same IDs: " + block.getId());
+        }
     }
+
 }

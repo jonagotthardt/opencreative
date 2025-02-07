@@ -88,8 +88,6 @@ public final class ChatListener implements Listener {
                 creativeEvent.callEvent();
                 if (creativeEvent.isCancelled()) return;
                 String finalMessage = formatted;
-                // фикс это
-                 // фикс отгрузку дев планет
                 if (planet != null) {
                     DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
                     if (devPlanet != null) {

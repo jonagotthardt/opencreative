@@ -18,16 +18,19 @@
 
 package ua.mcchickenstudio.opencreative.indev.blocks;
 
-import org.bukkit.Material;
+import org.bukkit.Location;
+import org.bukkit.World;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
-public abstract class PlayerActionBlock extends ActionBlock {
+public class DevActionBlock extends DevBlock {
 
-    public PlayerActionBlock(boolean hasContainer) {
-        super("player_action", Material.COBBLESTONE, Material.STONE, hasContainer);
-    }
+    private final Target target;
 
-    @Override
-    public void execute(WorldEvent event) {
+    public DevActionBlock(CodingBlock codingBlock, Arguments arguments, int x, int z, Target target) {
+        super(codingBlock, arguments, x, z);
+        this.target = target;
     }
 }
