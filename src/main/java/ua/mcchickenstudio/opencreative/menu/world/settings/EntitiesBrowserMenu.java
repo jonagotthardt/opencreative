@@ -44,6 +44,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.menu.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.buttons.ParameterButton;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -282,7 +283,7 @@ public class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {
+    public void onOpen(@NotNull InventoryOpenEvent event) {
         Sounds.MENU_OPEN_ENTITIES_BROWSER.play(getPlayer());
     }
 

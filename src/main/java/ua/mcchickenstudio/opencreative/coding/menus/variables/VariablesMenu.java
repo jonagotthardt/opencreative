@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.menus.variables;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import org.bukkit.Material;
@@ -60,7 +61,7 @@ public class VariablesMenu extends AbstractMenu  {
     }
 
     @Override
-    public void onClick(InventoryClickEvent event) {
+    public void onClick(@NotNull InventoryClickEvent event) {
         if (!isClickedInMenuSlots(event) || !isPlayerClicked(event)) return;
         event.setCancelled(true);
         if (event.getCurrentItem() == null || itemEquals(event.getCurrentItem(), DECORATION_ITEM)) return;
@@ -75,7 +76,7 @@ public class VariablesMenu extends AbstractMenu  {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {
+    public void onOpen(@NotNull InventoryOpenEvent event) {
         Sounds.MENU_OPEN_VALUES_BROWSER.play(event.getPlayer());
     }
 }

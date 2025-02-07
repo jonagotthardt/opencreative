@@ -39,7 +39,7 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
  * methods to check player's click, open and close inventory
  * events.
  */
-public abstract class AbstractMenu implements InventoryHolder {
+public abstract class AbstractMenu implements InventoryMenu {
 
     private int rows;
     private String title;
@@ -90,7 +90,7 @@ public abstract class AbstractMenu implements InventoryHolder {
         return inventory;
     }
 
-    public void open(Player player) {
+    public void open(@NotNull Player player) {
         Menus.addMenu(this);
         try {
             inventory = getInventory();
@@ -102,10 +102,9 @@ public abstract class AbstractMenu implements InventoryHolder {
     }
 
     public abstract void fillItems(Player player);
-    public abstract void onClick(InventoryClickEvent event);
-    public abstract void onOpen(InventoryOpenEvent event);
-
-    public void onClose(InventoryCloseEvent event) {
+    public abstract void onClick(@NotNull InventoryClickEvent event);
+    public abstract void onOpen(@NotNull InventoryOpenEvent event);
+    public void onClose(@NotNull InventoryCloseEvent event) {
         destroy();
     }
 

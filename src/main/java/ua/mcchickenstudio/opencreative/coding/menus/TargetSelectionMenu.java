@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.menus;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import org.bukkit.Location;
@@ -57,7 +58,7 @@ public class TargetSelectionMenu extends AbstractMenu {
     }
 
     @Override
-    public void onClick(InventoryClickEvent event) {
+    public void onClick(@NotNull InventoryClickEvent event) {
         if (isPlayerClicked(event) && isClickedInMenuSlots(event)) {
             Player player = (Player) event.getWhoClicked();
             ItemStack item = event.getCurrentItem();
@@ -77,5 +78,5 @@ public class TargetSelectionMenu extends AbstractMenu {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {}
+    public void onOpen(@NotNull InventoryOpenEvent event) {}
 }

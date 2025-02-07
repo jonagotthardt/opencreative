@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
+import org.bukkit.block.data.Rotatable;
+import org.bukkit.block.data.type.Piston;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
@@ -63,7 +65,16 @@ public final class PlaceBlockListener implements Listener {
             }
 
             if (blockAgainst.getType() == platform.getFloorMaterial()) {
-                if ((!(block.getType() == Material.PISTON && (blockAgainst.getZ() % 4) == 0 && blockAgainst.getRelative(BlockFace.WEST).getType() == platform.getActionMaterial())) && (!(block.getType().name().contains("SIGN") &&  blockAgainst.getX() >= 4 && (blockAgainst.getX() % 2) == 0)) && (!devPlanet.getAllowedBlocks().contains(block.getType())) || block.getY() <= 0) {
+                if (block.getType() == Material.PISTON && ((blockAgainst.getZ()-platform.getBeginZ()) % 4) == 0 && blockAgainst.getRelative(BlockFace.WEST).getType() == platform.getActionMaterial()) {
+                    Directional directional = (Directional) block.getBlockData();
+                    if (directional.getFacing() != BlockFace.EAST && directional.getFacing() != BlockFace.WEST) {
+                        directional.setFacing(player.getFacing().getOppositeFace());
+                    }
+                    if (directional.getFacing() != BlockFace.EAST && directional.getFacing() != BlockFace.WEST) {
+                        directional.setFacing(block.getRelative(BlockFace.WEST).isEmpty() ? BlockFace.WEST : BlockFace.EAST);
+                    }
+                    block.setBlockData(directional);
+                } else if ((!(block.getType().name().contains("SIGN") && blockAgainst.getX() >= 4 && (blockAgainst.getX() % 2) == 0)) && (!devPlanet.getAllowedBlocks().contains(block.getType())) || block.getY() <= 0) {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-on-floor"));
                     Sounds.DEV_NOT_ALLOWED.play(player);
                     event.setCancelled(true);

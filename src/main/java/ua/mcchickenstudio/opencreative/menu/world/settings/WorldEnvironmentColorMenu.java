@@ -36,6 +36,7 @@
 
 package ua.mcchickenstudio.opencreative.menu.world.settings;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.menu.AbstractListMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
@@ -175,7 +176,7 @@ public class WorldEnvironmentColorMenu extends AbstractListMenu<Material> {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {
+    public void onOpen(@NotNull InventoryOpenEvent event) {
 
     }
 }

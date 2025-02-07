@@ -16,29 +16,22 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.profiles;
+package ua.mcchickenstudio.opencreative.indev.blocks;
 
-import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
-import java.util.UUID;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * In development.
+ * <h1>TypedBlock</h1>
+ * This interface represents a coding block, that
+ * has specified type. Coding block execution will
+ * depend on type.
  */
-public class Club {
+public interface TypedBlock {
 
-    private final UUID uuid;
-    private UUID owner;
+    /**
+     * Returns a specific type of block.
+     * @return type of coding block.
+     */
+    @NotNull String getType();
 
-    private String name;
-    private String description;
-    private ItemStack icon;
-
-    private List<UUID> builders;
-    private List<UUID> developers;
-
-    public Club(UUID uuid) {
-        this.uuid = uuid;
-    }
 }

@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.menus.variables;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import net.kyori.adventure.text.Component;
@@ -125,7 +126,7 @@ public class EventValuesMenu extends ListBrowserMenu<EventValues.Variable> {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {
+    public void onOpen(@NotNull InventoryOpenEvent event) {
 
     }
 }

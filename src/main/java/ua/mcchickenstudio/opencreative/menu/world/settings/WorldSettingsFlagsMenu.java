@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.menu.world.settings;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menu.buttons.RadioButton;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -256,7 +257,7 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
     }
 
     @Override
-    public void onClick(InventoryClickEvent event) {
+    public void onClick(@NotNull InventoryClickEvent event) {
         event.setCancelled(true);
 
         if (!isClickedInMenuSlots(event)) return;
@@ -278,5 +279,5 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {}
+    public void onOpen(@NotNull InventoryOpenEvent event) {}
 }

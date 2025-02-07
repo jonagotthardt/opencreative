@@ -16,16 +16,22 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.profiles;
+package ua.mcchickenstudio.opencreative.indev.values;
 
-/**
- * In development.
- */
-public class Links {
+import java.util.ArrayList;
+import java.util.List;
 
-    private String x;
-    private String facebook;
-    private String youtube;
-    private String tiktok;
+public class EventValuesConcept {
+
+    private static EventValuesConcept instance;
+    private final List<EventValueTest> eventValues = new ArrayList<>();
+
+    public static EventValuesConcept getInstance() {
+        if (instance == null) {
+            instance = new EventValuesConcept();
+        }
+        return instance;
+    }
+
 
 }

@@ -16,25 +16,16 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.profiles;
-
-import java.util.UUID;
+package ua.mcchickenstudio.opencreative.indev;
 
 /**
  * In development.
  */
-public class Profile {
+public class Links {
 
-    private final UUID uuid;
+    private String x;
+    private String facebook;
+    private String youtube;
+    private String tiktok;
 
-    private String name;
-    private String description;
-
-    public Profile(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    public void loadInfo() {
-
-    }
 }

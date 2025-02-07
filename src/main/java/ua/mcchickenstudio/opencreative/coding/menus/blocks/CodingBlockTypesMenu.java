@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.menus.blocks;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
@@ -189,5 +190,5 @@ public abstract class CodingBlockTypesMenu extends ListBrowserMenu<Object> {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {}
+    public void onOpen(@NotNull InventoryOpenEvent event) {}
 }

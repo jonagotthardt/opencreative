@@ -24,6 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.menu.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
@@ -211,7 +212,7 @@ public class ParticlesMenu extends ListBrowserMenu<Particle> {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {
+    public void onOpen(@NotNull InventoryOpenEvent event) {
 
     }
 }

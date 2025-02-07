@@ -16,35 +16,30 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.variables.values.entity;
+package ua.mcchickenstudio.opencreative.indev.values;
 
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
-import ua.mcchickenstudio.opencreative.coding.variables.values.TextEventValue;
 
-public class EntityNameValue extends TextEventValue {
+public abstract class TextEventValue extends EventValueTest {
 
-    public EntityNameValue() {
-        super("nickname", new ItemStack(Material.NAME_TAG), MenusCategory.ENTITY);
+    public TextEventValue(String id, ItemStack displayIcon, MenusCategory category) {
+        super(id, displayIcon, category);
     }
 
-    @Override
-    public @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action) {
-        return action.getEntity() != null ? action.getEntity().getName() : null;
-    }
+    /**
+     * Returns a string that can be got from
+     * player, event, action, or null.
+     * @return string, or null.
+     */
+    public abstract @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action);
 
     @Override
-    public String getCodingPackId() {
-        return "default";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Returns entity name";
+    public @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
+        return getText(handler, action);
     }
 }

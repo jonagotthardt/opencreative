@@ -36,6 +36,7 @@
 
 package ua.mcchickenstudio.opencreative.menu.world.settings;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menu.buttons.ParameterButton;
@@ -130,7 +131,7 @@ public class WorldEnvironmentMenu extends AbstractMenu {
     }
 
     @Override
-    public void onClick(InventoryClickEvent event) {
+    public void onClick(@NotNull InventoryClickEvent event) {
         if (!isClickedInMenuSlots(event) || !isPlayerClicked(event)) {
             return;
         }
@@ -181,7 +182,7 @@ public class WorldEnvironmentMenu extends AbstractMenu {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {
+    public void onOpen(@NotNull InventoryOpenEvent event) {
         Player player = (Player) event.getPlayer();
         Sounds.MENU_OPEN_ENVIRONMENT.play(player);
     }

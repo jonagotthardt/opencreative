@@ -230,6 +230,9 @@ public final class InteractListener implements Listener {
                 if (actionBlockCategory == ActionCategory.SELECTION_ACTION && isSignLineEmpty(clickedBlock.getLocation(),(byte) 3)) {
                     return;
                 }
+                if (actionBlockCategory == ActionCategory.ELSE_CONDITION) {
+                    return;
+                }
                 if (isSignLineEmpty(clickedBlock.getLocation(),(byte) 1)) {
                     setSignLine(clickedBlock.getLocation(),(byte) 1,"not");
                     Sounds.DEV_CONDITION_NOT.play(player);

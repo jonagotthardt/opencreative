@@ -372,19 +372,19 @@ public class EventRaiser {
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
-    public static void raiseLeftClickEvent(Player player, Event bukkitEvent) {
+    public static void raiseLeftClickEvent(Player player, PlayerInteractEvent bukkitEvent) {
         if (cantRaiseEvent(player)) {
             return;
         }
-        LeftClickEvent creativeEvent = new LeftClickEvent(player);
+        LeftClickEvent creativeEvent = new LeftClickEvent(player,bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
-    public static void raiseRightClickEvent(Player player, Event bukkitEvent) {
+    public static void raiseRightClickEvent(Player player, PlayerInteractEvent bukkitEvent) {
         if (cantRaiseEvent(player)) {
             return;
         }
-        RightClickEvent creativeEvent = new RightClickEvent(player);
+        RightClickEvent creativeEvent = new RightClickEvent(player,bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 

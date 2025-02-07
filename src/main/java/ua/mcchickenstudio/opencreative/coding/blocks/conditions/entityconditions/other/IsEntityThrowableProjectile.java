@@ -30,8 +30,8 @@ import org.bukkit.entity.ThrowableProjectile;
 import java.util.List;
 
 public class IsEntityThrowableProjectile extends EntityCondition {
-    public IsEntityThrowableProjectile(Executor executor, Target target, int x, Arguments args, List<Action> actions, boolean isOpposed) {
-        super(executor, target, x, args, actions, isOpposed);
+    public IsEntityThrowableProjectile(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
+        super(executor, target, x, args, actions, reactions, isOpposed);
     }
 
     @Override

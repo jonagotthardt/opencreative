@@ -22,6 +22,6 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public interface WorldMenu {
 
-    public Planet getPlanet();
+    Planet getPlanet();
 
 }

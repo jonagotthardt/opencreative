@@ -34,10 +34,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.variables.values;
+package ua.mcchickenstudio.opencreative.indev.values;
 
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

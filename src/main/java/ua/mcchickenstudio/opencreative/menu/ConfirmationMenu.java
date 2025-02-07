@@ -24,6 +24,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.List;
@@ -58,7 +59,7 @@ public class ConfirmationMenu extends AbstractMenu{
     }
 
     @Override
-    public void onClick(InventoryClickEvent event) {
+    public void onClick(@NotNull InventoryClickEvent event) {
         event.setCancelled(true);
         if (!isPlayerClicked(event) || !isClickedInMenuSlots(event)) {
             return;
@@ -74,7 +75,7 @@ public class ConfirmationMenu extends AbstractMenu{
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {
+    public void onOpen(@NotNull InventoryOpenEvent event) {
         if (event.getPlayer() instanceof Player player) {
             Sounds.MENU_OPEN_CONFIRMATION.play(player);
         }

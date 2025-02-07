@@ -18,6 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.coding.arguments;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
@@ -506,6 +509,29 @@ public class Arguments {
         }
         sendCodingDebugVariable(planet,path,arg.getValue(action));
         return arg.getValue(action).toString();
+    }
+
+    public Component getValue(String path, Component defaultValue, Action action) {
+        Argument arg = getArg(path);
+        if (arg == null) {
+            sendCodingDebugNotFoundVariable(planet,path);
+            return defaultValue;
+        }
+        sendCodingDebugVariable(planet,path,arg.getValue(action));
+        String text = arg.getValue(action).toString();
+        try {
+            if (text.contains("§")) {
+                return Component.text(text);
+            } else {
+                Component miniMessage = MiniMessage.miniMessage().deserialize(text);
+                ClickEvent clickEvent = miniMessage.clickEvent();
+                if (clickEvent != null && clickEvent.action() == ClickEvent.Action.RUN_COMMAND) {
+                    miniMessage = miniMessage.clickEvent(null);
+                }
+                return miniMessage;
+            }
+        } catch (Exception ignored) {}
+        return Component.text(text);
     }
 
     public Particle getValue(String path, Particle defaultValue, Action action) {

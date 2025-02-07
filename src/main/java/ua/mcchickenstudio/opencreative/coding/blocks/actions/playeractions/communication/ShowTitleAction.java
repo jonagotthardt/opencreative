@@ -29,6 +29,8 @@ import org.bukkit.entity.Player;
 
 import java.time.Duration;
 
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
+
 public final class ShowTitleAction extends PlayerAction {
     public ShowTitleAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
@@ -47,7 +49,7 @@ public final class ShowTitleAction extends PlayerAction {
          * 1000 milliseconds = 1 second = 20 ticks.
          */
         player.showTitle(Title.title(
-                Component.text(title), Component.text(subtitle),
+                toComponent(title), toComponent(subtitle),
                 Title.Times.times(Duration.ofMillis(fadeIn * 50L), Duration.ofMillis(stay * 50L), Duration.ofMillis(fadeOut * 50L))
         ));
     }

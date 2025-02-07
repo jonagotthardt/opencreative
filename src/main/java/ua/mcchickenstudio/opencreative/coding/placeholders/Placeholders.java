@@ -51,6 +51,7 @@ public class Placeholders {
             instance.registerPlaceholder(new EventPlaceholder());
             instance.registerPlaceholder(new PlanetPlaceholder());
             instance.registerPlaceholder(new VarPlaceholder());
+            instance.registerPlaceholder(new ListPlaceholder());
         }
         return instance;
     }

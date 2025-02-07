@@ -26,6 +26,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
+
 public final class ShowActionbarAction extends PlayerAction {
     public ShowActionbarAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
@@ -33,7 +35,7 @@ public final class ShowActionbarAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        player.sendActionBar(Component.text(String.join("", getArguments().getTextList("actionbar",this))));
+        player.sendActionBar(toComponent(String.join("", getArguments().getTextList("actionbar",this))));
     }
 
 

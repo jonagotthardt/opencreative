@@ -28,7 +28,6 @@ public class WorldInteractEvent extends WorldEvent {
     private final PlayerInteractEvent event;
     private final Block clickedBlock;
 
-
     public WorldInteractEvent(Player player, PlayerInteractEvent event) {
         super(player);
         this.event = event;

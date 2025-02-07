@@ -103,7 +103,7 @@ public class CodingBlockParser {
                     Target actionTarget = Target.getBySign(actionBlock.getLocation());
                     Block containerBlock = actionBlock.getRelative(BlockFace.UP);
 
-                    if (actionCategory != null && actionCategory.isMultiAction()) {
+                    if (actionCategory != null && actionCategory != ActionCategory.ELSE_CONDITION && actionCategory.isMultiAction()) {
                         multiActions.add((actionCategory.isCondition() ? "condition_block_" : "multi_action_") + script.getBlockNumber(actionBlock));
                         if (actionType == null) {
                             continue;
@@ -122,6 +122,10 @@ public class CodingBlockParser {
                             if (!multiActions.isEmpty()) {
                                 String last = multiActions.getLast();
                                 multiActions.remove(last);
+                                if (world.getBlockAt(x+2,1,z).getType() == Material.END_STONE) {
+                                    multiActions.add(last+".else");
+                                    x=x+2;
+                                }
                             } else {
                                 sendPlanetCompileErrorMessage(devPlanet.getPlanet(),world.getBlockAt(x+1,1,z),getLocaleMessage("planet-code-error.bad-piston"));
                                 continue;

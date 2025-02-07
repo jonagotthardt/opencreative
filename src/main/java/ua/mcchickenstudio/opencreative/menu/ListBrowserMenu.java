@@ -18,10 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.menu;
 
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.List;
@@ -136,7 +136,7 @@ public abstract class ListBrowserMenu<T> extends AbstractListMenu<T> {
     }
 
     @Override
-    public void onClick(InventoryClickEvent event) {
+    public void onClick(@NotNull InventoryClickEvent event) {
         if (!isPlayerClicked(event) || !isClickedInMenuSlots(event)) {
             event.setCancelled(true);
             return;

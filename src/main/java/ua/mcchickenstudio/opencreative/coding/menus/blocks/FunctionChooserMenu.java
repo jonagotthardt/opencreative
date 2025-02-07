@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.menus.blocks;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.menu.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import net.kyori.adventure.text.Component;
@@ -164,7 +165,7 @@ public class FunctionChooserMenu extends ListBrowserMenu<Location> {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {
+    public void onOpen(@NotNull InventoryOpenEvent event) {
 
     }
 }

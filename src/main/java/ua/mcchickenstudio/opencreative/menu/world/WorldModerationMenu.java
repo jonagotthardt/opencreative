@@ -25,6 +25,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
 import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
@@ -70,7 +71,7 @@ public class WorldModerationMenu extends AbstractMenu implements WorldMenu {
     }
 
     @Override
-    public void onClick(InventoryClickEvent event) {
+    public void onClick(@NotNull InventoryClickEvent event) {
         event.setCancelled(true);
         ItemStack item = event.getCurrentItem();
         if (!isPlayerClicked(event) || !isClickedInMenuSlots(event)) return;
@@ -184,7 +185,7 @@ public class WorldModerationMenu extends AbstractMenu implements WorldMenu {
     }
 
     @Override
-    public void onOpen(InventoryOpenEvent event) {
+    public void onOpen(@NotNull InventoryOpenEvent event) {
         Sounds.MENU_OPEN_WORLD_MODERATION.play(event.getPlayer());
     }
 

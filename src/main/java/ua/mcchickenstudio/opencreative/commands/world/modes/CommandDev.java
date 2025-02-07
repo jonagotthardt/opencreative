@@ -179,6 +179,9 @@ public class CommandDev implements CommandExecutor {
         ItemStack conditionPlayerItem = createItem(Material.OAK_PLANKS,1,"items.developer.condition-player");
         player.getInventory().setItem(2, conditionPlayerItem);
 
+        ItemStack conditionElseItem = createItem(Material.END_STONE,1,"items.developer.condition-else");
+        player.getInventory().setItem(3, conditionElseItem);
+
         ItemStack actionVar = createItem(Material.IRON_BLOCK,1,"items.developer.action-var");
         player.getInventory().setItem(13, actionVar);
 

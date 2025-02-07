@@ -30,8 +30,8 @@ import java.util.List;
 
 public class IsWorldThunderingCondition extends WorldCondition {
 
-    public IsWorldThunderingCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, boolean isOpposed) {
-        super(executor, target, x, args, actions, isOpposed);
+    public IsWorldThunderingCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
+        super(executor, target, x, args, actions, reactions, isOpposed);
     }
 
     @Override
