@@ -186,7 +186,7 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
                         return true;
                     }
-                    playersToKick.add(player);
+                    playersToKick.add(playerToKick);
                 }
                 for (Player playerToKick : playersToKick) {
                     planet.getWorldPlayers().kickPlayer(playerToKick);
