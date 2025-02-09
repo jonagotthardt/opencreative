@@ -284,6 +284,10 @@ public enum ExecutorType {
         return list;
     }
 
+    public ExecutorCategory getCategory() {
+        return category;
+    }
+
     public boolean isCancellable() {
         Class<?> executorClass = getExecutorClass();
         return (executorClass != null && Cancellable.class.isAssignableFrom(executorClass));

@@ -23,6 +23,11 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DevPlatform {
 
@@ -41,6 +46,33 @@ public class DevPlatform {
             return false;
         }
         return world.getBlockAt(getBeginX(),0,getBeginZ()).isSolid();
+    }
+
+    /**
+     * Checks if specified column doesn't have any block.
+     * @param column from 1 to 24.
+     * @return true - column is empty, false - column has blocks.
+     */
+    public boolean isEmptyColumn(int column) {
+        if (column < 1 || column > 24) throw new IllegalArgumentException("Developer platform column must be in range from 1 to 24.");
+        int z = getBeginZ()+(column*4);
+        for (int x = getBeginX()+4; x <= getEndX()-3; x++) {
+            Block block = world.getBlockAt(x,1,z);
+            if (!block.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public List<Location> getFreeColumns() {
+        List<Location> columns = new ArrayList<>();
+        for (int column = 1; column <= 24; column++) {
+            if (isEmptyColumn(column)) {
+                columns.add(new Location(world,getBeginX()+4,1,getBeginZ()+(column*4)));
+            }
+        }
+        return columns;
     }
 
     public Material getFloorMaterial() {

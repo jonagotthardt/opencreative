@@ -19,13 +19,13 @@
 package ua.mcchickenstudio.opencreative.commands;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import ua.mcchickenstudio.opencreative.managers.packets.ProtocolLibManager;
+import ua.mcchickenstudio.opencreative.indev.modules.Module;
 import ua.mcchickenstudio.opencreative.menu.CreativeMenu;
-import ua.mcchickenstudio.opencreative.menu.world.WorldAccessMenu;
 import ua.mcchickenstudio.opencreative.menu.world.WorldModerationMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsPickerMenu;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
@@ -549,12 +549,15 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                     if (player == null) return true;
                     if (args.length == 1) return true;
-                    Planet planet = PlanetManager.getInstance().getPlanetById(args[1]);
-                    if (planet == null) {
-                        player.sendMessage("planet is null");
+                    DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                    if (devPlanet == null) {
+                        player.sendMessage("only dev planet");
                         return true;
                     }
-                    new WorldAccessMenu(planet).open(player);
+                    DevPlatform platform = devPlanet.getPlatformInLocation(player.getLocation());
+                    if (platform == null) return true;
+                    Module module = new Module(1);
+                    module.place(devPlanet);
                 }
                 case "test2" -> {
                     if (!sender.hasPermission("opencreative.test")) {

@@ -92,7 +92,7 @@ public final class PlaceBlockListener implements Listener {
                         signText = actionCategory.name().toLowerCase();
                         additionalBlockMaterial = actionCategory.getAdditionalBlock();
                     }
-                    placeDevBlock(block, additionalBlockMaterial, devPlanet.getSignMaterial(), signText);
+                    placeDevBlock(block.getLocation(), block.getType(), additionalBlockMaterial, devPlanet.getSignMaterial(), signText);
                 } else {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-action-on-event"));
                     Sounds.DEV_NOT_ALLOWED.play(player);
@@ -114,7 +114,7 @@ public final class PlaceBlockListener implements Listener {
                     if (block.getRelative(BlockFace.EAST).getType() == Material.PISTON) {
                         move(block.getLocation(), BlockFace.EAST);
                     }
-                    placeDevBlock(block, additionalBlockMaterial, devPlanet.getSignMaterial(), signText);
+                    placeDevBlock(block.getLocation(), block.getType(), additionalBlockMaterial, devPlanet.getSignMaterial(), signText);
                 } else {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-event-on-action"));
                     Sounds.DEV_NOT_ALLOWED.play(player);
@@ -136,7 +136,9 @@ public final class PlaceBlockListener implements Listener {
         }
     }
 
-    public static void placeDevBlock(Block block, Material additionalBlockMaterial, Material signMaterial, String signText) {
+    public static void placeDevBlock(Location location, Material material, Material additionalBlockMaterial, Material signMaterial, String signText) {
+        Block block = location.getBlock();
+        block.setType(material);
         Block eastBlock = block.getRelative(BlockFace.EAST);
         eastBlock.setType(additionalBlockMaterial);
         if (eastBlock.getType() == Material.PISTON) {

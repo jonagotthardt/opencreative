@@ -63,7 +63,7 @@ commands:
     aliases: [вшыдшлу, вшідшлу, dis]
   spawn:
     description: 'Teleports to spawn.'
-    aliases: [спавн, ізфцт, ызфцт, hub, lobby, s, ы]
+    aliases: [спавн, ізфцт, ызфцт, hub, lobby, s, ы, і]
   menu:
     description: 'Opens worlds browser menu.'
     aliases: [меню, games, worlds, ьутг, minigames, g, п]

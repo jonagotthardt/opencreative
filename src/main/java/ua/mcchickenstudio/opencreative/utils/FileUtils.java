@@ -18,8 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
-import org.apache.commons.lang3.ArrayUtils;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.indev.modules.Module;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetInfo;
@@ -28,15 +28,12 @@ import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 import java.io.*;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningErrorMessage;
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
-import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isPlanet;
 
 /**
  * <h1>FileUtils</h1>
@@ -623,6 +620,22 @@ public class FileUtils {
     }
 
     /**
+     * Returns module's configuration.
+     **/
+    public static FileConfiguration getModuleConfig(Module module) {
+        File file = new File(getModulesStorageFolder().getPath()+File.separator+module.getModuleName(),"module.yml");
+        return YamlConfiguration.loadConfiguration(file);
+    }
+
+    /**
+     * Returns folder that stores all modules folders.
+     * @return modules folder.
+     */
+    public static File getModulesStorageFolder() {
+        return new File(Bukkit.getWorldContainer().getPath() + File.separator + "modules" + File.separator);
+    }
+
+    /**
      * Returns size of file.
      * @param file file to get size.
      * @return size of file.
@@ -650,27 +663,6 @@ public class FileUtils {
      */
     public static File getPlanetsStorageFolder() {
         return new File(Bukkit.getWorldContainer().getPath() + File.separator + "planets" + File.separator);
-    }
-
-    /**
-     * Returns JSON file of player's profile.
-     * @param uuid uuid of player.
-     * @return json file.
-     */
-    public static File getProfileJson(String uuid) {
-        File folder = new File(OpenCreative.getPlugin().getDataFolder().getPath() + File.separator + "indev");
-        try {
-            if (!folder.exists()) {
-                folder.mkdirs();
-            }
-            File profileFile = new File(folder,uuid+ ".json");
-            if (!profileFile.exists()) {
-                profileFile.createNewFile();
-            }
-            return profileFile;
-        } catch (IOException error) {
-            return null;
-        }
     }
 
     public static String getPlanetIdFromName(String name) {

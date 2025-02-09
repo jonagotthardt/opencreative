@@ -39,10 +39,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetCompileErrorMessage;
@@ -71,8 +68,11 @@ public class CodingBlockParser {
         sendCodingDebugLog(devPlanet.getPlanet(),"Parsing blocks... Reading");
 
         List<Block> unknownBlocks = new ArrayList<>();
+        List<DevPlatform> platforms = devPlanet.getPlatforms();
+        Collections.reverse(platforms); // Reversing to make executors from first platform as first
+
         // For platforms
-        for (DevPlatform platform : devPlanet.getPlatforms()) {
+        for (DevPlatform platform : platforms) {
             // For coding executors
             for (int z = platform.getBeginZ()+4; z <= platform.getEndZ()-4; z = z+4) {
 
