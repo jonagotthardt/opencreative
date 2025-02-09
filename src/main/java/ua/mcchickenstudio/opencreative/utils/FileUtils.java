@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.utils;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.indev.modules.Module;
+import ua.mcchickenstudio.opencreative.indev.modules.ModuleManager;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetInfo;
@@ -205,6 +206,7 @@ public class FileUtils {
                     try {
                         id = Integer.parseInt(worldName.replace("planet",""));
                     } catch (NumberFormatException ignored) {}
+                    if (id == -1) continue;
                     Planet planet = new Planet(id);
                     if (planet.isCorrupted()) {
                         corruptedWorlds++;
@@ -221,6 +223,39 @@ public class FileUtils {
             OpenCreative.getPlugin().getLogger().info(" Corrupted worlds: " + corruptedWorlds);
         } catch (Exception error) {
             sendCriticalErrorMessage("An error has occurred while loading worlds...",error);
+        }
+    }
+
+    /**
+     Loads all modules to base.
+     **/
+    public static void loadModules() {
+        OpenCreative.getPlugin().getLogger().info("Registering modules to base...");
+        try {
+            File[] modulesList = getModulesStorageFolder().listFiles();
+            if (modulesList == null) {
+                OpenCreative.getPlugin().getLogger().info("No modules have been detected.");
+                return;
+            }
+            OpenCreative.getPlugin().getLogger().info("Found " + modulesList.length + " modules, adding...");
+            long currentTime = System.currentTimeMillis();
+            for (File moduleFile : getModulesFiles()) {
+                String moduleName = moduleFile.getPath()
+                        .replace(Bukkit.getServer().getWorldContainer() + File.separator,"")
+                        .replace("modules" + File.separator,"")
+                        .replace(".yml","");
+                OpenCreative.getPlugin().getLogger().info("Adding module " + moduleName + " to base...");
+                int id = -1;
+                try {
+                    id = Integer.parseInt(moduleName.replace("module",""));
+                } catch (NumberFormatException ignored) {}
+                if (id == -1) continue;
+                Module module = new Module(id);
+                ModuleManager.getInstance().registerModule(module);
+            }
+            OpenCreative.getPlugin().getLogger().info("Loaded " + ModuleManager.getInstance().getModules().size() + " modules for " + (System.currentTimeMillis()-currentTime) + " ms.");
+        } catch (Exception error) {
+            sendCriticalErrorMessage("An error has occurred while loading modules...",error);
         }
     }
 
@@ -322,6 +357,28 @@ public class FileUtils {
             if (isPlanetFolder(file)) worldsFolders.add(file);
         }
         return worldsFolders.toArray(new File[0]);
+    }
+
+    /**
+     * Returns folders of all modules yaml files.
+     * @return modules files.
+     */
+    public static File[] getModulesFiles() {
+        List<File> modules = new ArrayList<>();
+        File modulesFolder = getModulesStorageFolder();
+        if (!modulesFolder.exists()) {
+            modulesFolder.mkdirs();
+        }
+        File[] modulesFiles = modulesFolder.listFiles();
+        if (modulesFiles == null) {
+            return modules.toArray(new File[0]);
+        }
+        for (File moduleFile : modulesFiles) {
+            if (moduleFile.isDirectory()) continue;
+            if (!moduleFile.getName().endsWith(".yml")) continue;
+            modules.add(moduleFile);
+        }
+        return modules.toArray(new File[0]);
     }
 
     /**
@@ -623,15 +680,15 @@ public class FileUtils {
      * Returns module's configuration.
      **/
     public static FileConfiguration getModuleConfig(Module module) {
-        return YamlConfiguration.loadConfiguration(getModuleConfigFile(module));
+        return YamlConfiguration.loadConfiguration(getModuleConfigFile(module.getId()));
     }
 
     /**
      * Returns module's config file.
      * @return file of module's config.
      */
-    public static File getModuleConfigFile(Module module) {
-        return new File(getModulesStorageFolder(),"module"+module.getId()+".yml");
+    public static File getModuleConfigFile(int id) {
+        return new File(getModulesStorageFolder(),"module"+id+".yml");
     }
 
     /**

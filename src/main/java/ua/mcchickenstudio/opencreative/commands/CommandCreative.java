@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.commands;
 
 import org.bukkit.configuration.ConfigurationSection;
 import ua.mcchickenstudio.opencreative.indev.modules.Module;
+import ua.mcchickenstudio.opencreative.indev.modules.ModulesBrowserMenu;
 import ua.mcchickenstudio.opencreative.menu.CreativeMenu;
 import ua.mcchickenstudio.opencreative.menu.world.WorldModerationMenu;
 import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsBrowserMenu;
@@ -557,9 +558,18 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     DevPlatform platform = devPlanet.getPlatformInLocation(player.getLocation());
                     if (platform == null) return true;
                     Module module = new Module(1);
-                    module.place(devPlanet);
+                    module.place(devPlanet, player);
                 }
                 case "test2" -> {
+                    if (!sender.hasPermission("opencreative.test")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
+                    }
+                    if (player == null) return true;
+                    player.sendMessage("Modules browser test");
+                    new ModulesBrowserMenu(player).open(player);
+                }
+                case "test3" -> {
                     if (!sender.hasPermission("opencreative.test")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
@@ -568,13 +578,6 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     player.sendMessage("Test of worlds downloader");
                     WorldsBrowserMenu menu = new WorldsPickerMenu(player, new HashSet<>(PlanetManager.getInstance().getPlanets().stream().filter(planet -> planet.getInformation().isDownloadable()).toList()));
                     menu.open(player);
-                }
-                case "test3" -> {
-                    if (!sender.hasPermission("opencreative.test")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
-                    }
-                    //new PlayerToEntityConvertor(new ArrayList<>(PlanetManager.getInstance().getPlanets())).start();
                 }
                 case "template" -> {
                     if (!sender.hasPermission("opencreative.template")) {

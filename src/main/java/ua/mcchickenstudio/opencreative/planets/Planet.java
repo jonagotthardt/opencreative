@@ -386,7 +386,6 @@ public class Planet {
         return this.getPlayers().size();
     }
 
-    @SuppressWarnings("all")
     public long getCreationTime() {
         if (creationTime == 0) {
             return 1670573410000L;
@@ -394,7 +393,6 @@ public class Planet {
         return creationTime;
     }
 
-    @SuppressWarnings("all")
     public long getLastActivityTime() {
         if (lastActivityTime == 0) {
             return 1670573410000L;

@@ -82,7 +82,7 @@ public final class OpenCreative extends JavaPlugin {
     private static Updater updater;
     private static PacketManager packet;
 
-    private static final String version = "5.4.3";
+    private static final String version = "5.5.0";
     private static final String codename = "Well, it's possible";
 
     /**
@@ -127,6 +127,7 @@ public final class OpenCreative extends JavaPlugin {
         PlayerUtils.loadPermissions();
         HookUtils.loadHooks();
         FileUtils.loadPlanets();
+        FileUtils.loadModules();
 
         economy = HookUtils.getEconomy();
         economy.init();

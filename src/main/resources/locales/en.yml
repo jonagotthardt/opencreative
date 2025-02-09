@@ -59,6 +59,14 @@ locate:
   help: "%prefix%To find the world where a player is playing, type in the chat: &6/locate Username"
   found: "%prefix%&fPlayer &6%player%&f is currently playing in the world: \n&f %planetName%\n &f\n&a &a &n[Click to join]&f\n &f"
   offline: "%prefix%&cThe player is not currently playing in any worlds."
+modules:
+  created: "%prefix%You created a &6module&f! Every player &6can install&f your selected code. Now you can change it's display name, description and icon in modules browser."
+  deleted: "%prefix%Module &6%moduleID%&f was deleted :("
+  installed: "%prefix%&6%player%&f installed module &6%moduleName% &fby %moduleOwner%"
+  few-space: "%prefix%&cSeems like all your coding platforms are filled with code! To load this module we need %required% free rows of code."
+  error: "%prefix%&cCan't save code for module, please fix problems in code!"
+  default-name: "&7%player%'s Module"
+  default-description: "&7My cool module!"
 environment:
   help: "%prefix%Manage code, variables, and the world for developers.\n \n&6 /env variables clear &f- Clear variables\n&6 /env variables size &f- Number of variables\n&6 /env variables list &f- List of variables"
   variables:
@@ -8873,6 +8881,55 @@ menus:
             - " &eRight-click &7- Select value type"
             - ""
             - "&7Some values may be &3empty&7."
+  modules:
+    title: "&4⏼ Modules"
+    items:
+      previous-page:
+        name: " "
+        lore:
+          - " &6← &eBack... #%page%"
+          - ""
+          - "&7  Click to see"
+          - "&7  previous modules."
+          - ""
+      next-page:
+        name: " "
+        lore:
+          - "&e Next... #%page% &6→"
+          - ""
+          - "&7  Click to see"
+          - "&7  next modules."
+          - ""
+      no-modules:
+        name: "&c&oNo Modules!"
+        lore:
+          - "&7Seems like no one created a module.."
+          - "&7What are you waiting for? Create the&d first&7 one!"
+      own-modules:
+        name: " "
+        lore:
+          - "&a 🧪 My modules "
+          - ""
+          - "&7  See the list of your modules,"
+          - "&7  showing their rating and count"
+          - "&7  of downloads."
+          - " "
+          - "&e  Click to view your modules."
+          - " "
+      module:
+        name: "&f%moduleName%"
+        lore:
+          - "&8Created by %moduleOwner%"
+          - " "
+          - "&7 %moduleDescription%"
+          - " "
+          - "&e ⭐ &7Rating: &a%moduleReputation%"
+          - "&6 🍖 &7Downloads: &a%moduleDownloads%"
+          - " "
+          - "&5 ⌛ &7Created: &d%moduleCreationTime%"
+          - " "
+          - "&e Left-click &7- install module."
+          - " "
   own-worlds:
     title: "&2☄ My Worlds"
     items:

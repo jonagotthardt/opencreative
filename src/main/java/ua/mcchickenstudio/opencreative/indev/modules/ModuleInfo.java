@@ -18,11 +18,18 @@
 
 package ua.mcchickenstudio.opencreative.indev.modules;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 public class ModuleInfo {
 
@@ -32,6 +39,8 @@ public class ModuleInfo {
     private String description;
     private ItemStack icon;
     private int reputation;
+    private int downloads;
+    private long creationTime;
 
     public ModuleInfo(Module module) {
         this.module = module;
@@ -50,6 +59,21 @@ public class ModuleInfo {
         return icon;
     }
 
+    public long getCreationTime() {
+        if (creationTime == 0) {
+            return 1670573410000L;
+        }
+        return creationTime;
+    }
+
+    public int getReputation() {
+        return reputation;
+    }
+
+    public int getDownloads() {
+        return downloads;
+    }
+
     private void loadInformation() {
         FileConfiguration config = getModuleConfig(module);
         displayName = config.getString("name","Unknown name");
@@ -64,7 +88,34 @@ public class ModuleInfo {
             } catch (Exception ignored) {
                 icon = new ItemStack(Material.REDSTONE);
             }
+        } else {
+            icon = new ItemStack(Material.REDSTONE);
         }
+        creationTime = config.getLong("creation-time",1670573410000L);
         reputation = config.getStringList("players.liked").size()-config.getStringList("players.disliked").size();
+        downloads = config.getStringList("planets").size();
+    }
+
+    public void updateIcon() {
+        ItemStack item = icon.clone();
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(getLocaleItemName("menus.modules.items.module.name").replace("%planetName%", displayName));
+        List<String> lore = new ArrayList<>();
+        for (String loreLine : getLocaleItemDescription("menus.modules.items.module.lore")) {
+            if (loreLine.contains("%moduleDescription%")) {
+                String[] newLines = this.description.split("\\\\n");
+                for (String newLine : newLines) {
+                    lore.add(loreLine.replace("%moduleDescription%", ChatColor.translateAlternateColorCodes('&',newLine)));
+                }
+            } else {
+                lore.add(parseModuleLines(module,loreLine));
+            }
+        }
+        item.setAmount(1);
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        clearItemFlags(item);
+        setPersistentData(item, getItemIdKey(), String.valueOf(module.getId()));
+        icon = item;
     }
 }

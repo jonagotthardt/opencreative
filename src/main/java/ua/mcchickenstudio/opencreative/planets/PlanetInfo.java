@@ -126,7 +126,7 @@ public class PlanetInfo {
         meta.setLore(lore);
         item.setItemMeta(meta);
         clearItemFlags(item);
-        setPersistentData(item,getWorldIdKey(),customID);
+        setPersistentData(item, getItemIdKey(),customID);
         icon = item;
     }
 

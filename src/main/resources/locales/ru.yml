@@ -64,6 +64,14 @@ locate:
   help: "%prefix%Чтобы найти мир, в котором играет игрок, напишите в чат: &6/locate Никнейм"
   found: "%prefix%&fИгрок &6%player%&f сейчас играет в мире: \n&f %planetName%\n &f\n&a &a &n[Нажми, чтобы присоединиться]&f\n &f"
   offline: "%prefix%&cИгрок сейчас не играет в мирах."
+modules:
+  created: "%prefix%Вы создали &6модуль&f! Теперь каждый игрок &6может установить&f ваш созданный код. Вы можете изменить название, описание и значок модуля в списке модулей."
+  deleted: "%prefix%Модуль &6%moduleID%&f был удалён :("
+  installed: "%prefix%&6%player%&f установил модуль &6%moduleName% &fот %moduleOwner%"
+  few-space: "%prefix%&cКажется, что все платформы заполнены вашим кодом! Для установки модуля необходимо %required% свободных рядов для блоков кодинга."
+  error: "%prefix%&cПри сохранении модуля произошла проблема, исправьте её."
+  default-name: "&7Модуль %player%"
+  default-description: "&7Мой крутой модуль!"
 environment:
   help: "%prefix%Управляйте кодом, переменными и миром для разработчиков.\n \n&6 /env variables clear &f- Очистка переменных\n&6 /env variables size &f- Количество переменных\n&6 /env variables list &f- Список переменных"
   variables:

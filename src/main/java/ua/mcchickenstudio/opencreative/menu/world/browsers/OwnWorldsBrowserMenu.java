@@ -22,7 +22,6 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemFlag;
@@ -31,7 +30,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menu.ListBrowserMenu;
-import ua.mcchickenstudio.opencreative.menu.buttons.ParameterButton;
 import ua.mcchickenstudio.opencreative.menu.world.WorldAccessMenu;
 import ua.mcchickenstudio.opencreative.menu.world.WorldGenerationMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -42,7 +40,6 @@ import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.convertTime;
@@ -93,7 +90,7 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
         meta.addItemFlags(ItemFlag.HIDE_DYE);
         meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
         item.setItemMeta(meta);
-        setPersistentData(item,getWorldIdKey(),String.valueOf(planet.getId()));
+        setPersistentData(item, getItemIdKey(),String.valueOf(planet.getId()));
         return item;
     }
 
@@ -145,7 +142,7 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
         if (currentItem == null) {
             return;
         }
-        String worldID = getPersistentData(currentItem,getWorldIdKey());
+        String worldID = getPersistentData(currentItem, getItemIdKey());
         if (worldID.isEmpty()) {
             return;
         }

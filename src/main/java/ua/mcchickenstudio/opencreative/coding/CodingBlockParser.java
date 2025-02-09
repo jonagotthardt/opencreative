@@ -27,7 +27,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.ArgumentSlot;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import ua.mcchickenstudio.opencreative.indev.CodeConfiguration;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
@@ -86,8 +85,9 @@ public class CodingBlockParser {
 
     }
 
-    public void parseExecutors(DevPlanet devPlanet, CodeConfiguration config, List<Location> executorsLocations) {
+    public boolean parseExecutors(DevPlanet devPlanet, CodeConfiguration config, List<Location> executorsLocations) {
 
+        boolean isCodeFine = true;
         World world = devPlanet.getWorld();
 
         List<Block> unknownBlocks = new ArrayList<>();
@@ -152,6 +152,7 @@ public class CodingBlockParser {
                             }
                         } else {
                             sendPlanetCompileErrorMessage(devPlanet.getPlanet(),world.getBlockAt(x+1,1,z),getLocaleMessage("planet-code-error.bad-piston"));
+                            isCodeFine = false;
                             continue;
                         }
                     }
@@ -207,7 +208,9 @@ public class CodingBlockParser {
              * coding blocks that were found while parsing.
              */
             sendPlanetCompileErrorMessage(devPlanet.getPlanet(),unknownBlocks);
+            return false;
         }
+        return isCodeFine;
     }
 
     private static ValueType parseItemType(ItemStack item) {

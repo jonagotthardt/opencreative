@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
+import ua.mcchickenstudio.opencreative.indev.modules.Module;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.PAPIUtils;
@@ -387,6 +388,26 @@ public class MessageUtils {
                 .replace("%planetReputation%", planetReputation)
                 .replace("%planetLastTime%", getElapsedTime(System.currentTimeMillis(), planet.getLastActivityTime()))
                 .replace("%planetCreationTime%", getElapsedTime(System.currentTimeMillis(), planet.getCreationTime()))
+        );
+    }
+
+    /**
+     * Returns string with parsed module lines (
+     */
+    public static String parseModuleLines(Module module, String string) {
+        String reputation = String.valueOf(module.getInformation().getReputation());
+
+        if (module.getInformation().getReputation() >= 1) reputation = "§a+" + reputation;
+        else if (module.getInformation().getReputation() <= -1) reputation = "§c" + reputation;
+        else reputation = "§e" + reputation;
+
+        return parsePAPI(Bukkit.getOfflinePlayer(module.getOwner()), string
+                .replace("%moduleName%", module.getInformation().getDisplayName())
+                .replace("%moduleOwner%", module.getOwnerName())
+                .replace("%moduleID%", String.valueOf(module.getId()))
+                .replace("%moduleDownloads%", String.valueOf(module.getInformation().getDownloads()))
+                .replace("%moduleReputation%", reputation)
+                .replace("%planetCreationTime%", getElapsedTime(System.currentTimeMillis(), module.getInformation().getCreationTime()))
         );
     }
 

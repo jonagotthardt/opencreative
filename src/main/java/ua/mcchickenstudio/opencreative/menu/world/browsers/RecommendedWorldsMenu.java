@@ -120,7 +120,7 @@ public class RecommendedWorldsMenu extends AbstractMenu {
         } else if (itemEquals(currentItem,OWN_WORLDS)) {
             new OwnWorldsBrowserMenu(player).open(player);
         } else if (!itemEquals(currentItem,DECORATION_ITEM) && Arrays.stream(featuredWorldsSlots).anyMatch(i -> i == event.getRawSlot())) {
-            String worldID = getPersistentData(currentItem,getWorldIdKey());
+            String worldID = getPersistentData(currentItem, getItemIdKey());
             if (worldID.isEmpty()) {
                 return;
             }

@@ -36,21 +36,29 @@
 
 package ua.mcchickenstudio.opencreative.indev.modules;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.ApiStatus;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.placeDevBlock;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.setSignLine;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.getModuleConfig;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.parseModuleLines;
 
 /**
  * <h1>Module</h1>
@@ -63,18 +71,47 @@ public class Module {
 
     private final int id;
     private final ModuleInfo info;
+    private UUID owner;
 
     public Module(int id) {
         this.id = id;
         this.info = new ModuleInfo(this);
+
+        String uuid = getModuleConfig(this).getString("owner","");
+        try {
+            owner = UUID.fromString(uuid);
+        } catch (Exception ignored) {
+            owner = new UUID(0,0);
+        }
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                info.updateIcon();
+            }
+        }.runTaskAsynchronously(OpenCreative.getPlugin());
+    }
+
+    public UUID getOwner() {
+        return owner;
+    }
+
+    public String getOwnerName() {
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(owner);
+        return offlinePlayer.hasPlayedBefore() ? offlinePlayer.getName() : "Unknown owner";
     }
 
     public int getId() {
         return id;
     }
 
-    public boolean place(DevPlanet devPlanet) {
-        long time = System.currentTimeMillis();
+    public ModuleInfo getInformation() {
+        return info;
+    }
+
+    public boolean place(DevPlanet devPlanet, Player player) {
+        if (!devPlanet.isLoaded()) return false;
+        if (!devPlanet.getWorld().getPlayers().contains(player)) return false;
         FileConfiguration config = getModuleConfig(this);
         System.out.println(config.saveToString());
         ConfigurationSection section = config.getConfigurationSection("code.blocks");
@@ -83,24 +120,26 @@ public class Module {
             return true;
         }
         int requiredColumns = section.getKeys(false).size();
-        System.out.println("Required columns: " + requiredColumns);
         List<Location> freeColumns = new ArrayList<>();
         for (DevPlatform platform : devPlanet.getPlatforms()) {
             freeColumns.addAll(platform.getFreeColumns());
             if (freeColumns.size() >= requiredColumns) break;
         }
         if (freeColumns.size() < requiredColumns) {
-            System.out.println("Can't continue. Not enough space. " + freeColumns + " free, " + requiredColumns + " required.");
+            player.sendMessage(getLocaleMessage("modules.few-space").replace("%required%",String.valueOf(requiredColumns)));
+            return true;
         }
-        System.out.println("Starting inserting...");
+        for (Player planetPlayer : devPlanet.getPlanet().getPlayers()) {
+            if (devPlanet.getPlanet().getWorldPlayers().canDevelop(planetPlayer)) {
+                planetPlayer.sendMessage(parseModuleLines(this,getLocaleMessage("modules.installed",player)));
+            }
+        }
         int i = 0;
         for (String key : section.getKeys(false)) {
             ConfigurationSection executor = section.getConfigurationSection(key);
-            System.out.println("Executor to place: " + executor);
             placeExecutor(freeColumns.get(i), executor, devPlanet);
             i++;
         }
-        System.out.println("Placed! " + (System.currentTimeMillis() - time));
         return true;
     }
 

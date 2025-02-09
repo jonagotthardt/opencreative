@@ -47,6 +47,7 @@ public enum Sounds {
     MENU_OPEN_ENTITIES_BROWSER("entity.panda.worried_ambient",0.1f),
     MENU_OPEN_VALUES_BROWSER("ui.loom.select_pattern"),
     MENU_OPEN_CONFIRMATION("block.amethyst_block.resonate",0.5f),
+    MENU_OPEN_MODULES_BROWSER("block.shulker_box.open",0.1f),
     MENU_GENERATION_CHANGE("block.amethyst_block.resonate"),
     MENU_ENVIRONMENT_CHANGE("block.amethyst_block.step",0.1f),
     MENU_ENTITIES_BROWSER_SORT("block.trial_spawner.spawn_item",1.2f),
@@ -121,6 +122,8 @@ public enum Sounds {
     DEV_SETTINGS_SAVE_LOCATION("entity.illusioner.prepare_mirror",0.7f),
     DEV_SETTINGS_DROP_ITEMS("entity.illusioner.prepare_mirror",0.7f),
     DEV_PLATFORM_CLAIM("ui.toast.challenge_complete",1.7f),
+    DEV_MODULE_INSTALLED("entity.allay.item_given",0.1f),
+    DEV_MODULE_CREATED("ui.toast.challenge_complete",1.4f),
 
     DEV_ACTION_TARGET("block.amethyst_block.resonate"),
     DEV_ACTION_WITH_CHEST("block.ender_chest.close",1.2f),

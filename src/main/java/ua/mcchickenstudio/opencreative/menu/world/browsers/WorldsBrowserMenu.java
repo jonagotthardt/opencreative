@@ -26,7 +26,6 @@ import ua.mcchickenstudio.opencreative.menu.world.WorldModerationMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -148,7 +147,7 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
         if (currentItem == null) {
             return;
         }
-        String worldID = getPersistentData(currentItem,getWorldIdKey());
+        String worldID = getPersistentData(currentItem, getItemIdKey());
         if (worldID.isEmpty()) {
             return;
         }

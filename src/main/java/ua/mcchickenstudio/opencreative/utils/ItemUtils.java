@@ -41,8 +41,8 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemNa
 
 public class ItemUtils {
 
-    private final static NamespacedKey WORLD_ID = new NamespacedKey(OpenCreative.getPlugin(), "oc_world_id");
-    private final static NamespacedKey ITEM_TYPE_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_item");
+    private final static NamespacedKey ITEM_ID_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_item_id");
+    private final static NamespacedKey ITEM_TYPE_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_item_type");
     private final static NamespacedKey CODING_VALUE_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_value_type");
     private final static NamespacedKey CODING_PARTICLE_TYPE_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_particle_type");
     private final static NamespacedKey CODING_VARIABLE_TYPE_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_variable_type");
@@ -50,7 +50,6 @@ public class ItemUtils {
     private final static NamespacedKey CODING_LOCATION_X = new NamespacedKey(OpenCreative.getPlugin(), "oc_loc_x");
     private final static NamespacedKey CODING_LOCATION_Y = new NamespacedKey(OpenCreative.getPlugin(), "oc_loc_y");
     private final static NamespacedKey CODING_LOCATION_Z = new NamespacedKey(OpenCreative.getPlugin(), "oc_loc_z");
-
 
     public static NamespacedKey getCodingValueKey() {
         return CODING_VALUE_KEY;
@@ -84,8 +83,8 @@ public class ItemUtils {
         return ITEM_TYPE_KEY;
     }
 
-    public static NamespacedKey getWorldIdKey() {
-        return WORLD_ID;
+    public static NamespacedKey getItemIdKey() {
+        return ITEM_ID_KEY;
     }
 
     public static ItemStack setPersistentData(ItemStack item, NamespacedKey key, String value) {
