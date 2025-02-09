@@ -623,8 +623,15 @@ public class FileUtils {
      * Returns module's configuration.
      **/
     public static FileConfiguration getModuleConfig(Module module) {
-        File file = new File(getModulesStorageFolder().getPath()+File.separator+module.getModuleName(),"module.yml");
-        return YamlConfiguration.loadConfiguration(file);
+        return YamlConfiguration.loadConfiguration(getModuleConfigFile(module));
+    }
+
+    /**
+     * Returns module's config file.
+     * @return file of module's config.
+     */
+    public static File getModuleConfigFile(Module module) {
+        return new File(getModulesStorageFolder(),"module"+module.getId()+".yml");
     }
 
     /**

@@ -16,12 +16,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.managers.space;
+package ua.mcchickenstudio.opencreative.indev.space;
 
 import ua.mcchickenstudio.opencreative.managers.Manager;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-import java.util.List;
 import java.util.Set;
 
 /**

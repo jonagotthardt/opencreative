@@ -160,7 +160,7 @@ public class PlanetManager {
             }
             FileUtils.deleteFolder(FileUtils.getPlanetFolder(planet));
             FileUtils.deleteFolder(FileUtils.getDevPlanetFolder(planet.getDevPlanet()));
-        } catch (NullPointerException error) {
+        } catch (Exception error) {
             ErrorUtils.sendCriticalErrorMessage("Error while deleting world " + planet.getId(), error);
         }
     }

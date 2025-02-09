@@ -56,7 +56,6 @@ import static ua.mcchickenstudio.opencreative.utils.FileUtils.getModuleConfig;
  * <h1>Module</h1>
  * This class represents a module, a code that
  * can be pasted in developer world.
- *
  * <p>Modules are stored in ./modules/moduleID.yml files.
  */
 @ApiStatus.Experimental
@@ -70,8 +69,8 @@ public class Module {
         this.info = new ModuleInfo(this);
     }
 
-    public String getModuleName() {
-        return "module" + id;
+    public int getId() {
+        return id;
     }
 
     public boolean place(DevPlanet devPlanet) {

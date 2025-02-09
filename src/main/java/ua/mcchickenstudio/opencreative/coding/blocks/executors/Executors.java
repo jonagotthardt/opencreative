@@ -128,7 +128,8 @@ public class Executors {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
         ConfigurationSection section = config.getConfigurationSection("code.blocks");
         if (section != null) {
-            sendCodingDebugLog(planet,"Loading codeScript...");
+            long time = System.currentTimeMillis();
+            sendCodingDebugLog(planet,"Starting code, please wait...");
             List<Executor> executors = new ArrayList<>();
             Set<String> keys = section.getKeys(false);
             String path;
@@ -143,7 +144,7 @@ public class Executors {
             }
             clear();
             executorsList.addAll(executors);
-            sendCodingDebugLog(planet,"Loaded codeScript, executors: " + executorsList.size());
+            sendCodingDebugLog(planet,"Started code in " + (System.currentTimeMillis() - time) + " ms with " + executors.size() + " executors!");
         } else {
             sendCodingDebugLog(planet,"No code found to load.");
         }
