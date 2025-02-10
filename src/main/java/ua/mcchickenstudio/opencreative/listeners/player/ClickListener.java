@@ -40,14 +40,12 @@ import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.PlayerConfirmation;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.addPlayerWithLocation;
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.isPlayerWithLocation;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMessage;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.spawnGlowingBlock;

@@ -61,7 +61,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.indev.blocks.ViewableTypedBlock;
 import ua.mcchickenstudio.opencreative.indev.blocks.actions.ActionBlock;
 
@@ -77,7 +76,7 @@ public abstract class PlayerActionBlock extends ActionBlock implements ViewableT
     public abstract void execute(@NotNull Player player, @NotNull ActionsHandler actionsHandler, @NotNull Arguments arguments);
 
     @Override
-    public String getType() {
+    public @NotNull String getType() {
         return "player_" + type;
     }
 

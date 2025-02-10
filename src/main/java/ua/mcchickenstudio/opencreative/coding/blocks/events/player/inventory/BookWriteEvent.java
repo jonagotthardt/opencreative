@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory;
 
-import org.bukkit.inventory.meta.BookMeta;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerEditBookEvent;

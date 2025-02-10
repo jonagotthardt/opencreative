@@ -21,7 +21,6 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
-import io.papermc.paper.event.player.AsyncChatEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.jetbrains.annotations.NotNull;

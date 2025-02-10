@@ -18,8 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.placeholders;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;

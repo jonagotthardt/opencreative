@@ -23,8 +23,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 
 import java.util.ArrayList;
 import java.util.List;

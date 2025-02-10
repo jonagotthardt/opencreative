@@ -33,7 +33,7 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
  * This class represents a menu that stores
  * list of elements and has arrows to change pages.
  * @see ua.mcchickenstudio.opencreative.menu.AbstractListMenu
- * @param <T>
+ * @param <T> type of elements, that will be stored in list.
  */
 public abstract class ListBrowserMenu<T> extends AbstractListMenu<T> {
 

@@ -219,7 +219,7 @@ public class Settings {
             announcer = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    Bukkit.getServer().sendActionBar(Component.text("§fOpen§7Creative§b+ §3" + OpenCreative.getVersion() + "§7 Debug Mode. §fWell, it's possible."));
+                    Bukkit.getServer().sendActionBar(Component.text("§fOpen§7Creative§b+ §3" + OpenCreative.getVersion() + "§7 Debug Mode. §fShhh, let's not leak our hard work..."));
                 }
             };
             announcer.runTaskTimer(OpenCreative.getPlugin(),20L,20L);

@@ -136,7 +136,7 @@ public final class InteractListener implements Listener {
                     if (particleType.isEmpty()) return;
                     try {
                         Particle particle = Particle.valueOf(particleType.toUpperCase());
-                        Vector direction = player.getLocation().getDirection().normalize().multiply(1.5);;
+                        Vector direction = player.getLocation().getDirection().normalize().multiply(1.5);
                         Location particleLocation = player.getLocation().add(direction).add(0,1,0);
                         player.spawnParticle(particle,particleLocation,1);
                     } catch (Exception ignored) {}

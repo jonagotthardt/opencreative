@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.menu.world;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -181,7 +180,7 @@ public class WorldModerationMenu extends AbstractMenu implements WorldMenu {
                     }
                 },10L);
             }
-        };
+        }
     }
 
     @Override

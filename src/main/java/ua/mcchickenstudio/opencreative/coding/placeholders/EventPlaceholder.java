@@ -27,7 +27,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.MobD
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDamagesMobEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDamagesPlayerEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerKilledPlayerEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.MobInteractionEvent;
 
 public class EventPlaceholder extends KeyPlaceholder {
 

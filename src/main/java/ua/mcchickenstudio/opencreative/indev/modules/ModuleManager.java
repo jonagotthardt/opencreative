@@ -41,7 +41,7 @@ public class ModuleManager {
 
     private static ModuleManager instance;
 
-    private Set<Module> modules = new HashSet<>();
+    private final Set<Module> modules = new HashSet<>();
 
     private ModuleManager() {}
     public static ModuleManager getInstance() {

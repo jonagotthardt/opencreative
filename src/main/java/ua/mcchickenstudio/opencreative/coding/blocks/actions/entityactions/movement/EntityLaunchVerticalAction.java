@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.movement;
 
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;

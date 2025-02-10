@@ -40,12 +40,9 @@ import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 
-import static ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser.raisePlayerPurchaseEvent;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.getItemTypeKey;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemDescription;
 
 public class WorldAccessMenu extends AbstractMenu implements WorldMenu {
 
@@ -202,28 +199,26 @@ public class WorldAccessMenu extends AbstractMenu implements WorldMenu {
             case "delete" -> {
                 player.closeInventory();
                 Bukkit.getScheduler().scheduleSyncDelayedTask(OpenCreative.getPlugin(),
-                        () -> {
-                            new ConfirmationMenu(
-                                    getLocaleMessage("menus.confirmation.delete-world", false).replace("%name%", substring(ChatColor.stripColor(planet.getInformation().getDisplayName()),20)),
-                                    Material.TNT,
-                                    getLocaleItemName("menus.confirmation.items.delete-world.name"),
-                                    getLocaleItemDescription("menus.confirmation.items.delete-world.lore"),
-                                    new BukkitRunnable() {
-                                        @Override
-                                        public void run() {
-                                            player.closeInventory();
-                                            if (!PlanetManager.getInstance().getPlanets().contains(planet)) {
-                                                cancel();
-                                                return;
-                                            }
-                                            if (!planet.isOwner(player)) {
-                                                cancel();
-                                                return;
-                                            }
-                                            PlanetManager.getInstance().deletePlanet(planet,player);
+                        () -> new ConfirmationMenu(
+                                getLocaleMessage("menus.confirmation.delete-world", false).replace("%name%", substring(ChatColor.stripColor(planet.getInformation().getDisplayName()),20)),
+                                Material.TNT,
+                                getLocaleItemName("menus.confirmation.items.delete-world.name"),
+                                getLocaleItemDescription("menus.confirmation.items.delete-world.lore"),
+                                new BukkitRunnable() {
+                                    @Override
+                                    public void run() {
+                                        player.closeInventory();
+                                        if (!PlanetManager.getInstance().getPlanets().contains(planet)) {
+                                            cancel();
+                                            return;
                                         }
-                                    }).open(player);
-                        }, 5L);
+                                        if (!planet.isOwner(player)) {
+                                            cancel();
+                                            return;
+                                        }
+                                        PlanetManager.getInstance().deletePlanet(planet,player);
+                                    }
+                                }).open(player), 5L);
 
             }
         }

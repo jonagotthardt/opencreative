@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.item;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
-import com.destroystokyo.paper.profile.ProfileProperty;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -32,8 +31,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-
-import java.util.UUID;
 
 public final class SetSkullOwnerAction extends VariableAction {
     public SetSkullOwnerAction(Executor executor, Target target, int x, Arguments args) {

@@ -384,7 +384,6 @@ public class FileUtils {
     /**
      * Returns folders of planets worlds that are
      * stored in server container or /unloadedWorlds/ folder.
-     * @return planets worlds folders.
      */
     public static void convertOldPlanetFolders() {
         File serverDirectory = Bukkit.getServer().getWorldContainer();

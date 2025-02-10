@@ -31,6 +31,11 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.messageExists;
 
+/**
+ * <h1>ParameterButton</h1>
+ * This class represents a dynamic changeable item button,
+ * that stores list of values, and it stores selected value.
+ */
 public class ParameterButton {
 
     private final ItemStack item;

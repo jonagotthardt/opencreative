@@ -49,7 +49,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 public class Executors {
 
     protected final Planet planet;
-    private List<Executor> executorsList = new ArrayList<>();
+    private final List<Executor> executorsList = new ArrayList<>();
 
     private final Map<Executor,Integer> lastExecutorsCallsAmount = new HashMap<>();
 

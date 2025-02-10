@@ -18,13 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.world;
 
-import io.papermc.paper.event.player.AsyncChatEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerChatEvent;
 import ua.mcchickenstudio.opencreative.coding.placeholders.KeyPlaceholder;
 import ua.mcchickenstudio.opencreative.coding.placeholders.KeyValuePlaceholder;
-import ua.mcchickenstudio.opencreative.coding.placeholders.VarPlaceholder;
 
 public class ChatEvent extends WorldEvent {
 

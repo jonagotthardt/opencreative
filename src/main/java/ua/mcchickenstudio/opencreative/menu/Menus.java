@@ -27,12 +27,33 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <h1>Menus</h1>
+ * This class represents a menus manager, that
+ * stores current opened menus for handling
+ * inventory open, click and close events.
+ * <p>
+ * To make {@link InventoryMenu} usable for handling inventory events, register this menu with
+ * {@link Menus#addMenu(InventoryMenu)} method. To avoid memory leaks, please unregister it
+ * on inventory close event with {@link Menus#removeMenu(InventoryMenu)}
+ */
 public class Menus implements Listener {
 
     private static final List<InventoryMenu> activeMenus = new ArrayList<>();
+
+    /**
+     * Registers menu in menus manager for handling inventory events.
+     * @param menu menu to add.
+     */
     public static void addMenu(InventoryMenu menu) {
         activeMenus.add(menu);
     }
+
+    /**
+     * Unregisters menu from menus event listeners, required if menu is not more
+     * useful because player closed it.
+     * @param menu menu to remove.
+     */
     public static void removeMenu(InventoryMenu menu) {
         activeMenus.remove(menu);
     }

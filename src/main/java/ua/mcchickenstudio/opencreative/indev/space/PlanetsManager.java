@@ -32,16 +32,16 @@ import java.util.Set;
  */
 public interface PlanetsManager extends Manager {
 
-    public Set<Planet> getPlanets();
+    Set<Planet> getPlanets();
 
-    public Set<Planet> getPlayerPlanets(String owner);
+    Set<Planet> getPlayerPlanets(String owner);
 
-    public Set<Planet> getPlanetsContainingName(String name);
+    Set<Planet> getPlanetsContainingName(String name);
 
-    public Set<Planet> getPlanetsContainingId(String id);
+    Set<Planet> getPlanetsContainingId(String id);
 
-    public Set<Planet> getPlanetsContainingOwner(String owner);
+    Set<Planet> getPlanetsContainingOwner(String owner);
 
-    public void registerPlanet();
+    void registerPlanet();
 
 }

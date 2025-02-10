@@ -39,7 +39,6 @@ package ua.mcchickenstudio.opencreative.menu.world.settings;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -166,7 +165,7 @@ public class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
                     p.sendMessage(getLocaleMessage("menus.entities-browser.removed-all", getPlayer()).replace("%count%",String.valueOf(count)));
                 }
             }
-            elements.removeIf(e -> ((Entity) e).isDead());
+            elements.removeIf(e -> e.isDead());
             fillElements(getCurrentPage());
             fillArrowsItems(getCurrentPage());
         }
@@ -190,8 +189,8 @@ public class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
         UUID uuid = UUID.fromString(uuidString);
         Entity entity = Bukkit.getEntity(uuid);
         if (entity == null) {
-            elements.removeIf(e -> ((Entity) e).getUniqueId().equals(uuid));
-            elements.removeIf(e -> ((Entity) e).isDead());
+            elements.removeIf(e -> e.getUniqueId().equals(uuid));
+            elements.removeIf(e -> e.isDead());
             fillElements(getCurrentPage());
             fillArrowsItems(getCurrentPage());
             return;
@@ -213,7 +212,7 @@ public class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
                 }
                 Sounds.WORLD_TELEPORT_ENTITY_TO_ME.play(getPlayer());
                 entity.teleport(getPlayer().getLocation());
-                if (elements.removeIf(e -> ((Entity) e).isDead())) {
+                if (elements.removeIf(e -> e.isDead())) {
                     fillElements(getCurrentPage());
                     fillArrowsItems(getCurrentPage());
                 }
@@ -231,7 +230,7 @@ public class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
                 Sounds.WORLD_REMOVE_ENTITY.play(getPlayer());
                 elements.remove(entity);
                 entity.remove();
-                elements.removeIf(e -> ((Entity) e).isDead());
+                elements.removeIf(e -> e.isDead());
                 fillElements(getCurrentPage());
                 fillArrowsItems(getCurrentPage());
                 getPlayer().updateInventory();

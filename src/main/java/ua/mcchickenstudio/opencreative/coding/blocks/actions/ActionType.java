@@ -306,7 +306,7 @@ public enum ActionType {
     WORLD_CLEAR_CONTAINER(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, ClearContainerAction.class, Material.BARRIER, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 27)),
     WORLD_GIVE_CONTAINER_ITEMS(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, GiveItemsToContainerAction.class, Material.CHEST, new ArgumentSlot("items", ValueType.ITEM, (byte) 18), new ArgumentSlot("location",ValueType.LOCATION)),
     WORLD_PUT_ITEM_IN_CONTAINER(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, SetItemBySlotInContainerAction.class, Material.HOPPER, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ArgumentSlot("slot",ValueType.NUMBER), new ArgumentSlot("item", ValueType.ITEM)),
-    WORLD_GET_CONTAINER_ITEMS(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, SetItemBySlotInContainerAction.class, Material.HOPPER, new ArgumentSlot("variable",ValueType.VARIABLE), new ArgumentSlot("location",ValueType.LOCATION)),
+    WORLD_GET_CONTAINER_ITEMS(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, GetContainerItemsAction.class, Material.HOPPER, new ArgumentSlot("variable",ValueType.VARIABLE), new ArgumentSlot("location",ValueType.LOCATION)),
 
     WORLD_APPLY_BONE_MEAL(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, ApplyBoneMealAction.class, Material.BONE_MEAL, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 27)),
     WORLD_SET_BLOCK_BIOME(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, SetBlockBiomeAction.class, Material.MYCELIUM, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18),new ArgumentSlot("biome",ValueType.TEXT)),

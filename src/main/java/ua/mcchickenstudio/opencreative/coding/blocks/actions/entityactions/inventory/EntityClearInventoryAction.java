@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.inventory;
 
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.InventoryHolder;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;

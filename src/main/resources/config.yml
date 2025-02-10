@@ -301,4 +301,4 @@ maintenance: false
 # information about plugin's work and state.
 # Not useful, if you're not developing OC+.
 #
-debug: false
+debug: true

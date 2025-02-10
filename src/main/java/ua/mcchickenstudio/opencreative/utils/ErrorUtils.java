@@ -78,7 +78,8 @@ public class ErrorUtils {
                 \\|/ _____ \\|/
                 "@'/ . . \\`@"\s""" + OpenCreative.getVersion() + """
                 \n/_| \\___/ |_\\\s""" + getRandomPhrase() + """
-                \n   \\___U_/\n""" : "") +
+                \n   \\___U_/
+                """ : "") +
                 (colored ? "§4 " : " ") +
                 error.getClass().getSimpleName() +
                 ": " +

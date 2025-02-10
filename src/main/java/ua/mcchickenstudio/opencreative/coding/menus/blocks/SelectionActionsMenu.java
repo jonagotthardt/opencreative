@@ -42,8 +42,8 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSi
 
 public class SelectionActionsMenu extends AbstractMenu {
 
-    private Player player;
-    private Location signLocation;
+    private final Player player;
+    private final Location signLocation;
 
     private final ItemStack varCondition = createItem(Material.OBSIDIAN,1,"items.developer.condition-var");
     private final ItemStack playerCondition = createItem(Material.OAK_PLANKS,1,"items.developer.condition-player");

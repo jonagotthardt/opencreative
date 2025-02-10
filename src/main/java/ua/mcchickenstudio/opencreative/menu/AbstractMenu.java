@@ -26,7 +26,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -152,7 +151,4 @@ public abstract class AbstractMenu implements InventoryMenu {
         return (item != null && item.getType() != Material.AIR);
     }
 
-    public void destroy() {
-        Menus.removeMenu(this);
-    }
 }

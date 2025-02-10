@@ -21,7 +21,6 @@ package ua.mcchickenstudio.opencreative.utils;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemDescription;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemName;

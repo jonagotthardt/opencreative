@@ -18,19 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.planets;
 
-import ua.mcchickenstudio.opencreative.menu.buttons.RadioButton;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import org.bukkit.GameRule;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemDescription;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemName;
 
 public class PlanetFlags {
 

@@ -23,8 +23,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -34,6 +32,7 @@ import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public final class GetContainerItemsAction extends WorldAction {
     public GetContainerItemsAction(Executor executor, Target target, int x, Arguments args) {
@@ -47,11 +46,7 @@ public final class GetContainerItemsAction extends WorldAction {
         Location location = getArguments().getValue("location",getWorld().getSpawnLocation(),this);
         if (location.getBlock().getState() instanceof InventoryHolder container) {
             for (ItemStack item : container.getInventory().getContents()) {
-                if (item == null) {
-                    items.add(new ItemStack(Material.AIR));
-                } else {
-                    items.add(item);
-                }
+                items.add(Objects.requireNonNullElseGet(item, () -> new ItemStack(Material.AIR)));
             }
         }
         setVarValue(link,items);

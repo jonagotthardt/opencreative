@@ -29,7 +29,6 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 import java.time.Duration;
@@ -37,7 +36,6 @@ import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
@@ -149,9 +147,7 @@ public class PlanetManager {
             }
             Sounds.WORLD_DELETION.play(player);
             planets.remove(planet);
-            Bukkit.getServer().getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
-                player.sendMessage(MessageUtils.getLocaleMessage("deleting-world.message"));
-            }, 60);
+            Bukkit.getServer().getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> player.sendMessage(MessageUtils.getLocaleMessage("deleting-world.message")), 60);
             if (planet.isLoaded()) {
                 Bukkit.unloadWorld(planet.getWorldName(),false);
                 if (planet.getDevPlanet().isLoaded()) {

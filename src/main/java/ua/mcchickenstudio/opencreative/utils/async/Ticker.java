@@ -19,9 +19,6 @@
 package ua.mcchickenstudio.opencreative.utils.async;
 
 import lombok.experimental.UtilityClass;
-import org.bukkit.Bukkit;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.BlockActionCoverage;
 
 @UtilityClass
 public class Ticker {

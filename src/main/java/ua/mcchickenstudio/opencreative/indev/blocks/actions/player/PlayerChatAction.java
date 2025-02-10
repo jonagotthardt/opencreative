@@ -24,7 +24,6 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
 public class PlayerChatAction extends PlayerActionBlock {
 
@@ -53,7 +52,7 @@ public class PlayerChatAction extends PlayerActionBlock {
     }
 
     @Override
-    public ItemStack getIcon() {
+    public @NotNull ItemStack getIcon() {
         return new ItemStack(Material.BOOK);
     }
 }
