@@ -81,4 +81,14 @@ public abstract class CodingBlock implements ConfigurationSerializable, CodingPa
         return id;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof CodingBlock block)) return false;
+        return block.getId().equals(id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

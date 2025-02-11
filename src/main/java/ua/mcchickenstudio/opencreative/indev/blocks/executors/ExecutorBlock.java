@@ -42,8 +42,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
+import ua.mcchickenstudio.opencreative.indev.blocks.WrappedActionBlock;
+import ua.mcchickenstudio.opencreative.indev.blocks.WrappedCodingBlock;
 import ua.mcchickenstudio.opencreative.indev.blocks.actions.ActionBlock;
 import ua.mcchickenstudio.opencreative.indev.blocks.CodingBlock;
+import ua.mcchickenstudio.opencreative.indev.blocks.actions.WrappedAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,13 +54,14 @@ import java.util.Map;
 
 public abstract class ExecutorBlock extends CodingBlock {
 
-    private final List<ActionBlock> actions = new ArrayList<>();
-
     public ExecutorBlock(@NotNull String id, @NotNull Material mainBlock, @NotNull Material offBlock) {
         super(id, mainBlock, offBlock);
     }
 
-    public void execute(WorldEvent event, Arguments arguments) {
+    public void execute(@NotNull WorldEvent event, @NotNull List<WrappedActionBlock> actions) {
+        for (WrappedActionBlock block : actions) {
+
+        }
         /*ActionsHandler handler = new ActionsHandler();
         for (ActionBlock action : actions) {
             action.execute(actionsHandler,arguments);
@@ -76,5 +80,12 @@ public abstract class ExecutorBlock extends CodingBlock {
     @Override
     public @NotNull Map<String, Object> serialize() {
         return Map.of();
+    }
+
+    public abstract Class<? extends WorldEvent> getEventClass();
+
+    @Override
+    public String toString() {
+        return "Executor " + getName() + ", ID: " + getId() + " by " + getCodingPackId();
     }
 }
