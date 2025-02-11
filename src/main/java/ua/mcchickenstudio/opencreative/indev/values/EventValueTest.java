@@ -73,7 +73,7 @@ public abstract class EventValueTest implements CodingPackContent {
 
     /**
      * Returns an icon that will be used
-     * in event values menu.
+     * in event values menus.
      * @return icon of event value to display.
      */
     public ItemStack getDisplayIcon() {

@@ -23,7 +23,7 @@ import com.destroystokyo.paper.profile.ProfileProperty;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 
-import ua.mcchickenstudio.opencreative.menu.world.settings.*;
+import ua.mcchickenstudio.opencreative.menus.world.settings.*;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,7 +34,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import ua.mcchickenstudio.opencreative.menu.buttons.RadioButton;
+import ua.mcchickenstudio.opencreative.menus.buttons.RadioButton;
 import ua.mcchickenstudio.opencreative.planets.*;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.PlayerConfirmation;

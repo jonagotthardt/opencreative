@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.menus.blocks;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
-import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
+import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Location;

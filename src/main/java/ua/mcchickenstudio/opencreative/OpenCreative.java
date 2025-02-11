@@ -50,7 +50,7 @@ import ua.mcchickenstudio.opencreative.managers.economy.Economy;
 import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
 import ua.mcchickenstudio.opencreative.managers.updater.HangarUpdater;
 import ua.mcchickenstudio.opencreative.managers.updater.Updater;
-import ua.mcchickenstudio.opencreative.menu.Menus;
+import ua.mcchickenstudio.opencreative.menus.Menus;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
@@ -199,7 +199,7 @@ public final class OpenCreative extends JavaPlugin {
         Map<String,Class<? extends CommandExecutor>> commands = new HashMap<>();
         commands.put("creative",    CommandCreative.class);
         commands.put("spawn",       CommandSpawn.class);
-        commands.put("menu",        CommandMenu.class);
+        commands.put("menus",        CommandMenu.class);
         commands.put("world",       CommandWorld.class);
         commands.put("chat",        CreativeChat.class);
         commands.put("join",        CommandJoin.class);

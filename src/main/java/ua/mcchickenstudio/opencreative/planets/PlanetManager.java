@@ -22,7 +22,7 @@ import org.bukkit.command.CommandSender;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetDeletionEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetRegisterEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
-import ua.mcchickenstudio.opencreative.menu.world.WorldMenu;
+import ua.mcchickenstudio.opencreative.menus.world.WorldMenu;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.*;
 import net.kyori.adventure.title.Title;

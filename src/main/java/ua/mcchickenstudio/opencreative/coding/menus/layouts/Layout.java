@@ -21,8 +21,8 @@ package ua.mcchickenstudio.opencreative.coding.menus.layouts;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
-import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
-import ua.mcchickenstudio.opencreative.menu.buttons.ParameterButton;
+import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
+import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.ChatColor;
@@ -50,7 +50,7 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.sendOpenedChestA
 
 /**
  * <h1>Layout</h1>
- * This class represents an inventory menu, that opens
+ * This class represents an inventory menus, that opens
  * if player clicks on coding block chest to fill arguments.
  * @see LayoutMaker
  */

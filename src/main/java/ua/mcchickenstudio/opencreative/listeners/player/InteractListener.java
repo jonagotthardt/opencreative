@@ -34,10 +34,10 @@ import ua.mcchickenstudio.opencreative.coding.menus.variables.PotionsMenu;
 import ua.mcchickenstudio.opencreative.coding.menus.variables.VariablesMenu;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.LayoutMaker;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
-import ua.mcchickenstudio.opencreative.menu.world.browsers.OwnWorldsBrowserMenu;
-import ua.mcchickenstudio.opencreative.menu.world.browsers.RecommendedWorldsMenu;
-import ua.mcchickenstudio.opencreative.menu.world.settings.WorldSettingsMenu;
+import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
+import ua.mcchickenstudio.opencreative.menus.world.browsers.OwnWorldsBrowserMenu;
+import ua.mcchickenstudio.opencreative.menus.world.browsers.RecommendedWorldsMenu;
+import ua.mcchickenstudio.opencreative.menus.world.settings.WorldSettingsMenu;
 import ua.mcchickenstudio.opencreative.planets.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -176,7 +176,7 @@ public final class InteractListener implements Listener {
 
     /**
      * Handles event, when player clicks coding container block, like chest or barrel.
-     * Used for creating and opening layout menu of action.
+     * Used for creating and opening layout menus of action.
      */
     private void handleContainerClick(PlayerInteractEvent event, Player player, DevPlanet devPlanet, Block clickedBlock) {
         if ((!event.getPlayer().isSneaking()) && clickedBlock.getState() instanceof InventoryHolder) {
@@ -595,7 +595,7 @@ public final class InteractListener implements Listener {
         Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
         if (isEntityInLobby(player)) {
             if (getItemType(currentItem).equals("worlds")) {
-                // Opens recommended worlds menu.
+                // Opens recommended worlds menus.
                 if (OpenCreative.getSettings().isMaintenance() && !player.hasPermission("opencreative.maintenance.bypass")) {
                     player.sendMessage(getLocaleMessage("maintenance"));
                     return;
@@ -603,7 +603,7 @@ public final class InteractListener implements Listener {
                 player.setCooldown(Material.COMPASS,60);
                 new RecommendedWorldsMenu().open(player);
             } else if (getItemType(currentItem).equals("own_worlds")) {
-                // Opens player's worlds menu.
+                // Opens player's worlds menus.
                 if (OpenCreative.getSettings().isMaintenance() && !player.hasPermission("opencreative.maintenance.bypass")) {
                     player.sendMessage(getLocaleMessage("maintenance"));
                     return;
@@ -612,7 +612,7 @@ public final class InteractListener implements Listener {
                 new OwnWorldsBrowserMenu(player).open(player);
             }
         } else if (planet != null && currentItem.getType() == Material.COMPASS) {
-            // Opens world settings menu.
+            // Opens world settings menus.
             if (OpenCreative.getSettings().isMaintenance() && !player.hasPermission("opencreative.maintenance.bypass")) {
                 player.sendMessage(getLocaleMessage("maintenance"));
                 return;

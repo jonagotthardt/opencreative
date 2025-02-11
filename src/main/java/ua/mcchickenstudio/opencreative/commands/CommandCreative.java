@@ -21,10 +21,10 @@ package ua.mcchickenstudio.opencreative.commands;
 import org.bukkit.configuration.ConfigurationSection;
 import ua.mcchickenstudio.opencreative.indev.modules.Module;
 import ua.mcchickenstudio.opencreative.indev.modules.ModulesBrowserMenu;
-import ua.mcchickenstudio.opencreative.menu.CreativeMenu;
-import ua.mcchickenstudio.opencreative.menu.world.WorldModerationMenu;
-import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsBrowserMenu;
-import ua.mcchickenstudio.opencreative.menu.world.browsers.WorldsPickerMenu;
+import ua.mcchickenstudio.opencreative.menus.CreativeMenu;
+import ua.mcchickenstudio.opencreative.menus.world.WorldModerationMenu;
+import ua.mcchickenstudio.opencreative.menus.world.browsers.WorldsBrowserMenu;
+import ua.mcchickenstudio.opencreative.menus.world.browsers.WorldsPickerMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -142,7 +142,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 }
                 case "moderate", "moderation" -> {
                     if (player == null) return true;
-                    if (!sender.hasPermission("opencreative.moderation.menu")) {
+                    if (!sender.hasPermission("opencreative.moderation.menus")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }

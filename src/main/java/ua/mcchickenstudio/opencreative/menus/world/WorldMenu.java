@@ -16,18 +16,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.indev.blocks;
+package ua.mcchickenstudio.opencreative.menus.world;
 
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public interface ViewableTypedBlock extends TypedBlock {
+public interface WorldMenu {
 
-    /**
-     * Returns an icon that will be shown
-     * in action type selection menus.
-     * @return icon of typed block.
-     */
-    @NotNull ItemStack getIcon();
+    Planet getPlanet();
 
 }
