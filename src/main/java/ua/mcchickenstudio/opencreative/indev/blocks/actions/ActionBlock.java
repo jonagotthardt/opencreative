@@ -60,13 +60,4 @@ public abstract class ActionBlock extends CodingBlock {
 
     }
 
-    @Override
-    public @Nullable CodingBlock deserialize(Map<String, Object> args) {
-        return null;
-    }
-
-    @Override
-    public @NotNull Map<String, Object> serialize() {
-        return Map.of();
-    }
 }

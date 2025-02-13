@@ -154,28 +154,6 @@ public class MessageUtils {
 
     private static FileConfiguration getLocalization() {
         return localizationConfig;
-        //return YamlConfiguration.loadConfiguration(getLocalizationFile());
-    }
-
-    public static String getLocaleString(String path) {
-        return getLocalization().getString(path,path);
-    }
-
-    /**
-     Returns a path, that has specified message. May work wrong, if some messages will be same.
-     **/
-    public static String getPathFromMessage(String partOfPath, String message) {
-        for (String line : getLocalization().getKeys(true)) {
-            if (line.startsWith(partOfPath)) {
-                if (getLocaleMessage(line).equalsIgnoreCase(message)) {
-                    return line;
-                }
-            }
-        }
-        if (message.startsWith("§fNot found: ")) {
-            return ChatColor.stripColor(message).replace("Not found: ","");
-        }
-        return null;
     }
 
     /**

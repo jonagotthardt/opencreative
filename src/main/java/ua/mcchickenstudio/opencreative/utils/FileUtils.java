@@ -24,7 +24,6 @@ import ua.mcchickenstudio.opencreative.indev.modules.ModuleManager;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetInfo;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -218,7 +217,7 @@ public class FileUtils {
                     }
                 }
             }
-            OpenCreative.getPlugin().getLogger().info("Loaded " + PlanetManager.getInstance().getPlanets().size() + " worlds for " + (System.currentTimeMillis()-currentTime) + " ms.");
+            OpenCreative.getPlugin().getLogger().info("Loaded " + OpenCreative.getPlanetsManager().getPlanets().size() + " worlds for " + (System.currentTimeMillis()-currentTime) + " ms.");
             OpenCreative.getPlugin().getLogger().info(" Deprecated worlds: " + deprecatedWorlds);
             OpenCreative.getPlugin().getLogger().info(" Corrupted worlds: " + corruptedWorlds);
         } catch (Exception error) {
@@ -459,7 +458,7 @@ public class FileUtils {
     public static void unloadPlanets() {
         OpenCreative.getPlugin().getLogger().info("Unloading worlds, please wait...");
         try {
-            for (Planet planet : PlanetManager.getInstance().getPlanets()) {
+            for (Planet planet : OpenCreative.getPlanetsManager().getPlanets()) {
                 if (planet.isLoaded()) {
                     OpenCreative.getPlugin().getLogger().info("Unloading planet " + planet.getId() + "...");
                     planet.getTerritory().unload();
@@ -468,7 +467,7 @@ public class FileUtils {
                     planet.getDevPlanet().unload();
                 }
             }
-            PlanetManager.getInstance().clearPlanets();
+            OpenCreative.getPlanetsManager().getPlanets().clear();
         } catch (Exception error) {
             sendCriticalErrorMessage("Error while unloading worlds.",error);
         }

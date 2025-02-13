@@ -18,8 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.menus.world.browsers;
 
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 import org.bukkit.Bukkit;
@@ -48,7 +48,7 @@ public class WorldsPickerMenu extends WorldsBrowserMenu{
             newPlanet.getInformation().setCustomID(String.valueOf(id));
             newPlanet.getInformation().setDownloadable(false);
             newPlanet.getWorldPlayers().purgeData();
-            PlanetManager.getInstance().registerPlanet(newPlanet);
+            OpenCreative.getPlanetsManager().registerPlanet(newPlanet);
             FileUtils.deleteFolder(new File(FileUtils.getPlanetFolder(newPlanet).getPath() + File.separator + "playersData"));
             FileUtils.deleteUnnecessaryWorldFiles(FileUtils.getPlanetFolder(newPlanet));
             newPlanet.connectPlayer(player);

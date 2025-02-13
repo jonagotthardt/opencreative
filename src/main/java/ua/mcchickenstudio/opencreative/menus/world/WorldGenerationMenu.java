@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
@@ -91,10 +90,10 @@ public class WorldGenerationMenu extends AbstractMenu {
                 Sounds.MENU_GENERATE_STRUCTURES_CHANGE.play(player);
             }
             case 16 -> {
-                if (PlanetManager.getInstance().getPlayerPlanets(player).size() < OpenCreative.getSettings().getGroups().getGroup(player).getWorldsLimit()) {
+                if (OpenCreative.getPlanetsManager().getPlanetsByOwner(player).size() < OpenCreative.getSettings().getGroups().getGroup(player).getWorldsLimit()) {
                     Sounds.WORLD_GENERATION.play(player);
                     player.closeInventory();
-                    PlanetManager.getInstance().createPlanet(player, WorldUtils.generateWorldID(), WorldUtils.WorldGenerator.valueOf(generatorButton.getCurrentValue().toString().toUpperCase()), World.Environment.valueOf(environmentButton.getCurrentValue().toString().toUpperCase()),new Random().nextInt(),Boolean.parseBoolean(generateStructures.getCurrentValue().toString()));
+                    OpenCreative.getPlanetsManager().createPlanet(player, WorldUtils.generateWorldID(), WorldUtils.WorldGenerator.valueOf(generatorButton.getCurrentValue().toString().toUpperCase()), World.Environment.valueOf(environmentButton.getCurrentValue().toString().toUpperCase()),new Random().nextInt(),Boolean.parseBoolean(generateStructures.getCurrentValue().toString()));
                 }
                 player.closeInventory();
             }

@@ -34,7 +34,6 @@ import ua.mcchickenstudio.opencreative.menus.world.settings.WorldEnvironmentMenu
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import net.kyori.adventure.text.Component;
@@ -65,7 +64,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                 return true;
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
-            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
                 return true;
@@ -225,7 +224,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         }
                         break;
                     case "containers", "barrel", "barrels": {
-                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             player.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
@@ -239,7 +238,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
                             return true;
                         }
-                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
@@ -255,7 +254,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
 
                     }
                     case "drops", "drop", "drop-items": {
-                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             player.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
@@ -273,7 +272,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         break;
                     }
                     case "night-vision": {
-                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             player.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
@@ -296,7 +295,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         break;
                     }
                     case "save-location": {
-                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             player.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
@@ -322,7 +321,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
                             return true;
                         }
-                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
@@ -341,7 +340,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         break;
                     }
                     case "platform", "p": {
-                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
@@ -368,7 +367,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
                             return true;
                         }
-                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
@@ -388,7 +387,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
                             return true;
                         }
-                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
@@ -413,7 +412,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
                             return true;
                         }
-                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
@@ -438,7 +437,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
                             return true;
                         }
-                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
@@ -463,7 +462,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
                             return true;
                         }
-                        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return true;
@@ -638,7 +637,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
         if (List.of("execute", "exec", "run").contains(args[0].toLowerCase())) {
             if (sender instanceof Player player) {
                 if (PlayerUtils.isEntityInLobby(player)) return tabCompleter;
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet == null || !planet.getWorldPlayers().canDevelop(player)) return tabCompleter;
                 if (List.of("join", "quit", "player_join", "player_quit", "player_play", "play", "player_liked", "liked").contains(args[1].toLowerCase())) {
                     tabCompleter.addAll(planet.getTerritory().getWorld().getPlayers().stream().map(Player::getName).toList());
@@ -654,7 +653,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                 if (args.length == 3) {
                     if (sender instanceof Player player) {
                         if (PlayerUtils.isEntityInLobby(player)) return tabCompleter;
-                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                         if (planet == null || !planet.getWorldPlayers().canDevelop(player)) return tabCompleter;
                         List<WorldVariable> allVariables = new ArrayList<>(planet.getVariables().getSet());
                         if (allVariables.isEmpty()) return tabCompleter;
@@ -679,7 +678,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                 if (args.length == 3) {
                     if (sender instanceof Player player) {
                         if (PlayerUtils.isEntityInLobby(player)) return tabCompleter;
-                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                         if (planet == null || !planet.getWorldPlayers().canDevelop(player)) return tabCompleter;
                         List<WorldVariable> allVariables = new ArrayList<>(planet.getVariables().getSet());
                         if (allVariables.isEmpty()) return tabCompleter;

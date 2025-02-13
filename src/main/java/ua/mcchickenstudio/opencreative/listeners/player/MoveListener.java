@@ -21,9 +21,9 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -82,7 +82,7 @@ public final class MoveListener implements Listener {
 
     @EventHandler
     public void onJump(PlayerJumpEvent event) {
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) EventRaiser.raiseJumpEvent(event.getPlayer(),event);
     }
 
@@ -97,7 +97,7 @@ public final class MoveListener implements Listener {
 
     @EventHandler
     public void onFlying(PlayerToggleFlightEvent event) {
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
 
         if (planet != null) {
             if (event.isFlying())  EventRaiser.raiseStartFlyingEvent(event.getPlayer(),event);
@@ -107,7 +107,7 @@ public final class MoveListener implements Listener {
 
     @EventHandler
     public void onSprinting(PlayerToggleSprintEvent event) {
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) {
             if (event.isSprinting())  EventRaiser.raiseStartRunningEvent(event.getPlayer(),event);
             else  EventRaiser.raiseStopRunningEvent(event.getPlayer(),event);
@@ -116,7 +116,7 @@ public final class MoveListener implements Listener {
 
     @EventHandler
     public void onChunkLoad(PlayerChunkLoadEvent event) {
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) {
             EventRaiser.raiseChunkLoadEvent(event);
         }
@@ -124,7 +124,7 @@ public final class MoveListener implements Listener {
 
     @EventHandler
     public void onChunkUnload(PlayerChunkUnloadEvent event) {
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) {
             EventRaiser.raiseChunkUnloadEvent(event);
         }

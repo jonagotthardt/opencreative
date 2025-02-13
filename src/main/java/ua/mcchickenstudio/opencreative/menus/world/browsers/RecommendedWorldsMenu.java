@@ -19,10 +19,10 @@
 package ua.mcchickenstudio.opencreative.menus.world.browsers;
 
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.listeners.player.ChatListener;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Material;
@@ -62,7 +62,7 @@ public class RecommendedWorldsMenu extends AbstractMenu {
         setItem(51, DECORATION_OWN_WORLDS);
         setItem(52, DECORATION_PANE_ITEM);
         setItem(53, ALL_WORLDS);
-        List<Planet> featuredPlanets = PlanetManager.getInstance().getRecommendedPlanets();
+        List<Planet> featuredPlanets = OpenCreative.getPlanetsManager().getRecommendedPlanets();
         if (featuredPlanets.isEmpty()) {
             for (int slot : featuredWorldsSlots) {
                 setItem(slot,DECORATION_ITEM);
@@ -116,7 +116,7 @@ public class RecommendedWorldsMenu extends AbstractMenu {
             Sounds.MENU_WORLD_SEARCH.play(player);
             ChatListener.confirmation.put(player,request);
         } else if (itemEquals(currentItem,ALL_WORLDS)) {
-            new WorldsBrowserMenu(player, PlanetManager.getInstance().getPlanets()).open(player);
+            new WorldsBrowserMenu(player, OpenCreative.getPlanetsManager().getPlanets()).open(player);
         } else if (itemEquals(currentItem,OWN_WORLDS)) {
             new OwnWorldsBrowserMenu(player).open(player);
         } else if (!itemEquals(currentItem,DECORATION_ITEM) && Arrays.stream(featuredWorldsSlots).anyMatch(i -> i == event.getRawSlot())) {
@@ -124,7 +124,7 @@ public class RecommendedWorldsMenu extends AbstractMenu {
             if (worldID.isEmpty()) {
                 return;
             }
-            Planet planet = PlanetManager.getInstance().getPlanetByCustomID(worldID);
+            Planet planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(worldID);
             if (planet != null) {
                 player.closeInventory();
                 planet.connectPlayer(player);

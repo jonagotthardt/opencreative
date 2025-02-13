@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.indev.blocks.executors.player.PlayerEvent
 import ua.mcchickenstudio.opencreative.indev.blocks.executors.player.PlayerExecutor;
 
 public class PlayerConnectExecutor extends PlayerExecutor {
-    public PlayerConnectExecutor(@NotNull String id) {
+    public PlayerConnectExecutor() {
         super("join");
     }
 

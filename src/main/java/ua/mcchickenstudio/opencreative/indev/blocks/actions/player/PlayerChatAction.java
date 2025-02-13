@@ -27,7 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 
 public class PlayerChatAction extends PlayerActionBlock {
 
-    public PlayerChatAction(boolean hasContainer) {
+    public PlayerChatAction() {
         super("send_message");
     }
 

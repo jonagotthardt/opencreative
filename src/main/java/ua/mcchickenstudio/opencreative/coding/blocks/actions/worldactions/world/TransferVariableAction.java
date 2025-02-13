@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world;
 
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -25,7 +26,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldA
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.entity.Entity;
 
 public final class TransferVariableAction extends WorldAction {
@@ -37,7 +37,7 @@ public final class TransferVariableAction extends WorldAction {
     protected void execute(Entity entity) {
         if (!getArguments().pathExists("world") || !getArguments().pathExists("key") || !getArguments().pathExists("value")) return;
         String worldId = getArguments().getValue("world","0",this);
-        Planet planet = PlanetManager.getInstance().getPlanetById(worldId);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetById(worldId);
         if (planet == null) return;
         if (!planet.isLoaded()) return;
         if (!planet.isOwner(getPlanet().getOwner())) return;

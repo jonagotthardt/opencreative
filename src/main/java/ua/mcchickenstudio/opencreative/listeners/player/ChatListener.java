@@ -27,7 +27,6 @@ import ua.mcchickenstudio.opencreative.menus.world.browsers.WorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.world.settings.WorldSettingsPlayersMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.title.Title;
@@ -82,14 +81,14 @@ public final class ChatListener implements Listener {
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getChatCooldown(), CooldownUtils.CooldownType.WORLD_CHAT);
             String formatted = ChatColor.translateAlternateColorCodes('&',parsePAPI(player, OpenCreative.getPlugin().getConfig().getString("messages.world-chat")).replace("%player%",player.getName()).replace("%message%",message));
-            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             WorldChatEvent creativeEvent = new WorldChatEvent(player, message,formatted,player.getWorld(), planet);
             Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
                 creativeEvent.callEvent();
                 if (creativeEvent.isCancelled()) return;
                 String finalMessage = formatted;
                 if (planet != null) {
-                    DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                    DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                     if (devPlanet != null) {
                         // If player in dev world
                         for (Player p : devPlanet.getWorld().getPlayers()) {
@@ -299,7 +298,7 @@ public final class ChatListener implements Listener {
         if (confirmation.isEmpty()) return;
         if (!confirmation.containsKey(player)) return;
         PlayerConfirmation confirm = confirmation.get(player);
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         player.clearTitle();
         confirmation.remove(player);
         switch(confirm) {
@@ -333,7 +332,7 @@ public final class ChatListener implements Listener {
                             .replace("%max%",String.valueOf(OpenCreative.getSettings().getCustomIdMaxLength())));
                     return;
                 }
-                for (Planet searchablePlanet : PlanetManager.getInstance().getPlanets()) {
+                for (Planet searchablePlanet : OpenCreative.getPlanetsManager().getPlanets()) {
                     if (searchablePlanet.getInformation().getCustomID().equalsIgnoreCase(input)) {
                         player.sendMessage(getLocaleMessage("settings.world-id.taken"));
                         return;
@@ -370,7 +369,7 @@ public final class ChatListener implements Listener {
                 }.runTaskAsynchronously(OpenCreative.getPlugin());
             }
             case FIND_PLANETS_BY_NAME -> {
-                Set<Planet> foundPlanetsByName = PlanetManager.getInstance().getPlanetsByPlanetName(input);
+                Set<Planet> foundPlanetsByName = OpenCreative.getPlanetsManager().getPlanetsByPlanetName(input);
                 if (!foundPlanetsByName.isEmpty()) {
                     Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () -> new WorldsBrowserMenu(player, foundPlanetsByName).open(player));
                 } else {
@@ -378,7 +377,7 @@ public final class ChatListener implements Listener {
                 }
             }
             case FIND_PLANETS_BY_ID -> {
-                Set<Planet> foundPlanetsByID = PlanetManager.getInstance().getPlanetsByID(input);
+                Set<Planet> foundPlanetsByID = OpenCreative.getPlanetsManager().getPlanetsByID(input);
                 if (!foundPlanetsByID.isEmpty()) {
                     Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () -> new WorldsBrowserMenu(player, foundPlanetsByID).open(player));
                 } else {
@@ -386,7 +385,7 @@ public final class ChatListener implements Listener {
                 }
             }
             case FIND_PLANETS_BY_OWNER -> {
-                Set<Planet> foundPlanets = PlanetManager.getInstance().getPlanetsByOwner(input);
+                Set<Planet> foundPlanets = OpenCreative.getPlanetsManager().getPlanetsByOwner(input);
                 if (!foundPlanets.isEmpty()) {
                     Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () ->new WorldsBrowserMenu(player, foundPlanets).open(player));
                 } else {
@@ -406,7 +405,7 @@ public final class ChatListener implements Listener {
                             player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%", newOwner));
                             return;
                         }
-                        if (PlanetManager.getInstance().getPlayerPlanets(newOwnerPlayer).size() >= OpenCreative.getSettings().getGroups().getGroup(newOwnerPlayer).getWorldsLimit()) {
+                        if (OpenCreative.getPlanetsManager().getPlanetsByOwner(newOwnerPlayer).size() >= OpenCreative.getSettings().getGroups().getGroup(newOwnerPlayer).getWorldsLimit()) {
                             player.sendMessage(getLocaleMessage("world.players.transfer-ownership.limit").replace("%player%", newOwner));
                             return;
                         }
@@ -431,7 +430,7 @@ public final class ChatListener implements Listener {
                             player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%", player.getName()));
                             return;
                         }
-                        if (PlanetManager.getInstance().getPlayerPlanets(player).size() >= OpenCreative.getSettings().getGroups().getGroup(player).getWorldsLimit()) {
+                        if (OpenCreative.getPlanetsManager().getPlanetsByOwner(player).size() >= OpenCreative.getSettings().getGroups().getGroup(player).getWorldsLimit()) {
                             player.sendMessage(getLocaleMessage("world.players.transfer-ownership.limit").replace("%player%", player.getName()));
                             return;
                         }

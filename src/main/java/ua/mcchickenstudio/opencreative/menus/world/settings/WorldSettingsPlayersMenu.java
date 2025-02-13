@@ -18,10 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.menus.world.settings;
 
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menus.LegacyMenu;
 import ua.mcchickenstudio.opencreative.menus.buttons.RadioButton;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import org.bukkit.Bukkit;
@@ -54,7 +54,7 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
 
         Map<Integer, ItemStack> items = new HashMap<>();
 
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
 
         for (int slot : decorationSlots) {
             ItemStack decorationItem = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
@@ -117,7 +117,7 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
 
                     Player planetPlayer_ = Bukkit.getPlayer(planetPlayer);
                     if (planetPlayer_ != null) {
-                        if (PlanetManager.getInstance().getPlanetByPlayer(planetPlayer_) == planet) {
+                        if (OpenCreative.getPlanetsManager().getPlanetByPlayer(planetPlayer_) == planet) {
                             online = MessageUtils.getLocaleMessage("menus.world-settings-players.in-world");
                         }
                         if (planetPlayer_.isFlying()) fly = MessageUtils.getLocaleMessage("menus.world-settings-players.items.fly.choices.2");
@@ -210,7 +210,7 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
         String nickname = playersSelected.get(player);
         Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
-            if (PlanetManager.getInstance().getPlanetByPlayer(player) == planet) {
+            if (OpenCreative.getPlanetsManager().getPlanetByPlayer(player) == planet) {
                 ItemStack item = new ItemStack(Material.STRUCTURE_VOID);
                 ItemMeta meta = item.getItemMeta();
                 meta.setDisplayName(MessageUtils.getLocaleItemName("menus.world-settings-players.items.kick.name"));
@@ -243,7 +243,7 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
         String nickname = playersSelected.get(player);
         Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
-            if (PlanetManager.getInstance().getPlanetByPlayer(player) == planet) {
+            if (OpenCreative.getPlanetsManager().getPlanetByPlayer(player) == planet) {
 
                 List<Runnable> actions = new ArrayList<>();
                 actions.add(() -> {
@@ -375,7 +375,7 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
 
             Player planetPlayer_ = Bukkit.getPlayer(planetPlayer);
             if (planetPlayer_ != null) {
-                if (PlanetManager.getInstance().getPlanetByPlayer(planetPlayer_) == planet) {
+                if (OpenCreative.getPlanetsManager().getPlanetByPlayer(planetPlayer_) == planet) {
                     online = MessageUtils.getLocaleMessage("menus.world-settings-players.in-world");
                 }
                 if (planetPlayer_.isFlying()) fly = MessageUtils.getLocaleMessage("menus.world-settings-players.items.fly.choices.2");

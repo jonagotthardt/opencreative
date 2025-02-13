@@ -72,16 +72,6 @@ public abstract class ExecutorBlock extends CodingBlock {
     public void onSignClick(PlayerInteractEvent event) {
     }
 
-    @Override
-    public @Nullable CodingBlock deserialize(Map<String, Object> args) {
-        return null;
-    }
-
-    @Override
-    public @NotNull Map<String, Object> serialize() {
-        return Map.of();
-    }
-
     public abstract Class<? extends WorldEvent> getEventClass();
 
     @Override

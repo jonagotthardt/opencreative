@@ -19,6 +19,7 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
@@ -36,8 +37,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
-
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,7 +52,7 @@ public final class DeathListener implements Listener {
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getPlayer();
         event.deathMessage(null);
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet != null) {
             deathLocations.put(player, planet.getTerritory().getWorld().getSpawnLocation());
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.DEATH_MESSAGES) == 1) {

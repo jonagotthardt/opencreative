@@ -21,7 +21,6 @@ package ua.mcchickenstudio.opencreative.commands.minecraft;
 import org.bukkit.Registry;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -54,7 +53,7 @@ public class CommandPlaySound implements CommandExecutor, TabCompleter {
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (!player.hasPermission("opencreative.play-sound.bypass")) {
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet == null) {
                     player.sendMessage(getLocaleMessage("only-in-world"));
                     return true;
@@ -92,9 +91,9 @@ public class CommandPlaySound implements CommandExecutor, TabCompleter {
                     sender.sendMessage(getLocaleMessage("no-player-found"));
                     return true;
                 } else if (!sender.hasPermission("opencreative.play-sound.bypass")) {
-                    Planet targetPlanet = PlanetManager.getInstance().getPlanetByPlayer(target);
+                    Planet targetPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(target);
                     if (!player.hasPermission("opencreative.play-sound.bypass")) {
-                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                         if (planet == null || !planet.equals(targetPlanet)) {
                             player.sendMessage(getLocaleMessage("no-player-found"));
                             return true;

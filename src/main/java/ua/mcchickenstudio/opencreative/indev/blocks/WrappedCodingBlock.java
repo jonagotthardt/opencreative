@@ -18,7 +18,19 @@
 
 package ua.mcchickenstudio.opencreative.indev.blocks;
 
-public abstract class WrappedCodingBlock<T extends CodingBlock> {
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
+
+/**
+ * <h1>WrappedCodingBlock</h1>
+ * This class represents a coding metadata provider
+ * for coding block, for example: coordinates in coding world.
+ * @param <T> coding block type to store data.
+ */
+public abstract class WrappedCodingBlock<T extends CodingBlock> implements ConfigurationSerializable {
 
     protected final T codingBlock;
 
@@ -33,6 +45,15 @@ public abstract class WrappedCodingBlock<T extends CodingBlock> {
         this.z = z;
     }
 
+    @Override
+    public @NotNull Map<String, Object> serialize() {
+        return Map.of(
+                "category", codingBlock.getId(),
+                "location.x",x,
+                "location.y",y,
+                "location.z",z
+        );
+    }
 
     public T getBlock() {
         return codingBlock;

@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.listeners.entity;
 
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
@@ -36,8 +37,6 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
-
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.sendMessageOnce;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
@@ -48,7 +47,7 @@ public final class EntitySpawnListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEntitySpawn(EntitySpawnEvent event) {
         World world = event.getLocation().getWorld();
-        Planet planet = PlanetManager.getInstance().getPlanetByWorld(world);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(world);
         if (planet != null) {
             int limit = planet.getLimits().getEntitiesLimit();
             int count = planet.getTerritory().getWorld().getEntityCount();
@@ -76,7 +75,7 @@ public final class EntitySpawnListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEntityPlace(EntityPlaceEvent event) {
         World world = event.getBlock().getWorld();
-        Planet planet = PlanetManager.getInstance().getPlanetByWorld(world);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(world);
         if (planet != null) {
             int limit = planet.getLimits().getEntitiesLimit();
             if (world.getEntityCount() > limit) {
@@ -98,7 +97,7 @@ public final class EntitySpawnListener implements Listener {
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         World world = event.getEntity().getWorld();
         Entity entity = event.getEntity();
-        Planet planet = PlanetManager.getInstance().getPlanetByWorld(world);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(world);
         if (isEntityInDevPlanet(entity) && !(event.getEntity() instanceof Item)) {
             event.setCancelled(true);
         }
@@ -147,7 +146,7 @@ public final class EntitySpawnListener implements Listener {
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
         World world = event.getWorld();
-        Planet planet = PlanetManager.getInstance().getPlanetByWorld(world);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(world);
         if (planet != null && event.isNewChunk()) {
             if (world.getEntityCount() >= planet.getLimits().getEntitiesLimit() /2) {
                 for (Entity entity : event.getChunk().getEntities()) {

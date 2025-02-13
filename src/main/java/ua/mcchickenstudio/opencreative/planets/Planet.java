@@ -105,7 +105,7 @@ public class Planet {
         variables = new WorldVariables(this);
         experiments = new PlanetExperiments(this);
 
-        PlanetManager.getInstance().registerPlanet(this);
+        OpenCreative.getPlanetsManager().registerPlanet(this);
 
         new BukkitRunnable() {
             @Override
@@ -198,7 +198,7 @@ public class Planet {
                 }
                 EventRaiser.raiseWorldPlayEvent(this);
                 for (Player player : getPlayers()) {
-                    if (PlanetManager.getInstance().getDevPlanet(player) == null) {
+                    if (OpenCreative.getPlanetsManager().getDevPlanet(player) == null) {
                         EventRaiser.raiseJoinEvent(player);
                     }
                 }

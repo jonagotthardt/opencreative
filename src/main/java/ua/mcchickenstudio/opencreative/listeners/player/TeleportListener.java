@@ -19,8 +19,8 @@
 package ua.mcchickenstudio.opencreative.listeners.player;
 
 import io.papermc.paper.event.entity.EntityInsideBlockEvent;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -40,7 +40,7 @@ public final class TeleportListener implements Listener {
                 || event.getCause() == PlayerTeleportEvent.TeleportCause.NETHER_PORTAL) {
             event.setCancelled(true);
         }
-        Planet planet = PlanetManager.getInstance().getPlanetByWorld(event.getFrom().getWorld());
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getFrom().getWorld());
         if (planet != null) {
             if (event.getTo().getWorld().equals(event.getFrom().getWorld())) {
                 EventRaiser.raiseTeleportEvent(event.getPlayer(),event);

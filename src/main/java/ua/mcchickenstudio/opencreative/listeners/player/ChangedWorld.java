@@ -22,7 +22,6 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import ua.mcchickenstudio.opencreative.events.planet.PlanetDisconnectPlayerEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.planets.PlanetPlayer;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import org.bukkit.GameMode;
@@ -73,8 +72,8 @@ public final class ChangedWorld implements Listener {
         ChatListener.confirmation.remove(player);
         player.clearTitle();
 
-        Planet oldPlanet = PlanetManager.getInstance().getPlanetByWorld(oldWorld);
-        Planet newPlanet = PlanetManager.getInstance().getPlanetByWorld(newWorld);
+        Planet oldPlanet = OpenCreative.getPlanetsManager().getPlanetByWorld(oldWorld);
+        Planet newPlanet = OpenCreative.getPlanetsManager().getPlanetByWorld(newWorld);
 
         if (oldPlanet != null && oldPlanet == newPlanet) {
             if (isDevPlanet(oldWorld)) {
@@ -119,7 +118,7 @@ public final class ChangedWorld implements Listener {
                                     clearWorldModePermissions(p);
                                 }
                             }
-                            if (PlanetManager.getInstance().getDevPlanet(p) != null) {
+                            if (OpenCreative.getPlanetsManager().getDevPlanet(p) != null) {
                                 if (notTrustedDevelopers.contains(p.getName())) {
                                     p.setGameMode(GameMode.ADVENTURE);
                                     p.sendMessage(getLocaleMessage("world.dev-mode.cant-dev-when-offline"));

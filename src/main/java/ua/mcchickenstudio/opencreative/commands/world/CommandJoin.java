@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.commands.world;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -77,7 +76,7 @@ public class CommandJoin implements CommandExecutor, TabCompleter {
             return;
         }
 
-        if (foundPlanet.equals(PlanetManager.getInstance().getPlanetByPlayer(player))) {
+        if (foundPlanet.equals(OpenCreative.getPlanetsManager().getPlanetByPlayer(player))) {
             player.sendMessage(getLocaleMessage("same-world", player));
             return;
         }
@@ -86,9 +85,9 @@ public class CommandJoin implements CommandExecutor, TabCompleter {
     }
 
     protected Planet findPlanet(String planetId) {
-        if (PlanetManager.getInstance().getPlanets().isEmpty()) return null;
+        if (OpenCreative.getPlanetsManager().getPlanets().isEmpty()) return null;
 
-        for (Planet searchablePlanet : PlanetManager.getInstance().getPlanets()) {
+        for (Planet searchablePlanet : OpenCreative.getPlanetsManager().getPlanets()) {
             if (String.valueOf(searchablePlanet.getId()).equals(planetId) ||
                     searchablePlanet.getInformation().getCustomID().equalsIgnoreCase(planetId)) {
                 return searchablePlanet;
@@ -100,7 +99,7 @@ public class CommandJoin implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         if (args.length == 1) {
-            return PlanetManager.getInstance().getPlanets().stream()
+            return OpenCreative.getPlanetsManager().getPlanets().stream()
                     .map(planet -> planet.getInformation().getCustomID())
                     .toList();
         }

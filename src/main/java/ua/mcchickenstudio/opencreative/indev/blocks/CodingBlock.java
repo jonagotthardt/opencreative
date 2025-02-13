@@ -46,7 +46,7 @@ import ua.mcchickenstudio.opencreative.coding.CodingPackContent;
 
 import java.util.Map;
 
-public abstract class CodingBlock implements ConfigurationSerializable, CodingPackContent {
+public abstract class CodingBlock implements CodingPackContent {
 
     private final @NotNull String id;
     private final @NotNull Material mainBlock;
@@ -61,8 +61,6 @@ public abstract class CodingBlock implements ConfigurationSerializable, CodingPa
     }
 
     public abstract void onSignClick(PlayerInteractEvent event);
-    public abstract @Nullable CodingBlock deserialize(Map<String,Object> args);
-    public abstract @NotNull Map<String,Object> serialize();
 
     public final void placeBlocks(@NotNull Location mainLocation, @NotNull Location offLocation, @NotNull Location containerLocation, @NotNull Location signLocation, @NotNull Material containerMaterial, @NotNull Material signMaterial) {
         mainLocation.getBlock().setType(mainBlock);

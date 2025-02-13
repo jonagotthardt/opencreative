@@ -18,12 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.planets;
 
-import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetDeletionEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetRegisterEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
 import ua.mcchickenstudio.opencreative.menus.world.WorldMenu;
-import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.*;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
@@ -41,30 +40,23 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isPlanet;
 
-public class PlanetManager {
-
-    private static PlanetManager planetManager;
-
-    private PlanetManager() {}
-    public static PlanetManager getInstance() {
-        if (planetManager == null) {
-            planetManager = new PlanetManager();
-        }
-        return planetManager;
-    }
+public class Space implements PlanetsManager {
 
     private final Set<Planet> planets = new HashSet<>();
     private final Set<Planet> corruptedPlanets = new HashSet<>();
-
-    public Set<Planet> getPlanets() {
+    
+    @Override
+    public @NotNull Set<Planet> getPlanets() {
         return planets;
     }
 
-    public Set<Planet> getCorruptedPlanets() {
+    @Override
+    public @NotNull Set<Planet> getCorruptedPlanets() {
         return corruptedPlanets;
     }
 
-    public void registerPlanet(Planet planet) {
+    @Override
+    public void registerPlanet(@NotNull Planet planet) {
         if (planet.isCorrupted()) {
             corruptedPlanets.add(planet);
         } else {
@@ -73,26 +65,19 @@ public class PlanetManager {
         new PlanetRegisterEvent(planet).callEvent();
     }
 
-    /**
-     * Creates and loads a new planet for player with specified world generator.
-     * @param owner Owner of planet.
-     * @param id Id of planet.
-     * @param generator Generator of world.
-     */
-    public void createPlanet(Player owner, int id, WorldUtils.WorldGenerator generator) {
+    @Override
+    public void unregisterPlanet(@NotNull Planet planet) {
+        planets.remove(planet);
+        corruptedPlanets.remove(planet);
+    }
+
+    @Override
+    public void createPlanet(@NotNull Player owner, int id, WorldUtils.@NotNull WorldGenerator generator) {
         createPlanet(owner,id,generator, World.Environment.NORMAL,new Random().nextInt(),false);
     }
 
-    /**
-     * Creates and loads a new planet for player with specified world generator, environment, seed and generate sturctures option.
-     * @param owner Owner of planet.
-     * @param id Id of planet.
-     * @param generator Generator of world.
-     * @param environment Environment of world.
-     * @param seed Seed for generation.
-     * @param generateStructures Generate or not generate structures.
-     */
-    public void createPlanet(Player owner, int id, WorldUtils.WorldGenerator generator, World.Environment environment, long seed, boolean generateStructures) {
+    @Override
+    public void createPlanet(@NotNull Player owner, int id, WorldUtils.@NotNull WorldGenerator generator, World.@NotNull Environment environment, long seed, boolean generateStructures) {
         owner.showTitle(Title.title(
                 toComponent(getLocaleMessage("creating-world.title")), toComponent(getLocaleMessage("creating-world.subtitle")),
                 Title.Times.times(Duration.ofMillis(500), Duration.ofSeconds(30), Duration.ofSeconds(2))
@@ -110,27 +95,12 @@ public class PlanetManager {
 
     }
 
-    public void clearPlanets() {
-        planets.clear();
+    public @NotNull Set<Planet> getPlanetsByOwner(@NotNull Player player) {
+        return getPlanetsByOwner(player.getName());
     }
 
-    /**
-     Returns planets, these player owns.
-     **/
-    public List<Planet> getPlayerPlanets(Player player) {
-        List<Planet> playerPlanets = new ArrayList<>();
-        for (Planet planet : PlanetManager.getInstance().getPlanets()) {
-            if (planet.isOwner(player)) {
-                playerPlanets.add(planet);
-            }
-        }
-        return playerPlanets;
-    }
-
-    /**
-     Delete planet on player request. It teleports planet players to spawn, closes planet, unloads world and deletes world folder.
-     **/
-    public void deletePlanet(Planet planet, CommandSender player) {
+    @Override
+    public void deletePlanet(@NotNull Planet planet) {
         OpenCreative.getPlugin().getLogger().info("Deleting planet " + planet.getId());
         new PlanetDeletionEvent(planet).callEvent();
         try {
@@ -145,9 +115,7 @@ public class PlanetManager {
             if (!planetEvent.isCancelled()) {
                 planet.setSharing(Planet.Sharing.CLOSED);
             }
-            Sounds.WORLD_DELETION.play(player);
             planets.remove(planet);
-            Bukkit.getServer().getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> player.sendMessage(MessageUtils.getLocaleMessage("deleting-world.message")), 60);
             if (planet.isLoaded()) {
                 Bukkit.unloadWorld(planet.getWorldName(),false);
                 if (planet.getDevPlanet().isLoaded()) {
@@ -161,7 +129,8 @@ public class PlanetManager {
         }
     }
 
-    public List<Planet> getRecommendedPlanets() {
+    @Override
+    public @NotNull List<Planet> getRecommendedPlanets() {
         List<Planet> featuredPlanets = new ArrayList<>();
         Set<Integer> featuredIds = OpenCreative.getSettings().getRecommendedWorldsIDs();
         for (int id : featuredIds) {
@@ -173,11 +142,7 @@ public class PlanetManager {
         return featuredPlanets;
     }
 
-
-    /**
-     Returns planets that contains specified name.
-     **/
-    public Set<Planet> getPlanetsByPlanetName(String worldName) {
+    public @NotNull Set<Planet> getPlanetsByPlanetName(@NotNull String worldName) {
         Set<Planet> foundPlanets = new HashSet<>();
         for (Planet planet : planets) {
             if (planet.getInformation().getDisplayName().toLowerCase().contains(worldName.toLowerCase())) {
@@ -187,10 +152,8 @@ public class PlanetManager {
         return foundPlanets;
     }
 
-    /**
-     Returns planets that contains specified ID.
-     **/
-    public Set<Planet> getPlanetsByID(String worldID) {
+    @Override
+    public @NotNull Set<Planet> getPlanetsByID(@NotNull String worldID) {
         Set<Planet> foundPlanets = new HashSet<>();
         for (Planet planet : planets) {
             if (planet.getInformation().getCustomID().toLowerCase().contains(worldID.toLowerCase())) {
@@ -200,10 +163,8 @@ public class PlanetManager {
         return foundPlanets;
     }
 
-    /**
-     Returns planets that are owned by specified player.
-     **/
-    public Set<Planet> getPlanetsByOwner(String owner) {
+    @Override
+    public @NotNull Set<Planet> getPlanetsByOwner(@NotNull String owner) {
         Set<Planet> foundPlanets = new HashSet<>();
         for (Planet planet : planets) {
             if (planet.isOwner(owner)) {
@@ -213,23 +174,8 @@ public class PlanetManager {
         return foundPlanets;
     }
 
-    /**
-     Returns planets that has specified category.
-     **/
-    public Set<Planet> getPlanetsByCategory(PlanetInfo.Category category) {
-        Set<Planet> foundPlanets = new HashSet<>();
-        for (Planet planet : planets) {
-            if (planet.getInformation().getCategory() == category) {
-                foundPlanets.add(planet);
-            }
-        }
-        return foundPlanets;
-    }
-
-    /**
-     Returns planet where specified player in.
-     **/
-    public Planet getPlanetByPlayer(Player player) {
+    @Override
+    public Planet getPlanetByPlayer(@NotNull Player player) {
         World world = player.getWorld();
         if (!isPlanet(world)) return null;
         String id = world.getName()
@@ -243,16 +189,15 @@ public class PlanetManager {
         return null;
     }
 
-    /**
-     Returns developer planet where specified player in.
-     **/
-    public DevPlanet getDevPlanet(Player player) {
+    @Override
+    public DevPlanet getDevPlanet(@NotNull Player player) {
         if (!isDevPlanet(player.getWorld())) return null;
         Planet planet = getPlanetByPlayer(player);
         return planet != null ? planet.getDevPlanet() : null;
     }
 
-    public DevPlanet getDevPlanet(World world) {
+    @Override
+    public DevPlanet getDevPlanet(@NotNull World world) {
         if (!isDevPlanet(world)) return null;
         for (Planet planet : planets) {
             if (world.equals(planet.getDevPlanet().getWorld())) {
@@ -262,10 +207,8 @@ public class PlanetManager {
         return null;
     }
 
-    /**
-     Returns planet that has same specified world.
-     **/
-    public Planet getPlanetByWorld(World world) {
+    @Override
+    public Planet getPlanetByWorld(@NotNull World world) {
         if (!isPlanet(world) && !isDevPlanet(world)) return null;
         String id = world.getName()
                 .replace("./planets/planet","")
@@ -278,10 +221,8 @@ public class PlanetManager {
         return null;
     }
 
-    /**
-     Returns planet that has same specified world name (planet60, planet21)).
-     **/
-    public Planet getPlanetByWorldName(String worldName) {
+    @Override
+    public Planet getPlanetByWorldName(@NotNull String worldName) {
         for (Planet planet : planets) {
             if (planet.getWorldName().equalsIgnoreCase(worldName)) {
                 return planet;
@@ -290,19 +231,8 @@ public class PlanetManager {
         return null;
     }
 
-    public Planet getCorruptedPlanetById(String id) {
-        for (Planet planet : corruptedPlanets) {
-            if (id.equalsIgnoreCase(String.valueOf(planet.getId()))) {
-                return planet;
-            }
-        }
-        return null;
-    }
-
-    /**
-     Returns planet that has same specified ID.
-     **/
-    public Planet getPlanetById(String id) {
+    @Override
+    public Planet getPlanetById(@NotNull String id) {
         for (Planet planet : planets) {
             if (id.equalsIgnoreCase(String.valueOf(planet.getId()))) {
                 return planet;
@@ -311,10 +241,8 @@ public class PlanetManager {
         return null;
     }
 
-    /**
-     Returns planet that has same specified ID.
-     **/
-    public Planet getPlanetByCustomID(String customID) {
+    @Override
+    public Planet getPlanetByCustomID(@NotNull String customID) {
         for (Planet planet : planets) {
             if (planet.getInformation().getCustomID().equalsIgnoreCase(customID)) {
                 return planet;
@@ -323,4 +251,16 @@ public class PlanetManager {
         return null;
     }
 
+    @Override
+    public void init() {}
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public String getName() {
+        return "Planet Manager";
+    }
 }

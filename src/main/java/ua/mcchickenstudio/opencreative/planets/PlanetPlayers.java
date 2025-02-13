@@ -22,6 +22,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.ArrayList;
@@ -185,7 +186,7 @@ public class PlanetPlayers {
         if (owner == null) {
             return false;
         }
-        if (!planet.equals(PlanetManager.getInstance().getPlanetByPlayer(owner))) {
+        if (!planet.equals(OpenCreative.getPlanetsManager().getPlanetByPlayer(owner))) {
             return false;
         }
         for (String nickname : getDevelopersNotTrusted()) {
@@ -212,7 +213,7 @@ public class PlanetPlayers {
         if (owner == null) {
             return false;
         }
-        if (!planet.equals(PlanetManager.getInstance().getPlanetByPlayer(owner))) {
+        if (!planet.equals(OpenCreative.getPlanetsManager().getPlanetByPlayer(owner))) {
             return false;
         }
         for (String nickname : getBuildersNotTrusted()) {
@@ -226,7 +227,7 @@ public class PlanetPlayers {
     public void removeBuilder(String nickname) {
         Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
-            Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet.equals(playerPlanet)) {
                 if (player.getGameMode() == GameMode.CREATIVE) {
                     player.setGameMode(GameMode.ADVENTURE);
@@ -243,7 +244,7 @@ public class PlanetPlayers {
     public void removeDeveloper(String nickname) {
         Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
-            Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet.equals(playerPlanet)) {
                 if (player.getGameMode() == GameMode.CREATIVE) {
                     player.setGameMode(GameMode.ADVENTURE);
@@ -264,7 +265,7 @@ public class PlanetPlayers {
     public void addDeveloperGuest(String nickname) {
         Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
-            Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet.equals(playerPlanet)) {
                 player.sendMessage(getLocaleMessage("world.players.developers.player-guest").replace("%player%",player.getName()));
                 Sounds.WORLD_NOW_DEVELOPER_GUEST.play(player);
@@ -281,12 +282,12 @@ public class PlanetPlayers {
     public void addDeveloper(String nickname, boolean trusted) {
         Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
-            Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet.equals(playerPlanet)) {
                 if (!trusted) {
                     player.sendMessage(getLocaleMessage("world.players.developers.player").replace("%player%",player.getName()));
                     Sounds.WORLD_NOW_DEVELOPER.play(player);
-                    if (PlanetManager.getInstance().getDevPlanet(player) != null) {
+                    if (OpenCreative.getPlanetsManager().getDevPlanet(player) != null) {
                         player.setGameMode(GameMode.CREATIVE);
                     }
                 }
@@ -310,12 +311,12 @@ public class PlanetPlayers {
     public void addBuilder(String nickname, boolean trusted) {
         Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
-            Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet.equals(playerPlanet)) {
                 if (!trusted) {
                     player.sendMessage(getLocaleMessage("world.players.builders.player").replace("%player%",player.getName()));
                     Sounds.WORLD_NOW_BUILDER.play(player);
-                    if (PlanetManager.getInstance().getDevPlanet(player) == null) {
+                    if (OpenCreative.getPlanetsManager().getDevPlanet(player) == null) {
                         player.setGameMode(GameMode.CREATIVE);
                     }
                 }
@@ -345,7 +346,7 @@ public class PlanetPlayers {
         if (planet.isOwner(nickname)) return;
         Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
-            Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet.equals(playerPlanet)) {
                 teleportToLobby(player);
                 player.sendMessage(getLocaleMessage("world.players.black-list.player").replace("%player%",player.getName()));
@@ -359,7 +360,7 @@ public class PlanetPlayers {
     }
 
     public void kickPlayer(Player player) {
-        Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet.equals(playerPlanet)) {
             teleportToLobby(player);
             player.sendMessage(getLocaleMessage("world.players.kick.player").replace("%player%",player.getName()));

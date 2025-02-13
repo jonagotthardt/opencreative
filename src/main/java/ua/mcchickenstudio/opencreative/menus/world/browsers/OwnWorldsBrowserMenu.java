@@ -33,7 +33,6 @@ import ua.mcchickenstudio.opencreative.menus.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.world.WorldAccessMenu;
 import ua.mcchickenstudio.opencreative.menus.world.WorldGenerationMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 
@@ -60,7 +59,7 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
     public OwnWorldsBrowserMenu(Player player) {
         super(player,getLocaleMessage("menus.own-worlds.title",false),PlacementLayout.BOTTOM_NO_DECORATION,
                 new int[]{45,49},new int[]{45,46,47,51,52,53});
-        this.planets = new ArrayList<>(PlanetManager.getInstance().getPlayerPlanets(player));
+        this.planets = new ArrayList<>(OpenCreative.getPlanetsManager().getPlanetsByOwner(player));
         Comparator<Planet> sortByOnline = (planet1, planet2) -> Integer.compare(planet2.getOnline(), planet1.getOnline());
         this.planets.sort(sortByOnline);
     }
@@ -97,7 +96,7 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
     @Override
     protected void fillOtherItems() {
         setItem(45,RECOMMENDED);
-        int amount = PlanetManager.getInstance().getPlayerPlanets(getPlayer()).size();
+        int amount = OpenCreative.getPlanetsManager().getPlanetsByOwner(getPlayer()).size();
         int limit = OpenCreative.getSettings().getGroups().getGroup(getPlayer()).getWorldsLimit();
         if (amount >= limit) {
             setItem(47,createItem(Material.RED_STAINED_GLASS_PANE,1));
@@ -146,7 +145,7 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
         if (worldID.isEmpty()) {
             return;
         }
-        Planet planet = PlanetManager.getInstance().getPlanetById(worldID);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetById(worldID);
         if (planet != null) {
             new WorldAccessMenu(planet).open(getPlayer());
         }
@@ -194,7 +193,7 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
     }
 
     private boolean isLimitReached() {
-        int planetsAmount = PlanetManager.getInstance().getPlayerPlanets(getPlayer()).size();
+        int planetsAmount = OpenCreative.getPlanetsManager().getPlanetsByOwner(getPlayer()).size();
         int planetsLimit = OpenCreative.getSettings().getGroups().getGroup(getPlayer()).getWorldsLimit();
         return planetsAmount < planetsLimit;
     }

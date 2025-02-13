@@ -26,7 +26,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.settings.groups.Groups;
 
 import java.util.*;
@@ -190,7 +189,7 @@ public class Settings {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 Sounds.MAINTENANCE_START.play(onlinePlayer);
                 onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.started"));
-                for (Planet planet : PlanetManager.getInstance().getPlanets()) {
+                for (Planet planet : OpenCreative.getPlanetsManager().getPlanets()) {
                     if (planet.isLoaded()) {
                         for (Player player : planet.getPlayers()) {
                             teleportToLobby(player);

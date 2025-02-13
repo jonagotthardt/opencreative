@@ -20,10 +20,10 @@ package ua.mcchickenstudio.opencreative.menus.world.settings;
 
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetInfo;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import org.bukkit.entity.Player;
@@ -72,7 +72,7 @@ public class WorldSettingsCategoryMenu extends AbstractMenu {
     public void onClick(@NotNull InventoryClickEvent event) {
         event.setCancelled(true);
         if (!isPlayerClicked(event)) return;
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer((Player) event.getWhoClicked());
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer((Player) event.getWhoClicked());
         if (planet == null) return;
         if (!planet.isOwner(event.getWhoClicked().getName())) return;
         if (event.getCurrentItem() == null) return;

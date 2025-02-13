@@ -31,7 +31,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetInviteEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 
@@ -57,7 +56,7 @@ public class CommandAd extends CommandJoin {
 
         switch (args.length) {
             case 0:  // /ad
-                handlePlanetAdvertisement(player, PlanetManager.getInstance().getPlanetByPlayer(player));
+                handlePlanetAdvertisement(player, OpenCreative.getPlanetsManager().getPlanetByPlayer(player));
                 break;
             case 1:  // /ad [planet id]
                 handlePlayerConnection(player, args[0]);
@@ -177,7 +176,7 @@ public class CommandAd extends CommandJoin {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         return switch (args.length) {
-            case 1 -> PlanetManager.getInstance().getPlanets().stream()
+            case 1 -> OpenCreative.getPlanetsManager().getPlanets().stream()
                     .map(planet -> planet.getInformation().getCustomID())
                     .toList();
             case 2 -> Bukkit.getOnlinePlayers().stream()

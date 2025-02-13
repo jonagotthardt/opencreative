@@ -18,8 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events;
 
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
@@ -73,7 +73,7 @@ public abstract class WorldEvent extends Event  {
 
     public Planet getPlanet() {
         if (getWorld() == null) return null;
-        return PlanetManager.getInstance().getPlanetByWorld(getWorld());
+        return OpenCreative.getPlanetsManager().getPlanetByWorld(getWorld());
     }
 
     public static HandlerList getHandlerList() {

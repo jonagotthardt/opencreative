@@ -21,7 +21,6 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 import org.bukkit.GameMode;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -36,7 +35,7 @@ public final class GameModeListener implements Listener {
     public void onGameModeChange(PlayerGameModeChangeEvent event) {
         Player player = event.getPlayer();
         Bukkit.getScheduler().scheduleSyncDelayedTask(OpenCreative.getPlugin(),() -> {
-            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet == null) {
                 // If player is not in planet
                 if (isEntityInLobby(player) && event.getNewGameMode() == GameMode.CREATIVE && !player.hasPermission("opencreative.gamemode.change")) {

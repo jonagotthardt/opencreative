@@ -26,7 +26,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.Playe
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.menus.ConfirmationMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -47,7 +46,7 @@ public final class RequestPurchaseAction extends PlayerAction {
         String name = getArguments().getValue("name","Example",this);
         boolean save = getArguments().getValue("save",false,this);
         int price = getArguments().getValue("price",100,this);
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet == null) return;
         new ConfirmationMenu(
                 getLocaleMessage("menus.confirmation.request-money", false).replace("%name%", name),
@@ -59,7 +58,7 @@ public final class RequestPurchaseAction extends PlayerAction {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        Planet currentPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        Planet currentPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                         if (!planet.equals(currentPlanet) || !OpenCreative.getEconomy().isEnabled()) {
                             cancel();
                             return;

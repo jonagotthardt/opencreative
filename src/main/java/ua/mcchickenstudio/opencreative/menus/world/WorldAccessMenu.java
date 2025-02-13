@@ -35,7 +35,6 @@ import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menus.ConfirmationMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
@@ -94,7 +93,7 @@ public class WorldAccessMenu extends AbstractMenu implements WorldMenu {
         switch (getItemType(item)) {
             case "connect" -> {
                 player.closeInventory();
-                if (planet.equals(PlanetManager.getInstance().getPlanetByPlayer(player))) {
+                if (planet.equals(OpenCreative.getPlanetsManager().getPlanetByPlayer(player))) {
                     player.sendMessage(getLocaleMessage("same-world", player));
                     Sounds.PLAYER_FAIL.play(player);
                     return;
@@ -208,7 +207,7 @@ public class WorldAccessMenu extends AbstractMenu implements WorldMenu {
                                     @Override
                                     public void run() {
                                         player.closeInventory();
-                                        if (!PlanetManager.getInstance().getPlanets().contains(planet)) {
+                                        if (!OpenCreative.getPlanetsManager().getPlanets().contains(planet)) {
                                             cancel();
                                             return;
                                         }
@@ -216,7 +215,9 @@ public class WorldAccessMenu extends AbstractMenu implements WorldMenu {
                                             cancel();
                                             return;
                                         }
-                                        PlanetManager.getInstance().deletePlanet(planet,player);
+                                        Sounds.WORLD_DELETION.play(player);
+                                        OpenCreative.getPlanetsManager().deletePlanet(planet);
+                                        Bukkit.getServer().getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> player.sendMessage(MessageUtils.getLocaleMessage("deleting-world.message")), 60);
                                     }
                                 }).open(player), 5L);
 

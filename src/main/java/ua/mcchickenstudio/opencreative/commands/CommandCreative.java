@@ -28,7 +28,6 @@ import ua.mcchickenstudio.opencreative.menus.world.browsers.WorldsPickerMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 import net.kyori.adventure.text.Component;
@@ -111,7 +110,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return true;
                     }
-                    Planet planet = PlanetManager.getInstance().getPlanetByWorldName("./planets/planet" + args[1]);
+                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1]);
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
                         return true;
@@ -132,13 +131,13 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return true;
                     }
-                    Planet planet = PlanetManager.getInstance().getPlanetByWorldName("./planets/planet" + args[1]);
+                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1]);
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
                         return true;
                     }
                     OpenCreative.getPlugin().getLogger().info("Deleting a world " + args[1] + ", please wait...");
-                    PlanetManager.getInstance().deletePlanet(planet,sender);
+                    OpenCreative.getPlanetsManager().deletePlanet(planet);
                 }
                 case "moderate", "moderation" -> {
                     if (player == null) return true;
@@ -148,13 +147,13 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                     Planet planet;
                     if (args.length == 1) {
-                        planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                         if (planet == null) {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
                             return true;
                         }
                     } else {
-                        planet = PlanetManager.getInstance().getPlanetById(args[1]);
+                        planet = OpenCreative.getPlanetsManager().getPlanetById(args[1]);
                     }
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
@@ -171,7 +170,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return true;
                     }
-                    Planet planet = PlanetManager.getInstance().getPlanetByWorldName("./planets/planet" + args[1].replace("dev",""));
+                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1].replace("dev",""));
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
                         return true;
@@ -195,7 +194,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return true;
                     }
-                    Planet planet = PlanetManager.getInstance().getPlanetByWorldName("./planets/planet" + args[1].replace("dev",""));
+                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1].replace("dev",""));
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
                         return true;
@@ -404,7 +403,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return true;
                     }
-                    Planet planet = PlanetManager.getInstance().getPlanetByWorldName("./planets/planet" + args[1]);
+                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1]);
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
                         return true;
@@ -446,7 +445,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     if (months < 1) months = 1;
                     long currentTime = System.currentTimeMillis();
                     List<Planet> deprecatedWorlds = new ArrayList<>();
-                    for (Planet planet : PlanetManager.getInstance().getPlanets()) {
+                    for (Planet planet : OpenCreative.getPlanetsManager().getPlanets()) {
                         long monthsInMillis = 2592000000L*months;
                         if (currentTime- planet.getCreationTime() > monthsInMillis) {
                             OfflinePlayer planetOwner = Bukkit.getOfflinePlayer(planet.getOwner());
@@ -474,7 +473,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                             sender.sendMessage(getLocaleMessage("no-perms"));
                             return true;
                         }
-                        Set<Planet> corruptedPlanets = PlanetManager.getInstance().getCorruptedPlanets();
+                        Set<Planet> corruptedPlanets = OpenCreative.getPlanetsManager().getCorruptedPlanets();
                         sender.sendMessage(getLocaleMessage("creative.corrupted-worlds.list")
                                 .replace("%amount%",String.valueOf(corruptedPlanets.size())));
                         String worldMessage = getLocaleMessage("creative.corrupted-worlds.world");
@@ -496,7 +495,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     } catch (NumberFormatException ignored) {}
                     if (id < 0) return true;
                     Planet foundPlanet = null;
-                    for (Planet planet : PlanetManager.getInstance().getCorruptedPlanets()) {
+                    for (Planet planet : OpenCreative.getPlanetsManager().getCorruptedPlanets()) {
                         if (planet.getId() == id) {
                             foundPlanet = planet;
                             break;
@@ -526,9 +525,9 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                             if (foundPlanet.getCreationTime() == 0) setPlanetConfigParameter(foundPlanet,"creation-time",System.currentTimeMillis());
                             if (foundPlanet.getLastActivityTime() == 0) setPlanetConfigParameter(foundPlanet,"last-activity-time",System.currentTimeMillis());
                             foundPlanet.setOwner(args[3]);
-                            PlanetManager.getInstance().getCorruptedPlanets().remove(foundPlanet);
+                            OpenCreative.getPlanetsManager().getCorruptedPlanets().remove(foundPlanet);
                             Planet planet = new Planet(foundPlanet.getId());
-                            PlanetManager.getInstance().registerPlanet(planet);
+                            OpenCreative.getPlanetsManager().registerPlanet(planet);
                         }
                     }
                 }
@@ -550,7 +549,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                     if (player == null) return true;
                     if (args.length == 1) return true;
-                    DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                    DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                     if (devPlanet == null) {
                         player.sendMessage("only dev planet");
                         return true;
@@ -576,7 +575,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                     if (player == null) return true;
                     player.sendMessage("Test of worlds downloader");
-                    WorldsBrowserMenu menu = new WorldsPickerMenu(player, new HashSet<>(PlanetManager.getInstance().getPlanets().stream().filter(planet -> planet.getInformation().isDownloadable()).toList()));
+                    WorldsBrowserMenu menu = new WorldsPickerMenu(player, new HashSet<>(OpenCreative.getPlanetsManager().getPlanets().stream().filter(planet -> planet.getInformation().isDownloadable()).toList()));
                     menu.open(player);
                 }
                 case "template" -> {
@@ -594,7 +593,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     int id = WorldUtils.generateWorldID();
                     File world = new File(Bukkit.getWorldContainer().getPath()+File.separator+"planets"+File.separator+"planet"+id+File.separator);
                     FileUtils.copyFilesToDirectory(template,world);
-                    PlanetManager.getInstance().createPlanet(player, id, WorldUtils.WorldGenerator.FLAT);
+                    OpenCreative.getPlanetsManager().createPlanet(player, id, WorldUtils.WorldGenerator.FLAT);
                 }
                 default -> {
                     String copyright = OpenCreative.getPlugin().getConfig().getString("messages.version","\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2025\n ");
@@ -653,9 +652,9 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");
             } else if ("load".equalsIgnoreCase(args[0]) || "unload".equalsIgnoreCase(args[0]) || "moderation".equalsIgnoreCase(args[0])) {
-                tabCompleter.addAll(PlanetManager.getInstance().getPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());
+                tabCompleter.addAll(OpenCreative.getPlanetsManager().getPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());
             } else if ("corrupted".equalsIgnoreCase(args[0])) {
-                tabCompleter.addAll(PlanetManager.getInstance().getCorruptedPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());
+                tabCompleter.addAll(OpenCreative.getPlanetsManager().getCorruptedPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());
             } else if ("locale".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("en");
                 tabCompleter.add("ru");

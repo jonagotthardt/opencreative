@@ -18,9 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -42,7 +42,7 @@ public final class PlayerRespawn implements Listener {
         event.setRespawnLocation(deathLocation);
         Sounds.PLAYER_RESPAWN.play(event.getPlayer());
         DeathListener.deathLocations.remove(event.getPlayer());
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) {
             EventRaiser.raisePlayerRespawnEvent(event.getPlayer(),event);
             if (planet.isOwner(event.getPlayer())) {
@@ -56,7 +56,7 @@ public final class PlayerRespawn implements Listener {
 
     @EventHandler
     public void onTotemUsing(EntityResurrectEvent event) {
-        Planet planet = PlanetManager.getInstance().getPlanetByWorld((event.getEntity().getWorld()));
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld((event.getEntity().getWorld()));
         if (planet != null) EventRaiser.raisePlayerTotemRespawnEvent(event.getEntity(),event);
 
     }

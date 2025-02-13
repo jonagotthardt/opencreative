@@ -18,13 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.*;
@@ -48,8 +48,8 @@ public final class PlaceBlockListener implements Listener {
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
 
         if (devPlanet != null) {
 
@@ -173,7 +173,7 @@ public final class PlaceBlockListener implements Listener {
     }
 
     public static boolean move(Location location, BlockFace face) {
-        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(location.getWorld());
+        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(location.getWorld());
         if (devPlanet == null) return false;
         DevPlatform platform = devPlanet.getPlatformInLocation(location);
         if (platform == null) return false;
@@ -236,7 +236,7 @@ public final class PlaceBlockListener implements Listener {
         if (oldContainerBlock.getState() instanceof InventoryHolder container) {
             newContainerBlock.setType(oldContainerBlock.getType());
             newContainerBlock.setBlockData(oldContainerBlock.getBlockData());
-            DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(oldContainerBlock.getWorld());
+            DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(oldContainerBlock.getWorld());
             if (devPlanet != null) {
                 Layout layout = devPlanet.getOpenedMenu(oldContainerBlock.getLocation());
                 if (layout != null) {

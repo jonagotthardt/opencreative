@@ -33,7 +33,6 @@ import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 
@@ -61,7 +60,7 @@ public class CommandValue implements CommandExecutor, TabCompleter {
             return true;
         }
         setCooldown(player,OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
-        DevPlanet planet = PlanetManager.getInstance().getDevPlanet(player);
+        DevPlanet planet = OpenCreative.getPlanetsManager().getDevPlanet(player);
         if (planet == null) {
             player.sendMessage(getLocaleMessage("only-in-world"));
             return true;
@@ -170,7 +169,7 @@ public class CommandValue implements CommandExecutor, TabCompleter {
         if (!(sender instanceof Player player)) {
             return null;
         }
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet == null) return null;
         if (!planet.getWorldPlayers().canDevelop(player)) return null;
         List<String> completer = new ArrayList<>();

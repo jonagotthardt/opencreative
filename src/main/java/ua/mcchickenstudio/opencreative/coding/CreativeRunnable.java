@@ -21,7 +21,6 @@ package ua.mcchickenstudio.opencreative.coding;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -66,12 +65,12 @@ public abstract class CreativeRunnable {
                             currentPlayers.remove(player);
                             continue;
                         }
-                        Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                         if (!planet.equals(playerPlanet)) {
                             currentPlayers.remove(player);
                             continue;
                         }
-                        DevPlanet playerDevPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        DevPlanet playerDevPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (playerDevPlanet != null) {
                             currentPlayers.remove(player);
                             continue;
@@ -105,12 +104,12 @@ public abstract class CreativeRunnable {
                             currentPlayers.remove(player);
                             continue;
                         }
-                        Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                         if (!planet.equals(playerPlanet)) {
                             currentPlayers.remove(player);
                             continue;
                         }
-                        DevPlanet playerDevPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                        DevPlanet playerDevPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (playerDevPlanet != null) {
                             currentPlayers.remove(player);
                             continue;

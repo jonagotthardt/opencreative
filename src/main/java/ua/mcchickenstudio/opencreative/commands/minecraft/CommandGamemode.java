@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.commands.minecraft;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -61,7 +60,7 @@ public class CommandGamemode implements CommandExecutor, TabCompleter {
              * Checking is player owner, builder or developer of world.
              * If not, he can't change his game mode.
              */
-            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
                 return true;
@@ -74,7 +73,7 @@ public class CommandGamemode implements CommandExecutor, TabCompleter {
              * Players should not change game mode in developer world,
              * because it's work depends on game mode.
              */
-            if (PlanetManager.getInstance().getDevPlanet(player) != null) {
+            if (OpenCreative.getPlanetsManager().getDevPlanet(player) != null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
                 return true;
             }
@@ -124,14 +123,14 @@ public class CommandGamemode implements CommandExecutor, TabCompleter {
                      * If players' world is not same as sender's world game mode
                      * will be not changed.
                      */
-                    Planet modePlanet = PlanetManager.getInstance().getPlanetByPlayer(modePlayer);
+                    Planet modePlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(modePlayer);
                     if (!player.hasPermission("opencreative.game-mode.bypass")) {
-                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                         if (planet == null || !planet.equals(modePlanet)) {
                             player.sendMessage(getLocaleMessage("no-player-found"));
                             return true;
                         }
-                        if (PlanetManager.getInstance().getDevPlanet(modePlayer) != null) {
+                        if (OpenCreative.getPlanetsManager().getDevPlanet(modePlayer) != null) {
                             player.sendMessage(getLocaleMessage("only-in-world"));
                             return true;
                         }

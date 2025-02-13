@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.listeners.world;
 
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.*;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
@@ -35,7 +36,7 @@ public final class BlockChangeListener implements Listener {
     @EventHandler
     public void onBlockChanged(BlockFadeEvent event) {
         World world = event.getBlock().getWorld();
-        Planet planet = PlanetManager.getInstance().getPlanetByWorld(world);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(world);
         if (planet != null) {
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_CHANGING) == 2) {
                 event.setCancelled(true);
@@ -47,7 +48,7 @@ public final class BlockChangeListener implements Listener {
     public void onBlockChanged(BlockFormEvent event) {
         World world = event.getBlock().getWorld();
         if (isDevPlanet(world)) {
-            DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(world);
+            DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(world);
             if (devPlanet != null) {
                 DevPlatform platform = devPlanet.getPlatformInLocation(event.getBlock().getLocation());
                 if (platform == null) return;
@@ -56,7 +57,7 @@ public final class BlockChangeListener implements Listener {
                 }
             }
         } else {
-            Planet planet = PlanetManager.getInstance().getPlanetByWorld(world);
+            Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(world);
             if (planet != null) {
                 if (planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_CHANGING) == 2) {
                     event.setCancelled(true);
@@ -70,7 +71,7 @@ public final class BlockChangeListener implements Listener {
     @EventHandler
     public void onEntityExplosion(EntityExplodeEvent event) {
         World world = event.getLocation().getWorld();
-        Planet planet = PlanetManager.getInstance().getPlanetByWorld(world);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(world);
         if (planet != null) {
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_EXPLOSION) == 2) {
                 event.blockList().clear();
@@ -84,7 +85,7 @@ public final class BlockChangeListener implements Listener {
     @EventHandler
     public void onBlockExplosion(BlockExplodeEvent event) {
         World world = event.getBlock().getLocation().getWorld();
-        Planet planet = PlanetManager.getInstance().getPlanetByWorld(world);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(world);
         if (planet != null) {
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_EXPLOSION) == 2) {
                 event.blockList().clear();

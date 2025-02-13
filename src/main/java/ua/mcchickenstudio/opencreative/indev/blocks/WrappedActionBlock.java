@@ -25,6 +25,17 @@ import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 
+/**
+ * <h1>WrappedActionBlock</h1>
+ * This class represents an action metadata provider
+ * for any action block, like {@link ua.mcchickenstudio.opencreative.indev.blocks.actions.ActionBlock ActionBlock},
+ * {@link ua.mcchickenstudio.opencreative.indev.blocks.multiactions.MultiActionBlock MultiActionBlock},
+ * {@link ua.mcchickenstudio.opencreative.indev.blocks.conditions.ConditionBlock ConditionBlock}.
+ * It stores {@link WrappedActionBlock#target target}, {@link WrappedActionBlock#arguments arguments} and
+ * coding block coordinates in developers world from {@link WrappedCodingBlock}.
+ * @see WrappedActionBlock#execute(Entity, ActionsHandler) 
+ * @param <T>
+ */
 public abstract class WrappedActionBlock<T extends CodingBlock> extends WrappedCodingBlock<T> {
 
     protected final @NotNull Target target;

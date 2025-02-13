@@ -19,11 +19,11 @@
 package ua.mcchickenstudio.opencreative.menus.world.settings;
 
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menus.buttons.RadioButton;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import org.bukkit.GameRule;
@@ -234,7 +234,7 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
 
     @Override
     public void fillItems(Player player) {
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         setItem(46,BACK_ITEM);
         if (planet == null) return;
         if (!planet.isOwner(player.getName())) return;
@@ -263,7 +263,7 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
         if (event.getCurrentItem() == null) return;
         if (event.getCurrentItem().getType().isAir()) return;
 
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer((Player) event.getWhoClicked());
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer((Player) event.getWhoClicked());
         if (event.getCurrentItem().getType() == Material.SPECTRAL_ARROW) {
             new WorldSettingsMenu(planet,(Player) event.getWhoClicked()).open((Player) event.getWhoClicked());
         } else if (event.getCurrentItem().getType() != Material.AIR) {

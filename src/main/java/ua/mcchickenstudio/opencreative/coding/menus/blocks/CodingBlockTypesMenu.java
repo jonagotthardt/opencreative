@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.menus.blocks;
 
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
@@ -26,7 +27,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.menus.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -111,7 +111,7 @@ public abstract class CodingBlockTypesMenu extends ListBrowserMenu<Object> {
         event.setCancelled(true);
         if (item == null) return;
         if (item.getItemMeta() == null) return;
-        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(getPlayer());
+        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(getPlayer());
         Block codingBlock = signLocation.getBlock().getRelative(BlockFace.NORTH);
         if (signLocation.getWorld().getName().contains("dev") && devPlanet != null) {
             String typeString = getPersistentData(item,getCodingValueKey());

@@ -24,9 +24,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menus.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.ArrayList;
@@ -97,7 +97,7 @@ public class ModulesBrowserMenu extends ListBrowserMenu<Module> {
         }
         Module module = ModuleManager.getInstance().getModuleById(id);
         if (module == null) return;
-        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(getPlayer());
+        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(getPlayer());
         if (devPlanet == null) {
             Sounds.PLAYER_FAIL.play(event.getWhoClicked());
             return;

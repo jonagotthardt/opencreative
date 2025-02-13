@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.commands.minecraft;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
@@ -59,7 +58,7 @@ public class CommandTeleport implements CommandExecutor {
              * Checking is player owner, builder or developer of world.
              * If not, he can't teleport.
              */
-            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
                 return true;
@@ -72,7 +71,7 @@ public class CommandTeleport implements CommandExecutor {
              * Players should not teleport in developer world,
              * because it's work depends on game mode.
              */
-            if (PlanetManager.getInstance().getDevPlanet(player) != null) {
+            if (OpenCreative.getPlanetsManager().getDevPlanet(player) != null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
                 return true;
             }
@@ -86,14 +85,14 @@ public class CommandTeleport implements CommandExecutor {
                 player.sendMessage(getLocaleMessage("no-player-found"));
                 return true;
             }
-            Planet teleportPlanet = PlanetManager.getInstance().getPlanetByPlayer(teleportToPlayer);
+            Planet teleportPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(teleportToPlayer);
             if (!player.hasPermission("opencreative.teleport.bypass")) {
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet == null || !planet.equals(teleportPlanet)) {
                     player.sendMessage(getLocaleMessage("no-player-found"));
                     return true;
                 }
-                if (PlanetManager.getInstance().getDevPlanet(teleportToPlayer) != null) {
+                if (OpenCreative.getPlanetsManager().getDevPlanet(teleportToPlayer) != null) {
                     player.sendMessage(getLocaleMessage("only-in-world"));
                     return true;
                 }
@@ -103,7 +102,7 @@ public class CommandTeleport implements CommandExecutor {
                 if (!player.getWorld().equals(teleportToPlayer.getWorld())) {
                     clearPlayer(player);
                 }
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet == null || !planet.equals(teleportPlanet)) {
                     teleportPlanet.connectPlayer(player);
                 } else {
@@ -130,15 +129,15 @@ public class CommandTeleport implements CommandExecutor {
                 player.sendMessage(getLocaleMessage("no-player-found"));
                 return true;
             }
-            Planet firstPlanet = PlanetManager.getInstance().getPlanetByPlayer(firstPlayer);
-            Planet secondPlanet = PlanetManager.getInstance().getPlanetByPlayer(secondPlayer);
+            Planet firstPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(firstPlayer);
+            Planet secondPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(secondPlayer);
             if (!player.hasPermission("opencreative.teleport.others-bypass")) {
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet == null || !planet.equals(firstPlanet) || !planet.equals(secondPlanet) || !firstPlanet.equals(secondPlanet)) {
                     player.sendMessage(getLocaleMessage("no-player-found"));
                     return true;
                 }
-                if (PlanetManager.getInstance().getDevPlanet(firstPlayer) != null || PlanetManager.getInstance().getDevPlanet(secondPlayer) != null) {
+                if (OpenCreative.getPlanetsManager().getDevPlanet(firstPlayer) != null || OpenCreative.getPlanetsManager().getDevPlanet(secondPlayer) != null) {
                     player.sendMessage(getLocaleMessage("only-in-world"));
                     return true;
                 }

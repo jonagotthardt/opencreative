@@ -51,6 +51,8 @@ import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
 import ua.mcchickenstudio.opencreative.managers.updater.HangarUpdater;
 import ua.mcchickenstudio.opencreative.managers.updater.Updater;
 import ua.mcchickenstudio.opencreative.menus.Menus;
+import ua.mcchickenstudio.opencreative.planets.Space;
+import ua.mcchickenstudio.opencreative.planets.PlanetsManager;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
@@ -81,6 +83,7 @@ public final class OpenCreative extends JavaPlugin {
     private static Economy economy;
     private static Updater updater;
     private static PacketManager packet;
+    private static PlanetsManager space;
 
     private static final String version = "5.5.0";
     private static final String codename = "Well, it's possible";
@@ -120,6 +123,8 @@ public final class OpenCreative extends JavaPlugin {
         registerEvents();
         //Ticker.runTicker();
         saveDefaultConfig();
+
+        space = new Space();
         settings = new Settings();
         settings.load(getConfig());
 
@@ -307,6 +312,25 @@ public final class OpenCreative extends JavaPlugin {
      */
     public static PacketManager getPacketManager() {
         return packet;
+    }
+
+    /**
+     * Sets custom planets manager.
+     * @param planetsManager planets manager.
+     */
+    @SuppressWarnings("unused")
+    public static void setPlanetsManager(PlanetsManager planetsManager) {
+        getPlugin().getLogger().info("Now using planets manager: " + planetsManager.getName());
+        OpenCreative.space = planetsManager;
+    }
+
+    /**
+     * Gets planets manager, that stores planets in base
+     * and has methods to create, find and delete them.
+     * @return planets manager.
+     */
+    public static PlanetsManager getPlanetsManager() {
+        return space;
     }
 
     /**

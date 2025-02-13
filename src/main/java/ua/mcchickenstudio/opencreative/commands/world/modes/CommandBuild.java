@@ -21,7 +21,6 @@ package ua.mcchickenstudio.opencreative.commands.world.modes;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -50,7 +49,7 @@ public class CommandBuild implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
-            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
                 return true;
@@ -70,7 +69,7 @@ public class CommandBuild implements CommandExecutor {
                                 sender.sendMessage(getLocaleMessage("world.build-mode.cant-build-when-offline"));
                                 return true;
                             }
-                            Planet ownerPlanet = PlanetManager.getInstance().getPlanetByPlayer(planetOwner);
+                            Planet ownerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(planetOwner);
                             if (!(ownerPlanet == planet)) {
                                 sender.sendMessage(getLocaleMessage("world.build-mode.cant-build-when-offline"));
                                 return true;
@@ -109,7 +108,7 @@ public class CommandBuild implements CommandExecutor {
                                 sender.sendMessage(getLocaleMessage("world.build-mode.cant-build-when-offline"));
                                 return true;
                             }
-                            Planet ownerPlanet = PlanetManager.getInstance().getPlanetByPlayer(planetOwner);
+                            Planet ownerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(planetOwner);
                             if (!(ownerPlanet == planet)) {
                                 sender.sendMessage(getLocaleMessage("world.build-mode.cant-build-when-offline"));
                                 return true;
@@ -164,7 +163,7 @@ public class CommandBuild implements CommandExecutor {
                  * listed in builders.
                  */
                 if (onlinePlayer != null) {
-                    Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(onlinePlayer);
+                    Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(onlinePlayer);
                     if (planet.equals(playerPlanet)) {
                         sender.sendMessage(getLocaleMessage("world.players.builders.added").replace("%player%", onlinePlayer.getName()));
                         planet.getWorldPlayers().addBuilder(onlinePlayer.getName(),false);

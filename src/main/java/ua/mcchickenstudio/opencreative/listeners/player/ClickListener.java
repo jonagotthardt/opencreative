@@ -52,7 +52,6 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.spawnGlowingBloc
 
 public final class ClickListener implements Listener {
 
-    final PlanetManager planetManager = PlanetManager.getInstance();
     @EventHandler
     public void onCraft(CraftItemEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) return;
@@ -68,7 +67,7 @@ public final class ClickListener implements Listener {
     public void click(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
 
-        Planet planet1 = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet planet1 = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet1 != null) {
             if (event.getCurrentItem() != null) {
                 EventRaiser.raiseItemClickEvent((Player) event.getWhoClicked(), event);
@@ -84,7 +83,7 @@ public final class ClickListener implements Listener {
 
            if (event.getInventory().getHolder() instanceof WorldSettingsPlayersMenu) {
             event.setCancelled(true);
-            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
 
             String selectedPlayer = WorldSettingsPlayersMenu.playersSelected.get(player);
 
@@ -119,7 +118,7 @@ public final class ClickListener implements Listener {
                     player.sendMessage(getLocaleMessage("world.players.kick.kicked").replace("%player%", selectedPlayer));
                     Player planetPlayer = Bukkit.getPlayer(selectedPlayer);
                     if (planetPlayer != null) {
-                        if (planetManager.getPlanetByPlayer(planetPlayer) == planet) {
+                        if (OpenCreative.getPlanetsManager().getPlanetByPlayer(planetPlayer) == planet) {
                             planet.getWorldPlayers().kickPlayer(planetPlayer);
                         }
                     }
@@ -143,7 +142,7 @@ public final class ClickListener implements Listener {
                         player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%", newOwner));
                         return;
                     }
-                    if (PlanetManager.getInstance().getPlayerPlanets(Bukkit.getPlayer(newOwner)).size() >= OpenCreative.getSettings().getGroups().getGroup(Bukkit.getPlayer(newOwner)).getWorldsLimit()) {
+                    if (OpenCreative.getPlanetsManager().getPlanetsByOwner(Bukkit.getPlayer(newOwner)).size() >= OpenCreative.getSettings().getGroups().getGroup(Bukkit.getPlayer(newOwner)).getWorldsLimit()) {
                         player.sendMessage(getLocaleMessage("world.players.transfer-ownership.limit").replace("%player%", newOwner));
                         return;
                     }
@@ -165,7 +164,7 @@ public final class ClickListener implements Listener {
             }
         }
 
-        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
         if (devPlanet == null) return;
         if (player.getGameMode() == GameMode.ADVENTURE) {
             event.setCancelled(true);
@@ -185,21 +184,21 @@ public final class ClickListener implements Listener {
 
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent event) {
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer((Player) event.getPlayer());
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer((Player) event.getPlayer());
         if (planet != null) EventRaiser.raiseOpenInventoryEvent((Player) event.getPlayer(),event);
     }
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer((Player) event.getPlayer());
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer((Player) event.getPlayer());
         if (planet != null) EventRaiser.raiseCloseInventoryEvent((Player) event.getPlayer(),event);
     }
 
     @EventHandler
     public void onSwap(PlayerSwapHandItemsEvent event) {
         Player player = event.getPlayer();
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
         ItemStack currentItem = event.getOffHandItem();
         if (devPlanet != null) {
             if (currentItem.getType() == Material.PAPER) {
@@ -274,25 +273,25 @@ public final class ClickListener implements Listener {
 
     @EventHandler
     public void onBookWrite(PlayerEditBookEvent event) {
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) EventRaiser.raiseBookWriteEvent(event.getPlayer(),event);
     }
 
     @EventHandler
     public void onItemConsume(PlayerItemConsumeEvent event) {
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) EventRaiser.raiseItemConsumeEvent(event.getPlayer(),event);
     }
 
     @EventHandler
     public void onItemBreak(PlayerItemBreakEvent event) {
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) EventRaiser.raiseItemBreakEvent(event.getPlayer(),event);
     }
 
     @EventHandler
     public void onSlotChange(PlayerItemHeldEvent event) {
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) EventRaiser.raiseSlotChangeEvent(event.getPlayer(),event);
     }
 

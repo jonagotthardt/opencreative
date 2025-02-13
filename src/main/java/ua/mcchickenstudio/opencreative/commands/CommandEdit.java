@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.commands;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -61,7 +60,7 @@ public class CommandEdit implements CommandExecutor, TabCompleter {
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (!player.hasPermission("opencreative.edit.bypass")) {
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet == null) {
                     player.sendMessage(getLocaleMessage("only-in-world"));
                     return true;

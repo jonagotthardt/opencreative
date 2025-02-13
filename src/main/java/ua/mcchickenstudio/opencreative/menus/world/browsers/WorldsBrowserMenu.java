@@ -20,11 +20,11 @@ package ua.mcchickenstudio.opencreative.menus.world.browsers;
 
 import org.bukkit.event.inventory.ClickType;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menus.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
 import ua.mcchickenstudio.opencreative.menus.world.WorldModerationMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -151,7 +151,7 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
         if (worldID.isEmpty()) {
             return;
         }
-        Planet planet = PlanetManager.getInstance().getPlanetByCustomID(worldID);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(worldID);
         if (planet != null) {
             if (event.getClick() == ClickType.SHIFT_LEFT) {
                 if (!getPlayer().hasPermission("opencreative.moderation.menus")) {

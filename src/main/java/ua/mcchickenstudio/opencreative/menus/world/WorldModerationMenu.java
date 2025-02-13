@@ -29,7 +29,6 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 
@@ -79,7 +78,7 @@ public class WorldModerationMenu extends AbstractMenu implements WorldMenu {
         switch (getItemType(item)) {
             case "connect" -> {
                 player.closeInventory();
-                if (planet.equals(PlanetManager.getInstance().getPlanetByPlayer(player))) {
+                if (planet.equals(OpenCreative.getPlanetsManager().getPlanetByPlayer(player))) {
                     player.sendMessage(getLocaleMessage("same-world", player));
                     Sounds.PLAYER_FAIL.play(player);
                     return;
@@ -88,7 +87,7 @@ public class WorldModerationMenu extends AbstractMenu implements WorldMenu {
             }
             case "connect-silent" -> {
                 player.closeInventory();
-                if (planet.equals(PlanetManager.getInstance().getPlanetByPlayer(player))) {
+                if (planet.equals(OpenCreative.getPlanetsManager().getPlanetByPlayer(player))) {
                     player.sendMessage(getLocaleMessage("same-world", player));
                     Sounds.PLAYER_FAIL.play(player);
                     return;

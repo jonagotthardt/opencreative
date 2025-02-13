@@ -80,7 +80,7 @@ public final class InteractListener implements Listener {
     public void onInteraction(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         ItemStack currentItem = player.getInventory().getItemInMainHand();
-        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
         if (devPlanet == null) {
             setPaperLocation(event, player,currentItem);
             return;
@@ -442,7 +442,7 @@ public final class InteractListener implements Listener {
 
     private void handlePaperInteraction(PlayerInteractEvent event, Player player, ItemStack currentItem) {
         if (event.getAction() == Action.LEFT_CLICK_AIR && !player.hasCooldown(currentItem.getType())) {
-            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet != null) {
                 addPlayerWithLocation(player);
                 player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
@@ -537,7 +537,7 @@ public final class InteractListener implements Listener {
     }
 
     private void setPaperLocation(PlayerInteractEvent event, Player player, ItemStack currentItem) {
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (isPlayerWithLocation(player) && planet != null && !planet.getWorldPlayers().canBuild(player)) {
             event.setCancelled(true);
         }
@@ -592,7 +592,7 @@ public final class InteractListener implements Listener {
         if (player.hasCooldown(currentItem.getType())) {
             return;
         }
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (isEntityInLobby(player)) {
             if (getItemType(currentItem).equals("worlds")) {
                 // Opens recommended worlds menus.
@@ -627,11 +627,11 @@ public final class InteractListener implements Listener {
     @EventHandler
     public void onUsing(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet == null) {
             return;
         }
-        if (PlanetManager.getInstance().getDevPlanet(player) != null) {
+        if (OpenCreative.getPlanetsManager().getDevPlanet(player) != null) {
             return;
         }
         switch (event.getAction()) {
@@ -694,7 +694,7 @@ public final class InteractListener implements Listener {
     @EventHandler
     public void onMobClick(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet != null) {
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT) == 2 && !planet.getWorldPlayers().canBuild(player)) {
                 // Disallow entire mob interaction.
@@ -714,7 +714,7 @@ public final class InteractListener implements Listener {
     @EventHandler
     public void onMobClick(PlayerInteractAtEntityEvent event) {
         Player player = event.getPlayer();
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet != null) {
             if (event.getHand() == EquipmentSlot.HAND) {
                 EventRaiser.raiseMobInteractionEvent(player,event);
@@ -737,7 +737,7 @@ public final class InteractListener implements Listener {
     @EventHandler
     public void onHang(HangingBreakByEntityEvent event) {
         if (!(event.getRemover() instanceof Player player)) return;
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet != null) {
             EventRaiser.raiseMobInteractionEvent(player,event);
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT) == 2 && !planet.getWorldPlayers().canBuild(player)) {
@@ -759,32 +759,32 @@ public final class InteractListener implements Listener {
             return;
         }
         if (event.getCaught().getType() == EntityType.ITEM) {
-            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+            Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
             if (planet != null) EventRaiser.raiseFishEvent(event.getPlayer(),event);
         }
     }
 
     @EventHandler
     public void onSpectating(PlayerStartSpectatingEntityEvent event) {
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) EventRaiser.raiseStartSpectatingEvent(event.getPlayer(),event);
     }
 
     @EventHandler
     public void onSpectatingStop(PlayerStopSpectatingEntityEvent event) {
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) EventRaiser.raiseStopSpectatingEvent(event.getPlayer(),event);
     }
 
     @EventHandler
     public void onBedInteract(PlayerBedEnterEvent event) {
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) EventRaiser.raisePlayerBedEnterEvent(event.getPlayer(),event);
     }
 
     @EventHandler
     public void onBedInteract(PlayerBedLeaveEvent event) {
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(event.getPlayer());
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) EventRaiser.raisePlayerBedLeaveEvent(event.getPlayer(),event);
     }
 }
