@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.indev.blocks.executors.player;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 

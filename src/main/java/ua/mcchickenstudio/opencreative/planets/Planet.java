@@ -147,7 +147,7 @@ public class Planet {
         try {
             territory.getWorld().getSpawnLocation().getChunk().load(true);
             if (mode == Mode.BUILD) {
-                for (Player player : getPlayers()){
+                for (Player player : getPlayers()) {
                     if (!isEntityInDevPlanet(player)) {
                         raiseQuitEvent(player);
                         player.showTitle(Title.title(
@@ -157,6 +157,7 @@ public class Planet {
                         clearPlayer(player);
                         player.teleport(territory.getWorld().getSpawnLocation());
                         Sounds.WORLD_MODE_BUILD.play(player);
+                        territory.showBorders(player);
                         if (worldPlayers.canBuild(player)) {
                             player.setGameMode(GameMode.CREATIVE);
                             giveBuildPermissions(player);
@@ -182,6 +183,7 @@ public class Planet {
                         clearPlayer(player);
                         player.clearTitle();
                         player.teleport(territory.getWorld().getSpawnLocation());
+                        territory.showBorders(player);
                         if (worldPlayers.canDevelop(player)) {
                             player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
                         } else {
@@ -475,6 +477,7 @@ public class Planet {
                 mode.onPlayerConnect(player,this);
                 getWorldPlayers().getPlanetPlayer(player).load();
                 player.clearTitle();
+                territory.showBorders(player);
                 if (!getPlayersFromPlanetList(this, PlayersType.UNIQUE).contains(player.getName())) {
                     addPlayerInPlanetList(this,player.getName(), PlayersType.UNIQUE);
                     info.setUniques(info.getUniques()+1);

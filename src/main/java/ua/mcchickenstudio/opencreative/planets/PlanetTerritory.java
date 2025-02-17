@@ -45,6 +45,7 @@ import java.util.Map;
 import static ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser.raiseQuitEvent;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 
 /**
@@ -285,6 +286,25 @@ public class PlanetTerritory {
             return world;
         }
         return null;
+    }
+
+    /**
+     * Shows custom world borders for player.
+     * @param player player to show.
+     */
+    public void showBorders(Player player) {
+        if (isEntityInDevPlanet(player)) return;
+        WorldBorder border = Bukkit.createWorldBorder();
+        border.setSize(player.getWorld().getWorldBorder().getSize());
+        switch (planet.getFlagValue(PlanetFlags.PlanetFlag.WORLD_BORDERS)) {
+            case 1 -> border.setSize(border.getSize());
+            case 2 -> {
+                border.setSize(border.getSize()+0.001,3600);
+            }
+            case 3 -> border.setSize(border.getSize()-0.1, 3600);
+            case 4 -> border.setSize(border.getMaxSize());
+        }
+        player.setWorldBorder(border);
     }
 
     public boolean isAutoSave() {

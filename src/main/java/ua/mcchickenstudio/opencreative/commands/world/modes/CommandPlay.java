@@ -81,6 +81,7 @@ public class CommandPlay implements CommandExecutor, TabCompleter {
                     if (isEntityInDevPlanet(player)) {
                         clearPlayer(player);
                         player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
+                        planet.getTerritory().showBorders(player);
                         if (planet.isOwner(sender.getName())) {
                             player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
                         }
@@ -113,6 +114,7 @@ public class CommandPlay implements CommandExecutor, TabCompleter {
                     }
                     clearPlayer(player);
                     player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
+                    planet.getTerritory().showBorders(player);
                     if (planet.isOwner(sender.getName())) {
                         player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
                     }

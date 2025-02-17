@@ -162,6 +162,35 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
         return new RadioButton(Material.EGG, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.mob-spawn.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.mob-spawn.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_SPAWN),5, choicesActions, "menus.world-settings-flags.items.mob-spawn.choices", "menus.world-settings-flags");
     }
 
+    public static RadioButton getWorldBordersButton(Planet planet) {
+        List<Runnable> choicesActions = new ArrayList<>();
+        choicesActions.add(() -> {
+            planet.setFlagValue(PlanetFlags.PlanetFlag.WORLD_BORDERS, (byte)1);
+            for (Player player : planet.getPlayers()) {
+                planet.getTerritory().showBorders(player);
+            }
+        });
+        choicesActions.add(() -> {
+            planet.setFlagValue(PlanetFlags.PlanetFlag.WORLD_BORDERS, (byte)2);
+            for (Player player : planet.getPlayers()) {
+                planet.getTerritory().showBorders(player);
+            }
+        });
+        choicesActions.add(() -> {
+            planet.setFlagValue(PlanetFlags.PlanetFlag.WORLD_BORDERS, (byte)3);
+            for (Player player : planet.getPlayers()) {
+                planet.getTerritory().showBorders(player);
+            }
+        });
+        choicesActions.add(() -> {
+            planet.setFlagValue(PlanetFlags.PlanetFlag.WORLD_BORDERS, (byte)4);
+            for (Player player : planet.getPlayers()) {
+                planet.getTerritory().showBorders(player);
+            }
+        });
+        return new RadioButton(Material.LIGHT_BLUE_STAINED_GLASS, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.world-borders.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.world-borders.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.WORLD_BORDERS),4, choicesActions, "menus.world-settings-flags.items.world-borders.choices", "menus.world-settings-flags");
+    }
+
     public static RadioButton getBlockExplosionFlagButton(Planet planet) {
         List<Runnable> choicesActions = new ArrayList<>();
         choicesActions.add(() -> {
@@ -253,6 +282,7 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
         setItem(24, getBlockChangingFlagButton(planet).getButtonItem());
         setItem(25, getNaturalRegenerationFlagButton(planet).getButtonItem());
         setItem(28, getMobLootFlagButton(planet).getButtonItem());
+        setItem(29, getWorldBordersButton(planet).getButtonItem());
     }
 
     @Override

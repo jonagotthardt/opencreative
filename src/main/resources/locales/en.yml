@@ -1,5 +1,5 @@
 #
-# OpenCreative+ 5.4 - Well, it's possible.
+# OpenCreative+ 5.5 - Well, it's possible.
 # (C) McChicken Studio 2017-2025.
 #
 
@@ -213,7 +213,7 @@ planet-code-debug:
 lobby:
   title: "%branding%"
   subtitle: "&fLet's &acreate&f in your worlds!"
-  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.4\n<green> Well, it's possible!\n <white>\n<gold> ⭐ <white>Explore all <gold>worlds<white> using the compass!\n<light_purple> ❤ <white>Create your own world and <light_purple>invite <white>your friends!\n <yellow>⌚<white> Have fun and <yellow>create <white>whatever you want!\n \n<white>\n <white>"
+  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.5\n<green> Well, it's possible!\n <white>\n<gold> ⭐ <white>Explore all <gold>worlds<white> using the compass!\n<light_purple> ❤ <white>Create your own world and <light_purple>invite <white>your friends!\n <yellow>⌚<white> Have fun and <yellow>create <white>whatever you want!\n \n<white>\n <white>"
 creating-world:
   not-enough-played: "%prefix%&fYou need to play &6%time%&f in other worlds before creating a new world."
   title: "&eCreating World ◌"
@@ -9605,6 +9605,26 @@ menus:
           - "&7  Click to open"
           - "&7  world settings."
           - ""
+      world-borders:
+        choices:
+          1: "Show blue borders"
+          2: "Show green borders"
+          3: "Show red borders"
+          4: "Don't show borders"
+        name: "&bWorld Borders"
+        lore:
+          - " "
+          - "&7When you're close to"
+          - "&7world borders you can"
+          - "&7see blue moving lines."
+          - ""
+          - "&eClick to change."
+          - ""
+          - "&fOptions:"
+          - "%1%"
+          - "%2%"
+          - "%3%"
+          - "%4%"
       player-damage:
         choices:
           1: "Players take all damage"
@@ -9627,29 +9647,6 @@ menus:
           - "%3%"
           - "%4%"
           - "%5%"
-      day-and-night:
-        choices:
-          1: "Always day"
-          2: "Always evening"
-          3: "Always night"
-          4: "Switch day and night"
-        name: " "
-        lore:
-          - "&e ☀ Change world time"
-          - "&7 The sun is shining right in your eyes."
-          - " "
-          - "&7 For survival, you can enable"
-          - "&7 day and night cycle, or make"
-          - "&7 it always day or night."
-          - ""
-          - "&f Options:"
-          - "%1%"
-          - "%2%"
-          - "%3%"
-          - "%4%"
-          - ""
-          - "&e Click to change time."
-          - ""
       weather:
         choices:
           1: "Always no rain"

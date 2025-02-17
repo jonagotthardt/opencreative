@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.indev.blocks.executors.player;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.indev.blocks.ViewableTypedBlock;

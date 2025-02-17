@@ -29,7 +29,6 @@ import ua.mcchickenstudio.opencreative.indev.blocks.CodingBlock;
 import ua.mcchickenstudio.opencreative.indev.blocks.actions.ActionBlock;
 
 import java.util.List;
-import java.util.Map;
 
 public abstract class MultiActionBlock extends CodingBlock {
 

@@ -87,6 +87,7 @@ public class CommandBuild implements CommandExecutor {
                             if (planet.isOwner(sender.getName())) {
                                 player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
                             }
+                            planet.getTerritory().showBorders(player);
                             giveBuildPermissions(player);
                             player.setGameMode(GameMode.CREATIVE);
                         }
@@ -119,6 +120,7 @@ public class CommandBuild implements CommandExecutor {
                             player.getInventory().setItem(8,worldSettingsItem);
                         }
                         player.setGameMode(GameMode.CREATIVE);
+                        planet.getTerritory().showBorders(player);
                         giveBuildPermissions(player);
                         sender.sendMessage(getLocaleMessage("world.build-mode.message.owner"));
                         if (!planet.getTerritory().isAutoSave()) {

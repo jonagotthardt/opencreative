@@ -18,15 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
+import org.bukkit.*;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import ua.mcchickenstudio.opencreative.events.planet.PlanetDisconnectPlayerEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetPlayer;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -76,18 +74,23 @@ public final class ChangedWorld implements Listener {
         Planet newPlanet = OpenCreative.getPlanetsManager().getPlanetByWorld(newWorld);
 
         if (oldPlanet != null && oldPlanet == newPlanet) {
-            if (isDevPlanet(oldWorld)) {
-                if (!isPlayerWithLocation(player)) {
-                    for (Player onlinePlayer : oldWorld.getPlayers()) {
-                        onlinePlayer.sendMessage(getLocaleMessage("world.dev-mode.left", player));
-                    }
-                }
-            } else if (isDevPlanet(newWorld)) {
+            if (isDevPlanet(newWorld)) {
+                // Player entered developers world
                 if (isPlayerWithLocation(player)) {
                     removePlayerWithLocation(player);
                 }
                 for (Player onlinePlayer : newPlanet.getPlayers()) {
                     showPlayerFromTab(onlinePlayer,player);
+                }
+            } else {
+                // Player entered build world
+                if (!isPlayerWithLocation(player)) {
+                    for (Player onlinePlayer : oldWorld.getPlayers()) {
+                        onlinePlayer.sendMessage(getLocaleMessage("world.dev-mode.left", player));
+                    }
+                    for (Player onlinePlayer : newWorld.getPlayers()) {
+                        newPlanet.getTerritory().showBorders(onlinePlayer);
+                    }
                 }
             }
         } else {
@@ -147,6 +150,7 @@ public final class ChangedWorld implements Listener {
                 for (Player onlinePlayer : newPlanet.getPlayers()) {
                     showPlayerFromTab(onlinePlayer,player);
                     showPlayerFromTab(player,onlinePlayer);
+                    newPlanet.getTerritory().showBorders(onlinePlayer);
                 }
                 if (newPlanet.isOwner(player)) {
                     if (newPlanet.getDevPlanet().isLoaded()) {

@@ -56,7 +56,8 @@ public class PlanetFlags {
         LIKE_MESSAGES("like-messages", Material.KNOWLEDGE_BOOK, (byte) 1,(byte) 2),
         DEATH_MESSAGES("death-messages", Material.WITHER_SKELETON_SKULL, (byte) 1,(byte) 2),
         KEEP_INVENTORY("keep-inventory", Material.CHEST_MINECART, (byte) 1,(byte) 2, GameRule.KEEP_INVENTORY),
-        IMMEDIATE_RESPAWN("immediate-respawn", Material.SKELETON_SKULL, (byte) 1,(byte) 2, GameRule.DO_IMMEDIATE_RESPAWN);
+        IMMEDIATE_RESPAWN("immediate-respawn", Material.SKELETON_SKULL, (byte) 1,(byte) 2, GameRule.DO_IMMEDIATE_RESPAWN),
+        WORLD_BORDERS("world-borders", Material.LIGHT_BLUE_STAINED_GLASS, (byte) 1,(byte) 4);
 
         private final String configPath;
         private final byte defaultValue;

@@ -1,5 +1,5 @@
 #
-# OpenCreative+ 5.4 - Well, it's possible.
+# OpenCreative+ 5.5 - Well, it's possible.
 # (C) McChicken Studio 2017-2025.
 #
 
@@ -219,7 +219,7 @@ planet-code-debug:
 lobby:
   title: "%branding%"
   subtitle: "&fДавайте &aтворить&f в своих мирах!"
-  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.4\n<green> Что-ж, это возможно!\n <white>\n<gold> ⭐ <white>Осмотри все <gold>миры<white> с помощью компаса!\n<light_purple> ❤ <white>Создай свой мир и <light_purple>пригласи <white>друзей!\n <yellow>⌚<white> Веселись и <yellow>твори <white>что угодно!\n \n<white>\n <white>"
+  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.5\n<green> Что-ж, это возможно!\n <white>\n<gold> ⭐ <white>Осмотри все <gold>миры<white> с помощью компаса!\n<light_purple> ❤ <white>Создай свой мир и <light_purple>пригласи <white>друзей!\n <yellow>⌚<white> Веселись и <yellow>твори <white>что угодно!\n \n<white>\n <white>"
 creating-world:
   not-enough-played: "%prefix%&fПеред созданием мира сыграйте &6%time%&f в мирах других игроков."
   title: "&eСоздание мира ◌"
@@ -9709,6 +9709,26 @@ menus:
           - "&7  Нажми, чтобы открыть"
           - "&7  настройки мира."
           - ""
+      world-borders:
+        choices:
+          1: "Показывать синими"
+          2: "Показывать зелёными"
+          3: "Показывать красными"
+          4: "Не показывать границу"
+        name: "&bГраницы мира"
+        lore:
+          - " "
+          - "&7Когда вы подходите к"
+          - "&7границам мира, вы можете"
+          - "&7увидеть движущийся полосы."
+          - ""
+          - "&eНажми, чтобы изменить."
+          - ""
+          - "&fВарианты:"
+          - "%1%"
+          - "%2%"
+          - "%3%"
+          - "%4%"
       player-damage:
         choices:
           1: "Игроки получают любой урон"

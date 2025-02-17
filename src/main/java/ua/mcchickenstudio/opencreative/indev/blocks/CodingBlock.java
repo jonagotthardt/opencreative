@@ -38,13 +38,9 @@ package ua.mcchickenstudio.opencreative.indev.blocks;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.CodingPackContent;
-
-import java.util.Map;
 
 public abstract class CodingBlock implements CodingPackContent {
 

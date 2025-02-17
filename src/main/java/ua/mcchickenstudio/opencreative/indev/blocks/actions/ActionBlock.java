@@ -45,8 +45,6 @@ import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.indev.blocks.CodingBlock;
 
-import java.util.Map;
-
 public abstract class ActionBlock extends CodingBlock {
 
     public ActionBlock(@NotNull String id, @NotNull Material mainBlock, @NotNull Material offBlock ) {

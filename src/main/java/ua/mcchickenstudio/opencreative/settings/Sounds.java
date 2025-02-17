@@ -21,7 +21,6 @@ package ua.mcchickenstudio.opencreative.settings;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import org.intellij.lang.annotations.Subst;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningMessage;

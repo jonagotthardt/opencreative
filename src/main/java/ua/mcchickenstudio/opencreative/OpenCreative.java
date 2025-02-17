@@ -119,14 +119,14 @@ public final class OpenCreative extends JavaPlugin {
                     Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(5), Duration.ofSeconds(0))
             ));
         }
+        settings = new Settings();
+        settings.load(getConfig());
         registerCommands();
         registerEvents();
         //Ticker.runTicker();
         saveDefaultConfig();
 
         space = new Space();
-        settings = new Settings();
-        settings.load(getConfig());
 
         FileUtils.loadLocales();
         PlayerUtils.loadPermissions();
@@ -204,7 +204,7 @@ public final class OpenCreative extends JavaPlugin {
         Map<String,Class<? extends CommandExecutor>> commands = new HashMap<>();
         commands.put("creative",    CommandCreative.class);
         commands.put("spawn",       CommandSpawn.class);
-        commands.put("menus",        CommandMenu.class);
+        commands.put("menu",        CommandMenu.class);
         commands.put("world",       CommandWorld.class);
         commands.put("chat",        CreativeChat.class);
         commands.put("join",        CommandJoin.class);

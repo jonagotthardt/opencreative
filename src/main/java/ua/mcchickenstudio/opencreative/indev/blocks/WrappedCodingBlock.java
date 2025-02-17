@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.indev.blocks;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
