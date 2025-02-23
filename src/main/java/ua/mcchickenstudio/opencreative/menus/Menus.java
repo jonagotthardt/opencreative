@@ -18,14 +18,23 @@
 
 package ua.mcchickenstudio.opencreative.menus;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.utils.async.AsyncScheduler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningErrorMessage;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningMessage;
 
 /**
  * <h1>Menus</h1>
@@ -40,6 +49,36 @@ import java.util.List;
 public class Menus implements Listener {
 
     private static final List<InventoryMenu> activeMenus = new ArrayList<>();
+    private final BukkitRunnable runnable;
+
+    public Menus() {
+        runnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (activeMenus.isEmpty()) return;
+                for (InventoryMenu inventoryMenu : new ArrayList<>(activeMenus)) {
+                    if (inventoryMenu instanceof BlockMenu blockMenu && blockMenu.getLocation() != null && blockMenu.getBlockState() != null) {
+                        System.out.println("block state");
+                        if (!blockMenu.getLocation().getBlock().getState().equals(blockMenu.getBlockState())) {
+                            if (inventoryMenu.getInventory().getViewers().isEmpty()) {
+                                removeMenu(inventoryMenu);
+                            }
+                            inventoryMenu.getInventory().close();
+                        }
+                    }
+                    if (System.currentTimeMillis()-inventoryMenu.getCreationTime() > 600000L) {
+                        System.out.println("Time out");
+                        if (inventoryMenu.getInventory().getViewers().isEmpty()) {
+                            removeMenu(inventoryMenu);
+                        }
+                        inventoryMenu.getInventory().close();
+                    }
+                }
+            }
+        };
+        runnable.runTaskTimer(OpenCreative.getPlugin(),20L,20L);
+    }
+
 
     /**
      * Registers menus in menus manager for handling inventory events.
@@ -83,6 +122,9 @@ public class Menus implements Listener {
         for (InventoryMenu menu : activeMenus) {
             if (event.getInventory().getHolder() == menu.getInventory().getHolder()) {
                 menu.onClose(event);
+                if (event.getPlayer() instanceof Player player) {
+                    player.updateInventory();
+                }
                 return;
             }
         }

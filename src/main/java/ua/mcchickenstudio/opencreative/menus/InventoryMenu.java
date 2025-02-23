@@ -66,6 +66,12 @@ public interface InventoryMenu extends InventoryHolder {
     }
 
     /**
+     * Returns the creation time of menu in milliseconds of Unix format.
+     * @return creation time of menu.
+     */
+    long getCreationTime();
+
+    /**
      * Destroys menus from memory and disables
      * all event listeners for it.
      */

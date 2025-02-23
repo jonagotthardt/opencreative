@@ -20,11 +20,14 @@ package ua.mcchickenstudio.opencreative.settings;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.indev.Items;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.groups.Groups;
 
@@ -72,6 +75,7 @@ public class Settings {
     private final Set<String> allowedResourcePackLinks = new HashSet<>();
 
     private final Map<Sounds,SettingsSound> sounds = new HashMap<>();
+    private final Map<Items,SettingsItem> items = new HashMap<>();
 
     public Settings() {
         groups = new Groups();
@@ -117,6 +121,7 @@ public class Settings {
 
         String soundsTheme = config.getString("sounds.theme","default");
         loadSounds(config, soundsTheme);
+        loadItems(config);
 
         if (maintenance) {
             OpenCreative.getPlugin().getLogger().warning("Maintenance mode is still enabled in config.yml, to disable: /maintenance end");
@@ -130,7 +135,7 @@ public class Settings {
     private void loadSounds(FileConfiguration config, String soundsTheme) {
         sounds.clear();
         ConfigurationSection soundsSection = config.getConfigurationSection("sounds." + soundsTheme);
-        if (soundsSection != null ) {
+        if (soundsSection != null) {
             for (String key : soundsSection.getKeys(false)) {
                 try {
                     Sounds type = Sounds.valueOf(key.toUpperCase().replace("-","_"));
@@ -147,6 +152,37 @@ public class Settings {
         }
     }
 
+    private void loadItems(FileConfiguration config) {
+        items.clear();
+        ConfigurationSection itemsSection = config.getConfigurationSection("items");
+        if (itemsSection != null) {
+            for (String key : itemsSection.getKeys(false)) {
+                try {
+                    Items type = Items.valueOf(key.toUpperCase().replace("-","_"));
+                    ItemStack item = null;
+                    if (itemsSection.isString(key)) {
+                        // Get item only from material
+                        Material material = Material.getMaterial(itemsSection.getString(key,"").toUpperCase());
+                        if (material != null) {
+                            item = new ItemStack(material);
+                        }
+                    } else {
+                        // Get custom item with data
+                        item = itemsSection.getItemStack(key);
+                    }
+                    if (item != null) {
+                        items.put(type,new SettingsItem(item));
+                    }
+                } catch (Exception ignored) {
+                    sendWarningErrorMessage("Item " + key.toLowerCase() + " doesn't exists.");
+                }
+            }
+        }
+        if (!items.isEmpty()) {
+            OpenCreative.getPlugin().getLogger().info("Added " + items.size() + " custom items");
+        }
+    }
+
     public boolean setSoundsTheme(String theme) {
         FileConfiguration config = OpenCreative.getPlugin().getConfig();
         if (config.getConfigurationSection("sounds."+theme) == null) {
@@ -155,6 +191,14 @@ public class Settings {
         loadSounds(config, theme);
         OpenCreative.getPlugin().getConfig().set("sounds.theme",theme);
         OpenCreative.getPlugin().saveConfig();
+        return true;
+    }
+
+    public boolean setCustomItem(Items type, ItemStack item) {
+        FileConfiguration config = OpenCreative.getPlugin().getConfig();
+        OpenCreative.getPlugin().getConfig().set("items."+type.name().toLowerCase().replace("_","-"),item.serialize());
+        OpenCreative.getPlugin().saveConfig();
+        loadItems(config);
         return true;
     }
 
@@ -321,5 +365,9 @@ public class Settings {
 
     public Map<Sounds, SettingsSound> getSounds() {
         return sounds;
+    }
+
+    public Map<Items, SettingsItem> getItems() {
+        return items;
     }
 }

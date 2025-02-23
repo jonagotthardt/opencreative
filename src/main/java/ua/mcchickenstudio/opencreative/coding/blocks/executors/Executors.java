@@ -129,7 +129,6 @@ public class Executors {
         ConfigurationSection section = config.getConfigurationSection("code.blocks");
         if (section != null) {
             long time = System.currentTimeMillis();
-            sendCodingDebugLog(planet,"Starting code, please wait...");
             List<Executor> executors = new ArrayList<>();
             Set<String> keys = section.getKeys(false);
             String path;

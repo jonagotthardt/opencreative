@@ -158,6 +158,9 @@ public class Planet {
                         player.teleport(territory.getWorld().getSpawnLocation());
                         Sounds.WORLD_MODE_BUILD.play(player);
                         territory.showBorders(player);
+                        if (isOwner(player)) {
+                            player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
+                        }
                         if (worldPlayers.canBuild(player)) {
                             player.setGameMode(GameMode.CREATIVE);
                             giveBuildPermissions(player);

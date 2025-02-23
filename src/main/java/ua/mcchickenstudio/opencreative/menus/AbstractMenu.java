@@ -45,6 +45,7 @@ public abstract class AbstractMenu implements InventoryMenu {
     private boolean rightToLeft;
 
     protected final int[] allowedSlots = new int[]{10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34,37,38,39,40,41,42,43};
+    protected final long creationTime;
 
     protected final ItemStack AIR_ITEM = new ItemStack(Material.AIR);
     protected final ItemStack NO_PERMS_ITEM = createItem(Material.RED_STAINED_GLASS,1);
@@ -56,6 +57,7 @@ public abstract class AbstractMenu implements InventoryMenu {
     public AbstractMenu(int rows, String title) {
         this.rows = rows;
         this.title = title;
+        this.creationTime = System.currentTimeMillis();
     }
 
     public void setItem(int slot, ItemStack item) {
@@ -145,6 +147,11 @@ public abstract class AbstractMenu implements InventoryMenu {
             slot = slot-9;
         }
         return 8-slot;
+    }
+
+    @Override
+    public long getCreationTime() {
+        return creationTime;
     }
 
     protected boolean isNotEmpty(ItemStack item) {

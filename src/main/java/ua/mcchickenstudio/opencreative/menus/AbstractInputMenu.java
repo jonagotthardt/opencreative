@@ -34,9 +34,11 @@ public abstract class AbstractInputMenu implements InventoryMenu {
 
     private String title;
     protected AnvilInventory inventory;
+    protected final long creationTime;
 
     public AbstractInputMenu(String title) {
         this.title = title;
+        this.creationTime = System.currentTimeMillis();
     }
 
     public void setMainItem(@NotNull ItemStack item) {
@@ -74,5 +76,10 @@ public abstract class AbstractInputMenu implements InventoryMenu {
     @Override
     public void onClick(@NotNull InventoryClickEvent event) {
 
+    }
+
+    @Override
+    public long getCreationTime() {
+        return creationTime;
     }
 }

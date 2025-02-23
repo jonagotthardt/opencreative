@@ -19,6 +19,8 @@
 package ua.mcchickenstudio.opencreative.commands;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.indev.Items;
 import ua.mcchickenstudio.opencreative.indev.modules.Module;
 import ua.mcchickenstudio.opencreative.indev.modules.ModulesBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.CreativeMenu;
@@ -302,6 +304,37 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sound.play(sender);
                     } catch (Exception e) {
                         return false;
+                    }
+                }
+                case "item", "items" -> {
+                    if (!sender.hasPermission("opencreative.items.get") && !sender.hasPermission("opencreative.items.set")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
+                    }
+                    if (player == null) {
+                        return true;
+                    }
+                    if (args.length < 3) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return true;
+                    }
+                    Items itemType = null;
+                    try {
+                        itemType = Items.valueOf(args[2].toUpperCase());
+                    } catch (Exception error) {
+                        Sounds.PLAYER_FAIL.play(player);
+                        return true;
+                    }
+                    switch (args[1].toLowerCase()) {
+                        case "get" -> player.getInventory().addItem(itemType.get());
+                        case "set" -> {
+                            ItemStack item = player.getInventory().getItemInMainHand();
+                            if (item.isEmpty()) {
+                                Sounds.PLAYER_FAIL.play(player);
+                                return true;
+                            }
+                            OpenCreative.getSettings().setCustomItem(itemType,item);
+                        }
                     }
                 }
                 case "kick-all" -> {
@@ -665,6 +698,8 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 tabCompleter.remove("theme");
             } else if ("sound".equalsIgnoreCase(args[0]) || "playsound".equalsIgnoreCase(args[0])) {
                 tabCompleter.addAll(Arrays.stream(Sounds.values()).map(s -> s.name().toLowerCase()).filter(s -> s.startsWith(args[1].toLowerCase())).toList());
+            } else if ("item".equalsIgnoreCase(args[0]) || "items".equalsIgnoreCase(args[0])) {
+                tabCompleter.addAll(Arrays.stream(Items.values()).map(s -> s.name().toLowerCase()).filter(s -> s.startsWith(args[1].toLowerCase())).toList());
             }
         } else if (args.length == 3) {
             if ("start".equalsIgnoreCase(args[1])) {

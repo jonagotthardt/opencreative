@@ -37,11 +37,17 @@
 package ua.mcchickenstudio.opencreative.indev;
 
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.settings.SettingsItem;
+
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 
 public enum Items {
 
     LOBBY_WORLDS_BROWSER(Material.COMPASS),
     LOBBY_MY_WORLDS(Material.NETHER_STAR),
+    WORLD_SETTINGS(Material.COMPASS),
     DEV_EVENT_PLAYER(Material.DIAMOND_BLOCK),
     DEV_EVENT_WORLD(Material.REDSTONE_BLOCK),
     DEV_EVENT_ENTITY(Material.GOLD_BLOCK),
@@ -58,10 +64,7 @@ public enum Items {
     DEV_CONDITION_VAR(Material.OBSIDIAN),
     DEV_LAUNCH_FUNCTION(Material.LAPIS_ORE),
     DEV_LAUNCH_METHOD(Material.EMERALD_ORE),
-    DEV_CONDITION_ELSE(Material.END_STONE),
-
-
-    ;
+    DEV_CONDITION_ELSE(Material.END_STONE);
 
     private final Material material;
 
@@ -71,5 +74,13 @@ public enum Items {
 
     public Material getMaterial() {
         return material;
+    }
+
+    public ItemStack get() {
+        SettingsItem item = OpenCreative.getSettings().getItems().get(this);
+        if (item == null) {
+            return createItem(material,1);
+        }
+        return item.item();
     }
 }

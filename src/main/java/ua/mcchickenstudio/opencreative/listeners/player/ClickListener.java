@@ -20,9 +20,11 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
+import org.bukkit.inventory.Inventory;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 
+import ua.mcchickenstudio.opencreative.menus.EnderChestMenu;
 import ua.mcchickenstudio.opencreative.menus.world.settings.*;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -56,6 +58,17 @@ public final class ClickListener implements Listener {
     public void onCraft(CraftItemEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) return;
         EventRaiser.raiseItemCraftEvent(player,event);
+    }
+
+    @EventHandler
+    public void onOpen(InventoryOpenEvent event) {
+        if (event.getInventory().getType() != InventoryType.ENDER_CHEST) return;
+        if (!(event.getPlayer() instanceof Player player)) return;
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+        if (planet == null) return;
+        event.setCancelled(true);
+        event.getInventory().close();
+        new EnderChestMenu(planet,event.getInventory().getLocation()).open(player);
     }
 
     @EventHandler
