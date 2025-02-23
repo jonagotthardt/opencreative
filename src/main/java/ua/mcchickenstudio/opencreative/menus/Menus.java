@@ -58,7 +58,6 @@ public class Menus implements Listener {
                 if (activeMenus.isEmpty()) return;
                 for (InventoryMenu inventoryMenu : new ArrayList<>(activeMenus)) {
                     if (inventoryMenu instanceof BlockMenu blockMenu && blockMenu.getLocation() != null && blockMenu.getBlockState() != null) {
-                        System.out.println("block state");
                         if (!blockMenu.getLocation().getBlock().getState().equals(blockMenu.getBlockState())) {
                             if (inventoryMenu.getInventory().getViewers().isEmpty()) {
                                 removeMenu(inventoryMenu);
@@ -67,7 +66,6 @@ public class Menus implements Listener {
                         }
                     }
                     if (System.currentTimeMillis()-inventoryMenu.getCreationTime() > 600000L) {
-                        System.out.println("Time out");
                         if (inventoryMenu.getInventory().getViewers().isEmpty()) {
                             removeMenu(inventoryMenu);
                         }

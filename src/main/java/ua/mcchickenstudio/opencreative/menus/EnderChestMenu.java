@@ -75,7 +75,7 @@ public class EnderChestMenu extends AbstractMenu implements WorldMenu, BlockMenu
                         PlayerUtils.sendOpenedChestAnimation(player,location.getBlock());
                     }
                 }
-            }.runTaskLater(OpenCreative.getPlugin(),5L);
+            }.runTaskLater(OpenCreative.getPlugin(),10L);
         } else {
             event.getPlayer().playSound(Sound.sound(Key.key("block.ender_chest.open"), Sound.Source.BLOCK, 100f, 1f));
         }
