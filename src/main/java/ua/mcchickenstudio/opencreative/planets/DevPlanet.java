@@ -149,6 +149,7 @@ public class DevPlanet {
     }
 
     public void translateCodingBlocks(Player player) {
+        if (!isLoaded()) return;
         for (byte z = 4; z < 96; z = (byte) (z + 4)) {
             Block executorBlock = getWorld().getBlockAt(4, 1, z);
             PlayerUtils.translateBlockSign(executorBlock.getRelative(BlockFace.SOUTH),player);

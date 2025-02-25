@@ -38,6 +38,7 @@ import org.bukkit.util.Vector;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateSigns;
 
 
 public final class MoveListener implements Listener {
@@ -55,19 +56,7 @@ public final class MoveListener implements Listener {
             EventRaiser.raiseMoveEvent(event.getPlayer(),event);
             if (isEntityInDevPlanet(player)) {
                 if (player.getY() >= 0 && player.getY() <= 4) {
-                    int radius = 10;
-                    int minX = player.getLocation().getBlockX()-radius;
-                    int maxX = player.getLocation().getBlockX()+radius;
-                    int minZ = player.getLocation().getBlockZ()-radius;
-                    int maxZ = player.getLocation().getBlockZ()+radius;
-                    for (int x = minX; x <= maxX; x++) {
-                        for (int z = minZ; z <= maxZ; z++) {
-                            Block block = player.getWorld().getBlockAt(x,1,z);
-                            if (block.getType().name().contains("WALL_SIGN")) {
-                                PlayerUtils.translateSign(block,player);
-                            }
-                        }
-                    }
+                    translateSigns(player,10);
                 }
             }
             if (isOutOfBorders(event.getTo())) {

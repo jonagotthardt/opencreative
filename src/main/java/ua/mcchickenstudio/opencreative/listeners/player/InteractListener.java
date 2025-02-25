@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 
 import com.destroystokyo.paper.event.player.PlayerStartSpectatingEntityEvent;
 import com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -560,15 +561,22 @@ public final class InteractListener implements Listener {
             Sounds.DEV_LOCATION_SET.play(player);
         } else if (event.getAction() == Action.LEFT_CLICK_AIR) {
             if (planet != null && planet.getDevPlanet().isLoaded()) {
-                player.teleport(getOldLocationPlayerWithLocation(player));
                 player.setCooldown(currentItem.getType(),60);
-                Sounds.DEV_LOCATION_TELEPORT_BACK.play(player);
-                for (Player developer : planet.getDevPlanet().getWorld().getPlayers()) {
-                    WorldBorder border = Bukkit.createWorldBorder();
-                    border.setCenter(planet.getDevPlanet().getWorld().getWorldBorder().getCenter());
-                    border.setSize(planet.getDevPlanet().getWorld().getWorldBorder().getSize()*5);
-                    developer.setWorldBorder(border);
-                }
+                player.teleportAsync(getOldLocationPlayerWithLocation(player)).thenAccept(success -> {
+                    Sounds.DEV_LOCATION_TELEPORT_BACK.play(player);
+                    for (Player developer : planet.getDevPlanet().getWorld().getPlayers()) {
+                        WorldBorder border = Bukkit.createWorldBorder();
+                        border.setCenter(planet.getDevPlanet().getWorld().getWorldBorder().getCenter());
+                        border.setSize(planet.getDevPlanet().getWorld().getWorldBorder().getSize()*5);
+                        developer.setWorldBorder(border);
+                    }
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            translateSigns(player,10);
+                        }
+                    }.runTaskLater(OpenCreative.getPlugin(),10L);
+                });
             }
         }
     }
