@@ -20,6 +20,10 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.inve
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -34,10 +38,15 @@ public final class EntityGetItemAction extends EntityAction {
 
     @Override
     public void execute(Entity entity) {
-        if (!(entity instanceof HumanEntity human)) return;
         VariableLink link = getArguments().getVariableLink("variable",this);
         int index = getArguments().getValue("slot",1,this);
-        setVarValue(link,human.getInventory().getItem(index-1));
+        ItemStack item = null;
+        if (entity instanceof InventoryHolder holder) {
+            item = holder.getInventory().getItem(index-1);
+        } else if (entity instanceof LivingEntity living && living.getEquipment() != null) {
+            item = living.getEquipment().getItem(EquipmentSlot.values()[index-1]);
+        }
+        if (item != null) setVarValue(link,item);
     }
 
     @Override

@@ -20,6 +20,8 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.inve
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -34,23 +36,24 @@ public final class EntitySetArmorAction extends EntityAction {
 
     @Override
     public void execute(Entity entity) {
-        if (!(entity instanceof HumanEntity human)) return;
+        if (!(entity instanceof LivingEntity living)) return;
+        if (living.getEquipment() == null) return;
         ItemStack helmet = getArguments().getValue("helmet", ItemStack.empty(),this);
         ItemStack chestplate = getArguments().getValue("chestplate",ItemStack.empty(),this);
         ItemStack leggings = getArguments().getValue("leggings",ItemStack.empty(),this);
         ItemStack boots = getArguments().getValue("boots",ItemStack.empty(),this);
         boolean replaceWithAir = getArguments().getValue("replace-with-air",false,this);
         if (replaceWithAir || !helmet.isEmpty()) {
-            human.getInventory().setHelmet(helmet);
+            living.getEquipment().setHelmet(helmet);
         }
         if (replaceWithAir || !chestplate.isEmpty()) {
-            human.getInventory().setChestplate(chestplate);
+            living.getEquipment().setChestplate(chestplate);
         }
         if (replaceWithAir || !leggings.isEmpty()) {
-            human.getInventory().setLeggings(leggings);
+            living.getEquipment().setLeggings(leggings);
         }
         if (replaceWithAir || !boots.isEmpty()) {
-            human.getInventory().setBoots(boots);
+            living.getEquipment().setBoots(boots);
         }
     }
 

@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.inventory;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.InventoryHolder;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -33,8 +34,11 @@ public final class EntityClearInventoryAction extends EntityAction {
 
     @Override
     public void execute(Entity entity) {
-        if (!(entity instanceof InventoryHolder holder)) return;
-        holder.getInventory().clear();
+        if (entity instanceof InventoryHolder holder) {
+            holder.getInventory().clear();
+        } else if (entity instanceof LivingEntity living && living.getEquipment() != null) {
+            living.getEquipment().clear();
+        }
     }
 
     @Override
