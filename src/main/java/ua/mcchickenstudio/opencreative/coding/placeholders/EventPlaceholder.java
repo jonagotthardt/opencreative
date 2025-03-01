@@ -23,11 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.MobDamagesPlayerEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDamagesMobEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDamagesPlayerEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerKilledPlayerEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.MobInteractionEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.*;
 
 public class EventPlaceholder extends KeyPlaceholder {
 
@@ -40,16 +36,7 @@ public class EventPlaceholder extends KeyPlaceholder {
         WorldEvent worldEvent = handler.getEvent();
         Entity killer = null;
         Entity victim = null;
-        if (worldEvent instanceof PlayerDamagesMobEvent event) {
-            killer = event.getDamager();
-            victim = event.getVictim();
-        } else if (worldEvent instanceof PlayerDamagesPlayerEvent event) {
-            killer = event.getDamager();
-            victim = event.getVictim();
-        } if (worldEvent instanceof MobDamagesPlayerEvent event) {
-            killer = event.getDamager();
-            victim = event.getVictim();
-        } if (worldEvent instanceof PlayerKilledPlayerEvent event) {
+        if (worldEvent instanceof KillerVictimEvent event) {
             killer = event.getKiller();
             victim = event.getVictim();
         }

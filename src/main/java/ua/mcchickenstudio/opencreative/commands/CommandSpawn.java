@@ -27,7 +27,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,7 +50,7 @@ public class CommandSpawn implements CommandExecutor, TabCompleter {
         if (args.length == 0) {
             if (!(sender instanceof Player player)) {
                 // Console cannot be teleported to lobby
-                sender.sendMessage("Only player can be teleported to lobby");
+                sender.sendMessage(getLocaleMessage("only-players"));
                 return true;
             }
             EventRaiser.raiseQuitEvent(player);

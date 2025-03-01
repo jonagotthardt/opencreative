@@ -20,10 +20,10 @@ package ua.mcchickenstudio.opencreative.coding;
 
 public interface CodingPackContent {
 
-    public String getCodingPackId();
+    String getCodingPackId();
 
-    public String getName();
+    String getName();
 
-    public String getDescription();
+    String getDescription();
 
 }

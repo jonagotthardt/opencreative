@@ -76,6 +76,10 @@ public class PlanetPlayer {
         return savedInventory;
     }
 
+    public ItemStack[] getSavedEnderChest() {
+        return savedEnderChest;
+    }
+
     /**
      * Saves items array as inventory.
      * Used in player action "Save Inventory".

@@ -1,5 +1,5 @@
 #
-# OpenCreative+ 5.4 - Well, it's possible.
+# OpenCreative+ 5.5 - Well, it's possible.
 # (C) McChicken Studio 2017-2025.
 #
 
@@ -7,8 +7,10 @@ name: 'OpenCreative'
 main: ua.mcchickenstudio.opencreative.OpenCreative
 api-version: 1.21
 
-version: '5.4.3'
+version: '5.5.0 Build ${CI_PIPELINE_IID}'
 description: 'Let players create the worlds'
+build: ${maven.build.timestamp}
+
 authors: [McChicken Studio]
 prefix: "OC+"
 
@@ -63,7 +65,7 @@ commands:
     aliases: [вшыдшлу, вшідшлу, dis]
   spawn:
     description: 'Teleports to spawn.'
-    aliases: [спавн, ізфцт, ызфцт, hub, lobby, s, ы]
+    aliases: [спавн, ізфцт, ызфцт, hub, lobby, s, ы, і]
   menu:
     description: 'Opens worlds browser menu.'
     aliases: [меню, games, worlds, ьутг, minigames, g, п]

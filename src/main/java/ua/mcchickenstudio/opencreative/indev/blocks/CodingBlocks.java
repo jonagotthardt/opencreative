@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningErrorMessage;
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningMessage;
 
 public class CodingBlocks {
 

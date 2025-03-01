@@ -18,11 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 
 public final class BucketListener implements Listener {
@@ -30,7 +30,7 @@ public final class BucketListener implements Listener {
     @EventHandler
     public void onBucket(PlayerBucketEmptyEvent event) {
         Player player = event.getPlayer();
-        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
         if (devPlanet != null) {
             event.setCancelled(true);
         }

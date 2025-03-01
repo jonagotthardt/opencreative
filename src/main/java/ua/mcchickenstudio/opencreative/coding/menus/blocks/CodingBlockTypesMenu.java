@@ -19,14 +19,14 @@
 package ua.mcchickenstudio.opencreative.coding.menus.blocks;
 
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
-import ua.mcchickenstudio.opencreative.menu.ListBrowserMenu;
+import ua.mcchickenstudio.opencreative.menus.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -49,8 +49,8 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
 /**
- * This class represents a menu where player can select type of coding block.
- * Every category of coding blocks has this menu.
+ * This class represents a menus where player can select type of coding block.
+ * Every category of coding blocks has this menus.
  */
 public abstract class CodingBlockTypesMenu extends ListBrowserMenu<Object> {
 
@@ -111,7 +111,7 @@ public abstract class CodingBlockTypesMenu extends ListBrowserMenu<Object> {
         event.setCancelled(true);
         if (item == null) return;
         if (item.getItemMeta() == null) return;
-        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(getPlayer());
+        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(getPlayer());
         Block codingBlock = signLocation.getBlock().getRelative(BlockFace.NORTH);
         if (signLocation.getWorld().getName().contains("dev") && devPlanet != null) {
             String typeString = getPersistentData(item,getCodingValueKey());

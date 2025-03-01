@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.commands.world.modes;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
-import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -29,13 +28,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
-import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.inventory.meta.BookMeta;
 import org.jetbrains.annotations.NotNull;
-
-import java.time.Duration;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
@@ -52,7 +47,7 @@ public class CommandDev implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
         if (sender instanceof Player player) {
-            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
                 return true;
@@ -70,7 +65,7 @@ public class CommandDev implements CommandExecutor {
                             sender.sendMessage(getLocaleMessage("world.dev-mode.cant-dev-when-offline"));
                             return true;
                         }
-                        Planet ownerPlanet = PlanetManager.getInstance().getPlanetByPlayer(planetOwner);
+                        Planet ownerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(planetOwner);
                         if (!planet.equals(ownerPlanet)) {
                             sender.sendMessage(getLocaleMessage("world.dev-mode.cant-dev-when-offline"));
                             return true;
@@ -78,7 +73,7 @@ public class CommandDev implements CommandExecutor {
                     }
                     EventRaiser.raiseQuitEvent(player);
                     PlayerInventory playerInventory = player.getInventory();
-                    ItemStack[] playerInventoryItems = (PlanetManager.getInstance().getDevPlanet(player) == null ?  playerInventory.getContents() : new ItemStack[]{});
+                    ItemStack[] playerInventoryItems = (OpenCreative.getPlanetsManager().getDevPlanet(player) == null ?  playerInventory.getContents() : new ItemStack[]{});
                     clearPlayer(player);
                     sender.sendMessage(getLocaleMessage("world.dev-mode.help", player));
                     if (args.length == 3) {
@@ -151,7 +146,7 @@ public class CommandDev implements CommandExecutor {
                  * listed in developers.
                  */
                 if (onlinePlayer != null) {
-                    Planet playerPlanet = PlanetManager.getInstance().getPlanetByPlayer(onlinePlayer);
+                    Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(onlinePlayer);
                     if (planet.equals(playerPlanet)) {
                         sender.sendMessage(getLocaleMessage("world.players.developers.added").replace("%player%", onlinePlayer.getName()));
                         planet.getWorldPlayers().addDeveloper(onlinePlayer.getName(),false);

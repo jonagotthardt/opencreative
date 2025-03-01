@@ -30,7 +30,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +52,7 @@ public class CommandPlay implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
-            Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+            Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
                 return true;
@@ -65,7 +64,7 @@ public class CommandPlay implements CommandExecutor, TabCompleter {
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             // Проверка на владельца мира
 
-            DevPlanet playerDevPlanet = PlanetManager.getInstance().getDevPlanet(player);
+            DevPlanet playerDevPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
             if (playerDevPlanet != null) {
                 playerDevPlanet.getLastLocations().put(player,player.getLocation());
             }
@@ -82,6 +81,7 @@ public class CommandPlay implements CommandExecutor, TabCompleter {
                     if (isEntityInDevPlanet(player)) {
                         clearPlayer(player);
                         player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
+                        planet.getTerritory().showBorders(player);
                         if (planet.isOwner(sender.getName())) {
                             player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
                         }
@@ -106,7 +106,7 @@ public class CommandPlay implements CommandExecutor, TabCompleter {
                         player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
                     }
                     planet.getTerritory().getWorld().getSpawnLocation().getChunk().load(true);
-                    DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+                    DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                     if (devPlanet != null) {
                         clearPlayer(player);
                     } else {
@@ -114,6 +114,7 @@ public class CommandPlay implements CommandExecutor, TabCompleter {
                     }
                     clearPlayer(player);
                     player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
+                    planet.getTerritory().showBorders(player);
                     if (planet.isOwner(sender.getName())) {
                         player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
                     }
@@ -130,7 +131,7 @@ public class CommandPlay implements CommandExecutor, TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) return null;
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet == null) return null;
         if (planet.getMode() == Planet.Mode.PLAYING && planet.getWorldPlayers().canDevelop(player) && args.length <= 1) {
             return List.of("--no-compile");

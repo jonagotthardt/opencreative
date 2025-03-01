@@ -26,8 +26,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
-
 public final class SetViewDistanceAction extends PlayerAction {
     public SetViewDistanceAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);

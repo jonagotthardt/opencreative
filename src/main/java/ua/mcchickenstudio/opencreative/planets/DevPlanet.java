@@ -148,8 +148,8 @@ public class DevPlanet {
         return exists;
     }
 
-
     public void translateCodingBlocks(Player player) {
+        if (!isLoaded()) return;
         for (byte z = 4; z < 96; z = (byte) (z + 4)) {
             Block executorBlock = getWorld().getBlockAt(4, 1, z);
             PlayerUtils.translateBlockSign(executorBlock.getRelative(BlockFace.SOUTH),player);
@@ -454,11 +454,11 @@ public class DevPlanet {
         return planet.getWorldName()+"dev";
     }
 
-    public Set<DevPlatform> getPlatforms() {
-        Set<DevPlatform> platforms = new HashSet<>();
+    public List<DevPlatform> getPlatforms() {
+        List<DevPlatform> platforms = new ArrayList<>();
         if (!isLoaded()) return platforms;
-        for (int x = 10; x >= 1; x--) {
-            for (int z = 10; z >= 1; z--) {
+        for (int x = 1; x <= 10; x++) {
+            for (int z = 1; z <= 10; z++) {
                 DevPlatform platform = new DevPlatform(getWorld(),x,z);
                 if (platform.exists()) {
                     platforms.add(platform);

@@ -22,7 +22,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
-public class PlayerKilledPlayerEvent extends WorldEvent {
+public class PlayerKilledPlayerEvent extends WorldEvent implements KillerVictimEvent {
 
     private final PlayerDeathEvent event;
     private final Player killer;
@@ -35,10 +35,12 @@ public class PlayerKilledPlayerEvent extends WorldEvent {
         this.victim = victim;
     }
 
+    @Override
     public Player getKiller() {
         return killer;
     }
 
+    @Override
     public Player getVictim() {
         return victim;
     }

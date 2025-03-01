@@ -1,5 +1,5 @@
 #
-# OpenCreative+ 5.4 - Well, it's possible.
+# OpenCreative+ 5.5 - Well, it's possible.
 # (C) McChicken Studio 2017-2025.
 #
 
@@ -29,7 +29,13 @@ disabled: "&cThis feature is disabled :("
 too-few-args: "&cNot enough arguments :("
 cooldown: "%prefix%&cPlease wait %cooldown% seconds before using this command again."
 maintenance: "%prefix%&cOops, it seems there's a maintenance break: this action is unavailable as maintenance is underway. Please wait until the maintenance is over!"
+not-found-player: "&c Player is offline."
+only-players: "&c This command can be used only as player."
 commands:
+  join:
+    help: "%prefix%&fTo connect to the world with ID, use: &6/join ID"
+    connecting: "%prefix%Connecting &6%player%&f to world %id%..."
+    failed: "%prefix%&cFailed to connect to this world O_o"
   give:
     help: "%prefix%To give an item to yourself or a player in your world, use:\n &6/give ID &7- Give an item to yourself\n &6/give Username ID &7- Give an item to a player\n &6/give Username ID Amount &7- Give an item with a specific amount to a player"
     wrong: "%prefix%&cThis item does not exist O_o"
@@ -59,6 +65,14 @@ locate:
   help: "%prefix%To find the world where a player is playing, type in the chat: &6/locate Username"
   found: "%prefix%&fPlayer &6%player%&f is currently playing in the world: \n&f %planetName%\n &f\n&a &a &n[Click to join]&f\n &f"
   offline: "%prefix%&cThe player is not currently playing in any worlds."
+modules:
+  created: "%prefix%You created a &6module&f! Every player &6can install&f your selected code. Now you can change it's display name, description and icon in modules browser."
+  deleted: "%prefix%Module &6%moduleID%&f was deleted :("
+  installed: "%prefix%&6%player%&f installed module &6%moduleName% &fby %moduleOwner%"
+  few-space: "%prefix%&cSeems like all your coding platforms are filled with code! To load this module we need %required% free rows of code."
+  error: "%prefix%&cCan't save code for module, please fix problems in code!"
+  default-name: "&7%player%'s Module"
+  default-description: "&7My cool module!"
 environment:
   help: "%prefix%Manage code, variables, and the world for developers.\n \n&6 /env variables clear &f- Clear variables\n&6 /env variables size &f- Number of variables\n&6 /env variables list &f- List of variables"
   variables:
@@ -147,7 +161,7 @@ creative:
     not-found: "%prefix%&cNot found localization file for this language O_o"
   sounds:
     set: "%prefix%&fChanged sound theme to &6%theme%&f, have a good listening!"
-    not-found: "%prefix%&cNot found this sound theme in configuration О_о"
+    not-found: "%prefix%&cNot found this sound theme in configuration O_o"
 not-owner: "%prefix%&cYou are not the owner of this world."
 not-developer: "%prefix%&cYou are not the developer of this world."
 not-builder: "%prefix%&cYou are not the builder of this world."
@@ -205,7 +219,7 @@ planet-code-debug:
 lobby:
   title: "%branding%"
   subtitle: "&fLet's &acreate&f in your worlds!"
-  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.4\n<green> Well, it's possible!\n <white>\n<gold> ⭐ <white>Explore all <gold>worlds<white> using the compass!\n<light_purple> ❤ <white>Create your own world and <light_purple>invite <white>your friends!\n <yellow>⌚<white> Have fun and <yellow>create <white>whatever you want!\n \n<white>\n <white>"
+  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.5\n<green> Well, it's possible!\n <white>\n<gold> ⭐ <white>Explore all <gold>worlds<white> using the compass!\n<light_purple> ❤ <white>Create your own world and <light_purple>invite <white>your friends!\n <yellow>⌚<white> Have fun and <yellow>create <white>whatever you want!\n \n<white>\n <white>"
 creating-world:
   not-enough-played: "%prefix%&fYou need to play &6%time%&f in other worlds before creating a new world."
   title: "&eCreating World ◌"
@@ -332,6 +346,8 @@ world:
     kick:
       kicked: "%prefix%You kicked &6%player%&f from the world, but they can rejoin later."
       player: "%prefix%You were kicked from the world you were playing in."
+      all: "%prefix%You &6kicked all players&f from world, but they can rejoin later."
+      cannot: "%prefix%&cThis player cannot be kicked from world O_o"
     builders:
       added: "%prefix%You made &6%player%&f a builder, and they can now build in the world &6while you are online.\n &fIf you trust this player, you can make them a permanent builder in the player management settings."
       trusted: "%prefix%&6%player%&f can now build even when you are offline."
@@ -348,6 +364,7 @@ world:
       added: "%prefix%You have added &6%player%&f to the &7blacklist&f. They can no longer enter your world."
       removed: "%prefix%You have removed &6%player%&f from the blacklist. They can now enter your world."
       player: "%prefix%You have been blocked from the world you were playing in.. :("
+      cannot: "%prefix%&cThis player cannot be blocked from world O_o"
     white-list:
       added: "%prefix%You have added &6%player%&f to the &lwhitelist&f. They can now enter your world at any time, change world modes, build, and code.\n &6Be careful! &fOnly add players you trust, as they could destroy your world!"
       removed: "%prefix%You have removed &6%player%&f from the &lwhitelist&f."
@@ -372,7 +389,6 @@ creative-chat:
   on-usage: "%cc-prefix%&fTo &6enable&f creative chat, type: &6/cc on"
   cc-usage: "%cc-prefix%&fTo chat in creative chat, type: &6/cc Hello!"
   cooldown: "%cc-prefix%&fPlease wait &6%cooldown% seconds&f before sending another message."
-join-usage: "%prefix%Use &6/join ID"
 advertisement:
   message: "%prefix%&6Invitation:\n&f &7%player% &f&ninvites&f you to the world: \n&f %world%\n &f\n&a &a &n[Click to join]&f\n &f"
   hover: "&f%planetName%\n&8Created by %planetOwner%\n \n&a ☻ &7Online: &a%planetOnline%\n&e ⭐&7 Rating: &f%planetReputation%\n&3 ⚐&7 Category: &f%planetCategory%\n \n&aClick to join the world"
@@ -1410,12 +1426,12 @@ items:
         name: "&6Player opened inventory"
         lore:
           - "&7Triggered when a player opens a chest,"
-          - "&7crafting table, anvil, or menu."
+          - "&7crafting table, anvil, or menus."
           - " "
           - "&fUse for:"
-          - "&7> Prevent menu opening"
-          - "&7> Display menu info"
-          - "&7> Set items in the menu"
+          - "&7> Prevent menus opening"
+          - "&7> Display menus info"
+          - "&7> Set items in the menus"
           - " "
           - "&eClick to set event."
       player-click-inventory:
@@ -1426,7 +1442,7 @@ items:
           - " "
           - "&fUse for:"
           - "&7> Prevent item theft"
-          - "&7> Open a new menu"
+          - "&7> Open a new menus"
           - "&7> Perform button action"
           - " "
           - "&eClick to set event."
@@ -1449,7 +1465,7 @@ items:
           - "&7items between main and off-hand."
           - " "
           - "&fUse for:"
-          - "&7> Open menu with F"
+          - "&7> Open menus with F"
           - "&7> Abilities and elements"
           - "&7> Attack another player"
           - " "
@@ -1595,6 +1611,18 @@ items:
           - "&fUse for:"
           - "&7> Reward the killer"
           - "&7> Send death message"
+          - "&7> Update scoreboard"
+          - " "
+          - "&eClick to set event."
+      player-killed-mob:
+        name: "&bPlayer killed a mob"
+        lore:
+          - "&7Triggered when player"
+          - "&7kills entity in world."
+          - " "
+          - "&fUse for:"
+          - "&7> Reward the player"
+          - "&7> Cancel mob's death"
           - "&7> Update scoreboard"
           - " "
           - "&eClick to set event."
@@ -2619,13 +2647,13 @@ items:
               - ""
               - "&fExamples: &6online&f, &6money"
       player-open-inventory-view:
-        name: "&6Open an inventory menu"
+        name: "&6Open an inventory menus"
         lore:
           - "&7It will open an empty inventory"
           - "&7for player with specified type."
           - " "
           - "&fIn chest:"
-          - "&3 Option &7- Type of menu"
+          - "&3 Option &7- Type of menus"
           - "&6 Text &7- Name"
           - " "
           - "&eClick to set action."
@@ -2685,10 +2713,10 @@ items:
               stonecutter: "Stonecutter"
               crafter: "Crafter"
       player-set-inventory-view-item:
-        name: "&aSet item in opened menu"
+        name: "&aSet item in opened menus"
         lore:
           - "&7It will set item to slots"
-          - "&7in player's opened menu."
+          - "&7in player's opened menus."
           - " "
           - "&fIn chest:"
           - "&a Numbers &7- Slots"
@@ -2696,19 +2724,19 @@ items:
           - " "
           - "&eClick to set action."
       player-set-inventory-view-title:
-        name: "&eRename opened menu"
+        name: "&eRename opened menus"
         lore:
           - "&7Player will see renamed"
-          - "&7opened menu."
+          - "&7opened menus."
           - " "
           - "&fIn chest:"
           - "&6 Text &7- New name"
           - " "
           - "&eClick to set action."
       player-set-inventory-view-rows:
-        name: "&aChange menu's rows amount"
+        name: "&aChange menus's rows amount"
         lore:
-          - "&7It will open a new menu with"
+          - "&7It will open a new menus with"
           - "&7same items, but larger or"
           - "&7smaller in size."
           - " "
@@ -2726,14 +2754,14 @@ items:
               - "&7By default: &a6"
               - "&cNumber from 1 to 6"
       player-set-inventory-view-row-items:
-        name: "&eSet items in menu's row"
+        name: "&eSet items in menus's row"
         lore:
           - "&7In the opened inventory items"
           - "&7will be set in specified row."
           - ""
           - "&7But if specified row will be"
-          - "&7greater than menu's rows amount"
-          - "&7it will open a new menu with"
+          - "&7greater than menus's rows amount"
+          - "&7it will open a new menus with"
           - "&7same items."
           - " "
           - "&fIn chest:"
@@ -2961,7 +2989,7 @@ items:
             lore:
               - "&7Place a text value here as the"
               - "&7display name of the item in the"
-              - "&7purchase menu."
+              - "&7purchase menus."
               - ""
               - "&7Avoid overly long text to prevent"
               - "&7it from being cut off."
@@ -3895,7 +3923,7 @@ items:
       player-open-sign:
         name: "&6Open Sign Menu"
         lore:
-          - "&7This will open a menu for the"
+          - "&7This will open a menus for the"
           - "&7player to change the text on"
           - "&7a sign in the world."
           - ""
@@ -8873,6 +8901,55 @@ menus:
             - " &eRight-click &7- Select value type"
             - ""
             - "&7Some values may be &3empty&7."
+  modules:
+    title: "&4⏼ Modules"
+    items:
+      previous-page:
+        name: " "
+        lore:
+          - " &6← &eBack... #%page%"
+          - ""
+          - "&7  Click to see"
+          - "&7  previous modules."
+          - ""
+      next-page:
+        name: " "
+        lore:
+          - "&e Next... #%page% &6→"
+          - ""
+          - "&7  Click to see"
+          - "&7  next modules."
+          - ""
+      no-modules:
+        name: "&c&oNo Modules!"
+        lore:
+          - "&7Seems like no one created a module.."
+          - "&7What are you waiting for? Create the&d first&7 one!"
+      own-modules:
+        name: " "
+        lore:
+          - "&a 🧪 My modules "
+          - ""
+          - "&7  See the list of your modules,"
+          - "&7  showing their rating and count"
+          - "&7  of downloads."
+          - " "
+          - "&e  Click to view your modules."
+          - " "
+      module:
+        name: "&f%moduleName%"
+        lore:
+          - "&8Created by %moduleOwner%"
+          - " "
+          - "&7 %moduleDescription%"
+          - " "
+          - "&e ⭐ &7Rating: &a%moduleReputation%"
+          - "&6 🍖 &7Downloads: &a%moduleDownloads%"
+          - " "
+          - "&5 ⌛ &7Created: &d%moduleCreationTime%"
+          - " "
+          - "&e Left-click &7- install module."
+          - " "
   own-worlds:
     title: "&2☄ My Worlds"
     items:
@@ -9548,6 +9625,26 @@ menus:
           - "&7  Click to open"
           - "&7  world settings."
           - ""
+      world-borders:
+        choices:
+          1: "Show blue borders"
+          2: "Show green borders"
+          3: "Show red borders"
+          4: "Don't show borders"
+        name: "&bWorld Borders"
+        lore:
+          - " "
+          - "&7When you're close to"
+          - "&7world borders you can"
+          - "&7see blue moving lines."
+          - ""
+          - "&eClick to change."
+          - ""
+          - "&fOptions:"
+          - "%1%"
+          - "%2%"
+          - "%3%"
+          - "%4%"
       player-damage:
         choices:
           1: "Players take all damage"
@@ -9570,29 +9667,6 @@ menus:
           - "%3%"
           - "%4%"
           - "%5%"
-      day-and-night:
-        choices:
-          1: "Always day"
-          2: "Always evening"
-          3: "Always night"
-          4: "Switch day and night"
-        name: " "
-        lore:
-          - "&e ☀ Change world time"
-          - "&7 The sun is shining right in your eyes."
-          - " "
-          - "&7 For survival, you can enable"
-          - "&7 day and night cycle, or make"
-          - "&7 it always day or night."
-          - ""
-          - "&f Options:"
-          - "%1%"
-          - "%2%"
-          - "%3%"
-          - "%4%"
-          - ""
-          - "&e Click to change time."
-          - ""
       weather:
         choices:
           1: "Always no rain"
@@ -10013,6 +10087,7 @@ blocks:
   player_item_craft: "Crafted item"
   player_item_break: "Broke item"
   player_killed_player: "Killed a player"
+  player_killed_mob: "Killed a mob"
   player_damage_player: "Hit a player"
 
   world_play_mode: "&aPlay mode"
@@ -10026,11 +10101,11 @@ blocks:
   player_launch_vertical: "Launch vertic."
   player_launch_horizontal: "Launch horiz."
   player_launch_to_location: "Launch to loc."
-  player_open_inventory_view: "Open menu"
-  player_set_inventory_view_title: "Set menu title"
-  player_set_inventory_view_rows: "Set menu rows"
+  player_open_inventory_view: "Open menus"
+  player_set_inventory_view_title: "Set menus title"
+  player_set_inventory_view_rows: "Set menus rows"
   player_set_inventory_view_row_items: "Items in row"
-  player_set_inventory_view_item: "Item in menu"
+  player_set_inventory_view_item: "Item in menus"
   player_set_world_border: "Set world border"
   player_show_boss_bar: "Show boss bar"
   player_hide_boss_bar: "Hide boss bar"

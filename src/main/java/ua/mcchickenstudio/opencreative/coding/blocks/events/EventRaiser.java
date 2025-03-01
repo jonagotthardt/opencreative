@@ -21,10 +21,10 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
-import io.papermc.paper.event.player.AsyncChatEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.entities.EntitySpawnEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerRespawnEvent;
@@ -38,7 +38,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.Variable
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.WebResponseEvent;
 import ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -61,15 +60,15 @@ public class EventRaiser {
     // World
 
     public static boolean cantRaiseEvent(Player player) {
-        if (PlanetManager.getInstance().getPlanetByPlayer(player) == null) return true;
-        if (PlanetManager.getInstance().getDevPlanet(player) != null) return true;
-        if (PlanetManager.getInstance().getPlanetByPlayer(player).getMode() == Planet.Mode.BUILD) return true;
+        if (OpenCreative.getPlanetsManager().getPlanetByPlayer(player) == null) return true;
+        if (OpenCreative.getPlanetsManager().getDevPlanet(player) != null) return true;
+        if (OpenCreative.getPlanetsManager().getPlanetByPlayer(player).getMode() == Planet.Mode.BUILD) return true;
         return ChangedWorld.isPlayerWithLocation(player);
     }
 
     public static boolean cantRaiseEvent(Entity entity) {
-        if (PlanetManager.getInstance().getPlanetByWorld(entity.getWorld()) == null) return true;
-        if (PlanetManager.getInstance().getPlanetByWorld(entity.getWorld()).getMode() == Planet.Mode.BUILD) return true;
+        if (OpenCreative.getPlanetsManager().getPlanetByWorld(entity.getWorld()) == null) return true;
+        if (OpenCreative.getPlanetsManager().getPlanetByWorld(entity.getWorld()).getMode() == Planet.Mode.BUILD) return true;
         if (isEntityInDevPlanet(entity)) return true;
         return false;
     }
@@ -486,6 +485,14 @@ public class EventRaiser {
             return;
         }
         WorldEvent creativeEvent = new PlayerKilledPlayerEvent(killer,victim,bukkitEvent);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raisePlayerKilledMobEvent(Player killer, Entity victim, org.bukkit.event.entity.EntityDeathEvent bukkitEvent) {
+        if (cantRaiseEvent(killer) || cantRaiseEvent(victim)) {
+            return;
+        }
+        WorldEvent creativeEvent = new PlayerKilledMobEvent(killer,victim,bukkitEvent);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 

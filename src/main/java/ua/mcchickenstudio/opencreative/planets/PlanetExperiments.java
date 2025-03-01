@@ -25,8 +25,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
 
-import java.util.concurrent.TimeUnit;
-
 public class PlanetExperiments {
 
     private final Planet planet;

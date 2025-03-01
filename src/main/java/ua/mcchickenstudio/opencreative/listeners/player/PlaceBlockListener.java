@@ -18,15 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
-import org.bukkit.block.data.Rotatable;
-import org.bukkit.block.data.type.Piston;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.*;
@@ -50,8 +48,8 @@ public final class PlaceBlockListener implements Listener {
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
-        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
 
         if (devPlanet != null) {
 
@@ -92,7 +90,7 @@ public final class PlaceBlockListener implements Listener {
                         signText = actionCategory.name().toLowerCase();
                         additionalBlockMaterial = actionCategory.getAdditionalBlock();
                     }
-                    placeDevBlock(block, additionalBlockMaterial, devPlanet.getSignMaterial(), signText);
+                    placeDevBlock(block.getLocation(), block.getType(), additionalBlockMaterial, devPlanet.getSignMaterial(), signText);
                 } else {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-action-on-event"));
                     Sounds.DEV_NOT_ALLOWED.play(player);
@@ -114,7 +112,7 @@ public final class PlaceBlockListener implements Listener {
                     if (block.getRelative(BlockFace.EAST).getType() == Material.PISTON) {
                         move(block.getLocation(), BlockFace.EAST);
                     }
-                    placeDevBlock(block, additionalBlockMaterial, devPlanet.getSignMaterial(), signText);
+                    placeDevBlock(block.getLocation(), block.getType(), additionalBlockMaterial, devPlanet.getSignMaterial(), signText);
                 } else {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-event-on-action"));
                     Sounds.DEV_NOT_ALLOWED.play(player);
@@ -136,7 +134,9 @@ public final class PlaceBlockListener implements Listener {
         }
     }
 
-    public static void placeDevBlock(Block block, Material additionalBlockMaterial, Material signMaterial, String signText) {
+    public static void placeDevBlock(Location location, Material material, Material additionalBlockMaterial, Material signMaterial, String signText) {
+        Block block = location.getBlock();
+        block.setType(material);
         Block eastBlock = block.getRelative(BlockFace.EAST);
         eastBlock.setType(additionalBlockMaterial);
         if (eastBlock.getType() == Material.PISTON) {
@@ -173,7 +173,7 @@ public final class PlaceBlockListener implements Listener {
     }
 
     public static boolean move(Location location, BlockFace face) {
-        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(location.getWorld());
+        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(location.getWorld());
         if (devPlanet == null) return false;
         DevPlatform platform = devPlanet.getPlatformInLocation(location);
         if (platform == null) return false;
@@ -236,7 +236,7 @@ public final class PlaceBlockListener implements Listener {
         if (oldContainerBlock.getState() instanceof InventoryHolder container) {
             newContainerBlock.setType(oldContainerBlock.getType());
             newContainerBlock.setBlockData(oldContainerBlock.getBlockData());
-            DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(oldContainerBlock.getWorld());
+            DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(oldContainerBlock.getWorld());
             if (devPlanet != null) {
                 Layout layout = devPlanet.getOpenedMenu(oldContainerBlock.getLocation());
                 if (layout != null) {

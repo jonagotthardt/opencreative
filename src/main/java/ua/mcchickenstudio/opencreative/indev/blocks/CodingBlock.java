@@ -38,15 +38,11 @@ package ua.mcchickenstudio.opencreative.indev.blocks;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.CodingPackContent;
 
-import java.util.Map;
-
-public abstract class CodingBlock implements ConfigurationSerializable, CodingPackContent {
+public abstract class CodingBlock implements CodingPackContent {
 
     private final @NotNull String id;
     private final @NotNull Material mainBlock;
@@ -61,8 +57,6 @@ public abstract class CodingBlock implements ConfigurationSerializable, CodingPa
     }
 
     public abstract void onSignClick(PlayerInteractEvent event);
-    public abstract @Nullable CodingBlock deserialize(Map<String,Object> args);
-    public abstract @NotNull Map<String,Object> serialize();
 
     public final void placeBlocks(@NotNull Location mainLocation, @NotNull Location offLocation, @NotNull Location containerLocation, @NotNull Location signLocation, @NotNull Material containerMaterial, @NotNull Material signMaterial) {
         mainLocation.getBlock().setType(mainBlock);
@@ -81,4 +75,14 @@ public abstract class CodingBlock implements ConfigurationSerializable, CodingPa
         return id;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof CodingBlock block)) return false;
+        return block.getId().equals(id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

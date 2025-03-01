@@ -49,7 +49,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 public class Executors {
 
     protected final Planet planet;
-    private List<Executor> executorsList = new ArrayList<>();
+    private final List<Executor> executorsList = new ArrayList<>();
 
     private final Map<Executor,Integer> lastExecutorsCallsAmount = new HashMap<>();
 
@@ -128,7 +128,7 @@ public class Executors {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
         ConfigurationSection section = config.getConfigurationSection("code.blocks");
         if (section != null) {
-            sendCodingDebugLog(planet,"Loading codeScript...");
+            long time = System.currentTimeMillis();
             List<Executor> executors = new ArrayList<>();
             Set<String> keys = section.getKeys(false);
             String path;
@@ -143,7 +143,7 @@ public class Executors {
             }
             clear();
             executorsList.addAll(executors);
-            sendCodingDebugLog(planet,"Loaded codeScript, executors: " + executorsList.size());
+            sendCodingDebugLog(planet,"Started code in " + (System.currentTimeMillis() - time) + " ms with " + executors.size() + " executors!");
         } else {
             sendCodingDebugLog(planet,"No code found to load.");
         }

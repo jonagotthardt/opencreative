@@ -18,8 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.commands;
 
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -53,7 +53,7 @@ public class CommandLocate implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
 
         if (planet == null) {
             sender.sendMessage(getLocaleMessage("locate.offline"));

@@ -22,10 +22,7 @@ import ua.mcchickenstudio.opencreative.coding.arguments.Argument;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.selectionactions.SelectionAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.MobDamagesPlayerEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDamagesMobEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDamagesPlayerEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerKilledPlayerEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.exceptions.TooLongTextException;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
@@ -254,17 +251,10 @@ public abstract class Action {
     }
 
     private Entity getVictim() {
-        Entity victim = null;
-        if (executor.getEvent() instanceof PlayerDamagesMobEvent mobEvent) {
-            victim = mobEvent.getVictim();
-        } else if (executor.getEvent() instanceof MobDamagesPlayerEvent playerEvent) {
-            victim = playerEvent.getVictim();
-        } else if (executor.getEvent() instanceof PlayerDamagesPlayerEvent playerEvent) {
-            victim = playerEvent.getVictim();
-        } else if (executor.getEvent() instanceof PlayerKilledPlayerEvent playerEvent) {
-            victim = playerEvent.getVictim();
+        if (executor.getEvent() instanceof KillerVictimEvent event) {
+            return event.getVictim();
         }
-        return victim;
+        return null;
     }
 
     /**
@@ -272,17 +262,10 @@ public abstract class Action {
      * @return Killer, or null if there's no involved entity in damage event.
      */
     private Entity getKiller() {
-        Entity killer = null;
-        if (executor.getEvent() instanceof PlayerDamagesMobEvent mobEvent) {
-            killer = mobEvent.getDamager();
-        } else if (executor.getEvent() instanceof MobDamagesPlayerEvent playerEvent) {
-            killer = playerEvent.getDamager();
-        } else if (executor.getEvent() instanceof PlayerDamagesPlayerEvent playerEvent) {
-            killer = playerEvent.getDamager();
-        } else if (executor.getEvent() instanceof PlayerKilledPlayerEvent playerEvent) {
-            killer = playerEvent.getKiller();
+        if (executor.getEvent() instanceof KillerVictimEvent mobEvent) {
+            return mobEvent.getKiller();
         }
-        return killer;
+        return null;
     }
 
     /**

@@ -19,7 +19,7 @@
 package ua.mcchickenstudio.opencreative.commands;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.menu.world.browsers.RecommendedWorldsMenu;
+import ua.mcchickenstudio.opencreative.menus.world.browsers.RecommendedWorldsMenu;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

@@ -28,7 +28,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -78,7 +77,8 @@ public class ErrorUtils {
                 \\|/ _____ \\|/
                 "@'/ . . \\`@"\s""" + OpenCreative.getVersion() + """
                 \n/_| \\___/ |_\\\s""" + getRandomPhrase() + """
-                \n   \\___U_/\n""" : "") +
+                \n   \\___U_/
+                """ : "") +
                 (colored ? "§4 " : " ") +
                 error.getClass().getSimpleName() +
                 ": " +
@@ -200,7 +200,7 @@ public class ErrorUtils {
      Sends error message about planet's code exception on running Action for planet's players.
      **/
     public static void sendPlanetCodeErrorMessage(Executor executor, Action action, Entity entity, String errorMessage) {
-        Planet planet = PlanetManager.getInstance().getPlanetByWorld(entity.getWorld());
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(entity.getWorld());
         if (planet == null) return;
         for (Player player : planet.getPlayers()) {
             player.sendMessage(getLocaleMessage("planet-code-error.message").replace("%event%",executor.getExecutorType().getLocaleName()).replace("%action%", action.getActionType().toString()).replace("%error%",errorMessage).replace("%x%",String.valueOf(action.getX())).replace("%y%",String.valueOf(executor.getY())).replace("%z%",String.valueOf(executor.getZ())));

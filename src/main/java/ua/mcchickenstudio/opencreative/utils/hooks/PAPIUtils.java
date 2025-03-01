@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.utils.hooks;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
@@ -46,55 +45,55 @@ class Placeholder extends PlaceholderExpansion {
     public String onPlaceholderRequest(Player player, String identifier) {
         switch (identifier) {
             case "planet_id" -> {
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet != null) return String.valueOf(planet.getId());
             }
             case "planet_custom_id" -> {
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet != null) return planet.getInformation().getCustomID();
             }
             case "planet_online" -> {
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet != null) return String.valueOf(planet.getOnline());
             }
             case "planet_uniques" -> {
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet != null) return String.valueOf(planet.getInformation().getUniques());
             }
             case "planet_reputation" -> {
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet != null) return String.valueOf(planet.getInformation().getReputation());
             }
             case "is_in_planet" -> {
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 return String.valueOf((planet != null));
             }
             case "planet_name" -> {
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet != null) return planet.getInformation().getDisplayName();
             }
             case "planet_description" -> {
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet != null) return planet.getInformation().getDescription();
             }
             case "planet_owner" -> {
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet != null) return planet.getOwner();
             }
             case "planet_category" -> {
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet != null) return String.valueOf(planet.getInformation().getCategory());
             }
             case "planet_sharing" -> {
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet != null) return String.valueOf(planet.getSharing());
             }
             case "planet_mode" -> {
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet != null) return String.valueOf(planet.getMode());
             }
             case "planet_is_dev_planet_loaded" -> {
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet != null) return String.valueOf(planet.getDevPlanet() != null && planet.getDevPlanet().isLoaded());
             }
         }
@@ -113,7 +112,7 @@ class Placeholder extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "5.4";
+        return "5.5";
     }
 
     @Override

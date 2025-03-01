@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.commands;
 
-import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,17 +25,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 
@@ -50,14 +46,13 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 
 public class CommandValue implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("Only players can use this command");
+            sender.sendMessage(getLocaleMessage("only-players"));
             return true;
         }
         if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
@@ -65,7 +60,7 @@ public class CommandValue implements CommandExecutor, TabCompleter {
             return true;
         }
         setCooldown(player,OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
-        DevPlanet planet = PlanetManager.getInstance().getDevPlanet(player);
+        DevPlanet planet = OpenCreative.getPlanetsManager().getDevPlanet(player);
         if (planet == null) {
             player.sendMessage(getLocaleMessage("only-in-world"));
             return true;
@@ -174,7 +169,7 @@ public class CommandValue implements CommandExecutor, TabCompleter {
         if (!(sender instanceof Player player)) {
             return null;
         }
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet == null) return null;
         if (!planet.getWorldPlayers().canDevelop(player)) return null;
         List<String> completer = new ArrayList<>();

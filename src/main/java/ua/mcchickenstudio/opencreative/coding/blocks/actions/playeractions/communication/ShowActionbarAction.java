@@ -23,7 +23,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;

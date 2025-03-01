@@ -288,27 +288,21 @@ public class PlayerUtils {
         }.runTaskLater(OpenCreative.getPlugin(),5L);
     }
 
-    /**
-     * Translate sign text on code block.
-     * @param block Block with sign that will be translated.
-     */
-    public static void translateSign(Block block, Player player) {
-        if (block == null) return;
-        if (!block.getType().toString().contains("SIGN")) return;
-        Sign sign = (Sign) block.getState();
-        List<Component> newLines = new ArrayList<>();
-        for (Component line : sign.lines()) {
-            String content = ((TextComponent) line).content();
-            String path = "blocks." + content;
-            if (content.isEmpty()) {
-                newLines.add(Component.text(""));
-            } else if (!messageExists(path)) {
-                newLines.add(Component.text(content));
-            } else {
-                newLines.add(toComponent(getLocaleMessage(path,false)));
+    public static void translateSigns(Player player, int radius) {
+        if (radius <= 0) return;
+        if (radius > 50) radius = 50;
+        int minX = player.getLocation().getBlockX()-radius;
+        int maxX = player.getLocation().getBlockX()+radius;
+        int minZ = player.getLocation().getBlockZ()-radius;
+        int maxZ = player.getLocation().getBlockZ()+radius;
+        for (int x = minX; x <= maxX; x++) {
+            for (int z = minZ; z <= maxZ; z++) {
+                Block block = player.getWorld().getBlockAt(x,1,z);
+                if (block.getType().name().contains("WALL_SIGN")) {
+                    translateBlockSign(block,player);
+                }
             }
         }
-        player.sendSignChange(block.getLocation(), newLines);
     }
 
     public static void spawnGlowingBlock(Player player, Location location) {

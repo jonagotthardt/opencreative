@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.commands.minecraft;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -54,7 +53,7 @@ public class CommandGive implements CommandExecutor, TabCompleter {
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (!player.hasPermission("opencreative.give.bypass")) {
-                Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet == null) {
                     player.sendMessage(getLocaleMessage("only-in-world"));
                     return true;
@@ -84,9 +83,9 @@ public class CommandGive implements CommandExecutor, TabCompleter {
                     player.sendMessage(getLocaleMessage("no-player-found"));
                     return true;
                 } else {
-                    Planet givePlanet = PlanetManager.getInstance().getPlanetByPlayer(givePlayer);
+                    Planet givePlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(givePlayer);
                     if (!player.hasPermission("opencreative.give.bypass")) {
-                        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+                        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                         if (planet == null || !planet.equals(givePlanet)) {
                             player.sendMessage(getLocaleMessage("no-player-found"));
                             return true;

@@ -43,10 +43,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.indev.blocks.CodingBlock;
-
-import java.util.Map;
 
 public abstract class ActionBlock extends CodingBlock {
 
@@ -61,13 +58,4 @@ public abstract class ActionBlock extends CodingBlock {
 
     }
 
-    @Override
-    public @Nullable CodingBlock deserialize(Map<String, Object> args) {
-        return null;
-    }
-
-    @Override
-    public @NotNull Map<String, Object> serialize() {
-        return Map.of();
-    }
 }

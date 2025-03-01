@@ -24,19 +24,17 @@ import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
-import ua.mcchickenstudio.opencreative.menu.world.settings.EntitiesBrowserMenu;
-import ua.mcchickenstudio.opencreative.menu.world.settings.WorldSettingsMenu;
+import ua.mcchickenstudio.opencreative.menus.world.settings.EntitiesBrowserMenu;
+import ua.mcchickenstudio.opencreative.menus.world.settings.WorldSettingsMenu;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 
 import java.io.File;
@@ -49,7 +47,6 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
 
 public class CommandWorld implements CommandExecutor, TabCompleter {
@@ -57,7 +54,7 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("Only players can use command");
+            sender.sendMessage(getLocaleMessage("only-players"));
             return true;
         }
         if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
@@ -65,7 +62,7 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
             return true;
         }
         setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet == null) {
             player.sendMessage(getLocaleMessage("only-in-world"));
             return true;
@@ -124,6 +121,7 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
                 }
                 Sounds.WORLD_SETTINGS_SHARING_PRIVATE.play(player);
                 planet.setSharing(Planet.Sharing.PRIVATE);
+                player.sendMessage(getLocaleMessage("settings.world-sharing.disabled"));
             }
             case "open" -> {
                 if (!planet.isOwner(player)) {
@@ -142,6 +140,7 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
                 }
                 Sounds.WORLD_SETTINGS_SHARING_PUBLIC.play(player);
                 planet.setSharing(Planet.Sharing.PUBLIC);
+                player.sendMessage(getLocaleMessage("settings.world-sharing.enabled"));
             }
             case "ban", "block", "blacklist" -> {
                 if (!planet.isOwner(player)) {
@@ -161,6 +160,11 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
                     sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
                     return true;
                 }
+                if (playerToBan.hasPermission("opencreative.world.ban.bypass")) {
+                    sender.sendMessage(getLocaleMessage("world.players.black-list.cannot", playerToBan));
+                    return true;
+                }
+                sender.sendMessage(getLocaleMessage("world.players.black-list.added", playerToBan));
                 planet.getWorldPlayers().banPlayer(args[1]);
             }
             case "kick" -> {
@@ -176,6 +180,7 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
                 if (List.of("*","@a").contains(args[1].toLowerCase())) {
                     playersToKick.addAll(planet.getPlayers());
                     playersToKick.remove(player);
+                    sender.sendMessage(getLocaleMessage("world.players.kick.all"));
                 } else {
                     if (planet.isOwner(args[1])) {
                         sender.sendMessage(getLocaleMessage("same-player"));
@@ -184,6 +189,10 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
                     Player playerToKick = Bukkit.getPlayer(args[1]);
                     if (playerToKick == null || !planet.getPlayers().contains(playerToKick)) {
                         sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
+                        return true;
+                    }
+                    if (playerToKick.hasPermission("opencreative.world.kick.bypass")) {
+                        sender.sendMessage(getLocaleMessage("world.players.kick.cannot", playerToKick));
                         return true;
                     }
                     playersToKick.add(playerToKick);
@@ -210,6 +219,7 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
                     return true;
                 }
                 planet.getWorldPlayers().unbanPlayer(args[1]);
+                sender.sendMessage(getLocaleMessage("world.players.black-list.removed",Bukkit.getOfflinePlayer(args[1])));
             }
             case "exp", "e", "experiment", "experiments" -> {
                 if (!planet.isOwner(player)) {
@@ -287,7 +297,7 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) return null;
         List<String> tabCompleter = new ArrayList<>();
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet == null) return null;
         if (!planet.isOwner(player)) return null;
         if (args.length == 1) {

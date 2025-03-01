@@ -19,11 +19,9 @@
 package ua.mcchickenstudio.opencreative.coding.placeholders;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.MobInteractionEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class PlanetPlaceholder extends KeyPlaceholder {

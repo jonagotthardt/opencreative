@@ -50,7 +50,9 @@ import ua.mcchickenstudio.opencreative.managers.economy.Economy;
 import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
 import ua.mcchickenstudio.opencreative.managers.updater.HangarUpdater;
 import ua.mcchickenstudio.opencreative.managers.updater.Updater;
-import ua.mcchickenstudio.opencreative.menu.Menus;
+import ua.mcchickenstudio.opencreative.menus.Menus;
+import ua.mcchickenstudio.opencreative.planets.Space;
+import ua.mcchickenstudio.opencreative.planets.PlanetsManager;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
@@ -81,8 +83,9 @@ public final class OpenCreative extends JavaPlugin {
     private static Economy economy;
     private static Updater updater;
     private static PacketManager packet;
+    private static PlanetsManager space;
 
-    private static final String version = "5.4.3";
+    private static final String version = "5.5.0";
     private static final String codename = "Well, it's possible";
 
     /**
@@ -116,17 +119,20 @@ public final class OpenCreative extends JavaPlugin {
                     Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(5), Duration.ofSeconds(0))
             ));
         }
+        settings = new Settings();
+        settings.load(getConfig());
         registerCommands();
         registerEvents();
         //Ticker.runTicker();
         saveDefaultConfig();
-        settings = new Settings();
-        settings.load(getConfig());
+
+        space = new Space();
 
         FileUtils.loadLocales();
         PlayerUtils.loadPermissions();
         HookUtils.loadHooks();
         FileUtils.loadPlanets();
+        FileUtils.loadModules();
 
         economy = HookUtils.getEconomy();
         economy.init();
@@ -306,6 +312,25 @@ public final class OpenCreative extends JavaPlugin {
      */
     public static PacketManager getPacketManager() {
         return packet;
+    }
+
+    /**
+     * Sets custom planets manager.
+     * @param planetsManager planets manager.
+     */
+    @SuppressWarnings("unused")
+    public static void setPlanetsManager(PlanetsManager planetsManager) {
+        getPlugin().getLogger().info("Now using planets manager: " + planetsManager.getName());
+        OpenCreative.space = planetsManager;
+    }
+
+    /**
+     * Gets planets manager, that stores planets in base
+     * and has methods to create, find and delete them.
+     * @return planets manager.
+     */
+    public static PlanetsManager getPlanetsManager() {
+        return space;
     }
 
     /**

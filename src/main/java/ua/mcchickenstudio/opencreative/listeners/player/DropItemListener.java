@@ -18,8 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -55,14 +55,14 @@ public final class DropItemListener implements Listener {
                 }
             }
         }
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet != null) EventRaiser.raiseItemDropEvent(event.getPlayer(),event);
     }
 
     @EventHandler
     public void onPlayerPickupItem(EntityPickupItemEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
-        Planet planet = PlanetManager.getInstance().getPlanetByPlayer(player);
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet != null)  EventRaiser.raiseItemPickupEvent(player,event);
     }
 

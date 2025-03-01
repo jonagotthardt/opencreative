@@ -20,7 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.menus;
 
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
+import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;

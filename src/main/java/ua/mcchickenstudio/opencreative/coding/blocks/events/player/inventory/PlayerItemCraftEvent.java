@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 

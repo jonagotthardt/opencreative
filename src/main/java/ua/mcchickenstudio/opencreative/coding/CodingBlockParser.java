@@ -39,10 +39,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetCompileErrorMessage;
@@ -52,127 +49,154 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 /**
  * <h1>BlockParser</h1>
  * This class represents parser of coding blocks. It has methods to
- * read coding block information and save it into planet's code script.
+ * read coding block information and save it into planet's code script.getConfig().
  * @see CodeScript
  */
 public class CodingBlockParser {
 
-    /**
-     * Checks every coding block on coding platform in developer's planet and saves them into codeScript.yml.
-     * @param devPlanet Developer's planet to check blocks.
-     */
     public void parseCode(DevPlanet devPlanet) {
-
-        sendCodingDebugLog(devPlanet.getPlanet(),"Parsing code... Clearing");
-        World world = devPlanet.getWorld();
+        long time = System.currentTimeMillis();
+        sendCodingDebugLog(devPlanet.getPlanet(),"Shutting down executors and clearing...");
         devPlanet.getPlanet().getTerritory().stopBukkitRunnables();
         CodeScript script = devPlanet.getPlanet().getTerritory().getScript();
         script.clear();
-        sendCodingDebugLog(devPlanet.getPlanet(),"Parsing blocks... Reading");
+        sendCodingDebugLog(devPlanet.getPlanet(),"Parsing every block, please wait...");
+        parseAllExecutors(devPlanet, script.getConfig());
+        sendCodingDebugLog(devPlanet.getPlanet(),"Parsed code in " + (System.currentTimeMillis() - time) + " ms.");
+        if (script.saveCode()) {
+            devPlanet.getPlanet().getTerritory().getScript().loadCode();
+        }
+    }
+
+    public void parseAllExecutors(DevPlanet devPlanet, CodeConfiguration config) {
+
+        List<Location> locations = new ArrayList<>();
+        List<DevPlatform> platforms = devPlanet.getPlatforms();
+
+        // For platforms
+        for (DevPlatform platform : platforms) {
+            // For coding executors
+            for (int z = platform.getBeginZ() + 4; z <= platform.getEndZ() - 4; z = z + 4) {
+                Block executorBlock = devPlanet.getWorld().getBlockAt(platform.getBeginX() + 4, 1, z);
+                locations.add(executorBlock.getLocation());
+            }
+        }
+        parseExecutors(devPlanet, config, locations);
+
+    }
+
+    public boolean parseExecutors(DevPlanet devPlanet, CodeConfiguration config, List<Location> executorsLocations) {
+
+        boolean isCodeFine = true;
+        World world = devPlanet.getWorld();
 
         List<Block> unknownBlocks = new ArrayList<>();
-        // For platforms
-        for (DevPlatform platform : devPlanet.getPlatforms()) {
-            // For coding executors
-            for (int z = platform.getBeginZ()+4; z <= platform.getEndZ()-4; z = z+4) {
+        List<DevPlatform> platforms = devPlanet.getPlatforms();
+        Collections.reverse(platforms); // Reversing to make executors from first platform as first
 
-                Block executorBlock = world.getBlockAt(platform.getBeginX()+4,1,z);
-                ExecutorCategory executorCategory = ExecutorCategory.getByMaterial(executorBlock.getType());
-                ExecutorType executorType = ExecutorType.getType(executorBlock);
+        // For coding executors
+        for (Location executorLocation : executorsLocations) {
 
-                /*
-                 * Checking executor. If executor is not detected,
-                 * then we don't need to save actions inside,
-                 * because we can't execute them without executor.
-                 */
-                if (executorCategory == null || executorType == null) {
-                    if ((executorCategory == null && isSignEmpty(executorBlock, (byte) 2)) || (executorType == null && isSignEmpty(executorBlock, (byte) 3))) {
-                        unknownBlocks.add(executorBlock);
-                    }
-                    continue;
+            int executorX = executorLocation.getBlockX();
+            int z = executorLocation.getBlockZ();
+
+            Block executorBlock = world.getBlockAt(executorX,1, z);
+            ExecutorCategory executorCategory = ExecutorCategory.getByMaterial(executorBlock.getType());
+            ExecutorType executorType = ExecutorType.getType(executorBlock);
+
+            /*
+             * Checking executor. If executor is not detected,
+             * then we don't need to save actions inside,
+             * because we can't execute them without executor.
+             */
+            if (executorCategory == null || executorType == null) {
+                if ((executorCategory == null && isSignEmpty(executorBlock, (byte) 2)) || (executorType == null && isSignEmpty(executorBlock, (byte) 3))) {
+                    unknownBlocks.add(executorBlock);
                 }
-                script.saveExecutorBlock(executorBlock,executorCategory,executorType);
+                continue;
+            }
+            config.saveExecutorBlock(executorBlock,executorCategory,executorType);
 
-                // For coding actions
-                List<String> multiActions = new ArrayList<>();
-                for (int x = platform.getBeginX()+6; x <= platform.getEndX()-4; x = x+2) {
+            // For coding actions
+            List<String> multiActions = new ArrayList<>();
+            for (int x = executorX+2; x <= executorX+92; x = x+2) {
 
-                    Block actionBlock = world.getBlockAt(x,1,z);
-                    ActionCategory actionCategory = ActionCategory.getByMaterial(actionBlock.getType());
-                    ActionType actionType = ActionType.getType(actionBlock);
-                    Target actionTarget = Target.getBySign(actionBlock.getLocation());
-                    Block containerBlock = actionBlock.getRelative(BlockFace.UP);
+                Block actionBlock = world.getBlockAt(x,1, z);
+                ActionCategory actionCategory = ActionCategory.getByMaterial(actionBlock.getType());
+                ActionType actionType = ActionType.getType(actionBlock);
+                Target actionTarget = Target.getBySign(actionBlock.getLocation());
+                Block containerBlock = actionBlock.getRelative(BlockFace.UP);
 
-                    if (actionCategory != null && actionCategory != ActionCategory.ELSE_CONDITION && actionCategory.isMultiAction()) {
-                        multiActions.add((actionCategory.isCondition() ? "condition_block_" : "multi_action_") + script.getBlockNumber(actionBlock));
-                        if (actionType == null) {
+                if (actionCategory != null && actionCategory != ActionCategory.ELSE_CONDITION && actionCategory.isMultiAction()) {
+                    multiActions.add((actionCategory.isCondition() ? "condition_block_" : "multi_action_") + config.getBlockNumber(actionBlock));
+                    if (actionType == null) {
+                        continue;
+                    }
+                }
+
+                if (actionCategory == null || actionType == null) {
+                    if (actionBlock.getType() != Material.END_STONE && ((actionCategory == null && isSignEmpty(actionBlock, (byte) 2)) || (actionType == null && isSignEmpty(actionBlock, (byte) 3)))) {
+                        unknownBlocks.add(actionBlock);
+                    }
+                    /*
+                     * Checking condition's piston. If it is beginning piston,
+                     * we already added condition in conditions list..
+                     */
+                    if (world.getBlockAt(x+1,1,z).getType() == Material.PISTON) {
+                        if (!multiActions.isEmpty()) {
+                            String last = multiActions.getLast();
+                            multiActions.remove(last);
+                            if (world.getBlockAt(x+2,1,z).getType() == Material.END_STONE) {
+                                multiActions.add(last+".else");
+                                x=x+2;
+                            }
+                        } else {
+                            sendPlanetCompileErrorMessage(devPlanet.getPlanet(),world.getBlockAt(x+1,1,z),getLocaleMessage("planet-code-error.bad-piston"));
+                            isCodeFine = false;
                             continue;
                         }
                     }
-
-                    if (actionCategory == null || actionType == null) {
-                        if (actionBlock.getType() != Material.END_STONE && ((actionCategory == null && isSignEmpty(actionBlock, (byte) 2)) || (actionType == null && isSignEmpty(actionBlock, (byte) 3)))) {
-                            unknownBlocks.add(actionBlock);
-                        }
-                        /*
-                         * Checking condition's piston. If it is beginning piston,
-                         * we already added condition in conditions list..
-                         */
-                        if (world.getBlockAt(x+1,1,z).getType() == Material.PISTON) {
-                            if (!multiActions.isEmpty()) {
-                                String last = multiActions.getLast();
-                                multiActions.remove(last);
-                                if (world.getBlockAt(x+2,1,z).getType() == Material.END_STONE) {
-                                    multiActions.add(last+".else");
-                                    x=x+2;
-                                }
-                            } else {
-                                sendPlanetCompileErrorMessage(devPlanet.getPlanet(),world.getBlockAt(x+1,1,z),getLocaleMessage("planet-code-error.bad-piston"));
-                                continue;
-                            }
-                        }
-                        continue;
-                    }
-                    script.saveActionBlock(executorBlock,multiActions,actionBlock,actionCategory,actionType,actionTarget);
+                    continue;
+                }
+                config.saveActionBlock(executorBlock,multiActions,actionBlock,actionCategory,actionType,actionTarget);
+                /*
+                 * Checking items in container and saving
+                 * them as arguments for action.
+                 */
+                if (!(containerBlock.getState() instanceof InventoryHolder container)) continue;
+                byte slot = 0;
+                ItemStack[] content = container.getInventory().getContents();
+                if (actionType.getCategory() == ActionCategory.SELECTION_ACTION) {
+                    actionType = ActionType.getTypeFromSelectionAction(actionBlock);
+                    if (actionType == null) continue;
+                }
+                for (ArgumentSlot argSlot : actionType.getArgumentsSlots()) {
+                    ItemStack item = content[slot];
                     /*
-                     * Checking items in container and saving
-                     * them as arguments for action.
+                     * If argument slot is list, then we need
+                     * handle and save every item into list.
                      */
-                    if (!(containerBlock.getState() instanceof InventoryHolder container)) continue;
-                    byte slot = 0;
-                    ItemStack[] content = container.getInventory().getContents();
-                    if (actionType.getCategory() == ActionCategory.SELECTION_ACTION) {
-                        actionType = ActionType.getTypeFromSelectionAction(actionBlock);
-                        if (actionType == null) continue;
-                    }
-                    for (ArgumentSlot argSlot : actionType.getArgumentsSlots()) {
-                        ItemStack item = content[slot];
-                        /*
-                         * If argument slot is list, then we need
-                         * handle and save every item into list.
-                         */
-                        if (argSlot.isList()) {
-                            script.saveArguments(executorBlock,multiActions,actionBlock,argSlot.getPath(),null, ValueType.LIST);
-                            for (byte i = 1; i < argSlot.getListSize()+1; i++) {
-                                if (slot < content.length) {
-                                    item = content[slot];
-                                    if (item == null) {
-                                        if (argSlot.acceptEmptyItems()) {
-                                            item = new ItemStack(Material.AIR);
-                                            script.saveArguments(executorBlock,multiActions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
-                                        }
-                                    } else {
-                                        script.saveArguments(executorBlock,multiActions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
+                    if (argSlot.isList()) {
+                        config.saveArguments(executorBlock,multiActions,actionBlock,argSlot.getPath(),null, ValueType.LIST);
+                        for (byte i = 1; i < argSlot.getListSize()+1; i++) {
+                            if (slot < content.length) {
+                                item = content[slot];
+                                if (item == null) {
+                                    if (argSlot.acceptEmptyItems()) {
+                                        item = new ItemStack(Material.AIR);
+                                        config.saveArguments(executorBlock,multiActions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
                                     }
+                                } else {
+                                    config.saveArguments(executorBlock,multiActions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
                                 }
-                                slot++;
-                            }
-                        } else {
-                            if (item != null) {
-                                script.saveArguments(executorBlock,multiActions,actionBlock,argSlot.getPath(),parseItemValue(item),parseItemType(item));
                             }
                             slot++;
                         }
+                    } else {
+                        if (item != null) {
+                            config.saveArguments(executorBlock,multiActions,actionBlock,argSlot.getPath(),parseItemValue(item),parseItemType(item));
+                        }
+                        slot++;
                     }
                 }
             }
@@ -184,11 +208,9 @@ public class CodingBlockParser {
              * coding blocks that were found while parsing.
              */
             sendPlanetCompileErrorMessage(devPlanet.getPlanet(),unknownBlocks);
+            return false;
         }
-        sendCodingDebugLog(devPlanet.getPlanet(),"Saving code...");
-        if (script.saveCode()) {
-            devPlanet.getPlanet().getTerritory().getScript().loadCode();
-        }
+        return isCodeFine;
     }
 
     private static ValueType parseItemType(ItemStack item) {

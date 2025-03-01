@@ -85,11 +85,7 @@ public class ActionsHandler {
         this.variables = mainHandler.variables;
         this.action = action;
         this.selectedTargets = new HashSet<>(parentActionsHandler.selectedTargets);
-        if (action.getActionType() == ActionType.HANDLER_CATCH_ERROR) {
-            this.doNotUseTryFlag = true;
-        } else {
-            this.doNotUseTryFlag = false;
-        }
+        this.doNotUseTryFlag = action.getActionType() == ActionType.HANDLER_CATCH_ERROR;
     }
 
     public final void executeActions(List<Action> actions) {
@@ -105,40 +101,47 @@ public class ActionsHandler {
     }
 
     private void executeNextAction() {
+        if (executor.getPlanet().getMode() != Planet.Mode.PLAYING) {
+            actionsQueue.clear();
+            return;
+        }
         if (actionsQueue.isEmpty()) {
             if (getMainActionHandler() == this) {
                 executor.getPlanet().getVariables().garbageCollector(this);
             }
             if (action instanceof RepeatAction repeatAction) {
-                if (action instanceof RepeatForLoopAction forLoopAction) {
-                    VariableLink link = forLoopAction.getArguments().getVariableLink("variable",forLoopAction);
-                    double add = forLoopAction.getArguments().getValue("add",1.0d,forLoopAction);
-                    String type = forLoopAction.getArguments().getValue("type","less",forLoopAction);
-                    double untilValue = forLoopAction.getArguments().getValue("range",10.0d,forLoopAction);
-                    if (link == null) {
+                switch (action) {
+                    case RepeatForLoopAction forLoopAction -> {
+                        VariableLink link = forLoopAction.getArguments().getVariableLink("variable", forLoopAction);
+                        double add = forLoopAction.getArguments().getValue("add", 1.0d, forLoopAction);
+                        String type = forLoopAction.getArguments().getValue("type", "less", forLoopAction);
+                        double untilValue = forLoopAction.getArguments().getValue("range", 10.0d, forLoopAction);
+                        if (link == null) {
+                            return;
+                        }
+                        double currentValue = forLoopAction.getArguments().getValue("variable", 0.0d, forLoopAction);
+                        boolean execute = switch (type.toLowerCase()) {
+                            case "less" -> currentValue < untilValue;
+                            case "less-equals" -> currentValue <= untilValue;
+                            case "greater" -> currentValue > untilValue;
+                            case "greater-equals" -> currentValue >= untilValue;
+                            default -> false;
+                        };
+                        if (execute) {
+                            forLoopAction.setVarValue(link, currentValue + add);
+                            repeatAction.prepareAndExecute(this);
+                        }
+                    }
+                    case RepeatForEachAction forEachAction -> {
+                        VariableLink link = action.getArguments().getVariableLink("variable", action);
+                        List<Object> list = action.getArguments().getList("list", action);
+                        if (list.isEmpty()) return;
                         return;
                     }
-                    double currentValue = forLoopAction.getArguments().getValue("variable",0.0d,forLoopAction);
-                    boolean execute = switch (type.toLowerCase()) {
-                        case "less" -> currentValue < untilValue;
-                        case "less-equals" -> currentValue <= untilValue;
-                        case "greater" -> currentValue > untilValue;
-                        case "greater-equals" -> currentValue >= untilValue;
-                        default -> false;
-                    };
-                    if (execute) {
-                        forLoopAction.setVarValue(link,currentValue+add);
-                        repeatAction.prepareAndExecute(this);
+                    case RepeatBlocksInRegionAction forEachAction -> {
+                        return;
                     }
-                } else if (action instanceof RepeatForEachAction forEachAction) {
-                    VariableLink link = action.getArguments().getVariableLink("variable",action);
-                    List<Object> list = action.getArguments().getList("list",action);
-                    if (list.isEmpty()) return;
-                    return;
-                }  else if (action instanceof RepeatBlocksInRegionAction forEachAction) {
-                    return;
-                } else {
-                    repeatAction.prepareAndExecute(this);
+                    default -> repeatAction.prepareAndExecute(this);
                 }
             }
             return;

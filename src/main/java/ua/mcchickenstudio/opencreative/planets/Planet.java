@@ -105,7 +105,7 @@ public class Planet {
         variables = new WorldVariables(this);
         experiments = new PlanetExperiments(this);
 
-        PlanetManager.getInstance().registerPlanet(this);
+        OpenCreative.getPlanetsManager().registerPlanet(this);
 
         new BukkitRunnable() {
             @Override
@@ -147,7 +147,7 @@ public class Planet {
         try {
             territory.getWorld().getSpawnLocation().getChunk().load(true);
             if (mode == Mode.BUILD) {
-                for (Player player : getPlayers()){
+                for (Player player : getPlayers()) {
                     if (!isEntityInDevPlanet(player)) {
                         raiseQuitEvent(player);
                         player.showTitle(Title.title(
@@ -157,6 +157,10 @@ public class Planet {
                         clearPlayer(player);
                         player.teleport(territory.getWorld().getSpawnLocation());
                         Sounds.WORLD_MODE_BUILD.play(player);
+                        territory.showBorders(player);
+                        if (isOwner(player)) {
+                            player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
+                        }
                         if (worldPlayers.canBuild(player)) {
                             player.setGameMode(GameMode.CREATIVE);
                             giveBuildPermissions(player);
@@ -182,6 +186,7 @@ public class Planet {
                         clearPlayer(player);
                         player.clearTitle();
                         player.teleport(territory.getWorld().getSpawnLocation());
+                        territory.showBorders(player);
                         if (worldPlayers.canDevelop(player)) {
                             player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
                         } else {
@@ -198,7 +203,7 @@ public class Planet {
                 }
                 EventRaiser.raiseWorldPlayEvent(this);
                 for (Player player : getPlayers()) {
-                    if (PlanetManager.getInstance().getDevPlanet(player) == null) {
+                    if (OpenCreative.getPlanetsManager().getDevPlanet(player) == null) {
                         EventRaiser.raiseJoinEvent(player);
                     }
                 }
@@ -386,7 +391,6 @@ public class Planet {
         return this.getPlayers().size();
     }
 
-    @SuppressWarnings("all")
     public long getCreationTime() {
         if (creationTime == 0) {
             return 1670573410000L;
@@ -394,7 +398,6 @@ public class Planet {
         return creationTime;
     }
 
-    @SuppressWarnings("all")
     public long getLastActivityTime() {
         if (lastActivityTime == 0) {
             return 1670573410000L;
@@ -477,6 +480,7 @@ public class Planet {
                 mode.onPlayerConnect(player,this);
                 getWorldPlayers().getPlanetPlayer(player).load();
                 player.clearTitle();
+                territory.showBorders(player);
                 if (!getPlayersFromPlanetList(this, PlayersType.UNIQUE).contains(player.getName())) {
                     addPlayerInPlanetList(this,player.getName(), PlayersType.UNIQUE);
                     info.setUniques(info.getUniques()+1);

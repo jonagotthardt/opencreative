@@ -23,7 +23,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-public class PlayerDamagesMobEvent extends WorldEvent {
+public class PlayerDamagesMobEvent extends WorldEvent implements KillerVictimEvent {
 
     private final Entity damager;
     private final Entity victim;
@@ -42,10 +42,12 @@ public class PlayerDamagesMobEvent extends WorldEvent {
         return damage;
     }
 
-    public Entity getDamager() {
+    @Override
+    public Entity getKiller() {
         return damager;
     }
 
+    @Override
     public Entity getVictim() {
         return victim;
     }

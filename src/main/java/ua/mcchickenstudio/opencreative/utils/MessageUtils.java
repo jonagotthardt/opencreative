@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
+import ua.mcchickenstudio.opencreative.indev.modules.Module;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.PAPIUtils;
@@ -153,28 +154,6 @@ public class MessageUtils {
 
     private static FileConfiguration getLocalization() {
         return localizationConfig;
-        //return YamlConfiguration.loadConfiguration(getLocalizationFile());
-    }
-
-    public static String getLocaleString(String path) {
-        return getLocalization().getString(path,path);
-    }
-
-    /**
-     Returns a path, that has specified message. May work wrong, if some messages will be same.
-     **/
-    public static String getPathFromMessage(String partOfPath, String message) {
-        for (String line : getLocalization().getKeys(true)) {
-            if (line.startsWith(partOfPath)) {
-                if (getLocaleMessage(line).equalsIgnoreCase(message)) {
-                    return line;
-                }
-            }
-        }
-        if (message.startsWith("§fNot found: ")) {
-            return ChatColor.stripColor(message).replace("Not found: ","");
-        }
-        return null;
     }
 
     /**
@@ -193,13 +172,13 @@ public class MessageUtils {
     /**
      Returns message from localization file, that parsed player's placeholders with PlaceholderAPI. If message is not found, then returns a detailed error message, that message is not found.
      **/
-    public static String getLocaleMessage(String messageID, Player player) {
+    public static String getLocaleMessage(String messageID, OfflinePlayer player) {
         String originalMessage = getLocalization().getString(messageID);
         if (originalMessage == null || originalMessage.equalsIgnoreCase("null")) {
             if (OpenCreative.getSettings().isConsoleNotFoundMessage()) ErrorUtils.sendWarningErrorMessage("Not found " + messageID + " in localization file!");
             return "§6 Error §8| §fNot found §6" + messageID + "§f! Administration of server needs to fill that line in §6locales"+File.separator+getLanguage()+".yml";
         } else {
-            return ChatColor.translateAlternateColorCodes('&',parsePAPI(Bukkit.getOfflinePlayer(player.getName()),originalMessage.replace("%prefix%",getPrefix()).replace("%branding%",getBranding()).replace("%cc-prefix%",getCreativeChatPrefix()).replace("%player%",player.getName())));
+            return ChatColor.translateAlternateColorCodes('&',parsePAPI(player,originalMessage.replace("%prefix%",getPrefix()).replace("%branding%",getBranding()).replace("%cc-prefix%",getCreativeChatPrefix()).replace("%player%",player.getName() == null ? "Unknown player" : player.getName())));
         }
     }
 
@@ -387,6 +366,26 @@ public class MessageUtils {
                 .replace("%planetReputation%", planetReputation)
                 .replace("%planetLastTime%", getElapsedTime(System.currentTimeMillis(), planet.getLastActivityTime()))
                 .replace("%planetCreationTime%", getElapsedTime(System.currentTimeMillis(), planet.getCreationTime()))
+        );
+    }
+
+    /**
+     * Returns string with parsed module lines (
+     */
+    public static String parseModuleLines(Module module, String string) {
+        String reputation = String.valueOf(module.getInformation().getReputation());
+
+        if (module.getInformation().getReputation() >= 1) reputation = "§a+" + reputation;
+        else if (module.getInformation().getReputation() <= -1) reputation = "§c" + reputation;
+        else reputation = "§e" + reputation;
+
+        return parsePAPI(Bukkit.getOfflinePlayer(module.getOwner()), string
+                .replace("%moduleName%", module.getInformation().getDisplayName())
+                .replace("%moduleOwner%", module.getOwnerName())
+                .replace("%moduleID%", String.valueOf(module.getId()))
+                .replace("%moduleDownloads%", String.valueOf(module.getInformation().getDownloads()))
+                .replace("%moduleReputation%", reputation)
+                .replace("%planetCreationTime%", getElapsedTime(System.currentTimeMillis(), module.getInformation().getCreationTime()))
         );
     }
 

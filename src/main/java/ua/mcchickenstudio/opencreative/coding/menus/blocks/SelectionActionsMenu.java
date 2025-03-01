@@ -19,11 +19,11 @@
 package ua.mcchickenstudio.opencreative.coding.menus.blocks;
 
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
-import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
+import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -42,8 +42,8 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSi
 
 public class SelectionActionsMenu extends AbstractMenu {
 
-    private Player player;
-    private Location signLocation;
+    private final Player player;
+    private final Location signLocation;
 
     private final ItemStack varCondition = createItem(Material.OBSIDIAN,1,"items.developer.condition-var");
     private final ItemStack playerCondition = createItem(Material.OAK_PLANKS,1,"items.developer.condition-player");
@@ -127,7 +127,7 @@ public class SelectionActionsMenu extends AbstractMenu {
         setSignLine(signLocation, 3,"");
         translateBlockSign(signLocation.getBlock());
         Block containerBlock = signLocation.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.NORTH);
-        DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet(signLocation.getWorld());
+        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(signLocation.getWorld());
         if (devPlanet == null) {
             containerBlock.setType(Material.AIR);
             return;

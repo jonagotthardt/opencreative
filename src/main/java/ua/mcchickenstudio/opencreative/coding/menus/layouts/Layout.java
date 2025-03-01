@@ -19,12 +19,12 @@
 package ua.mcchickenstudio.opencreative.coding.menus.layouts;
 
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
-import ua.mcchickenstudio.opencreative.menu.AbstractMenu;
-import ua.mcchickenstudio.opencreative.menu.buttons.ParameterButton;
+import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
+import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -50,7 +50,7 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.sendOpenedChestA
 
 /**
  * <h1>Layout</h1>
- * This class represents an inventory menu, that opens
+ * This class represents an inventory menus, that opens
  * if player clicks on coding block chest to fill arguments.
  * @see LayoutMaker
  */
@@ -137,7 +137,7 @@ public abstract class Layout extends AbstractMenu {
         (containerBlock.getType() == Material.BARREL ? Sounds.DEV_CLOSED_BARREL : Sounds.DEV_CLOSED_CHEST).play(event.getPlayer());
         viewers.remove((Player) event.getPlayer());
         if (viewers.isEmpty()) {
-            DevPlanet devPlanet = PlanetManager.getInstance().getDevPlanet((Player) event.getPlayer());
+            DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet((Player) event.getPlayer());
             if (devPlanet != null) {
                 devPlanet.unregisterOpenedMenu(containerBlock.getLocation());
                 for (Player onlinePlayer : event.getPlayer().getWorld().getPlayers()) {

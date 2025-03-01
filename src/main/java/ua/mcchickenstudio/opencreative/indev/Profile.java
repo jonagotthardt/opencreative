@@ -35,6 +35,25 @@ public class Profile {
     }
 
     public void loadInfo() {
-
+        /*
+         * example yaml
+         *
+         * uuid: OOO-OOO-OOO-OOO
+         * name: Notch
+         * description: The famous games creator ever.
+         * gender: Male
+         * country: Scotland
+         * last-location:
+         *   world: world
+         *   x: 1
+         *   y: 1
+         *   z: 1
+         * birth:
+         *   day: 21
+         *   month: 08
+         *   year: 1990
+         * favourite-worlds: [1, 2, 3, 4, 5, 6, 7]
+         * club: AAA-AAA-AAA-AAA
+         */
     }
 }

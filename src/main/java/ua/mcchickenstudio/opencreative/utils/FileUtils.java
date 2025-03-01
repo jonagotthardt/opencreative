@@ -18,25 +18,22 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
-import org.apache.commons.lang3.ArrayUtils;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.indev.modules.Module;
+import ua.mcchickenstudio.opencreative.indev.modules.ModuleManager;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetInfo;
-import ua.mcchickenstudio.opencreative.planets.PlanetManager;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 import java.io.*;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningErrorMessage;
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
-import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isPlanet;
 
 /**
  * <h1>FileUtils</h1>
@@ -208,6 +205,7 @@ public class FileUtils {
                     try {
                         id = Integer.parseInt(worldName.replace("planet",""));
                     } catch (NumberFormatException ignored) {}
+                    if (id == -1) continue;
                     Planet planet = new Planet(id);
                     if (planet.isCorrupted()) {
                         corruptedWorlds++;
@@ -219,11 +217,44 @@ public class FileUtils {
                     }
                 }
             }
-            OpenCreative.getPlugin().getLogger().info("Loaded " + PlanetManager.getInstance().getPlanets().size() + " worlds for " + (System.currentTimeMillis()-currentTime) + " ms.");
+            OpenCreative.getPlugin().getLogger().info("Loaded " + OpenCreative.getPlanetsManager().getPlanets().size() + " worlds for " + (System.currentTimeMillis()-currentTime) + " ms.");
             OpenCreative.getPlugin().getLogger().info(" Deprecated worlds: " + deprecatedWorlds);
             OpenCreative.getPlugin().getLogger().info(" Corrupted worlds: " + corruptedWorlds);
         } catch (Exception error) {
             sendCriticalErrorMessage("An error has occurred while loading worlds...",error);
+        }
+    }
+
+    /**
+     Loads all modules to base.
+     **/
+    public static void loadModules() {
+        OpenCreative.getPlugin().getLogger().info("Registering modules to base...");
+        try {
+            File[] modulesList = getModulesStorageFolder().listFiles();
+            if (modulesList == null) {
+                OpenCreative.getPlugin().getLogger().info("No modules have been detected.");
+                return;
+            }
+            OpenCreative.getPlugin().getLogger().info("Found " + modulesList.length + " modules, adding...");
+            long currentTime = System.currentTimeMillis();
+            for (File moduleFile : getModulesFiles()) {
+                String moduleName = moduleFile.getPath()
+                        .replace(Bukkit.getServer().getWorldContainer() + File.separator,"")
+                        .replace("modules" + File.separator,"")
+                        .replace(".yml","");
+                OpenCreative.getPlugin().getLogger().info("Adding module " + moduleName + " to base...");
+                int id = -1;
+                try {
+                    id = Integer.parseInt(moduleName.replace("module",""));
+                } catch (NumberFormatException ignored) {}
+                if (id == -1) continue;
+                Module module = new Module(id);
+                ModuleManager.getInstance().registerModule(module);
+            }
+            OpenCreative.getPlugin().getLogger().info("Loaded " + ModuleManager.getInstance().getModules().size() + " modules for " + (System.currentTimeMillis()-currentTime) + " ms.");
+        } catch (Exception error) {
+            sendCriticalErrorMessage("An error has occurred while loading modules...",error);
         }
     }
 
@@ -328,9 +359,30 @@ public class FileUtils {
     }
 
     /**
+     * Returns folders of all modules yaml files.
+     * @return modules files.
+     */
+    public static File[] getModulesFiles() {
+        List<File> modules = new ArrayList<>();
+        File modulesFolder = getModulesStorageFolder();
+        if (!modulesFolder.exists()) {
+            modulesFolder.mkdirs();
+        }
+        File[] modulesFiles = modulesFolder.listFiles();
+        if (modulesFiles == null) {
+            return modules.toArray(new File[0]);
+        }
+        for (File moduleFile : modulesFiles) {
+            if (moduleFile.isDirectory()) continue;
+            if (!moduleFile.getName().endsWith(".yml")) continue;
+            modules.add(moduleFile);
+        }
+        return modules.toArray(new File[0]);
+    }
+
+    /**
      * Returns folders of planets worlds that are
      * stored in server container or /unloadedWorlds/ folder.
-     * @return planets worlds folders.
      */
     public static void convertOldPlanetFolders() {
         File serverDirectory = Bukkit.getServer().getWorldContainer();
@@ -406,7 +458,7 @@ public class FileUtils {
     public static void unloadPlanets() {
         OpenCreative.getPlugin().getLogger().info("Unloading worlds, please wait...");
         try {
-            for (Planet planet : PlanetManager.getInstance().getPlanets()) {
+            for (Planet planet : OpenCreative.getPlanetsManager().getPlanets()) {
                 if (planet.isLoaded()) {
                     OpenCreative.getPlugin().getLogger().info("Unloading planet " + planet.getId() + "...");
                     planet.getTerritory().unload();
@@ -415,7 +467,7 @@ public class FileUtils {
                     planet.getDevPlanet().unload();
                 }
             }
-            PlanetManager.getInstance().clearPlanets();
+            OpenCreative.getPlanetsManager().getPlanets().clear();
         } catch (Exception error) {
             sendCriticalErrorMessage("Error while unloading worlds.",error);
         }
@@ -623,6 +675,29 @@ public class FileUtils {
     }
 
     /**
+     * Returns module's configuration.
+     **/
+    public static FileConfiguration getModuleConfig(Module module) {
+        return YamlConfiguration.loadConfiguration(getModuleConfigFile(module.getId()));
+    }
+
+    /**
+     * Returns module's config file.
+     * @return file of module's config.
+     */
+    public static File getModuleConfigFile(int id) {
+        return new File(getModulesStorageFolder(),"module"+id+".yml");
+    }
+
+    /**
+     * Returns folder that stores all modules folders.
+     * @return modules folder.
+     */
+    public static File getModulesStorageFolder() {
+        return new File(Bukkit.getWorldContainer().getPath() + File.separator + "modules" + File.separator);
+    }
+
+    /**
      * Returns size of file.
      * @param file file to get size.
      * @return size of file.
@@ -650,27 +725,6 @@ public class FileUtils {
      */
     public static File getPlanetsStorageFolder() {
         return new File(Bukkit.getWorldContainer().getPath() + File.separator + "planets" + File.separator);
-    }
-
-    /**
-     * Returns JSON file of player's profile.
-     * @param uuid uuid of player.
-     * @return json file.
-     */
-    public static File getProfileJson(String uuid) {
-        File folder = new File(OpenCreative.getPlugin().getDataFolder().getPath() + File.separator + "indev");
-        try {
-            if (!folder.exists()) {
-                folder.mkdirs();
-            }
-            File profileFile = new File(folder,uuid+ ".json");
-            if (!profileFile.exists()) {
-                profileFile.createNewFile();
-            }
-            return profileFile;
-        } catch (IOException error) {
-            return null;
-        }
     }
 
     public static String getPlanetIdFromName(String name) {

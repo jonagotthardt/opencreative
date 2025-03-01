@@ -250,6 +250,11 @@ public class WorldListener implements Listener {
     }
 
     @EventHandler
+    public void onMobKill(PlayerKilledMobEvent event) {
+        Executors.activate(event);
+    }
+
+    @EventHandler
     public void onPlayerDamagedMob(PlayerDamagesMobEvent event) {
         Executors.activate(event);
     }
