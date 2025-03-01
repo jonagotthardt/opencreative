@@ -10494,6 +10494,7 @@ blocks:
   player_open_book: "Открыть книгу"
   player_get_item_by_slot: "Получ. предмет"
   player_set_remaining_air: "Остав. воздух"
+  player_release_shoulders: "Освоб. плечи"
 
   entity_add_damage: "Нанести урон"
   entity_remove: "&cУничтожить"
@@ -10529,6 +10530,7 @@ blocks:
   entity_set_shield_blocking_delay: "Задержка щита"
   entity_set_bee_stinger_cooldown: "Задержка пчёл"
   entity_set_maximum_no_damage_ticks: "Макс. без урона"
+  entity_release_shoulders: "Освоб. плечи"
   entity_set_glowing: "Свечение"
   entity_teleport: "Телепорт"
   entity_launch_vertical: "Запуск верт."

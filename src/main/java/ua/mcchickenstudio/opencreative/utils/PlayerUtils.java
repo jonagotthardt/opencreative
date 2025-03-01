@@ -72,6 +72,8 @@ public class PlayerUtils {
         player.resetPlayerTime();
         player.resetPlayerWeather();
         player.removeResourcePacks();
+        player.setMaximumAir(20);
+        player.setRemainingAir(player.getMaximumAir());
         player.releaseLeftShoulderEntity();
         player.releaseRightShoulderEntity();
         player.setSimulationDistance(Bukkit.getSimulationDistance());
