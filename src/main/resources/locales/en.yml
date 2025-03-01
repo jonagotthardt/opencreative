@@ -1935,6 +1935,33 @@ items:
           - " &7target or UUID."
           - " "
           - "&eClick to set action."
+      entity-release-shoulders:
+        name: "&aRelease shoulders"
+        lore:
+          - "&7Parrots on entity's shoulders"
+          - "&7will fly away from him."
+          - " "
+          - "&fIn chest:"
+          - "&3 Option &7- Both, left, right"
+          - " "
+          - "&eClick to set action."
+        arguments:
+          type:
+            name: "&aShoulder"
+            lore:
+              - "&7Select shoulder to release"
+              - "&7parrots from it."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+            choices:
+              all: "Both"
+              left: "Left"
+              right: "Right"
       entity-path-move-to-location:
         name: "&fSet move path to location"
         lore:
@@ -2150,6 +2177,60 @@ items:
               - ""
               - "&eClick to toggle."
               - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
+      entity-set-maximum-air:
+        name: "&eSet Maximum Air"
+        lore:
+          - "&7Sets maximum time of breathing"
+          - "&7for entity under water."
+          - " "
+          - "&fIn the chest:"
+          - "&a Number &7- Maximum Air (in ticks)"
+          - "&3 Parameter &7- Set or Add"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or Add"
+            lore:
+              - "&7If Add is selected, your value"
+              - "&7will be added to the current"
+              - "&7value of the entity."
+              - " "
+              - "&eClick to change."
+              - " "
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
+      entity-set-remaining-air:
+        name: "&eSet Remaining Air"
+        lore:
+          - "&7Sets how much time in ticks"
+          - "&7entity can breath under water."
+          - " "
+          - "&fIn the chest:"
+          - "&a Number &7- Remaining Air (in ticks)"
+          - "&3 Parameter &7- Set or Add"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or Add"
+            lore:
+              - "&7If Add is selected, your value"
+              - "&7will be added to the current"
+              - "&7value of the entity."
+              - " "
+              - "&eClick to change."
+              - " "
               - "&fOptions:"
               - "%1%"
               - "%2%"
@@ -3411,6 +3492,33 @@ items:
           - " &7glowing"
           - " "
           - "&eClick to set action."
+      player-release-shoulders:
+        name: "&aRelease shoulders"
+        lore:
+          - "&7Parrots on player's shoulders"
+          - "&7will fly away from him."
+          - " "
+          - "&fIn chest:"
+          - "&3 Option &7- Both, left, right"
+          - " "
+          - "&eClick to set action."
+        arguments:
+          type:
+            name: "&aShoulder"
+            lore:
+              - "&7Select shoulder to release"
+              - "&7parrots from it."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+            choices:
+              all: "Both"
+              left: "Left"
+              right: "Right"
       player-set-flying:
         name: "&fSet flying mode"
         lore:
@@ -4716,6 +4824,60 @@ items:
           - "&7player's inventory."
           - " "
           - "&eClick to set action."
+      player-set-maximum-air:
+        name: "&eSet Maximum Air"
+        lore:
+          - "&7Sets maximum time of breathing"
+          - "&7for player under water."
+          - " "
+          - "&fIn the chest:"
+          - "&a Number &7- Maximum Air (in ticks)"
+          - "&3 Parameter &7- Set or Add"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or Add"
+            lore:
+              - "&7If Add is selected, your value"
+              - "&7will be added to the current"
+              - "&7value of the player."
+              - " "
+              - "&eClick to change."
+              - " "
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
+      player-set-remaining-air:
+        name: "&eSet Remaining Air"
+        lore:
+          - "&7Sets how much time in ticks"
+          - "&7player can breath under water."
+          - " "
+          - "&fIn the chest:"
+          - "&a Number &7- Remaining Air (in ticks)"
+          - "&3 Parameter &7- Set or Add"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or Add"
+            lore:
+              - "&7If Add is selected, your value"
+              - "&7will be added to the current"
+              - "&7value of the player."
+              - " "
+              - "&eClick to change."
+              - " "
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
       player-set-walk-speed:
         name: "&eSet Walk Speed"
         lore:
@@ -10183,6 +10345,9 @@ blocks:
   player_open_container: "Open block inventory"
   player_open_book: "Open book"
   player_get_item_by_slot: "Get item"
+  player_set_maximum_air: "Maximum Air"
+  player_set_remaining_air: "Remaining Air"
+  player_release_shoulders: "Release Shoulders"
 
   entity_remove: "&cRemove"
   entity_set_team: "Set team"
@@ -10224,6 +10389,9 @@ blocks:
   entity_launch_horizontal: "Launch Horizontally"
   entity_launch_to_location: "Launch to Location"
   entity_saddle_entity: "Saddle Entity"
+  entity_set_maximum_air: "Maximum Air"
+  entity_set_remaining_air: "Remaining Air"
+  entity_release_shoulders: "Release Shoulders"
 
   handler_catch_error: "Catch error"
   handler_measure_time: "Measure time"
