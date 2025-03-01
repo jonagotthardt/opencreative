@@ -29,7 +29,13 @@ disabled: "&cThis feature is disabled :("
 too-few-args: "&cNot enough arguments :("
 cooldown: "%prefix%&cPlease wait %cooldown% seconds before using this command again."
 maintenance: "%prefix%&cOops, it seems there's a maintenance break: this action is unavailable as maintenance is underway. Please wait until the maintenance is over!"
+not-found-player: "&c Player is offline."
+only-players: "&c This command can be used only as player."
 commands:
+  join:
+    help: "%prefix%&fTo connect to the world with ID, use: &6/join ID"
+    connecting: "%prefix%Connecting &6%player%&f to world %id%..."
+    failed: "%prefix%&cFailed to connect to this world O_o"
   give:
     help: "%prefix%To give an item to yourself or a player in your world, use:\n &6/give ID &7- Give an item to yourself\n &6/give Username ID &7- Give an item to a player\n &6/give Username ID Amount &7- Give an item with a specific amount to a player"
     wrong: "%prefix%&cThis item does not exist O_o"
@@ -380,7 +386,6 @@ creative-chat:
   on-usage: "%cc-prefix%&fTo &6enable&f creative chat, type: &6/cc on"
   cc-usage: "%cc-prefix%&fTo chat in creative chat, type: &6/cc Hello!"
   cooldown: "%cc-prefix%&fPlease wait &6%cooldown% seconds&f before sending another message."
-join-usage: "%prefix%Use &6/join ID"
 advertisement:
   message: "%prefix%&6Invitation:\n&f &7%player% &f&ninvites&f you to the world: \n&f %world%\n &f\n&a &a &n[Click to join]&f\n &f"
   hover: "&f%planetName%\n&8Created by %planetOwner%\n \n&a ☻ &7Online: &a%planetOnline%\n&e ⭐&7 Rating: &f%planetReputation%\n&3 ⚐&7 Category: &f%planetCategory%\n \n&aClick to join the world"
@@ -1603,6 +1608,18 @@ items:
           - "&fUse for:"
           - "&7> Reward the killer"
           - "&7> Send death message"
+          - "&7> Update scoreboard"
+          - " "
+          - "&eClick to set event."
+      player-killed-mob:
+        name: "&bPlayer killed a mob"
+        lore:
+          - "&7Triggered when player"
+          - "&7kills entity in world."
+          - " "
+          - "&fUse for:"
+          - "&7> Reward the player"
+          - "&7> Cancel mob's death"
           - "&7> Update scoreboard"
           - " "
           - "&eClick to set event."
@@ -10067,6 +10084,7 @@ blocks:
   player_item_craft: "Crafted item"
   player_item_break: "Broke item"
   player_killed_player: "Killed a player"
+  player_killed_mob: "Killed a mob"
   player_damage_player: "Hit a player"
 
   world_play_mode: "&aPlay mode"

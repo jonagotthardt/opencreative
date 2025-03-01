@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.commands.world;
 
+import org.bukkit.Bukkit;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.command.Command;
@@ -41,47 +42,63 @@ public class CommandJoin implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (!(sender instanceof Player player)) {
+
+        if (sender instanceof Player player) {
+            if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
+                player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
+                return true;
+            }
+            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
+        }
+
+        if (OpenCreative.getSettings().isMaintenance() && !sender.hasPermission("opencreative.maintenance.bypass")) {
+            sender.sendMessage(getLocaleMessage("maintenance"));
             return true;
         }
 
-        if (OpenCreative.getSettings().isMaintenance() && !player.hasPermission("opencreative.maintenance.bypass")) {
-            player.sendMessage(getLocaleMessage("maintenance"));
+        if (args.length == 2) {
+            if (!sender.hasPermission("opencreative.join.others")) {
+                sender.sendMessage(getLocaleMessage("no-perms"));
+                return true;
+            }
+            Player player = Bukkit.getPlayer(args[1]);
+            if (player == null) {
+                sender.sendMessage(getLocaleMessage("not-found-player"));
+                return true;
+            }
+            sender.sendMessage(getLocaleMessage("commands.join.connecting", player).replace("%id%",args[0]));
+            if (!handlePlayerConnection(player, args[0])) {
+                sender.sendMessage(getLocaleMessage("commands.join.failed", player));
+            }
+        } else if (args.length != 1) {
+            sender.sendMessage(getLocaleMessage("commands.join.help"));
             return true;
+        } else if (sender instanceof Player player) {
+            handlePlayerConnection(player, args[0]);
+        } else {
+            sender.sendMessage(getLocaleMessage("only-players"));
         }
-
-        if (args.length != 1) {
-            player.sendMessage(getLocaleMessage("join-usage"));
-            return true;
-        }
-
-        handlePlayerConnection(player, args[0]);
 
         return true;
     }
 
-    protected void handlePlayerConnection(Player player, String planetId) {
-        if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-            player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
-            return;
-        }
-        setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
-
+    protected boolean handlePlayerConnection(Player player, String planetId) {
         Planet foundPlanet = findPlanet(planetId);
 
         if (foundPlanet == null) {
             Sounds.PLAYER_FAIL.play(player);
             player.clearTitle();
             player.sendMessage(getLocaleMessage("no-planet-found", player));
-            return;
+            return false;
         }
 
         if (foundPlanet.equals(OpenCreative.getPlanetsManager().getPlanetByPlayer(player))) {
             player.sendMessage(getLocaleMessage("same-world", player));
-            return;
+            return false;
         }
 
         foundPlanet.connectPlayer(player);
+        return true;
     }
 
     protected Planet findPlanet(String planetId) {

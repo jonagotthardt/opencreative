@@ -50,7 +50,7 @@ public class CommandSpawn implements CommandExecutor, TabCompleter {
         if (args.length == 0) {
             if (!(sender instanceof Player player)) {
                 // Console cannot be teleported to lobby
-                sender.sendMessage("Only player can be teleported to lobby");
+                sender.sendMessage(getLocaleMessage("only-players"));
                 return true;
             }
             EventRaiser.raiseQuitEvent(player);

@@ -22,7 +22,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-public class PlayerDamagesPlayerEvent extends WorldEvent {
+public class PlayerDamagesPlayerEvent extends WorldEvent implements KillerVictimEvent {
 
     private final EntityDamageByEntityEvent event;
     private final Player damager;
@@ -41,10 +41,12 @@ public class PlayerDamagesPlayerEvent extends WorldEvent {
         return damage;
     }
 
-    public Player getDamager() {
+    @Override
+    public Player getKiller() {
         return damager;
     }
 
+    @Override
     public Player getVictim() {
         return victim;
     }

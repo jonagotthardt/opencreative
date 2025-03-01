@@ -18,17 +18,19 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
-public class PlayerKilledPlayerEvent extends WorldEvent implements KillerVictimEvent {
+public class PlayerKilledMobEvent extends WorldEvent implements KillerVictimEvent {
 
-    private final PlayerDeathEvent event;
+    private final EntityDeathEvent event;
     private final Player killer;
-    private final Player victim;
+    private final Entity victim;
 
-    public PlayerKilledPlayerEvent(Player killer, Player victim, PlayerDeathEvent event) {
+    public PlayerKilledMobEvent(Player killer, Entity victim, EntityDeathEvent event) {
         super(killer);
         this.event = event;
         this.killer = killer;
@@ -41,7 +43,7 @@ public class PlayerKilledPlayerEvent extends WorldEvent implements KillerVictimE
     }
 
     @Override
-    public Player getVictim() {
+    public Entity getVictim() {
         return victim;
     }
 

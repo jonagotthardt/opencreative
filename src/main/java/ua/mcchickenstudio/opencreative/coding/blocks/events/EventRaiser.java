@@ -488,6 +488,14 @@ public class EventRaiser {
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 
+    public static void raisePlayerKilledMobEvent(Player killer, Entity victim, org.bukkit.event.entity.EntityDeathEvent bukkitEvent) {
+        if (cantRaiseEvent(killer) || cantRaiseEvent(victim)) {
+            return;
+        }
+        WorldEvent creativeEvent = new PlayerKilledMobEvent(killer,victim,bukkitEvent);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
     public static void raisePlayerDamagesPlayerEvent(Player damager, Player victim, EntityDamageByEntityEvent bukkitEvent) {
         if (cantRaiseEvent(damager) || cantRaiseEvent(victim)) {
             return;

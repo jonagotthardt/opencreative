@@ -52,7 +52,7 @@ public class CommandValue implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("Only players can use this command");
+            sender.sendMessage(getLocaleMessage("only-players"));
             return true;
         }
         if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {

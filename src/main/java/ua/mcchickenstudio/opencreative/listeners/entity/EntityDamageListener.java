@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.listeners.entity;
 
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
@@ -101,6 +102,15 @@ public final class EntityDamageListener implements Listener {
                 if (planet != null) {
                     EventRaiser.raisePlayerDamagedMobEvent(damager,event);
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onDeath(EntityDeathEvent event) {
+        if (event.getEntity().getKiller() instanceof Player player && !(event.getEntity() instanceof Player)) {
+            if (OpenCreative.getPlanetsManager().getPlanetByPlayer(player) != null) {
+                EventRaiser.raisePlayerKilledMobEvent(player,event.getEntity(),event);
             }
         }
     }

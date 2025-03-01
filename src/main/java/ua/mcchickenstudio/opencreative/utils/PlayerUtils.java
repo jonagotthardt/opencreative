@@ -275,7 +275,6 @@ public class PlayerUtils {
             if (content.isEmpty()) {
                 newLines.add(Component.text(""));
             } else if (!messageExists(path)) {
-                System.out.println("doesnt exists " + path);
                 newLines.add(Component.text(content));
             } else {
                 newLines.add(toComponent(getLocaleMessage(path,false)));

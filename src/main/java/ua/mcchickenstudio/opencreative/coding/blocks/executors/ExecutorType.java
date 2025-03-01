@@ -161,6 +161,7 @@ public enum ExecutorType {
     PLAYER_DAMAGE_PLAYER(   ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerDamagesPlayerExecutor.class, PlayerDamagesPlayerEvent.class, Material.PLAYER_HEAD),
     PLAYER_HUNGER_CHANGE(   ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, HungerChangeExecutor.class, HungerChangeEvent.class, Material.COOKED_CHICKEN),
     PLAYER_KILLED_PLAYER(   ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerKilledPlayerExecutor.class, PlayerKilledPlayerEvent.class, Material.DIAMOND_SWORD),
+    PLAYER_KILLED_MOB(      ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerKilledMobExecutor.class, PlayerKilledMobEvent.class, Material.IRON_AXE),
     PLAYER_DEATH(           ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerDeathExecutor.class, PlayerDeathEvent.class,Material.REDSTONE),
     PLAYER_RESPAWN(         ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerRespawnExecutor.class, PlayerRespawnEvent.class, Material.NETHER_STAR),
     PLAYER_TOTEM_RESPAWN(   ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerTotemRespawnExecutor.class, PlayerTotemRespawnEvent.class, Material.TOTEM_OF_UNDYING),

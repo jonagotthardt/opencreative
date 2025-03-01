@@ -101,6 +101,10 @@ public class ActionsHandler {
     }
 
     private void executeNextAction() {
+        if (executor.getPlanet().getMode() != Planet.Mode.PLAYING) {
+            actionsQueue.clear();
+            return;
+        }
         if (actionsQueue.isEmpty()) {
             if (getMainActionHandler() == this) {
                 executor.getPlanet().getVariables().garbageCollector(this);

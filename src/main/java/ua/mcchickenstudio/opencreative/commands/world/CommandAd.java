@@ -59,6 +59,11 @@ public class CommandAd extends CommandJoin {
                 handlePlanetAdvertisement(player, OpenCreative.getPlanetsManager().getPlanetByPlayer(player));
                 break;
             case 1:  // /ad [planet id]
+                if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
+                    player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
+                    return true;
+                }
+                setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
                 handlePlayerConnection(player, args[0]);
                 break;
             case 2:  // /ad [planet id] [player]

@@ -16,37 +16,31 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting;
+package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.fighting;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import org.bukkit.entity.Player;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.Cancellable;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public class PlayerKilledPlayerEvent extends WorldEvent implements KillerVictimEvent {
+public class PlayerKilledMobExecutor extends PlayerExecutor implements Cancellable {
 
-    private final PlayerDeathEvent event;
-    private final Player killer;
-    private final Player victim;
-
-    public PlayerKilledPlayerEvent(Player killer, Player victim, PlayerDeathEvent event) {
-        super(killer);
-        this.event = event;
-        this.killer = killer;
-        this.victim = victim;
+    public PlayerKilledMobExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override
-    public Player getKiller() {
-        return killer;
+    public ExecutorType getExecutorType() {
+        return ExecutorType.PLAYER_KILLED_MOB;
     }
 
     @Override
-    public Player getVictim() {
-        return victim;
+    public boolean isCancelled() {
+        return getEvent().isCancelled();
     }
 
     @Override
-    public void setCancelled(boolean cancelled) {
-        event.setCancelled(cancelled);
+    public void setCancelled(boolean cancel) {
+        getEvent().setCancelled(cancel);
     }
 }
