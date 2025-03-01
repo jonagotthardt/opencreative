@@ -16,33 +16,33 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.inventory;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.params;
 
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
-public final class EntityClearInventoryAction extends EntityAction {
-    public EntityClearInventoryAction(Executor executor, Target target, int x, Arguments args) {
+public final class PlayerSetRemainingAirAction extends PlayerAction {
+    public PlayerSetRemainingAirAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
-    public void execute(Entity entity) {
-        if (entity instanceof InventoryHolder holder) {
-            holder.getInventory().clear();
-        } else if (entity instanceof LivingEntity living && living.getEquipment() != null) {
-            living.getEquipment().clear();
+    public void executePlayer(Player player) {
+        boolean add = getArguments().getValue("add",false,this);
+        int ticks = getArguments().getValue("ticks",0,this);
+        if (!add) {
+            player.setRemainingAir(ticks);
+        } else {
+            player.setRemainingAir(player.getRemainingAir()+ticks);
         }
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.ENTITY_CLEAR_INVENTORY;
+        return ActionType.PLAYER_SET_REMAINING_AIR;
     }
 }

@@ -16,41 +16,37 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.inventory;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.other;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
-public final class EntityGetItemAction extends EntityAction {
-    public EntityGetItemAction(Executor executor, Target target, int x, Arguments args) {
+public final class EntityReleaseShouldersAction extends EntityAction {
+    public EntityReleaseShouldersAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
-    public void execute(Entity entity) {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        int index = getArguments().getValue("slot",1,this);
-        ItemStack item = null;
-        if (entity instanceof InventoryHolder holder) {
-            item = holder.getInventory().getItem(index-1);
-        } else if (entity instanceof LivingEntity living && living.getEquipment() != null) {
-            item = living.getEquipment().getItem(EquipmentSlot.values()[index-1]);
+    protected void execute(Entity entity) {
+        if (!(entity instanceof HumanEntity humanEntity)) return;
+        String type = getArguments().getValue("type", "all", this);
+        switch (type.toLowerCase()) {
+            case "left" -> humanEntity.releaseLeftShoulderEntity();
+            case "right" -> humanEntity.releaseRightShoulderEntity();
+            default -> {
+                humanEntity.releaseLeftShoulderEntity();
+                humanEntity.releaseRightShoulderEntity();
+            }
         }
-        if (item != null) setVarValue(link,item);
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.ENTITY_GET_ITEM_BY_SLOT;
+        return ActionType.ENTITY_RELEASE_SHOULDERS;
     }
 }

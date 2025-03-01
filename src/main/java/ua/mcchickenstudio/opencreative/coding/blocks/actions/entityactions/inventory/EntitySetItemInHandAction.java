@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.inve
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -35,12 +36,18 @@ public final class EntitySetItemInHandAction extends EntityAction {
 
     @Override
     protected void execute(Entity entity) {
-        if (!(entity instanceof HumanEntity human)) return;
         ItemStack mainItem = getArguments().getValue("main",new ItemStack(Material.AIR),this);
         ItemStack offItem = getArguments().getValue("off",new ItemStack(Material.AIR),this);
         boolean replaceWithAir = getArguments().getValue("replace-with-air",false,this);
-        if (replaceWithAir || !mainItem.isEmpty()) human.getInventory().setItemInMainHand(mainItem);
-        if (replaceWithAir || !offItem.isEmpty()) human.getInventory().setItemInOffHand(offItem);
+        if (entity instanceof HumanEntity human) {
+            if (replaceWithAir || !mainItem.isEmpty()) human.getInventory().setItemInMainHand(mainItem);
+            if (replaceWithAir || !offItem.isEmpty()) human.getInventory().setItemInOffHand(offItem);
+        } else if (entity instanceof LivingEntity living && living.getEquipment() != null) {
+            if (replaceWithAir || !mainItem.isEmpty()) living.getEquipment().setItemInMainHand(mainItem);
+            if (replaceWithAir || !offItem.isEmpty()) living.getEquipment().setItemInOffHand(offItem);
+        }
+
+
     }
 
     @Override

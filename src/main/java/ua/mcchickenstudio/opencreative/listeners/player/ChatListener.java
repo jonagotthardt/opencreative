@@ -435,13 +435,18 @@ public final class ChatListener implements Listener {
                             return;
                         }
                         oldOwner.sendMessage(getLocaleMessage("world.players.transfer-ownership.transferred-old").replace("%player%", player.getName()));
-                        oldOwner.setGameMode(GameMode.ADVENTURE);
-                        planet.getWorldPlayers().removeBuilder(player.getName());
-                        planet.getWorldPlayers().removeDeveloper(player.getName());
-                        planet.setOwner(player.getName());
                         player.sendMessage(getLocaleMessage("world.players.transfer-ownership.transferred-new"));
-                        Sounds.WORLD_SETTINGS_OWNER_SET.play(player);
                         planet.setChangingOwner(false);
+                        Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () -> {
+                            planet.setOwner(player.getName());
+                            planet.getWorldPlayers().removeBuilder(player.getName());
+                            planet.getWorldPlayers().removeDeveloper(player.getName());
+                            Sounds.WORLD_SETTINGS_OWNER_SET.play(player);
+                            ItemStack compass = createItem(Material.COMPASS,1,"items.developer.world-settings");
+                            player.getInventory().setItem(8,compass);
+                            oldOwner.getInventory().remove(compass);
+                            oldOwner.setGameMode(GameMode.ADVENTURE);
+                        });
                     } else {
                         if (oldOwner != null)
                             oldOwner.sendMessage(getLocaleMessage("world.players.transfer-ownership.cancelled"));

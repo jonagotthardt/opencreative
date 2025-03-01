@@ -157,6 +157,7 @@ public enum ActionType {
     PLAYER_GIVE_POTION_EFFECTS(         ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS,  GivePotionEffectsAction.class, Material.POTION,         new ArgumentSlot("potions",ValueType.POTION,(byte) 18), new ParameterSlot("replace")),
     PLAYER_CLEAR_POTION_EFFECTS(        ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS, ClearPotionEffectsAction.class, Material.MILK_BUCKET,         new ArgumentSlot("potions", ValueType.POTION)),
     PLAYER_REMOVE_POTION_EFFECTS(       ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS, RemovePotionEffectsAction.class, Material.GLASS_BOTTLE,         new ArgumentSlot("potions",ValueType.POTION, (byte) 27)),
+    PLAYER_SET_REMAINING_AIR(           ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS, PlayerSetRemainingAirAction.class, Material.SPONGE,  new ArgumentSlot("ticks", ValueType.NUMBER),new ParameterSlot("add")),
     PLAYER_SET_FLYING_FALL_DAMAGE(      ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS,  SetFlyingFallDamageAction.class, Material.RABBIT_HIDE,  new ParameterSlot("boolean")),
     PLAYER_SET_FALL_DISTANCE(           ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS,        SetFallDistanceAction.class, Material.RABBIT_FOOT, new ArgumentSlot("distance", ValueType.NUMBER),new ParameterSlot("add")),
     PLAYER_SET_LAST_DAMAGE(             ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS,        SetLastDamageAction.class, Material.REDSTONE, new ArgumentSlot("damage", ValueType.NUMBER),new ParameterSlot("add")),
@@ -165,6 +166,7 @@ public enum ActionType {
     PLAYER_SET_SHIELD_BLOCKING_DELAY(   ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS,        SetShieldBlockingDelay.class, Material.SHIELD, new ArgumentSlot("delay", ValueType.NUMBER),new ParameterSlot("add")),
     PLAYER_SET_BEE_STINGER_COOLDOWN(    ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS,        SetBeeStingerCooldownAction.class, Material.BEE_NEST, new ArgumentSlot("cooldown", ValueType.NUMBER),new ParameterSlot("add")),
     PLAYER_SET_MAXIMUM_NO_DAMAGE_TICKS( ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS, SetMaxNoDamageTicksAction.class, Material.ENCHANTED_GOLDEN_APPLE, new ArgumentSlot("ticks", ValueType.NUMBER),new ParameterSlot("add")),
+    PLAYER_SET_MAXIMUM_AIR(             ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS, PlayerSetMaximumAirAction.class, Material.POTION,  new ArgumentSlot("ticks", ValueType.NUMBER),new ParameterSlot("add")),
 
     // State
     PLAYER_SET_GAMEMODE(                ActionCategory.PLAYER_ACTION, MenusCategory.STATE, SetGameModeAction.class, Material.CRAFTING_TABLE,  new ParameterSlot("game-mode", Arrays.asList("adventure","survival","creative","spectator"), Material.PUFFERFISH_BUCKET,Material.CRAFTING_TABLE,Material.TNT,Material.FEATHER)),
@@ -173,6 +175,7 @@ public enum ActionType {
     PLAYER_SET_GLIDING(                 ActionCategory.PLAYER_ACTION, MenusCategory.STATE, SetGlidingAction.class, Material.ELYTRA, new ParameterSlot("boolean", Material.CHAINMAIL_BOOTS, Material.ELYTRA)),
     PLAYER_SET_SPRINTING(               ActionCategory.PLAYER_ACTION, MenusCategory.STATE, SetSprintingAction.class, Material.GOLDEN_BOOTS, new ParameterSlot("boolean", Material.LEATHER_BOOTS, Material.NETHERITE_BOOTS)),
     PLAYER_SET_SNEAKING(                ActionCategory.PLAYER_ACTION, MenusCategory.STATE, SetSneakingAction.class, Material.RABBIT_FOOT, new ParameterSlot("boolean", Material.RABBIT_FOOT, Material.RABBIT_STEW)),
+    PLAYER_RELEASE_SHOULDERS(           ActionCategory.PLAYER_ACTION, MenusCategory.STATE, PlayerReleaseShouldersAction.class, Material.PARROT_SPAWN_EGG, new ParameterSlot("type",List.of("all","left","right"),Material.PARROT_SPAWN_EGG,Material.SHIELD,Material.NETHERITE_SWORD)),
 
     // Appearance
     PLAYER_SET_TIME(                    ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, PlayerSetTimeAction.class, Material.CLOCK, new ArgumentSlot("time", ValueType.NUMBER)),
@@ -450,6 +453,8 @@ public enum ActionType {
      */
 
     ENTITY_REMOVE(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, RemoveEntityAction.class, Material.BARRIER),
+
+    ENTITY_RELEASE_SHOULDERS(ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntityReleaseShouldersAction.class, Material.PARROT_SPAWN_EGG, new ParameterSlot("type",List.of("all","left","right"),Material.PARROT_SPAWN_EGG,Material.SHIELD,Material.NETHERITE_SWORD)),
     ENTITY_SET_TEAM(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, SetTeamAction.class, Material.LIME_BANNER, new ArgumentSlot("scoreboard", ValueType.TEXT), new ArgumentSlot("team", ValueType.TEXT)),
     ENTITY_UNSET_TEAM(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, UnsetTeamAction.class, Material.RED_BANNER, new ArgumentSlot("scoreboard", ValueType.TEXT), new ArgumentSlot("team", ValueType.TEXT)),
 
@@ -463,6 +468,7 @@ public enum ActionType {
     ENTITY_GIVE_POTION_EFFECTS(         ActionCategory.ENTITY_ACTION, MenusCategory.PARAMS, EntityGivePotionEffectsAction.class, Material.POTION,         new ArgumentSlot("potions",ValueType.POTION,(byte) 18), new ParameterSlot("replace")),
     ENTITY_CLEAR_POTION_EFFECTS(        ActionCategory.ENTITY_ACTION, MenusCategory.PARAMS, EntityClearPotionEffectsAction.class, Material.MILK_BUCKET,         new ArgumentSlot("potions", ValueType.POTION)),
     ENTITY_REMOVE_POTION_EFFECTS(       ActionCategory.ENTITY_ACTION, MenusCategory.PARAMS, EntityRemovePotionEffectsAction.class, Material.GLASS_BOTTLE,         new ArgumentSlot("potions",ValueType.POTION, (byte) 27)),
+    ENTITY_SET_REMAINING_AIR(           ActionCategory.ENTITY_ACTION, MenusCategory.PARAMS, EntitySetRemainingAirAction.class, Material.SPONGE,  new ArgumentSlot("ticks", ValueType.NUMBER),new ParameterSlot("add")),
     ENTITY_SET_FALL_DISTANCE(           ActionCategory.ENTITY_ACTION, MenusCategory.PARAMS, EntitySetFallDistanceAction.class, Material.RABBIT_FOOT, new ArgumentSlot("distance", ValueType.NUMBER),new ParameterSlot("add")),
     ENTITY_SET_LAST_DAMAGE(             ActionCategory.ENTITY_ACTION, MenusCategory.PARAMS, EntitySetLastDamageAction.class, Material.REDSTONE, new ArgumentSlot("damage", ValueType.NUMBER),new ParameterSlot("add")),
     ENTITY_SET_CAN_PICKUP_ITEM(         ActionCategory.ENTITY_ACTION, MenusCategory.PARAMS, EntitySetCanPickupItemAction.class, Material.GLOWSTONE_DUST, new ParameterSlot("boolean")),
@@ -470,6 +476,7 @@ public enum ActionType {
     ENTITY_SET_SHIELD_BLOCKING_DELAY(   ActionCategory.ENTITY_ACTION, MenusCategory.PARAMS, EntitySetShieldBlockingDelay.class, Material.SHIELD, new ArgumentSlot("delay", ValueType.NUMBER),new ParameterSlot("add")),
     ENTITY_SET_BEE_STINGER_COOLDOWN(    ActionCategory.ENTITY_ACTION, MenusCategory.PARAMS, EntitySetBeeStingerCooldownAction.class, Material.BEE_NEST, new ArgumentSlot("cooldown", ValueType.NUMBER),new ParameterSlot("add")),
     ENTITY_SET_MAXIMUM_NO_DAMAGE_TICKS( ActionCategory.ENTITY_ACTION, MenusCategory.PARAMS, EntitySetMaxNoDamageTicksAction.class, Material.ENCHANTED_GOLDEN_APPLE, new ArgumentSlot("ticks", ValueType.NUMBER),new ParameterSlot("add")),
+    ENTITY_SET_MAXIMUM_AIR(             ActionCategory.ENTITY_ACTION, MenusCategory.PARAMS, EntitySetMaximumAirAction.class, Material.POTION,  new ArgumentSlot("ticks", ValueType.NUMBER),new ParameterSlot("add")),
 
     ENTITY_GIVE_ITEMS(                  ActionCategory.ENTITY_ACTION, MenusCategory.INVENTORY, EntityGiveItemsAction.class, Material.CHEST_MINECART,  new ArgumentSlot("items", ValueType.ITEM,(byte) 27)),
     ENTITY_SET_ITEMS(                   ActionCategory.ENTITY_ACTION, MenusCategory.INVENTORY, EntitySetItemsAction.class, Material.DARK_OAK_CHEST_BOAT,          new ArgumentSlot("items", ValueType.ITEM,(byte) 27,true)),

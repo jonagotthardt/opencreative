@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.inventory;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
@@ -27,6 +28,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
+import java.util.Arrays;
+
 public final class EntityRemoveItemsAction extends EntityAction {
     public EntityRemoveItemsAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
@@ -34,10 +37,22 @@ public final class EntityRemoveItemsAction extends EntityAction {
 
     @Override
     public void execute(Entity entity) {
-        if (!(entity instanceof InventoryHolder holder)) return;
-        for (ItemStack item : getArguments().getItemList("items",this)) {
-            holder.getInventory().removeItemAnySlot(item);
+        if (entity instanceof InventoryHolder holder) {
+            for (ItemStack item : getArguments().getItemList("items",this)) {
+                holder.getInventory().removeItemAnySlot(item);
+            }
+        } else if (entity instanceof LivingEntity living && living.getEquipment() != null) {
+            ItemStack[] armor = living.getEquipment().getArmorContents();
+            for (ItemStack item : getArguments().getItemList("items", this)) {
+                for (int i = 0; i < armor.length; i++) {
+                    if (armor[i] != null && armor[i].isSimilar(item)) {
+                        armor[i] = null;
+                    }
+                }
+            }
+            living.getEquipment().setArmorContents(armor);
         }
+
     }
 
     @Override
