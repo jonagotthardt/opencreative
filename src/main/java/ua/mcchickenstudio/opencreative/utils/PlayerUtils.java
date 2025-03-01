@@ -72,7 +72,7 @@ public class PlayerUtils {
         player.resetPlayerTime();
         player.resetPlayerWeather();
         player.removeResourcePacks();
-        player.setMaximumAir(20);
+        player.setMaximumAir(300);
         player.setRemainingAir(player.getMaximumAir());
         player.releaseLeftShoulderEntity();
         player.releaseRightShoulderEntity();

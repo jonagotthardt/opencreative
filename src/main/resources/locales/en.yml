@@ -8899,6 +8899,32 @@ menus:
             - "&7 bee stinger can leave the entity."
             - ""
             - "&eClick to set."
+        remaining-air:
+          name: "&eRemaining Air"
+          lore:
+            - "&7Type: &aNumber (in ticks)"
+            - ""
+            - "&7 Gets the remaining time through"
+            - "&7 entity can breath under water."
+            - ""
+            - "&f Examples:"
+            - "&a  0 &7- Can't breath"
+            - "&a  300 &7- Default 15 seconds"
+            - ""
+            - "&eClick to set."
+        maximum-air:
+          name: "&bMaximum Air"
+          lore:
+            - "&7Type: &aNumber (in ticks)"
+            - ""
+            - "&7 Gets the time through entity"
+            - "&7 can breath in water."
+            - ""
+            - "&f Examples:"
+            - "&a  0 &7- Can't breath"
+            - "&a  300 &7- Default 15 seconds"
+            - ""
+            - "&eClick to set."
         experience:
           name: "&aPlayer Experience Bar"
           lore:

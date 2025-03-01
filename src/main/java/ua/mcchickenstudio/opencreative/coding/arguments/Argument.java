@@ -138,6 +138,8 @@ public class Argument {
         if (action.getEntity() instanceof LivingEntity livingEntity) {
             setEventVariable(action, EventValues.Variable.ARROWS_IN_BODY, livingEntity.getArrowsInBody());
             setEventVariable(action, EventValues.Variable.BEE_STINGER_COOLDOWN, livingEntity.getBeeStingerCooldown());
+            setEventVariable(action, EventValues.Variable.REMAINING_AIR, livingEntity.getRemainingAir());
+            setEventVariable(action, EventValues.Variable.MAXIMUM_AIR, livingEntity.getMaximumAir());
             setEventVariable(action, EventValues.Variable.NO_DAMAGE_TICKS, livingEntity.getNoDamageTicks());
             setEventVariable(action, EventValues.Variable.MAX_NO_DAMAGE_TICKS, livingEntity.getMaximumNoDamageTicks());
             setEventVariable(action, EventValues.Variable.HEALTH, livingEntity.getHealth());

@@ -155,7 +155,13 @@ public class EventValues {
         CAN_PICKUP_ITEM         (Material.GLOWSTONE_DUST,           MenusCategory.ENTITY, Boolean.class),
         ARROWS_IN_BODY          (Material.ARROW,                    MenusCategory.ENTITY, Integer.class),
         SHIELD_BLOCKING_DELAY   (Material.SHIELD,                   MenusCategory.ENTITY, Integer.class),
-        BEE_STINGER_COOLDOWN    (Material.BEE_NEST,                 MenusCategory.ENTITY, Integer.class);
+        BEE_STINGER_COOLDOWN    (Material.BEE_NEST,                 MenusCategory.ENTITY, Integer.class),
+        REMAINING_AIR           (Material.SPONGE,                   MenusCategory.ENTITY, Integer.class),
+        MAXIMUM_AIR           (Material.SPONGE,                   MenusCategory.ENTITY, Integer.class),
+
+        ;
+
+
         final Class<?> valueClass;
         final MenusCategory category;
         final Material icon;
