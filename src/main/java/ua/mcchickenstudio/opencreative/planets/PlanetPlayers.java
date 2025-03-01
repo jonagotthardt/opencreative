@@ -345,7 +345,7 @@ public class PlanetPlayers {
     public void banPlayer(String nickname) {
         if (planet.isOwner(nickname)) return;
         Player player = Bukkit.getPlayer(nickname);
-        if (player != null) {
+        if (player != null && !player.hasPermission("opencreative.world.ban.bypass")) {
             Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet.equals(playerPlanet)) {
                 teleportToLobby(player);
@@ -361,7 +361,7 @@ public class PlanetPlayers {
 
     public void kickPlayer(Player player) {
         Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-        if (planet.equals(playerPlanet)) {
+        if (planet.equals(playerPlanet) && !player.hasPermission("opencreative.world.kick.bypass")) {
             teleportToLobby(player);
             player.sendMessage(getLocaleMessage("world.players.kick.player").replace("%player%",player.getName()));
             Sounds.WORLD_KICKED.play(player);

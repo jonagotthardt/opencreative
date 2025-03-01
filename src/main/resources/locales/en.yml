@@ -161,7 +161,7 @@ creative:
     not-found: "%prefix%&cNot found localization file for this language O_o"
   sounds:
     set: "%prefix%&fChanged sound theme to &6%theme%&f, have a good listening!"
-    not-found: "%prefix%&cNot found this sound theme in configuration О_о"
+    not-found: "%prefix%&cNot found this sound theme in configuration O_o"
 not-owner: "%prefix%&cYou are not the owner of this world."
 not-developer: "%prefix%&cYou are not the developer of this world."
 not-builder: "%prefix%&cYou are not the builder of this world."
@@ -346,6 +346,8 @@ world:
     kick:
       kicked: "%prefix%You kicked &6%player%&f from the world, but they can rejoin later."
       player: "%prefix%You were kicked from the world you were playing in."
+      all: "%prefix%You &6kicked all players&f from world, but they can rejoin later."
+      cannot: "%prefix%&cThis player cannot be kicked from world O_o"
     builders:
       added: "%prefix%You made &6%player%&f a builder, and they can now build in the world &6while you are online.\n &fIf you trust this player, you can make them a permanent builder in the player management settings."
       trusted: "%prefix%&6%player%&f can now build even when you are offline."
@@ -362,6 +364,7 @@ world:
       added: "%prefix%You have added &6%player%&f to the &7blacklist&f. They can no longer enter your world."
       removed: "%prefix%You have removed &6%player%&f from the blacklist. They can now enter your world."
       player: "%prefix%You have been blocked from the world you were playing in.. :("
+      cannot: "%prefix%&cThis player cannot be blocked from world O_o"
     white-list:
       added: "%prefix%You have added &6%player%&f to the &lwhitelist&f. They can now enter your world at any time, change world modes, build, and code.\n &6Be careful! &fOnly add players you trust, as they could destroy your world!"
       removed: "%prefix%You have removed &6%player%&f from the &lwhitelist&f."

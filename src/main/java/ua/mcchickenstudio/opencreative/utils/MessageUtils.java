@@ -172,13 +172,13 @@ public class MessageUtils {
     /**
      Returns message from localization file, that parsed player's placeholders with PlaceholderAPI. If message is not found, then returns a detailed error message, that message is not found.
      **/
-    public static String getLocaleMessage(String messageID, Player player) {
+    public static String getLocaleMessage(String messageID, OfflinePlayer player) {
         String originalMessage = getLocalization().getString(messageID);
         if (originalMessage == null || originalMessage.equalsIgnoreCase("null")) {
             if (OpenCreative.getSettings().isConsoleNotFoundMessage()) ErrorUtils.sendWarningErrorMessage("Not found " + messageID + " in localization file!");
             return "§6 Error §8| §fNot found §6" + messageID + "§f! Administration of server needs to fill that line in §6locales"+File.separator+getLanguage()+".yml";
         } else {
-            return ChatColor.translateAlternateColorCodes('&',parsePAPI(Bukkit.getOfflinePlayer(player.getName()),originalMessage.replace("%prefix%",getPrefix()).replace("%branding%",getBranding()).replace("%cc-prefix%",getCreativeChatPrefix()).replace("%player%",player.getName())));
+            return ChatColor.translateAlternateColorCodes('&',parsePAPI(player,originalMessage.replace("%prefix%",getPrefix()).replace("%branding%",getBranding()).replace("%cc-prefix%",getCreativeChatPrefix()).replace("%player%",player.getName() == null ? "Unknown player" : player.getName())));
         }
     }
 
