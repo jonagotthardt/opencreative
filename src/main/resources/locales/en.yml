@@ -1050,7 +1050,7 @@ items:
             - " "
             - "&eClick to choose category."
       conditions:
-        no-conditions:
+        empty:
           name: "&cNo conditions"
           lore:
             - "&7No conditions created for this"
@@ -1083,6 +1083,20 @@ items:
           lore:
             - "&7Does text contain, start with,"
             - "&7end with text."
+            - " "
+            - "&eClick to choose category."
+        blocks:
+          name: "&dBlocks"
+          lore:
+            - "&7Block type equals, is solid,"
+            - "&7is liquid, is burnable."
+            - " "
+            - "&eClick to choose category."
+        world:
+          name: "&bWorld"
+          lore:
+            - "&7Is public, is in debug mode,"
+            - "&7is weather clear, is sunny."
             - " "
             - "&eClick to choose category."
         inventory:
@@ -6581,6 +6595,557 @@ items:
           - " "
           - "&eClick to set action."
     conditions:
+      if-world-is-in-debug-mode:
+        name: "&eDebug Mode Enabled"
+        lore:
+          - "&7Checks if the world's"
+          - "&7coding debug mode is enabled."
+          - " "
+          - "&eClick to set the condition."
+      if-world-is-public:
+        name: "&aWorld Entry Available"
+        lore:
+          - "&7Checks if the world is public"
+          - "&7and listed among all worlds."
+          - " "
+          - "&eClick to set the condition."
+      if-world-is-thundering:
+        name: "&bThunderstorm Weather"
+        lore:
+          - "&7Checks if the current"
+          - "&7weather in the world is a thunderstorm with lightning."
+          - " "
+          - "&eClick to set the condition."
+      if-world-is-day-time:
+        name: "&eIt’s Daytime"
+        lore:
+          - "&7Checks the world's time of day"
+          - "&7and if it's currently bright."
+          - " "
+          - "&eClick to set the condition."
+      if-world-is-bed-works:
+        name: "&aBed Usable"
+        lore:
+          - "&7Checks if the dimension"
+          - "&7is neither the Nether nor the End."
+          - " "
+          - "&eClick to set the condition."
+      if-world-is-clear-weather:
+        name: "&9Clear Weather"
+        lore:
+          - "&7Checks if the weather is currently"
+          - "&7clear, without rain or snow."
+          - " "
+          - "&eClick to set the condition."
+      if-world-block-type-equals:
+        name: "&aBlock Type Equals"
+        lore:
+          - "&7Checks if the block type"
+          - "&7matches the specified one."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location(s) &7- Blocks"
+          - "&6 Item &7- Block Type"
+          - "&3 Parameter &7- All or one of them"
+          - " "
+          - "&eClick to set the condition."
+        arguments:
+          all:
+            name: "&3Match All or Any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all values match, or when"
+              - "&7at least one of them matches."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Match Any"
+              true: "Require All"
+      if-world-block-is-empty:
+        name: "&fBlock is Empty"
+        lore:
+          - "&7Checks if the block"
+          - "&7is air."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location(s) &7- Blocks"
+          - "&3 Parameter &7- All or one of them"
+          - " "
+          - "&eClick to set the condition."
+        arguments:
+          all:
+            name: "&3Match All or Any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all values match, or when"
+              - "&7at least one of them matches."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Match Any"
+              true: "Require All"
+      if-world-block-is-powered:
+        name: "&cBlock is Powered by Redstone"
+        lore:
+          - "&7Checks if the block"
+          - "&7is powered by redstone."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location(s) &7- Blocks"
+          - "&3 Parameter &7- All or one of them"
+          - " "
+          - "&eClick to set the condition."
+        arguments:
+          all:
+            name: "&3Match All or Any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all values match, or when"
+              - "&7at least one of them matches."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Match Any"
+              true: "Require All"
+      if-world-block-is-solid:
+        name: "&6Block is Solid"
+        lore:
+          - "&7Checks if the block"
+          - "&7is solid enough to"
+          - "&7stand on properly."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location(s) &7- Blocks"
+          - "&3 Parameter &7- All or one of them"
+          - " "
+          - "&eClick to set the condition."
+        arguments:
+          all:
+            name: "&3Match All or Any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all values match, or when"
+              - "&7at least one of them matches."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Match Any"
+              true: "Require All"
+      if-world-block-is-burnable:
+        name: "&eBlock is Flammable"
+        lore:
+          - "&7Checks if the block"
+          - "&7can catch fire and burn."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location(s) &7- Blocks"
+          - "&3 Parameter &7- All or one of them"
+          - " "
+          - "&eClick to set the condition."
+        arguments:
+          all:
+            name: "&3Match All or Any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all values match, or when"
+              - "&7at least one of them matches."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Match Any"
+              true: "Require All"
+      if-world-block-is-liquid:
+        name: "&9Block is Liquid"
+        lore:
+          - "&7Checks if the block"
+          - "&7is a liquid (water or lava)."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location(s) &7- Blocks"
+          - "&3 Parameter &7- All or one of them"
+          - " "
+          - "&eClick to set the condition."
+        arguments:
+          all:
+            name: "&3Match All or Any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all values match, or when"
+              - "&7at least one of them matches."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Match Any"
+              true: "Require All"
+      if-world-block-is-passable:
+        name: "&2Block is Passable"
+        lore:
+          - "&7Checks if mobs can move"
+          - "&7through this block like air."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location(s) &7- Blocks"
+          - "&3 Parameter &7- All or one of them"
+          - " "
+          - "&eClick to set the condition."
+        arguments:
+          all:
+            name: "&3Match All or Any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all values match, or when"
+              - "&7at least one of them matches."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Match Any"
+              true: "Require All"
+      if-world-block-is-buildable:
+        name: "&dBlock is Buildable On"
+        lore:
+          - "&7Checks if blocks can be"
+          - "&7placed on top of this block."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location(s) &7- Blocks"
+          - "&3 Parameter &7- All or one of them"
+          - " "
+          - "&eClick to set the condition."
+        arguments:
+          all:
+            name: "&3Match All or Any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all values match, or when"
+              - "&7at least one of them matches."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Match Any"
+              true: "Require All"
+      if-world-block-is-replaceable:
+        name: "&aBlock is Replaceable"
+        lore:
+          - "&7Checks if another block"
+          - "&7can be placed at this location."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location(s) &7- Blocks"
+          - "&3 Parameter &7- All or one of them"
+          - " "
+          - "&eClick to set the condition."
+        arguments:
+          all:
+            name: "&3Match All or Any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all values match, or when"
+              - "&7at least one of them matches."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Match Any"
+              true: "Require All"
+      if-world-block-is-collidable:
+        name: "&cBlock is Collidable"
+        lore:
+          - "&7Checks if a mob can"
+          - "&7collide with this block while moving."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location(s) &7- Blocks"
+          - "&3 Parameter &7- All or one of them"
+          - " "
+          - "&eClick to set the condition."
+        arguments:
+          all:
+            name: "&3Match All or Any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all values match, or when"
+              - "&7at least one of them matches."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Match Any"
+              true: "Require All"
+      if-world-block-is-preferred-tool:
+        name: "&bBest Tool for Block"
+        lore:
+          - "&7Checks if the item"
+          - "&7is the best tool for mining"
+          - "&7this block."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location(s) &7- Blocks"
+          - "&6 Item &7- Tool"
+          - "&3 Parameter &7- All or one of them"
+          - " "
+          - "&eClick to set the condition."
+        arguments:
+          all:
+            name: "&3Match All or Any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all values match, or when"
+              - "&7at least one of them matches."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Match Any"
+              true: "Require All"
+      if-world-block-is-valid-tool:
+        name: "&9Applicable Tool for Block"
+        lore:
+          - "&7Checks if the item"
+          - "&7can be used to mine"
+          - "&7this block."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location(s) &7- Blocks"
+          - "&6 Item &7- Tool"
+          - "&3 Parameter &7- All or one of them"
+          - " "
+          - "&eClick to set the condition."
+        arguments:
+          all:
+            name: "&3Match All or Any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all values match, or when"
+              - "&7at least one of them matches."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Match Any"
+              true: "Require All"
+      if-entity-is-player:
+        name: "&6Is a Player"
+        lore:
+          - "&7Checks if the entity"
+          - "&7is a player."
+          - " "
+          - "&eClick to set the condition."
+      if-entity-is-mob:
+        name: "&dIs a Mob"
+        lore:
+          - "&7Checks if the entity"
+          - "&7is a mob – a living being with intelligence."
+          - " "
+          - "&eClick to set the condition."
+      if-entity-is-living-entity:
+        name: "&cIs a Living Entity"
+        lore:
+          - "&7Checks if the entity"
+          - "&7is a living being with health and attributes."
+          - " "
+          - "&eClick to set the condition."
+      if-entity-is-human-entity:
+        name: "&2Is Humanoid"
+        lore:
+          - "&7Checks if the entity"
+          - "&7is a player or an NPC (villager)."
+          - " "
+          - "&eClick to set the condition."
+      if-entity-is-ageable:
+        name: "&eCan Grow"
+        lore:
+          - "&7Checks if the entity"
+          - "&7can grow over time and change"
+          - "&7its age."
+          - " "
+          - "&eClick to set the condition."
+      if-entity-is-throwable-projectile:
+        name: "&bIs a Throwable Projectile"
+        lore:
+          - "&7Checks if the entity"
+          - "&7is a throwable projectile."
+          - ""
+          - "&7Includes: eggs, snowballs,"
+          - "&7ender pearls, tridents, and potions."
+          - " "
+          - "&eClick to set the condition."
+      if-entity-is-projectile:
+        name: "&fIs a Projectile"
+        lore:
+          - "&7Checks if the entity"
+          - "&7is a launched projectile."
+          - ""
+          - "&7Includes: arrows, fireballs,"
+          - "&7llama spit, fireworks,"
+          - "&7shulker bullets, fishing hooks,"
+          - "&7as well as &7&nthrowable projectiles."
+          - " "
+          - "&eClick to set the condition."
+      if-entity-is-npc:
+        name: "&6Is an NPC"
+        lore:
+          - "&7Checks if the entity"
+          - "&7is an NPC (villager)."
+          - " "
+          - "&eClick to set the condition."
+      if-entity-is-creature:
+        name: "&eIs a Creature"
+        lore:
+          - "&7Checks if the entity"
+          - "&7is a creature."
+          - ""
+          - "&7Includes: golems, &ngrowable&7,"
+          - "&7sniffers, NPCs, &nwater mobs&7,"
+          - "&7&nmonsters&7."
+          - " "
+          - "&eClick to set the condition."
+      if-entity-is-monster:
+        name: "&2Is a Monster"
+        lore:
+          - "&7Checks if the entity"
+          - "&7is a monster that can attack."
+          - ""
+          - "&7Includes: creepers, skeletons, zombies,"
+          - "&7endermen, silverfish, &nenemies&7"
+          - "&7and other similar entities."
+          - " "
+          - "&eClick to set the condition."
+      if-entity-is-enemy:
+        name: "&4Is an Enemy"
+        lore:
+          - "&7Checks if the entity"
+          - "&7is an enemy that should attack."
+          - ""
+          - "&7Includes: Ender Dragon, Ghast,"
+          - "&7Phantom, Shulker, Slime, Hoglin."
+          - " "
+          - "&eClick to set the condition."
+      if-entity-is-dead:
+        name: "&4Entity is Dead"
+        lore:
+          - "&7Checks if the entity"
+          - "&7is deceased and no longer alive."
+          - " "
+          - "&eClick to set the condition."
+      if-entity-is-underwater:
+        name: "&9Is Underwater"
+        lore:
+          - "&7Checks if the entity"
+          - "&7is underwater."
+          - " "
+          - "&eClick to set the condition."
+      if-entity-has-gravity:
+        name: "&eHas Gravity"
+        lore:
+          - "&7Checks if the entity"
+          - "&7has gravity applied."
+          - " "
+          - "&eClick to set the condition."
+      if-entity-is-in-rain:
+        name: "&3Is in Rain"
+        lore:
+          - "&7Checks if the entity"
+          - "&7is exposed to rain."
+          - " "
+          - "&eClick to set the condition."
+      if-entity-is-in-lava:
+        name: "&cIs in Lava"
+        lore:
+          - "&7Checks if the entity"
+          - "&7is inside a lava pool."
+          - " "
+          - "&eClick to set the condition."
+      if-entity-is-in-powdered-snow:
+        name: "&bIs in Powdered Snow"
+        lore:
+          - "&7Checks if the entity"
+          - "&7is in powdered snow, where it can freeze."
+          - " "
+          - "&eClick to set the condition."
+      if-entity-is-on-ground:
+        name: "&aIs Standing on Surface"
+        lore:
+          - "&7Checks if the entity"
+          - "&7is standing on a solid surface,"
+          - "&7not in air or liquid."
+          - " "
+          - "&eClick to set the condition."
+      if-entity-is-inside-vehicle:
+        name: "&3Is Inside Vehicle"
+        lore:
+          - "&7Checks if the entity"
+          - "&7is inside a vehicle (minecart, boat)."
+          - " "
+          - "&eClick to set the condition."
+      if-entity-has-no-physics:
+        name: "&eHas No Physics"
+        lore:
+          - "&7Checks if the entity"
+          - "&7has physics disabled."
+          - " "
+          - "&eClick to set the condition."
+      if-entity-is-invulnerable:
+        name: "&eIs Invulnerable"
+        lore:
+          - "&7Checks if the entity"
+          - "&7is immune to all damage."
+          - " "
+          - "&eClick to set the condition."
+      if-entity-is-in-team:
+        name: "&aIs in a Team"
+        lore:
+          - "&7Checks if the entity"
+          - "&7is listed as a team member."
+          - " "
+          - "&fIn the chest:"
+          - "&6 Text &7- Scoreboard"
+          - "&6 Text &7- Team"
+          - " "
+          - "&eClick to set the condition."
       if-var-equals:
         name: "&5Variable equals value"
         lore:
@@ -10261,46 +10826,47 @@ blocks:
   entity_action: "&aEntity action"
   player_condition: "&6If player"
   variable_condition: "&0If variable"
-  world_condition: "&cWorld condition"
+  world_condition: "&cIf world"
+  entity_condition: "&cIf entity"
   condition_player: "&6If player"
   launch_function_action: "&9Call function"
   launch_method_action: "&aCall method"
   handler_action: "&aCode handler"
   repeat_action: "&bRepeat"
   # Events
-  player_join: "Joined the world"
-  player_quit: "Left the world"
-  player_play: "Rejoined the world"
-  player_liked: "Liked the world"
-  player_advertised: "Advertises the world"
+  player_join: "Joined world"
+  player_quit: "Left world"
+  player_play: "Rejoined world"
+  player_liked: "Liked world"
+  player_advertised: "Advertises"
   player_chat: "Chat message"
   player_left_click: "Left click"
   player_right_click: "Right click"
   player_interact: "Interacts"
   player_place_block: "Placed a block"
-  player_destroy_block: "Destroyed a block"
+  player_destroy_block: "Destroyed block"
   player_destroying_block: "Damaging block"
-  player_block_interact: "Touched a block"
-  player_mob_interact: "Touched a mob"
-  player_fishing: "Caught with fishing rod"
+  player_block_interact: "Touched block"
+  player_mob_interact: "Touched mob"
+  player_fishing: "Fishing"
   player_spectating: "Spectating"
-  player_stop_spectating: "Stopped spectating"
+  player_stop_spectating: "Stop spectating"
   player_open_inventory: "Opened inventory"
-  player_click_inventory: "Clicked in inventory"
-  player_drag_item: "Dragged an item"
+  player_click_inventory: "Clicked inventory"
+  player_drag_item: "Dragged item"
   player_swap_hand: "Swapped hand"
-  player_write_book: "Wrote a book"
+  player_write_book: "Wrote book"
   player_change_slot: "Changed slot"
-  player_drop_item: "Dropped an item"
-  player_pickup_item: "Picked up an item"
+  player_drop_item: "Dropped item"
+  player_pickup_item: "Picked up item"
   player_close_inventory: "Closed inventory"
   player_get_damaged: "Got damaged"
   mob_damage_player: "Mob hit player"
   player_damage_mob: "Hit a mob"
   player_hunger_change: "Hunger changed"
-  player_death: "Player died"
+  player_death: "Died"
   player_respawn: "Respawned"
-  player_totem_respawn: "Revived by totem"
+  player_totem_respawn: "Revived"
   player_walk: "Walked"
   player_jump: "Jumped"
   player_running: "Running"
@@ -10388,7 +10954,7 @@ blocks:
   player_set_no_damage_ticks: "Set no damage ticks"
   player_set_exp: "Set experience"
   player_set_exp_level: "Set experience level"
-  player_set_total_experience: "Set total experience"
+  player_set_total_experience: "Set total exp."
   player_clear_potion_effects: "Clear potion effects"
   player_give_potion_effects: "Give effects"
   player_remove_potion_effects: "Remove effects"
@@ -10401,9 +10967,9 @@ blocks:
   player_set_last_damage: "Set last damage"
   player_set_can_pickup_items: "Can pick up items"
   player_set_arrows_in_body: "Arrows in body"
-  player_set_shield_blocking_delay: "Shield blocking delay"
-  player_set_bee_stinger_cooldown: "Bee stinger cooldown"
-  player_set_maximum_no_damage_ticks: "Max no damage ticks"
+  player_set_shield_blocking_delay: "Shield delay"
+  player_set_bee_stinger_cooldown: "Bee stinger delay"
+  player_set_maximum_no_damage_ticks: "Max no damage"
   player_set_hunger: "Set hunger"
   player_set_flying: "Flying mode"
   player_set_glowing: "Glowing"
@@ -10616,6 +11182,48 @@ blocks:
   if_player_inventory_full: "Inventory full"
   if_player_inventory_name_equals: "Inventory name equals"
   if_player_has_item_cooldown: "Has item cooldown"
+
+  if_world_is_in_debug_mode: "Debug Mode"
+  if_world_is_public: "Public Entry"
+  if_world_is_thundering: "Thunderstorm Weather"
+  if_world_is_day_time: "Daytime"
+  if_world_is_bed_works: "Bed Usable"
+  if_world_is_clear_weather: "Clear Weather"
+  if_world_block_type_equals: "Block Type"
+  if_world_block_is_empty: "Block Empty"
+  if_world_block_is_powered: "Block Powered"
+  if_world_block_is_solid: "Block Solid"
+  if_world_block_is_burnable: "Block Flammable"
+  if_world_block_is_liquid: "Block Liquid"
+  if_world_block_is_passable: "Block Passable"
+  if_world_block_is_buildable: "Block Buildable"
+  if_world_block_is_replaceable: "Block Replaceable"
+  if_world_block_is_collidable: "Block Collidable"
+  if_world_block_is_preferred_tool: "Preferred Tool"
+  if_world_block_is_valid_tool: "Tool Mineable"
+
+  if_entity_is_player: "Is Player"
+  if_entity_is_mob: "Is Mob"
+  if_entity_is_living_entity: "Is Living Entity"
+  if_entity_is_human_entity: "Is Humanoid"
+  if_entity_is_ageable: "Is Ageable"
+  if_entity_is_throwable_projectile: "Throwable Projectile"
+  if_entity_is_projectile: "Is Projectile"
+  if_entity_is_npc: "Is NPC"
+  if_entity_is_creature: "Is Creature"
+  if_entity_is_monster: "Is Monster"
+  if_entity_is_enemy: "Is Enemy"
+  if_entity_is_in_team: "In Team"
+  if_entity_is_dead: "Dead"
+  if_entity_is_underwater: "Underwater"
+  if_entity_has_gravity: "Has Gravity"
+  if_entity_is_in_rain: "In Rain"
+  if_entity_is_in_lava: "In Lava"
+  if_entity_is_in_powdered_snow: "In Powdered Snow"
+  if_entity_is_on_ground: "On Ground"
+  if_entity_is_inside_vehicle: "Inside Vehicle"
+  if_entity_has_no_physics: "No Physics"
+  if_entity_is_invulnerable: "Invulnerable"
 
   if_var_equals: "&bEquals value"
   if_var_is_null: "&cIs null"
