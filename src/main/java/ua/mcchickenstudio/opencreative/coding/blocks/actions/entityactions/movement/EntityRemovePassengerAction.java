@@ -16,31 +16,36 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.conditions.entityconditions.other;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.movement;
 
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.conditions.entityconditions.EntityCondition;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 
-import java.util.List;
-
-public class IsEntityLivingEntity extends EntityCondition {
-    public IsEntityLivingEntity(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
-        super(executor, target, x, args, actions, reactions, isOpposed);
+public final class EntityRemovePassengerAction extends EntityAction {
+    public EntityRemovePassengerAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
-    public boolean check(Entity entity) {
-        return entity instanceof LivingEntity;
+    public void execute(Entity entity) {
+        String text = getArguments().getValue("entity","",this);
+        if (text.isEmpty()) {
+            for (Entity passenger : entity.getPassengers()) {
+                entity.removePassenger(passenger);
+            }
+            return;
+        }
+        for (Entity entityWithName : getEntitiesByNameOrUUID(text)) {
+            entity.removePassenger(entityWithName);
+        }
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.IF_ENTITY_IS_LIVING_ENTITY;
+        return ActionType.ENTITY_REMOVE_PASSENGER;
     }
 }

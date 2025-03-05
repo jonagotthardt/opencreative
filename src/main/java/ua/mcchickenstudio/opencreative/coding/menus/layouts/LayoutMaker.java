@@ -151,16 +151,16 @@ public class LayoutMaker extends Layout {
         }
         switch (getRequiredSlots().length) {
             case 1:
-                setArgSlotVertical(1,13);
+                setArgSlotCross(1,13);
                 break;
             case 2:
-                setArgSlotVertical(1,12);
-                setArgSlotVertical(2,14);
+                setArgSlotCross(1,11);
+                setArgSlotCross(2,15);
                 break;
             case 3:
-                setArgSlotVertical(1,11);
-                setArgSlotVertical(2,13);
-                setArgSlotVertical(3,15);
+                setArgSlotCross(1,10);
+                setArgSlotCross(2,13);
+                setArgSlotCross(3,16);
                 break;
             case 4:
                 setArgSlotVertical(1,10);

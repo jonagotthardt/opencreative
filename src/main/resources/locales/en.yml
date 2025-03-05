@@ -2617,6 +2617,28 @@ items:
               all: "Consider All"
               only-coordinates: "Coordinates Only"
               only-rotation: "Rotation Only"
+      entity-remove-passenger:
+        name: "&cRemove passenger"
+        lore:
+          - "&7Kicks specified mob"
+          - "&7from entity's head."
+          - " "
+          - "&7If name is not specified, it"
+          - "&7will remove all passengers."
+          - " "
+          - "&fIn the chest:"
+          - "&6 Text &7- Mob name"
+          - " &7or its UUID."
+          - " "
+          - "&eClick to set the action."
+        placeholders:
+          entity:
+            name: "&6Mob Name or UUID"
+            lore:
+              - "&7Place the name or UUID"
+              - "&7of the mob that will be"
+              - "&7dropped on ground from"
+              - "&7entity's head."
       entity-saddle-entity:
         name: "&6Saddle an Entity"
         lore:
@@ -2635,6 +2657,29 @@ items:
               - "&7Place the name or UUID"
               - "&7of the mob that should"
               - "&7be ridden here."
+      entity-set-leash-holder:
+        name: "&6Set Leash Holder"
+        lore:
+          - "&7Sets leash holder of"
+          - "&7mob. It doesn't work"
+          - "&7for ender dragon, wither"
+          - "&7and some entities."
+          - " "
+          - "&7If name is not specified,"
+          - "&7mob's leash will be removed."
+          - " "
+          - "&fIn the chest:"
+          - "&6 Text &7- Mob name"
+          - " &7or its UUID."
+          - " "
+          - "&eClick to set the action."
+        placeholders:
+          entity:
+            name: "&6Mob Name or UUID"
+            lore:
+              - "&7Place the name or UUID"
+              - "&7of the mob that will be"
+              - "&7leash holder."
       entity-set-glowing:
         name: "&aSet Entity Glowing"
         lore:
@@ -10418,6 +10463,8 @@ blocks:
   entity_set_maximum_air: "Maximum Air"
   entity_set_remaining_air: "Remaining Air"
   entity_release_shoulders: "Release Shoulders"
+  entity_set_leash_holder: "Set Leash Holder"
+  entity_remove_passenger: "Remove Passenger"
 
   handler_catch_error: "Catch error"
   handler_measure_time: "Measure time"
