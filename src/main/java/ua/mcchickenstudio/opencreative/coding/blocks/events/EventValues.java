@@ -157,7 +157,7 @@ public class EventValues {
         SHIELD_BLOCKING_DELAY   (Material.SHIELD,                   MenusCategory.ENTITY, Integer.class),
         BEE_STINGER_COOLDOWN    (Material.BEE_NEST,                 MenusCategory.ENTITY, Integer.class),
         REMAINING_AIR           (Material.SPONGE,                   MenusCategory.ENTITY, Integer.class),
-        MAXIMUM_AIR           (Material.SPONGE,                   MenusCategory.ENTITY, Integer.class),
+        MAXIMUM_AIR           (Material.POTION,                   MenusCategory.ENTITY, Integer.class),
 
         ;
 

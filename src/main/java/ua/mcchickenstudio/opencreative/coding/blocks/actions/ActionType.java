@@ -25,6 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.movem
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.other.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.params.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.state.EntitySetGlowingAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.state.EntitySetLeashHolderAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.handleractions.other.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.other.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.other.*;
@@ -487,6 +488,8 @@ public enum ActionType {
     ENTITY_REMOVE_ITEMS(                ActionCategory.ENTITY_ACTION, MenusCategory.INVENTORY, EntityRemoveItemsAction.class, Material.COBWEB, new ArgumentSlot("items", ValueType.ITEM,(byte) 27)),
 
     ENTITY_SET_GLOWING(                 ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetGlowingAction.class, Material.DRAGON_BREATH,  new ParameterSlot("glowing", Arrays.asList(false,true), Material.WHITE_STAINED_GLASS, Material.GLASS)),
+    ENTITY_SET_LEASH_HOLDER(            ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetLeashHolderAction.class, Material.LEAD,  new ArgumentSlot("entity", ValueType.TEXT)),
+    ENTITY_REMOVE_PASSENGER(            ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntityRemovePassengerAction.class, Material.MINECART,  new ArgumentSlot("entity", ValueType.TEXT)),
 
     ENTITY_TELEPORT(                    ActionCategory.ENTITY_ACTION, MenusCategory.MOVEMENT, EntityTeleportAction.class, Material.ENDER_PEARL,  new ArgumentSlot("location", ValueType.LOCATION), new ParameterSlot("consider",Arrays.asList("all","only-coordinates","only-rotation"),Material.ENDER_EYE,Material.PAPER,Material.PLAYER_HEAD)),
     ENTITY_PATH_MOVE_TO_LOCATION(ActionCategory.ENTITY_ACTION, MenusCategory.MOVEMENT, SetEntityPathMoveToLocationAction.class, Material.PAPER, new ArgumentSlot("location",ValueType.LOCATION)),

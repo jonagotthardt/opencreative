@@ -34,7 +34,7 @@ public final class EntitySaddleEntityAction extends EntityAction {
     public void execute(Entity entity) {
         String text = getArguments().getValue("entity"," ",this);
         for (Entity entityWithName : getEntitiesByNameOrUUID(text)) {
-            entity.addPassenger(entityWithName);
+            entityWithName.addPassenger(entity);
         }
     }
 

@@ -208,6 +208,15 @@ public abstract class Layout extends AbstractMenu {
         setItem((slot+1), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
     }
 
+    protected void setArgSlotCross(int argNumber, int slot) {
+        ArgumentSlot argumentSlot = getRequiredSlots()[argNumber-1];
+        setItem((slot-9), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
+        setItem((slot-1), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
+        setArgSlot(argumentSlot,slot);
+        setItem((slot+1), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
+        setItem((slot+9), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
+    }
+
     protected void setGlass(int argNumber, int slot) {
         ArgumentSlot argumentSlot = getRequiredSlots()[argNumber-1];
         setItem(slot, argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));

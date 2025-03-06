@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
+import net.kyori.adventure.resource.ResourcePackRequest;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.KeyedBossBar;
 import org.jetbrains.annotations.NotNull;
@@ -72,8 +73,6 @@ public class PlayerUtils {
         player.resetPlayerTime();
         player.resetPlayerWeather();
         player.removeResourcePacks();
-        player.setMaximumAir(300);
-        player.setRemainingAir(player.getMaximumAir());
         player.releaseLeftShoulderEntity();
         player.releaseRightShoulderEntity();
         player.setSimulationDistance(Bukkit.getSimulationDistance());
@@ -111,6 +110,8 @@ public class PlayerUtils {
         player.setGliding(false);
         player.setFlySpeed(0.1f);
         player.setWalkSpeed(0.2f);
+        player.setMaximumAir(300);
+        player.setRemainingAir(player.getMaximumAir());
         player.setCanPickupItems(true);
         player.setGlowing(false);
         player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.1f);
