@@ -111,7 +111,7 @@ public final class OpenCreative extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         long startTime = System.currentTimeMillis();
-        this.getLogger().info("Starting OpenCreative+ " + version + ": " + codename + ", please wait...");
+        getLogger().info("Starting OpenCreative+ " + version + ": " + codename + ", please wait...");
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,100,1));
             player.showTitle(Title.title(
@@ -225,6 +225,7 @@ public final class OpenCreative extends JavaPlugin {
         commands.put("time",        CommandTime.class);
         commands.put("weather",     CommandWeather.class);
         commands.put("value",       CommandValue.class);
+        commands.put("module",      CommandModule.class);
         for (String commandName : commands.keySet()) {
             PluginCommand command = getCommand(commandName);
             if (command != null) {
@@ -238,24 +239,24 @@ public final class OpenCreative extends JavaPlugin {
                 sendCriticalErrorMessage("Couldn't get command with name " + commandName + ", it is null. Maybe it doesn't exist in plugins.yml?");
             }
         }
-        this.getLogger().info("OpenCreative+ registered " + (registeredCommands == commands.size() ? "all" : registeredCommands + "/" + commands.size()) +  " commands.");
+        getLogger().info("OpenCreative+ registered " + (registeredCommands == commands.size() ? "all" : registeredCommands + "/" + commands.size()) +  " commands.");
     }
 
     /**
      * Registers event listeners in server.
      */
     private void registerEvents() {
-        this.getLogger().info("Registering OpenCreative+ event listeners...");
+        getLogger().info("Registering OpenCreative+ event listeners...");
         int registeredListeners = 0;
         Class<?>[] listeners = new Class[] {
-                ChangedWorld.class,     EntitySpawnListener.class,      EntityDamageListener.class,
-                JoinListener.class,       QuitListener.class,       PlayerRespawn.class,
-                DeathListener.class,      TeleportListener.class,   MoveListener.class,
-                ChatListener.class,       InteractListener.class,   DropItemListener.class,
+                ChangedWorld.class,       EntitySpawnListener.class,  EntityDamageListener.class,
+                JoinListener.class,       QuitListener.class,         PlayerRespawn.class,
+                DeathListener.class,      TeleportListener.class,     MoveListener.class,
+                ChatListener.class,       InteractListener.class,     DropItemListener.class,
                 PlaceBlockListener.class, DestroyBlockListener.class, BucketListener.class,
-                ClickListener.class,   RedstoneListener.class,    BlockChangeListener.class,
-                Menus.class,            WorldListener.class,       GameModeListener.class,
-                CreativeListener.class, PotionListener.class
+                ClickListener.class,      RedstoneListener.class,     BlockChangeListener.class,
+                Menus.class,              WorldListener.class,        GameModeListener.class,
+                CreativeListener.class,   PotionListener.class
         };
         for (Class<?> listenerClass : listeners) {
             try {
@@ -267,7 +268,7 @@ public final class OpenCreative extends JavaPlugin {
                 sendCriticalErrorMessage("Couldn't register event listener: " + listenerClass.getSimpleName(),exception);
             }
         }
-        this.getLogger().info("OpenCreative+ registered " + (registeredListeners == listeners.length ? "all" : registeredListeners + "/" + listeners.length) + " event listeners.");
+        getLogger().info("OpenCreative+ registered " + (registeredListeners == listeners.length ? "all" : registeredListeners + "/" + listeners.length) + " event listeners.");
     }
 
     /**
@@ -339,6 +340,14 @@ public final class OpenCreative extends JavaPlugin {
      */
     public static String getVersion() {
         return version;
+    }
+
+    /**
+     * Gets update manager, that has methods to
+     * check available updates for plugin.
+     */
+    public static Updater getUpdater() {
+        return updater;
     }
 
     /**

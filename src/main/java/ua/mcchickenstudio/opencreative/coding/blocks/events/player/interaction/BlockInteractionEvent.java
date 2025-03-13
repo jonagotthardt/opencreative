@@ -24,7 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class BlockInteractionEvent extends WorldEvent {
+public final class BlockInteractionEvent extends WorldEvent {
 
     private final PlayerInteractEvent event;
     private final Action action;

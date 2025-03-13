@@ -24,7 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class FishEvent extends WorldEvent {
+public final class FishEvent extends WorldEvent {
 
     private final PlayerFishEvent event;
     private ItemStack caughtItem = null;

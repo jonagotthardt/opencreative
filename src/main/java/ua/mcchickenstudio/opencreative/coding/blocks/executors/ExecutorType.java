@@ -91,45 +91,6 @@ public enum ExecutorType {
     PLAYER_RIGHT_CLICK(     ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, RightClickExecutor.class, RightClickEvent.class, Material.DIAMOND_PICKAXE),
     PLAYER_INTERACT(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, WorldInteractExecutor.class, WorldInteractEvent.class, Material.GOLDEN_HOE),
 
-    // IN DEVELOPMENT
-    /*PLAYER_BUCKET_FILL(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_BUCKET_FISH(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_SHEAR_ENTITY(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_VELOCITY(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_TRADE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-
-    PLAYER_ITEM_BREAK(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_SIGN_OPEN(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_PICKUP_ARROW(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_LOCALE_CHANGE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-
-    PLAYER_RIPTIDE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_PORTAL(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_NAME_ENTITY(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_LEASH_ENTITY(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_UNLEASH_ENTITY(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_ITEM_HELD(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_ITEM_MEND(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_EXP_CHANGE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_ARMOR_STAND_MANIPULATE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_EGG_THROW(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_FLOWER_POT_MANIPULATE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_PROJECTILE_LAUNCH(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_GAME_MODE_CHANGE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_CHANGE_BEACON(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-
-    PLAYER_ARMOR_CHANGE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_RECIPE_SETTINGS_CHANGE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_CLIENT_SETTINGS_CHANGE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_CARTOGRAPHY_ITEM(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_TAKE_LECTERN_BOOK(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_LOOM_PATTERN_SELECT(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_LECTERN_PAGE_CHANGE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_ELYTRA_BOOST(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_SHIELD_DISABLE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),
-    PLAYER_STONE_CUTTER_RECIPE_USE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, null, null, Material.WATER_BUCKET),*/
-
-
     PLAYER_PLACE_BLOCK(     ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, PlaceBlockExecutor.class, PlaceBlockEvent.class, Material.GRASS_BLOCK),
     PLAYER_DESTROY_BLOCK(   ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, DestroyBlockExecutor.class, DestroyBlockEvent.class, Material.STONE),
     PLAYER_DESTROYING_BLOCK(ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, DamageBlockExecutor.class, DamageBlockEvent.class, Material.COBBLESTONE),
@@ -166,18 +127,6 @@ public enum ExecutorType {
     PLAYER_RESPAWN(         ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerRespawnExecutor.class, PlayerRespawnEvent.class, Material.NETHER_STAR),
     PLAYER_TOTEM_RESPAWN(   ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, PlayerTotemRespawnExecutor.class, PlayerTotemRespawnEvent.class, Material.TOTEM_OF_UNDYING),
 
-    // in development
-    /*
-
-    MOB_KILLS_PLAYER(        ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, null, null, Material.WATER_BUCKET),
-    PLAYER_KILLS_MOB(        ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, null, null, Material.WATER_BUCKET),
-    PROJECTILE_DAMAGES_PLAYER(        ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, null, null, Material.WATER_BUCKET),
-    PLAYER_FALL_DAMAGE(        ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, null, null, Material.WATER_BUCKET),
-    PLAYER_SHOOTS_MOB(        ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, null, null, Material.WATER_BUCKET),
-    PLAYER_SHOT_MOB(        ExecutorCategory.EVENT_PLAYER, MenusCategory.FIGHTING, null, null, Material.WATER_BUCKET),*/
-
-
-
     PLAYER_WALK(            ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, PlayerMoveExecutor.class, PlayerMoveEvent.class, Material.LEATHER_BOOTS),
     PLAYER_JUMP(            ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, JumpExecutor.class, JumpEvent.class, Material.RABBIT_FOOT),
     PLAYER_RUNNING(         ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, StartRunningExecutor.class, StartRunningEvent.class, Material.GOLDEN_BOOTS),
@@ -189,10 +138,48 @@ public enum ExecutorType {
     PLAYER_TELEPORT(        ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, TeleportExecutor.class, TeleportEvent.class, Material.ENDER_PEARL),
 
     WORLD_PLAY_MODE(        ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, GamePlayExecutor.class, GamePlayEvent.class, Material.ENDER_EYE),
-    WORLD_VARIABLE_TRANSFER(        ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, VariableTransferExecutor.class, VariableTransferEvent.class, Material.CALIBRATED_SCULK_SENSOR),
-    WORLD_WEB_RESPONSE(        ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, WebResponseExecutor.class, WebResponseEvent.class, Material.BEACON),
+    WORLD_VARIABLE_TRANSFER(ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, VariableTransferExecutor.class, VariableTransferEvent.class, Material.CALIBRATED_SCULK_SENSOR),
+    WORLD_WEB_RESPONSE(     ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, WebResponseExecutor.class, WebResponseEvent.class, Material.BEACON),
 
-    ENTITY_SPAWNED(        ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY, EntitySpawnExecutor.class, EntitySpawnEvent.class, Material.CHICKEN_SPAWN_EGG);
+    WORLD_BLOCK_BURNED(         ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.CAMPFIRE),
+    WORLD_BLOCK_COOKED(         ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.FURNACE),
+    WORLD_BLOCK_DISPENSED(      ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.DROPPER),
+    WORLD_BLOCK_EXPLODED(       ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.TNT),
+    WORLD_BLOCK_TNT_PRIME(      ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.TNT_MINECART),
+    WORLD_BLOCK_FADED(          ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.ICE),
+    WORLD_BLOCK_FORMED(         ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.SNOW_BLOCK),
+    WORLD_BLOCK_GROWN(          ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.OAK_SAPLING),
+    WORLD_BLOCK_IGNITED(        ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.FLINT_AND_STEEL),
+    WORLD_BLOCK_PHYSICS(        ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.SAND),
+    WORLD_BLOCK_PISTON_EXTENDED(ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.PISTON),
+    WORLD_BLOCK_PISTON_RETRACTED(ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.STICKY_PISTON),
+    WORLD_BLOCK_REDSTONE(       ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.REDSTONE),
+    WORLD_BLOCK_BREWING_START(  ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.BREWING_STAND),
+    WORLD_BLOCK_CAMPFIRE_START( ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.CAMPFIRE),
+    WORLD_BLOCK_CAULDRON_CHANGE(ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.CAULDRON),
+    WORLD_BLOCK_CRAFTER_CRAFTED(ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.CRAFTER),
+    WORLD_BLOCK_FLUID_CHANGED(  ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.WATER_BUCKET),
+    WORLD_BLOCK_LEAVES_DECAYED( ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.OAK_LEAVES),
+    WORLD_BLOCK_NOTE_PLAYED(    ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.NOTE_BLOCK),
+    WORLD_BLOCK_SCULK_BLOOMED(  ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.SCULK_SENSOR),
+    WORLD_BLOCK_SIGN_CHANGED(   ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.OAK_SIGN),
+    WORLD_PORTAL_CREATED(       ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.CRYING_OBSIDIAN),
+    WORLD_BLOCK_BEACON_ACTIVATED(ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.BEACON),
+    WORLD_BLOCK_BEACON_DEACTIVATED(ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.BEACON),
+    WORLD_BLOCK_ANVIL_DAMAGED(  ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.DAMAGED_ANVIL),
+    WORLD_BLOCK_TARGET_HIT(     ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.TARGET),
+    WORLD_BLOCK_SPONGE_ABSORBED(ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.WET_SPONGE),
+    WORLD_BLOCK_BELL_RUNG(      ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.BELL),
+    WORLD_WEATHER_CHANGED(      ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, null, null, Material.WATER_BUCKET),
+    WORLD_LIGHTNING_STRIKE(     ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, null, null, Material.TRIDENT),
+    WORLD_REACHED_REDSTONE_LIMIT(ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, null, null, Material.REDSTONE),
+    WORLD_REACHED_BLOCKS_LIMIT( ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, null, null, Material.GRASS_BLOCK),
+    WORLD_REACHED_ENTITIES_LIMIT(ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, null, null, Material.CHICKEN_SPAWN_EGG),
+    WORLD_REACHED_VARIABLES_LIMIT(ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, null, null, Material.MAGMA_CREAM),
+    WORLD_CODE_ERROR_OCCURRED(  ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, null, null, Material.BARRIER),
+
+
+    ENTITY_SPAWNED(         ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY, EntitySpawnExecutor.class, EntitySpawnEvent.class, Material.CHICKEN_SPAWN_EGG);
 
 
     private final Class<? extends Executor> executor;

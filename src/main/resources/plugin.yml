@@ -94,6 +94,9 @@ commands:
   stopsound:
     description: 'Stops specified sound.'
     aliases: [ыещзыщгтв, іещзіщгтв]
+  module:
+    description: 'Opens module`s browser menu.'
+    aliases: [modules, ьщвгдуы, ьщвгдуі, ьщвгду]
   weather:
     description: 'Changes current world`s weather.'
     aliases: [цуферук]

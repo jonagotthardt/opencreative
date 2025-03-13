@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.world.other;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public class VariableTransferEvent extends WorldEvent {
+public final class VariableTransferEvent extends WorldEvent {
 
     private final String key;
     private final Object value;

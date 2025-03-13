@@ -22,9 +22,10 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
-public class PlayerKilledMobEvent extends WorldEvent implements KillerVictimEvent {
+public final class PlayerKilledMobEvent extends WorldEvent implements KillerVictimEvent {
 
     private final EntityDeathEvent event;
     private final Player killer;
@@ -38,12 +39,12 @@ public class PlayerKilledMobEvent extends WorldEvent implements KillerVictimEven
     }
 
     @Override
-    public Player getKiller() {
+    public @NotNull Player getKiller() {
         return killer;
     }
 
     @Override
-    public Entity getVictim() {
+    public @NotNull Entity getVictim() {
         return victim;
     }
 

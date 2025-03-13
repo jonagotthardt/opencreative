@@ -26,48 +26,50 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 public class CreativeMenu extends AbstractMenu {
 
-    private final ItemStack RELOAD_ITEM = createItem(Material.STRUCTURE_VOID,1,"menus.creative.items.reload");
-    private final ItemStack RESET_LOCALE_ITEM = createItem(Material.BOOKSHELF,1,"menus.creative.items.reset-locale");
+    private final ItemStack RELOAD_ITEM = createItem(Material.STRUCTURE_VOID,1,"menus.creative.items.reload","reload");
+    private final ItemStack RESET_LOCALE_ITEM = createItem(Material.BOOKSHELF,1,"menus.creative.items.reset-locale","reset-locale");
 
     public CreativeMenu() {
-        super(3, getLocaleMessage("menus.creative.title",false).replace("%version%", OpenCreative.getVersion()).replace("%codename%", OpenCreative.getCodename()));
+        super(6, getLocaleMessage("menus.creative.title",false).replace("%version%", OpenCreative.getVersion()).replace("%codename%", OpenCreative.getCodename()));
     }
 
     @Override
     public void fillItems(Player player) {
-        setItem(13,createItem(Material.BEACON,1,"menus.creative.items.info"));
-        setItem(0,DECORATION_PANE_ITEM);
-        setItem(8,DECORATION_PANE_ITEM);
-        setItem(9,DECORATION_PANE_ITEM);
-        setItem(10,DECORATION_ITEM);
-        setItem(16,DECORATION_ITEM);
-        setItem(17,DECORATION_PANE_ITEM);
-        setItem(18,DECORATION_PANE_ITEM);
-        setItem(19,DECORATION_ITEM);
-        setItem(25,DECORATION_ITEM);
-        setItem(26,DECORATION_PANE_ITEM);
-        setItem(1,player.hasPermission("opencreative.reload") ? RELOAD_ITEM : DECORATION_ITEM);
-        setItem(7,player.hasPermission("opencreative.resetlocale") ? RESET_LOCALE_ITEM : DECORATION_ITEM);
+        setItem(49,createItem(Material.BEACON,1,"menus.creative.items.info"));
+        setItem(createItem(Material.LIGHT_BLUE_STAINED_GLASS_PANE,1),47,51);
+        setItem(DECORATION_PANE_ITEM,45,46,52,53);
+        setItem(10,player.hasPermission("opencreative.reload") ? RELOAD_ITEM : DECORATION_ITEM);
+        setItem(12,player.hasPermission("opencreative.resetlocale") ? RESET_LOCALE_ITEM : DECORATION_ITEM);
+        setItem(14,player.hasPermission("opencreative.updates.check") ? DECORATION_PANE_ITEM : DECORATION_ITEM);
+        setItem(16,player.hasPermission("opencreative.maintenance") ? DECORATION_PANE_ITEM : DECORATION_ITEM);
+        setItem(28,player.hasPermission("opencreative.list.loaded") ? DECORATION_PANE_ITEM : DECORATION_ITEM);
+        setItem(30,player.hasPermission("opencreative.list.corrupted") ? DECORATION_PANE_ITEM : DECORATION_ITEM);
+        setItem(32,player.hasPermission("opencreative.list.deprecated") ? DECORATION_PANE_ITEM : DECORATION_ITEM);
+        setItem(34,player.hasPermission("opencreative.debug") ? DECORATION_PANE_ITEM : DECORATION_ITEM);
     }
 
     @Override
     public void onClick(@NotNull InventoryClickEvent event) {
         ItemStack clickedItem = event.getCurrentItem();
         event.setCancelled(true);
-        if (event.getClickedInventory() != event.getInventory()) return;
+        if (!isClickedInMenuSlots(event)) return;
         Player player = (Player) event.getWhoClicked();
-        if (itemEquals(clickedItem,RELOAD_ITEM)) {
-            player.performCommand("creative reload");
-            player.closeInventory();
-        } else if (itemEquals(clickedItem, RESET_LOCALE_ITEM)) {
-            player.performCommand("creative resetlocale");
-            player.closeInventory();
+        switch (getItemType(clickedItem)) {
+            case "reload" -> player.performCommand("creative reload");
+            case "reset-locale" -> player.performCommand("creative resetlocale");
+            case "check-updates" -> player.performCommand("creative checkupdates");
+            case "maintenance-start" -> player.performCommand("creative maintenance start");
+            case "maintenance-end" -> player.performCommand("creative maintenance end");
+            case "debug-enable" -> player.performCommand("creative debug enable");
+            case "debug-disable" -> player.performCommand("creative debug disable");
+            case "list" -> player.performCommand("creative list");
+            case "deprecated" -> player.performCommand("creative deprecated");
+            case "corrupted" -> player.performCommand("creative corrupted");
         }
     }
 

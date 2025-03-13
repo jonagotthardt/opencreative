@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemMoveEvent extends WorldEvent {
+public final class ItemMoveEvent extends WorldEvent {
 
     private final InventoryClickEvent event;
     private final ItemStack item;

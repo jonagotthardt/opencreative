@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemConsumeEvent extends WorldEvent {
+public final class ItemConsumeEvent extends WorldEvent {
 
     private final PlayerItemConsumeEvent event;
     private final ItemStack item;

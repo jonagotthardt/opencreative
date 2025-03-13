@@ -22,7 +22,7 @@ import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class ChunkLoadEvent extends WorldEvent {
+public final class ChunkLoadEvent extends WorldEvent {
 
     public ChunkLoadEvent(Player player, PlayerChunkLoadEvent event) {
         super(player);

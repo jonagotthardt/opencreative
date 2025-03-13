@@ -23,7 +23,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDamageEvent;
 
-public class DamageBlockEvent extends WorldEvent {
+public final class DamageBlockEvent extends WorldEvent {
 
     private final BlockDamageEvent event;
     private final Block block;

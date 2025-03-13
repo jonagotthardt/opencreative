@@ -23,7 +23,7 @@ import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
-public class PlayerItemDamagedEvent extends WorldEvent {
+public final class PlayerItemDamagedEvent extends WorldEvent {
 
     private final PlayerItemDamageEvent event;
     private final ItemStack item;

@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class PlayerDeathEvent extends WorldEvent {
+public final class PlayerDeathEvent extends WorldEvent {
 
     private final org.bukkit.event.entity.PlayerDeathEvent event;
 

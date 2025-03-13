@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemPickupEvent extends WorldEvent {
+public final class ItemPickupEvent extends WorldEvent {
 
     private final ItemStack item;
     private final EntityPickupItemEvent event;

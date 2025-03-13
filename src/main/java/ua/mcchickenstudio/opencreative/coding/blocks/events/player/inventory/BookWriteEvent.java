@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerEditBookEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class BookWriteEvent extends WorldEvent {
+public final class BookWriteEvent extends WorldEvent {
 
     private final PlayerEditBookEvent event;
     private final ItemStack oldBook;

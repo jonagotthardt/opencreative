@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.world.other;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public class WebResponseEvent extends WorldEvent {
+public final class WebResponseEvent extends WorldEvent {
 
     private final String url;
     private final int code;

@@ -16,15 +16,27 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory;
+package ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks;
 
+import org.bukkit.block.Block;
+import org.bukkit.event.block.BlockBurnEvent;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public final class CloseInventoryEvent extends WorldEvent {
+public final class BlockBurnedEvent extends WorldEvent implements BlockEvent {
 
-    public CloseInventoryEvent(Player player) {
-        super(player);
+    private final BlockBurnEvent event;
+
+    public BlockBurnedEvent(Planet planet, BlockBurnEvent event) {
+        super(planet);
+        this.event = event;
+    }
+
+    @Override
+    public @NotNull Block getBlock() {
+        return event.getBlock();
     }
 
 }

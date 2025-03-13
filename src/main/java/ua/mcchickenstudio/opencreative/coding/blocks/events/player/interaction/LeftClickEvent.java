@@ -22,7 +22,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class LeftClickEvent extends WorldEvent {
+public final class LeftClickEvent extends WorldEvent {
 
     private final PlayerInteractEvent event;
 

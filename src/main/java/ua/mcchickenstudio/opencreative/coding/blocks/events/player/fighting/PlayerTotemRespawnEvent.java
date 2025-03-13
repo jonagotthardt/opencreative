@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class PlayerTotemRespawnEvent extends WorldEvent {
+public final class PlayerTotemRespawnEvent extends WorldEvent {
 
     public PlayerTotemRespawnEvent(Player player) {
         super(player);

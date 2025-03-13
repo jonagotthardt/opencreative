@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.player.world;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class QuitEvent extends WorldEvent {
+public final class QuitEvent extends WorldEvent {
 
     public QuitEvent(Player player) {
         super(player);

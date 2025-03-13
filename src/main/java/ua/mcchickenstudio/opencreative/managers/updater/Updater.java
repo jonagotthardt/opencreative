@@ -20,6 +20,8 @@ package ua.mcchickenstudio.opencreative.managers.updater;
 
 import ua.mcchickenstudio.opencreative.managers.Manager;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * <h1>Updater</h1>
  * This interface represents a update manager,
@@ -32,7 +34,7 @@ public interface Updater extends Manager {
      * of OpenCreative+ are available. It's called once
      * on plugin enable and on command usage.
      */
-    void checkUpdates();
+    CompletableFuture<String> checkUpdates();
 
     /**
      * Returns updates availability for OpenCreative+.

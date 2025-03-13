@@ -18,12 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction;
 
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class WorldInteractEvent extends WorldEvent {
+public final class WorldInteractEvent extends WorldEvent implements BlockEvent {
 
     private final PlayerInteractEvent event;
     private final Block clickedBlock;
@@ -35,6 +37,11 @@ public class WorldInteractEvent extends WorldEvent {
     }
 
     public Block getClickedBlock() {
+        return clickedBlock;
+    }
+
+    @Override
+    public @NotNull Block getBlock() {
         return clickedBlock;
     }
 

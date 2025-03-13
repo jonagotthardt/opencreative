@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class HungerChangeEvent extends WorldEvent {
+public final class HungerChangeEvent extends WorldEvent {
 
     private final FoodLevelChangeEvent event;
     private final ItemStack itemStack;

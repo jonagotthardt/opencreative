@@ -16,15 +16,22 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory;
+package ua.mcchickenstudio.opencreative.coding.blocks.events;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import org.bukkit.entity.Player;
+import org.bukkit.block.Block;
+import org.jetbrains.annotations.NotNull;
 
-public final class CloseInventoryEvent extends WorldEvent {
+/**
+ * <h1>BlockEvent</h1>
+ * This interface is used in world blocks events
+ * to get location and material.
+ */
+public interface BlockEvent {
 
-    public CloseInventoryEvent(Player player) {
-        super(player);
-    }
+    /**
+     * Returns block involved in block event.
+     * @return block from event.
+     */
+    @NotNull Block getBlock();
 
 }

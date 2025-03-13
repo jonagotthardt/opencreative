@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.placeholders.KeyPlaceholder;
 import ua.mcchickenstudio.opencreative.coding.placeholders.KeyValuePlaceholder;
 
-public class ChatEvent extends WorldEvent {
+public final class ChatEvent extends WorldEvent {
 
     private final String message;
 
