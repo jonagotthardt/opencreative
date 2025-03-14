@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.executors.world.blocks;
+package ua.mcchickenstudio.opencreative.coding.blocks.executors.world.other;
 
 import org.bukkit.event.Cancellable;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
@@ -26,9 +26,9 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.world.WorldExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public class BlockBurnedExecutor extends WorldExecutor implements Cancellable {
+public class LightningStrikeExecutor extends WorldExecutor implements Cancellable {
 
-    public BlockBurnedExecutor(Planet planet, int x, int y, int z) {
+    public LightningStrikeExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
     }
 
@@ -43,7 +43,7 @@ public class BlockBurnedExecutor extends WorldExecutor implements Cancellable {
 
     @Override
     public ExecutorType getExecutorType() {
-        return ExecutorType.WORLD_BLOCK_BURNED;
+        return ExecutorType.WORLD_LIGHTNING_STRIKE;
     }
 
     @Override
@@ -55,4 +55,5 @@ public class BlockBurnedExecutor extends WorldExecutor implements Cancellable {
     public void setCancelled(boolean cancel) {
         getEvent().setCancelled(cancel);
     }
+
 }

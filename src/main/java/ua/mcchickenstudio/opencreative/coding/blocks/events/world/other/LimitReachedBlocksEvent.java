@@ -16,32 +16,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks;
+package ua.mcchickenstudio.opencreative.coding.blocks.events.world.other;
 
-import org.bukkit.block.Block;
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.block.BlockBurnEvent;
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public final class BlockBurnedEvent extends WorldEvent implements BlockEvent, Cancellable {
+public final class LimitReachedBlocksEvent extends WorldEvent {
 
-    private final BlockBurnEvent event;
-
-    public BlockBurnedEvent(Planet planet, BlockBurnEvent event) {
+    public LimitReachedBlocksEvent(Planet planet) {
         super(planet);
-        this.event = event;
     }
-
-    @Override
-    public @NotNull Block getBlock() {
-        return event.getBlock();
-    }
-
-    @Override
-    public void setCancelled(boolean cancelled) {
-        event.setCancelled(cancelled);
-    }
+    
 }

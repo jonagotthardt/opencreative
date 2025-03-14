@@ -16,32 +16,23 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks;
+package ua.mcchickenstudio.opencreative.coding.blocks.executors.world.other;
 
-import org.bukkit.block.Block;
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.block.BlockBurnEvent;
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.WebResponseEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.world.WorldExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public final class BlockBurnedEvent extends WorldEvent implements BlockEvent, Cancellable {
+public class LimitReachedRedstoneExecutor extends WorldExecutor {
 
-    private final BlockBurnEvent event;
-
-    public BlockBurnedEvent(Planet planet, BlockBurnEvent event) {
-        super(planet);
-        this.event = event;
+    public LimitReachedRedstoneExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override
-    public @NotNull Block getBlock() {
-        return event.getBlock();
-    }
-
-    @Override
-    public void setCancelled(boolean cancelled) {
-        event.setCancelled(cancelled);
+    public ExecutorType getExecutorType() {
+        return ExecutorType.WORLD_REACHED_REDSTONE_LIMIT;
     }
 }

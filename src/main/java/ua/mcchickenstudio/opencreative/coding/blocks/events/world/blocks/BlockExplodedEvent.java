@@ -21,16 +21,17 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks;
 import org.bukkit.block.Block;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public final class BlockBurnedEvent extends WorldEvent implements BlockEvent, Cancellable {
+public final class BlockExplodedEvent extends WorldEvent implements BlockEvent, Cancellable {
 
-    private final BlockBurnEvent event;
+    private final BlockExplodeEvent event;
 
-    public BlockBurnedEvent(Planet planet, BlockBurnEvent event) {
+    public BlockExplodedEvent(Planet planet, BlockExplodeEvent event) {
         super(planet);
         this.event = event;
     }

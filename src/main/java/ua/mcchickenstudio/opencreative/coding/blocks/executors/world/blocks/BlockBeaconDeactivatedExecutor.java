@@ -16,32 +16,34 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks;
+package ua.mcchickenstudio.opencreative.coding.blocks.executors.world.blocks;
 
-import org.bukkit.block.Block;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.block.BlockBurnEvent;
-import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.world.WorldExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public final class BlockBurnedEvent extends WorldEvent implements BlockEvent, Cancellable {
+public class BlockBeaconDeactivatedExecutor extends WorldExecutor {
 
-    private final BlockBurnEvent event;
-
-    public BlockBurnedEvent(Planet planet, BlockBurnEvent event) {
-        super(planet);
-        this.event = event;
+    public BlockBeaconDeactivatedExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override
-    public @NotNull Block getBlock() {
-        return event.getBlock();
+    protected void setTempVars(WorldEvent event) {
+        if (event instanceof BlockEvent blockEvent) {
+            setTempVar(EventValues.Variable.BLOCK, blockEvent.getBlock());
+            setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getBlock());
+            setTempVar(EventValues.Variable.BLOCK_LOCATION, blockEvent.getBlock());
+        }
     }
 
     @Override
-    public void setCancelled(boolean cancelled) {
-        event.setCancelled(cancelled);
+    public ExecutorType getExecutorType() {
+        return ExecutorType.WORLD_BLOCK_BEACON_DEACTIVATED;
     }
+
 }

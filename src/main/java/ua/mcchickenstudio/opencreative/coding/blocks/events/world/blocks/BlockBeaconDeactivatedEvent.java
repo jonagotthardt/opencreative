@@ -18,19 +18,19 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks;
 
+import io.papermc.paper.event.block.BeaconActivatedEvent;
+import io.papermc.paper.event.block.BeaconDeactivatedEvent;
 import org.bukkit.block.Block;
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.block.BlockBurnEvent;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public final class BlockBurnedEvent extends WorldEvent implements BlockEvent, Cancellable {
+public final class BlockBeaconDeactivatedEvent extends WorldEvent implements BlockEvent {
 
-    private final BlockBurnEvent event;
+    private final BeaconDeactivatedEvent event;
 
-    public BlockBurnedEvent(Planet planet, BlockBurnEvent event) {
+    public BlockBeaconDeactivatedEvent(Planet planet, BeaconDeactivatedEvent event) {
         super(planet);
         this.event = event;
     }
@@ -40,8 +40,4 @@ public final class BlockBurnedEvent extends WorldEvent implements BlockEvent, Ca
         return event.getBlock();
     }
 
-    @Override
-    public void setCancelled(boolean cancelled) {
-        event.setCancelled(cancelled);
-    }
 }

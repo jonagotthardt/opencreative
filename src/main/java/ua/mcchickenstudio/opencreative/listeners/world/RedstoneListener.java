@@ -26,6 +26,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
@@ -37,7 +38,6 @@ public final class RedstoneListener implements Listener {
     @EventHandler
     public void onBlockRedstone(BlockRedstoneEvent event) {
         Location location = event.getBlock().getLocation();
-
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(location.getWorld());
         if (planet != null) {
             planet.getLimits().setLastRedstoneOperationsAmount(planet.getLimits().getLastRedstoneOperationsAmount()+1);
@@ -54,6 +54,9 @@ public final class RedstoneListener implements Listener {
                         location.getBlock().setType(Material.CAVE_AIR);
                     }
                     planet.getLimits().setLastRedstoneOperationsAmount(0);
+                    EventRaiser.raiseLimitReachedRedstoneEvent(planet);
+            } else {
+                EventRaiser.raiseBlockRedstoneEvent(planet,event);
             }
             if (planet.getLimits().getLastRedstoneOperationsAmount() > 0) {
                 new BukkitRunnable() {

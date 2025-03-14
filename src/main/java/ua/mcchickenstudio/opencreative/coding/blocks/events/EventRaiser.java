@@ -19,13 +19,20 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.events;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
+import io.papermc.paper.event.block.BeaconActivatedEvent;
+import io.papermc.paper.event.block.BeaconDeactivatedEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
+import org.bukkit.event.block.*;
+import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.weather.LightningStrikeEvent;
+import org.bukkit.event.world.PortalCreateEvent;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.entities.EntitySpawnEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.entities.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerRespawnEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.*;
@@ -33,18 +40,14 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement.PlayerMoveEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.GamePlayEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.VariableTransferEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.WebResponseEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.*;
 import ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
@@ -69,8 +72,7 @@ public class EventRaiser {
     public static boolean cantRaiseEvent(Entity entity) {
         if (OpenCreative.getPlanetsManager().getPlanetByWorld(entity.getWorld()) == null) return true;
         if (OpenCreative.getPlanetsManager().getPlanetByWorld(entity.getWorld()).getMode() == Planet.Mode.BUILD) return true;
-        if (isEntityInDevPlanet(entity)) return true;
-        return false;
+        return isEntityInDevPlanet(entity);
     }
 
     public static boolean cantRaiseEvent(Planet planet) {
@@ -560,4 +562,173 @@ public class EventRaiser {
         WorldEvent creativeEvent = new PlayerItemDamagedEvent(player,event);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
+
+    public static void raiseBlockBurnedEvent(Planet planet, BlockBurnEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockBurnedEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockCookedEvent(Planet planet, BlockCookEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockCookedEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockExplodedEvent(Planet planet, BlockExplodeEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockExplodedEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockDispensedEvent(Planet planet, BlockDispenseEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockDispensedEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockTntPrimeEvent(Planet planet, TNTPrimeEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockTntPrimeEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockFadedEvent(Planet planet, BlockFadeEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockFadedEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockPistonExtendedEvent(Planet planet, BlockPistonExtendEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockPistonExtendedEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockPistonRetractedEvent(Planet planet, BlockPistonRetractEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockPistonRetractedEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockIgnitedEvent(Planet planet, BlockIgniteEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockIgnitedEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockGrownEvent(Planet planet, BlockGrowEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockGrownEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockPhysicsEvent(Planet planet, BlockPhysicsEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks.BlockPhysicsEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockRedstoneEvent(Planet planet, BlockRedstoneEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks.BlockRedstoneEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockFormedEvent(Planet planet, BlockFormEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockFormedEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raisePortalCreatedEvent(Planet planet, PortalCreateEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new PortalCreatedEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBeaconActivatedEvent(Planet planet, BeaconActivatedEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockBeaconActivatedEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBeaconDeactivatedEvent(Planet planet, BeaconDeactivatedEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockBeaconDeactivatedEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseLimitReachedRedstoneEvent(Planet planet) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new LimitReachedRedstoneEvent(planet);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseLimitReachedVariablesEvent(Planet planet) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new LimitReachedVariablesEvent(planet);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseLimitReachedEntitiesEvent(Planet planet) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new LimitReachedEntitiesEvent(planet);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseLimitReachedBlocksEvent(Planet planet) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new LimitReachedBlocksEvent(planet);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseLightningStrikeEvent(Planet planet, LightningStrikeEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LightningStrikeEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
 }

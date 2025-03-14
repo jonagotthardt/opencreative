@@ -25,9 +25,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.*
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.GamePlayEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.VariableTransferEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.WebResponseEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.entities.EntitySpawnExecutor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Cycle;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Function;
@@ -37,9 +36,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.interactio
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.inventory.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.movement.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.world.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.world.other.GamePlayExecutor;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.world.other.VariableTransferExecutor;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.world.other.WebResponseExecutor;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.world.blocks.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.world.other.*;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -141,42 +139,42 @@ public enum ExecutorType {
     WORLD_VARIABLE_TRANSFER(ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, VariableTransferExecutor.class, VariableTransferEvent.class, Material.CALIBRATED_SCULK_SENSOR),
     WORLD_WEB_RESPONSE(     ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, WebResponseExecutor.class, WebResponseEvent.class, Material.BEACON),
 
-    WORLD_BLOCK_BURNED(         ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.CAMPFIRE),
-    WORLD_BLOCK_COOKED(         ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.FURNACE),
-    WORLD_BLOCK_DISPENSED(      ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.DROPPER),
-    WORLD_BLOCK_EXPLODED(       ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.TNT),
-    WORLD_BLOCK_TNT_PRIME(      ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.TNT_MINECART),
-    WORLD_BLOCK_FADED(          ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.ICE),
-    WORLD_BLOCK_FORMED(         ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.SNOW_BLOCK),
-    WORLD_BLOCK_GROWN(          ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.OAK_SAPLING),
-    WORLD_BLOCK_IGNITED(        ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.FLINT_AND_STEEL),
-    WORLD_BLOCK_PHYSICS(        ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.SAND),
-    WORLD_BLOCK_PISTON_EXTENDED(ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.PISTON),
-    WORLD_BLOCK_PISTON_RETRACTED(ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.STICKY_PISTON),
-    WORLD_BLOCK_REDSTONE(       ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.REDSTONE),
-    WORLD_BLOCK_BREWING_START(  ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.BREWING_STAND),
-    WORLD_BLOCK_CAMPFIRE_START( ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.CAMPFIRE),
-    WORLD_BLOCK_CAULDRON_CHANGE(ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.CAULDRON),
-    WORLD_BLOCK_CRAFTER_CRAFTED(ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.CRAFTER),
-    WORLD_BLOCK_FLUID_CHANGED(  ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.WATER_BUCKET),
-    WORLD_BLOCK_LEAVES_DECAYED( ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.OAK_LEAVES),
-    WORLD_BLOCK_NOTE_PLAYED(    ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.NOTE_BLOCK),
-    WORLD_BLOCK_SCULK_BLOOMED(  ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.SCULK_SENSOR),
-    WORLD_BLOCK_SIGN_CHANGED(   ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.OAK_SIGN),
-    WORLD_PORTAL_CREATED(       ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.CRYING_OBSIDIAN),
-    WORLD_BLOCK_BEACON_ACTIVATED(ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.BEACON),
-    WORLD_BLOCK_BEACON_DEACTIVATED(ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.BEACON),
-    WORLD_BLOCK_ANVIL_DAMAGED(  ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.DAMAGED_ANVIL),
-    WORLD_BLOCK_TARGET_HIT(     ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.TARGET),
-    WORLD_BLOCK_SPONGE_ABSORBED(ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.WET_SPONGE),
-    WORLD_BLOCK_BELL_RUNG(      ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.BELL),
-    WORLD_WEATHER_CHANGED(      ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, null, null, Material.WATER_BUCKET),
-    WORLD_LIGHTNING_STRIKE(     ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, null, null, Material.TRIDENT),
-    WORLD_REACHED_REDSTONE_LIMIT(ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, null, null, Material.REDSTONE),
-    WORLD_REACHED_BLOCKS_LIMIT( ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, null, null, Material.GRASS_BLOCK),
-    WORLD_REACHED_ENTITIES_LIMIT(ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, null, null, Material.CHICKEN_SPAWN_EGG),
-    WORLD_REACHED_VARIABLES_LIMIT(ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, null, null, Material.MAGMA_CREAM),
-    WORLD_CODE_ERROR_OCCURRED(  ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, null, null, Material.BARRIER),
+    WORLD_BLOCK_BURNED(         ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, BlockBurnedExecutor.class, BlockBurnedEvent.class, Material.CAMPFIRE),
+    WORLD_BLOCK_COOKED(         ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, BlockCookedExecutor.class, BlockCookedEvent.class, Material.FURNACE),
+    WORLD_BLOCK_DISPENSED(      ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, BlockDispensedExecutor.class, BlockDispensedEvent.class, Material.DROPPER),
+    WORLD_BLOCK_EXPLODED(       ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, BlockExplodedExecutor.class, BlockExplodedEvent.class, Material.TNT),
+    WORLD_BLOCK_TNT_PRIME(      ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, BlockTntPrimeExecutor.class, BlockTntPrimeEvent.class, Material.TNT_MINECART),
+    WORLD_BLOCK_FADED(          ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, BlockFadedExecutor.class, BlockFadedEvent.class, Material.ICE),
+    WORLD_BLOCK_FORMED(         ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, BlockFormedExecutor.class, BlockFormedEvent.class, Material.SNOW_BLOCK),
+    WORLD_BLOCK_GROWN(          ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, BlockGrownExecutor.class, BlockGrownEvent.class, Material.OAK_SAPLING),
+    WORLD_BLOCK_IGNITED(        ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, BlockIgnitedExecutor.class, BlockIgnitedEvent.class, Material.FLINT_AND_STEEL),
+    WORLD_BLOCK_PHYSICS(        ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, BlockPhysicsExecutor.class, BlockPhysicsEvent.class, Material.SAND),
+    WORLD_BLOCK_PISTON_EXTENDED(ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, BlockPistonExtendedExecutor.class, BlockPistonExtendedEvent.class, Material.PISTON),
+    WORLD_BLOCK_PISTON_RETRACTED(ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, BlockPistonRetractedExecutor.class, BlockPistonRetractedEvent.class, Material.STICKY_PISTON),
+    WORLD_BLOCK_REDSTONE(       ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, BlockRedstoneExecutor.class, BlockRedstoneEvent.class, Material.REDSTONE),
+    //WORLD_BLOCK_BREWING_START(  ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.BREWING_STAND),
+    //WORLD_BLOCK_CAMPFIRE_START( ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.CAMPFIRE),
+    //WORLD_BLOCK_CAULDRON_CHANGE(ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.CAULDRON),
+    //WORLD_BLOCK_CRAFTER_CRAFTED(ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.CRAFTER),
+    //WORLD_BLOCK_FLUID_CHANGED(  ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.WATER_BUCKET),
+    //WORLD_BLOCK_LEAVES_DECAYED( ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.OAK_LEAVES),
+    //WORLD_BLOCK_NOTE_PLAYED(    ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.NOTE_BLOCK),
+    //WORLD_BLOCK_SCULK_BLOOMED(  ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.SCULK_SENSOR),
+    //WORLD_BLOCK_SIGN_CHANGED(   ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.OAK_SIGN),
+    WORLD_PORTAL_CREATED(       ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, PortalCreatedExecutor.class, PortalCreatedEvent.class, Material.CRYING_OBSIDIAN),
+    WORLD_BLOCK_BEACON_ACTIVATED(ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, BlockBeaconActivatedExecutor.class, BlockBeaconActivatedEvent.class, Material.BEACON),
+    WORLD_BLOCK_BEACON_DEACTIVATED(ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, BlockBeaconDeactivatedExecutor.class, BlockBeaconActivatedEvent.class, Material.BEACON),
+    //WORLD_BLOCK_ANVIL_DAMAGED(  ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.DAMAGED_ANVIL),
+    //WORLD_BLOCK_TARGET_HIT(     ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.TARGET),
+    //WORLD_BLOCK_SPONGE_ABSORBED(ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.WET_SPONGE),
+    //WORLD_BLOCK_BELL_RUNG(      ExecutorCategory.EVENT_WORLD, MenusCategory.BLOCKS, null, null, Material.BELL),
+    //WORLD_WEATHER_CHANGED(      ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, null, null, Material.WATER_BUCKET),
+    WORLD_LIGHTNING_STRIKE(     ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, LightningStrikeExecutor.class, LightningStrikeEvent.class, Material.TRIDENT),
+    WORLD_REACHED_REDSTONE_LIMIT(ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, LimitReachedRedstoneExecutor.class, LimitReachedRedstoneEvent.class, Material.REDSTONE),
+    WORLD_REACHED_BLOCKS_LIMIT( ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, LimitReachedBlocksExecutor.class, LimitReachedBlocksEvent.class, Material.GRASS_BLOCK),
+    WORLD_REACHED_ENTITIES_LIMIT(ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, LimitReachedEntitiesExecutor.class, LimitReachedEntitiesEvent.class, Material.CHICKEN_SPAWN_EGG),
+    WORLD_REACHED_VARIABLES_LIMIT(ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, LimitReachedVariablesExecutor.class, LimitReachedVariablesEvent.class, Material.MAGMA_CREAM),
+    //WORLD_CODE_ERROR_OCCURRED(  ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, null, null, Material.BARRIER),
 
 
     ENTITY_SPAWNED(         ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY, EntitySpawnExecutor.class, EntitySpawnEvent.class, Material.CHICKEN_SPAWN_EGG);

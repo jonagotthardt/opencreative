@@ -66,6 +66,7 @@ public final class EntitySpawnListener implements Listener {
                 warning.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(getLocaleMessage("world.entity-limit-hover"))));
                 warning.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/world deletemobs"));
                 sendMessageOnce(planet,warning,3);
+                EventRaiser.raiseLimitReachedEntitiesEvent(planet);
             } else {
                 EventRaiser.raiseEntitySpawnEvent(event);
             }
@@ -85,6 +86,7 @@ public final class EntitySpawnListener implements Listener {
                 warning.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(getLocaleMessage("world.entity-limit-hover"))));
                 warning.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/world deletemobs"));
                 sendMessageOnce(planet,warning,3);
+                EventRaiser.raiseLimitReachedEntitiesEvent(planet);
             }
         }
         String worldName = world.getName();

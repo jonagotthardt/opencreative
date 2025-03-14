@@ -127,6 +127,7 @@ public final class OpenCreative extends JavaPlugin {
         saveDefaultConfig();
 
         space = new Space();
+        space.init();
 
         FileUtils.loadLocales();
         PlayerUtils.loadPermissions();
@@ -255,7 +256,7 @@ public final class OpenCreative extends JavaPlugin {
                 ChatListener.class,       InteractListener.class,     DropItemListener.class,
                 PlaceBlockListener.class, DestroyBlockListener.class, BucketListener.class,
                 ClickListener.class,      RedstoneListener.class,     BlockChangeListener.class,
-                Menus.class,              WorldListener.class,        GameModeListener.class,
+                Menus.class,              GameModeListener.class,
                 CreativeListener.class,   PotionListener.class
         };
         for (Class<?> listenerClass : listeners) {
@@ -265,8 +266,13 @@ public final class OpenCreative extends JavaPlugin {
                 );
                 registeredListeners++;
             } catch (Exception exception) {
-                sendCriticalErrorMessage("Couldn't register event listener: " + listenerClass.getSimpleName(),exception);
+                sendCriticalErrorMessage("Couldn't register event listener: " + listenerClass.getSimpleName(), exception);
             }
+        }
+        try {
+            new WorldListener().registerExecutors();
+        } catch (Exception exception) {
+            sendCriticalErrorMessage("Couldn't register executors", exception);
         }
         getLogger().info("OpenCreative+ registered " + (registeredListeners == listeners.length ? "all" : registeredListeners + "/" + listeners.length) + " event listeners.");
     }

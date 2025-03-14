@@ -20,17 +20,20 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks;
 
 import org.bukkit.block.Block;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockCookEvent;
+import org.bukkit.event.block.BlockDispenseEvent;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.ItemEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public final class BlockBurnedEvent extends WorldEvent implements BlockEvent, Cancellable {
+public final class BlockDispensedEvent extends WorldEvent implements BlockEvent, ItemEvent, Cancellable {
 
-    private final BlockBurnEvent event;
+    private final BlockDispenseEvent event;
 
-    public BlockBurnedEvent(Planet planet, BlockBurnEvent event) {
+    public BlockDispensedEvent(Planet planet, BlockDispenseEvent event) {
         super(planet);
         this.event = event;
     }
@@ -38,6 +41,11 @@ public final class BlockBurnedEvent extends WorldEvent implements BlockEvent, Ca
     @Override
     public @NotNull Block getBlock() {
         return event.getBlock();
+    }
+
+    @Override
+    public @NotNull ItemStack getItem() {
+        return event.getItem();
     }
 
     @Override
