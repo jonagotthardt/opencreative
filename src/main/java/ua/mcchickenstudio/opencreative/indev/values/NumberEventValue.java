@@ -25,23 +25,21 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 
-public abstract class TextEventValue extends EventValueTest {
+public abstract class NumberEventValue extends EventValueTest {
 
-    public TextEventValue(String id, ItemStack displayIcon, MenusCategory category) {
+    public NumberEventValue(String id, ItemStack displayIcon, MenusCategory category) {
         super(id, displayIcon, category);
     }
 
     /**
-     * Returns a string that can be got from
+     * Returns a number that can be got from
      * player, event, action, or null.
-     * @return string, or null.
+     * @return number, or null.
      */
-    public abstract @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action);
+    public abstract @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action);
 
     @Override
     public @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
-        String text = getText(handler, action);
-        if (text == null) return null;
-        return new StringBuilder(text).substring(0,Math.min(1024,text.length()));
+        return getNumber(handler, action);
     }
 }

@@ -16,32 +16,43 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.indev.values;
+package ua.mcchickenstudio.opencreative.indev.values.entity;
 
+import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
+import ua.mcchickenstudio.opencreative.indev.values.NumberEventValue;
+import ua.mcchickenstudio.opencreative.indev.values.TextEventValue;
 
-public abstract class TextEventValue extends EventValueTest {
+public class EntitySizeValue extends NumberEventValue {
 
-    public TextEventValue(String id, ItemStack displayIcon, MenusCategory category) {
-        super(id, displayIcon, category);
+    public EntitySizeValue() {
+        super("nickname", new ItemStack(Material.NAME_TAG), MenusCategory.ENTITY);
     }
 
-    /**
-     * Returns a string that can be got from
-     * player, event, action, or null.
-     * @return string, or null.
-     */
-    public abstract @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action);
+    @Override
+    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action) {
+        if (action.getEntity() instanceof LivingEntity livingEntity) {
+            AttributeInstance attribute = livingEntity.getAttribute(Attribute.GENERIC_SCALE);
+            return attribute == null ? null : attribute.getValue();
+        }
+        return null;
+    }
 
     @Override
-    public @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
-        String text = getText(handler, action);
-        if (text == null) return null;
-        return new StringBuilder(text).substring(0,Math.min(1024,text.length()));
+    public String getCodingPackId() {
+        return "default";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Returns entity name";
     }
 }

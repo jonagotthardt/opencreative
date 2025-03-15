@@ -465,6 +465,27 @@ public class Arguments {
         return value;
     }
 
+    public long getValue(String path, long defaultValue, Action action) {
+        Argument arg = getArg(path);
+        long value = defaultValue;
+        if (arg == null) {
+            sendCodingDebugNotFoundVariable(planet, path);
+        } else if (arg.getValue(action) instanceof Long l) {
+            value = l;
+            sendCodingDebugVariable(planet,path,value);
+        } else if (arg.getValue(action) instanceof Integer i) {
+            value = i.longValue();
+            sendCodingDebugVariable(planet,path,value);
+        } else if (arg.getValue(action) instanceof Float f) {
+            value = f.longValue();
+            sendCodingDebugVariable(planet,path,value);
+        } else if (arg.getValue(action) instanceof Double d) {
+            value = d.longValue();
+            sendCodingDebugVariable(planet,path,value);
+        }
+        return value;
+    }
+
     public Color getValue(String path, Color defaultValue, Action action) {
         Argument arg = getArg(path);
         Color value = defaultValue;
