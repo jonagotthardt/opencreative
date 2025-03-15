@@ -120,9 +120,6 @@ public class Menus implements Listener {
         for (InventoryMenu menu : activeMenus) {
             if (event.getInventory().getHolder() == menu.getInventory().getHolder()) {
                 menu.onClose(event);
-                if (event.getPlayer() instanceof Player player) {
-                    player.updateInventory();
-                }
                 return;
             }
         }
