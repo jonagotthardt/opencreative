@@ -23,7 +23,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-public class PlaceBlockEvent extends WorldEvent {
+public final class PlaceBlockEvent extends WorldEvent {
 
     private final BlockPlaceEvent event;
     private final Block placedBlock;

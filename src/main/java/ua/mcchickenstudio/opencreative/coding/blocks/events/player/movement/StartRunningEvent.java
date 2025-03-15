@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class StartRunningEvent extends WorldEvent {
+public final class StartRunningEvent extends WorldEvent {
 
     public StartRunningEvent(Player player) {
         super(player);

@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemBreakEvent extends WorldEvent {
+public final class ItemBreakEvent extends WorldEvent {
 
     private final ItemStack item;
 

@@ -22,7 +22,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
-public class StopSneakingEvent extends WorldEvent {
+public final class StopSneakingEvent extends WorldEvent {
 
     private final PlayerToggleSneakEvent event;
 

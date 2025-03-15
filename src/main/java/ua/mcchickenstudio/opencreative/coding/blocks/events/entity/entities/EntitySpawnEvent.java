@@ -20,7 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.entity.entities;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
-public class EntitySpawnEvent extends WorldEvent {
+public final class EntitySpawnEvent extends WorldEvent {
 
     private final org.bukkit.event.entity.EntitySpawnEvent event;
 

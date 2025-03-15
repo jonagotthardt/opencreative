@@ -22,7 +22,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-public class PlayerDamagedEvent extends WorldEvent {
+public final class PlayerDamagedEvent extends WorldEvent {
 
     private final EntityDamageEvent event;
     private final EntityDamageEvent.DamageCause cause;

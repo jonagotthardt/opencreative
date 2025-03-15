@@ -27,15 +27,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.CompletableFuture;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 
 public final class HangarUpdater implements Updater {
 
     private boolean updatesAvailable;
+    private final String downloadUrl = "https://hangar.papermc.io/mcchickenstudio/OpenCreative";
+    private final String apiUrl = "https://hangar.papermc.io/api/v1/projects/OpenCreative/latestrelease";
 
     @Override
-    public void checkUpdates() {
+    public CompletableFuture<String> checkUpdates() {
+        CompletableFuture<String> future = new CompletableFuture<>();
         Bukkit.getScheduler().runTaskAsynchronously(OpenCreative.getPlugin(),() -> {
             try {
                 HttpURLConnection connection = getHttpURLConnection();
@@ -48,21 +52,28 @@ public final class HangarUpdater implements Updater {
                     int latestVersion = getLatestVersion(response);
                     int currentVersion = getCurrentVersion();
                     if (latestVersion > currentVersion) {
+                        updatesAvailable = true;
                         OpenCreative.getPlugin().getLogger().info("A new version (" + getSemVer(response) + ") is available for downloading! Current: " + getSemVer(OpenCreative.getPlugin().getPluginMeta().getVersion()));
                         OpenCreative.getPlugin().getLogger().info("Visit this site, select latest version, read changelogs and replace OpenCreative.jar with new one.");
-                        OpenCreative.getPlugin().getLogger().info("https://hangar.papermc.io/mcchickenstudio/OpenCreative");
+                        OpenCreative.getPlugin().getLogger().info(downloadUrl);
+                        future.complete(getSemVer(response));
                     } else {
+                        updatesAvailable = false;
                         OpenCreative.getPlugin().getLogger().info("No updates detected, probably it's latest version :) (" + currentVersion + " - " + latestVersion + ")");
+                        future.complete("");
                     }
                 }
             } catch (Exception error) {
-                sendDebugError("Can't check updates",error);
+                updatesAvailable = false;
+                sendDebugError("Can't check updates: " + apiUrl,error);
+                future.completeExceptionally(error);
             }
         });
+        return future;
     }
 
-    private static HttpURLConnection getHttpURLConnection() throws IOException {
-        String url = "https://hangar.papermc.io/api/v1/projects/OpenCreative/latestrelease";
+    private HttpURLConnection getHttpURLConnection() throws IOException {
+        String url = apiUrl;
         URL requestUrl = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
         connection.setConnectTimeout(3000);

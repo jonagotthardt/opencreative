@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.world.other;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public class GamePlayEvent extends WorldEvent {
+public final class GamePlayEvent extends WorldEvent {
 
     public GamePlayEvent(Planet planet) {
         super(planet);

@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class CloseInventoryEvent extends WorldEvent {
+public final class CloseInventoryEvent extends WorldEvent {
 
     public CloseInventoryEvent(Player player) {
         super(player);

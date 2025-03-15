@@ -22,7 +22,7 @@ import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class JumpEvent extends WorldEvent {
+public final class JumpEvent extends WorldEvent {
 
     private final PlayerJumpEvent event;
 

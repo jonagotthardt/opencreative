@@ -40,6 +40,8 @@ public abstract class TextEventValue extends EventValueTest {
 
     @Override
     public @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
-        return getText(handler, action);
+        String text = getText(handler, action);
+        if (text == null) return null;
+        return new StringBuilder(text).substring(0,Math.min(1024,text.length()));
     }
 }

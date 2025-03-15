@@ -25,7 +25,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class MobInteractionEvent extends WorldEvent {
+public final class MobInteractionEvent extends WorldEvent {
 
     private final Cancellable event;
     private final Entity entity;

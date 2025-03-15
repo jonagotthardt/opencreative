@@ -18,12 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-public class PlayerDamagesMobEvent extends WorldEvent implements KillerVictimEvent {
+public final class PlayerDamagesMobEvent extends WorldEvent implements KillerVictimEvent {
 
     private final Entity damager;
     private final Entity victim;
@@ -43,12 +44,12 @@ public class PlayerDamagesMobEvent extends WorldEvent implements KillerVictimEve
     }
 
     @Override
-    public Entity getKiller() {
+    public @NotNull Entity getKiller() {
         return damager;
     }
 
     @Override
-    public Entity getVictim() {
+    public @NotNull Entity getVictim() {
         return victim;
     }
 

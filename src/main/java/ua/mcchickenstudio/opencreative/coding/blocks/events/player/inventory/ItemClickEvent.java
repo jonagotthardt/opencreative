@@ -24,7 +24,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemClickEvent extends WorldEvent {
+public final class ItemClickEvent extends WorldEvent {
 
     private final InventoryClickEvent event;
     private final ItemStack item;

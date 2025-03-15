@@ -29,6 +29,7 @@ import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
@@ -53,12 +54,14 @@ public final class SetItemBySlotInContainerAction extends WorldAction {
             if (getPlanet().getLimits().getLastModifiedBlocksAmount() > getPlanet().getLimits().getModifyingBlocksLimit()) {
                 runnable.runTaskLater(OpenCreative.getPlugin(),20L);
                 getPlanet().getTerritory().removeBukkitRunnable(runnable);
+                EventRaiser.raiseLimitReachedBlocksEvent(getPlanet());
                 return;
             }
             if (location.getBlock().getState() instanceof InventoryHolder container) {
                 if (getPlanet().getLimits().getLastModifiedBlocksAmount() > getPlanet().getLimits().getModifyingBlocksLimit()) {
                     runnable.runTaskLater(OpenCreative.getPlugin(),20L);
                     getPlanet().getTerritory().removeBukkitRunnable(runnable);
+                    EventRaiser.raiseLimitReachedBlocksEvent(getPlanet());
                     return;
                 }
                 container.getInventory().setItem(slot-1,item);

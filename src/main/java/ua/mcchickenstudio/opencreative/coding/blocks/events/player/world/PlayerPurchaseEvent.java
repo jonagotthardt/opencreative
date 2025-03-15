@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.player.world;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class PlayerPurchaseEvent extends WorldEvent {
+public final class PlayerPurchaseEvent extends WorldEvent {
 
     private final String id;
     private final String name;

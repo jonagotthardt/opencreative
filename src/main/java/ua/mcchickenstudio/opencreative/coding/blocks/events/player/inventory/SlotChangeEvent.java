@@ -22,7 +22,7 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class SlotChangeEvent extends WorldEvent {
+public final class SlotChangeEvent extends WorldEvent {
 
     private final PlayerItemHeldEvent event;
     private final int oldSlot;

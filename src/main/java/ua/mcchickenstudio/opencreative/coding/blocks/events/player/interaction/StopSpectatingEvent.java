@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class StopSpectatingEvent extends WorldEvent {
+public final class StopSpectatingEvent extends WorldEvent {
 
     public StopSpectatingEvent(Player player) {
         super(player);

@@ -47,8 +47,8 @@ public class ParameterSlot extends ArgumentSlot {
         this.values.add(false);
         this.values.add(true);
         if (Arrays.asList(materials).isEmpty()) {
-            this.icons.add(Material.RED_SHULKER_BOX);
-            this.icons.add(Material.LIME_SHULKER_BOX);
+            this.icons.add(Material.GRAY_DYE);
+            this.icons.add(Material.LIME_DYE);
         } else {
             this.icons.addAll(Arrays.asList(materials));
         }

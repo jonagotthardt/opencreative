@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class StopFlyingEvent extends WorldEvent {
+public final class StopFlyingEvent extends WorldEvent {
 
     public StopFlyingEvent(Player player) {
         super(player);

@@ -1,0 +1,71 @@
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.number;
+
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.util.noise.PerlinNoiseGenerator;
+import org.bukkit.util.noise.SimplexNoiseGenerator;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
+
+public class SimplexNoiseAction extends VariableAction {
+
+    public SimplexNoiseAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
+    }
+
+    @Override
+    protected void execute(Entity entity) {
+
+        VariableLink link = getArguments().getVariableLink("variable",this);
+        if (link == null) return;
+
+        long seed = getArguments().getValue("seed",1L,this);
+        Location location = getArguments().getValue("location",getWorld().getSpawnLocation(),this);
+        double lacunarity = getArguments().getValue("lacunarity",1.0d,this);
+        int octaves = getArguments().getValue("octaves",7,this);
+        double frequency = getArguments().getValue("frequency",0.5d,this);
+        double amplitude = getArguments().getValue("amplitude",-3.0d,this);
+        boolean normalize = getArguments().getValue("normalize",true,this);
+
+        SimplexNoiseGenerator generator = new SimplexNoiseGenerator(seed);
+
+        double result = generator.noise(
+                location.getX()*lacunarity,
+                location.getY()*lacunarity,
+                location.getZ()*lacunarity,
+                octaves,
+                frequency,
+                amplitude,
+                normalize);
+
+        setVarValue(link,result);
+
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return ActionType.VAR_NOISE_SIMPLEX;
+    }
+}

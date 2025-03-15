@@ -18,15 +18,18 @@
 
 package ua.mcchickenstudio.opencreative.listeners.world;
 
+import io.papermc.paper.event.block.BeaconActivatedEvent;
+import io.papermc.paper.event.block.BeaconDeactivatedEvent;
+import org.bukkit.event.block.*;
+import org.bukkit.event.weather.LightningStrikeEvent;
+import org.bukkit.event.world.PortalCreateEvent;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
 import ua.mcchickenstudio.opencreative.planets.*;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockExplodeEvent;
-import org.bukkit.event.block.BlockFadeEvent;
-import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
@@ -40,6 +43,8 @@ public final class BlockChangeListener implements Listener {
         if (planet != null) {
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_CHANGING) == 2) {
                 event.setCancelled(true);
+            } else {
+                EventRaiser.raiseBlockFadedEvent(planet,event);
             }
         }
     }
@@ -61,6 +66,8 @@ public final class BlockChangeListener implements Listener {
             if (planet != null) {
                 if (planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_CHANGING) == 2) {
                     event.setCancelled(true);
+                } else {
+                    EventRaiser.raiseBlockFormedEvent(planet,event);
                 }
             }
         }
@@ -90,10 +97,89 @@ public final class BlockChangeListener implements Listener {
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_EXPLOSION) == 2) {
                 event.blockList().clear();
             }
+            EventRaiser.raiseBlockExplodedEvent(planet,event);
         }
         if (isDevPlanet(world)) {
             event.blockList().clear();
         }
+    }
+
+    @EventHandler
+    public void onBeacon(BeaconActivatedEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBeaconActivatedEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onBeacon(BeaconDeactivatedEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBeaconDeactivatedEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onPortal(PortalCreateEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getWorld());
+        if (planet != null) EventRaiser.raisePortalCreatedEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onPiston(BlockPistonExtendEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBlockPistonExtendedEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onPiston(BlockPistonRetractEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBlockPistonRetractedEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onPhysics(BlockPhysicsEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBlockPhysicsEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onBlock(BlockGrowEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBlockGrownEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onBlock(BlockIgniteEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBlockIgnitedEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onBlock(TNTPrimeEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBlockTntPrimeEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onBlock(BlockDispenseEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBlockDispensedEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onBlock(BlockBurnEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBlockBurnedEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onBlock(BlockCookEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBlockCookedEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onLightningStrike(LightningStrikeEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getWorld());
+        if (planet != null) EventRaiser.raiseLightningStrikeEvent(planet,event);
     }
 
 }

@@ -23,7 +23,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 
-public class BedLeaveEvent extends WorldEvent {
+public final class BedLeaveEvent extends WorldEvent {
 
     private final Block bed;
     private final PlayerBedLeaveEvent event;

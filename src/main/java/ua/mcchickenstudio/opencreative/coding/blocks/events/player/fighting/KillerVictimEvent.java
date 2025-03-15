@@ -37,11 +37,25 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting;
 
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * <h1>KillerVictimEvent</h1>
+ * This interface is used for entities damage events,
+ * when there's victim and killer.
+ */
 public interface KillerVictimEvent {
 
-    Entity getVictim();
+    /**
+     * Returns victim of damage event, that got damaged.
+     * @return entity victim.
+     */
+    @NotNull Entity getVictim();
 
-    Entity getKiller();
+    /**
+     * Returns killer of damage event, that attacked victim.
+     * @return entity killer.
+     */
+    @NotNull Entity getKiller();
 
 }

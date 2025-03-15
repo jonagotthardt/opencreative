@@ -23,7 +23,7 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
-public class PlayerItemCraftEvent extends WorldEvent {
+public final class PlayerItemCraftEvent extends WorldEvent {
 
     private final CraftItemEvent event;
     private final ItemStack item;

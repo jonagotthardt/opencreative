@@ -451,6 +451,27 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("world.already-unloaded").replace("%id%",args[1]));
                     }
                 }
+                case "update", "updates", "checkupdate" -> {
+                    if (!sender.hasPermission("opencreative.update")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
+                    }
+                    OpenCreative.getUpdater().checkUpdates().thenAccept(
+                            version -> {
+                                if (version.isEmpty()) {
+                                    sender.sendMessage(getLocaleMessage("creative.updates.up-to-date")
+                                            .replace("%version%",OpenCreative.getPlugin().getPluginMeta().getVersion()));
+                                } else {
+                                    sender.sendMessage(getLocaleMessage("creative.updates.available")
+                                            .replace("%new%",version)
+                                            .replace("%old%",OpenCreative.getPlugin().getPluginMeta().getVersion()));
+                                }
+                            }
+                    ).exceptionally(e -> {
+                        sender.sendMessage(getLocaleMessage("creative.updates.cant-check"));
+                        return null;
+                    });
+                }
                 case "list" -> {
                     if (!sender.hasPermission("opencreative.list.loaded")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));

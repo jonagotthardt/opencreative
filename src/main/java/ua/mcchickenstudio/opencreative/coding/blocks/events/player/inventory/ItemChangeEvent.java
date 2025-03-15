@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class ItemChangeEvent extends WorldEvent {
+public final class ItemChangeEvent extends WorldEvent {
 
     public ItemChangeEvent(Player player) {
         super(player);

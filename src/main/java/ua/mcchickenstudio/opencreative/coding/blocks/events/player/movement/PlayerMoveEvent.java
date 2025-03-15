@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class PlayerMoveEvent extends WorldEvent {
+public final class PlayerMoveEvent extends WorldEvent {
 
     private final org.bukkit.event.player.PlayerMoveEvent event;
 

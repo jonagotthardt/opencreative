@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public class TeleportEvent extends WorldEvent {
+public final class TeleportEvent extends WorldEvent {
 
     public TeleportEvent(Player player) {
         super(player);
