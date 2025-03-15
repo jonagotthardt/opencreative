@@ -5547,6 +5547,206 @@ items:
               all: "Consider everything"
               only-coordinates: "Only coordinates"
               only-rotation: "Only rotation"
+      var-noise-perlin:
+        name: "&6Calculate Perlin Noise"
+        lore:
+          - "&7A number, which was calculated"
+          - "&7with Perlin noise algorithm,"
+          - "&7will be assigned to variable."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- For storing the result"
+          - "&f Location &7- For coordinates"
+          - "&a Number &7 - Seed value"
+          - "&a Number &7 - Coordinate multiplier"
+          - "&a Number &7 - Number of octaves"
+          - "&a Number &7 - Octave frequency"
+          - "&a Number &7 - Octave amplitude"
+          - "&3 Parameter &7- Whether to normalize"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          normalize:
+            name: "&eNormalize the value"
+            lore:
+              - "&7When normalization is enabled,"
+              - "&7the result will always be"
+              - "&7within the range of -1 to 1."
+              - ""
+              - "&eClick to toggle."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "No, do not normalize"
+              true: "Yes, normalize"
+        placeholders:
+          location:
+            name: "&fNoise Location"
+            lore:
+              - "&7Place the location of the"
+              - "&7noise here. Only the X, Y, Z"
+              - "&7coordinates will be used in calculations."
+              - ""
+              - "&7Default: "
+              - "&f Player spawn location"
+          seed:
+            name: "&aSeed Value"
+            lore:
+              - "&7Place a slime item here"
+              - "&7with a number to set the seed value."
+              - ""
+              - "&7You can set a random number"
+              - "&7to get different results."
+              - ""
+              - "&7Default: &a1"
+          lacunarity:
+            name: "&aCoordinate Multiplier"
+            lore:
+              - "&7Place a slime item here"
+              - "&7with a number to multiply the"
+              - "&7coordinates by. Also known as"
+              - "&7the noise frequency."
+              - ""
+              - "&7Higher values result in"
+              - "&7more detailed octaves."
+              - ""
+              - "&7Default: &a1"
+          frequency:
+            name: "&aOctave Frequency"
+            lore:
+              - "&7Place a slime item here"
+              - "&7with a number to set the"
+              - "&7octave frequency."
+              - ""
+              - "&7Higher values result in sharper noise."
+              - "&7Lower values result in smoother noise."
+              - ""
+              - "&7Default: &a0.5"
+          amplitude:
+            name: "&aOctave Amplitude"
+            lore:
+              - "&7Place a slime item here"
+              - "&7with a number to set the"
+              - "&7octave amplitude."
+              - ""
+              - "&7Higher values result in more chaos."
+              - "&7Lower values make octaves weaker."
+              - ""
+              - "&7Default: &a-3"
+          octaves:
+            name: "&aNumber of Octaves"
+            lore:
+              - "&7Place a slime item here"
+              - "&7with a number to set the"
+              - "&7number of octaves."
+              - ""
+              - "&7Octaves add details to the noise."
+              - "&7More octaves result in more complex noise."
+              - ""
+              - "&7Default: &a7"
+      var-noise-simplex:
+        name: "&eCalculate Simplex Noise"
+        lore:
+          - "&7This will assign a number"
+          - "&7to the variable, which was"
+          - "&7calculated using the Simplex"
+          - "&7noise algorithm."
+          - "&7Maybe better than Perlin noise!"
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- For storing the result"
+          - "&f Location &7- For coordinates"
+          - "&a Number &7 - Seed value"
+          - "&a Number &7 - Coordinate multiplier"
+          - "&a Number &7 - Number of octaves"
+          - "&a Number &7 - Octave frequency"
+          - "&a Number &7 - Octave amplitude"
+          - "&3 Parameter &7- Whether to normalize"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          normalize:
+            name: "&eNormalize the value"
+            lore:
+              - "&7When normalization is enabled,"
+              - "&7the result will always be"
+              - "&7within the range of -1 to 1."
+              - ""
+              - "&eClick to toggle."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "No, do not normalize"
+              true: "Yes, normalize"
+        placeholders:
+          location:
+            name: "&fNoise Location"
+            lore:
+              - "&7Place the location of the"
+              - "&7noise here. Only the X, Y, Z"
+              - "&7coordinates will be used in calculations."
+              - ""
+              - "&7Default: "
+              - "&f Player spawn location"
+          seed:
+            name: "&aSeed Value"
+            lore:
+              - "&7Place a slime item here"
+              - "&7with a number to set the seed value."
+              - ""
+              - "&7You can set a random number"
+              - "&7to get different results."
+              - ""
+              - "&7Default: &a1"
+          lacunarity:
+            name: "&aCoordinate Multiplier"
+            lore:
+              - "&7Place a slime item here"
+              - "&7with a number to multiply the"
+              - "&7coordinates by. Also known as"
+              - "&7the noise frequency."
+              - ""
+              - "&7Higher values result in"
+              - "&7more detailed octaves."
+              - ""
+              - "&7Default: &a1"
+          frequency:
+            name: "&aOctave Frequency"
+            lore:
+              - "&7Place a slime item here"
+              - "&7with a number to set the"
+              - "&7octave frequency."
+              - ""
+              - "&7Higher values result in sharper noise."
+              - "&7Lower values result in smoother noise."
+              - ""
+              - "&7Default: &a0.5"
+          amplitude:
+            name: "&aOctave Amplitude"
+            lore:
+              - "&7Place a slime item here"
+              - "&7with a number to set the"
+              - "&7octave amplitude."
+              - ""
+              - "&7Higher values result in more chaos."
+              - "&7Lower values make octaves weaker."
+              - ""
+              - "&7Default: &a-3"
+          octaves:
+            name: "&aNumber of Octaves"
+            lore:
+              - "&7Place a slime item here"
+              - "&7with a number to set the"
+              - "&7number of octaves."
+              - ""
+              - "&7Octaves add details to the noise."
+              - "&7More octaves result in more complex noise."
+              - ""
+              - "&7Default: &a7"
       var-set-value:
         name: "&bSet Value"
         lore:
@@ -11247,6 +11447,8 @@ blocks:
   var_arccosine_of_number: "Arccosine"
   var_tangent_of_number: "Tangent"
   var_arctangent_of_number: "Arctangent"
+  var_noise_simplex: "Simplex Noise"
+  var_noise_perlin: "Perlin Noise"
 
   world_set_time: "World time"
   world_set_weather: "World weather"

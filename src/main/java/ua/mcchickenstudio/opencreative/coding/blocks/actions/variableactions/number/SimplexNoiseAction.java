@@ -41,19 +41,20 @@ public class SimplexNoiseAction extends VariableAction {
         VariableLink link = getArguments().getVariableLink("variable",this);
         if (link == null) return;
 
-        long seed = getArguments().getValue("seed",0L,this);
+        long seed = getArguments().getValue("seed",1L,this);
         Location location = getArguments().getValue("location",getWorld().getSpawnLocation(),this);
-        int octaves = getArguments().getValue("octaves",1,this);
-        double frequency = getArguments().getValue("frequency",1.0d,this);
-        double amplitude = getArguments().getValue("frequency",1.0d,this);
+        double lacunarity = getArguments().getValue("lacunarity",1.0d,this);
+        int octaves = getArguments().getValue("octaves",7,this);
+        double frequency = getArguments().getValue("frequency",0.5d,this);
+        double amplitude = getArguments().getValue("amplitude",-3.0d,this);
         boolean normalize = getArguments().getValue("normalize",true,this);
 
         SimplexNoiseGenerator generator = new SimplexNoiseGenerator(seed);
 
         double result = generator.noise(
-                location.getX(),
-                location.getY(),
-                location.getZ(),
+                location.getX()*lacunarity,
+                location.getY()*lacunarity,
+                location.getZ()*lacunarity,
                 octaves,
                 frequency,
                 amplitude,
