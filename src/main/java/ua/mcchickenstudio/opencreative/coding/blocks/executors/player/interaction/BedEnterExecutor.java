@@ -37,6 +37,8 @@ public class BedEnterExecutor extends PlayerExecutor implements Cancellable {
         if (event instanceof BedEnterEvent enterEvent) {
             setTempVar(EventValues.Variable.BED_ENTER_RESULT,enterEvent.getBedEnterResult().toString());
             setTempVar(EventValues.Variable.BED,enterEvent.getBed());
+            setTempVar(EventValues.Variable.BLOCK_MATERIAL,enterEvent.getBed().getType().name().toLowerCase());
+            setTempVar(EventValues.Variable.BLOCK_LOCATION,enterEvent.getBed().getLocation());
         }
     }
 

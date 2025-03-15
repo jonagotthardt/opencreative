@@ -36,6 +36,8 @@ public class BedLeaveExecutor extends PlayerExecutor implements Cancellable {
     protected void setTempVars(WorldEvent event) {
         if (event instanceof BedLeaveEvent leaveEvent) {
             setTempVar(EventValues.Variable.BED,leaveEvent.getBed());
+            setTempVar(EventValues.Variable.BLOCK_MATERIAL,leaveEvent.getBed().getType().name().toLowerCase());
+            setTempVar(EventValues.Variable.BLOCK_LOCATION,leaveEvent.getBed().getLocation());
         }
     }
 
