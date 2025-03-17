@@ -25,6 +25,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
 
+/**
+ * <h1>PlanetExperiments</h1>
+ * This class represents secret experiments, that are enabled
+ * in debug mode only for server admins with specific permission.
+ */
 public class PlanetExperiments {
 
     private final Planet planet;

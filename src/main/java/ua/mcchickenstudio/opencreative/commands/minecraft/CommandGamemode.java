@@ -38,6 +38,14 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
+/**
+ * <h1>CommandGamemode</h1>
+ * This command is responsible for changing player's gamemode.
+ * <p>
+ * Using this command from console will redirect to Minecraft command.
+ * <p>
+ * Available: For world builders or developers.
+ */
 public class CommandGamemode implements CommandExecutor, TabCompleter {
 
     @Override

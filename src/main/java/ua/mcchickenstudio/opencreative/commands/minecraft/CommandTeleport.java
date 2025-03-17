@@ -36,6 +36,14 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.clearPlayer;
 
+/**
+ * <h1>CommandTeleport</h1>
+ * This command is responsible for teleporting player to specified coordinates.
+ * <p>
+ * Using this command from console will redirect to Minecraft command.
+ * <p>
+ * Available: For world builders or developers.
+ */
 public class CommandTeleport implements CommandExecutor {
 
     @Override

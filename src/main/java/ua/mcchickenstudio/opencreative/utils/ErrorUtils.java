@@ -44,6 +44,11 @@ import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getSignLine;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 
+/**
+ * <h1>ErrorUtils</h1>
+ * This class contains utilities for handling exceptions
+ * and logging them in console with friendly look.
+ */
 public class ErrorUtils {
 
     private static String cutClassesName(String text) {

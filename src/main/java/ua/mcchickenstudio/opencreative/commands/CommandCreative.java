@@ -57,6 +57,14 @@ import static ua.mcchickenstudio.opencreative.utils.FileUtils.loadLocales;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.setPlanetConfigParameter;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
+/**
+ * <h1>CommandCreative</h1>
+ * This command has special tools only for server admins.
+ * Can change plugin's behaviour, change settings or
+ * manipulate with worlds.
+ * <p>
+ * Available: For server admins with specific permissions.
+ */
 public class CommandCreative implements CommandExecutor, TabCompleter {
 
     @Override

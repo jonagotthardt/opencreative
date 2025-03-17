@@ -49,6 +49,12 @@ import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
 
+/**
+ * <h1>CommandWorld</h1>
+ * This command allows world owner to change world's settings.
+ * <p>
+ * Available: For world owners; some subcommands for all players in world.
+ */
 public class CommandWorld implements CommandExecutor, TabCompleter {
 
     @Override

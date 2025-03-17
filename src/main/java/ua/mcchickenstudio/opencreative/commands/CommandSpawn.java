@@ -36,6 +36,12 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
+/**
+ * <h1>CommandSpawn</h1>
+ * This command is responsible for teleporting players to lobby.
+ * <p>
+ * Available: For all players.
+ */
 public class CommandSpawn implements CommandExecutor, TabCompleter {
 
     @Override

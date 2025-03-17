@@ -41,6 +41,14 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
+/**
+ * <h1>CommandAd</h1>
+ * This command is used to invite all players from server
+ * to specific world. Or, it can be used as alias of
+ * {@link CommandJoin}.
+ * <p>
+ * Available: For all players.
+ */
 public class CommandAd extends CommandJoin {
 
     @Override

@@ -41,6 +41,14 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.giveDevPermissions;
 
+/**
+ * <h1>CommandDev</h1>
+ * This command is responsible for connecting player to
+ * developers world, where he can create a code with
+ * coding blocks and items.
+ * <p>
+ * Available: For world developers.
+ */
 public class CommandDev implements CommandExecutor {
 
     @Override

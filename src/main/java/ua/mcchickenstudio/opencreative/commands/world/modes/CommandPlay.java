@@ -22,6 +22,7 @@ import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+import ua.mcchickenstudio.opencreative.commands.world.CommandJoin;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import org.bukkit.Material;
@@ -47,6 +48,14 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
+/**
+ * <h1>CommandPlay</h1>
+ * This command is responsible for changing current world's mode
+ * to play mode. If it's already set, it can teleport player to
+ * spawn location and load code.
+ * <p>
+ * Available: For world developers.
+ */
 public class CommandPlay implements CommandExecutor, TabCompleter {
 
     @Override

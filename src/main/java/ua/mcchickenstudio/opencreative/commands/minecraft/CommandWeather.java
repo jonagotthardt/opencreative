@@ -37,6 +37,14 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
+/**
+ * <h1>CommandWeather</h1>
+ * This command is responsible for changing weather in current world.
+ * <p>
+ * Using this command from console will redirect to Minecraft command.
+ * <p>
+ * Available: For world builders or developers.
+ */
 public class CommandWeather implements CommandExecutor, TabCompleter {
 
     @Override
