@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,6 +28,8 @@ import ua.mcchickenstudio.opencreative.events.planet.PlanetDisconnectPlayerEvent
 import ua.mcchickenstudio.opencreative.events.player.CreativeChatEvent;
 import ua.mcchickenstudio.opencreative.events.player.PlayerLobbyEvent;
 import ua.mcchickenstudio.opencreative.events.player.WorldChatEvent;
+import ua.mcchickenstudio.opencreative.events.status.MaintenanceEndEvent;
+import ua.mcchickenstudio.opencreative.events.status.MaintenanceStartEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,6 +77,30 @@ public final class CreativeListener implements Listener {
         placeholders.put("%player%",event.getPlayer().getName());
         placeholders.put("%planet%",event.getPlanet().getId());
         OpenCreative.getSettings().getCommands().execute(event.getPlayer(),"onPlanetDisconnect",placeholders);
+    }
+
+    @EventHandler
+    public void onEvent(MaintenanceStartEvent event) {
+        Map<String,Object> placeholders = new HashMap<>();
+        if (event.getSender() instanceof Player player) {
+            placeholders.put("%player%", player.getName());
+            OpenCreative.getSettings().getCommands().execute(player,"onMaintenanceStart",placeholders);
+        } else if (event.getSender() != null) {
+            placeholders.put("%player%", Bukkit.getConsoleSender().getName());
+            OpenCreative.getSettings().getCommands().execute(null,"onMaintenanceStart",placeholders);
+        }
+    }
+
+    @EventHandler
+    public void onEvent(MaintenanceEndEvent event) {
+        Map<String,Object> placeholders = new HashMap<>();
+        if (event.getSender() instanceof Player player) {
+            placeholders.put("%player%", player.getName());
+            OpenCreative.getSettings().getCommands().execute(player,"onMaintenanceEnd",placeholders);
+        } else if (event.getSender() != null) {
+            placeholders.put("%player%", Bukkit.getConsoleSender().getName());
+            OpenCreative.getSettings().getCommands().execute(null,"onMaintenanceEnd",placeholders);
+        }
     }
 
 }

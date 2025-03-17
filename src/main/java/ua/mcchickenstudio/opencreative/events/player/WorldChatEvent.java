@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.events.player;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.events.CreativeEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.World;
@@ -48,15 +49,15 @@ public class WorldChatEvent extends CreativeEvent implements Cancellable {
         this.planet = planet;
     }
 
-    public Player getPlayer() {
+    public @NotNull Player getPlayer() {
         return player;
     }
 
-    public String getMessage() {
+    public @NotNull String getMessage() {
         return message;
     }
 
-    public World getWorld() {
+    public @NotNull World getWorld() {
         return world;
     }
 

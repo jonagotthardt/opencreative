@@ -35,7 +35,6 @@ public record Command(String commandLine, boolean console, long delay) {
                 @Override
                 public void run() {
                     dispatch(player,placeholders);
-
                 }
             }.runTaskLater(OpenCreative.getPlugin(),delay);
         } else {
@@ -48,10 +47,12 @@ public record Command(String commandLine, boolean console, long delay) {
         for (String placeholder : placeholders.keySet()) {
             dispatchedCommand = dispatchedCommand.replace(placeholder, placeholders.get(placeholder).toString());
         }
-        dispatchedCommand = parsePAPI(player,dispatchedCommand);
+        if (player != null) {
+            dispatchedCommand = parsePAPI(player,dispatchedCommand);
+        }
         if (console) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(),dispatchedCommand);
-        } else {
+        } else if (player != null){
             player.performCommand(dispatchedCommand);
         }
     }

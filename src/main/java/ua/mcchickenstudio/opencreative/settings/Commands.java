@@ -34,6 +34,8 @@ public class Commands  {
     private final Map<String,Command> onPlanetDisconnectCommands = new LinkedHashMap<>();
     private final Map<String,Command> onWorldChatCommands = new LinkedHashMap<>();
     private final Map<String,Command> onCreativeChatCommands = new LinkedHashMap<>();
+    private final Map<String,Command> onMaintenanceStartCommands = new LinkedHashMap<>();
+    private final Map<String,Command> onMaintenanceEndCommands = new LinkedHashMap<>();
 
     public void load() {
         onLobbyCommands.clear();
@@ -41,6 +43,8 @@ public class Commands  {
         onPlanetDisconnectCommands.clear();
         onWorldChatCommands.clear();
         onCreativeChatCommands.clear();
+        onMaintenanceStartCommands.clear();
+        onMaintenanceEndCommands.clear();
         FileConfiguration config = OpenCreative.getPlugin().getConfig();
         ConfigurationSection allCommandsSection = config.getConfigurationSection("commands");
         if (allCommandsSection == null) {
@@ -78,6 +82,8 @@ public class Commands  {
             case "onPlanetDisconnect" -> onPlanetDisconnectCommands;
             case "onWorldChat" -> onWorldChatCommands;
             case "onCreativeChat" -> onCreativeChatCommands;
+            case "onMaintenanceStart" -> onMaintenanceStartCommands;
+            case "onMaintenanceEnd" -> onMaintenanceEndCommands;
             default -> null;
         };
     }

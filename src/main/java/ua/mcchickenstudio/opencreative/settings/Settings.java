@@ -21,12 +21,16 @@ package ua.mcchickenstudio.opencreative.settings;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.events.status.MaintenanceEndEvent;
+import ua.mcchickenstudio.opencreative.events.status.MaintenanceStartEvent;
 import ua.mcchickenstudio.opencreative.indev.Items;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.groups.Groups;
@@ -224,6 +228,10 @@ public class Settings {
     }
 
     public void setMaintenance(boolean maintenance) {
+        setMaintenance(maintenance, null);
+    }
+
+    public void setMaintenance(boolean maintenance, @Nullable CommandSender sender) {
         if (this.maintenance == maintenance) return;
         this.maintenance = maintenance;
         OpenCreative.getPlugin().getConfig().set("maintenance",maintenance);
@@ -241,14 +249,15 @@ public class Settings {
                     }
                 }
             }
+            new MaintenanceStartEvent(sender).callEvent();
         } else {
             OpenCreative.getPlugin().getLogger().info("Maintenance mode ended, now players can play in worlds.");
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 Sounds.MAINTENANCE_END.play(onlinePlayer);
                 onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.ended"));
             }
+            new MaintenanceEndEvent(sender).callEvent();
         }
-
     }
 
     /**
