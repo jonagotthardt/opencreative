@@ -18,12 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory;
 
+import org.bukkit.event.Cancellable;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerEditBookEvent;
 import org.bukkit.inventory.ItemStack;
 
-public final class BookWriteEvent extends WorldEvent {
+public final class BookWriteEvent extends WorldEvent implements Cancellable {
 
     private final PlayerEditBookEvent event;
     private final ItemStack oldBook;
@@ -49,5 +50,10 @@ public final class BookWriteEvent extends WorldEvent {
     @Override
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 }

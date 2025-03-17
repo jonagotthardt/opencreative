@@ -18,11 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting;
 
+import org.bukkit.event.Cancellable;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-public final class PlayerDamagedEvent extends WorldEvent {
+public final class PlayerDamagedEvent extends WorldEvent implements Cancellable {
 
     private final EntityDamageEvent event;
     private final EntityDamageEvent.DamageCause cause;
@@ -36,6 +37,11 @@ public final class PlayerDamagedEvent extends WorldEvent {
     @Override
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 
     public EntityDamageEvent.DamageCause getCause() {

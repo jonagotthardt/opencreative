@@ -275,8 +275,8 @@ public enum ExecutorType {
     }
 
     public boolean isCancellable() {
-        Class<?> executorClass = getExecutorClass();
-        return (executorClass != null && Cancellable.class.isAssignableFrom(executorClass));
+        Class<?> eventClass = getEventClass();
+        return (eventClass != null && Cancellable.class.isAssignableFrom(eventClass));
     }
 
 }

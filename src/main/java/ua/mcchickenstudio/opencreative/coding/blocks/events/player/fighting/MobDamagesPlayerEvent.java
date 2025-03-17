@@ -18,13 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting;
 
+import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-public final class MobDamagesPlayerEvent extends WorldEvent implements KillerVictimEvent {
+public final class MobDamagesPlayerEvent extends WorldEvent implements KillerVictimEvent, Cancellable {
 
     private final EntityDamageByEntityEvent event;
     private final Entity damager;
@@ -40,6 +41,11 @@ public final class MobDamagesPlayerEvent extends WorldEvent implements KillerVic
     @Override
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 
     @Override

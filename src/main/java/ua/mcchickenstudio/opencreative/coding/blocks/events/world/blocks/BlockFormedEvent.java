@@ -45,4 +45,9 @@ public final class BlockFormedEvent extends WorldEvent implements BlockEvent, Ca
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
     }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
+    }
 }

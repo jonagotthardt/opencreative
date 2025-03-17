@@ -19,10 +19,11 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
+import org.bukkit.event.Cancellable;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public final class JumpEvent extends WorldEvent {
+public final class JumpEvent extends WorldEvent implements Cancellable {
 
     private final PlayerJumpEvent event;
 
@@ -34,5 +35,10 @@ public final class JumpEvent extends WorldEvent {
     @Override
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 }

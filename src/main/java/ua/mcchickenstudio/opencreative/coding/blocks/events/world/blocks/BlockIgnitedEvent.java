@@ -45,4 +45,9 @@ public final class BlockIgnitedEvent extends WorldEvent implements BlockEvent, C
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
     }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
+    }
 }

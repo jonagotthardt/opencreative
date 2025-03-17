@@ -18,11 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement;
 
+import org.bukkit.event.Cancellable;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
-public final class StopSneakingEvent extends WorldEvent {
+public final class StopSneakingEvent extends WorldEvent implements Cancellable {
 
     private final PlayerToggleSneakEvent event;
 
@@ -34,5 +35,10 @@ public final class StopSneakingEvent extends WorldEvent {
     @Override
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 }

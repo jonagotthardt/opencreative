@@ -423,6 +423,10 @@ public enum ActionType {
     VAR_GET_ITEM_DISPLAY_NAME( ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, GetItemDisplayNameAction.class, Material.NAME_TAG, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM)),
     VAR_GET_ITEM_LORE( ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, GetItemLoreAction.class, Material.BOOK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM)),
     VAR_GET_ITEM_LORE_LINE( ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, GetItemLoreLineAction.class, Material.WRITABLE_BOOK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM), new ArgumentSlot("index", ValueType.NUMBER)),
+    VAR_ADD_ITEM_ENCHANTMENT( ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, AddItemEnchantmentAction.class, Material.ENCHANTED_BOOK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM), new ArgumentSlot("enchantment", ValueType.ITEM), new ArgumentSlot("level", ValueType.NUMBER)),
+    VAR_REMOVE_ITEM_ENCHANTMENT( ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, AddItemEnchantmentAction.class, Material.ENCHANTED_BOOK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM), new ArgumentSlot("enchantment", ValueType.ITEM)),
+    VAR_CLEAR_ITEM_ENCHANTMENTS( ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, ClearItemEnchantmentsAction.class, Material.GRINDSTONE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM)),
+
     //VAR_GET_ITEM_PAGES( ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, null, Material.CRAFTING_TABLE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM)),
 
     VAR_NORMALIZE_VECTOR( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, NormalizeVectorAction.class, Material.PRISMARINE_BRICKS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("vector", ValueType.VECTOR)),

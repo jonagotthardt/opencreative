@@ -23,7 +23,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public class MobInteractionExecutor extends PlayerExecutor implements Cancellable {
+public class MobInteractionExecutor extends PlayerExecutor {
 
     public MobInteractionExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
@@ -33,14 +33,5 @@ public class MobInteractionExecutor extends PlayerExecutor implements Cancellabl
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_MOB_INTERACT;
     }
-
-    @Override
-    public boolean isCancelled() {
-        return getEvent().isCancelled();
-    }
-
-    @Override
-    public void setCancelled(boolean cancel) {
-        getEvent().setCancelled(cancel);
-    }
+    
 }

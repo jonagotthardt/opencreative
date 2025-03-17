@@ -18,12 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction;
 
+import org.bukkit.event.Cancellable;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDamageEvent;
 
-public final class DamageBlockEvent extends WorldEvent {
+public final class DamageBlockEvent extends WorldEvent implements Cancellable {
 
     private final BlockDamageEvent event;
     private final Block block;
@@ -36,7 +37,12 @@ public final class DamageBlockEvent extends WorldEvent {
 
     @Override
     public void setCancelled(boolean cancelled) {
-        super.setCancelled(cancelled);
+        event.setCancelled(cancelled);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 
     public Block getBlock() {

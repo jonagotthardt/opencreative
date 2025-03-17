@@ -59,14 +59,6 @@ public abstract class WorldEvent extends Event  {
         return selection;
     }
 
-    public void setCancelled(boolean cancelled) {
-        this.cancelled = cancelled;
-    }
-
-    public boolean isCancelled() {
-        return this.cancelled;
-    }
-
     public World getWorld() {
         return world;
     }

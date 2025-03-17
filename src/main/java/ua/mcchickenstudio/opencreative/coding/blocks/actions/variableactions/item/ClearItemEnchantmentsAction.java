@@ -16,32 +16,37 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.events;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.item;
 
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.ControlAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Cancellable;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
-public final class CancelEventAction extends ControlAction {
-    public CancelEventAction(Executor executor, Target target, int x, Arguments args) {
+import java.util.Map;
+
+public final class ClearItemEnchantmentsAction extends VariableAction {
+    public ClearItemEnchantmentsAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     protected void execute(Entity entity) {
-        WorldEvent worldEvent = getHandler().getEvent();
-        if (worldEvent instanceof Cancellable cancellable) {
-            cancellable.setCancelled(true);
-        }
+        VariableLink link = getArguments().getVariableLink("variable",this);
+        ItemStack item = getArguments().getValue("item",getArguments().getValue("variable",new ItemStack(Material.APPLE),this),this);
+        item.removeEnchantments();
+        setVarValue(link,item);
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.CONTROL_CANCEL_EVENT;
+        return ActionType.VAR_CLEAR_ITEM_ENCHANTMENTS;
     }
 }

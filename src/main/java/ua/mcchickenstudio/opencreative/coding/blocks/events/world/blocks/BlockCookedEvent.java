@@ -52,4 +52,9 @@ public final class BlockCookedEvent extends WorldEvent implements BlockEvent, It
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
     }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
+    }
 }

@@ -45,4 +45,9 @@ public final class BlockPistonRetractedEvent extends WorldEvent implements Block
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
     }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
+    }
 }

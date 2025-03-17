@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExec
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.event.Cancellable;
 
-public class BedEnterExecutor extends PlayerExecutor implements Cancellable {
+public class BedEnterExecutor extends PlayerExecutor {
 
     public BedEnterExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
@@ -47,13 +47,4 @@ public class BedEnterExecutor extends PlayerExecutor implements Cancellable {
         return ExecutorType.PLAYER_BED_ENTER;
     }
 
-    @Override
-    public boolean isCancelled() {
-        return getEvent().isCancelled();
-    }
-
-    @Override
-    public void setCancelled(boolean cancel) {
-        getEvent().setCancelled(true);
-    }
 }

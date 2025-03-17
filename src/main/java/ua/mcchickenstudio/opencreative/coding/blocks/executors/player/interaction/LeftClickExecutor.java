@@ -23,7 +23,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public class LeftClickExecutor extends PlayerExecutor implements Cancellable {
+public class LeftClickExecutor extends PlayerExecutor {
 
     public LeftClickExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
@@ -34,13 +34,4 @@ public class LeftClickExecutor extends PlayerExecutor implements Cancellable {
         return ExecutorType.PLAYER_LEFT_CLICK;
     }
 
-    @Override
-    public boolean isCancelled() {
-        return getEvent().isCancelled();
-    }
-
-    @Override
-    public void setCancelled(boolean cancel) {
-        getEvent().setCancelled(cancel);
-    }
 }

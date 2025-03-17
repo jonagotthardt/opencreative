@@ -23,7 +23,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExec
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.event.Cancellable;
 
-public class JumpExecutor extends PlayerExecutor implements Cancellable {
+public class JumpExecutor extends PlayerExecutor {
 
     public JumpExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
@@ -33,14 +33,5 @@ public class JumpExecutor extends PlayerExecutor implements Cancellable {
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_JUMP;
     }
-
-    @Override
-    public boolean isCancelled() {
-        return getEvent().isCancelled();
-    }
-
-    @Override
-    public void setCancelled(boolean b) {
-        getEvent().setCancelled(b);
-    }
+    
 }

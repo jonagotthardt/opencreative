@@ -19,11 +19,12 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
-public final class PlayerItemDamagedEvent extends WorldEvent {
+public final class PlayerItemDamagedEvent extends WorldEvent implements Cancellable {
 
     private final PlayerItemDamageEvent event;
     private final ItemStack item;
@@ -39,6 +40,11 @@ public final class PlayerItemDamagedEvent extends WorldEvent {
     @Override
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 
     public ItemStack getItem() {
