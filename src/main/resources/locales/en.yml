@@ -6809,6 +6809,37 @@ items:
           - " &6hello &7-> &3Nothing"
           - " "
           - "&eClick to set action."
+      var-code-point-of-char:
+        name: "&eFind Unicode's code by char"
+        lore:
+          - "&7Variable will be set to"
+          - "&7unicode's code of first"
+          - "&7symbol in the text."
+          - " "
+          - "&fIn chest:"
+          - "&e Variable &7- To assign"
+          - "&6 Text &7- Symbol"
+          - ""
+          - "&fExamples:"
+          - " &6A&7 &7-> &a65"
+          - " &6❤ &7-> &a10084"
+          - " "
+          - "&eClick to set action."
+      var-char-from-code-point:
+        name: "&bGet char by Unicode's code"
+        lore:
+          - "&7Variable will be set to char,"
+          - "&7that found by Unicode's code."
+          - " "
+          - "&fIn chest:"
+          - "&e Variable &7- To assign"
+          - "&a Number &7- Unicode's code"
+          - ""
+          - "&fExamples:"
+          - " &a65 &7-> &6A"
+          - " &a10084 &7-> &6❤"
+          - " "
+          - "&eClick to set action."
       var-char-at:
         name: "&bFind character by index"
         lore:
@@ -11820,6 +11851,8 @@ blocks:
   var_split_text: "&6Split text"
   var_text_length: "Text length"
   var_clone_item: "Clone item"
+  var_code_point_of_char: "Symbol's code"
+  var_char_from_code_point: "Symbol from code"
 
   var_set_item_display_name: "&6Set item name"
   var_set_item_amount: "&6Set item amount"
