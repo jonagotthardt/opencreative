@@ -52,9 +52,9 @@ public final class AddItemEnchantmentAction extends VariableAction {
                 if (!enchantment.canEnchantItem(item)) {
                     continue;
                 }
-                if (level > 10) {
-                    level = 10;
-                } else if (level < 0) {
+                if (level > 5) {
+                    level = 5;
+                } else if (level < 1) {
                     level = 1;
                 }
                 item.addEnchantment(enchantment,level);

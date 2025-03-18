@@ -1723,7 +1723,7 @@ items:
           - "&2 Block Location"
           - " "
           - "&eClick to set the event."
-      world-tnt-prime:
+      world-block-tnt-prime:
         name: "&cTNT Ignited"
         lore:
           - "&7When something or someone"
@@ -6304,6 +6304,59 @@ items:
           - "&e Variable &7- To save"
           - "&c Item &7- Item to change"
           - "&a Number &7- Max durability"
+          - " "
+          - "&eClick to set action."
+      var-add-item-enchantment:
+        name: "&bEnchant item"
+        lore:
+          - "&7It will add an enchantment"
+          - "&7to item with specified level."
+          - " "
+          - "&7Some enchantments aren't"
+          - "&7available for some items."
+          - " "
+          - "&fIn chest:"
+          - "&e Variable &7- To save"
+          - "&c Item &7- To change"
+          - "&c Item &7- Enchanted book"
+          - "&a Number &7- Level (from 1 to 5)"
+          - " "
+          - "&eClick to set action."
+        placeholders:
+          level:
+            name: "&aEnchantment level"
+            lore:
+              - "&7Place here a number"
+              - "&7with enchantment level."
+              - ""
+              - "&7By default: &a1"
+              - "&cNumber from 1 to 5"
+          enchantment:
+            name: "&6Enchanted book"
+      var-remove-item-enchantment:
+        name: "&dRemove enchantment"
+        lore:
+          - "&7It will remove specified"
+          - "&7enchantment from item."
+          - " "
+          - "&fIn chest:"
+          - "&e Variable &7- To save"
+          - "&c Item &7- To change"
+          - "&c Item &7- Enchanted book"
+          - " "
+          - "&eClick to set action."
+        placeholders:
+          enchantment:
+            name: "&6Enchanted book"
+      var-clear-item-enchantments:
+        name: "&cClear item enchantments"
+        lore:
+          - "&7It will remove all enchantments"
+          - "&7from specified item."
+          - " "
+          - "&fIn chest:"
+          - "&e Variable &7- To save"
+          - "&c Item &7- To change"
           - " "
           - "&eClick to set action."
       var-get-item-damage:
@@ -11469,6 +11522,9 @@ blocks:
   var_get_item_display_name: "&aGet item name"
   var_get_item_lore: "&aGet item lore"
   var_get_item_lore_line: "&aGet lore line"
+  var_add_item_enchantment: "Add enchantment"
+  var_remove_item_enchantment: "Remove enchant"
+  var_clear_item_enchantments: "Clear enchants"
 
   var_normalize_vector: "Normal. vector"
   var_vector_to_location: "Vector to loc."
