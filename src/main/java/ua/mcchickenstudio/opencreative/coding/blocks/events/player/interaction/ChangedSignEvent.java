@@ -18,23 +18,22 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction;
 
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.SignChangeEvent;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockDamageEvent;
 
-public final class DamageBlockEvent extends WorldEvent implements Cancellable, BlockEvent {
+public final class ChangedSignEvent extends WorldEvent implements Cancellable, BlockEvent {
 
-    private final BlockDamageEvent event;
-    private final Block block;
+    private final SignChangeEvent event;
 
-    public DamageBlockEvent(Player player, BlockDamageEvent event) {
+    public ChangedSignEvent(Player player, SignChangeEvent event) {
         super(player);
         this.event = event;
-        this.block = event.getBlock();
     }
 
     @Override
@@ -49,7 +48,7 @@ public final class DamageBlockEvent extends WorldEvent implements Cancellable, B
 
     @Override
     public @NotNull Block getBlock() {
-        return block;
+        return event.getBlock();
     }
 
 }

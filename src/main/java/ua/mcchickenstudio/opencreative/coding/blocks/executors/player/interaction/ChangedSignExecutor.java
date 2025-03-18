@@ -18,32 +18,33 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.interaction;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.BedLeaveEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.world.WorldExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import org.bukkit.event.Cancellable;
 
-public class BedLeaveExecutor extends PlayerExecutor {
+public class ChangedSignExecutor extends WorldExecutor {
 
-    public BedLeaveExecutor(Planet planet, int x, int y, int z) {
+    public ChangedSignExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
     }
 
     @Override
     protected void setTempVars(WorldEvent event) {
-        if (event instanceof BedLeaveEvent leaveEvent) {
-            setTempVar(EventValues.Variable.BED,leaveEvent.getBlock());
-            setTempVar(EventValues.Variable.BLOCK_MATERIAL,leaveEvent.getBlock().getType().name().toLowerCase());
-            setTempVar(EventValues.Variable.BLOCK_LOCATION,leaveEvent.getBlock().getLocation());
+        if (event instanceof BlockEvent blockEvent) {
+            setTempVar(EventValues.Variable.BLOCK, blockEvent.getBlock());
+            setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getBlock());
+            setTempVar(EventValues.Variable.BLOCK_LOCATION, blockEvent.getBlock());
         }
     }
 
     @Override
     public ExecutorType getExecutorType() {
-        return ExecutorType.PLAYER_BED_LEAVE;
+        return ExecutorType.PLAYER_CHANGED_SIGN;
     }
+
+    
 
 }

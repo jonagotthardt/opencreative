@@ -18,9 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.listeners.world;
 
+import com.destroystokyo.paper.event.block.AnvilDamagedEvent;
 import io.papermc.paper.event.block.BeaconActivatedEvent;
 import io.papermc.paper.event.block.BeaconDeactivatedEvent;
+import io.papermc.paper.event.block.TargetHitEvent;
+import org.bukkit.Location;
 import org.bukkit.event.block.*;
+import org.bukkit.event.inventory.BrewEvent;
+import org.bukkit.event.inventory.BrewingStandFuelEvent;
+import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -177,9 +183,110 @@ public final class BlockChangeListener implements Listener {
     }
 
     @EventHandler
+    public void onBlock(BlockExpEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBlockExperienceDropEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onBlock(BrewEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBlockBrewingEndEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onBlock(FurnaceBurnEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBlockFurnaceBurnedEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onBlock(BrewingStandFuelEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBlockBrewingFuelEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onBlock(FluidLevelChangeEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBlockFluidChangeEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onBlock(CauldronLevelChangeEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBlockCauldronChangeEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onBlock(CampfireStartEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBlockCampfireStartEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onBlock(BrewingStartEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBlockBrewingStartEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onBlock(AnvilDamagedEvent event) {
+        Location location = event.getInventory().getLocation();
+        if (location != null) {
+            Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(location.getWorld());
+            if (planet != null) EventRaiser.raiseBlockAnvilDamagedEvent(planet,event,location.getBlock());
+        }
+    }
+
+    @EventHandler
+    public void onBlock(TargetHitEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getEntity().getWorld());
+        if (planet != null) EventRaiser.raiseBlockTargetHitEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onBlock(NotePlayEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBlockNotePlayedEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onBlock(SculkBloomEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBlockSculkBloomedEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onBlock(BellRingEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBlockBellRungEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onBlock(CrafterCraftEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseBlockCrafterCraftedEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onBlock(LeavesDecayEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseLeavesDecayedEvent(planet,event);
+    }
+
+    @EventHandler
+    public void onBlock(SpongeAbsorbEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
+        if (planet != null) EventRaiser.raiseSpongeAbsorbed(planet,event);
+    }
+
+    @EventHandler
     public void onLightningStrike(LightningStrikeEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getWorld());
         if (planet != null) EventRaiser.raiseLightningStrikeEvent(planet,event);
     }
+
+
 
 }

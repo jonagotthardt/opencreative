@@ -18,16 +18,19 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events;
 
+import com.destroystokyo.paper.event.block.AnvilDamagedEvent;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.papermc.paper.event.block.BeaconActivatedEvent;
 import io.papermc.paper.event.block.BeaconDeactivatedEvent;
+import io.papermc.paper.event.block.TargetHitEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
+import org.bukkit.block.Block;
 import org.bukkit.event.block.*;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.jetbrains.annotations.NotNull;
@@ -52,7 +55,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
@@ -728,6 +730,134 @@ public class EventRaiser {
             return;
         }
         WorldEvent creativeEvent = new ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LightningStrikeEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockExperienceDropEvent(Planet planet, BlockExpEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockExperienceDropEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockBrewingEndEvent(Planet planet, BrewEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockBrewingEndEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockFurnaceBurnedEvent(Planet planet, FurnaceBurnEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockFurnaceBurnedEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockBrewingFuelEvent(Planet planet, BrewingStandFuelEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockBrewingFuelEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockFluidChangeEvent(Planet planet, FluidLevelChangeEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockFluidChangeEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockCauldronChangeEvent(Planet planet, CauldronLevelChangeEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockCauldronChangeEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockCampfireStartEvent(Planet planet, CampfireStartEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockCampfireStartEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockBrewingStartEvent(Planet planet, BrewingStartEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockBrewingStartEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockAnvilDamagedEvent(Planet planet, AnvilDamagedEvent event, Block anvil) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockAnvilDamagedEvent(planet,event,anvil);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockTargetHitEvent(Planet planet, TargetHitEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockTargetHitEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockNotePlayedEvent(Planet planet, NotePlayEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockNotePlayedEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockSculkBloomedEvent(Planet planet, SculkBloomEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockSculkBloomedEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockBellRungEvent(Planet planet, BellRingEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockBellRungEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseBlockCrafterCraftedEvent(Planet planet, CrafterCraftEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockCrafterCraftedEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseLeavesDecayedEvent(Planet planet, LeavesDecayEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockLeavesDecayedEvent(planet,event);
+        Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
+    }
+
+    public static void raiseSpongeAbsorbed(Planet planet, SpongeAbsorbEvent event) {
+        if (cantRaiseEvent(planet)) {
+            return;
+        }
+        WorldEvent creativeEvent = new BlockSpongeAbsorbedEvent(planet,event);
         Bukkit.getServer().getPluginManager().callEvent(creativeEvent);
     }
 

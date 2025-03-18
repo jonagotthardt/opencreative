@@ -16,34 +16,37 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.interaction;
+package ua.mcchickenstudio.opencreative.coding.blocks.executors.world.blocks;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.BedLeaveEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks.BlockCrafterCraftedEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks.BlockDispensedEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.world.WorldExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import org.bukkit.event.Cancellable;
 
-public class BedLeaveExecutor extends PlayerExecutor {
+public class BlockCrafterCraftedExecutor extends WorldExecutor {
 
-    public BedLeaveExecutor(Planet planet, int x, int y, int z) {
+    public BlockCrafterCraftedExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
     }
 
     @Override
     protected void setTempVars(WorldEvent event) {
-        if (event instanceof BedLeaveEvent leaveEvent) {
-            setTempVar(EventValues.Variable.BED,leaveEvent.getBlock());
-            setTempVar(EventValues.Variable.BLOCK_MATERIAL,leaveEvent.getBlock().getType().name().toLowerCase());
-            setTempVar(EventValues.Variable.BLOCK_LOCATION,leaveEvent.getBlock().getLocation());
+        if (event instanceof BlockCrafterCraftedEvent blockEvent) {
+            setTempVar(EventValues.Variable.BLOCK, blockEvent.getBlock());
+            setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getBlock());
+            setTempVar(EventValues.Variable.BLOCK_LOCATION, blockEvent.getBlock());
+            setTempVar(EventValues.Variable.ITEM, blockEvent.getItem());
         }
     }
 
     @Override
     public ExecutorType getExecutorType() {
-        return ExecutorType.PLAYER_BED_LEAVE;
+        return ExecutorType.WORLD_BLOCK_CRAFTER_CRAFTED;
     }
+
+    
 
 }

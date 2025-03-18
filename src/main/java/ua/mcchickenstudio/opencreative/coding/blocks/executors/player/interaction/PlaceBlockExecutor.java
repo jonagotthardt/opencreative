@@ -35,9 +35,9 @@ public class PlaceBlockExecutor extends PlayerExecutor {
     @Override
     protected void setTempVars(WorldEvent event) {
         if (event instanceof PlaceBlockEvent blockEvent) {
-            setTempVar(EventValues.Variable.BLOCK, blockEvent.getPlacedBlock());
-            setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getPlacedBlock().getType().name().toLowerCase());
-            setTempVar(EventValues.Variable.BLOCK_LOCATION, blockEvent.getPlacedBlock().getLocation());
+            setTempVar(EventValues.Variable.BLOCK, blockEvent.getBlock());
+            setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getBlock().getType().name().toLowerCase());
+            setTempVar(EventValues.Variable.BLOCK_LOCATION, blockEvent.getBlock().getLocation());
         }
     }
 

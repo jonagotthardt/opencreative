@@ -16,25 +16,31 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction;
+package ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks;
 
+import com.destroystokyo.paper.event.block.AnvilDamagedEvent;
+import io.papermc.paper.event.block.TargetHitEvent;
+import org.bukkit.block.Block;
 import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockDamageEvent;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public final class DamageBlockEvent extends WorldEvent implements Cancellable, BlockEvent {
+public final class BlockAnvilDamagedEvent extends WorldEvent implements BlockEvent, Cancellable {
 
-    private final BlockDamageEvent event;
-    private final Block block;
+    private final AnvilDamagedEvent event;
+    private final Block anvil;
 
-    public DamageBlockEvent(Player player, BlockDamageEvent event) {
-        super(player);
+    public BlockAnvilDamagedEvent(Planet planet, AnvilDamagedEvent event, Block anvil) {
+        super(planet);
         this.event = event;
-        this.block = event.getBlock();
+        this.anvil = anvil;
+    }
+
+    @Override
+    public @NotNull Block getBlock() {
+        return anvil;
     }
 
     @Override
@@ -46,10 +52,4 @@ public final class DamageBlockEvent extends WorldEvent implements Cancellable, B
     public boolean isCancelled() {
         return event.isCancelled();
     }
-
-    @Override
-    public @NotNull Block getBlock() {
-        return block;
-    }
-
 }

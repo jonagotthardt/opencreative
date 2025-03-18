@@ -16,25 +16,28 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction;
+package ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks;
 
+import org.bukkit.block.Block;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.block.SpongeAbsorbEvent;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockDamageEvent;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public final class DamageBlockEvent extends WorldEvent implements Cancellable, BlockEvent {
+public final class BlockSpongeAbsorbedEvent extends WorldEvent implements BlockEvent, Cancellable {
 
-    private final BlockDamageEvent event;
-    private final Block block;
+    private final SpongeAbsorbEvent event;
 
-    public DamageBlockEvent(Player player, BlockDamageEvent event) {
-        super(player);
+    public BlockSpongeAbsorbedEvent(Planet planet, SpongeAbsorbEvent event) {
+        super(planet);
         this.event = event;
-        this.block = event.getBlock();
+    }
+
+    @Override
+    public @NotNull Block getBlock() {
+        return event.getBlock();
     }
 
     @Override
@@ -46,10 +49,4 @@ public final class DamageBlockEvent extends WorldEvent implements Cancellable, B
     public boolean isCancelled() {
         return event.isCancelled();
     }
-
-    @Override
-    public @NotNull Block getBlock() {
-        return block;
-    }
-
 }

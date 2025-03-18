@@ -36,9 +36,9 @@ public class BedEnterExecutor extends PlayerExecutor {
     protected void setTempVars(WorldEvent event) {
         if (event instanceof BedEnterEvent enterEvent) {
             setTempVar(EventValues.Variable.BED_ENTER_RESULT,enterEvent.getBedEnterResult().toString());
-            setTempVar(EventValues.Variable.BED,enterEvent.getBed());
-            setTempVar(EventValues.Variable.BLOCK_MATERIAL,enterEvent.getBed().getType().name().toLowerCase());
-            setTempVar(EventValues.Variable.BLOCK_LOCATION,enterEvent.getBed().getLocation());
+            setTempVar(EventValues.Variable.BED,enterEvent.getBlock());
+            setTempVar(EventValues.Variable.BLOCK_MATERIAL,enterEvent.getBlock().getType().name().toLowerCase());
+            setTempVar(EventValues.Variable.BLOCK_LOCATION,enterEvent.getBlock().getLocation());
         }
     }
 

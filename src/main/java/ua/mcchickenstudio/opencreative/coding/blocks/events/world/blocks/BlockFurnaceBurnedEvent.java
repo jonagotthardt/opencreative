@@ -16,40 +16,44 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction;
+package ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks;
 
+import org.bukkit.block.Block;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.inventory.FurnaceBurnEvent;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.ItemEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockDamageEvent;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public final class DamageBlockEvent extends WorldEvent implements Cancellable, BlockEvent {
+public final class BlockFurnaceBurnedEvent extends WorldEvent implements BlockEvent, ItemEvent, Cancellable {
 
-    private final BlockDamageEvent event;
-    private final Block block;
+    private final FurnaceBurnEvent event;
 
-    public DamageBlockEvent(Player player, BlockDamageEvent event) {
-        super(player);
+    public BlockFurnaceBurnedEvent(Planet planet, FurnaceBurnEvent event) {
+        super(planet);
         this.event = event;
-        this.block = event.getBlock();
     }
 
     @Override
-    public void setCancelled(boolean cancelled) {
-        event.setCancelled(cancelled);
+    public @NotNull Block getBlock() {
+        return event.getBlock();
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        event.setCancelled(cancel);
+    }
+
+    @Override
+    public @NotNull ItemStack getItem() {
+        return event.getFuel();
     }
 
     @Override
     public boolean isCancelled() {
         return event.isCancelled();
     }
-
-    @Override
-    public @NotNull Block getBlock() {
-        return block;
-    }
-
 }
