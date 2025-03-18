@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.Var
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
-public class PerlinNoiseAction extends VariableAction {
+public final class PerlinNoiseAction extends VariableAction {
 
     public PerlinNoiseAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
