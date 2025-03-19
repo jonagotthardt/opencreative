@@ -31,7 +31,7 @@ public final class BlockSpongeAbsorbedEvent extends WorldEvent implements BlockE
     private final SpongeAbsorbEvent event;
 
     public BlockSpongeAbsorbedEvent(Planet planet, SpongeAbsorbEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 

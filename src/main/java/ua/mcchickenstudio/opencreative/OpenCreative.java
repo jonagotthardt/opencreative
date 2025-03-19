@@ -133,7 +133,7 @@ public final class OpenCreative extends JavaPlugin {
         PlayerUtils.loadPermissions();
         HookUtils.loadHooks();
         FileUtils.loadPlanets();
-        FileUtils.loadModules();
+        //FileUtils.loadModules();
 
         economy = HookUtils.getEconomy();
         economy.init();
@@ -226,7 +226,7 @@ public final class OpenCreative extends JavaPlugin {
         commands.put("time",        CommandTime.class);
         commands.put("weather",     CommandWeather.class);
         commands.put("value",       CommandValue.class);
-        commands.put("module",      CommandModule.class);
+        //commands.put("module",      CommandModule.class);
         for (String commandName : commands.keySet()) {
             PluginCommand command = getCommand(commandName);
             if (command != null) {

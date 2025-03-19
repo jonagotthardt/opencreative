@@ -73,6 +73,9 @@ public class Commands  {
         if (!onPlanetDisconnectCommands.isEmpty()) OpenCreative.getPlugin().getLogger().info("Registered " + onPlanetDisconnectCommands.size() + " commands for onPlanetDisconnect");
         if (!onWorldChatCommands.isEmpty()) OpenCreative.getPlugin().getLogger().info("Registered " + onWorldChatCommands.size() + " commands for onWorldChat");
         if (!onCreativeChatCommands.isEmpty()) OpenCreative.getPlugin().getLogger().info("Registered " + onCreativeChatCommands.size() + " commands for onCreativeChat");
+        if (!onMaintenanceStartCommands.isEmpty()) OpenCreative.getPlugin().getLogger().info("Registered " + onMaintenanceStartCommands.size() + " commands for onMaintenanceStart");
+        if (!onMaintenanceEndCommands.isEmpty()) OpenCreative.getPlugin().getLogger().info("Registered " + onMaintenanceEndCommands.size() + " commands for onMaintenanceEnd");
+
     }
 
     private Map<String,Command> getMap(String eventName) {

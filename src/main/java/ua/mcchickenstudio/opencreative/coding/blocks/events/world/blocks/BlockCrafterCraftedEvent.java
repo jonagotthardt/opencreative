@@ -34,7 +34,7 @@ public final class BlockCrafterCraftedEvent extends WorldEvent implements BlockE
     private final CrafterCraftEvent event;
 
     public BlockCrafterCraftedEvent(Planet planet, CrafterCraftEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 

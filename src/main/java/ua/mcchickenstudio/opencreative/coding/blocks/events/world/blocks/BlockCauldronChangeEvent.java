@@ -31,7 +31,7 @@ public final class BlockCauldronChangeEvent extends WorldEvent implements BlockE
     private final CauldronLevelChangeEvent event;
 
     public BlockCauldronChangeEvent(Planet planet, CauldronLevelChangeEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 

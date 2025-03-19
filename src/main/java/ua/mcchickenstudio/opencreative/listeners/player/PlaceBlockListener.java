@@ -20,7 +20,8 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.PlaceBlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
@@ -130,7 +131,7 @@ public final class PlaceBlockListener implements Listener {
                 event.setCancelled(true);
                 return;
             }
-            EventRaiser.raisePlaceBlockEvent(event.getPlayer(),event);
+            new PlaceBlockEvent(event.getPlayer(),event).callEvent();
         }
     }
 

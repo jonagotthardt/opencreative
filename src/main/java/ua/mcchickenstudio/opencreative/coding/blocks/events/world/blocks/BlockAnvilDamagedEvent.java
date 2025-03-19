@@ -33,7 +33,7 @@ public final class BlockAnvilDamagedEvent extends WorldEvent implements BlockEve
     private final Block anvil;
 
     public BlockAnvilDamagedEvent(Planet planet, AnvilDamagedEvent event, Block anvil) {
-        super(planet);
+        super(planet, anvil);
         this.event = event;
         this.anvil = anvil;
     }

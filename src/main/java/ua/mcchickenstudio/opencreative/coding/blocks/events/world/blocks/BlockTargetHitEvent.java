@@ -32,7 +32,7 @@ public final class BlockTargetHitEvent extends WorldEvent implements BlockEvent,
     private final TargetHitEvent event;
 
     public BlockTargetHitEvent(Planet planet, TargetHitEvent event) {
-        super(planet);
+        super(planet, event.getHitBlock() != null ? event.getHitBlock() : event.getEntity().getLocation().getBlock());
         this.event = event;
     }
 

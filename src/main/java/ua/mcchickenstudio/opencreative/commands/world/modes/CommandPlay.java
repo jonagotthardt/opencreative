@@ -21,7 +21,11 @@ package ua.mcchickenstudio.opencreative.commands.world.modes;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.JoinEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.LikeEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.PlayEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.commands.world.CommandJoin;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
@@ -95,13 +99,13 @@ public class CommandPlay implements CommandExecutor, TabCompleter {
                             player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
                         }
                         givePlayPermissions(player);
-                        EventRaiser.raiseJoinEvent(player);
+                        new JoinEvent(player).callEvent();
                     }
                 } else {
                     sender.sendMessage(getLocaleMessage("not-owner", player));
                 }
             } else {
-                if (EventRaiser.raisePlayEvent(player) || planet.getWorldPlayers().canDevelop(player)) {
+                if (!new PlayEvent(player).callEvent() || planet.getWorldPlayers().canDevelop(player)) {
                     if (planet.getWorldPlayers().canDevelop(player)) {
                         player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
                         if (!Arrays.asList(args).contains("--no-compile")) {
@@ -119,7 +123,7 @@ public class CommandPlay implements CommandExecutor, TabCompleter {
                     if (devPlanet != null) {
                         clearPlayer(player);
                     } else {
-                        EventRaiser.raiseQuitEvent(player);
+                        new QuitEvent(player).callEvent();
                     }
                     clearPlayer(player);
                     player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
@@ -130,7 +134,7 @@ public class CommandPlay implements CommandExecutor, TabCompleter {
                     if (planet.getWorldPlayers().canDevelop(player)) {
                         givePlayPermissions(player);
                     }
-                    EventRaiser.raiseJoinEvent(player);
+                    new JoinEvent(player).callEvent();
                 }
             }
         }

@@ -23,7 +23,8 @@ import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+
+import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.VariableTransferEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.entity.Entity;
@@ -43,7 +44,7 @@ public final class TransferVariableAction extends WorldAction {
         if (!planet.isOwner(getPlanet().getOwner())) return;
         String key = getArguments().getValue("key","key",this);
         String value = getArguments().getValue("value","value",this);
-        EventRaiser.raiseVariableTransferEvent(planet,key,value);
+        new VariableTransferEvent(planet,key,value).callEvent();
     }
 
     @Override

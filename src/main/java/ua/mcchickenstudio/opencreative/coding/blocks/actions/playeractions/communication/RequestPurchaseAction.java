@@ -23,6 +23,7 @@ import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.PlayerPurchaseEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.menus.ConfirmationMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -32,7 +33,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
-import static ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser.raisePlayerPurchaseEvent;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 public final class RequestPurchaseAction extends PlayerAction {
@@ -78,7 +78,7 @@ public final class RequestPurchaseAction extends PlayerAction {
                                 OpenCreative.getEconomy().withdrawMoney(player,price);
                                 OpenCreative.getEconomy().depositMoney(Bukkit.getOfflinePlayer(planet.getOwner()),price);
                             }
-                            raisePlayerPurchaseEvent(player,id,name,price,save);
+                            new PlayerPurchaseEvent(player,id,name,price,save).callEvent();
                         }
                     }
                 }).open(player);

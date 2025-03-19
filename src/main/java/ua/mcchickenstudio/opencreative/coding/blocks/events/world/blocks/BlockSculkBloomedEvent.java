@@ -32,7 +32,7 @@ public final class BlockSculkBloomedEvent extends WorldEvent implements BlockEve
     private final SculkBloomEvent event;
 
     public BlockSculkBloomedEvent(Planet planet, SculkBloomEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 

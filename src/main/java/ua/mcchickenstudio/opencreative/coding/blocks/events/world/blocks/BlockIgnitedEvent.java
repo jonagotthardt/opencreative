@@ -32,7 +32,7 @@ public final class BlockIgnitedEvent extends WorldEvent implements BlockEvent, C
     private final BlockIgniteEvent event;
 
     public BlockIgnitedEvent(Planet planet, BlockIgniteEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 

@@ -32,7 +32,7 @@ public final class BlockCampfireStartEvent extends WorldEvent implements BlockEv
     private final CampfireStartEvent event;
 
     public BlockCampfireStartEvent(Planet planet, CampfireStartEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 

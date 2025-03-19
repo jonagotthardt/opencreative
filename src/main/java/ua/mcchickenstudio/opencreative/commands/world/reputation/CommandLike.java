@@ -20,7 +20,8 @@ package ua.mcchickenstudio.opencreative.commands.world.reputation;
 
 import org.bukkit.Bukkit;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.LikeEvent;
 import ua.mcchickenstudio.opencreative.commands.world.CommandJoin;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
@@ -79,7 +80,7 @@ public class CommandLike implements CommandExecutor {
                 if (addPlayerInPlanetList(planet,sender.getName(), Planet.PlayersType.LIKED)) {
                     Sounds.WORLD_LIKED.play(player);
                     planet.getInformation().setPlanetReputation(planet.getInformation().getReputation() +1);
-                    EventRaiser.raiseLikeEvent(player);
+                    new LikeEvent(player).callEvent();
                     if (planet.getFlagValue(PlanetFlags.PlanetFlag.LIKE_MESSAGES) == 1) {
                         for (Player p : planet.getPlayers()) {
                             p.sendMessage(getLocaleMessage("world.liked").replace("%player%",sender.getName()));

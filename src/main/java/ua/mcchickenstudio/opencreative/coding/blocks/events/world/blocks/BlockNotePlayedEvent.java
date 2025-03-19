@@ -32,7 +32,7 @@ public final class BlockNotePlayedEvent extends WorldEvent implements BlockEvent
     private final NotePlayEvent event;
 
     public BlockNotePlayedEvent(Planet planet, NotePlayEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 

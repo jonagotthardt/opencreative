@@ -32,7 +32,7 @@ public final class BlockBellRungEvent extends WorldEvent implements BlockEvent, 
     private final BellRingEvent event;
 
     public BlockBellRungEvent(Planet planet, BellRingEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 

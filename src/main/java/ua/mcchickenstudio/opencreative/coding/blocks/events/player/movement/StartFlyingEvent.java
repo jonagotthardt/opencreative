@@ -18,13 +18,27 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement;
 
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.player.PlayerToggleFlightEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public final class StartFlyingEvent extends WorldEvent {
+public final class StartFlyingEvent extends WorldEvent implements Cancellable {
 
-    public StartFlyingEvent(Player player) {
+    private final PlayerToggleFlightEvent event;
+
+    public StartFlyingEvent(Player player, PlayerToggleFlightEvent event) {
         super(player);
+        this.event = event;
     }
 
+    @Override
+    public void setCancelled(boolean cancel) {
+        event.setCancelled(cancelled);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
+    }
 }

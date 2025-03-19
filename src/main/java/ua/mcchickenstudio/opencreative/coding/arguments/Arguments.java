@@ -46,6 +46,12 @@ import java.util.regex.Pattern;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 
+/**
+ * <h1>Arguments</h1>
+ * This class represents an arguments holder, that
+ * stores arguments for actions and conditions.
+ * @see Argument
+ */
 public class Arguments {
 
     private final Planet planet;

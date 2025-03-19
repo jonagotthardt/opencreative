@@ -21,12 +21,13 @@ package ua.mcchickenstudio.opencreative.commands;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,7 +60,7 @@ public class CommandSpawn implements CommandExecutor, TabCompleter {
                 sender.sendMessage(getLocaleMessage("only-players"));
                 return true;
             }
-            EventRaiser.raiseQuitEvent(player);
+            new QuitEvent(player).callEvent();
             teleportToLobby(player);
             return true;
         }
@@ -72,7 +73,7 @@ public class CommandSpawn implements CommandExecutor, TabCompleter {
             sender.sendMessage(getLocaleMessage("not-found-player"));
             return true;
         }
-        EventRaiser.raiseQuitEvent(player);
+        new QuitEvent(player).callEvent();
         teleportToLobby(player);
         return true;
     }

@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.menus;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -77,6 +78,17 @@ public class Menus implements Listener {
         runnable.runTaskTimer(OpenCreative.getPlugin(),20L,20L);
     }
 
+    public static void onBlockDestroy(Location location) {
+        if (activeMenus.isEmpty()) return;
+        for (InventoryMenu inventoryMenu : new ArrayList<>(activeMenus)) {
+            if (inventoryMenu instanceof BlockMenu blockMenu && location.equals(blockMenu.getLocation())) {
+                if (inventoryMenu.getInventory().getViewers().isEmpty()) {
+                    removeMenu(inventoryMenu);
+                }
+                inventoryMenu.getInventory().close();
+            }
+        }
+    }
 
     /**
      * Registers menus in menus manager for handling inventory events.

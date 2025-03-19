@@ -21,7 +21,8 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.ChatEvent;
 import ua.mcchickenstudio.opencreative.events.player.WorldChatEvent;
 import ua.mcchickenstudio.opencreative.menus.world.browsers.WorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.world.settings.WorldSettingsPlayersMenu;
@@ -102,7 +103,9 @@ public final class ChatListener implements Listener {
                         OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + planet.getId() + "dev] " + player.getName() + ": " + message);
                     } else {
                         // If player in build world
-                        if (!EventRaiser.raiseChatEvent(event.getPlayer(), message)) {
+                        ChatEvent chatEvent = new ChatEvent(event.getPlayer(), message);
+                        chatEvent.callEvent();
+                        if (chatEvent.isCancelled()) {
                             event.setCancelled(true);
                             return;
                         }

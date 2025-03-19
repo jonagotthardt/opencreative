@@ -31,7 +31,7 @@ public final class BlockRedstoneEvent extends WorldEvent implements BlockEvent, 
     private final org.bukkit.event.block.BlockRedstoneEvent event;
 
     public BlockRedstoneEvent(Planet planet, org.bukkit.event.block.BlockRedstoneEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 

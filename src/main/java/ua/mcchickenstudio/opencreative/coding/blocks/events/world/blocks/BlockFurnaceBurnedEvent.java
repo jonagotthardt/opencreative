@@ -33,7 +33,7 @@ public final class BlockFurnaceBurnedEvent extends WorldEvent implements BlockEv
     private final FurnaceBurnEvent event;
 
     public BlockFurnaceBurnedEvent(Planet planet, FurnaceBurnEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 

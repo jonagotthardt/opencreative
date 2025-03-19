@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.planets;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodeScript;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetLoadEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetUnloadEvent;
 import ua.mcchickenstudio.opencreative.utils.*;
@@ -42,7 +43,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser.raiseQuitEvent;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
@@ -144,7 +144,7 @@ public class PlanetTerritory {
      */
     public synchronized void unload() {
         for (Player player : planet.getPlayers()) {
-            raiseQuitEvent(player);
+            new QuitEvent(player).callEvent();
         }
         planet.setLastActivityTime(System.currentTimeMillis());
         FileUtils.setPlanetConfigParameter(planet,"environment", planet.getTerritory().getEnvironment().name());

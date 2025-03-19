@@ -136,7 +136,7 @@ public enum ExecutorType {
     PLAYER_STOP_SNEAKING(   ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, StopSneakingExecutor.class, StopSneakingEvent.class, Material.IRON_LEGGINGS),
     PLAYER_TELEPORT(        ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, TeleportExecutor.class, TeleportEvent.class, Material.ENDER_PEARL),
 
-    WORLD_PLAY_MODE(        ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, GamePlayExecutor.class, GamePlayEvent.class, Material.ENDER_EYE),
+    WORLD_PLAY_MODE(        ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, GamePlayExecutor.class, GamePlayEvent.class, Material.EMERALD),
     WORLD_VARIABLE_TRANSFER(ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, VariableTransferExecutor.class, VariableTransferEvent.class, Material.CALIBRATED_SCULK_SENSOR),
     WORLD_WEB_RESPONSE(     ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, WebResponseExecutor.class, WebResponseEvent.class, Material.BEACON),
 

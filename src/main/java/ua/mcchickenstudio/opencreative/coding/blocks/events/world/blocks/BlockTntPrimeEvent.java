@@ -32,7 +32,7 @@ public final class BlockTntPrimeEvent extends WorldEvent implements BlockEvent, 
     private final TNTPrimeEvent event;
 
     public BlockTntPrimeEvent(Planet planet, TNTPrimeEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 

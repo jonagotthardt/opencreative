@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events;
 
+import org.bukkit.block.Block;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.World;
@@ -35,22 +36,28 @@ import java.util.List;
  */
 public abstract class WorldEvent extends Event  {
 
-    private static final HandlerList handlers = new HandlerList();
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+
     protected List<Entity> selection = new ArrayList<>();
     protected boolean cancelled = false;
     protected final World world;
 
-    public WorldEvent(Planet planet, List<Entity> selection) {
+    public WorldEvent(@NotNull Planet planet, @NotNull List<Entity> selection) {
         this.selection = selection;
         world = planet.getTerritory().getWorld();
     }
 
-    public WorldEvent(Planet planet) {
+    public WorldEvent(@NotNull Planet planet) {
         this.selection.addAll(planet.getTerritory().getWorld().getPlayers());
         world = planet.getTerritory().getWorld();
     }
 
-    public WorldEvent(Entity entity) {
+    public WorldEvent(@NotNull Planet planet, @NotNull Block block) {
+        this.selection.addAll(planet.getTerritory().getWorld().getPlayers());
+        world = block.getWorld();
+    }
+
+    public WorldEvent(@NotNull Entity entity) {
         selection.add(entity);
         world = entity.getWorld();
     }
@@ -69,12 +76,12 @@ public abstract class WorldEvent extends Event  {
     }
 
     public static HandlerList getHandlerList() {
-        return handlers;
+        return HANDLER_LIST;
     }
 
     @NotNull
     @Override
     public HandlerList getHandlers() {
-        return handlers;
+        return HANDLER_LIST;
     }
 }

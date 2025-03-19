@@ -34,7 +34,7 @@ public final class BlockBrewingEndEvent extends WorldEvent implements BlockEvent
     private final BrewEvent event;
 
     public BlockBrewingEndEvent(Planet planet, BrewEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 

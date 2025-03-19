@@ -32,7 +32,7 @@ public final class BlockFluidChangeEvent extends WorldEvent implements BlockEven
     private final FluidLevelChangeEvent event;
 
     public BlockFluidChangeEvent(Planet planet, FluidLevelChangeEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 

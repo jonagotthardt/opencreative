@@ -22,7 +22,9 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.AdvertisedEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.LikeEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetAdvertisementEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -117,7 +119,7 @@ public class CommandAd extends CommandJoin {
         }
 
         setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getAdvertisementCooldown(), CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND);
-        EventRaiser.raiseAdvertisedEvent(player);
+        new AdvertisedEvent(player).callEvent();
 
         Component advertisementMessage = createAdvertisementMessage(player, planet);
 

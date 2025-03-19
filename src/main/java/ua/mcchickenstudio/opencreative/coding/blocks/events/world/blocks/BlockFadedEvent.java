@@ -32,7 +32,7 @@ public final class BlockFadedEvent extends WorldEvent implements BlockEvent, Can
     private final BlockFadeEvent event;
 
     public BlockFadedEvent(Planet planet, BlockFadeEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 

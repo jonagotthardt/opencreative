@@ -34,7 +34,7 @@ public final class BlockExperienceDropEvent extends WorldEvent implements BlockE
     private final BlockExpEvent event;
 
     public BlockExperienceDropEvent(Planet planet, BlockExpEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
 
     }

@@ -32,7 +32,7 @@ public final class BlockExplodedEvent extends WorldEvent implements BlockEvent, 
     private final BlockExplodeEvent event;
 
     public BlockExplodedEvent(Planet planet, BlockExplodeEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 

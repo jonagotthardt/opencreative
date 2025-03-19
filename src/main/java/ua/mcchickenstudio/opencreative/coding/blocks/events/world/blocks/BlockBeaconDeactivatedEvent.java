@@ -31,7 +31,7 @@ public final class BlockBeaconDeactivatedEvent extends WorldEvent implements Blo
     private final BeaconDeactivatedEvent event;
 
     public BlockBeaconDeactivatedEvent(Planet planet, BeaconDeactivatedEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 

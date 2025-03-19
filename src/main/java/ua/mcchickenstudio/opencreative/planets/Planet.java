@@ -29,7 +29,10 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.JoinEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.GamePlayEvent;
 import ua.mcchickenstudio.opencreative.coding.variables.WorldVariables;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetConnectPlayerEvent;
 import ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld;
@@ -42,7 +45,6 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser.raiseQuitEvent;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
@@ -149,7 +151,7 @@ public class Planet {
             if (mode == Mode.BUILD) {
                 for (Player player : getPlayers()) {
                     if (!isEntityInDevPlanet(player)) {
-                        raiseQuitEvent(player);
+                        new QuitEvent(player).callEvent();
                         player.showTitle(Title.title(
                                 toComponent(getLocaleMessage("world.build-mode.title")), toComponent(getLocaleMessage("world.build-mode.subtitle")),
                                 Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(2), Duration.ofMillis(130))
@@ -201,10 +203,10 @@ public class Planet {
                 } else {
                     territory.getScript().loadCode();
                 }
-                EventRaiser.raiseWorldPlayEvent(this);
+                new GamePlayEvent(this).callEvent();
                 for (Player player : getPlayers()) {
                     if (OpenCreative.getPlanetsManager().getDevPlanet(player) == null) {
-                        EventRaiser.raiseJoinEvent(player);
+                        new JoinEvent(player).callEvent();
                     }
                 }
             }
@@ -513,7 +515,7 @@ public class Planet {
                 }
                 if (!wasLoaded) {
                     territory.getScript().loadCode();
-                    EventRaiser.raiseWorldPlayEvent(this);
+                    new GamePlayEvent(this).callEvent();
                 }
                 if (mode == Mode.PLAYING && worldPlayers.canDevelop(player)) {
                     givePlayPermissions(player);
@@ -521,7 +523,7 @@ public class Planet {
                     giveBuildPermissions(player);
                 }
                 if (!hidePlayer) {
-                    EventRaiser.raiseJoinEvent(player);
+                    new JoinEvent(player).callEvent();
                 } else {
                     player.setGameMode(GameMode.SPECTATOR);
                     ChangedWorld.addPlayerWithLocation(player);

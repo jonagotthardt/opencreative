@@ -31,7 +31,7 @@ public final class BlockBurnedEvent extends WorldEvent implements BlockEvent, Ca
     private final BlockBurnEvent event;
 
     public BlockBurnedEvent(Planet planet, BlockBurnEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 

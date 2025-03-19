@@ -24,7 +24,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.menus.*;
 import ua.mcchickenstudio.opencreative.coding.menus.blocks.*;
@@ -643,21 +644,21 @@ public final class InteractListener implements Listener {
             return;
         }
         switch (event.getAction()) {
-            case LEFT_CLICK_AIR -> EventRaiser.raiseLeftClickEvent(player,event);
+            case LEFT_CLICK_AIR -> new LeftClickEvent(player,event).callEvent();
             case LEFT_CLICK_BLOCK -> {
-                EventRaiser.raiseLeftClickEvent(player,event);
-                EventRaiser.raiseBlockInteractionEvent(player,event);
+                new LeftClickEvent(player,event).callEvent();
+                new BlockInteractionEvent(player,event).callEvent();
             }
-            case PHYSICAL -> EventRaiser.raiseWorldInteractEvent(player,event);
+            case PHYSICAL -> new WorldInteractEvent(player,event).callEvent();
             case RIGHT_CLICK_AIR -> {
                 if (event.getHand() == EquipmentSlot.HAND) {
-                    EventRaiser.raiseRightClickEvent(player,event);
+                    new RightClickEvent(player,event).callEvent();
                 }
             }
             case RIGHT_CLICK_BLOCK -> {
                 if (event.getHand() == EquipmentSlot.HAND) {
-                    EventRaiser.raiseRightClickEvent(player,event);
-                    EventRaiser.raiseBlockInteractionEvent(player,event);
+                    new RightClickEvent(player,event).callEvent();
+                    new BlockInteractionEvent(player,event).callEvent();
                 }
             }
         }
@@ -725,7 +726,7 @@ public final class InteractListener implements Listener {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet != null) {
             if (event.getHand() == EquipmentSlot.HAND) {
-                EventRaiser.raiseMobInteractionEvent(player,event);
+                new MobInteractionEvent(player,event).callEvent();
             }
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT) == 2 && !planet.getWorldPlayers().canBuild(player)) {
                 // Disallow entire mob interaction.
@@ -747,7 +748,7 @@ public final class InteractListener implements Listener {
         if (!(event.getRemover() instanceof Player player)) return;
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet != null) {
-            EventRaiser.raiseMobInteractionEvent(player,event);
+            new MobInteractionEvent(player,event).callEvent();
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT) == 2 && !planet.getWorldPlayers().canBuild(player)) {
                 player.sendActionBar(getLocaleMessage("world.cant-mob-interact"));
                 event.setCancelled(true);
@@ -768,31 +769,31 @@ public final class InteractListener implements Listener {
         }
         if (event.getCaught().getType() == EntityType.ITEM) {
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
-            if (planet != null) EventRaiser.raiseFishEvent(event.getPlayer(),event);
+            if (planet != null) new FishEvent(event.getPlayer(),event).callEvent();
         }
     }
 
     @EventHandler
     public void onSpectating(PlayerStartSpectatingEntityEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
-        if (planet != null) EventRaiser.raiseStartSpectatingEvent(event.getPlayer(),event);
+        if (planet != null) new StartSpectatingEvent(event.getPlayer()).callEvent();
     }
 
     @EventHandler
     public void onSpectatingStop(PlayerStopSpectatingEntityEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
-        if (planet != null) EventRaiser.raiseStopSpectatingEvent(event.getPlayer(),event);
+        if (planet != null) new StopSpectatingEvent(event.getPlayer()).callEvent();
     }
 
     @EventHandler
     public void onBedInteract(PlayerBedEnterEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
-        if (planet != null) EventRaiser.raisePlayerBedEnterEvent(event.getPlayer(),event);
+        if (planet != null) new BedEnterEvent(event.getPlayer(),event).callEvent();
     }
 
     @EventHandler
     public void onBedInteract(PlayerBedLeaveEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
-        if (planet != null) EventRaiser.raisePlayerBedLeaveEvent(event.getPlayer(),event);
+        if (planet != null) new BedLeaveEvent(event.getPlayer(),event).callEvent();
     }
 }

@@ -32,7 +32,7 @@ public final class BlockLeavesDecayedEvent extends WorldEvent implements BlockEv
     private final LeavesDecayEvent event;
 
     public BlockLeavesDecayedEvent(Planet planet, LeavesDecayEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 

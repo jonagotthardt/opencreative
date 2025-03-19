@@ -25,8 +25,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedRedstoneEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedVariablesEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import org.bukkit.Location;
@@ -82,7 +84,7 @@ public final class WorldVariables {
         if (variable != null) {
             if (variable.getSize() + getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
                 sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
-                EventRaiser.raiseLimitReachedVariablesEvent(planet);
+                new LimitReachedVariablesEvent(planet).callEvent();
                 return false;
             }
             variable.setType(type);
@@ -90,7 +92,7 @@ public final class WorldVariables {
         } else {
             if (getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
                 sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
-                EventRaiser.raiseLimitReachedVariablesEvent(planet);
+                new LimitReachedVariablesEvent(planet).callEvent();
                 return false;
             }
 
@@ -100,7 +102,7 @@ public final class WorldVariables {
 
             if (newVariable.getSize() + getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
                 sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
-                EventRaiser.raiseLimitReachedVariablesEvent(planet);
+                new LimitReachedVariablesEvent(planet).callEvent();
                 return false;
             }
             variables.add(newVariable);

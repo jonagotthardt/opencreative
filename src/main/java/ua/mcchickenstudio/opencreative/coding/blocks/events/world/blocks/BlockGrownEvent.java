@@ -32,7 +32,7 @@ public final class BlockGrownEvent extends WorldEvent implements BlockEvent, Can
     private final BlockGrowEvent event;
 
     public BlockGrownEvent(Planet planet, BlockGrowEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 

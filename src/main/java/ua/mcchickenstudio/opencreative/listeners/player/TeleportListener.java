@@ -20,7 +20,7 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 
 import io.papermc.paper.event.entity.EntityInsideBlockEvent;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -29,6 +29,7 @@ import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement.TeleportEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public final class TeleportListener implements Listener {
@@ -43,7 +44,7 @@ public final class TeleportListener implements Listener {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getFrom().getWorld());
         if (planet != null) {
             if (event.getTo().getWorld().equals(event.getFrom().getWorld())) {
-                EventRaiser.raiseTeleportEvent(event.getPlayer(),event);
+                new TeleportEvent(event.getPlayer()).callEvent();
             } else if (event.getCause() == PlayerTeleportEvent.TeleportCause.SPECTATE
                     || event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL
                     || event.getCause() == PlayerTeleportEvent.TeleportCause.DISMOUNT

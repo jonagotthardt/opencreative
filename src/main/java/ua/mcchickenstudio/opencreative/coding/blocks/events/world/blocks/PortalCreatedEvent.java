@@ -32,7 +32,7 @@ public final class PortalCreatedEvent extends WorldEvent implements BlockEvent, 
     private final PortalCreateEvent event;
 
     public PortalCreatedEvent(Planet planet, PortalCreateEvent event) {
-        super(planet);
+        super(planet, event.getBlocks().getFirst().getBlock());
         this.event = event;
     }
 
