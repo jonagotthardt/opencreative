@@ -181,7 +181,7 @@ public final class InteractListener implements Listener {
      * Used for creating and opening layout menus of action.
      */
     private void handleContainerClick(PlayerInteractEvent event, Player player, DevPlanet devPlanet, Block clickedBlock) {
-        if ((!event.getPlayer().isSneaking()) && clickedBlock.getState() instanceof InventoryHolder) {
+        if (!event.getPlayer().isSneaking() && clickedBlock.getState() instanceof InventoryHolder && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Block actionBlock = clickedBlock.getRelative(BlockFace.DOWN);
             Block signBlock = actionBlock.getRelative(BlockFace.SOUTH);
             if (signBlock.getType().toString().contains("WALL_SIGN")) {

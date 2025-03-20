@@ -41,7 +41,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.movement.Hors
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.state.*;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public class EntityStateListener implements Listener {
+public final class EntityStateListener implements Listener {
 
     @EventHandler
     public void onEntityEvent(PigZombieAngerEvent event) {
