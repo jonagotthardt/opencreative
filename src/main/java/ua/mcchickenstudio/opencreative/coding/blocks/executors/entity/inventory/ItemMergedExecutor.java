@@ -16,29 +16,31 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.events.entity.state;
+package ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.inventory;
 
-import com.destroystokyo.paper.event.entity.CreeperIgniteEvent;
-import org.bukkit.event.Cancellable;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.ItemEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.EntityExecutor;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public final class CreeperIgnitedEventEvent extends WorldEvent implements Cancellable {
+public class ItemMergedExecutor extends EntityExecutor {
 
-    private final CreeperIgniteEvent event;
+    @Override
+    protected void setTempVars(WorldEvent event) {
+        if (event instanceof ItemEvent itemEvent) {
+            setTempVar(EventValues.Variable.ITEM, itemEvent.getItem());
+        }
+    }
 
-    public CreeperIgnitedEventEvent(CreeperIgniteEvent event) {
-        super(event.getEntity());
-        this.event = event;
+    public ItemMergedExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override
-    public boolean isCancelled() {
-        return event.isCancelled();
-    }
-
-    @Override
-    public void setCancelled(boolean cancelled) {
-        event.setCancelled(cancelled);
+    public ExecutorType getExecutorType() {
+        return null;
     }
 
 }

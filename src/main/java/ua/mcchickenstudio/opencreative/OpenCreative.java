@@ -43,6 +43,7 @@ import ua.mcchickenstudio.opencreative.commands.world.reputation.CommandLike;
 import ua.mcchickenstudio.opencreative.listeners.CreativeListener;
 import ua.mcchickenstudio.opencreative.listeners.entity.EntityDamageListener;
 import ua.mcchickenstudio.opencreative.listeners.entity.EntitySpawnListener;
+import ua.mcchickenstudio.opencreative.listeners.entity.EntityStateListener;
 import ua.mcchickenstudio.opencreative.listeners.player.*;
 import ua.mcchickenstudio.opencreative.listeners.world.BlockChangeListener;
 import ua.mcchickenstudio.opencreative.listeners.world.RedstoneListener;
@@ -256,7 +257,7 @@ public final class OpenCreative extends JavaPlugin {
                 ChatListener.class,       InteractListener.class,     DropItemListener.class,
                 PlaceBlockListener.class, DestroyBlockListener.class, BucketListener.class,
                 ClickListener.class,      RedstoneListener.class,     BlockChangeListener.class,
-                Menus.class,              GameModeListener.class,
+                Menus.class,              GameModeListener.class,     EntityStateListener.class,
                 CreativeListener.class,   PotionListener.class
         };
         for (Class<?> listenerClass : listeners) {

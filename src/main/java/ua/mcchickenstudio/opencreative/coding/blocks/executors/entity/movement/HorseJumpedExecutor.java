@@ -16,29 +16,21 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.events.entity.state;
+package ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.movement;
 
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.entity.CreeperPowerEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.EntityExecutor;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public final class CrepeerPoweredEvent extends WorldEvent implements Cancellable {
+public class HorseJumpedExecutor extends EntityExecutor {
 
-    private final CreeperPowerEvent event;
-
-    public CrepeerPoweredEvent(CreeperPowerEvent event) {
-        super(event.getEntity());
-        this.event = event;
+    public HorseJumpedExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override
-    public boolean isCancelled() {
-        return event.isCancelled();
-    }
-
-    @Override
-    public void setCancelled(boolean cancelled) {
-        event.setCancelled(cancelled);
+    public ExecutorType getExecutorType() {
+        return null;
     }
 
 }
