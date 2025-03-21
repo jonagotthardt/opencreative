@@ -30,7 +30,7 @@ public class PufferfishStateChangedExecutor extends EntityExecutor {
 
     @Override
     public ExecutorType getExecutorType() {
-        return null;
+        return ExecutorType.ENTITY_PUFFERFISH_STATE_CHANGED;
     }
 
 }

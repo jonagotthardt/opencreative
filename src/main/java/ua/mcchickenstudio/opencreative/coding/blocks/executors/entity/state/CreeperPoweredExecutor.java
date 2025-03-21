@@ -30,7 +30,7 @@ public class CreeperPoweredExecutor extends EntityExecutor {
 
     @Override
     public ExecutorType getExecutorType() {
-        return null;
+        return ExecutorType.ENTITY_CREEPER_POWERED;
     }
 
 }

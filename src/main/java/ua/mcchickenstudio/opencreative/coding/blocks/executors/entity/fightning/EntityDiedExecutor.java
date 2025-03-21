@@ -30,7 +30,7 @@ public class EntityDiedExecutor extends EntityExecutor {
 
     @Override
     public ExecutorType getExecutorType() {
-        return null;
+        return ExecutorType.ENTITY_DIED;
     }
 
 }

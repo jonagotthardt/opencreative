@@ -137,6 +137,7 @@ public class Executors {
                 if (config.getString(path + ".type") != null) {
                     Executor executor = createExecutor(config,path);
                     if (executor != null) {
+                        if (executor.getExecutorType() == null) continue;
                         executors.add(executor);
                     }
                 }

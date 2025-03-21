@@ -30,7 +30,7 @@ public class SheepRegrownWoolExecutor extends EntityExecutor {
 
     @Override
     public ExecutorType getExecutorType() {
-        return null;
+        return ExecutorType.ENTITY_SHEEP_REGROWN_WOOL;
     }
 
 }

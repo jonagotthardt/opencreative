@@ -33,7 +33,7 @@ public class TurtleLaysEggExecutor extends EntityExecutor {
 
     @Override
     public ExecutorType getExecutorType() {
-        return null;
+        return ExecutorType.ENTITY_TURTLE_LAYS_EGG;
     }
 
 }

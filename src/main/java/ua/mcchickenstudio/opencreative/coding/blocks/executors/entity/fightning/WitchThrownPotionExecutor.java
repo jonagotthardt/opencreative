@@ -40,7 +40,7 @@ public class WitchThrownPotionExecutor extends EntityExecutor {
 
     @Override
     public ExecutorType getExecutorType() {
-        return null;
+        return ExecutorType.ENTITY_WITCH_THROWN_POTION;
     }
 
 }

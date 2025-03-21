@@ -30,7 +30,7 @@ public class EntityAirChangedExecutor extends EntityExecutor {
 
     @Override
     public ExecutorType getExecutorType() {
-        return null;
+        return ExecutorType.ENTITY_AIR_CHANGED;
     }
 
 }

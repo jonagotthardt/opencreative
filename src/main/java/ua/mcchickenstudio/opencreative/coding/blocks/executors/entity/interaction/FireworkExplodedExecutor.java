@@ -40,7 +40,7 @@ public class FireworkExplodedExecutor extends EntityExecutor {
 
     @Override
     public ExecutorType getExecutorType() {
-        return null;
+        return ExecutorType.ENTITY_FIREWORK_EXPLODED;
     }
 
 }

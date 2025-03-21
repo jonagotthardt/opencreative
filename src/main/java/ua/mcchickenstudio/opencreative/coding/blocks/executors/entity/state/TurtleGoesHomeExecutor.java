@@ -30,7 +30,7 @@ public class TurtleGoesHomeExecutor extends EntityExecutor {
 
     @Override
     public ExecutorType getExecutorType() {
-        return null;
+        return ExecutorType.ENTITY_TURTLE_GOES_HOME;
     }
 
 }

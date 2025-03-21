@@ -30,7 +30,7 @@ public class PigZombieAngeredExecutor extends EntityExecutor {
 
     @Override
     public ExecutorType getExecutorType() {
-        return null;
+        return ExecutorType.ENTITY_PIG_ZOMBIE_ANGERED;
     }
 
 }

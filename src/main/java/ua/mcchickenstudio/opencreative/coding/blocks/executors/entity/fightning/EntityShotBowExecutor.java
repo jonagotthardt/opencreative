@@ -40,7 +40,7 @@ public class EntityShotBowExecutor extends EntityExecutor {
 
     @Override
     public ExecutorType getExecutorType() {
-        return null;
+        return ExecutorType.ENTITY_SHOT_BOW;
     }
 
 }
