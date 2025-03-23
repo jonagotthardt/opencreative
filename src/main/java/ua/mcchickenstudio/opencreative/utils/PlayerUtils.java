@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
-import net.kyori.adventure.resource.ResourcePackRequest;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.KeyedBossBar;
 import org.jetbrains.annotations.NotNull;
@@ -50,6 +49,11 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 
+/**
+ * <h1>PlayerUtils</h1>
+ * This class contains most used utilities for manipulating
+ * with player and his data.
+ */
 public class PlayerUtils {
 
     private final static Map<UUID, PermissionAttachment> permissionAttachmentMap = new HashMap<>();
@@ -60,6 +64,9 @@ public class PlayerUtils {
      * @param player player to clear.
      */
     public static void clearPlayer(Player player) {
+        if (player.isDead()) {
+            player.spigot().respawn();
+        }
         player.setGameMode(GameMode.ADVENTURE);
         PlayerUtils.clearWorldModePermissions(player);
         player.closeInventory();

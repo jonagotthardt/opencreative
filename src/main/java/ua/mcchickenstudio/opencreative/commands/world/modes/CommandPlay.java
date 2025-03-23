@@ -21,7 +21,12 @@ package ua.mcchickenstudio.opencreative.commands.world.modes;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.JoinEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.LikeEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.PlayEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
+import ua.mcchickenstudio.opencreative.commands.world.CommandJoin;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import org.bukkit.Material;
@@ -47,6 +52,14 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
+/**
+ * <h1>CommandPlay</h1>
+ * This command is responsible for changing current world's mode
+ * to play mode. If it's already set, it can teleport player to
+ * spawn location and load code.
+ * <p>
+ * Available: For world developers.
+ */
 public class CommandPlay implements CommandExecutor, TabCompleter {
 
     @Override
@@ -86,13 +99,13 @@ public class CommandPlay implements CommandExecutor, TabCompleter {
                             player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
                         }
                         givePlayPermissions(player);
-                        EventRaiser.raiseJoinEvent(player);
+                        new JoinEvent(player).callEvent();
                     }
                 } else {
                     sender.sendMessage(getLocaleMessage("not-owner", player));
                 }
             } else {
-                if (EventRaiser.raisePlayEvent(player) || planet.getWorldPlayers().canDevelop(player)) {
+                if (!new PlayEvent(player).callEvent() || planet.getWorldPlayers().canDevelop(player)) {
                     if (planet.getWorldPlayers().canDevelop(player)) {
                         player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
                         if (!Arrays.asList(args).contains("--no-compile")) {
@@ -110,7 +123,7 @@ public class CommandPlay implements CommandExecutor, TabCompleter {
                     if (devPlanet != null) {
                         clearPlayer(player);
                     } else {
-                        EventRaiser.raiseQuitEvent(player);
+                        new QuitEvent(player).callEvent();
                     }
                     clearPlayer(player);
                     player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
@@ -121,7 +134,7 @@ public class CommandPlay implements CommandExecutor, TabCompleter {
                     if (planet.getWorldPlayers().canDevelop(player)) {
                         givePlayPermissions(player);
                     }
-                    EventRaiser.raiseJoinEvent(player);
+                    new JoinEvent(player).callEvent();
                 }
             }
         }

@@ -18,11 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction;
 
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.player.PlayerInteractEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public final class RightClickEvent extends WorldEvent {
+public final class RightClickEvent extends WorldEvent implements Cancellable {
 
     private final PlayerInteractEvent event;
 
@@ -34,5 +35,10 @@ public final class RightClickEvent extends WorldEvent {
     @Override
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 }

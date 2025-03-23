@@ -18,17 +18,17 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting;
 
+import org.bukkit.event.Cancellable;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.inventory.ItemStack;
 
-public final class HungerChangeEvent extends WorldEvent {
+public final class HungerChangeEvent extends WorldEvent implements Cancellable {
 
     private final FoodLevelChangeEvent event;
     private final ItemStack itemStack;
     private final int foodLevel;
-
 
     public HungerChangeEvent(Player player, FoodLevelChangeEvent event) {
         super(player);
@@ -43,6 +43,11 @@ public final class HungerChangeEvent extends WorldEvent {
 
     public ItemStack getItemStack() {
         return itemStack;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 
     @Override

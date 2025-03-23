@@ -32,7 +32,7 @@ public final class BlockExplodedEvent extends WorldEvent implements BlockEvent, 
     private final BlockExplodeEvent event;
 
     public BlockExplodedEvent(Planet planet, BlockExplodeEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 
@@ -44,5 +44,10 @@ public final class BlockExplodedEvent extends WorldEvent implements BlockEvent, 
     @Override
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 }

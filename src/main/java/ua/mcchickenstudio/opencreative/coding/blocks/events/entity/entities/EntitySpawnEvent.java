@@ -18,15 +18,21 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.entity.entities;
 
+import org.bukkit.event.Cancellable;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
-public final class EntitySpawnEvent extends WorldEvent {
+public final class EntitySpawnEvent extends WorldEvent implements Cancellable {
 
     private final org.bukkit.event.entity.EntitySpawnEvent event;
 
     public EntitySpawnEvent(org.bukkit.event.entity.EntitySpawnEvent event) {
         super(event.getEntity());
         this.event = event;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 
     @Override

@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.world.WorldExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public class BlockPistonExtendedExecutor extends WorldExecutor implements Cancellable {
+public class BlockPistonExtendedExecutor extends WorldExecutor {
 
     public BlockPistonExtendedExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
@@ -46,14 +46,6 @@ public class BlockPistonExtendedExecutor extends WorldExecutor implements Cancel
         return ExecutorType.WORLD_BLOCK_PISTON_EXTENDED;
     }
 
-    @Override
-    public boolean isCancelled() {
-        return getEvent().isCancelled();
-    }
-
-    @Override
-    public void setCancelled(boolean cancel) {
-        getEvent().setCancelled(cancel);
-    }
+    
 
 }

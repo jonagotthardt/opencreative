@@ -19,7 +19,7 @@
 package ua.mcchickenstudio.opencreative.commands.world.modes;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -27,6 +27,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.inventory.meta.BookMeta;
@@ -41,6 +42,14 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.giveDevPermissions;
 
+/**
+ * <h1>CommandDev</h1>
+ * This command is responsible for connecting player to
+ * developers world, where he can create a code with
+ * coding blocks and items.
+ * <p>
+ * Available: For world developers.
+ */
 public class CommandDev implements CommandExecutor {
 
     @Override
@@ -71,7 +80,7 @@ public class CommandDev implements CommandExecutor {
                             return true;
                         }
                     }
-                    EventRaiser.raiseQuitEvent(player);
+                    new QuitEvent(player).callEvent();
                     PlayerInventory playerInventory = player.getInventory();
                     ItemStack[] playerInventoryItems = (OpenCreative.getPlanetsManager().getDevPlanet(player) == null ?  playerInventory.getContents() : new ItemStack[]{});
                     clearPlayer(player);

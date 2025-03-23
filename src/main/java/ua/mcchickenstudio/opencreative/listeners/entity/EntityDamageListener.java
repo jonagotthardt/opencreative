@@ -21,7 +21,9 @@ package ua.mcchickenstudio.opencreative.listeners.entity;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.MobInteractionEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import org.bukkit.entity.Player;
@@ -69,7 +71,7 @@ public final class EntityDamageListener implements Listener {
                 if (playerDamageFlag == 4 && event.getCause() == EntityDamageEvent.DamageCause.FALL) event.setCancelled(true);
                 if (playerDamageFlag == 5 && (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK || event.getCause() == EntityDamageEvent.DamageCause.FALL)) event.setCancelled(true);
 
-                EventRaiser.raisePlayerDamagedEvent(victim,event);
+                new PlayerDamagedEvent(victim,event).callEvent();
 
             } else if (isEntityInLobby(victim)) {
                 event.setCancelled(true);
@@ -86,13 +88,13 @@ public final class EntityDamageListener implements Listener {
             if (event.getDamager() instanceof Player damager) {
                 Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(damager);
                 if (planet != null) {
-                    EventRaiser.raisePlayerDamagesPlayerEvent(damager,victim,event);
+                    new PlayerDamagesPlayerEvent(damager,victim,event).callEvent();
                 }
             // Mob damages player
             } else {
                 Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(victim);
                 if (planet != null) {
-                    EventRaiser.raiseMobDamagesPlayerEvent(victim,event);
+                    new MobDamagesPlayerEvent(victim,event).callEvent();
                 }
             }
         } else {
@@ -100,7 +102,7 @@ public final class EntityDamageListener implements Listener {
             if (event.getDamager() instanceof Player damager) {
                 Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(damager);
                 if (planet != null) {
-                    EventRaiser.raisePlayerDamagedMobEvent(damager,event);
+                    new PlayerDamagesMobEvent(damager,event).callEvent();
                 }
             }
         }
@@ -110,7 +112,7 @@ public final class EntityDamageListener implements Listener {
     public void onDeath(EntityDeathEvent event) {
         if (event.getEntity().getKiller() instanceof Player player && !(event.getEntity() instanceof Player)) {
             if (OpenCreative.getPlanetsManager().getPlanetByPlayer(player) != null) {
-                EventRaiser.raisePlayerKilledMobEvent(player,event.getEntity(),event);
+                new PlayerKilledMobEvent(player,event.getEntity(),event).callEvent();
             }
         }
     }
@@ -125,7 +127,7 @@ public final class EntityDamageListener implements Listener {
             if (planet.getMode() == Planet.Mode.BUILD) {
                 event.setCancelled(true);
             } else {
-                EventRaiser.raiseHungerChangeEvent((Player) event.getEntity(),event);
+                new HungerChangeEvent((Player) event.getEntity(),event).callEvent();
             }
         }
     }

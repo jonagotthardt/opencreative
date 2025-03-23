@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExec
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.event.Cancellable;
 
-public class PlaceBlockExecutor extends PlayerExecutor implements Cancellable {
+public class PlaceBlockExecutor extends PlayerExecutor {
 
     public PlaceBlockExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
@@ -35,9 +35,9 @@ public class PlaceBlockExecutor extends PlayerExecutor implements Cancellable {
     @Override
     protected void setTempVars(WorldEvent event) {
         if (event instanceof PlaceBlockEvent blockEvent) {
-            setTempVar(EventValues.Variable.BLOCK, blockEvent.getPlacedBlock());
-            setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getPlacedBlock().getType().name().toLowerCase());
-            setTempVar(EventValues.Variable.BLOCK_LOCATION, blockEvent.getPlacedBlock().getLocation());
+            setTempVar(EventValues.Variable.BLOCK, blockEvent.getBlock());
+            setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getBlock().getType().name().toLowerCase());
+            setTempVar(EventValues.Variable.BLOCK_LOCATION, blockEvent.getBlock().getLocation());
         }
     }
 
@@ -46,13 +46,4 @@ public class PlaceBlockExecutor extends PlayerExecutor implements Cancellable {
         return ExecutorType.PLAYER_PLACE_BLOCK;
     }
 
-    @Override
-    public boolean isCancelled() {
-        return getEvent().isCancelled();
-    }
-
-    @Override
-    public void setCancelled(boolean cancel) {
-        getEvent().setCancelled(cancel);
-    }
 }

@@ -23,7 +23,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.EntityExec
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.event.Cancellable;
 
-public class EntitySpawnExecutor extends EntityExecutor implements Cancellable {
+public class EntitySpawnExecutor extends EntityExecutor {
 
     public EntitySpawnExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
@@ -34,13 +34,4 @@ public class EntitySpawnExecutor extends EntityExecutor implements Cancellable {
         return ExecutorType.ENTITY_SPAWNED;
     }
 
-    @Override
-    public boolean isCancelled() {
-        return getEvent().isCancelled();
-    }
-
-    @Override
-    public void setCancelled(boolean cancel) {
-        getEvent().setCancelled(cancel);
-    }
 }

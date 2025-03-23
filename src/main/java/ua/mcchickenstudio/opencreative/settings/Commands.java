@@ -34,6 +34,8 @@ public class Commands  {
     private final Map<String,Command> onPlanetDisconnectCommands = new LinkedHashMap<>();
     private final Map<String,Command> onWorldChatCommands = new LinkedHashMap<>();
     private final Map<String,Command> onCreativeChatCommands = new LinkedHashMap<>();
+    private final Map<String,Command> onMaintenanceStartCommands = new LinkedHashMap<>();
+    private final Map<String,Command> onMaintenanceEndCommands = new LinkedHashMap<>();
 
     public void load() {
         onLobbyCommands.clear();
@@ -41,6 +43,8 @@ public class Commands  {
         onPlanetDisconnectCommands.clear();
         onWorldChatCommands.clear();
         onCreativeChatCommands.clear();
+        onMaintenanceStartCommands.clear();
+        onMaintenanceEndCommands.clear();
         FileConfiguration config = OpenCreative.getPlugin().getConfig();
         ConfigurationSection allCommandsSection = config.getConfigurationSection("commands");
         if (allCommandsSection == null) {
@@ -69,6 +73,9 @@ public class Commands  {
         if (!onPlanetDisconnectCommands.isEmpty()) OpenCreative.getPlugin().getLogger().info("Registered " + onPlanetDisconnectCommands.size() + " commands for onPlanetDisconnect");
         if (!onWorldChatCommands.isEmpty()) OpenCreative.getPlugin().getLogger().info("Registered " + onWorldChatCommands.size() + " commands for onWorldChat");
         if (!onCreativeChatCommands.isEmpty()) OpenCreative.getPlugin().getLogger().info("Registered " + onCreativeChatCommands.size() + " commands for onCreativeChat");
+        if (!onMaintenanceStartCommands.isEmpty()) OpenCreative.getPlugin().getLogger().info("Registered " + onMaintenanceStartCommands.size() + " commands for onMaintenanceStart");
+        if (!onMaintenanceEndCommands.isEmpty()) OpenCreative.getPlugin().getLogger().info("Registered " + onMaintenanceEndCommands.size() + " commands for onMaintenanceEnd");
+
     }
 
     private Map<String,Command> getMap(String eventName) {
@@ -78,6 +85,8 @@ public class Commands  {
             case "onPlanetDisconnect" -> onPlanetDisconnectCommands;
             case "onWorldChat" -> onWorldChatCommands;
             case "onCreativeChat" -> onCreativeChatCommands;
+            case "onMaintenanceStart" -> onMaintenanceStartCommands;
+            case "onMaintenanceEnd" -> onMaintenanceEndCommands;
             default -> null;
         };
     }

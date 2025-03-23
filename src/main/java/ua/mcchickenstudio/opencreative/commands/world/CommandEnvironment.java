@@ -53,6 +53,13 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
+/**
+ * <h1>CommandEnvironment</h1>
+ * This command is responsible for setting up world's
+ * developers world and code environment.
+ * <p>
+ * Available: For world developers.
+ */
 public class CommandEnvironment implements CommandExecutor, TabCompleter {
 
     @Override

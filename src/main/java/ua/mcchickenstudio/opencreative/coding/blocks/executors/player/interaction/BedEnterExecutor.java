@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExec
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.event.Cancellable;
 
-public class BedEnterExecutor extends PlayerExecutor implements Cancellable {
+public class BedEnterExecutor extends PlayerExecutor {
 
     public BedEnterExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
@@ -36,9 +36,9 @@ public class BedEnterExecutor extends PlayerExecutor implements Cancellable {
     protected void setTempVars(WorldEvent event) {
         if (event instanceof BedEnterEvent enterEvent) {
             setTempVar(EventValues.Variable.BED_ENTER_RESULT,enterEvent.getBedEnterResult().toString());
-            setTempVar(EventValues.Variable.BED,enterEvent.getBed());
-            setTempVar(EventValues.Variable.BLOCK_MATERIAL,enterEvent.getBed().getType().name().toLowerCase());
-            setTempVar(EventValues.Variable.BLOCK_LOCATION,enterEvent.getBed().getLocation());
+            setTempVar(EventValues.Variable.BED,enterEvent.getBlock());
+            setTempVar(EventValues.Variable.BLOCK_MATERIAL,enterEvent.getBlock().getType().name().toLowerCase());
+            setTempVar(EventValues.Variable.BLOCK_LOCATION,enterEvent.getBlock().getLocation());
         }
     }
 
@@ -47,13 +47,4 @@ public class BedEnterExecutor extends PlayerExecutor implements Cancellable {
         return ExecutorType.PLAYER_BED_ENTER;
     }
 
-    @Override
-    public boolean isCancelled() {
-        return getEvent().isCancelled();
-    }
-
-    @Override
-    public void setCancelled(boolean cancel) {
-        getEvent().setCancelled(true);
-    }
 }

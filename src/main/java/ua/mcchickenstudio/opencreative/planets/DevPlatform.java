@@ -27,6 +27,11 @@ import org.bukkit.block.Block;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <h1>DevPlatform</h1>
+ * This class represents developers platform in developers world.
+ * It's a floor with columns, that are used to place coding blocks.
+ */
 public class DevPlatform {
 
     private final int x;

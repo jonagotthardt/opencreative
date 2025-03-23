@@ -23,7 +23,8 @@ import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+
+import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.WebResponseEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -85,11 +86,11 @@ public final class SendWebRequestAction extends WorldAction {
                         int read = reader.read(buffer);
                         String response = new String(buffer, 0, Math.max(0, read));
                         Bukkit.getScheduler().runTask(OpenCreative.getPlugin(),
-                                () -> EventRaiser.raiseWebResponseEvent(getPlanet(), url, code, response));
+                                () -> new WebResponseEvent(getPlanet(), url, code, response).callEvent());
                     }
                 } catch (Exception e) {
                     Bukkit.getScheduler().runTask(OpenCreative.getPlugin(),
-                            () -> EventRaiser.raiseWebResponseEvent(getPlanet(), url, 408, "Error: " + e.getMessage()));
+                            () -> new WebResponseEvent(getPlanet(), url, 408, "Error: " + e.getMessage()));
                 }
             }
         }.runTaskAsynchronously(OpenCreative.getPlugin());

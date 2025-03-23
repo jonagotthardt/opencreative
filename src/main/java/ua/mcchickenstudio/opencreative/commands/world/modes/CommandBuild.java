@@ -45,6 +45,14 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
+/**
+ * <h1>CommandBuild</h1>
+ * This command is responsible for changing current world's mode
+ * to build mode. If it's already set, it can teleport player to
+ * spawn location and give creative mode.
+ * <p>
+ * Available: For world builders.
+ */
 public class CommandBuild implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {

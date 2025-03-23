@@ -43,6 +43,7 @@ import ua.mcchickenstudio.opencreative.commands.world.reputation.CommandLike;
 import ua.mcchickenstudio.opencreative.listeners.CreativeListener;
 import ua.mcchickenstudio.opencreative.listeners.entity.EntityDamageListener;
 import ua.mcchickenstudio.opencreative.listeners.entity.EntitySpawnListener;
+import ua.mcchickenstudio.opencreative.listeners.entity.EntityStateListener;
 import ua.mcchickenstudio.opencreative.listeners.player.*;
 import ua.mcchickenstudio.opencreative.listeners.world.BlockChangeListener;
 import ua.mcchickenstudio.opencreative.listeners.world.RedstoneListener;
@@ -133,7 +134,7 @@ public final class OpenCreative extends JavaPlugin {
         PlayerUtils.loadPermissions();
         HookUtils.loadHooks();
         FileUtils.loadPlanets();
-        FileUtils.loadModules();
+        //FileUtils.loadModules();
 
         economy = HookUtils.getEconomy();
         economy.init();
@@ -226,7 +227,7 @@ public final class OpenCreative extends JavaPlugin {
         commands.put("time",        CommandTime.class);
         commands.put("weather",     CommandWeather.class);
         commands.put("value",       CommandValue.class);
-        commands.put("module",      CommandModule.class);
+        //commands.put("module",      CommandModule.class);
         for (String commandName : commands.keySet()) {
             PluginCommand command = getCommand(commandName);
             if (command != null) {
@@ -256,7 +257,7 @@ public final class OpenCreative extends JavaPlugin {
                 ChatListener.class,       InteractListener.class,     DropItemListener.class,
                 PlaceBlockListener.class, DestroyBlockListener.class, BucketListener.class,
                 ClickListener.class,      RedstoneListener.class,     BlockChangeListener.class,
-                Menus.class,              GameModeListener.class,
+                Menus.class,              GameModeListener.class,     EntityStateListener.class,
                 CreativeListener.class,   PotionListener.class
         };
         for (Class<?> listenerClass : listeners) {

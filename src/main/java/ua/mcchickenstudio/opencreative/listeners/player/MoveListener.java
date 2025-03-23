@@ -22,11 +22,11 @@ import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.ChunkLoadEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.ChunkUnloadEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -53,7 +53,7 @@ public final class MoveListener implements Listener {
             }
         }
         if (isBlockChanged(event.getFrom(),event.getTo())) {
-            EventRaiser.raiseMoveEvent(event.getPlayer(),event);
+            new ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement.PlayerMoveEvent(event.getPlayer(),event).callEvent();
             if (isEntityInDevPlanet(player)) {
                 if (player.getY() >= 0 && player.getY() <= 4) {
                     translateSigns(player,10);
@@ -72,25 +72,29 @@ public final class MoveListener implements Listener {
     @EventHandler
     public void onJump(PlayerJumpEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
-        if (planet != null) EventRaiser.raiseJumpEvent(event.getPlayer(),event);
+        if (planet != null) {
+            new JumpEvent(event.getPlayer(),event).callEvent();
+        }
     }
 
     @EventHandler
     public void onSneaking(PlayerToggleSneakEvent event) {
         if (event.isSneaking()) {
-            EventRaiser.raiseStartSneakingEvent(event.getPlayer(),event);
+            new StartSneakingEvent(event.getPlayer(),event).callEvent();
         } else {
-            EventRaiser.raiseStopSneakingEvent(event.getPlayer(),event);
+            new StopSneakingEvent(event.getPlayer(),event).callEvent();
         }
     }
 
     @EventHandler
     public void onFlying(PlayerToggleFlightEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
-
         if (planet != null) {
-            if (event.isFlying())  EventRaiser.raiseStartFlyingEvent(event.getPlayer(),event);
-            else  EventRaiser.raiseStopFlyingEvent(event.getPlayer(),event);
+            if (event.isFlying()) {
+                new StartFlyingEvent(event.getPlayer(),event).callEvent();
+            } else {
+                new StopFlyingEvent(event.getPlayer(),event).callEvent();
+            }
         }
     }
 
@@ -98,8 +102,11 @@ public final class MoveListener implements Listener {
     public void onSprinting(PlayerToggleSprintEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) {
-            if (event.isSprinting())  EventRaiser.raiseStartRunningEvent(event.getPlayer(),event);
-            else  EventRaiser.raiseStopRunningEvent(event.getPlayer(),event);
+            if (event.isSprinting()) {
+                new StartRunningEvent(event.getPlayer()).callEvent();
+            } else {
+                new StopRunningEvent(event.getPlayer()).callEvent();
+            }
         }
     }
 
@@ -107,7 +114,7 @@ public final class MoveListener implements Listener {
     public void onChunkLoad(PlayerChunkLoadEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) {
-            EventRaiser.raiseChunkLoadEvent(event);
+            new ChunkLoadEvent(event.getPlayer(),event).callEvent();
         }
     }
 
@@ -115,7 +122,7 @@ public final class MoveListener implements Listener {
     public void onChunkUnload(PlayerChunkUnloadEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) {
-            EventRaiser.raiseChunkUnloadEvent(event);
+            new ChunkUnloadEvent(event.getPlayer(),event).callEvent();
         }
     }
 

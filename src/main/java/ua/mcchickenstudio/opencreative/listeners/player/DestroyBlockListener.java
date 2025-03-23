@@ -20,8 +20,11 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.DamageBlockEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.DestroyBlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
+import ua.mcchickenstudio.opencreative.menus.Menus;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import org.bukkit.Material;
@@ -109,7 +112,10 @@ public final class DestroyBlockListener implements Listener {
                 event.setCancelled(true);
                 return;
             }
-            EventRaiser.raiseDestroyEvent(event.getPlayer(),event);
+            new DestroyBlockEvent(event.getPlayer(),event).callEvent();
+            if (!event.isCancelled()) {
+                Menus.onBlockDestroy(event.getBlock().getLocation());
+            }
         }
     }
 
@@ -127,6 +133,7 @@ public final class DestroyBlockListener implements Listener {
         additionalBlock.setType(Material.AIR);
         signBlock.setType(Material.AIR);
         if (dropItems && containerBlock.getState() instanceof InventoryHolder container) {
+            Menus.onBlockDestroy(containerBlock.getLocation());
             for (ItemStack item : container.getInventory().getContents()) {
                 if (item != null) {
                     if (item.getItemMeta() == null || !item.getItemMeta().getPersistentDataContainer().has(getCodingDoNotDropMeKey())) {
@@ -141,7 +148,7 @@ public final class DestroyBlockListener implements Listener {
     @EventHandler
     public void onStartDamaging(BlockDamageEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
-        if (planet != null) EventRaiser.raiseDamageBlockEvent(event.getPlayer(),event);
+        if (planet != null) new DamageBlockEvent(event.getPlayer(),event).callEvent();
     }
 
 }

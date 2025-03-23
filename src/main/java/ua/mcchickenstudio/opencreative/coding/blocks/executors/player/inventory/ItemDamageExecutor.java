@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public class ItemDamageExecutor extends PlayerExecutor implements Cancellable {
+public class ItemDamageExecutor extends PlayerExecutor {
 
     @Override
     protected void setTempVars(WorldEvent event) {
@@ -45,13 +45,4 @@ public class ItemDamageExecutor extends PlayerExecutor implements Cancellable {
         return ExecutorType.PLAYER_ITEM_CRAFT;
     }
 
-    @Override
-    public void setCancelled(boolean cancel) {
-        getEvent().setCancelled(cancel);
-    }
-
-    @Override
-    public boolean isCancelled() {
-        return getEvent().isCancelled();
-    }
 }

@@ -20,7 +20,9 @@ package ua.mcchickenstudio.opencreative.commands.world.reputation;
 
 import org.bukkit.Bukkit;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.LikeEvent;
+import ua.mcchickenstudio.opencreative.commands.world.CommandJoin;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import org.bukkit.command.Command;
@@ -39,6 +41,16 @@ import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.convertTime;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
+/**
+ * <h1>CommandLike</h1>
+ * This command allows players to rate current world
+ * as good one and increase world's reputation.
+ * <p>
+ * If economy is set up, then world's owner can
+ * get server's virtual currency money.
+ * <p>
+ * Available: For all world players.
+ */
 public class CommandLike implements CommandExecutor {
 
     @Override
@@ -68,7 +80,7 @@ public class CommandLike implements CommandExecutor {
                 if (addPlayerInPlanetList(planet,sender.getName(), Planet.PlayersType.LIKED)) {
                     Sounds.WORLD_LIKED.play(player);
                     planet.getInformation().setPlanetReputation(planet.getInformation().getReputation() +1);
-                    EventRaiser.raiseLikeEvent(player);
+                    new LikeEvent(player).callEvent();
                     if (planet.getFlagValue(PlanetFlags.PlanetFlag.LIKE_MESSAGES) == 1) {
                         for (Player p : planet.getPlayers()) {
                             p.sendMessage(getLocaleMessage("world.liked").replace("%player%",sender.getName()));

@@ -38,6 +38,13 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
+/**
+ * <h1>CommandJoin</h1>
+ * This command is used to connect player to specified planet
+ * by its numeric or text ID.
+ * <p>
+ * Available: For all players.
+ */
 public class CommandJoin implements CommandExecutor, TabCompleter {
 
     @Override

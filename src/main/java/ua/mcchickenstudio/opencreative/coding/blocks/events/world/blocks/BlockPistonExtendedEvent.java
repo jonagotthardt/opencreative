@@ -32,7 +32,7 @@ public final class BlockPistonExtendedEvent extends WorldEvent implements BlockE
     private final BlockPistonExtendEvent event;
 
     public BlockPistonExtendedEvent(Planet planet, BlockPistonExtendEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 
@@ -44,5 +44,10 @@ public final class BlockPistonExtendedEvent extends WorldEvent implements BlockE
     @Override
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 }

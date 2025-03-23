@@ -31,6 +31,12 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
+/**
+ * <h1>CommandMenu</h1>
+ * This command responsible for opening recommended worlds browser menu.
+ * <p>
+ * Available: For all players.
+ */
 public class CommandMenu implements CommandExecutor {
 
     @Override

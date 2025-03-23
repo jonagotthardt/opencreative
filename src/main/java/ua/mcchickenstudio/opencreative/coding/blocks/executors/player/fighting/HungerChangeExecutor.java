@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExec
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.event.Cancellable;
 
-public class HungerChangeExecutor extends PlayerExecutor implements Cancellable {
+public class HungerChangeExecutor extends PlayerExecutor {
 
     public HungerChangeExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
@@ -45,13 +45,4 @@ public class HungerChangeExecutor extends PlayerExecutor implements Cancellable 
         return ExecutorType.PLAYER_HUNGER_CHANGE;
     }
 
-    @Override
-    public boolean isCancelled() {
-        return getEvent().isCancelled();
-    }
-
-    @Override
-    public void setCancelled(boolean cancel) {
-        getEvent().setCancelled(cancel);
-    }
 }

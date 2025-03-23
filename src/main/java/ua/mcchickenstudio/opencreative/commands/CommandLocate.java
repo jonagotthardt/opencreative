@@ -36,6 +36,13 @@ import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
+/**
+ * <h1>CommandLocate</h1>
+ * This command is responsible for finding online player's current world.
+ * It allows players to locate each other and join friends.
+ * <p>
+ * Available: For all players.
+ */
 public class CommandLocate implements CommandExecutor, TabCompleter {
 
     @Override

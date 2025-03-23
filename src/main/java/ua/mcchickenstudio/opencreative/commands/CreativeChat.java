@@ -38,6 +38,12 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.parsePAPI;
 
+/**
+ * <h1>CreativeChat</h1>
+ * This command is used to chat with all players on server.
+ * <p>
+ * Available: For all players.
+ */
 public class CreativeChat implements CommandExecutor {
 
     public static final List<Player> creativeChatOff = new ArrayList<>();

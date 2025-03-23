@@ -22,6 +22,7 @@ import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.ControlAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
@@ -33,8 +34,8 @@ public final class CancelEventAction extends ControlAction {
 
     @Override
     protected void execute(Entity entity) {
-        Executor executor = getHandler().getExecutor();
-        if (executor instanceof Cancellable cancellable) {
+        WorldEvent worldEvent = getHandler().getEvent();
+        if (worldEvent instanceof Cancellable cancellable) {
             cancellable.setCancelled(true);
         }
     }

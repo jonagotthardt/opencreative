@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExec
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.event.Cancellable;
 
-public class BlockInteractionExecutor extends PlayerExecutor implements Cancellable {
+public class BlockInteractionExecutor extends PlayerExecutor {
 
     @Override
     protected void setTempVars(WorldEvent event) {
@@ -48,13 +48,4 @@ public class BlockInteractionExecutor extends PlayerExecutor implements Cancella
         return ExecutorType.PLAYER_BLOCK_INTERACT;
     }
 
-    @Override
-    public boolean isCancelled() {
-        return getEvent().isCancelled();
-    }
-
-    @Override
-    public void setCancelled(boolean b) {
-        getEvent().setCancelled(b);
-    }
 }

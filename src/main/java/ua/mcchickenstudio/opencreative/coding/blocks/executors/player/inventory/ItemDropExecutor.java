@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExec
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.event.Cancellable;
 
-public class ItemDropExecutor extends PlayerExecutor implements Cancellable {
+public class ItemDropExecutor extends PlayerExecutor {
 
     @Override
     protected void setTempVars(WorldEvent event) {
@@ -44,13 +44,4 @@ public class ItemDropExecutor extends PlayerExecutor implements Cancellable {
         return ExecutorType.PLAYER_DROP_ITEM;
     }
 
-    @Override
-    public boolean isCancelled() {
-        return getEvent().isCancelled();
-    }
-
-    @Override
-    public void setCancelled(boolean b) {
-        getEvent().setCancelled(b);
-    }
 }

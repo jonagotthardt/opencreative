@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.world.WorldExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public class BlockRedstoneExecutor extends WorldExecutor implements Cancellable {
+public class BlockRedstoneExecutor extends WorldExecutor {
 
     public BlockRedstoneExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
@@ -44,16 +44,6 @@ public class BlockRedstoneExecutor extends WorldExecutor implements Cancellable 
     @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.WORLD_BLOCK_REDSTONE;
-    }
-
-    @Override
-    public boolean isCancelled() {
-        return getEvent().isCancelled();
-    }
-
-    @Override
-    public void setCancelled(boolean cancel) {
-        getEvent().setCancelled(cancel);
     }
 
 }

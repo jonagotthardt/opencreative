@@ -19,7 +19,9 @@
 package ua.mcchickenstudio.opencreative.listeners.entity;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+
+import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedEntitiesEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedVariablesEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -66,9 +68,9 @@ public final class EntitySpawnListener implements Listener {
                 warning.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(getLocaleMessage("world.entity-limit-hover"))));
                 warning.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/world deletemobs"));
                 sendMessageOnce(planet,warning,3);
-                EventRaiser.raiseLimitReachedEntitiesEvent(planet);
+                new LimitReachedEntitiesEvent(planet).callEvent();
             } else {
-                EventRaiser.raiseEntitySpawnEvent(event);
+                new ua.mcchickenstudio.opencreative.coding.blocks.events.entity.entities.EntitySpawnEvent(event).callEvent();
             }
         }
     }
@@ -86,7 +88,7 @@ public final class EntitySpawnListener implements Listener {
                 warning.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(getLocaleMessage("world.entity-limit-hover"))));
                 warning.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/world deletemobs"));
                 sendMessageOnce(planet,warning,3);
-                EventRaiser.raiseLimitReachedEntitiesEvent(planet);
+                new LimitReachedEntitiesEvent(planet).callEvent();
             }
         }
         String worldName = world.getName();

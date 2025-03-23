@@ -37,6 +37,13 @@ import org.bukkit.inventory.ItemStack;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * <h1>Argument</h1>
+ * This class represents an argument, a field that
+ * has type, name (path) and value. It's used to
+ * get values, like text, numbers, locations etc.
+ * @see Arguments
+ */
 public class Argument {
 
     protected final Planet planet;

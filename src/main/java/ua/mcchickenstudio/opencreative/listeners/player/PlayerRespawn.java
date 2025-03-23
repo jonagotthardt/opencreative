@@ -18,8 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
+import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerTotemRespawnEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -44,7 +46,7 @@ public final class PlayerRespawn implements Listener {
         DeathListener.deathLocations.remove(event.getPlayer());
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) {
-            EventRaiser.raisePlayerRespawnEvent(event.getPlayer(),event);
+            new ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerRespawnEvent(event.getPlayer()).callEvent();
             if (planet.isOwner(event.getPlayer())) {
                 ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
                 if (!event.getPlayer().getInventory().contains(worldSettingsItem)) {
@@ -57,7 +59,11 @@ public final class PlayerRespawn implements Listener {
     @EventHandler
     public void onTotemUsing(EntityResurrectEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld((event.getEntity().getWorld()));
-        if (planet != null) EventRaiser.raisePlayerTotemRespawnEvent(event.getEntity(),event);
+        if (event.getEntity() instanceof Player player) {
+            if (planet != null) {
+                new PlayerTotemRespawnEvent(player).callEvent();
+            }
+        }
 
     }
 }

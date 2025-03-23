@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks;
 import org.bukkit.block.Block;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.block.BlockFadeEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
@@ -28,10 +29,10 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public final class BlockPhysicsEvent extends WorldEvent implements BlockEvent, Cancellable {
 
-    private final org.bukkit.event.block.BlockPhysicsEvent event;
+    private final EntityChangeBlockEvent event;
 
-    public BlockPhysicsEvent(Planet planet, org.bukkit.event.block.BlockPhysicsEvent event) {
-        super(planet);
+    public BlockPhysicsEvent(Planet planet, EntityChangeBlockEvent event) {
+        super(planet, event.getBlock());
         this.event = event;
     }
 
@@ -43,5 +44,10 @@ public final class BlockPhysicsEvent extends WorldEvent implements BlockEvent, C
     @Override
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 }

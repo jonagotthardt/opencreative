@@ -28,7 +28,8 @@ import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+
+import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedBlocksEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
@@ -71,7 +72,7 @@ public final class SetBlocksAreaTypeAction extends WorldAction {
                     if (getPlanet().getLimits().getLastModifiedBlocksAmount() > getPlanet().getLimits().getModifyingBlocksLimit()) {
                         runnable.runTaskLater(OpenCreative.getPlugin(),20L);
                         getPlanet().getTerritory().removeBukkitRunnable(runnable);
-                        EventRaiser.raiseLimitReachedBlocksEvent(getPlanet());
+                        new LimitReachedBlocksEvent(getPlanet()).callEvent();
                         return;
                     }
                     getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount()+1);

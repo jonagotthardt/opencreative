@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.events;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.*;
 import org.bukkit.plugin.EventExecutor;
 import org.jetbrains.annotations.NotNull;
@@ -35,12 +36,15 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.WebRespo
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
 import ua.mcchickenstudio.opencreative.indev.blocks.executors.ExecutorBlock;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebug;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isPlanet;
 
 /**
  * <h1>WorldListener</h1>
@@ -60,10 +64,42 @@ public class WorldListener implements EventExecutor, Listener {
         }
     }
 
+    /**
+     * Checks if world event can activate executors or not.
+     * World event must:
+     * <p>
+     * <ul>
+     * <li>Be in planet's build world
+     * <li>Have entities selection in planet's build world
+     * <li>Happen while planet is in play mode
+     * <li>Happen while planet is loaded
+     * </ul>
+     * @param worldEvent event to check.
+     * @return true - if possible, false - disallowed.
+     */
+    public boolean canActivate(@NotNull WorldEvent worldEvent) {
+        if (worldEvent.getPlanet() == null) return false;
+        if (worldEvent.getWorld() == null) return false;
+        if (!isPlanet(worldEvent.getWorld())) return false;
+        if (isDevPlanet(worldEvent.getWorld())) return false;
+        if (!worldEvent.getPlanet().isLoaded()) return false;
+        if (worldEvent.getPlanet().getMode() != Planet.Mode.PLAYING) return false;
+        if (!worldEvent.getSelection().isEmpty()) {
+            for (Entity entity : worldEvent.getSelection()) {
+                if (!entity.getWorld().equals(worldEvent.getPlanet().getWorld())) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     @Override
     public void execute(@NotNull Listener listener, @NotNull Event event) throws EventException {
         if (event instanceof WorldEvent worldEvent) {
-            Executors.activate(worldEvent);
+            if (canActivate(worldEvent)) {
+                Executors.activate(worldEvent);
+            }
         }
     }
 

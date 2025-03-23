@@ -20,7 +20,8 @@
 package ua.mcchickenstudio.opencreative.listeners.player;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerKilledPlayerEvent;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
@@ -61,10 +62,10 @@ public final class DeathListener implements Listener {
                 }
             }
             event.getDrops().remove(createItem(Material.COMPASS,1,"items.developer.world-settings"));
-            EventRaiser.raisePlayerDeathEvent(player,event);
+            new ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDeathEvent(player,event).callEvent();
             Player killer = player.getKiller();
             if (killer != null) {
-                EventRaiser.raisePlayerKilledPlayerEvent(killer,player,event);
+                new PlayerKilledPlayerEvent(killer,player,event).callEvent();
             }
         } else {
             event.setKeepInventory(true);

@@ -18,13 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction;
 
+import org.bukkit.event.Cancellable;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 
-public final class FishEvent extends WorldEvent {
+public final class FishEvent extends WorldEvent implements Cancellable {
 
     private final PlayerFishEvent event;
     private ItemStack caughtItem = null;
@@ -40,6 +41,11 @@ public final class FishEvent extends WorldEvent {
     @Override
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 
     public ItemStack getCaughtItem() {

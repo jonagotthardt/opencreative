@@ -31,7 +31,7 @@ public final class LightningStrikeEvent extends WorldEvent implements BlockEvent
     private final org.bukkit.event.weather.LightningStrikeEvent event;
 
     public LightningStrikeEvent(Planet planet, org.bukkit.event.weather.LightningStrikeEvent event) {
-        super(planet);
+        super(planet, event.getLightning().getLocation().getBlock());
         this.event = event;
     }
 
@@ -43,5 +43,10 @@ public final class LightningStrikeEvent extends WorldEvent implements BlockEvent
     @Override
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 }

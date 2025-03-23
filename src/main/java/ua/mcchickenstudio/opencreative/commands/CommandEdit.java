@@ -43,6 +43,13 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 
+/**
+ * <h1>CommandEdit</h1>
+ * This command is responsible for editing items data,
+ * like display name and lore.
+ * <p>
+ * Available: For world builders or developers.
+ */
 public class CommandEdit implements CommandExecutor, TabCompleter {
 
     private final int TEXT_LIMIT = 100;

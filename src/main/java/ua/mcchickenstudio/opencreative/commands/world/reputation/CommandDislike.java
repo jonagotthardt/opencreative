@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.commands.world.reputation;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.commands.world.CommandJoin;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
@@ -33,6 +34,13 @@ import org.jetbrains.annotations.NotNull;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.convertTime;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
+/**
+ * <h1>CommandDislike</h1>
+ * This command allows players to rate current world
+ * as bad one and decrease world's reputation.
+ * <p>
+ * Available: For all world players.
+ */
 public class CommandDislike implements CommandExecutor {
 
     @Override

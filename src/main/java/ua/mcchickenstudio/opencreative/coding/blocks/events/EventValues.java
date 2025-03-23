@@ -111,6 +111,8 @@ public class EventValues {
         FOOD_LEVEL              (Material.COOKED_CHICKEN, MenusCategory.EVENTS, Integer.class),
         DAMAGE_CAUSE            (Material.REDSTONE_TORCH,           MenusCategory.EVENTS, String.class),
         DAMAGE                  (Material.SOUL_TORCH,           MenusCategory.EVENTS, String.class),
+        EVENT_EXPERIENCE        (Material.SLIME_SPAWN_EGG,          MenusCategory.EVENTS, Float.class),
+
 
         CLIENT_BRAND            (Material.GRASS_BLOCK,              MenusCategory.PLAYER, String.class),
         HUNGER                  (Material.COOKED_CHICKEN,           MenusCategory.PLAYER, Double.class),

@@ -18,12 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction;
 
+import org.bukkit.event.Cancellable;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 
-public final class BedLeaveEvent extends WorldEvent {
+public final class BedLeaveEvent extends WorldEvent implements Cancellable, BlockEvent {
 
     private final Block bed;
     private final PlayerBedLeaveEvent event;
@@ -39,7 +42,13 @@ public final class BedLeaveEvent extends WorldEvent {
         event.setCancelled(cancelled);
     }
 
-    public Block getBed() {
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
+    }
+
+    @Override
+    public @NotNull Block getBlock() {
         return bed;
     }
 }

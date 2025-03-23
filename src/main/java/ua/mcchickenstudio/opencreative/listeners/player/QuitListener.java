@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 import org.bukkit.GameMode;
 import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventRaiser;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.commands.CreativeChat;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.entity.Player;
@@ -42,7 +42,7 @@ public final class QuitListener implements Listener {
 
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName(player.getWorld().getName().replace("dev",""));
         if (planet != null) {
-            EventRaiser.raiseQuitEvent(player);
+            new QuitEvent(player).callEvent();
             PlanetPlayer planetPlayer = planet.getWorldPlayers().getPlanetPlayer(player);
             if (planetPlayer != null) planetPlayer.save();
             planet.getWorldPlayers().unregisterPlayer(player);

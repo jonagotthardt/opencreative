@@ -18,13 +18,26 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.world;
 
+import org.bukkit.event.Cancellable;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public final class PlayEvent extends WorldEvent {
+public final class PlayEvent extends WorldEvent implements Cancellable {
+
+    private boolean cancelled;
 
     public PlayEvent(Player player) {
         super(player);
     }
 
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
+    }
 }

@@ -32,7 +32,7 @@ public final class PortalCreatedEvent extends WorldEvent implements BlockEvent, 
     private final PortalCreateEvent event;
 
     public PortalCreatedEvent(Planet planet, PortalCreateEvent event) {
-        super(planet);
+        super(planet, event.getBlocks().getFirst().getBlock());
         this.event = event;
     }
 
@@ -44,5 +44,10 @@ public final class PortalCreatedEvent extends WorldEvent implements BlockEvent, 
     @Override
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 }

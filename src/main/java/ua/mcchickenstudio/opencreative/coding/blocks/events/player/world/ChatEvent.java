@@ -18,14 +18,16 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.world;
 
+import org.bukkit.event.Cancellable;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.placeholders.KeyPlaceholder;
 import ua.mcchickenstudio.opencreative.coding.placeholders.KeyValuePlaceholder;
 
-public final class ChatEvent extends WorldEvent {
+public final class ChatEvent extends WorldEvent implements Cancellable {
 
     private final String message;
+    private boolean cancelled;
 
     public ChatEvent(Player player, String message) {
         super(player);
@@ -44,6 +46,11 @@ public final class ChatEvent extends WorldEvent {
 
     @Override
     public void setCancelled(boolean cancelled) {
-        super.setCancelled(cancelled);
+        this.cancelled = cancelled;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
     }
 }

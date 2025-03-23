@@ -34,7 +34,7 @@ public final class BlockCookedEvent extends WorldEvent implements BlockEvent, It
     private final BlockCookEvent event;
 
     public BlockCookedEvent(Planet planet, BlockCookEvent event) {
-        super(planet);
+        super(planet, event.getBlock());
         this.event = event;
     }
 
@@ -51,5 +51,10 @@ public final class BlockCookedEvent extends WorldEvent implements BlockEvent, It
     @Override
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 }

@@ -18,10 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting;
 
+import org.bukkit.event.Cancellable;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public final class PlayerDeathEvent extends WorldEvent {
+public final class PlayerDeathEvent extends WorldEvent implements Cancellable {
 
     private final org.bukkit.event.entity.PlayerDeathEvent event;
 
@@ -33,5 +34,10 @@ public final class PlayerDeathEvent extends WorldEvent {
     @Override
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 }

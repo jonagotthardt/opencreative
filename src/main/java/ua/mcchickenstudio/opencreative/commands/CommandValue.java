@@ -47,6 +47,14 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
+/**
+ * <h1>CommandValue</h1>
+ * This command allows players to get coding values, like Text,
+ * Number, Variable, Location, Vector, Event Value with already
+ * set values.
+ * <p>
+ * Available: For world developers in developers world.
+ */
 public class CommandValue implements CommandExecutor, TabCompleter {
 
     @Override
