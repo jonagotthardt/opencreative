@@ -45,6 +45,7 @@ public final class SetSignLineAction extends WorldAction {
         Block block = location.getBlock();
 
         if (!(block.getState() instanceof Sign sign)) return;
+
         String text = getArguments().getValue("text","",this);
         String sideString = getArguments().getValue("side","front",this);
         Side side = (sideString.equals("back") ? Side.BACK : Side.FRONT);
@@ -65,6 +66,8 @@ public final class SetSignLineAction extends WorldAction {
         }
 
         sign.getSide(side).setLine(number-1,text);
+        sign.update();
+
         getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount()+1);
         runnable.runTaskLater(OpenCreative.getPlugin(),20L);
         getPlanet().getTerritory().removeBukkitRunnable(runnable);
