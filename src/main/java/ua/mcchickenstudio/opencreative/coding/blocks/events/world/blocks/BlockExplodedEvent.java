@@ -44,6 +44,7 @@ public final class BlockExplodedEvent extends WorldEvent implements BlockEvent, 
     @Override
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
+        event.blockList().clear();
     }
 
     @Override

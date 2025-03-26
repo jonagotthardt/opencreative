@@ -88,6 +88,8 @@ public final class CreativeListener implements Listener {
         } else if (event.getSender() != null) {
             placeholders.put("%player%", Bukkit.getConsoleSender().getName());
             OpenCreative.getSettings().getCommands().execute(null,"onMaintenanceStart",placeholders);
+        } else {
+            OpenCreative.getSettings().getCommands().execute(null,"onMaintenanceStart",placeholders);
         }
     }
 
@@ -99,6 +101,8 @@ public final class CreativeListener implements Listener {
             OpenCreative.getSettings().getCommands().execute(player,"onMaintenanceEnd",placeholders);
         } else if (event.getSender() != null) {
             placeholders.put("%player%", Bukkit.getConsoleSender().getName());
+            OpenCreative.getSettings().getCommands().execute(null,"onMaintenanceEnd",placeholders);
+        } else {
             OpenCreative.getSettings().getCommands().execute(null,"onMaintenanceEnd",placeholders);
         }
     }
