@@ -42,10 +42,10 @@ public final class RespawnListener implements Listener {
         if (!DeathListener.deathLocations.containsKey(event.getPlayer())) return;
         Location deathLocation = DeathListener.deathLocations.get(event.getPlayer());
         event.setRespawnLocation(deathLocation);
-        Sounds.PLAYER_RESPAWN.play(event.getPlayer());
         DeathListener.deathLocations.remove(event.getPlayer());
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) {
+            Sounds.PLAYER_RESPAWN.play(event.getPlayer());
             if (planet.isOwner(event.getPlayer())) {
                 ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
                 if (!event.getPlayer().getInventory().contains(worldSettingsItem)) {

@@ -63,6 +63,10 @@ public class CommandAd extends CommandJoin {
             player.sendMessage(getLocaleMessage("maintenance"));
             return true;
         }
+        if (OpenCreative.getStability().isVeryBad() && !player.hasPermission("opencreative.stability.bypass")) {
+            player.sendMessage(getLocaleMessage("creative.stability.cannot"));
+            return true;
+        }
 
         switch (args.length) {
             case 0:  // /ad

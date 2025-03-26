@@ -262,6 +262,12 @@ public class Space implements PlanetsManager {
     }
 
     @Override
+    public boolean isStableConnection() {
+        // True, because it depends only on file system
+        return true;
+    }
+
+    @Override
     public String getName() {
         return "Planet Manager";
     }

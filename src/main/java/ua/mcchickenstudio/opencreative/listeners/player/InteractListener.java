@@ -609,12 +609,20 @@ public final class InteractListener implements Listener {
                     player.sendMessage(getLocaleMessage("maintenance"));
                     return;
                 }
+                if (OpenCreative.getStability().isVeryBad() && !player.hasPermission("opencreative.stability.bypass")) {
+                    player.sendMessage(getLocaleMessage("creative.stability.cannot"));
+                    return;
+                }
                 player.setCooldown(Material.COMPASS,60);
                 new RecommendedWorldsMenu().open(player);
             } else if (getItemType(currentItem).equals("own_worlds")) {
                 // Opens player's worlds menus.
                 if (OpenCreative.getSettings().isMaintenance() && !player.hasPermission("opencreative.maintenance.bypass")) {
                     player.sendMessage(getLocaleMessage("maintenance"));
+                    return;
+                }
+                if (OpenCreative.getStability().isVeryBad() && !player.hasPermission("opencreative.stability.bypass")) {
+                    player.sendMessage(getLocaleMessage("creative.stability.cannot"));
                     return;
                 }
                 player.setCooldown(Material.NETHER_STAR,60);
@@ -624,6 +632,10 @@ public final class InteractListener implements Listener {
             // Opens world settings menus.
             if (OpenCreative.getSettings().isMaintenance() && !player.hasPermission("opencreative.maintenance.bypass")) {
                 player.sendMessage(getLocaleMessage("maintenance"));
+                return;
+            }
+            if (OpenCreative.getStability().isVeryBad() && !player.hasPermission("opencreative.stability.bypass")) {
+                player.sendMessage(getLocaleMessage("creative.stability.cannot"));
                 return;
             }
             if (planet.isOwner(player)) {

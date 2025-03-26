@@ -33,7 +33,7 @@ import java.util.Random;
 public class WaterChunkGenerator extends ChunkGenerator {
 
     @Override
-    public @NotNull  ChunkData generateChunkData(@NotNull World world, @NotNull Random random, int x, int z, @NotNull BiomeGrid biome) {
+    public @NotNull ChunkData generateChunkData(@NotNull World world, @NotNull Random random, int x, int z, @NotNull BiomeGrid biome) {
         ChunkData chunkData = createChunkData(world);
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 16; j++) {

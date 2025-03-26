@@ -81,7 +81,7 @@ public final class DeathListener implements Listener {
 
     }
 
-    private String translateDeathMessage(Player player ) {
+    private String translateDeathMessage(Player player) {
         EntityDamageEvent damageEvent = player.getLastDamageCause();
         if (damageEvent == null) return getLocaleMessage("deaths.custom");
         Entity damager = player.getKiller();

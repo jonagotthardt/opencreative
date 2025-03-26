@@ -138,6 +138,14 @@ creative:
   resetting-locale: "%prefix%Loading default localization files, please wait..."
   reset-locale: "%prefix%Plugin has &6successfully&f reset the localization files to defaults!"
   loaded-worlds-list: "%prefix%List of loaded worlds, total %amount%: &6"
+  stability:
+    cannot: "%prefix%&cServer experiences a stability problem, action cannot be done. Please try again later..."
+    unload: "%prefix%Unloading worlds due to stability downfall..."
+    shutdown: "%prefix%Shutting down server due to stability downfall..."
+    actionbar: "&fTPS: %tps%&f, RAM: %memory%&f, DISK: %storage%&f, DB: %database%&f."
+    fine: "&aFine"
+    not-okay: "&6Not okay"
+    nightmare: "&cVery bad"
   updates:
     available: "%prefix%New version of OpenCreative+ &6%new%&f is available (current: %old%).\n&f Download here: &6%link%"
     up-to-date: "%prefix%This version %version% is last, no need to update :)"

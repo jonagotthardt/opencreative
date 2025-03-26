@@ -46,9 +46,11 @@ import java.util.logging.Level;
 import java.util.zip.GZIPOutputStream;
 
 /**
- * bStats collects some data for plugin authors.
- * <p>
- * Check out <a href="https://bStats.org/">site</a> to learn more about bStats!
+ * <h1>Metrics</h1>
+ * This class represents metrics, that collects plugin's
+ * information and sends it on launch to site. Powered
+ * by bStats.
+ * @author bStats Developers
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class Metrics {
@@ -230,7 +232,7 @@ public class Metrics {
     public JsonObject getPluginData() {
         JsonObject data = new JsonObject();
 
-        String pluginName = plugin.getDescription().getName();
+        String pluginName = plugin.getPluginMeta().getName();
         String pluginVersion = plugin.getDescription().getVersion();
 
         data.addProperty("pluginName", pluginName); // Append the name of the plugin

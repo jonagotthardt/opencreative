@@ -56,6 +56,8 @@ public class ErrorUtils {
         newText = newText.replace("ua.mcchickenstudio.opencreative.coding.","");
         newText = newText.replace("ua.mcchickenstudio.opencreative.","");
         newText = newText.replace("org.bukkit.","");
+        newText = newText.replace("io.papermc.","");
+        newText = newText.replace("com.destroystokyo.","");
         newText = newText.replace("java.lang.","java.");
         newText = newText.replace("blocks.","");
         return newText;

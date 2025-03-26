@@ -144,6 +144,14 @@ creative:
   resetting-locale: "%prefix%Загрузка изначальных файлов локализации, пожалуйста подождите..."
   reset-locale: "%prefix%Плагин &6успешно&f заменил файлы локализации на изначальные!"
   loaded-worlds-list: "%prefix%Список загруженных миров, всего %amount%: &6"
+  stability:
+    cannot: "%prefix%&cСейчас сервер работает нестабильно, попробуйте сделать это позже..."
+    unload: "%prefix%Отгрузка миров из-за проблем с стабильностью..."
+    shutdown: "%prefix%Завершение работы сервера из-за проблем с стабильностью..."
+    actionbar: "&fTPS: %tps%&f, ОЗУ: %memory%&f, ДИСК: %storage%&f, ДБ: %database%&f."
+    fine: "&aХорошо"
+    not-okay: "&6Плохо"
+    nightmare: "&cОчень плохо"
   updates:
     available: "%prefix%Доступна новая версия OpenCreative+ &6%new%&f (текущая: %old%).\n&f Скачать: &6%link%"
     up-to-date: "%prefix%Обновлений не найдено, это последняя версия (%version%) :)"

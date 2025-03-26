@@ -188,4 +188,10 @@ public interface PlanetsManager extends Manager {
      */
     void unregisterPlanet(@NotNull Planet planet);
 
+    /**
+     * Check if connection with database is stable.
+     * @return true - if connection is normal, false - not stable.
+     */
+    boolean isStableConnection();
+
 }

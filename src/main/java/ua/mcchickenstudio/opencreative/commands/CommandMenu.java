@@ -46,6 +46,10 @@ public class CommandMenu implements CommandExecutor {
                 player.sendMessage(getLocaleMessage("maintenance"));
                 return true;
             }
+            if (OpenCreative.getStability().isVeryBad() && !player.hasPermission("opencreative.stability.bypass")) {
+                player.sendMessage(getLocaleMessage("creative.stability.cannot"));
+                return true;
+            }
             if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
                 sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
                 return true;

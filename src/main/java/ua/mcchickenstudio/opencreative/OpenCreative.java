@@ -49,6 +49,8 @@ import ua.mcchickenstudio.opencreative.listeners.world.BlockChangeListener;
 import ua.mcchickenstudio.opencreative.listeners.world.RedstoneListener;
 import ua.mcchickenstudio.opencreative.managers.economy.Economy;
 import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
+import ua.mcchickenstudio.opencreative.managers.stability.StabilityManager;
+import ua.mcchickenstudio.opencreative.managers.stability.Watchdog;
 import ua.mcchickenstudio.opencreative.managers.updater.HangarUpdater;
 import ua.mcchickenstudio.opencreative.managers.updater.Updater;
 import ua.mcchickenstudio.opencreative.menus.Menus;
@@ -80,11 +82,12 @@ public final class OpenCreative extends JavaPlugin {
 
     private static OpenCreative plugin;
 
-    private static Settings settings;
-    private static Economy economy;
-    private static Updater updater;
-    private static PacketManager packet;
-    private static PlanetsManager space;
+    private Settings settings;
+    private Economy economy;
+    private Updater updater;
+    private PacketManager packet;
+    private PlanetsManager space;
+    private StabilityManager watchdog;
 
     private static final String version = "5.5.0";
     private static final String codename = "Well, it's possible";
@@ -142,6 +145,8 @@ public final class OpenCreative extends JavaPlugin {
         updater.init();
         packet = HookUtils.getPacketManager();
         packet.init();
+        watchdog = new Watchdog();
+        watchdog.init();
 
         long loadedTime = System.currentTimeMillis()-startTime;
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -283,7 +288,7 @@ public final class OpenCreative extends JavaPlugin {
      * @return settings of plugin.
      */
     public static Settings getSettings() {
-        return settings;
+        return getPlugin().settings;
     }
 
     /**
@@ -293,7 +298,7 @@ public final class OpenCreative extends JavaPlugin {
     @SuppressWarnings("unused")
     public static void setEconomy(Economy economy) {
         getPlugin().getLogger().info("Now using economy manager: " + economy.getName());
-        OpenCreative.economy = economy;
+        getPlugin().economy = economy;
     }
 
     /**
@@ -301,7 +306,7 @@ public final class OpenCreative extends JavaPlugin {
      * @return economy manager.
      */
     public static Economy getEconomy() {
-        return economy;
+        return getPlugin().economy;
     }
 
     /**
@@ -311,7 +316,7 @@ public final class OpenCreative extends JavaPlugin {
     @SuppressWarnings("unused")
     public static void setPacketManager(PacketManager packetManager) {
         getPlugin().getLogger().info("Now using packet manager: " + packetManager.getName());
-        OpenCreative.packet = packetManager;
+        getPlugin().packet = packetManager;
     }
 
     /**
@@ -319,7 +324,7 @@ public final class OpenCreative extends JavaPlugin {
      * @return packet manager.
      */
     public static PacketManager getPacketManager() {
-        return packet;
+        return getPlugin().packet;
     }
 
     /**
@@ -329,7 +334,7 @@ public final class OpenCreative extends JavaPlugin {
     @SuppressWarnings("unused")
     public static void setPlanetsManager(PlanetsManager planetsManager) {
         getPlugin().getLogger().info("Now using planets manager: " + planetsManager.getName());
-        OpenCreative.space = planetsManager;
+        getPlugin().space = planetsManager;
     }
 
     /**
@@ -338,7 +343,26 @@ public final class OpenCreative extends JavaPlugin {
      * @return planets manager.
      */
     public static PlanetsManager getPlanetsManager() {
-        return space;
+        return getPlugin().space;
+    }
+
+    /**
+     * Sets custom stability manager.
+     * @param stabilityManager planets manager.
+     */
+    @SuppressWarnings("unused")
+    public static void setStability(StabilityManager stabilityManager) {
+        getPlugin().getLogger().info("Now using stability manager: " + stabilityManager.getName());
+        getPlugin().watchdog = stabilityManager;
+    }
+
+    /**
+     * Gets stability manager, that checks server's
+     * performance and makes sure everything is fine.
+     * @return planets manager.
+     */
+    public static StabilityManager getStability() {
+        return getPlugin().watchdog;
     }
 
     /**
@@ -354,7 +378,7 @@ public final class OpenCreative extends JavaPlugin {
      * check available updates for plugin.
      */
     public static Updater getUpdater() {
-        return updater;
+        return getPlugin().updater;
     }
 
     /**

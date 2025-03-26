@@ -20,6 +20,8 @@ package ua.mcchickenstudio.opencreative.menus.world;
 
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.managers.stability.StabilityManager;
+import ua.mcchickenstudio.opencreative.managers.stability.StabilityState;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
@@ -36,6 +38,7 @@ import java.util.List;
 import java.util.Random;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 public class WorldGenerationMenu extends AbstractMenu {
 
@@ -46,7 +49,7 @@ public class WorldGenerationMenu extends AbstractMenu {
     private final ItemStack createButton = createItem(Material.PUFFERFISH_BUCKET,1,"menus.world-creation.items.create");
 
     public WorldGenerationMenu(Player player, String generator, String environment, boolean generateStructures) {
-        super(3, MessageUtils.getLocaleMessage("menus.world-creation.title",false));
+        super(3, getLocaleMessage("menus.world-creation.title",false));
         this.player = player;
         this.generatorButton = new ParameterButton(generator, List.of("flat","empty","water","survival","large_biomes"), "type", "menus.world-creation", "menus.world-creation.items.type", List.of(Material.MOSS_BLOCK, Material.GLASS, Material.WATER_BUCKET, Material.OAK_SAPLING, Material.MYCELIUM));
         this.environmentButton = new ParameterButton(environment, List.of("normal","nether","the_end"), "environment", "menus.world-creation", "menus.world-creation.items.environment", List.of(Material.GRASS_BLOCK, Material.NETHERRACK, Material.END_STONE));
@@ -90,12 +93,18 @@ public class WorldGenerationMenu extends AbstractMenu {
                 Sounds.MENU_GENERATE_STRUCTURES_CHANGE.play(player);
             }
             case 16 -> {
-                if (OpenCreative.getPlanetsManager().getPlanetsByOwner(player).size() < OpenCreative.getSettings().getGroups().getGroup(player).getWorldsLimit()) {
+                player.closeInventory();
+                if (!OpenCreative.getStability().isFine()) {
+                    player.sendMessage(getLocaleMessage("creative.stability.cannot"));
+                    Sounds.PLAYER_FAIL.play(player);
+                    return;
+                }
+                boolean notReachedWorldsLimit = OpenCreative.getPlanetsManager().getPlanetsByOwner(player).size() < OpenCreative.getSettings().getGroups().getGroup(player).getWorldsLimit();
+                if (notReachedWorldsLimit) {
                     Sounds.WORLD_GENERATION.play(player);
                     player.closeInventory();
                     OpenCreative.getPlanetsManager().createPlanet(player, WorldUtils.generateWorldID(), WorldUtils.WorldGenerator.valueOf(generatorButton.getCurrentValue().toString().toUpperCase()), World.Environment.valueOf(environmentButton.getCurrentValue().toString().toUpperCase()),new Random().nextInt(),Boolean.parseBoolean(generateStructures.getCurrentValue().toString()));
                 }
-                player.closeInventory();
             }
         }
     }
