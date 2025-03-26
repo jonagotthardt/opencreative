@@ -25,11 +25,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class LargeBiomeGenerator extends BiomeProvider {
+public class LargeBiomesGenerator extends BiomeProvider {
 
     private final Biome biome;
 
-    public LargeBiomeGenerator(Biome biome) {
+    public LargeBiomesGenerator(Biome biome) {
         this.biome = biome;
     }
 

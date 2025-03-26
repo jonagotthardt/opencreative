@@ -25,6 +25,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
+/**
+ * <h1>WaterChunkGenerator</h1>
+ * This class represents a ChunkGenerator, that
+ * generates ocean world with water, sand and bedrock.
+ */
 public class WaterChunkGenerator extends ChunkGenerator {
 
     @Override

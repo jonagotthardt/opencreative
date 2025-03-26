@@ -35,7 +35,7 @@ import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 
-public final class PlayerRespawn implements Listener {
+public final class RespawnListener implements Listener {
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
@@ -46,13 +46,13 @@ public final class PlayerRespawn implements Listener {
         DeathListener.deathLocations.remove(event.getPlayer());
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) {
-            new ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerRespawnEvent(event.getPlayer()).callEvent();
             if (planet.isOwner(event.getPlayer())) {
                 ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
                 if (!event.getPlayer().getInventory().contains(worldSettingsItem)) {
                     event.getPlayer().getInventory().setItem(8,worldSettingsItem);
                 }
             }
+            new ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerRespawnEvent(event.getPlayer()).callEvent();
         }
     }
 

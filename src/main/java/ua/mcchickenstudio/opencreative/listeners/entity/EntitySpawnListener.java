@@ -114,12 +114,12 @@ public final class EntitySpawnListener implements Listener {
                         }
                         break;
                     case 4:
-                        if (isEntityHostile(entity.getType())) {
+                        if (isEntityHostile(entity)) {
                             event.setCancelled(true);
                         }
                         break;
                     case 5:
-                        if (!isEntityHostile(entity.getType())) {
+                        if (!isEntityHostile(entity)) {
                             event.setCancelled(true);
                         }
                         break;

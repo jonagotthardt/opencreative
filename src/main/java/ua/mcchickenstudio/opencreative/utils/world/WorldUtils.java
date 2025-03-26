@@ -18,44 +18,128 @@
 
 package ua.mcchickenstudio.opencreative.utils.world;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import org.bukkit.*;
 import org.bukkit.entity.*;
+import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
 import java.io.File;
 
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 
+/**
+ * <h1>WorldUtils</h1>
+ * This class contains methods for changing
+ * or manipulating worlds, like checking if
+ * world is a planet.
+ */
 public class WorldUtils {
 
-    public static String getPlanetIdFromName(World world) {
+    public enum WorldGenerator {
+
+        /**
+         * Default flat vanilla world with 4 blocks in height.
+         */
+        FLAT,
+
+        /**
+         * Empty world with a little platform to stand and place blocks.
+         */
+        EMPTY,
+
+        /**
+         * Ocean world filled with water.
+         */
+        WATER,
+
+        /**
+         * Default vanilla world with landscapes.
+         */
+        SURVIVAL,
+
+        /**
+         * Default vanilla world with large biomes.
+         */
+        LARGE_BIOMES,
+
+    }
+
+    /**
+     * Returns planet id from world's name
+     * by splitting it and removing path to
+     * planets folder.
+     * @param world world to get id.
+     * @return planet id.
+     */
+    public static @NotNull String getPlanetIdFromName(@NotNull World world) {
         return world.getName()
                 .replace(Bukkit.getServer().getWorldContainer() + "/","")
                 .replace("planets/planet","");
     }
 
-    public static boolean isPlanet(World world) {
+    /**
+     * Checks if the world is a planet by
+     * checking whether it's name contains
+     * a typical planets folder path.
+     * @param world world to check.
+     * @return true - should be a planet, false - not a planet.
+     */
+    public static boolean isPlanet(@NotNull World world) {
         return world.getName().contains("planets/planet");
     }
 
-    public enum WorldGenerator {
-
-        FLAT,
-        EMPTY,
-        WATER,
-        SURVIVAL,
-        LARGE_BIOMES,
-
+    /**
+     * Checks if the world is a planet, or
+     * dev planet, or lobby world.
+     * @param world world to check.
+     * @return true - it's spawn, planet, dev planet world, false - not plugin's world.
+     */
+    public static boolean isOpenCreativeWorld(@NotNull World world) {
+        return isLobbyWorld(world) || isPlanet(world) || isDevPlanet(world);
     }
 
+    /**
+     * Checks if entity is a hostile one,
+     * that can attack player.
+     * @param entity entity to check.
+     * @return true - entity is angry, false - entity is friendly or null.
+     */
+    public static boolean isEntityHostile(@Nullable Entity entity) {
+        return entity instanceof Enemy || entity instanceof Boss;
+    }
+
+    /**
+     * Checks if the world is a dev planet
+     * by checking whether it's name ends
+     * with "dev" word.
+     * @param world world to check.
+     * @return true - should be a dev planet, false - not a dev planet.
+     */
     public static boolean isDevPlanet(World world) {
         return world.getName().endsWith("dev");
     }
 
     /**
-     Returns still not used ID for new planet. It gets a value from config.yml and increases it.
-     @return Unique ID for new world.
-     **/
+     * Checks if the world is a lobby world,
+     * where players will be teleported on
+     * server connection or by /spawn command.
+     * @param world world to check.
+     * @return true - it's lobby world, false - not lobby world.
+     */
+    public static boolean isLobbyWorld(@NotNull World world) {
+        return world.equals(PlayerUtils.getLobbyWorld());
+    }
+
+    /**
+     * Returns a unique numeric ID for new planet.
+     * It gets a last numeric ID from config and
+     * increases it while checking is number free.
+     * Immediately will replace last numeric ID
+     * with result.
+     * @return unique numeric ID.
+     */
     public static int generateWorldID() {
         int newWorldID = OpenCreative.getPlugin().getConfig().getInt("last-world-id",1);
         while (true) {
@@ -73,20 +157,6 @@ public class WorldUtils {
                 return newWorldID;
             }
         }
-    }
-
-    /**
-     Returns boolean if entity is hostile mob.
-     **/
-    public static boolean isEntityHostile(EntityType entityType) {
-        return switch (entityType) {
-            case PIGLIN, PIGLIN_BRUTE, ZOMBIFIED_PIGLIN, ELDER_GUARDIAN, GUARDIAN, ZOGLIN, ZOMBIE_VILLAGER, ZOMBIE,
-                 ZOMBIE_HORSE, SKELETON, SKELETON_HORSE, WITHER_SKELETON, WITHER, SHULKER, SPIDER, CAVE_SPIDER,
-                 VINDICATOR, ENDER_DRAGON, ENDERMAN, ENDERMITE, SILVERFISH, VEX, RAVAGER, EVOKER, EVOKER_FANGS, BLAZE,
-                 HOGLIN, SLIME, STRAY, WITCH, DROWNED, PILLAGER, CREEPER, GHAST, GIANT, MAGMA_CUBE, PHANTOM,
-                 ILLUSIONER, WARDEN, BREEZE, HUSK, BOGGED -> true;
-            default -> false;
-        };
     }
 
 }

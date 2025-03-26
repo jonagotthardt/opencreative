@@ -374,7 +374,7 @@ public final class ChatListener implements Listener {
                 }.runTaskAsynchronously(OpenCreative.getPlugin());
             }
             case FIND_PLANETS_BY_NAME -> {
-                Set<Planet> foundPlanetsByName = OpenCreative.getPlanetsManager().getPlanetsByPlanetName(input);
+                Set<Planet> foundPlanetsByName = OpenCreative.getPlanetsManager().getPlanetsContainingName(input);
                 if (!foundPlanetsByName.isEmpty()) {
                     Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () -> new WorldsBrowserMenu(player, foundPlanetsByName).open(player));
                 } else {
@@ -382,7 +382,7 @@ public final class ChatListener implements Listener {
                 }
             }
             case FIND_PLANETS_BY_ID -> {
-                Set<Planet> foundPlanetsByID = OpenCreative.getPlanetsManager().getPlanetsByID(input);
+                Set<Planet> foundPlanetsByID = OpenCreative.getPlanetsManager().getPlanetsContainingID(input);
                 if (!foundPlanetsByID.isEmpty()) {
                     Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () -> new WorldsBrowserMenu(player, foundPlanetsByID).open(player));
                 } else {

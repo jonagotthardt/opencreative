@@ -44,6 +44,7 @@ import java.util.Map;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isLobbyWorld;
 
 public final class DeathListener implements Listener {
 
@@ -52,9 +53,9 @@ public final class DeathListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getPlayer();
-        event.deathMessage(null);
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet != null) {
+            event.deathMessage(null);
             deathLocations.put(player, planet.getTerritory().getWorld().getSpawnLocation());
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.DEATH_MESSAGES) == 1) {
                 for (Player p : planet.getPlayers()) {
@@ -67,14 +68,17 @@ public final class DeathListener implements Listener {
             if (killer != null) {
                 new PlayerKilledPlayerEvent(killer,player,event).callEvent();
             }
-        } else {
+            player.showTitle(Title.title(
+                    toComponent(getLocaleMessage("deaths.title",false)), Component.text("§7 " + player.getName() + "§f " + translateDeathMessage(player)),
+                    Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(2), Duration.ofMillis(500))
+            ));
+        } else if (isLobbyWorld(event.getPlayer().getWorld())) {
+            event.deathMessage(null);
             event.setKeepInventory(true);
+            event.setCancelled(true);
             PlayerUtils.teleportToLobby(player);
         }
-        player.showTitle(Title.title(
-                toComponent(getLocaleMessage("deaths.title",false)), Component.text("§7 " + player.getName() + "§f " + translateDeathMessage(player)),
-                Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(2), Duration.ofMillis(500))
-        ));
+
     }
 
     private String translateDeathMessage(Player player ) {

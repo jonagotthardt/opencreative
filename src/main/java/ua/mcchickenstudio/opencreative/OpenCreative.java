@@ -252,7 +252,7 @@ public final class OpenCreative extends JavaPlugin {
         int registeredListeners = 0;
         Class<?>[] listeners = new Class[] {
                 ChangedWorld.class,       EntitySpawnListener.class,  EntityDamageListener.class,
-                JoinListener.class,       QuitListener.class,         PlayerRespawn.class,
+                JoinListener.class,       QuitListener.class,         RespawnListener.class,
                 DeathListener.class,      TeleportListener.class,     MoveListener.class,
                 ChatListener.class,       InteractListener.class,     DropItemListener.class,
                 PlaceBlockListener.class, DestroyBlockListener.class, BucketListener.class,
