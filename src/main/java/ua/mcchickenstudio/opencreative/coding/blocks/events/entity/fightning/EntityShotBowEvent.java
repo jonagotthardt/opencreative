@@ -20,6 +20,9 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.entity.fightning;
 
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.ItemEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
 public final class EntityShotBowEvent extends WorldEvent implements Cancellable {
