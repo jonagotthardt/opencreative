@@ -1684,6 +1684,442 @@ items:
           - "&a Response body"
           - " "
           - "&eClick to set the event."
+      world-block-furnace-burned:
+        name: "&9Fuel Burning in Furnace"
+        lore:
+          - "&7This occurs when fuel burns"
+          - "&7in the furnace, such as coal."
+          - " "
+          - "&7Retrieved values:"
+          - "&c Block Material"
+          - "&2 Block Location"
+          - "&6 Item in Event"
+          - " "
+          - "&eClick to set the event."
+      world-block-experience-drop:
+        name: "&aExperience Dropping from Block"
+        lore:
+          - "&7This occurs when breaking a block"
+          - "&7with a pickaxe and experience drops."
+          - " "
+          - "&7Retrieved values:"
+          - "&c Block Material"
+          - "&2 Block Location"
+          - "&2 Event Experience Amount"
+          - " "
+          - "&eClick to set the event."
+      world-block-brewing-start:
+        name: "&eBrewing Stand Started"
+        lore:
+          - "&7This occurs when a brewing stand"
+          - "&7starts brewing potions."
+          - " "
+          - "&7Retrieved values:"
+          - "&2 Block Location"
+          - " "
+          - "&eClick to set the event."
+      world-block-brewing-fuel:
+        name: "&6Brewing Stand Fueled"
+        lore:
+          - "&7This occurs when a brewing stand"
+          - "&7is fueled with blaze powder."
+          - " "
+          - "&7Retrieved values:"
+          - "&2 Block Location"
+          - "&6 Item in Event"
+          - " "
+          - "&eClick to set the event."
+      world-block-brewing-end:
+        name: "&3Brewing Stand Finished Brewing"
+        lore:
+          - "&7This occurs when a brewing stand"
+          - "&7finishes brewing a potion."
+          - " "
+          - "&7Retrieved values:"
+          - "&2 Block Location"
+          - " "
+          - "&eClick to set the event."
+      world-block-campfire-start:
+        name: "&eCampfire Started Cooking"
+        lore:
+          - "&7This occurs when a campfire"
+          - "&7starts cooking food."
+          - " "
+          - "&7Retrieved values:"
+          - "&2 Block Location"
+          - " "
+          - "&eClick to set the event."
+      world-block-cauldron-change:
+        name: "&3Cauldron Water Level Changed"
+        lore:
+          - "&7This occurs when water is added"
+          - "&7to or removed from a cauldron."
+          - " "
+          - "&7Retrieved values:"
+          - "&2 Block Location"
+          - " "
+          - "&eClick to set the event."
+      world-block-crafter-crafted:
+        name: "&cCrafter Crafted an Item"
+        lore:
+          - "&7This occurs when the crafter"
+          - "&7creates a new item."
+          - " "
+          - "&7Retrieved values:"
+          - "&2 Block Location"
+          - "&6 Item in Event"
+          - " "
+          - "&eClick to set the event."
+      world-block-fluid-changed:
+        name: "&9Fluid Level Changed"
+        lore:
+          - "&7This occurs when a slab,"
+          - "&7such as stairs,"
+          - "&7has water added or removed."
+          - " "
+          - "&7Retrieved values:"
+          - "&c Block Material"
+          - "&2 Block Location"
+          - " "
+          - "&eClick to set the event."
+      world-block-leaves-decayed:
+        name: "&aLeaves Decayed"
+        lore:
+          - "&7This occurs when there are"
+          - "&7no trees around the leaves,"
+          - "&7causing them to decay."
+          - " "
+          - "&7Retrieved values:"
+          - "&c Block Material"
+          - "&2 Block Location"
+          - " "
+          - "&eClick to set the event."
+      world-block-note-played:
+        name: "&dNote Block Played"
+        lore:
+          - "&7This occurs when a note block"
+          - "&7is activated and plays a sound."
+          - " "
+          - "&7Retrieved values:"
+          - "&2 Block Location"
+          - " "
+          - "&eClick to set the event."
+      world-block-sculk-bloomed:
+        name: "&bSculk Sensor Activated"
+        lore:
+          - "&7This occurs when a sculk sensor"
+          - "&7detects actions"
+          - "&7happening nearby."
+          - " "
+          - "&7Retrieved values:"
+          - "&c Block Material"
+          - "&2 Block Location"
+          - " "
+          - "&eClick to set the event."
+      world-block-anvil-damaged:
+        name: "&cAnvil Got Damaged"
+        lore:
+          - "&7This occurs when an anvil"
+          - "&7gets worn down after use."
+          - " "
+          - "&7Retrieved values:"
+          - "&c Block Material"
+          - "&2 Block Location"
+          - " "
+          - "&eClick to set the event."
+      world-block-target-hit:
+        name: "&cTarget Hit"
+        lore:
+          - "&7This occurs when something"
+          - "&7hits a target, such as an arrow."
+          - " "
+          - "&7Retrieved values:"
+          - "&2 Block Location"
+          - " "
+          - "&eClick to set the event."
+      world-block-sponge-absorbed:
+        name: "&eSponge Absorbed Water"
+        lore:
+          - "&7This occurs when a sponge"
+          - "&7absorbs nearby water and becomes wet."
+          - " "
+          - "&7Retrieved values:"
+          - "&2 Block Location"
+          - " "
+          - "&eClick to set the event."
+      world-block-bell-rung:
+        name: "&eBell Rang"
+        lore:
+          - "&7This occurs when someone"
+          - "&7activates a bell, making it ring."
+          - " "
+          - "&7Retrieved values:"
+          - "&2 Block Location"
+          - " "
+          - "&eClick to set the event."
+      entity-pig-zombie-angered:
+        name: "&cZombie Pig Angered"
+        lore:
+          - "&7This occurs when someone"
+          - "&7hits a Zombie Pig."
+          - " "
+          - "&eClick to set the event."
+      entity-bat-toggled-sleep-mode:
+        name: "&6Bat Toggled Sleep Mode"
+        lore:
+          - "&7This occurs when a bat"
+          - "&7starts or stops sleeping."
+          - " "
+          - "&eClick to set the event."
+      entity-slime-split:
+        name: "&aSlime Split"
+        lore:
+          - "&7This occurs when a slime"
+          - "&7splits into multiple smaller"
+          - "&7slimes upon death."
+          - " "
+          - "&eClick to set the event."
+      entity-witch-ready-potion:
+        name: "&dWitch Prepared a Potion"
+        lore:
+          - "&7This occurs when a witch"
+          - "&7prepares a potion."
+          - " "
+          - "&7Retrieved values:"
+          - "&6 Item in Event"
+          - " "
+          - "&eClick to set the event."
+      entity-sheep-regrown-wool:
+        name: "&dSheep Regrew Wool"
+        lore:
+          - "&7This occurs when a sheared"
+          - "&7sheep regrows its wool."
+          - " "
+          - "&eClick to set the event."
+      entity-pufferfish-state-changed:
+        name: "&ePufferfish State Changed"
+        lore:
+          - "&7This occurs when a pufferfish"
+          - "&7expands or contracts."
+          - " "
+          - "&eClick to set the event."
+      entity-creeper-ignited:
+        name: "&aCreeper Ignited"
+        lore:
+          - "&7This occurs when someone"
+          - "&7ignites a creeper with flint and steel."
+          - " "
+          - "&eClick to set the event."
+      entity-creeper-powered:
+        name: "&2Creeper Struck by Lightning"
+        lore:
+          - "&7This occurs when a creeper"
+          - "&7is struck by lightning and becomes charged."
+          - " "
+          - "&eClick to set the event."
+      entity-entered-love-mode:
+        name: "&6Mob Ready to Breed"
+        lore:
+          - "&7This occurs when a mob is fed"
+          - "&7and heart particles appear around it."
+          - " "
+          - "&eClick to set the event."
+      entity-turtle-goes-home:
+        name: "&aTurtle Going Home"
+        lore:
+          - "&7This occurs when a turtle"
+          - "&7decides to return home."
+          - " "
+          - "&eClick to set the event."
+      entity-turtle-lays-egg:
+        name: "&bTurtle Laying Eggs"
+        lore:
+          - "&7This occurs when a turtle"
+          - "&7lays its eggs."
+          - " "
+          - "&eClick to set the event."
+      entity-resurrected:
+        name: "&eMob Resurrected"
+        lore:
+          - "&7This occurs when a mob uses"
+          - "&7a Totem of Undying and"
+          - "&7continues to live."
+          - " "
+          - "&eClick to set the event."
+      entity-potion-effected:
+        name: "&9Mob Affected by Potion"
+        lore:
+          - "&7This occurs when a mob"
+          - "&7consumes a potion or"
+          - "&7gets affected by potion particles."
+          - " "
+          - "&eClick to set the event."
+      entity-warden-anger-changed:
+        name: "&9Warden Got Angry"
+        lore:
+          - "&7This occurs when the Warden"
+          - "&7becomes angry at the nearest mob."
+          - " "
+          - "&eClick to set the event."
+      entity-air-changed:
+        name: "&bOxygen Level Changed"
+        lore:
+          - "&7This occurs when a mob"
+          - "&7starts losing oxygen underwater"
+          - "&7or regains it when surfacing."
+          - " "
+          - "&eClick to set the event."
+      entity-piglin-bartered:
+        name: "&cPiglin Bartered"
+        lore:
+          - "&7This occurs when a Piglin"
+          - "&7takes gold and"
+          - "&7throws out a reward."
+          - " "
+          - "&eClick to set the event."
+      entity-interacted-block:
+        name: "&6Interacted with Block"
+        lore:
+          - "&7This occurs when a mob"
+          - "&7interacts with a block."
+          - " "
+          - "&7Retrieved values:"
+          - "&c Block Material"
+          - "&2 Block Location"
+          - " "
+          - "&eClick to set the event."
+      entity-firework-exploded:
+        name: "&cFirework Rocket Exploded"
+        lore:
+          - "&7This occurs when a firework"
+          - "&7explodes in the air."
+          - " "
+          - "&7Retrieved values:"
+          - "&6 Item in Event"
+          - " "
+          - "&eClick to set the event."
+      entity-dropped-item:
+        name: "&3Item Dropped"
+        lore:
+          - "&7This occurs when a mob"
+          - "&7drops an item."
+          - " "
+          - "&7Retrieved values:"
+          - "&6 Item in Event"
+          - " "
+          - "&eClick to set the event."
+      entity-picked-up-item:
+        name: "&eItem Picked Up"
+        lore:
+          - "&7This occurs when a mob"
+          - "&7picks up an item from the ground."
+          - " "
+          - "&7Retrieved values:"
+          - "&6 Item in Event"
+          - " "
+          - "&eClick to set the event."
+      entity-item-merged:
+        name: "&eItems Merged"
+        lore:
+          - "&7This occurs when a stack of items"
+          - "&7combines into a single stack."
+          - " "
+          - "&7Retrieved values:"
+          - "&6 Item in Event"
+          - " "
+          - "&eClick to set the event."
+      entity-item-despawned:
+        name: "&cItems Despawned"
+        lore:
+          - "&7This occurs when a stack of items"
+          - "&7disappears after some time."
+          - " "
+          - "&7Retrieved values:"
+          - "&6 Item in Event"
+          - " "
+          - "&eClick to set the event."
+      entity-damaged-item:
+        name: "&cMob Damaged an Item"
+        lore:
+          - "&7This occurs when a mob"
+          - "&7damages an item through wear."
+          - " "
+          - "&7Retrieved values:"
+          - "&6 Item in Event"
+          - " "
+          - "&eClick to set the event."
+      entity-entered-block:
+        name: "&7Entered a Block"
+        lore:
+          - "&7This occurs when a mob"
+          - "&7enters a block."
+          - " "
+          - "&eClick to set the event."
+      entity-jumped:
+        name: "&eMob Jumped"
+        lore:
+          - "&7This occurs when a mob"
+          - "&7jumps to move upwards."
+          - " "
+          - "&eClick to set the event."
+      entity-horse-jumped:
+        name: "&6Horse Jumped"
+        lore:
+          - "&7This occurs when a player"
+          - "&7makes a horse jump."
+          - " "
+          - "&7Canceling this event only"
+          - "&7prevents the jump animation."
+          - " "
+          - "&eClick to set the event."
+      entity-enderman-escaped:
+        name: "&5Enderman Teleported Away"
+        lore:
+          - "&7This occurs when an Enderman"
+          - "&7teleports to escape a threat."
+          - " "
+          - "&eClick to set the event."
+      entity-died:
+        name: "&4Mob Died"
+        lore:
+          - "&7This occurs when a mob dies."
+          - " "
+          - "&eClick to set the event."
+      entity-shot-bow:
+        name: "&6Mob Shoots a Bow"
+        lore:
+          - "&7This occurs when a mob"
+          - "&7attempts to fire a projectile"
+          - "&7from a bow."
+          - " "
+          - "&eClick to set the event."
+      entity-witch-thrown-potion:
+        name: "&2Witch Threw a Potion"
+        lore:
+          - "&7This occurs when a witch"
+          - "&7throws a potion at a player."
+          - " "
+          - "&7Retrieved values:"
+          - "&6 Item in Event"
+          - " "
+          - "&eClick to set the event."
+      entity-witch-consumed-potion:
+        name: "&9Witch Drank a Potion"
+        lore:
+          - "&7This occurs when a witch"
+          - "&7drinks a potion to buff itself."
+          - " "
+          - "&7Retrieved values:"
+          - "&6 Item in Event"
+          - " "
+          - "&eClick to set the event."
+      entity-loaded-crossbow:
+        name: "&6Mob Loaded a Crossbow"
+        lore:
+          - "&7This occurs when a mob"
+          - "&7loads a crossbow with an arrow."
+          - " "
+          - "&eClick to set the event."
       world-block-burned:
         name: "&6Block Burned"
         lore:
@@ -11662,6 +12098,59 @@ blocks:
   world_reached_blocks_limit: "Blocks limit"
   world_reached_entities_limit: "Entities limit"
   world_reached_variables_limit: "Variables limit"
+  world_block_furnace_burned: "Furnace Fuel"
+  world_block_experience_drop: "Experience Drop"
+  world_block_brewing_start: "Brewing Start"
+  world_block_brewing_fuel: "Brewing Fuel"
+  world_block_brewing_end: "Brewing End"
+  world_block_campfire_start: "Campfire Lit"
+  world_block_cauldron_change: "Cauldron Water Change"
+  world_block_crafter_crafted: "Crafter Crafted"
+  world_block_fluid_changed: "Fluid Level Changed"
+  world_block_leaves_decayed: "Leaves Decayed"
+  world_block_note_played: "Note Played"
+  world_block_sculk_bloomed: "Sculk Sensor Activated"
+  world_block_anvil_damaged: "Anvil Damaged"
+  world_block_target_hit: "Target Hit"
+  world_block_sponge_absorbed: "Sponge Absorbed Water"
+  world_block_bell_rung: "Bell Rung"
+
+  entity_pig_zombie_angered: "Zombie Pig Angered"
+  entity_bat_toggled_sleep_mode: "Bat sleep mode"
+  entity_slime_split: "Slime Split"
+  entity_witch_ready_potion: "Witch Readied Potion"
+  entity_sheep_regrown_wool: "Sheep Regrew Wool"
+  entity_pufferfish_state_changed: "Pufferfish changed"
+  entity_creeper_ignited: "Creeper Ignited"
+  entity_creeper_powered: "Creeper Charged"
+  entity_entered_love_mode: "Love mode"
+  entity_turtle_goes_home: "Turtle goes home"
+  entity_resurrected: "Resurrected"
+  entity_potion_effected: "Potion Effect Applied"
+  entity_warden_anger_changed: "Warden got angry"
+  entity_air_changed: "Air level changed"
+
+  entity_piglin_bartered: "Piglin Bartered"
+  entity_interacted_block: "Block interaction"
+  entity_turtle_lays_egg: "Turtle Laid Eggs"
+  entity_firework_exploded: "Firework Exploded"
+
+  entity_dropped_item: "Item Dropped"
+  entity_picked_up_item: "Item Picked Up"
+  entity_item_merged: "Items Merged"
+  entity_item_despawned: "Items Despawned"
+  entity_damaged_item: "Damaged item"
+
+  entity_entered_block: "Entered block"
+  entity_jumped: "Jumped"
+  entity_horse_jumped: "Horse Jumped"
+  entity_enderman_escaped: "Enderman Escaped"
+
+  entity_died: "&4Entity Died"
+  entity_shot_bow: "Shot with bow"
+  entity_witch_thrown_potion: "Witch Threw Potion"
+  entity_witch_consumed_potion: "Witch Drank Potion"
+  entity_loaded_crossbow: "Loaded crossbow"
 
   entity_spawned: "Entity spawned"
 
