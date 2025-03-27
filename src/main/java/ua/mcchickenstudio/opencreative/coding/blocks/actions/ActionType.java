@@ -401,8 +401,8 @@ public enum ActionType {
     VAR_REMOVE_FROM_MAP_BY_KEY( ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, RemoveFromMapByKeyAction.class, Material.BARRIER, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("key", ValueType.ANY)),
 
     VAR_GET_FROM_MAP_BY_KEY( ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, GetFromMapByKeyAction.class, Material.MINECART, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("map", ValueType.VARIABLE), new ArgumentSlot("key", ValueType.ANY)),
-    VAR_GET_KEYS_SET( ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, GetFromMapByKeyAction.class, Material.NAME_TAG, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("map", ValueType.VARIABLE)),
-    VAR_GET_VALUES_SET( ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, GetFromMapByKeyAction.class, Material.APPLE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("map", ValueType.VARIABLE)),
+    VAR_GET_KEYS_SET( ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, GetKeysSetAction.class, Material.NAME_TAG, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("map", ValueType.VARIABLE)),
+    VAR_GET_VALUES_SET( ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, GetValuesSetAction.class, Material.APPLE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("map", ValueType.VARIABLE)),
 
     VAR_CLONE_ITEM( ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, CloneItemAction.class, Material.ITEM_FRAME, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM)),
     VAR_SET_ITEM_DISPLAY_NAME( ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, SetItemDisplayNameAction.class, Material.NAME_TAG, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM), new ArgumentSlot("name", ValueType.TEXT)),
