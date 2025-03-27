@@ -24,7 +24,6 @@ import net.kyori.adventure.text.event.HoverEvent;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.AdvertisedEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.LikeEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetAdvertisementEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -61,6 +60,10 @@ public class CommandAd extends CommandJoin {
 
         if (OpenCreative.getSettings().isMaintenance() && !player.hasPermission("opencreative.maintenance.bypass")) {
             player.sendMessage(getLocaleMessage("maintenance"));
+            return true;
+        }
+        if (OpenCreative.getStability().isVeryBad() && !player.hasPermission("opencreative.stability.bypass")) {
+            player.sendMessage(getLocaleMessage("creative.stability.cannot"));
             return true;
         }
 

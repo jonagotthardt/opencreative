@@ -27,6 +27,11 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 
+/**
+ * <h1>Advancement</h1>
+ * This class represents a custom advancement, used in
+ * {@link ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.communication.ShowAdvancementAction Show Advancement Action}.
+ */
 public class Advancement {
 
     private final Material material;
@@ -85,26 +90,10 @@ public class Advancement {
 
     public enum AdvancementStyle {
 
-        GOAL((byte) 0),
-        TASK((byte) 1),
-        CHALLENGE((byte) 2);
+        GOAL,
+        TASK,
+        CHALLENGE
 
-        private final byte id;
-
-        AdvancementStyle(byte id) {
-            this.id = id;
-        }
-
-        public byte getId() {
-            return id;
-        }
-
-        public static AdvancementStyle getById(byte id) {
-            for (AdvancementStyle style : values()) {
-                if (style.id == id) return style;
-            }
-            return GOAL;
-        }
     }
 
 }

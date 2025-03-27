@@ -234,8 +234,10 @@ public class Settings {
     public void setMaintenance(boolean maintenance, @Nullable CommandSender sender) {
         if (this.maintenance == maintenance) return;
         this.maintenance = maintenance;
-        OpenCreative.getPlugin().getConfig().set("maintenance",maintenance);
-        OpenCreative.getPlugin().saveConfig();
+        try {
+            OpenCreative.getPlugin().getConfig().set("maintenance",maintenance);
+            OpenCreative.getPlugin().saveConfig();
+        } catch (Exception ignored) {}
         if (maintenance) {
             OpenCreative.getPlugin().getLogger().info("Maintenance mode started! Unloading planets, please wait...");
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {

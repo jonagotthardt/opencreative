@@ -62,6 +62,10 @@ public class CommandJoin implements CommandExecutor, TabCompleter {
             sender.sendMessage(getLocaleMessage("maintenance"));
             return true;
         }
+        if (OpenCreative.getStability().isVeryBad() && !sender.hasPermission("opencreative.stability.bypass")) {
+            sender.sendMessage(getLocaleMessage("creative.stability.cannot"));
+            return true;
+        }
 
         if (args.length == 2) {
             if (!sender.hasPermission("opencreative.join.others")) {

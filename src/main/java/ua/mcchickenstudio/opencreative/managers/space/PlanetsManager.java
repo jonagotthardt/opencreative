@@ -78,8 +78,8 @@ public interface PlanetsManager extends Manager {
     @Nullable DevPlanet getDevPlanet(@NotNull World world);
 
     /**
-     * Returns a planet, where player
-     * currently is connected.
+     * Returns a planet, where player currently is connected.
+     * Should return planet even if player is in dev planet.
      * @param player to get planet.
      * @return if player is in planet - returns planet, else - null.
      */
@@ -138,7 +138,7 @@ public interface PlanetsManager extends Manager {
      * @param id custom id.
      * @return set of planets with similar custom IDs.
      */
-    @NotNull Set<Planet> getPlanetsByID(@NotNull String id);
+    @NotNull Set<Planet> getPlanetsContainingID(@NotNull String id);
 
     /**
      * Returns a set of planets, that contain
@@ -146,7 +146,7 @@ public interface PlanetsManager extends Manager {
      * @param name display name.
      * @return set of planets with similar display names.
      */
-    @NotNull Set<Planet> getPlanetsByPlanetName(@NotNull String name);
+    @NotNull Set<Planet> getPlanetsContainingName(@NotNull String name);
 
     /**
      * Creates and loads a new planet for player with specified world generator.
@@ -187,5 +187,11 @@ public interface PlanetsManager extends Manager {
      * @param planet planet to unregister.
      */
     void unregisterPlanet(@NotNull Planet planet);
+
+    /**
+     * Check if connection with database is stable.
+     * @return true - if connection is normal, false - not stable.
+     */
+    boolean isStableConnection();
 
 }

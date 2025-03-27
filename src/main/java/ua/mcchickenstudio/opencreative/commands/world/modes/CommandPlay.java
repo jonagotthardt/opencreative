@@ -23,10 +23,8 @@ import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.JoinEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.LikeEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.PlayEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
-import ua.mcchickenstudio.opencreative.commands.world.CommandJoin;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import org.bukkit.Material;
@@ -35,6 +33,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.jetbrains.annotations.NotNull;
@@ -90,6 +89,11 @@ public class CommandPlay implements CommandExecutor, TabCompleter {
                     if (event.isCancelled()) {
                         return true;
                     }
+                    if (!OpenCreative.getStability().isFine()) {
+                        player.sendMessage(getLocaleMessage("creative.stability.cannot"));
+                        Sounds.PLAYER_FAIL.play(player);
+                        return true;
+                    }
                     planet.setMode(Planet.Mode.PLAYING);
                     if (isEntityInDevPlanet(player)) {
                         clearPlayer(player);
@@ -107,12 +111,17 @@ public class CommandPlay implements CommandExecutor, TabCompleter {
             } else {
                 if (!new PlayEvent(player).callEvent() || planet.getWorldPlayers().canDevelop(player)) {
                     if (planet.getWorldPlayers().canDevelop(player)) {
-                        player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
-                        if (!Arrays.asList(args).contains("--no-compile")) {
-                            if (planet.getDevPlanet().isLoaded()) {
-                                new CodingBlockParser().parseCode(planet.getDevPlanet());
-                            } else {
-                                planet.getTerritory().getScript().loadCode();
+                        if (!OpenCreative.getStability().isFine()) {
+                            player.sendMessage(getLocaleMessage("creative.stability.cannot"));
+                            Sounds.PLAYER_FAIL.play(player);
+                        } else {
+                            player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
+                            if (!Arrays.asList(args).contains("--no-compile")) {
+                                if (planet.getDevPlanet().isLoaded()) {
+                                    new CodingBlockParser().parseCode(planet.getDevPlanet());
+                                } else {
+                                    planet.getTerritory().getScript().loadCode();
+                                }
                             }
                         }
                     } else {

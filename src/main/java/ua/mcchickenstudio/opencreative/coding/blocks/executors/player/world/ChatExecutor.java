@@ -24,7 +24,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.ChatEve
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import org.bukkit.event.Cancellable;
 
 public class ChatExecutor extends PlayerExecutor {
 

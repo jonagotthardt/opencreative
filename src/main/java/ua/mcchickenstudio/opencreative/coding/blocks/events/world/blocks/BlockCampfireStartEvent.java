@@ -19,9 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks;
 
 import org.bukkit.block.Block;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.block.CampfireStartEvent;
-import org.bukkit.event.block.NotePlayEvent;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;

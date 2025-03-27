@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks;
 
-import io.papermc.paper.event.block.BeaconActivatedEvent;
 import io.papermc.paper.event.block.BeaconDeactivatedEvent;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;

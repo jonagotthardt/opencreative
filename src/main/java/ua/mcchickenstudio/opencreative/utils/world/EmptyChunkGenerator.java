@@ -24,6 +24,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
+/**
+ * <h1>EmptyChunkGenerator</h1>
+ * This class represents a ChunkGenerator, that
+ * generates empty world without any terrain.
+ */
 public class EmptyChunkGenerator extends ChunkGenerator {
     @Override
     public @NotNull ChunkData generateChunkData(@NotNull World world, @NotNull Random random, int x, int z, @NotNull BiomeGrid biome) {

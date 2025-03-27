@@ -24,6 +24,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
+/**
+ * <h1>DevPlanetChunkGenerator</h1>
+ * This class represents a ChunkGenerator, that
+ * generates empty world without any terrain.
+ */
 public class DevPlanetChunkGenerator extends ChunkGenerator {
 
     @Override

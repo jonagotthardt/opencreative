@@ -16,21 +16,30 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.interaction;
+package ua.mcchickenstudio.opencreative.utils.world;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
-import ua.mcchickenstudio.opencreative.planets.Planet;
+import org.bukkit.block.Biome;
+import org.bukkit.generator.BiomeProvider;
+import org.bukkit.generator.WorldInfo;
+import org.jetbrains.annotations.NotNull;
 
-public class RightClickExecutor extends PlayerExecutor {
+import java.util.List;
 
-    public RightClickExecutor(Planet planet, int x, int y, int z) {
-        super(planet, x, y, z);
+public class LargeBiomesGenerator extends BiomeProvider {
+
+    private final Biome biome;
+
+    public LargeBiomesGenerator(Biome biome) {
+        this.biome = biome;
     }
 
     @Override
-    public ExecutorType getExecutorType() {
-        return ExecutorType.PLAYER_RIGHT_CLICK;
+    public @NotNull Biome getBiome(@NotNull WorldInfo worldInfo, int x, int y, int z) {
+        return biome;
     }
 
+    @Override
+    public @NotNull List<Biome> getBiomes(@NotNull WorldInfo worldInfo) {
+        return List.of(biome);
+    }
 }

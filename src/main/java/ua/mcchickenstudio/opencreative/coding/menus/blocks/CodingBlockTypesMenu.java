@@ -93,7 +93,7 @@ public abstract class CodingBlockTypesMenu extends ListBrowserMenu<Object> {
     protected void onCharmsBarClick(InventoryClickEvent event) {
         ItemStack clicked = event.getCurrentItem();
         event.setCancelled(true);
-        MenusCategory category = MenusCategory.getByMaterial(clicked.getType());
+        MenusCategory category = MenusCategory.getByIcon(clicked);
         if (category != null) {
             Sounds.DEV_CHANGE_CATEGORY.play(event.getWhoClicked());
             currentCategory = category;

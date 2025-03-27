@@ -30,7 +30,6 @@ import ua.mcchickenstudio.opencreative.indev.modules.Module;
 import ua.mcchickenstudio.opencreative.indev.modules.ModuleManager;
 import ua.mcchickenstudio.opencreative.indev.modules.ModulesBrowserMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
-import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.util.List;
 

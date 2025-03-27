@@ -16,30 +16,27 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.utils.world;
+package ua.mcchickenstudio.opencreative.managers.stability;
 
-import org.bukkit.block.Biome;
-import org.bukkit.generator.BiomeProvider;
-import org.bukkit.generator.WorldInfo;
-import org.jetbrains.annotations.NotNull;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-import java.util.List;
+public enum StabilityState {
 
-public class LargeBiomeGenerator extends BiomeProvider {
+    /**
+     * This state allows players to create, connect worlds and launch a code.
+     */
+    FINE,
+    /**
+     * This state allows players to connect loaded worlds, but disallows to create, compile a code.
+     */
+    NOT_OKAY,
+    /**
+     * This state disallows players everything: browsing, connecting, compiling.
+     */
+    NIGHTMARE;
 
-    private final Biome biome;
-
-    public LargeBiomeGenerator(Biome biome) {
-        this.biome = biome;
+    public String getLocalized() {
+        return getLocaleMessage("creative.stability." + name().toLowerCase().replace("_","-"),false);
     }
 
-    @Override
-    public @NotNull Biome getBiome(@NotNull WorldInfo worldInfo, int x, int y, int z) {
-        return biome;
-    }
-
-    @Override
-    public @NotNull List<Biome> getBiomes(@NotNull WorldInfo worldInfo) {
-        return List.of(biome);
-    }
 }

@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks;
 
 import com.destroystokyo.paper.event.block.AnvilDamagedEvent;
-import io.papermc.paper.event.block.TargetHitEvent;
 import org.bukkit.block.Block;
 import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.NotNull;

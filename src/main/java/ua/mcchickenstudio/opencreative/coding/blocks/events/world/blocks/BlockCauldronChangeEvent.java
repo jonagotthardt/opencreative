@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks;
 
 import org.bukkit.block.Block;
-import org.bukkit.event.block.CampfireStartEvent;
 import org.bukkit.event.block.CauldronLevelChangeEvent;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;

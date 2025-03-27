@@ -117,7 +117,7 @@ public class Space implements PlanetsManager {
             if (!planetEvent.isCancelled()) {
                 planet.setSharing(Planet.Sharing.CLOSED);
             }
-            planets.remove(planet);
+            unregisterPlanet(planet);
             if (planet.isLoaded()) {
                 Bukkit.unloadWorld(planet.getWorldName(),false);
                 if (planet.getDevPlanet().isLoaded()) {
@@ -144,7 +144,7 @@ public class Space implements PlanetsManager {
         return featuredPlanets;
     }
 
-    public @NotNull Set<Planet> getPlanetsByPlanetName(@NotNull String worldName) {
+    public @NotNull Set<Planet> getPlanetsContainingName(@NotNull String worldName) {
         Set<Planet> foundPlanets = new HashSet<>();
         for (Planet planet : planets) {
             if (planet.getInformation().getDisplayName().toLowerCase().contains(worldName.toLowerCase())) {
@@ -155,7 +155,7 @@ public class Space implements PlanetsManager {
     }
 
     @Override
-    public @NotNull Set<Planet> getPlanetsByID(@NotNull String worldID) {
+    public @NotNull Set<Planet> getPlanetsContainingID(@NotNull String worldID) {
         Set<Planet> foundPlanets = new HashSet<>();
         for (Planet planet : planets) {
             if (planet.getInformation().getCustomID().toLowerCase().contains(worldID.toLowerCase())) {
@@ -258,6 +258,12 @@ public class Space implements PlanetsManager {
 
     @Override
     public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isStableConnection() {
+        // True, because it depends only on file system
         return true;
     }
 

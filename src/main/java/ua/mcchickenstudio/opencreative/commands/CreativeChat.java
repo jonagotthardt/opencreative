@@ -54,6 +54,10 @@ public class CreativeChat implements CommandExecutor {
             sender.sendMessage(getLocaleMessage("maintenance"));
             return true;
         }
+        if (OpenCreative.getStability().isVeryBad() && !sender.hasPermission("opencreative.stability.bypass")) {
+            sender.sendMessage(getLocaleMessage("creative.stability.cannot"));
+            return true;
+        }
         if (!OpenCreative.getSettings().isCreativeChatEnabled() && !sender.hasPermission("opencreative.creative-chat.bypass")) {
             sender.sendMessage(getLocaleMessage("creative.creative-chat.off"));
             return true;

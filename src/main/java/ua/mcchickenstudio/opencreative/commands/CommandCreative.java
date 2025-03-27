@@ -20,8 +20,6 @@ package ua.mcchickenstudio.opencreative.commands;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-import ua.mcchickenstudio.opencreative.events.status.MaintenanceEndEvent;
-import ua.mcchickenstudio.opencreative.events.status.MaintenanceStartEvent;
 import ua.mcchickenstudio.opencreative.indev.Items;
 import ua.mcchickenstudio.opencreative.indev.modules.Module;
 import ua.mcchickenstudio.opencreative.indev.modules.ModulesBrowserMenu;
@@ -606,6 +604,18 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                     sender.sendMessage(getLocaleMessage(args[1]));
                 }
+                case "stability" -> {
+                    if (!sender.hasPermission("opencreative.stability")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
+                    }
+                    player.sendMessage(getLocaleMessage("creative.stability.actionbar")
+                            .replace("%memory%", OpenCreative.getStability().getMemoryState().getLocalized())
+                            .replace("%storage%", OpenCreative.getStability().getStorageState().getLocalized())
+                            .replace("%tps%", OpenCreative.getStability().getTicksState().getLocalized())
+                            .replace("%database%", OpenCreative.getStability().getDatabaseState().getLocalized())
+                    );
+                }
                 case "test" -> {
                     if (!sender.hasPermission("opencreative.test")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
@@ -654,6 +664,11 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage("Template doesn't exists.");
                         return true;
                     }
+                    if (!OpenCreative.getStability().isFine()) {
+                        player.sendMessage(getLocaleMessage("creative.stability.cannot"));
+                        Sounds.PLAYER_FAIL.play(player);
+                        return true;
+                    }
                     int id = WorldUtils.generateWorldID();
                     File world = new File(Bukkit.getWorldContainer().getPath()+File.separator+"planets"+File.separator+"planet"+id+File.separator);
                     FileUtils.copyFilesToDirectory(template,world);
@@ -684,11 +699,13 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
         List<String> tabCompleter = new ArrayList<>();
         if (!sender.hasPermission("opencreative.admin")) return null;
         if (args.length == 1) {
+            tabCompleter.add("update");
             tabCompleter.add("moderation");
             tabCompleter.add("reload");
             tabCompleter.add("locale");
             tabCompleter.add("debug");
             tabCompleter.add("maintenance");
+            tabCompleter.add("stability");
             tabCompleter.add("load");
             tabCompleter.add("unload");
             tabCompleter.add("resetlocale");

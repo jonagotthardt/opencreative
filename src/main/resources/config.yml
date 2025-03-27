@@ -287,22 +287,6 @@ sounds:
       name: "music_disc.chirp"
       pitch: 1.7
 
-items:
-  #
-  # This section allows you to change items.
-  # If you edit with text editor you're able
-  # only to set material.
-  # lobby-my-worlds: "COMPASS"
-  #
-  # To set additional item data (enchantments, colors,
-  # textures) you have to use in-game command while
-  # holding item for setting in right-hand.
-  # /oc items set lobby-my-worlds
-  #
-  # Some items can break in next Minecraft updates,
-  # so if item is failed to create it will use default one.
-  lobby-worlds-browser: "COMPASS"
-
 #
 # Maintenance mode unloads all worlds and
 # prevents players without admin permissions

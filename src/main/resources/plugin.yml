@@ -12,6 +12,7 @@ description: 'Let players create the worlds'
 build: ${maven.build.timestamp}
 
 authors: [McChicken Studio]
+contributors: [McChicken Team, onn512, pawsashatoy]
 prefix: "OC+"
 
 load: POSTWORLD

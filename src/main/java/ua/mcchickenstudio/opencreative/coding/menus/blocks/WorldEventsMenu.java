@@ -38,7 +38,7 @@ public class WorldEventsMenu extends CodingBlockTypesMenu {
 
     @Override
     protected List<Object> getElements() {
-        if (currentCategory == null) currentCategory = MenusCategory.OTHER;
+        if (currentCategory == null) currentCategory = MenusCategory.WORLD_OTHER;
         return new ArrayList<>(ExecutorType.getExecutorsByCategories(ExecutorCategory.EVENT_WORLD,currentCategory));
     }
 

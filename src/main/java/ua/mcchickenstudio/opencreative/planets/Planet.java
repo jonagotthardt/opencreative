@@ -36,6 +36,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.GamePlay
 import ua.mcchickenstudio.opencreative.coding.variables.WorldVariables;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetConnectPlayerEvent;
 import ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld;
+import ua.mcchickenstudio.opencreative.managers.stability.StabilityState;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.groups.Group;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
@@ -441,6 +442,11 @@ public class Planet {
     }
 
     public void connectPlayer(Player player, boolean hidePlayer) {
+        if (OpenCreative.getStability().getState() != StabilityState.FINE && !isLoaded()) {
+            player.sendMessage(getLocaleMessage("creative.stability.cannot"));
+            Sounds.PLAYER_FAIL.play(player);
+            return;
+        }
         if (getSharing() != Sharing.PUBLIC) {
             if (!isOwner(player)) {
                 if (!(player.hasPermission("opencreative.world.private.bypass"))) {
@@ -506,7 +512,7 @@ public class Planet {
                     ownerGroup = OpenCreative.getSettings().getGroups().getGroup(player).getName().toLowerCase();
                     ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
                     player.getInventory().setItem(8,worldSettingsItem);
-                    if (this.getDevPlanet().isLoaded()) {
+                    if (this.getDevPlanet().isLoaded() && OpenCreative.getStability().isFine()) {
                         new CodingBlockParser().parseCode(this.getDevPlanet());
                     }
                 }
