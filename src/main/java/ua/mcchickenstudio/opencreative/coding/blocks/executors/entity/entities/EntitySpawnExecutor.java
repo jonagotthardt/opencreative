@@ -21,7 +21,6 @@ package ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.entities;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.EntityExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import org.bukkit.event.Cancellable;
 
 public class EntitySpawnExecutor extends EntityExecutor {
 

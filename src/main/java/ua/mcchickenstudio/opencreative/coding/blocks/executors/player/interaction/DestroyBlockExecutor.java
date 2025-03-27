@@ -24,7 +24,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.D
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import org.bukkit.event.Cancellable;
 
 public class DestroyBlockExecutor extends PlayerExecutor {
 

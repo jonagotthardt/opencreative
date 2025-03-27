@@ -24,7 +24,6 @@ import net.kyori.adventure.text.event.HoverEvent;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.AdvertisedEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.LikeEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetAdvertisementEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

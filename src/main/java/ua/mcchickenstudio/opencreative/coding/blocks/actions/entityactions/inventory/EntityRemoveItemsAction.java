@@ -28,8 +28,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
-import java.util.Arrays;
-
 public final class EntityRemoveItemsAction extends EntityAction {
     public EntityRemoveItemsAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);

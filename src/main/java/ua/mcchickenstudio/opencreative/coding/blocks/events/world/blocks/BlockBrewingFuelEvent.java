@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks;
 
 import org.bukkit.block.Block;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.block.BrewingStartEvent;
 import org.bukkit.event.inventory.BrewingStandFuelEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
