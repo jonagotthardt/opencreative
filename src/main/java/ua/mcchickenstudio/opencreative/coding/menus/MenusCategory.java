@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.menus;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 
 public enum MenusCategory {
 
@@ -41,6 +41,15 @@ public enum MenusCategory {
     PLAYER(Material.PLAYER_HEAD),
     OTHER(Material.PUMPKIN_SEEDS),
 
+    ENTITY_STATE(Material.NAME_TAG),
+    ENTITY_MOVEMENT(Material.NETHERITE_BOOTS),
+    ENTITY_INTERACTION(Material.DARK_OAK_CHEST_BOAT),
+    ENTITY_FIGHTING(Material.NETHERITE_SWORD),
+
+    WORLD_OTHER(Material.AMETHYST_CLUSTER),
+    WORLD_INVENTORY(Material.MANGROVE_CHEST_BOAT),
+    WORLD_BLOCKS(Material.CAMPFIRE),
+
     TEXT_OPERATIONS(Material.BOOK),
     NUMBER_OPERATIONS(Material.SLIME_BALL),
     LOCATION_OPERATIONS(Material.PAPER),
@@ -56,12 +65,14 @@ public enum MenusCategory {
     }
 
     public ItemStack getItem(String blockCategory) {
-        return createItem(material,1,"items.developer.categories." + blockCategory + "." + this.name().toLowerCase());
+        return createItem(material,1,"items.developer.categories." + blockCategory + "." + this.name().toLowerCase(),this.name().toLowerCase());
     }
 
-    public static MenusCategory getByMaterial(Material material) {
+    public static MenusCategory getByIcon(ItemStack icon) {
+        if (icon == null) return null;
+        String type = getItemType(icon);
         for (MenusCategory category : values()) {
-            if (category.material == material) {
+            if (category.name().equalsIgnoreCase(type)) {
                 return category;
             }
         }

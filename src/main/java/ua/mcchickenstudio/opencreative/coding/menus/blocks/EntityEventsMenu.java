@@ -38,7 +38,7 @@ public class EntityEventsMenu extends CodingBlockTypesMenu {
 
     @Override
     protected List<Object> getElements() {
-        if (currentCategory == null) currentCategory = MenusCategory.ENTITY;
+        if (currentCategory == null) currentCategory = MenusCategory.ENTITY_INTERACTION;
         return new ArrayList<>(ExecutorType.getExecutorsByCategories(ExecutorCategory.EVENT_ENTITY,currentCategory));
     }
 

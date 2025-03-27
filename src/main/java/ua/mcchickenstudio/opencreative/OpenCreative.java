@@ -49,8 +49,8 @@ import ua.mcchickenstudio.opencreative.listeners.world.BlockChangeListener;
 import ua.mcchickenstudio.opencreative.listeners.world.RedstoneListener;
 import ua.mcchickenstudio.opencreative.managers.economy.Economy;
 import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
+import ua.mcchickenstudio.opencreative.managers.stability.DisabledWatchdog;
 import ua.mcchickenstudio.opencreative.managers.stability.StabilityManager;
-import ua.mcchickenstudio.opencreative.managers.stability.Watchdog;
 import ua.mcchickenstudio.opencreative.managers.updater.HangarUpdater;
 import ua.mcchickenstudio.opencreative.managers.updater.Updater;
 import ua.mcchickenstudio.opencreative.menus.Menus;
@@ -145,7 +145,7 @@ public final class OpenCreative extends JavaPlugin {
         updater.init();
         packet = HookUtils.getPacketManager();
         packet.init();
-        watchdog = new Watchdog();
+        watchdog = new DisabledWatchdog();
         watchdog.init();
 
         long loadedTime = System.currentTimeMillis()-startTime;

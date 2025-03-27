@@ -860,6 +860,55 @@ items:
           lore:
             - "&7No events created for this"
             - "&7category yet."
+        world_other:
+          name: "&dWorld Events"
+          lore:
+            - "&7Game start, receiving responses"
+            - "&7and values, reaching limits."
+            - " "
+            - "&eClick to select category."
+        world_inventory:
+          name: "&6Item Events"
+          lore:
+            - "&7Block cooked food, refilled"
+            - "&7brewing stand, dropped item, collector."
+            - " "
+            - "&eClick to select category."
+        world_blocks:
+          name: "&eBlock Events"
+          lore:
+            - "&7Explosion, redstone activation,"
+            - "&7beacon events, sponge, physics."
+            - " "
+            - "&eClick to select category."
+        entity_state:
+          name: "&eEntity State Change"
+          lore:
+            - "&7Entity got angry, ready to breed,"
+            - "&7lost oxygen, received effects."
+            - " "
+            - "&eClick to select category."
+        entity_movement:
+          name: "&9Entity Movement"
+          lore:
+            - "&7Entity jumped, entered a block,"
+            - "&7teleported."
+            - " "
+            - "&eClick to select category."
+        entity_interaction:
+          name: "&5Entity Interaction"
+          lore:
+            - "&7Entity barters, picks up an item,"
+            - "&7wears out, throws, explodes."
+            - " "
+            - "&eClick to select category."
+        entity_fighting:
+          name: "&cEntity Combat"
+          lore:
+            - "&7Entity shoots a bow, loads"
+            - "&7a crossbow, throws potions."
+            - " "
+            - "&eClick to select category."
         world:
           name: "&bWorld Interaction"
           lore:
