@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.events.CancelEventAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.inventory.*;
@@ -734,7 +735,7 @@ public enum ActionType {
         List<ActionType> list = new ArrayList<>();
         for (ActionType type : values()) {
             if (type.category == actionCategory && type.menusCategory == menusCategory) {
-                list.add(type);
+                if (!type.isDisabled() || OpenCreative.getSettings().isDebug()) list.add(type);
             }
         }
         return list;

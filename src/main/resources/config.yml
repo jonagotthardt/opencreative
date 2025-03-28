@@ -123,6 +123,8 @@ commands:
   onPlanetDisconnect: {} # %planet% %player%
   onWorldChat: {} # %world% %player% %message% %formatted%
   onCreativeChat: {} # %player% %message% %formatted%
+  onMaintenanceStart: {} # %player%
+  onMaintenanceEnd: {} # %player%
 
 requirements:
   #
@@ -191,6 +193,7 @@ groups:
       build-permissions: # Permissions will be given when player types /build command
         - "headdb.open"
         - "worldedit.wand"
+        - "minecraft.debugstick"
         # If you want to add WorldEdit permissions please turn off
         # region-restrictions in WorldEdit/config.yml to make //set working
         #- "worldedit.region.set"
@@ -234,6 +237,7 @@ groups:
       build-permissions:
         - "headdb.open"
         - "worldedit.wand"
+        - "minecraft.debugstick"
         #- "worldedit.region.set"
         #- "worldedit.region.replace"
       play-permissions:

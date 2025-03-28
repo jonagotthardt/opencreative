@@ -1551,6 +1551,13 @@ items:
           - "&7an inventory."
           - " "
           - "&eClick to set event."
+      player-changed-sign:
+        name: "&6Player changed sign text"
+        lore:
+          - "&7Triggered when a player changes"
+          - "&7text on a sign."
+          - " "
+          - "&eClick to set event."
       player-get-damaged:
         name: "&6Player took damage"
         lore:
@@ -12122,6 +12129,7 @@ blocks:
   player_killed_player: "Killed a player"
   player_killed_mob: "Killed a mob"
   player_damage_player: "Hit a player"
+  player_changed_sign: "Sign changed"
 
   world_play_mode: "&aPlay mode"
   world_variable_transfer: "Value receive"
