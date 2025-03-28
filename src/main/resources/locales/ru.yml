@@ -1575,6 +1575,13 @@ items:
           - "&7моба, то сработает событие."
           - " "
           - "&eНажми, чтобы установить событие."
+      player-changed-sign:
+        name: "&6Игрок сменил текст таблички"
+        lore:
+          - "&7Это когда игрок редактирует"
+          - "&7текст на табличке."
+          - " "
+          - "&eНажми, чтобы установить событие."
       player-killed-player:
         name: "&3Игрок убил игрока"
         lore:
@@ -12167,6 +12174,7 @@ blocks:
   player_sneaking: "Крадётся"
   player_stop_sneaking: "Не крадётся"
   player_teleport: "Телепорт"
+  player_changed_sign: "Смена таблички"
 
   player_chunk_load: "Загрузил чанк"
   player_chunk_unload: "Отгрузил чанк"
