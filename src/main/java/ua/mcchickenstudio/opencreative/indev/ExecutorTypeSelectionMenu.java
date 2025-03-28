@@ -1,0 +1,105 @@
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package ua.mcchickenstudio.opencreative.indev;
+
+import net.kyori.adventure.title.Title;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Directional;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
+import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
+
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+
+import static ua.mcchickenstudio.opencreative.utils.BlockUtils.setSignLine;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
+
+public class ExecutorTypeSelectionMenu extends ContentWithMenusCategoryMenu<ExecutorType> {
+
+    private final ExecutorCategory executor;
+
+    public ExecutorTypeSelectionMenu(@NotNull Player player,
+                                     @NotNull Location location,
+                                     @NotNull String titleName,
+                                     @NotNull ExecutorCategory executor,
+                                     @NotNull MenusCategory category) {
+        super(player, location, "events", titleName, executor.getStainedPane(), category);
+        this.executor = executor;
+    }
+
+    @Override
+    protected ItemStack getElementIcon(ExecutorType type) {
+        return type.getIcon();
+    }
+
+    @Override
+    protected void onElementClick(InventoryClickEvent event) {
+        ItemStack item = event.getCurrentItem();
+        event.setCancelled(true);
+        if (item == null) return;
+        if (item.getItemMeta() == null) return;
+        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(getPlayer());
+        Block codingBlock = signLocation.getBlock().getRelative(BlockFace.NORTH);
+        if (signLocation.getWorld().getName().contains("dev") && devPlanet != null) {
+            String typeString = getPersistentData(item,getCodingValueKey());
+            ExecutorType executorType = null;
+            try {
+                executorType = ExecutorType.valueOf(typeString);
+            } catch (Exception ignored) {}
+            ExecutorCategory executorCategory = executorType == null ? null : ExecutorCategory.getByMaterial(codingBlock.getType());
+            if (executorCategory != null) {
+                setSignLine(signLocation,2, executorCategory.name().toLowerCase());
+            }
+            if (setSignLine(signLocation,3,typeString.toLowerCase())) {
+                translateBlockSign(signLocation.getBlock());
+                getPlayer().closeInventory();
+                getPlayer().showTitle(Title.title(
+                        toComponent(getLocaleMessage("world.dev-mode.set-events")), item.getItemMeta().displayName(),
+                        Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(1), Duration.ofMillis(750))
+                ));
+                Sounds.DEV_SET_EVENT.play(event.getWhoClicked());
+            }
+        }
+    }
+
+    @Override
+    protected List<ExecutorType> getElements() {
+        return ExecutorType.getExecutorsByCategories(executor,currentCategory);
+    }
+}
