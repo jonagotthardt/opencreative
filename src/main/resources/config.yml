@@ -74,7 +74,7 @@
 # Discord: https://discord.gg/sSFCXUeq63
 #
 
-version: 5.5.0
+version: 5.5.1
 last-world-id: 0
 hide-from-tab: spectator # Hides players, that aren't in same world: spectator - Transparent nickname (requires ProtocolLib), full - Full hide from tab list, none - Not hide.
 
@@ -305,4 +305,4 @@ maintenance: false
 # information about plugin's work and state.
 # Not useful, if you're not developing OC+.
 #
-debug: true
+debug: false

@@ -33,21 +33,23 @@ import org.bukkit.Material;
  */
 public enum ExecutorCategory {
 
-    EVENT_PLAYER(Material.DIAMOND_BLOCK, Material.DIAMOND_ORE, NamedTextColor.AQUA),
-    EVENT_ENTITY(Material.GOLD_BLOCK, Material.GOLD_ORE, NamedTextColor.YELLOW),
-    EVENT_WORLD(Material.REDSTONE_BLOCK, Material.REDSTONE_ORE, NamedTextColor.RED),
-    CYCLE(Material.OXIDIZED_COPPER, Material.WAXED_OXIDIZED_CUT_COPPER, NamedTextColor.DARK_AQUA),
-    FUNCTION(Material.LAPIS_BLOCK, Material.DEEPSLATE_LAPIS_ORE, NamedTextColor.BLUE),
-    METHOD(Material.EMERALD_BLOCK, Material.DEEPSLATE_EMERALD_ORE, NamedTextColor.GREEN);
+    EVENT_PLAYER(Material.DIAMOND_BLOCK, Material.DIAMOND_ORE, NamedTextColor.AQUA, Material.LIGHT_BLUE_STAINED_GLASS_PANE),
+    EVENT_ENTITY(Material.GOLD_BLOCK, Material.GOLD_ORE, NamedTextColor.YELLOW, Material.YELLOW_STAINED_GLASS_PANE),
+    EVENT_WORLD(Material.REDSTONE_BLOCK, Material.REDSTONE_ORE, NamedTextColor.RED, Material.RED_STAINED_GLASS_PANE),
+    CYCLE(Material.OXIDIZED_COPPER, Material.WAXED_OXIDIZED_CUT_COPPER, NamedTextColor.DARK_AQUA, Material.LIGHT_BLUE_STAINED_GLASS_PANE),
+    FUNCTION(Material.LAPIS_BLOCK, Material.DEEPSLATE_LAPIS_ORE, NamedTextColor.BLUE, Material.BLUE_STAINED_GLASS_PANE),
+    METHOD(Material.EMERALD_BLOCK, Material.DEEPSLATE_EMERALD_ORE, NamedTextColor.GREEN, Material.LIME_STAINED_GLASS_PANE);
 
     private final Material block;
     private final Material additionalBlock;
     private final NamedTextColor color;
+    private final Material stainedPane;
 
-    ExecutorCategory(Material block, Material additionalBlock, NamedTextColor color) {
+    ExecutorCategory(Material block, Material additionalBlock, NamedTextColor color, Material stainedPane) {
         this.block = block;
         this.additionalBlock = additionalBlock;
         this.color = color;
+        this.stainedPane = stainedPane;
     }
 
     public Material getBlock() {
@@ -59,6 +61,10 @@ public enum ExecutorCategory {
             if (category.block == material) return category;
         }
         return null;
+    }
+
+    public Material getStainedPane() {
+        return stainedPane;
     }
 
     public NamedTextColor getColor() {

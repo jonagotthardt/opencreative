@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.menus;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -29,6 +30,8 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMessage;
 
 /**
  * <h1>Menus</h1>
@@ -104,7 +107,13 @@ public class Menus implements Listener {
     public void onClick(InventoryClickEvent event) {
         for (InventoryMenu menu : activeMenus) {
             if (event.getInventory().getHolder() == menu.getInventory().getHolder()) {
-                menu.onClick(event);
+                try {
+                    menu.onClick(event);
+                } catch (Exception error) {
+                    if (event.getWhoClicked() instanceof Player player) {
+                        sendPlayerErrorMessage(player,"Can't handle click event in " + menu.getClass().getSimpleName(), error);
+                    }
+                }
                 return;
             }
         }

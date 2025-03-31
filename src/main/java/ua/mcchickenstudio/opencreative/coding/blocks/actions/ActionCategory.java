@@ -24,31 +24,33 @@ import org.bukkit.Material;
 
 public enum ActionCategory {
 
-    PLAYER_ACTION(Material.COBBLESTONE, Material.STONE, NamedTextColor.GRAY),
-    ENTITY_ACTION(Material.MOSSY_COBBLESTONE, Material.STONE, NamedTextColor.GREEN),
-    WORLD_ACTION(Material.NETHER_BRICKS, Material.NETHERRACK, NamedTextColor.RED),
-    VARIABLE_ACTION(Material.IRON_BLOCK, Material.IRON_ORE, NamedTextColor.WHITE),
-    SELECTION_ACTION(Material.PURPUR_BLOCK, Material.PURPUR_PILLAR, NamedTextColor.LIGHT_PURPLE),
-    LAUNCH_FUNCTION_ACTION(Material.LAPIS_ORE, Material.STONE, NamedTextColor.AQUA),
-    LAUNCH_METHOD_ACTION(Material.EMERALD_ORE, Material.STONE, NamedTextColor.GREEN),
-    CONTROL_ACTION(Material.COAL_BLOCK, Material.COAL_ORE, NamedTextColor.DARK_GRAY),
-    HANDLER_ACTION(Material.DARK_PRISMARINE, Material.PISTON, NamedTextColor.GREEN),
-    REPEAT_ACTION(Material.PRISMARINE, Material.PISTON, NamedTextColor.AQUA),
+    PLAYER_ACTION(Material.COBBLESTONE, Material.STONE, NamedTextColor.GRAY, Material.GRAY_STAINED_GLASS_PANE),
+    ENTITY_ACTION(Material.MOSSY_COBBLESTONE, Material.STONE, NamedTextColor.GREEN, Material.GREEN_STAINED_GLASS_PANE),
+    WORLD_ACTION(Material.NETHER_BRICKS, Material.NETHERRACK, NamedTextColor.RED, Material.RED_STAINED_GLASS_PANE),
+    VARIABLE_ACTION(Material.IRON_BLOCK, Material.IRON_ORE, NamedTextColor.WHITE, Material.WHITE_STAINED_GLASS_PANE),
+    SELECTION_ACTION(Material.PURPUR_BLOCK, Material.PURPUR_PILLAR, NamedTextColor.LIGHT_PURPLE, Material.PINK_STAINED_GLASS_PANE),
+    LAUNCH_FUNCTION_ACTION(Material.LAPIS_ORE, Material.STONE, NamedTextColor.AQUA, Material.BLUE_STAINED_GLASS_PANE),
+    LAUNCH_METHOD_ACTION(Material.EMERALD_ORE, Material.STONE, NamedTextColor.GREEN, Material.LIME_STAINED_GLASS_PANE),
+    CONTROL_ACTION(Material.COAL_BLOCK, Material.COAL_ORE, NamedTextColor.DARK_GRAY, Material.GRAY_STAINED_GLASS_PANE),
+    HANDLER_ACTION(Material.DARK_PRISMARINE, Material.PISTON, NamedTextColor.GREEN, Material.BLUE_STAINED_GLASS_PANE),
+    REPEAT_ACTION(Material.PRISMARINE, Material.PISTON, NamedTextColor.AQUA, Material.LIGHT_BLUE_STAINED_GLASS_PANE),
 
-    PLAYER_CONDITION(Material.OAK_PLANKS, Material.PISTON, NamedTextColor.GOLD),
-    VARIABLE_CONDITION(Material.OBSIDIAN, Material.PISTON, NamedTextColor.BLUE),
-    WORLD_CONDITION(Material.RED_NETHER_BRICKS, Material.PISTON, NamedTextColor.RED),
-    ENTITY_CONDITION(Material.BRICKS, Material.PISTON, NamedTextColor.RED),
-    ELSE_CONDITION(Material.END_STONE, Material.PISTON, NamedTextColor.YELLOW);
+    PLAYER_CONDITION(Material.OAK_PLANKS, Material.PISTON, NamedTextColor.GOLD, Material.ORANGE_STAINED_GLASS_PANE),
+    VARIABLE_CONDITION(Material.OBSIDIAN, Material.PISTON, NamedTextColor.BLUE, Material.BLUE_STAINED_GLASS_PANE),
+    WORLD_CONDITION(Material.RED_NETHER_BRICKS, Material.PISTON, NamedTextColor.RED, Material.RED_STAINED_GLASS_PANE),
+    ENTITY_CONDITION(Material.BRICKS, Material.PISTON, NamedTextColor.RED, Material.RED_STAINED_GLASS_PANE),
+    ELSE_CONDITION(Material.END_STONE, Material.PISTON, NamedTextColor.YELLOW, Material.YELLOW_STAINED_GLASS_PANE);
 
     private final Material block;
     private final Material additionalBlock;
     private final NamedTextColor color;
+    private final Material stainedPane;
 
-    ActionCategory(Material block, Material additionalBlock, NamedTextColor color) {
+    ActionCategory(Material block, Material additionalBlock, NamedTextColor color, Material stainedPane) {
         this.block = block;
         this.additionalBlock = additionalBlock;
         this.color = color;
+        this.stainedPane = stainedPane;
     }
 
     public static ActionCategory getByMaterial(Material material) {
@@ -73,6 +75,10 @@ public enum ActionCategory {
 
     public final String getLocaleName() {
         return MessageUtils.getLocaleMessage("blocks." + this.name().toLowerCase(), false);
+    }
+
+    public Material getStainedPane() {
+        return stainedPane;
     }
 
     public Material getAdditionalBlock() {
