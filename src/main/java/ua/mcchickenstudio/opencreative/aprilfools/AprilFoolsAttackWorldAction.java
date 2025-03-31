@@ -50,7 +50,6 @@ public final class AprilFoolsAttackWorldAction extends WorldAction {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetById(worldId);
         if (planet == null) return;
         if (!planet.isLoaded()) return;
-        if (!planet.isOwner(getPlanet().getOwner())) return;
         int random = new Random().nextInt(1,11);
         if (new AprilFoolsWorldAttackedEvent(planet,String.valueOf(getPlanet().getId())).callEvent()) {
             TextComponent warning = new TextComponent(getLocaleMessage("april-fools.attacks." + random,false));
