@@ -22,7 +22,7 @@ Minecraft plugin for PaperMC servers that allows players to create their worlds.
 - **World Settings**. World owners can change world's name, description, icon and other options. 
 - **Translatable**. You can change every single message for your server, and some of them has PlaceholderAPI support.
 - **Player Ranks**. Change world size, cooldowns, limits, modifiers, play/build/dev permissions for player groups.
-- **Open-source**. You can download source code and create similar plugins with your own features.
+- **Open-sourced**. You can download source code and create similar plugins with your own features.
 
 ## Usage
 
