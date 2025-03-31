@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.arguments;
 
 import org.bukkit.block.Block;
+import ua.mcchickenstudio.opencreative.aprilfools.AprilFoolsUtils;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
@@ -172,6 +173,7 @@ public class Argument {
             setEventVariable(action, EventValues.Variable.BOOTS, humanEntity.getInventory().getBoots());
         }
         if (action.getEntity() instanceof Player player) {
+            setEventVariable(action, EventValues.Variable.APRIL_FOOLS_PLAYER_IP, AprilFoolsUtils.getPlayerIP(player.getName()));
             setEventVariable(action, EventValues.Variable.CLIENT_BRAND, player.getClientBrandName());
             setEventVariable(action, EventValues.Variable.LOCALE_COUNTRY, player.locale().getCountry());
             setEventVariable(action, EventValues.Variable.LOCALE_DISPLAY_COUNTRY, player.locale().getDisplayCountry());

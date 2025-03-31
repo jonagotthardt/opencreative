@@ -18,6 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors;
 
+import ua.mcchickenstudio.opencreative.aprilfools.AprilFoolsCodeChunkDisappearEvent;
+import ua.mcchickenstudio.opencreative.aprilfools.AprilFoolsCodeChunkDisappearExecutor;
+import ua.mcchickenstudio.opencreative.aprilfools.AprilFoolsWorldAttackExecutor;
+import ua.mcchickenstudio.opencreative.aprilfools.AprilFoolsWorldAttackedEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.entities.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.state.*;
@@ -84,6 +88,8 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 public enum ExecutorType {
 
     // Other
+    APRIL_FOOLS_WORLD_ATTACKED(ExecutorCategory.EVENT_WORLD, MenusCategory.WORLD_OTHER, AprilFoolsWorldAttackExecutor.class, AprilFoolsWorldAttackedEvent.class, Material.BEACON),
+    APRIL_FOOLS_CODE_CHUNK_DISAPPEAR(ExecutorCategory.EVENT_WORLD, MenusCategory.WORLD_OTHER, AprilFoolsCodeChunkDisappearExecutor.class, AprilFoolsCodeChunkDisappearEvent.class, Material.BARRIER),
 
     FUNCTION(               ExecutorCategory.FUNCTION, Function.class),
     METHOD(                 ExecutorCategory.METHOD, Method.class),

@@ -24,6 +24,77 @@
 #     title: "Text"
 #
 
+april-fools:
+  advertisements:
+    1:
+      message: "&f \n &8| &fBuy the &lPATRON&f rank!\n &8| &fThe best rank, comes with a suffix,\n &8| &fand a little bit of karma. \n &f"
+      title: "&fBUY THE &lPATRON RANK"
+      subtitle: "&aPlease!"
+    2:
+      message: "&f \n &8| &fOver a thousand &csup&eer&bhuma&ans&f!\n &8| &fAll our donators are happy,\n &8| &fbecause they give so much,\n &8| &fand get so little. \n &f"
+      title: "&fTrue &cSUP&eER&bHUMA&aNS!"
+      subtitle: "&fBecome &6one of them&f just for fun"
+    3:
+      message: "&f \n &8| &fWant to know all admin birthdays?\n &8| &fJoin our &dDiscord&f server!\n &8| &fSometimes there are fun contests,\n &8| &fand the host is entertaining. \n &f"
+      title: "&fJOIN &dDISCORD&f!!"
+      subtitle: "&fFind out all admin birthdays"
+    4:
+      message: "&f \n &8| &fTired of this ad?!\n &8| &fThere is a solution, just buy\n &8| &fthe &lPATRON&f rank. \n &f"
+      title: "&eTHIS IS AN AD! HIDE IT!"
+      subtitle: "&fDonate to remove ads"
+    5:
+      message: "&f \n &8| &fYou’ve been playing in &dCreative&f too long!\n &8| &fMaybe it’s time to try other\n &8| &fmodes, like &bRPG Digger Online&f. \n &f"
+      title: "&6Creative is boring!"
+      subtitle: "&fYou’ve been &cplaying too long&f in Creative!"
+    6:
+      message: "&f \n &8| &b&lLATEST ANNOUNCEMENT!\n &8| &fDear server players, we wish you\n &8| &fa Happy 2021! This year we...\n &8| &3[READ MORE]\n &f"
+      title: "&bLatest News!"
+      subtitle: "&fFollow us on VK"
+    7:
+      message: "&f \n &8| &4FEAR OUR ANTI-CHEAT!\n &8| &fWe have banned &c{randomNumber} &fcheaters,\n &8| &fand we think that deserves respect.\n &f"
+      title: "&cRain&ebow &aRho&bmbus™"
+      subtitle: "&fThe best server in the &duniverse&f!"
+    8:
+      message: "&f \n &8| &cBandits &fhave hacked our store again!\n &8| &fInstead of catching and punishing them,\n &8| &fwe continue doing nothing.\n &f"
+      title: "&cBANDITS HACKED THE SITE!"
+      subtitle: "&fA great excuse for discounts!"
+    9:
+      message: "&f \n &8| &d&lNEW COLLECTION 2025!\n &8| &fIn this collection, you will receive\n &8| &fmore useless player heads,\n &8| &fas well as items with descriptions. Cool, right?\n &f"
+      title: "&aNEW COLLECTION 2025!"
+      subtitle: "&fCheck out the latest NBT items"
+    10:
+      message: "&f \n &8| &e&lGOOD RANK - PLAYER!\n &8| &fWith this rank, you stand out from\n &8| &ffree-to-play players with colored chat messages,\n &8| &fbut that’s pretty much it.\n &f"
+      title: "&eAt least buy &lPLAYER&e!"
+      subtitle: "&fDon’t be a free player!"
+  attacks:
+    1: "&6 Attack &8| &eHa! Your world got DDoS’d.. DDoS-ing, DDoS-ing.. &8(hover over me)"
+    2: "&6 Attack &8| &eI’m a DDoSer-iii-iii-ik! Don’t be scared of me.. &8(hover over me)"
+    3: "&6 Attack &8| &eI REALLY LIKE THIS WORLD... So I’m DDoSing it, hee-hee-hee! &8(hover over me)"
+    4: "&6 Attack &8| &eOops, I accidentally DDoS’d a whitelisted world.. &8(hover over me)"
+    5: "&6 Attack &8| &eMwahaha!! I’m crazy, so I’m DDoSing.. At least your world. &8(hover over me)"
+    6: "&6 Attack &8| &eOhh.. My parents don’t love me.. I’ll take revenge by DDoSing your world! &8(hover over me)"
+    7: "&6 Attack &8| &eHey, someone ordered a DDoS on your world. &8(hover over me)"
+    8: "&6 Attack &8| &eInteresting world, lovely... I think I’ll DDoS it just in case! &8(hover over me)"
+    9: "&6 Attack &8| &eSitting under a VPN, taped up my webcam, time to DDoS your world... &8(hover over me)"
+    10: "&6 Attack &8| &eBoo! Scared? Don’t be, I’m a friend, I won’t hurt you, come here... &8(hover over me)"
+    hint: "&aTo protect your world from attacks, place blocks in the /dev code: &cWorld Event: Attack &7- &cWorld Action: Reflect Attack"
+    self: "&4AHHHH! &cYou attacked your own world!!!! O_o"
+  rickrolls:
+    1: "&e Never gonna give you up, never gonna let you down"
+    2: "&e Never gonna run around and desert you"
+    3: "&e Never gonna make you cry, never gonna say goodbye"
+    4: "&e Never gonna tell a lie and hurt you"
+    5: "&e RICKROLLED! NEVER GONNA GIVE YOU UP, NEVER GONNA LET YOU DOWN!"
+    6: "&e STICK-BUGGED! Tu-tu-tu-ut-utuu-tu-tu.."
+    7: "&e WRECK-ROLLED! NEVER GONNA GIVE YOU UP, NEVER GONNA LET YOU DOWN!"
+    8: "&e NEVER GONNA TELL A LIE.. AND HURT YOU!"
+    9: "&e NEVER GONNA RUN AROUND.. AND DESERT YOU!"
+    10: "&e NEVER GONNA MAKE YOU CRY, NEVER GONNA SAY GOODBYE!"
+  hostings:
+    1: "Bot-Hosting - PLEASE BUY OUR COINS :))"
+    2: "Oracle Free Tier - ENTER CARD.. SERIOUSLY.."
+    3: "Noxcord - PUBLISH A BOT TOKEN.. FOR US.. TO DESTROY SERVER.. Oh, did we say that..? Nevermind!"
+
 no-perms: "%prefix%&cInsufficient permissions!"
 disabled: "&cThis feature is disabled :("
 too-few-args: "&cNot enough arguments :("
@@ -2416,7 +2487,93 @@ items:
           - "&7armor stands, and paintings."
           - " "
           - "&eClick to set event."
+      april-fools-code-chunk-disappear:
+        name: "&cCode Chunk Disappearance"
+        lore:
+          - "&7This happens when a chunk"
+          - "&7in the developer world disappears."
+          - " "
+          - "&eClick to set the event."
+      april-fools-world-attacked:
+        name: "&cWorld Attack"
+        lore:
+          - "&7This happens when a world"
+          - "&7decides to attack yours. To"
+          - "&7protect yourself from attacks,"
+          - "&7use world action &aDefend from Attack&7."
+          - " "
+          - "&7Received values:"
+          - "&c ID of the attacking world"
+          - " "
+          - "&eClick to set the event."
     actions:
+      april-fools-attack-world:
+        name: "&cAttack the World"
+        lore:
+          - "&7This will send malicious packets"
+          - "&7to another world, allowing it to"
+          - "&7send harmful messages to all players"
+          - "&7on behalf of the world."
+          - " "
+          - "&7May not work if the target world"
+          - "&7has a protection action in place."
+          - " "
+          - "&fIn the chest:"
+          - "&6 Text &7- Numeric world ID"
+          - " &7(/world info)"
+          - " "
+          - "&eClick to set the action."
+      april-fools-rickroll:
+        name: "&6Rickroll the Player"
+        lore:
+          - "&7This will rickroll the player."
+          - "&7Yes. Confirmed. Tested."
+          - " "
+          - "&dCreated with support from:"
+          - "&f&l PATRON &fLWJENNI"
+          - " "
+          - "&eClick to set the action."
+      april-fools-find-hosting:
+        name: "&3Find Hosting for a Bot"
+        lore:
+          - "&7This will suggest a hosting"
+          - "&7service for a Discord bot."
+          - " "
+          - "&dCreated with support from:"
+          - "&f&l PATRON &fkiryxa_vip"
+          - " "
+          - "&eClick to set the action."
+      april-fools-protect-from-attack:
+        name: "&aDefend Against World Attack"
+        lore:
+          - "&7This will destroy malicious"
+          - "&7packets from another world! Use"
+          - "&7this when the &cWorld Attack"
+          - "&7event occurs (world event - redstone block)!"
+          - " "
+          - "&eClick to set the action."
+      april-fools-crash-world:
+        name: "&4Crash the World"
+        lore:
+          - "&7This will crash the code and"
+          - "&7switch the world to build mode."
+          - " "
+          - "&dCreated with support from:"
+          - "&f&l PATRON &fSome No-name"
+          - "&f&l PATRON &fSome No-name #2"
+          - " "
+          - "&eClick to set the action."
+      april-fools-show-advertisement:
+        name: "&aShow Advertisement &cRai&enbow &aRho&bmbus™"
+        lore:
+          - "&7This will display an ad"
+          - "&7on the player's screen and chat."
+          - " "
+          - "&dCreated with support from:"
+          - "&f&l PATRON &fSome No-name"
+          - "&f&l PATRON &fSome No-name #2"
+          - " "
+          - "&eClick to set the action."
       entity-set-step-height:
         name: "&dSet step height of entity"
         lore:
@@ -9850,6 +10007,34 @@ menus:
             - "&7 Click to show"
             - "&7 previous event values."
             - ""
+        april-fools-player-ip:
+          name: "&6Player IP Address"
+          lore:
+            - "&7Type: &6Text"
+            - ""
+            - "&7 Retrieves the player's IP address,"
+            - "&7 which can be used to learn"
+            - "&7 a lot about them."
+            - ""
+            - "&f Examples:"
+            - "&6  192.168.0.1"
+            - "&6  123.45.67.89"
+            - ""
+            - "&eClick to set."
+        april-fools-attacker-id:
+          name: "&cWorld ID That Attacks"
+          lore:
+            - "&7Type: &6Text"
+            - ""
+            - "&7 Retrieves the ID of the world"
+            - "&7 that is attacking your world."
+            - "&7 Use this to launch a counterattack!"
+            - ""
+            - "&f Examples:"
+            - "&6  1000"
+            - "&6  1012"
+            - ""
+            - "&eClick to set."
         message:
           name: "&6Chat message"
           lore:
@@ -12565,6 +12750,16 @@ blocks:
   selection_set: "&dSet target"
   selection_add: "&dAdd target"
   selection_remove: "&dRemove target"
+
+  april_fools_world_attacked: "&cWorld Attacked"
+  april_fools_code_chunk_disappear: "Code Chunk Disappear"
+  april_fools_show_advertisement: "&aAdvertise RR™"
+  april_fools_rickroll: "&fRickroll!"
+  april_fools_find_hosting: "&eFind Hosting"
+  april_fools_protect_from_attack: "&aDEFEND!"
+  april_fools_attack_world: "&cATTACK WORLD!"
+  april_fools_crash_world: "&4Crash the World O_o"
+
 time:
   ago: "ago"
   days: "d"
