@@ -82,7 +82,7 @@ public final class DestroyBlockListener implements Listener {
                 } else {
                     if (ExecutorCategory.getByMaterial(block.getType()) != null) {
                         if (event.getPlayer().isSneaking()) {
-                            for (byte x = (byte) block.getX(); x < platform.getEndX()-1; x = (byte) (x + 2)) {
+                            for (int x = block.getX(); x < platform.getEndX()-1; x = x + 2) {
                                 Block actionBlock = block.getWorld().getBlockAt(x, block.getY(), block.getZ());
                                 destroyAdditionalBlocks(platform,actionBlock,devPlanet.isDropItems());
                                 actionBlock.setType(Material.AIR);
@@ -95,7 +95,7 @@ public final class DestroyBlockListener implements Listener {
                 event.setCancelled(true);
             }
 
-            if (block.getType() == Material.CHEST) {
+            if (block.getType() == devPlanet.getContainerMaterial()) {
                 Block blockAtDown = block.getRelative(BlockFace.DOWN).getRelative(BlockFace.DOWN);
                 if (blockAtDown.getType() == platform.getEventMaterial() || blockAtDown.getType() == platform.getActionMaterial()) {
                     event.setCancelled(true);
