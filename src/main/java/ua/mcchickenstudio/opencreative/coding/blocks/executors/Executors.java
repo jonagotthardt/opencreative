@@ -306,6 +306,12 @@ public class Executors {
         }
     }
 
+    public void aprilFoolsCrash(Executor executor) {
+        clearExecutionsAmount(executor);
+        stopPlanetCode(planet);
+        sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("planet-code-error.operations-limit",false).replace("%limit%",String.valueOf(planet.getLimits().getCodeOperationsLimit())));
+    }
+
     private void increaseCallsAmount(Executor executor) {
         lastExecutorsCallsAmount.put(executor,getLastExecutorCallsAmount(executor)+1);
     }

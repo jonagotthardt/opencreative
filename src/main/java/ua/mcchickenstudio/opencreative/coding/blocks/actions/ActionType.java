@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.aprilfools.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.events.CancelEventAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.inventory.*;
@@ -88,6 +89,13 @@ public enum ActionType {
      * Actions with players.
      * <p>Categories: Communication, Inventory, Movement, Params, State, Appearance</p>
      */
+
+    APRIL_FOOLS_SHOW_ADVERTISEMENT(     ActionCategory.PLAYER_ACTION, MenusCategory.COMMUNICATION, AprilFoolsShowAdvertiseAction.class, Material.BEACON),
+    APRIL_FOOLS_RICKROLL(     ActionCategory.PLAYER_ACTION, MenusCategory.COMMUNICATION, AprilFoolsRickrollAction.class, Material.LAVA_BUCKET),
+    APRIL_FOOLS_FIND_HOSTING(     ActionCategory.PLAYER_ACTION, MenusCategory.COMMUNICATION, AprilFoolsFindHostingAction.class, Material.OBSERVER),
+    APRIL_FOOLS_CRASH_WORLD(     ActionCategory.WORLD_ACTION, MenusCategory.WORLD, AprilFoolsCrashWorld.class, Material.TNT),
+    APRIL_FOOLS_ATTACK_WORLD(     ActionCategory.WORLD_ACTION, MenusCategory.WORLD, AprilFoolsAttackWorldAction.class, Material.DIAMOND_SWORD, new ArgumentSlot("world", ValueType.TEXT)),
+    APRIL_FOOLS_PROTECT_FROM_ATTACK(     ActionCategory.WORLD_ACTION, MenusCategory.WORLD, AprilFoolsProtectFromAttackAction.class, Material.SHIELD),
 
     // Communication
     PLAYER_SEND_MESSAGE(                ActionCategory.PLAYER_ACTION, MenusCategory.COMMUNICATION, SendMessageAction.class, Material.WRITABLE_BOOK, new ArgumentSlot("messages", ValueType.TEXT,(byte)18), new ParameterSlot("type",Arrays.asList("new-line","join-spaces","join"),Material.PAPER, Material.MAP, Material.FILLED_MAP)),
