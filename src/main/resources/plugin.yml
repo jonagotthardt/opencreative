@@ -7,7 +7,7 @@ name: 'OpenCreative'
 main: ua.mcchickenstudio.opencreative.OpenCreative
 api-version: 1.21
 
-version: '5.5.1 April Fools'
+version: '5.5.1'
 description: 'Let players create the worlds'
 build: ${maven.build.timestamp}
 
