@@ -79,7 +79,7 @@ public class PlayerBreakBlock implements Listener {
                 } else {
                     if (ExecutorCategory.getByMaterial(block.getType()) != null) {
                         if (event.getPlayer().isSneaking()) {
-                            for (byte x = (byte) block.getX(); x < platform.getEndX()-1; x = (byte) (x + 2)) {
+                            for (int x = block.getX(); x < platform.getEndX()-1; x = x + 2) {
                                 Block actionBlock = block.getWorld().getBlockAt(x, block.getY(), block.getZ());
                                 destroyAdditionalBlocks(platform,actionBlock);
                                 actionBlock.setType(Material.AIR);
