@@ -260,11 +260,11 @@ sounds:
   # To add sound from resource pack use
   # name: "resource_pack_name:sound.id"
   #
-  # lobby, lobby-music, opencreative, reloading, reloaded, menus-next-page, menus-previous-page, menus-open-world-access,
-  # menus-next-choice, menus-open-generation, menus-open-environment, menus-open-world-settings, menus-open-world-moderation,
-  # menus-open-recommendations, menus-open-own-worlds-browser, menus-open-worlds-browser, menus-open-entities-browser,
-  # menus-open-values-browser, menus-open-confirmation, menus-generation-change, menus-environment-change, menus-entities-browser-sort,
-  # menus-worlds-browser-sort, menus-worlds-browser-category, menus-world-search, menus-generate-structures-change, world-generation,
+  # lobby, lobby-music, opencreative, reloading, reloaded, menu-next-page, menu-previous-page, menu-open-world-access,
+  # menu-next-choice, menu-open-generation, menu-open-environment, menu-open-world-settings, menu-open-world-moderation,
+  # menu-open-recommendations, menu-open-own-worlds-browser, menu-open-worlds-browser, menu-open-entities-browser,
+  # menu-open-values-browser, menu-open-confirmation, menu-generation-change, menu-environment-change, menu-entities-browser-sort,
+  # menu-worlds-browser-sort, menu-worlds-browser-category, menu-world-search, menu-generate-structures-change, world-generation,
   # world-connection, world-connected, world-liked, world-disliked, welcome-to-new-world, world-mode-build, world-mode-dev,
   # world-now-builder, world-now-developer, world-now-developer-guest, world-kicked, world-banned, player-cancel, player-fail,
   # player-error, player-teleport, player-respawn, world-code-error, world-code-compile-error, world-code-critical-error,
