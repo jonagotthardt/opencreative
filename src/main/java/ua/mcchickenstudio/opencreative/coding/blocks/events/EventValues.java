@@ -57,9 +57,6 @@ public class EventValues {
 
     public enum Variable {
 
-        APRIL_FOOLS_ATTACKER_ID           (Material.TNT,              MenusCategory.EVENTS, String.class),
-        APRIL_FOOLS_PLAYER_IP             (Material.PLAYER_HEAD,      MenusCategory.PLAYER, String.class),
-
         PLANET_NAME                       (Material.NAME_TAG,         MenusCategory.WORLD, String.class),
         PLANET_DESCRIPTION                (Material.BOOK,             MenusCategory.WORLD, String.class),
         PLANET_ONLINE                     (Material.PUFFERFISH,       MenusCategory.WORLD, Integer.class),

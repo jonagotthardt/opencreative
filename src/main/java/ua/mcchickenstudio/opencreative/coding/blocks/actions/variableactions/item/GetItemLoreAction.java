@@ -29,6 +29,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class GetItemLoreAction extends VariableAction {
     public GetItemLoreAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
@@ -38,11 +41,17 @@ public final class GetItemLoreAction extends VariableAction {
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
         ItemStack item = getArguments().getValue("item",getArguments().getValue("variable",new ItemStack(Material.APPLE),this),this);
-        ItemMeta meta = item.getItemMeta();
-        if (meta == null) {
-            return;
+
+        List<String> lore = new ArrayList<>();
+
+        if (item.hasItemMeta()) {
+            ItemMeta meta = item.getItemMeta();
+            if (meta.hasLore()) {
+                lore = meta.getLore();
+            }
         }
-        setVarValue(link,meta.getLore());
+
+        setVarValue(link, lore);
     }
 
     @Override

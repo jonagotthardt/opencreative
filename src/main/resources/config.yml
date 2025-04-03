@@ -290,46 +290,6 @@ sounds:
     lobby-music:
       name: "music_disc.chirp"
       pitch: 1.7
-  aprilfools:
-    lobby-music:
-      name: music_disc.relic
-      pitch: 1.8
-    lobby:
-      name: entity.evoker.prepare_wololo
-      pitch: 2.0
-    menu-open-recommendations:
-      name: entity.elder_guardian.ambient
-      pitch: 2.0
-    menu-open-own-worlds-browser:
-      name: entity.elder_guardian.ambient
-      pitch: 2.0
-    menu-open-worlds-browser:
-      name: entity.panda.sneeze
-      pitch: 0.1
-    menu-new-page:
-      name: entity.enderman.hurt
-      pitch: 2.0
-    menu-previous-page:
-      name: entity.enderman.hurt
-      pitch: 1.7
-    world-code-critical-error:
-      name: block.anvil.destroy
-      pitch: 1.3
-    world-code-error:
-      name: block.anvil.use
-      pitch: 2.0
-    world-code-compile-error:
-      name: block.anvil.destroy
-      pitch: 1.7
-    dev-connected:
-      name: entity.allay.ambient_without_item
-      pitch: 2.0
-    world-connection:
-      name: entity.bee.loop_aggressive
-      pitch: 2.0
-    world-generation:
-      name: entity.bee.loop_aggressive
-      pitch: 2.0
 
 #
 # Maintenance mode unloads all worlds and
