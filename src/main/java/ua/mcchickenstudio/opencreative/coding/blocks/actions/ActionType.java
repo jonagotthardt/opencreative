@@ -56,7 +56,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.inventory.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.params.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.state.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.item.VarItemHasEnchantments;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.item.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.list.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.location.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.number.*;
