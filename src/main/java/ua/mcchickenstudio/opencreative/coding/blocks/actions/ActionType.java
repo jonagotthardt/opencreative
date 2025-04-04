@@ -56,6 +56,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.inventory.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.params.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.state.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.item.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.list.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.location.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.number.*;
@@ -539,6 +540,7 @@ public enum ActionType {
     IF_VAR_EXISTS(ActionCategory.VARIABLE_CONDITION, MenusCategory.OTHER, VariableExistsCondition.class, Material.MAGMA_CREAM, new ArgumentSlot("variables", ValueType.VARIABLE, (byte) 18), new ParameterSlot("all")),
     IF_VAR_ITEM_EQUALS(ActionCategory.VARIABLE_CONDITION, MenusCategory.OTHER, VarItemEqualsCondition.class, Material.CRAFTING_TABLE, new ArgumentSlot("items", ValueType.ITEM,(byte) 18), new ParameterSlot("ignore-amount", Material.BEETROOT_SEEDS, Material.OAK_BUTTON), new ParameterSlot("ignore-name", Material.NAME_TAG, Material.STRING), new ParameterSlot("ignore-lore", Material.WRITABLE_BOOK, Material.COBWEB), new ArgumentSlot("item",ValueType.ITEM), new ParameterSlot("ignore-enchantments", Material.ENCHANTED_BOOK, Material.BOOK), new ParameterSlot("ignore-flags",Material.BLUE_BANNER,Material.WHITE_BANNER), new ParameterSlot("ignore-material",Material.CRAFTING_TABLE,Material.WHITE_STAINED_GLASS)),
     IF_VAR_LOCATION_IN_AREA(ActionCategory.VARIABLE_CONDITION, MenusCategory.OTHER, LocationInAreaCondition.class, Material.HONEY_BLOCK, new ArgumentSlot("first", ValueType.LOCATION), new ArgumentSlot("location", ValueType.LOCATION), new ArgumentSlot("second", ValueType.LOCATION)),
+    IF_VAR_ITEM_HAS_ENCHANTMENTS(ActionCategory.VARIABLE_CONDITION, MenusCategory.OTHER, VarItemHasEnchantments.class, Material.ENCHANTED_BOOK, new ArgumentSlot("item", ValueType.ITEM), new ArgumentSlot("enchanted-book", ValueType.ITEM), new ParameterSlot("all"), new ParameterSlot("level-check", Arrays.asList("exact", "min-level", "ignore"), Material.GLOW_ITEM_FRAME, Material.ITEM_FRAME, Material.PAINTING)),
 
     IF_VAR_TEXT_EQUALS(ActionCategory.VARIABLE_CONDITION, MenusCategory.TEXT_OPERATIONS, TextEqualsCondition.class, Material.BOOK, new ArgumentSlot("text", ValueType.TEXT), new ArgumentSlot("content", ValueType.TEXT), new ParameterSlot("ignore-caps"), new ParameterSlot("ignore-colors")),
     IF_VAR_TEXT_CONTAINS(ActionCategory.VARIABLE_CONDITION, MenusCategory.TEXT_OPERATIONS, TextContainsCondition.class, Material.LECTERN, new ArgumentSlot("text", ValueType.TEXT), new ArgumentSlot("contains", ValueType.TEXT), new ParameterSlot("ignore-caps"), new ParameterSlot("ignore-colors")),
