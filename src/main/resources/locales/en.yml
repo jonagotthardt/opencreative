@@ -8298,6 +8298,58 @@ items:
           - "&e Variable &7- For comparison"
           - " "
           - "&eClick to set condition."
+      if-var-item-has-enchantments:
+        name: "&dItem Has Enchantments"
+        lore:
+          - "&7Checks whether the item is"
+          - "&7enchanted with the specified enchantments."
+          - " "
+          - "&fIn the chest:"
+          - "&c Item &7- For comparison"
+          - "&c Item &7- Enchanted Book"
+          - "&3 Parameter &7- Item must have"
+          - "&7  all or any of the enchantments"
+          - "&3 Parameter &7- Level check type"
+          - " "
+          - "&eClick to set the condition."
+        placeholders:
+          enchantment:
+            name: "&6Enchanted Book"
+        arguments:
+          all:
+            name: "&fMatch Any or All"
+            lore:
+              - "&7If 'yes' is selected, the condition"
+              - "&7will be met only if the item has"
+              - "&7all the specified enchantments."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Any"
+              true: "Require All"
+          level-check:
+            name: "&6Level Check Type"
+            lore:
+              - "&7If exact match is selected, all"
+              - "&7enchantment levels must match the"
+              - "&7ones in the book. If level is ignored,"
+              - "&7it will only check if the"
+              - "&7enchantment type exists."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+            choices:
+              exact: "Levels Must Match"
+              min-level: "If Equal or Higher"
+              ignore: "Ignore Levels"
       if-var-text-equals:
         name: "&eText equals"
         lore:
@@ -12560,6 +12612,7 @@ blocks:
   if_var_number_greater: "&aNumber greater >"
   if_var_number_less: "&cNumber less <"
   if_var_number_in_range: "&fNumber in range"
+  if_var_item_has_enchantments: "Has enchants"
   else_condition: "&eElse"
   selection_action: "&5Select target"
   selection_set: "&dSet target"
