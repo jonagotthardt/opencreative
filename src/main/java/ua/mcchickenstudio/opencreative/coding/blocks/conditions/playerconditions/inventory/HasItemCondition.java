@@ -25,6 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -37,16 +38,26 @@ public class HasItemCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
-        boolean check = false;
-        List<ItemStack> items = getArguments().getItemList("items",this);
-        for (ItemStack itemStack : items) {
-            if (player.getInventory().containsAtLeast(itemStack,itemStack.getAmount())) {
-                check = true;
-            } else {
-                return false;
-            }
+        List<ItemStack> items = getArguments().getItemList("items", this);
+        boolean all = getArguments().getValue("all", false, this);
+        String compareMode = getArguments().getValue("compare-mode", "min-items", this);
+
+        if (all) {
+            return items.stream().allMatch(itemStack -> matches(itemStack, player, compareMode));
+        } else {
+            return items.stream().anyMatch(itemStack -> matches(itemStack, player, compareMode));
         }
-        return check;
+    }
+
+    private boolean matches(ItemStack item, Player player, String compareMode) {
+        Inventory inv = player.getInventory();
+
+        return switch (compareMode.toLowerCase()) {
+            case "min-items" -> inv.containsAtLeast(item, item.getAmount());
+            case "full" -> inv.contains(item);
+            case "material" -> inv.contains(item.getType(), item.getAmount());
+            default -> false;
+        };
     }
 
     @Override
