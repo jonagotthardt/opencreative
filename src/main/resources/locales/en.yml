@@ -8346,9 +8346,11 @@ items:
               - "%1%"
               - "%2%"
               - "%3%"
+              - "%4%"
             choices:
               exact: "Levels Must Match"
               min-level: "If Equal or Higher"
+              max-level: "If Equal or Lower"
               ignore: "Ignore Levels"
       if-var-text-equals:
         name: "&eText equals"
