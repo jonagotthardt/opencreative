@@ -71,7 +71,7 @@ public enum ValueType {
     /**
      * Parameters are used in Layout menus for coding blocks. They can store text, boolean and number values.
      */
-    PARAMETER(Material.ANVIL, Material.CYAN_STAINED_GLASS_PANE),
+    PARAMETER(Material.ANVIL, Material.BLACK_STAINED_GLASS_PANE),
     /**
      * Particle stores Minecraft particle type, for example: EXPLOSION.
      */

@@ -58,6 +58,7 @@ public class CreativeMenu extends AbstractMenu {
         ItemStack clickedItem = event.getCurrentItem();
         event.setCancelled(true);
         if (!isClickedInMenuSlots(event)) return;
+        if (clickedItem == null) return;
         Player player = (Player) event.getWhoClicked();
         switch (getItemType(clickedItem)) {
             case "reload" -> player.performCommand("creative reload");

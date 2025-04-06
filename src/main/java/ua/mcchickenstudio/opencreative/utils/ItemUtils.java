@@ -287,6 +287,9 @@ public class ItemUtils {
     }
 
     public static String getPersistentData(ItemStack item, NamespacedKey key) {
+        if (item == null) {
+            return "";
+        }
         if (item.getItemMeta() == null) {
             return "";
         }
