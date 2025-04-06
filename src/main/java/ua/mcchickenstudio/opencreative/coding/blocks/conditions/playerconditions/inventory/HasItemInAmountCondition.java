@@ -18,50 +18,42 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.inventory;
 
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
 
-public class HasItemCondition extends PlayerCondition {
+public class HasItemInAmountCondition extends PlayerCondition {
 
-    public HasItemCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
+    public HasItemInAmountCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
         super(executor, target, x, args, actions, reactions, isOpposed);
     }
 
     @Override
     public boolean checkPlayer(Player player) {
-        List<ItemStack> items = getArguments().getItemList("items", this);
-        boolean all = getArguments().getValue("all", false, this);
-        String compareMode = getArguments().getValue("compare-mode", "min-items", this);
+        ItemStack item = getArguments().getValue("item", new ItemStack(Material.APPLE), this);
+        int amount = getArguments().getValue("amount", item.getAmount(), this);
+        String compareMode = getArguments().getValue("compare-mode", "full", this);
 
-        if (all) {
-            return items.stream().allMatch(itemStack -> matches(itemStack, player, compareMode));
-        } else {
-            return items.stream().anyMatch(itemStack -> matches(itemStack, player, compareMode));
-        }
-    }
-
-    private boolean matches(ItemStack item, Player player, String compareMode) {
         Inventory inv = player.getInventory();
 
         return switch (compareMode.toLowerCase()) {
-            case "min-items" -> inv.containsAtLeast(item, item.getAmount());
-            case "full" -> inv.contains(item);
-            case "material" -> inv.contains(item.getType(), item.getAmount());
+            case "full" -> inv.containsAtLeast(item, amount);
+            case "material" -> inv.contains(item.getType(), amount);
             default -> false;
         };
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.IF_PLAYER_HAS_ITEM;
+        return ActionType.IF_PLAYER_HAS_ITEM_IN_AMOUNT;
     }
 }

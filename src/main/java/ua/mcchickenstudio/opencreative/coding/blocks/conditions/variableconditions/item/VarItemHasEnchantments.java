@@ -71,6 +71,7 @@ public class VarItemHasEnchantments extends VariableCondition {
             boolean levelMatches = switch (levelCheckMode) {
                 case "exact" -> item.getEnchantmentLevel(enchantment) == requiredLevel;
                 case "min-level" -> item.getEnchantmentLevel(enchantment) >= requiredLevel;
+                case "max-level" -> item.getEnchantmentLevel(enchantment) <= requiredLevel;
                 case "ignore" -> true;
                 default -> false;
             };
