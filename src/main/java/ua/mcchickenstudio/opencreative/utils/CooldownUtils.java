@@ -19,8 +19,11 @@
 package ua.mcchickenstudio.opencreative.utils;
 
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.settings.groups.Group;
 
 import java.util.HashMap;
+
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
  * This class contains utils for checking and modifying player's cooldown.
@@ -82,12 +85,47 @@ public class CooldownUtils {
         }
     }
 
+    /**
+     * Checks if player has cooldown. If not, sets it and returns true.
+     * If cooldown is active, returns false.
+     *
+     * @param player Player to check and set cooldown
+     * @param group Group object for retrieving cooldown durations
+     * @param type Cooldown type to check/set
+     * @return true if cooldown was not active and now set; false if still on cooldown
+     */
+    public static boolean checkAndSetCooldown(Player player, Group group, CooldownType type) {
+        int currentCooldown = getCooldown(player, type);
+        if (currentCooldown > 0) return false;
+
+        setCooldown(player, getGroupCooldown(type, group), type);
+        return true;
+    }
+
+    public static boolean checkAndSetCooldownWithMessage(Player player, Group group, CooldownType type) {
+        if (!checkAndSetCooldown(player, group, type)) {
+            player.sendMessage(getLocaleMessage("cooldown")
+                    .replace("%cooldown%", String.valueOf(getCooldown(player, type))));
+            return false;
+        }
+        return true;
+    }
+
     private static HashMap<Player, Long> getCooldownMap(CooldownType type) {
         return switch (type) {
             case GENERIC_COMMAND -> genericCommandCooldown;
             case ADVERTISEMENT_COMMAND -> advertisementCommandCooldown;
             case CREATIVE_CHAT -> creativeChatCooldown;
             case WORLD_CHAT -> worldChatCooldown;
+        };
+    }
+
+    private static int getGroupCooldown(CooldownType type, Group group) {
+        return switch (type) {
+            case GENERIC_COMMAND -> group.getGenericCommandCooldown();
+            case ADVERTISEMENT_COMMAND -> group.getAdvertisementCooldown();
+            case CREATIVE_CHAT -> group.getCreativeChatCooldown();
+            case WORLD_CHAT -> group.getChatCooldown();
         };
     }
 }
