@@ -51,6 +51,6 @@ public abstract class ExecutorBlock extends CodingBlock {
 
     @Override
     public String toString() {
-        return "Executor " + getName() + ", ID: " + getId() + " by " + getCodingPackId();
+        return "Executor " + getName() + ", ID: " + getId() + " by " + getExtensionId();
     }
 }

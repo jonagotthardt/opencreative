@@ -22,7 +22,7 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.coding.CodingPackContent;
+import ua.mcchickenstudio.opencreative.coding.ExtensionContent;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
@@ -32,7 +32,7 @@ import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
  * This class represents a value, that can be got
  * from event, actions handler, action and target.
  */
-public abstract class EventValueTest implements CodingPackContent {
+public abstract class EventValueTest implements ExtensionContent {
 
     private final String id;
     private final ItemStack displayIcon;
@@ -81,7 +81,7 @@ public abstract class EventValueTest implements CodingPackContent {
     public abstract @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action);
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return StringUtils.capitalize(id);
     }
 }

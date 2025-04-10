@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.arguments;
 
 import org.bukkit.block.Block;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
@@ -51,6 +52,13 @@ public class Argument {
     protected final ValueType type;
     protected final Object value;
 
+    /**
+     * Creates instance of argument.
+     * @param planet associated planet.
+     * @param type type of value.
+     * @param path name of argument.
+     * @param value value.
+     */
     public Argument(Planet planet, ValueType type, String path, Object value) {
         this.planet = planet;
         this.path = path;
@@ -58,15 +66,31 @@ public class Argument {
         this.type = type;
     }
 
+    /**
+     * Returns a name of argument.
+     * @return name of argument.
+     */
     public String getPath() {
         return path;
     }
 
+    /**
+     * Returns type of value.
+     * @return type of value.
+     */
     public ValueType getType() {
         return type;
     }
 
-    public Object getValue(Action action) {
+    /**
+     * Returns value of argument.
+     * <p>If value is a link to variable or event value
+     * with null value, it will return link instead of
+     * null. That prevents from null pointer problems.
+     * @param action action, that will be used, to parse text placeholders.
+     * @return value of argument.
+     */
+    public @NotNull Object getValue(@NotNull Action action) {
         if (value instanceof VariableLink link) {
             Object variableValue = planet.getVariables().getVariableValue(link,action);
             if (variableValue != null) {
@@ -84,12 +108,20 @@ public class Argument {
         return value;
     }
 
+    /**
+     * Checks is variable a list.
+     * @return true - is list, false - not a list.
+     */
     public boolean isList() {
         return (this.type == ValueType.LIST);
     }
 
-    private void setTempVars(Action action) {
-        // FIXME: We need to separate these methods into different class.
+    /**
+     * Sets temporary values for event value.
+     * @param action action to parse some values.
+     */
+    private void setTempVars(@NotNull Action action) {
+        // FIXME: We need to change EventValues enum to different classes.
         if (action.getEntity() instanceof Entity entity) {
             setEventVariable(action, EventValues.Variable.NICKNAME,entity.getName());
             setEventVariable(action, EventValues.Variable.TYPE,entity.getType().name().toLowerCase());
@@ -99,11 +131,21 @@ public class Argument {
         setTempPlayerVars(action);
     }
 
+    /**
+     * Sets event value to actions handler.
+     * @param action action to set event value.
+     * @param variable event value type.
+     * @param value new value.
+     */
     private void setEventVariable(Action action, EventValues.Variable variable, Object value) {
         action.getHandler().setVarValue(variable,value);
     }
 
-    private void setTempPlanetVars(Action action) {
+    /**
+     * Sets temporary planet values for event value.
+     * @param action action to set event value.
+     */
+    private void setTempPlanetVars(@NotNull Action action) {
         long time = System.currentTimeMillis();
 
         SimpleDateFormat hoursFormat = new SimpleDateFormat("HH");
@@ -133,7 +175,11 @@ public class Argument {
         setEventVariable(action, EventValues.Variable.THUNDER_WEATHER_DURATION, planet.getTerritory().getWorld().getThunderDuration());
     }
 
-    private void setTempPlayerVars(Action action) {
+    /**
+     * Sets temporary player values for event value.
+     * @param action action to set event value.
+     */
+    private void setTempPlayerVars(@NotNull Action action) {
         if (action.getEntity() instanceof Entity entity) {
             setEventVariable(action, EventValues.Variable.FALL_DISTANCE, entity.getFallDistance());
             setEventVariable(action, EventValues.Variable.FREEZE_TICKS, entity.getFreezeTicks());
@@ -187,7 +233,14 @@ public class Argument {
         }
     }
 
-    public static String parseEntity(String text, ActionsHandler handler, Action action) {
+    /**
+     * Replaces placeholders in text with values.
+     * @param text text to parse.
+     * @param handler handler to get some values.
+     * @param action action to get some values.
+     * @return parsed text.
+     */
+    public static @NotNull String parseEntity(String text, ActionsHandler handler, Action action) {
         return Placeholders.getInstance().parsePlaceholders(text,handler,action);
     }
 

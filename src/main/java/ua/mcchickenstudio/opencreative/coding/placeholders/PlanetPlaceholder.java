@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.placeholders;
 
 import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
@@ -42,17 +43,17 @@ public class PlanetPlaceholder extends KeyPlaceholder {
     }
 
     @Override
-    public String getCodingPackId() {
+    public @NotNull String getExtensionId() {
         return "default";
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "Planet Placeholder";
     }
 
     @Override
-    public String getDescription() {
+    public @NotNull String getDescription() {
         return "Parses planet placeholders";
     }
 }

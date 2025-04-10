@@ -54,6 +54,11 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  */
 public class CodingBlockParser {
 
+    /**
+     * Saves all code lines in developer planet and
+     * launches new code.
+     * @param devPlanet developer planet to parse code.
+     */
     public void parseCode(DevPlanet devPlanet) {
         long time = System.currentTimeMillis();
         sendCodingDebugLog(devPlanet.getPlanet(),"Shutting down executors and clearing...");
@@ -68,6 +73,12 @@ public class CodingBlockParser {
         }
     }
 
+    /**
+     * Adds all code lines from developer planet to configuration.
+     * Don't forget to save it.
+     * @param devPlanet developer planet to parse code.
+     * @param config config to add executors.
+     */
     public void parseAllExecutors(DevPlanet devPlanet, CodeConfiguration config) {
 
         List<Location> locations = new ArrayList<>();
@@ -85,6 +96,14 @@ public class CodingBlockParser {
 
     }
 
+    /**
+     * Adds specified code lines from developer planet to configuration.
+     * Locations represent locations of executors cells (blue glass).
+     * Don't forget to save it.
+     * @param devPlanet developer planet to parse code.
+     * @param config config to add executors.
+     * @return true - code is fine, false - troubles while parsing.
+     */
     public boolean parseExecutors(DevPlanet devPlanet, CodeConfiguration config, List<Location> executorsLocations) {
 
         boolean isCodeFine = true;

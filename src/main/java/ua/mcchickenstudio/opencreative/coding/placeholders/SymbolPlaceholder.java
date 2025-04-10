@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.placeholders;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
@@ -39,17 +40,17 @@ public class SymbolPlaceholder extends KeyPlaceholder {
     }
 
     @Override
-    public String getCodingPackId() {
+    public @NotNull String getExtensionId() {
         return "default";
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "Symbol Placeholder";
     }
 
     @Override
-    public String getDescription() {
+    public @NotNull String getDescription() {
         return "Parses symbol placeholders";
     }
 }

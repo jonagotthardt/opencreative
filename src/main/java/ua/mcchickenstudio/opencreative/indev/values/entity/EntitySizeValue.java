@@ -46,12 +46,12 @@ public class EntitySizeValue extends NumberEventValue {
     }
 
     @Override
-    public String getCodingPackId() {
+    public @NotNull String getExtensionId() {
         return "default";
     }
 
     @Override
-    public String getDescription() {
+    public @NotNull String getDescription() {
         return "Returns entity name";
     }
 }

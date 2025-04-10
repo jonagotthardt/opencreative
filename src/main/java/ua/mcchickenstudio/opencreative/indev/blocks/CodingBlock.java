@@ -22,9 +22,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.CodingPackContent;
+import ua.mcchickenstudio.opencreative.coding.ExtensionContent;
 
-public abstract class CodingBlock implements CodingPackContent {
+public abstract class CodingBlock implements ExtensionContent {
 
     private final @NotNull String id;
     private final @NotNull Material mainBlock;

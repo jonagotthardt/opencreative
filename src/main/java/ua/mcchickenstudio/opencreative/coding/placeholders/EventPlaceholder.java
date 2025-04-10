@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.placeholders;
 
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
@@ -50,17 +51,17 @@ public class EventPlaceholder extends KeyPlaceholder {
     }
 
     @Override
-    public String getCodingPackId() {
+    public @NotNull String getExtensionId() {
         return "default";
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "Event Placeholder";
     }
 
     @Override
-    public String getDescription() {
+    public @NotNull String getDescription() {
         return "Parses event placeholders";
     }
 }

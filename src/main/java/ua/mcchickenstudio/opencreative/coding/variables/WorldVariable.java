@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.variables;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
@@ -34,15 +36,25 @@ import java.util.Map;
  * <p>Global - stores in world while it's loaded
  * <p>Saved - stores in world forever
  */
-public class WorldVariable {
+public final class WorldVariable {
 
-    private final String name;
-    private Object value;
-    private ValueType valueType;
-    private final VariableLink.VariableType varType;
-    private final ActionsHandler handler;
+    private final @NotNull String name;
+    private final @NotNull VariableLink.VariableType varType;
+    private final @Nullable ActionsHandler handler;
 
-    public WorldVariable(String name, VariableLink.VariableType varType, ValueType type, Object value, ActionsHandler handler) {
+    private @Nullable Object value;
+    private @NotNull ValueType valueType;
+
+    /**
+     * Creates instance of variable, that has name, value, type,
+     * value type and actions handler.
+     * @param name name of variable.
+     * @param varType type of variable (local, global, saved).
+     * @param type type of value.
+     * @param value value.
+     * @param handler actions handler.
+     */
+    public WorldVariable(@NotNull String name, @NotNull VariableLink.VariableType varType, @NotNull ValueType type, @Nullable Object value, @Nullable ActionsHandler handler) {
         this.name = name;
         this.valueType = type;
         this.varType = varType;
@@ -50,34 +62,73 @@ public class WorldVariable {
         this.handler = handler;
     }
 
-    public ActionsHandler getHandler() {
+    /**
+     * Returns actions handler associated with
+     * variable. Can be null when variable
+     * is loaded from storage, or when
+     * player creates variable with
+     * command.
+     * @return actions handler, or null.
+     */
+    public @Nullable ActionsHandler getHandler() {
         return handler;
     }
 
-    public final Object getValue() {
+    /**
+     * Returns value of variable.
+     * @return value of variable.
+     */
+    public @Nullable Object getValue() {
         return value;
     }
 
-    public final ValueType getType() {
+    /**
+     * Returns type of value.
+     * @return value type.
+     */
+    public @NotNull ValueType getType() {
         return valueType;
     }
 
-    public VariableLink.VariableType getVarType() {
+    /**
+     * Returns type of variable (local, global, saved).
+     * @return type of variable.
+     */
+    public @NotNull VariableLink.VariableType getVarType() {
         return varType;
     }
 
-    public String getName() {
+    /**
+     * Returns name of variable.
+     * @return name of variable.
+     */
+    public @NotNull String getName() {
         return name;
     }
 
-    public void setType(ValueType type) {
+    /**
+     * Sets a new value type to variable.
+     * @param type new type.
+     */
+    public void setType(@NotNull ValueType type) {
         this.valueType = type;
     }
 
-    public void setValue(Object value) {
+    /**
+     * Sets a new value to variable.
+     * @param value new value.
+     */
+    public void setValue(@Nullable Object value) {
         this.value = value;
     }
 
+    /**
+     * Returns a size of variable.
+     * <p>If value is map, then keys amount will be added to size.
+     * <p>If value is list, then elements amount will be added to size.
+     * <p>Otherwise, it will return 1.
+     * @return size of variable.
+     */
     public int getSize() {
         int size = 1;
         if (value instanceof List<?> list) {

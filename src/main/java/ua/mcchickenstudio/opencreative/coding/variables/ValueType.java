@@ -21,6 +21,8 @@ package ua.mcchickenstudio.opencreative.coding.variables;
 import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -105,21 +107,33 @@ public enum ValueType {
      */
     ANY(Material.AIR, Material.BLACK_STAINED_GLASS_PANE);
 
-    private final Material itemMaterial;
-    private final Material menuGlass;
+    private final Material material;
+    private final Material glass;
 
-    ValueType(Material item, Material menuGlass) {
-        this.itemMaterial = item;
-        this.menuGlass = menuGlass;
+    ValueType(Material item, Material glass) {
+        this.material = item;
+        this.glass = glass;
     }
 
-    public Material getMenuGlass() {
-        return menuGlass;
+    /**
+     * Returns stained-glass pane material,
+     * that's displayed in layout menu.
+     * @return
+     */
+    public Material getGlass() {
+        return glass;
     }
 
+    /**
+     * Returns localized glass item stack,
+     * that's displayed in layout menu.
+     * @param action type of action.
+     * @param path name of argument.
+     * @return stained-glass pane item with name and description.
+     */
     public ItemStack getGlassItem(ActionType action, String path) {
         String messagePath = "items.developer.actions." + action.name().toLowerCase().replace("_", "-") + ".placeholders." + path;
-        ItemStack itemStack = createItem(getMenuGlass(), 1);
+        ItemStack itemStack = createItem(getGlass(), 1);
         ItemMeta meta = itemStack.getItemMeta();
         if (!messageExists(messagePath + ".name")) {
             meta.setDisplayName(getLocaleItemName("items.developer.placeholders." + this.name().toLowerCase() + ".name"));
@@ -135,21 +149,38 @@ public enum ValueType {
         return itemStack;
     }
 
-    public static ValueType parseString(String type) {
+    /**
+     * Returns type of value by comparing
+     * it with value types names.
+     * @param type text with type name.
+     * @return value type, or text value.
+     */
+    public static @NotNull ValueType parseString(String type) {
         for (ValueType varType : values()) {
             if (varType.name().equalsIgnoreCase(type)) return varType;
         }
         return TEXT;
     }
 
-    public static ValueType getByMaterial(Material material) {
+    /**
+     * Returns type of value by comparing
+     * material with value types materials.
+     * @param material material to check.
+     * @return value type, or text value.
+     */
+    public static @NotNull ValueType getByMaterial(Material material) {
         for (ValueType varType : values()) {
-            if (varType.itemMaterial == material) return varType;
+            if (varType.material == material) return varType;
         }
         return TEXT;
     }
 
-    public static ValueType getByObject(Object object) {
+    /**
+     * Returns value type of object.
+     * @param object object to check.
+     * @return value type, or null if it's unknown type.
+     */
+    public static @Nullable ValueType getByObject(Object object) {
         if (object instanceof Float || object instanceof Double || object instanceof Integer || object instanceof Byte) {
             return NUMBER;
         } else if (object instanceof String) {
@@ -178,6 +209,10 @@ public enum ValueType {
         return null;
     }
 
+    /**
+     * Returns localized name of value type.
+     * @return localized name of value type.
+     */
     public String getLocaleName() {
         return getLocaleMessage("environment.values." + name().toLowerCase().replace("_","-"),false);
     }

@@ -19,7 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.placeholders;
 
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.CodingPackContent;
+import ua.mcchickenstudio.opencreative.coding.ExtensionContent;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 
@@ -30,7 +30,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
  * @see Placeholders
  * @see KeyPlaceholder
  */
-public abstract class Placeholder implements CodingPackContent {
+public abstract class Placeholder implements ExtensionContent {
 
     /**
      * Returns <code>true</code> if specified text contains
@@ -51,6 +51,6 @@ public abstract class Placeholder implements CodingPackContent {
 
     @Override
     public String toString() {
-        return "Placeholder (" + getName() + " from " + getCodingPackId() + ")";
+        return "Placeholder (" + getName() + " from " + getExtensionId() + ")";
     }
 }
