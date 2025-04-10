@@ -288,9 +288,9 @@ public final class WorldVariables {
                 return variableMap;
             }
         } catch (Exception e) {
-            return value;
+            return String.valueOf(value);
         }
-        return value;
+        return String.valueOf(value);
     }
 
     private Object deserializeObject(Object value, ValueType type) {
@@ -368,9 +368,9 @@ public final class WorldVariables {
                 return new VariableLink(varName, VariableLink.VariableType.SAVED);
             }
         } catch (Exception e) {
-            return value;
+            return String.valueOf(value);
         }
-        return value;
+        return String.valueOf(value);
     }
 
     /**
