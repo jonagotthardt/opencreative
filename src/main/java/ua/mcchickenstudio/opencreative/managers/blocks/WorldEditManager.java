@@ -1,0 +1,177 @@
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package ua.mcchickenstudio.opencreative.managers.blocks;
+
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.MaxChangedBlocksException;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.entity.BaseEntity;
+import com.sk89q.worldedit.event.extent.EditSessionEvent;
+import com.sk89q.worldedit.extent.AbstractDelegateExtent;
+import com.sk89q.worldedit.extent.Extent;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.util.eventbus.Subscribe;
+import com.sk89q.worldedit.world.World;
+import com.sk89q.worldedit.world.biome.BiomeType;
+import com.sk89q.worldedit.world.block.BaseBlock;
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.block.BlockTypes;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+
+public class WorldEditManager implements BlocksManager {
+
+    @Override
+    public int setBlocksType(@NotNull Location first, @NotNull Location second, @NotNull Material material, int limit) {
+        World world = BukkitAdapter.adapt(first.getWorld());
+        Region selection = new CuboidRegion(world, BlockVector3.at(0, 80, 0), BlockVector3.at(10, 80, 10));
+        try (EditSession editSession = WorldEdit.getInstance().newEditSessionBuilder().world(world).maxBlocks(limit).build()) {
+            BlockState blockState = BukkitAdapter.adapt(material.createBlockData());
+            return editSession.setBlocks(selection, blockState);
+        } catch (MaxChangedBlocksException ex) {
+            return 0;
+        }
+    }
+
+    @Override
+    public void init() {
+        WorldEdit.getInstance().getEventBus().register(new Object() {
+            @Subscribe
+            public void onEditSessionEvent(EditSessionEvent event) {
+                if (event.getStage() != EditSession.Stage.BEFORE_HISTORY) return;
+                if (event.getActor() == null) return;
+                org.bukkit.World bukkitWorld = BukkitAdapter.adapt(event.getWorld());
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(bukkitWorld);
+                if (planet == null) return;
+                event.setExtent(new PlanetExtent(planet, event.getExtent()));
+            }
+        });
+    }
+
+    static class PlanetExtent extends AbstractDelegateExtent {
+
+        private final Planet planet;
+
+        public PlanetExtent(Planet planet, Extent extent) {
+            super(extent);
+            this.planet = planet;
+        }
+
+        public static BlockState AIRSTATE = BlockTypes.AIR.getDefaultState();
+        public static BaseBlock AIRBASE = BlockTypes.AIR.getDefaultState().toBaseBlock();
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public boolean setBlock(BlockVector3 location, BlockStateHolder block) {
+            return planet.getWorld().getWorldBorder().isInside(
+                    new Location(planet.getWorld(),
+                            location.x(),
+                            location.y(),
+                            location.z())
+            ) && super.setBlock(location, block);
+        }
+
+        @Override
+        public com.sk89q.worldedit.entity.Entity createEntity(com.sk89q.worldedit.util.Location location, BaseEntity entity) {
+            if (planet.getWorld().getWorldBorder().isInside(
+                    new Location(planet.getWorld(),
+                            location.x(),
+                            location.y(),
+                            location.z())
+            )) {
+                super.createEntity(location, entity);
+            }
+            return null;
+        }
+
+        @Override
+        public boolean setBiome(BlockVector3 location, BiomeType biome) {
+            return planet.getWorld().getWorldBorder().isInside(
+                    new Location(planet.getWorld(),
+                            location.x(),
+                            location.y(),
+                            location.z())
+            ) && super.setBiome(location, biome);
+        }
+
+        @Override
+        public BlockState getBlock(BlockVector3 location) {
+            if (planet.getWorld().getWorldBorder().isInside(
+                    new Location(planet.getWorld(),
+                            location.x(),
+                            location.y(),
+                            location.z())
+            )) {
+                super.getBlock(location);
+            }
+            return AIRSTATE;
+        }
+
+        @Override
+        public BaseBlock getFullBlock(BlockVector3 location) {
+            if (planet.getWorld().getWorldBorder().isInside(
+                    new Location(planet.getWorld(),
+                            location.x(),
+                            location.y(),
+                            location.z())
+            )) {
+                super.getFullBlock(location);
+            }
+            return AIRBASE;
+        }
+
+    }
+
+
+    @Override
+    public boolean isEnabled() {
+        return WorldEdit.getInstance() != null;
+    }
+
+    @Override
+    public String getName() {
+        return "WorldEdit Blocks Manager";
+    }
+}

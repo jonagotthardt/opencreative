@@ -47,6 +47,7 @@ import ua.mcchickenstudio.opencreative.listeners.entity.EntityStateListener;
 import ua.mcchickenstudio.opencreative.listeners.player.*;
 import ua.mcchickenstudio.opencreative.listeners.world.BlockChangeListener;
 import ua.mcchickenstudio.opencreative.listeners.world.RedstoneListener;
+import ua.mcchickenstudio.opencreative.managers.blocks.BlocksManager;
 import ua.mcchickenstudio.opencreative.managers.economy.Economy;
 import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
 import ua.mcchickenstudio.opencreative.managers.stability.DisabledWatchdog;
@@ -57,6 +58,7 @@ import ua.mcchickenstudio.opencreative.menus.Menus;
 import ua.mcchickenstudio.opencreative.managers.space.Space;
 import ua.mcchickenstudio.opencreative.managers.space.PlanetsManager;
 import ua.mcchickenstudio.opencreative.settings.Settings;
+import ua.mcchickenstudio.opencreative.utils.BlockUtils;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
@@ -88,8 +90,9 @@ public final class OpenCreative extends JavaPlugin {
     private PacketManager packet;
     private PlanetsManager space;
     private StabilityManager watchdog;
+    private BlocksManager blocks;
 
-    private static final String version = "5.5.0";
+    private static final String version = "5.6.0";
     private static final String codename = "Well, it's possible";
 
     /**
@@ -147,6 +150,8 @@ public final class OpenCreative extends JavaPlugin {
         packet.init();
         watchdog = new DisabledWatchdog();
         watchdog.init();
+        blocks = HookUtils.getBlocks();
+        blocks.init();
 
         long loadedTime = System.currentTimeMillis()-startTime;
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -325,6 +330,25 @@ public final class OpenCreative extends JavaPlugin {
      */
     public static PacketManager getPacketManager() {
         return getPlugin().packet;
+    }
+
+    /**
+     * Sets custom blocks manager.
+     * @param blocksManager blocks manager.
+     */
+    @SuppressWarnings("unused")
+    public static void setBlocksManager(BlocksManager blocksManager) {
+        getPlugin().getLogger().info("Now using blocks manager: " + blocksManager.getName());
+        getPlugin().blocks = blocksManager;
+    }
+
+    /**
+     * Gets blocks manager, that changes a lot
+     * of blocks in world.
+     * @return blocks manager.
+     */
+    public static BlocksManager getBlocksManager() {
+        return getPlugin().blocks;
     }
 
     /**

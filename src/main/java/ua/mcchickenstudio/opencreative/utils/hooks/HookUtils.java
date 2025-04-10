@@ -23,6 +23,9 @@ import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import ua.mcchickenstudio.opencreative.managers.blocks.BlocksManager;
+import ua.mcchickenstudio.opencreative.managers.blocks.DisabledBlocksManager;
+import ua.mcchickenstudio.opencreative.managers.blocks.WorldEditManager;
 import ua.mcchickenstudio.opencreative.managers.economy.DisabledEconomy;
 import ua.mcchickenstudio.opencreative.managers.economy.Economy;
 import ua.mcchickenstudio.opencreative.managers.economy.VaultEconomy;
@@ -36,6 +39,7 @@ public class HookUtils {
     public static boolean isProtocolLibEnabled = false;
     public static boolean isVaultEnabled = false;
     public static boolean isLibsDisguisesEnabled = false;
+    public static boolean isWorldEditEnabled = false;
 
     /**
      Load hooks into other plugins for working with them. For example: Creative+ can hook into PlaceholderAPI.
@@ -44,11 +48,13 @@ public class HookUtils {
         isPlaceholderAPIEnabled = isPluginEnabled("PlaceholderAPI");
         isProtocolLibEnabled = isPluginEnabled("ProtocolLib");
         isVaultEnabled = isPluginEnabled("Vault");
+        isWorldEditEnabled = isPluginEnabled("WorldEdit");
         isLibsDisguisesEnabled = isProtocolLibEnabled && isPluginEnabled("LibsDisguises");
         OpenCreative.getPlugin().getLogger().info((isPlaceholderAPIEnabled ? "Creative+ hooked into PlaceholderAPI." : "Creative+ didn't detect PlaceholderAPI."));
         OpenCreative.getPlugin().getLogger().info((isProtocolLibEnabled ? "Creative+ hooked into ProtocolLib." : "Creative+ didn't detect ProtocolLib, some block effects will be not available."));
         OpenCreative.getPlugin().getLogger().info((isVaultEnabled ? "Creative+ hooked into Vault." : "Creative+ didn't detect Vault, action Request Purchase will be not available."));
         OpenCreative.getPlugin().getLogger().info((isLibsDisguisesEnabled ? "Creative+ hooked into LibsDisguises." : "Creative+ didn't detect LibsDisguises or ProtocolLib, disguise actions will be not available."));
+        OpenCreative.getPlugin().getLogger().info((isWorldEditEnabled ? "Creative+ hooked into WorldEdit." : "Creative+ didn't detect WorldEdit."));
         if (isPlaceholderAPIEnabled) {
             PAPIUtils.registerPlaceholder();
         }
@@ -80,6 +86,14 @@ public class HookUtils {
             return new ProtocolLibManager();
         } else {
             return new DisabledPacketManager();
+        }
+    }
+
+    public static BlocksManager getBlocks() {
+        if (isWorldEditEnabled) {
+            return new WorldEditManager();
+        } else {
+            return new DisabledBlocksManager();
         }
     }
 }

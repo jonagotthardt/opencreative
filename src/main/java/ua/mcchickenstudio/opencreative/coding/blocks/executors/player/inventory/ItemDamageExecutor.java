@@ -41,7 +41,7 @@ public class ItemDamageExecutor extends PlayerExecutor {
 
     @Override
     public ExecutorType getExecutorType() {
-        return ExecutorType.PLAYER_ITEM_CRAFT;
+        return ExecutorType.PLAYER_ITEM_DAMAGE;
     }
 
 }
