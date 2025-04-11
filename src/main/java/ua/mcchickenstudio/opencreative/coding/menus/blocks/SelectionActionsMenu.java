@@ -90,11 +90,11 @@ public class SelectionActionsMenu extends AbstractMenu {
         ItemStack currentItem = event.getCurrentItem();
         if (currentItem == null) return;
         if (itemEquals(currentItem, playerCondition)) {
-            new MenusCategorySelectionMenu(player,signLocation, ActionCategory.PLAYER_CONDITION).open(player);
+            new BlocksCategorySelectionMenu(player,signLocation, ActionCategory.PLAYER_CONDITION).open(player);
         } else if (itemEquals(currentItem, entityCondition)) {
-            new MenusCategorySelectionMenu(player,signLocation, ActionCategory.ENTITY_CONDITION).open(player);
+            new BlocksCategorySelectionMenu(player,signLocation, ActionCategory.ENTITY_CONDITION).open(player);
         } else if (itemEquals(currentItem, varCondition)) {
-            new MenusCategorySelectionMenu(player,signLocation, ActionCategory.VARIABLE_CONDITION).open(player);
+            new BlocksCategorySelectionMenu(player,signLocation, ActionCategory.VARIABLE_CONDITION).open(player);
         } else if (itemEquals(currentItem, allPlayers)) {
             setLine("all_players");
             Sounds.DEV_SET_TARGET.play(player);

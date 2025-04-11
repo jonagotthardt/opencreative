@@ -58,7 +58,6 @@ import ua.mcchickenstudio.opencreative.menus.Menus;
 import ua.mcchickenstudio.opencreative.managers.space.Space;
 import ua.mcchickenstudio.opencreative.managers.space.PlanetsManager;
 import ua.mcchickenstudio.opencreative.settings.Settings;
-import ua.mcchickenstudio.opencreative.utils.BlockUtils;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;

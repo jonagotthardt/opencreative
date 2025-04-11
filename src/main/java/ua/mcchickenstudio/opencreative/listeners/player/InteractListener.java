@@ -36,7 +36,6 @@ import ua.mcchickenstudio.opencreative.coding.menus.variables.PotionsMenu;
 import ua.mcchickenstudio.opencreative.coding.menus.variables.VariablesMenu;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.LayoutMaker;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import ua.mcchickenstudio.opencreative.coding.menus.blocks.MenusCategorySelectionMenu;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menus.world.browsers.OwnWorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.world.browsers.RecommendedWorldsMenu;
@@ -270,7 +269,7 @@ public final class InteractListener implements Listener {
             AbstractMenu menu = null;
             if (mainBlockCategory != null) {
                 menu = switch (mainBlockCategory) {
-                    case EVENT_WORLD, EVENT_ENTITY, EVENT_PLAYER -> new MenusCategorySelectionMenu(player, clickedBlock.getLocation(), mainBlockCategory);
+                    case EVENT_WORLD, EVENT_ENTITY, EVENT_PLAYER -> new BlocksCategorySelectionMenu(player, clickedBlock.getLocation(), mainBlockCategory);
                     default -> null;
                 };
             } else if (actionBlockCategory != null) {
@@ -278,7 +277,7 @@ public final class InteractListener implements Listener {
                     case PLAYER_ACTION, PLAYER_CONDITION, VARIABLE_ACTION,
                          VARIABLE_CONDITION, ENTITY_ACTION, ENTITY_CONDITION,
                          WORLD_ACTION, WORLD_CONDITION, CONTROL_ACTION,
-                         REPEAT_ACTION, HANDLER_ACTION -> new MenusCategorySelectionMenu(player, clickedBlock.getLocation(), actionBlockCategory);
+                         REPEAT_ACTION, HANDLER_ACTION -> new BlocksCategorySelectionMenu(player, clickedBlock.getLocation(), actionBlockCategory);
                     case SELECTION_ACTION -> new SelectionActionsMenu(player,clickedBlock.getLocation());
                     case LAUNCH_FUNCTION_ACTION -> new FunctionChooserMenu(player, devPlanet,clickedBlock.getLocation());
                     case LAUNCH_METHOD_ACTION -> new MethodChooserMenu(player, devPlanet,clickedBlock.getLocation());
