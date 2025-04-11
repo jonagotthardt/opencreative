@@ -20,8 +20,11 @@ package ua.mcchickenstudio.opencreative.coding.menus.blocks;
 
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
+import ua.mcchickenstudio.opencreative.indev.ActionTypeSelectionMenu;
+import ua.mcchickenstudio.opencreative.indev.MenusCategorySelectionMenu;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import org.bukkit.Location;
@@ -89,11 +92,23 @@ public class SelectionActionsMenu extends AbstractMenu {
         ItemStack currentItem = event.getCurrentItem();
         if (currentItem == null) return;
         if (itemEquals(currentItem, playerCondition)) {
-            new PlayerConditionsMenu(player,signLocation).open(player);
+            if (OpenCreative.getSettings().isDebug()) {
+                new MenusCategorySelectionMenu(player,signLocation, ActionCategory.PLAYER_CONDITION).open(player);
+            } else {
+                new PlayerConditionsMenu(player,signLocation).open(player);
+            }
         } else if (itemEquals(currentItem, entityCondition)) {
-            new EntityConditionsMenu(player,signLocation).open(player);
+            if (OpenCreative.getSettings().isDebug()) {
+                new MenusCategorySelectionMenu(player,signLocation, ActionCategory.ENTITY_CONDITION).open(player);
+            } else {
+                new EntityConditionsMenu(player,signLocation).open(player);
+            }
         } else if (itemEquals(currentItem, varCondition)) {
-            new VariableConditionsMenu(player,signLocation).open(player);
+            if (OpenCreative.getSettings().isDebug()) {
+                new MenusCategorySelectionMenu(player,signLocation, ActionCategory.VARIABLE_CONDITION).open(player);
+            } else {
+                new VariableConditionsMenu(player,signLocation).open(player);
+            }
         } else if (itemEquals(currentItem, allPlayers)) {
             setLine("all_players");
             Sounds.DEV_SET_TARGET.play(player);

@@ -36,6 +36,8 @@ import ua.mcchickenstudio.opencreative.coding.menus.variables.PotionsMenu;
 import ua.mcchickenstudio.opencreative.coding.menus.variables.VariablesMenu;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.LayoutMaker;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
+import ua.mcchickenstudio.opencreative.indev.ExecutorTypeSelectionMenu;
+import ua.mcchickenstudio.opencreative.indev.MenusCategorySelectionMenu;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menus.world.browsers.OwnWorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.world.browsers.RecommendedWorldsMenu;
@@ -267,6 +269,17 @@ public final class InteractListener implements Listener {
             }
         } else {
             AbstractMenu menu = null;
+            // FIXME: Debug!!!
+            if (OpenCreative.getSettings().isDebug()) {
+                if (mainBlockCategory != null) {
+                    menu = new MenusCategorySelectionMenu(player, clickedBlock.getLocation(), mainBlockCategory);
+                } else if (actionBlockCategory != null) {
+                    menu = new MenusCategorySelectionMenu(player, clickedBlock.getLocation(), actionBlockCategory);
+                }
+                if (menu != null) menu.open(player);
+                return;
+            }
+            // FIXME: Debug!!!
             if (mainBlockCategory != null) {
                 menu = switch (mainBlockCategory) {
                     case EVENT_PLAYER -> new PlayerEventsMenu(player,clickedBlock.getLocation());

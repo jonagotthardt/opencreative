@@ -21,12 +21,15 @@ package ua.mcchickenstudio.opencreative.indev;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
+import ua.mcchickenstudio.opencreative.menus.BlockMenu;
 import ua.mcchickenstudio.opencreative.menus.ListBrowserMenu;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
@@ -36,7 +39,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * This class represents a menus where player can select type of coding block.
  * Every category of coding blocks has this menus.
  */
-public abstract class ContentWithMenusCategoryMenu<T> extends ListBrowserMenu<T> {
+public abstract class ContentWithMenusCategoryMenu<T> extends ListBrowserMenu<T> implements BlockMenu {
 
     private final Player player;
     private final String codingBlockName;
@@ -46,6 +49,7 @@ public abstract class ContentWithMenusCategoryMenu<T> extends ListBrowserMenu<T>
     protected MenusCategory currentCategory;
 
     private final ItemStack BACK_TO_CATEGORIES;
+    private MenusCategorySelectionMenu categoriesMenu;
 
     public ContentWithMenusCategoryMenu(@NotNull Player player,
                                         @NotNull Location location,
@@ -61,6 +65,10 @@ public abstract class ContentWithMenusCategoryMenu<T> extends ListBrowserMenu<T>
         this.stainedPane = stainedPane;
         this.currentCategory = defaultCategory;
         this.BACK_TO_CATEGORIES = createItem(Material.SPECTRAL_ARROW, 1, "items.developer." + codingBlockName + ".back-to-categories","categories");
+    }
+
+    public void setCategoriesMenu(MenusCategorySelectionMenu categoriesMenu) {
+        this.categoriesMenu = categoriesMenu;
     }
 
     public void setCurrentCategory(MenusCategory currentCategory) {
@@ -99,8 +107,11 @@ public abstract class ContentWithMenusCategoryMenu<T> extends ListBrowserMenu<T>
         ItemStack clicked = event.getCurrentItem();
         event.setCancelled(true);
         if (getItemType(clicked).equalsIgnoreCase("categories")) {
-            player.sendMessage("open back categories");
-            // new MenusCategorySelectionMenu(player, signLocation, titleName, )
+            if (categoriesMenu != null) {
+                categoriesMenu.open(player);
+            } else {
+                player.closeInventory();
+            }
         }
     }
 
@@ -122,5 +133,15 @@ public abstract class ContentWithMenusCategoryMenu<T> extends ListBrowserMenu<T>
     @Override
     public void onOpen(@NotNull InventoryOpenEvent event) {
 
+    }
+
+    @Override
+    public @Nullable BlockState getBlockState() {
+        return signLocation.getBlock().getState();
+    }
+
+    @Override
+    public @Nullable Location getLocation() {
+        return signLocation;
     }
 }

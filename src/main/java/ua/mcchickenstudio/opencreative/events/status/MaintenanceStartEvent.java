@@ -27,7 +27,7 @@ import ua.mcchickenstudio.opencreative.events.CreativeEvent;
  * <p>
  * If command sender is null, then maintenance mode was started by other plugin.
  */
-public class MaintenanceStartEvent extends CreativeEvent {
+public final class MaintenanceStartEvent extends CreativeEvent {
 
     private final @Nullable CommandSender sender;
 

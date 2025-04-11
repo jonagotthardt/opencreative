@@ -33,6 +33,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
@@ -42,7 +43,6 @@ import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.setSignLine;
@@ -51,21 +51,21 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
-public class ExecutorTypeSelectionMenu extends ContentWithMenusCategoryMenu<ExecutorType> {
+public class ActionTypeSelectionMenu extends ContentWithMenusCategoryMenu<ActionType> {
 
-    private final ExecutorCategory executor;
+    private final ActionCategory action;
 
-    public ExecutorTypeSelectionMenu(@NotNull Player player,
-                                     @NotNull Location location,
-                                     @NotNull ExecutorCategory executor) {
-        super(player, location, "events",
-                executor.name().toLowerCase(),
-                executor.getStainedPane(), executor.getDefaultCategory());
-        this.executor = executor;
+    public ActionTypeSelectionMenu(@NotNull Player player,
+                                   @NotNull Location location,
+                                   @NotNull ActionCategory action) {
+        super(player, location, action.isCondition() ? "conditions" : "actions",
+                action.name().toLowerCase(),
+                action.getStainedPane(), action.getDefaultCategory());
+        this.action = action;
     }
 
     @Override
-    protected ItemStack getElementIcon(ExecutorType type) {
+    protected ItemStack getElementIcon(ActionType type) {
         return type.getIcon();
     }
 
@@ -79,28 +79,55 @@ public class ExecutorTypeSelectionMenu extends ContentWithMenusCategoryMenu<Exec
         Block codingBlock = signLocation.getBlock().getRelative(BlockFace.NORTH);
         if (signLocation.getWorld().getName().contains("dev") && devPlanet != null) {
             String typeString = getPersistentData(item,getCodingValueKey());
-            ExecutorType executorType = null;
+            ActionType actionType = null;
             try {
-                executorType = ExecutorType.valueOf(typeString);
+                actionType = ActionType.valueOf(typeString);
             } catch (Exception ignored) {}
-            ExecutorCategory executorCategory = executorType == null ? null : ExecutorCategory.getByMaterial(codingBlock.getType());
-            if (executorCategory != null) {
-                setSignLine(signLocation,2, executorCategory.name().toLowerCase());
+            ActionCategory actionCategory = actionType == null ? null : actionType.getCategory();
+            if (actionCategory != null) {
+                setSignLine(signLocation,2, actionCategory.name().toLowerCase());
             }
             if (setSignLine(signLocation,3,typeString.toLowerCase())) {
                 translateBlockSign(signLocation.getBlock());
                 getPlayer().closeInventory();
                 getPlayer().showTitle(Title.title(
-                        toComponent(getLocaleMessage("world.dev-mode.set-events")), item.getItemMeta().displayName(),
+                        toComponent(getLocaleMessage("world.dev-mode.set-" + (action.isCondition() ? "conditions" : "actions"))), item.getItemMeta().displayName(),
                         Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(1), Duration.ofMillis(750))
                 ));
-                Sounds.DEV_SET_EVENT.play(event.getWhoClicked());
+                (action.isCondition() ? Sounds.DEV_SET_CONDITION : Sounds.DEV_SET_ACTION).play(event.getWhoClicked());
+            }
+            /*
+             Setting a chest block if action requires container.
+             Executors don't have arguments, neither chests.
+            */
+            if (actionCategory != null)  {
+                Block containerBlock = codingBlock.getRelative(BlockFace.UP);
+                if (containerBlock.getState() instanceof InventoryHolder container) {
+                    if (devPlanet.isDropItems()) {
+                        for (ItemStack chestItem : container.getInventory().getContents()) {
+                            if (chestItem != null) {
+                                if (chestItem.getItemMeta() == null || !chestItem.getItemMeta().getPersistentDataContainer().has(getCodingDoNotDropMeKey())) {
+                                    containerBlock.getWorld().dropItem(containerBlock.getLocation(),chestItem);
+                                }
+                            }
+                        }
+                    }
+                    containerBlock.setType(Material.AIR);
+                }
+                if (actionType.isChestRequired()) {
+                    containerBlock.setType(devPlanet.getContainerMaterial());
+                    BlockData blockData = containerBlock.getBlockData();
+                    ((Directional) blockData).setFacing(BlockFace.SOUTH);
+                    containerBlock.setBlockData(blockData);
+                    getPlayer().spawnParticle(Particle.BLOCK,containerBlock.getLocation(),1,0,0.5f,0.5f,containerBlock.getBlockData());
+                    Sounds.DEV_ACTION_WITH_CHEST.play(getPlayer());
+                }
             }
         }
     }
 
     @Override
-    protected List<ExecutorType> getElements() {
-        return ExecutorType.getExecutorsByCategories(executor,currentCategory);
+    protected List<ActionType> getElements() {
+        return ActionType.getActionsByCategories(action, currentCategory);
     }
 }

@@ -636,23 +636,6 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     Module module = new Module(1);
                     module.place(devPlanet, player);
                 }
-                case "test2" -> {
-                    if (!sender.hasPermission("opencreative.test")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
-                    }
-                    if (player == null) return true;
-                    player.sendMessage("Block browser test");
-                    new MenusCategorySelectionMenu(player,
-                            player.getLocation(),
-                            "event_player",
-                            ExecutorCategory.EVENT_PLAYER,
-                            new ExecutorTypeSelectionMenu(
-                                    player, player.getLocation(),
-                                    "event_player", ExecutorCategory.EVENT_PLAYER,
-                                    MenusCategory.STATE
-                            )).open(player);
-                }
                 case "test3" -> {
                     if (!sender.hasPermission("opencreative.test")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
