@@ -36,8 +36,7 @@ import ua.mcchickenstudio.opencreative.coding.menus.variables.PotionsMenu;
 import ua.mcchickenstudio.opencreative.coding.menus.variables.VariablesMenu;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.LayoutMaker;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import ua.mcchickenstudio.opencreative.indev.ExecutorTypeSelectionMenu;
-import ua.mcchickenstudio.opencreative.indev.MenusCategorySelectionMenu;
+import ua.mcchickenstudio.opencreative.coding.menus.blocks.MenusCategorySelectionMenu;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menus.world.browsers.OwnWorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.world.browsers.RecommendedWorldsMenu;
@@ -269,62 +268,25 @@ public final class InteractListener implements Listener {
             }
         } else {
             AbstractMenu menu = null;
-            // FIXME: Debug!!!
-            if (OpenCreative.getSettings().isDebug()) {
-                if (mainBlockCategory != null) {
-                    menu = switch (mainBlockCategory) {
-                        case EVENT_WORLD, EVENT_ENTITY, EVENT_PLAYER -> new MenusCategorySelectionMenu(player, clickedBlock.getLocation(), mainBlockCategory);
-                        default -> null;
-                    };
-                } else if (actionBlockCategory != null) {
-                    menu = switch (actionBlockCategory) {
-                        case PLAYER_ACTION, PLAYER_CONDITION, VARIABLE_ACTION,
-                             VARIABLE_CONDITION, ENTITY_ACTION, ENTITY_CONDITION,
-                             WORLD_ACTION, WORLD_CONDITION, CONTROL_ACTION,
-                             REPEAT_ACTION, HANDLER_ACTION -> new MenusCategorySelectionMenu(player, clickedBlock.getLocation(), actionBlockCategory);
-                        case SELECTION_ACTION -> new SelectionActionsMenu(player,clickedBlock.getLocation());
-                        case LAUNCH_FUNCTION_ACTION -> new FunctionChooserMenu(player, devPlanet,clickedBlock.getLocation());
-                        case LAUNCH_METHOD_ACTION -> new MethodChooserMenu(player, devPlanet,clickedBlock.getLocation());
-                        default -> null;
-                    };
-                }
-                if (menu != null) {
-                    menu.open(player);
-                    return;
-                }
-            }
-            // FIXME: Debug!!!
             if (mainBlockCategory != null) {
                 menu = switch (mainBlockCategory) {
-                    case EVENT_PLAYER -> new PlayerEventsMenu(player,clickedBlock.getLocation());
-                    case EVENT_WORLD -> new WorldEventsMenu(player,clickedBlock.getLocation());
-                    case EVENT_ENTITY -> new EntityEventsMenu(player,clickedBlock.getLocation());
+                    case EVENT_WORLD, EVENT_ENTITY, EVENT_PLAYER -> new MenusCategorySelectionMenu(player, clickedBlock.getLocation(), mainBlockCategory);
                     default -> null;
                 };
-            }
-            if (actionBlockCategory != null) {
+            } else if (actionBlockCategory != null) {
                 menu = switch (actionBlockCategory) {
-                    case PLAYER_ACTION -> new PlayerActionsMenu(player,clickedBlock.getLocation());
-                    case CONTROL_ACTION -> new ControlActionsMenu(player,clickedBlock.getLocation());
-                    case PLAYER_CONDITION -> new PlayerConditionsMenu(player,clickedBlock.getLocation());
-                    case VARIABLE_CONDITION -> new VariableConditionsMenu(player,clickedBlock.getLocation());
-                    case WORLD_CONDITION -> new WorldConditionsMenu(player,clickedBlock.getLocation());
-                    case ENTITY_CONDITION -> new EntityConditionsMenu(player,clickedBlock.getLocation());
-                    case VARIABLE_ACTION -> new VariableActionsMenu(player,clickedBlock.getLocation());
-                    case WORLD_ACTION -> new WorldActionsMenu(player,clickedBlock.getLocation());
-                    case HANDLER_ACTION -> new HandlerActionsMenu(player,clickedBlock.getLocation());
-                    case REPEAT_ACTION -> new RepeatActionsMenu(player,clickedBlock.getLocation());
+                    case PLAYER_ACTION, PLAYER_CONDITION, VARIABLE_ACTION,
+                         VARIABLE_CONDITION, ENTITY_ACTION, ENTITY_CONDITION,
+                         WORLD_ACTION, WORLD_CONDITION, CONTROL_ACTION,
+                         REPEAT_ACTION, HANDLER_ACTION -> new MenusCategorySelectionMenu(player, clickedBlock.getLocation(), actionBlockCategory);
                     case SELECTION_ACTION -> new SelectionActionsMenu(player,clickedBlock.getLocation());
-                    case ENTITY_ACTION -> new EntityActionsMenu(player,clickedBlock.getLocation());
+                    case LAUNCH_FUNCTION_ACTION -> new FunctionChooserMenu(player, devPlanet,clickedBlock.getLocation());
+                    case LAUNCH_METHOD_ACTION -> new MethodChooserMenu(player, devPlanet,clickedBlock.getLocation());
                     default -> null;
                 };
             }
             if (menu != null) {
                 menu.open(player);
-            } else if (actionBlockCategory == ActionCategory.LAUNCH_FUNCTION_ACTION) {
-                new FunctionChooserMenu(player, devPlanet,clickedBlock.getLocation()).open(player);
-            } else if (actionBlockCategory == ActionCategory.LAUNCH_METHOD_ACTION) {
-                new MethodChooserMenu(player, devPlanet,clickedBlock.getLocation()).open(player);
             } else if (mainBlockCategory == ExecutorCategory.CYCLE) {
                 String cycleTicksString = getSignLine(clickedBlock.getLocation(),(byte) 3);
                 if (cycleTicksString != null && !cycleTicksString.isEmpty()) {
