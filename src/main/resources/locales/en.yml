@@ -618,7 +618,7 @@ items:
         - "&7 while holding a book."
         - " "
         - "&fCategory: &9Executor"
-    launch-function:
+    launch-function-action:
       name: "&bCall Function"
       lore:
         - "&7Calls a chosen function and"
@@ -644,7 +644,7 @@ items:
         - "&7 while holding a book."
         - " "
         - "&fCategory: &9Executor"
-    launch-method:
+    launch-method-action:
       name: "&aCall method"
       lore:
         - "&7Calls specified method and"
@@ -675,7 +675,7 @@ items:
         - "&7 right-click the cycle sign."
         - " "
         - "&fCategory: &9Executor"
-    action-world:
+    world-action:
       name: "&cWorld Action"
       lore:
         - "&7Used to modify the world,"
@@ -687,7 +687,7 @@ items:
         - "&7> Set the time"
         - " "
         - "&fCategory: &cAction"
-    action-player:
+    player-action:
       name: "&7Player Action"
       lore:
         - "&7Used to perform actions"
@@ -699,7 +699,7 @@ items:
         - "&7> Clear a player's inventory"
         - " "
         - "&fCategory: &cAction"
-    action-control:
+    control-action:
       name: "&cCode Control Action"
       lore:
         - "&7Used to control the"
@@ -711,7 +711,7 @@ items:
         - "&7> Skip a cycle"
         - " "
         - "&fCategory: &cAction"
-    action-entity:
+    entity-action:
       name: "&aEntity Action"
       lore:
         - "&7Useful for changing entity's"
@@ -723,7 +723,7 @@ items:
         - "&7> Set mob's goal"
         - " "
         - "&fCategory: &cAction"
-    condition-else:
+    else-condition:
       name: "&eElse"
       lore:
         - "&7Actions between pistons will be"
@@ -737,7 +737,7 @@ items:
         - "&7> Else if player is in survival mode"
         - " "
         - "&fCategory: &6Condition"
-    condition-player:
+    player-condition:
       name: "&6Player Condition"
       lore:
         - "&7Checks player options, state"
@@ -749,7 +749,7 @@ items:
         - "&7> If player's game mode is set"
         - " "
         - "&fCategory: &6Condition"
-    condition-world:
+    world-condition:
       name: "&cWorld Condition"
       lore:
         - "&7Checks world parameters,"
@@ -762,7 +762,7 @@ items:
         - "&7> If world is opened"
         - " "
         - "&fCategory: &6Conditions"
-    condition-entity:
+    entity-condition:
       name: "&cEntity Condition"
       lore:
         - "&7Checks entity state and"
@@ -774,7 +774,7 @@ items:
         - "&7> If entity is under rain"
         - " "
         - "&fCategory: &6Conditions"
-    condition-var:
+    variable-condition:
       name: "&9Variable Condition"
       lore:
         - "&7Checks the value of a variable and"
@@ -786,7 +786,7 @@ items:
         - "&7> If the value is not empty"
         - " "
         - "&fCategory: &6Condition"
-    action-var:
+    variable-action:
       name: "&fVariable Action"
       lore:
         - "&7Used to perform actions"
@@ -798,7 +798,7 @@ items:
         - "&7> Delete a variable"
         - " "
         - "&fCategory: &cAction"
-    action-selection:
+    selection-action:
       name: "&dSelect Target"
       lore:
         - "&7Used for changing current"

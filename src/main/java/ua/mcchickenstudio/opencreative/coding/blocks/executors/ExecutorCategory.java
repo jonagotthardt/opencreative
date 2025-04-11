@@ -18,10 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors;
 
+import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
+
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 
 /**
  * <h1>ExecutorCategory</h1>
@@ -88,5 +91,9 @@ public enum ExecutorCategory {
 
     public Material getAdditionalBlock() {
         return additionalBlock;
+    }
+
+    public ItemStack getItem() {
+        return createItem(block,1,"items.developer." + name().toLowerCase().replace("_","-"));
     }
 }

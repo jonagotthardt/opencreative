@@ -18,10 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
+import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
+
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 
 public enum ActionCategory {
 
@@ -98,5 +101,9 @@ public enum ActionCategory {
 
     public Material getBlock() {
         return block;
+    }
+
+    public ItemStack getItem() {
+        return createItem(block,1,"items.developer." + name().toLowerCase().replace("_","-"));
     }
 }

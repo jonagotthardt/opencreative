@@ -27,7 +27,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.inventory.meta.BookMeta;
@@ -174,63 +176,25 @@ public class CommandDev implements CommandExecutor {
 
         player.getInventory().setHeldItemSlot(0);
 
-        ItemStack eventPlayerItem = createItem(Material.DIAMOND_BLOCK,1,"items.developer.event-player");
-        player.getInventory().setItem(0, eventPlayerItem);
-
-        ItemStack actionPlayerItem = createItem(Material.COBBLESTONE,1,"items.developer.action-player");
-        player.getInventory().setItem(1, actionPlayerItem);
-
-        ItemStack conditionPlayerItem = createItem(Material.OAK_PLANKS,1,"items.developer.condition-player");
-        player.getInventory().setItem(2, conditionPlayerItem);
-
-        ItemStack conditionElseItem = createItem(Material.END_STONE,1,"items.developer.condition-else");
-        player.getInventory().setItem(3, conditionElseItem);
-
-        ItemStack actionVar = createItem(Material.IRON_BLOCK,1,"items.developer.action-var");
-        player.getInventory().setItem(13, actionVar);
-
-        ItemStack conditionVarItem = createItem(Material.OBSIDIAN,1,"items.developer.condition-var");
-        player.getInventory().setItem(22, conditionVarItem);
-
-        ItemStack functionItem = createItem(Material.LAPIS_BLOCK,1,"items.developer.function");
-        player.getInventory().setItem(9, functionItem);
-
-        ItemStack launchFunction = createItem(Material.LAPIS_ORE,1,"items.developer.launch-function");
-        player.getInventory().setItem(10, launchFunction);
-
-
-        ItemStack actionControl = createItem(Material.COAL_BLOCK,1,"items.developer.action-control");
-        player.getInventory().setItem(11, actionControl);
-
-        ItemStack conditionEntity = createItem(Material.BRICKS,1,"items.developer.condition-entity");
-        player.getInventory().setItem(12, conditionEntity);
-
-        ItemStack actionWorld = createItem(Material.NETHER_BRICKS,1,"items.developer.action-world");
-        player.getInventory().setItem(20, actionWorld);
-
-        ItemStack actionEntity = createItem(Material.MOSSY_COBBLESTONE,1,"items.developer.action-entity");
-        player.getInventory().setItem(21, actionEntity);
-
-        ItemStack eventEntityItem = createItem(Material.GOLD_BLOCK,1,"items.developer.event-entity");
-        player.getInventory().setItem(27, eventEntityItem);
-
-        ItemStack worldConditionItem = createItem(Material.RED_NETHER_BRICKS,1,"items.developer.condition-world");
-        player.getInventory().setItem(28, worldConditionItem);
-
-        ItemStack eventWorldItem = createItem(Material.REDSTONE_BLOCK,1,"items.developer.event-world");
-        player.getInventory().setItem(29, eventWorldItem);
-
-        ItemStack methodItem = createItem(Material.EMERALD_BLOCK,1,"items.developer.method");
-        player.getInventory().setItem(30, methodItem);
-
-        ItemStack launchMethodItem = createItem(Material.EMERALD_ORE,1,"items.developer.launch-method");
-        player.getInventory().setItem(31, launchMethodItem);
-
-        ItemStack cycleItem = createItem(Material.OXIDIZED_COPPER,1,"items.developer.cycle");
-        player.getInventory().setItem(18, cycleItem);
-
-        ItemStack selectionItem = createItem(Material.PURPUR_BLOCK,1,"items.developer.action-selection");
-        player.getInventory().setItem(19, selectionItem);
+        player.getInventory().setItem(0, ExecutorCategory.EVENT_PLAYER.getItem());
+        player.getInventory().setItem(1, ActionCategory.PLAYER_ACTION.getItem());
+        player.getInventory().setItem(2, ActionCategory.PLAYER_CONDITION.getItem());
+        player.getInventory().setItem(3, ActionCategory.ELSE_CONDITION.getItem());
+        player.getInventory().setItem(13, ActionCategory.VARIABLE_ACTION.getItem());
+        player.getInventory().setItem(22, ActionCategory.VARIABLE_CONDITION.getItem());
+        player.getInventory().setItem(9, ExecutorCategory.FUNCTION.getItem());
+        player.getInventory().setItem(10, ActionCategory.LAUNCH_FUNCTION_ACTION.getItem());
+        player.getInventory().setItem(11, ActionCategory.CONTROL_ACTION.getItem());
+        player.getInventory().setItem(12, ActionCategory.ENTITY_CONDITION.getItem());
+        player.getInventory().setItem(20, ActionCategory.WORLD_ACTION.getItem());
+        player.getInventory().setItem(21, ActionCategory.ENTITY_ACTION.getItem());
+        player.getInventory().setItem(27, ExecutorCategory.EVENT_ENTITY.getItem());
+        player.getInventory().setItem(28, ActionCategory.WORLD_CONDITION.getItem());
+        player.getInventory().setItem(29, ExecutorCategory.EVENT_WORLD.getItem());
+        player.getInventory().setItem(30, ExecutorCategory.METHOD.getItem());
+        player.getInventory().setItem(31, ActionCategory.LAUNCH_METHOD_ACTION.getItem());
+        player.getInventory().setItem(18, ExecutorCategory.CYCLE.getItem());
+        player.getInventory().setItem(19, ActionCategory.SELECTION_ACTION.getItem());
 
         ItemStack linesControllerItem = createItem(Material.COMPARATOR,1,"items.developer.lines-controller");
         player.getInventory().setItem(26, linesControllerItem);
