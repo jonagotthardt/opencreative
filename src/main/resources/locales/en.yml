@@ -1,5 +1,5 @@
 #
-# OpenCreative+ 5.5 - Well, it's possible.
+# OpenCreative+ 5.6 - Well, it's possible.
 # (C) McChicken Studio 2017-2025.
 #
 
@@ -234,7 +234,7 @@ planet-code-debug:
 lobby:
   title: "%branding%"
   subtitle: "&fLet's &acreate&f in your worlds!"
-  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.5\n<green> Well, it's possible!\n <white>\n<gold> ⭐ <white>Explore all <gold>worlds<white> using the compass!\n<light_purple> ❤ <white>Create your own world and <light_purple>invite <white>your friends!\n <yellow>⌚<white> Have fun and <yellow>create <white>whatever you want!\n \n<white>\n <white>"
+  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.6\n<green> Well, it's possible!\n <white>\n<gold> ⭐ <white>Explore all <gold>worlds<white> using the compass!\n<light_purple> ❤ <white>Create your own world and <light_purple>invite <white>your friends!\n <yellow>⌚<white> Have fun and <yellow>create <white>whatever you want!\n \n<white>\n <white>"
 creating-world:
   not-enough-played: "%prefix%&fYou need to play &6%time%&f in other worlds before creating a new world."
   title: "&eCreating World ◌"
@@ -846,15 +846,29 @@ items:
             - "&eClick to choose category."
       events:
         next-page:
-          name: "&c▶ &aNext #%page% &c▶"
+          name: " "
           lore:
-            - "&7Click to show"
-            - "&7next events."
+            - "&e Next... &6→"
+            - ""
+            - "&7  Click to show"
+            - "&7  more events."
+            - ""
         previous-page:
-          name: "&c◀ &aBack #%page% &c◀"
+          name: " "
           lore:
-            - "&7Click to show"
-            - "&7previous events."
+            - " &6← &eBack..."
+            - ""
+            - "&7  Click to show"
+            - "&7  previous events."
+            - ""
+        back-to-categories:
+          name: " "
+          lore:
+            - " &6← &eBack to categories..."
+            - ""
+            - "&7  Click to show"
+            - "&7  categories list."
+            - ""
         empty:
           name: "&cNo events"
           lore:
@@ -979,6 +993,14 @@ items:
             - ""
             - "&7  Click to show"
             - "&7  more actions."
+            - ""
+        back-to-categories:
+          name: " "
+          lore:
+            - " &6← &eBack to categories..."
+            - ""
+            - "&7  Click to show"
+            - "&7  categories list."
             - ""
         world:
           name: "&bEnvironment Actions"
@@ -1119,6 +1141,14 @@ items:
           lore:
             - "&7No conditions created for this"
             - "&7category yet."
+        back-to-categories:
+          name: " "
+          lore:
+            - " &6← &eBack to categories..."
+            - ""
+            - "&7  Click to show"
+            - "&7  categories list."
+            - ""
         previous-page:
           name: " "
           lore:

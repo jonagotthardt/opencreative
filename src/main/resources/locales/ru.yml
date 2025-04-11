@@ -1,5 +1,5 @@
 #
-# OpenCreative+ 5.5 - Well, it's possible.
+# OpenCreative+ 5.6 - Well, it's possible.
 # (C) McChicken Studio 2017-2025.
 #
 
@@ -240,7 +240,7 @@ planet-code-debug:
 lobby:
   title: "%branding%"
   subtitle: "&fДавайте &aтворить&f в своих мирах!"
-  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.5\n<green> Что-ж, это возможно!\n <white>\n<gold> ⭐ <white>Осмотри все <gold>миры<white> с помощью компаса!\n<light_purple> ❤ <white>Создай свой мир и <light_purple>пригласи <white>друзей!\n <yellow>⌚<white> Веселись и <yellow>твори <white>что угодно!\n \n<white>\n <white>"
+  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.6\n<green> Что-ж, это возможно!\n <white>\n<gold> ⭐ <white>Осмотри все <gold>миры<white> с помощью компаса!\n<light_purple> ❤ <white>Создай свой мир и <light_purple>пригласи <white>друзей!\n <yellow>⌚<white> Веселись и <yellow>твори <white>что угодно!\n \n<white>\n <white>"
 creating-world:
   not-enough-played: "%prefix%&fПеред созданием мира сыграйте &6%time%&f в мирах других игроков."
   title: "&eСоздание мира ◌"
@@ -859,6 +859,14 @@ items:
           lore:
             - "&7Нажми, чтобы показать"
             - "&7предыдущие события."
+        back-to-categories:
+          name: " "
+          lore:
+            - " &6← &eНазад в категории..."
+            - ""
+            - "&7  Нажми, чтобы показать"
+            - "&7  выбор категорий."
+            - ""
         empty:
           name: "&cНет событий"
           lore:
@@ -983,6 +991,14 @@ items:
             - ""
             - "&7  Нажми, чтобы показать"
             - "&7  ещё больше действий."
+            - ""
+        back-to-categories:
+          name: " "
+          lore:
+            - " &6← &eНазад в категории..."
+            - ""
+            - "&7  Нажми, чтобы показать"
+            - "&7  выбор категорий."
             - ""
         world:
           name: "&bДействия над окружением"
@@ -1124,6 +1140,14 @@ items:
           lore:
             - "&7Под эту категорию ещё не"
             - "&7изобрели условия."
+        back-to-categories:
+          name: " "
+          lore:
+            - " &6← &eНазад в категории..."
+            - ""
+            - "&7  Нажми, чтобы показать"
+            - "&7  выбор категорий."
+            - ""
         previous-page:
           name: " "
           lore:
