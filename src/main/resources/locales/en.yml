@@ -7737,6 +7737,7 @@ items:
           - "&e Variable &7- Beam contact location with the HitBox"
           - "&e Variable &7- Type of contact"
           - "&b Vector &7- Direction of the ray"
+          - “&f Location &7- Starting location of the beam”
           - "&f Location &7- Position of the HitBox"
           - "&c Number &7- Distance the ray will travel"
           - "&c Number &7- Size of the HitBox along X axis"

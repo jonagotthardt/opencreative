@@ -45,11 +45,12 @@ public final class RayTraceVectorAction extends VariableAction {
         VariableLink hitVec = getArguments().getVariableLink("hitVec", this);
         VariableLink hitType = getArguments().getVariableLink("hitType", this);
         final Vector vector = getArguments().getValue("vector", new Vector(0, 0, 0), this);
-        final Location target = getArguments().getValue("location", new Location(entity.getWorld(), 0, 0, 0), this);
+        final Location from = getArguments().getValue("from", new Location(entity.getWorld(), 0, 0, 0), this);
+        final Location to = getArguments().getValue("to", new Location(entity.getWorld(), 0, 0, 0), this);
         final double
-        x = target.getX(),
-        y = target.getY(),
-        z = target.getZ();
+        x = to.getX(),
+        y = to.getY(),
+        z = to.getZ();
         final double range = getArguments().getValue("range", 3.0, this);
         final double
         xSize = getArguments().getValue("xSize", 0.3, this) / 2.0,
@@ -63,10 +64,11 @@ public final class RayTraceVectorAction extends VariableAction {
                         x - xSize, y - ySize, z - zSize,
                         x + xSize, y + ySize, z + zSize
         );
-        final MovingObjectPosition result = RayTrace.rayCast(rotation.getX(), rotation.getY(), aabb, new Vec3(x, y, z), range, buildSpeed);
+        final MovingObjectPosition result = RayTrace.rayCast(rotation.getX(), rotation.getY(),
+                        aabb, new Vec3(from.getX(), from.getY(), from.getZ()), range, buildSpeed);
         final Vec3 hit = result.hitVec;
         final String type = result.typeOfHit.name();
-        setVarValue(hitVec, new Location(target.getWorld(), hit.xCoord, hit.yCoord, hit.zCoord));
+        setVarValue(hitVec, new Location(to.getWorld(), hit.xCoord, hit.yCoord, hit.zCoord));
         setVarValue(hitType, type);
     }
 
