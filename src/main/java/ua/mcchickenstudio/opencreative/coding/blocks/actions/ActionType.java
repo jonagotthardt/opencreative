@@ -451,6 +451,17 @@ public enum ActionType {
     VAR_GET_VECTOR_X( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, GetVectorXAction.class, Material.RED_STAINED_GLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("vector", ValueType.VECTOR)),
     VAR_GET_VECTOR_Y( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, GetVectorYAction.class, Material.GREEN_STAINED_GLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("vector", ValueType.VECTOR)),
     VAR_GET_VECTOR_Z( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, GetVectorZAction.class, Material.BLUE_STAINED_GLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("vector", ValueType.VECTOR)),
+    VAR_DO_RAY_TRACE( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, RayTraceVectorAction.class, Material.SPECTRAL_ARROW,
+                    new ArgumentSlot("hitVec", ValueType.VARIABLE),
+                    new ArgumentSlot("hitType", ValueType.VARIABLE),
+                    new ArgumentSlot("vector", ValueType.VECTOR),
+                    new ArgumentSlot("location", ValueType.LOCATION),
+                    new ArgumentSlot("range", ValueType.NUMBER),
+                    new ArgumentSlot("xSize", ValueType.NUMBER),
+                    new ArgumentSlot("ySize", ValueType.NUMBER),
+                    new ArgumentSlot("zSize", ValueType.NUMBER),
+                    new ParameterSlot("calculation", Arrays.asList("Vanilla Java", "OptiFine FastMath"), Material.PAPER, Material.MAP)
+    ),
 
     /**
      * <h1>Selection Actions.</h1>

@@ -7726,6 +7726,25 @@ items:
           - "&b Vector &7- For getting"
           - " "
           - "&eClick to set action."
+      var-do-ray-trace:
+        name: "&9Do Ray Trace"
+        lore:
+          - "&7Checks whether the"
+          - "&7generated ray hits the specified HitBox."
+          - "&7Returns the point of intersection."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- Beam contact location with the HitBox"
+          - "&e Variable &7- Type of contact"
+          - "&b Vector &7- Direction of the ray"
+          - "&f Location &7- Position of the HitBox"
+          - "&c Number &7- Distance the ray will travel"
+          - "&c Number &7- Size of the HitBox along X axis"
+          - "&c Number &7- Size of the HitBox along Y axis"
+          - "&c Number &7- Size of the HitBox along Z axis"
+          - "&3 Parameter &7- Type of calculation"
+          - " "
+          - "&eClick to set action."
       var-normalize-vector:
         name: "&3Normalize vector"
         lore:
