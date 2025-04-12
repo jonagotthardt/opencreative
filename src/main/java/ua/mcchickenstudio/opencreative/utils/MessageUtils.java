@@ -1,5 +1,5 @@
 /*
- * OpenCreative+, Minecraft plugin.
+ * OpenCreative+, Minecraft OpenCreative.getPlugin().
  * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
@@ -32,8 +32,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import java.io.File;
@@ -45,9 +43,7 @@ import java.util.*;
  * modify and format them. Uses translation files.
  */
 public class MessageUtils {
-
-    @NotNull private static final Plugin plugin = OpenCreative.getPlugin();
-
+    
     private static File localizationFile;
     private static FileConfiguration localizationConfig;
 
@@ -67,42 +63,57 @@ public class MessageUtils {
         return text.indexOf(LegacyComponentSerializer.AMPERSAND_CHAR) != -1 || text.indexOf(LegacyComponentSerializer.SECTION_CHAR) != -1;
     }
 
+    /**
+     * Returns text that could be shortened to specified length,
+     * if text length is greater than specified one.
+     * <pre>
+     * {@code
+     * substring("Hello",5); // "Hello"
+     * substring("World",4); // "Wo..."
+     * substring("World",0); // ""
+     * }
+     * </pre>
+     * @param text text to substring.
+     * @param length maximum length of text.
+     * @return shortened text.
+     */
     public static String substring(String text, int length) {
-        if (text.length() <= length) return text;
-        return text.substring(0,length-3) + "...";
+        if (text.length() <= length || length <= 0) return text;
+        String dots = text.endsWith("...") ? "" : text.endsWith("..") ? "." : "...";
+        return text.substring(0,length-dots.length()) + dots;
     }
 
     /**
-     Loads localization file (.yml) from Creative/locales/ folder. If localization file is not found, then it creates a new one.
-     **/
+     * Loads localization file, that located in ./plugins/OpenCreative/locales/ folder.
+     */
     public static void loadLocalizationFile() {
 
-        File localeFile = new File((plugin.getDataFolder() + File.separator + "locales" + File.separator), getLanguage() + ".yml");
+        File localeFile = new File((OpenCreative.getPlugin().getDataFolder() + File.separator + "locales" + File.separator), getLanguage() + ".yml");
         if (localeFile.exists()) {
             localizationFile = localeFile;
         } else {
             String defaultLanguage = getLanguage().equalsIgnoreCase("ru") ? "ru" : "en";
-            plugin.getConfig().set("messages.locale",defaultLanguage);
-            plugin.saveResource("locales" + File.separator + "olden.yml",false);
-            plugin.saveResource("locales" + File.separator + "en.yml",false);
-            plugin.saveResource("locales" + File.separator + "ru.yml",false);
-            plugin.reloadConfig();
-            localeFile = new File((plugin.getDataFolder() + File.separator + "locales" + File.separator),  defaultLanguage + ".yml");
+            OpenCreative.getPlugin().getConfig().set("messages.locale",defaultLanguage);
+            OpenCreative.getPlugin().saveResource("locales" + File.separator + "olden.yml",false);
+            OpenCreative.getPlugin().saveResource("locales" + File.separator + "en.yml",false);
+            OpenCreative.getPlugin().saveResource("locales" + File.separator + "ru.yml",false);
+            OpenCreative.getPlugin().reloadConfig();
+            localeFile = new File((OpenCreative.getPlugin().getDataFolder() + File.separator + "locales" + File.separator),  defaultLanguage + ".yml");
         }
 
         localizationConfig = YamlConfiguration.loadConfiguration(localeFile);
     }
 
     public static boolean localizationFileExists(String languageName) {
-        return "en".equalsIgnoreCase(languageName) || "ru".equalsIgnoreCase(languageName) || new File(plugin.getDataFolder() + File.separator + "locales" + File.separator, languageName + ".yml").exists();
+        return "en".equalsIgnoreCase(languageName) || "ru".equalsIgnoreCase(languageName) || new File(OpenCreative.getPlugin().getDataFolder() + File.separator + "locales" + File.separator, languageName + ".yml").exists();
     }
 
     private static String getPrefix() {
-        String prefix = plugin.getConfig().getString("messages.prefix");
+        String prefix = OpenCreative.getPlugin().getConfig().getString("messages.prefix");
         if (prefix == null || prefix.equalsIgnoreCase("null")) {
             prefix = ChatColor.translateAlternateColorCodes('&',"&6 Worlds &8| &f");
-            plugin.getConfig().set("messages.prefix","&6 Worlds &8| &f");
-            plugin.saveConfig();
+            OpenCreative.getPlugin().getConfig().set("messages.prefix","&6 Worlds &8| &f");
+            OpenCreative.getPlugin().saveConfig();
             return prefix;
         } else {
             return ChatColor.translateAlternateColorCodes('&',prefix);
@@ -110,11 +121,11 @@ public class MessageUtils {
     }
 
     private static String getCreativeChatPrefix() {
-        String prefix = plugin.getConfig().getString("messages.cc-prefix");
+        String prefix = OpenCreative.getPlugin().getConfig().getString("messages.cc-prefix");
         if (prefix == null || prefix.equalsIgnoreCase("null")) {
             prefix = ChatColor.translateAlternateColorCodes('&',"&6 Creative Chat &8| &7");
-            plugin.getConfig().set("messages.cc-prefix","&6 Creative Chat &8| &7");
-            plugin.reloadConfig();
+            OpenCreative.getPlugin().getConfig().set("messages.cc-prefix","&6 Creative Chat &8| &7");
+            OpenCreative.getPlugin().reloadConfig();
             return prefix;
         } else {
             return ChatColor.translateAlternateColorCodes('&',prefix);
@@ -122,28 +133,28 @@ public class MessageUtils {
     }
 
     private static String getBranding() {
-        String prefix = plugin.getConfig().getString("messages.branding");
+        String prefix = OpenCreative.getPlugin().getConfig().getString("messages.branding");
         if (prefix == null || prefix.equalsIgnoreCase("null")) {
             prefix = ChatColor.translateAlternateColorCodes('&',"&fOpen&7Creative&a+");
-            plugin.getConfig().set("messages.branding","&fOpen&7Creative&a+");
-            plugin.reloadConfig();
+            OpenCreative.getPlugin().getConfig().set("messages.branding","&fOpen&7Creative&a+");
+            OpenCreative.getPlugin().reloadConfig();
             return prefix;
         } else {
             return ChatColor.translateAlternateColorCodes('&',prefix);
         }
     }
 
-    private static String getLanguage() {
-        Object language = plugin.getConfig().get("messages.locale");
+    public static String getLanguage() {
+        Object language = OpenCreative.getPlugin().getConfig().get("messages.locale");
         if (language != null) {
             return String.valueOf(language);
         } else {
             Object defaultLanguage = "en";
-            plugin.getConfig().set("messages.locale",defaultLanguage);
-            plugin.saveResource("locales" + File.separator + "olden.yml",false);
-            plugin.saveResource("locales" + File.separator + "en.yml",false);
-            plugin.saveResource("locales" + File.separator + "ru.yml",false);
-            plugin.reloadConfig();
+            OpenCreative.getPlugin().getConfig().set("messages.locale",defaultLanguage);
+            OpenCreative.getPlugin().saveResource("locales" + File.separator + "olden.yml",false);
+            OpenCreative.getPlugin().saveResource("locales" + File.separator + "en.yml",false);
+            OpenCreative.getPlugin().saveResource("locales" + File.separator + "ru.yml",false);
+            OpenCreative.getPlugin().reloadConfig();
             return "en";
         }
     }
@@ -154,6 +165,18 @@ public class MessageUtils {
 
     private static FileConfiguration getLocalization() {
         return localizationConfig;
+    }
+
+    public static Component getLocaleComponent(String messageID) {
+        return toComponent(getLocaleMessage(messageID));
+    }
+
+    public static Component getLocaleComponent(String messageID, OfflinePlayer player) {
+        return toComponent(getLocaleMessage(messageID, player));
+    }
+
+    public static Component getLocaleComponent(String messageID, boolean returnDetailedError) {
+        return toComponent(getLocaleMessage(messageID, returnDetailedError));
     }
 
     /**

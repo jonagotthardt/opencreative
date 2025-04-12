@@ -38,6 +38,8 @@ import org.bukkit.inventory.ItemStack;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.substring;
+
 /**
  * <h1>Argument</h1>
  * This class represents an argument, a field that
@@ -47,10 +49,10 @@ import java.util.Date;
  */
 public class Argument {
 
-    protected final Planet planet;
-    protected final String path;
-    protected final ValueType type;
-    protected final Object value;
+    protected final @NotNull Planet planet;
+    protected final @NotNull String path;
+    protected final @NotNull ValueType type;
+    protected final @NotNull Object value;
 
     /**
      * Creates instance of argument.
@@ -59,7 +61,7 @@ public class Argument {
      * @param path name of argument.
      * @param value value.
      */
-    public Argument(Planet planet, ValueType type, String path, Object value) {
+    public Argument(@NotNull Planet planet, @NotNull ValueType type, @NotNull String path, @NotNull Object value) {
         this.planet = planet;
         this.path = path;
         this.value = value;
@@ -91,19 +93,26 @@ public class Argument {
      * @return value of argument.
      */
     public @NotNull Object getValue(@NotNull Action action) {
-        if (value instanceof VariableLink link) {
-            Object variableValue = planet.getVariables().getVariableValue(link,action);
-            if (variableValue != null) {
-                return variableValue;
+        switch (value) {
+            case VariableLink link -> {
+                Object variableValue = planet.getVariables().getVariableValue(link, action);
+                if (variableValue != null) {
+                    return variableValue;
+                }
             }
-        } else if (value instanceof EventValueLink link) {
-            setTempVars(action);
-            Object value = action.getHandler().getVariables().getVarValue(link.type());
-            if (value != null) {
+            case EventValueLink link -> {
+                setTempVars(action);
+                Object value = action.getHandler().getVariables().getVarValue(link.type());
+                if (value != null) {
+                    return value;
+                }
+            }
+            case String string -> {
+                return parseEntity(string, action.getHandler().getMainActionHandler(), action);
+            }
+            default -> {
                 return value;
             }
-        } else if (value instanceof String string) {
-            return parseEntity(string,action.getHandler().getMainActionHandler(),action);
         }
         return value;
     }
@@ -246,6 +255,6 @@ public class Argument {
 
     @Override
     public String toString() {
-        return path + " - " + type.name() + ": " + value.toString();
+        return path + " - " + type.name() + ": " + substring(value.toString(),30);
     }
 }

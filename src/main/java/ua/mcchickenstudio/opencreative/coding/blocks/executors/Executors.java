@@ -272,7 +272,7 @@ public class Executors {
             }
             if (actionType == ActionType.LAUNCH_FUNCTION || actionType == ActionType.LAUNCH_METHOD) {
                 if (config.getString(path+".name") != null) {
-                    args.setArgumentValue("name", ValueType.TEXT,config.getString(path+".name"));
+                    args.setArgumentValue("name", ValueType.TEXT,config.getString(path+".name"," "));
                 }
             } else if (actionType == ActionType.SELECTION_SET || actionType == ActionType.SELECTION_ADD || actionType == ActionType.SELECTION_REMOVE) {
                 if (config.getConfigurationSection(path+".condition") != null) {
@@ -287,7 +287,7 @@ public class Executors {
                     return actionType.getActionClass().getConstructor(Executor.class,int.class, Arguments.class, Target.class).newInstance(executor,config.getInt(path+".location.x"),args,target);
                 }
                 if (config.getString(path+".condition.type") != null) {
-                    args.setArgumentValue("name", ValueType.TEXT,config.getString(path+".name"));
+                    args.setArgumentValue("name", ValueType.TEXT,config.getString(path+".name",""));
                 }
             }
             if (actionType.getCategory().isMultiAction()) {

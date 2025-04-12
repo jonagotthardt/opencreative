@@ -22,6 +22,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
@@ -54,14 +56,14 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
  */
 public class Arguments {
 
-    private final Planet planet;
-    private final Executor executor;
-    private final List<Argument> argumentList = new ArrayList<>();
+    private final @NotNull Planet planet;
+    private final @NotNull Executor executor;
+    private final @NotNull List<Argument> argumentList = new ArrayList<>();
 
     private final static Pattern INT_PATTERN = Pattern.compile("^-?[0-9]*$");
     private final static Pattern FLOAT_PATTERN = Pattern.compile("^-?[0-9]*\\.?[0-9]+$");
 
-    public Arguments(Planet planet, Executor executor) {
+    public Arguments(@NotNull Planet planet, @NotNull Executor executor) {
         this.planet = planet;
         this.executor = executor;
     }
@@ -84,7 +86,7 @@ public class Arguments {
         return new Argument(planet,type,name,value);
     }
 
-    private Object parseValue(ConfigurationSection section, String name, ValueType type, Object configValue) {
+    private @NotNull Object parseValue(ConfigurationSection section, String name, ValueType type, Object configValue) {
         String stringValue = configValue.toString();
         ConfigurationSection listSection = section.getConfigurationSection(name + ".value");
         switch (type) {
@@ -133,9 +135,9 @@ public class Arguments {
                 }
             case VARIABLE: {
                 if (listSection == null) {
-                    return null;
+                    return stringValue;
                 }
-                String varName = listSection.getString("name");
+                String varName = listSection.getString("name","");
                 String typeString = listSection.getString("type");
                 VariableLink.VariableType varType = VariableLink.VariableType.getEnum(typeString);
                 if (varType == null) {
@@ -145,19 +147,19 @@ public class Arguments {
             }
             case EVENT_VALUE: {
                 if (listSection == null) {
-                    return null;
+                    return stringValue;
                 }
                 String typeString = listSection.getString("name");
-                if (typeString == null) return null;
+                if (typeString == null) return stringValue;
                 EventValues.Variable varType;
-                if (typeString.isEmpty()) return null;
+                if (typeString.isEmpty()) return stringValue;
                 try {
                     if (typeString.startsWith("PLOT")) {
                         typeString = typeString.replace("PLOT","PLANET");
                     }
                     varType = EventValues.Variable.valueOf(typeString);
                 } catch (Exception e) {
-                    return null;
+                    return stringValue;
                 }
                 return new EventValueLink(varType,executor);
             }
@@ -179,10 +181,10 @@ public class Arguments {
                 return ItemStack.deserialize(listSection.getValues(true));
             case PARTICLE:
                 if (listSection == null) {
-                    return null;
+                    return stringValue;
                 }
                 String typeString = listSection.getString("type");
-                if (typeString == null || typeString.isEmpty()) return null;
+                if (typeString == null || typeString.isEmpty()) return stringValue;
                 try {
                     return Particle.valueOf(typeString);
                 } catch (Exception e) {
@@ -200,7 +202,7 @@ public class Arguments {
         return false;
     }
 
-    private Argument getArg(String path) {
+    private @Nullable Argument getArg(String path) {
         for (Argument argument : argumentList) {
             if (argument.getPath().equals(path)) {
                 return argument;
@@ -662,7 +664,7 @@ public class Arguments {
         return value;
     }
 
-    public void setArgumentValue(String path, ValueType type, Object value) {
+    public void setArgumentValue(@NotNull String path, @NotNull ValueType type, @NotNull Object value) {
         argumentList.add(new Argument(planet,type,path,value));
     }
 

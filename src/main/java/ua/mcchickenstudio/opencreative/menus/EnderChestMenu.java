@@ -97,7 +97,7 @@ public class EnderChestMenu extends AbstractMenu implements WorldMenu, BlockMenu
     }
 
     @Override
-    public Planet getPlanet() {
+    public @NotNull Planet getPlanet() {
         return planet;
     }
 

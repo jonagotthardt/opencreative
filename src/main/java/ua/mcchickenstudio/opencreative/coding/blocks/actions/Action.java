@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.arguments.Argument;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.selectionactions.SelectionAction;
@@ -273,7 +274,7 @@ public abstract class Action {
      * @param link Link of variable.
      * @param value New value.
      */
-    protected void setVarValue(VariableLink link, Object value) {
+    protected void setVarValue(@Nullable VariableLink link, Object value) {
         if (link != null) {
             ValueType type = ValueType.getByObject(value);
             if (type == null) {
