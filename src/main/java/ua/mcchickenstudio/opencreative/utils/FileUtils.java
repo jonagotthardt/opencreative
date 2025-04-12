@@ -325,7 +325,11 @@ public class FileUtils {
      * @return file - if exists, otherwise - null.
      */
     public static @Nullable File getWanderJsonFile(@NotNull OfflineWander wander, boolean create) {
-        File wanderFile = new File(getWandersStorageFolder(),wander.getUniqueId().toString() + ".json");
+        File wandersFolder = getWandersStorageFolder();
+        if (!wandersFolder.exists()) {
+            wandersFolder.mkdirs();
+        }
+        File wanderFile = new File(getWandersStorageFolder(),wander.getUniqueId() + ".json");
         if (!wanderFile.exists()) {
             if (!create) return null;
             try {

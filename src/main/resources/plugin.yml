@@ -95,12 +95,18 @@ commands:
   stopsound:
     description: 'Stops specified sound.'
     aliases: [ыещзыщгтв, іещзіщгтв]
-  module:
-    description: 'Opens module`s browser menu.'
-    aliases: [modules, ьщвгдуы, ьщвгдуі, ьщвгду]
   weather:
     description: 'Changes current world`s weather.'
     aliases: [цуферук]
   time:
     description: 'Sets current world`s time.'
     aliases: [ешьу]
+  module:
+    description: 'Opens module`s browser menu.'
+    aliases: [modules, ьщвгдуы, ьщвгдуі, ьщвгду]
+  favorite:
+    description: 'Adds world to favorites list'
+    aliases: [fav, афм, афмщкшеу, favourite]
+  unfavorite:
+    description: 'Removes world from favorites list'
+    aliases: [unfav, гтафм, гтафмщкшеу, unfavourite]

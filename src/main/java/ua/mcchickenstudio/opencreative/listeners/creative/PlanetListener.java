@@ -16,31 +16,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.settings.groups;
+package ua.mcchickenstudio.opencreative.listeners.creative;
 
-public enum LimitType {
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.events.planet.PlanetDisconnectPlayerEvent;
 
-    ENTITIES("entities-amount"),
-    CODE_OPERATIONS("executor-calls"),
-    SCOREBOARDS("scoreboards-amount"),
-    BOSSBARS("bossbars-amount"),
-    REDSTONE_OPERATIONS("redstone-changes"),
-    OPENING_INVENTORIES("opening-inventories"),
-    VARIABLES("variables-amount"),
-    CODING_PLATFORMS("coding-platforms"),
-    MODIFYING_BLOCKS("modifying-blocks"),
-    BUILDERS_AMOUNT("builders-amount"),
-    DEVELOPERS_AMOUNT("developers-amount"),
-    BLACKLISTED_AMOUNT("blacklisted-amount");
+public final class PlanetListener implements Listener {
 
-    private final String path;
-
-    LimitType(String path) {
-        this.path = path;
-    }
-
-    public String getPath() {
-        return path;
+    @EventHandler
+    public void onDisconnect(PlanetDisconnectPlayerEvent event) {
+        if (OpenCreative.getSettings().isDebug()) {
+            OpenCreative.getWander(event.getPlayer()).setLastPlayedWorldId(event.getPlanet().getId());
+        }
     }
 
 }

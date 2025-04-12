@@ -368,6 +368,7 @@ world:
       trusted: "%prefix%&6%player%&f can now build even when you are offline."
       removed: "%prefix%&6%player%&f is no longer a builder."
       player: "%prefix%You have been given permission to build in this world!\n &fTo do so, type the command &6/build"
+      limit: "%prefix%You reached limit of &6%limit% builders&f, to add new builder remove old one in world settings."
     developers:
       guest: "%prefix%&6%player%&f can now visit the coding world but cannot make changes."
       added: "%prefix%You made &6%player%&f a coder, and they can now code in the world &6while you are online.\n &fIf you trust this player, you can make them a permanent coder in the player management settings."
@@ -375,11 +376,13 @@ world:
       removed: "%prefix%&6%player%&f is no longer a coder."
       player: "%prefix%You can now code in this world!\n &fTo do so, type the command &6/dev"
       player-guest: "%prefix%You have been given access to view the code in this world!\n &fTo do so, type the command &6/dev"
+      limit: "%prefix%You reached limit of &6%limit% developers&f, to add new developer remove old one in world settings."
     black-list:
       added: "%prefix%You have added &6%player%&f to the &7blacklist&f. They can no longer enter your world."
       removed: "%prefix%You have removed &6%player%&f from the blacklist. They can now enter your world."
       player: "%prefix%You have been blocked from the world you were playing in.. :("
       cannot: "%prefix%&cThis player cannot be blocked from world O_o"
+      limit: "%prefix%You reached limit of &6%limit% blacklisted players&f, to block player unban old one in world settings."
     white-list:
       added: "%prefix%You have added &6%player%&f to the &lwhitelist&f. They can now enter your world at any time, change world modes, build, and code.\n &6Be careful! &fOnly add players you trust, as they could destroy your world!"
       removed: "%prefix%You have removed &6%player%&f from the &lwhitelist&f."

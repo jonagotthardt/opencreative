@@ -177,6 +177,9 @@ groups:
         scoreboards-amount: 50 # limit for amount of all scoreboards
         bossbars-amount: 10 # limit for amount of all bossbars
         coding-platforms: 4 # limit for coding platforms
+        builders-amount: 10 # limit of added builders
+        developers-amount: 10 # limit of added developers
+        blacklist-amount: 10 # limit of banned players
       per-player-limit-modifiers:
         #
         # When player joins a world or leaves from world,
@@ -225,6 +228,9 @@ groups:
         scoreboards-amount: 50
         bossbars-amount: 10
         coding-platforms: 4
+        builders-amount: 10
+        developers-amount: 10
+        blacklist-amount: 10
       per-player-limit-modifiers:
         executor-calls: 30
         entities-amount: 50

@@ -22,8 +22,11 @@ import com.google.gson.*;
 import com.google.gson.annotations.Since;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -43,20 +46,29 @@ import static ua.mcchickenstudio.opencreative.utils.FileUtils.getWanderJsonFile;
 public class OfflineWander {
 
     @Since(5.6)
-    private final @NotNull UUID uuid;
-    private @Nullable String name;
-    private @Nullable String description;
-    private @Nullable Gender gender;
-    private @Nullable List<Integer> favoriteWorlds;
-    private int lastPlayedWorldId = -1;
+    protected final @NotNull UUID uuid;
+    protected @Nullable String name;
+    protected @Nullable String description;
+    protected @Nullable Gender gender;
+    protected @Nullable List<Integer> favoriteWorlds;
+    protected int lastPlayedWorldId = -1;
 
     public OfflineWander(@NotNull UUID uuid) {
         this.uuid = uuid;
         loadInfo();
     }
 
+    public OfflineWander(@NotNull OfflinePlayer offlinePlayer) {
+        this.uuid = offlinePlayer.getUniqueId();
+        loadInfo();
+    }
+
     public OfflinePlayer getOfflinePlayer() {
         return Bukkit.getOfflinePlayer(uuid);
+    }
+
+    public boolean isOnline() {
+        return Bukkit.getPlayer(uuid) != null;
     }
 
     public @NotNull UUID getUniqueId() {
@@ -81,6 +93,53 @@ public class OfflineWander {
 
     public @NotNull List<Integer> getFavoriteWorlds() {
         return favoriteWorlds != null ? favoriteWorlds : List.of();
+    }
+
+    public void setLastPlayedWorldId(int lastPlayedWorldId) {
+        this.lastPlayedWorldId = lastPlayedWorldId;
+        saveData();
+    }
+
+    public void setName(@NotNull String name) {
+        this.name = name;
+        saveData();
+    }
+
+    public void setDescription(@NotNull String description) {
+        this.description = description;
+        saveData();
+    }
+
+    public void addFavoriteWorld(int worldId) {
+        getFavoriteWorlds().add(worldId);
+        saveData();
+    }
+
+    public void removeFavoriteWorld(int worldId) {
+        getFavoriteWorlds().remove(worldId);
+        saveData();
+    }
+
+    public void setGender(@NotNull Gender gender) {
+        this.gender = gender;
+        saveData();
+    }
+
+    public void clearData() {
+        File jsonFile = getWanderJsonFile(this,false);
+        if (jsonFile == null || !jsonFile.exists()) {
+            return;
+        }
+        this.name = null;
+        this.description = null;
+        this.gender = null;
+        this.lastPlayedWorldId = -1;
+        this.getFavoriteWorlds().clear();
+        try {
+            jsonFile.delete();
+        } catch (Exception error) {
+            sendDebugError("Can't delete wander file: " + uuid, error);
+        }
     }
 
     public void loadInfo() {
@@ -122,12 +181,14 @@ public class OfflineWander {
     }
 
     public void saveData() {
-        if (!shouldSaveData()) return;
-        File jsonFile = getWanderJsonFile(this,true);
-        if (jsonFile == null) {
-            return;
-        }
         try {
+            if (!shouldSaveData()) {
+                return;
+            }
+            File jsonFile = getWanderJsonFile(this,true);
+            if (jsonFile == null) {
+                return;
+            }
             JsonObject json = getJsonObject();
             try (Writer writer = new FileWriter(jsonFile)) {
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -144,7 +205,6 @@ public class OfflineWander {
 
     private JsonObject getJsonObject() {
         JsonObject json = new JsonObject();
-
         json.addProperty("uuid", uuid.toString());
         if (name != null) json.addProperty("name", name);
         if (description != null) json.addProperty("description", description);
@@ -155,8 +215,8 @@ public class OfflineWander {
                 favoriteWorlds.add(id);
             }
         }
-        json.add("favoriteWorlds", favoriteWorlds);
-        json.addProperty("lastPlayedWorldId", lastPlayedWorldId);
+        if (!favoriteWorlds.isEmpty()) json.add("favoriteWorlds", favoriteWorlds);
+        if (lastPlayedWorldId != -1) json.addProperty("lastPlayedWorldId", lastPlayedWorldId);
         return json;
     }
 

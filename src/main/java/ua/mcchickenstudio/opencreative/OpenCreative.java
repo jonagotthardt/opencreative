@@ -28,6 +28,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldListener;
 import ua.mcchickenstudio.opencreative.commands.*;
 import ua.mcchickenstudio.opencreative.commands.minecraft.*;
@@ -40,7 +42,10 @@ import ua.mcchickenstudio.opencreative.commands.world.modes.CommandDev;
 import ua.mcchickenstudio.opencreative.commands.world.modes.CommandPlay;
 import ua.mcchickenstudio.opencreative.commands.world.reputation.CommandDislike;
 import ua.mcchickenstudio.opencreative.commands.world.reputation.CommandLike;
+import ua.mcchickenstudio.opencreative.indev.OfflineWander;
+import ua.mcchickenstudio.opencreative.indev.Wander;
 import ua.mcchickenstudio.opencreative.listeners.CreativeListener;
+import ua.mcchickenstudio.opencreative.listeners.creative.PlanetListener;
 import ua.mcchickenstudio.opencreative.listeners.entity.EntityDamageListener;
 import ua.mcchickenstudio.opencreative.listeners.entity.EntitySpawnListener;
 import ua.mcchickenstudio.opencreative.listeners.entity.EntityStateListener;
@@ -65,10 +70,7 @@ import ua.mcchickenstudio.opencreative.utils.hooks.Metrics;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
@@ -82,6 +84,7 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 public final class OpenCreative extends JavaPlugin {
 
     private static OpenCreative plugin;
+    private final Set<Wander> wanders = new HashSet<>();
 
     private Settings settings;
     private Economy economy;
@@ -267,7 +270,7 @@ public final class OpenCreative extends JavaPlugin {
                 PlaceBlockListener.class, DestroyBlockListener.class, BucketListener.class,
                 ClickListener.class,      RedstoneListener.class,     BlockChangeListener.class,
                 Menus.class,              GameModeListener.class,     EntityStateListener.class,
-                CreativeListener.class,   PotionListener.class
+                CreativeListener.class,   PotionListener.class,       PlanetListener.class
         };
         for (Class<?> listenerClass : listeners) {
             try {
@@ -438,6 +441,50 @@ public final class OpenCreative extends JavaPlugin {
         } catch (Exception error) {
             return false;
         }
+    }
+
+    public Wander registerWander(@NotNull Player player) {
+        Wander wander = new Wander(player);
+        wanders.add(wander);
+        return wander;
+    }
+
+    public void unregisterWander(@NotNull Player player) {
+        wanders.removeIf(wander -> player.getUniqueId().equals(wander.getUniqueId()));
+    }
+
+    /**
+     * Returns online wander, that plays on server.
+     * @return wander - if online, otherwise - null
+     */
+    public static @Nullable Wander getWander(@NotNull UUID uuid) {
+        for (Wander wander : new ArrayList<>(getPlugin().wanders)) {
+            if (wander.getUniqueId().equals(uuid)) {
+                return wander;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns online wander, that plays on server.
+     * @return wander - if online, otherwise - null
+     */
+    public static @NotNull Wander getWander(@NotNull Player player) {
+        for (Wander wander : new ArrayList<>(getPlugin().wanders)) {
+            if (wander.getUniqueId().equals(player.getUniqueId())) {
+                return wander;
+            }
+        }
+        return getPlugin().registerWander(player);
+    }
+
+    /**
+     * Returns offline wander, that can be online or offline.
+     * @return offline wander.
+     */
+    public static @NotNull OfflineWander getOfflineWander(@NotNull UUID uuid) {
+        return new OfflineWander(uuid);
     }
 
 

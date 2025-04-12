@@ -39,6 +39,18 @@ public class PlanetLimits {
         return planet.getGroup().getLimit(LimitType.MODIFYING_BLOCKS).calculateLimit(planet.getPlayers().size());
     }
 
+    public int getBuildersLimit() {
+        return planet.getGroup().getLimit(LimitType.BUILDERS_AMOUNT).calculateLimit(planet.getPlayers().size());
+    }
+
+    public int getDevelopersLimit() {
+        return planet.getGroup().getLimit(LimitType.DEVELOPERS_AMOUNT).calculateLimit(planet.getPlayers().size());
+    }
+
+    public int getBlacklistedLimit() {
+        return planet.getGroup().getLimit(LimitType.BLACKLISTED_AMOUNT).calculateLimit(planet.getPlayers().size());
+    }
+
     public int getRedstoneOperationsLimit() {
         return planet.getGroup().getLimit(LimitType.REDSTONE_OPERATIONS).calculateLimit(planet.getPlayers().size());
     }
