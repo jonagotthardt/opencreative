@@ -3,12 +3,31 @@ package ua.mcchickenstudio.opencreative.utils.millennium.vectors;
 import lombok.Getter;
 
 @Getter
-public class Vec3i implements Comparable<Vec3i> {
-
+public class Vec3i implements Comparable {
+    /**
+     * The Null vector constant (0, 0, 0)
+     */
     public static final Vec3i NULL_VECTOR = new Vec3i(0, 0, 0);
 
+    /**
+     * X coordinate
+     * -- GETTER --
+     * Get the X coordinate
+     */
     private final int x;
+
+    /**
+     * Y coordinate
+     * -- GETTER --
+     * Get the Y coordinate
+     */
     private final int y;
+
+    /**
+     * Z coordinate
+     * -- GETTER --
+     * Get the Z coordinate
+     */
     private final int z;
 
     public Vec3i(int x, int y, int z) {
@@ -21,67 +40,64 @@ public class Vec3i implements Comparable<Vec3i> {
         this((int) Math.floor(x), (int) Math.floor(y), (int) Math.floor(z));
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
+    public boolean equals(Object p_equals_1_) {
+        if (this == p_equals_1_) {
             return true;
-        }
-        if (!(obj instanceof Vec3i otherVec)) {
+        } else if (!(p_equals_1_ instanceof Vec3i)) {
             return false;
+        } else {
+            Vec3i var2 = (Vec3i) p_equals_1_;
+            return this.getX() != var2.getX() ? false : (this.getY() != var2.getY() ? false : this.getZ() == var2.getZ());
         }
-        return this.getX() == otherVec.getX() &&
-                        this.getY() == otherVec.getY() &&
-                        this.getZ() == otherVec.getZ();
     }
 
-    @Override
     public int hashCode() {
         return (this.getY() + this.getZ() * 31) * 31 + this.getX();
     }
 
-    @Override
-    public int compareTo(Vec3i otherVec) {
-        if (this.getY() != otherVec.getY()) {
-            return this.getY() - otherVec.getY();
-        } else if (this.getZ() != otherVec.getZ()) {
-            return this.getZ() - otherVec.getZ();
-        } else {
-            return this.getX() - otherVec.getX();
-        }
+    public int compareTo(Vec3i vec) {
+        return this.getY() == vec.getY() ? (this.getZ() == vec.getZ() ? this.getX() - vec.getX() : this.getZ() - vec.getZ()) : this.getY() - vec.getY();
     }
 
-    public Vec3i crossProduct(Vec3i otherVec) {
-        return new Vec3i(
-                        this.getY() * otherVec.getZ() - this.getZ() * otherVec.getY(),
-                        this.getZ() * otherVec.getX() - this.getX() * otherVec.getZ(),
-                        this.getX() * otherVec.getY() - this.getY() * otherVec.getX()
-        );
+    /**
+     * Calculate the cross product of this and the given Vector
+     */
+    public Vec3i crossProduct(Vec3i vec) {
+        return new Vec3i(this.getY() * vec.getZ() - this.getZ() * vec.getY(), this.getZ() * vec.getX() - this.getX() * vec.getZ(), this.getX() * vec.getY() - this.getY() * vec.getX());
     }
 
+    /**
+     * Calculate squared distance to the given coordinates
+     *
+     * @param toX X Coordinate
+     * @param toY Y Coordinate
+     * @param toZ Z Coordinate
+     */
     public double distanceSq(double toX, double toY, double toZ) {
-        double deltaX = (double) this.getX() - toX;
-        double deltaY = (double) this.getY() - toY;
-        double deltaZ = (double) this.getZ() - toZ;
-        return deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
+        double var7 = (double) this.getX() - toX;
+        double var9 = (double) this.getY() - toY;
+        double var11 = (double) this.getZ() - toZ;
+        return var7 * var7 + var9 * var9 + var11 * var11;
     }
 
-    public double distanceSqToCenter(double targetX, double targetY, double targetZ) {
-        double deltaX = (double) this.getX() + 0.5D - targetX;
-        double deltaY = (double) this.getY() + 0.5D - targetY;
-        double deltaZ = (double) this.getZ() + 0.5D - targetZ;
-        return deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
+    /**
+     * Compute square of distance from point x, y, z to center of this Block
+     */
+    public double distanceSqToCenter(double x, double y, double z) {
+        double var7 = (double) this.getX() + 0.5D - x;
+        double var9 = (double) this.getY() + 0.5D - y;
+        double var11 = (double) this.getZ() + 0.5D - z;
+        return var7 * var7 + var9 * var9 + var11 * var11;
     }
 
-    public double distanceSq(Vec3i toVec) {
-        return this.distanceSq((double) toVec.getX(), (double) toVec.getY(), (double) toVec.getZ());
+    /**
+     * Calculate squared distance to the given Vector
+     */
+    public double distanceSq(Vec3i to) {
+        return this.distanceSq((double) to.getX(), (double) to.getY(), (double) to.getZ());
     }
 
-    @Override
-    public String toString() {
-        return "Vec3i{" +
-                        "x=" + x +
-                        ", y=" + y +
-                        ", z=" + z +
-                        '}';
+    public int compareTo(Object p_compareTo_1_) {
+        return this.compareTo((Vec3i) p_compareTo_1_);
     }
 }

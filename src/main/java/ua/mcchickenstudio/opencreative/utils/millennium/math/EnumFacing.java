@@ -66,6 +66,7 @@ public enum EnumFacing {
     private final String name;
     @Getter
     private final Axis axis;
+    // private static final String __OBFID = "CL_00001201";
     /**
      * -- GETTER --
      * Get the AxisDirection of this Facing.

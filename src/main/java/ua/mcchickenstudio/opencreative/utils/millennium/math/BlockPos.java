@@ -9,17 +9,15 @@ import java.util.Iterator;
 public class BlockPos extends Vec3i {
 
     public static final BlockPos ORIGIN = new BlockPos(0, 0, 0);
-
-    private static final int NUM_X_BITS = 1 + FastMath.calculateLogBaseTwo(FastMath.roundUpToPowerOfTwo(30000000));
-    private static final int NUM_Z_BITS = NUM_X_BITS;
-    private static final int NUM_Y_BITS = 64 - NUM_X_BITS - NUM_Z_BITS;
-
-    private static final long Y_MASK = (1L << NUM_Y_BITS) - 1L;
-    private static final int Y_SHIFT = NUM_Z_BITS;
-    private static final int X_SHIFT = Y_SHIFT + NUM_Y_BITS;
-
-    private static final long Z_MASK = (1L << NUM_Z_BITS) - 1L;
-    private static final long X_MASK = (1L << NUM_X_BITS) - 1L;
+    private static final int field_177990_b = 1 + FastMath.calculateLogBaseTwo(FastMath.roundUpToPowerOfTwo(30000000));
+    private static final int field_177991_c = field_177990_b;
+    private static final int field_177989_d = 64 - field_177990_b - field_177991_c;
+    private static final long field_177995_i = (1L << field_177989_d) - 1L;
+    private static final int field_177987_f = field_177991_c;
+    private static final int field_177988_g = field_177987_f + field_177989_d;
+    private static final long field_177993_j = (1L << field_177991_c) - 1L;
+    private static final long field_177994_h = (1L << field_177990_b) - 1L;
+    // private static final String __OBFID = "CL_00002334";
 
     public BlockPos(int x, int y, int z) {
         super(x, y, z);
@@ -29,250 +27,324 @@ public class BlockPos extends Vec3i {
         super(x, y, z);
     }
 
-    public BlockPos(Vec3 vector) {
-        this(vector.xCoord, vector.yCoord, vector.zCoord);
+
+    public BlockPos(Vec3 vec3) {
+        this(vec3.xCoord, vec3.yCoord, vec3.zCoord);
     }
 
-    public BlockPos(Vec3i source) {
-        this(source.getX(), source.getY(), source.getZ());
+    public BlockPos(Vec3i p_i46034_1_) {
+        this(p_i46034_1_.getX(), p_i46034_1_.getY(), p_i46034_1_.getZ());
     }
 
+    /**
+     * Create a BlockPos from a serialized long value (created by toLong)
+     */
     public static BlockPos fromLong(long serialized) {
-        int x = (int) (serialized << (64 - X_SHIFT - NUM_X_BITS) >> (64 - NUM_X_BITS));
-        int y = (int) (serialized << (64 - Y_SHIFT - NUM_Y_BITS) >> (64 - NUM_Y_BITS));
-        int z = (int) (serialized << (64 - NUM_Z_BITS)         >> (64 - NUM_Z_BITS));
-        return new BlockPos(x, y, z);
+        int var2 = (int) (serialized << 64 - field_177988_g - field_177990_b >> 64 - field_177990_b);
+        int var3 = (int) (serialized << 64 - field_177987_f - field_177989_d >> 64 - field_177989_d);
+        int var4 = (int) (serialized << 64 - field_177991_c >> 64 - field_177991_c);
+        return new BlockPos(var2, var3, var4);
     }
 
-    public static Iterable<BlockPos> getAllInBox(BlockPos from, BlockPos to) {
-        final BlockPos minPos = new BlockPos(Math.min(from.getX(), to.getX()), Math.min(from.getY(), to.getY()), Math.min(from.getZ(), to.getZ()));
-        final BlockPos maxPos = new BlockPos(Math.max(from.getX(), to.getX()), Math.max(from.getY(), to.getY()), Math.max(from.getZ(), to.getZ()));
-
-        return new Iterable<BlockPos>() {
-            public Iterator<BlockPos> iterator() {
-                return new AbstractIterator<BlockPos>() {
+    /**
+     * Create an Iterable that returns all positions in the box specified by the given corners
+     *
+     * @param from The first corner (inclusive)
+     * @param to   the second corner (exclusive)
+     */
+    public static Iterable getAllInBox(BlockPos from, BlockPos to) {
+        final BlockPos var2 = new BlockPos(Math.min(from.getX(), to.getX()), Math.min(from.getY(), to.getY()), Math.min(from.getZ(), to.getZ()));
+        final BlockPos var3 = new BlockPos(Math.max(from.getX(), to.getX()), Math.max(from.getY(), to.getY()), Math.max(from.getZ(), to.getZ()));
+        return new Iterable() {
+            // private static final String __OBFID = "CL_00002333";
+            public Iterator iterator() {
+                return new AbstractIterator() {
                     private BlockPos lastReturned = null;
 
-                    @Override
-                    protected BlockPos computeNext() {
+                    // private static final String __OBFID = "CL_00002332";
+                    protected BlockPos computeNext0() {
                         if (this.lastReturned == null) {
-                            this.lastReturned = minPos;
+                            this.lastReturned = var2;
                             return this.lastReturned;
-                        } else if (this.lastReturned.equals(maxPos)) {
-                            return this.endOfData();
+                        } else if (this.lastReturned.equals(var3)) {
+                            return (BlockPos) this.endOfData();
                         } else {
-                            int currentX = this.lastReturned.getX();
-                            int currentY = this.lastReturned.getY();
-                            int currentZ = this.lastReturned.getZ();
+                            int var1 = this.lastReturned.getX();
+                            int var2x = this.lastReturned.getY();
+                            int var3x = this.lastReturned.getZ();
 
-                            if (currentX < maxPos.getX()) {
-                                ++currentX;
-                            } else if (currentY < maxPos.getY()) {
-                                currentX = minPos.getX();
-                                ++currentY;
-                            } else if (currentZ < maxPos.getZ()) {
-                                currentX = minPos.getX();
-                                currentY = minPos.getY();
-                                ++currentZ;
-                            } else {
-                                return this.endOfData();
+                            if (var1 < var3.getX()) {
+                                ++var1;
+                            } else if (var2x < var3.getY()) {
+                                var1 = var2.getX();
+                                ++var2x;
+                            } else if (var3x < var3.getZ()) {
+                                var1 = var2.getX();
+                                var2x = var2.getY();
+                                ++var3x;
                             }
-                            this.lastReturned = new BlockPos(currentX, currentY, currentZ);
+
+                            this.lastReturned = new BlockPos(var1, var2x, var3x);
                             return this.lastReturned;
                         }
+                    }
+
+                    protected Object computeNext() {
+                        return this.computeNext0();
                     }
                 };
             }
         };
     }
 
-    public static Iterable<MutableBlockPos> getAllInBoxMutable(BlockPos from, BlockPos to) {
-        final BlockPos minPos = new BlockPos(Math.min(from.getX(), to.getX()), Math.min(from.getY(), to.getY()), Math.min(from.getZ(), to.getZ()));
-        final BlockPos maxPos = new BlockPos(Math.max(from.getX(), to.getX()), Math.max(from.getY(), to.getY()), Math.max(from.getZ(), to.getZ()));
+    /**
+     * Like getAllInBox but reuses a single MutableBlockPos instead. If this method is used, the resulting BlockPos
+     * instances can only be used inside the iteration loop.
+     *
+     * @param from The first corner (inclusive)
+     * @param to   the second corner (exclusive)
+     */
+    public static Iterable getAllInBoxMutable(BlockPos from, BlockPos to) {
+        final BlockPos var2 = new BlockPos(Math.min(from.getX(), to.getX()), Math.min(from.getY(), to.getY()), Math.min(from.getZ(), to.getZ()));
+        final BlockPos var3 = new BlockPos(Math.max(from.getX(), to.getX()), Math.max(from.getY(), to.getY()), Math.max(from.getZ(), to.getZ()));
+        return new Iterable() {
+            // private static final String __OBFID = "CL_00002331";
+            public Iterator iterator() {
+                return new AbstractIterator() {
+                    private MutableBlockPos theBlockPos = null;
 
-        return new Iterable<MutableBlockPos>() {
-            public Iterator<MutableBlockPos> iterator() {
-                return new AbstractIterator<MutableBlockPos>() {
-                    private MutableBlockPos currentPos = null;
-
-                    @Override
-                    protected MutableBlockPos computeNext() {
-                        if (this.currentPos == null) {
-                            this.currentPos = new MutableBlockPos(minPos.getX(), minPos.getY(), minPos.getZ());
-                            return this.currentPos;
-                        } else if (this.currentPos.equals(maxPos)) {
-                            return this.endOfData();
+                    // private static final String __OBFID = "CL_00002330";
+                    protected MutableBlockPos computeNext0() {
+                        if (this.theBlockPos == null) {
+                            this.theBlockPos = new MutableBlockPos(var2.getX(), var2.getY(), var2.getZ(), null);
+                            return this.theBlockPos;
+                        } else if (this.theBlockPos.equals(var3)) {
+                            return (MutableBlockPos) this.endOfData();
                         } else {
-                            int nextX = this.currentPos.getX();
-                            int nextY = this.currentPos.getY();
-                            int nextZ = this.currentPos.getZ();
+                            int var1 = this.theBlockPos.getX();
+                            int var2xx = this.theBlockPos.getY();
+                            int var3x = this.theBlockPos.getZ();
 
-                            if (nextX < maxPos.getX()) {
-                                ++nextX;
-                            } else if (nextY < maxPos.getY()) {
-                                nextX = minPos.getX();
-                                ++nextY;
-                            } else if (nextZ < maxPos.getZ()) {
-                                nextX = minPos.getX();
-                                nextY = minPos.getY();
-                                ++nextZ;
-                            } else {
-                                return this.endOfData();
+                            if (var1 < var3.getX()) {
+                                ++var1;
+                            } else if (var2xx < var3.getY()) {
+                                var1 = var2.getX();
+                                ++var2xx;
+                            } else if (var3x < var3.getZ()) {
+                                var1 = var2.getX();
+                                var2xx = var2.getY();
+                                ++var3x;
                             }
 
-                            this.currentPos.setPos(nextX, nextY, nextZ);
-                            return this.currentPos;
+                            this.theBlockPos.x = var1;
+                            this.theBlockPos.y = var2xx;
+                            this.theBlockPos.z = var3x;
+                            return this.theBlockPos;
                         }
+                    }
+
+                    protected Object computeNext() {
+                        return this.computeNext0();
                     }
                 };
             }
         };
     }
 
+    /**
+     * Add the given coordinates to the coordinates of this BlockPos
+     *
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param z Z coordinate
+     */
     public BlockPos add(double x, double y, double z) {
-        return x == 0.0D && y == 0.0D && z == 0.0D ? this : new BlockPos((double) this.getX() + x, (double) this.getY() + y, (double) this.getZ() + z);
+        return new BlockPos((double) this.getX() + x, (double) this.getY() + y, (double) this.getZ() + z);
     }
 
+    /**
+     * Add the given coordinates to the coordinates of this BlockPos
+     *
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param z Z coordinate
+     */
     public BlockPos add(int x, int y, int z) {
-        return x == 0 && y == 0 && z == 0 ? this : new BlockPos(this.getX() + x, this.getY() + y, this.getZ() + z);
+        return new BlockPos(this.getX() + x, this.getY() + y, this.getZ() + z);
     }
 
-    public BlockPos add(Vec3i vector) {
-        return vector.getX() == 0 && vector.getY() == 0 && vector.getZ() == 0 ? this : new BlockPos(this.getX() + vector.getX(), this.getY() + vector.getY(), this.getZ() + vector.getZ());
+    /**
+     * Add the given Vector to this BlockPos
+     */
+    public BlockPos add(Vec3i vec) {
+        return new BlockPos(this.getX() + vec.getX(), this.getY() + vec.getY(), this.getZ() + vec.getZ());
     }
 
-    public BlockPos subtract(Vec3i vector) {
-        return vector.getX() == 0 && vector.getY() == 0 && vector.getZ() == 0 ? this : new BlockPos(this.getX() - vector.getX(), this.getY() - vector.getY(), this.getZ() - vector.getZ());
+    /**
+     * Subtract the given Vector from this BlockPos
+     */
+    public BlockPos subtract(Vec3i vec) {
+        return new BlockPos(this.getX() - vec.getX(), this.getY() - vec.getY(), this.getZ() - vec.getZ());
     }
 
+    /**
+     * Multiply every coordinate by the given factor
+     */
     public BlockPos multiply(int factor) {
-        if (factor == 1) {
-            return this;
-        } else {
-            return factor == 0 ? ORIGIN : new BlockPos(this.getX() * factor, this.getY() * factor, this.getZ() * factor);
-        }
+        return new BlockPos(this.getX() * factor, this.getY() * factor, this.getZ() * factor);
     }
 
+    /**
+     * Offset this BlockPos 1 block up
+     */
     public BlockPos offsetUp() {
-        return this.offset(EnumFacing.UP, 1);
+        return this.offsetUp(1);
     }
 
+    /**
+     * Offset this BlockPos n blocks up
+     */
     public BlockPos offsetUp(int n) {
         return this.offset(EnumFacing.UP, n);
     }
 
+    /**
+     * Offset this BlockPos 1 block down
+     */
     public BlockPos offsetDown() {
-        return this.offset(EnumFacing.DOWN, 1);
+        return this.offsetDown(1);
     }
 
+    /**
+     * Offset this BlockPos n blocks down
+     */
     public BlockPos offsetDown(int n) {
         return this.offset(EnumFacing.DOWN, n);
     }
 
+    /**
+     * Offset this BlockPos 1 block in northern direction
+     */
     public BlockPos offsetNorth() {
-        return this.offset(EnumFacing.NORTH, 1);
+        return this.offsetNorth(1);
     }
 
+    /**
+     * Offset this BlockPos n blocks in northern direction
+     */
     public BlockPos offsetNorth(int n) {
         return this.offset(EnumFacing.NORTH, n);
     }
 
+    /**
+     * Offset this BlockPos 1 block in southern direction
+     */
     public BlockPos offsetSouth() {
-        return this.offset(EnumFacing.SOUTH, 1);
+        return this.offsetSouth(1);
     }
 
+    /**
+     * Offset this BlockPos n blocks in southern direction
+     */
     public BlockPos offsetSouth(int n) {
         return this.offset(EnumFacing.SOUTH, n);
     }
 
+    /**
+     * Offset this BlockPos 1 block in western direction
+     */
     public BlockPos offsetWest() {
-        return this.offset(EnumFacing.WEST, 1);
+        return this.offsetWest(1);
     }
 
+    /**
+     * Offset this BlockPos n blocks in western direction
+     */
     public BlockPos offsetWest(int n) {
         return this.offset(EnumFacing.WEST, n);
     }
 
+    /**
+     * Offset this BlockPos 1 block in eastern direction
+     */
     public BlockPos offsetEast() {
-        return this.offset(EnumFacing.EAST, 1);
+        return this.offsetEast(1);
     }
 
+    /**
+     * Offset this BlockPos n blocks in eastern direction
+     */
     public BlockPos offsetEast(int n) {
         return this.offset(EnumFacing.EAST, n);
     }
 
+    /**
+     * Offset this BlockPos 1 block in the given direction
+     */
     public BlockPos offset(EnumFacing facing) {
         return this.offset(facing, 1);
     }
 
+    /**
+     * Offset this BlockPos n blocks in the given direction
+     */
     public BlockPos offset(EnumFacing facing, int n) {
-        return n == 0 ? this : new BlockPos(
-                        this.getX() + facing.getFrontOffsetX() * n,
-                        this.getY() + facing.getFrontOffsetY() * n,
-                        this.getZ() + facing.getFrontOffsetZ() * n
-        );
+        return new BlockPos(this.getX() + facing.getFrontOffsetX() * n, this.getY() + facing.getFrontOffsetY() * n, this.getZ() + facing.getFrontOffsetZ() * n);
     }
 
-    public BlockPos crossProductBP(Vec3i vector) {
-        return new BlockPos(
-                        this.getY() * vector.getZ() - this.getZ() * vector.getY(),
-                        this.getZ() * vector.getX() - this.getX() * vector.getZ(),
-                        this.getX() * vector.getY() - this.getY() * vector.getX()
-        );
+    /**
+     * Calculate the cross product of this BlockPos and the given Vector. Version of crossProduct that returns a
+     * BlockPos instead of a Vec3i
+     */
+    public BlockPos crossProductBP(Vec3i vec) {
+        return new BlockPos(this.getY() * vec.getZ() - this.getZ() * vec.getY(), this.getZ() * vec.getX() - this.getX() * vec.getZ(), this.getX() * vec.getY() - this.getY() * vec.getX());
     }
 
+    /**
+     * Serialize this BlockPos into a long value
+     */
     public long toLong() {
-        return ((long) this.getX() & X_MASK) << X_SHIFT |
-                        ((long) this.getY() & Y_MASK) << Y_SHIFT |
-                        ((long) this.getZ() & Z_MASK);
+        return ((long) this.getX() & field_177994_h) << field_177988_g | ((long) this.getY() & field_177995_i) << field_177987_f | ((long) this.getZ() & field_177993_j);
     }
 
-    @Override
-    public BlockPos crossProduct(Vec3i vector) {
-        return this.crossProductBP(vector);
+    /**
+     * Calculate the cross product of this and the given Vector
+     */
+    public Vec3i crossProduct(Vec3i vec) {
+        return this.crossProductBP(vec);
     }
 
     public static final class MutableBlockPos extends BlockPos {
         public int x;
         public int y;
         public int z;
+        // private static final String __OBFID = "CL_00002329";
 
-        private MutableBlockPos(int initialX, int initialY, int initialZ) {
+        private MutableBlockPos(int x_, int y_, int z_) {
             super(0, 0, 0);
-            this.x = initialX;
-            this.y = initialY;
-            this.z = initialZ;
+            this.x = x_;
+            this.y = y_;
+            this.z = z_;
         }
 
-        @Override
+        MutableBlockPos(int p_i46025_1_, int p_i46025_2_, int p_i46025_3_, Object p_i46025_4_) {
+            this(p_i46025_1_, p_i46025_2_, p_i46025_3_);
+        }
+
         public int getX() {
             return this.x;
         }
 
-        @Override
         public int getY() {
             return this.y;
         }
 
-        @Override
         public int getZ() {
             return this.z;
         }
 
-        public MutableBlockPos setPos(int newX, int newY, int newZ) {
-            this.x = newX;
-            this.y = newY;
-            this.z = newZ;
-            return this;
-        }
-
-        public MutableBlockPos setPos(double newX, double newY, double newZ) {
-            return this.setPos(FastMath.floor(newX), FastMath.floor(newY), FastMath.floor(newZ));
-        }
-
-        @Override
-        public BlockPos crossProduct(Vec3i vector) {
-            return super.crossProductBP(vector);
+        public Vec3i crossProduct(Vec3i vec) {
+            return super.crossProductBP(vec);
         }
     }
 }

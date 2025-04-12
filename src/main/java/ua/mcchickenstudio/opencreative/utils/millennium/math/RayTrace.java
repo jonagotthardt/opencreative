@@ -18,7 +18,7 @@ public final class RayTrace {
         return intersection;
     }
 
-    public static MovingObjectPosition rayCast(final float yaw, final float pitch, final AxisAlignedBB bb, Vec3 locationIn, double dist, BuildSpeed s) {
+    private static MovingObjectPosition rayCast(final float yaw, final float pitch, final AxisAlignedBB bb, Vec3 locationIn, double dist, BuildSpeed s) {
         double lastX = locationIn.xCoord,
                 lastY = locationIn.yCoord,
                 lastZ = locationIn.zCoord;
