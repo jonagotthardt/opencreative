@@ -42,7 +42,8 @@ public final class RayTraceVectorAction extends VariableAction {
     }
     @Override
     protected void execute(Entity entity) {
-        VariableLink hitVec = getArguments().getVariableLink("variable", this);
+        VariableLink hitVec = getArguments().getVariableLink("hitVec", this);
+        VariableLink hitType = getArguments().getVariableLink("hitType", this);
         final Vector vector = getArguments().getValue("vector", new Vector(0, 0, 0), this);
         final Location target = getArguments().getValue("location", new Location(entity.getWorld(), 0, 0, 0), this);
         final double
@@ -66,6 +67,7 @@ public final class RayTraceVectorAction extends VariableAction {
         final Vec3 hit = result.hitVec;
         final String type = result.typeOfHit.name();
         setVarValue(hitVec, new Location(target.getWorld(), hit.xCoord, hit.yCoord, hit.zCoord));
+        setVarValue(hitType, type);
     }
 
     private static Vec2f getYawPitch(final Vector vector) {
