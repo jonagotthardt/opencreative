@@ -159,22 +159,14 @@ public final class OpenCreative extends JavaPlugin {
             teleportToLobby(player);
             getServer().sendActionBar(Component.text("§7Open§fCreative§b+ §7" + version + "§f is loaded for " + loadedTime + " ms."));
         }
-
         getLogger().info(String.join("\n",
+                        "",
                         "OpenCreative+ " + version + ": " + codename + " is loaded for " + loadedTime + " ms.",
-                        "",
                         " Welcome to OpenCreative+ " + version + "!",
-                        "",
                         "  Running on " + Bukkit.getMinecraftVersion() + " server",
-                        "  Current time " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date())
-        ));
-        if (isChristmas()) {
-            getLogger().info("  Ho-ho-ho! Merry Christmas, server owners! :-) ❆");
-        } else if (isHalloween()) {
-            getLogger().info("  Spo-o-o-oky Halloween, server owners! O_o 🎃");
-        }
-        getLogger().info(String.join("\n",
-                        "",
+                        "  Current time " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()),
+                        isChristmas() ? "  Ho-ho-ho! Merry Christmas, server owners! :-) ❆" :
+                                        isHalloween() ? "  Spo-o-o-oky Halloween, server owners! O_o 🎃" : "",
                         "  " + codename,
                         "  Made by McChicken Studio 2017–2025",
                         ""
@@ -195,12 +187,14 @@ public final class OpenCreative extends JavaPlugin {
             teleportToLobby(player);
         }
         FileUtils.unloadPlanets();
-        getLogger().info(" ");
-        getLogger().info(" Goodbye from OpenCreative+");
-        getLogger().info(" ");
-        getLogger().info(" " + codename);
-        getLogger().info("  Made by McChicken Studio 2017-2025");
-        getLogger().info(" ");
+        getLogger().info(String.join("\n",
+                        "",
+                        "Goodbye from OpenCreative+",
+                        "",
+                        " " + codename,
+                        "  Made by McChicken Studio 2017–2025",
+                        ""
+        ));
     }
 
 
