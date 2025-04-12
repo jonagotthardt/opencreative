@@ -100,13 +100,15 @@ public final class OpenCreative extends JavaPlugin {
      */
     @Override
     public void onLoad() {
-        getLogger().info(" ");
-        getLogger().info("This software was made by ukrainians, that are suffering from never-ending air alerts, explosions and people's deaths.");
-        getLogger().info("We're AGAINST THE WAR. This software IS NOT DESIGNED for people, who support killing and robbing another country.");
-        getLogger().info(" ");
-        getLogger().info("Let us having fun, like players that create their worlds...");
-        getLogger().info("McChicken Studio 2017-2025");
-        getLogger().info(" ");
+        getLogger().info(String.join("\n",
+                        "",
+                        "This software was made by Ukrainians, suffering from never-ending air alerts, explosions, and deaths.",
+                        "We're AGAINST THE WAR. This software IS NOT DESIGNED for those who support killing and robbing another country.",
+                        "",
+                        "Let us have fun, like players who create their worlds...",
+                        "McChicken Studio 2017–2025",
+                        ""
+        ));
     }
 
     /**
@@ -158,21 +160,25 @@ public final class OpenCreative extends JavaPlugin {
             getServer().sendActionBar(Component.text("§7Open§fCreative§b+ §7" + version + "§f is loaded for " + loadedTime + " ms."));
         }
 
-        getLogger().info("OpenCreative+ " + version + ": " + codename + " is loaded for " + loadedTime + " ms.");
-        getLogger().info(" ");
-        getLogger().info(" Welcome to OpenCreative+ " + version + "!");
-        getLogger().info(" ");
-        getLogger().info("  Running on " + Bukkit.getMinecraftVersion() + " server");
-        getLogger().info("  Current time " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()));
+        getLogger().info(String.join("\n",
+                        "OpenCreative+ " + version + ": " + codename + " is loaded for " + loadedTime + " ms.",
+                        "",
+                        " Welcome to OpenCreative+ " + version + "!",
+                        "",
+                        "  Running on " + Bukkit.getMinecraftVersion() + " server",
+                        "  Current time " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date())
+        ));
         if (isChristmas()) {
             getLogger().info("  Ho-ho-ho! Merry Christmas, server owners! :-) ❆");
         } else if (isHalloween()) {
             getLogger().info("  Spo-o-o-oky Halloween, server owners! O_o 🎃");
         }
-        getLogger().info(" ");
-        getLogger().info("  " + codename);
-        getLogger().info("  Made by McChicken Studio 2017-2025");
-        getLogger().info(" ");
+        getLogger().info(String.join("\n",
+                        "",
+                        "  " + codename,
+                        "  Made by McChicken Studio 2017–2025",
+                        ""
+        ));
         new Metrics(this, 22001);
 
     }
