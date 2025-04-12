@@ -161,6 +161,11 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
                     sender.sendMessage(getLocaleMessage("same-player"));
                     return true;
                 }
+                int limit = planet.getLimits().getBlacklistedLimit();
+                if (planet.getWorldPlayers().getBannedPlayers().size() > limit) {
+                    sender.sendMessage(getLocaleMessage("world.players.black-list.limit").replace("%limit%",String.valueOf(limit)));
+                    return true;
+                }
                 Player playerToBan = Bukkit.getPlayer(args[1]);
                 if (playerToBan == null || !planet.getPlayers().contains(playerToBan)) {
                     sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));

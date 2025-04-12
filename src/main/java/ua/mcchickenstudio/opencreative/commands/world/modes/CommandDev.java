@@ -156,6 +156,11 @@ public class CommandDev implements CommandExecutor {
                  * Adds online player as not trusted developers, if he's not
                  * listed in developers.
                  */
+                int limit = planet.getLimits().getDevelopersLimit();
+                if (planet.getWorldPlayers().getAllDevelopers().size() > limit) {
+                    sender.sendMessage(getLocaleMessage("world.players.developers.limit").replace("%limit%",String.valueOf(limit)));
+                    return true;
+                }
                 if (onlinePlayer != null) {
                     Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(onlinePlayer);
                     if (planet.equals(playerPlanet)) {

@@ -118,6 +118,11 @@ public final class ClickListener implements Listener {
                 }
             } else if (item.getType() == Material.BARRIER && event.getSlot() == 16) {
                 player.closeInventory();
+                int limit = planet.getLimits().getBlacklistedLimit();
+                if (planet.getWorldPlayers().getBannedPlayers().size() > limit) {
+                    player.sendMessage(getLocaleMessage("world.players.black-list.limit").replace("%limit%",String.valueOf(limit)));
+                    return;
+                }
                 player.sendMessage(getLocaleMessage("world.players.black-list.added").replace("%player%", selectedPlayer));
                 planet.getWorldPlayers().banPlayer(selectedPlayer);
             } else if (item.getType() == Material.STRUCTURE_VOID) {

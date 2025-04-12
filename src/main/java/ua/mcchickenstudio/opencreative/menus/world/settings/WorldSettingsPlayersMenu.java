@@ -36,6 +36,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 public class WorldSettingsPlayersMenu extends LegacyMenu {
 
@@ -293,6 +294,11 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
             planet.getWorldPlayers().removeDeveloper(nickname);
         });
         actions.add(() -> {
+            int limit = planet.getLimits().getDevelopersLimit();
+            if (planet.getWorldPlayers().getAllDevelopers().size() > limit) {
+                player.sendMessage(getLocaleMessage("world.players.developers.limit").replace("%limit%",String.valueOf(limit)));
+                return;
+            }
             player.sendMessage(MessageUtils.getLocaleMessage("world.players.developers.guest").replace("%player%", nickname));
             planet.getWorldPlayers().addDeveloperGuest(nickname);
         });
@@ -335,6 +341,11 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
             planet.getWorldPlayers().removeBuilder(nickname);
         });
         actions.add(() -> {
+            int limit = planet.getLimits().getBuildersLimit();
+            if (planet.getWorldPlayers().getAllBuilders().size() > limit) {
+                player.sendMessage(getLocaleMessage("world.players.builders.limit").replace("%limit%",String.valueOf(limit)));
+                return;
+            }
             player.sendMessage(MessageUtils.getLocaleMessage("world.players.builders.added").replace("%player%", nickname));
             planet.getWorldPlayers().addBuilder(nickname, false);
         });
