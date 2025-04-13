@@ -7748,7 +7748,6 @@ items:
           - " "
           - "&fIn the chest:"
           - "&e Variable &7- Beam contact location with the HitBox"
-          - "&e Variable &7- Type of contact"
           - "&b Vector &7- Direction of the ray"
           - “&f Location &7- Starting location of the beam”
           - "&f Location &7- Position of the HitBox"
