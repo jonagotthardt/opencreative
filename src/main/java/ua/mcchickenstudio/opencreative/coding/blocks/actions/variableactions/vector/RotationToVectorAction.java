@@ -52,6 +52,6 @@ public final class RotationToVectorAction extends VariableAction {
 
     @Override
     public ActionType getActionType() {
-        return ActionType.VAR_GET_VECTOR_Z;
+        return ActionType.VAR_ROTATION_TO_VECTOR;
     }
 }
