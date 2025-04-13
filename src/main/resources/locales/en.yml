@@ -7726,6 +7726,18 @@ items:
           - "&b Vector &7- For getting"
           - " "
           - "&eClick to set action."
+      var-rotation-to-vector:
+        name: "&9Rotation to Vector"
+        lore:
+          - "&7Converts rotation (yaw/pitch)"
+          - "&7into a direction vector (from -1 to 1)."
+          - "&7Useful for ray tracing."
+          - "&fIn the chest:"
+          - "&e Variable &7- The resulting vector"
+          - "&c Number &7- Yaw (Y)"
+          - "&c Number &7- Pitch (X)"
+          - " "
+          - "&eClick to set action."
       var-do-ray-trace:
         name: "&9Do Ray Trace"
         lore:

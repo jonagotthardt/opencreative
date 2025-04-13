@@ -451,6 +451,11 @@ public enum ActionType {
     VAR_GET_VECTOR_X( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, GetVectorXAction.class, Material.RED_STAINED_GLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("vector", ValueType.VECTOR)),
     VAR_GET_VECTOR_Y( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, GetVectorYAction.class, Material.GREEN_STAINED_GLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("vector", ValueType.VECTOR)),
     VAR_GET_VECTOR_Z( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, GetVectorZAction.class, Material.BLUE_STAINED_GLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("vector", ValueType.VECTOR)),
+    VAR_ROTATION_TO_VECTOR( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, RotationToVectorAction.class, Material.TIPPED_ARROW,
+                    new ArgumentSlot("variable", ValueType.VARIABLE),
+                    new ArgumentSlot("yaw", ValueType.NUMBER),
+                    new ArgumentSlot("pitch", ValueType.NUMBER)
+    ),
     VAR_DO_RAY_TRACE( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, RayTraceVectorAction.class, Material.SPECTRAL_ARROW,
                     new ArgumentSlot("hitVec", ValueType.VARIABLE),
                     new ArgumentSlot("hitType", ValueType.VARIABLE),
