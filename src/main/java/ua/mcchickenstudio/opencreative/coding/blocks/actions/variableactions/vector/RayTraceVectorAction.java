@@ -56,8 +56,8 @@ public final class RayTraceVectorAction extends VariableAction {
         ySize = getArguments().getValue("ySize", 1.8, this) / 2.0,
         zSize = getArguments().getValue("zSize", 0.3, this) / 2.0;
         final BuildSpeed buildSpeed =
-                        (getArguments().getValue("calculation", "Vanilla Java", this)
-                        .equals("Vanilla Java") ? BuildSpeed.NORMAL : BuildSpeed.FAST);
+                        (getArguments().getValue("calculation", "vanilla-java", this)
+                        .equals("vanilla-java") ? BuildSpeed.NORMAL : BuildSpeed.FAST);
         final Vec2f rotation = getYawPitch(vector);
         final AxisAlignedBB aabb = new AxisAlignedBB(
                         x - xSize, y - ySize, z - zSize,

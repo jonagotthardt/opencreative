@@ -465,7 +465,7 @@ public enum ActionType {
                     new ArgumentSlot("xSize", ValueType.NUMBER),
                     new ArgumentSlot("ySize", ValueType.NUMBER),
                     new ArgumentSlot("zSize", ValueType.NUMBER),
-                    new ParameterSlot("calculation", Arrays.asList("Vanilla Java", "OptiFine FastMath"), Material.PAPER, Material.MAP)
+                    new ParameterSlot("calculation", Arrays.asList("vanilla-java", "optifine-fastmath"), Material.PAPER, Material.MAP)
     ),
 
     /**
