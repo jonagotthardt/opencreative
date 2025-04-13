@@ -90,9 +90,9 @@ public final class InteractListener implements Listener {
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock != null) {
             if (clickedBlock.getType().toString().contains("WALL_SIGN")) {
-                handleSignClick(event,player,currentItem,clickedBlock, devPlanet);
+                handleSignClick(event, player, currentItem, clickedBlock, devPlanet);
             } else if (clickedBlock.getState() instanceof InventoryHolder) {
-                handleContainerClick(event,player, devPlanet,event.getClickedBlock());
+                handleContainerClick(event, player, devPlanet, event.getClickedBlock());
             }
         }
         if (currentItem.getItemMeta() != null) {
@@ -267,9 +267,10 @@ public final class InteractListener implements Listener {
             }
         } else {
             AbstractMenu menu = null;
+            final Location clickedLocation = clickedBlock.getLocation();
             if (mainBlockCategory != null) {
                 menu = switch (mainBlockCategory) {
-                    case EVENT_WORLD, EVENT_ENTITY, EVENT_PLAYER -> new BlocksCategorySelectionMenu(player, clickedBlock.getLocation(), mainBlockCategory);
+                    case EVENT_WORLD, EVENT_ENTITY, EVENT_PLAYER -> new BlocksCategorySelectionMenu(player, clickedLocation, mainBlockCategory);
                     default -> null;
                 };
             } else if (actionBlockCategory != null) {
@@ -277,10 +278,10 @@ public final class InteractListener implements Listener {
                     case PLAYER_ACTION, PLAYER_CONDITION, VARIABLE_ACTION,
                          VARIABLE_CONDITION, ENTITY_ACTION, ENTITY_CONDITION,
                          WORLD_ACTION, WORLD_CONDITION, CONTROL_ACTION,
-                         REPEAT_ACTION, HANDLER_ACTION -> new BlocksCategorySelectionMenu(player, clickedBlock.getLocation(), actionBlockCategory);
-                    case SELECTION_ACTION -> new SelectionActionsMenu(player,clickedBlock.getLocation());
-                    case LAUNCH_FUNCTION_ACTION -> new FunctionChooserMenu(player, devPlanet,clickedBlock.getLocation());
-                    case LAUNCH_METHOD_ACTION -> new MethodChooserMenu(player, devPlanet,clickedBlock.getLocation());
+                         REPEAT_ACTION, HANDLER_ACTION -> new BlocksCategorySelectionMenu(player, clickedLocation, actionBlockCategory);
+                    case SELECTION_ACTION -> new SelectionActionsMenu(player,clickedLocation);
+                    case LAUNCH_FUNCTION_ACTION -> new FunctionChooserMenu(player, devPlanet,clickedLocation);
+                    case LAUNCH_METHOD_ACTION -> new MethodChooserMenu(player, devPlanet,clickedLocation);
                     default -> null;
                 };
             }

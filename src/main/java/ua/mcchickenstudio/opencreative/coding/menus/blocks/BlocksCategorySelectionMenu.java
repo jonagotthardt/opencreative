@@ -39,9 +39,9 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  */
 public class BlocksCategorySelectionMenu extends MenusCategorySelectionMenu implements BlockMenu {
 
-    private final ExecutorCategory executorCategory;
-    private final ActionCategory actionCategory;
-    private final Location signLocation;
+    private ExecutorCategory executorCategory = null;
+    private ActionCategory actionCategory = null;
+    private Location signLocation = null;
 
     public BlocksCategorySelectionMenu(@NotNull Player player,
                                        @NotNull Location location,
@@ -50,10 +50,7 @@ public class BlocksCategorySelectionMenu extends MenusCategorySelectionMenu impl
                 category.getStainedPane(),
                 ExecutorType.getMenusCategories(category),
                 ChatColor.stripColor(getLocaleMessage("blocks." + category.name().toLowerCase())),
-                "events");
-        this.signLocation = location;
-        this.executorCategory = category;
-        this.actionCategory = null;
+                "events", location, category);
     }
 
     public BlocksCategorySelectionMenu(@NotNull Player player,
@@ -63,15 +60,18 @@ public class BlocksCategorySelectionMenu extends MenusCategorySelectionMenu impl
                 category.getStainedPane(),
                 ActionType.getMenusCategories(category),
                 ChatColor.stripColor(getLocaleMessage("blocks." + category.name().toLowerCase())),
-                category.isCondition() ? "conditions" : "actions");
-        this.signLocation = location;
-        this.executorCategory = null;
-        this.actionCategory = category;
+                category.isCondition() ? "conditions" : "actions", location, category);
     }
 
     @Override
-    public @NotNull ContentWithMenusCategoryMenu<?> getContentBrowserMenu() {
+    public @NotNull ContentWithMenusCategoryMenu<?> getContentBrowserMenu(final Location location, final Object frequency) {
         BlocksWithMenusCategoryMenu<?> content;
+        this.signLocation = location;
+        if (frequency instanceof ActionCategory) {
+            this.actionCategory = (ActionCategory) frequency;
+        } else if (frequency instanceof ExecutorCategory) {
+            this.executorCategory = (ExecutorCategory) frequency;
+        }
         if (mainCategory.equalsIgnoreCase("events")) {
             content = new ExecutorTypeSelectionMenu(player, signLocation, executorCategory);
         } else {

@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.menus.blocks;
 
+import net.bytebuddy.asm.Advice;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -47,24 +49,31 @@ public abstract class MenusCategorySelectionMenu extends AbstractMenu {
     protected final String mainCategory;
     protected final ContentWithMenusCategoryMenu<?> contentMenu;
     protected final List<MenusCategory> menusCategories = new ArrayList<>();
+    protected final Location location;
+    protected final Object frequency;
 
     public MenusCategorySelectionMenu(@NotNull Player player,
                                       @NotNull ItemStack mainItem,
                                       @NotNull Material additionalPane,
                                       @NotNull Collection<MenusCategory> menusCategories,
                                       @NotNull String title,
-                                      @NotNull String mainCategory) {
+                                      @NotNull String mainCategory,
+                                      @NotNull Location location,
+                                      @NotNull Object frequency
+    ) {
         super(6, title);
         this.player = player;
         this.menusCategories.addAll(menusCategories);
         this.additionalPane = additionalPane;
         this.mainItem = mainItem;
         this.mainCategory = mainCategory;
-        this.contentMenu = getContentBrowserMenu();
+        this.location = location;
+        this.frequency = frequency;
+        this.contentMenu = getContentBrowserMenu(location, frequency);
         contentMenu.setCategoriesMenu(this);
     }
 
-    public abstract @NotNull ContentWithMenusCategoryMenu<?> getContentBrowserMenu();
+    public abstract @NotNull ContentWithMenusCategoryMenu<?> getContentBrowserMenu(Location location, Object frequency);
 
     @Override
     public void fillItems(Player player) {
