@@ -458,7 +458,6 @@ public enum ActionType {
     ),
     VAR_DO_RAY_TRACE( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, RayTraceVectorAction.class, Material.SPECTRAL_ARROW,
                     new ArgumentSlot("hitVec", ValueType.VARIABLE),
-                    new ArgumentSlot("hitType", ValueType.VARIABLE),
                     new ArgumentSlot("vector", ValueType.VECTOR),
                     new ArgumentSlot("from", ValueType.LOCATION),
                     new ArgumentSlot("to", ValueType.LOCATION),
