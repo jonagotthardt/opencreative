@@ -43,7 +43,6 @@ public final class RayTraceVectorAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink hitVec = getArguments().getVariableLink("hitVec", this);
-        VariableLink hitType = getArguments().getVariableLink("hitType", this);
         final Vector vector = getArguments().getValue("vector", new Vector(0, 0, 0), this);
         final Location from = getArguments().getValue("from", new Location(entity.getWorld(), 0, 0, 0), this);
         final Location to = getArguments().getValue("to", new Location(entity.getWorld(), 0, 0, 0), this);
