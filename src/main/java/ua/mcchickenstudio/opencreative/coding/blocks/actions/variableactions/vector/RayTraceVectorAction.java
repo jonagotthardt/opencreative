@@ -65,8 +65,12 @@ public final class RayTraceVectorAction extends VariableAction {
         );
         final MovingObjectPosition result = RayTrace.rayCast(rotation.getX(), rotation.getY(),
                         aabb, new Vec3(from.getX(), from.getY(), from.getZ()), range, buildSpeed);
-        final Vec3 hit = result.hitVec;
-        setVarValue(hitVec, new Location(to.getWorld(), hit.xCoord, hit.yCoord, hit.zCoord));
+        if (result == null) {
+            setVarValue(hitVec, new Location(to.getWorld(), -1, -1, -1));
+        } else {
+            final Vec3 hit = result.hitVec;
+            setVarValue(hitVec, new Location(to.getWorld(), hit.xCoord, hit.yCoord, hit.zCoord));
+        }
     }
 
     private static Vec2f getYawPitch(final Vector vector) {
