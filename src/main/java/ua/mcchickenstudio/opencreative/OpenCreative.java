@@ -31,6 +31,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.data.PhysService;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldListener;
 import ua.mcchickenstudio.opencreative.commands.*;
 import ua.mcchickenstudio.opencreative.commands.minecraft.*;
@@ -146,6 +147,7 @@ public final class OpenCreative extends JavaPlugin {
         PlayerUtils.loadPermissions();
         HookUtils.loadHooks();
         FileUtils.loadPlanets();
+        PhysService.run();
         //FileUtils.loadModules();
 
         economy = HookUtils.getEconomy();

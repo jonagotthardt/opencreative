@@ -38,7 +38,7 @@ import java.util.function.Function;
 public class AsyncScheduler {
 
     private static final char INNER_CLASS_SEPARATOR_CHAR = '$';
-    private static final int STOP_WATCH_TIME_MILLIS = 500;
+    private static final int STOP_WATCH_TIME_MILLIS = 750;
 
     @Getter
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(64,

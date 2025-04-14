@@ -49,6 +49,10 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appear
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.blocks.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.entity.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.AddPhysObjectAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.MotionParamPhysObjectAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.SettingsParamPhysObjectAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.VisualParamPhysObjectAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.entityconditions.other.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.entityconditions.params.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.appearance.*;
@@ -274,6 +278,50 @@ public enum ActionType {
     WORLD_SET_TIME(                 ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SetTimeAction.class, Material.CLOCK, new ArgumentSlot("time", ValueType.NUMBER)),
     WORLD_SET_WEATHER(                 ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SetWeatherAction.class, Material.WATER_BUCKET, new ParameterSlot("weather", Arrays.asList("clean","storm","thunder"), Material.SUNFLOWER, Material.WATER_BUCKET, Material.TRIDENT), new ArgumentSlot("duration", ValueType.NUMBER)),
     WORLD_SET_WORLD_BORDER(            ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SetWorldBorderAction.class, Material.END_CRYSTAL, new ArgumentSlot("radius", ValueType.NUMBER), new ArgumentSlot("time", ValueType.NUMBER), new ArgumentSlot("damage", ValueType.NUMBER), new ArgumentSlot("warning-distance", ValueType.NUMBER), new ArgumentSlot("warning-time", ValueType.NUMBER), new ArgumentSlot("safe-distance", ValueType.NUMBER)),
+    WORLD_VISUAL_PARAM_PHYS_OBJECT(
+                    ActionCategory.WORLD_ACTION, MenusCategory.WORLD, VisualParamPhysObjectAction.class,
+                    Material.FIRE_CHARGE,
+                    new ArgumentSlot("variable", ValueType.VARIABLE),
+                    new ArgumentSlot("particle", ValueType.PARTICLE),
+                    new ArgumentSlot("particle2", ValueType.PARTICLE),
+                    new ArgumentSlot("param1", ValueType.NUMBER),
+                    new ArgumentSlot("param2", ValueType.NUMBER),
+                    new ArgumentSlot("param3", ValueType.NUMBER),
+                    new ArgumentSlot("param4", ValueType.NUMBER),
+                    new ArgumentSlot("hit-particle", ValueType.PARTICLE),
+                    new ArgumentSlot("hit-param1", ValueType.NUMBER)
+    ),
+
+    WORLD_MOTION_PARAM_PHYS_OBJECT(
+                    ActionCategory.WORLD_ACTION, MenusCategory.WORLD, MotionParamPhysObjectAction.class,
+                    Material.FEATHER,
+                    new ArgumentSlot("variable", ValueType.VARIABLE),
+                    new ArgumentSlot("location", ValueType.LOCATION),
+                    new ArgumentSlot("speed", ValueType.NUMBER),
+                    new ArgumentSlot("weight", ValueType.NUMBER),
+                    new ArgumentSlot("acceleration-speed", ValueType.NUMBER),
+                    new ArgumentSlot("speed-limit", ValueType.NUMBER),
+                    new ArgumentSlot("acceleration-weight", ValueType.NUMBER),
+                    new ArgumentSlot("weight-limit", ValueType.NUMBER)
+    ),
+    WORLD_SETTINGS_PARAM_PHYS_OBJECT(
+                    ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SettingsParamPhysObjectAction.class,
+                    Material.PAPER,
+                    new ArgumentSlot("variable", ValueType.VARIABLE),
+                    new ArgumentSlot("damage", ValueType.NUMBER),
+                    new ArgumentSlot("explosion", ValueType.NUMBER),
+                    new ArgumentSlot("potion", ValueType.POTION),
+                    new ArgumentSlot("shockwave-range", ValueType.NUMBER),
+                    new ArgumentSlot("shockwave-power", ValueType.NUMBER)
+    ),
+
+    WORLD_ADD_PHYS_OBJECT(
+                    ActionCategory.WORLD_ACTION, MenusCategory.WORLD, AddPhysObjectAction.class,
+                    Material.STRUCTURE_BLOCK,
+                    new ArgumentSlot("visual", ValueType.VARIABLE),
+                    new ArgumentSlot("motion", ValueType.VARIABLE),
+                    new ArgumentSlot("settings", ValueType.VARIABLE)
+    ),
 
     WORLD_CREATE_SCOREBOARD(                 ActionCategory.WORLD_ACTION, MenusCategory.APPEARANCE, CreateScoreboardAction.class, Material.PAINTING, new ArgumentSlot("name", ValueType.TEXT), new ArgumentSlot("display-name", ValueType.TEXT)),
     WORLD_SCOREBOARD_SET_SCORE(                 ActionCategory.WORLD_ACTION, MenusCategory.APPEARANCE, ScoreboardSetScoreAction.class, Material.ITEM_FRAME, new ArgumentSlot("name", ValueType.TEXT), new ArgumentSlot("object", ValueType.TEXT), new ArgumentSlot("score", ValueType.NUMBER)),

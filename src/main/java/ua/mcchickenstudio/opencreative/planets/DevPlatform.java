@@ -45,6 +45,7 @@ public class DevPlatform {
     }
 
     public boolean exists() {
+        // TODO: переписать, жрет слишком много
         if (!ChunkCache.isChunkGenerated(world, getBeginX() >> 4, getBeginZ() >> 4)) {
             return false;
         }
