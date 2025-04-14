@@ -57,17 +57,17 @@ public final class RayTraceVectorMultiAction extends VariableAction {
             for (final Object o : list) {
                 if (o instanceof Location to) {
                     final double
-                                    x = to.getX(),
-                                    y = to.getY(),
-                                    z = to.getZ();
+                    x = to.getX(),
+                    y = to.getY(),
+                    z = to.getZ();
                     final double range = getArguments().getValue("range", 3.0, this);
                     final double
-                                    xSize = getArguments().getValue("xSize", 0.3, this) / 2.0,
-                                    ySize = getArguments().getValue("ySize", 1.8, this) / 2.0,
-                                    zSize = getArguments().getValue("zSize", 0.3, this) / 2.0;
+                    xSize = getArguments().getValue("xSize", 0.3, this) / 2.0,
+                    ySize = getArguments().getValue("ySize", 1.8, this) / 2.0,
+                    zSize = getArguments().getValue("zSize", 0.3, this) / 2.0;
                     final BuildSpeed buildSpeed =
                                     (getArguments().getValue("calculation", "vanilla-java", this)
-                                                    .equals("vanilla-java") ? BuildSpeed.NORMAL : BuildSpeed.FAST);
+                                     .equals("vanilla-java") ? BuildSpeed.NORMAL : BuildSpeed.FAST);
                     final Vec2f rotation = getYawPitch(vector);
                     final AxisAlignedBB aabb = new AxisAlignedBB(
                                     x - xSize, y - ySize, z - zSize,

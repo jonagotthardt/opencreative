@@ -53,20 +53,20 @@ public final class RayTraceVectorMultiEntitiesAction extends VariableAction {
         VariableLink hitVec = getArguments().getVariableLink("hitVec", this);
         final Vector vector = getArguments().getValue("vector", new Vector(0, 0, 0), this);
         final Location from = getArguments().getValue("from", new Location(entity.getWorld(), 0, 0, 0), this);
-        final List<LivingEntity> list = entity.getWorld().getLivingEntities();
+        final List<Entity> list = entity.getWorld().getEntities();
         AsyncScheduler.run(() -> {
             final List<Location> resultList = new ArrayList<>();
             final String filter = getArguments().getValue("filter", "no-filter", this);
-            for (final LivingEntity livingEntity : list) {
-                final boolean isPlayer = (livingEntity instanceof Player);
+            for (final Entity e : list) {
+                final boolean isPlayer = (e instanceof Player);
                 if (filter.equals("only-players") && !isPlayer) continue;
-                if (filter.equals("only-entities") && isPlayer) continue;
-                if (livingEntity.isDead()) return;
-                final Location to = livingEntity.getLocation();
+                if (filter.equals("only-entities") && (isPlayer || !(entity instanceof LivingEntity))) continue;
+                if (e.isDead()) continue;
+                final Location to = e.getLocation();
                 final double
-                                x = to.getX(),
-                                y = to.getY(),
-                                z = to.getZ();
+                x = to.getX(),
+                y = to.getY(),
+                z = to.getZ();
                 final double range = getArguments().getValue("range", 3.0, this);
                 final BuildSpeed buildSpeed =
                                 (getArguments().getValue("calculation", "vanilla-java", this)
