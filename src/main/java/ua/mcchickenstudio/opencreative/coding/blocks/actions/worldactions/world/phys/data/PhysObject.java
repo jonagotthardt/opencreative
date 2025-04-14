@@ -208,14 +208,14 @@ public class PhysObject {
                                 -GeneralMath.sin((float) Math.toRadians(vec.getX()), BuildSpeed.FAST),
                                 -GeneralMath.sin((float) Math.toRadians(vec.getY()), BuildSpeed.FAST),
                                 GeneralMath.cos((float) Math.toRadians(vec.getX()), BuildSpeed.FAST))
-                                .multiply(explosion + (double) 1 / 5);
+                                .multiply((double) (shockwavePower + 0.1) / 5);
                 double interpolatePitch = 1 - ((Math.abs(vec.getY())) / 90);
                 velo.setX(velo.getX() * 3 * interpolatePitch);
                 velo.setZ(velo.getZ() * 3 * interpolatePitch);
                 { // ease 2
-                    double delta = l.distance(to);
+                    double delta = l.distance(to) / shockwaveRadius;
                     double calculateRealisticHorizontal = Interpolation.interpolate(1, 0.55,
-                                    delta, Interpolation.Type.BACK, Interpolation.Ease.OUT) * shockwavePower;
+                                    delta, Interpolation.Type.BACK, Interpolation.Ease.OUT);
                     velo.setX(velo.getX() * calculateRealisticHorizontal);
                     velo.setZ(velo.getZ() * calculateRealisticHorizontal);
                 }

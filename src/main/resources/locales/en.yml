@@ -3610,7 +3610,7 @@ items:
           - "&a Number &7- Explosion strength"
           - "&9 Potion &7- The effect applied by the object"
           - "&a Number &7- Shockwave radius"
-          - "&a Number &7- Shockwave force"
+          - "&a Number &7- Shockwave force (velocity)"
           - ""
           - "&eClick to set action."
       world-add-phys-object:
