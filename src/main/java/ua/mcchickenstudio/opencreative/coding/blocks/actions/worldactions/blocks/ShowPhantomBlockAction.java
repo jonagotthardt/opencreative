@@ -55,7 +55,7 @@ public final class ShowPhantomBlockAction extends WorldAction {
                 packet.getBlockPositionModifier().write(0, new BlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ()));
                 packet.getBlockData().write(0, WrappedBlockData.createData(item.getType()));
                 ProtocolLibrary.getProtocolManager().sendServerPacket((Player) entity, packet);
-            });
+            }, AsyncScheduler.getScheduler());
         }
     }
 

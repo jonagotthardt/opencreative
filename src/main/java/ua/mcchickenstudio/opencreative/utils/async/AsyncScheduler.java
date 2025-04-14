@@ -41,26 +41,26 @@ public class AsyncScheduler {
     private static final int STOP_WATCH_TIME_MILLIS = 750;
 
     @Getter
-    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(64,
-        new ThreadFactoryBuilder().setNameFormat("opencreative-schedule-%d").build());
+    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(36,
+        new ThreadFactoryBuilder().setNameFormat("opencreative-thread-%d").build());
 
-    public static void shutdown() {
-        TryIgnore.ignore(scheduler::shutdownNow);
+    public static void shutdown(ScheduledExecutorService schedulerCustom) {
+        TryIgnore.ignore(schedulerCustom::shutdownNow);
     }
 
     private AsyncScheduler() {}
 
-    public static Future<?> run(Runnable runnable) {
-        return scheduler.submit(new DecoratedRunnable(runnable));
+    public static Future<?> run(Runnable runnable, ScheduledExecutorService schedulerCustom) {
+        return schedulerCustom.submit(new DecoratedRunnable(runnable));
     }
-    public static <T> Future<T> run(Callable<T> callable) {
-        return scheduler.submit(new DecoratedCallable<>(callable));
+    public static <T> Future<T> run(Callable<T> callable, ScheduledExecutorService schedulerCustom) {
+        return schedulerCustom.submit(new DecoratedCallable<>(callable));
     }
-    public static ScheduledFuture<?> later(Runnable runnable, long delay, TimeUnit time) {
-        return scheduler.schedule(new DecoratedRunnable(runnable), delay, time);
+    public static ScheduledFuture<?> later(Runnable runnable, ScheduledExecutorService schedulerCustom, long delay, TimeUnit time) {
+        return schedulerCustom.schedule(new DecoratedRunnable(runnable), delay, time);
     }
-    public static ScheduledFuture<?> timer(Runnable runnable, long delay, long period, TimeUnit time) {
-        return scheduler.scheduleAtFixedRate(new DecoratedRunnable(runnable), delay, period, time);
+    public static ScheduledFuture<?> timer(Runnable runnable, ScheduledExecutorService schedulerCustom, long delay, long period, TimeUnit time) {
+        return schedulerCustom.scheduleAtFixedRate(new DecoratedRunnable(runnable), delay, period, time);
     }
 
     public static void cancel(ScheduledFuture<?> timer) {

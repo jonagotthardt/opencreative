@@ -19,6 +19,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.data;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -28,11 +29,15 @@ import ua.mcchickenstudio.opencreative.utils.millennium.types.EvictingList;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 // Made by pawsashatoy :)
 @UtilityClass
 public class PhysService {
 
+    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(40,
+                    new ThreadFactoryBuilder().setNameFormat("opencreative-phys-thread-%d").build());
     private static final Map<Integer, List<PhysObject>> objects = new ConcurrentHashMap<>();
     public static void add(final PhysObject object) {
         final World world = object.getWorld();
@@ -52,7 +57,7 @@ public class PhysService {
                     }
                     objects.removeAll(toDelete);
                 }
-            });
+            }, scheduler);
         }, 1L, 1L);
     }
 }

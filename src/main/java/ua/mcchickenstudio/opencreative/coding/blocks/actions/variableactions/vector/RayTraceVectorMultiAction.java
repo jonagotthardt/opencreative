@@ -82,7 +82,7 @@ public final class RayTraceVectorMultiAction extends VariableAction {
                 }
             }
             setVarValue(hitVec, resultList);
-        });
+        }, AsyncScheduler.getScheduler());
     }
     @Override
     public ActionType getActionType() {

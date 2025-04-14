@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.vector;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -30,14 +31,12 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.Var
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import ua.mcchickenstudio.opencreative.utils.async.AsyncScheduler;
-import ua.mcchickenstudio.opencreative.utils.millennium.math.AxisAlignedBB;
-import ua.mcchickenstudio.opencreative.utils.millennium.math.BuildSpeed;
-import ua.mcchickenstudio.opencreative.utils.millennium.math.MovingObjectPosition;
-import ua.mcchickenstudio.opencreative.utils.millennium.math.RayTrace;
+import ua.mcchickenstudio.opencreative.utils.millennium.math.*;
 import ua.mcchickenstudio.opencreative.utils.millennium.vectors.Vec2f;
 import ua.mcchickenstudio.opencreative.utils.millennium.vectors.Vec3;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.vector.RayTraceVectorAction.getYawPitch;
@@ -53,8 +52,9 @@ public final class RayTraceVectorMultiEntitiesAction extends VariableAction {
         VariableLink hitVec = getArguments().getVariableLink("hitVec", this);
         final Vector vector = getArguments().getValue("vector", new Vector(0, 0, 0), this);
         final Location from = getArguments().getValue("from", new Location(entity.getWorld(), 0, 0, 0), this);
-        final List<Entity> list = entity.getWorld().getEntities();
         AsyncScheduler.run(() -> {
+            final double range = getArguments().getValue("range", 3.0, this);
+            final List<Entity> list = getEntitiesAroundPoint(from, range + 1.0);
             final List<Location> resultList = new ArrayList<>();
             final String filter = getArguments().getValue("filter", "no-filter", this);
             for (final Entity e : list) {
@@ -67,7 +67,6 @@ public final class RayTraceVectorMultiEntitiesAction extends VariableAction {
                 x = to.getX(),
                 y = to.getY(),
                 z = to.getZ();
-                final double range = getArguments().getValue("range", 3.0, this);
                 final BuildSpeed buildSpeed =
                                 (getArguments().getValue("calculation", "vanilla-java", this)
                                                 .equals("vanilla-java") ? BuildSpeed.NORMAL : BuildSpeed.FAST);
@@ -84,8 +83,28 @@ public final class RayTraceVectorMultiEntitiesAction extends VariableAction {
                 }
             }
             setVarValue(hitVec, resultList);
-        });
+        }, AsyncScheduler.getScheduler());
     }
+
+    private static List<Entity> getEntitiesAroundPoint(Location location, double radius) {
+        List<Entity> entities = new ArrayList<>();
+        World world = location.getWorld();
+        int smallX = FastMath.floor((location.getX() - radius) / 16.0D);
+        int bigX = FastMath.floor((location.getX() + radius) / 16.0D);
+        int smallZ = FastMath.floor((location.getZ() - radius) / 16.0D);
+        int bigZ = FastMath.floor((location.getZ() + radius) / 16.0D);
+
+        for (int x = smallX; x <= bigX; x++) {
+            for (int z = smallZ; z <= bigZ; z++) {
+                if (world.isChunkLoaded(x, z)) {
+                    entities.addAll(Arrays.asList(world.getChunkAt(x, z).getEntities()));
+                }
+            }
+        }
+        entities.removeIf(entity -> entity.getLocation().distanceSquared(location) > radius * radius);
+        return entities;
+    }
+
     @Override
     public ActionType getActionType() {
         return ActionType.VAR_DO_RAY_TRACE_MULTI_ENTITIES;

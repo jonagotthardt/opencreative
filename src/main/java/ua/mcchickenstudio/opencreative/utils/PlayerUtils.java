@@ -267,8 +267,8 @@ public class PlayerUtils {
                 for (Player player : block.getLocation().getWorld().getPlayers()) {
                     player.sendSignChange(block.getLocation(), newLines);
                 }
-            }, 100, TimeUnit.MILLISECONDS);
-        });
+            }, AsyncScheduler.getScheduler(), 100, TimeUnit.MILLISECONDS);
+        }, AsyncScheduler.getScheduler());
     }
 
     /**

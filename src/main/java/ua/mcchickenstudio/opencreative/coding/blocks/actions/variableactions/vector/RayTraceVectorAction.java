@@ -73,7 +73,7 @@ public final class RayTraceVectorAction extends VariableAction {
                 final Vec3 hit = result.hitVec;
                 setVarValue(hitVec, new Location(to.getWorld(), hit.xCoord, hit.yCoord, hit.zCoord));
             }
-        });
+        }, AsyncScheduler.getScheduler());
     }
 
     public static Vec2f getYawPitch(final Vector vector) {

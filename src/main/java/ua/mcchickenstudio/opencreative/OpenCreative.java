@@ -291,7 +291,9 @@ public final class OpenCreative extends JavaPlugin {
         } catch (Exception exception) {
             sendCriticalErrorMessage("Couldn't register executors", exception);
         }
-        ProtocolLibrary.getProtocolManager().addPacketListener(new ChunkPacketListener(this));
+        if (HookUtils.getPacketManager().isEnabled()) {
+            ProtocolLibrary.getProtocolManager().addPacketListener(new ChunkPacketListener(this));
+        }
         getLogger().info("OpenCreative+ registered " + (registeredListeners == listeners.length ? "all" : registeredListeners + "/" + listeners.length) + " event listeners.");
     }
 
