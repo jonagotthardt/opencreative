@@ -1,6 +1,7 @@
 package ua.mcchickenstudio.opencreative.utils.millennium.math;
 
 import com.google.common.collect.Lists;
+import lombok.val;
 import ua.mcchickenstudio.opencreative.utils.async.Pair;
 
 import java.util.*;
@@ -183,14 +184,20 @@ public final class Statistics {
         return maxValue;
     }
 
-    public static double getMedian(final List<Double> data) {
+    public static double getMedian(final List<Number> data) {
         if (data.size() % 2 == 0) {
-            return (data.get(data.size() / 2) + data.get(data.size() / 2 - 1)) / 2;
+            return (data.get(data.size() / 2).doubleValue() + data.get(data.size() / 2 - 1).doubleValue()) / 2;
         } else {
-            return data.get(data.size() / 2);
+            return data.get(data.size() / 2).doubleValue();
         }
     }
-
+    public static double getMedianDouble(final List<Double> data) {
+        if (data.size() % 2 == 0) {
+            return (data.get(data.size() / 2).doubleValue() + data.get(data.size() / 2 - 1).doubleValue()) / 2;
+        } else {
+            return data.get(data.size() / 2).doubleValue();
+        }
+    }
     public static boolean isExponentiallySmall(final Number number) {
         return number.doubleValue() < 1 && (Double.toString(number.doubleValue()).contains("E") || number.doubleValue() == 0.0);
     }
@@ -287,8 +294,8 @@ public final class Statistics {
             values.add(number.doubleValue());
         }
 
-        final double q1 = getMedian(values.subList(0, values.size() / 2));
-        final double q3 = getMedian(values.subList(values.size() / 2, values.size()));
+        final double q1 = getMedianDouble(values.subList(0, values.size() / 2));
+        final double q3 = getMedianDouble(values.subList(values.size() / 2, values.size()));
 
         final double iqr = Math.abs(q1 - q3);
         final double lowThreshold = q1 - 1.5 * iqr, highThreshold = q3 + 1.5 * iqr;
@@ -304,6 +311,10 @@ public final class Statistics {
         }
 
         return tuple;
+    }
+    public static List<List<Double>> getOutliersSimply(final Collection<? extends Number> collection) {
+        val result = getOutliers(collection);
+        return Arrays.asList(result.getX(), result.getY());
     }
 
     public static List<Long> convertToLongList(List<Integer> integerList) {

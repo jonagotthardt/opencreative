@@ -404,7 +404,26 @@ public enum ActionType {
     VAR_GET_BY_ID_FROM_LIST( ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, GetByIdFromListAction.class, Material.WATER_BUCKET, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE), new ArgumentSlot("index", ValueType.NUMBER)),
     VAR_REMOVE_BY_ID_FROM_LIST( ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, RemoveByIdFromListAction.class, Material.LAVA_BUCKET, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("index", ValueType.NUMBER)),
     VAR_GET_RANDOM_FROM_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, GetRandomFromListAction.class, Material.ENDER_EYE, new ArgumentSlot("variable",ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE)),
-
+    VAR_CALCULATE_FROM_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS,
+                    CalculateFromListAction.class,
+                    Material.COBWEB, new ArgumentSlot("variable",ValueType.VARIABLE),
+                    new ArgumentSlot("list", ValueType.VARIABLE),
+                    new ParameterSlot("calculation",
+                                    Arrays.asList(
+                                                    "get-min", "get-max",
+                                                    "average", "variance", "deviation",
+                                                    "median", "distinct", "kurtosis",
+                                                    "skewness", "mode", "quantile",
+                                                    "iqr", "shannon-entropy", "gini-index",
+                                                    "linear-trend", "jolt-delta-list", "outliers-list"
+                                    ),
+                                    Material.COAL, Material.DIAMOND, Material.ANVIL,
+                                    Material.IRON_INGOT, Material.NETHERITE_INGOT, Material.GOLD_INGOT,
+                                    Material.MELON_SEEDS, Material.STRING, Material.COBWEB,
+                                    Material.GRAY_CARPET, Material.FIREWORK_STAR, Material.NETHER_STAR,
+                                    Material.EMERALD, Material.IRON_NUGGET, Material.STICK,
+                                    Material.PUMPKIN_SEEDS, Material.WHEAT_SEEDS
+                    )),
     VAR_CREATE_MAP( ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, CreateMapAction.class, Material.CHEST_MINECART, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("keys", ValueType.VARIABLE), new ArgumentSlot("values", ValueType.VARIABLE)),
     VAR_PUT_INTO_MAP( ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, PutIntoMapAction.class, Material.CHEST, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("key", ValueType.ANY), new ArgumentSlot("value", ValueType.ANY)),
     VAR_REMOVE_FROM_MAP_BY_KEY( ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, RemoveFromMapByKeyAction.class, Material.BARRIER, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("key", ValueType.ANY)),

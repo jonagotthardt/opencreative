@@ -6960,6 +6960,18 @@ items:
           - " &7[&6Watermelon&7, &6Pear&7] &7= &6Watermelon"
           - " "
           - "&eClick to set action."
+      var-calculate-from-list:
+        name: "&bCalculate from Number List"
+        lore:
+          - "&7Various types of calculations from a list of numbers"
+          - "&7(minimum, maximum, statistics...)"
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- Result (to save)"
+          - "&e Variable &7- List"
+          - "&3 Parameter &7 - Calculation type"
+          - " "
+          - "&eClick to set action."
       var-create-map:
         name: "&aCreate dictionary"
         lore:
@@ -12593,6 +12605,7 @@ blocks:
   var_get_by_id_from_list: "&bGet from list"
   var_remove_by_id_from_list: "&cRemove from list"
   var_get_random_from_list: "Random from list"
+  var_calculate_from_list: "&3Calcul. from list"
   var_increase_number: "Increase number"
   var_modify_location: "Modify location"
   var_get_location_x: "&cX coordinate"
