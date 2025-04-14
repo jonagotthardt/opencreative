@@ -27,6 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
+import ua.mcchickenstudio.opencreative.utils.async.AsyncScheduler;
 import ua.mcchickenstudio.opencreative.utils.millennium.math.AxisAlignedBB;
 import ua.mcchickenstudio.opencreative.utils.millennium.math.BuildSpeed;
 import ua.mcchickenstudio.opencreative.utils.millennium.math.MovingObjectPosition;
@@ -55,22 +56,24 @@ public final class RayTraceVectorAction extends VariableAction {
         xSize = getArguments().getValue("xSize", 0.3, this) / 2.0,
         ySize = getArguments().getValue("ySize", 1.8, this) / 2.0,
         zSize = getArguments().getValue("zSize", 0.3, this) / 2.0;
-        final BuildSpeed buildSpeed =
-                        (getArguments().getValue("calculation", "vanilla-java", this)
-                        .equals("vanilla-java") ? BuildSpeed.NORMAL : BuildSpeed.FAST);
-        final Vec2f rotation = getYawPitch(vector);
-        final AxisAlignedBB aabb = new AxisAlignedBB(
-                        x - xSize, y - ySize, z - zSize,
-                        x + xSize, y + ySize, z + zSize
-        );
-        final MovingObjectPosition result = RayTrace.rayCast(rotation.getX(), rotation.getY(),
-                        aabb, new Vec3(from.getX(), from.getY(), from.getZ()), range, buildSpeed);
-        if (result == null) {
-            setVarValue(hitVec, hitVec);
-        } else {
-            final Vec3 hit = result.hitVec;
-            setVarValue(hitVec, new Location(to.getWorld(), hit.xCoord, hit.yCoord, hit.zCoord));
-        }
+        AsyncScheduler.run(() -> {
+            final BuildSpeed buildSpeed =
+                            (getArguments().getValue("calculation", "vanilla-java", this)
+                                            .equals("vanilla-java") ? BuildSpeed.NORMAL : BuildSpeed.FAST);
+            final Vec2f rotation = getYawPitch(vector);
+            final AxisAlignedBB aabb = new AxisAlignedBB(
+                            x - xSize, y - ySize, z - zSize,
+                            x + xSize, y + ySize, z + zSize
+            );
+            final MovingObjectPosition result = RayTrace.rayCast(rotation.getX(), rotation.getY(),
+                            aabb, new Vec3(from.getX(), from.getY(), from.getZ()), range, buildSpeed);
+            if (result == null) {
+                setVarValue(hitVec, hitVec);
+            } else {
+                final Vec3 hit = result.hitVec;
+                setVarValue(hitVec, new Location(to.getWorld(), hit.xCoord, hit.yCoord, hit.zCoord));
+            }
+        });
     }
 
     public static Vec2f getYawPitch(final Vector vector) {

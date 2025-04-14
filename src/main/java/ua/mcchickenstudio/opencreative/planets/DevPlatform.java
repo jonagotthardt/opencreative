@@ -34,7 +34,6 @@ import java.util.List;
  * It's a floor with columns, that are used to place coding blocks.
  */
 public class DevPlatform {
-
     private final int x;
     private final int z;
     private final World world;

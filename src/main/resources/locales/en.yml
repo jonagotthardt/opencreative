@@ -7813,6 +7813,21 @@ items:
           - "&3 Parameter &7- Type of calculation"
           - " "
           - "&eClick to set action."
+      var-do-ray-trace-multi-entities:
+        name: "&9Do Ray Trace (Entities)"
+        lore:
+          - "&7Checks whether the created ray hits"
+          - "&7the automatically detected HitBox(es) of all entities."
+          - "&7Returns the location(s) of intersection."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- Location of the ray's intersection with HitBox(es)"
+          - "&b Vector &7- Direction of the ray"
+          - "&f Location &7- Starting location of the ray"
+          - "&3 Parameter &7- Entity filter"
+          - "&3 Parameter &7- Calculation type"
+          - " "
+          - "&eClick to set action."
       var-normalize-vector:
         name: "&3Normalize vector"
         lore:

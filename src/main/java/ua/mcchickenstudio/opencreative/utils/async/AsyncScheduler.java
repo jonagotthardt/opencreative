@@ -41,7 +41,7 @@ public class AsyncScheduler {
     private static final int STOP_WATCH_TIME_MILLIS = 500;
 
     @Getter
-    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(32,
+    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(64,
         new ThreadFactoryBuilder().setNameFormat("opencreative-schedule-%d").build());
 
     public static void shutdown() {
