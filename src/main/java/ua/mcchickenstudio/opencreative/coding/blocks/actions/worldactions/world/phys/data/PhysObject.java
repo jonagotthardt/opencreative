@@ -90,6 +90,7 @@ public class PhysObject {
             z = Math.cos(pitchRad) * Math.cos(yawRad);
             location.add(new Vector(x, y, z).multiply(speed));
         }
+        location.add(0, -weight, 0);
         speed += speedAccel;
         if (speed > speedLimit) speed = speedLimit;
         else if (speed < 0) speed = 0;
