@@ -8611,6 +8611,13 @@ items:
           - "&7player is sneaking by pressing SHIFT."
           - " "
           - "&eClick to set condition."
+      if-player-is-on-ground:
+        name: "&fOn ground"
+        lore:
+          - "&7Triggers the code if the"
+          - "&7player is on ground."
+          - " "
+          - "&eClick to set condition."
       if-player-is-flying:
         name: "&fFlying"
         lore:
@@ -12681,6 +12688,7 @@ blocks:
   if_player_block_equals: "Block equals"
   if_player_is_sneaking: "Is sneaking"
   if_player_is_flying: "Is flying"
+  if_player_is_on_ground: "Is on ground"
   if_player_liked_world: "Liked world"
   if_player_name_equals: "Name equals"
   if_player_message_equals: "Message equals"

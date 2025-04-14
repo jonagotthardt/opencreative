@@ -221,6 +221,7 @@ public enum ActionType {
 
     IF_PLAYER_LIKED_WORLD(                 ActionCategory.PLAYER_CONDITION, MenusCategory.STATE, IsLikedWorldCondition.class, Material.GOLDEN_APPLE),
     IF_PLAYER_IS_SNEAKING(                 ActionCategory.PLAYER_CONDITION, MenusCategory.STATE, IsSneakingCondition.class, Material.RABBIT),
+    IF_PLAYER_IS_ON_GROUND(                   ActionCategory.PLAYER_CONDITION, MenusCategory.STATE, IsOnGroundCondition.class, Material.STONE_SLAB),
     IF_PLAYER_IS_FLYING(                   ActionCategory.PLAYER_CONDITION, MenusCategory.STATE, IsFlyingCondition.class, Material.FEATHER),
     IF_PLAYER_HAS_SAVED_PURCHASE(                 ActionCategory.PLAYER_CONDITION, MenusCategory.STATE, HasSavedPurchaseCondition.class, Material.GOLD_BLOCK, new ArgumentSlot("names", ValueType.TEXT,(byte) 18)),
 

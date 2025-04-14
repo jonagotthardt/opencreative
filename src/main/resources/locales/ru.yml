@@ -8745,6 +8745,13 @@ items:
           - "&7крадётся, нажимая SHIFT."
           - " "
           - "&eНажми, чтобы установить условие."
+      if-player-is-on-ground:
+        name: "&fСтоит на земле"
+        lore:
+          - "&7Выполнит код, если игрок"
+          - "&7стоит на земле."
+          - " "
+          - "&eНажми, чтобы установить условие."
       if-player-is-flying:
         name: "&fЛетает"
         lore:
@@ -12744,6 +12751,7 @@ blocks:
   if_player_block_equals: "Блок равен"
   if_player_is_sneaking: "Крадётся"
   if_player_is_flying: "Летает"
+  if_player_is_on_ground: "Стоит на земле"
   if_player_liked_world: "Лайкнул мир"
   if_player_name_equals: "Никнейм равен"
   if_player_message_equals: "Сообщен. равен"
