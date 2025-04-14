@@ -326,6 +326,7 @@ public enum ActionType {
 
     WORLD_DESTROY_BLOCK(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, DestroyBlockAction.class, Material.TNT, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ParameterSlot("show-particle", true, Material.GUNPOWDER, Material.LIGHT_GRAY_STAINED_GLASS), new ParameterSlot("drop-experience", true, Material.EXPERIENCE_BOTTLE, Material.STRING)),
     WORLD_SET_BLOCK_POWERED(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, SetBlockPoweredAction.class, Material.REDSTONE_BLOCK, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ParameterSlot("powered", true, Material.REDSTONE_BLOCK, Material.COAL_BLOCK)),
+    WORLD_SHOW_PHANTOM_BLOCK(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, ShowPhantomBlockAction.class, Material.GLASS, new ArgumentSlot("location", ValueType.LOCATION), new ArgumentSlot("block", ValueType.ITEM)),
 
 
     /**
