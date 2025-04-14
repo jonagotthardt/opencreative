@@ -7824,6 +7824,7 @@ items:
           - "&e Variable &7- Location of the ray's intersection with HitBox(es)"
           - "&b Vector &7- Direction of the ray"
           - "&f Location &7- Starting location of the ray"
+          - "&c Number &7- Distance the ray will travel"
           - "&3 Parameter &7- Entity filter"
           - "&3 Parameter &7- Calculation type"
           - " "
