@@ -41,11 +41,11 @@ public class AsyncScheduler {
     private static final int STOP_WATCH_TIME_MILLIS = 500;
 
     @Getter
-    private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(32,
+    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(32,
         new ThreadFactoryBuilder().setNameFormat("opencreative-schedule-%d").build());
 
     public static void shutdown() {
-        TryIgnore.ignore(() -> scheduler.shutdownNow());
+        TryIgnore.ignore(scheduler::shutdownNow);
     }
 
     private AsyncScheduler() {}
