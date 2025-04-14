@@ -481,7 +481,7 @@ public enum ActionType {
                     new ArgumentSlot("yaw", ValueType.NUMBER),
                     new ArgumentSlot("pitch", ValueType.NUMBER)
     ),
-    VAR_DO_RAY_TRACE( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, RayTraceVectorAction.class, Material.SPECTRAL_ARROW,
+    VAR_DO_RAY_TRACE( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, RayTraceVectorAction.class, Material.ARROW,
                     new ArgumentSlot("hitVec", ValueType.VARIABLE),
                     new ArgumentSlot("vector", ValueType.VECTOR),
                     new ArgumentSlot("from", ValueType.LOCATION),
@@ -492,6 +492,18 @@ public enum ActionType {
                     new ArgumentSlot("zSize", ValueType.NUMBER),
                     new ParameterSlot("calculation", Arrays.asList("vanilla-java", "optifine-fastmath"), Material.PAPER, Material.MAP)
     ),
+    VAR_DO_RAY_TRACE_MULTI( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, RayTraceVectorMultiAction.class, Material.SPECTRAL_ARROW,
+                    new ArgumentSlot("hitVec", ValueType.VARIABLE),
+                    new ArgumentSlot("vector", ValueType.VECTOR),
+                    new ArgumentSlot("from", ValueType.LOCATION),
+                    new ArgumentSlot("to", ValueType.LIST),
+                    new ArgumentSlot("range", ValueType.NUMBER),
+                    new ArgumentSlot("xSize", ValueType.NUMBER),
+                    new ArgumentSlot("ySize", ValueType.NUMBER),
+                    new ArgumentSlot("zSize", ValueType.NUMBER),
+                    new ParameterSlot("calculation", Arrays.asList("vanilla-java", "optifine-fastmath"), Material.PAPER, Material.MAP)
+    ),
+
 
     /**
      * <h1>Selection Actions.</h1>
