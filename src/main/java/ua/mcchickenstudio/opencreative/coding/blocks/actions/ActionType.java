@@ -334,6 +334,10 @@ public enum ActionType {
 
     VAR_SET_VALUE( ActionCategory.VARIABLE_ACTION, MenusCategory.OTHER, SetVariableValueAction.class, Material.IRON_INGOT, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("value", ValueType.ANY)),
     VAR_SET_RANDOM_VALUE( ActionCategory.VARIABLE_ACTION, MenusCategory.OTHER, SetVariableRandomValueAction.class, Material.PUMPKIN_SEEDS, new ArgumentSlot("values", ValueType.ANY, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
+    VAR_GET_TYPE( ActionCategory.VARIABLE_ACTION, MenusCategory.OTHER, GetVariableTypeAction.class, Material.STRUCTURE_VOID,
+                    new ArgumentSlot("result", ValueType.VARIABLE),
+                    new ArgumentSlot("variable", ValueType.VARIABLE)
+    ),
     VAR_DELETE_VARIABLE( ActionCategory.VARIABLE_ACTION, MenusCategory.OTHER, DeleteVariableAction.class, Material.BARRIER, new ArgumentSlot("variables", ValueType.VARIABLE, (byte) 18)),
 
     VAR_SUM_NUMBERS( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, SumNumbersAction.class, Material.BRICK, new ArgumentSlot("numbers", ValueType.NUMBER, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),

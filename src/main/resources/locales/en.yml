@@ -6338,6 +6338,17 @@ items:
           - "&e Variable &7- For saving"
           - " "
           - "&eClick to set action."
+      var-get-type:
+        name: "&6Get Variable Type"
+        lore:
+          - "&7This will assign to a variable"
+          - "&7the type of another variable (location, number...)"
+          - " "
+          - "&fIn the chest:"
+          - "&9 Variable &7- To save the type into"
+          - "&e Variable &7- To check the type of"
+          - " "
+          - "&eClick to set action."
       var-delete-variable:
         name: "&4Delete Variable"
         lore:
@@ -12553,6 +12564,7 @@ blocks:
   control_stop_cycles: "&3Stop cycle"
 
   var_set_value: "Assign value"
+  var_get_type: "Get type of var"
   var_set_random_value: "Random value"
   var_sum_numbers: "&aSum numbers +"
   var_subtract_numbers: "&cSubtract numbers -"
