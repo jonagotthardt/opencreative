@@ -4875,11 +4875,11 @@ items:
           - "&7 деактивировать"
           - ""
           - "&eНажми, чтобы установить действие."
-      world-show-phantom-block:
+      player-show-phantom-block:
         name: "&3Отобразить фантомный блок"
         lore:
           - "&7Визуально отображает фантомный блок."
-          - "&7Он будет виден только конкретному игроку,"
+          - "&7Он будет виден только игроку,"
           - "&7и является ненастоящим блоком."
           - ""
           - "&fВ сундуке:"
@@ -12864,7 +12864,7 @@ blocks:
   world_copy_blocks: "Копировать блоки"
   world_destroy_block: "Разрушить блок"
   world_set_block_powered: "Запитать блок"
-  world_show_phantom_block: "Отобр. фант. блок"
+  player_show_phantom_block: "Отобр. фант. блок"
   world_set_world_border: "Граница мира"
   world_visual_param_phys_object: "&3Созд. Визуал."
   world_motion_param_phys_object: "&3Созд. Движен."

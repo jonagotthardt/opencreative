@@ -30,34 +30,39 @@ import java.util.concurrent.ConcurrentHashMap;
  * <h1>ChunkCache</h1>
  * Which saves the state of the chunk in the
  * cache so as not to overload the memory
+ * @author Sasha Kireiko
  */
-
-
-// author: pawsashatoy
 @UtilityClass
 public class ChunkCache {
+
     private final Map<Long, Boolean> statusKeeper = new ConcurrentHashMap<>();
+
     public boolean isChunkGenerated(final World world, final int i, final int i1) {
         if (world == null) return false;
         final long hash = hash(world, i, i1);
         return statusKeeper.computeIfAbsent(hash, k -> world.isChunkGenerated(i, i1));
     }
+
     public void preCheck(final World world, final int i, final int i1) {
         if (world == null) return;
         final long hash = hash(world, i, i1);
         statusKeeper.computeIfAbsent(hash, k -> world.isChunkGenerated(i, i1));
     }
+
     public void preLoad(final World world, final int i, final int i1) {
         if (world == null) return;
         final long hash = hash(world, i, i1);
         statusKeeper.putIfAbsent(hash, true);
     }
+
     public void unload(final World world, final int i, final int i1) {
         if (world == null) return;
         final long hash = hash(world, i, i1);
         statusKeeper.putIfAbsent(hash, false);
     }
+
     private long hash(final World world, final int i, final int i1) {
         return (31L * i + i1 + world.getUID().hashCode()) * 31L;
     }
+
 }

@@ -18,24 +18,21 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.blocks;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.BlockPosition;
-import com.comphenix.protocol.wrappers.WrappedBlockData;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.utils.async.AsyncScheduler;
 
-public final class ShowPhantomBlockAction extends WorldAction {
+public final class ShowPhantomBlockAction extends PlayerAction {
 
     // Made by pawsashatoy :)
     public ShowPhantomBlockAction(Executor executor, Target target, int x, Arguments args) {
@@ -43,24 +40,16 @@ public final class ShowPhantomBlockAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
-        if (!(entity instanceof Player)) return;
-
+    public void executePlayer(Player player) {
         final Location location = getArguments().getValue("location", entity.getLocation(), this);
         final ItemStack item = getArguments().getValue("block", new ItemStack(Material.STONE), this);
-
         if (location != null && item.getType().isBlock()) {
-            AsyncScheduler.run(() -> {
-                PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.BLOCK_CHANGE);
-                packet.getBlockPositionModifier().write(0, new BlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ()));
-                packet.getBlockData().write(0, WrappedBlockData.createData(item.getType()));
-                ProtocolLibrary.getProtocolManager().sendServerPacket((Player) entity, packet);
-            }, AsyncScheduler.getScheduler());
+            AsyncScheduler.run(() -> OpenCreative.getPacketManager().showBlockForPlayer(player, location, item.getType()), AsyncScheduler.getScheduler());
         }
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.WORLD_SHOW_PHANTOM_BLOCK;
+        return ActionType.PLAYER_SHOW_PHANTOM_BLOCK;
     }
 }

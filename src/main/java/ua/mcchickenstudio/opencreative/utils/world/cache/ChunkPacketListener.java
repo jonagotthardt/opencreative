@@ -10,6 +10,8 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.Arrays;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebugError;
+
 public class ChunkPacketListener extends PacketAdapter {
 
     public ChunkPacketListener(Plugin plugin) {
@@ -26,8 +28,8 @@ public class ChunkPacketListener extends PacketAdapter {
             chunkX = event.getPacket().getIntegers().read(0),
             chunkZ = event.getPacket().getIntegers().read(1);
             ChunkCache.preLoad(world, chunkX, chunkZ);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception error) {
+            sendDebugError("Cannot preload chunks.",error);
         }
     }
 }

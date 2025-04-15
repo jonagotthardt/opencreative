@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative;
 
-import com.comphenix.protocol.ProtocolLibrary;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
@@ -69,7 +68,6 @@ import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.Metrics;
-import ua.mcchickenstudio.opencreative.utils.world.cache.ChunkPacketListener;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -290,9 +288,6 @@ public final class OpenCreative extends JavaPlugin {
             new WorldListener().registerExecutors();
         } catch (Exception exception) {
             sendCriticalErrorMessage("Couldn't register executors", exception);
-        }
-        if (HookUtils.getPacketManager().isEnabled()) {
-            ProtocolLibrary.getProtocolManager().addPacketListener(new ChunkPacketListener(this));
         }
         getLogger().info("OpenCreative+ registered " + (registeredListeners == listeners.length ? "all" : registeredListeners + "/" + listeners.length) + " event listeners.");
     }

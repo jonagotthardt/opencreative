@@ -202,7 +202,8 @@ public enum ActionType {
     PLAYER_HIDE_PLAYER(                 ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, HidePlayerAction.class, Material.WITHER_SKELETON_SKULL, new ArgumentSlot("player", ValueType.TEXT)),
     PLAYER_SHOW_ELDER_GUARDIAN(         ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, ShowElderGuardianAction.class, Material.ELDER_GUARDIAN_SPAWN_EGG, new ParameterSlot("silent",Material.STRUCTURE_VOID,Material.NAUTILUS_SHELL)),
     PLAYER_SET_VIEW_DISTANCE(           ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, SetViewDistanceAction.class, Material.SPYGLASS, new ArgumentSlot("distance", ValueType.NUMBER),new ParameterSlot("add")),
-    PLAYER_SET_SIMULATION_DISTANCE(           ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, SetSimulationDistanceAction.class, Material.WIND_CHARGE, new ArgumentSlot("distance", ValueType.NUMBER),new ParameterSlot("add")),
+    PLAYER_SET_SIMULATION_DISTANCE(     ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, SetSimulationDistanceAction.class, Material.WIND_CHARGE, new ArgumentSlot("distance", ValueType.NUMBER),new ParameterSlot("add")),
+    PLAYER_SHOW_PHANTOM_BLOCK(          ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, ShowPhantomBlockAction.class, Material.GLASS, new ArgumentSlot("location", ValueType.LOCATION), new ArgumentSlot("block", ValueType.ITEM)),
 
     /**
      * <h1>Player Conditions.</h1>
@@ -374,8 +375,6 @@ public enum ActionType {
 
     WORLD_DESTROY_BLOCK(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, DestroyBlockAction.class, Material.TNT, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ParameterSlot("show-particle", true, Material.GUNPOWDER, Material.LIGHT_GRAY_STAINED_GLASS), new ParameterSlot("drop-experience", true, Material.EXPERIENCE_BOTTLE, Material.STRING)),
     WORLD_SET_BLOCK_POWERED(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, SetBlockPoweredAction.class, Material.REDSTONE_BLOCK, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ParameterSlot("powered", true, Material.REDSTONE_BLOCK, Material.COAL_BLOCK)),
-    WORLD_SHOW_PHANTOM_BLOCK(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, ShowPhantomBlockAction.class, Material.GLASS, new ArgumentSlot("location", ValueType.LOCATION), new ArgumentSlot("block", ValueType.ITEM)),
-
 
     /**
      * <h1>Variable Actions.</h1>

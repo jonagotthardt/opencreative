@@ -4858,11 +4858,11 @@ items:
           - ""
           - "&eClick to set the action."
 
-      world-show-phantom-block:
+      player-show-phantom-block:
         name: "&3Show Phantom Block"
         lore:
           - "&7Visually displays a phantom block."
-          - "&7It will be visible only to a specific player,"
+          - "&7It will be visible only to a player,"
           - "&7and is not a real block."
           - ""
           - "&fIn the chest:"
@@ -12804,7 +12804,7 @@ blocks:
   world_set_blocks_area_type: "Block region"
   world_destroy_block: "Destroy block"
   world_set_block_powered: "Power block"
-  world_show_phantom_block: "Show phant. block"
+  player_show_phantom_block: "Show phant. block"
   world_set_world_border: "Set world border"
   world_visual_param_phys_object: "&3Visual Creator"
   world_motion_param_phys_object: "&3Motion Creator"

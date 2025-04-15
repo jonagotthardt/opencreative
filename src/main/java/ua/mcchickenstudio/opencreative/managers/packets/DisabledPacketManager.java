@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.managers.packets;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -44,6 +45,9 @@ public final class DisabledPacketManager implements PacketManager {
 
     @Override
     public void removeSpectatorName(@NotNull Player player, @NotNull Player receiver) {}
+
+    @Override
+    public void showBlockForPlayer(@NotNull Player player, @NotNull Location location, @NotNull Material material) {}
 
     @Override
     public void init() {}
