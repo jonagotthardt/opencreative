@@ -97,6 +97,7 @@ public abstract class ContentWithMenusCategoryMenu<T> extends ListBrowserMenu<T>
         event.setCancelled(true);
         if (getItemType(clicked).equalsIgnoreCase("categories")) {
             if (categoriesMenu != null) {
+                elements.clear();
                 categoriesMenu.open(player);
             } else {
                 player.closeInventory();
