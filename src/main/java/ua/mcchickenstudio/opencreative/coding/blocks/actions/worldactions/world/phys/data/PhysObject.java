@@ -25,6 +25,9 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -58,7 +61,7 @@ public class PhysObject {
                     shockwaveRadius, shockwavePower;
 
     @Getter
-    private final PotionEffect potionEffect;
+    private final List<PotionEffect> potionEffect;
 
     public int timeExist = 0;
 
@@ -131,7 +134,7 @@ public class PhysObject {
             shockwave(hitLoc, entities);
             Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () -> {
                 finalClosestEntity.damage(damage);
-                if (potionEffect != null) finalClosestEntity.addPotionEffect(potionEffect);
+                if (potionEffect != null) finalClosestEntity.addPotionEffects(potionEffect);
                 world.spawnParticle(hitParticle, hitLoc, hitCount);
                 if (explosion > 0) world.createExplosion(hitLoc, (float) explosion);
             });
@@ -214,8 +217,8 @@ public class PhysObject {
                 velo.setX(velo.getX() * 3 * interpolatePitch);
                 velo.setZ(velo.getZ() * 3 * interpolatePitch);
                 { // ease 2
-                    double delta = Math.min(l.distance(to) / shockwaveRadius, 0.35);
-                    double calculateRealisticHorizontal = Interpolation.interpolate(1, 0.55,
+                    double delta = l.distance(to) / shockwaveRadius;
+                    double calculateRealisticHorizontal = Interpolation.interpolate(1, 0.25,
                                     delta, Interpolation.Type.BACK, Interpolation.Ease.OUT);
                     velo.setX(velo.getX() * calculateRealisticHorizontal);
                     velo.setZ(velo.getZ() * calculateRealisticHorizontal);
@@ -250,7 +253,7 @@ public class PhysObject {
         { // settings
             this.damage = ((Number) settings.get(0)).doubleValue();
             this.explosion = ((Number) settings.get(1)).doubleValue();
-            this.potionEffect = (settings.get(2) instanceof PotionEffect) ? (PotionEffect) settings.get(2) : null;
+            this.potionEffect = (settings.get(2) instanceof ItemStack) ? getPotionEffects(((ItemStack) settings.get(2))) : null;
             this.shockwaveRadius = ((Number) settings.get(3)).doubleValue();
             this.shockwavePower = ((Number) settings.get(4)).doubleValue();
         }
@@ -273,5 +276,11 @@ public class PhysObject {
         }
         entities.removeIf(entity -> entity.getLocation().distanceSquared(location) > radius * radius);
         return entities;
+    }
+    private static List<PotionEffect> getPotionEffects(ItemStack item) {
+        if (item == null || item.getType() != Material.POTION) return List.of();
+        if (!(item.getItemMeta() instanceof PotionMeta potionMeta)) return List.of();
+
+        return potionMeta.getCustomEffects();
     }
 }
