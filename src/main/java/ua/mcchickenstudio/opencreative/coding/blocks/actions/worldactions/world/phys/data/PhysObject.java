@@ -190,7 +190,7 @@ public class PhysObject {
     }
 
     private void shockwave(final Location to, final List<Entity> saved) {
-        final List<Entity> entities = (saved != null) ? saved : getEntitiesAroundPoint(to, speed + 0.3);
+        final List<Entity> entities = (saved != null) ? saved : getEntitiesAroundPoint(to, shockwaveRadius + 0.3);
         if (shockwaveRadius < 1e-7 || shockwavePower < 1e-7) return;
         for (final Entity entity : entities) {
             final Location l = entity.getLocation();
@@ -209,12 +209,12 @@ public class PhysObject {
                                 -GeneralMath.sin((float) Math.toRadians(vec.getX()), BuildSpeed.FAST),
                                 -GeneralMath.sin((float) Math.toRadians(vec.getY()), BuildSpeed.FAST),
                                 GeneralMath.cos((float) Math.toRadians(vec.getX()), BuildSpeed.FAST))
-                                .multiply((double) (shockwavePower + 0.1) / 5);
+                                .multiply((shockwavePower + 1) / 5);
                 double interpolatePitch = 1 - ((Math.abs(vec.getY())) / 90);
                 velo.setX(velo.getX() * 3 * interpolatePitch);
                 velo.setZ(velo.getZ() * 3 * interpolatePitch);
                 { // ease 2
-                    double delta = l.distance(to) / shockwaveRadius;
+                    double delta = Math.min(l.distance(to) / shockwaveRadius, 0.35);
                     double calculateRealisticHorizontal = Interpolation.interpolate(1, 0.55,
                                     delta, Interpolation.Type.BACK, Interpolation.Ease.OUT);
                     velo.setX(velo.getX() * calculateRealisticHorizontal);
