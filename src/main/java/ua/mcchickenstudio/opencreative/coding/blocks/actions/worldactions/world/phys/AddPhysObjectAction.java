@@ -16,42 +16,39 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.vector;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys;
 
 import org.bukkit.entity.Entity;
-import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.data.PhysObject;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.data.PhysService;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
-public final class RotationToVectorAction extends VariableAction {
+import java.util.List;
+
+public final class AddPhysObjectAction extends WorldAction {
 
     // Made by pawsashatoy :)
-    public RotationToVectorAction(Executor executor, Target target, int x, Arguments args) {
+    public AddPhysObjectAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     protected void execute(Entity entity) {
-        VariableLink link = getArguments().getVariableLink("variable", this);
-        final float
-        yaw = getArguments().getValue("yaw", 0, this),
-        pitch = getArguments().getValue("pitch", 0, this);
-        final double
-        yawRad = Math.toRadians(yaw),
-        pitchRad = Math.toRadians(pitch),
-        x = -Math.cos(pitchRad) * Math.sin(yawRad),
-        y = -Math.sin(pitchRad),
-        z = Math.cos(pitchRad) * Math.cos(yawRad);
-        final Vector vector = new Vector(x, y, z);
-        setVarValue(link, vector);
+        final Arguments a = getArguments();
+        final List<?>
+        visual = a.getList("visual", this),
+        motion = a.getList("motion", this),
+        settings =  a.getList("settings", this);
+        final PhysObject physObject = new PhysObject(entity.getWorld(), visual, motion, settings);
+        PhysService.add(physObject);
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.VAR_ROTATION_TO_VECTOR;
+        return ActionType.WORLD_ADD_PHYS_OBJECT;
     }
 }

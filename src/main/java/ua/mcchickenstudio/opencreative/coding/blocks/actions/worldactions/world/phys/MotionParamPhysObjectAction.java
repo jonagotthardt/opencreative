@@ -16,42 +16,42 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.vector;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys;
 
+import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
-import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
-public final class RotationToVectorAction extends VariableAction {
+import java.util.Arrays;
+
+public final class MotionParamPhysObjectAction extends WorldAction {
 
     // Made by pawsashatoy :)
-    public RotationToVectorAction(Executor executor, Target target, int x, Arguments args) {
+    public MotionParamPhysObjectAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     protected void execute(Entity entity) {
-        VariableLink link = getArguments().getVariableLink("variable", this);
-        final float
-        yaw = getArguments().getValue("yaw", 0, this),
-        pitch = getArguments().getValue("pitch", 0, this);
-        final double
-        yawRad = Math.toRadians(yaw),
-        pitchRad = Math.toRadians(pitch),
-        x = -Math.cos(pitchRad) * Math.sin(yawRad),
-        y = -Math.sin(pitchRad),
-        z = Math.cos(pitchRad) * Math.cos(yawRad);
-        final Vector vector = new Vector(x, y, z);
-        setVarValue(link, vector);
+        final Arguments a = getArguments();
+        setVarValue(getArguments().getVariableLink("variable", this), Arrays.asList(
+                        a.getValue("location", new Location(entity.getWorld(), 0, 0, 0), this),
+                        a.getValue("speed", 3, this),
+                        a.getValue("weight", 0.4, this),
+                        a.getValue("acceleration-speed", 0.06, this),
+                        a.getValue("speed-limit", 5, this),
+                        a.getValue("acceleration-weight", 0.02, this),
+                        a.getValue("weight-limit", 1.5, this)
+        ));
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.VAR_ROTATION_TO_VECTOR;
+        return ActionType.WORLD_MOTION_PARAM_PHYS_OBJECT;
     }
 }

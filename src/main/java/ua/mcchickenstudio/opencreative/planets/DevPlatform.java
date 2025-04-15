@@ -23,6 +23,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
+import ua.mcchickenstudio.opencreative.utils.world.cache.ChunkCache;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,6 @@ import java.util.List;
  * It's a floor with columns, that are used to place coding blocks.
  */
 public class DevPlatform {
-
     private final int x;
     private final int z;
     private final World world;
@@ -45,7 +45,8 @@ public class DevPlatform {
     }
 
     public boolean exists() {
-        if (!world.isChunkGenerated(getBeginX() >> 4,getBeginZ() >> 4)) {
+        // TODO: переписать, жрет слишком много
+        if (!ChunkCache.isChunkGenerated(world, getBeginX() >> 4, getBeginZ() >> 4)) {
             return false;
         }
         return world.getBlockAt(getBeginX(),0,getBeginZ()).isSolid();

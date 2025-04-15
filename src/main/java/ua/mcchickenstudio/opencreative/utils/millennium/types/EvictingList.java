@@ -3,10 +3,10 @@ package ua.mcchickenstudio.opencreative.utils.millennium.types;
 import lombok.Getter;
 
 import java.util.Collection;
-import java.util.LinkedList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Getter
-public final class EvictingList<T> extends LinkedList<T> {
+public final class EvictingList<T> extends CopyOnWriteArrayList<T> {
 
     private final int maxSize;
 

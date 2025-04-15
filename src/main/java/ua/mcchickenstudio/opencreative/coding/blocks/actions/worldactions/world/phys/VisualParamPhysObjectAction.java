@@ -16,42 +16,42 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.vector;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys;
 
+import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
-import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
-public final class RotationToVectorAction extends VariableAction {
+import java.util.Arrays;
+
+public final class VisualParamPhysObjectAction extends WorldAction {
 
     // Made by pawsashatoy :)
-    public RotationToVectorAction(Executor executor, Target target, int x, Arguments args) {
+    public VisualParamPhysObjectAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     protected void execute(Entity entity) {
-        VariableLink link = getArguments().getVariableLink("variable", this);
-        final float
-        yaw = getArguments().getValue("yaw", 0, this),
-        pitch = getArguments().getValue("pitch", 0, this);
-        final double
-        yawRad = Math.toRadians(yaw),
-        pitchRad = Math.toRadians(pitch),
-        x = -Math.cos(pitchRad) * Math.sin(yawRad),
-        y = -Math.sin(pitchRad),
-        z = Math.cos(pitchRad) * Math.cos(yawRad);
-        final Vector vector = new Vector(x, y, z);
-        setVarValue(link, vector);
+        final Arguments a = getArguments();
+        setVarValue(getArguments().getVariableLink("variable", this), Arrays.asList(
+                        a.getValue("particle", Particle.CLOUD, this),
+                        a.getValue("particle2", this),
+                        a.getValue("param1", 1, this),
+                        a.getValue("param2", 0, this),
+                        a.getValue("param3", 0, this),
+                        a.getValue("param4", 0, this),
+                        a.getValue("hit-particle", Particle.EXPLOSION, this),
+                        a.getValue("hit-param1", 1, this)
+        ));
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.VAR_ROTATION_TO_VECTOR;
+        return ActionType.WORLD_VISUAL_PARAM_PHYS_OBJECT;
     }
 }

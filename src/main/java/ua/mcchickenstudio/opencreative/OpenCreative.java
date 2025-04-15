@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative;
 
+import com.comphenix.protocol.ProtocolLibrary;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
@@ -30,6 +31,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.data.PhysService;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldListener;
 import ua.mcchickenstudio.opencreative.commands.*;
 import ua.mcchickenstudio.opencreative.commands.minecraft.*;
@@ -67,6 +69,7 @@ import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.Metrics;
+import ua.mcchickenstudio.opencreative.utils.world.cache.ChunkPacketListener;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -144,6 +147,7 @@ public final class OpenCreative extends JavaPlugin {
         PlayerUtils.loadPermissions();
         HookUtils.loadHooks();
         FileUtils.loadPlanets();
+        PhysService.run();
         //FileUtils.loadModules();
 
         economy = HookUtils.getEconomy();
@@ -286,6 +290,9 @@ public final class OpenCreative extends JavaPlugin {
             new WorldListener().registerExecutors();
         } catch (Exception exception) {
             sendCriticalErrorMessage("Couldn't register executors", exception);
+        }
+        if (HookUtils.getPacketManager().isEnabled()) {
+            ProtocolLibrary.getProtocolManager().addPacketListener(new ChunkPacketListener(this));
         }
         getLogger().info("OpenCreative+ registered " + (registeredListeners == listeners.length ? "all" : registeredListeners + "/" + listeners.length) + " event listeners.");
     }

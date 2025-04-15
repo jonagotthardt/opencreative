@@ -16,42 +16,36 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.vector;
+package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.state;
 
-import org.bukkit.entity.Entity;
-import org.bukkit.util.Vector;
+import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
-public final class RotationToVectorAction extends VariableAction {
+import java.util.List;
+
+public class IsOnGroundCondition extends PlayerCondition {
 
     // Made by pawsashatoy :)
-    public RotationToVectorAction(Executor executor, Target target, int x, Arguments args) {
-        super(executor, target, x, args);
+    public IsOnGroundCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
+        super(executor, target, x, args, actions, reactions, isOpposed);
     }
 
     @Override
-    protected void execute(Entity entity) {
-        VariableLink link = getArguments().getVariableLink("variable", this);
-        final float
-        yaw = getArguments().getValue("yaw", 0, this),
-        pitch = getArguments().getValue("pitch", 0, this);
-        final double
-        yawRad = Math.toRadians(yaw),
-        pitchRad = Math.toRadians(pitch),
-        x = -Math.cos(pitchRad) * Math.sin(yawRad),
-        y = -Math.sin(pitchRad),
-        z = Math.cos(pitchRad) * Math.cos(yawRad);
-        final Vector vector = new Vector(x, y, z);
-        setVarValue(link, vector);
+    public boolean checkPlayer(Player player) {
+        // твоя мама deprecated
+        // я не знаю что они хотят заменить xd
+        // на серверной стороне проверять странная идея
+        // (то, что они хотят).
+        return player.isOnGround();
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.VAR_ROTATION_TO_VECTOR;
+        return ActionType.IF_PLAYER_IS_ON_GROUND;
     }
 }
