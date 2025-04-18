@@ -3620,7 +3620,6 @@ items:
           - "&7with its own physics, damage, visuals, etc."
           - "&7Requires 3 components for creation."
           - "&7May collide with blocks and entities."
-          - "&4Limit: 120 objects per world."
           - ""
           - "&fIn the chest:"
           - "&e Variable &7- Visual component"

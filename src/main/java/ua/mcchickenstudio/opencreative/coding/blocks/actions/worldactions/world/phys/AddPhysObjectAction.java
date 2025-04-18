@@ -44,7 +44,7 @@ public final class AddPhysObjectAction extends WorldAction {
         motion = a.getList("motion", this),
         settings =  a.getList("settings", this);
         final PhysObject physObject = new PhysObject(entity.getWorld(), visual, motion, settings);
-        PhysService.add(physObject);
+        PhysService.add(physObject,getPlanet().getLimits().getPhysicalObjectsLimit());
     }
 
     @Override

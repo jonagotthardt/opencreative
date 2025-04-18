@@ -71,6 +71,10 @@ public class PlanetLimits {
         return planet.getGroup().getLimit(LimitType.BOSSBARS).calculateLimit(planet.getPlayers().size());
     }
 
+    public int getPhysicalObjectsLimit() {
+        return planet.getGroup().getLimit(LimitType.PHYSICAL_OBJECTS).calculateLimit(planet.getPlayers().size());
+    }
+
     public void setLastModifiedBlocksAmount(int lastModifiedBlocksAmount) {
         this.lastModifiedBlocksAmount = lastModifiedBlocksAmount;
     }

@@ -180,9 +180,10 @@ groups:
         builders-amount: 10 # limit of added builders
         developers-amount: 10 # limit of added developers
         blacklist-amount: 10 # limit of banned players
+        physical-objects: 140 # limit of special physical objects (it's not sand, gravels; they can be spawned with code)
       per-player-limit-modifiers:
         #
-        # When player joins a world or leaves from world,
+        # When a player joins a world or leaves from world,
         # this will increase or decrease limits values.
         #
         executor-calls: 100
@@ -193,6 +194,7 @@ groups:
         variables-amount: 50
         scoreboards-amount: 3
         bossbars-amount: 3
+        physical-objects: 5
       build-permissions: # Permissions will be given when player types /build command
         - "headdb.open"
         - "worldedit.wand"
@@ -231,6 +233,7 @@ groups:
         builders-amount: 10
         developers-amount: 10
         blacklist-amount: 10
+        physical-objects: 140
       per-player-limit-modifiers:
         executor-calls: 30
         entities-amount: 50
@@ -240,6 +243,7 @@ groups:
         variables-amount: 50
         scoreboards-amount: 10
         bossbars-amount: 10
+        physical-objects: 5
       build-permissions:
         - "headdb.open"
         - "worldedit.wand"

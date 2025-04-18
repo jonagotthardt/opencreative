@@ -29,7 +29,7 @@ public class ChunkPacketListener extends PacketAdapter {
             chunkZ = event.getPacket().getIntegers().read(1);
             ChunkCache.preLoad(world, chunkX, chunkZ);
         } catch (Exception error) {
-            sendDebugError("Cannot preload chunks.",error);
+            sendDebugError("Cannot preload chunks.", error);
         }
     }
 }

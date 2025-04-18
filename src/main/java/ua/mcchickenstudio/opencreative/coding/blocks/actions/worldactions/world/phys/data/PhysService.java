@@ -39,12 +39,14 @@ public class PhysService {
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(40,
                     new ThreadFactoryBuilder().setNameFormat("opencreative-phys-thread-%d").build());
     private static final Map<Integer, List<PhysObject>> objects = new ConcurrentHashMap<>();
-    public static void add(final PhysObject object) {
+
+    public static void add(final PhysObject object, final int limit) {
         final World world = object.getWorld();
         final int hash = Objects.hashCode(world.getName());
-        if (!objects.containsKey(hash)) objects.put(hash, new EvictingList<>(120));
+        if (!objects.containsKey(hash)) objects.put(hash, new EvictingList<>(limit));
         objects.get(hash).add(object);
     }
+
     public void run() {
         Bukkit.getScheduler().runTaskTimerAsynchronously(OpenCreative.getPlugin(), () -> {
             AsyncScheduler.run(() -> {
