@@ -215,7 +215,7 @@ public abstract class Action {
                 }
             }
             case ALL_PLAYERS -> {
-                List<Player> playerList = this.getExecutor().getPlanet().getPlayers();
+                List<Player> playerList = this.getExecutor().getPlanet().getTerritory().getWorld().getPlayers();
                 if (!playerList.isEmpty()) {
                     entities.addAll(playerList);
                 }
@@ -248,12 +248,13 @@ public abstract class Action {
             }
             default -> entities.addAll(eventEntities);
         }
+        entities.removeIf(entity -> !entity.getWorld().equals(getPlanet().getWorld()));
         return entities;
     }
 
     private Entity getVictim() {
-        if (executor.getEvent() instanceof KillerVictimEvent event) {
-            return event.getVictim();
+        if (executor.getEvent() instanceof KillerVictimEvent victimEvent) {
+            return victimEvent.getVictim();
         }
         return null;
     }
