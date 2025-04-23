@@ -8721,6 +8721,69 @@ items:
           - "&7 case or not"
           - " "
           - "&eClick to set condition."
+        arguments:
+          require-caps:
+            name: "&eConsider letter case"
+            lore:
+              - "&7If selected, it will check"
+              - "&7the case of letters (CAPS)"
+              - "&7and lowercase letters."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Ignore caps"
+              true: "Require case match"
+      if-entity-name-equals:
+        name: "&eName equals"
+        lore:
+          - "&7Checks if the entity's"
+          - "&7name matches texts in"
+          - "&7the chest."
+          - " "
+          - "&fIn chest:"
+          - "&6 Text(s) &7- Names"
+          - "&7 for comparison"
+          - "&3 Option &7- Ignore"
+          - "&7 case or not"
+          - "&3 Option &7- Ignore"
+          - "&7 colors or not"
+          - " "
+          - "&eClick to set condition."
+        arguments:
+          require-caps:
+            name: "&eConsider letter case"
+            lore:
+              - "&7If selected, it will check"
+              - "&7the case of letters (CAPS)"
+              - "&7and lowercase letters."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Ignore caps"
+              true: "Require case match"
+          require-color:
+            name: "&dConsider color codes"
+            lore:
+              - "&7You may want to ignore"
+              - "&7color codes, as it's rare"
+              - "&7when needed."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Ignore color in text"
+              true: "Require color match"
       if-player-has-saved-purchase:
         name: "&eBought item before"
         lore:
@@ -12904,6 +12967,7 @@ blocks:
   if_world_block_is_preferred_tool: "Preferred Tool"
   if_world_block_is_valid_tool: "Tool Mineable"
 
+  if_entity_name_equals: "Name equals"
   if_entity_is_player: "Is Player"
   if_entity_is_mob: "Is Mob"
   if_entity_is_living_entity: "Is Living Entity"
