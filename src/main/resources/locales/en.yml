@@ -340,6 +340,10 @@ world:
   entity-limit: "%prefix%The world has reached the limit of &6%count% mobs&f. &3[Remove mobs]"
   entity-limit-hover: "&fClick to remove all entities."
   redstone-limit: "%prefix%The world has reached the limit of &6%count% redstone operations&f."
+  favorites:
+    added: "%prefix%You marked this world &7%id% &fas &6favorite&f :)"
+    removed: "%prefix%You removed world &7%id%&f from favorites.."
+    limit: "%prefix%&cYou reached maximum amount of favorite worlds (%limit%)! To add new favorite worlds remove old ones."
   categories:
     sandbox: "&e&lSANDBOX"
     adventure: "&9&lADVENTURE"

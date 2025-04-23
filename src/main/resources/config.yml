@@ -157,16 +157,17 @@ groups:
       generic-command: 5 # /play, /build, /games
       advertisement: 120 # /ad
       creative-chat: 10 # /cc
-      world-chat: 2 # chat in world
+      world-chat: 2 # chat in the world
     creating-world:
       limit: 2
+    favorite-worlds-limit: 30 # limit of favorite worlds for player
     world:
       size: 25
       like-reward: 1
       advertisement-cost: 0
       limits:
         #
-        # Limits for world, that player created.
+        # Limits for a world, that player created.
         #
         executor-calls: 100 # limit of executor calls
         entities-amount: 50 # limit for spawned entities in world
@@ -216,6 +217,7 @@ groups:
       world-chat: 1
     creating-world:
       limit: 4
+    favorite-worlds-limit: 30
     world:
       size: 50
       like-reward: 1
