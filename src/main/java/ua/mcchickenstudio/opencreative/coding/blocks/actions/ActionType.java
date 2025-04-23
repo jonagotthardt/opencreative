@@ -702,7 +702,7 @@ public enum ActionType {
     IF_ENTITY_IS_MONSTER(ActionCategory.ENTITY_CONDITION, MenusCategory.OTHER, IsEntityMonster.class, Material.ZOMBIE_SPAWN_EGG),
     IF_ENTITY_IS_ENEMY(ActionCategory.ENTITY_CONDITION, MenusCategory.OTHER, IsEntityEnemy.class, Material.ENDER_DRAGON_SPAWN_EGG),
 
-    IF_ENTITY_NAME_EQUALS(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, EntityNameEqualsCondition.class, Material.NAME_TAG, new ArgumentSlot("names", ValueType.TEXT,(byte) 18), new ParameterSlot("caps"), new ParameterSlot("color")),
+    IF_ENTITY_NAME_EQUALS(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, EntityNameEqualsCondition.class, Material.NAME_TAG, new ArgumentSlot("names", ValueType.TEXT,(byte) 18), new ParameterSlot("require-caps"), new ParameterSlot("require-color")),
     IF_ENTITY_IS_IN_TEAM(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, IsEntityInTeam.class, Material.LIME_BANNER, new ArgumentSlot("scoreboard",ValueType.TEXT), new ArgumentSlot("team",ValueType.TEXT)),
 
     IF_ENTITY_IS_DEAD(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, IsEntityDead.class, Material.REDSTONE),
