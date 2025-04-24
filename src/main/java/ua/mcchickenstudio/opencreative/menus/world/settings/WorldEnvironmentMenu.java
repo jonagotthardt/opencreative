@@ -100,7 +100,7 @@ public class WorldEnvironmentMenu extends AbstractMenu {
             int amount = devPlanet.getPlatforms().size();
             int limit = devPlanet.getPlanet().getLimits().getCodingPlatformsLimit();
             ItemStack item = createItem(Material.NETHER_STAR,1,"menus.developer.environment.items." +
-                     (amount >= limit ? "create-platform-limit" : "create-platform"));
+                     (amount >= limit ? "create-platform-limit" : "create-platform"), (amount >= limit ? "" : "platform"));
             replacePlaceholderInLore(info,"%limit%", limit);
             replacePlaceholderInLore(info,"%amount%", amount);
             return item;
@@ -150,7 +150,7 @@ public class WorldEnvironmentMenu extends AbstractMenu {
         } else if (itemEquals(currentItem,clearVariables)) {
             player.performCommand("env vars clear");
             player.closeInventory();
-        } else if (itemEquals(currentItem,createPlatform)) {
+        } else if (getItemType(currentItem).equals("platform")) {
             player.performCommand("env platform");
             player.closeInventory();
         } else if (itemEquals(currentItem,time.getItem())) {
