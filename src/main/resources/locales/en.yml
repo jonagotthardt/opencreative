@@ -9893,10 +9893,31 @@ menus:
         back:
           name: " "
           lore:
-            - " &6← &eBack..."
+            - "&6 ← &eBack..."
             - ""
             - "&7  Click to open"
             - "&7  world settings."
+            - ""
+        create-platform-limit:
+          name: " "
+          lore:
+            - "&c No more platforms available!"
+            - ""
+            - "&7 You have created %amount% out of"
+            - "&7 the allowed %limit% platforms."
+            - ""
+        create-platform:
+          name: " "
+          lore:
+            - "&b ☀ &lCreate a platform for coding"
+            - ""
+            - "&7 This will create a new platform in the"
+            - "&7 developers' world where you can"
+            - "&7 place coding blocks."
+            - ""
+            - "&7 Platforms created: %amount%/%limit%"
+            - ""
+            - "&e Click to create."
             - ""
         debug:
           name: " "
