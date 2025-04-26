@@ -25,8 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.inven
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.movement.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.other.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.params.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.state.EntitySetGlowingAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.state.EntitySetLeashHolderAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.state.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.handleractions.other.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.other.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.other.*;
@@ -609,6 +608,23 @@ public enum ActionType {
     ENTITY_SET_GLOWING(                 ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetGlowingAction.class, Material.DRAGON_BREATH,  new ParameterSlot("glowing", Arrays.asList(false,true), Material.WHITE_STAINED_GLASS, Material.GLASS)),
     ENTITY_SET_LEASH_HOLDER(            ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetLeashHolderAction.class, Material.LEAD,  new ArgumentSlot("entity", ValueType.TEXT)),
     ENTITY_REMOVE_PASSENGER(            ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntityRemovePassengerAction.class, Material.MINECART,  new ArgumentSlot("entity", ValueType.TEXT)),
+
+    //ENTITY_SET_DISPLAY_BILLBOARD(       ActionCategory.ENTITY_ACTION, MenusCategory.STATE, null, Material.ENDER_EYE, new ParameterSlot("billboard", Arrays.asList("center","fixed","horizontal","vertical"), Material.ENDER_EYE, Material.ENDER_PEARL, Material.SLIME_BALL, Material.SNOWBALL)),
+    ENTITY_SET_DISPLAY_SCALE(           ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetDisplayScaleAction.class, Material.PAPER, new ArgumentSlot("x", ValueType.NUMBER), new ArgumentSlot("y",ValueType.NUMBER), new ArgumentSlot("z",ValueType.NUMBER), new ParameterSlot("add")),
+    ENTITY_SET_DISPLAY_TRANSLATION(     ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetDisplayTranslationAction.class, Material.ARROW, new ArgumentSlot("x", ValueType.NUMBER), new ArgumentSlot("y",ValueType.NUMBER), new ArgumentSlot("z",ValueType.NUMBER), new ParameterSlot("add")),
+    ENTITY_SET_DISPLAY_ITEM(            ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetDisplayItemAction.class, Material.CRAFTING_TABLE, new ArgumentSlot("item", ValueType.ITEM)),
+    //ENTITY_SET_DISPLAY_ITEM_MODE(       ActionCategory.ENTITY_ACTION, MenusCategory.STATE, null, Material.LECTERN, new ParameterSlot("mode", Arrays.asList("fixed","none","ground","gui","head","firstperson-lefthand","firstperson-righthand","thirdperson-lefthand","thirdperson-righthand"), Material.ENDER_EYE, Material.STRUCTURE_VOID, Material.GRASS_BLOCK, Material.CHEST, Material.PLAYER_HEAD, Material.TRIPWIRE_HOOK, Material.TRIPWIRE_HOOK, Material.LEVER, Material.LEVER)),
+    //ENTITY_SET_TEXT_DISPLAY_BACKGROUND( ActionCategory.ENTITY_ACTION, MenusCategory.STATE, null, Material.GRAY_STAINED_GLASS, new ArgumentSlot("color",ValueType.COLOR), new ArgumentSlot("opacity",ValueType.NUMBER)),
+    //ENTITY_RESET_TEXT_DISPLAY_BACKGROUND(ActionCategory.ENTITY_ACTION, MenusCategory.STATE, null, Material.LIGHT_GRAY_STAINED_GLASS),
+    ENTITY_SET_TEXT_DISPLAY_SEE_THROUGH(ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetDisplaySeeThroughAction.class, Material.SPECTRAL_ARROW, new ParameterSlot("see")),
+    ENTITY_SET_TEXT_DISPLAY_SHADOW(     ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetDisplayShadowedAction.class, Material.NAME_TAG, new ParameterSlot("shadow")),
+    //ENTITY_SET_TEXT_DISPLAY_ALIGN(      ActionCategory.ENTITY_ACTION, MenusCategory.STATE, null, Material.MAGENTA_TERRACOTTA, new ParameterSlot("align", Arrays.asList("center","left","right"), Material.ENDER_EYE, Material.SHIELD, Material.DIAMOND_SWORD)),
+    ENTITY_SET_TEXT_DISPLAY_OPACITY(    ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetDisplayTextOpacityAction.class, Material.BIRCH_SIGN, new ArgumentSlot("opacity",ValueType.NUMBER)),
+    ENTITY_SET_TEXT_DISPLAY_WIDTH(      ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetDisplayTextWidthAction.class, Material.OAK_SIGN, new ArgumentSlot("width",ValueType.NUMBER)),
+    ENTITY_SET_DISPLAY_TEXT(            ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetDisplayTextAction.class, Material.BOOK, new ArgumentSlot("text",ValueType.TEXT)),
+    ENTITY_SET_DISPLAY_BRIGHTNESS(      ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetDisplayLightningAction.class, Material.LIGHT, new ArgumentSlot("light",ValueType.NUMBER)),
+    //ENTITY_RESET_DISPLAY_BRIGHTNESS(ActionCategory.ENTITY_ACTION, MenusCategory.STATE, null, Material.GLASS_BOTTLE),
+
 
     ENTITY_TELEPORT(                    ActionCategory.ENTITY_ACTION, MenusCategory.MOVEMENT, EntityTeleportAction.class, Material.ENDER_PEARL,  new ArgumentSlot("location", ValueType.LOCATION), new ParameterSlot("consider",Arrays.asList("all","only-coordinates","only-rotation"),Material.ENDER_EYE,Material.PAPER,Material.PLAYER_HEAD)),
     ENTITY_PATH_MOVE_TO_LOCATION(ActionCategory.ENTITY_ACTION, MenusCategory.MOVEMENT, SetEntityPathMoveToLocationAction.class, Material.PAPER, new ArgumentSlot("location",ValueType.LOCATION)),

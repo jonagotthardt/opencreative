@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.arguments;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -550,7 +551,7 @@ public class Arguments {
         String text = arg.getValue(action).toString();
         try {
             if (text.contains("§")) {
-                return Component.text(text);
+                return LegacyComponentSerializer.legacySection().deserialize(text);
             } else {
                 Component miniMessage = MiniMessage.miniMessage().deserialize(text);
                 ClickEvent clickEvent = miniMessage.clickEvent();
