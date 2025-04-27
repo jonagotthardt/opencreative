@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.commands.world;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -176,13 +177,12 @@ public class CommandAd extends CommandJoin {
     }
 
     private static Component createAdvertisementMessage(Player player, Planet planet) {
-        String advertisementText = getLocaleMessage("advertisement.message", player)
-                .replace("%world%", planet.getInformation().getDisplayName());
-        String hoverText = parsePlanetLines(planet, getLocaleMessage("advertisement.hover"));
+        Component advertisement = getLocaleComponent("advertisement.message", player)
+                .replaceText(TextReplacementConfig.builder()
+                        .match("%world%")
+                        .replacement(planet.getInformation().displayName()).build());
+        Component hoverComponent = parsePlanetLines(planet, getLocaleComponent("advertisement.hover"));
         String clickCommand = "/ad " + planet.getId();
-
-        Component advertisement = toComponent(advertisementText);
-        Component hoverComponent = toComponent(hoverText);
 
         advertisement = advertisement
                 .hoverEvent(HoverEvent.showText(hoverComponent))

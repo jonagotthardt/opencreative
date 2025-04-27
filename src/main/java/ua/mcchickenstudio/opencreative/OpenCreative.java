@@ -137,11 +137,11 @@ public final class OpenCreative extends JavaPlugin {
         registerEvents();
         //Ticker.runTicker();
         saveDefaultConfig();
+        FileUtils.loadLocales();
 
         space = new Space();
         space.init();
 
-        FileUtils.loadLocales();
         PlayerUtils.loadPermissions();
         HookUtils.loadHooks();
         FileUtils.loadPlanets();

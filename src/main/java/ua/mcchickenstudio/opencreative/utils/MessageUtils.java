@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
+import net.kyori.adventure.text.TextReplacementConfig;
 import ua.mcchickenstudio.opencreative.indev.modules.Module;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
@@ -390,6 +391,46 @@ public class MessageUtils {
                 .replace("%planetLastTime%", getElapsedTime(System.currentTimeMillis(), planet.getLastActivityTime()))
                 .replace("%planetCreationTime%", getElapsedTime(System.currentTimeMillis(), planet.getCreationTime()))
         );
+    }
+
+    public static Component parsePlanetLines(Planet planet, Component component) {
+        String planetReputation = String.valueOf(planet.getInformation().getReputation());
+
+        if (planet.getInformation().getReputation() >= 1) planetReputation = "§a+" + planetReputation;
+        else if (planet.getInformation().getReputation() <= -1) planetReputation = "§c" + planetReputation;
+        else planetReputation = "§e" + planetReputation;
+
+        return component
+                .replaceText(TextReplacementConfig.builder()
+                        .match("%planetName%")
+                        .replacement(planet.getInformation().displayName()).build())
+                .replaceText(TextReplacementConfig.builder()
+                        .match("%planetOnline%")
+                        .replacement(String.valueOf(planet.getOnline())).build())
+                .replaceText(TextReplacementConfig.builder()
+                        .match("%planetOwner%")
+                        .replacement(planet.getOwner()).build())
+                .replaceText(TextReplacementConfig.builder()
+                        .match("%planetID%")
+                        .replacement(String.valueOf(planet.getId())).build())
+                .replaceText(TextReplacementConfig.builder()
+                        .match("%planetCustomID%")
+                        .replacement(planet.getInformation().getCustomID()).build())
+                .replaceText(TextReplacementConfig.builder()
+                        .match("%planetCategory%")
+                        .replacement(toComponent(planet.getInformation().getCategory().getLocaleName())).build())
+                .replaceText(TextReplacementConfig.builder()
+                        .match("%planetUniques%")
+                        .replacement(String.valueOf(planet.getInformation().getUniques())).build())
+                .replaceText(TextReplacementConfig.builder()
+                        .match("%planetReputation%")
+                        .replacement(toComponent(planetReputation)).build())
+                .replaceText(TextReplacementConfig.builder()
+                        .match("%planetLastTime%")
+                        .replacement(getElapsedTime(System.currentTimeMillis(), planet.getLastActivityTime())).build())
+                .replaceText(TextReplacementConfig.builder()
+                        .match("%planetCreationTime%")
+                        .replacement(getElapsedTime(System.currentTimeMillis(), planet.getCreationTime())).build());
     }
 
     /**
