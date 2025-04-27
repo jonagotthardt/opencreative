@@ -21,7 +21,12 @@ package ua.mcchickenstudio.opencreative.coding.arguments;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
@@ -54,14 +59,14 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
  */
 public class Arguments {
 
-    private final Planet planet;
-    private final Executor executor;
-    private final List<Argument> argumentList = new ArrayList<>();
+    private final @NotNull Planet planet;
+    private final @NotNull Executor executor;
+    private final @NotNull List<Argument> argumentList = new ArrayList<>();
 
     private final static Pattern INT_PATTERN = Pattern.compile("^-?[0-9]*$");
     private final static Pattern FLOAT_PATTERN = Pattern.compile("^-?[0-9]*\\.?[0-9]+$");
 
-    public Arguments(Planet planet, Executor executor) {
+    public Arguments(@NotNull Planet planet, @NotNull Executor executor) {
         this.planet = planet;
         this.executor = executor;
     }
@@ -84,7 +89,7 @@ public class Arguments {
         return new Argument(planet,type,name,value);
     }
 
-    private Object parseValue(ConfigurationSection section, String name, ValueType type, Object configValue) {
+    private @NotNull Object parseValue(ConfigurationSection section, String name, ValueType type, Object configValue) {
         String stringValue = configValue.toString();
         ConfigurationSection listSection = section.getConfigurationSection(name + ".value");
         switch (type) {
@@ -133,9 +138,9 @@ public class Arguments {
                 }
             case VARIABLE: {
                 if (listSection == null) {
-                    return null;
+                    return stringValue;
                 }
-                String varName = listSection.getString("name");
+                String varName = listSection.getString("name","");
                 String typeString = listSection.getString("type");
                 VariableLink.VariableType varType = VariableLink.VariableType.getEnum(typeString);
                 if (varType == null) {
@@ -145,19 +150,19 @@ public class Arguments {
             }
             case EVENT_VALUE: {
                 if (listSection == null) {
-                    return null;
+                    return stringValue;
                 }
                 String typeString = listSection.getString("name");
-                if (typeString == null) return null;
+                if (typeString == null) return stringValue;
                 EventValues.Variable varType;
-                if (typeString.isEmpty()) return null;
+                if (typeString.isEmpty()) return stringValue;
                 try {
                     if (typeString.startsWith("PLOT")) {
                         typeString = typeString.replace("PLOT","PLANET");
                     }
                     varType = EventValues.Variable.valueOf(typeString);
                 } catch (Exception e) {
-                    return null;
+                    return stringValue;
                 }
                 return new EventValueLink(varType,executor);
             }
@@ -179,10 +184,10 @@ public class Arguments {
                 return ItemStack.deserialize(listSection.getValues(true));
             case PARTICLE:
                 if (listSection == null) {
-                    return null;
+                    return stringValue;
                 }
                 String typeString = listSection.getString("type");
-                if (typeString == null || typeString.isEmpty()) return null;
+                if (typeString == null || typeString.isEmpty()) return stringValue;
                 try {
                     return Particle.valueOf(typeString);
                 } catch (Exception e) {
@@ -200,7 +205,7 @@ public class Arguments {
         return false;
     }
 
-    private Argument getArg(String path) {
+    private @Nullable Argument getArg(String path) {
         for (Argument argument : argumentList) {
             if (argument.getPath().equals(path)) {
                 return argument;
@@ -410,17 +415,8 @@ public class Arguments {
         boolean value = defaultValue;
         if (arg == null) {
             sendCodingDebugNotFoundVariable(planet,path);
-        } else if (arg.getValue(action) instanceof Boolean) {
-            value = (boolean) arg.getValue(action);
-            sendCodingDebugVariable(planet,path,value);
-        } else if (arg.getValue(action) instanceof Integer) {
-            value = (getValue(path,(defaultValue ? 2 : 1), action) > 1);
-            sendCodingDebugVariable(planet,path,value);
-        } else if (arg.getValue(action) instanceof Float) {
-            value = (getValue(path,(defaultValue ? 2f : 1f), action) > 1f);
-            sendCodingDebugVariable(planet,path,value);
-        } else if (arg.getValue(action) instanceof Double) {
-            value = (getValue(path,(defaultValue ? 2d : 1d), action) > 1d);
+        } else {
+            value = parseObject(arg.getValue(action),defaultValue);
             sendCodingDebugVariable(planet,path,value);
         }
         return value;
@@ -438,34 +434,13 @@ public class Arguments {
         return value;
     }
 
-    public byte getValue(String path, byte defaultValue, Action action) {
-        Argument arg = getArg(path);
-        byte value = defaultValue;
-        if (arg == null) {
-            sendCodingDebugNotFoundVariable(planet,path);
-        } else {
-            value = parseObject(arg.getValue(action),defaultValue,action);
-            sendCodingDebugVariable(planet,path,value);
-        }
-        return value;
-    }
-
     public int getValue(String path, int defaultValue, Action action) {
         Argument arg = getArg(path);
         int value = defaultValue;
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(planet, path);
-        } else if (arg.getValue(action) instanceof Long l) {
-            value = l.intValue();
-            sendCodingDebugVariable(planet,path,value);
-        } else if (arg.getValue(action) instanceof Integer) {
-            value = (int) arg.getValue(action);
-            sendCodingDebugVariable(planet,path,value);
-        } else if (arg.getValue(action) instanceof Float) {
-            value = Math.round((float) arg.getValue(action));
-            sendCodingDebugVariable(planet,path,value);
-        } else if (arg.getValue(action) instanceof Double) {
-            value = (int) Math.round((Double) arg.getValue(action));
+            sendCodingDebugNotFoundVariable(planet,path);
+        } else {
+            value = parseObject(arg.getValue(action),defaultValue);
             sendCodingDebugVariable(planet,path,value);
         }
         return value;
@@ -475,18 +450,9 @@ public class Arguments {
         Argument arg = getArg(path);
         long value = defaultValue;
         if (arg == null) {
-            sendCodingDebugNotFoundVariable(planet, path);
-        } else if (arg.getValue(action) instanceof Long l) {
-            value = l;
-            sendCodingDebugVariable(planet,path,value);
-        } else if (arg.getValue(action) instanceof Integer i) {
-            value = i.longValue();
-            sendCodingDebugVariable(planet,path,value);
-        } else if (arg.getValue(action) instanceof Float f) {
-            value = f.longValue();
-            sendCodingDebugVariable(planet,path,value);
-        } else if (arg.getValue(action) instanceof Double d) {
-            value = d.longValue();
+            sendCodingDebugNotFoundVariable(planet,path);
+        } else {
+            value = parseObject(arg.getValue(action),defaultValue);
             sendCodingDebugVariable(planet,path,value);
         }
         return value;
@@ -548,7 +514,7 @@ public class Arguments {
         String text = arg.getValue(action).toString();
         try {
             if (text.contains("§")) {
-                return Component.text(text);
+                return LegacyComponentSerializer.legacySection().deserialize(text);
             } else {
                 Component miniMessage = MiniMessage.miniMessage().deserialize(text);
                 ClickEvent clickEvent = miniMessage.clickEvent();
@@ -573,10 +539,10 @@ public class Arguments {
 
     public char getValue(String path, char defaultValue, Action action) {
         Argument arg = getArg(path);
-        if (arg != null && arg.getValue(action) != null) {
+        if (arg != null) {
             String value = arg.getValue(action).toString();
             if (value != null && !value.isEmpty()) {
-                sendCodingDebugVariable(planet,path,value.charAt(0));
+                sendCodingDebugVariable(planet, path, value.charAt(0));
                 return value.charAt(0);
             }
         }
@@ -617,52 +583,60 @@ public class Arguments {
         return planet.getVariables().getVariableValue(link,action);
     }
 
+    public int parseObject(Object object, int defaultValue) {
+        return switch (object) {
+            case Float f -> f.intValue();
+            case Long l -> l.intValue();
+            case Double d -> d.intValue();
+            case Integer i -> i;
+            case String s -> NumberUtils.toInt(s,defaultValue);
+            default -> defaultValue;
+        };
+    }
+
+    public long parseObject(Object object, long defaultValue) {
+        return switch (object) {
+            case Float f -> f.longValue();
+            case Long l -> l;
+            case Double d -> d.longValue();
+            case Integer i -> i.longValue();
+            case String s -> NumberUtils.toLong(s,defaultValue);
+            default -> defaultValue;
+        };
+    }
+
+    public boolean parseObject(Object object, boolean defaultValue) {
+        return switch (object) {
+            case Boolean b -> b;
+            case Number n -> parseObject(n,defaultValue ? 2 : 1) > 1;
+            case String s -> s.equalsIgnoreCase("true");
+            default -> defaultValue;
+        };
+    }
+
     public float parseObject(Object object, float defaultValue) {
-        float value = defaultValue;
-        if (object instanceof Integer i) {
-            value = i.floatValue();
-        } else if (object instanceof Float) {
-            value = (float) object;
-        } else if (object instanceof Double d) {
-            value = d.floatValue();
-        }
-        return value;
+        return switch (object) {
+            case Float f -> f;
+            case Long l -> l.floatValue();
+            case Double d -> d.floatValue();
+            case Integer i -> i.floatValue();
+            case String s -> NumberUtils.toFloat(s,defaultValue);
+            default -> defaultValue;
+        };
     }
 
     public double parseObject(Object object, double defaultValue) {
-        double value = defaultValue;
-        if (object instanceof Integer || object instanceof Float || object instanceof Double) {
-            value = Double.parseDouble(String.valueOf(object));
-        }
-        switch (object) {
-            case null -> {
-                return defaultValue;
-            }
-            case Float f -> value = f;
-            case Long l -> value = l.doubleValue();
-            case Double d -> value = d;
-            case Integer i -> value = i.doubleValue();
-            default -> {
-            }
-        }
-        return value;
+        return switch (object) {
+            case Float f -> f.doubleValue();
+            case Long l -> l.doubleValue();
+            case Double d -> d;
+            case Integer i -> i.doubleValue();
+            case String s -> NumberUtils.toDouble(s,defaultValue);
+            default -> defaultValue;
+        };
     }
 
-    public byte parseObject(Object object, byte defaultValue, Action action) {
-        byte value = defaultValue;
-        if (object instanceof VariableLink link) {
-            return parseObject(getVariableValue(link,action),defaultValue,action);
-        } else if (object instanceof Integer) {
-            value = (byte) object;
-        } else if (object instanceof Float) {
-            value = (byte) Math.round((float) object);
-        } else if (object instanceof Double) {
-            value = (byte) Math.round((Double) object);
-        }
-        return value;
-    }
-
-    public void setArgumentValue(String path, ValueType type, Object value) {
+    public void setArgumentValue(@NotNull String path, @NotNull ValueType type, @NotNull Object value) {
         argumentList.add(new Argument(planet,type,path,value));
     }
 

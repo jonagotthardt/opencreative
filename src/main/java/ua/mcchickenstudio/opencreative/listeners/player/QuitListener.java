@@ -23,6 +23,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.commands.CreativeChat;
+import ua.mcchickenstudio.opencreative.indev.OfflineWander;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -63,6 +64,9 @@ public final class QuitListener implements Listener {
         CreativeChat.creativeChatOff.remove(player);
 
         removeFromPermissionsMap(player);
+        if (OpenCreative.getSettings().isDebug()) {
+            new OfflineWander(player.getUniqueId()).saveData();
+        }
 
     }
 

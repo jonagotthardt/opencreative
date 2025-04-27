@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.arguments.Argument;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.selectionactions.SelectionAction;
@@ -214,7 +215,7 @@ public abstract class Action {
                 }
             }
             case ALL_PLAYERS -> {
-                List<Player> playerList = this.getExecutor().getPlanet().getPlayers();
+                List<Player> playerList = this.getExecutor().getPlanet().getTerritory().getWorld().getPlayers();
                 if (!playerList.isEmpty()) {
                     entities.addAll(playerList);
                 }
@@ -247,12 +248,13 @@ public abstract class Action {
             }
             default -> entities.addAll(eventEntities);
         }
+        entities.removeIf(entity -> !entity.getWorld().equals(getPlanet().getWorld()));
         return entities;
     }
 
     private Entity getVictim() {
-        if (executor.getEvent() instanceof KillerVictimEvent event) {
-            return event.getVictim();
+        if (executor.getEvent() instanceof KillerVictimEvent victimEvent) {
+            return victimEvent.getVictim();
         }
         return null;
     }
@@ -273,7 +275,7 @@ public abstract class Action {
      * @param link Link of variable.
      * @param value New value.
      */
-    protected void setVarValue(VariableLink link, Object value) {
+    protected void setVarValue(@Nullable VariableLink link, Object value) {
         if (link != null) {
             ValueType type = ValueType.getByObject(value);
             if (type == null) {

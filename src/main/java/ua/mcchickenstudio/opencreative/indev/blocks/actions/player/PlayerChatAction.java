@@ -37,17 +37,17 @@ public class PlayerChatAction extends PlayerActionBlock {
     }
 
     @Override
-    public String getCodingPackId() {
+    public @NotNull String getExtensionId() {
         return "default";
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "Send chat message";
     }
 
     @Override
-    public String getDescription() {
+    public @NotNull String getDescription() {
         return "Player will receive chat message";
     }
 

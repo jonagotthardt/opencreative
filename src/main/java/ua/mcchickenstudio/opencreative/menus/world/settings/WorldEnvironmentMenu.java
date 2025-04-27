@@ -52,6 +52,7 @@ public class WorldEnvironmentMenu extends AbstractMenu {
     private final ItemStack clearVariables = createItem(Material.BRUSH,1,"menus.developer.environment.items.clear-variables");
 
     private final ItemStack info;
+    private final ItemStack createPlatform;
 
     private final ParameterButton containers;
     private final ParameterButton time;
@@ -67,17 +68,8 @@ public class WorldEnvironmentMenu extends AbstractMenu {
         this.devPlatform = isDevPlanet(player.getWorld()) ? devPlanet.getPlatformInLocation(player.getLocation()) : null;
         debug = new ParameterButton(devPlanet.getPlanet().isDebug() ? "all" : "disabled", List.of("disabled","all"),"debug","menus.developer.environment","menus.developer.environment.items.debug",List.of(Material.PUFFERFISH_BUCKET,Material.PUFFERFISH));
         containers = new ParameterButton(devPlanet.getContainerMaterial() == Material.CHEST ? "chest" : "barrel", List.of("chest","barrel"),"containers","menus.developer.environment","menus.developer.environment.items.containers",List.of(Material.CHEST,Material.BARREL));
-        info = createItem(Material.AMETHYST_CLUSTER,1,"menus.developer.environment.items.info");
-        replacePlaceholderInLore(info,"%executors%", devPlanet.getPlanet().getTerritory().getScript().getExecutors().getExecutorsList().size());
-        replacePlaceholderInLore(info,"%scoreboards%", devPlanet.getPlanet().getTerritory().getScoreboards().size());
-        replacePlaceholderInLore(info,"%scoreboards-limit%", devPlanet.getPlanet().getLimits().getScoreboardsLimit());
-        replacePlaceholderInLore(info,"%bossbars%", devPlanet.getPlanet().getTerritory().getBossBars().size());
-        replacePlaceholderInLore(info,"%bossbars-limit%", devPlanet.getPlanet().getLimits().getBossBarsLimit());
-        replacePlaceholderInLore(info,"%variables%", devPlanet.getPlanet().getVariables().getTotalVariablesAmount());
-        replacePlaceholderInLore(info,"%variables-limit%", devPlanet.getPlanet().getLimits().getVariablesAmountLimit());
-        replacePlaceholderInLore(info,"%executor-calls-limit%", devPlanet.getPlanet().getLimits().getCodeOperationsLimit());
-        replacePlaceholderInLore(info,"%planetID%", devPlanet.getPlanet().getId());
-        replacePlaceholderInLore(info,"%version%", OpenCreative.getVersion());
+        info = createInfoItem();
+        createPlatform = createPlatformsItem();
         long currentTime = devPlanet.getWorld() == null ? 0 : devPlanet.getWorld().getTime();
         boolean isMorning = currentTime >= 0L && currentTime < 6000L;
         boolean isNight = currentTime >= 15000L && currentTime <= 23000L;
@@ -88,13 +80,42 @@ public class WorldEnvironmentMenu extends AbstractMenu {
         actionMaterial = createItem(devPlatform != null ? devPlatform.getActionMaterial() : DevPlanet.getDefaultActionMaterial(),1,"menus.developer.environment.items.action-material");
     }
 
+    private ItemStack createInfoItem() {
+        ItemStack info = createItem(Material.AMETHYST_CLUSTER,1,"menus.developer.environment.items.info");
+        replacePlaceholderInLore(info,"%executors%", devPlanet.getPlanet().getTerritory().getScript().getExecutors().getExecutorsList().size());
+        replacePlaceholderInLore(info,"%scoreboards%", devPlanet.getPlanet().getTerritory().getScoreboards().size());
+        replacePlaceholderInLore(info,"%scoreboards-limit%", devPlanet.getPlanet().getLimits().getScoreboardsLimit());
+        replacePlaceholderInLore(info,"%bossbars%", devPlanet.getPlanet().getTerritory().getBossBars().size());
+        replacePlaceholderInLore(info,"%bossbars-limit%", devPlanet.getPlanet().getLimits().getBossBarsLimit());
+        replacePlaceholderInLore(info,"%variables%", devPlanet.getPlanet().getVariables().getTotalVariablesAmount());
+        replacePlaceholderInLore(info,"%variables-limit%", devPlanet.getPlanet().getLimits().getVariablesAmountLimit());
+        replacePlaceholderInLore(info,"%executor-calls-limit%", devPlanet.getPlanet().getLimits().getCodeOperationsLimit());
+        replacePlaceholderInLore(info,"%planetID%", devPlanet.getPlanet().getId());
+        replacePlaceholderInLore(info,"%version%", OpenCreative.getVersion());
+        return info;
+    }
+
+    private ItemStack createPlatformsItem() {
+        if (devPlanet.isLoaded()) {
+            int amount = devPlanet.getPlatforms().size();
+            int limit = devPlanet.getPlanet().getLimits().getCodingPlatformsLimit();
+            ItemStack item = createItem(Material.NETHER_STAR,1,"menus.developer.environment.items." +
+                     (amount >= limit ? "create-platform-limit" : "create-platform"), (amount >= limit ? "" : "platform"));
+            replacePlaceholderInLore(item,"%limit%", limit);
+            replacePlaceholderInLore(item,"%amount%", amount);
+            return item;
+        } else {
+            return DECORATION_ITEM;
+        }
+    }
+
     @Override
     public void fillItems(Player player) {
 
-        setItem(10,debug.getItem());
-        setItem(12,variablesSize);
-        setItem(14,variablesList);
-        setItem(16,clearVariables);
+        setItem(10, debug.getItem());
+        setItem(12, variablesSize);
+        setItem(14, variablesList);
+        setItem(16, clearVariables);
 
         setItem(28, devPlanet.getWorld() != null ? containers.getItem() : DECORATION_ITEM);
         setItem(30, devPlanet.getWorld() != null ? time.getItem() : DECORATION_ITEM);
@@ -103,13 +124,13 @@ public class WorldEnvironmentMenu extends AbstractMenu {
         setItem(34, devPlanet.getWorld() != null ? actionMaterial : DECORATION_ITEM);
 
         setItem(45, devPlanet.getPlanet().isOwner(player) ? back : DECORATION_PANE_ITEM);
-        setItem(46,DECORATION_PANE_ITEM);
+        setItem(46, DECORATION_PANE_ITEM);
 
-        setItem(47,createItem(Material.MAGENTA_STAINED_GLASS_PANE,1));
-        setItem(49,info);
-        setItem(51,createItem(Material.MAGENTA_STAINED_GLASS_PANE,1));
-        setItem(52,DECORATION_PANE_ITEM);
-        setItem(53,DECORATION_PANE_ITEM);
+        setItem(47, createItem(Material.MAGENTA_STAINED_GLASS_PANE,1));
+        setItem(49, info);
+        setItem(51, createItem(Material.MAGENTA_STAINED_GLASS_PANE,1));
+        setItem(52, DECORATION_PANE_ITEM);
+        setItem(53, devPlanet.getWorld() != null ? createPlatform : DECORATION_ITEM);
     }
 
     @Override
@@ -119,7 +140,7 @@ public class WorldEnvironmentMenu extends AbstractMenu {
         }
         event.setCancelled(true);
         ItemStack currentItem = event.getCurrentItem();
-        if (currentItem == null) return;
+        if (currentItem == null || currentItem.equals(DECORATION_ITEM)) return;
         if (itemEquals(currentItem,variablesList)) {
             player.performCommand("env vars list");
             player.closeInventory();
@@ -128,6 +149,9 @@ public class WorldEnvironmentMenu extends AbstractMenu {
             player.closeInventory();
         } else if (itemEquals(currentItem,clearVariables)) {
             player.performCommand("env vars clear");
+            player.closeInventory();
+        } else if (getItemType(currentItem).equals("platform")) {
+            player.performCommand("env platform");
             player.closeInventory();
         } else if (itemEquals(currentItem,time.getItem())) {
             if (devPlanet.getWorld() == null) return;

@@ -1,5 +1,5 @@
 #
-# OpenCreative+ 5.5 - Well, it's possible.
+# OpenCreative+ 5.6 - Well, it's possible.
 # (C) McChicken Studio 2017-2025.
 #
 
@@ -74,7 +74,7 @@
 # Discord: https://discord.gg/sSFCXUeq63
 #
 
-version: 5.5.1
+version: 5.6.0
 last-world-id: 0
 hide-from-tab: spectator # Hides players, that aren't in same world: spectator - Transparent nickname (requires ProtocolLib), full - Full hide from tab list, none - Not hide.
 
@@ -157,16 +157,17 @@ groups:
       generic-command: 5 # /play, /build, /games
       advertisement: 120 # /ad
       creative-chat: 10 # /cc
-      world-chat: 2 # chat in world
+      world-chat: 2 # chat in the world
     creating-world:
       limit: 2
+    favorite-worlds-limit: 30 # limit of favorite worlds for player
     world:
       size: 25
       like-reward: 1
       advertisement-cost: 0
       limits:
         #
-        # Limits for world, that player created.
+        # Limits for a world, that player created.
         #
         executor-calls: 100 # limit of executor calls
         entities-amount: 50 # limit for spawned entities in world
@@ -177,9 +178,13 @@ groups:
         scoreboards-amount: 50 # limit for amount of all scoreboards
         bossbars-amount: 10 # limit for amount of all bossbars
         coding-platforms: 4 # limit for coding platforms
+        builders-amount: 10 # limit of added builders
+        developers-amount: 10 # limit of added developers
+        blacklist-amount: 10 # limit of banned players
+        physical-objects: 140 # limit of special physical objects (it's not sand, gravels; they can be spawned with code)
       per-player-limit-modifiers:
         #
-        # When player joins a world or leaves from world,
+        # When a player joins a world or leaves from world,
         # this will increase or decrease limits values.
         #
         executor-calls: 100
@@ -190,6 +195,7 @@ groups:
         variables-amount: 50
         scoreboards-amount: 3
         bossbars-amount: 3
+        physical-objects: 5
       build-permissions: # Permissions will be given when player types /build command
         - "headdb.open"
         - "worldedit.wand"
@@ -211,6 +217,7 @@ groups:
       world-chat: 1
     creating-world:
       limit: 4
+    favorite-worlds-limit: 30
     world:
       size: 50
       like-reward: 1
@@ -225,6 +232,10 @@ groups:
         scoreboards-amount: 50
         bossbars-amount: 10
         coding-platforms: 4
+        builders-amount: 10
+        developers-amount: 10
+        blacklist-amount: 10
+        physical-objects: 140
       per-player-limit-modifiers:
         executor-calls: 30
         entities-amount: 50
@@ -234,6 +245,7 @@ groups:
         variables-amount: 50
         scoreboards-amount: 10
         bossbars-amount: 10
+        physical-objects: 5
       build-permissions:
         - "headdb.open"
         - "worldedit.wand"

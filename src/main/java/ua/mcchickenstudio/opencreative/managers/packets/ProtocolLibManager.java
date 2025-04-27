@@ -30,6 +30,7 @@ import org.bukkit.entity.*;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.utils.world.cache.ChunkPacketListener;
 
 import java.util.*;
 
@@ -47,6 +48,7 @@ public final class ProtocolLibManager implements PacketManager {
     @Override
     public void init() {
         manager = ProtocolLibrary.getProtocolManager();
+        manager.addPacketListener(new ChunkPacketListener(OpenCreative.getPlugin()));
     }
 
     @Override
@@ -118,6 +120,14 @@ public final class ProtocolLibManager implements PacketManager {
                 WrappedChatComponent.fromText(player.getName())
         )));
         manager.sendServerPacket(receiver, packet);
+    }
+
+    @Override
+    public void showBlockForPlayer(@NotNull Player player, @NotNull Location location, @NotNull Material material) {
+        PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.BLOCK_CHANGE);
+        packet.getBlockPositionModifier().write(0, new BlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ()));
+        packet.getBlockData().write(0, WrappedBlockData.createData(material));
+        ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
     }
 
     @Override

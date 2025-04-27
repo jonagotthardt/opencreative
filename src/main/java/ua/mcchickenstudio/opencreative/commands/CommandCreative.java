@@ -20,11 +20,7 @@ package ua.mcchickenstudio.opencreative.commands;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
-import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
-import ua.mcchickenstudio.opencreative.indev.ExecutorTypeSelectionMenu;
 import ua.mcchickenstudio.opencreative.indev.Items;
-import ua.mcchickenstudio.opencreative.indev.MenusCategorySelectionMenu;
 import ua.mcchickenstudio.opencreative.indev.modules.Module;
 import ua.mcchickenstudio.opencreative.menus.CreativeMenu;
 import ua.mcchickenstudio.opencreative.menus.world.WorldModerationMenu;
@@ -635,23 +631,6 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     if (platform == null) return true;
                     Module module = new Module(1);
                     module.place(devPlanet, player);
-                }
-                case "test2" -> {
-                    if (!sender.hasPermission("opencreative.test")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
-                    }
-                    if (player == null) return true;
-                    player.sendMessage("Block browser test");
-                    new MenusCategorySelectionMenu(player,
-                            player.getLocation(),
-                            "event_player",
-                            ExecutorCategory.EVENT_PLAYER,
-                            new ExecutorTypeSelectionMenu(
-                                    player, player.getLocation(),
-                                    "event_player", ExecutorCategory.EVENT_PLAYER,
-                                    MenusCategory.STATE
-                            )).open(player);
                 }
                 case "test3" -> {
                     if (!sender.hasPermission("opencreative.test")) {

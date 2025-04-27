@@ -18,11 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
+import net.kyori.adventure.text.format.NamedTextColor;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -57,14 +57,21 @@ public final class JoinListener implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    event.getPlayer().kick(Component.text(ChatColor.translateAlternateColorCodes('&',"&cSomething went wrong...\n&f \n&7Your account has a nickname that is associated with the person who violated GPL v3 license. Please change your nickname to continue playing server using OpenCreative+ software.")));
+                    event.getPlayer().kick(Component.text("Something went wrong...")
+                            .color(NamedTextColor.RED)
+                            .appendNewline().appendSpace().appendNewline()
+                            .append(Component.text("Your account has a nickname that" +
+                                    " is associated with the person who violated GPL v3 license." +
+                                    " Please change your nickname to continue playing server using" +
+                                    " OpenCreative+ software.").color(NamedTextColor.GRAY)));
                 }
             }.runTaskLater(OpenCreative.getPlugin(),40L);
         }
     }
 
     /**
-     * Checks is player blocked from using OpenCreative+ or not. Blocked players are people, who violated GNU GPL v3 license.
+     * Checks is player blocked from using OpenCreative+ or not.
+     * Blocked players are people, who violated GNU GPL v3 license.
      * @param nickname Nickname of player that has to be checked.
      * @return true - if this player is blocked, false - is not blocked.
      */

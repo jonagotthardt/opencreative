@@ -27,15 +27,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
+import ua.mcchickenstudio.opencreative.settings.groups.Group;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
 
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
@@ -49,19 +50,18 @@ public class CommandJoin implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-
         if (sender instanceof Player player) {
-            if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-                player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
+            Group group = OpenCreative.getSettings().getGroups().getGroup(player);
+            if (!checkAndSetCooldownWithMessage(player, group, CooldownUtils.CooldownType.GENERIC_COMMAND)) {
                 return true;
             }
-            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
         }
 
         if (OpenCreative.getSettings().isMaintenance() && !sender.hasPermission("opencreative.maintenance.bypass")) {
             sender.sendMessage(getLocaleMessage("maintenance"));
             return true;
         }
+
         if (OpenCreative.getStability().isVeryBad() && !sender.hasPermission("opencreative.stability.bypass")) {
             sender.sendMessage(getLocaleMessage("creative.stability.cannot"));
             return true;
@@ -113,24 +113,26 @@ public class CommandJoin implements CommandExecutor, TabCompleter {
     }
 
     protected Planet findPlanet(String planetId) {
-        if (OpenCreative.getPlanetsManager().getPlanets().isEmpty()) return null;
+        Set<Planet> planets = OpenCreative.getPlanetsManager().getPlanets();
+        if (planets.isEmpty()) return null;
 
-        for (Planet searchablePlanet : OpenCreative.getPlanetsManager().getPlanets()) {
-            if (String.valueOf(searchablePlanet.getId()).equals(planetId) ||
-                    searchablePlanet.getInformation().getCustomID().equalsIgnoreCase(planetId)) {
-                return searchablePlanet;
-            }
-        }
-        return null;
+        return planets.stream()
+                .filter(planet -> String.valueOf(planet.getId()).equals(planetId) ||
+                        planet.getInformation().getCustomID().equalsIgnoreCase(planetId))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
-        if (args.length == 1) {
-            return OpenCreative.getPlanetsManager().getPlanets().stream()
+        return switch (args.length) {
+            case 1 -> OpenCreative.getPlanetsManager().getPlanets().stream()
                     .map(planet -> planet.getInformation().getCustomID())
                     .toList();
-        }
-        return Collections.emptyList();
+            case 2 -> sender.hasPermission("opencreative.join.others")
+                    ? Bukkit.getOnlinePlayers().stream().map(Player::getName).toList()
+                    : Collections.emptyList();
+            default -> Collections.emptyList();
+        };
     }
 }

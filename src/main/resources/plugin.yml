@@ -1,5 +1,5 @@
 #
-# OpenCreative+ 5.5 - Well, it's possible.
+# OpenCreative+ 5.6 - Well, it's possible.
 # (C) McChicken Studio 2017-2025.
 #
 
@@ -7,7 +7,7 @@ name: 'OpenCreative'
 main: ua.mcchickenstudio.opencreative.OpenCreative
 api-version: 1.21
 
-version: '5.5.1'
+version: '5.6.0 Beta'
 description: 'Let players create the worlds'
 build: ${maven.build.timestamp}
 
@@ -95,12 +95,18 @@ commands:
   stopsound:
     description: 'Stops specified sound.'
     aliases: [ыещзыщгтв, іещзіщгтв]
-  module:
-    description: 'Opens module`s browser menu.'
-    aliases: [modules, ьщвгдуы, ьщвгдуі, ьщвгду]
   weather:
     description: 'Changes current world`s weather.'
     aliases: [цуферук]
   time:
     description: 'Sets current world`s time.'
     aliases: [ешьу]
+  module:
+    description: 'Opens module`s browser menu.'
+    aliases: [modules, ьщвгдуы, ьщвгдуі, ьщвгду]
+  favorite:
+    description: 'Adds world to favorites list'
+    aliases: [fav, афм, афмщкшеу, favourite]
+  unfavorite:
+    description: 'Removes world from favorites list'
+    aliases: [unfav, гтафм, гтафмщкшеу, unfavourite]

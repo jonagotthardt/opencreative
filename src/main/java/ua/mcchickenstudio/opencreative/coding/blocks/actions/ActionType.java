@@ -25,8 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.inven
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.movement.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.other.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.params.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.state.EntitySetGlowingAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.state.EntitySetLeashHolderAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.state.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.handleractions.other.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.other.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.other.*;
@@ -49,6 +48,10 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appear
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.blocks.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.entity.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.AddPhysObjectAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.MotionParamPhysObjectAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.SettingsParamPhysObjectAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.VisualParamPhysObjectAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.entityconditions.other.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.entityconditions.params.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.appearance.*;
@@ -198,7 +201,8 @@ public enum ActionType {
     PLAYER_HIDE_PLAYER(                 ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, HidePlayerAction.class, Material.WITHER_SKELETON_SKULL, new ArgumentSlot("player", ValueType.TEXT)),
     PLAYER_SHOW_ELDER_GUARDIAN(         ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, ShowElderGuardianAction.class, Material.ELDER_GUARDIAN_SPAWN_EGG, new ParameterSlot("silent",Material.STRUCTURE_VOID,Material.NAUTILUS_SHELL)),
     PLAYER_SET_VIEW_DISTANCE(           ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, SetViewDistanceAction.class, Material.SPYGLASS, new ArgumentSlot("distance", ValueType.NUMBER),new ParameterSlot("add")),
-    PLAYER_SET_SIMULATION_DISTANCE(           ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, SetSimulationDistanceAction.class, Material.WIND_CHARGE, new ArgumentSlot("distance", ValueType.NUMBER),new ParameterSlot("add")),
+    PLAYER_SET_SIMULATION_DISTANCE(     ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, SetSimulationDistanceAction.class, Material.WIND_CHARGE, new ArgumentSlot("distance", ValueType.NUMBER),new ParameterSlot("add")),
+    PLAYER_SHOW_PHANTOM_BLOCK(          ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, ShowPhantomBlockAction.class, Material.GLASS, new ArgumentSlot("location", ValueType.LOCATION), new ArgumentSlot("block", ValueType.ITEM)),
 
     /**
      * <h1>Player Conditions.</h1>
@@ -221,6 +225,7 @@ public enum ActionType {
 
     IF_PLAYER_LIKED_WORLD(                 ActionCategory.PLAYER_CONDITION, MenusCategory.STATE, IsLikedWorldCondition.class, Material.GOLDEN_APPLE),
     IF_PLAYER_IS_SNEAKING(                 ActionCategory.PLAYER_CONDITION, MenusCategory.STATE, IsSneakingCondition.class, Material.RABBIT),
+    IF_PLAYER_IS_ON_GROUND(                   ActionCategory.PLAYER_CONDITION, MenusCategory.STATE, IsOnGroundCondition.class, Material.STONE_SLAB),
     IF_PLAYER_IS_FLYING(                   ActionCategory.PLAYER_CONDITION, MenusCategory.STATE, IsFlyingCondition.class, Material.FEATHER),
     IF_PLAYER_HAS_SAVED_PURCHASE(                 ActionCategory.PLAYER_CONDITION, MenusCategory.STATE, HasSavedPurchaseCondition.class, Material.GOLD_BLOCK, new ArgumentSlot("names", ValueType.TEXT,(byte) 18)),
 
@@ -273,6 +278,50 @@ public enum ActionType {
     WORLD_SET_TIME(                 ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SetTimeAction.class, Material.CLOCK, new ArgumentSlot("time", ValueType.NUMBER)),
     WORLD_SET_WEATHER(                 ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SetWeatherAction.class, Material.WATER_BUCKET, new ParameterSlot("weather", Arrays.asList("clean","storm","thunder"), Material.SUNFLOWER, Material.WATER_BUCKET, Material.TRIDENT), new ArgumentSlot("duration", ValueType.NUMBER)),
     WORLD_SET_WORLD_BORDER(            ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SetWorldBorderAction.class, Material.END_CRYSTAL, new ArgumentSlot("radius", ValueType.NUMBER), new ArgumentSlot("time", ValueType.NUMBER), new ArgumentSlot("damage", ValueType.NUMBER), new ArgumentSlot("warning-distance", ValueType.NUMBER), new ArgumentSlot("warning-time", ValueType.NUMBER), new ArgumentSlot("safe-distance", ValueType.NUMBER)),
+    WORLD_VISUAL_PARAM_PHYS_OBJECT(
+                    ActionCategory.WORLD_ACTION, MenusCategory.WORLD, VisualParamPhysObjectAction.class,
+                    Material.FIRE_CHARGE,
+                    new ArgumentSlot("variable", ValueType.VARIABLE),
+                    new ArgumentSlot("particle", ValueType.PARTICLE),
+                    new ArgumentSlot("particle2", ValueType.PARTICLE),
+                    new ArgumentSlot("param1", ValueType.NUMBER),
+                    new ArgumentSlot("param2", ValueType.NUMBER),
+                    new ArgumentSlot("param3", ValueType.NUMBER),
+                    new ArgumentSlot("param4", ValueType.NUMBER),
+                    new ArgumentSlot("hit-particle", ValueType.PARTICLE),
+                    new ArgumentSlot("hit-param1", ValueType.NUMBER)
+    ),
+
+    WORLD_MOTION_PARAM_PHYS_OBJECT(
+                    ActionCategory.WORLD_ACTION, MenusCategory.WORLD, MotionParamPhysObjectAction.class,
+                    Material.FEATHER,
+                    new ArgumentSlot("variable", ValueType.VARIABLE),
+                    new ArgumentSlot("location", ValueType.LOCATION),
+                    new ArgumentSlot("speed", ValueType.NUMBER),
+                    new ArgumentSlot("weight", ValueType.NUMBER),
+                    new ArgumentSlot("acceleration-speed", ValueType.NUMBER),
+                    new ArgumentSlot("speed-limit", ValueType.NUMBER),
+                    new ArgumentSlot("acceleration-weight", ValueType.NUMBER),
+                    new ArgumentSlot("weight-limit", ValueType.NUMBER)
+    ),
+    WORLD_SETTINGS_PARAM_PHYS_OBJECT(
+                    ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SettingsParamPhysObjectAction.class,
+                    Material.PAPER,
+                    new ArgumentSlot("variable", ValueType.VARIABLE),
+                    new ArgumentSlot("damage", ValueType.NUMBER),
+                    new ArgumentSlot("explosion", ValueType.NUMBER),
+                    new ArgumentSlot("potion", ValueType.POTION),
+                    new ArgumentSlot("shockwave-range", ValueType.NUMBER),
+                    new ArgumentSlot("shockwave-power", ValueType.NUMBER)
+    ),
+
+    WORLD_ADD_PHYS_OBJECT(
+                    ActionCategory.WORLD_ACTION, MenusCategory.WORLD, AddPhysObjectAction.class,
+                    Material.STRUCTURE_BLOCK,
+                    new ArgumentSlot("visual", ValueType.VARIABLE),
+                    new ArgumentSlot("motion", ValueType.VARIABLE),
+                    new ArgumentSlot("settings", ValueType.VARIABLE)
+    ),
 
     WORLD_CREATE_SCOREBOARD(                 ActionCategory.WORLD_ACTION, MenusCategory.APPEARANCE, CreateScoreboardAction.class, Material.PAINTING, new ArgumentSlot("name", ValueType.TEXT), new ArgumentSlot("display-name", ValueType.TEXT)),
     WORLD_SCOREBOARD_SET_SCORE(                 ActionCategory.WORLD_ACTION, MenusCategory.APPEARANCE, ScoreboardSetScoreAction.class, Material.ITEM_FRAME, new ArgumentSlot("name", ValueType.TEXT), new ArgumentSlot("object", ValueType.TEXT), new ArgumentSlot("score", ValueType.NUMBER)),
@@ -326,13 +375,16 @@ public enum ActionType {
     WORLD_DESTROY_BLOCK(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, DestroyBlockAction.class, Material.TNT, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ParameterSlot("show-particle", true, Material.GUNPOWDER, Material.LIGHT_GRAY_STAINED_GLASS), new ParameterSlot("drop-experience", true, Material.EXPERIENCE_BOTTLE, Material.STRING)),
     WORLD_SET_BLOCK_POWERED(                 ActionCategory.WORLD_ACTION, MenusCategory.BLOCKS, SetBlockPoweredAction.class, Material.REDSTONE_BLOCK, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ParameterSlot("powered", true, Material.REDSTONE_BLOCK, Material.COAL_BLOCK)),
 
-
     /**
      * <h1>Variable Actions.</h1>
      */
 
     VAR_SET_VALUE( ActionCategory.VARIABLE_ACTION, MenusCategory.OTHER, SetVariableValueAction.class, Material.IRON_INGOT, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("value", ValueType.ANY)),
     VAR_SET_RANDOM_VALUE( ActionCategory.VARIABLE_ACTION, MenusCategory.OTHER, SetVariableRandomValueAction.class, Material.PUMPKIN_SEEDS, new ArgumentSlot("values", ValueType.ANY, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
+    VAR_GET_TYPE( ActionCategory.VARIABLE_ACTION, MenusCategory.OTHER, GetVariableTypeAction.class, Material.STRUCTURE_VOID,
+                    new ArgumentSlot("result", ValueType.VARIABLE),
+                    new ArgumentSlot("variable", ValueType.VARIABLE)
+    ),
     VAR_DELETE_VARIABLE( ActionCategory.VARIABLE_ACTION, MenusCategory.OTHER, DeleteVariableAction.class, Material.BARRIER, new ArgumentSlot("variables", ValueType.VARIABLE, (byte) 18)),
 
     VAR_SUM_NUMBERS( ActionCategory.VARIABLE_ACTION, MenusCategory.NUMBER_OPERATIONS, SumNumbersAction.class, Material.BRICK, new ArgumentSlot("numbers", ValueType.NUMBER, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
@@ -398,7 +450,26 @@ public enum ActionType {
     VAR_GET_BY_ID_FROM_LIST( ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, GetByIdFromListAction.class, Material.WATER_BUCKET, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE), new ArgumentSlot("index", ValueType.NUMBER)),
     VAR_REMOVE_BY_ID_FROM_LIST( ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, RemoveByIdFromListAction.class, Material.LAVA_BUCKET, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("index", ValueType.NUMBER)),
     VAR_GET_RANDOM_FROM_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, GetRandomFromListAction.class, Material.ENDER_EYE, new ArgumentSlot("variable",ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE)),
-
+    VAR_CALCULATE_FROM_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS,
+                    CalculateFromListAction.class,
+                    Material.COBWEB, new ArgumentSlot("variable",ValueType.VARIABLE),
+                    new ArgumentSlot("list", ValueType.VARIABLE),
+                    new ParameterSlot("calculation",
+                                    Arrays.asList(
+                                                    "get-min", "get-max",
+                                                    "average", "variance", "deviation",
+                                                    "median", "distinct", "kurtosis",
+                                                    "skewness", "mode", "quantile",
+                                                    "iqr", "shannon-entropy", "gini-index",
+                                                    "linear-trend", "jolt-delta-list", "outliers-list"
+                                    ),
+                                    Material.COAL, Material.DIAMOND, Material.ANVIL,
+                                    Material.IRON_INGOT, Material.NETHERITE_INGOT, Material.GOLD_INGOT,
+                                    Material.MELON_SEEDS, Material.STRING, Material.COBWEB,
+                                    Material.GRAY_CARPET, Material.FIREWORK_STAR, Material.NETHER_STAR,
+                                    Material.EMERALD, Material.IRON_NUGGET, Material.STICK,
+                                    Material.PUMPKIN_SEEDS, Material.WHEAT_SEEDS
+                    )),
     VAR_CREATE_MAP( ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, CreateMapAction.class, Material.CHEST_MINECART, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("keys", ValueType.VARIABLE), new ArgumentSlot("values", ValueType.VARIABLE)),
     VAR_PUT_INTO_MAP( ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, PutIntoMapAction.class, Material.CHEST, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("key", ValueType.ANY), new ArgumentSlot("value", ValueType.ANY)),
     VAR_REMOVE_FROM_MAP_BY_KEY( ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, RemoveFromMapByKeyAction.class, Material.BARRIER, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("key", ValueType.ANY)),
@@ -451,6 +522,42 @@ public enum ActionType {
     VAR_GET_VECTOR_X( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, GetVectorXAction.class, Material.RED_STAINED_GLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("vector", ValueType.VECTOR)),
     VAR_GET_VECTOR_Y( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, GetVectorYAction.class, Material.GREEN_STAINED_GLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("vector", ValueType.VECTOR)),
     VAR_GET_VECTOR_Z( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, GetVectorZAction.class, Material.BLUE_STAINED_GLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("vector", ValueType.VECTOR)),
+    VAR_ROTATION_TO_VECTOR( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, RotationToVectorAction.class, Material.ENDER_EYE,
+                    new ArgumentSlot("variable", ValueType.VARIABLE),
+                    new ArgumentSlot("yaw", ValueType.NUMBER),
+                    new ArgumentSlot("pitch", ValueType.NUMBER)
+    ),
+    VAR_DO_RAY_TRACE( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, RayTraceVectorAction.class, Material.ARROW,
+                    new ArgumentSlot("hitVec", ValueType.VARIABLE),
+                    new ArgumentSlot("vector", ValueType.VECTOR),
+                    new ArgumentSlot("from", ValueType.LOCATION),
+                    new ArgumentSlot("to", ValueType.LOCATION),
+                    new ArgumentSlot("range", ValueType.NUMBER),
+                    new ArgumentSlot("xSize", ValueType.NUMBER),
+                    new ArgumentSlot("ySize", ValueType.NUMBER),
+                    new ArgumentSlot("zSize", ValueType.NUMBER),
+                    new ParameterSlot("calculation", Arrays.asList("vanilla-java", "optifine-fastmath"), Material.PAPER, Material.MAP)
+    ),
+    VAR_DO_RAY_TRACE_MULTI( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, RayTraceVectorMultiAction.class, Material.SPECTRAL_ARROW,
+                    new ArgumentSlot("hitVec", ValueType.VARIABLE),
+                    new ArgumentSlot("vector", ValueType.VECTOR),
+                    new ArgumentSlot("from", ValueType.LOCATION),
+                    new ArgumentSlot("to", ValueType.LIST),
+                    new ArgumentSlot("range", ValueType.NUMBER),
+                    new ArgumentSlot("xSize", ValueType.NUMBER),
+                    new ArgumentSlot("ySize", ValueType.NUMBER),
+                    new ArgumentSlot("zSize", ValueType.NUMBER),
+                    new ParameterSlot("calculation", Arrays.asList("vanilla-java", "optifine-fastmath"), Material.PAPER, Material.MAP)
+    ),
+    VAR_DO_RAY_TRACE_MULTI_ENTITIES( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, RayTraceVectorMultiEntitiesAction.class, Material.TIPPED_ARROW,
+                    new ArgumentSlot("hitVec", ValueType.VARIABLE),
+                    new ArgumentSlot("vector", ValueType.VECTOR),
+                    new ArgumentSlot("from", ValueType.LOCATION),
+                    new ArgumentSlot("range", ValueType.NUMBER),
+                    new ParameterSlot("filter", Arrays.asList("no-filter", "only-players", "only-entities"), Material.BARRIER, Material.PLAYER_HEAD, Material.ZOMBIE_HEAD),
+                    new ParameterSlot("calculation", Arrays.asList("vanilla-java", "optifine-fastmath"), Material.PAPER, Material.MAP)
+    ),
+
 
     /**
      * <h1>Selection Actions.</h1>
@@ -501,6 +608,23 @@ public enum ActionType {
     ENTITY_SET_GLOWING(                 ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetGlowingAction.class, Material.DRAGON_BREATH,  new ParameterSlot("glowing", Arrays.asList(false,true), Material.WHITE_STAINED_GLASS, Material.GLASS)),
     ENTITY_SET_LEASH_HOLDER(            ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetLeashHolderAction.class, Material.LEAD,  new ArgumentSlot("entity", ValueType.TEXT)),
     ENTITY_REMOVE_PASSENGER(            ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntityRemovePassengerAction.class, Material.MINECART,  new ArgumentSlot("entity", ValueType.TEXT)),
+
+    //ENTITY_SET_DISPLAY_BILLBOARD(       ActionCategory.ENTITY_ACTION, MenusCategory.STATE, null, Material.ENDER_EYE, new ParameterSlot("billboard", Arrays.asList("center","fixed","horizontal","vertical"), Material.ENDER_EYE, Material.ENDER_PEARL, Material.SLIME_BALL, Material.SNOWBALL)),
+    ENTITY_SET_DISPLAY_SCALE(           ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetDisplayScaleAction.class, Material.PAPER, new ArgumentSlot("x", ValueType.NUMBER), new ArgumentSlot("y",ValueType.NUMBER), new ArgumentSlot("z",ValueType.NUMBER), new ParameterSlot("add")),
+    ENTITY_SET_DISPLAY_TRANSLATION(     ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetDisplayTranslationAction.class, Material.ARROW, new ArgumentSlot("x", ValueType.NUMBER), new ArgumentSlot("y",ValueType.NUMBER), new ArgumentSlot("z",ValueType.NUMBER), new ParameterSlot("add")),
+    ENTITY_SET_DISPLAY_ITEM(            ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetDisplayItemAction.class, Material.CRAFTING_TABLE, new ArgumentSlot("item", ValueType.ITEM)),
+    //ENTITY_SET_DISPLAY_ITEM_MODE(       ActionCategory.ENTITY_ACTION, MenusCategory.STATE, null, Material.LECTERN, new ParameterSlot("mode", Arrays.asList("fixed","none","ground","gui","head","firstperson-lefthand","firstperson-righthand","thirdperson-lefthand","thirdperson-righthand"), Material.ENDER_EYE, Material.STRUCTURE_VOID, Material.GRASS_BLOCK, Material.CHEST, Material.PLAYER_HEAD, Material.TRIPWIRE_HOOK, Material.TRIPWIRE_HOOK, Material.LEVER, Material.LEVER)),
+    //ENTITY_SET_TEXT_DISPLAY_BACKGROUND( ActionCategory.ENTITY_ACTION, MenusCategory.STATE, null, Material.GRAY_STAINED_GLASS, new ArgumentSlot("color",ValueType.COLOR), new ArgumentSlot("opacity",ValueType.NUMBER)),
+    //ENTITY_RESET_TEXT_DISPLAY_BACKGROUND(ActionCategory.ENTITY_ACTION, MenusCategory.STATE, null, Material.LIGHT_GRAY_STAINED_GLASS),
+    ENTITY_SET_TEXT_DISPLAY_SEE_THROUGH(ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetDisplaySeeThroughAction.class, Material.SPECTRAL_ARROW, new ParameterSlot("see")),
+    ENTITY_SET_TEXT_DISPLAY_SHADOW(     ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetDisplayShadowedAction.class, Material.NAME_TAG, new ParameterSlot("shadow")),
+    //ENTITY_SET_TEXT_DISPLAY_ALIGN(      ActionCategory.ENTITY_ACTION, MenusCategory.STATE, null, Material.MAGENTA_TERRACOTTA, new ParameterSlot("align", Arrays.asList("center","left","right"), Material.ENDER_EYE, Material.SHIELD, Material.DIAMOND_SWORD)),
+    ENTITY_SET_TEXT_DISPLAY_OPACITY(    ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetDisplayTextOpacityAction.class, Material.BIRCH_SIGN, new ArgumentSlot("opacity",ValueType.NUMBER)),
+    ENTITY_SET_TEXT_DISPLAY_WIDTH(      ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetDisplayTextWidthAction.class, Material.OAK_SIGN, new ArgumentSlot("width",ValueType.NUMBER)),
+    ENTITY_SET_DISPLAY_TEXT(            ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetDisplayTextAction.class, Material.BOOK, new ArgumentSlot("text",ValueType.TEXT)),
+    ENTITY_SET_DISPLAY_BRIGHTNESS(      ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntitySetDisplayLightningAction.class, Material.LIGHT, new ArgumentSlot("light",ValueType.NUMBER)),
+    //ENTITY_RESET_DISPLAY_BRIGHTNESS(ActionCategory.ENTITY_ACTION, MenusCategory.STATE, null, Material.GLASS_BOTTLE),
+
 
     ENTITY_TELEPORT(                    ActionCategory.ENTITY_ACTION, MenusCategory.MOVEMENT, EntityTeleportAction.class, Material.ENDER_PEARL,  new ArgumentSlot("location", ValueType.LOCATION), new ParameterSlot("consider",Arrays.asList("all","only-coordinates","only-rotation"),Material.ENDER_EYE,Material.PAPER,Material.PLAYER_HEAD)),
     ENTITY_PATH_MOVE_TO_LOCATION(ActionCategory.ENTITY_ACTION, MenusCategory.MOVEMENT, SetEntityPathMoveToLocationAction.class, Material.PAPER, new ArgumentSlot("location",ValueType.LOCATION)),
@@ -594,6 +718,7 @@ public enum ActionType {
     IF_ENTITY_IS_MONSTER(ActionCategory.ENTITY_CONDITION, MenusCategory.OTHER, IsEntityMonster.class, Material.ZOMBIE_SPAWN_EGG),
     IF_ENTITY_IS_ENEMY(ActionCategory.ENTITY_CONDITION, MenusCategory.OTHER, IsEntityEnemy.class, Material.ENDER_DRAGON_SPAWN_EGG),
 
+    IF_ENTITY_NAME_EQUALS(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, EntityNameEqualsCondition.class, Material.NAME_TAG, new ArgumentSlot("names", ValueType.TEXT,(byte) 18), new ParameterSlot("require-caps"), new ParameterSlot("require-color")),
     IF_ENTITY_IS_IN_TEAM(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, IsEntityInTeam.class, Material.LIME_BANNER, new ArgumentSlot("scoreboard",ValueType.TEXT), new ArgumentSlot("team",ValueType.TEXT)),
 
     IF_ENTITY_IS_DEAD(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, IsEntityDead.class, Material.REDSTONE),

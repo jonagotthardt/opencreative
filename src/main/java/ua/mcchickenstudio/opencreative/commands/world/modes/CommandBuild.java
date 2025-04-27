@@ -172,6 +172,11 @@ public class CommandBuild implements CommandExecutor {
                  * Adds online player as not trusted builder, if he's not
                  * listed in builders.
                  */
+                int limit = planet.getLimits().getBuildersLimit();
+                if (planet.getWorldPlayers().getAllBuilders().size() > limit) {
+                    sender.sendMessage(getLocaleMessage("world.players.builders.limit").replace("%limit%",String.valueOf(limit)));
+                    return true;
+                }
                 if (onlinePlayer != null) {
                     Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(onlinePlayer);
                     if (planet.equals(playerPlanet)) {

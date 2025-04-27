@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.placeholders;
 
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
@@ -28,7 +29,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.*;
 public class EventPlaceholder extends KeyPlaceholder {
 
     public EventPlaceholder() {
-        super("killer","damager","killer_uuid","damager_uuid","victim","victim_uuid","shooter","shooter_uuid");
+        super("killer","damager","killer_uuid","damager_uuid","victim","victim_uuid","shooter","shooter_uuid","event");
     }
 
     @Override
@@ -45,22 +46,23 @@ public class EventPlaceholder extends KeyPlaceholder {
             case "killer_uuid", "damager_uuid", "shooter_uuid" -> killer != null ? killer.getUniqueId().toString() : null;
             case "victim" -> victim != null ? victim.getName() : null;
             case "victim_uuid" -> victim != null ? victim.getUniqueId().toString() : null;
+            case "event" -> handler.getEvent() == null ? "null" : handler.getEvent().getClass().getSimpleName().toLowerCase();
             default -> null;
         };
     }
 
     @Override
-    public String getCodingPackId() {
+    public @NotNull String getExtensionId() {
         return "default";
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "Event Placeholder";
     }
 
     @Override
-    public String getDescription() {
+    public @NotNull String getDescription() {
         return "Parses event placeholders";
     }
 }

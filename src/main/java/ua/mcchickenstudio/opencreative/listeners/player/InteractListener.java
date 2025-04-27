@@ -90,9 +90,9 @@ public final class InteractListener implements Listener {
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock != null) {
             if (clickedBlock.getType().toString().contains("WALL_SIGN")) {
-                handleSignClick(event,player,currentItem,clickedBlock, devPlanet);
+                handleSignClick(event, player, currentItem, clickedBlock, devPlanet);
             } else if (clickedBlock.getState() instanceof InventoryHolder) {
-                handleContainerClick(event,player, devPlanet,event.getClickedBlock());
+                handleContainerClick(event, player, devPlanet, event.getClickedBlock());
             }
         }
         if (currentItem.getItemMeta() != null) {
@@ -267,37 +267,26 @@ public final class InteractListener implements Listener {
             }
         } else {
             AbstractMenu menu = null;
+            final Location clickedLocation = clickedBlock.getLocation();
             if (mainBlockCategory != null) {
                 menu = switch (mainBlockCategory) {
-                    case EVENT_PLAYER -> new PlayerEventsMenu(player,clickedBlock.getLocation());
-                    case EVENT_WORLD -> new WorldEventsMenu(player,clickedBlock.getLocation());
-                    case EVENT_ENTITY -> new EntityEventsMenu(player,clickedBlock.getLocation());
+                    case EVENT_WORLD, EVENT_ENTITY, EVENT_PLAYER -> new BlocksCategorySelectionMenu(player, clickedLocation, mainBlockCategory);
                     default -> null;
                 };
-            }
-            if (actionBlockCategory != null) {
+            } else if (actionBlockCategory != null) {
                 menu = switch (actionBlockCategory) {
-                    case PLAYER_ACTION -> new PlayerActionsMenu(player,clickedBlock.getLocation());
-                    case CONTROL_ACTION -> new ControlActionsMenu(player,clickedBlock.getLocation());
-                    case PLAYER_CONDITION -> new PlayerConditionsMenu(player,clickedBlock.getLocation());
-                    case VARIABLE_CONDITION -> new VariableConditionsMenu(player,clickedBlock.getLocation());
-                    case WORLD_CONDITION -> new WorldConditionsMenu(player,clickedBlock.getLocation());
-                    case ENTITY_CONDITION -> new EntityConditionsMenu(player,clickedBlock.getLocation());
-                    case VARIABLE_ACTION -> new VariableActionsMenu(player,clickedBlock.getLocation());
-                    case WORLD_ACTION -> new WorldActionsMenu(player,clickedBlock.getLocation());
-                    case HANDLER_ACTION -> new HandlerActionsMenu(player,clickedBlock.getLocation());
-                    case REPEAT_ACTION -> new RepeatActionsMenu(player,clickedBlock.getLocation());
-                    case SELECTION_ACTION -> new SelectionActionsMenu(player,clickedBlock.getLocation());
-                    case ENTITY_ACTION -> new EntityActionsMenu(player,clickedBlock.getLocation());
+                    case PLAYER_ACTION, PLAYER_CONDITION, VARIABLE_ACTION,
+                         VARIABLE_CONDITION, ENTITY_ACTION, ENTITY_CONDITION,
+                         WORLD_ACTION, WORLD_CONDITION, CONTROL_ACTION,
+                         REPEAT_ACTION, HANDLER_ACTION -> new BlocksCategorySelectionMenu(player, clickedLocation, actionBlockCategory);
+                    case SELECTION_ACTION -> new SelectionActionsMenu(player,clickedLocation);
+                    case LAUNCH_FUNCTION_ACTION -> new FunctionChooserMenu(player, devPlanet,clickedLocation);
+                    case LAUNCH_METHOD_ACTION -> new MethodChooserMenu(player, devPlanet,clickedLocation);
                     default -> null;
                 };
             }
             if (menu != null) {
                 menu.open(player);
-            } else if (actionBlockCategory == ActionCategory.LAUNCH_FUNCTION_ACTION) {
-                new FunctionChooserMenu(player, devPlanet,clickedBlock.getLocation()).open(player);
-            } else if (actionBlockCategory == ActionCategory.LAUNCH_METHOD_ACTION) {
-                new MethodChooserMenu(player, devPlanet,clickedBlock.getLocation()).open(player);
             } else if (mainBlockCategory == ExecutorCategory.CYCLE) {
                 String cycleTicksString = getSignLine(clickedBlock.getLocation(),(byte) 3);
                 if (cycleTicksString != null && !cycleTicksString.isEmpty()) {

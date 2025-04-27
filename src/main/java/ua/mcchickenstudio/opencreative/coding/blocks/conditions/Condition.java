@@ -61,10 +61,13 @@ public abstract class Condition extends Action {
         this.event = getExecutor().getEvent();
         sendCodingDebugAction(this);
         boolean check = false;
+        if (getTargets().isEmpty()) return;
         for (Entity entity : getTargets()) {
             this.entity = entity;
-            if (check(entity)) {
-                check = true;
+            if (!getActionType().isSelectionMustBeInWorld() || (entity != null && entity.getWorld() == getPlanet().getTerritory().getWorld())) {
+                if (check(entity)) {
+                    check = true;
+                }
             }
         }
         sendCodingDebugLog(getPlanet(), getLocaleMessage("planet-code-debug.condition.returned-" + check,false).replace("%type%",getActionType().getLocaleName()));

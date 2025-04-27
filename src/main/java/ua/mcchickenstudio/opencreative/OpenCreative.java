@@ -28,6 +28,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.data.PhysService;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldListener;
 import ua.mcchickenstudio.opencreative.commands.*;
 import ua.mcchickenstudio.opencreative.commands.minecraft.*;
@@ -40,13 +43,17 @@ import ua.mcchickenstudio.opencreative.commands.world.modes.CommandDev;
 import ua.mcchickenstudio.opencreative.commands.world.modes.CommandPlay;
 import ua.mcchickenstudio.opencreative.commands.world.reputation.CommandDislike;
 import ua.mcchickenstudio.opencreative.commands.world.reputation.CommandLike;
+import ua.mcchickenstudio.opencreative.indev.OfflineWander;
+import ua.mcchickenstudio.opencreative.indev.Wander;
 import ua.mcchickenstudio.opencreative.listeners.CreativeListener;
+import ua.mcchickenstudio.opencreative.listeners.creative.PlanetListener;
 import ua.mcchickenstudio.opencreative.listeners.entity.EntityDamageListener;
 import ua.mcchickenstudio.opencreative.listeners.entity.EntitySpawnListener;
 import ua.mcchickenstudio.opencreative.listeners.entity.EntityStateListener;
 import ua.mcchickenstudio.opencreative.listeners.player.*;
 import ua.mcchickenstudio.opencreative.listeners.world.BlockChangeListener;
 import ua.mcchickenstudio.opencreative.listeners.world.RedstoneListener;
+import ua.mcchickenstudio.opencreative.managers.blocks.BlocksManager;
 import ua.mcchickenstudio.opencreative.managers.economy.Economy;
 import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
 import ua.mcchickenstudio.opencreative.managers.stability.DisabledWatchdog;
@@ -64,10 +71,7 @@ import ua.mcchickenstudio.opencreative.utils.hooks.Metrics;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
@@ -81,6 +85,7 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 public final class OpenCreative extends JavaPlugin {
 
     private static OpenCreative plugin;
+    private final Set<Wander> wanders = new HashSet<>();
 
     private Settings settings;
     private Economy economy;
@@ -88,8 +93,9 @@ public final class OpenCreative extends JavaPlugin {
     private PacketManager packet;
     private PlanetsManager space;
     private StabilityManager watchdog;
+    private BlocksManager blocks;
 
-    private static final String version = "5.5.0";
+    private static final String version = "5.6.0";
     private static final String codename = "Well, it's possible";
 
     /**
@@ -98,13 +104,15 @@ public final class OpenCreative extends JavaPlugin {
      */
     @Override
     public void onLoad() {
-        getLogger().info(" ");
-        getLogger().info("This software was made by ukrainians, that are suffering from never-ending air alerts, explosions and people's deaths.");
-        getLogger().info("We're AGAINST THE WAR. This software IS NOT DESIGNED for people, who support killing and robbing another country.");
-        getLogger().info(" ");
-        getLogger().info("Let us having fun, like players that create their worlds...");
-        getLogger().info("McChicken Studio 2017-2025");
-        getLogger().info(" ");
+        getLogger().info(String.join("\n",
+                        "",
+                        "This software was made by Ukrainians, suffering from never-ending air alerts, explosions, and deaths.",
+                        "We're AGAINST THE WAR. This software IS NOT DESIGNED for those who support killing and robbing another country.",
+                        "",
+                        "Let us have fun, like players who create their worlds...",
+                        "McChicken Studio 2017–2025",
+                        ""
+        ));
     }
 
     /**
@@ -129,14 +137,15 @@ public final class OpenCreative extends JavaPlugin {
         registerEvents();
         //Ticker.runTicker();
         saveDefaultConfig();
+        FileUtils.loadLocales();
 
         space = new Space();
         space.init();
 
-        FileUtils.loadLocales();
         PlayerUtils.loadPermissions();
         HookUtils.loadHooks();
         FileUtils.loadPlanets();
+        PhysService.run();
         //FileUtils.loadModules();
 
         economy = HookUtils.getEconomy();
@@ -147,28 +156,26 @@ public final class OpenCreative extends JavaPlugin {
         packet.init();
         watchdog = new DisabledWatchdog();
         watchdog.init();
+        blocks = HookUtils.getBlocks();
+        blocks.init();
 
         long loadedTime = System.currentTimeMillis()-startTime;
         for (Player player : Bukkit.getOnlinePlayers()) {
             teleportToLobby(player);
             getServer().sendActionBar(Component.text("§7Open§fCreative§b+ §7" + version + "§f is loaded for " + loadedTime + " ms."));
         }
-
-        getLogger().info("OpenCreative+ " + version + ": " + codename + " is loaded for " + loadedTime + " ms.");
-        getLogger().info(" ");
-        getLogger().info(" Welcome to OpenCreative+ " + version + "!");
-        getLogger().info(" ");
-        getLogger().info("  Running on " + Bukkit.getMinecraftVersion() + " server");
-        getLogger().info("  Current time " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()));
-        if (isChristmas()) {
-            getLogger().info("  Ho-ho-ho! Merry Christmas, server owners! :-) ❆");
-        } else if (isHalloween()) {
-            getLogger().info("  Spo-o-o-oky Halloween, server owners! O_o 🎃");
-        }
-        getLogger().info(" ");
-        getLogger().info("  " + codename);
-        getLogger().info("  Made by McChicken Studio 2017-2025");
-        getLogger().info(" ");
+        getLogger().info(String.join("\n",
+                        "",
+                        "OpenCreative+ " + version + ": " + codename + " is loaded for " + loadedTime + " ms.",
+                        " Welcome to OpenCreative+ " + version + "!",
+                        "  Running on " + Bukkit.getMinecraftVersion() + " server",
+                        "  Current time " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()),
+                        isChristmas() ? "  Ho-ho-ho! Merry Christmas, server owners! :-) ❆" :
+                                        isHalloween() ? "  Spo-o-o-oky Halloween, server owners! O_o 🎃" : "",
+                        "  " + codename,
+                        "  Made by McChicken Studio 2017–2025",
+                        ""
+        ));
         new Metrics(this, 22001);
 
     }
@@ -185,12 +192,14 @@ public final class OpenCreative extends JavaPlugin {
             teleportToLobby(player);
         }
         FileUtils.unloadPlanets();
-        getLogger().info(" ");
-        getLogger().info(" Goodbye from OpenCreative+");
-        getLogger().info(" ");
-        getLogger().info(" " + codename);
-        getLogger().info("  Made by McChicken Studio 2017-2025");
-        getLogger().info(" ");
+        getLogger().info(String.join("\n",
+                        "",
+                        "Goodbye from OpenCreative+",
+                        "",
+                        " " + codename,
+                        "  Made by McChicken Studio 2017–2025",
+                        ""
+        ));
     }
 
 
@@ -263,7 +272,7 @@ public final class OpenCreative extends JavaPlugin {
                 PlaceBlockListener.class, DestroyBlockListener.class, BucketListener.class,
                 ClickListener.class,      RedstoneListener.class,     BlockChangeListener.class,
                 Menus.class,              GameModeListener.class,     EntityStateListener.class,
-                CreativeListener.class,   PotionListener.class
+                CreativeListener.class,   PotionListener.class,       PlanetListener.class
         };
         for (Class<?> listenerClass : listeners) {
             try {
@@ -325,6 +334,25 @@ public final class OpenCreative extends JavaPlugin {
      */
     public static PacketManager getPacketManager() {
         return getPlugin().packet;
+    }
+
+    /**
+     * Sets custom blocks manager.
+     * @param blocksManager blocks manager.
+     */
+    @SuppressWarnings("unused")
+    public static void setBlocksManager(BlocksManager blocksManager) {
+        getPlugin().getLogger().info("Now using blocks manager: " + blocksManager.getName());
+        getPlugin().blocks = blocksManager;
+    }
+
+    /**
+     * Gets blocks manager, that changes a lot
+     * of blocks in world.
+     * @return blocks manager.
+     */
+    public static BlocksManager getBlocksManager() {
+        return getPlugin().blocks;
     }
 
     /**
@@ -415,6 +443,50 @@ public final class OpenCreative extends JavaPlugin {
         } catch (Exception error) {
             return false;
         }
+    }
+
+    public Wander registerWander(@NotNull Player player) {
+        Wander wander = new Wander(player);
+        wanders.add(wander);
+        return wander;
+    }
+
+    public void unregisterWander(@NotNull Player player) {
+        wanders.removeIf(wander -> player.getUniqueId().equals(wander.getUniqueId()));
+    }
+
+    /**
+     * Returns online wander, that plays on server.
+     * @return wander - if online, otherwise - null
+     */
+    public static @Nullable Wander getWander(@NotNull UUID uuid) {
+        for (Wander wander : new ArrayList<>(getPlugin().wanders)) {
+            if (wander.getUniqueId().equals(uuid)) {
+                return wander;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns online wander, that plays on server.
+     * @return wander - if online, otherwise - null
+     */
+    public static @NotNull Wander getWander(@NotNull Player player) {
+        for (Wander wander : new ArrayList<>(getPlugin().wanders)) {
+            if (wander.getUniqueId().equals(player.getUniqueId())) {
+                return wander;
+            }
+        }
+        return getPlugin().registerWander(player);
+    }
+
+    /**
+     * Returns offline wander, that can be online or offline.
+     * @return offline wander.
+     */
+    public static @NotNull OfflineWander getOfflineWander(@NotNull UUID uuid) {
+        return new OfflineWander(uuid);
     }
 
 

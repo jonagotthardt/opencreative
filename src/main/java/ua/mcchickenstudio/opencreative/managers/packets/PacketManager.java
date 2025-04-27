@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.managers.packets;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -81,5 +82,13 @@ public interface PacketManager extends Manager {
      * @param receiver player that will see this change.
      */
     void removeSpectatorName(@NotNull Player player, @NotNull Player receiver);
+
+    /**
+     * Shows fake phantom block for player.
+     * @param player player to change display name.
+     * @param location player that will see this change.
+     * @param material type of block.
+     */
+    void showBlockForPlayer(@NotNull Player player, @NotNull Location location, @NotNull Material material);
 
 }

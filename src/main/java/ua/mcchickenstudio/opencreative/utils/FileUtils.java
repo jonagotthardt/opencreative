@@ -18,7 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.indev.OfflineWander;
 import ua.mcchickenstudio.opencreative.indev.modules.Module;
 import ua.mcchickenstudio.opencreative.indev.modules.ModuleManager;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
@@ -32,8 +35,7 @@ import org.bukkit.entity.Player;
 import java.io.*;
 import java.util.*;
 
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningErrorMessage;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 
 /**
  * <h1>FileUtils</h1>
@@ -314,6 +316,32 @@ public class FileUtils {
             }
         }
         return variablesFile;
+    }
+
+    /**
+     * Returns wanders file with his data, located in ./wanders/UUID.json.
+     * @param wander wander to get data.
+     * @param create create file if it doesn't exist.
+     * @return file - if exists, otherwise - null.
+     */
+    public static @Nullable File getWanderJsonFile(@NotNull OfflineWander wander, boolean create) {
+        File wandersFolder = getWandersStorageFolder();
+        if (!wandersFolder.exists()) {
+            wandersFolder.mkdirs();
+        }
+        File wanderFile = new File(getWandersStorageFolder(),wander.getUniqueId() + ".json");
+        if (!wanderFile.exists()) {
+            if (!create) return null;
+            try {
+                if (!wanderFile.createNewFile()) {
+                    sendDebug("Cannot create new wander's file: " + wanderFile);
+                }
+            } catch (Exception error) {
+                sendCriticalErrorMessage("Failed to create new wander's file: " + wanderFile,error);
+                return null;
+            }
+        }
+        return wanderFile;
     }
 
     /**
@@ -725,6 +753,14 @@ public class FileUtils {
      */
     public static File getPlanetsStorageFolder() {
         return new File(Bukkit.getWorldContainer().getPath() + File.separator + "planets" + File.separator);
+    }
+
+    /**
+     * Returns folder that stores all wanders folders.
+     * @return wanders folder.
+     */
+    public static File getWandersStorageFolder() {
+        return new File(Bukkit.getWorldContainer().getPath() + File.separator + "wanders" + File.separator);
     }
 
     public static String getPlanetIdFromName(String name) {

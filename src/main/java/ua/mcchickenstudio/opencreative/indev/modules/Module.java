@@ -38,6 +38,7 @@ import java.util.UUID;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.placeDevBlock;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.setSignLine;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.getModuleConfig;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.parseModuleLines;
@@ -149,6 +150,7 @@ public class Module {
                 setSignLine(signLocation,3,type.name().toLowerCase());
             }
         } catch (Exception error) {
+            sendPlanetErrorMessage(devPlanet.getPlanet(),"Cannot load module",error);
             error.printStackTrace();
         }
         return true;

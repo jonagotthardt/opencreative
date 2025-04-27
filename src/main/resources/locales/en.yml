@@ -1,5 +1,5 @@
 #
-# OpenCreative+ 5.5 - Well, it's possible.
+# OpenCreative+ 5.6 - Well, it's possible.
 # (C) McChicken Studio 2017-2025.
 #
 
@@ -234,7 +234,7 @@ planet-code-debug:
 lobby:
   title: "%branding%"
   subtitle: "&fLet's &acreate&f in your worlds!"
-  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.5\n<green> Well, it's possible!\n <white>\n<gold> ⭐ <white>Explore all <gold>worlds<white> using the compass!\n<light_purple> ❤ <white>Create your own world and <light_purple>invite <white>your friends!\n <yellow>⌚<white> Have fun and <yellow>create <white>whatever you want!\n \n<white>\n <white>"
+  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.6\n<green> Well, it's possible!\n <white>\n<gold> ⭐ <white>Explore all <gold>worlds<white> using the compass!\n<light_purple> ❤ <white>Create your own world and <light_purple>invite <white>your friends!\n <yellow>⌚<white> Have fun and <yellow>create <white>whatever you want!\n \n<white>\n <white>"
 creating-world:
   not-enough-played: "%prefix%&fYou need to play &6%time%&f in other worlds before creating a new world."
   title: "&eCreating World ◌"
@@ -340,6 +340,10 @@ world:
   entity-limit: "%prefix%The world has reached the limit of &6%count% mobs&f. &3[Remove mobs]"
   entity-limit-hover: "&fClick to remove all entities."
   redstone-limit: "%prefix%The world has reached the limit of &6%count% redstone operations&f."
+  favorites:
+    added: "%prefix%You marked this world &7%id% &fas &6favorite&f :)"
+    removed: "%prefix%You removed world &7%id%&f from favorites.."
+    limit: "%prefix%&cYou reached maximum amount of favorite worlds (%limit%)! To add new favorite worlds remove old ones."
   categories:
     sandbox: "&e&lSANDBOX"
     adventure: "&9&lADVENTURE"
@@ -368,6 +372,7 @@ world:
       trusted: "%prefix%&6%player%&f can now build even when you are offline."
       removed: "%prefix%&6%player%&f is no longer a builder."
       player: "%prefix%You have been given permission to build in this world!\n &fTo do so, type the command &6/build"
+      limit: "%prefix%You reached limit of &6%limit% builders&f, to add new builder remove old one in world settings."
     developers:
       guest: "%prefix%&6%player%&f can now visit the coding world but cannot make changes."
       added: "%prefix%You made &6%player%&f a coder, and they can now code in the world &6while you are online.\n &fIf you trust this player, you can make them a permanent coder in the player management settings."
@@ -375,11 +380,13 @@ world:
       removed: "%prefix%&6%player%&f is no longer a coder."
       player: "%prefix%You can now code in this world!\n &fTo do so, type the command &6/dev"
       player-guest: "%prefix%You have been given access to view the code in this world!\n &fTo do so, type the command &6/dev"
+      limit: "%prefix%You reached limit of &6%limit% developers&f, to add new developer remove old one in world settings."
     black-list:
       added: "%prefix%You have added &6%player%&f to the &7blacklist&f. They can no longer enter your world."
       removed: "%prefix%You have removed &6%player%&f from the blacklist. They can now enter your world."
       player: "%prefix%You have been blocked from the world you were playing in.. :("
       cannot: "%prefix%&cThis player cannot be blocked from world O_o"
+      limit: "%prefix%You reached limit of &6%limit% blacklisted players&f, to block player unban old one in world settings."
     white-list:
       added: "%prefix%You have added &6%player%&f to the &lwhitelist&f. They can now enter your world at any time, change world modes, build, and code.\n &6Be careful! &fOnly add players you trust, as they could destroy your world!"
       removed: "%prefix%You have removed &6%player%&f from the &lwhitelist&f."
@@ -618,7 +625,7 @@ items:
         - "&7 while holding a book."
         - " "
         - "&fCategory: &9Executor"
-    launch-function:
+    launch-function-action:
       name: "&bCall Function"
       lore:
         - "&7Calls a chosen function and"
@@ -644,7 +651,7 @@ items:
         - "&7 while holding a book."
         - " "
         - "&fCategory: &9Executor"
-    launch-method:
+    launch-method-action:
       name: "&aCall method"
       lore:
         - "&7Calls specified method and"
@@ -675,7 +682,7 @@ items:
         - "&7 right-click the cycle sign."
         - " "
         - "&fCategory: &9Executor"
-    action-world:
+    world-action:
       name: "&cWorld Action"
       lore:
         - "&7Used to modify the world,"
@@ -687,7 +694,7 @@ items:
         - "&7> Set the time"
         - " "
         - "&fCategory: &cAction"
-    action-player:
+    player-action:
       name: "&7Player Action"
       lore:
         - "&7Used to perform actions"
@@ -699,7 +706,7 @@ items:
         - "&7> Clear a player's inventory"
         - " "
         - "&fCategory: &cAction"
-    action-control:
+    control-action:
       name: "&cCode Control Action"
       lore:
         - "&7Used to control the"
@@ -711,7 +718,7 @@ items:
         - "&7> Skip a cycle"
         - " "
         - "&fCategory: &cAction"
-    action-entity:
+    entity-action:
       name: "&aEntity Action"
       lore:
         - "&7Useful for changing entity's"
@@ -723,7 +730,7 @@ items:
         - "&7> Set mob's goal"
         - " "
         - "&fCategory: &cAction"
-    condition-else:
+    else-condition:
       name: "&eElse"
       lore:
         - "&7Actions between pistons will be"
@@ -737,7 +744,7 @@ items:
         - "&7> Else if player is in survival mode"
         - " "
         - "&fCategory: &6Condition"
-    condition-player:
+    player-condition:
       name: "&6Player Condition"
       lore:
         - "&7Checks player options, state"
@@ -749,7 +756,7 @@ items:
         - "&7> If player's game mode is set"
         - " "
         - "&fCategory: &6Condition"
-    condition-world:
+    world-condition:
       name: "&cWorld Condition"
       lore:
         - "&7Checks world parameters,"
@@ -762,7 +769,7 @@ items:
         - "&7> If world is opened"
         - " "
         - "&fCategory: &6Conditions"
-    condition-entity:
+    entity-condition:
       name: "&cEntity Condition"
       lore:
         - "&7Checks entity state and"
@@ -774,7 +781,7 @@ items:
         - "&7> If entity is under rain"
         - " "
         - "&fCategory: &6Conditions"
-    condition-var:
+    variable-condition:
       name: "&9Variable Condition"
       lore:
         - "&7Checks the value of a variable and"
@@ -786,7 +793,7 @@ items:
         - "&7> If the value is not empty"
         - " "
         - "&fCategory: &6Condition"
-    action-var:
+    variable-action:
       name: "&fVariable Action"
       lore:
         - "&7Used to perform actions"
@@ -798,7 +805,7 @@ items:
         - "&7> Delete a variable"
         - " "
         - "&fCategory: &cAction"
-    action-selection:
+    selection-action:
       name: "&dSelect Target"
       lore:
         - "&7Used for changing current"
@@ -846,15 +853,29 @@ items:
             - "&eClick to choose category."
       events:
         next-page:
-          name: "&c▶ &aNext #%page% &c▶"
+          name: " "
           lore:
-            - "&7Click to show"
-            - "&7next events."
+            - "&e Next... &6→"
+            - ""
+            - "&7  Click to show"
+            - "&7  more events."
+            - ""
         previous-page:
-          name: "&c◀ &aBack #%page% &c◀"
+          name: " "
           lore:
-            - "&7Click to show"
-            - "&7previous events."
+            - " &6← &eBack..."
+            - ""
+            - "&7  Click to show"
+            - "&7  previous events."
+            - ""
+        back-to-categories:
+          name: " "
+          lore:
+            - " &6← &eBack to categories..."
+            - ""
+            - "&7  Click to show"
+            - "&7  categories list."
+            - ""
         empty:
           name: "&cNo events"
           lore:
@@ -979,6 +1000,14 @@ items:
             - ""
             - "&7  Click to show"
             - "&7  more actions."
+            - ""
+        back-to-categories:
+          name: " "
+          lore:
+            - " &6← &eBack to categories..."
+            - ""
+            - "&7  Click to show"
+            - "&7  categories list."
             - ""
         world:
           name: "&bEnvironment Actions"
@@ -1119,6 +1148,14 @@ items:
           lore:
             - "&7No conditions created for this"
             - "&7category yet."
+        back-to-categories:
+          name: " "
+          lore:
+            - " &6← &eBack to categories..."
+            - ""
+            - "&7  Click to show"
+            - "&7  categories list."
+            - ""
         previous-page:
           name: " "
           lore:
@@ -3530,6 +3567,70 @@ items:
               - "&7this distance won't take damage yet."
               - ""
               - "&7Default: &a5 (blocks)"
+      world-visual-param-phys-object:
+        name: "&dCreate a visual appearance for a physical object"
+        lore:
+          - "&7First of three components for"
+          - "&7the creation of a physical object."
+          - ""
+          - "&fIn the chest:"
+          - "&e Variable &7 - To save."
+          - "&5 Particle &7- The main displayed particle of the object"
+          - "&5 Particle &7- An additional displayed particle of the object"
+          - "&a Number &7- The number of particles"
+          - "&a Number &7- Deviation along X"
+          - "&a Number &7- Deviation along Y"
+          - "&a Number &7- Deviation along Z"
+          - "&5 Particle &7- The displayed particle after collision"
+          - "&a Number &7- The number of particles after collision"
+          - ""
+          - "&eClick to set action."
+      world-motion-param-phys-object:
+        name: "&dCreate motion for a physical object"
+        lore:
+          - "&7Second of three components for"
+          - "&7the creation of a physical object."
+          - ""
+          - "&fIn the chest:"
+          - "&e Variable &7 - To save."
+          - "&f Location &7- The initial position and rotation"
+          - "&a Number &7- The object's speed"
+          - "&a Number &7- The object's weight"
+          - "&a Number &7- Acceleration per tick"
+          - "&a Number &7- Speed limit"
+          - "&a Number &7- Weight increase per tick"
+          - "&a Number &7- Weight limitation"
+          - ""
+          - "&eClick to set action."
+      world-settings-param-phys-object:
+        name: "&dCreate settings for a physical object"
+        lore:
+          - "&7Last of three components for"
+          - "&7the creation of a physical object."
+          - ""
+          - "&fIn the chest:"
+          - "&e Variable &7 - To save."
+          - "&a Number &7- The damage inflicted by the object"
+          - "&a Number &7- Explosion strength"
+          - "&9 Potion &7- The effect applied by the object"
+          - "&a Number &7- Shockwave radius"
+          - "&a Number &7- Shockwave force (velocity)"
+          - ""
+          - "&eClick to set action."
+      world-add-phys-object:
+        name: "&dCreate a physical object"
+        lore:
+          - "&7Creates an advanced physical object"
+          - "&7with its own physics, damage, visuals, etc."
+          - "&7Requires 3 components for creation."
+          - "&7May collide with blocks and entities."
+          - ""
+          - "&fIn the chest:"
+          - "&e Variable &7- Visual component"
+          - "&e Variable &7- Motion component"
+          - "&e Variable &7- Settings component"
+          - ""
+          - "&eClick to set action."
       player-set-world-border:
         name: "&dSet personal world border"
         lore:
@@ -4757,6 +4858,19 @@ items:
           - "&f Location &7- Where to activate"
           - "&3 Option &7- Activate or"
           - "&7 deactivate"
+          - ""
+          - "&eClick to set the action."
+
+      player-show-phantom-block:
+        name: "&3Show Phantom Block"
+        lore:
+          - "&7Visually displays a phantom block."
+          - "&7It will be visible only to a player,"
+          - "&7and is not a real block."
+          - ""
+          - "&fIn the chest:"
+          - "&f Location &7- Where to display it"
+          - "&c Item &7- Block type"
           - ""
           - "&eClick to set the action."
 
@@ -6305,6 +6419,17 @@ items:
           - "&e Variable &7- For saving"
           - " "
           - "&eClick to set action."
+      var-get-type:
+        name: "&6Get Variable Type"
+        lore:
+          - "&7This will assign to a variable"
+          - "&7the type of another variable (location, number...)"
+          - " "
+          - "&fIn the chest:"
+          - "&9 Variable &7- To save the type into"
+          - "&e Variable &7- To check the type of"
+          - " "
+          - "&eClick to set action."
       var-delete-variable:
         name: "&4Delete Variable"
         lore:
@@ -6901,6 +7026,18 @@ items:
           - "&fExamples:"
           - " &7[&6Watermelon&7, &6Pear&7] &7= &6Pear"
           - " &7[&6Watermelon&7, &6Pear&7] &7= &6Watermelon"
+          - " "
+          - "&eClick to set action."
+      var-calculate-from-list:
+        name: "&bCalculate from Number List"
+        lore:
+          - "&7Various types of calculations from a list of numbers"
+          - "&7(minimum, maximum, statistics...)"
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- Result (to save)"
+          - "&e Variable &7- List"
+          - "&3 Parameter &7 - Calculation type"
           - " "
           - "&eClick to set action."
       var-create-map:
@@ -7691,6 +7828,73 @@ items:
           - "&fIn the chest:"
           - "&e Variable &7- For saving"
           - "&b Vector &7- For getting"
+          - " "
+          - "&eClick to set action."
+      var-rotation-to-vector:
+        name: "&9Rotation to Vector"
+        lore:
+          - "&7Converts rotation (yaw/pitch)"
+          - "&7into a direction vector (from -1 to 1)."
+          - "&7Useful for ray tracing."
+          -
+          - "&fIn the chest:"
+          - "&e Variable &7- The resulting vector"
+          - "&c Number &7- Yaw (Y)"
+          - "&c Number &7- Pitch (X)"
+          - " "
+          - "&eClick to set action."
+      var-do-ray-trace:
+        name: "&9Do Ray Trace"
+        lore:
+          - "&7Checks whether the"
+          - "&7generated ray hits the specified HitBox."
+          - "&7Returns the point of intersection."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- Beam contact location with the HitBox"
+          - "&b Vector &7- Direction of the ray"
+          - "&f Location &7- Starting location of the beam"
+          - "&f Location &7- Position of the HitBox"
+          - "&c Number &7- Distance the ray will travel"
+          - "&c Number &7- Size of the HitBox along X axis"
+          - "&c Number &7- Size of the HitBox along Y axis"
+          - "&c Number &7- Size of the HitBox along Z axis"
+          - "&3 Parameter &7- Type of calculation"
+          - " "
+          - "&eClick to set action."
+      var-do-ray-trace-multi:
+        name: "&9Do Ray Trace (Multi)"
+        lore:
+          - "&7Checks whether the"
+          - "&7generated ray hits the specified HitBox(es)."
+          - "&7Returns the point(s) of intersection."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- Beam contact location with the HitBox"
+          - "&b Vector &7- Direction of the ray"
+          - "&f Location &7- Starting location of the beam"
+          - "&e Variable &7- Position of the HitBox(es)"
+          - "&c Number &7- Distance the ray will travel"
+          - "&c Number &7- Size of the HitBox along X axis"
+          - "&c Number &7- Size of the HitBox along Y axis"
+          - "&c Number &7- Size of the HitBox along Z axis"
+          - "&3 Parameter &7- Type of calculation"
+          - " "
+          - "&eClick to set action."
+      var-do-ray-trace-multi-entities:
+        name: "&9Do Ray Trace (Entities)"
+        lore:
+          - "&7Checks whether the created ray hits"
+          - "&7the automatically detected HitBox(es) of all entities."
+          - "&7Returns the location(s) of intersection."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- Location of the ray's intersection with HitBox(es)"
+          - "&b Vector &7- Direction of the ray"
+          - "&f Location &7- Starting location of the ray"
+          - "&c Number &7- Distance the ray will travel"
+          - "&3 Parameter &7- Entity filter"
+          - "&3 Parameter &7- Calculation type"
           - " "
           - "&eClick to set action."
       var-normalize-vector:
@@ -8517,6 +8721,69 @@ items:
           - "&7 case or not"
           - " "
           - "&eClick to set condition."
+        arguments:
+          require-caps:
+            name: "&eConsider letter case"
+            lore:
+              - "&7If selected, it will check"
+              - "&7the case of letters (CAPS)"
+              - "&7and lowercase letters."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Ignore caps"
+              true: "Require case match"
+      if-entity-name-equals:
+        name: "&eName equals"
+        lore:
+          - "&7Checks if the entity's"
+          - "&7name matches texts in"
+          - "&7the chest."
+          - " "
+          - "&fIn chest:"
+          - "&6 Text(s) &7- Names"
+          - "&7 for comparison"
+          - "&3 Option &7- Ignore"
+          - "&7 case or not"
+          - "&3 Option &7- Ignore"
+          - "&7 colors or not"
+          - " "
+          - "&eClick to set condition."
+        arguments:
+          require-caps:
+            name: "&eConsider letter case"
+            lore:
+              - "&7If selected, it will check"
+              - "&7the case of letters (CAPS)"
+              - "&7and lowercase letters."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Ignore caps"
+              true: "Require case match"
+          require-color:
+            name: "&dConsider color codes"
+            lore:
+              - "&7You may want to ignore"
+              - "&7color codes, as it's rare"
+              - "&7when needed."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Ignore color in text"
+              true: "Require color match"
       if-player-has-saved-purchase:
         name: "&eBought item before"
         lore:
@@ -8544,6 +8811,13 @@ items:
         lore:
           - "&7Triggers the code if the"
           - "&7player is sneaking by pressing SHIFT."
+          - " "
+          - "&eClick to set condition."
+      if-player-is-on-ground:
+        name: "&fOn ground"
+        lore:
+          - "&7Triggers the code if the"
+          - "&7player is on ground."
           - " "
           - "&eClick to set condition."
       if-player-is-flying:
@@ -8809,19 +9083,84 @@ items:
             choices:
               false: "Consider item type"
               true: "Ignore item type"
-      if-player-has-item:
-        name: "&6Has item in inventory"
+      if-player-has-item-in-amount:
+        name: "&6Has Item in Amount"
         lore:
-          - "&7Checks if the player has"
-          - "&7any item in their inventory."
+          - "&7Checks whether the player has the"
+          - "&7specified item in inventory in the"
+          - "&7given quantity. Useful for"
+          - "&7item-based shops!"
           - " "
-          - "&fIn chest:"
-          - "&c Item(s) &7- Items for"
-          - "&7 comparison"
-          - "&3 Parameters &7- Ignoring"
-          - "&7 item data"
+          - "&fIn the chest:"
+          - "&c Item &7- For comparison"
+          - "&a Number &7- Item quantity"
+          - "&3 Parameter &7- Ignore item data"
           - " "
-          - "&eClick to set condition."
+          - "&eClick to set the condition."
+        arguments:
+          compare-mode:
+            name: "&6Check Type"
+            lore:
+              - "&7If item data is ignored,"
+              - "&7only the material will be checked."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              material: "Ignore item data"
+              full: "Match full data"
+        placeholders:
+          amount:
+            name: "&aItem Quantity"
+      if-player-has-item:
+        name: "&6Has Item in Inventory"
+        lore:
+          - "&7Checks whether the player has"
+          - "&7any of the specified items in inventory."
+          - " "
+          - "&fIn the chest:"
+          - "&c Item(s) &7- Items for comparison"
+          - "&3 Parameter &7- Require quantity"
+          - "&3 Parameter &7- Ignore item data"
+          - " "
+          - "&eClick to set the condition."
+        arguments:
+          all:
+            name: "&fRequire All Items"
+            lore:
+              - "&7If 'yes' is selected, the condition"
+              - "&7will be met only if the player"
+              - "&7has all specified items."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "If any item exists"
+              true: "Require all items"
+          compare-mode:
+            name: "&6Check Type"
+            lore:
+              - "&7If selected, item quantities"
+              - "&7must match the player's amounts."
+              - "&7If data is ignored, only the"
+              - "&7item material will be checked."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+            choices:
+              min-items: "At least the amount"
+              full: "Exact amount match"
+              material: "Ignore item data"
       if-player-has-item-cooldown:
         name: "&eHas item cooldown"
         lore:
@@ -9554,10 +9893,31 @@ menus:
         back:
           name: " "
           lore:
-            - " &6← &eBack..."
+            - "&6 ← &eBack..."
             - ""
             - "&7  Click to open"
             - "&7  world settings."
+            - ""
+        create-platform-limit:
+          name: " "
+          lore:
+            - "&c No more platforms available!"
+            - ""
+            - "&7 You have created %amount% out of"
+            - "&7 the allowed %limit% platforms."
+            - ""
+        create-platform:
+          name: " "
+          lore:
+            - "&b ☀ &lCreate a platform for coding"
+            - ""
+            - "&7 This will create a new platform in the"
+            - "&7 developers' world where you can"
+            - "&7 place coding blocks."
+            - ""
+            - "&7 Platforms created: %amount%/%limit%"
+            - ""
+            - "&e Click to create."
             - ""
         debug:
           name: " "
@@ -12416,6 +12776,7 @@ blocks:
   control_stop_cycles: "&3Stop cycle"
 
   var_set_value: "Assign value"
+  var_get_type: "Get type of var"
   var_set_random_value: "Random value"
   var_sum_numbers: "&aSum numbers +"
   var_subtract_numbers: "&cSubtract numbers -"
@@ -12431,6 +12792,7 @@ blocks:
   var_get_by_id_from_list: "&bGet from list"
   var_remove_by_id_from_list: "&cRemove from list"
   var_get_random_from_list: "Random from list"
+  var_calculate_from_list: "&3Calcul. from list"
   var_increase_number: "Increase number"
   var_modify_location: "Modify location"
   var_get_location_x: "&cX coordinate"
@@ -12529,7 +12891,11 @@ blocks:
   world_set_blocks_area_type: "Block region"
   world_destroy_block: "Destroy block"
   world_set_block_powered: "Power block"
+  player_show_phantom_block: "Show phant. block"
   world_set_world_border: "Set world border"
+  world_visual_param_phys_object: "&3Visual Creator"
+  world_motion_param_phys_object: "&3Motion Creator"
+  world_settings_param_phys_object: "&3Settings Creator"
   world_drop_item: "Drop item"
   world_create_scoreboard: "&aCreate scoreboard"
   world_create_boss_bar: "&aCreate boss bar"
@@ -12551,6 +12917,7 @@ blocks:
   if_player_block_equals: "Block equals"
   if_player_is_sneaking: "Is sneaking"
   if_player_is_flying: "Is flying"
+  if_player_is_on_ground: "Is on ground"
   if_player_liked_world: "Liked world"
   if_player_name_equals: "Name equals"
   if_player_message_equals: "Message equals"
@@ -12559,6 +12926,48 @@ blocks:
   if_player_inventory_full: "Inventory full"
   if_player_inventory_name_equals: "Inventory name equals"
   if_player_has_item_cooldown: "Has item cooldown"
+  if_player_has_potion_effects: "Has Effects"
+  if_player_has_item_in_amount: "Has Items"
+  if_player_is_inventory_full: "Inventory Full"
+  if_player_clicked_slot_equals: "Clicked Slot Equals"
+  if_player_current_slot_equals: "Slot Equals"
+  if_player_game_mode_equals: "Game Mode Equals"
+  if_player_is_sprinting: "Is Sprinting"
+  if_player_is_glowing: "Is Glowing"
+  if_player_is_gliding: "Is Gliding with Elytra"
+  if_player_is_blocking: "Is Blocking with Shield"
+  if_player_has_world_permission: "Has World Permissions"
+  if_player_is_flight_allowed: "Can Fly"
+  if_player_is_time_relative: "Time Matches"
+  if_player_can_see_player: "Can See Player"
+  if_player_can_see_entity: "Can See Entity"
+  if_player_scoreboard_equals: "Scoreboard Equals"
+  if_player_boss_bar_equals: "Boss Bar Equals"
+  if_player_has_resource_pack: "Has Resource Pack"
+  world_set_difficulty: "Set Difficulty"
+  world_spawn_arrow: "Spawn Arrow"
+  world_spawn_firework: "Spawn Firework"
+  world_create_firework_explosion: "Firework Explosion"
+  world_create_experience_orb: "Spawn XP Orb"
+  world_spawn_particles_line: "Line of Particles"
+  world_create_team: "Create Team"
+  world_team_set_color: "Set Team Color"
+  world_delete_team: "Delete Team"
+  world_team_set_collision_rule: "Team Collision"
+  world_team_set_name_tag_visible: "Show Name Tag"
+  world_team_set_can_see_invisible: "See Invisible"
+  world_set_sign_line: "Sign Text Line"
+  world_set_sign_waxed: "Wax Sign"
+  world_set_sign_glowing_text: "Glowing Sign Text"
+  world_clear_container: "Clear Container"
+  world_give_container_items: "Set Container Items"
+  world_put_item_in_container: "Put Item in Container"
+  world_get_container_items: "Get Container Items"
+  world_apply_bone_meal: "Apply Bone Meal"
+  world_set_block_biome: "Set Block Biome"
+  world_get_sign_line: "Get Sign Line"
+  if_var_item_equals: "Item Equals"
+  if_var_location_in_area: "In Region"
 
   if_world_is_in_debug_mode: "Debug Mode"
   if_world_is_public: "Public Entry"
@@ -12579,6 +12988,7 @@ blocks:
   if_world_block_is_preferred_tool: "Preferred Tool"
   if_world_block_is_valid_tool: "Tool Mineable"
 
+  if_entity_name_equals: "Name equals"
   if_entity_is_player: "Is Player"
   if_entity_is_mob: "Is Mob"
   if_entity_is_living_entity: "Is Living Entity"

@@ -36,17 +36,17 @@ public class PlayerConnectExecutor extends PlayerExecutor {
     }
 
     @Override
-    public String getCodingPackId() {
+    public @NotNull String getExtensionId() {
         return "default";
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "Player Joined World";
     }
 
     @Override
-    public String getDescription() {
+    public @NotNull String getDescription() {
         return "Triggers when player joins world";
     }
 

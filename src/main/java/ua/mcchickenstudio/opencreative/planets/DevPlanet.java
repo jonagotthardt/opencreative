@@ -457,8 +457,8 @@ public class DevPlanet {
     public List<DevPlatform> getPlatforms() {
         List<DevPlatform> platforms = new ArrayList<>();
         if (!isLoaded()) return platforms;
-        for (int x = 1; x <= 10; x++) {
-            for (int z = 1; z <= 10; z++) {
+        for (int x = 1; x <= getFarPlatformByX().getX(); x++) {
+            for (int z = 1; z <= getFarPlatformByZ().getZ(); z++) {
                 DevPlatform platform = new DevPlatform(getWorld(),x,z);
                 if (platform.exists()) {
                     platforms.add(platform);
@@ -471,7 +471,7 @@ public class DevPlanet {
     public DevPlatform getFarPlatformByX() {
         DevPlatform farPlatform = new DevPlatform(getWorld(),1,1);
         if (!isLoaded()) return farPlatform;
-        for (int x = 2; x <= 10; x++) {
+        for (int x = 2; x <= 5; x++) {
             DevPlatform current = new DevPlatform(getWorld(),x,1);
             if (current.exists()) {
                 farPlatform = current;
@@ -483,7 +483,7 @@ public class DevPlanet {
     public DevPlatform getFarPlatformByZ() {
         DevPlatform farPlatform = new DevPlatform(getWorld(),1,1);
         if (!isLoaded()) return farPlatform;
-        for (int z = 2; z <= 10; z++) {
+        for (int z = 2; z <= 5; z++) {
             DevPlatform current = new DevPlatform(getWorld(),1,z);
             if (current.exists()) {
                 farPlatform = current;

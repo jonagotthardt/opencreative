@@ -26,9 +26,13 @@ public enum LimitType {
     BOSSBARS("bossbars-amount"),
     REDSTONE_OPERATIONS("redstone-changes"),
     OPENING_INVENTORIES("opening-inventories"),
+    PHYSICAL_OBJECTS("physical-objects"),
     VARIABLES("variables-amount"),
     CODING_PLATFORMS("coding-platforms"),
-    MODIFYING_BLOCKS("modifying-blocks");
+    MODIFYING_BLOCKS("modifying-blocks"),
+    BUILDERS_AMOUNT("builders-amount"),
+    DEVELOPERS_AMOUNT("developers-amount"),
+    BLACKLISTED_AMOUNT("blacklisted-amount");
 
     private final String path;
 

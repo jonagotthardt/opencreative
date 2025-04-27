@@ -18,6 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.planets;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -110,7 +114,11 @@ public class PlanetInfo {
     public void updateIcon() {
         ItemStack item = icon.clone();
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(getLocaleItemName("menus.all-worlds.items.world.name").replace("%planetName%", displayName));
+        meta.displayName(
+                getLocaleComponent("menus.all-worlds.items.world.name")
+                        .replaceText(TextReplacementConfig.builder()
+                                .match("%planetName%")
+                                .replacement(displayName()).build()));
         List<String> lore = new ArrayList<>();
         for (String loreLine : getLocaleItemDescription("menus.all-worlds.items.world.lore")) {
             if (loreLine.contains("%planetDescription%")) {
@@ -156,6 +164,14 @@ public class PlanetInfo {
     public void setCustomID(String customID) {
         this.customID = customID;
         setPlanetConfigParameter(planet,"customID",customID);
+    }
+
+    public Component displayName() {
+        return LegacyComponentSerializer.legacySection().deserialize(displayName).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
+    }
+
+    public Component description() {
+        return LegacyComponentSerializer.legacySection().deserialize(description);
     }
 
     public String getDisplayName() {

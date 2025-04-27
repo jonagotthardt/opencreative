@@ -38,8 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 
@@ -52,148 +51,183 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
  */
 public class CommandEdit implements CommandExecutor, TabCompleter {
 
-    private final int TEXT_LIMIT = 100;
-    private final int LINES_LIMIT = 20;
+    private static final int TEXT_LIMIT = 100;
+    private static final int LINES_LIMIT = 20;
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
             OpenCreative.getPlugin().getLogger().info(getLocaleMessage("only-in-world"));
+            return true;
+        }
+
+        if (!checkPermissions(player)) return true;
+
+        if (args.length == 0) {
+            sender.sendMessage(getLocaleMessage("commands.edit.help"));
+            return true;
+        }
+
+        ItemStack item = player.getInventory().getItemInMainHand();
+
+        ItemMeta meta = item.getItemMeta();
+        if (item.getType().isAir() || meta == null) {
+            sender.sendMessage(getLocaleMessage("commands.edit.item"));
+            return true;
+        }
+
+        switch (args[0].toLowerCase()) {
+            case "name":
+                handleSetName(player, item, args);
+                break;
+            case "lore", "setlore":
+                handleSetLore(player, item, args);
+                break;
+            case "addlore":
+                handleAddLore(player, item, args);
+                break;
+            case "removelore", "deletelore", "dellore", "remlore":
+                handleRemoveLore(player, item, args);
+                break;
+            case "clear":
+                handleClear(player, item);
+                break;
+        }
+
+        return true;
+    }
+
+    private boolean checkPermissions(Player player) {
+        if (!checkAndSetCooldownWithMessage(player, OpenCreative.getSettings().getGroups().getGroup(player), CooldownUtils.CooldownType.GENERIC_COMMAND)) {
+            return false;
+        }
+
+        if (player.hasPermission("opencreative.edit.bypass")) return true;
+
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+        if (planet == null) {
+            player.sendMessage(getLocaleMessage("only-in-world"));
+            return false;
+        }
+        if (!(planet.isOwner(player) || planet.getWorldPlayers().canDevelop(player) || planet.getWorldPlayers().canBuild(player))) {
+            player.sendMessage(getLocaleMessage("not-owner"));
+            return false;
+        }
+
+        return true;
+    }
+
+    private String joinArgs(String[] args, int fromIndex) {
+        return String.join(" ", Arrays.copyOfRange(args, fromIndex, args.length));
+    }
+
+    private void handleSetName(Player player, ItemStack item, String[] args) {
+        ItemMeta meta = item.getItemMeta();
+        if (args.length == 1) {
+            if (!meta.hasDisplayName()) {
+                player.sendMessage(getLocaleMessage("commands.edit.item"));
+                return;
+            }
+            player.sendMessage(meta.displayName().clickEvent(ClickEvent.suggestCommand(meta.getDisplayName())));
         } else {
-            int cooldown = getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND);
-            if (cooldown > 0) {
-                sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(cooldown)));
-                return true;
+            String newName = ChatColor.translateAlternateColorCodes('&', joinArgs(args, 1));
+            if (ChatColor.stripColor(newName).length() >= TEXT_LIMIT) {
+                player.sendMessage(toComponent(getLocaleMessage("commands.edit.text-limit").replace("%limit%",String.valueOf(TEXT_LIMIT))));
+                return;
             }
-            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
-            if (!player.hasPermission("opencreative.edit.bypass")) {
-                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-                if (planet == null) {
-                    player.sendMessage(getLocaleMessage("only-in-world"));
-                    return true;
-                }
-                if (!(planet.isOwner(player) || planet.getWorldPlayers().canDevelop(player) || planet.getWorldPlayers().canBuild(player))) {
-                    player.sendMessage(getLocaleMessage("not-owner"));
-                    return true;
-                }
+            meta.setDisplayName(newName);
+            item.setItemMeta(meta);
+            player.sendMessage(toComponent(getLocaleMessage("commands.edit.renamed").replace("%name%", newName)).clickEvent(ClickEvent.suggestCommand(newName)));
+        }
+    }
+
+    private void handleSetLore(Player player, ItemStack item, String[] args) {
+        ItemMeta meta = item.getItemMeta();
+        if (args.length == 1) {
+            player.sendMessage(getLocaleMessage("commands.edit.item"));
+            return;
+        }
+        int lineNumber = 1;
+        try {
+            lineNumber = Integer.parseInt(args[1]);
+            if (lineNumber < 1) {
+                lineNumber = 1;
+            } else if (lineNumber >= LINES_LIMIT) {
+                player.sendMessage(toComponent(getLocaleMessage("commands.edit.lines-limit").replace("%limit%",String.valueOf(LINES_LIMIT))));
+                return;
             }
-            if (args.length == 0) {
-                sender.sendMessage(getLocaleMessage("commands.edit.help"));
-                return true;
-            }
-            ItemStack item = player.getInventory().getItemInMainHand();
-            ItemMeta meta = item.getItemMeta();
-            if (item.getType().isAir() || meta == null) {
-                sender.sendMessage(getLocaleMessage("commands.edit.item"));
-                return true;
-            }
-            switch (args[0].toLowerCase()) {
-                case "name": {
-                    if (args.length == 1) {
-                        if (!meta.hasDisplayName()) {
-                            sender.sendMessage(getLocaleMessage("commands.edit.item"));
-                            return true;
-                        }
-                        sender.sendMessage(meta.displayName().clickEvent(ClickEvent.suggestCommand(meta.getDisplayName())));
-                    } else {
-                        String newName = ChatColor.translateAlternateColorCodes('&',String.join(" ", Arrays.copyOfRange(args,1,args.length)));
-                        if (ChatColor.stripColor(newName).length() >= TEXT_LIMIT) {
-                            sender.sendMessage(toComponent(getLocaleMessage("commands.edit.text-limit").replace("%limit%",String.valueOf(TEXT_LIMIT))));
-                            return true;
-                        }
-                        meta.setDisplayName(newName);
-                        item.setItemMeta(meta);
-                        sender.sendMessage(toComponent(getLocaleMessage("commands.edit.renamed").replace("%name%", newName)).clickEvent(ClickEvent.suggestCommand(newName)));
-                    }
-                    break;
-                }
-                case "lore", "setlore": {
-                    if (args.length == 1) {
-                        sender.sendMessage(getLocaleMessage("commands.edit.item"));
-                        return true;
-                    }
-                    int lineNumber = 1;
-                    try {
-                        lineNumber = Integer.parseInt(args[1]);
-                        if (lineNumber < 1) {
-                            lineNumber = 1;
-                        } else if (lineNumber >= LINES_LIMIT) {
-                            sender.sendMessage(toComponent(getLocaleMessage("commands.edit.lines-limit").replace("%limit%",String.valueOf(LINES_LIMIT))));
-                            return true;
-                        }
-                    } catch (NumberFormatException ignored) {}
-                    String newLoreLine = ChatColor.translateAlternateColorCodes('&',String.join(" ", Arrays.copyOfRange(args,2,args.length)));
-                    if (ChatColor.stripColor(newLoreLine).length() >= TEXT_LIMIT) {
-                        sender.sendMessage(toComponent(getLocaleMessage("commands.edit.text-limit").replace("%limit%",String.valueOf(TEXT_LIMIT))));
-                        return true;
-                    }
-                    List<String> newLore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
-                    if (newLore.size() < lineNumber) {
-                        while (newLore.size() < lineNumber) {
-                            newLore.add(" ");
-                        }
-                    }
-                    if (args.length == 2) {
-                        sender.sendMessage(Component.text(newLore.get(lineNumber-1)).clickEvent(ClickEvent.suggestCommand(newLore.get(lineNumber-1))));
-                        return true;
-                    }
-                    newLore.set(lineNumber-1,newLoreLine);
-                    meta.setLore(newLore);
-                    item.setItemMeta(meta);
-                    sender.sendMessage(toComponent(getLocaleMessage("commands.edit.set-lore").replace("%number%",String.valueOf(lineNumber)).replace("%lore%", newLoreLine)).clickEvent(ClickEvent.suggestCommand(newLoreLine)));
-                    break;
-                }
-                case "addlore": {
-                    String newLoreLine = ChatColor.translateAlternateColorCodes('&',String.join(" ", Arrays.copyOfRange(args,1,args.length)));
-                    if (ChatColor.stripColor(newLoreLine).length() >= TEXT_LIMIT) {
-                        sender.sendMessage(toComponent(getLocaleMessage("commands.edit.text-limit").replace("%limit%",String.valueOf(TEXT_LIMIT))));
-                        return true;
-                    }
-                    List<String> newLore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
-                    if (newLore.size() >= LINES_LIMIT) {
-                        sender.sendMessage(toComponent(getLocaleMessage("commands.edit.lines-limit").replace("%limit%",String.valueOf(LINES_LIMIT))));
-                        return true;
-                    }
-                    newLore.add(newLoreLine);
-                    meta.setLore(newLore);
-                    item.setItemMeta(meta);
-                    sender.sendMessage(toComponent(getLocaleMessage("commands.edit.set-lore").replace("%number%",String.valueOf(newLore.size())).replace("%lore%", newLoreLine)).clickEvent(ClickEvent.suggestCommand(newLoreLine)));
-                    break;
-                }
-                case "removelore", "deletelore", "dellore", "remlore": {
-                    if (args.length == 1) {
-                        sender.sendMessage(getLocaleMessage("commands.edit.item"));
-                        return true;
-                    }
-                    int lineNumber = 1;
-                    try {
-                        lineNumber = Integer.parseInt(args[1]);
-                        if (lineNumber < 1) {
-                            lineNumber = 1;
-                        } else if (lineNumber >= LINES_LIMIT) {
-                            sender.sendMessage(toComponent(getLocaleMessage("commands.edit.lines-limit").replace("%limit%",String.valueOf(LINES_LIMIT))));
-                            return true;
-                        }
-                    } catch (NumberFormatException ignored) {}
-                    List<String> newLore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
-                    if (newLore.size() >= lineNumber) {
-                        newLore.remove(lineNumber-1);
-                    }
-                    meta.setLore(newLore);
-                    item.setItemMeta(meta);
-                    sender.sendMessage(toComponent(getLocaleMessage("commands.edit.removed-lore").replace("%number%",String.valueOf(lineNumber))));
-                    break;
-                }
-                case "clear": {
-                    meta.displayName(null);
-                    meta.lore(null);
-                    item.setItemMeta(meta);
-                    sender.sendMessage(toComponent(getLocaleMessage("commands.edit.cleared")));
-                    break;
-                }
+        } catch (NumberFormatException ignored) {}
+        String newLoreLine = ChatColor.translateAlternateColorCodes('&', joinArgs(args, 1));
+        if (ChatColor.stripColor(newLoreLine).length() >= TEXT_LIMIT) {
+            player.sendMessage(toComponent(getLocaleMessage("commands.edit.text-limit").replace("%limit%",String.valueOf(TEXT_LIMIT))));
+            return;
+        }
+        List<String> newLore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
+        if (newLore.size() < lineNumber) {
+            while (newLore.size() < lineNumber) {
+                newLore.add(" ");
             }
         }
-        return true;
+        if (args.length == 2) {
+            player.sendMessage(Component.text(newLore.get(lineNumber-1)).clickEvent(ClickEvent.suggestCommand(newLore.get(lineNumber-1))));
+            return;
+        }
+        newLore.set(lineNumber-1,newLoreLine);
+        meta.setLore(newLore);
+        item.setItemMeta(meta);
+        player.sendMessage(toComponent(getLocaleMessage("commands.edit.set-lore").replace("%number%",String.valueOf(lineNumber)).replace("%lore%", newLoreLine)).clickEvent(ClickEvent.suggestCommand(newLoreLine)));
+    }
+
+    private void handleAddLore(Player player, ItemStack item, String[] args) {
+        ItemMeta meta = item.getItemMeta();
+        String newLoreLine = ChatColor.translateAlternateColorCodes('&', joinArgs(args, 1));
+        if (ChatColor.stripColor(newLoreLine).length() >= TEXT_LIMIT) {
+            player.sendMessage(toComponent(getLocaleMessage("commands.edit.text-limit").replace("%limit%",String.valueOf(TEXT_LIMIT))));
+            return;
+        }
+        List<String> newLore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
+        if (newLore.size() >= LINES_LIMIT) {
+            player.sendMessage(toComponent(getLocaleMessage("commands.edit.lines-limit").replace("%limit%",String.valueOf(LINES_LIMIT))));
+            return;
+        }
+        newLore.add(newLoreLine);
+        meta.setLore(newLore);
+        item.setItemMeta(meta);
+        player.sendMessage(toComponent(getLocaleMessage("commands.edit.set-lore").replace("%number%",String.valueOf(newLore.size())).replace("%lore%", newLoreLine)).clickEvent(ClickEvent.suggestCommand(newLoreLine)));
+    }
+
+    private void handleRemoveLore(Player player, ItemStack item, String[] args) {
+        ItemMeta meta = item.getItemMeta();
+        if (args.length == 1) {
+            player.sendMessage(getLocaleMessage("commands.edit.item"));
+            return;
+        }
+        int lineNumber = 1;
+        try {
+            lineNumber = Integer.parseInt(args[1]);
+            if (lineNumber < 1) {
+                lineNumber = 1;
+            } else if (lineNumber >= LINES_LIMIT) {
+                player.sendMessage(toComponent(getLocaleMessage("commands.edit.lines-limit").replace("%limit%",String.valueOf(LINES_LIMIT))));
+                return;
+            }
+        } catch (NumberFormatException ignored) {}
+        List<String> newLore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
+        if (newLore.size() >= lineNumber) {
+            newLore.remove(lineNumber-1);
+        }
+        meta.setLore(newLore);
+        item.setItemMeta(meta);
+        player.sendMessage(toComponent(getLocaleMessage("commands.edit.removed-lore").replace("%number%",String.valueOf(lineNumber))));
+
+    }
+
+    private void handleClear(Player player, ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        meta.displayName(null);
+        meta.lore(null);
+        item.setItemMeta(meta);
+        player.sendMessage(toComponent(getLocaleMessage("commands.edit.cleared")));
     }
 
     @Override

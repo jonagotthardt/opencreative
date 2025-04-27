@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.menus.blocks;
 
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
@@ -45,9 +46,9 @@ public class SelectionActionsMenu extends AbstractMenu {
     private final Player player;
     private final Location signLocation;
 
-    private final ItemStack varCondition = createItem(Material.OBSIDIAN,1,"items.developer.condition-var");
-    private final ItemStack playerCondition = createItem(Material.OAK_PLANKS,1,"items.developer.condition-player");
-    private final ItemStack entityCondition = createItem(Material.BRICKS,1,"items.developer.condition-entity");
+    private final ItemStack varCondition = createItem(Material.OBSIDIAN,1,"items.developer.variable-condition");
+    private final ItemStack playerCondition = createItem(Material.OAK_PLANKS,1,"items.developer.player-condition");
+    private final ItemStack entityCondition = createItem(Material.BRICKS,1,"items.developer.entity-condition");
 
     private final ItemStack defaultItem = createItem(Target.RANDOM_TARGET.getIcon(),1,"menus.developer.selection.items.default");
     private final ItemStack allPlayers = createItem(Target.ALL_PLAYERS.getIcon(),1,"menus.developer.selection.items.all-players");
@@ -89,11 +90,11 @@ public class SelectionActionsMenu extends AbstractMenu {
         ItemStack currentItem = event.getCurrentItem();
         if (currentItem == null) return;
         if (itemEquals(currentItem, playerCondition)) {
-            new PlayerConditionsMenu(player,signLocation).open(player);
+            new BlocksCategorySelectionMenu(player,signLocation, ActionCategory.PLAYER_CONDITION).open(player);
         } else if (itemEquals(currentItem, entityCondition)) {
-            new EntityConditionsMenu(player,signLocation).open(player);
+            new BlocksCategorySelectionMenu(player,signLocation, ActionCategory.ENTITY_CONDITION).open(player);
         } else if (itemEquals(currentItem, varCondition)) {
-            new VariableConditionsMenu(player,signLocation).open(player);
+            new BlocksCategorySelectionMenu(player,signLocation, ActionCategory.VARIABLE_CONDITION).open(player);
         } else if (itemEquals(currentItem, allPlayers)) {
             setLine("all_players");
             Sounds.DEV_SET_TARGET.play(player);

@@ -23,6 +23,7 @@ import org.bukkit.boss.KeyedBossBar;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.player.PlayerLobbyEvent;
+import ua.mcchickenstudio.opencreative.indev.Wander;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.async.AsyncScheduler;
@@ -266,8 +267,8 @@ public class PlayerUtils {
                 for (Player player : block.getLocation().getWorld().getPlayers()) {
                     player.sendSignChange(block.getLocation(), newLines);
                 }
-            }, 100, TimeUnit.MILLISECONDS);
-        });
+            }, AsyncScheduler.getScheduler(), 100, TimeUnit.MILLISECONDS);
+        }, AsyncScheduler.getScheduler());
     }
 
     /**

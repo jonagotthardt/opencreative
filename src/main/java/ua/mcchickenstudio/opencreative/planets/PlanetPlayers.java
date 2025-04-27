@@ -263,6 +263,7 @@ public class PlanetPlayers {
     }
 
     public void addDeveloperGuest(String nickname) {
+        if (getAllDevelopers().size() > planet.getLimits().getDevelopersLimit()) return;
         Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
             Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
@@ -280,6 +281,7 @@ public class PlanetPlayers {
         setPlanetConfigParameter(planet,"players.developers.trusted",developersTrusted);    }
 
     public void addDeveloper(String nickname, boolean trusted) {
+        if (getAllDevelopers().size() > planet.getLimits().getDevelopersLimit()) return;
         Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
             Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
@@ -309,6 +311,7 @@ public class PlanetPlayers {
 
 
     public void addBuilder(String nickname, boolean trusted) {
+        if (getAllBuilders().size() > planet.getLimits().getBuildersLimit()) return;
         Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
             Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
@@ -344,6 +347,7 @@ public class PlanetPlayers {
 
     public void banPlayer(String nickname) {
         if (planet.isOwner(nickname)) return;
+        if (getBannedPlayers().size() > planet.getLimits().getBlacklistedLimit()) return;
         Player player = Bukkit.getPlayer(nickname);
         if (player != null && !player.hasPermission("opencreative.world.ban.bypass")) {
             Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);

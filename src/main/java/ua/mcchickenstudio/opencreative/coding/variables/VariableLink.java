@@ -20,29 +20,44 @@ package ua.mcchickenstudio.opencreative.coding.variables;
 
 
 import org.bukkit.ChatColor;
+import org.jetbrains.annotations.NotNull;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
+ * <h1>VariableLink</h1>
  * This class represents a link to existing or not existing world variable.
  * Links, as variables, have specified name and type. It's used for searching
  * and getting variables values.
  */
-public class VariableLink {
+public final class VariableLink {
 
-    private final String name;
-    private final VariableType type;
+    private final @NotNull String name;
+    private final @NotNull VariableType type;
 
-    public VariableLink(String name, VariableType type) {
+    /**
+     * Creates instance of variable link.
+     * @param name name of variable.
+     * @param type type of variable (local, global, saved).
+     */
+    public VariableLink(@NotNull String name, @NotNull VariableType type) {
         this.name = name;
         this.type = type;
     }
 
-    public VariableType getVariableType() {
+    /**
+     * Returns type of variable (local, global, saved).
+     * @return type of variable.
+     */
+    public @NotNull VariableType getVariableType() {
         return type;
     }
 
-    public String getName() {
+    /**
+     * Returns name of variable.
+     * @return name of variable.
+     */
+    public @NotNull String getName() {
         return name;
     }
 
@@ -51,39 +66,24 @@ public class VariableLink {
         /**
          * Local variables are stored per code line (main action handler).
          */
-        LOCAL(1,ChatColor.RED),
+        LOCAL(ChatColor.RED),
         /**
          * Global variables are stored when world is loaded.
          */
-        GLOBAL(2,ChatColor.YELLOW),
+        GLOBAL(ChatColor.YELLOW),
         /**
          * Saved variables will be stored forever.
          */
-        SAVED(3,ChatColor.GREEN);
+        SAVED(ChatColor.GREEN);
 
         private final ChatColor color;
-        private final int id;
 
-        VariableType(int id, ChatColor color) {
-            this.id = id;
+        VariableType(ChatColor color) {
             this.color = color;
         }
 
         public ChatColor getColor() {
             return color;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public static VariableType getById(int id) {
-            for (VariableType type : values()) {
-                if (type.getId() == id) {
-                    return type;
-                }
-            }
-            return LOCAL;
         }
 
         public static VariableType getEnum(String string) {

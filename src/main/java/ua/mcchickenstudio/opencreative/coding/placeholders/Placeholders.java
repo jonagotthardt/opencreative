@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.placeholders;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 
@@ -121,7 +122,7 @@ public class Placeholders {
      * @param action action.
      * @return parsed text.
      */
-    public String parsePlaceholders(String text, ActionsHandler handler, Action action) {
+    public @NotNull String parsePlaceholders(String text, ActionsHandler handler, Action action) {
         text = text.replace("\\n","\n");
         try {
             for (Placeholder placeholder : placeholders) {
