@@ -81,7 +81,7 @@ public class WorldEnvironmentMenu extends AbstractMenu {
     }
 
     private ItemStack createInfoItem() {
-        ItemStack item = createItem(Material.AMETHYST_CLUSTER,1,"menus.developer.environment.items.info");
+        ItemStack info = createItem(Material.AMETHYST_CLUSTER,1,"menus.developer.environment.items.info");
         replacePlaceholderInLore(info,"%executors%", devPlanet.getPlanet().getTerritory().getScript().getExecutors().getExecutorsList().size());
         replacePlaceholderInLore(info,"%scoreboards%", devPlanet.getPlanet().getTerritory().getScoreboards().size());
         replacePlaceholderInLore(info,"%scoreboards-limit%", devPlanet.getPlanet().getLimits().getScoreboardsLimit());
@@ -92,7 +92,7 @@ public class WorldEnvironmentMenu extends AbstractMenu {
         replacePlaceholderInLore(info,"%executor-calls-limit%", devPlanet.getPlanet().getLimits().getCodeOperationsLimit());
         replacePlaceholderInLore(info,"%planetID%", devPlanet.getPlanet().getId());
         replacePlaceholderInLore(info,"%version%", OpenCreative.getVersion());
-        return item;
+        return info;
     }
 
     private ItemStack createPlatformsItem() {
@@ -101,8 +101,8 @@ public class WorldEnvironmentMenu extends AbstractMenu {
             int limit = devPlanet.getPlanet().getLimits().getCodingPlatformsLimit();
             ItemStack item = createItem(Material.NETHER_STAR,1,"menus.developer.environment.items." +
                      (amount >= limit ? "create-platform-limit" : "create-platform"), (amount >= limit ? "" : "platform"));
-            replacePlaceholderInLore(info,"%limit%", limit);
-            replacePlaceholderInLore(info,"%amount%", amount);
+            replacePlaceholderInLore(item,"%limit%", limit);
+            replacePlaceholderInLore(item,"%amount%", amount);
             return item;
         } else {
             return DECORATION_ITEM;

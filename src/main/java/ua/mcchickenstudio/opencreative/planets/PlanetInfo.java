@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.planets;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -166,7 +167,7 @@ public class PlanetInfo {
     }
 
     public Component displayName() {
-        return LegacyComponentSerializer.legacySection().deserialize(displayName);
+        return LegacyComponentSerializer.legacySection().deserialize(displayName).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
     }
 
     public Component description() {
