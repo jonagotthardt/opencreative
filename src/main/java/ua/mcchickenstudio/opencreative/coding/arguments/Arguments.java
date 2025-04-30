@@ -301,6 +301,17 @@ public class Arguments {
     }
 
     @SuppressWarnings("unchecked")
+    public final List<Component> getComponentList(String path, Action action) {
+        List<Component> list = new ArrayList<>();
+        List<String> texts = getTextList(path,action);
+        for (String text : texts) {
+            list.add(textToComponent(text));
+        }
+        sendCodingDebugVariable(planet,path,list);
+        return list;
+    }
+
+    @SuppressWarnings("unchecked")
     public final List<Double> getNumbersList(String path, Action action) {
         List<Double> list = new ArrayList<>();
         Argument arg = getArg(path);
@@ -512,6 +523,10 @@ public class Arguments {
         }
         sendCodingDebugVariable(planet,path,arg.getValue(action));
         String text = arg.getValue(action).toString();
+        return textToComponent(text);
+    }
+
+    public Component textToComponent(String text) {
         try {
             if (text.contains("§")) {
                 return LegacyComponentSerializer.legacySection().deserialize(text);

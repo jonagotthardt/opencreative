@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.communication;
 
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -27,6 +29,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.coding.exceptions.TooLongTextException;
 
 import java.util.List;
 
@@ -38,29 +41,26 @@ public final class SendMessageAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        String type = getArguments().getValue("type","new-line",this);
-        List<String> messages = getArguments().getTextList("messages",this);
-        String message;
-        if (type.equals("new-line")) {
-            message = String.join("\n",messages);
-        } else if (type.equals("join-spaces")) {
-            message = String.join(" ",messages);
-        } else {
-            message = String.join("",messages);
-        }
-        if (message.length() > 1024) {
-            throw new RuntimeException("Can't send message with length above 1024 symbols.");
-        }
-        if (message.contains("§")) {
-            player.sendMessage(message);
-        } else {
-            Component miniMessage = MiniMessage.miniMessage().deserialize(message);
-            ClickEvent clickEvent = miniMessage.clickEvent();
-            if (clickEvent != null && clickEvent.action() == ClickEvent.Action.RUN_COMMAND) {
-                miniMessage = miniMessage.clickEvent(null);
+        String separator = getArguments().getValue("type","new-line",this);
+        List<Component> messages = getArguments().getComponentList("messages",this);
+        TextComponent.Builder builder = Component.text();
+        Component separatorComponent = switch (separator) {
+            case "new-line" -> Component.newline();
+            case "join-spaces" -> Component.space();
+            default -> Component.empty();
+        };
+        for (int i = 0; i < messages.size(); i++) {
+            builder.append(messages.get(i));
+            if (i != messages.size()-1) {
+                builder.append(separatorComponent);
             }
-            player.sendMessage(miniMessage);
         }
+        Component message = builder.build();
+        String plainText = PlainTextComponentSerializer.plainText().serialize(message);
+        if (plainText.length() > 1024) {
+            throw new TooLongTextException(1024);
+        }
+        player.sendMessage(message);
     }
 
 

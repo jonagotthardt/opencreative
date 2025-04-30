@@ -18,12 +18,18 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.communication;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.coding.exceptions.TooLongTextException;
+
+import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 
@@ -34,7 +40,17 @@ public final class ShowActionbarAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        player.sendActionBar(toComponent(String.join("", getArguments().getTextList("actionbar",this))));
+        List<Component> components = getArguments().getComponentList("actionbar",this);
+        TextComponent.Builder builder = Component.text();
+        for (Component component : components) {
+            builder.append(component);
+        }
+        Component actionbar = builder.build();
+        String plainText = PlainTextComponentSerializer.plainText().serialize(actionbar);
+        if (plainText.length() > 1024) {
+            throw new TooLongTextException(1024);
+        }
+        player.sendActionBar(actionbar);
     }
 
 

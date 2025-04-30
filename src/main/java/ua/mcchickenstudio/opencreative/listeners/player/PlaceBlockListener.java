@@ -18,6 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 
@@ -45,6 +49,64 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
 public final class PlaceBlockListener implements Listener {
+
+    @EventHandler
+    public void onChestPlace(BlockPlaceEvent event) {
+        /*
+         * Removes container items, that are located
+         * in container item to prevent a server crash.
+         */
+        if (event.isCancelled()) return;
+        ItemStack item = event.getItemInHand();
+        if (!(item.getItemMeta() instanceof BlockStateMeta meta)) return;
+        if (!(meta.getBlockState() instanceof InventoryHolder container)) return;
+        for (ItemStack insideItem : container.getInventory().getContents()) {
+            if (insideItem != null && insideItem.getItemMeta() instanceof BlockStateMeta insideMeta
+            && insideMeta.getBlockState() instanceof InventoryHolder) {
+                container.getInventory().remove(insideItem);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onChest(PlayerItemHeldEvent event) {
+        /*
+         * Removes container items, that are located
+         * in container item to prevent a server crash.
+         */
+        if (event.isCancelled()) return;
+        ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
+        if (!(item.getItemMeta() instanceof BlockStateMeta meta)) return;
+        if (!(meta.getBlockState() instanceof InventoryHolder container)) return;
+        for (ItemStack insideItem : container.getInventory().getContents()) {
+            if (insideItem != null && insideItem.getItemMeta() instanceof BlockStateMeta insideMeta
+                    && insideMeta.getBlockState() instanceof InventoryHolder) {
+                container.getInventory().remove(insideItem);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onChestOpen(InventoryOpenEvent event) {
+        /*
+         * Removes container items, that are located
+         * in container item to prevent a server crash.
+         */
+        if (event.isCancelled()) return;
+        if (event.getInventory().getLocation() == null) return;
+        List<ItemStack> itemsToRemove = new ArrayList<>();
+        for (ItemStack insideItem : event.getInventory().getContents()) {
+            if (insideItem != null && insideItem.getItemMeta() instanceof BlockStateMeta insideMeta
+                    && insideMeta.getBlockState() instanceof InventoryHolder) {
+                itemsToRemove.add(insideItem);
+            }
+        }
+        if (itemsToRemove.size() > 3) {
+            for (ItemStack item : itemsToRemove) {
+                event.getInventory().remove(item);
+            }
+        }
+    }
 
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
