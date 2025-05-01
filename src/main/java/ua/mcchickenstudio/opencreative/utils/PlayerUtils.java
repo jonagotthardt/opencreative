@@ -83,6 +83,7 @@ public class PlayerUtils {
         player.removeResourcePacks();
         player.releaseLeftShoulderEntity();
         player.releaseRightShoulderEntity();
+        player.eject();
         player.setSimulationDistance(Bukkit.getSimulationDistance());
         player.setViewDistance(Math.min(player.getClientViewDistance(),Bukkit.getViewDistance()));
         player.setWorldBorder(player.getWorld().getWorldBorder());

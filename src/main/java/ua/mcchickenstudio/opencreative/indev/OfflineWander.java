@@ -52,6 +52,7 @@ public class OfflineWander {
     protected @Nullable Gender gender;
     protected @Nullable List<Integer> favoriteWorlds;
     protected int lastPlayedWorldId = -1;
+    protected boolean hideHints;
 
     public OfflineWander(@NotNull UUID uuid) {
         this.uuid = uuid;
@@ -89,6 +90,10 @@ public class OfflineWander {
 
     public int getLastPlayedWorldId() {
         return lastPlayedWorldId;
+    }
+
+    public boolean isHideHints() {
+        return hideHints;
     }
 
     public @NotNull List<Integer> getFavoriteWorlds() {
@@ -175,6 +180,10 @@ public class OfflineWander {
                 this.lastPlayedWorldId = json.get("lastPlayedWorldId").getAsInt();
             }
 
+            if (json.has("hideHints")) {
+                this.hideHints = json.get("hideHints").getAsBoolean();
+            }
+
         } catch (Exception error) {
             sendDebugError("Failed to load info for wander " + uuid, error);
         }
@@ -217,6 +226,7 @@ public class OfflineWander {
         }
         if (!favoriteWorlds.isEmpty()) json.add("favoriteWorlds", favoriteWorlds);
         if (lastPlayedWorldId != -1) json.addProperty("lastPlayedWorldId", lastPlayedWorldId);
+        if (hideHints) json.addProperty("hideHints", hideHints);
         return json;
     }
 

@@ -71,12 +71,12 @@ public final class ClickListener implements Listener {
     }
 
     @EventHandler
-    public void onCraft(PlayerItemDamageEvent event) {
+    public void onItemDamage(PlayerItemDamageEvent event) {
         new PlayerItemDamagedEvent(event.getPlayer(),event).callEvent();
     }
 
     @EventHandler
-    public void click(InventoryClickEvent event) {
+    public void onClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
 
         Planet planet1 = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
@@ -310,18 +310,5 @@ public final class ClickListener implements Listener {
     public void onSlotChange(PlayerItemHeldEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) new SlotChangeEvent(event.getPlayer(),event).callEvent();
-    }
-
-    private static ItemStack getHeadItem(String internal) {
-        PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
-        Set<ProfileProperty> propertySet = profile.getProperties();
-        propertySet.add(new ProfileProperty("textures", internal));
-        profile.setProperties(propertySet);
-
-        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
-        SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
-        skullMeta.setPlayerProfile(profile);
-        head.setItemMeta(skullMeta);
-        return head;
     }
 }
