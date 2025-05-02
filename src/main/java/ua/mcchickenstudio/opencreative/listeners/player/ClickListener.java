@@ -38,6 +38,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import ua.mcchickenstudio.opencreative.menus.buttons.RadioButton;
 import ua.mcchickenstudio.opencreative.planets.*;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
+import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerConfirmation;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
@@ -57,6 +58,20 @@ public final class ClickListener implements Listener {
     public void onCraft(CraftItemEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) return;
         new PlayerItemCraftEvent(player,event).callEvent();
+    }
+
+    @EventHandler
+    public void onChestOpen(InventoryOpenEvent event) {
+        /*
+         * Removes container items, that are located
+         * in container item to prevent a server crash.
+         */
+        if (event.isCancelled()) return;
+        if (event.getInventory().getLocation() == null) return;
+        for (ItemStack insideItem : event.getInventory().getContents()) {
+            if (insideItem == null) continue;
+            ItemUtils.fixItem(insideItem);
+        }
     }
 
     @EventHandler
@@ -302,6 +317,8 @@ public final class ClickListener implements Listener {
 
     @EventHandler
     public void onItemBreak(PlayerItemBreakEvent event) {
+        ItemUtils.fixItem(event.getPlayer().getInventory().getItemInMainHand());
+        ItemUtils.fixItem(event.getPlayer().getInventory().getItemInOffHand());
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) new ItemBreakEvent(event.getPlayer(),event).callEvent();
     }

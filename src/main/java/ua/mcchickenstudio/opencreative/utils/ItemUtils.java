@@ -18,6 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
+import net.kyori.adventure.inventory.Book;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.meta.BlockStateMeta;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import net.kyori.adventure.text.Component;
@@ -36,6 +41,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebug;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebugError;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemDescription;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemName;
 
@@ -333,4 +340,58 @@ public class ItemUtils {
         return newItem;
     }
 
+    /**
+     * Removes bad things from item: enchants with big level,
+     * attribute modifiers, books with a lot of pages,
+     * containers with containers; or replaces items with air.
+     * @param item item to fix.
+     */
+    public static ItemStack fixItem(@NotNull ItemStack item) {
+        try {
+            ItemMeta meta = item.getItemMeta();
+            if (meta == null) return item;
+            if (meta.hasEnchants()) {
+                List<Enchantment> badEnchants = new ArrayList<>();
+                for (Enchantment enchant : meta.getEnchants().keySet()) {
+                    if (meta.getEnchantLevel(enchant) > 10) {
+                        badEnchants.add(enchant);
+                    }
+                }
+                for (Enchantment enchantment : badEnchants) {
+                    meta.removeEnchant(enchantment);
+                }
+                item.setItemMeta(meta);
+                sendDebug("Cleared enchants");
+            }
+            if (meta.hasAttributeModifiers() && meta.getAttributeModifiers() != null) {
+                Set<Attribute> attributes = meta.getAttributeModifiers().keySet();
+                for (Attribute attribute : attributes) {
+                    meta.removeAttributeModifier(attribute);
+                }
+                sendDebug("Cleared attributes");
+            }
+            if (meta instanceof BlockStateMeta blockMeta && blockMeta.getBlockState() instanceof InventoryHolder holder) {
+                // If item is Chest or Shulker
+                int insideLimit = 3;
+                int insideContainers = 0;
+                for (ItemStack insideItem : holder.getInventory().getContents()) {
+                    if (insideItem == null) continue;
+                    if (insideItem instanceof BlockStateMeta insideMeta && insideMeta.getBlockState() instanceof InventoryHolder insideHolder && !insideHolder.getInventory().isEmpty()) {
+                        insideContainers++;
+                        if (insideContainers > insideLimit) break;
+                    }
+                }
+                if (insideContainers > insideLimit) {
+                    item.setType(Material.AIR);
+                    sendDebug("Cleared container");
+                }
+            } else if (item instanceof Book book && book.pages().size() > 50) {
+                item.setType(Material.AIR);
+                sendDebug("Cleared book");
+            }
+        } catch (Exception exception) {
+            sendDebugError("Can't fix item: " + item.toString(), exception);
+        }
+        return item;
+    }
 }
