@@ -22,6 +22,7 @@ import net.kyori.adventure.inventory.Book;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.meta.BlockStateMeta;
+import org.bukkit.inventory.meta.BookMeta;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
@@ -366,7 +367,7 @@ public class ItemUtils {
             if (meta.hasAttributeModifiers() && meta.getAttributeModifiers() != null) {
                 Set<Attribute> attributes = meta.getAttributeModifiers().keySet();
                 for (Attribute attribute : attributes) {
-                    meta.removeAttributeModifier(attribute);
+                    if (attribute != Attribute.GENERIC_ARMOR) meta.removeAttributeModifier(attribute);
                 }
                 sendDebug("Cleared attributes");
             }
@@ -378,8 +379,10 @@ public class ItemUtils {
                     if (insideItem == null) continue;
                     if (insideItem instanceof BlockStateMeta insideMeta && insideMeta.getBlockState() instanceof InventoryHolder insideHolder && !insideHolder.getInventory().isEmpty()) {
                         insideContainers++;
-                        if (insideContainers > insideLimit) break;
+                    } else if (insideItem.getItemMeta() instanceof BookMeta book) {
+                        insideContainers++;
                     }
+                    if (insideContainers > insideLimit) break;
                 }
                 if (insideContainers > insideLimit) {
                     item.setType(Material.AIR);

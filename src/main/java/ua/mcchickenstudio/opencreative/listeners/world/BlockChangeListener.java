@@ -30,6 +30,7 @@ import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.inventory.BrewingStandFuelEvent;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -183,6 +184,11 @@ public final class BlockChangeListener implements Listener {
         event.setItem(ItemUtils.fixItem(event.getItem()));
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
         if (planet != null) new BlockDispensedEvent(planet, event).callEvent();
+    }
+
+    @EventHandler
+    public void onBlockDispense(InventoryMoveItemEvent event) {
+        event.setItem(ItemUtils.fixItem(event.getItem()));
     }
 
     @EventHandler

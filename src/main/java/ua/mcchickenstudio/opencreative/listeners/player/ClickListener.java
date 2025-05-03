@@ -106,7 +106,13 @@ public final class ClickListener implements Listener {
 
         if (event.getCurrentItem() != null) {
             ItemStack item = event.getCurrentItem();
-            ItemMeta meta = item.getItemMeta();
+            if (event.getClickedInventory() != null) {
+                InventoryHolder clickedHolder = event.getClickedInventory().getHolder();
+                InventoryHolder eventHolder = event.getInventory().getHolder();
+                if (clickedHolder != null && clickedHolder.equals(eventHolder)) {
+                    ItemUtils.fixItem(item);
+                }
+            }
 
            if (event.getInventory().getHolder() instanceof WorldSettingsPlayersMenu) {
             event.setCancelled(true);
@@ -228,6 +234,8 @@ public final class ClickListener implements Listener {
 
     @EventHandler
     public void onSwap(PlayerSwapHandItemsEvent event) {
+        ItemUtils.fixItem(event.getPlayer().getInventory().getItemInMainHand());
+        ItemUtils.fixItem(event.getPlayer().getInventory().getItemInOffHand());
         Player player = event.getPlayer();
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
@@ -325,6 +333,8 @@ public final class ClickListener implements Listener {
 
     @EventHandler
     public void onSlotChange(PlayerItemHeldEvent event) {
+        ItemUtils.fixItem(event.getPlayer().getInventory().getItemInMainHand());
+        ItemUtils.fixItem(event.getPlayer().getInventory().getItemInOffHand());
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) new SlotChangeEvent(event.getPlayer(),event).callEvent();
     }
