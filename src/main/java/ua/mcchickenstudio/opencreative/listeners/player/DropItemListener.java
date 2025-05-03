@@ -30,6 +30,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.Ite
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.ItemPickupEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 
@@ -63,6 +64,11 @@ public final class DropItemListener implements Listener {
 
     @EventHandler
     public void onPlayerPickupItem(EntityPickupItemEvent event) {
+        ItemStack item = ItemUtils.fixItem(event.getItem().getItemStack());
+        if (item.getType().isAir()) {
+            event.setCancelled(true);
+        }
+        event.getItem().setItemStack(item);
         if (!(event.getEntity() instanceof Player player)) return;
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet != null) new ItemPickupEvent(player,event).callEvent();

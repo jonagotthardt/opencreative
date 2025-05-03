@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.listeners.entity;
 
+import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedEntitiesEvent;
@@ -37,6 +38,7 @@ import org.bukkit.event.entity.EntityPlaceEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
+import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.sendMessageOnce;
@@ -47,6 +49,14 @@ public final class EntitySpawnListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEntitySpawn(EntitySpawnEvent event) {
+        if (event.getEntity() instanceof Item item) {
+            ItemStack newItem = ItemUtils.fixItem(item.getItemStack());
+            if (newItem.getType().isAir()) {
+                event.setCancelled(true);
+            } else {
+                item.setItemStack(newItem);
+            }
+        }
         World world = event.getLocation().getWorld();
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(world);
         if (planet != null) {
