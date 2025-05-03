@@ -195,7 +195,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             if (args.length > 2) {
                                 try {
                                     page = Integer.parseInt(args[2]) - 1;
-                                    if (page < 0 || page * 20 > allVariables.size() || (page + 1) * 20 > allVariables.size()) {
+                                    if (page < 0 || page * 20 > allVariables.size()) {
                                         page = 0;
                                     }
                                 } catch (NumberFormatException ignored) {
@@ -204,7 +204,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             int current = Math.min(((page + 1) * 20), allVariables.size());
                             List<WorldVariable> variables = new ArrayList<>(allVariables.subList(page * 20, current));
                             Sounds.DEV_VAR_LIST.play(player);
-                            player.sendMessage(getLocaleMessage("environment.variables.list.header").replace("%current%", String.valueOf(current)).replace("%amount%", String.valueOf(variables.size())));
+                            player.sendMessage(getLocaleMessage("environment.variables.list.header").replace("%current%", String.valueOf(current)).replace("%amount%", String.valueOf(allVariables.size())));
                             for (WorldVariable variable : variables) {
                                 String name = variable.getName();
                                 VariableLink.VariableType type = variable.getVarType();
@@ -221,7 +221,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             if (page * 20 > 20) {
                                 navigation = navigation.append(toComponent(getLocaleMessage("environment.variables.list.previous-page")).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/environment variables list " + (page - 1))));
                             }
-                            if (allVariables.size() > current + 1) {
+                            if (allVariables.size() > current) {
                                 navigation = navigation.append(toComponent(getLocaleMessage("environment.variables.list.next-page")).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/environment variables list " + (page + 1))));
                             }
                             if (!toComponent(getLocaleMessage("environment.variables.list.navigation")).equals(navigation)) {

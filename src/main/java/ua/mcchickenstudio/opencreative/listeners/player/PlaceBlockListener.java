@@ -56,8 +56,7 @@ public final class PlaceBlockListener implements Listener {
     @EventHandler
     public void onChestPlace(BlockPlaceEvent event) {
         /*
-         * Removes container items, that are located
-         * in container item to prevent a server crash.
+         * Fixes container items.
          */
         if (event.isCancelled()) return;
         Block block = event.getBlock();
@@ -80,11 +79,11 @@ public final class PlaceBlockListener implements Listener {
             Block blockAgainst = event.getBlockAgainst();
 
             DevPlatform platform = devPlanet.getPlatformInLocation(event.getBlock().getLocation());
-            if (platform == null) {
+            if (platform == null || block.getY() < 1) {
                 event.setCancelled(true);
+                Sounds.DEV_NOT_ALLOWED.play(player);
                 return;
             }
-
             if (blockAgainst.getType() == platform.getFloorMaterial()) {
                 if (block.getType() == Material.PISTON && ((blockAgainst.getZ()-platform.getBeginZ()) % 4) == 0 && blockAgainst.getRelative(BlockFace.WEST).getType() == platform.getActionMaterial()) {
                     Directional directional = (Directional) block.getBlockData();
