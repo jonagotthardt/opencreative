@@ -333,8 +333,17 @@ public final class ClickListener implements Listener {
 
     @EventHandler
     public void onSlotChange(PlayerItemHeldEvent event) {
-        ItemUtils.fixItem(event.getPlayer().getInventory().getItemInMainHand());
-        ItemUtils.fixItem(event.getPlayer().getInventory().getItemInOffHand());
+        Player player = event.getPlayer();
+        int previousSlot = event.getPreviousSlot();
+        int newSlot = event.getNewSlot();
+        ItemStack previousItem = player.getInventory().getItem(previousSlot);
+        ItemStack newItem = player.getInventory().getItem(newSlot);
+        if (previousItem != null) {
+            player.getInventory().setItem(previousSlot, ItemUtils.fixItem(previousItem));
+        }
+        if (newItem != null) {
+            player.getInventory().setItem(newSlot, ItemUtils.fixItem(newItem));
+        }
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) new SlotChangeEvent(event.getPlayer(),event).callEvent();
     }
