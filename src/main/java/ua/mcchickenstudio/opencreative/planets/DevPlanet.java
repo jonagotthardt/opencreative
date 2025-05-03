@@ -301,7 +301,7 @@ public class DevPlanet {
     public List<Location> getPlacedExecutors(ExecutorCategory category) {
         List<Location> locations = new ArrayList<>();
         for (DevPlatform platform : getPlatforms()) {
-            for (int z = platform.getBeginZ()+4; z < platform.getEndZ()-4; z =z+4) {
+            for (int z = platform.getBeginZ()+4; z <= platform.getEndZ()-4; z =z+4) {
                 Block block = getWorld().getBlockAt(platform.getBeginX()+4,1,z);
                 ExecutorCategory blockCategory = ExecutorCategory.getByMaterial(block.getType());
                 if (blockCategory == category) {
