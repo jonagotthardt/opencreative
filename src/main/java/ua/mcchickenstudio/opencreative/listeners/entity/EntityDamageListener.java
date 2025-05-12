@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.listeners.entity;
 
+import org.bukkit.World;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -74,6 +75,18 @@ public final class EntityDamageListener implements Listener {
 
             } else if (isEntityInLobby(victim)) {
                 event.setCancelled(true);
+                if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
+                    World world = victim.getWorld();
+                    BukkitRunnable runnable = new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            if (world.equals(victim.getWorld())) {
+                                victim.teleport(world.getSpawnLocation());
+                            }
+                        }
+                    };
+                    runnable.runTaskLater(OpenCreative.getPlugin(),1L);
+                }
             }
 
         }

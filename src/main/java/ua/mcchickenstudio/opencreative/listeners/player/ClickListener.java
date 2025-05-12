@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
+import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.*;
@@ -329,6 +330,12 @@ public final class ClickListener implements Listener {
         ItemUtils.fixItem(event.getPlayer().getInventory().getItemInOffHand());
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) new ItemBreakEvent(event.getPlayer(),event).callEvent();
+    }
+
+    @EventHandler
+    public void onInventorySlotChange(PlayerInventorySlotChangeEvent event) {
+        ItemUtils.fixItem(event.getNewItemStack());
+        ItemUtils.fixItem(event.getOldItemStack());
     }
 
     @EventHandler
