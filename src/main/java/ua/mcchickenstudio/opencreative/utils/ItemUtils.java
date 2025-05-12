@@ -348,13 +348,29 @@ public class ItemUtils {
      * @param item item to fix.
      */
     public static ItemStack fixItem(@NotNull ItemStack item) {
+        return fixItem(item,10,50,true,3);
+    }
+
+    /**
+     * Removes bad things from item: enchants with big level,
+     * attribute modifiers, books with a lot of pages,
+     * containers with containers; or replaces items with air.
+     * @param item item to fix.
+     * @param maxEnchantLevel maximum enchant level.
+     * @param bookPagesLimit limit of books pages.
+     * @param removeClickableBooks remove clickable components in books or not.
+     * @param containerBigItemsLimit limit of big items (books, containers) in container.
+     */
+    public static ItemStack fixItem(@NotNull ItemStack item, int maxEnchantLevel,
+                                    int bookPagesLimit, boolean removeClickableBooks,
+                                    int containerBigItemsLimit) {
         try {
             ItemMeta meta = item.getItemMeta();
             if (meta == null) return item;
             if (meta.hasEnchants()) {
                 List<Enchantment> badEnchants = new ArrayList<>();
                 for (Enchantment enchant : meta.getEnchants().keySet()) {
-                    if (meta.getEnchantLevel(enchant) > 10) {
+                    if (meta.getEnchantLevel(enchant) > maxEnchantLevel) {
                         badEnchants.add(enchant);
                     }
                 }
@@ -367,13 +383,15 @@ public class ItemUtils {
             if (meta.hasAttributeModifiers() && meta.getAttributeModifiers() != null) {
                 Set<Attribute> attributes = meta.getAttributeModifiers().keySet();
                 for (Attribute attribute : attributes) {
-                    if (attribute != Attribute.GENERIC_ARMOR) meta.removeAttributeModifier(attribute);
+                    if (attribute != Attribute.GENERIC_ARMOR) {
+                        meta.removeAttributeModifier(attribute);
+                        sendDebug("Cleared attributes");
+                    }
                 }
-                sendDebug("Cleared attributes");
             }
             if (meta instanceof BlockStateMeta blockMeta && blockMeta.getBlockState() instanceof InventoryHolder holder) {
                 // If item is Chest or Shulker
-                int insideLimit = 3;
+                int insideLimit = containerBigItemsLimit;
                 int insideContainers = 0;
                 for (ItemStack insideItem : holder.getInventory().getContents()) {
                     if (insideItem == null) continue;
@@ -388,12 +406,22 @@ public class ItemUtils {
                     item.setType(Material.AIR);
                     sendDebug("Cleared container");
                 }
-            } else if (item instanceof Book book && book.pages().size() > 50) {
-                item.setType(Material.AIR);
+            } else if (meta instanceof BookMeta book) {
+                if (book.pages().size() > bookPagesLimit) {
+                    item.setType(Material.AIR);
+                } else {
+                    List<Component> pages = book.pages();
+                    for (int i = 0; i < pages.size(); i++) {
+                        Component component = pages.get(i);
+                        component = component.clickEvent() != null ? component.clickEvent(null) : component;
+                        book.page(i+1,component);
+                    }
+                    item.setItemMeta(book);
+                }
                 sendDebug("Cleared book");
             }
         } catch (Exception exception) {
-            sendDebugError("Can't fix item: " + item.toString(), exception);
+            sendDebugError("Can't fix item: " + item, exception);
         }
         return item;
     }

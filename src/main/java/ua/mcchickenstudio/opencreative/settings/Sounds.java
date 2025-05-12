@@ -70,6 +70,8 @@ public enum Sounds {
     WORLD_NOW_BUILDER("entity.cat.ambient"),
     WORLD_NOW_DEVELOPER("entity.cat.ambient"),
     WORLD_NOW_DEVELOPER_GUEST("entity.cat.ambient"),
+    WORLD_WHITELIST_ADDED("entity.cat.ambient"),
+    WORLD_WHITELIST_REMOVED("entity.cat.hurt"),
     WORLD_KICKED("entity.cat.hurt"),
     WORLD_BANNED("entity.cat.hurt"),
 

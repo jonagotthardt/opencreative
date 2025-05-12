@@ -79,6 +79,14 @@ public class PlanetLimits {
     }
 
     /**
+     * Returns maximum whitelisted players amount in the planet.
+     * @return limit of whitelisted players amount.
+     */
+    public int getWhitelistedLimit() {
+        return planet.getGroup().getLimit(LimitType.WHITELISTED_AMOUNT).calculateLimit(planet.getPlayers().size());
+    }
+
+    /**
      * Returns maximum redstone operations amount in the planet.
      * @return limit of redstone operations.
      */

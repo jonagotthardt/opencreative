@@ -104,6 +104,6 @@ public enum ActionCategory {
     }
 
     public ItemStack getItem() {
-        return createItem(block,1,"items.developer." + name().toLowerCase().replace("_","-"));
+        return createItem(block,1,"items.developer." + name().toLowerCase().replace("_","-"),name().toLowerCase());
     }
 }

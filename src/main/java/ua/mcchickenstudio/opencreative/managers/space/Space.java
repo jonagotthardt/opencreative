@@ -102,7 +102,7 @@ public class Space implements PlanetsManager {
     }
 
     @Override
-    public void deletePlanet(@NotNull Planet planet) {
+    public boolean deletePlanet(@NotNull Planet planet) {
         OpenCreative.getPlugin().getLogger().info("Deleting planet " + planet.getId());
         new PlanetDeletionEvent(planet).callEvent();
         try {
@@ -126,8 +126,10 @@ public class Space implements PlanetsManager {
             }
             FileUtils.deleteFolder(FileUtils.getPlanetFolder(planet));
             FileUtils.deleteFolder(FileUtils.getDevPlanetFolder(planet.getDevPlanet()));
+            return true;
         } catch (Exception error) {
             ErrorUtils.sendCriticalErrorMessage("Error while deleting world " + planet.getId(), error);
+            return false;
         }
     }
 

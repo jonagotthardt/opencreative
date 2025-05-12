@@ -165,9 +165,10 @@ public final class OpenCreative extends JavaPlugin {
             getServer().sendActionBar(Component.text("§7Open§fCreative§b+ §7" + version + "§f is loaded for " + loadedTime + " ms."));
         }
         getLogger().info(String.join("\n",
-                        "",
                         "OpenCreative+ " + version + ": " + codename + " is loaded for " + loadedTime + " ms.",
+                        "",
                         " Welcome to OpenCreative+ " + version + "!",
+                        "",
                         "  Running on " + Bukkit.getMinecraftVersion() + " server",
                         "  Current time " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()),
                         isChristmas() ? "  Ho-ho-ho! Merry Christmas, server owners! :-) ❆" :
