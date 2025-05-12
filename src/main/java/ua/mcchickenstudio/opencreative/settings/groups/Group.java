@@ -71,7 +71,7 @@ public class Group {
         playPermissions.addAll(config.getStringList(path + "world.play-permissions"));
         buildPermissions.addAll(config.getStringList(path + "world.build-permissions"));
         devPermissions.addAll(config.getStringList(path + "world.dev-permissions"));
-        lobbyPermissions.addAll(config.getStringList(path + "world.lobby-permissions"));
+        lobbyPermissions.addAll(config.getStringList(path + "lobby-permissions"));
         for (LimitType type : LimitType.values()) {
             limits.put(type,
                     new LimitModifier(

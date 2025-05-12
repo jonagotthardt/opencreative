@@ -161,6 +161,8 @@ groups:
     creating-world:
       limit: 2
     favorite-worlds-limit: 30 # limit of favorite worlds for player
+    lobby-permissions: # Permissions will be given when player teleports to lobby
+      - "music.play"
     world:
       size: 25
       like-reward: 1
@@ -211,8 +213,6 @@ groups:
         # If you want to deny permission, that player has (maybe he's admin),
         # just add ! at the beginning of permission node.
         # - !nte.default
-      lobby-permissions: # Permissions will be given when player teleports to lobby
-        - "music.play"
   premium:
     permission: "opencreative.group.premium"
     cooldowns:
@@ -223,6 +223,8 @@ groups:
     creating-world:
       limit: 4
     favorite-worlds-limit: 30
+    lobby-permissions:
+      - "music.play"
     world:
       size: 50
       like-reward: 1
@@ -262,9 +264,6 @@ groups:
       dev-permissions:
         - "headdb.open"
         - "essentials.itemname"
-      lobby-permissions:
-        - "music.play"
-
 sounds:
   #
   # This section allows you to set custom
