@@ -208,6 +208,11 @@ groups:
       dev-permissions: # Permissions will be given when player types /dev command
         - "headdb.open"
         - "essentials.itemname"
+        # If you want to deny permission, that player has (maybe he's admin),
+        # just add ! at the beginning of permission node.
+        # - !nte.default
+      lobby-permissions: # Permissions will be given when player teleports to lobby
+        - "music.play"
   premium:
     permission: "opencreative.group.premium"
     cooldowns:
@@ -257,6 +262,8 @@ groups:
       dev-permissions:
         - "headdb.open"
         - "essentials.itemname"
+      lobby-permissions:
+        - "music.play"
 
 sounds:
   #
