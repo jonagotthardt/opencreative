@@ -131,12 +131,12 @@ public final class OpenCreative extends JavaPlugin {
                     Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(5), Duration.ofSeconds(0))
             ));
         }
+        saveDefaultConfig();
         settings = new Settings();
         settings.load(getConfig());
         registerCommands();
         registerEvents();
         //Ticker.runTicker();
-        saveDefaultConfig();
         FileUtils.loadLocales();
 
         space = new Space();
