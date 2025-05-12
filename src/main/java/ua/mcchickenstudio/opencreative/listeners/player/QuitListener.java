@@ -30,6 +30,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import ua.mcchickenstudio.opencreative.planets.PlanetPlayer;
+import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 
 
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
@@ -63,6 +64,7 @@ public final class QuitListener implements Listener {
         ChatListener.confirmation.remove(player);
         CreativeChat.creativeChatOff.remove(player);
         removeFromPermissionsMap(player);
+        CooldownUtils.clearPlayerCooldowns(player);
 
     }
 

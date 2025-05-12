@@ -111,6 +111,13 @@ public class CooldownUtils {
         return true;
     }
 
+    public static void clearPlayerCooldowns(Player player) {
+        genericCommandCooldown.remove(player);
+        advertisementCommandCooldown.remove(player);
+        creativeChatCooldown.remove(player);
+        worldChatCooldown.remove(player);
+    }
+
     private static HashMap<Player, Long> getCooldownMap(CooldownType type) {
         return switch (type) {
             case GENERIC_COMMAND -> genericCommandCooldown;
