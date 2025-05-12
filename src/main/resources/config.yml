@@ -108,6 +108,20 @@ allowed-links:
     - "dropbox.com"
     - "drive.google.com"
 
+item-fixer:
+  #
+  # We want to prevent players from hurting
+  # server with some bad items. These items
+  # will be edited or entirely removed from
+  # player's inventory.
+  #
+  max-enchantment-level: 10 # Maximum enchantment level (swords, armor...)
+  container-big-items-max-amount: 3 # Limit of bad items (containers, books) inside container
+  books-pages-max-amount: 50 # Limit of book pages
+  remove-attribute-modifiers: true # Removes some attribute modifiers from item (scale, speed, strength)
+  remove-clickable-in-books: true # Removes clickable components from books
+  remove-custom-spawn-eggs: true # Removes custom data in spawn eggs
+
 commands:
   #
   # These commands will be executed on

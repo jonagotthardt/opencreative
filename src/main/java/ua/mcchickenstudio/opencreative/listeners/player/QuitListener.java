@@ -62,11 +62,7 @@ public final class QuitListener implements Listener {
 
         ChatListener.confirmation.remove(player);
         CreativeChat.creativeChatOff.remove(player);
-
         removeFromPermissionsMap(player);
-        if (OpenCreative.getSettings().isDebug()) {
-            new OfflineWander(player.getUniqueId()).saveData();
-        }
 
     }
 

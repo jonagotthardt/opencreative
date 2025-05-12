@@ -38,6 +38,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import ua.mcchickenstudio.opencreative.settings.Settings;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -350,7 +351,14 @@ public class ItemUtils {
      * @param item item to fix.
      */
     public static ItemStack fixItem(@NotNull ItemStack item) {
-        return fixItem(item,10,50,true,3);
+        Settings settings = OpenCreative.getSettings();
+        return fixItem(item,
+                settings.getItemsMaxEnchantLevel(),
+                settings.getItemsMaxBookPagesAmount(),
+                settings.isItemsRemoveClickableBooks(),
+                settings.getItemsContainerBigItemsLimit(),
+                settings.isItemsRemoveCustomSpawnEggs(),
+                settings.isItemsRemoveAttributes());
     }
 
     /**
@@ -362,10 +370,13 @@ public class ItemUtils {
      * @param bookPagesLimit limit of books pages.
      * @param removeClickableBooks remove clickable components in books or not.
      * @param containerBigItemsLimit limit of big items (books, containers) in container.
+     * @param removeCustomEggs removes custom spawn eggs.
+     * @param removeAttributes removes attribute modifiers (scale).
      */
     public static ItemStack fixItem(@NotNull ItemStack item, int maxEnchantLevel,
                                     int bookPagesLimit, boolean removeClickableBooks,
-                                    int containerBigItemsLimit) {
+                                    int containerBigItemsLimit, boolean removeCustomEggs,
+                                    boolean removeAttributes) {
         try {
             ItemMeta meta = item.getItemMeta();
             if (meta == null) return item;
@@ -382,7 +393,7 @@ public class ItemUtils {
                 item.setItemMeta(meta);
                 sendDebug("Cleared enchants");
             }
-            if (meta.hasAttributeModifiers() && meta.getAttributeModifiers() != null) {
+            if (meta.hasAttributeModifiers() && meta.getAttributeModifiers() != null && removeAttributes) {
                 Set<Attribute> attributes = meta.getAttributeModifiers().keySet();
                 for (Attribute attribute : attributes) {
                     if (attribute != Attribute.GENERIC_ARMOR) {
@@ -406,22 +417,23 @@ public class ItemUtils {
                 }
                 if (insideContainers > insideLimit) {
                     item.setType(Material.AIR);
-                    sendDebug("Cleared container");
+                    sendDebug("Destroyed container with a lot of items");
                 }
             } else if (meta instanceof BookMeta book) {
                 if (book.pages().size() > bookPagesLimit) {
                     item.setType(Material.AIR);
-                } else {
+                    sendDebug("Destroyed book with a lot of pages");
+                } else if (removeClickableBooks) {
                     List<Component> pages = book.pages();
                     for (int i = 0; i < pages.size(); i++) {
                         Component component = pages.get(i);
                         component = component.clickEvent() != null ? component.clickEvent(null) : component;
                         book.page(i+1,component);
                     }
+                    sendDebug("Cleared book with clickable components");
                     item.setItemMeta(book);
                 }
-                sendDebug("Cleared book");
-            } else if (meta instanceof SpawnEggMeta egg) {
+            } else if (meta instanceof SpawnEggMeta egg && removeCustomEggs) {
                 if (egg.getCustomSpawnedType() != null) {
                     egg.setCustomSpawnedType(null);
                     item.setItemMeta(egg);
