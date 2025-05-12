@@ -69,7 +69,7 @@ public class PlayerUtils {
             player.spigot().respawn();
         }
         player.setGameMode(GameMode.ADVENTURE);
-        PlayerUtils.clearWorldModePermissions(player);
+        clearWorldModePermissions(player);
         player.closeInventory();
         if (OpenCreative.getSettings().isLobbyClearInventory()) {
             player.getInventory().clear();
@@ -163,6 +163,7 @@ public class PlayerUtils {
         ItemStack myWorldsItem = createItem(Material.NETHER_STAR, 1, "items.lobby.own", "own_worlds");
         player.getInventory().setItem(5, myWorldsItem);
 
+        giveLobbyPermissions(player);
         PlayerLobbyEvent event = new PlayerLobbyEvent(player);
         event.callEvent();
     }
@@ -208,7 +209,7 @@ public class PlayerUtils {
         PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
         Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getDevPermissions();
         for (String permission : perms) {
-            permissionAttachment.setPermission(permission,true);
+            permissionAttachment.setPermission(permission, !permission.startsWith("!"));
         }
     }
 
@@ -216,7 +217,7 @@ public class PlayerUtils {
         PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
         Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getPlayPermissions();
         for (String permission : perms) {
-            permissionAttachment.setPermission(permission,true);
+            permissionAttachment.setPermission(permission, !permission.startsWith("!"));
         }
     }
 
@@ -224,12 +225,20 @@ public class PlayerUtils {
         PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
         Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getBuildPermissions();
         for (String permission : perms) {
-            permissionAttachment.setPermission(permission,true);
+            permissionAttachment.setPermission(permission, !permission.startsWith("!"));
+        }
+    }
+
+    public static void giveLobbyPermissions(Player player) {
+        PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
+        Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getLobbyPermissions();
+        for (String permission : perms) {
+            permissionAttachment.setPermission(permission, !permission.startsWith("!"));
         }
     }
 
     /**
-     * Removes player's permissions that he got in world in Build, Play or Dev mode.
+     * Removes player's permissions that he got in world in Build, Play, Dev mode, or in lobby.
      * @param player player to remove permissions.
      */
     public static void clearWorldModePermissions(Player player) {

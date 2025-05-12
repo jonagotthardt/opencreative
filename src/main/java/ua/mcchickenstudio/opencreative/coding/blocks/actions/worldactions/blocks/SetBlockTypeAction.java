@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.blocks;
 
-import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -29,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
-import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.planets.PlanetRunnable;
 
 import java.util.List;
 
@@ -42,17 +41,15 @@ public final class SetBlockTypeAction extends WorldAction {
     protected void execute(Entity entity) {
         List<Location> locations = getArguments().getLocationList("locations",this);
         Material material = getArguments().getValue("type", Material.AIR,this);
-        BukkitRunnable runnable = new BukkitRunnable() {
+        PlanetRunnable planetRunnable = new PlanetRunnable(getPlanet()) {
             @Override
-            public void run() {
+            public void execute() {
                 getPlanet().getLimits().setLastModifiedBlocksAmount(0);
             }
         };
-        getPlanet().getTerritory().addBukkitRunnable(runnable);
         for (Location location : locations) {
             if (getPlanet().getLimits().getLastModifiedBlocksAmount() > getPlanet().getLimits().getModifyingBlocksLimit()) {
-                runnable.runTaskLater(OpenCreative.getPlugin(),20L);
-                getPlanet().getTerritory().removeBukkitRunnable(runnable);
+                getPlanet().getTerritory().scheduleAsyncRunnable(planetRunnable,20L);
                 new LimitReachedBlocksEvent(getPlanet()).callEvent();
                 return;
             }
@@ -67,8 +64,7 @@ public final class SetBlockTypeAction extends WorldAction {
             }
             getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount()+1);
         }
-        runnable.runTaskLater(OpenCreative.getPlugin(),20L);
-        getPlanet().getTerritory().removeBukkitRunnable(runnable);
+        getPlanet().getTerritory().scheduleAsyncRunnable(planetRunnable,20L);
 
     }
 

@@ -20,9 +20,11 @@ package ua.mcchickenstudio.opencreative.utils;
 
 import net.kyori.adventure.inventory.Book;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntitySnapshot;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
@@ -419,6 +421,12 @@ public class ItemUtils {
                     item.setItemMeta(book);
                 }
                 sendDebug("Cleared book");
+            } else if (meta instanceof SpawnEggMeta egg) {
+                if (egg.getCustomSpawnedType() != null) {
+                    egg.setCustomSpawnedType(null);
+                    item.setItemMeta(egg);
+                    sendDebug("Cleared egg spawn");
+                }
             }
         } catch (Exception exception) {
             sendDebugError("Can't fix item: " + item, exception);
