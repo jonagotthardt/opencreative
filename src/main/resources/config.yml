@@ -308,8 +308,8 @@ sounds:
   # dev-var-list, dev-platform-color, dev-platform-claim, dev-action-target, dev-action-with-chest, dev-condition-not,
   # dev-condition-default, dev-cycle-delay-decrease, dev-cycle-delay-increase, dev-cycle-delay-set, dev-cycle-named,
   # dev-function-named, dev-method-named, dev-variable-parameter, dev-next-parameter, dev-change-category, dev-take-value,
-  # dev-value-set, dev-text-set, dev-number-set, dev-particle-set, dev-variable-set, dev-variable-change, dev-fly-speed-change, d
-  # ev-potion-set, dev-location-set, dev-location-teleport, dev-location-teleport-back, dev-event-value-set, dev-vector-set,
+  # dev-value-set, dev-text-set, dev-number-set, dev-particle-set, dev-variable-set, dev-variable-change, dev-fly-speed-change,
+  # dev-potion-set, dev-location-set, dev-location-teleport, dev-location-teleport-back, dev-event-value-set, dev-vector-set,
   # dev-boolean-true, dev-boolean-false, dev-move-blocks-right, dev-move-blocks-left, dev-debug-on, dev-debug-off, maintenance-notify,
   # maintenance-count, maintenance-start, maintenance-end, world-load, world-unload, world-deletion
   #

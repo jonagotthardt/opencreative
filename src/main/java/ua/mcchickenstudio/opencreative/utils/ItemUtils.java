@@ -435,9 +435,8 @@ public class ItemUtils {
                 }
             } else if (meta instanceof SpawnEggMeta egg && removeCustomEggs) {
                 if (egg.getCustomSpawnedType() != null) {
-                    egg.setCustomSpawnedType(null);
-                    item.setItemMeta(egg);
-                    sendDebug("Cleared egg spawn");
+                    item.setType(Material.AIR);
+                    sendDebug("Destroyed spawn egg");
                 }
             }
         } catch (Exception exception) {
