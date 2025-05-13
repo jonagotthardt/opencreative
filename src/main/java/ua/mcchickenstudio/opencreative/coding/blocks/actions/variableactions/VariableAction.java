@@ -23,6 +23,11 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.planets.PlanetRunnable;
+
+import java.util.List;
+
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 
 public abstract class VariableAction extends Action {
 
@@ -33,5 +38,22 @@ public abstract class VariableAction extends Action {
     @Override
     public ActionCategory getActionCategory() {
         return ActionCategory.VARIABLE_ACTION;
+    }
+
+    public boolean cannotChangeListElements(int size) {
+        if (size + getPlanet().getLimits().getLastVariableElementsChangesAmount() > getPlanet().getLimits().getVariableElementsChangesLimit()) {
+            return true;
+        }
+        return false;
+    }
+
+    public void changeListElementsChangesAmount(int size) {
+        getPlanet().getLimits().setLastVariableElementsChangesAmount(getPlanet().getLimits().getLastVariableElementsChangesAmount()+size);
+        getPlanet().getTerritory().scheduleAsyncRunnable(new PlanetRunnable(getPlanet()) {
+            @Override
+            public void execute() {
+                getPlanet().getLimits().setLastVariableElementsChangesAmount(0);
+            }
+        },20L);
     }
 }

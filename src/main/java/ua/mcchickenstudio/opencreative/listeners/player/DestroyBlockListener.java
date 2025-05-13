@@ -132,6 +132,7 @@ public final class DestroyBlockListener implements Listener {
         }
         additionalBlock.setType(Material.AIR);
         signBlock.setType(Material.AIR);
+        Menus.onBlockDestroy(signBlock.getLocation());
         if (dropItems && containerBlock.getState() instanceof InventoryHolder container) {
             Menus.onBlockDestroy(containerBlock.getLocation());
             for (ItemStack item : container.getInventory().getContents()) {

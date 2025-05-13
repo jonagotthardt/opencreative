@@ -39,6 +39,10 @@ public final class PutIntoMapAction extends VariableAction {
         Map<Object,Object> map = getArguments().getMap("variable",this);
         Object key = getArguments().getValue("key",this);
         Object value = getArguments().getValue("value",this);
+        if (cannotChangeListElements(1)) {
+            return;
+        }
+        changeListElementsChangesAmount(1);
         map.put(key,value);
         setVarValue(variable, map);
     }

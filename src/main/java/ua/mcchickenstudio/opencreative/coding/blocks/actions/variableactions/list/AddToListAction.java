@@ -32,6 +32,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+
 public final class AddToListAction extends VariableAction {
     public AddToListAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
@@ -42,6 +44,10 @@ public final class AddToListAction extends VariableAction {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         List<Object> list = new ArrayList<>(getArguments().getList("variable",this));
         List<Object> elements = getArguments().getList("elements",this);
+        if (cannotChangeListElements(elements.size())) {
+            return;
+        }
+        changeListElementsChangesAmount(list.size());
         for (Object element : elements) {
             if (element instanceof Collection<?> || element instanceof Map<?,?>) {
                 throw new CollectionWithCollectionException(list.getClass(),element.getClass());

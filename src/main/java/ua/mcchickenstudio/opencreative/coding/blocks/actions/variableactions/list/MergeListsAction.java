@@ -29,6 +29,8 @@ import org.bukkit.entity.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+
 public final class MergeListsAction extends VariableAction {
     public MergeListsAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
@@ -39,6 +41,10 @@ public final class MergeListsAction extends VariableAction {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         List<Object> variableList = new ArrayList<>(getArguments().getList("variable",this));
         List<Object> list = getArguments().getList("list",this);
+        if (cannotChangeListElements(list.size())) {
+            return;
+        }
+        changeListElementsChangesAmount(list.size());
         variableList.addAll(list);
         setVarValue(variable, variableList);
     }

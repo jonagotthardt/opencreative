@@ -194,6 +194,7 @@ groups:
         scoreboards-amount: 50 # limit for amount of all scoreboards
         bossbars-amount: 10 # limit for amount of all bossbars
         coding-platforms: 4 # limit for coding platforms
+        changing-list-elements: 50 # limit of changing elements in lists and maps per second
         builders-amount: 10 # limit of added builders
         developers-amount: 10 # limit of added developers
         blacklist-amount: 10 # limit of banned players
@@ -210,6 +211,7 @@ groups:
         opening-inventories: 5
         variables-amount: 50
         scoreboards-amount: 3
+        changing-list-elements: 10
         bossbars-amount: 3
         physical-objects: 5
       build-permissions: # Permissions will be given when player types /build command
@@ -253,6 +255,7 @@ groups:
         scoreboards-amount: 50
         bossbars-amount: 10
         coding-platforms: 4
+        changing-list-elements: 50
         builders-amount: 10
         developers-amount: 10
         blacklist-amount: 10
@@ -263,6 +266,7 @@ groups:
         modifying-blocks: 0
         redstone-changes: 20
         opening-inventories: 5
+        changing-list-elements: 10
         variables-amount: 50
         scoreboards-amount: 10
         bossbars-amount: 10

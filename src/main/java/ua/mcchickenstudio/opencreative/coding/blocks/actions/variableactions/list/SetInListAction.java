@@ -40,6 +40,10 @@ public final class SetInListAction extends VariableAction {
         List<Object> elements = new ArrayList<>(getArguments().getList("variable",this));
         Object value = getArguments().getValue("value",this);
         int index = getArguments().getValue("index",1,this);
+        if (cannotChangeListElements(1)) {
+            return;
+        }
+        changeListElementsChangesAmount(1);
         elements.set(index-1,value);
         setVarValue(variable,elements);
     }
