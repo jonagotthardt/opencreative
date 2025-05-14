@@ -106,6 +106,8 @@ public class PlanetTerritory {
      * Loads planet's files into worlds directory, loads and setups build world, loads script and variables.
      */
     public synchronized void load() {
+        long startTime = System.currentTimeMillis();
+
         loadInformation();
         flags.loadFlags();
         planet.getWorldPlayers().loadPlayers();
@@ -134,12 +136,17 @@ public class PlanetTerritory {
         world.getWorldBorder().setSize(worldSize);
         planet.getVariables().load();
         new PlanetLoadEvent(planet).callEvent();
+
+        long endTime = System.currentTimeMillis();
+        OpenCreative.getPlugin().getLogger().info("Planet " + planet.getId() + " loaded in " + (endTime - startTime) + " ms");
     }
 
     /**
      * Saves planet's data and unloads planet's build and dev world.
      */
     public synchronized void unload() {
+        long startTime = System.currentTimeMillis();
+
         World world = getWorld();
         if (world != null) {
             for (Entity entity : world.getEntitiesByClass(Item.class)) {
@@ -163,6 +170,9 @@ public class PlanetTerritory {
             planet.getDevPlanet().unload();
         }
         new PlanetUnloadEvent(planet).callEvent();
+
+        long endTime = System.currentTimeMillis();
+        OpenCreative.getPlugin().getLogger().info("Planet " + planet.getId() + " unloaded in " + (endTime - startTime) + " ms");
     }
 
     public void clearData() {

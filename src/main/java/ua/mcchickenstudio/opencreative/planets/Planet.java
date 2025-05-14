@@ -474,6 +474,8 @@ public class Planet {
         if (!isLoaded()) {
             OpenCreative.getPlugin().getLogger().info("Loading planet " + id + " and teleporting " + player.getName());
             territory.load();
+        } else {
+            OpenCreative.getPlugin().getLogger().info("Planet " + id + " is already loaded, teleporting " + player.getName());
         }
         player.teleportAsync(territory.getWorld().getSpawnLocation()).thenAccept(success -> {
             clearPlayer(player);
