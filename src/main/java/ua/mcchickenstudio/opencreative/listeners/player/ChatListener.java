@@ -132,13 +132,13 @@ public final class ChatListener implements Listener {
             ItemStack itemInHand = player.getInventory().getItemInMainHand();
             if (itemInHand.getType() == Material.BOOK) {
                 ItemMeta meta = itemInHand.getItemMeta();
-                meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                        message.replace("%space%", " ")
-                                .replace("&&","§")));
+                Component newName = LegacyComponentSerializer.legacyAmpersand()
+                        .deserialize(message.replace("%space%", " "));
+                meta.displayName(newName);
                 itemInHand.setItemMeta(meta);
                 Sounds.DEV_TEXT_SET.play(player);
                 setPersistentData(itemInHand,getCodingValueKey(),"TEXT");
-                player.setItemInHand(itemInHand);
+                player.getInventory().setItemInMainHand(itemInHand);
                 player.showTitle(Title.title(
                         toComponent(getLocaleMessage("world.dev-mode.set-variable")), meta.displayName(),
                         Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))

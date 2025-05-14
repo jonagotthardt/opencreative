@@ -125,7 +125,7 @@ public class WorldEditManager implements BlocksManager {
                             location.y(),
                             location.z())
             )) {
-                super.getBlock(location);
+                return super.getBlock(location);
             }
             return AIRSTATE;
         }
@@ -138,11 +138,10 @@ public class WorldEditManager implements BlocksManager {
                             location.y(),
                             location.z())
             )) {
-                super.getFullBlock(location);
+                return super.getFullBlock(location);
             }
             return AIRBASE;
         }
-
     }
 
 

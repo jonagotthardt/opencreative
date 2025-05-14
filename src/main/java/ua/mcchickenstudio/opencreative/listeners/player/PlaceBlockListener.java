@@ -18,6 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
+import org.bukkit.event.block.BlockDispenseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 
@@ -37,6 +43,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.inventory.InventoryHolder;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
+import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import java.util.*;
 
@@ -45,6 +52,20 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
 public final class PlaceBlockListener implements Listener {
+
+    @EventHandler
+    public void onChestPlace(BlockPlaceEvent event) {
+        /*
+         * Fixes container items.
+         */
+        if (event.isCancelled()) return;
+        Block block = event.getBlock();
+        if (!(block.getState() instanceof InventoryHolder container)) return;
+        for (ItemStack insideItem : container.getInventory().getContents()) {
+            if (insideItem == null) continue;
+            ItemUtils.fixItem(insideItem);
+        }
+    }
 
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
@@ -58,11 +79,11 @@ public final class PlaceBlockListener implements Listener {
             Block blockAgainst = event.getBlockAgainst();
 
             DevPlatform platform = devPlanet.getPlatformInLocation(event.getBlock().getLocation());
-            if (platform == null) {
+            if (platform == null || block.getY() < 1) {
                 event.setCancelled(true);
+                Sounds.DEV_NOT_ALLOWED.play(player);
                 return;
             }
-
             if (blockAgainst.getType() == platform.getFloorMaterial()) {
                 if (block.getType() == Material.PISTON && ((blockAgainst.getZ()-platform.getBeginZ()) % 4) == 0 && blockAgainst.getRelative(BlockFace.WEST).getType() == platform.getActionMaterial()) {
                     Directional directional = (Directional) block.getBlockData();

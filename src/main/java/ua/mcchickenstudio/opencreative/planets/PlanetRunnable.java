@@ -16,7 +16,24 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.list;
+package ua.mcchickenstudio.opencreative.planets;
 
-public final class RemoveFromListAction {
+import org.bukkit.scheduler.BukkitRunnable;
+
+public abstract class PlanetRunnable extends BukkitRunnable {
+
+    protected final Planet planet;
+
+    protected PlanetRunnable(Planet planet) {
+        this.planet = planet;
+    }
+
+    @Override
+    public final void run() {
+        planet.getTerritory().removeBukkitRunnable(this);
+        execute();
+    }
+
+    public abstract void execute();
+
 }

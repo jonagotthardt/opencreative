@@ -55,6 +55,13 @@ public class Settings {
     private boolean consoleNotFoundMessage = true;
     private boolean consoleWarnings = true;
 
+    private int itemsMaxEnchantLevel = 10;
+    private int itemsMaxBookPagesAmount = 50;
+    private int itemsContainerBigItemsLimit = 3;
+    private boolean itemsRemoveAttributes = true;
+    private boolean itemsRemoveCustomSpawnEggs = true;
+    private boolean itemsRemoveClickableBooks = true;
+
     private boolean lobbyClearInventory = true;
 
     private BukkitRunnable announcer;
@@ -119,6 +126,13 @@ public class Settings {
 
         worldDescriptionMinLength = config.getInt("requirements.world-description.min-length",2);
         worldDescriptionMaxLength = config.getInt("requirements.world-description.max-length",256);
+
+        itemsRemoveAttributes = config.getBoolean("item-fixer.remove-attribute-modifiers",true);
+        itemsRemoveClickableBooks = config.getBoolean("item-fixer.remove-clickable-in-books",true);
+        itemsRemoveCustomSpawnEggs = config.getBoolean("item-fixer.remove-custom-spawn-eggs",true);
+        itemsMaxEnchantLevel = config.getInt("item-fixer.max-enchantment-level",10);
+        itemsMaxBookPagesAmount = config.getInt("item-fixer.books-pages-max-amount:",50);
+        itemsContainerBigItemsLimit = config.getInt("item-fixer.container-big-items-max-amount",3);
 
         groups.load();
         commands.load();
@@ -380,5 +394,29 @@ public class Settings {
 
     public Map<Items, SettingsItem> getItems() {
         return items;
+    }
+
+    public int getItemsContainerBigItemsLimit() {
+        return itemsContainerBigItemsLimit;
+    }
+
+    public int getItemsMaxBookPagesAmount() {
+        return itemsMaxBookPagesAmount;
+    }
+
+    public int getItemsMaxEnchantLevel() {
+        return itemsMaxEnchantLevel;
+    }
+
+    public boolean isItemsRemoveAttributes() {
+        return itemsRemoveAttributes;
+    }
+
+    public boolean isItemsRemoveClickableBooks() {
+        return itemsRemoveClickableBooks;
+    }
+
+    public boolean isItemsRemoveCustomSpawnEggs() {
+        return itemsRemoveCustomSpawnEggs;
     }
 }

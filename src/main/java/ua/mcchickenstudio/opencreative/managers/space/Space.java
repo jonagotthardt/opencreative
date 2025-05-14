@@ -80,6 +80,8 @@ public class Space implements PlanetsManager {
 
     @Override
     public void createPlanet(@NotNull Player owner, int id, WorldUtils.@NotNull WorldGenerator generator, World.@NotNull Environment environment, long seed, boolean generateStructures) {
+        long startTime = System.currentTimeMillis();
+
         owner.showTitle(Title.title(
                 toComponent(getLocaleMessage("creating-world.title")), toComponent(getLocaleMessage("creating-world.subtitle")),
                 Title.Times.times(Duration.ofMillis(500), Duration.ofSeconds(30), Duration.ofSeconds(2))
@@ -90,11 +92,14 @@ public class Space implements PlanetsManager {
         Planet planet = new Planet(id);
 
         if (planet.getTerritory().generateWorld(generator,environment,seed,generateStructures) != null) {
+            long endTime = System.currentTimeMillis();
+            OpenCreative.getPlugin().getLogger().info("World for planet " + id + " successfully generated in " + (endTime - startTime) + " ms");
+
             planet.connectPlayer(owner);
         } else {
+            ErrorUtils.sendCriticalErrorMessage("Failed to create world for planet " + id + " by " + owner.getName() + ". World is null.");
             sendPlayerErrorMessage(owner,"Failed to create world, world is null.");
         }
-
     }
 
     public @NotNull Set<Planet> getPlanetsByOwner(@NotNull Player player) {
@@ -102,7 +107,7 @@ public class Space implements PlanetsManager {
     }
 
     @Override
-    public void deletePlanet(@NotNull Planet planet) {
+    public boolean deletePlanet(@NotNull Planet planet) {
         OpenCreative.getPlugin().getLogger().info("Deleting planet " + planet.getId());
         new PlanetDeletionEvent(planet).callEvent();
         try {
@@ -126,8 +131,10 @@ public class Space implements PlanetsManager {
             }
             FileUtils.deleteFolder(FileUtils.getPlanetFolder(planet));
             FileUtils.deleteFolder(FileUtils.getDevPlanetFolder(planet.getDevPlanet()));
+            return true;
         } catch (Exception error) {
             ErrorUtils.sendCriticalErrorMessage("Error while deleting world " + planet.getId(), error);
+            return false;
         }
     }
 

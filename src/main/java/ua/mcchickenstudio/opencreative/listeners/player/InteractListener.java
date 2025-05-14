@@ -64,6 +64,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
+import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -81,6 +82,8 @@ public final class InteractListener implements Listener {
     @EventHandler
     public void onInteraction(PlayerInteractEvent event) {
         Player player = event.getPlayer();
+        ItemUtils.fixItem(event.getPlayer().getInventory().getItemInMainHand());
+        ItemUtils.fixItem(event.getPlayer().getInventory().getItemInOffHand());
         ItemStack currentItem = player.getInventory().getItemInMainHand();
         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
         if (devPlanet == null) {

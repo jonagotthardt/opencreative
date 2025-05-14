@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.commands.world.modes;
 
+import org.bukkit.inventory.Inventory;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import org.bukkit.*;
@@ -34,6 +35,8 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.inventory.meta.BookMeta;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
@@ -115,7 +118,7 @@ public class CommandDev implements CommandExecutor {
                     }
                     giveItems(player);
                     for (ItemStack item : playerInventoryItems) {
-                        if (item != null && !itemEquals(item,worldSettingsItem)) {
+                        if (item != null && !itemEquals(item,worldSettingsItem) && !player.getInventory().containsAtLeast(item,1)) {
                             player.getInventory().addItem(item);
                         }
                     }
@@ -179,36 +182,37 @@ public class CommandDev implements CommandExecutor {
 
     private void giveItems(Player player) {
 
-        player.getInventory().setHeldItemSlot(0);
+        PlayerInventory inventory = player.getInventory();
+        inventory.setHeldItemSlot(0);
 
-        player.getInventory().setItem(0, ExecutorCategory.EVENT_PLAYER.getItem());
-        player.getInventory().setItem(1, ActionCategory.PLAYER_ACTION.getItem());
-        player.getInventory().setItem(2, ActionCategory.PLAYER_CONDITION.getItem());
-        player.getInventory().setItem(3, ActionCategory.ELSE_CONDITION.getItem());
-        player.getInventory().setItem(13, ActionCategory.VARIABLE_ACTION.getItem());
-        player.getInventory().setItem(22, ActionCategory.VARIABLE_CONDITION.getItem());
-        player.getInventory().setItem(9, ExecutorCategory.FUNCTION.getItem());
-        player.getInventory().setItem(10, ActionCategory.LAUNCH_FUNCTION_ACTION.getItem());
-        player.getInventory().setItem(11, ActionCategory.CONTROL_ACTION.getItem());
-        player.getInventory().setItem(12, ActionCategory.ENTITY_CONDITION.getItem());
-        player.getInventory().setItem(20, ActionCategory.WORLD_ACTION.getItem());
-        player.getInventory().setItem(21, ActionCategory.ENTITY_ACTION.getItem());
-        player.getInventory().setItem(27, ExecutorCategory.EVENT_ENTITY.getItem());
-        player.getInventory().setItem(28, ActionCategory.WORLD_CONDITION.getItem());
-        player.getInventory().setItem(29, ExecutorCategory.EVENT_WORLD.getItem());
-        player.getInventory().setItem(30, ExecutorCategory.METHOD.getItem());
-        player.getInventory().setItem(31, ActionCategory.LAUNCH_METHOD_ACTION.getItem());
-        player.getInventory().setItem(18, ExecutorCategory.CYCLE.getItem());
-        player.getInventory().setItem(19, ActionCategory.SELECTION_ACTION.getItem());
+        setItemIfAbsent(inventory, 0,  ExecutorCategory.EVENT_PLAYER.getItem());
+        setItemIfAbsent(inventory, 1,  ActionCategory.PLAYER_ACTION.getItem());
+        setItemIfAbsent(inventory, 2,  ActionCategory.PLAYER_CONDITION.getItem());
+        setItemIfAbsent(inventory, 3,  ActionCategory.ELSE_CONDITION.getItem());
+        setItemIfAbsent(inventory, 13, ActionCategory.VARIABLE_ACTION.getItem());
+        setItemIfAbsent(inventory, 22, ActionCategory.VARIABLE_CONDITION.getItem());
+        setItemIfAbsent(inventory, 9,  ExecutorCategory.FUNCTION.getItem());
+        setItemIfAbsent(inventory, 10, ActionCategory.LAUNCH_FUNCTION_ACTION.getItem());
+        setItemIfAbsent(inventory, 11, ActionCategory.CONTROL_ACTION.getItem());
+        setItemIfAbsent(inventory, 12, ActionCategory.ENTITY_CONDITION.getItem());
+        setItemIfAbsent(inventory, 20, ActionCategory.WORLD_ACTION.getItem());
+        setItemIfAbsent(inventory, 21, ActionCategory.ENTITY_ACTION.getItem());
+        setItemIfAbsent(inventory, 27, ExecutorCategory.EVENT_ENTITY.getItem());
+        setItemIfAbsent(inventory, 28, ActionCategory.WORLD_CONDITION.getItem());
+        setItemIfAbsent(inventory, 29, ExecutorCategory.EVENT_WORLD.getItem());
+        setItemIfAbsent(inventory, 30, ExecutorCategory.METHOD.getItem());
+        setItemIfAbsent(inventory, 31, ActionCategory.LAUNCH_METHOD_ACTION.getItem());
+        setItemIfAbsent(inventory, 18, ExecutorCategory.CYCLE.getItem());
+        setItemIfAbsent(inventory, 19, ActionCategory.SELECTION_ACTION.getItem());
 
         ItemStack linesControllerItem = createItem(Material.COMPARATOR,1,"items.developer.lines-controller");
-        player.getInventory().setItem(26, linesControllerItem);
+        setItemIfAbsent(inventory, 26, linesControllerItem);
 
         ItemStack arrowNotItem = createItem(Material.ARROW,1,"items.developer.arrow-not");
-        player.getInventory().setItem(35, arrowNotItem);
+        setItemIfAbsent(inventory, 35, arrowNotItem);
 
         int slot = 8;
-        if (player.getInventory().getItem(8) != null) {
+        if (inventory.getItem(8) != null) {
             slot = 7;
         }
 
@@ -218,12 +222,18 @@ public class CommandDev implements CommandExecutor {
         bookMeta.setAuthor("OpenCreative+");
         bookMeta.setPages(getBookPages("items.developer.coding-book.pages"));
         bookHelperItem.setItemMeta(bookMeta);
-        player.getInventory().setItem(slot == 8 ? slot-1 : 17, bookHelperItem);
+        setItemIfAbsent(inventory, slot == 8 ? slot-1 : 17, bookHelperItem);
 
         ItemStack flySpeedChangerItem = createItem(Material.FEATHER,1,"items.developer.fly-speed-changer");
-        player.getInventory().setItem(slot == 8 ? 17 : 16, flySpeedChangerItem);
+        setItemIfAbsent(inventory, slot == 8 ? 17 : 16, flySpeedChangerItem);
 
-        player.getInventory().setItem(slot, createItem(Material.IRON_INGOT,1,"items.developer.variables"));
+        setItemIfAbsent(inventory, slot, createItem(Material.IRON_INGOT,1,"items.developer.variables"));
 
+    }
+
+    private void setItemIfAbsent(@NotNull Inventory inventory, int slot, @NotNull ItemStack item) {
+        if (!inventory.contains(item,1)) {
+            inventory.setItem(slot, item);
+        }
     }
 }

@@ -149,6 +149,9 @@ public class WorldUtils {
                 if (folder.getName().equalsIgnoreCase("planet" + newWorldID)) {
                     exists = true;
                     break;
+                } else if (folder.getName().equalsIgnoreCase("planet" + newWorldID + "dev")) {
+                    exists = true;
+                    break;
                 }
             }
             if (!exists) {

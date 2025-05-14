@@ -38,6 +38,10 @@ public final class RemoveFromMapByKeyAction extends VariableAction {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         Map<Object,Object> map = getArguments().getMap("variable",this);
         Object key = getArguments().getValue("key",this);
+        if (cannotChangeListElements(1)) {
+            return;
+        }
+        changeListElementsChangesAmount(1);
         map.remove(key);
         setVarValue(variable, map);
     }

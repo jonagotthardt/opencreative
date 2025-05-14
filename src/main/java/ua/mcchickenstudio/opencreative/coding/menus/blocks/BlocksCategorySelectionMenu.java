@@ -41,7 +41,6 @@ public class BlocksCategorySelectionMenu extends MenusCategorySelectionMenu impl
 
     private ExecutorCategory executorCategory = null;
     private ActionCategory actionCategory = null;
-    private Location signLocation = null;
 
     public BlocksCategorySelectionMenu(@NotNull Player player,
                                        @NotNull Location location,
@@ -66,28 +65,27 @@ public class BlocksCategorySelectionMenu extends MenusCategorySelectionMenu impl
     @Override
     public @NotNull ContentWithMenusCategoryMenu<?> getContentBrowserMenu(final Location location, final Object frequency) {
         BlocksWithMenusCategoryMenu<?> content;
-        this.signLocation = location;
         if (frequency instanceof ActionCategory) {
             this.actionCategory = (ActionCategory) frequency;
         } else if (frequency instanceof ExecutorCategory) {
             this.executorCategory = (ExecutorCategory) frequency;
         }
         if (mainCategory.equalsIgnoreCase("events")) {
-            content = new ExecutorTypeSelectionMenu(player, signLocation, executorCategory);
+            content = new ExecutorTypeSelectionMenu(player, location, executorCategory);
         } else {
-            content = new ActionTypeSelectionMenu(player, signLocation, actionCategory);
+            content = new ActionTypeSelectionMenu(player, location, actionCategory);
         }
-        content.setSignLocation(signLocation);
+        content.setSignLocation(location);
         return content;
     }
 
     @Override
     public @Nullable BlockState getBlockState() {
-        return signLocation.getBlock().getState();
+        return location.getBlock().getState();
     }
 
     @Override
     public @Nullable Location getLocation() {
-        return signLocation;
+        return location;
     }
 }

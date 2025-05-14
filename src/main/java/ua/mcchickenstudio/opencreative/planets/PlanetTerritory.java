@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.planets;
 
+import org.bukkit.entity.*;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodeScript;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
@@ -28,10 +29,6 @@ import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.util.TriState;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.EnderDragon;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 import ua.mcchickenstudio.opencreative.utils.world.EmptyChunkGenerator;
@@ -109,6 +106,8 @@ public class PlanetTerritory {
      * Loads planet's files into worlds directory, loads and setups build world, loads script and variables.
      */
     public synchronized void load() {
+        long startTime = System.currentTimeMillis();
+
         loadInformation();
         flags.loadFlags();
         planet.getWorldPlayers().loadPlayers();
@@ -137,12 +136,25 @@ public class PlanetTerritory {
         world.getWorldBorder().setSize(worldSize);
         planet.getVariables().load();
         new PlanetLoadEvent(planet).callEvent();
+
+        long endTime = System.currentTimeMillis();
+        OpenCreative.getPlugin().getLogger().info("Planet " + planet.getId() + " loaded in " + (endTime - startTime) + " ms");
     }
 
     /**
      * Saves planet's data and unloads planet's build and dev world.
      */
     public synchronized void unload() {
+        long startTime = System.currentTimeMillis();
+
+        World world = getWorld();
+        if (world != null) {
+            for (Entity entity : world.getEntitiesByClass(Item.class)) {
+                if (entity instanceof Item item) {
+                    item.setItemStack(ItemUtils.fixItem(item.getItemStack()));
+                }
+            }
+        }
         for (Player player : planet.getPlayers()) {
             new QuitEvent(player).callEvent();
         }
@@ -158,6 +170,9 @@ public class PlanetTerritory {
             planet.getDevPlanet().unload();
         }
         new PlanetUnloadEvent(planet).callEvent();
+
+        long endTime = System.currentTimeMillis();
+        OpenCreative.getPlugin().getLogger().info("Planet " + planet.getId() + " unloaded in " + (endTime - startTime) + " ms");
     }
 
     public void clearData() {
@@ -173,6 +188,16 @@ public class PlanetTerritory {
 
     public void addBukkitRunnable(BukkitRunnable runnable) {
         runningBukkitRunnables.add(runnable);
+    }
+
+    public void scheduleRunnable(PlanetRunnable runnable, long delay) {
+        runningBukkitRunnables.add(runnable);
+        runnable.runTaskLater(OpenCreative.getPlugin(), delay);
+    }
+
+    public void scheduleAsyncRunnable(PlanetRunnable runnable, long delay) {
+        runningBukkitRunnables.add(runnable);
+        runnable.runTaskLaterAsynchronously(OpenCreative.getPlugin(), delay);
     }
 
     public void removeBukkitRunnable(BukkitRunnable runnable) {

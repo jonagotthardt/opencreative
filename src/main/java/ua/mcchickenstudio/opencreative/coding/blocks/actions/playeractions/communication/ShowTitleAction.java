@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.communication;
 
+import net.kyori.adventure.text.Component;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -37,8 +38,8 @@ public final class ShowTitleAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        String title = getArguments().getValue("title", EMPTY_STRING,this);
-        String subtitle = getArguments().getValue("subtitle", EMPTY_STRING,this);
+        Component title = getArguments().getValue("title", Component.text(""),this);
+        Component subtitle = getArguments().getValue("subtitle", Component.text(""),this);
         int fadeIn = getArguments().getValue("fade-in",20,this);
         int stay = getArguments().getValue("stay",60,this);
         int fadeOut = getArguments().getValue("stay-out",10,this);
@@ -48,7 +49,7 @@ public final class ShowTitleAction extends PlayerAction {
          * 1000 milliseconds = 1 second = 20 ticks.
          */
         player.showTitle(Title.title(
-                toComponent(title), toComponent(subtitle),
+                title, subtitle,
                 Title.Times.times(Duration.ofMillis(fadeIn * 50L), Duration.ofMillis(stay * 50L), Duration.ofMillis(fadeOut * 50L))
         ));
     }

@@ -108,6 +108,20 @@ allowed-links:
     - "dropbox.com"
     - "drive.google.com"
 
+item-fixer:
+  #
+  # We want to prevent players from hurting
+  # server with some bad items. These items
+  # will be edited or entirely removed from
+  # player's inventory.
+  #
+  max-enchantment-level: 10 # Maximum enchantment level (swords, armor...)
+  container-big-items-max-amount: 3 # Limit of bad items (containers, books) inside container
+  books-pages-max-amount: 50 # Limit of book pages
+  remove-attribute-modifiers: true # Removes some attribute modifiers from item (scale, speed, strength)
+  remove-clickable-in-books: true # Removes clickable components from books
+  remove-custom-spawn-eggs: true # Removes custom data in spawn eggs
+
 commands:
   #
   # These commands will be executed on
@@ -161,6 +175,8 @@ groups:
     creating-world:
       limit: 2
     favorite-worlds-limit: 30 # limit of favorite worlds for player
+    lobby-permissions: # Permissions will be given when player teleports to lobby
+      - "music.play"
     world:
       size: 25
       like-reward: 1
@@ -178,6 +194,7 @@ groups:
         scoreboards-amount: 50 # limit for amount of all scoreboards
         bossbars-amount: 10 # limit for amount of all bossbars
         coding-platforms: 4 # limit for coding platforms
+        changing-list-elements: 50 # limit of changing elements in lists and maps per second
         builders-amount: 10 # limit of added builders
         developers-amount: 10 # limit of added developers
         blacklist-amount: 10 # limit of banned players
@@ -194,6 +211,7 @@ groups:
         opening-inventories: 5
         variables-amount: 50
         scoreboards-amount: 3
+        changing-list-elements: 10
         bossbars-amount: 3
         physical-objects: 5
       build-permissions: # Permissions will be given when player types /build command
@@ -208,6 +226,9 @@ groups:
       dev-permissions: # Permissions will be given when player types /dev command
         - "headdb.open"
         - "essentials.itemname"
+        # If you want to deny permission, that player has (maybe he's admin),
+        # just add ! at the beginning of permission node.
+        # - !nte.default
   premium:
     permission: "opencreative.group.premium"
     cooldowns:
@@ -218,6 +239,8 @@ groups:
     creating-world:
       limit: 4
     favorite-worlds-limit: 30
+    lobby-permissions:
+      - "music.play"
     world:
       size: 50
       like-reward: 1
@@ -232,6 +255,7 @@ groups:
         scoreboards-amount: 50
         bossbars-amount: 10
         coding-platforms: 4
+        changing-list-elements: 50
         builders-amount: 10
         developers-amount: 10
         blacklist-amount: 10
@@ -242,6 +266,7 @@ groups:
         modifying-blocks: 0
         redstone-changes: 20
         opening-inventories: 5
+        changing-list-elements: 10
         variables-amount: 50
         scoreboards-amount: 10
         bossbars-amount: 10
@@ -257,7 +282,6 @@ groups:
       dev-permissions:
         - "headdb.open"
         - "essentials.itemname"
-
 sounds:
   #
   # This section allows you to set custom
@@ -288,8 +312,8 @@ sounds:
   # dev-var-list, dev-platform-color, dev-platform-claim, dev-action-target, dev-action-with-chest, dev-condition-not,
   # dev-condition-default, dev-cycle-delay-decrease, dev-cycle-delay-increase, dev-cycle-delay-set, dev-cycle-named,
   # dev-function-named, dev-method-named, dev-variable-parameter, dev-next-parameter, dev-change-category, dev-take-value,
-  # dev-value-set, dev-text-set, dev-number-set, dev-particle-set, dev-variable-set, dev-variable-change, dev-fly-speed-change, d
-  # ev-potion-set, dev-location-set, dev-location-teleport, dev-location-teleport-back, dev-event-value-set, dev-vector-set,
+  # dev-value-set, dev-text-set, dev-number-set, dev-particle-set, dev-variable-set, dev-variable-change, dev-fly-speed-change,
+  # dev-potion-set, dev-location-set, dev-location-teleport, dev-location-teleport-back, dev-event-value-set, dev-vector-set,
   # dev-boolean-true, dev-boolean-false, dev-move-blocks-right, dev-move-blocks-left, dev-debug-on, dev-debug-off, maintenance-notify,
   # maintenance-count, maintenance-start, maintenance-end, world-load, world-unload, world-deletion
   #

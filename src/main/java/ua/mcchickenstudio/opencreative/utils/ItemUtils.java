@@ -18,6 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
+import net.kyori.adventure.inventory.Book;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntitySnapshot;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.meta.BlockStateMeta;
+import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.SpawnEggMeta;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import net.kyori.adventure.text.Component;
@@ -30,12 +38,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import ua.mcchickenstudio.opencreative.settings.Settings;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebug;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebugError;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemDescription;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemName;
 
@@ -333,4 +344,104 @@ public class ItemUtils {
         return newItem;
     }
 
+    /**
+     * Removes bad things from item: enchants with big level,
+     * attribute modifiers, books with a lot of pages,
+     * containers with containers; or replaces items with air.
+     * @param item item to fix.
+     */
+    public static ItemStack fixItem(@NotNull ItemStack item) {
+        Settings settings = OpenCreative.getSettings();
+        return fixItem(item,
+                settings.getItemsMaxEnchantLevel(),
+                settings.getItemsMaxBookPagesAmount(),
+                settings.isItemsRemoveClickableBooks(),
+                settings.getItemsContainerBigItemsLimit(),
+                settings.isItemsRemoveCustomSpawnEggs(),
+                settings.isItemsRemoveAttributes());
+    }
+
+    /**
+     * Removes bad things from item: enchants with big level,
+     * attribute modifiers, books with a lot of pages,
+     * containers with containers; or replaces items with air.
+     * @param item item to fix.
+     * @param maxEnchantLevel maximum enchant level.
+     * @param bookPagesLimit limit of books pages.
+     * @param removeClickableBooks remove clickable components in books or not.
+     * @param containerBigItemsLimit limit of big items (books, containers) in container.
+     * @param removeCustomEggs removes custom spawn eggs.
+     * @param removeAttributes removes attribute modifiers (scale).
+     */
+    public static ItemStack fixItem(@NotNull ItemStack item, int maxEnchantLevel,
+                                    int bookPagesLimit, boolean removeClickableBooks,
+                                    int containerBigItemsLimit, boolean removeCustomEggs,
+                                    boolean removeAttributes) {
+        try {
+            ItemMeta meta = item.getItemMeta();
+            if (meta == null) return item;
+            if (meta.hasEnchants()) {
+                List<Enchantment> badEnchants = new ArrayList<>();
+                for (Enchantment enchant : meta.getEnchants().keySet()) {
+                    if (meta.getEnchantLevel(enchant) > maxEnchantLevel) {
+                        badEnchants.add(enchant);
+                    }
+                }
+                for (Enchantment enchantment : badEnchants) {
+                    meta.removeEnchant(enchantment);
+                }
+                item.setItemMeta(meta);
+                sendDebug("Cleared enchants");
+            }
+            if (meta.hasAttributeModifiers() && meta.getAttributeModifiers() != null && removeAttributes) {
+                Set<Attribute> attributes = meta.getAttributeModifiers().keySet();
+                for (Attribute attribute : attributes) {
+                    if (attribute != Attribute.GENERIC_ARMOR) {
+                        meta.removeAttributeModifier(attribute);
+                        sendDebug("Cleared attributes");
+                    }
+                }
+            }
+            if (meta instanceof BlockStateMeta blockMeta && blockMeta.getBlockState() instanceof InventoryHolder holder) {
+                // If item is Chest or Shulker
+                int insideLimit = containerBigItemsLimit;
+                int insideContainers = 0;
+                for (ItemStack insideItem : holder.getInventory().getContents()) {
+                    if (insideItem == null) continue;
+                    if (insideItem instanceof BlockStateMeta insideMeta && insideMeta.getBlockState() instanceof InventoryHolder insideHolder && !insideHolder.getInventory().isEmpty()) {
+                        insideContainers++;
+                    } else if (insideItem.getItemMeta() instanceof BookMeta book) {
+                        insideContainers++;
+                    }
+                    if (insideContainers > insideLimit) break;
+                }
+                if (insideContainers > insideLimit) {
+                    item.setType(Material.AIR);
+                    sendDebug("Destroyed container with a lot of items");
+                }
+            } else if (meta instanceof BookMeta book) {
+                if (book.pages().size() > bookPagesLimit) {
+                    item.setType(Material.AIR);
+                    sendDebug("Destroyed book with a lot of pages");
+                } else if (removeClickableBooks) {
+                    List<Component> pages = book.pages();
+                    for (int i = 0; i < pages.size(); i++) {
+                        Component component = pages.get(i);
+                        component = component.clickEvent() != null ? component.clickEvent(null) : component;
+                        book.page(i+1,component);
+                    }
+                    sendDebug("Cleared book with clickable components");
+                    item.setItemMeta(book);
+                }
+            } else if (meta instanceof SpawnEggMeta egg && removeCustomEggs) {
+                if (egg.getCustomSpawnedType() != null) {
+                    item.setType(Material.AIR);
+                    sendDebug("Destroyed spawn egg");
+                }
+            }
+        } catch (Exception exception) {
+            sendDebugError("Can't fix item: " + item, exception);
+        }
+        return item;
+    }
 }

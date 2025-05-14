@@ -39,6 +39,10 @@ public final class RemoveByIdFromListAction extends VariableAction {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         List<Object> elements = new ArrayList<>(getArguments().getList("variable",this));
         int index = getArguments().getValue("index",1,this);
+        if (cannotChangeListElements(1)) {
+            return;
+        }
+        changeListElementsChangesAmount(1);
         elements.remove(index-1);
         setVarValue(variable,elements);
     }

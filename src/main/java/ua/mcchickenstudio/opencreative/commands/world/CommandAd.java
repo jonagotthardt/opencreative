@@ -196,9 +196,11 @@ public class CommandAd extends CommandJoin {
         return switch (args.length) {
             case 1 -> OpenCreative.getPlanetsManager().getPlanets().stream()
                     .map(planet -> planet.getInformation().getCustomID())
+                    .filter(id -> id.startsWith(args[0]))
                     .toList();
             case 2 -> Bukkit.getOnlinePlayers().stream()
                     .map(Player::getName)
+                    .filter(name -> name.startsWith(args[1]))
                     .toList();
             default -> Collections.emptyList();
         };

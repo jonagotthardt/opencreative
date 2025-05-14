@@ -18,6 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.planets;
 
+import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedBlocksEvent;
 import ua.mcchickenstudio.opencreative.settings.groups.LimitType;
 
 /**
@@ -31,6 +34,7 @@ public class PlanetLimits {
 
     private int lastModifiedBlocksAmount;
     private int lastRedstoneOperationsAmount;
+    private int lastListElementsChangesAmount;
 
     public PlanetLimits(Planet planet) {
         this.planet = planet;
@@ -79,6 +83,14 @@ public class PlanetLimits {
     }
 
     /**
+     * Returns maximum whitelisted players amount in the planet.
+     * @return limit of whitelisted players amount.
+     */
+    public int getWhitelistedLimit() {
+        return planet.getGroup().getLimit(LimitType.WHITELISTED_AMOUNT).calculateLimit(planet.getPlayers().size());
+    }
+
+    /**
      * Returns maximum redstone operations amount in the planet.
      * @return limit of redstone operations.
      */
@@ -111,6 +123,14 @@ public class PlanetLimits {
     }
 
     /**
+     * Returns maximum elements changes amount in the planet.
+     * @return limit of scoreboards.
+     */
+    public int getVariableElementsChangesLimit() {
+        return planet.getGroup().getLimit(LimitType.SCOREBOARDS).calculateLimit(planet.getPlayers().size());
+    }
+
+    /**
      * Returns maximum bossbars amount in the planet.
      * @return limit of bossbars.
      */
@@ -126,6 +146,14 @@ public class PlanetLimits {
      */
     public int getPhysicalObjectsLimit() {
         return planet.getGroup().getLimit(LimitType.PHYSICAL_OBJECTS).calculateLimit(planet.getPlayers().size());
+    }
+
+    /**
+     * Sets last amount of changed elements in lists or maps.
+     * @param changedElementsAmount number of changed elements.
+     */
+    public void setLastVariableElementsChangesAmount(int changedElementsAmount) {
+        this.lastListElementsChangesAmount = changedElementsAmount;
     }
 
     /**
@@ -159,6 +187,15 @@ public class PlanetLimits {
     public int getLastRedstoneOperationsAmount() {
         return lastRedstoneOperationsAmount;
     }
+
+    /**
+     * Returns last elements changes amount in lists or maps.
+     * @return number of elements changes.
+     */
+    public int getLastVariableElementsChangesAmount() {
+        return lastListElementsChangesAmount;
+    }
+
 
     /**
      * Returns maximum coding platforms amount in the planet.

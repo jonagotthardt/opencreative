@@ -29,10 +29,12 @@ public enum LimitType {
     PHYSICAL_OBJECTS("physical-objects"),
     VARIABLES("variables-amount"),
     CODING_PLATFORMS("coding-platforms"),
+    LIST_ELEMENTS_CHANGES("changing-list-elements"),
     MODIFYING_BLOCKS("modifying-blocks"),
     BUILDERS_AMOUNT("builders-amount"),
     DEVELOPERS_AMOUNT("developers-amount"),
-    BLACKLISTED_AMOUNT("blacklisted-amount");
+    BLACKLISTED_AMOUNT("blacklisted-amount"),
+    WHITELISTED_AMOUNT("whitelisted-amount");
 
     private final String path;
 

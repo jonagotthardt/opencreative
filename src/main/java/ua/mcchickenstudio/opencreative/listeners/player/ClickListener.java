@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
+import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.*;
@@ -38,6 +39,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import ua.mcchickenstudio.opencreative.menus.buttons.RadioButton;
 import ua.mcchickenstudio.opencreative.planets.*;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
+import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerConfirmation;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
@@ -60,6 +62,20 @@ public final class ClickListener implements Listener {
     }
 
     @EventHandler
+    public void onChestOpen(InventoryOpenEvent event) {
+        /*
+         * Removes container items, that are located
+         * in container item to prevent a server crash.
+         */
+        if (event.isCancelled()) return;
+        if (event.getInventory().getLocation() == null) return;
+        for (ItemStack insideItem : event.getInventory().getContents()) {
+            if (insideItem == null) continue;
+            ItemUtils.fixItem(insideItem);
+        }
+    }
+
+    @EventHandler
     public void onOpen(InventoryOpenEvent event) {
         if (event.getInventory().getType() != InventoryType.ENDER_CHEST) return;
         if (!(event.getPlayer() instanceof Player player)) return;
@@ -71,12 +87,12 @@ public final class ClickListener implements Listener {
     }
 
     @EventHandler
-    public void onCraft(PlayerItemDamageEvent event) {
+    public void onItemDamage(PlayerItemDamageEvent event) {
         new PlayerItemDamagedEvent(event.getPlayer(),event).callEvent();
     }
 
     @EventHandler
-    public void click(InventoryClickEvent event) {
+    public void onClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
 
         Planet planet1 = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
@@ -91,7 +107,13 @@ public final class ClickListener implements Listener {
 
         if (event.getCurrentItem() != null) {
             ItemStack item = event.getCurrentItem();
-            ItemMeta meta = item.getItemMeta();
+            if (event.getClickedInventory() != null) {
+                InventoryHolder clickedHolder = event.getClickedInventory().getHolder();
+                InventoryHolder eventHolder = event.getInventory().getHolder();
+                if (clickedHolder != null && clickedHolder.equals(eventHolder)) {
+                    ItemUtils.fixItem(item);
+                }
+            }
 
            if (event.getInventory().getHolder() instanceof WorldSettingsPlayersMenu) {
             event.setCancelled(true);
@@ -213,6 +235,8 @@ public final class ClickListener implements Listener {
 
     @EventHandler
     public void onSwap(PlayerSwapHandItemsEvent event) {
+        ItemUtils.fixItem(event.getPlayer().getInventory().getItemInMainHand());
+        ItemUtils.fixItem(event.getPlayer().getInventory().getItemInOffHand());
         Player player = event.getPlayer();
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
@@ -302,26 +326,32 @@ public final class ClickListener implements Listener {
 
     @EventHandler
     public void onItemBreak(PlayerItemBreakEvent event) {
+        ItemUtils.fixItem(event.getPlayer().getInventory().getItemInMainHand());
+        ItemUtils.fixItem(event.getPlayer().getInventory().getItemInOffHand());
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) new ItemBreakEvent(event.getPlayer(),event).callEvent();
     }
 
     @EventHandler
-    public void onSlotChange(PlayerItemHeldEvent event) {
-        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
-        if (planet != null) new SlotChangeEvent(event.getPlayer(),event).callEvent();
+    public void onInventorySlotChange(PlayerInventorySlotChangeEvent event) {
+        ItemUtils.fixItem(event.getNewItemStack());
+        ItemUtils.fixItem(event.getOldItemStack());
     }
 
-    private static ItemStack getHeadItem(String internal) {
-        PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
-        Set<ProfileProperty> propertySet = profile.getProperties();
-        propertySet.add(new ProfileProperty("textures", internal));
-        profile.setProperties(propertySet);
-
-        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
-        SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
-        skullMeta.setPlayerProfile(profile);
-        head.setItemMeta(skullMeta);
-        return head;
+    @EventHandler
+    public void onSlotChange(PlayerItemHeldEvent event) {
+        Player player = event.getPlayer();
+        int previousSlot = event.getPreviousSlot();
+        int newSlot = event.getNewSlot();
+        ItemStack previousItem = player.getInventory().getItem(previousSlot);
+        ItemStack newItem = player.getInventory().getItem(newSlot);
+        if (previousItem != null) {
+            player.getInventory().setItem(previousSlot, ItemUtils.fixItem(previousItem));
+        }
+        if (newItem != null) {
+            player.getInventory().setItem(newSlot, ItemUtils.fixItem(newItem));
+        }
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
+        if (planet != null) new SlotChangeEvent(event.getPlayer(),event).callEvent();
     }
 }

@@ -41,6 +41,7 @@ public final class CalculateFromListAction extends VariableAction {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         List<Object> elements = getArguments().getList("list",this);
         final String type = getArguments().getValue("calculation", "get-min", this);
+
         if (elements != null && !elements.isEmpty() && elements.get(0) instanceof Number) {
             List<Number> numbers = elements.stream()
                             .filter(o -> o instanceof Number)

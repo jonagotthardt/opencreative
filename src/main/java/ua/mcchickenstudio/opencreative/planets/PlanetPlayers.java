@@ -54,6 +54,7 @@ public class PlanetPlayers {
     private final Set<String> developersGuests = new HashSet<>();
 
     private final Set<String> bannedPlayers = new HashSet<>();
+    private final Set<String> whitelistedPlayers = new HashSet<>();
 
     public PlanetPlayers(Planet planet) {
         this.planet = planet;
@@ -84,6 +85,7 @@ public class PlanetPlayers {
         developersNotTrusted.clear();
         developersGuests.clear();
         bannedPlayers.clear();
+        whitelistedPlayers.clear();
     }
 
     public void loadPlayers() {
@@ -345,6 +347,13 @@ public class PlanetPlayers {
         if (!planet.isLoaded()) clear();
     }
 
+    public void removeFromWhitelist(String nickname) {
+        if (!planet.isLoaded()) loadPlayers();
+        this.whitelistedPlayers.removeIf(whitelisted -> whitelisted.equalsIgnoreCase(nickname));
+        setPlanetConfigParameter(planet,"players.whitelist",whitelistedPlayers);
+        if (!planet.isLoaded()) clear();
+    }
+
     public void banPlayer(String nickname) {
         if (planet.isOwner(nickname)) return;
         if (getBannedPlayers().size() > planet.getLimits().getBlacklistedLimit()) return;
@@ -360,6 +369,23 @@ public class PlanetPlayers {
         }
         if (!planet.isLoaded()) loadPlayers();
         setPlanetConfigParameter(planet,"players.blacklist",bannedPlayers);
+        if (!planet.isLoaded()) clear();
+    }
+
+    public void whitelistPlayer(String nickname) {
+        if (planet.isOwner(nickname)) return;
+        if (getWhitelistedPlayers().size() > planet.getLimits().getWhitelistedLimit()) return;
+        Player player = Bukkit.getPlayer(nickname);
+        if (player != null) {
+            Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+            if (planet.equals(playerPlanet)) {
+                player.sendMessage(getLocaleMessage("world.players.white-list.player").replace("%player%",player.getName()));
+                Sounds.WORLD_WHITELIST_ADDED.play(player);
+                whitelistedPlayers.add(player.getName());
+            }
+        }
+        if (!planet.isLoaded()) loadPlayers();
+        setPlanetConfigParameter(planet,"players.whitelist",whitelistedPlayers);
         if (!planet.isLoaded()) clear();
     }
 
@@ -381,6 +407,7 @@ public class PlanetPlayers {
         allPlayers.addAll(getDevelopersNotTrusted());
         allPlayers.addAll(getDevelopersGuests());
         allPlayers.addAll(getBannedPlayers());
+        allPlayers.addAll(getWhitelistedPlayers());
         allPlayers.remove(planet.getOwner());
         return allPlayers;
     }
@@ -437,11 +464,27 @@ public class PlanetPlayers {
         return false;
     }
 
+    public boolean isWhitelisted(String nickname) {
+        for (String whitelisted : getWhitelistedPlayers()) {
+            if (whitelisted.equalsIgnoreCase(nickname)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Set<String> getBannedPlayers() {
         if (!planet.isLoaded()) {
             return new HashSet<>(getPlanetConfig(planet).getStringList("players.blacklist"));
         }
         return bannedPlayers;
+    }
+
+    public Set<String> getWhitelistedPlayers() {
+        if (!planet.isLoaded()) {
+            return new HashSet<>(getPlanetConfig(planet).getStringList("players.whitelist"));
+        }
+        return whitelistedPlayers;
     }
 
     public void purgeData() {

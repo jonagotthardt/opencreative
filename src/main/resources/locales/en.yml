@@ -386,11 +386,12 @@ world:
       removed: "%prefix%You have removed &6%player%&f from the blacklist. They can now enter your world."
       player: "%prefix%You have been blocked from the world you were playing in.. :("
       cannot: "%prefix%&cThis player cannot be blocked from world O_o"
-      limit: "%prefix%You reached limit of &6%limit% blacklisted players&f, to block player unban old one in world settings."
+      limit: "%prefix%You reached limit of &6%limit% banned players&f, to block player unban old one in world settings."
     white-list:
-      added: "%prefix%You have added &6%player%&f to the &lwhitelist&f. They can now enter your world at any time, change world modes, build, and code.\n &6Be careful! &fOnly add players you trust, as they could destroy your world!"
-      removed: "%prefix%You have removed &6%player%&f from the &lwhitelist&f."
-      player: "%prefix%You have been added to the &lwhitelist&f of this world! This means you can enter the world even if it's closed, and you can also build and code."
+      added: "%prefix%You have added &6%player%&f to the &lwhitelist&f. Now he can enter your world, even if its closed."
+      removed: "%prefix%You have removed &6%player%&f from the &lwhitelist&f. Now he's not able to join world, if its closed."
+      player: "%prefix%You have been added to the &lwhitelist&f of this world! This means you can enter the world even if it's closed."
+      limit: "%prefix%You reached limit of &6%limit% whitelisted players&f, to whitelist player remove old one in world settings."
     transfer-ownership:
       confirm-new: "%prefix%The world owner &6wants to transfer ownership of the world&f to you, which means you will have full control over it. If you want to accept, type in the chat: &6%id%"
       confirm-old: "%prefix%Are you sure you want to &6transfer ownership of this world&f to %player%? This means &6this player will have full control over the world&f, but &6you will lose the ability to manage it&f. To confirm, type in the chat: &6%id%"
@@ -405,6 +406,12 @@ world:
   already-loaded: "%prefix%&cThe world %id% is already loaded!"
   unloaded: "%prefix%World &6%id% &fhas been successfully &7unloaded&f..."
   already-unloaded: "%prefix%&cThe world %id% is already unloaded!"
+  not-numeric-id: "%prefix%&cWorld's ID needs to be numeric."
+  not-found: "%prefix%&cNot found world with ID %id%, please check does &6%path%&f exist?"
+  already-registered: "%prefix%&fWorld &6%id%&f is already registered. To update world's information, use: &6/oc worlds reload %id%"
+  reloaded: "%prefix%&fUpdated world information for &6%id%&f."
+  registered: "%prefix%&fRegistered a world &6%id%&f. Now it can appear in worlds browser menu and can be visited by &6/join %id%&f!"
+  unregistered: "%prefix%&fUnregistered a world &6%id%&f. It will not appear in worlds browser menu &6til next server restart&f, if world files exist."
 creative-chat:
   turned-on: "%cc-prefix%&fYou have &6enabled&f creative chat, you can now communicate. Type /cc Hello!"
   turned-off: "%cc-prefix%&fYou have &6disabled&f creative chat, you will no longer receive messages."
@@ -11806,7 +11813,7 @@ menus:
           - "&7 to change their rights in the world."
           - "&7"
       dev:
-        name: "&bWorld Development"
+        name: "&bDevelopment"
         choices:
           1: "Cannot code"
           2: "Can enter code but not change"
@@ -11896,6 +11903,31 @@ menus:
           - "&7be able to join your world."
           - ""
           - "&eClick to ban."
+      whitelist:
+        name: "&bWhitelist player"
+        lore:
+          - " "
+          - "&7If you want to make player able"
+          - "&7to join your world, even if its"
+          - "&7closed, then add him into whitelist."
+          - ""
+          - "&7Whitelisted players are able"
+          - "&7to join your closed world."
+          - ""
+          - "&eClick to add into whitelist."
+      whitelist-remove:
+        name: "&cRemove from whitelist"
+        lore:
+          - " "
+          - "&7If you don't trust player anymore,"
+          - "&7and you want to disallow him to join"
+          - "&7your closed world, then remove from"
+          - "&7whitelist."
+          - ""
+          - "&7Once removed, they cannot"
+          - "&7enter closed world."
+          - ""
+          - "&eClick to remove from whitelist."
       transfer-ownership:
         name: "&eTransfer world ownership"
         lore:

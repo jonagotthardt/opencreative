@@ -172,7 +172,7 @@ public interface PlanetsManager extends Manager {
      * unloads world and removes planet folders.
      * @param planet planet to delete.
      */
-    void deletePlanet(@NotNull Planet planet);
+    boolean deletePlanet(@NotNull Planet planet);
 
     /**
      * Registers planet to base, for example if plugin
