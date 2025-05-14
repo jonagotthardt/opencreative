@@ -23,6 +23,7 @@ import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 
@@ -44,9 +45,11 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 
+import static org.apache.commons.io.FileUtils.byteCountToDisplaySize;
 import static ua.mcchickenstudio.opencreative.coding.arguments.Argument.parseEntity;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
+import static ua.mcchickenstudio.opencreative.utils.FileUtils.getFileSize;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
@@ -172,6 +175,9 @@ public final class WorldVariables {
      * Loads variables from /planet/variables.json file.
      */
     public void load() {
+        long startTime = System.currentTimeMillis();
+        OpenCreative.getPlugin().getLogger().info("Loading variables for planet " + planet.getId());
+
         clearVariables();
         File variablesJson = FileUtils.getPlanetVariablesJson(planet);
         if (variablesJson == null || variablesJson.length() <= 2) {
@@ -193,12 +199,18 @@ public final class WorldVariables {
         } catch (Exception e) {
             sendCriticalErrorMessage("Failed to parse JSON file " + variablesJson.getPath(),e);
         }
+
+        long endTime = System.currentTimeMillis();
+        OpenCreative.getPlugin().getLogger().info("Loaded " + variables.size() + " variables for planet " + planet.getId() + " in " + (endTime - startTime) + " ms");
     }
 
     /**
      * Saves variables with type saved into /planet/variables.json file.
      */
     public void save() {
+        long startTime = System.currentTimeMillis();
+        OpenCreative.getPlugin().getLogger().info("Saving variables for planet " + planet.getId());
+
         File variablesJson = FileUtils.getPlanetVariablesJson(planet);
         if (variablesJson == null) {
             return;
@@ -222,6 +234,15 @@ public final class WorldVariables {
         } catch (Exception e){
             sendCriticalErrorMessage("Failed to save variables",e);
         }
+
+        long endTime = System.currentTimeMillis();
+        long fileSize = getFileSize(variablesJson);
+
+        OpenCreative.getPlugin().getLogger().info(
+                "Saved " + jsonArray.size() + " variables for planet " + planet.getId()
+                        + " in " + (endTime - startTime) + " ms"
+                        + " (" + byteCountToDisplaySize(fileSize) + ")"
+        );
     }
 
     private Object serializeObject(Object value) {
