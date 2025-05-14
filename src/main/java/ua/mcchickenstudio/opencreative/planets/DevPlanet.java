@@ -25,6 +25,7 @@ import org.bukkit.block.sign.Side;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
@@ -98,6 +99,8 @@ public class DevPlanet {
     }
 
     public void loadDevPlanetWorld() {
+        long startTime = System.currentTimeMillis();
+
         if (this.exists()) {
             Bukkit.createWorld(new WorldCreator(this.getWorldName())
                     .type(WorldType.FLAT)
@@ -114,14 +117,24 @@ public class DevPlanet {
             this.getWorld().setTime(12500);
             setupWorld();
         }
+
+        long endTime = System.currentTimeMillis();
+        OpenCreative.getPlugin().getLogger().info("Dev planet world " + this.getWorldName() + " loaded in " + (endTime - startTime) + " ms");
     }
 
     public void unload() {
         if (!isLoaded()) return;
+
+        long startTime = System.currentTimeMillis();
+
         for (Player player : getWorld().getPlayers()) {
             teleportToLobby(player);
         }
+
         Bukkit.unloadWorld(getWorldName(),true);
+
+        long endTime = System.currentTimeMillis();
+        OpenCreative.getPlugin().getLogger().info("Dev planet world " + getWorldName() + " unloaded in " + (endTime - startTime) + " ms");
     }
 
     public void setupWorld() {
