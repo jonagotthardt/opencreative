@@ -54,9 +54,15 @@ public final class QuitListener implements Listener {
                     planet.getInformation().updateIcon();
                 }
             }.runTaskAsynchronously(OpenCreative.getPlugin());
-            if (planet.getOnline() <= 1) {
-                planet.getTerritory().unload();
-            }
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (planet.getOnline() <= 1) {
+                        planet.getTerritory().unload();
+                    }
+                }
+            }.runTaskLater(OpenCreative.getPlugin(),20L);
+
         }
         player.setGameMode(GameMode.ADVENTURE);
         teleportToLobby(player);

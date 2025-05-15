@@ -119,7 +119,7 @@ public class DevPlanet {
         }
 
         long endTime = System.currentTimeMillis();
-        OpenCreative.getPlugin().getLogger().info("Dev planet world " + this.getWorldName() + " loaded in " + (endTime - startTime) + " ms");
+        OpenCreative.getPlugin().getLogger().info("Dev planet world " + planet.getId() + " loaded in " + (endTime - startTime) + " ms");
     }
 
     public void unload() {
@@ -134,7 +134,7 @@ public class DevPlanet {
         Bukkit.unloadWorld(getWorldName(),true);
 
         long endTime = System.currentTimeMillis();
-        OpenCreative.getPlugin().getLogger().info("Dev planet world " + getWorldName() + " unloaded in " + (endTime - startTime) + " ms");
+        OpenCreative.getPlugin().getLogger().info("Dev planet world " + planet.getId() + " unloaded in " + (endTime - startTime) + " ms");
     }
 
     public void setupWorld() {

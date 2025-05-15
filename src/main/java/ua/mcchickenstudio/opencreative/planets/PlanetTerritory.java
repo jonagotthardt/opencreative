@@ -146,6 +146,14 @@ public class PlanetTerritory {
      */
     public synchronized void unload() {
         long startTime = System.currentTimeMillis();
+        if (!planet.isLoaded()) {
+            if (planet.getDevPlanet().isLoaded()) {
+                planet.getDevPlanet().unload();
+                long endTime = System.currentTimeMillis();
+                OpenCreative.getPlugin().getLogger().info("Planet " + planet.getId() + " unloaded only dev in " + (endTime - startTime) + " ms");
+            }
+            return;
+        }
 
         World world = getWorld();
         if (world != null) {
