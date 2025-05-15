@@ -147,6 +147,19 @@ public final class ClickListener implements Listener {
                 }
                 player.sendMessage(getLocaleMessage("world.players.black-list.added").replace("%player%", selectedPlayer));
                 planet.getWorldPlayers().banPlayer(selectedPlayer);
+            } else if (item.getType() == Material.PAPER && event.getSlot() == 5) {
+                player.closeInventory();
+                int limit = planet.getLimits().getWhitelistedLimit();
+                if (planet.getWorldPlayers().getWhitelistedPlayers().size() > limit) {
+                    player.sendMessage(getLocaleMessage("world.players.white-list.limit").replace("%limit%",String.valueOf(limit)));
+                    return;
+                }
+                player.sendMessage(getLocaleMessage("world.players.white-list.added").replace("%player%", selectedPlayer));
+                planet.getWorldPlayers().whitelistPlayer(selectedPlayer);
+            } else if (item.getType() == Material.FILLED_MAP && event.getSlot() == 5) {
+                player.closeInventory();
+                player.sendMessage(getLocaleMessage("world.players.white-list.removed").replace("%player%", selectedPlayer));
+                planet.getWorldPlayers().removeFromWhitelist(selectedPlayer);
             } else if (item.getType() == Material.STRUCTURE_VOID) {
                 if (event.getSlot() == 16) {
                     player.closeInventory();
