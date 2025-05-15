@@ -99,7 +99,8 @@ public class PlanetPlayers {
         developersNotTrusted.addAll(config.getStringList("players.developers.not-trusted"));
 
         developersGuests.addAll(config.getStringList("players.developers.guests"));
-        bannedPlayers.addAll(config.getStringList("players.black-list"));
+        bannedPlayers.addAll(config.getStringList("players.blacklist"));
+        whitelistedPlayers.addAll(config.getStringList("players.whitelist"));
     }
 
     public Set<String> getAllBuilders() {

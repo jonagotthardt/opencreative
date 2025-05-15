@@ -326,7 +326,7 @@ public class Planet {
         }
     }
 
-    private void loadInfo() {
+    public void loadInfo() {
         FileConfiguration config = getPlanetConfig(this);
         String owner = "Unknown owner";
         String ownerGroup = "default";
@@ -442,16 +442,8 @@ public class Planet {
             Sounds.PLAYER_FAIL.play(player);
             return;
         }
-        if (getSharing() != Sharing.PUBLIC) {
-            if (!isOwner(player)) {
-                if (!(player.hasPermission("opencreative.world.private.bypass"))) {
-                    player.sendMessage(getLocaleMessage("private-planet", player));
-                    return;
-                }
-            }
-        }
         if (!isOwner(player.getName())) {
-            if (getSharing() != Sharing.PUBLIC && !player.hasPermission("opencreative.world.private.bypass")) {
+            if (getSharing() != Sharing.PUBLIC && !player.hasPermission("opencreative.world.private.bypass") && !worldPlayers.isWhitelisted(player.getName())) {
                 player.sendMessage(getLocaleMessage("private-planet", player));
                 return;
             }

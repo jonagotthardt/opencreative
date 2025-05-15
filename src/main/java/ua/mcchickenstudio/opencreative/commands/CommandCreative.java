@@ -134,7 +134,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                             .replace("%sharing%", planet.getSharing().getName()).replace("%mode%", planet.getMode().getName()).replace("%description%", planet.getInformation().getDescription()));
                 }
                 case "register" -> {
-                    if (!sender.hasPermission("opencreative.info")) {
+                    if (!sender.hasPermission("opencreative.world.register")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;
                     }
@@ -146,12 +146,12 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     try {
                         id = Integer.parseInt(args[1]);
                     } catch (Exception ignored) {
-                        sender.sendMessage(getLocaleMessage("creative.worlds.wrong-id"));
+                        sender.sendMessage(getLocaleMessage("world.not-numeric-id"));
                         return true;
                     }
                     File planetFolder = new File(FileUtils.getPlanetsStorageFolder(),"planet"+id);
-                    if (!planetFolder.exists() || planetFolder.isDirectory()) {
-                        sender.sendMessage(getLocaleMessage("creative.worlds.not-found")
+                    if (!planetFolder.exists() || !planetFolder.isDirectory()) {
+                        sender.sendMessage(getLocaleMessage("world.not-found")
                                 .replace("%id%",args[1])
                                 .replace("%path%",planetFolder.getPath()));
                         return true;
@@ -162,6 +162,50 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                     Planet newPlanet = new Planet(id);
                     OpenCreative.getPlanetsManager().registerPlanet(newPlanet);
+                    sender.sendMessage(getLocaleMessage("world.registered").replace("%id%",args[1]));
+                }
+                case "unregister" -> {
+                    if (!sender.hasPermission("opencreative.world.unregister")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return true;
+                    }
+                    String id = args[1];
+                    Planet planet = OpenCreative.getPlanetsManager().getPlanetById(id);
+                    if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(id);
+                    if (planet == null) {
+                        sender.sendMessage(getLocaleMessage("world.not-found")
+                                .replace("%id%",args[1])
+                                .replace("%path%","/join " + id));
+                        return true;
+                    }
+                    OpenCreative.getPlanetsManager().unregisterPlanet(planet);
+                    sender.sendMessage(getLocaleMessage("world.unregistered").replace("%id%",args[1]));
+                }
+                case "updateworld" -> {
+                    if (!sender.hasPermission("opencreative.world.update")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return true;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return true;
+                    }
+                    String id = args[1];
+                    Planet planet = OpenCreative.getPlanetsManager().getPlanetById(id);
+                    if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(id);
+                    if (planet == null) {
+                        sender.sendMessage(getLocaleMessage("world.not-found")
+                                .replace("%id%",args[1])
+                                .replace("%path%","/join " + id));
+                        return true;
+                    }
+                    planet.loadInfo();
+                    planet.getInformation().loadInformation();
+                    sender.sendMessage(getLocaleMessage("world.updated-info").replace("%id%",args[1]));
                 }
                 case "delete" -> {
                     if (!sender.hasPermission("opencreative.delete")) {
@@ -197,6 +241,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         }
                     } else {
                         planet = OpenCreative.getPlanetsManager().getPlanetById(args[1]);
+                        if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(args[1]);
                     }
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
@@ -431,6 +476,14 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                     if (args.length < 2) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return true;
+                    }
+                    if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("*")) {
+                        if (!sender.hasPermission("opencreative.world.unload.all")) {
+                            sender.sendMessage(getLocaleMessage("no-perms"));
+                            return true;
+                        }
+                        FileUtils.unloadPlanets();
                         return true;
                     }
                     Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1]);
@@ -723,30 +776,6 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    public boolean handleListCommand(@NotNull CommandSender sender, String[] args) {
-        return true;
-    }
-
-    public boolean handleWorldsCommand(@NotNull CommandSender sender, String[] args) {
-        return true;
-    }
-
-    public boolean handleSoundsCommand(@NotNull CommandSender sender, String[] args) {
-        return true;
-    }
-
-    public boolean handleTestCommand(@NotNull CommandSender sender, @NotNull String alias, String[] args) {
-        return true;
-    }
-
-    public boolean handleKickCommand(@NotNull CommandSender sender, @NotNull String alias, String[] args) {
-        return true;
-    }
-
-    public boolean handleItemsCommand(@NotNull CommandSender sender, @NotNull String alias, String[] args) {
-        return true;
-    }
-
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         List<String> tabCompleter = new ArrayList<>();
@@ -769,6 +798,9 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
             tabCompleter.add("corrupted");
             tabCompleter.add("sound");
             tabCompleter.add("sounds");
+            tabCompleter.add("register");
+            tabCompleter.add("unregister");
+            tabCompleter.add("updateworld");
         } else if (args.length == 2) {
             if ("maintenance".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("start");
@@ -785,7 +817,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
             }  else if ("debug".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");
-            } else if ("load".equalsIgnoreCase(args[0]) || "unload".equalsIgnoreCase(args[0]) || "moderation".equalsIgnoreCase(args[0])) {
+            } else if (List.of("load","unload","moderate","moderation","updateworld","unregister").contains(args[0].toLowerCase())) {
                 tabCompleter.addAll(OpenCreative.getPlanetsManager().getPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());
             } else if ("corrupted".equalsIgnoreCase(args[0])) {
                 tabCompleter.addAll(OpenCreative.getPlanetsManager().getCorruptedPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());
@@ -814,6 +846,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 tabCompleter.add("unload");
             }
         }
-        return tabCompleter;
+        String currentArgument = args.length == 0 ? "" : args[args.length-1].toLowerCase();
+        return tabCompleter.stream().filter(s -> s.startsWith(currentArgument)).toList();
     }
 }

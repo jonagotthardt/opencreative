@@ -407,9 +407,9 @@ world:
   unloaded: "%prefix%World &6%id% &fhas been successfully &7unloaded&f..."
   already-unloaded: "%prefix%&cThe world %id% is already unloaded!"
   not-numeric-id: "%prefix%&cWorld's ID needs to be numeric."
-  not-found: "%prefix%&cNot found world with ID %id%, please check does &6%path%&f exist?"
+  not-found: "%prefix%&cNot found world with ID %id%, please check does &6%path%&c exist?"
   already-registered: "%prefix%&fWorld &6%id%&f is already registered. To update world's information, use: &6/oc worlds reload %id%"
-  reloaded: "%prefix%&fUpdated world information for &6%id%&f."
+  updated-info: "%prefix%&fUpdated world information for &6%id%&f."
   registered: "%prefix%&fRegistered a world &6%id%&f. Now it can appear in worlds browser menu and can be visited by &6/join %id%&f!"
   unregistered: "%prefix%&fUnregistered a world &6%id%&f. It will not appear in worlds browser menu &6til next server restart&f, if world files exist."
 creative-chat:

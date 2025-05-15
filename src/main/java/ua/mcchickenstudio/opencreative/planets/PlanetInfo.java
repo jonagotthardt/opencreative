@@ -71,7 +71,7 @@ public class PlanetInfo {
     /**
      * Loads information from world's settings.
      */
-    private void loadInformation() {
+    public void loadInformation() {
         FileConfiguration config = getPlanetConfig(planet);
         String name = "Unknown name";
         String description = "World data is corrupted,\\nplease report server admin\\nabout this world.";
