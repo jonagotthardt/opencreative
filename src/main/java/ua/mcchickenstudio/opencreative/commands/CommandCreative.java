@@ -483,7 +483,14 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                             sender.sendMessage(getLocaleMessage("no-perms"));
                             return true;
                         }
-                        FileUtils.unloadPlanets();
+                        for (Planet planet : OpenCreative.getPlanetsManager().getPlanets()) {
+                            if (planet.isLoaded()) {
+                                planet.getTerritory().unload();
+                            } else if (planet.getDevPlanet().isLoaded()) {
+                                planet.getDevPlanet().unload();
+                            }
+                        }
+                        OpenCreative.getPlugin().getLogger().info("All worlds were unloaded by " + sender.getName());
                         return true;
                     }
                     Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1]);
