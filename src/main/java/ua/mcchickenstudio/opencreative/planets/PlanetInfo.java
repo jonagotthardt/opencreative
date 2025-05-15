@@ -22,11 +22,14 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +68,9 @@ public class PlanetInfo {
         loadInformation();
     }
 
+    /**
+     * Loads information from world's settings.
+     */
     private void loadInformation() {
         FileConfiguration config = getPlanetConfig(planet);
         String name = "Unknown name";
@@ -111,6 +117,22 @@ public class PlanetInfo {
         this.icon = icon;
     }
 
+    /**
+     * Updates icon in asynchronous task. Used to not
+     * load the main thread.
+     */
+    public void updateIconAsync() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                updateIcon();
+            }
+        }.runTaskAsynchronously(OpenCreative.getPlugin());
+    }
+
+    /**
+     * Updates icon with current planet's information.
+     */
     public void updateIcon() {
         ItemStack item = icon.clone();
         ItemMeta meta = item.getItemMeta();
@@ -138,21 +160,41 @@ public class PlanetInfo {
         icon = item;
     }
 
+    /**
+     * Sets category of planet, that will be displayed
+     * in worlds browser menu.
+     * @param category new category.
+     */
     public void setCategory(Category category) {
         this.category = category;
         setPlanetConfigParameter(planet,"category",category.toString());
     }
 
+    /**
+     * Sets new display name of planet, that will be displayed
+     * in worlds browser menu and advertisements.
+     * @param name new display name.
+     */
     public void setDisplayName(String name) {
         this.displayName = name;
         setPlanetConfigParameter(planet,"name",name);
     }
 
+    /**
+     * Sets new description of planet, that will be displayed
+     * in worlds browser menu.
+     * @param description new description.
+     */
     public void setDescription(String description) {
         this.description = description;
         setPlanetConfigParameter(planet,"description",description);
     }
 
+    /**
+     * Sets new item stack as planet's icon. Name, lore
+     * and enchantments will be removed from item.
+     * @param itemStack new icon.
+     */
     public void setIcon(ItemStack itemStack) {
         ItemStack newIcon = clearItemMeta(itemStack.clone());
         newIcon.setAmount(1);
@@ -161,35 +203,74 @@ public class PlanetInfo {
         updateIcon();
     }
 
+    /**
+     * Sets new text custom ID, that can be used to
+     * join world with short /join command.
+     * @param customID new custom ID.
+     */
     public void setCustomID(String customID) {
         this.customID = customID;
         setPlanetConfigParameter(planet,"customID",customID);
     }
 
+    /**
+     * Returns text component of display name, that can be
+     * used in item stacks or texts.
+     * @return display name of planet.
+     */
     public Component displayName() {
         return LegacyComponentSerializer.legacySection().deserialize(displayName).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
     }
 
+    /**
+     * Returns text component of description, that can be
+     * used in item stacks or texts.
+     * @return description of planet.
+     */
     public Component description() {
         return LegacyComponentSerializer.legacySection().deserialize(description);
     }
 
+    /**
+     * Returns display name, that stores in
+     * world's settings.
+     * @return display name of planet.
+     */
     public String getDisplayName() {
         return displayName;
     }
 
+    /**
+     * Returns description, that stores in
+     * world's settings.
+     * @return description of planet.
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Returns category of planet.
+     * @return category of planet.
+     */
     public Category getCategory() {
         return category;
     }
 
+    /**
+     * Returns text custom ID of planet,
+     * that can be used with /join.
+     * @return custom ID of planet.
+     */
     public String getCustomID() {
         return customID;
     }
 
+    /**
+     * Returns icon of planet. If planet is closed,
+     * it will have type of barrier.
+     * @return
+     */
     public ItemStack getIcon() {
         if (planet.getSharing() == PUBLIC) return icon;
         else {
@@ -197,18 +278,37 @@ public class PlanetInfo {
         }
     }
 
+    /**
+     * Returns count of unique visitors.
+     * @return count of uniques.
+     */
     public int getUniques() {
         return uniques;
     }
 
+    /**
+     * Sets count of unique visitors.
+     * @param uniques new count.
+     */
     public void setUniques(int uniques) {
         this.uniques = uniques;
     }
 
+    /**
+     * Returns rating of planet. It's calculated
+     * by subtracting likes count by count of dislikes.
+     * It's displayed in worlds browser menu.
+     * @return reputation of planet.
+     */
     public int getReputation() {
         return reputation;
     }
 
+    /**
+     * Sets rating of planet. It's displayed
+     * in worlds browser menu.
+     * @param reputation new reputation.
+     */
     public void setPlanetReputation(int reputation) {
         this.reputation = reputation;
     }
@@ -239,10 +339,20 @@ public class PlanetInfo {
         }
     }
 
+    /**
+     * Checks if world can be used as template in
+     * worlds generation menu.
+     * @return true - can be used as template, false - not.
+     */
     public boolean isDownloadable() {
         return downloadable;
     }
 
+    /**
+     * Sets can be world used as template to generate
+     * a new world.
+     * @param downloadable true - can be used, false - not.
+     */
     public void setDownloadable(boolean downloadable) {
         this.downloadable = downloadable;
         setPlanetConfigParameter(planet,"downloadable",downloadable);

@@ -48,12 +48,7 @@ public final class QuitListener implements Listener {
             PlanetPlayer planetPlayer = planet.getWorldPlayers().getPlanetPlayer(player);
             if (planetPlayer != null) planetPlayer.save();
             planet.getWorldPlayers().unregisterPlayer(player);
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    planet.getInformation().updateIcon();
-                }
-            }.runTaskAsynchronously(OpenCreative.getPlugin());
+            planet.getInformation().updateIconAsync();
             new BukkitRunnable() {
                 @Override
                 public void run() {

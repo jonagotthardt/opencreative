@@ -319,12 +319,7 @@ public final class ChatListener implements Listener {
                 }
                 planet.getInformation().setDisplayName(newName);
                 player.sendMessage(getLocaleMessage("settings.world-name.changed").replace("%name%",newName));
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        planet.getInformation().updateIcon();
-                    }
-                }.runTaskAsynchronously(OpenCreative.getPlugin());
+                planet.getInformation().updateIconAsync();
             }
             case WORLD_CUSTOM_ID_CHANGE -> {
                 if (planet == null || !planet.isOwner(player)) return;
@@ -345,12 +340,7 @@ public final class ChatListener implements Listener {
                 }
                 planet.getInformation().setCustomID(input);
                 player.sendMessage(getLocaleMessage("settings.world-id.changed").replace("%id%", input));
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        planet.getInformation().updateIcon();
-                    }
-                }.runTaskAsynchronously(OpenCreative.getPlugin());
+                planet.getInformation().updateIconAsync();
             }
             case WORLD_DESCRIPTION_CHANGE -> {
                 if (planet == null || !planet.isOwner(player)) return;
@@ -366,12 +356,7 @@ public final class ChatListener implements Listener {
                 newDescription = String.join("\\n", splitDescription(newDescription, 39));
                 planet.getInformation().setDescription(newDescription);
                 player.sendMessage(getLocaleMessage("settings.world-description.changed").replace("%description%", newDescription));
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        planet.getInformation().updateIcon();
-                    }
-                }.runTaskAsynchronously(OpenCreative.getPlugin());
+                planet.getInformation().updateIconAsync();
             }
             case FIND_PLANETS_BY_NAME -> {
                 Set<Planet> foundPlanetsByName = OpenCreative.getPlanetsManager().getPlanetsContainingName(input);

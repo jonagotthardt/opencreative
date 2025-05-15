@@ -110,12 +110,7 @@ public class Planet {
 
         OpenCreative.getPlanetsManager().registerPlanet(this);
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                getInformation().updateIcon();
-            }
-        }.runTaskAsynchronously(OpenCreative.getPlugin());
+        info.updateIconAsync();
     }
 
     public PlanetInfo getInformation() {
@@ -540,12 +535,7 @@ public class Planet {
                     }
                 }
                 new PlanetConnectPlayerEvent(this,player).callEvent();
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        getInformation().updateIcon();
-                    }
-                }.runTaskAsynchronously(OpenCreative.getPlugin());
+                info.updateIconAsync();
             } else {
                 sendPlayerErrorMessage(player,"Can't join planet. World is unloaded.");
             }
@@ -631,24 +621,14 @@ public class Planet {
     public void setCreationTime(long creationTime) {
         this.creationTime = creationTime;
         FileUtils.setPlanetConfigParameter(this,"creation-time",creationTime);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                getInformation().updateIcon();
-            }
-        }.runTaskAsynchronously(OpenCreative.getPlugin());
+        info.updateIconAsync();
     }
 
     public void setOwner(String owner) {
         this.owner = owner;
         FileUtils.setPlanetConfigParameter(this,"owner",owner);
         FileUtils.setPlanetConfigParameter(this,"owner-uuid",Bukkit.getOfflinePlayer(owner).getUniqueId().toString());
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                getInformation().updateIcon();
-            }
-        }.runTaskAsynchronously(OpenCreative.getPlugin());
+        info.updateIconAsync();
     }
 
     public boolean isDebug() {
