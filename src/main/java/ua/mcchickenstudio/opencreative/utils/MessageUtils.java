@@ -95,7 +95,6 @@ public class MessageUtils {
         } else {
             String defaultLanguage = getLanguage().equalsIgnoreCase("ru") ? "ru" : "en";
             OpenCreative.getPlugin().getConfig().set("messages.locale",defaultLanguage);
-            OpenCreative.getPlugin().saveResource("locales" + File.separator + "olden.yml",false);
             OpenCreative.getPlugin().saveResource("locales" + File.separator + "en.yml",false);
             OpenCreative.getPlugin().saveResource("locales" + File.separator + "ru.yml",false);
             OpenCreative.getPlugin().reloadConfig();
@@ -152,7 +151,6 @@ public class MessageUtils {
         } else {
             Object defaultLanguage = "en";
             OpenCreative.getPlugin().getConfig().set("messages.locale",defaultLanguage);
-            OpenCreative.getPlugin().saveResource("locales" + File.separator + "olden.yml",false);
             OpenCreative.getPlugin().saveResource("locales" + File.separator + "en.yml",false);
             OpenCreative.getPlugin().saveResource("locales" + File.separator + "ru.yml",false);
             OpenCreative.getPlugin().reloadConfig();

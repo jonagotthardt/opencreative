@@ -203,7 +203,7 @@ public final class InteractListener implements Listener {
                         player.openInventory(layout.getInventory());
                     }
                 } catch (IllegalArgumentException e) {
-                    player.sendActionBar(getLocaleMessage("planet-code-error.unknown-layout"));
+                    player.sendActionBar(getLocaleMessage("coding-error.unknown-layout"));
                     event.setCancelled(false);
                 }
             }

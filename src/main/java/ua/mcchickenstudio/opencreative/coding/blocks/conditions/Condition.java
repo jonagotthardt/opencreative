@@ -70,7 +70,7 @@ public abstract class Condition extends Action {
                 }
             }
         }
-        sendCodingDebugLog(getPlanet(), getLocaleMessage("planet-code-debug.condition.returned-" + check,false).replace("%type%",getActionType().getLocaleName()));
+        sendCodingDebugLog(getPlanet(), getLocaleMessage("coding-debug.condition.returned-" + check,false).replace("%type%",getActionType().getLocaleName()));
         if (check ^ isOpposed) {
             new ActionsHandler(this).executeActions(actions);
         } else {

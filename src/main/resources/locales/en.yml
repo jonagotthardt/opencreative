@@ -190,7 +190,7 @@ same-player: "%prefix%&cYou cannot specify yourself."
 same-world: "%prefix%&cYou are already playing in this world."
 player-error: "&6 Worlds &8| &fA player error occurred. Please report this to the developer: &6%error%"
 planet-error: "&6 Worlds &8| &fAn error occurred in the world: &6%error%"
-planet-code-error:
+coding-error:
   message: "\n &c &m                   &c ☹ ERROR &m                   \n&f\n &fOops, it seems there was a problem executing &f%event% &7-> &f%action% &7(%x%,%y%,%z%)\n \n&f Information: &6%error%\n \n &c &m                                                    \n&f"
   message-event-critical: "\n &4 &m          &4 ☠ CRITICAL ERROR &m          \n&f\n &cATTENTION! &fThe world has been put into build mode because a serious issue occurred during the execution of the code &f%event% &7(%x%,%y%,%z%)...\n \n&f Information: &6%error%\n \n &4 &m                                                    \n&f"
   message-event: "&6 Error &8| &fAn error occurred during the execution of the code &f%event% &7(%x%,%y%,%z%).\n &fError information: &6%error%"
@@ -207,7 +207,7 @@ planet-code-error:
   unknown-layout: "&cThis block opened a menu without hints, as there is a problem loading them..."
   hover-message: "&fClick to teleport to the block."
   temp-var-not-exists: "The temporary value %variable% for this event was not found because the event is not compatible with this value. Replace the event with a more suitable one."
-planet-code-debug:
+coding-debug:
   condition:
     returned-true: "&fCondition %type%&f executed, &aTrue&f."
     returned-false: "&fCondition %type%&f did not execute, &cFalse&f."
@@ -222,7 +222,7 @@ planet-code-debug:
   variable:
     set: "&6 Debug &8| &fNew value for %variable%&f: &7%value%"
     created: "&6 Debug &8| &fVariable %variable%&f created: &7%value%"
-  log: "&6 Debug &8| &f%log%"
+  log: "&8 [&6⌘&8] &f%log%"
   event-message: "&7 Event Call &8| &7Event %type%&f occurred, finding the trigger..."
   variable-found: "&7           %name% &a=&7 %value%"
   variable-not-found: "&7           %name% &cdefault&7: %value%"
@@ -231,6 +231,26 @@ planet-code-debug:
   action-hover: "&7Type %type% &7Argument &6%name%&7 Value: &6%value%"
   condition-message-true: "&7 Condition &8| &7%type%&7 (%x% %y% %z%) returned &aYES&7: Executing actions..."
   condition-message-false: "&7 Condition &8| &7%type%&7 (%x% %y% %z%) returned &cNO&7: Executing otherwise..."
+coding-warning:
+  message: "&f\n &8 [&6⚠&8] &f%warning% \n&f"
+  variables-limit:
+    text: "&7Maximum number of variables reached &6%count%&7/%limit%. &3[?]"
+    hover: "&fTo view the list of variables, use &6/env var list&f. To delete &fall variables&f, use &c/env var clear&f."
+  changing-elements-limit:
+    text: "&7Too many list element changes &6%count%&7/%limit% in a short time. &3[?]"
+    hover: "&fYou need to reduce the number of modified data items."
+  changing-blocks-limit:
+    text: "&7Too many blocks modified &6%count%&7/%limit% in a short time. &3[?]"
+    hover: "&fMost likely, too many blocks were selected. Reduce the distance between locations or split block operations over several seconds."
+  opening-inventories-limit:
+    text: "&7Inventories are being opened too frequently &6%count%&7/%limit% in a short time. &3[?]"
+    hover: "&fReduce the number of menu openings or add a delay, then check whether the player is on cooldown before opening the inventory.\n&7This is necessary to allow the player to exit the game properly."
+  bossbars-limit:
+    text: "&7Maximum number of bossbars reached &6%count%&7/%limit%. &3[?]"
+    hover: "&fIf there are personal bossbars for players in the world, they should be removed when a player leaves the world."
+  scoreboards-limit:
+    text: "&7Maximum number of scoreboards reached &6%count%&7/%limit% &3[?]"
+    hover: "&fIf there are personal scoreboards for players in the world, they should be removed when a player leaves the world."
 lobby:
   title: "%branding%"
   subtitle: "&fLet's &acreate&f in your worlds!"

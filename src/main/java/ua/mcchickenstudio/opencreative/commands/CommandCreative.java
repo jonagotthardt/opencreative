@@ -297,7 +297,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     planet.connectToDevPlanet(player);
                     sender.sendMessage(getLocaleMessage("world.loaded").replace("%id%",args[1]));
                 }
-                case "creative-chat" -> {
+                case "creative-chat", "chat" -> {
                     if (!sender.hasPermission("opencreative.creative-chat")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return true;

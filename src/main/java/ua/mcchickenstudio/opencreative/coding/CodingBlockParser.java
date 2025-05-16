@@ -170,7 +170,7 @@ public class CodingBlockParser {
                                 x=x+2;
                             }
                         } else {
-                            sendPlanetCompileErrorMessage(devPlanet.getPlanet(),world.getBlockAt(x+1,1,z),getLocaleMessage("planet-code-error.bad-piston"));
+                            sendPlanetCompileErrorMessage(devPlanet.getPlanet(),world.getBlockAt(x+1,1,z),getLocaleMessage("coding-error.bad-piston"));
                             isCodeFine = false;
                             continue;
                         }

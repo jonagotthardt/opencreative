@@ -182,7 +182,7 @@ public class ActionsHandler {
                     action.prepareAndExecute(this);
                 } catch (Exception error) {
                     String id = error.getClass().getSimpleName().toLowerCase();
-                    sendPlanetCodeErrorMessage(executor, action, getLocaleMessage("planet-code-error." + (messageExists("planet-code-error." + id) ? id : "unknown")) + (error.getMessage() == null ? error.getClass().getSimpleName() : error.getMessage()).replace("ua.mcchickenstudio.opencreative.coding.",""), error);
+                    sendPlanetCodeErrorMessage(executor, action, getLocaleMessage("coding-error." + (messageExists("coding-error." + id) ? id : "unknown")) + (error.getMessage() == null ? error.getClass().getSimpleName() : error.getMessage()).replace("ua.mcchickenstudio.opencreative.coding.",""), error);
                     removeAllActions();
                 }
             }
