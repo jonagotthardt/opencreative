@@ -59,6 +59,7 @@ public class ActionsHandler {
     private final Set<Entity> selectedTargets;
     private final ActionsHandler parentActionsHandler;
     private final Queue<Action> actionsQueue = new LinkedList<>();
+
     private final boolean doNotUseTryFlag;
     private boolean stopped = false;
     private long waitDelay = 0;

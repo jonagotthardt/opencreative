@@ -41,10 +41,7 @@ public abstract class VariableAction extends Action {
     }
 
     public boolean cannotChangeListElements(int size) {
-        if (size + getPlanet().getLimits().getLastVariableElementsChangesAmount() > getPlanet().getLimits().getVariableElementsChangesLimit()) {
-            return true;
-        }
-        return false;
+        return size + getPlanet().getLimits().getLastVariableElementsChangesAmount() > getPlanet().getLimits().getVariableElementsChangesLimit();
     }
 
     public void changeListElementsChangesAmount(int size) {

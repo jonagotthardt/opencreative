@@ -52,7 +52,7 @@ public final class QuitListener implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (planet.getOnline() <= 1) {
+                    if (planet.getOnline() == 0) {
                         planet.getTerritory().unload();
                     }
                 }

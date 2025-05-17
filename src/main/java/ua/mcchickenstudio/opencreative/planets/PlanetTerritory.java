@@ -215,7 +215,7 @@ public class PlanetTerritory {
     public void stopBukkitRunnables() {
         for (BukkitRunnable runnable : runningBukkitRunnables) {
             try {
-                runnable.cancel();
+                if (runnable != null) runnable.cancel();
             } catch (IllegalStateException ignored) {}
         }
         runningBukkitRunnables.clear();
