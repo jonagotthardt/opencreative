@@ -138,12 +138,7 @@ public final class ChangedWorld implements Listener {
                         oldPlanet.getTerritory().unload();
                     }
                 }
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        oldPlanet.getInformation().updateIcon();
-                    }
-                }.runTaskAsynchronously(OpenCreative.getPlugin());
+                oldPlanet.getInformation().updateIconAsync();
             }
             if (newPlanet != null) {
                 newPlanet.getWorldPlayers().registerPlayer(player);
@@ -170,12 +165,7 @@ public final class ChangedWorld implements Listener {
                     }
 
                 }
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        newPlanet.getInformation().updateIcon();
-                    }
-                }.runTaskAsynchronously(OpenCreative.getPlugin());
+                newPlanet.getInformation().updateIconAsync();
             }
         }
 

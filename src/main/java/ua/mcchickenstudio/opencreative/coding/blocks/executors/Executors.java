@@ -89,7 +89,7 @@ public class Executors {
         if (executors.getLastExecutorCallsAmount(executor) > planet.getLimits().getCodeOperationsLimit()) {
             executors.clearExecutionsAmount(executor);
             stopPlanetCode(planet);
-            sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("planet-code-error.operations-limit",false).replace("%limit%",String.valueOf(planet.getLimits().getCodeOperationsLimit())));
+            sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("coding-error.operations-limit",false).replace("%limit%",String.valueOf(planet.getLimits().getCodeOperationsLimit())));
         } else {
             executors.increaseCallsAmount(executor);
             executor.run(event);
@@ -108,7 +108,7 @@ public class Executors {
         if (executors.getLastExecutorCallsAmount(executor) > planet.getLimits().getCodeOperationsLimit()) {
             executors.clearExecutionsAmount(executor);
             stopPlanetCode(planet);
-            sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("planet-code-error.operations-limit",false).replace("%limit%",String.valueOf(planet.getLimits().getCodeOperationsLimit())));
+            sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("coding-error.operations-limit",false).replace("%limit%",String.valueOf(planet.getLimits().getCodeOperationsLimit())));
         } else {
             executors.increaseCallsAmount(executor);
             new BukkitRunnable() {

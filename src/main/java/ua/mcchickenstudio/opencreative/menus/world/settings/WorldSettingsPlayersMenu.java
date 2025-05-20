@@ -71,6 +71,7 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
         items.put(14,getDevButton(planet));
         items.put(15,getKickButton(planet));
         items.put(16,getBanButton(planet));
+        items.put(5,getWhiteListButton(planet));
         items.put(6,getTransferOwnershipButton(planet));
 
         Set<String> playersList = planet.getWorldPlayers().getAllPlayersFromConfig();
@@ -201,6 +202,26 @@ public class WorldSettingsPlayersMenu extends LegacyMenu {
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName(MessageUtils.getLocaleItemName("menus.world-settings-players.items.ban.name"));
             meta.setLore(MessageUtils.getLocaleItemDescription("menus.world-settings-players.items.ban.lore"));
+            item.setItemMeta(meta);
+        }
+        return item;
+    }
+
+    public ItemStack getWhiteListButton(Planet planet) {
+        if (playersSelected.get(player) == null) return null;
+        ItemStack item;
+        String planetPlayer = playersSelected.get(player);
+        if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.WHITELISTED).contains(planetPlayer)) {
+            item = new ItemStack(Material.FILLED_MAP);
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(MessageUtils.getLocaleItemName("menus.world-settings-players.items.whitelist-remove.name"));
+            meta.setLore(MessageUtils.getLocaleItemDescription("menus.world-settings-players.items.whitelist-remove.lore"));
+            item.setItemMeta(meta);
+        } else {
+            item = new ItemStack(Material.PAPER);
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(MessageUtils.getLocaleItemName("menus.world-settings-players.items.whitelist.name"));
+            meta.setLore(MessageUtils.getLocaleItemDescription("menus.world-settings-players.items.whitelist.lore"));
             item.setItemMeta(meta);
         }
         return item;

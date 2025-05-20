@@ -154,7 +154,6 @@ public class FileUtils {
 
     private static void setDefaultLocales() {
         try {
-            OpenCreative.getPlugin().saveResource("locales" + File.separator + "olden.yml",false);
             OpenCreative.getPlugin().saveResource("locales" + File.separator + "ru.yml",false);
         } catch (IllegalArgumentException error) {
             sendWarningErrorMessage("Couldn't save default localization file (resource) " + error.getClass().getName() + " " + error.getMessage());

@@ -146,6 +146,14 @@ public class PlanetTerritory {
      */
     public synchronized void unload() {
         long startTime = System.currentTimeMillis();
+        if (!planet.isLoaded()) {
+            if (planet.getDevPlanet().isLoaded()) {
+                planet.getDevPlanet().unload();
+                long endTime = System.currentTimeMillis();
+                OpenCreative.getPlugin().getLogger().info("Planet " + planet.getId() + " unloaded only dev in " + (endTime - startTime) + " ms");
+            }
+            return;
+        }
 
         World world = getWorld();
         if (world != null) {
@@ -207,7 +215,7 @@ public class PlanetTerritory {
     public void stopBukkitRunnables() {
         for (BukkitRunnable runnable : runningBukkitRunnables) {
             try {
-                runnable.cancel();
+                if (runnable != null) runnable.cancel();
             } catch (IllegalStateException ignored) {}
         }
         runningBukkitRunnables.clear();

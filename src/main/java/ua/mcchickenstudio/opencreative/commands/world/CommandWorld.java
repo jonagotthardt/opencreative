@@ -148,6 +148,32 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
                 planet.setSharing(Planet.Sharing.PUBLIC);
                 player.sendMessage(getLocaleMessage("settings.world-sharing.enabled"));
             }
+            case "whitelist", "white" -> {
+                if (!planet.isOwner(player)) {
+                    sender.sendMessage(getLocaleMessage("not-owner"));
+                    return true;
+                }
+                if (args.length == 1) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return true;
+                }
+                if (planet.isOwner(args[1])) {
+                    sender.sendMessage(getLocaleMessage("same-player"));
+                    return true;
+                }
+                int limit = planet.getLimits().getWhitelistedLimit();
+                if (planet.getWorldPlayers().getWhitelistedPlayers().size() > limit) {
+                    sender.sendMessage(getLocaleMessage("world.players.white-list.limit").replace("%limit%",String.valueOf(limit)));
+                    return true;
+                }
+                Player playerToWhitelist = Bukkit.getPlayer(args[1]);
+                if (playerToWhitelist == null || !planet.getPlayers().contains(playerToWhitelist)) {
+                    sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
+                    return true;
+                }
+                sender.sendMessage(getLocaleMessage("world.players.white-list.added", playerToWhitelist));
+                planet.getWorldPlayers().banPlayer(args[1]);
+            }
             case "ban", "block", "blacklist" -> {
                 if (!planet.isOwner(player)) {
                     sender.sendMessage(getLocaleMessage("not-owner"));
@@ -232,6 +258,26 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
                 planet.getWorldPlayers().unbanPlayer(args[1]);
                 sender.sendMessage(getLocaleMessage("world.players.black-list.removed",Bukkit.getOfflinePlayer(args[1])));
             }
+            case "unwhitelist", "unwhite" -> {
+                if (!planet.isOwner(player)) {
+                    sender.sendMessage(getLocaleMessage("not-owner"));
+                    return true;
+                }
+                if (args.length == 1) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return true;
+                }
+                if (planet.isOwner(args[1])) {
+                    sender.sendMessage(getLocaleMessage("same-player"));
+                    return true;
+                }
+                if (!planet.getWorldPlayers().isWhitelisted(args[1])) {
+                    sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
+                    return true;
+                }
+                planet.getWorldPlayers().removeFromWhitelist(args[1]);
+                sender.sendMessage(getLocaleMessage("world.players.white-list.removed",Bukkit.getOfflinePlayer(args[1])));
+            }
             case "exp", "e", "experiment", "experiments" -> {
                 if (!planet.isOwner(player)) {
                     sender.sendMessage(getLocaleMessage("not-owner"));
@@ -313,13 +359,15 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
         if (!planet.isOwner(player)) return null;
         if (args.length == 1) {
             tabCompleter.addAll(List.of((planet.getSharing() == Planet.Sharing.PUBLIC ? "close" : "open"),
-                    "kick","ban","unban","spawn","setspawn"));
+                    "kick","ban","unban","spawn","setspawn","whitelist","unwhitelist"));
         } else if (args.length == 2) {
             if (List.of("unban","unblacklist").contains(args[0].toLowerCase())) {
-                tabCompleter.addAll(planet.getWorldPlayers().getBannedPlayers());
-            } else if (List.of("ban","blacklist","kick").contains(args[0].toLowerCase())) {
+                tabCompleter.addAll(planet.getWorldPlayers().getBannedPlayers().stream().filter(p -> p.startsWith(args[1])).toList());
+            } else if (List.of("unwhite","unwhitelist").contains(args[0].toLowerCase())) {
+                tabCompleter.addAll(planet.getWorldPlayers().getWhitelistedPlayers().stream().filter(p -> p.startsWith(args[1])).toList());
+            } else if (List.of("ban","blacklist","kick","whitelist","white").contains(args[0].toLowerCase())) {
                 if (args[0].equalsIgnoreCase("kick")) tabCompleter.add("*");
-                tabCompleter.addAll(planet.getPlayers().stream().filter(p -> !planet.isOwner(p)).map(Player::getName).toList());
+                tabCompleter.addAll(planet.getPlayers().stream().filter(p -> !planet.isOwner(p) && p.getName().startsWith(args[1])).map(Player::getName).toList());
             }
         }
         return tabCompleter;
