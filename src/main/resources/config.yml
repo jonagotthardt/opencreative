@@ -197,7 +197,8 @@ groups:
         changing-list-elements: 50 # limit of changing elements in lists and maps per second
         builders-amount: 10 # limit of added builders
         developers-amount: 10 # limit of added developers
-        blacklist-amount: 10 # limit of banned players
+        blacklisted-amount: 10 # limit of banned players
+        whitelisted-amount: 10 # limit of whitelisted players
         physical-objects: 140 # limit of special physical objects (it's not sand, gravels; they can be spawned with code)
       per-player-limit-modifiers:
         #
@@ -258,7 +259,8 @@ groups:
         changing-list-elements: 50
         builders-amount: 10
         developers-amount: 10
-        blacklist-amount: 10
+        blacklisted-amount: 10
+        whitelisted-amount: 10
         physical-objects: 140
       per-player-limit-modifiers:
         executor-calls: 30
