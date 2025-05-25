@@ -35,12 +35,12 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
- * <h1>CommandMenu</h1>
+ * <h1>MenuCommand</h1>
  * This command responsible for opening recommended worlds browser menu.
  * <p>
  * Available: For all players.
  */
-public class CommandMenu extends CommandHandler {
+public class MenuCommand extends CommandHandler {
 
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {

@@ -53,14 +53,14 @@ import static ua.mcchickenstudio.opencreative.utils.FileUtils.setPlanetConfigPar
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 /**
- * <h1>CommandCreative</h1>
+ * <h1>CreativeCommand</h1>
  * This command has special tools only for server admins.
  * Can change plugin's behaviour, change settings or
  * manipulate with worlds.
  * <p>
  * Available: For server admins with specific permissions.
  */
-public class CommandCreative extends CommandHandler {
+public class CreativeCommand extends CommandHandler {
 
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {

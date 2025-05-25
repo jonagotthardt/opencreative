@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.commands.world;
 
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
-import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.commands.CommandHandler;
@@ -29,7 +28,6 @@ import ua.mcchickenstudio.opencreative.menus.world.settings.EntitiesBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.world.settings.WorldSettingsMenu;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -51,12 +49,12 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
 
 /**
- * <h1>CommandWorld</h1>
+ * <h1>WorldCommand</h1>
  * This command allows world owner to change world's settings.
  * <p>
  * Available: For world owners; some subcommands for all players in world.
  */
-public class CommandWorld extends CommandHandler {
+public class WorldCommand extends CommandHandler {
 
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {

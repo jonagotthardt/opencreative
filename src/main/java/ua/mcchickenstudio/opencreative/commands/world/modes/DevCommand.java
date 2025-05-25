@@ -24,7 +24,6 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import org.bukkit.*;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -39,7 +38,6 @@ import org.bukkit.inventory.meta.BookMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
@@ -52,14 +50,14 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.giveDevPermissions;
 
 /**
- * <h1>CommandDev</h1>
+ * <h1>DevCommand</h1>
  * This command is responsible for connecting player to
  * developers world, where he can create a code with
  * coding blocks and items.
  * <p>
  * Available: For world developers.
  */
-public class CommandDev extends CommandHandler {
+public class DevCommand extends CommandHandler {
 
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {

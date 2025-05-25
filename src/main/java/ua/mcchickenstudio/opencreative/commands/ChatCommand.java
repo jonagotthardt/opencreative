@@ -24,7 +24,6 @@ import ua.mcchickenstudio.opencreative.events.player.CreativeChatEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
@@ -40,12 +39,12 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.parsePAPI;
 
 /**
- * <h1>CreativeChat</h1>
+ * <h1>ChatCommand</h1>
  * This command is used to chat with all players on server.
  * <p>
  * Available: For all players.
  */
-public class CreativeChat extends CommandHandler {
+public class ChatCommand extends CommandHandler {
 
     public static final List<Player> creativeChatOff = new ArrayList<>();
 

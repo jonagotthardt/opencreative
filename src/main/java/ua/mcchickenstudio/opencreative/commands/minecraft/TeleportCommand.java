@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.commands.minecraft;
 
-import org.bukkit.GameMode;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -27,13 +26,11 @@ import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
@@ -43,14 +40,14 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.clearPlayer;
 
 /**
- * <h1>CommandTeleport</h1>
+ * <h1>TeleportCommand</h1>
  * This command is responsible for teleporting player to specified coordinates.
  * <p>
  * Using this command from console will redirect to Minecraft command.
  * <p>
  * Available: For world builders or developers.
  */
-public class CommandTeleport extends CommandHandler {
+public class TeleportCommand extends CommandHandler {
 
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {

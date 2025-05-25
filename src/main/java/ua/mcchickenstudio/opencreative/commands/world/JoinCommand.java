@@ -23,9 +23,7 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.groups.Group;
@@ -41,13 +39,13 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCoo
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
- * <h1>CommandJoin</h1>
+ * <h1>JoinCommand</h1>
  * This command is used to connect player to specified planet
  * by its numeric or text ID.
  * <p>
  * Available: For all players.
  */
-public class CommandJoin extends CommandHandler {
+public class JoinCommand extends CommandHandler {
 
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {

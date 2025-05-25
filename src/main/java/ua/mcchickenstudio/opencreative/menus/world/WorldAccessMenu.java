@@ -28,7 +28,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.commands.world.CommandAd;
+import ua.mcchickenstudio.opencreative.commands.world.AdvertisementCommand;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetAdvertisementEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
@@ -161,7 +161,7 @@ public class WorldAccessMenu extends AbstractMenu implements WorldMenu {
                     }
                 }
                 player.setCooldown(item.getType(), OpenCreative.getSettings().getGroups().getGroup(player).getAdvertisementCooldown()*20);
-                CommandAd.handlePlanetAdvertisement(player,planet);
+                AdvertisementCommand.handlePlanetAdvertisement(player,planet);
             }
             case "open" -> {
                 if (player.hasCooldown(item.getType()) || getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {

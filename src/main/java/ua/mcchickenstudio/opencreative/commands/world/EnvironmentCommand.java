@@ -41,9 +41,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.*;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
@@ -55,13 +53,13 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 /**
- * <h1>CommandEnvironment</h1>
+ * <h1>EnvironmentCommand</h1>
  * This command is responsible for setting up world's
  * developers world and code environment.
  * <p>
  * Available: For world developers.
  */
-public class CommandEnvironment extends CommandHandler {
+public class EnvironmentCommand extends CommandHandler {
 
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {

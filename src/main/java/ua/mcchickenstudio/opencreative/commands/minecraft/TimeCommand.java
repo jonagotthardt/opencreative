@@ -24,9 +24,7 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,22 +37,22 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
- * <h1>CommandWeather</h1>
- * This command is responsible for changing weather in current world.
+ * <h1>TimeCommand</h1>
+ * This command is responsible for changing time in current world.
  * <p>
  * Using this command from console will redirect to Minecraft command.
  * <p>
  * Available: For world builders or developers.
  */
-public class CommandWeather extends CommandHandler {
+public class TimeCommand extends CommandHandler {
 
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
             /*
-             * If sender is console, then replace with default /minecraft:weather command
+             * If sender is console, then replace with default /minecraft:time command
              */
-            Bukkit.getServer().dispatchCommand(sender, "minecraft:weather " + String.join(" ", args));
+            Bukkit.getServer().dispatchCommand(sender, "minecraft:time " + String.join(" ", args));
             return;
         }
         int cooldown = getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND);
@@ -63,7 +61,7 @@ public class CommandWeather extends CommandHandler {
             return;
         }
         setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
-        if (!player.hasPermission("opencreative.weather.bypass")) {
+        if (!player.hasPermission("opencreative.time.bypass")) {
             /*
              * Checking is player owner, builder or developer of world.
              * If not, he can't change world's time.
@@ -78,36 +76,34 @@ public class CommandWeather extends CommandHandler {
                 return;
             }
         }
-        if (args.length != 1 || !(args[0].equalsIgnoreCase("sun") || args[0].equalsIgnoreCase("clear") || args[0].equalsIgnoreCase("storm") || args[0].equalsIgnoreCase("rain") || args[0].equalsIgnoreCase("rainy") || args[0].equalsIgnoreCase("thunder"))) {
-            sender.sendMessage(getLocaleMessage("commands.weather.help"));
+        if (args.length != 2 || !(args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("add"))) {
+            sender.sendMessage(getLocaleMessage("commands.time.help"));
             return;
         }
-        switch (args[0].toLowerCase()) {
-            case "sun", "clear" -> {
-                player.getWorld().setStorm(false);
-                player.getWorld().setThundering(false);
-            }
-            case "storm", "rain", "rainy" -> {
-                player.getWorld().setStorm(true);
-                player.getWorld().setThundering(false);
-            }
-            case "thunder" -> {
-                player.getWorld().setStorm(true);
-                player.getWorld().setThundering(true);
-            }
-        }
+        int time = 6000;
+        boolean add = args[0].equalsIgnoreCase("add");
+        try {
+            time = Integer.parseInt(args[1]);
+        } catch (Exception ignored) {}
+        player.getWorld().setTime(add ? time+player.getWorld().getTime() : time);
     }
 
     @Override
     public @Nullable List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         List<String> tabCompleter = new ArrayList<>();
         if (args.length == 1) {
-            tabCompleter.add("sun");
-            tabCompleter.add("rain");
-            tabCompleter.add("thunder");
-            return tabCompleter;
+            tabCompleter.add("set");
+            tabCompleter.add("add");
+        } else if (args.length == 2) {
+            tabCompleter.add("6000");
+            tabCompleter.add("12500");
+            tabCompleter.add("15000");
+            tabCompleter.add("0");
+            tabCompleter.add("1000");
+        } else {
+            return null;
         }
-        return null;
+        return tabCompleter;
     }
 
 }

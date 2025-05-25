@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.commands.world.modes;
 
-import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
@@ -30,7 +29,6 @@ import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
@@ -53,14 +51,14 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
 /**
- * <h1>CommandPlay</h1>
+ * <h1>PlayCommand</h1>
  * This command is responsible for changing current world's mode
  * to play mode. If it's already set, it can teleport player to
  * spawn location and load code.
  * <p>
  * Available: For world developers.
  */
-public class CommandPlay extends CommandHandler {
+public class PlayCommand extends CommandHandler {
 
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {

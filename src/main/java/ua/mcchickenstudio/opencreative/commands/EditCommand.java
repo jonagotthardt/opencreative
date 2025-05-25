@@ -41,13 +41,13 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 
 /**
- * <h1>CommandEdit</h1>
+ * <h1>EditCommand</h1>
  * This command is responsible for editing items data,
  * like display name and lore.
  * <p>
  * Available: For world builders or developers.
  */
-public class CommandEdit extends CommandHandler {
+public class EditCommand extends CommandHandler {
 
     private static final int TEXT_LIMIT = 100;
     private static final int LINES_LIMIT = 20;

@@ -37,13 +37,13 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.convertTime;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
- * <h1>CommandDislike</h1>
+ * <h1>DislikeCommand</h1>
  * This command allows players to rate current world
  * as bad one and decrease world's reputation.
  * <p>
  * Available: For all world players.
  */
-public class CommandDislike extends CommandHandler {
+public class DislikeCommand extends CommandHandler {
 
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {

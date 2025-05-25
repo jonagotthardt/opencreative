@@ -40,21 +40,21 @@ import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import java.util.Collections;
 import java.util.List;
 
-import static ua.mcchickenstudio.opencreative.commands.world.CommandJoin.findPlanet;
-import static ua.mcchickenstudio.opencreative.commands.world.CommandJoin.handlePlayerConnection;
+import static ua.mcchickenstudio.opencreative.commands.world.JoinCommand.findPlanet;
+import static ua.mcchickenstudio.opencreative.commands.world.JoinCommand.handlePlayerConnection;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 /**
- * <h1>CommandAd</h1>
+ * <h1>AdvertisementCommand</h1>
  * This command is used to invite all players from server
  * to specific world. Or, it can be used as alias of
- * {@link CommandJoin}.
+ * {@link JoinCommand}.
  * <p>
  * Available: For all players.
  */
-public class CommandAd extends CommandHandler {
+public class AdvertisementCommand extends CommandHandler {
 
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {

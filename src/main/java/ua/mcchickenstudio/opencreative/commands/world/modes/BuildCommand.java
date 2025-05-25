@@ -28,7 +28,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -50,14 +49,14 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
 /**
- * <h1>CommandBuild</h1>
+ * <h1>BuildCommand</h1>
  * This command is responsible for changing current world's mode
  * to build mode. If it's already set, it can teleport player to
  * spawn location and give creative mode.
  * <p>
  * Available: For world builders.
  */
-public class CommandBuild extends CommandHandler {
+public class BuildCommand extends CommandHandler {
 
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
