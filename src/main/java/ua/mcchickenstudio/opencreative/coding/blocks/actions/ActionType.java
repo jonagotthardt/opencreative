@@ -577,6 +577,7 @@ public enum ActionType {
     ENTITY_SET_TEAM(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, SetTeamAction.class, Material.LIME_BANNER, new ArgumentSlot("scoreboard", ValueType.TEXT), new ArgumentSlot("team", ValueType.TEXT)),
     ENTITY_UNSET_TEAM(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, UnsetTeamAction.class, Material.RED_BANNER, new ArgumentSlot("scoreboard", ValueType.TEXT), new ArgumentSlot("team", ValueType.TEXT)),
 
+    ENTITY_SET_CUSTOM_NAME(             ActionCategory.ENTITY_ACTION, MenusCategory.PARAMS, EntitySetNameAction.class, Material.NAME_TAG,  new ArgumentSlot("name", ValueType.TEXT, (byte) 18)),
     ENTITY_ADD_DAMAGE(                  ActionCategory.ENTITY_ACTION, MenusCategory.PARAMS, DamageEntityAction.class, Material.NETHERITE_SWORD,             new ArgumentSlot("damage", ValueType.NUMBER)),
     ENTITY_SET_HEALTH(                  ActionCategory.ENTITY_ACTION, MenusCategory.PARAMS, EntitySetHealthAction.class, Material.APPLE,             new ArgumentSlot("health", ValueType.NUMBER),new ParameterSlot("add")),
     ENTITY_SET_WALK_SPEED(              ActionCategory.ENTITY_ACTION, MenusCategory.PARAMS, EntitySetWalkSpeedAction.class, Material.CHAINMAIL_BOOTS, new ArgumentSlot("speed", ValueType.NUMBER),new ParameterSlot("add")),
