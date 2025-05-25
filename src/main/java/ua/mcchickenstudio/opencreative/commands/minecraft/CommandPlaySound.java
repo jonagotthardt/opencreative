@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.commands.minecraft;
 
 import org.bukkit.Registry;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
@@ -47,33 +48,33 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * <p>
  * Available: For world builders or developers.
  */
-public class CommandPlaySound implements CommandExecutor, TabCompleter {
+public class CommandPlaySound extends CommandHandler {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
             Bukkit.getServer().dispatchCommand(sender,"minecraft:playsound " + String.join(" ",args));
         } else {
             int cooldown = getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (cooldown > 0) {
                 sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(cooldown)));
-                return true;
+                return;
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (!player.hasPermission("opencreative.play-sound.bypass")) {
                 Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet == null) {
                     player.sendMessage(getLocaleMessage("only-in-world"));
-                    return true;
+                    return;
                 }
                 if (!(planet.isOwner(player) || planet.getWorldPlayers().canDevelop(player))) {
                     player.sendMessage(getLocaleMessage("not-owner"));
-                    return true;
+                    return;
                 }
             }
             if (args.length == 0) {
                 sender.sendMessage(getLocaleMessage("commands.play-sound.help"));
-                return true;
+                return;
             }
             Player target = player;
             String soundString;
@@ -97,14 +98,14 @@ public class CommandPlaySound implements CommandExecutor, TabCompleter {
                 target = Bukkit.getPlayer(args[0]);
                 if (target == null) {
                     sender.sendMessage(getLocaleMessage("no-player-found"));
-                    return true;
+                    return;
                 } else if (!sender.hasPermission("opencreative.play-sound.bypass")) {
                     Planet targetPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(target);
                     if (!player.hasPermission("opencreative.play-sound.bypass")) {
                         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                         if (planet == null || !planet.equals(targetPlanet)) {
                             player.sendMessage(getLocaleMessage("no-player-found"));
-                            return true;
+                            return;
                         }
                     }
                 }
@@ -117,7 +118,7 @@ public class CommandPlaySound implements CommandExecutor, TabCompleter {
                 } catch (NumberFormatException ignored) {}
             } else {
                 sender.sendMessage(getLocaleMessage("commands.play-sound.help"));
-                return true;
+                return;
             }
             try {
                 sound = Sound.valueOf(soundString.toUpperCase());
@@ -133,17 +134,17 @@ public class CommandPlaySound implements CommandExecutor, TabCompleter {
             }
             sender.sendMessage(getLocaleMessage("commands.play-sound.played").replace("%sound%",soundString).replace("%volume%",String.valueOf(volume)).replace("%pitch%",String.valueOf(pitch)).replace("%player%",target.getName()));
         }
-        return true;
+        return;
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public @Nullable List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         List<String> tabCompleter = new ArrayList<>();
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 tabCompleter.addAll(player.getWorld().getPlayers().stream().map(Player::getName).toList());
             } else if (args.length == 2) {
-                tabCompleter.addAll(Registry.SOUNDS.stream().filter(s -> s.getKey().asMinimalString().startsWith(args[1])).map(sound -> sound.getKey().asMinimalString()).toList());
+                tabCompleter.addAll(Registry.SOUNDS.stream().map(sound -> sound.getKey().asMinimalString()).toList());
             } else if (args.length == 3) {
                 tabCompleter.add("100");
                 tabCompleter.add("50");

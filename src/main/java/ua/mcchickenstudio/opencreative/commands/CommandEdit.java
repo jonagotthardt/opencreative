@@ -25,9 +25,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -49,23 +47,23 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
  * <p>
  * Available: For world builders or developers.
  */
-public class CommandEdit implements CommandExecutor, TabCompleter {
+public class CommandEdit extends CommandHandler {
 
     private static final int TEXT_LIMIT = 100;
     private static final int LINES_LIMIT = 20;
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
             OpenCreative.getPlugin().getLogger().info(getLocaleMessage("only-in-world"));
-            return true;
+            return;
         }
 
-        if (!checkPermissions(player)) return true;
+        if (!checkPermissions(player)) return;
 
         if (args.length == 0) {
             sender.sendMessage(getLocaleMessage("commands.edit.help"));
-            return true;
+            return;
         }
 
         ItemStack item = player.getInventory().getItemInMainHand();
@@ -73,7 +71,7 @@ public class CommandEdit implements CommandExecutor, TabCompleter {
         ItemMeta meta = item.getItemMeta();
         if (item.getType().isAir() || meta == null) {
             sender.sendMessage(getLocaleMessage("commands.edit.item"));
-            return true;
+            return;
         }
 
         switch (args[0].toLowerCase()) {
@@ -94,7 +92,7 @@ public class CommandEdit implements CommandExecutor, TabCompleter {
                 break;
         }
 
-        return true;
+        return;
     }
 
     private boolean checkPermissions(Player player) {
@@ -231,7 +229,7 @@ public class CommandEdit implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public @Nullable List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         List<String> tabCompleter = new ArrayList<>();
         if (args.length <= 1) {
             tabCompleter.add("name");

@@ -18,17 +18,20 @@
 
 package ua.mcchickenstudio.opencreative.commands.world.reputation;
 
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.convertTime;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
@@ -40,26 +43,26 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * <p>
  * Available: For all world players.
  */
-public class CommandDislike implements CommandExecutor {
+public class CommandDislike extends CommandHandler {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet == null) {
                 player.sendMessage(MessageUtils.getLocaleMessage("only-in-world"));
-                return true;
+                return;
             }
             if (CooldownUtils.getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
                 player.sendMessage(MessageUtils.getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(CooldownUtils.getCooldown(player,CooldownUtils.CooldownType.GENERIC_COMMAND))));
-                return true;
+                return;
             }
             CooldownUtils.setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             long createdSeconds = (System.currentTimeMillis()-planet.getCreationTime())/1000;
             if (OpenCreative.getSettings().getWorldReputationMinSeconds() > createdSeconds) {
                 Sounds.PLAYER_CANCEL.play(player);
                 player.sendMessage(getLocaleMessage("world.cant-rate",player).replace("%time%",convertTime(OpenCreative.getSettings().getWorldReputationMinSeconds()-createdSeconds)));
-                return true;
+                return;
             }
             if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.LIKED).contains(sender.getName())) {
                 sender.sendMessage(MessageUtils.getLocaleMessage("world.already-rated"));
@@ -73,7 +76,10 @@ public class CommandDislike implements CommandExecutor {
                 }
             }
         }
-        return true;
     }
 
+    @Override
+    public @Nullable List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        return null;
+    }
 }

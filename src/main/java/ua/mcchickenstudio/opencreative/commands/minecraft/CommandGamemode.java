@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.commands.minecraft;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
@@ -46,21 +47,21 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * <p>
  * Available: For world builders or developers.
  */
-public class CommandGamemode implements CommandExecutor, TabCompleter {
+public class CommandGamemode extends CommandHandler {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
             /*
              * If sender is console, then replace with default /minecraft:gamemode command
              */
             Bukkit.getServer().dispatchCommand(sender, "minecraft:gamemode " + String.join(" ", args));
-            return true;
+            return;
         }
         int cooldown = getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND);
         if (cooldown > 0) {
             sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(cooldown)));
-            return true;
+            return;
         }
         setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
         if (!player.hasPermission("opencreative.game-mode.bypass")) {
@@ -71,11 +72,11 @@ public class CommandGamemode implements CommandExecutor, TabCompleter {
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
-                return true;
+                return;
             }
             if (!(planet.isOwner(player) || planet.getWorldPlayers().canDevelop(player) || planet.getWorldPlayers().canBuild(player))) {
                 player.sendMessage(getLocaleMessage("not-owner"));
-                return true;
+                return;
             }
             /*
              * Players should not change game mode in developer world,
@@ -83,7 +84,7 @@ public class CommandGamemode implements CommandExecutor, TabCompleter {
              */
             if (OpenCreative.getPlanetsManager().getDevPlanet(player) != null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
-                return true;
+                return;
             }
         }
         if (args.length == 1) {
@@ -124,7 +125,7 @@ public class CommandGamemode implements CommandExecutor, TabCompleter {
                 Player modePlayer = Bukkit.getPlayer(args[1]);
                 if (modePlayer == null) {
                     player.sendMessage(getLocaleMessage("no-player-found"));
-                    return true;
+                    return;
                 } else {
                     /*
                      * Check player's, that will receive new game mode, world.
@@ -136,11 +137,11 @@ public class CommandGamemode implements CommandExecutor, TabCompleter {
                         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                         if (planet == null || !planet.equals(modePlanet)) {
                             player.sendMessage(getLocaleMessage("no-player-found"));
-                            return true;
+                            return;
                         }
                         if (OpenCreative.getPlanetsManager().getDevPlanet(modePlayer) != null) {
                             player.sendMessage(getLocaleMessage("only-in-world"));
-                            return true;
+                            return;
                         }
                     }
                 }
@@ -150,13 +151,14 @@ public class CommandGamemode implements CommandExecutor, TabCompleter {
             }
         } else {
             sender.sendMessage(getLocaleMessage("commands.game-mode.help"));
-            return true;
+            return;
         }
-        return true;
+        return;
     }
 
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        if (args.length >= 3) return null;
         List<String> tabCompleter = new ArrayList<>();
         if (sender instanceof Player player) {
             if (args.length == 1) {

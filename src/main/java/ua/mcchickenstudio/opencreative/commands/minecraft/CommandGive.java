@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.commands.minecraft;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
@@ -47,33 +48,33 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * <p>
  * Available: For world builders or developers.
  */
-public class CommandGive implements CommandExecutor, TabCompleter {
+public class CommandGive extends CommandHandler {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
             Bukkit.getServer().dispatchCommand(sender,"minecraft:give " + String.join(" ",args));
         } else {
             int cooldown = getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (cooldown > 0) {
                 sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(cooldown)));
-                return true;
+                return;
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (!player.hasPermission("opencreative.give.bypass")) {
                 Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet == null) {
                     player.sendMessage(getLocaleMessage("only-in-world"));
-                    return true;
+                    return;
                 }
                 if (!(planet.isOwner(player) || planet.getWorldPlayers().canDevelop(player) || planet.getWorldPlayers().canBuild(player))) {
                     player.sendMessage(getLocaleMessage("not-owner"));
-                    return true;
+                    return;
                 }
             }
             if (args.length == 0) {
                 sender.sendMessage(getLocaleMessage("commands.give.help"));
-                return true;
+                return;
             }
             // give apple
             if (args.length == 1) {
@@ -89,14 +90,14 @@ public class CommandGive implements CommandExecutor, TabCompleter {
                 Player givePlayer = Bukkit.getPlayer(args[0]);
                 if (givePlayer == null) {
                     player.sendMessage(getLocaleMessage("no-player-found"));
-                    return true;
+                    return;
                 } else {
                     Planet givePlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(givePlayer);
                     if (!player.hasPermission("opencreative.give.bypass")) {
                         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                         if (planet == null || !planet.equals(givePlanet)) {
                             player.sendMessage(getLocaleMessage("no-player-found"));
-                            return true;
+                            return;
                         }
                     }
                 }
@@ -112,7 +113,7 @@ public class CommandGive implements CommandExecutor, TabCompleter {
                     Player givePlayer = Bukkit.getPlayer(args[0]);
                     if (givePlayer == null) {
                         player.sendMessage(getLocaleMessage("no-player-found"));
-                        return true;
+                        return;
                     }
                     Material material = Material.valueOf(args[1].replace("minecraft:", "").toUpperCase());
                     int amount = Integer.parseInt(args[2]);
@@ -124,11 +125,10 @@ public class CommandGive implements CommandExecutor, TabCompleter {
                 }
             }
         }
-        return true;
     }
 
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         List<String> tabCompleter = new ArrayList<>();
         if (sender instanceof Player player) {
             if (args.length == 1) {
@@ -140,6 +140,8 @@ public class CommandGive implements CommandExecutor, TabCompleter {
                 tabCompleter.add("16");
                 tabCompleter.add("32");
                 tabCompleter.add("64");
+            } else {
+                return null;
             }
         }
         return tabCompleter;

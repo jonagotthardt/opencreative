@@ -18,7 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.commands.minecraft;
 
+import org.bukkit.GameMode;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
@@ -29,6 +31,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
@@ -44,21 +50,21 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.clearPlayer;
  * <p>
  * Available: For world builders or developers.
  */
-public class CommandTeleport implements CommandExecutor {
+public class CommandTeleport extends CommandHandler {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
             /*
              * If sender is console, then replace with default /minecraft:tp command
              */
             Bukkit.getServer().dispatchCommand(sender, "minecraft:tp " + String.join(" ", args));
-            return true;
+            return;
         }
         int cooldown = getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND);
         if (cooldown > 0) {
             sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(cooldown)));
-            return true;
+            return;
         }
         setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
         if (!player.hasPermission("opencreative.teleport.bypass")) {
@@ -69,11 +75,11 @@ public class CommandTeleport implements CommandExecutor {
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
-                return true;
+                return;
             }
             if (!(planet.isOwner(player) || planet.getWorldPlayers().canDevelop(player) || planet.getWorldPlayers().canBuild(player))) {
                 player.sendMessage(getLocaleMessage("not-owner"));
-                return true;
+                return;
             }
             /*
              * Players should not teleport in developer world,
@@ -81,7 +87,7 @@ public class CommandTeleport implements CommandExecutor {
              */
             if (OpenCreative.getPlanetsManager().getDevPlanet(player) != null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
-                return true;
+                return;
             }
         }
         if (args.length == 1) {
@@ -91,18 +97,18 @@ public class CommandTeleport implements CommandExecutor {
             Player teleportToPlayer = Bukkit.getPlayer(args[0]);
             if (teleportToPlayer == null) {
                 player.sendMessage(getLocaleMessage("no-player-found"));
-                return true;
+                return;
             }
             Planet teleportPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(teleportToPlayer);
             if (!player.hasPermission("opencreative.teleport.bypass")) {
                 Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet == null || !planet.equals(teleportPlanet)) {
                     player.sendMessage(getLocaleMessage("no-player-found"));
-                    return true;
+                    return;
                 }
                 if (OpenCreative.getPlanetsManager().getDevPlanet(teleportToPlayer) != null) {
                     player.sendMessage(getLocaleMessage("only-in-world"));
-                    return true;
+                    return;
                 }
 
             }
@@ -130,12 +136,12 @@ public class CommandTeleport implements CommandExecutor {
             Player firstPlayer = Bukkit.getPlayer(args[0]);
             if (firstPlayer == null) {
                 player.sendMessage(getLocaleMessage("no-player-found"));
-                return true;
+                return;
             }
             Player secondPlayer = Bukkit.getPlayer(args[1]);
             if (secondPlayer == null) {
                 player.sendMessage(getLocaleMessage("no-player-found"));
-                return true;
+                return;
             }
             Planet firstPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(firstPlayer);
             Planet secondPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(secondPlayer);
@@ -143,11 +149,11 @@ public class CommandTeleport implements CommandExecutor {
                 Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet == null || !planet.equals(firstPlanet) || !planet.equals(secondPlanet) || !firstPlanet.equals(secondPlanet)) {
                     player.sendMessage(getLocaleMessage("no-player-found"));
-                    return true;
+                    return;
                 }
                 if (OpenCreative.getPlanetsManager().getDevPlanet(firstPlayer) != null || OpenCreative.getPlanetsManager().getDevPlanet(secondPlayer) != null) {
                     player.sendMessage(getLocaleMessage("only-in-world"));
-                    return true;
+                    return;
                 }
             }
             if (!firstPlayer.getWorld().equals(secondPlayer.getWorld()) && !player.hasPermission("opencreative.teleport.clear-bypass")) {
@@ -189,9 +195,9 @@ public class CommandTeleport implements CommandExecutor {
             }
         } else {
             sender.sendMessage(getLocaleMessage("commands.teleport.help"));
-            return true;
+            return;
         }
-        return true;
+        return;
     }
 
     private double parseCoordinate(String arg, double current) throws NumberFormatException {
@@ -208,6 +214,13 @@ public class CommandTeleport implements CommandExecutor {
         } else {
             return Float.parseFloat(arg);
         }
+    }
+
+    @Override
+    public List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        if (args.length >= 3) return null;
+        if (!(sender instanceof Player player)) return new ArrayList<>(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
+        return player.getWorld().getPlayers().stream().map(Player::getName).toList();
     }
 
 }

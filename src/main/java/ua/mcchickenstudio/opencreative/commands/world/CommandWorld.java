@@ -23,6 +23,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
 import ua.mcchickenstudio.opencreative.menus.world.settings.EntitiesBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.world.settings.WorldSettingsMenu;
@@ -55,23 +56,23 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPla
  * <p>
  * Available: For world owners; some subcommands for all players in world.
  */
-public class CommandWorld implements CommandExecutor, TabCompleter {
+public class CommandWorld extends CommandHandler {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage(getLocaleMessage("only-players"));
-            return true;
+            return;
         }
         if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
             player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.GENERIC_COMMAND))));
-            return true;
+            return;
         }
         setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet == null) {
             player.sendMessage(getLocaleMessage("only-in-world"));
-            return true;
+            return;
         }
         String arg = args.length == 0 ? "" : args[0].toLowerCase();
         switch (arg) {
@@ -85,11 +86,11 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
             case "setspawn" -> {
                 if (!planet.isOwner(player)) {
                     sender.sendMessage(getLocaleMessage("not-owner"));
-                    return true;
+                    return;
                 }
                 if (isEntityInDevPlanet(player)) {
                     Sounds.PLAYER_FAIL.play(player);
-                    return true;
+                    return;
                 }
                 player.getWorld().setSpawnLocation(player.getLocation());
                 player.showTitle(Title.title(
@@ -101,11 +102,11 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
             case "spawn" -> {
                 if (!planet.isOwner(player)) {
                     sender.sendMessage(getLocaleMessage("not-owner"));
-                    return true;
+                    return;
                 }
                 if (isEntityInDevPlanet(player)) {
                     Sounds.PLAYER_FAIL.play(player);
-                    return true;
+                    return;
                 }
                 player.teleport(player.getWorld().getSpawnLocation());
                 Sounds.WORLD_SETTINGS_SPAWN_TELEPORT.play(player);
@@ -113,17 +114,17 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
             case "close" -> {
                 if (!planet.isOwner(player)) {
                     sender.sendMessage(getLocaleMessage("not-owner"));
-                    return true;
+                    return;
                 }
                 if (planet.getSharing() != Planet.Sharing.PUBLIC) {
                     Sounds.PLAYER_FAIL.play(player);
-                    return true;
+                    return;
                 }
                 PlanetSharingChangeEvent planetEvent = new PlanetSharingChangeEvent(planet, planet.getSharing(), Planet.Sharing.PRIVATE);
                 planetEvent.callEvent();
                 if (planetEvent.isCancelled()) {
                     Sounds.PLAYER_FAIL.play(player);
-                    return true;
+                    return;
                 }
                 Sounds.WORLD_SETTINGS_SHARING_PRIVATE.play(player);
                 planet.setSharing(Planet.Sharing.PRIVATE);
@@ -132,17 +133,17 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
             case "open" -> {
                 if (!planet.isOwner(player)) {
                     sender.sendMessage(getLocaleMessage("not-owner"));
-                    return true;
+                    return;
                 }
                 if (planet.getSharing() == Planet.Sharing.PUBLIC) {
                     Sounds.PLAYER_FAIL.play(player);
-                    return true;
+                    return;
                 }
                 PlanetSharingChangeEvent planetEvent = new PlanetSharingChangeEvent(planet, planet.getSharing(), Planet.Sharing.PUBLIC);
                 planetEvent.callEvent();
                 if (planetEvent.isCancelled()) {
                     Sounds.PLAYER_FAIL.play(player);
-                    return true;
+                    return;
                 }
                 Sounds.WORLD_SETTINGS_SHARING_PUBLIC.play(player);
                 planet.setSharing(Planet.Sharing.PUBLIC);
@@ -151,25 +152,25 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
             case "whitelist", "white" -> {
                 if (!planet.isOwner(player)) {
                     sender.sendMessage(getLocaleMessage("not-owner"));
-                    return true;
+                    return;
                 }
                 if (args.length == 1) {
                     sender.sendMessage(getLocaleMessage("too-few-args"));
-                    return true;
+                    return;
                 }
                 if (planet.isOwner(args[1])) {
                     sender.sendMessage(getLocaleMessage("same-player"));
-                    return true;
+                    return;
                 }
                 int limit = planet.getLimits().getWhitelistedLimit();
                 if (planet.getWorldPlayers().getWhitelistedPlayers().size() > limit) {
                     sender.sendMessage(getLocaleMessage("world.players.white-list.limit").replace("%limit%",String.valueOf(limit)));
-                    return true;
+                    return;
                 }
                 Player playerToWhitelist = Bukkit.getPlayer(args[1]);
                 if (playerToWhitelist == null || !planet.getPlayers().contains(playerToWhitelist)) {
                     sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
-                    return true;
+                    return;
                 }
                 sender.sendMessage(getLocaleMessage("world.players.white-list.added", playerToWhitelist));
                 planet.getWorldPlayers().banPlayer(args[1]);
@@ -177,29 +178,29 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
             case "ban", "block", "blacklist" -> {
                 if (!planet.isOwner(player)) {
                     sender.sendMessage(getLocaleMessage("not-owner"));
-                    return true;
+                    return;
                 }
                 if (args.length == 1) {
                     sender.sendMessage(getLocaleMessage("too-few-args"));
-                    return true;
+                    return;
                 }
                 if (planet.isOwner(args[1])) {
                     sender.sendMessage(getLocaleMessage("same-player"));
-                    return true;
+                    return;
                 }
                 int limit = planet.getLimits().getBlacklistedLimit();
                 if (planet.getWorldPlayers().getBannedPlayers().size() > limit) {
                     sender.sendMessage(getLocaleMessage("world.players.black-list.limit").replace("%limit%",String.valueOf(limit)));
-                    return true;
+                    return;
                 }
                 Player playerToBan = Bukkit.getPlayer(args[1]);
                 if (playerToBan == null || !planet.getPlayers().contains(playerToBan)) {
                     sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
-                    return true;
+                    return;
                 }
                 if (playerToBan.hasPermission("opencreative.world.ban.bypass")) {
                     sender.sendMessage(getLocaleMessage("world.players.black-list.cannot", playerToBan));
-                    return true;
+                    return;
                 }
                 sender.sendMessage(getLocaleMessage("world.players.black-list.added", playerToBan));
                 planet.getWorldPlayers().banPlayer(args[1]);
@@ -207,11 +208,11 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
             case "kick" -> {
                 if (!planet.isOwner(player)) {
                     sender.sendMessage(getLocaleMessage("not-owner"));
-                    return true;
+                    return;
                 }
                 if (args.length == 1) {
                     sender.sendMessage(getLocaleMessage("too-few-args"));
-                    return true;
+                    return;
                 }
                 List<Player> playersToKick = new ArrayList<>();
                 if (List.of("*","@a").contains(args[1].toLowerCase())) {
@@ -221,16 +222,16 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
                 } else {
                     if (planet.isOwner(args[1])) {
                         sender.sendMessage(getLocaleMessage("same-player"));
-                        return true;
+                        return;
                     }
                     Player playerToKick = Bukkit.getPlayer(args[1]);
                     if (playerToKick == null || !planet.getPlayers().contains(playerToKick)) {
                         sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
-                        return true;
+                        return;
                     }
                     if (playerToKick.hasPermission("opencreative.world.kick.bypass")) {
                         sender.sendMessage(getLocaleMessage("world.players.kick.cannot", playerToKick));
-                        return true;
+                        return;
                     }
                     playersToKick.add(playerToKick);
                 }
@@ -241,19 +242,19 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
             case "unban", "unblacklist" -> {
                 if (!planet.isOwner(player)) {
                     sender.sendMessage(getLocaleMessage("not-owner"));
-                    return true;
+                    return;
                 }
                 if (args.length == 1) {
                     sender.sendMessage(getLocaleMessage("too-few-args"));
-                    return true;
+                    return;
                 }
                 if (planet.isOwner(args[1])) {
                     sender.sendMessage(getLocaleMessage("same-player"));
-                    return true;
+                    return;
                 }
                 if (!planet.getWorldPlayers().isBanned(args[1])) {
                     sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
-                    return true;
+                    return;
                 }
                 planet.getWorldPlayers().unbanPlayer(args[1]);
                 sender.sendMessage(getLocaleMessage("world.players.black-list.removed",Bukkit.getOfflinePlayer(args[1])));
@@ -261,19 +262,19 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
             case "unwhitelist", "unwhite" -> {
                 if (!planet.isOwner(player)) {
                     sender.sendMessage(getLocaleMessage("not-owner"));
-                    return true;
+                    return;
                 }
                 if (args.length == 1) {
                     sender.sendMessage(getLocaleMessage("too-few-args"));
-                    return true;
+                    return;
                 }
                 if (planet.isOwner(args[1])) {
                     sender.sendMessage(getLocaleMessage("same-player"));
-                    return true;
+                    return;
                 }
                 if (!planet.getWorldPlayers().isWhitelisted(args[1])) {
                     sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
-                    return true;
+                    return;
                 }
                 planet.getWorldPlayers().removeFromWhitelist(args[1]);
                 sender.sendMessage(getLocaleMessage("world.players.white-list.removed",Bukkit.getOfflinePlayer(args[1])));
@@ -281,22 +282,22 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
             case "exp", "e", "experiment", "experiments" -> {
                 if (!planet.isOwner(player)) {
                     sender.sendMessage(getLocaleMessage("not-owner"));
-                    return true;
+                    return;
                 }
                 if (!sender.hasPermission("opencreative.world.experiments")) {
                     sender.sendMessage(getLocaleMessage("no-perms"));
-                    return true;
+                    return;
                 }
                 if (args.length == 1) {
                     sender.sendMessage(getLocaleMessage("too-few-args"));
-                    return true;
+                    return;
                 }
                 planet.getExperiments().handle(player, Arrays.copyOfRange(args,1,args.length));
             }
             case "size" -> {
                 if (!sender.hasPermission("opencreative.world.size")) {
                     sender.sendMessage(getLocaleMessage("no-perms"));
-                    return true;
+                    return;
                 }
                 long settingsSize = getFileSize(new File(getPlanetFolder(planet), "settings.yml"));
                 long scriptSize = getFileSize(new File(getPlanetFolder(planet), "codeScript.yml"));
@@ -317,7 +318,7 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
             case "mem", "tps", "memory" -> {
                 if (!sender.hasPermission("opencreative.world.memory")) {
                     sender.sendMessage(getLocaleMessage("no-perms"));
-                    return true;
+                    return;
                 }
                 int chunks = planet.getTerritory().getWorld().getChunkCount()
                         + (planet.getDevPlanet().isLoaded() ? planet.getDevPlanet().getWorld().getChunkCount() : 0);
@@ -338,7 +339,6 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
                 }
             }
         }
-        return true;
     }
 
     private void sendPlanetInfo(CommandSender sender, Planet planet) {
@@ -351,7 +351,7 @@ public class CommandWorld implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public @Nullable List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) return null;
         List<String> tabCompleter = new ArrayList<>();
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);

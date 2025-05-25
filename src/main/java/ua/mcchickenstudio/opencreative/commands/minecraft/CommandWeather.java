@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.commands.minecraft;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
@@ -45,21 +46,21 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * <p>
  * Available: For world builders or developers.
  */
-public class CommandWeather implements CommandExecutor, TabCompleter {
+public class CommandWeather extends CommandHandler {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
             /*
              * If sender is console, then replace with default /minecraft:weather command
              */
             Bukkit.getServer().dispatchCommand(sender, "minecraft:weather " + String.join(" ", args));
-            return true;
+            return;
         }
         int cooldown = getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND);
         if (cooldown > 0) {
             sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(cooldown)));
-            return true;
+            return;
         }
         setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
         if (!player.hasPermission("opencreative.weather.bypass")) {
@@ -70,16 +71,16 @@ public class CommandWeather implements CommandExecutor, TabCompleter {
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
-                return true;
+                return;
             }
             if (!(planet.isOwner(player) || planet.getWorldPlayers().canDevelop(player) || planet.getWorldPlayers().canBuild(player))) {
                 player.sendMessage(getLocaleMessage("not-owner"));
-                return true;
+                return;
             }
         }
         if (args.length != 1 || !(args[0].equalsIgnoreCase("sun") || args[0].equalsIgnoreCase("clear") || args[0].equalsIgnoreCase("storm") || args[0].equalsIgnoreCase("rain") || args[0].equalsIgnoreCase("rainy") || args[0].equalsIgnoreCase("thunder"))) {
             sender.sendMessage(getLocaleMessage("commands.weather.help"));
-            return true;
+            return;
         }
         switch (args[0].toLowerCase()) {
             case "sun", "clear" -> {
@@ -95,11 +96,10 @@ public class CommandWeather implements CommandExecutor, TabCompleter {
                 player.getWorld().setThundering(true);
             }
         }
-        return true;
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public @Nullable List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         List<String> tabCompleter = new ArrayList<>();
         if (args.length == 1) {
             tabCompleter.add("sun");

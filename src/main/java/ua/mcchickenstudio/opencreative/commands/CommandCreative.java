@@ -18,12 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.commands;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.indev.Items;
 import ua.mcchickenstudio.opencreative.indev.modules.Module;
-import ua.mcchickenstudio.opencreative.managers.space.PlanetsManager;
 import ua.mcchickenstudio.opencreative.menus.CreativeMenu;
 import ua.mcchickenstudio.opencreative.menus.world.WorldModerationMenu;
 import ua.mcchickenstudio.opencreative.menus.world.browsers.WorldsBrowserMenu;
@@ -37,9 +35,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.*;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.*;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
@@ -64,10 +60,10 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
  * <p>
  * Available: For server admins with specific permissions.
  */
-public class CommandCreative implements CommandExecutor, TabCompleter {
+public class CommandCreative extends CommandHandler {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length > 0) {
             Player player = null;
             if (sender instanceof Player) {
@@ -75,7 +71,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 int cooldown = getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND);
                 if (cooldown > 0) {
                     sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(cooldown)));
-                    return true;
+                    return;
                 }
                 setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             }
@@ -83,7 +79,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 case "reload" -> {
                     if (!sender.hasPermission("opencreative.reload")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     sender.sendMessage(getLocaleMessage("creative.reloading"));
                     if (player != null) {
@@ -100,7 +96,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 case "resetlocale" -> {
                     if (!sender.hasPermission("opencreative.resetlocale")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     sender.sendMessage(getLocaleMessage("creative.resetting-locale"));
                     if (player != null) {
@@ -115,16 +111,16 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 case "info" -> {
                     if (!sender.hasPermission("opencreative.info")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     if (args.length < 2) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return true;
+                        return;
                     }
                     Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1]);
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
-                        return true;
+                        return;
                     }
                     long now = System.currentTimeMillis();
                     sender.sendMessage(getLocaleMessage("world.info").replace("%name%", planet.getInformation().getDisplayName())
@@ -136,29 +132,29 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 case "register" -> {
                     if (!sender.hasPermission("opencreative.world.register")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     if (args.length < 2) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return true;
+                        return;
                     }
                     int id;
                     try {
                         id = Integer.parseInt(args[1]);
                     } catch (Exception ignored) {
                         sender.sendMessage(getLocaleMessage("world.not-numeric-id"));
-                        return true;
+                        return;
                     }
                     File planetFolder = new File(FileUtils.getPlanetsStorageFolder(),"planet"+id);
                     if (!planetFolder.exists() || !planetFolder.isDirectory()) {
                         sender.sendMessage(getLocaleMessage("world.not-found")
                                 .replace("%id%",args[1])
                                 .replace("%path%",planetFolder.getPath()));
-                        return true;
+                        return;
                     }
                     if (OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1]) != null) {
                         sender.sendMessage(getLocaleMessage("world.already-registered").replace("%id%",args[1]));
-                        return true;
+                        return;
                     }
                     Planet newPlanet = new Planet(id);
                     OpenCreative.getPlanetsManager().registerPlanet(newPlanet);
@@ -167,11 +163,11 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 case "unregister" -> {
                     if (!sender.hasPermission("opencreative.world.unregister")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     if (args.length < 2) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return true;
+                        return;
                     }
                     String id = args[1];
                     Planet planet = OpenCreative.getPlanetsManager().getPlanetById(id);
@@ -180,7 +176,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("world.not-found")
                                 .replace("%id%",args[1])
                                 .replace("%path%","/join " + id));
-                        return true;
+                        return;
                     }
                     OpenCreative.getPlanetsManager().unregisterPlanet(planet);
                     sender.sendMessage(getLocaleMessage("world.unregistered").replace("%id%",args[1]));
@@ -188,11 +184,11 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 case "updateworld" -> {
                     if (!sender.hasPermission("opencreative.world.update")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     if (args.length < 2) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return true;
+                        return;
                     }
                     String id = args[1];
                     Planet planet = OpenCreative.getPlanetsManager().getPlanetById(id);
@@ -201,7 +197,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                         sender.sendMessage(getLocaleMessage("world.not-found")
                                 .replace("%id%",args[1])
                                 .replace("%path%","/join " + id));
-                        return true;
+                        return;
                     }
                     planet.loadInfo();
                     planet.getInformation().loadInformation();
@@ -210,16 +206,16 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 case "delete" -> {
                     if (!sender.hasPermission("opencreative.delete")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     if (args.length < 2) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return true;
+                        return;
                     }
                     Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1]);
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
-                        return true;
+                        return;
                     }
                     if (OpenCreative.getPlanetsManager().deletePlanet(planet)) {
                         Sounds.WORLD_DELETION.play(sender);
@@ -227,17 +223,17 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                 }
                 case "moderate", "moderation" -> {
-                    if (player == null) return true;
+                    if (player == null) return;
                     if (!sender.hasPermission("opencreative.moderation.menus")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     Planet planet;
                     if (args.length == 1) {
                         planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                         if (planet == null) {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
-                            return true;
+                            return;
                         }
                     } else {
                         planet = OpenCreative.getPlanetsManager().getPlanetById(args[1]);
@@ -245,23 +241,23 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
-                        return true;
+                        return;
                     }
                     new WorldModerationMenu(planet).open(player);
                 }
                 case "load" -> {
                     if (!sender.hasPermission("opencreative.world.load")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     if (args.length < 2) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return true;
+                        return;
                     }
                     Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1].replace("dev",""));
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
-                        return true;
+                        return;
                     }
                     if (!planet.isLoaded()) {
                         planet.getTerritory().load();
@@ -276,20 +272,20 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 case "dev" -> {
                     if (!sender.hasPermission("opencreative.world.dev.visit")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     if (args.length < 2) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return true;
+                        return;
                     }
                     Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1].replace("dev",""));
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
-                        return true;
+                        return;
                     }
                     if (planet.getDevPlanet().isLoaded()) {
                         sender.sendMessage(getLocaleMessage("world.already-loaded").replace("%id%",args[1]));
-                        return true;
+                        return;
                     }
                     if (!planet.isLoaded()) {
                         planet.getTerritory().load();
@@ -300,11 +296,11 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 case "creative-chat", "chat" -> {
                     if (!sender.hasPermission("opencreative.creative-chat")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     if (args.length < 2) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return true;
+                        return;
                     }
                     if ("disable".equalsIgnoreCase(args[1])) {
                         OpenCreative.getSettings().setCreativeChatEnabled(false);
@@ -326,11 +322,11 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 case "debug" -> {
                     if (!sender.hasPermission("opencreative.debug")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     if (args.length < 2) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return true;
+                        return;
                     }
                     if ("disable".equalsIgnoreCase(args[1]) || "off".equalsIgnoreCase(args[1])) {
                         OpenCreative.getSettings().setDebug(false);
@@ -343,11 +339,11 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 case "locale", "lang", "language" -> {
                     if (!sender.hasPermission("opencreative.locale")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     if (args.length < 2) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return true;
+                        return;
                     }
                     if (localizationFileExists(args[1])) {
                         OpenCreative.getPlugin().getConfig().set("messages.locale",args[1]);
@@ -361,11 +357,11 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 case "sounds", "soundtheme", "soundstheme" -> {
                     if (!sender.hasPermission("opencreative.sounds.theme")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     if (args.length < 2) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return true;
+                        return;
                     }
                     if (OpenCreative.getSettings().setSoundsTheme(args[1])) {
                         sender.sendMessage(getLocaleMessage("creative.sounds.set").replace("%theme%",args[1]));
@@ -379,37 +375,37 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 case "sound", "playsound" -> {
                     if (!sender.hasPermission("opencreative.sounds.play")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     if (args.length < 2) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return true;
+                        return;
                     }
                     try {
                         Sounds sound = Sounds.valueOf(args[1].toUpperCase());
                         sound.play(sender);
                     } catch (Exception e) {
-                        return false;
+                        return;
                     }
                 }
                 case "item", "items" -> {
                     if (!sender.hasPermission("opencreative.items.get") && !sender.hasPermission("opencreative.items.set")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     if (player == null) {
-                        return true;
+                        return;
                     }
                     if (args.length < 3) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return true;
+                        return;
                     }
                     Items itemType = null;
                     try {
                         itemType = Items.valueOf(args[2].toUpperCase());
                     } catch (Exception error) {
                         Sounds.PLAYER_FAIL.play(player);
-                        return true;
+                        return;
                     }
                     switch (args[1].toLowerCase()) {
                         case "get" -> player.getInventory().addItem(itemType.get());
@@ -417,7 +413,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                             ItemStack item = player.getInventory().getItemInMainHand();
                             if (item.isEmpty()) {
                                 Sounds.PLAYER_FAIL.play(player);
-                                return true;
+                                return;
                             }
                             OpenCreative.getSettings().setCustomItem(itemType,item);
                         }
@@ -426,11 +422,11 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 case "kick-all" -> {
                     if (!sender.hasPermission("opencreative.kick-all")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     if (args.length < 3) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return true;
+                        return;
                     }
                     String nickname = args[2];
                     if ("starts".equalsIgnoreCase(args[1])) {
@@ -467,21 +463,21 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                 }
                 case "maintenance" -> {
-                    return handleMaintenanceCommand(sender, Arrays.copyOfRange(args, 0,args.length));
+                    handleMaintenanceCommand(sender, Arrays.copyOfRange(args, 0,args.length));
                 }
                 case "unload" -> {
                     if (!sender.hasPermission("opencreative.world.unload")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     if (args.length < 2) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return true;
+                        return;
                     }
                     if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("*")) {
                         if (!sender.hasPermission("opencreative.world.unload.all")) {
                             sender.sendMessage(getLocaleMessage("no-perms"));
-                            return true;
+                            return;
                         }
                         for (Planet planet : OpenCreative.getPlanetsManager().getPlanets()) {
                             if (planet.isLoaded()) {
@@ -491,12 +487,12 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                             }
                         }
                         OpenCreative.getPlugin().getLogger().info("All worlds were unloaded by " + sender.getName());
-                        return true;
+                        return;
                     }
                     Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1]);
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
-                        return true;
+                        return;
                     }
                     if (planet.isLoaded()) {
                         planet.getTerritory().unload();
@@ -511,7 +507,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 case "update", "updates", "checkupdate" -> {
                     if (!sender.hasPermission("opencreative.update")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     OpenCreative.getUpdater().checkUpdates().thenAccept(
                             version -> {
@@ -532,7 +528,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 case "list" -> {
                     if (!sender.hasPermission("opencreative.list.loaded")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     List<String> worlds = Bukkit.getServer().getWorlds().stream()
                             .filter(WorldUtils::isPlanet)
@@ -545,7 +541,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 case "deprecated" -> {
                     if (!sender.hasPermission("opencreative.list.deprecated")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     int months = 1;
                     if (args.length >= 2) {
@@ -582,7 +578,7 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     if (args.length < 3) {
                         if (!sender.hasPermission("opencreative.list.corrupted")) {
                             sender.sendMessage(getLocaleMessage("no-perms"));
-                            return true;
+                            return;
                         }
                         Set<Planet> corruptedPlanets = OpenCreative.getPlanetsManager().getCorruptedPlanets();
                         sender.sendMessage(getLocaleMessage("creative.corrupted-worlds.list")
@@ -594,17 +590,17 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                                     ).clickEvent(ClickEvent.runCommand("/oc corrupted " + planet.getId() + " join"))
                             );
                         }
-                        return true;
+                        return;
                     }
                     if (!sender.hasPermission("opencreative.corrupted.recovery")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     int id = -1;
                     try {
                         id = Integer.parseInt(args[1]);
                     } catch (NumberFormatException ignored) {}
-                    if (id < 0) return true;
+                    if (id < 0) return;
                     Planet foundPlanet = null;
                     for (Planet planet : OpenCreative.getPlanetsManager().getCorruptedPlanets()) {
                         if (planet.getId() == id) {
@@ -614,23 +610,23 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                     }
                     if (foundPlanet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
-                        return true;
+                        return;
                     }
                     String action = args[2];
                     switch (action.toLowerCase()) {
                         case "teleport", "tp", "join", "load" -> {
-                            if (player == null) return true;
+                            if (player == null) return;
                             foundPlanet.getTerritory().load();
                             foundPlanet.connectPlayer(player);
                         }
                         case "unload" -> {
-                            if (player == null) return true;
+                            if (player == null) return;
                             foundPlanet.getTerritory().unload();
                         }
                         case "owner", "setowner" -> {
                             if (args.length < 4) {
                                 sender.sendMessage(getLocaleMessage("too-few-args"));
-                                return true;
+                                return;
                             }
                             sender.sendMessage(getLocaleMessage("creative.corrupted-worlds.set-owner").replace("%replace%",args[3]));
                             if (foundPlanet.getCreationTime() == 0) setPlanetConfigParameter(foundPlanet,"creation-time",System.currentTimeMillis());
@@ -645,18 +641,18 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 case "print" -> {
                     if (!sender.hasPermission("opencreative.print")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     if (args.length < 2) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return true;
+                        return;
                     }
                     sender.sendMessage(getLocaleMessage(args[1]));
                 }
                 case "stability" -> {
                     if (!sender.hasPermission("opencreative.stability")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
                     player.sendMessage(getLocaleMessage("creative.stability.actionbar")
                             .replace("%memory%", OpenCreative.getStability().getMemoryState().getLocalized())
@@ -668,26 +664,26 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 case "test" -> {
                     if (!sender.hasPermission("opencreative.test")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
-                    if (player == null) return true;
-                    if (args.length == 1) return true;
+                    if (player == null) return;
+                    if (args.length == 1) return;
                     DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                     if (devPlanet == null) {
                         player.sendMessage("only dev planet");
-                        return true;
+                        return;
                     }
                     DevPlatform platform = devPlanet.getPlatformInLocation(player.getLocation());
-                    if (platform == null) return true;
+                    if (platform == null) return;
                     Module module = new Module(1);
                     module.place(devPlanet, player);
                 }
                 case "test3" -> {
                     if (!sender.hasPermission("opencreative.test")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
-                    if (player == null) return true;
+                    if (player == null) return;
                     player.sendMessage("Test of worlds downloader");
                     WorldsBrowserMenu menu = new WorldsPickerMenu(player, new HashSet<>(OpenCreative.getPlanetsManager().getPlanets().stream().filter(planet -> planet.getInformation().isDownloadable()).toList()));
                     menu.open(player);
@@ -695,19 +691,19 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 case "template" -> {
                     if (!sender.hasPermission("opencreative.template")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
-                        return true;
+                        return;
                     }
-                    if (player == null) return true;
-                    if (args.length == 1) return true;
+                    if (player == null) return;
+                    if (args.length == 1) return;
                     File template = new File(OpenCreative.getPlugin().getDataPath()+File.separator+"templates"+File.separator+args[1]);
                     if (!template.exists()) {
                         sender.sendMessage("Template doesn't exists.");
-                        return true;
+                        return;
                     }
                     if (!OpenCreative.getStability().isFine()) {
                         player.sendMessage(getLocaleMessage("creative.stability.cannot"));
                         Sounds.PLAYER_FAIL.play(player);
-                        return true;
+                        return;
                     }
                     int id = WorldUtils.generateWorldID();
                     File world = new File(Bukkit.getWorldContainer().getPath()+File.separator+"planets"+File.separator+"planet"+id+File.separator);
@@ -731,17 +727,17 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 new CreativeMenu().open(player);
             }
         }
-        return true;
+        return;
     }
 
-    public boolean handleMaintenanceCommand(@NotNull CommandSender sender, String[] args) {
+    public void handleMaintenanceCommand(@NotNull CommandSender sender, String[] args) {
         if (!sender.hasPermission("opencreative.maintenance")) {
             sender.sendMessage(getLocaleMessage("no-perms"));
-            return true;
+            return;
         }
         if (args.length < 2) {
             sender.sendMessage(getLocaleMessage("too-few-args"));
-            return true;
+            return;
         }
         if ("start".equalsIgnoreCase(args[1])) {
             int seconds = 60;
@@ -780,11 +776,11 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
         } else if ("end".equalsIgnoreCase(args[1])) {
             OpenCreative.getSettings().setMaintenance(false);
         }
-        return true;
+        return;
     }
 
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
+    public List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         List<String> tabCompleter = new ArrayList<>();
         if (!sender.hasPermission("opencreative.admin")) return null;
         if (args.length == 1) {
@@ -853,7 +849,6 @@ public class CommandCreative implements CommandExecutor, TabCompleter {
                 tabCompleter.add("unload");
             }
         }
-        String currentArgument = args.length == 0 ? "" : args[args.length-1].toLowerCase();
-        return tabCompleter.stream().filter(s -> s.startsWith(currentArgument)).toList();
+        return tabCompleter;
     }
 }

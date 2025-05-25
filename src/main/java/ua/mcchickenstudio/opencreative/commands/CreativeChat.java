@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.commands;
 
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.player.CreativeChatEvent;
 import org.bukkit.Bukkit;
@@ -44,32 +45,32 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.parsePAPI;
  * <p>
  * Available: For all players.
  */
-public class CreativeChat implements CommandExecutor {
+public class CreativeChat extends CommandHandler {
 
     public static final List<Player> creativeChatOff = new ArrayList<>();
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (OpenCreative.getSettings().isMaintenance() && !sender.hasPermission("opencreative.maintenance.bypass")) {
             sender.sendMessage(getLocaleMessage("maintenance"));
-            return true;
+            return;
         }
         if (OpenCreative.getStability().isVeryBad() && !sender.hasPermission("opencreative.stability.bypass")) {
             sender.sendMessage(getLocaleMessage("creative.stability.cannot"));
-            return true;
+            return;
         }
         if (!OpenCreative.getSettings().isCreativeChatEnabled() && !sender.hasPermission("opencreative.creative-chat.bypass")) {
             sender.sendMessage(getLocaleMessage("creative.creative-chat.off"));
-            return true;
+            return;
         }
         if (args.length == 0) {
             sender.sendMessage(getLocaleMessage("creative-chat.cc-usage"));
-            return true;
+            return;
         }
         if (sender instanceof Player player) {
             if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
                 sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
-                return true;
+                return;
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
         }
@@ -85,12 +86,12 @@ public class CreativeChat implements CommandExecutor {
                 creativeChatOff.remove(player);
                 sender.sendMessage(getLocaleMessage("creative-chat.turned-on"));
             }
-            return true;
+            return;
         }
         if (sender instanceof Player player) {
             if (creativeChatOff.contains(player)) {
                 sender.sendMessage(getLocaleMessage("creative-chat.on-usage"));
-                return true;
+                return;
             }
         }
         OpenCreative.getPlugin().getLogger().info("[CREATIVE-CHAT] "+sender.getName()+": "+String.join(" ",args));
@@ -104,13 +105,17 @@ public class CreativeChat implements CommandExecutor {
         formattedMessage = ChatColor.translateAlternateColorCodes('&',formattedMessage);
         CreativeChatEvent event = new CreativeChatEvent(sender,String.join(" ",args),formattedMessage);
         event.callEvent();
-        if (event.isCancelled()) return true;
+        if (event.isCancelled()) return;
         formattedMessage = event.getFormattedMessage();
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (!(creativeChatOff.contains(onlinePlayer))) {
                 onlinePlayer.sendMessage(formattedMessage);
             }
         }
-        return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
     }
 }

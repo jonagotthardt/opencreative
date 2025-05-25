@@ -30,6 +30,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Method;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.WorldVariable;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.menus.world.settings.WorldEnvironmentMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
@@ -60,25 +61,25 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
  * <p>
  * Available: For world developers.
  */
-public class CommandEnvironment implements CommandExecutor, TabCompleter {
+public class CommandEnvironment extends CommandHandler {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
             int cooldown = getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (cooldown > 0) {
                 sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(cooldown)));
-                return true;
+                return;
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
-                return true;
+                return;
             }
             if (!planet.getWorldPlayers().canDevelop(player)) {
                 player.sendMessage(getLocaleMessage("not-developer"));
-                return true;
+                return;
             }
             if (args.length == 0) {
                 new WorldEnvironmentMenu(player, planet.getDevPlanet()).open(player);
@@ -86,24 +87,24 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                 switch (args[0].toLowerCase()) {
                     case "vars", "variables", "var":
                         if (args.length == 1) {
-                            return true;
+                            return;
                         }
                         if (args[1].equalsIgnoreCase("size")) {
                             player.sendMessage(getLocaleMessage("environment.variables.size").replace("%count%", String.valueOf(planet.getVariables().getTotalVariablesAmount())));
                         } else if (args[1].equalsIgnoreCase("set")) {
                             if (args.length <= 4) {
                                 player.sendMessage(getLocaleMessage("environment.variables.set.help"));
-                                return true;
+                                return;
                             }
                             // /env var set VAR_NAME VAR_TYPE VALUE_TYPE VALUE
                             String varName = args[2];
                             VariableLink.VariableType type = VariableLink.VariableType.getEnum(args[3]);
-                            if (type == null || type == VariableLink.VariableType.LOCAL) return true;
+                            if (type == null || type == VariableLink.VariableType.LOCAL) return;
                             ValueType valueType = ValueType.TEXT;
                             Object value = null;
                             switch (args[4].toLowerCase()) {
                                 case "number", "n", "num", "numb" -> {
-                                    if (args.length == 5) return true;
+                                    if (args.length == 5) return;
                                     String numberString = args[5];
                                     if (numberString.equalsIgnoreCase("p") || numberString.equalsIgnoreCase("pi")) {
                                         numberString = "3.1415926";
@@ -114,7 +115,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                                     } catch (NumberFormatException ignored) {}
                                 }
                                 case "boolean", "bool", "b" -> {
-                                    if (args.length == 5) return true;
+                                    if (args.length == 5) return;
                                     value = Boolean.parseBoolean(args[5]);
                                     valueType = ValueType.BOOLEAN;
                                 }
@@ -125,7 +126,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                                 }
                                 case "location", "loc" -> {
                                     try {
-                                        if (args.length < 8) return true;
+                                        if (args.length < 8) return;
                                         double x = parseCoordinate(args[5],player.getX());
                                         double y = parseCoordinate(args[6],player.getY());
                                         double z = parseCoordinate(args[7],player.getZ());
@@ -143,7 +144,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                                 }
                                 case "vector", "vec" -> {
                                     try {
-                                        if (args.length < 6) return true;
+                                        if (args.length < 6) return;
                                         double x = Double.parseDouble(args[5]);
                                         double y = Double.parseDouble(args[6]);
                                         double z = Double.parseDouble(args[7]);
@@ -164,7 +165,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             }
                         } else if (args[1].equalsIgnoreCase("get")) {
                             VariableLink.VariableType type = VariableLink.VariableType.GLOBAL;
-                            if (args.length == 2) return true;
+                            if (args.length == 2) return;
                             String varName = args[2];
                             if (args.length >= 4) {
                                 type = VariableLink.VariableType.getEnum(args[3]);
@@ -190,7 +191,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                             List<WorldVariable> allVariables = new ArrayList<>(planet.getVariables().getSet());
                             if (allVariables.isEmpty()) {
                                 player.sendMessage(getLocaleMessage("environment.variables.list.empty"));
-                                return true;
+                                return;
                             }
                             if (args.length > 2) {
                                 try {
@@ -234,7 +235,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             player.sendMessage(getLocaleMessage("only-in-dev-world"));
-                            return true;
+                            return;
                         }
                         devPlanet.setContainerMaterial(devPlanet.getContainerMaterial() == Material.CHEST ? Material.BARREL : Material.CHEST);
                         devPlanet.updateContainers();
@@ -243,12 +244,12 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                     case "container": {
                         if (args.length < 2) {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
-                            return true;
+                            return;
                         }
                         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
-                            return true;
+                            return;
                         }
                         Material material = Material.CHEST;
                         try {
@@ -264,7 +265,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             player.sendMessage(getLocaleMessage("only-in-dev-world"));
-                            return true;
+                            return;
                         }
                         boolean value = !devPlanet.isDropItems();
                         if (args.length >= 2) {
@@ -282,7 +283,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             player.sendMessage(getLocaleMessage("only-in-dev-world"));
-                            return true;
+                            return;
                         }
                         boolean value = !devPlanet.isNightVision();
                         if (args.length >= 2) {
@@ -305,7 +306,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             player.sendMessage(getLocaleMessage("only-in-dev-world"));
-                            return true;
+                            return;
                         }
                         boolean value = !devPlanet.isSaveLocation();
                         if (args.length >= 2) {
@@ -322,16 +323,16 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                     case "createplatform": {
                         if (!sender.hasPermission("opencreative.debug")) {
                             sender.sendMessage(getLocaleMessage("no-perms"));
-                            return true;
+                            return;
                         }
                         if (args.length < 3) {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
-                            return true;
+                            return;
                         }
                         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
-                            return true;
+                            return;
                         }
                         int x = 1;
                         int z = 1;
@@ -350,11 +351,11 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
-                            return true;
+                            return;
                         }
                         if (devPlanet.getPlatforms().size() >= devPlanet.getPlanet().getLimits().getCodingPlatformsLimit()) {
                             sender.sendMessage(getLocaleMessage("environment.platform.limit").replace("%amount%",String.valueOf(devPlanet.getPlanet().getLimits().getCodingPlatformsLimit())));
-                            return true;
+                            return;
                         }
                         int[][] platformCoordinates = {
                                 {2, 1}, {1, 2}, {2, 2}, {3, 1}, {1, 3}, {2, 3}, {3, 2}, {3, 3}
@@ -372,12 +373,12 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                     case "sign": {
                         if (args.length < 2) {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
-                            return true;
+                            return;
                         }
                         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
-                            return true;
+                            return;
                         }
                         Material material = Material.OAK_WALL_SIGN;
                         try {
@@ -392,12 +393,12 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                     case "floor": {
                         if (args.length < 2) {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
-                            return true;
+                            return;
                         }
                         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
-                            return true;
+                            return;
                         }
                         Material material = Material.WHITE_STAINED_GLASS;
                         try {
@@ -417,12 +418,12 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                     case "action": {
                         if (args.length < 2) {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
-                            return true;
+                            return;
                         }
                         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
-                            return true;
+                            return;
                         }
                         Material material = Material.GRAY_STAINED_GLASS;
                         try {
@@ -442,12 +443,12 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                     case "event", "executor": {
                         if (args.length < 2) {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
-                            return true;
+                            return;
                         }
                         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
-                            return true;
+                            return;
                         }
                         Material material = Material.BLUE_STAINED_GLASS;
                         try {
@@ -467,16 +468,16 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                     case "theme", "settheme", "themes": {
                         if (args.length < 2) {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
-                            return true;
+                            return;
                         }
                         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
-                            return true;
+                            return;
                         }
                         DevPlatform platform = devPlanet.getPlatformInLocation(player.getX(),player.getZ());
                         if (platform == null) {
-                            return true;
+                            return;
                         }
                         if (switch (args[1].toLowerCase()) {
                             case "dark", "black", "darkmode", "space", "night" -> platform.setMaterials(Material.BARRIER,Material.GRAY_STAINED_GLASS,Material.BLACK_STAINED_GLASS);
@@ -497,11 +498,11 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                     case "execute", "exec", "launch", "run": {
                         if (planet.getMode() != Planet.Mode.PLAYING) {
                             sender.sendMessage(getLocaleMessage("world.not-in-play-mode"));
-                            return true;
+                            return;
                         }
                         if (args.length < 3) {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
-                            return true;
+                            return;
                         }
                         String eventName = args[1];
                         String argument = String.join(" ",Arrays.copyOfRange(args,2,args.length));
@@ -512,7 +513,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                                 Player eventPlayer = Bukkit.getPlayer(argument);
                                 if (eventPlayer == null || !planet.getTerritory().getWorld().getPlayers().contains(eventPlayer)) {
                                     sender.sendMessage(getLocaleMessage("environment.execute.offline"));
-                                    return true;
+                                    return;
                                 }
                                 new JoinEvent(player).callEvent();
                             }
@@ -520,7 +521,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                                 Player eventPlayer = Bukkit.getPlayer(argument);
                                 if (eventPlayer == null || !planet.getTerritory().getWorld().getPlayers().contains(eventPlayer)) {
                                     sender.sendMessage(getLocaleMessage("environment.execute.offline"));
-                                    return true;
+                                    return;
                                 }
                                 new QuitEvent(player).callEvent();
                             }
@@ -528,7 +529,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                                 Player eventPlayer = Bukkit.getPlayer(argument);
                                 if (eventPlayer == null || !planet.getTerritory().getWorld().getPlayers().contains(eventPlayer)) {
                                     sender.sendMessage(getLocaleMessage("environment.execute.offline"));
-                                    return true;
+                                    return;
                                 }
                                 new LikeEvent(player).callEvent();
                             }
@@ -536,7 +537,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                                 Player eventPlayer = Bukkit.getPlayer(argument);
                                 if (eventPlayer == null || !planet.getTerritory().getWorld().getPlayers().contains(eventPlayer)) {
                                     sender.sendMessage(getLocaleMessage("environment.execute.offline"));
-                                    return true;
+                                    return;
                                 }
                                 new PlayEvent(player).callEvent();
                             }
@@ -578,7 +579,7 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                     case "debug": {
                         if (args.length == 1) {
                             player.sendMessage(getLocaleMessage("environment.debug.help"));
-                            return true;
+                            return;
                         }
                         if (args[1].equalsIgnoreCase("enable") || args[1].equalsIgnoreCase("on")) {
                             for (Player planetPlayer : planet.getPlayers()){
@@ -598,11 +599,11 @@ public class CommandEnvironment implements CommandExecutor, TabCompleter {
                 }
             }
         }
-        return true;
+        return;
     }
 
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         List<String> tabCompleter = new ArrayList<>();
         if (args.length == 1) {
             Collections.addAll(tabCompleter,"platform","variables","debug","execute","barrel","floor","action","theme","event","sign","save-location","night-vision","drops");

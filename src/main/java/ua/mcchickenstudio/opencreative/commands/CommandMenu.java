@@ -18,14 +18,17 @@
 
 package ua.mcchickenstudio.opencreative.commands;
 
+import org.bukkit.Bukkit;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menus.world.browsers.RecommendedWorldsMenu;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
@@ -37,26 +40,48 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * <p>
  * Available: For all players.
  */
-public class CommandMenu implements CommandExecutor {
+public class CommandMenu extends CommandHandler {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (sender instanceof Player player) {
-            if (OpenCreative.getSettings().isMaintenance() && !player.hasPermission("opencreative.maintenance.bypass")) {
-                player.sendMessage(getLocaleMessage("maintenance"));
-                return true;
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        if (args.length >= 1) {
+            if (!sender.hasPermission("opencreative.menu.others")) {
+                sender.sendMessage(getLocaleMessage("no-perms"));
+                return;
             }
-            if (OpenCreative.getStability().isVeryBad() && !player.hasPermission("opencreative.stability.bypass")) {
-                player.sendMessage(getLocaleMessage("creative.stability.cannot"));
-                return true;
+            Player player = Bukkit.getPlayer(args[0]);
+            if (player == null) {
+                sender.sendMessage(getLocaleMessage("not-found-player"));
+                return;
             }
-            if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-                sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
-                return true;
-            }
-            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             new RecommendedWorldsMenu().open(player);
+            return;
         }
-        return true;
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(getLocaleMessage("only-players"));
+            return;
+        }
+        if (OpenCreative.getSettings().isMaintenance() && !player.hasPermission("opencreative.maintenance.bypass")) {
+            player.sendMessage(getLocaleMessage("maintenance"));
+            return;
+        }
+        if (OpenCreative.getStability().isVeryBad() && !player.hasPermission("opencreative.stability.bypass")) {
+            player.sendMessage(getLocaleMessage("creative.stability.cannot"));
+            return;
+        }
+        if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
+            sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
+            return;
+        }
+        setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
+        new RecommendedWorldsMenu().open(player);
+    }
+
+    @Override
+    public @Nullable List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        if (sender.hasPermission("opencreative.menu.others")) {
+            return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
+        }
+        return List.of();
     }
 }

@@ -43,14 +43,14 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * <p>
  * Available: For all players.
  */
-public class CommandSpawn implements CommandExecutor, TabCompleter {
+public class CommandSpawn extends CommandHandler {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
             if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
                 sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
-                return true;
+                return;
             }
             setCooldown(player,OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
         }
@@ -58,28 +58,28 @@ public class CommandSpawn implements CommandExecutor, TabCompleter {
             if (!(sender instanceof Player player)) {
                 // Console cannot be teleported to lobby
                 sender.sendMessage(getLocaleMessage("only-players"));
-                return true;
+                return;
             }
             new QuitEvent(player).callEvent();
             teleportToLobby(player);
-            return true;
+            return;
         }
         if (!sender.hasPermission("opencreative.spawn.others")) {
             sender.sendMessage(getLocaleMessage("no-perms"));
-            return true;
+            return;
         }
         Player player = Bukkit.getPlayer(args[0]);
         if (player == null) {
             sender.sendMessage(getLocaleMessage("not-found-player"));
-            return true;
+            return;
         }
         new QuitEvent(player).callEvent();
         teleportToLobby(player);
-        return true;
+        return;
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public @Nullable List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!sender.hasPermission("opencreative.spawn.others") || args.length > 1) {
             return null;
         }

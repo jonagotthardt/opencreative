@@ -25,6 +25,7 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.JoinEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.PlayEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import org.bukkit.Material;
@@ -59,19 +60,19 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
  * <p>
  * Available: For world developers.
  */
-public class CommandPlay implements CommandExecutor, TabCompleter {
+public class CommandPlay extends CommandHandler {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
-                return true;
+                return;
             }
             if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
                 player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.GENERIC_COMMAND))));
-                return true;
+                return;
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             // Проверка на владельца мира
@@ -87,12 +88,12 @@ public class CommandPlay implements CommandExecutor, TabCompleter {
                     PlanetModeChangeEvent event = new PlanetModeChangeEvent(planet, planet.getMode(), Planet.Mode.PLAYING,player);
                     event.callEvent();
                     if (event.isCancelled()) {
-                        return true;
+                        return;
                     }
                     if (!OpenCreative.getStability().isFine()) {
                         player.sendMessage(getLocaleMessage("creative.stability.cannot"));
                         Sounds.PLAYER_FAIL.play(player);
-                        return true;
+                        return;
                     }
                     planet.setMode(Planet.Mode.PLAYING);
                     if (isEntityInDevPlanet(player)) {
@@ -147,11 +148,10 @@ public class CommandPlay implements CommandExecutor, TabCompleter {
                 }
             }
         }
-        return true;
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public @Nullable List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) return null;
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet == null) return null;
