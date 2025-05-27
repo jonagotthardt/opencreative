@@ -9622,6 +9622,7 @@ menus:
           - "&7 This will &c&ndelete&7 the current"
           - "&7 localization files (en.yml, ru.yml)"
           - "&7 and replace with plugin's one."
+          - "&7 Useful after plugin's update!"
           - ""
           - "&c Click to reset the translation."
           - ""
