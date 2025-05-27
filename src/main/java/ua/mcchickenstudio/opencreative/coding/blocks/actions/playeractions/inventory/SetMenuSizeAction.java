@@ -51,7 +51,7 @@ public final class SetMenuSizeAction extends PlayerAction {
             if (i >= oldInventory.getTopInventory().getSize()) break;
             newInventory.setItem(i,oldInventory.getTopInventory().getItem(i));
         }
-        if (!getPlanet().getLimits().canOpenMenu(player)) {
+        if (getPlanet().getLimits().cantOpenMenu(player)) {
             /*
              * This check prevents player from opening
              * too many menus, that can prevent from

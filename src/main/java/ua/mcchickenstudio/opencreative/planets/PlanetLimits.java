@@ -111,6 +111,15 @@ public class PlanetLimits {
     }
 
     /**
+     * Returns maximum amount of opening or closing
+     * inventories for player in the last 5 seconds.
+     * @return limit of inventory actions.
+     */
+    public int getOpeningInventoriesLimit() {
+        return planet.getGroup().getLimit(LimitType.OPENING_INVENTORIES).calculateLimit(planet.getPlayers().size());
+    }
+
+    /**
      * Returns maximum entities amount in the planet.
      * @return limit of entities.
      */
@@ -240,7 +249,7 @@ public class PlanetLimits {
      * in last 5 seconds is not greater than 5.
      * @return true - if it's allowed to open menu, false - it's disallowed.
      */
-    public boolean canOpenMenu(Player player) {
+    public boolean cantOpenMenu(Player player) {
 
         for (UUID uuid : lastPlayerMenuOpens.keySet()) {
             // Removes offline players
@@ -259,12 +268,12 @@ public class PlanetLimits {
             timestamps.pollFirst();
         }
 
-        if (timestamps.size() >= 5) {
-            return false;
+        if (timestamps.size() >= getOpeningInventoriesLimit()) {
+            return true;
         }
 
         timestamps.addLast(now);
-        return true;
+        return false;
     }
 
     /**

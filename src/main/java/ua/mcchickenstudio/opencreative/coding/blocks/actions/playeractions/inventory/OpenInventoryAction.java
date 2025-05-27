@@ -34,7 +34,7 @@ public final class OpenInventoryAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        if (!getPlanet().getLimits().canOpenMenu(player)) {
+        if (getPlanet().getLimits().cantOpenMenu(player)) {
             /*
              * This check prevents player from opening
              * too many menus, that can prevent from

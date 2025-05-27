@@ -53,7 +53,7 @@ public final class OpenContainerAction extends PlayerAction {
             } else {
                 inventory = copyInventory(container.getInventory(),container.customName());
             }
-            if (!getPlanet().getLimits().canOpenMenu(player)) {
+            if (getPlanet().getLimits().cantOpenMenu(player)) {
                 throw new TooManyOpenedMenus(player.getName());
             }
             player.openInventory(inventory);
@@ -63,7 +63,7 @@ public final class OpenContainerAction extends PlayerAction {
             } else {
                 inventory = copyInventory(player.getEnderChest(),null);
             }
-            if (!getPlanet().getLimits().canOpenMenu(player)) {
+            if (getPlanet().getLimits().cantOpenMenu(player)) {
                 /*
                  * This check prevents player from opening
                  * too many menus, that can prevent from

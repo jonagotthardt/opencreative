@@ -53,7 +53,7 @@ public final class SetMenuItemsRowAction extends PlayerAction {
         else if (row < 1) row = 1;
         if (inventory.getSize() < row*9) {
             inventory = new CustomMenu(row*9,player.getOpenInventory().getTitle()).getInventory();
-            if (!getPlanet().getLimits().canOpenMenu(player)) {
+            if (getPlanet().getLimits().cantOpenMenu(player)) {
                 /*
                  * This check prevents player from opening
                  * too many menus, that can prevent from

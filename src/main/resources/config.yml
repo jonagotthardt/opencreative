@@ -209,7 +209,6 @@ groups:
         entities-amount: 50
         modifying-blocks: 0
         redstone-changes: 20
-        opening-inventories: 5
         variables-amount: 50
         scoreboards-amount: 3
         changing-list-elements: 10
@@ -267,7 +266,6 @@ groups:
         entities-amount: 50
         modifying-blocks: 0
         redstone-changes: 20
-        opening-inventories: 5
         changing-list-elements: 10
         variables-amount: 50
         scoreboards-amount: 10
