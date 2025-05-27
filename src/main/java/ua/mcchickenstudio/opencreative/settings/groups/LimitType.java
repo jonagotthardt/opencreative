@@ -26,6 +26,7 @@ public enum LimitType {
     BOSSBARS("bossbars-amount"),
     REDSTONE_OPERATIONS("redstone-changes"),
     OPENING_INVENTORIES("opening-inventories"),
+    SENDING_WEB_REQUESTS("sending-web-requests"),
     PHYSICAL_OBJECTS("physical-objects"),
     VARIABLES("variables-amount"),
     CODING_PLATFORMS("coding-platforms"),

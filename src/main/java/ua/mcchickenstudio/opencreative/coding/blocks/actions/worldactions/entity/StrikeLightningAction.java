@@ -33,7 +33,9 @@ public final class StrikeLightningAction extends WorldAction {
 
     @Override
     protected void execute(Entity entity) {
-        if (!getPlanet().getLimits().canLightningStrike()) return;
+        if (!getPlanet().getLimits().canLightningStrike()) {
+            return;
+        }
         boolean damage = getArguments().getValue("damage",true,this);
         for (Location location : getArguments().getLocationList("locations",this)) {
             if (damage) {

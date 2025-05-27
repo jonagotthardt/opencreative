@@ -44,6 +44,10 @@ public final class SendWebRequestAction extends WorldAction {
 
     @Override
     protected void execute(Entity entity) {
+        if (!getPlanet().getLimits().canSendWebRequest()) {
+            return;
+        }
+
         String url = getArguments().getValue("url", "", this);
         String body = getArguments().getValue("body", "", this);
         String request = getArguments().getValue("request", "GET", this).toUpperCase();

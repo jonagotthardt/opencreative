@@ -190,6 +190,7 @@ groups:
         modifying-blocks: 5000 # limit for changing blocks with world actions per second
         redstone-changes: 100 # limit for redstone operations in world
         opening-inventories: 5 # limit for opening inventories per 5 seconds for preventing anti-exit
+        sending-web-requests: 5 # limit for sending web requests per 5 seconds for preventing attacks
         variables-amount: 50 # limit for amount of all variables in world (saved, global, local)
         scoreboards-amount: 50 # limit for amount of all scoreboards
         bossbars-amount: 10 # limit for amount of all bossbars
@@ -251,6 +252,7 @@ groups:
         modifying-blocks: 7500
         redstone-changes: 200
         opening-inventories: 5
+        sending-web-requests: 5
         variables-amount: 500
         scoreboards-amount: 50
         bossbars-amount: 10
