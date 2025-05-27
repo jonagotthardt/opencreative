@@ -18,10 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.planets;
 
-import org.bukkit.scheduler.BukkitRunnable;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedBlocksEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.settings.groups.LimitType;
+
+import java.util.*;
 
 /**
  * <h1>PlanetLimits</h1>
@@ -35,6 +36,11 @@ public class PlanetLimits {
     private int lastModifiedBlocksAmount;
     private int lastRedstoneOperationsAmount;
     private int lastListElementsChangesAmount;
+
+    private final LinkedList<Long> lastWebRequests = new LinkedList<>();
+    private final LinkedList<Long> lastLightningsStrikes = new LinkedList<>();
+
+    private final Map<UUID, Deque<Long>> lastPlayerMenuOpens = new HashMap<>();
 
     public PlanetLimits(Planet planet) {
         this.planet = planet;
@@ -104,6 +110,23 @@ public class PlanetLimits {
      */
     public int getCodeOperationsLimit() {
         return planet.getGroup().getLimit(LimitType.CODE_OPERATIONS).calculateLimit(planet.getPlayers().size());
+    }
+
+    /**
+     * Returns maximum amount of opening or closing
+     * inventories for player in the last 5 seconds.
+     * @return limit of inventory actions.
+     */
+    public int getOpeningInventoriesLimit() {
+        return planet.getGroup().getLimit(LimitType.OPENING_INVENTORIES).calculateLimit(planet.getPlayers().size());
+    }
+
+    /**
+     * Returns maximum amount of sending web requests in the last 5 seconds.
+     * @return limit of web requests.
+     */
+    public int getWebRequestsLimit() {
+        return planet.getGroup().getLimit(LimitType.SENDING_WEB_REQUESTS).calculateLimit(planet.getPlayers().size());
     }
 
     /**
@@ -196,7 +219,6 @@ public class PlanetLimits {
         return lastListElementsChangesAmount;
     }
 
-
     /**
      * Returns maximum coding platforms amount in the planet.
      * Doesn't change with players' amount.
@@ -205,5 +227,108 @@ public class PlanetLimits {
     public int getCodingPlatformsLimit() {
         return planet.getGroup().getCodingPlatformsLimit();
     }
+
+    /**
+     * Checks if world can strike lightning. Used to prevent
+     * "too many lightning strikes" crash. Checks if the amount
+     * of lightning strikes in last 5 seconds is not greater than 5.
+     * @return true - if it's allowed to strike lightning, false - it's disallowed.
+     */
+    public boolean canLightningStrike() {
+
+        long now = System.currentTimeMillis();
+
+        // Removes time from list, if it's more than 5 seconds.
+        while (!lastLightningsStrikes.isEmpty() && (now - lastLightningsStrikes.peek()) > 5000) {
+            lastLightningsStrikes.poll();
+        }
+
+        if (lastLightningsStrikes.size() >= 5) {
+            return false;
+        } else {
+            lastLightningsStrikes.add(now);
+            return true;
+        }
+
+    }
+
+    /**
+     * Checks if world can send web request. Used to prevent
+     * web attacks. Checks if the amount of sent web requests
+     * in last 5 seconds is not greater than limit.
+     * @return true - if it's allowed to strike lightning, false - it's disallowed.
+     */
+    public boolean canSendWebRequest() {
+
+        long now = System.currentTimeMillis();
+
+        // Removes time from list, if it's more than 5 seconds.
+        while (!lastWebRequests.isEmpty() && (now - lastWebRequests.peek()) > 5000) {
+            lastWebRequests.poll();
+        }
+
+        if (lastWebRequests.size() >= getWebRequestsLimit()) {
+            return false;
+        } else {
+            lastWebRequests.add(now);
+            return true;
+        }
+
+    }
+
+    /**
+     * Checks if world can open custom menu for player.
+     * Used to prevent unavailability of leaving game.
+     * Checks if the amount of player's opened menus
+     * in last 5 seconds is not greater than limit.
+     * @return true - if it's allowed to open menu, false - it's disallowed.
+     */
+    public boolean cantOpenMenu(Player player) {
+
+        for (UUID uuid : lastPlayerMenuOpens.keySet()) {
+            // Removes offline players
+            if (Bukkit.getPlayer(uuid) == null) {
+                lastPlayerMenuOpens.remove(uuid);
+            }
+        }
+
+        UUID uuid = player.getUniqueId();
+        long now = System.currentTimeMillis();
+        lastPlayerMenuOpens.putIfAbsent(uuid, new LinkedList<>());
+        Deque<Long> timestamps = lastPlayerMenuOpens.get(uuid);
+
+        // Removes time from list, if it's more than 5 seconds.
+        while (!timestamps.isEmpty() && (now - timestamps.peekFirst()) > 5000) {
+            timestamps.pollFirst();
+        }
+
+        if (timestamps.size() >= getOpeningInventoriesLimit()) {
+            return true;
+        }
+
+        timestamps.addLast(now);
+        return false;
+    }
+
+    /**
+     * Clears player's data when player leaves planet.
+     * @param player player to clear data.
+     */
+    public void clearPlayerLimits(Player player) {
+        lastPlayerMenuOpens.remove(player.getUniqueId());
+    }
+
+    /**
+     * Clears data on planet unload.
+     */
+    public void clear() {
+        lastModifiedBlocksAmount = 0;
+        lastRedstoneOperationsAmount = 0;
+        lastListElementsChangesAmount = 0;
+        lastLightningsStrikes.clear();
+        lastPlayerMenuOpens.clear();
+        lastWebRequests.clear();
+    }
+
 }
 

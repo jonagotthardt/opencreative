@@ -18,13 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.commands;
 
-import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
@@ -38,19 +36,19 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
- * <h1>CommandSpawn</h1>
+ * <h1>SpawnCommand</h1>
  * This command is responsible for teleporting players to lobby.
  * <p>
  * Available: For all players.
  */
-public class CommandSpawn implements CommandExecutor, TabCompleter {
+public class SpawnCommand extends CommandHandler {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
             if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
                 sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
-                return true;
+                return;
             }
             setCooldown(player,OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
         }
@@ -58,28 +56,28 @@ public class CommandSpawn implements CommandExecutor, TabCompleter {
             if (!(sender instanceof Player player)) {
                 // Console cannot be teleported to lobby
                 sender.sendMessage(getLocaleMessage("only-players"));
-                return true;
+                return;
             }
             new QuitEvent(player).callEvent();
             teleportToLobby(player);
-            return true;
+            return;
         }
         if (!sender.hasPermission("opencreative.spawn.others")) {
             sender.sendMessage(getLocaleMessage("no-perms"));
-            return true;
+            return;
         }
         Player player = Bukkit.getPlayer(args[0]);
         if (player == null) {
             sender.sendMessage(getLocaleMessage("not-found-player"));
-            return true;
+            return;
         }
         new QuitEvent(player).callEvent();
         teleportToLobby(player);
-        return true;
+        return;
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public @Nullable List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!sender.hasPermission("opencreative.spawn.others") || args.length > 1) {
             return null;
         }

@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
@@ -34,15 +35,15 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldListener;
 import ua.mcchickenstudio.opencreative.commands.*;
 import ua.mcchickenstudio.opencreative.commands.minecraft.*;
-import ua.mcchickenstudio.opencreative.commands.world.CommandAd;
-import ua.mcchickenstudio.opencreative.commands.world.CommandEnvironment;
-import ua.mcchickenstudio.opencreative.commands.world.CommandJoin;
-import ua.mcchickenstudio.opencreative.commands.world.CommandWorld;
-import ua.mcchickenstudio.opencreative.commands.world.modes.CommandBuild;
-import ua.mcchickenstudio.opencreative.commands.world.modes.CommandDev;
-import ua.mcchickenstudio.opencreative.commands.world.modes.CommandPlay;
-import ua.mcchickenstudio.opencreative.commands.world.reputation.CommandDislike;
-import ua.mcchickenstudio.opencreative.commands.world.reputation.CommandLike;
+import ua.mcchickenstudio.opencreative.commands.world.AdvertisementCommand;
+import ua.mcchickenstudio.opencreative.commands.world.EnvironmentCommand;
+import ua.mcchickenstudio.opencreative.commands.world.JoinCommand;
+import ua.mcchickenstudio.opencreative.commands.world.WorldCommand;
+import ua.mcchickenstudio.opencreative.commands.world.modes.BuildCommand;
+import ua.mcchickenstudio.opencreative.commands.world.modes.DevCommand;
+import ua.mcchickenstudio.opencreative.commands.world.modes.PlayCommand;
+import ua.mcchickenstudio.opencreative.commands.world.reputation.DislikeCommand;
+import ua.mcchickenstudio.opencreative.commands.world.reputation.LikeCommand;
 import ua.mcchickenstudio.opencreative.indev.OfflineWander;
 import ua.mcchickenstudio.opencreative.indev.Wander;
 import ua.mcchickenstudio.opencreative.listeners.CreativeListener;
@@ -127,7 +128,8 @@ public final class OpenCreative extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,100,1));
             player.showTitle(Title.title(
-                    Component.text("§fOpen§7Creative§b+ §7" + version), Component.text("§f" + codename + "..."),
+                    MiniMessage.miniMessage().deserialize("<white>Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+ <gray>" + version),
+                    Component.text("§f" + codename + "..."),
                     Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(5), Duration.ofSeconds(0))
             ));
         }
@@ -162,7 +164,10 @@ public final class OpenCreative extends JavaPlugin {
         long loadedTime = System.currentTimeMillis()-startTime;
         for (Player player : Bukkit.getOnlinePlayers()) {
             teleportToLobby(player);
-            getServer().sendActionBar(Component.text("§7Open§fCreative§b+ §7" + version + "§f is loaded for " + loadedTime + " ms."));
+            getServer().sendActionBar(
+                    MiniMessage.miniMessage().deserialize(
+                            "<white>Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+ <gray>" + version + "<white> is loaded for " + loadedTime + " ms."
+                    ));
         }
         getLogger().info(String.join("\n",
                         "OpenCreative+ " + version + ": " + codename + " is loaded for " + loadedTime + " ms.",
@@ -178,7 +183,6 @@ public final class OpenCreative extends JavaPlugin {
                         ""
         ));
         new Metrics(this, 22001);
-
     }
 
     /**
@@ -189,7 +193,10 @@ public final class OpenCreative extends JavaPlugin {
     public void onDisable() {
         getLogger().info("Shutting down OpenCreative+, please wait...");
         for (Player player: Bukkit.getOnlinePlayers()) {
-            player.sendMessage(Component.text("§f\n§f Shutting down §7Open§fCreative§b+ §7" + version + "§f, please wait...\n§f"));
+            player.sendMessage(
+                    MiniMessage.miniMessage().deserialize(
+                            " \n<white> Shutting down Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+ <gray>" + version + "<white>, please wait...\n "
+                    ));
             teleportToLobby(player);
         }
         FileUtils.unloadPlanets();
@@ -219,30 +226,30 @@ public final class OpenCreative extends JavaPlugin {
         this.getLogger().info("Registering OpenCreative+ commands...");
         int registeredCommands = 0;
         Map<String,Class<? extends CommandExecutor>> commands = new HashMap<>();
-        commands.put("creative",    CommandCreative.class);
-        commands.put("spawn",       CommandSpawn.class);
-        commands.put("menu",        CommandMenu.class);
-        commands.put("world",       CommandWorld.class);
-        commands.put("chat",        CreativeChat.class);
-        commands.put("join",        CommandJoin.class);
-        commands.put("ad",          CommandAd.class);
-        commands.put("play",        CommandPlay.class);
-        commands.put("build",       CommandBuild.class);
-        commands.put("dev",         CommandDev.class);
-        commands.put("environment", CommandEnvironment.class);
-        commands.put("like",        CommandLike.class);
-        commands.put("dislike",     CommandDislike.class);
-        commands.put("locate",      CommandLocate.class);
-        commands.put("gamemode",    CommandGamemode.class);
-        commands.put("give",        CommandGive.class);
-        commands.put("teleport",    CommandTeleport.class);
-        commands.put("edit",        CommandEdit.class);
-        commands.put("playsound",   CommandPlaySound.class);
-        commands.put("stopsound",   CommandStopSound.class);
-        commands.put("time",        CommandTime.class);
-        commands.put("weather",     CommandWeather.class);
-        commands.put("value",       CommandValue.class);
-        //commands.put("module",      CommandModule.class);
+        commands.put("creative",    CreativeCommand.class);
+        commands.put("spawn",       SpawnCommand.class);
+        commands.put("menu",        MenuCommand.class);
+        commands.put("world",       WorldCommand.class);
+        commands.put("chat",        ChatCommand.class);
+        commands.put("join",        JoinCommand.class);
+        commands.put("ad",          AdvertisementCommand.class);
+        commands.put("play",        PlayCommand.class);
+        commands.put("build",       BuildCommand.class);
+        commands.put("dev",         DevCommand.class);
+        commands.put("environment", EnvironmentCommand.class);
+        commands.put("like",        LikeCommand.class);
+        commands.put("dislike",     DislikeCommand.class);
+        commands.put("locate",      LocateCommand.class);
+        commands.put("gamemode",    GamemodeCommand.class);
+        commands.put("give",        GiveCommand.class);
+        commands.put("teleport",    TeleportCommand.class);
+        commands.put("edit",        EditCommand.class);
+        commands.put("playsound",   PlaySoundCommand.class);
+        commands.put("stopsound",   StopSoundCommand.class);
+        commands.put("time",        TimeCommand.class);
+        commands.put("weather",     WeatherCommand.class);
+        commands.put("value",       ValueCommand.class);
+        //commands.put("module",      ModuleCommand.class);
         for (String commandName : commands.keySet()) {
             PluginCommand command = getCommand(commandName);
             if (command != null) {

@@ -18,7 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.commands.world.modes;
 
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import net.kyori.adventure.title.Title;
@@ -26,7 +28,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -35,6 +36,8 @@ import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.removePlayerWithLocation;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
@@ -46,25 +49,26 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
 /**
- * <h1>CommandBuild</h1>
+ * <h1>BuildCommand</h1>
  * This command is responsible for changing current world's mode
  * to build mode. If it's already set, it can teleport player to
  * spawn location and give creative mode.
  * <p>
  * Available: For world builders.
  */
-public class CommandBuild implements CommandExecutor {
+public class BuildCommand extends CommandHandler {
+
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
-                return true;
+                return;
             }
             if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
                 player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.GENERIC_COMMAND))));
-                return true;
+                return;
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (args.length == 0) {
@@ -75,18 +79,18 @@ public class CommandBuild implements CommandExecutor {
                         if (!planet.getWorldPlayers().isTrustedBuilder(player)) {
                             if (planetOwner == null) {
                                 sender.sendMessage(getLocaleMessage("world.build-mode.cant-build-when-offline"));
-                                return true;
+                                return;
                             }
                             Planet ownerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(planetOwner);
                             if (!(ownerPlanet == planet)) {
                                 sender.sendMessage(getLocaleMessage("world.build-mode.cant-build-when-offline"));
-                                return true;
+                                return;
                             }
                         }
                         PlanetModeChangeEvent event = new PlanetModeChangeEvent(planet, planet.getMode(), Planet.Mode.BUILD,player);
                         event.callEvent();
                         if (event.isCancelled()) {
-                            return true;
+                            return;
                         }
                         planet.setMode(Planet.Mode.BUILD);
                         if (isEntityInDevPlanet(player)) {
@@ -115,12 +119,12 @@ public class CommandBuild implements CommandExecutor {
                         if (planet.getWorldPlayers().getBuildersNotTrusted().contains(sender.getName())) {
                             if (planetOwner == null) {
                                 sender.sendMessage(getLocaleMessage("world.build-mode.cant-build-when-offline"));
-                                return true;
+                                return;
                             }
                             Planet ownerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(planetOwner);
                             if (!(ownerPlanet == planet)) {
                                 sender.sendMessage(getLocaleMessage("world.build-mode.cant-build-when-offline"));
-                                return true;
+                                return;
                             }
                         }
                         if (planet.isOwner(sender.getName())) {
@@ -141,7 +145,7 @@ public class CommandBuild implements CommandExecutor {
             } else {
                 if (!planet.isOwner(sender.getName())) {
                     sender.sendMessage(getLocaleMessage("not-owner"));
-                    return true;
+                    return;
                 }
                 String nickname = args[0];
                 Player onlinePlayer = Bukkit.getPlayer(nickname);
@@ -152,7 +156,7 @@ public class CommandBuild implements CommandExecutor {
                 }
                 if (planet.isOwner(nickname)) {
                     sender.sendMessage(getLocaleMessage("same-player"));
-                    return true;
+                    return;
                 }
                 /*
                  * Checks if player's name contains in not trusted
@@ -161,12 +165,12 @@ public class CommandBuild implements CommandExecutor {
                 if (planet.getWorldPlayers().getBuildersNotTrusted().contains(nickname)) {
                     planet.getWorldPlayers().addBuilder(nickname,true);
                     sender.sendMessage(getLocaleMessage("world.players.builders.trusted").replace("%player%", nickname));
-                    return true;
+                    return;
                 }
                 if (planet.getWorldPlayers().getBuildersTrusted().contains(nickname)) {
                     planet.getWorldPlayers().removeBuilder(nickname);
                     sender.sendMessage(getLocaleMessage("world.players.builders.removed").replace("%player%", nickname));
-                    return true;
+                    return;
                 }
                 /*
                  * Adds online player as not trusted builder, if he's not
@@ -175,7 +179,7 @@ public class CommandBuild implements CommandExecutor {
                 int limit = planet.getLimits().getBuildersLimit();
                 if (planet.getWorldPlayers().getAllBuilders().size() > limit) {
                     sender.sendMessage(getLocaleMessage("world.players.builders.limit").replace("%limit%",String.valueOf(limit)));
-                    return true;
+                    return;
                 }
                 if (onlinePlayer != null) {
                     Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(onlinePlayer);
@@ -190,6 +194,18 @@ public class CommandBuild implements CommandExecutor {
                 }
             }
         }
-        return true;
     }
+
+    @Override
+    public @Nullable List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        if (!(sender instanceof Player player)) return null;
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+        if (planet == null) return null;
+        if (planet.isOwner(player)) {
+            List<String> list = new ArrayList<>(planet.getWorldPlayers().getAllBuilders());
+            return list.subList(0,Math.min(10,list.size()));
+        }
+        return null;
+    }
+
 }

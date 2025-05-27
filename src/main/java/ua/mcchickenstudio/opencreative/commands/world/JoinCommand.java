@@ -20,11 +20,10 @@ package ua.mcchickenstudio.opencreative.commands.world;
 
 import org.bukkit.Bukkit;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.groups.Group;
@@ -40,42 +39,42 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCoo
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
- * <h1>CommandJoin</h1>
+ * <h1>JoinCommand</h1>
  * This command is used to connect player to specified planet
  * by its numeric or text ID.
  * <p>
  * Available: For all players.
  */
-public class CommandJoin implements CommandExecutor, TabCompleter {
+public class JoinCommand extends CommandHandler {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
             Group group = OpenCreative.getSettings().getGroups().getGroup(player);
             if (!checkAndSetCooldownWithMessage(player, group, CooldownUtils.CooldownType.GENERIC_COMMAND)) {
-                return true;
+                return;
             }
         }
 
         if (OpenCreative.getSettings().isMaintenance() && !sender.hasPermission("opencreative.maintenance.bypass")) {
             sender.sendMessage(getLocaleMessage("maintenance"));
-            return true;
+            return;
         }
 
         if (OpenCreative.getStability().isVeryBad() && !sender.hasPermission("opencreative.stability.bypass")) {
             sender.sendMessage(getLocaleMessage("creative.stability.cannot"));
-            return true;
+            return;
         }
 
         if (args.length == 2) {
             if (!sender.hasPermission("opencreative.join.others")) {
                 sender.sendMessage(getLocaleMessage("no-perms"));
-                return true;
+                return;
             }
             Player player = Bukkit.getPlayer(args[1]);
             if (player == null) {
                 sender.sendMessage(getLocaleMessage("not-found-player"));
-                return true;
+                return;
             }
             sender.sendMessage(getLocaleMessage("commands.join.connecting", player).replace("%id%",args[0]));
             if (!handlePlayerConnection(player, args[0])) {
@@ -83,17 +82,15 @@ public class CommandJoin implements CommandExecutor, TabCompleter {
             }
         } else if (args.length != 1) {
             sender.sendMessage(getLocaleMessage("commands.join.help"));
-            return true;
+            return;
         } else if (sender instanceof Player player) {
             handlePlayerConnection(player, args[0]);
         } else {
             sender.sendMessage(getLocaleMessage("only-players"));
         }
-
-        return true;
     }
 
-    protected boolean handlePlayerConnection(Player player, String planetId) {
+    public static boolean handlePlayerConnection(Player player, String planetId) {
         Planet foundPlanet = findPlanet(planetId);
 
         if (foundPlanet == null) {
@@ -112,7 +109,7 @@ public class CommandJoin implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    protected Planet findPlanet(String planetId) {
+    public static Planet findPlanet(String planetId) {
         Set<Planet> planets = OpenCreative.getPlanetsManager().getPlanets();
         if (planets.isEmpty()) return null;
 
@@ -124,7 +121,7 @@ public class CommandJoin implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
+    public List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         return switch (args.length) {
             case 1 -> OpenCreative.getPlanetsManager().getPlanets().stream()
                     .map(planet -> planet.getInformation().getCustomID())

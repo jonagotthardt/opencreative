@@ -27,6 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyOpenedMenus;
 
 import java.util.List;
 
@@ -52,6 +53,14 @@ public final class SetMenuItemsRowAction extends PlayerAction {
         else if (row < 1) row = 1;
         if (inventory.getSize() < row*9) {
             inventory = new CustomMenu(row*9,player.getOpenInventory().getTitle()).getInventory();
+            if (getPlanet().getLimits().cantOpenMenu(player)) {
+                /*
+                 * This check prevents player from opening
+                 * too many menus, that can prevent from
+                 * quiting the game.
+                 */
+                throw new TooManyOpenedMenus(player.getName());
+            }
             player.openInventory(inventory);
         }
         boolean replaceWithAir = getArguments().getValue("replace-with-air",true,this);

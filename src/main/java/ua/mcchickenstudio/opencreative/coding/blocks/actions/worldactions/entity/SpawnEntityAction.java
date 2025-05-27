@@ -30,7 +30,10 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+
 public final class SpawnEntityAction extends WorldAction {
+
     public SpawnEntityAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
@@ -55,12 +58,17 @@ public final class SpawnEntityAction extends WorldAction {
         } else {
             typeString = getArguments().getValue("type","chicken",this);
         }
+
         EntityType type;
         try {
             type = EntityType.valueOf(typeString);
         } catch (IllegalArgumentException e) {
             type = EntityType.CHICKEN;
         }
+        if (isBannedEntity(type)) {
+            throw new IllegalArgumentException("Cannot spawn " + type.name() + ", because it's disallowed entity type.");
+        }
+
         for (Location location : getArguments().getLocationList("locations",this)) {
             Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location,type);
 
@@ -78,6 +86,13 @@ public final class SpawnEntityAction extends WorldAction {
                 living.setAI(ai);
             }
         }
+    }
+
+    public boolean isBannedEntity(EntityType type) {
+        return switch (type) {
+            case PLAYER, ITEM, LIGHTNING_BOLT -> true;
+            default -> false;
+        };
     }
 
     @Override

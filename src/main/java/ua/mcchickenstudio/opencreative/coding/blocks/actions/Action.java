@@ -28,6 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.exceptions.TooLongTextException;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
+import ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -248,6 +249,7 @@ public abstract class Action {
             }
             default -> entities.addAll(eventEntities);
         }
+        entities.removeIf(entity -> entity instanceof Player player && ChangedWorld.isPlayerWithLocation(player));
         entities.removeIf(entity -> !entity.getWorld().equals(getPlanet().getWorld()));
         return entities;
     }

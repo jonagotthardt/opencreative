@@ -25,6 +25,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.AdvertisedEvent;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetAdvertisementEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -39,33 +40,38 @@ import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import java.util.Collections;
 import java.util.List;
 
+import static ua.mcchickenstudio.opencreative.commands.world.JoinCommand.findPlanet;
+import static ua.mcchickenstudio.opencreative.commands.world.JoinCommand.handlePlayerConnection;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 /**
- * <h1>CommandAd</h1>
+ * <h1>AdvertisementCommand</h1>
  * This command is used to invite all players from server
  * to specific world. Or, it can be used as alias of
- * {@link CommandJoin}.
+ * {@link JoinCommand}.
  * <p>
  * Available: For all players.
  */
-public class CommandAd extends CommandJoin {
+public class AdvertisementCommand extends CommandHandler {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+
         if (!(sender instanceof Player player)) {
-            return true;
+            sender.sendMessage(getLocaleMessage("only-players"));
+            return;
         }
 
         if (OpenCreative.getSettings().isMaintenance() && !player.hasPermission("opencreative.maintenance.bypass")) {
             player.sendMessage(getLocaleMessage("maintenance"));
-            return true;
+            return;
         }
+
         if (OpenCreative.getStability().isVeryBad() && !player.hasPermission("opencreative.stability.bypass")) {
             player.sendMessage(getLocaleMessage("creative.stability.cannot"));
-            return true;
+            return;
         }
 
         switch (args.length) {
@@ -75,7 +81,7 @@ public class CommandAd extends CommandJoin {
             case 1:  // /ad [planet id]
                 if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
                     player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
-                    return true;
+                    return;
                 }
                 setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
                 handlePlayerConnection(player, args[0]);
@@ -85,7 +91,6 @@ public class CommandAd extends CommandJoin {
                 break;
         }
 
-        return true;
     }
 
     public static void handlePlanetAdvertisement(Player player, Planet planet) {
@@ -192,7 +197,7 @@ public class CommandAd extends CommandJoin {
     }
 
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
+    public List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         return switch (args.length) {
             case 1 -> OpenCreative.getPlanetsManager().getPlanets().stream()
                     .map(planet -> planet.getInformation().getCustomID())

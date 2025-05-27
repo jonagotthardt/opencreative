@@ -425,13 +425,17 @@ public class ItemUtils {
                     sendDebug("Destroyed book with a lot of pages");
                 } else if (removeClickableBooks) {
                     List<Component> pages = book.pages();
+                    boolean cleared = false;
                     for (int i = 0; i < pages.size(); i++) {
                         Component component = pages.get(i);
+                        if (component.clickEvent() != null) cleared = true;
                         component = component.clickEvent() != null ? component.clickEvent(null) : component;
                         book.page(i+1,component);
                     }
-                    sendDebug("Cleared book with clickable components");
-                    item.setItemMeta(book);
+                    if (cleared) {
+                        sendDebug("Cleared book with clickable components");
+                        item.setItemMeta(book);
+                    }
                 }
             } else if (meta instanceof SpawnEggMeta egg && removeCustomEggs) {
                 if (egg.getCustomSpawnedType() != null) {

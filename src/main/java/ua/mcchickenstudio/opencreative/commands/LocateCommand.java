@@ -25,9 +25,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,19 +35,20 @@ import java.util.List;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 /**
- * <h1>CommandLocate</h1>
+ * <h1>LocateCommand</h1>
  * This command is responsible for finding online player's current world.
  * It allows players to locate each other and join friends.
  * <p>
  * Available: For all players.
  */
-public class CommandLocate implements CommandExecutor, TabCompleter {
+public class LocateCommand extends CommandHandler {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+
         if (args.length == 0) {
             sender.sendMessage(getLocaleMessage("locate.help"));
-            return true;
+            return;
         }
 
         String nickname = args[0];
@@ -57,18 +56,17 @@ public class CommandLocate implements CommandExecutor, TabCompleter {
 
         if (player == null) {
             sender.sendMessage(getLocaleMessage("locate.offline"));
-            return true;
+            return;
         }
 
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
 
         if (planet == null) {
             sender.sendMessage(getLocaleMessage("locate.offline"));
-            return true;
+            return;
         }
 
         sendLocateMessage(sender, player, planet);
-        return true;
     }
 
     private void sendLocateMessage(CommandSender sender, Player player, Planet planet) {
@@ -88,10 +86,13 @@ public class CommandLocate implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
+    public List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
+
         if (args.length == 1) {
             return new ArrayList<>(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
         }
-        return new ArrayList<>();
+
+        return null;
+
     }
 }

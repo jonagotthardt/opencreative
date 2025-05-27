@@ -24,6 +24,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyOpenedMenus;
 
 public final class CloseInventoryAction extends PlayerAction {
     public CloseInventoryAction(Executor executor, Target target, int x, Arguments args) {
@@ -32,6 +33,14 @@ public final class CloseInventoryAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
+        if (getPlanet().getLimits().cantOpenMenu(player)) {
+            /*
+             * This check prevents player from closing
+             * too many menus, that can prevent from
+             * quiting the game.
+             */
+            throw new TooManyOpenedMenus(player.getName());
+        }
         player.closeInventory();
     }
 

@@ -28,6 +28,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyOpenedMenus;
 
 public final class OpenSignAction extends PlayerAction {
     public OpenSignAction(Executor executor, Target target, int x, Arguments args) {
@@ -41,6 +42,14 @@ public final class OpenSignAction extends PlayerAction {
         if (!(block.getState() instanceof Sign sign)) return;
         String sideString = getArguments().getValue("side","front",this);
         Side side = (sideString.equals("back") ? Side.BACK : Side.FRONT);
+        if (getPlanet().getLimits().cantOpenMenu(player)) {
+            /*
+             * This check prevents player from opening
+             * too many menus, that can prevent from
+             * quiting the game.
+             */
+            throw new TooManyOpenedMenus(player.getName());
+        }
         player.openSign(sign,side);
     }
 

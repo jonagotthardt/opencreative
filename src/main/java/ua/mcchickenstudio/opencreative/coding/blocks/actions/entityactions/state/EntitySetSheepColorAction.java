@@ -16,38 +16,38 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.entity;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.state;
 
+import org.bukkit.DyeColor;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Sheep;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 
-public final class StrikeLightningAction extends WorldAction {
-    public StrikeLightningAction(Executor executor, Target target, int x, Arguments args) {
+public final class EntitySetSheepColorAction extends EntityAction {
+    public EntitySetSheepColorAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     protected void execute(Entity entity) {
-        if (!getPlanet().getLimits().canLightningStrike()) {
-            return;
+        String colorName = getArguments().getValue("color", "white", this);
+        DyeColor color;
+        try {
+            color = DyeColor.valueOf(colorName.toUpperCase().replace("-","_"));
+        } catch (Exception ignored) {
+            color = DyeColor.WHITE;
         }
-        boolean damage = getArguments().getValue("damage",true,this);
-        for (Location location : getArguments().getLocationList("locations",this)) {
-            if (damage) {
-                getPlanet().getTerritory().getWorld().strikeLightning(location);
-            } else {
-                getPlanet().getTerritory().getWorld().strikeLightningEffect(location);
-            }
+        if (entity instanceof Sheep sheep) {
+            sheep.setColor(color);
         }
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.WORLD_STRIKE_LIGHTNING;
+        return ActionType.ENTITY_SET_SHEEP_COLOR;
     }
 }

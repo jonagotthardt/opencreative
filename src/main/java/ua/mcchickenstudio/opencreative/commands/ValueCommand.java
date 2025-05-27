@@ -20,9 +20,7 @@ package ua.mcchickenstudio.opencreative.commands;
 
 import org.bukkit.*;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -48,30 +46,30 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
- * <h1>CommandValue</h1>
+ * <h1>ValueCommand</h1>
  * This command allows players to get coding values, like Text,
  * Number, Variable, Location, Vector, Event Value with already
  * set values.
  * <p>
  * Available: For world developers in developers world.
  */
-public class CommandValue implements CommandExecutor, TabCompleter {
+public class ValueCommand extends CommandHandler {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage(getLocaleMessage("only-players"));
-            return true;
+            return;
         }
         if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
             sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
-            return true;
+            return;
         }
         setCooldown(player,OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
         DevPlanet planet = OpenCreative.getPlanetsManager().getDevPlanet(player);
         if (planet == null) {
             player.sendMessage(getLocaleMessage("only-in-world"));
-            return true;
+            return;
         }
         ItemStack itemStack = null;
         switch (label.toLowerCase()) {
@@ -169,11 +167,11 @@ public class CommandValue implements CommandExecutor, TabCompleter {
             Sounds.DEV_TAKE_VALUE.play(player);
             player.getInventory().addItem(itemStack);
         }
-        return true;
+        return;
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public @Nullable List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
             return null;
         }

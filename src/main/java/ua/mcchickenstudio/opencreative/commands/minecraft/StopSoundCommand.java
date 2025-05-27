@@ -18,58 +18,62 @@
 
 package ua.mcchickenstudio.opencreative.commands.minecraft;
 
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
- * <h1>CommandStopSound</h1>
+ * <h1>StopSoundCommand</h1>
  * This command is responsible for stopping sounds for player.
  * <p>
  * Using this command from console will redirect to Minecraft command.
  * <p>
  * Available: For world builders or developers.
  */
-public class CommandStopSound implements CommandExecutor {
+public class StopSoundCommand extends CommandHandler {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
             Bukkit.getServer().dispatchCommand(sender,"minecraft:stopsound " + String.join(" ",args));
         } else {
             int cooldown = getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (cooldown > 0) {
                 sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(cooldown)));
-                return true;
+                return;
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (!player.hasPermission("opencreative.stop-sound.bypass")) {
                 Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet == null) {
                     player.sendMessage(getLocaleMessage("only-in-world"));
-                    return true;
+                    return;
                 }
                 if (!(planet.isOwner(player) || planet.getWorldPlayers().canDevelop(player))) {
                     player.sendMessage(getLocaleMessage("not-owner"));
-                    return true;
+                    return;
                 }
             }
             if (args.length == 0) {
                 player.stopAllSounds();
                 sender.sendMessage(getLocaleMessage("commands.stop-sound.stopped-all").replace("%player%",player.getName()));
-                return true;
+                return;
             }
             Player target = player;
             String soundOrCategory;
@@ -79,24 +83,24 @@ public class CommandStopSound implements CommandExecutor {
                 target = Bukkit.getPlayer(args[0]);
                 if (target == null) {
                     sender.sendMessage(getLocaleMessage("no-player-found"));
-                    return true;
+                    return;
                 } else if (!sender.hasPermission("opencreative.stop-sound.bypass")) {
                     Planet targetPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(target);
                     if (!player.hasPermission("opencreative.stop-sound.bypass")) {
                         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                         if (planet == null || !planet.equals(targetPlanet)) {
                             player.sendMessage(getLocaleMessage("no-player-found"));
-                            return true;
+                            return;
                         }
                     }
                 }
                 soundOrCategory = args[1].toUpperCase();
             } else {
                 sender.sendMessage(getLocaleMessage("commands.stop-sound.help"));
-                return true;
+                return;
             }
             Sound sound = null;
-            SoundCategory category =null;
+            SoundCategory category = null;
             try {
                 sound = Sound.valueOf(soundOrCategory);
             } catch (IllegalArgumentException ignored) {}
@@ -114,6 +118,10 @@ public class CommandStopSound implements CommandExecutor {
                 sender.sendMessage(getLocaleMessage("commands.stop-sound.stopped-all").replace("%player%",target.getName()));
             }
         }
-        return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        return Arrays.stream(SoundCategory.values()).map(c -> c.name().toLowerCase()).toList();
     }
 }

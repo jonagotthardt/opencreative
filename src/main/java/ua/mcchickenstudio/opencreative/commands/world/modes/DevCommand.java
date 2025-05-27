@@ -19,11 +19,11 @@
 package ua.mcchickenstudio.opencreative.commands.world.modes;
 
 import org.bukkit.inventory.Inventory;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import org.bukkit.*;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -31,12 +31,14 @@ import org.bukkit.inventory.PlayerInventory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.inventory.meta.BookMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
@@ -48,27 +50,27 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.giveDevPermissions;
 
 /**
- * <h1>CommandDev</h1>
+ * <h1>DevCommand</h1>
  * This command is responsible for connecting player to
  * developers world, where he can create a code with
  * coding blocks and items.
  * <p>
  * Available: For world developers.
  */
-public class CommandDev implements CommandExecutor {
+public class DevCommand extends CommandHandler {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
         if (sender instanceof Player player) {
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet == null) {
                 player.sendMessage(getLocaleMessage("only-in-world"));
-                return true;
+                return;
             }
             if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
                 player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
-                return true;
+                return;
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
             if (args.length == 0 || args.length == 3) {
@@ -77,12 +79,12 @@ public class CommandDev implements CommandExecutor {
                         Player planetOwner = Bukkit.getPlayer(planet.getOwner());
                         if (planetOwner == null) {
                             sender.sendMessage(getLocaleMessage("world.dev-mode.cant-dev-when-offline"));
-                            return true;
+                            return;
                         }
                         Planet ownerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(planetOwner);
                         if (!planet.equals(ownerPlanet)) {
                             sender.sendMessage(getLocaleMessage("world.dev-mode.cant-dev-when-offline"));
-                            return true;
+                            return;
                         }
                     }
                     new QuitEvent(player).callEvent();
@@ -128,7 +130,7 @@ public class CommandDev implements CommandExecutor {
             } else {
                 if (!planet.isOwner(sender.getName())) {
                     sender.sendMessage(getLocaleMessage("not-owner"));
-                    return true;
+                    return;
                 }
                 String nickname = args[0];
                 Player onlinePlayer = Bukkit.getPlayer(nickname);
@@ -139,7 +141,7 @@ public class CommandDev implements CommandExecutor {
                 }
                 if (planet.isOwner(nickname)) {
                     sender.sendMessage(getLocaleMessage("same-player"));
-                    return true;
+                    return;
                 }
                 /*
                  * Checks if player's name contains in not trusted
@@ -148,12 +150,12 @@ public class CommandDev implements CommandExecutor {
                 if (planet.getWorldPlayers().getDevelopersNotTrusted().contains(nickname)) {
                     planet.getWorldPlayers().addDeveloper(nickname,true);
                     sender.sendMessage(getLocaleMessage("world.players.developers.trusted").replace("%player%", nickname));
-                    return true;
+                    return;
                 }
                 if (planet.getWorldPlayers().getDevelopersTrusted().contains(nickname)) {
                     planet.getWorldPlayers().removeDeveloper(nickname);
                     sender.sendMessage(getLocaleMessage("world.players.developers.removed").replace("%player%", nickname));
-                    return true;
+                    return;
                 }
                 /*
                  * Adds online player as not trusted developers, if he's not
@@ -162,7 +164,7 @@ public class CommandDev implements CommandExecutor {
                 int limit = planet.getLimits().getDevelopersLimit();
                 if (planet.getWorldPlayers().getAllDevelopers().size() > limit) {
                     sender.sendMessage(getLocaleMessage("world.players.developers.limit").replace("%limit%",String.valueOf(limit)));
-                    return true;
+                    return;
                 }
                 if (onlinePlayer != null) {
                     Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(onlinePlayer);
@@ -177,7 +179,7 @@ public class CommandDev implements CommandExecutor {
                 }
             }
         }
-        return true;
+        return;
     }
 
     private void giveItems(Player player) {
@@ -235,5 +237,17 @@ public class CommandDev implements CommandExecutor {
         if (!inventory.contains(item,1)) {
             inventory.setItem(slot, item);
         }
+    }
+
+    @Override
+    public @Nullable List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        if (!(sender instanceof Player player)) return null;
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+        if (planet == null) return null;
+        if (planet.isOwner(player)) {
+            List<String> list = new ArrayList<>(planet.getWorldPlayers().getAllDevelopers());
+            return list.subList(0,Math.min(10,list.size()));
+        }
+        return null;
     }
 }
