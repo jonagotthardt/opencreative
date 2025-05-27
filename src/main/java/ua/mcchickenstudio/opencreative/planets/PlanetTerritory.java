@@ -191,6 +191,7 @@ public class PlanetTerritory {
         script.getExecutors().clear();
         planet.getVariables().clearVariables();
         planet.getWorldPlayers().clear();
+        planet.getLimits().clear();
         script.unload();
     }
 

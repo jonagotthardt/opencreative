@@ -18,10 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.planets;
 
-import org.bukkit.scheduler.BukkitRunnable;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedBlocksEvent;
 import ua.mcchickenstudio.opencreative.settings.groups.LimitType;
+
+import java.util.LinkedList;
 
 /**
  * <h1>PlanetLimits</h1>
@@ -35,6 +34,8 @@ public class PlanetLimits {
     private int lastModifiedBlocksAmount;
     private int lastRedstoneOperationsAmount;
     private int lastListElementsChangesAmount;
+
+    private final LinkedList<Long> lastLightningsStrikes = new LinkedList<>();
 
     public PlanetLimits(Planet planet) {
         this.planet = planet;
@@ -196,7 +197,6 @@ public class PlanetLimits {
         return lastListElementsChangesAmount;
     }
 
-
     /**
      * Returns maximum coding platforms amount in the planet.
      * Doesn't change with players' amount.
@@ -205,5 +205,42 @@ public class PlanetLimits {
     public int getCodingPlatformsLimit() {
         return planet.getGroup().getCodingPlatformsLimit();
     }
+
+    /**
+     * Checks if world can strike lightning. Used to prevent
+     * "too many lightning strikes" crash. Checks if the amount
+     * of lightning strikes in last 5 seconds is not greater than 5.
+     * @return true - if it's allowed to strike lightning, false - it's disallowed.
+     */
+    public boolean canLightningStrike() {
+
+        long now = System.currentTimeMillis();
+
+        /*
+         * Removes time from list, if it's more than 5 seconds.
+         */
+        while (!lastLightningsStrikes.isEmpty() && (now - lastLightningsStrikes.peek()) > 5000) {
+            lastLightningsStrikes.poll();
+        }
+
+        if (lastLightningsStrikes.size() >= 5) {
+            return false;
+        } else {
+            lastLightningsStrikes.add(now);
+            return true;
+        }
+
+    }
+
+    /**
+     * Clears data on planet unload.
+     */
+    public void clear() {
+        lastLightningsStrikes.clear();
+        lastModifiedBlocksAmount = 0;
+        lastRedstoneOperationsAmount = 0;
+        lastListElementsChangesAmount = 0;
+    }
+
 }
 

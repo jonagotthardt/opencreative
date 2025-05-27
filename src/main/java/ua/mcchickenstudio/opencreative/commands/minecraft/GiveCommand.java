@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.commands.minecraft;
 
+import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
+import org.bukkit.Registry;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -115,7 +117,8 @@ public class GiveCommand extends CommandHandler {
                     }
                     Material material = Material.valueOf(args[1].replace("minecraft:", "").toUpperCase());
                     int amount = Integer.parseInt(args[2]);
-                    givePlayer.getInventory().addItem(new ItemStack(material, amount));
+                    ItemStack item = new ItemStack(material, amount);
+                    givePlayer.getInventory().addItem(item);
                 } catch (NumberFormatException error) {
                     player.sendMessage(getLocaleMessage("commands.give.wrong-amount"));
                 } catch (IllegalArgumentException error) {
