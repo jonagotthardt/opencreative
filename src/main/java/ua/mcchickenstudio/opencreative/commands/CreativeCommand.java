@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.commands;
 
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.indev.Items;
@@ -648,6 +649,18 @@ public class CreativeCommand extends CommandHandler {
                         return;
                     }
                     sender.sendMessage(getLocaleMessage(args[1]));
+                }
+                case "minimsg" -> {
+                    if (!sender.hasPermission("opencreative.print.minimessage")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return;
+                    }
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize(
+                            String.join(" ", Arrays.copyOfRange(args,1,args.length))));
                 }
                 case "stability" -> {
                     if (!sender.hasPermission("opencreative.stability")) {
