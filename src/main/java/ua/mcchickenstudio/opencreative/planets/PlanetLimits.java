@@ -18,9 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.planets;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.settings.groups.LimitType;
 
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * <h1>PlanetLimits</h1>
@@ -36,6 +38,7 @@ public class PlanetLimits {
     private int lastListElementsChangesAmount;
 
     private final LinkedList<Long> lastLightningsStrikes = new LinkedList<>();
+    private final Map<UUID, Deque<Long>> lastPlayerMenuOpens = new HashMap<>();
 
     public PlanetLimits(Planet planet) {
         this.planet = planet;
@@ -216,9 +219,7 @@ public class PlanetLimits {
 
         long now = System.currentTimeMillis();
 
-        /*
-         * Removes time from list, if it's more than 5 seconds.
-         */
+        // Removes time from list, if it's more than 5 seconds.
         while (!lastLightningsStrikes.isEmpty() && (now - lastLightningsStrikes.peek()) > 5000) {
             lastLightningsStrikes.poll();
         }
@@ -230,6 +231,48 @@ public class PlanetLimits {
             return true;
         }
 
+    }
+
+    /**
+     * Checks if world can open custom menu for player.
+     * Used to prevent unavailability of leaving game.
+     * Checks if the amount of player's opened menus
+     * in last 5 seconds is not greater than 5.
+     * @return true - if it's allowed to open menu, false - it's disallowed.
+     */
+    public boolean canOpenMenu(Player player) {
+
+        for (UUID uuid : lastPlayerMenuOpens.keySet()) {
+            // Removes offline players
+            if (Bukkit.getPlayer(uuid) == null) {
+                lastPlayerMenuOpens.remove(uuid);
+            }
+        }
+
+        UUID uuid = player.getUniqueId();
+        long now = System.currentTimeMillis();
+        lastPlayerMenuOpens.putIfAbsent(uuid, new LinkedList<>());
+        Deque<Long> timestamps = lastPlayerMenuOpens.get(uuid);
+
+        // Removes time from list, if it's more than 5 seconds.
+        while (!timestamps.isEmpty() && (now - timestamps.peekFirst()) > 5000) {
+            timestamps.pollFirst();
+        }
+
+        if (timestamps.size() >= 5) {
+            return false;
+        }
+
+        timestamps.addLast(now);
+        return true;
+    }
+
+    /**
+     * Clears player's data when player leaves planet.
+     * @param player player to clear data.
+     */
+    public void clearPlayerLimits(Player player) {
+        lastPlayerMenuOpens.remove(player.getUniqueId());
     }
 
     /**

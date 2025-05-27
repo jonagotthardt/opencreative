@@ -26,6 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyOpenedMenus;
 
 public final class SetMenuSizeAction extends PlayerAction {
     public SetMenuSizeAction(Executor executor, Target target, int x, Arguments args) {
@@ -49,6 +50,14 @@ public final class SetMenuSizeAction extends PlayerAction {
         for (int i = 0; i < newInventory.getSize(); i++) {
             if (i >= oldInventory.getTopInventory().getSize()) break;
             newInventory.setItem(i,oldInventory.getTopInventory().getItem(i));
+        }
+        if (!getPlanet().getLimits().canOpenMenu(player)) {
+            /*
+             * This check prevents player from opening
+             * too many menus, that can prevent from
+             * quiting the game.
+             */
+            throw new TooManyOpenedMenus(player.getName());
         }
         player.openInventory(newInventory);
     }
