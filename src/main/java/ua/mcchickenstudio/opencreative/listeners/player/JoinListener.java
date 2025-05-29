@@ -41,6 +41,9 @@ public final class JoinListener implements Listener {
 
     {
         blockedPlayers.add("danfm");
+        blockedPlayers.add("mubikill");
+        blockedPlayers.add("mubikil");
+        blockedPlayers.add("mubikll");
     }
 
     @EventHandler
