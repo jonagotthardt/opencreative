@@ -10786,6 +10786,17 @@ menus:
             - "&a  0 &7- No players"
             - ""
             - "&eClick to set."
+        world-spawn:
+          name: "&dSpawn location"
+          lore:
+            - "&7Type: &fLocation"
+            - ""
+            - "&7Gets the world spawn location"
+            - "&7where players teleported at join."
+            - ""
+            - "&7Can be changed in world settings."
+            - ""
+            - "&eClick to set."
         planet-name:
           name: "&eWorld name"
           lore:
