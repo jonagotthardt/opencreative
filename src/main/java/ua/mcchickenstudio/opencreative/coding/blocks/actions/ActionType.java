@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.events.CancelEventAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.events.UncancelEventAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.inventory.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.movement.*;
@@ -266,8 +267,9 @@ public enum ActionType {
     CONTROL_LAUNCH_CYCLES(                 ActionCategory.CONTROL_ACTION, MenusCategory.LINES, LaunchCyclesAction.class, Material.OXIDIZED_COPPER, new ArgumentSlot("names", ValueType.TEXT, (byte) 27)),
     CONTROL_STOP_CYCLES(                 ActionCategory.CONTROL_ACTION, MenusCategory.LINES, StopCyclesAction.class, Material.WEATHERED_CUT_COPPER_STAIRS, new ArgumentSlot("names", ValueType.TEXT, (byte) 27)),
 
-
     CONTROL_CANCEL_EVENT(                 ActionCategory.CONTROL_ACTION, MenusCategory.EVENTS, CancelEventAction.class, Material.BARRIER),
+    CONTROL_UNCANCEL_EVENT(                 ActionCategory.CONTROL_ACTION, MenusCategory.EVENTS, UncancelEventAction.class, Material.STRUCTURE_VOID),
+
 
     /**
      * <h1>World Actions.</h1>
@@ -653,9 +655,9 @@ public enum ActionType {
     HANDLER_MEASURE_TIME(ActionCategory.HANDLER_ACTION, MenusCategory.OTHER, MeasureTimeAction.class, Material.CLOCK, new ArgumentSlot("variable", ValueType.VARIABLE)),
 
     REPEAT_ALWAYS(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatAlwaysAction.class, Material.BEACON),
-    REPEAT_FOR_LOOP(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatForLoopAction.class, Material.SLIME_BALL, new ArgumentSlot("variable", ValueType.VARIABLE), new ParameterSlot("type", Arrays.asList("less","less-equals","greater","greater-equals"), Material.BRICK, Material.BRICKS, Material.NETHER_BRICK, Material.NETHER_BRICKS), new ArgumentSlot("range", ValueType.NUMBER), new ArgumentSlot("add", ValueType.NUMBER)),
-    REPEAT_FOR_EACH(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatForEachAction.class, Material.BOOKSHELF, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE)),
-    REPEAT_BLOCKS_IN_REGION(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatBlocksInRegionAction.class, Material.PAPER, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("first", ValueType.LOCATION), new ArgumentSlot("second", ValueType.LOCATION)),
+    REPEAT_FOR_NUMBERS(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatForLoopAction.class, Material.SLIME_BALL, new ArgumentSlot("variable", ValueType.VARIABLE), new ParameterSlot("type", Arrays.asList("less","less-equals","greater","greater-equals"), Material.BRICK, Material.BRICKS, Material.NETHER_BRICK, Material.NETHER_BRICKS), new ArgumentSlot("range", ValueType.NUMBER), new ArgumentSlot("add", ValueType.NUMBER)),
+    REPEAT_FOR_LIST(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatForEachAction.class, Material.BOOKSHELF, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE)),
+    REPEAT_FOR_BLOCKS(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatForBlocksAction.class, Material.PAPER, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("first", ValueType.LOCATION), new ArgumentSlot("second", ValueType.LOCATION)),
 
     LAUNCH_FUNCTION(ActionCategory.LAUNCH_FUNCTION_ACTION, MenusCategory.OTHER, LaunchFunctionAction.class, Material.LAPIS_ORE),
     LAUNCH_METHOD(ActionCategory.LAUNCH_METHOD_ACTION, MenusCategory.OTHER, LaunchMethodAction.class, Material.EMERALD),

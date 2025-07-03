@@ -25,20 +25,29 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.handleractions.HandlerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
+import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
 import java.util.List;
 
 public final class MeasureTimeAction extends HandlerAction {
+
+    long time = 0;
+
     public MeasureTimeAction(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
         super(executor, target, x, args, actions);
     }
 
     @Override
     protected void execute(Entity entity) {
-        /*VariableLink link = getArguments().getVariableLink("variable",this);
-        long time = System.currentTimeMillis();
+        time = System.currentTimeMillis();
         executeActions();
-        setVarValue(link,System.currentTimeMillis()-time);*/
+    }
+
+    public void measure() {
+        long passed = System.currentTimeMillis()-time;
+        VariableLink link = getArguments().getVariableLink("variable",this);
+        if (link == null) return;
+        setVarValue(link, passed);
     }
 
     @Override

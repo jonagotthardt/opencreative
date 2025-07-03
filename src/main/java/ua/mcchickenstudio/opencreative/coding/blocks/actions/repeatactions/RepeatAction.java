@@ -17,16 +17,19 @@
  */
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions;
+import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.MultiAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.planets.PlanetRunnable;
 
 import java.util.List;
+
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugAction;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 public abstract class RepeatAction extends MultiAction {
 
@@ -38,9 +41,29 @@ public abstract class RepeatAction extends MultiAction {
     }
 
     @Override
-    public void executeActions() {
-        //super.executeActions();
-        //increaseCalls();
+    public final void executeActions() {
+        if (!checkCanContinue()) {
+            return;
+        }
+        ActionsHandler handler = new ActionsHandler(this);
+        handler.executeActions(getActions());
+        increaseCalls();
+        if (handler.getWaitDelay() > 0) {
+            getPlanet().getTerritory().scheduleRunnable(
+                    new PlanetRunnable(getPlanet()) {
+                        @Override
+                        public void execute() {
+                            executeActions();
+                        }
+                    }, handler.getWaitDelay());
+        } else {
+            executeActions();
+        }
+    }
+
+    @Override
+    protected void execute(Entity entity) {
+        executeActions();
     }
 
     public void increaseCalls() {
@@ -57,6 +80,8 @@ public abstract class RepeatAction extends MultiAction {
         getPlanet().getTerritory().addBukkitRunnable(runnable);
         runnable.runTaskLater(OpenCreative.getPlugin(),20L);
     }
+
+    public abstract boolean checkCanContinue();
 
     @Override
     public ActionCategory getActionCategory() {

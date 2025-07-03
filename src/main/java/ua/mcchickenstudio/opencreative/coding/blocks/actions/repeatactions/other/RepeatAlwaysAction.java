@@ -36,8 +36,8 @@ public final class RepeatAlwaysAction extends RepeatAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
-        executeActions();
+    public boolean checkCanContinue() {
+        return true;
     }
 
     @Override

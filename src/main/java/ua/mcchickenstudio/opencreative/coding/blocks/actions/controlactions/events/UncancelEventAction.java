@@ -16,33 +16,32 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.other;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.events;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.event.Cancellable;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.RepeatAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.ControlAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
-import java.util.List;
-
-public final class RepeatBlocksInRegionAction extends RepeatAction {
-
-    public RepeatBlocksInRegionAction(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
-        super(executor, target, x, args, actions);
+public final class UncancelEventAction extends ControlAction {
+    public UncancelEventAction(Executor executor, Target target, int x, Arguments args) {
+        super(executor, target, x, args);
     }
 
     @Override
     protected void execute(Entity entity) {
-        executeActions();
+        WorldEvent worldEvent = getHandler().getEvent();
+        if (worldEvent instanceof Cancellable cancellable) {
+            cancellable.setCancelled(false);
+        }
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.REPEAT_BLOCKS_IN_REGION;
+        return ActionType.CONTROL_UNCANCEL_EVENT;
     }
 }
-

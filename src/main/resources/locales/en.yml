@@ -4555,6 +4555,15 @@ items:
           - "&7running the code."
           - " "
           - "&eClick to set the action."
+      control-uncancel-event:
+        name: "&3Uncancel Event"
+        lore:
+          - "&7Tries to revert event cancel"
+          - "&7and allow event's behaviour."
+          - " "
+          - "&7&nMay not work with some events&7!"
+          - " "
+          - "&eClick to set the action."
       player-clear-chat:
         name: "&fClear Chat"
         lore:
@@ -8090,6 +8099,87 @@ items:
           - "&b Vector &7- For launch"
           - " "
           - "&eClick to set action."
+      repeat-always:
+        name: "&bRepeat Always"
+        lore:
+          - "&7Executes actions between"
+          - "&7pistons under any conditions."
+          - " "
+          - "&7&nDon’t forget to add the"
+          - "&7&naction &eWait&7 at the end!"
+          - " "
+          - "&eClick to set the action."
+      repeat-for-numbers:
+        name: "&aFor Loop Over Numbers"
+        lore:
+          - "&7Executes the action and adds"
+          - "&7a number to a variable while"
+          - "&7the condition is met."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- To store the value"
+          - "&3 Parameter &7- Condition of numbers"
+          - "&a Number &7- Number to check against"
+          - "&a Number &7- Step to add"
+          - " "
+          - "&eClick to set the action."
+        placeholders:
+          range:
+            name: "&aNumber for the condition"
+          add:
+            name: "&aAddition"
+        arguments:
+          type:
+            name: "&cExecute while the variable is..."
+            lore:
+              - "&7Select the condition type for"
+              - "&7numbers; if it is met,"
+              - "&7the actions between pistons"
+              - "&7will also execute."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+              - "%4%"
+            choices:
+              less: "Less than the number"
+              less-equals: "Less than or equal"
+              greater: "Greater than the number"
+              greater-equals: "Greater than or equal"
+      repeat-for-blocks:
+        name: "&bFor Block in Region"
+        lore:
+          - "&7Executes the action and iterates"
+          - "&7next location between both specified."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- For saving"
+          - "&f Location &7- From"
+          - "&f Location &7- To"
+          - " "
+          - "&eClick to set the action."
+        placeholders:
+          first:
+            name: "&fFirst location"
+          second:
+            name: "&fSecond location"
+      repeat-for-list:
+        name: "&6For Each in List"
+        lore:
+          - "&7Executes the action and iterates"
+          - "&7over each element in the list."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- To store the value"
+          - "&e Variable &7- List"
+          - " "
+          - "&eClick to set the action."
+        placeholders:
+          list:
+            name: "&eList of elements"
     conditions:
       if-world-is-in-debug-mode:
         name: "&eDebug Mode Enabled"
@@ -12666,6 +12756,10 @@ blocks:
   launch_method_action: "&aCall method"
   handler_action: "&aCode handler"
   repeat_action: "&bRepeat"
+  repeat_for_numbers: "&aFor numbers"
+  repeat_for_blocks: "&eFor blocks"
+  repeat_for_list: "&fFor list"
+  repeat_always: "Always"
   # Events
   player_join: "Joined world"
   player_quit: "Left world"
@@ -12943,10 +13037,8 @@ blocks:
   handler_catch_error: "Catch error"
   handler_measure_time: "Measure time"
 
-  repeat_always: "Always"
-  repeat_for_loop: "For loop"
-
   control_cancel_event: "&cCancel event"
+  control_uncancel_event: "&bUncancel event"
   control_throw_error: "Trigger error"
   control_stop_code_line: "&4Stop code line"
   control_wait: "&eWait"

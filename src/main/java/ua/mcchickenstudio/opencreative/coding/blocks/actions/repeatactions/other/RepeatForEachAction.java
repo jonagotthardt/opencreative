@@ -19,13 +19,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.other;
 
-import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.RepeatAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
+import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
 import java.util.List;
 
@@ -36,13 +37,24 @@ public final class RepeatForEachAction extends RepeatAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
-        executeActions();
+    public boolean checkCanContinue() {
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        List<Object> list = getArguments().getList("list",this);
+        if (link == null || list.isEmpty()) {
+            return false;
+        }
+        int index = getArguments().getValue("index",1,this);
+        if (index > list.size()) {
+            return false;
+        }
+        setVarValue(link, list.get(index-1));
+        getArguments().setArgumentValue("index", ValueType.NUMBER, index+1);
+        return true;
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.REPEAT_FOR_EACH;
+        return ActionType.REPEAT_FOR_LIST;
     }
 }
 
