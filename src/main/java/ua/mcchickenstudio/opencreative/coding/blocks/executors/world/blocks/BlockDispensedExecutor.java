@@ -34,7 +34,6 @@ public class BlockDispensedExecutor extends WorldExecutor {
     @Override
     protected void setTempVars(WorldEvent event) {
         if (event instanceof BlockDispensedEvent blockEvent) {
-            setTempVar(EventValues.Variable.BLOCK, blockEvent.getBlock());
             setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getBlock());
             setTempVar(EventValues.Variable.BLOCK_LOCATION, blockEvent.getBlock());
             setTempVar(EventValues.Variable.ITEM, blockEvent.getItem());

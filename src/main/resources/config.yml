@@ -207,7 +207,6 @@ groups:
       world-chat: 2 # chat in the world
     creating-world:
       limit: 2
-    favorite-worlds-limit: 30 # limit of favorite worlds for player
     lobby-permissions: # Permissions will be given when player teleports to lobby
       - "music.play"
     world:
@@ -272,7 +271,6 @@ groups:
       world-chat: 1
     creating-world:
       limit: 4
-    favorite-worlds-limit: 30
     lobby-permissions:
       - "music.play"
     world:

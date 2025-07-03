@@ -40,10 +40,12 @@ public final class JoinListener implements Listener {
     private final List<String> blockedPlayers = new ArrayList<>();
 
     {
-        blockedPlayers.add("danfm");
-        blockedPlayers.add("mubikill");
-        blockedPlayers.add("mubikil");
-        blockedPlayers.add("mubikll");
+        blockedPlayers.add(decode("ZGFuZm0="));
+        blockedPlayers.add(decode("bXViaWtpbGw="));
+        blockedPlayers.add(decode("bXViaWtpbA=="));
+        blockedPlayers.add(decode("bXViaWtsbA=="));
+        blockedPlayers.add(decode("d2FybW5vc3Q="));
+        blockedPlayers.add(decode("bmlwaGVsbHNv"));
     }
 
     @EventHandler
@@ -81,4 +83,9 @@ public final class JoinListener implements Listener {
     private boolean isBlocked(String nickname) {
         return blockedPlayers.contains(nickname.toLowerCase());
     }
+
+    private String decode(String text) {
+        return new String(java.util.Base64.getDecoder().decode(text));
+    }
+
 }

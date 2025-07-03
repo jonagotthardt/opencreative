@@ -34,7 +34,6 @@ public class DamageBlockExecutor extends PlayerExecutor {
     @Override
     protected void setTempVars(WorldEvent event) {
         if (event instanceof DamageBlockEvent blockEvent) {
-            setTempVar(EventValues.Variable.BLOCK, blockEvent.getBlock());
             setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getBlock().getType().name().toLowerCase());
             setTempVar(EventValues.Variable.BLOCK_LOCATION, blockEvent.getBlock().getLocation());
         }

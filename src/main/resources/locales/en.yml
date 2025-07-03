@@ -13,7 +13,6 @@
 # Some messages support player's placeholders from PlaceholderAPI.
 # Some messages aren't translated and can appear as `Not found message ...`
 # Titles messages can contain only and only MiniMessage or Legacy format colors.
-# Don't make messages same, it can cause problems while comparing items.
 #
 
 #
@@ -930,7 +929,7 @@ items:
             - " "
             - "&eClick to select category."
         entity_state:
-          name: "&eEntity State Change"
+          name: "&3Entity State Change"
           lore:
             - "&7Entity got angry, ready to breed,"
             - "&7lost oxygen, received effects."
@@ -1051,7 +1050,7 @@ items:
             - " "
             - "&eClick to choose category."
         blocks:
-          name: "&aBlock Manipulation"
+          name: "&cBlock Manipulation"
           lore:
             - "&7Set block type, copy blocks,"
             - "&7check block type."
@@ -1148,14 +1147,14 @@ items:
             - " "
             - "&eClick to choose category."
         params:
-          name: "&7Player Parameters"
+          name: "&cPlayer Parameters"
           lore:
             - "&7Set health, give"
             - "&7effect, set experience level."
             - " "
             - "&eClick to choose category."
         state:
-          name: "&ePlayer State"
+          name: "&3Player State"
           lore:
             - "&7Set game mode, flying mode,"
             - "&7and glowing."
@@ -1214,7 +1213,7 @@ items:
             - " "
             - "&eClick to choose category."
         blocks:
-          name: "&dBlocks"
+          name: "&cBlocks"
           lore:
             - "&7Block type equals, is solid,"
             - "&7is liquid, is burnable."
@@ -1242,21 +1241,21 @@ items:
             - " "
             - "&eClick to choose category."
         movement:
-          name: "&aBlocks"
+          name: "&cBlocks"
           lore:
             - "&7Is on block, nearby,"
             - "&7looking at block."
             - " "
             - "&eClick to choose category."
         state:
-          name: "&eState"
+          name: "&3State"
           lore:
             - "&7Liked world, flying,"
             - "&7game mode set."
             - " "
             - "&eClick to choose category."
         params:
-          name: "&6Parameters"
+          name: "&cParameters"
           lore:
             - "&7Is nickname equal, is"
             - "&7chat message equal."
@@ -2812,7 +2811,7 @@ items:
           - " "
           - "&fIn the chest:"
           - "&a Number &7- Maximum Air (in ticks)"
-          - "&3 Parameter &7- Set or Add"
+          - "&3 Option &7- Set or Add"
           - " "
           - "&eClick to set the action."
         arguments:
@@ -2839,7 +2838,7 @@ items:
           - " "
           - "&fIn the chest:"
           - "&a Number &7- Remaining Air (in ticks)"
-          - "&3 Parameter &7- Set or Add"
+          - "&3 Option &7- Set or Add"
           - " "
           - "&eClick to set the action."
         arguments:
@@ -2866,7 +2865,7 @@ items:
           - " "
           - "&fIn the chest:"
           - "&a Number &7- Walk Speed"
-          - "&3 Parameter &7- Set or Add"
+          - "&3 Option &7- Set or Add"
           - " "
           - "&eClick to set the action."
         arguments:
@@ -2893,7 +2892,7 @@ items:
           - " "
           - "&fIn the chest:"
           - "&a Number &7- Max Health (HP)"
-          - "&3 Parameter &7- Set or Add"
+          - "&3 Option &7- Set or Add"
           - " "
           - "&eClick to set the action."
       entity-set-fire-ticks:
@@ -4845,7 +4844,6 @@ items:
           - "&a Number &7- Z offset"
           - ""
           - "&eClick to set the action."
-
       world-set-block-type:
         name: "&3Set Block Type"
         lore:
@@ -4857,7 +4855,133 @@ items:
           - "&c Item &7- Block type"
           - ""
           - "&eClick to set the action."
-
+      world-set-sign-line:
+        name: "&eSet Sign Line Text"
+        lore:
+          - "&7This will set the specified text"
+          - "&7on a line of the sign."
+          - ""
+          - "&fIn the chest:"
+          - "&f Locations &7- Where to change"
+          - "&3 Option &7- Sign side"
+          - "&a Number &7- Line number"
+          - "&6 Text &7- Line text"
+          - ""
+          - "&eClick to set the action."
+      world-set-sign-waxed:
+        name: "&6Wax Sign"
+        lore:
+          - "&7This will set whether players"
+          - "&7can edit the sign text."
+          - ""
+          - "&fIn the chest:"
+          - "&f Locations &7- Where to change"
+          - "&3 Option &7- Yes or No"
+          - ""
+          - "&eClick to set the action."
+      world-set-sign-glowing-text:
+        name: "&bSign Glowing Text"
+        lore:
+          - "&7This will set whether the sign"
+          - "&7text will glow."
+          - ""
+          - "&fIn the chest:"
+          - "&f Locations &7- Where to change"
+          - "&3 Option &7- Side"
+          - "&3 Option &7- Yes or No"
+          - ""
+          - "&eClick to set the action."
+      world-clear-container:
+        name: "&cClear Container"
+        lore:
+          - "&7This will remove all items from"
+          - "&7a chest, shulker box, or any block"
+          - "&7with an inventory."
+          - ""
+          - "&fIn the chest:"
+          - "&f Locations &7- Where to clear"
+          - ""
+          - "&eClick to set the action."
+      world-give-container-items:
+        name: "&6Add Items to Container"
+        lore:
+          - "&7This will add items to a chest,"
+          - "&7shulker box, or any other container."
+          - ""
+          - "&fIn the chest:"
+          - "&c Items &7- To add"
+          - "&f Location &7- Where"
+          - ""
+          - "&eClick to set the action."
+      world-put-item-in-container:
+        name: "&3Set Item in Container"
+        lore:
+          - "&7This will set an item in a chest"
+          - "&7or any container at the specified slot."
+          - ""
+          - "&fIn the chest:"
+          - "&f Location &7- Where"
+          - "&a Number &7- Slot"
+          - "&c Item &7- To set"
+          - ""
+          - "&eClick to set the action."
+      world-get-container-items:
+        name: "&eGet Container Items"
+        lore:
+          - "&7This will store in a variable"
+          - "&7the list of items in the container,"
+          - "&7such as a chest."
+          - ""
+          - "&fIn the chest:"
+          - "&e Variable &7- To store in"
+          - "&f Location &7- Container"
+          - ""
+          - "&eClick to set the action."
+      world-get-sign-line:
+        name: "&6Get Sign Line Text"
+        lore:
+          - "&7This will store in a variable"
+          - "&7the text from a sign line."
+          - ""
+          - "&fIn the chest:"
+          - "&e Variable &7- To store in"
+          - "&f Location &7- Sign"
+          - "&3 Option &7- Side"
+          - "&a Number &7- Line number"
+          - ""
+          - "&eClick to set the action."
+      world-apply-bone-meal:
+        name: "&fApply Bone Meal"
+        lore:
+          - "&7This will apply bone meal"
+          - "&7on a block. Useful for plants!"
+          - ""
+          - "&fIn the chest:"
+          - "&f Locations &7- Where"
+          - ""
+          - "&eClick to set the action."
+      world-set-block-biome:
+        name: "&5Set Block Biome"
+        lore:
+          - "&7This will set the biome of a block,"
+          - "&7which affects its color or behavior."
+          - ""
+          - "&fIn the chest:"
+          - "&f Locations &7- Where"
+          - "&6 Text &7- Biome"
+          - ""
+          - "&eClick to set the action."
+      world-set-difficulty:
+        name: "&9Set World Difficulty"
+        lore:
+          - "&7This will change the world's difficulty,"
+          - "&7affecting hunger speed and"
+          - "&7players' health regeneration."
+          - ""
+          - "&fIn the chest:"
+          - "&3 Option &7- Difficulty type"
+          - ""
+          - "&eClick to set the action."
       world-destroy-block:
         name: "&cDestroy Block"
         lore:
@@ -5575,7 +5699,7 @@ items:
           - " "
           - "&fIn the chest:"
           - "&a Number &7- Maximum Air (in ticks)"
-          - "&3 Parameter &7- Set or Add"
+          - "&3 Option &7- Set or Add"
           - " "
           - "&eClick to set the action."
         arguments:
@@ -5602,7 +5726,7 @@ items:
           - " "
           - "&fIn the chest:"
           - "&a Number &7- Remaining Air (in ticks)"
-          - "&3 Parameter &7- Set or Add"
+          - "&3 Option &7- Set or Add"
           - " "
           - "&eClick to set the action."
         arguments:
@@ -6239,7 +6363,7 @@ items:
           - "&a Number &7 - Number of octaves"
           - "&a Number &7 - Octave frequency"
           - "&a Number &7 - Octave amplitude"
-          - "&3 Parameter &7- Whether to normalize"
+          - "&3 Option &7- Whether to normalize"
           - " "
           - "&eClick to set the action."
         arguments:
@@ -6340,7 +6464,7 @@ items:
           - "&a Number &7 - Number of octaves"
           - "&a Number &7 - Octave frequency"
           - "&a Number &7 - Octave amplitude"
-          - "&3 Parameter &7- Whether to normalize"
+          - "&3 Option &7- Whether to normalize"
           - " "
           - "&eClick to set the action."
         arguments:
@@ -7064,7 +7188,7 @@ items:
           - "&fIn the chest:"
           - "&e Variable &7- Result (to save)"
           - "&e Variable &7- List"
-          - "&3 Parameter &7 - Calculation type"
+          - "&3 Option &7 - Calculation type"
           - " "
           - "&eClick to set action."
       var-create-map:
@@ -7886,7 +8010,7 @@ items:
           - "&c Number &7- Size of the HitBox along X axis"
           - "&c Number &7- Size of the HitBox along Y axis"
           - "&c Number &7- Size of the HitBox along Z axis"
-          - "&3 Parameter &7- Type of calculation"
+          - "&3 Option &7- Type of calculation"
           - " "
           - "&eClick to set action."
       var-do-ray-trace-multi:
@@ -7905,7 +8029,7 @@ items:
           - "&c Number &7- Size of the HitBox along X axis"
           - "&c Number &7- Size of the HitBox along Y axis"
           - "&c Number &7- Size of the HitBox along Z axis"
-          - "&3 Parameter &7- Type of calculation"
+          - "&3 Option &7- Type of calculation"
           - " "
           - "&eClick to set action."
       var-do-ray-trace-multi-entities:
@@ -7920,8 +8044,8 @@ items:
           - "&b Vector &7- Direction of the ray"
           - "&f Location &7- Starting location of the ray"
           - "&c Number &7- Distance the ray will travel"
-          - "&3 Parameter &7- Entity filter"
-          - "&3 Parameter &7- Calculation type"
+          - "&3 Option &7- Entity filter"
+          - "&3 Option &7- Calculation type"
           - " "
           - "&eClick to set action."
       var-normalize-vector:
@@ -8018,7 +8142,7 @@ items:
           - "&fIn the chest:"
           - "&f Location(s) &7- Blocks"
           - "&6 Item &7- Block Type"
-          - "&3 Parameter &7- All or one of them"
+          - "&3 Option &7- All or one of them"
           - " "
           - "&eClick to set the condition."
         arguments:
@@ -8045,7 +8169,7 @@ items:
           - " "
           - "&fIn the chest:"
           - "&f Location(s) &7- Blocks"
-          - "&3 Parameter &7- All or one of them"
+          - "&3 Option &7- All or one of them"
           - " "
           - "&eClick to set the condition."
         arguments:
@@ -8072,7 +8196,7 @@ items:
           - " "
           - "&fIn the chest:"
           - "&f Location(s) &7- Blocks"
-          - "&3 Parameter &7- All or one of them"
+          - "&3 Option &7- All or one of them"
           - " "
           - "&eClick to set the condition."
         arguments:
@@ -8100,7 +8224,7 @@ items:
           - " "
           - "&fIn the chest:"
           - "&f Location(s) &7- Blocks"
-          - "&3 Parameter &7- All or one of them"
+          - "&3 Option &7- All or one of them"
           - " "
           - "&eClick to set the condition."
         arguments:
@@ -8127,7 +8251,7 @@ items:
           - " "
           - "&fIn the chest:"
           - "&f Location(s) &7- Blocks"
-          - "&3 Parameter &7- All or one of them"
+          - "&3 Option &7- All or one of them"
           - " "
           - "&eClick to set the condition."
         arguments:
@@ -8154,7 +8278,7 @@ items:
           - " "
           - "&fIn the chest:"
           - "&f Location(s) &7- Blocks"
-          - "&3 Parameter &7- All or one of them"
+          - "&3 Option &7- All or one of them"
           - " "
           - "&eClick to set the condition."
         arguments:
@@ -8181,7 +8305,7 @@ items:
           - " "
           - "&fIn the chest:"
           - "&f Location(s) &7- Blocks"
-          - "&3 Parameter &7- All or one of them"
+          - "&3 Option &7- All or one of them"
           - " "
           - "&eClick to set the condition."
         arguments:
@@ -8208,7 +8332,7 @@ items:
           - " "
           - "&fIn the chest:"
           - "&f Location(s) &7- Blocks"
-          - "&3 Parameter &7- All or one of them"
+          - "&3 Option &7- All or one of them"
           - " "
           - "&eClick to set the condition."
         arguments:
@@ -8235,7 +8359,7 @@ items:
           - " "
           - "&fIn the chest:"
           - "&f Location(s) &7- Blocks"
-          - "&3 Parameter &7- All or one of them"
+          - "&3 Option &7- All or one of them"
           - " "
           - "&eClick to set the condition."
         arguments:
@@ -8262,7 +8386,7 @@ items:
           - " "
           - "&fIn the chest:"
           - "&f Location(s) &7- Blocks"
-          - "&3 Parameter &7- All or one of them"
+          - "&3 Option &7- All or one of them"
           - " "
           - "&eClick to set the condition."
         arguments:
@@ -8291,7 +8415,7 @@ items:
           - "&fIn the chest:"
           - "&f Location(s) &7- Blocks"
           - "&6 Item &7- Tool"
-          - "&3 Parameter &7- All or one of them"
+          - "&3 Option &7- All or one of them"
           - " "
           - "&eClick to set the condition."
         arguments:
@@ -8320,7 +8444,7 @@ items:
           - "&fIn the chest:"
           - "&f Location(s) &7- Blocks"
           - "&6 Item &7- Tool"
-          - "&3 Parameter &7- All or one of them"
+          - "&3 Option &7- All or one of them"
           - " "
           - "&eClick to set the condition."
         arguments:
@@ -8538,9 +8662,9 @@ items:
           - "&fIn the chest:"
           - "&c Item &7- For comparison"
           - "&c Item &7- Enchanted Book"
-          - "&3 Parameter &7- Item must have"
+          - "&3 Option &7- Item must have"
           - "&7  all or any of the enchantments"
-          - "&3 Parameter &7- Level check type"
+          - "&3 Option &7- Level check type"
           - " "
           - "&eClick to set the condition."
         placeholders:
@@ -9016,7 +9140,7 @@ items:
           - "&fIn chest:"
           - "&c Item(s) &7- Items for"
           - "&7 comparison"
-          - "&3 Parameters &7- Ignoring"
+          - "&3 Options &7- Ignoring"
           - "&7 item data"
           - " "
           - "&eClick to set condition."
@@ -9121,7 +9245,7 @@ items:
           - "&fIn the chest:"
           - "&c Item &7- For comparison"
           - "&a Number &7- Item quantity"
-          - "&3 Parameter &7- Ignore item data"
+          - "&3 Option &7- Ignore item data"
           - " "
           - "&eClick to set the condition."
         arguments:
@@ -9150,8 +9274,8 @@ items:
           - " "
           - "&fIn the chest:"
           - "&c Item(s) &7- Items for comparison"
-          - "&3 Parameter &7- Require quantity"
-          - "&3 Parameter &7- Ignore item data"
+          - "&3 Option &7- Require quantity"
+          - "&3 Option &7- Ignore item data"
           - " "
           - "&eClick to set the condition."
         arguments:
@@ -9208,7 +9332,7 @@ items:
           - "&fIn chest:"
           - "&6 Text(s) &7- Name for"
           - "&7 comparison"
-          - "&3 Parameters &7- Ignore"
+          - "&3 Options &7- Ignore"
           - "&7 caps and color"
           - " "
           - "&eClick to set condition."
@@ -10386,17 +10510,6 @@ menus:
             - "&c  false &7- Not saved"
             - ""
             - "&eClick to set."
-        block:
-          name: "&aBlock from event"
-          lore:
-            - "&7Type: &6Block"
-            - ""
-            - "&7 Gets the block from events:"
-            - "&b Placed block&7, &4Destroyed"
-            - "&4 block&7, &cDamaged block&7,"
-            - "&e Interacted&7."
-            - ""
-            - "&eClick to set."
         item:
           name: "&6Item in event"
           lore:
@@ -11499,7 +11612,8 @@ menus:
           - "&2 ⌚ &7Last played: &a%planetLastTime%"
           - "&5 ⌛ &7Created: &d%planetCreationTime%"
           - " "
-          - "&e Left-click &7- enter the world."
+          - "&2 ⏵ &a&nJoin the world&a... &e &e &e &e "
+          - "&8 &8 &8 ID: %planetCustomID%"
           - " "
   world-settings:
     title: "&1✎ Your World Settings"
