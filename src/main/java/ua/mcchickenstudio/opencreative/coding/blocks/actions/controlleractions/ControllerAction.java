@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.handleractions;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.controlleractions;
 
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.*;
@@ -24,14 +24,14 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
 
-public abstract class HandlerAction extends MultiAction {
+public abstract class ControllerAction extends MultiAction {
 
-    public HandlerAction(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
+    public ControllerAction(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
         super(executor, target, x, args, actions);
     }
 
     @Override
     public ActionCategory getActionCategory() {
-        return ActionCategory.HANDLER_ACTION;
+        return ActionCategory.CONTROLLER_ACTION;
     }
 }

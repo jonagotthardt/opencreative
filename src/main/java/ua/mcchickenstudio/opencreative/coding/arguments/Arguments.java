@@ -652,6 +652,7 @@ public class Arguments {
     }
 
     public void setArgumentValue(@NotNull String path, @NotNull ValueType type, @NotNull Object value) {
+        argumentList.removeIf(it -> path.equals(it.path));
         argumentList.add(new Argument(planet,type,path,value));
     }
 

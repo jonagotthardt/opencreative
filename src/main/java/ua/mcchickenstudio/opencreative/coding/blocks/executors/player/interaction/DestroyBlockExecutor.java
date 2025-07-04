@@ -34,12 +34,8 @@ public class DestroyBlockExecutor extends PlayerExecutor {
     @Override
     protected void setTempVars(WorldEvent event) {
         if (event instanceof DestroyBlockEvent blockEvent) {
-            setTempVar(EventValues.Variable.BLOCK, blockEvent.getDestroyedBlock());
-            if (blockEvent.getDestroyedBlock() == null) {
-                return;
-            }
-            setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getDestroyedBlock().getType().name().toLowerCase());
-            setTempVar(EventValues.Variable.BLOCK_LOCATION, blockEvent.getDestroyedBlock().getLocation());
+            setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getBlock().getType().name().toLowerCase());
+            setTempVar(EventValues.Variable.BLOCK_LOCATION, blockEvent.getBlock().getLocation());
         }
     }
 

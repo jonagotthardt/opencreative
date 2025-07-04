@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.blocks;
 
+import org.bukkit.Material;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
@@ -41,15 +42,17 @@ public class IsBlockEqualsCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
-        if (getHandler().hasTempVariable(EventValues.Variable.BLOCK)) {
-            sendCodingNotFoundTempVar(getPlanet(),getExecutor(), EventValues.Variable.BLOCK);
+        if (getHandler().hasTempVariable(EventValues.Variable.BLOCK_MATERIAL)) {
+            sendCodingNotFoundTempVar(getPlanet(),getExecutor(), EventValues.Variable.BLOCK_MATERIAL);
             return false;
         }
-        Block block = (Block) getHandler().getVarValue(EventValues.Variable.BLOCK);
+        if (!(getHandler().getVarValue(EventValues.Variable.BLOCK_MATERIAL) instanceof Material material)) {
+            return false;
+        }
         List<ItemStack> blocks = getArguments().getItemList("blocks",this);
         if (blocks.isEmpty()) return false;
         for (ItemStack checkBlock : blocks) {
-            if (block.getType() == checkBlock.getType()) {
+            if (material == checkBlock.getType()) {
                 return true;
             }
         }

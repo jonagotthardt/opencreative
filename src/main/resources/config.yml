@@ -23,6 +23,13 @@
 #    /world info - Displays world's info.
 #    /world delete - Deletes world.
 #    /world deletemobs - Removes mobs.
+#    /world size - Displays size of world folder.       (opencreative.world.size)
+#    /world kick [Player] - Kicks player from world.
+#    /world ban [Player] - Bans player in world.
+#    /world unban [Player] - Unbans player in world.
+#    /world whitelist [Player] - Allows player to visit world, if it's closed.
+#    /world unwhitelist [Player] - Removes player from whitelist.
+#
 #  /ad - Advertises world in chat for all players.
 #  /build - Changes world's mode to Build, disables PvP,
 #           and gives Creative mode to world owner and builders.
@@ -41,27 +48,53 @@
 #  /like - Changes world's reputation by +1
 #  /dislike - Changes world's reputation by -1
 #
-#  /give [Player] [Material] [Amount] - Gives item.               (for world owners, world developers or builders)
-#  /tp [Player] (player) - Teleports to player.                   (for world owners, world developers or builders)
-#  /gamemode [Gamemode] (player) - Changes player's gamemode.     (for world owners, world developers or builders)
-#  /playsound [Player] [Sound] [Volume] [Pitch] - Plays a sound.  (for world owners, world developers or builders)
-#  /time set [Time] - Changes world's time.                       (for world owners, world developers or builders)
-#  /weather [Sun/Storm] - Changes world's weather.                (for world owners, world developers or builders)
-#  /stopsound [Player] - Stops sounds.                            (for world owners, world developers or builders)
+#  /give [Player] [Material] [Amount] - Gives item.               (for world owners, world developers or builders) (opencreative.give.bypass)
+#  /tp [Player] (player) - Teleports to player.                   (for world owners, world developers or builders) (opencreative.teleport.bypass, opencreative.teleport.clear-bypass, opencreative.teleport.others-bypass)
+#  /gamemode [Gamemode] (player) - Changes player's gamemode.     (for world owners, world developers or builders) (opencreative.game-mode.bypass)
+#  /playsound [Player] [Sound] [Volume] [Pitch] - Plays a sound.  (for world owners, world developers or builders) (opencreative.play-sound.bypass)
+#  /time set [Time] - Changes world's time.                       (for world owners, world developers or builders) (opencreative.time.bypass)
+#  /weather [Sun/Storm] - Changes world's weather.                (for world owners, world developers or builders) (opencreative.weather.bypass)
+#  /stopsound [Player] - Stops sounds.                            (for world owners, world developers or builders) (opencreative.stop-sound.bypass)
 #
-#  /creative - Opens menu of plugin info.
-#    /creative reload - Reloads config.
-#    /creative list - Displays list of loaded worlds.
+#  /creative - Opens menu of plugin info.                                                   Permission nodes
+#    /creative reload - Reloads config.                                                     (opencreative.reload)
+#    /creative resetlocale - Removes current localization files and replaces with default.  (opencreative.resetlocale)
+#    /creative list - Displays list of loaded worlds.                                       (opencreative.list.loaded)
 #    /creative deprecated - Displays list of old worlds, which have owner,
-#                           that last joined server 1 month ago.
-#    /creative corrupted - Displays list of worlds, that lost settings.yml.
-#    /creative load [ID] - Loads specified world.
-#    /creative unload [ID] - Unloads specified world.
-#    /creative maintenance - Maintenance mode settings (start, end).
+#                           that last joined server 1 month ago.                            (opencreative.list.deprecated)
+#    /creative corrupted - Displays list of worlds, that lost settings.yml.                 (opencreative.list.corrupted)
+#    /creative moderate [ID] - Opens moderation menu with admin tools for specified world.  (opencreative.moderation.menu)
+#    /creative info [ID] - Displays world's info.                                           (opencreative.world.info)
+#    /creative load [ID] - Loads specified world.                                           (opencreative.world.load)
+#    /creative unload [ID] - Unloads specified world.                                       (opencreative.world.unload)
+#              unload all - Unloads all worlds.                                             (opencreative.world.unload.all)
+#    /creative register [ID] - Adds not registered world to worlds browser.                 (opencreative.world.register)
+#    /creative unregister [ID] - Removes world from worlds browser, until restart.          (opencreative.world.unregister)
+#    /creative maintenance - Maintenance mode settings (start, end).                        (opencreative.maintenance)
 #    /creative creative-chat - Creative Chat settings (on, off)
-#    /creative sounds [theme] - Sets current sounds theme.
-#    /creative template [folder] - Creates a new world from Minecraft
+#    /creative sounds [theme] - Sets current sounds theme.                                  (opencreative.sounds.theme)
+#    /creative sound [sound] - Plays specified sound.                                       (opencreative.sounds.play)
+#    /creative template [folder] - Creates a new world from Minecraft                       (opencreative.template)
 #                                  save in plugins/OpenCreative/templates
+#    /creative update - Check if new version is available                                   (opencreative.updates.check)
+#
+# Permissions:
+#
+#  Permissions for admin commands are written above.
+#
+#  opencreative.maintenance.bypass - Bypass maintenance restrictions to join the worlds.
+#  opencreative.stability.bypass - Bypass stability restrictions to join the worlds.
+#  opencreative.world.private.bypass - Allows player to join world, even if it's closed.
+#  opencreative.world.kick.bypass - Prevents admin from kicking from world.
+#  opencreative.world.ban.bypass - Prevents admin from banning in world.
+#  opencreative.world.banned.bypass - Allows player to join world, even if he's banned.
+#  opencreative.creative-chat.bypass - Allows player to use creative chat, even if it's disabled.
+#  opencreative.moderation.clear-name - Ability to clear world's display name in moderation menu.
+#  opencreative.moderation.clear-description - Ability to clear world's description in moderation menu.
+#  opencreative.moderation.clear-icon - Ability to reset world's icon in moderation menu.
+#  opencreative.moderation.connect-silent - Ability to connect the world without join message.
+#  opencreative.moderation.connect-dev-silent - Ability to connect the developers world without join message.
+#  opencreative.moderation.close-world - Ability to close world.
 #
 
 #
@@ -100,13 +133,24 @@ messages:
   version: "&f \n &fPowered by Open&7Creative&b+ &3%version%\n &f%codename% \n \n &fContributors: &7McChicken Team\n &fTranslators: &7initzero, Nagibator6000Lol \n \n &cMcChicken Studio 2017-2025\n &c"
   critical-errors: true # Will send critical errors in console
   warnings: true # Will send warning in console
-  not-found: true # Will send not found message in console
+  not-found: false # Will send not found message in console
 
 allowed-links:
   # These links are allowed to use in Request Resource Pack action.
   resource-pack:
     - "dropbox.com"
     - "drive.google.com"
+
+coding:
+  #
+  # You can disable some coding blocks,
+  # if they're useless or harming performance.
+  # disabled-actions:
+  #  - "world_set_block_type"
+  #
+  disabled-events: []
+  disabled-actions: []
+  disabled-conditions: []
 
 item-fixer:
   #
@@ -174,7 +218,6 @@ groups:
       world-chat: 2 # chat in the world
     creating-world:
       limit: 2
-    favorite-worlds-limit: 30 # limit of favorite worlds for player
     lobby-permissions: # Permissions will be given when player teleports to lobby
       - "music.play"
     world:
@@ -239,7 +282,6 @@ groups:
       world-chat: 1
     creating-world:
       limit: 4
-    favorite-worlds-limit: 30
     lobby-permissions:
       - "music.play"
     world:

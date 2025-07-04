@@ -20,13 +20,14 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.events.CancelEventAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.events.UncancelEventAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.inventory.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.movement.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.other.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.params.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.state.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.handleractions.other.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlleractions.other.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.other.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.other.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.selectionactions.*;
@@ -266,8 +267,9 @@ public enum ActionType {
     CONTROL_LAUNCH_CYCLES(                 ActionCategory.CONTROL_ACTION, MenusCategory.LINES, LaunchCyclesAction.class, Material.OXIDIZED_COPPER, new ArgumentSlot("names", ValueType.TEXT, (byte) 27)),
     CONTROL_STOP_CYCLES(                 ActionCategory.CONTROL_ACTION, MenusCategory.LINES, StopCyclesAction.class, Material.WEATHERED_CUT_COPPER_STAIRS, new ArgumentSlot("names", ValueType.TEXT, (byte) 27)),
 
-
     CONTROL_CANCEL_EVENT(                 ActionCategory.CONTROL_ACTION, MenusCategory.EVENTS, CancelEventAction.class, Material.BARRIER),
+    CONTROL_UNCANCEL_EVENT(                 ActionCategory.CONTROL_ACTION, MenusCategory.EVENTS, UncancelEventAction.class, Material.STRUCTURE_VOID),
+
 
     /**
      * <h1>World Actions.</h1>
@@ -649,13 +651,13 @@ public enum ActionType {
      * <h1>Other Actions.</h1>
      */
 
-    HANDLER_CATCH_ERROR(ActionCategory.HANDLER_ACTION, MenusCategory.OTHER, CatchErrorAction.class, Material.RED_DYE, new ArgumentSlot("variable", ValueType.VARIABLE)),
-    HANDLER_MEASURE_TIME(ActionCategory.HANDLER_ACTION, MenusCategory.OTHER, MeasureTimeAction.class, Material.CLOCK, new ArgumentSlot("variable", ValueType.VARIABLE)),
+    HANDLER_CATCH_ERROR(ActionCategory.CONTROLLER_ACTION, MenusCategory.OTHER, CatchErrorAction.class, Material.RED_DYE, new ArgumentSlot("variable", ValueType.VARIABLE)),
+    HANDLER_MEASURE_TIME(ActionCategory.CONTROLLER_ACTION, MenusCategory.OTHER, MeasureTimeAction.class, Material.CLOCK, new ArgumentSlot("variable", ValueType.VARIABLE)),
 
     REPEAT_ALWAYS(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatAlwaysAction.class, Material.BEACON),
-    REPEAT_FOR_LOOP(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatForLoopAction.class, Material.SLIME_BALL, new ArgumentSlot("variable", ValueType.VARIABLE), new ParameterSlot("type", Arrays.asList("less","less-equals","greater","greater-equals"), Material.BRICK, Material.BRICKS, Material.NETHER_BRICK, Material.NETHER_BRICKS), new ArgumentSlot("range", ValueType.NUMBER), new ArgumentSlot("add", ValueType.NUMBER)),
-    REPEAT_FOR_EACH(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatForEachAction.class, Material.BOOKSHELF, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE)),
-    REPEAT_BLOCKS_IN_REGION(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatBlocksInRegionAction.class, Material.PAPER, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("first", ValueType.LOCATION), new ArgumentSlot("second", ValueType.LOCATION)),
+    REPEAT_FOR_NUMBERS(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatForLoopAction.class, Material.SLIME_BALL, new ArgumentSlot("variable", ValueType.VARIABLE), new ParameterSlot("type", Arrays.asList("less","less-equals","greater","greater-equals"), Material.BRICK, Material.BRICKS, Material.NETHER_BRICK, Material.NETHER_BRICKS), new ArgumentSlot("range", ValueType.NUMBER), new ArgumentSlot("add", ValueType.NUMBER)),
+    REPEAT_FOR_LIST(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatForEachAction.class, Material.BOOKSHELF, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE)),
+    REPEAT_FOR_BLOCKS(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatForBlocksAction.class, Material.PAPER, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("first", ValueType.LOCATION), new ArgumentSlot("second", ValueType.LOCATION)),
 
     LAUNCH_FUNCTION(ActionCategory.LAUNCH_FUNCTION_ACTION, MenusCategory.OTHER, LaunchFunctionAction.class, Material.LAPIS_ORE),
     LAUNCH_METHOD(ActionCategory.LAUNCH_METHOD_ACTION, MenusCategory.OTHER, LaunchMethodAction.class, Material.EMERALD),
@@ -710,31 +712,30 @@ public enum ActionType {
      * <h1>Entity Conditions.</h1>
      */
 
-    IF_ENTITY_IS_PLAYER(ActionCategory.ENTITY_CONDITION, MenusCategory.OTHER, IsEntityPlayer.class, Material.PLAYER_HEAD),
-    IF_ENTITY_IS_MOB(ActionCategory.ENTITY_CONDITION, MenusCategory.OTHER, IsEntityMob.class, Material.PIG_SPAWN_EGG),
-    IF_ENTITY_IS_LIVING_ENTITY(ActionCategory.ENTITY_CONDITION, MenusCategory.OTHER, IsEntityLivingEntity.class, Material.APPLE),
-    IF_ENTITY_IS_HUMAN_ENTITY(ActionCategory.ENTITY_CONDITION, MenusCategory.OTHER, IsEntityHuman.class, Material.ZOMBIE_HEAD),
-    IF_ENTITY_IS_AGEABLE(ActionCategory.ENTITY_CONDITION, MenusCategory.OTHER, IsEntityAgeable.class, Material.CAT_SPAWN_EGG),
-    IF_ENTITY_IS_THROWABLE_PROJECTILE(ActionCategory.ENTITY_CONDITION, MenusCategory.OTHER, IsEntityThrowableProjectile.class, Material.TRIDENT),
-    IF_ENTITY_IS_PROJECTILE(ActionCategory.ENTITY_CONDITION, MenusCategory.OTHER, IsEntityProjectile.class, Material.ARROW),
-    IF_ENTITY_IS_NPC(ActionCategory.ENTITY_CONDITION, MenusCategory.OTHER, IsEntityNPC.class, Material.PLAYER_HEAD),
-    IF_ENTITY_IS_CREATURE(ActionCategory.ENTITY_CONDITION, MenusCategory.OTHER, IsEntityCreature.class, Material.PIGLIN_HEAD),
-    IF_ENTITY_IS_MONSTER(ActionCategory.ENTITY_CONDITION, MenusCategory.OTHER, IsEntityMonster.class, Material.ZOMBIE_SPAWN_EGG),
-    IF_ENTITY_IS_ENEMY(ActionCategory.ENTITY_CONDITION, MenusCategory.OTHER, IsEntityEnemy.class, Material.ENDER_DRAGON_SPAWN_EGG),
+    IF_ENTITY_NAME_EQUALS(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, EntityNameEqualsCondition.class, Material.NAME_TAG, new ArgumentSlot("names", ValueType.TEXT,(byte) 18), new ParameterSlot("require-caps"), new ParameterSlot("require-color")),
+    IF_ENTITY_IS_PLAYER(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, IsEntityPlayer.class, Material.PLAYER_HEAD),
+    IF_ENTITY_IS_DEAD(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, IsEntityDead.class, Material.REDSTONE),
+    IF_ENTITY_IS_MOB(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, IsEntityMob.class, Material.PIG_SPAWN_EGG),
+    IF_ENTITY_IS_LIVING_ENTITY(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, IsEntityLivingEntity.class, Material.APPLE),
+    IF_ENTITY_IS_HUMAN_ENTITY(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, IsEntityHuman.class, Material.ZOMBIE_HEAD),
+    IF_ENTITY_IS_AGEABLE(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, IsEntityAgeable.class, Material.CAT_SPAWN_EGG),
+    IF_ENTITY_IS_THROWABLE_PROJECTILE(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, IsEntityThrowableProjectile.class, Material.TRIDENT),
+    IF_ENTITY_IS_PROJECTILE(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, IsEntityProjectile.class, Material.ARROW),
+    IF_ENTITY_IS_NPC(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, IsEntityNPC.class, Material.PLAYER_HEAD),
+    IF_ENTITY_IS_CREATURE(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, IsEntityCreature.class, Material.PIGLIN_HEAD),
+    IF_ENTITY_IS_MONSTER(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, IsEntityMonster.class, Material.ZOMBIE_SPAWN_EGG),
+    IF_ENTITY_IS_ENEMY(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, IsEntityEnemy.class, Material.ENDER_DRAGON_SPAWN_EGG),
 
-    IF_ENTITY_NAME_EQUALS(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, EntityNameEqualsCondition.class, Material.NAME_TAG, new ArgumentSlot("names", ValueType.TEXT,(byte) 18), new ParameterSlot("require-caps"), new ParameterSlot("require-color")),
-    IF_ENTITY_IS_IN_TEAM(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, IsEntityInTeam.class, Material.LIME_BANNER, new ArgumentSlot("scoreboard",ValueType.TEXT), new ArgumentSlot("team",ValueType.TEXT)),
-
-    IF_ENTITY_IS_DEAD(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, IsEntityDead.class, Material.REDSTONE),
-    IF_ENTITY_IS_UNDERWATER(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, IsEntityUnderWater.class, Material.BLUE_STAINED_GLASS),
-    IF_ENTITY_HAS_GRAVITY(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, HasEntityGravity.class, Material.SAND),
-    IF_ENTITY_IS_IN_RAIN(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, IsEntityInRain.class, Material.WATER_BUCKET),
-    IF_ENTITY_IS_IN_LAVA(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, IsEntityInLava.class, Material.LAVA_BUCKET),
-    IF_ENTITY_IS_IN_POWDERED_SNOW(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, IsWorldBlockPoweredCondition.class, Material.POWDER_SNOW_BUCKET),
-    IF_ENTITY_IS_ON_GROUND(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, IsEntityOnGround.class, Material.GRASS_BLOCK),
-    IF_ENTITY_IS_INSIDE_VEHICLE(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, IsEntityInsideVehicle.class, Material.MINECART),
-    IF_ENTITY_HAS_NO_PHYSICS(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, HasEntityNoPhysics.class, Material.DAMAGED_ANVIL),
-    IF_ENTITY_IS_INVULNERABLE(ActionCategory.ENTITY_CONDITION, MenusCategory.PARAMS, IsEntityInvulnerable.class, Material.TOTEM_OF_UNDYING);
+    IF_ENTITY_IS_IN_TEAM(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsEntityInTeam.class, Material.LIME_BANNER, new ArgumentSlot("scoreboard",ValueType.TEXT), new ArgumentSlot("team",ValueType.TEXT)),
+    IF_ENTITY_IS_UNDERWATER(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsEntityUnderWater.class, Material.BLUE_STAINED_GLASS),
+    IF_ENTITY_HAS_GRAVITY(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, HasEntityGravity.class, Material.SAND),
+    IF_ENTITY_IS_IN_RAIN(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsEntityInRain.class, Material.WATER_BUCKET),
+    IF_ENTITY_IS_IN_LAVA(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsEntityInLava.class, Material.LAVA_BUCKET),
+    IF_ENTITY_IS_IN_POWDERED_SNOW(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsWorldBlockPoweredCondition.class, Material.POWDER_SNOW_BUCKET),
+    IF_ENTITY_IS_ON_GROUND(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsEntityOnGround.class, Material.GRASS_BLOCK),
+    IF_ENTITY_IS_INSIDE_VEHICLE(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsEntityInsideVehicle.class, Material.MINECART),
+    IF_ENTITY_HAS_NO_PHYSICS(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, HasEntityNoPhysics.class, Material.DAMAGED_ANVIL),
+    IF_ENTITY_IS_INVULNERABLE(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsEntityInvulnerable.class, Material.TOTEM_OF_UNDYING);
 
     private final Class<? extends Action> actionClass;
     private final ActionCategory category;
@@ -846,7 +847,10 @@ public enum ActionType {
     }
 
     public boolean isDisabled() {
-        return getActionClass() == null || (requiredPlugin != null && !HookUtils.isPluginEnabled(requiredPlugin));
+        return getActionClass() == null
+                || (requiredPlugin != null && !HookUtils.isPluginEnabled(requiredPlugin))
+                || (isCondition() && OpenCreative.getSettings().isDisabledCondition(this))
+                || OpenCreative.getSettings().isDisabledAction(this);
     }
 
     public String getRequiredPlugin() {

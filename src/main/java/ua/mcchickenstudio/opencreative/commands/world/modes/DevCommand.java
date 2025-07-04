@@ -193,6 +193,8 @@ public class DevCommand extends CommandHandler {
         setItemIfAbsent(inventory, 3,  ActionCategory.ELSE_CONDITION.getItem());
         setItemIfAbsent(inventory, 13, ActionCategory.VARIABLE_ACTION.getItem());
         setItemIfAbsent(inventory, 22, ActionCategory.VARIABLE_CONDITION.getItem());
+        setItemIfAbsent(inventory, 14, ActionCategory.CONTROLLER_ACTION.getItem());
+        setItemIfAbsent(inventory, 23, ActionCategory.REPEAT_ACTION.getItem());
         setItemIfAbsent(inventory, 9,  ExecutorCategory.FUNCTION.getItem());
         setItemIfAbsent(inventory, 10, ActionCategory.LAUNCH_FUNCTION_ACTION.getItem());
         setItemIfAbsent(inventory, 11, ActionCategory.CONTROL_ACTION.getItem());

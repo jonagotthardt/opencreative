@@ -34,7 +34,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugEx
  * This class represents Executor that has actions to run.
  * Executor will be executed on events in planet.
  * @since 5.0
- * @version 5.0
+ * @version 5.6
  * @author McChicken Studio
  */
 public abstract class Executor {
@@ -67,6 +67,9 @@ public abstract class Executor {
      * @param event Event that occurred in planet.
      */
     public void run(WorldEvent event) {
+        if (getExecutorType() != null && getExecutorType().isDisabled()) {
+            return;
+        }
         sendCodingDebugExecutor(this);
         setTempVars(event);
         executeActions(event);

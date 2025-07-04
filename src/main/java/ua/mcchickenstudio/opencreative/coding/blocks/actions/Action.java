@@ -38,6 +38,7 @@ import org.bukkit.entity.Player;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugAction;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 
 /**
  * <h1>Action</h1>
@@ -78,6 +79,10 @@ public abstract class Action {
      * @param handler ActionsHandler that stores event data and temporary variables.
      */
     public void prepareAndExecute(ActionsHandler handler) {
+        if (getActionType() != null && getActionType().isDisabled()) {
+            sendCodingDebugLog(getPlanet(),"Action is disabled, cannot work: " + getActionType().getLocaleName());
+            return;
+        }
         this.handler = handler;
         this.event = handler.getEvent();
         sendCodingDebugAction(this);

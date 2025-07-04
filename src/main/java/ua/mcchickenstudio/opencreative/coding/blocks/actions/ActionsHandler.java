@@ -20,14 +20,10 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines.WaitAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.RepeatAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.other.RepeatBlocksInRegionAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.other.RepeatForEachAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.other.RepeatForLoopAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlleractions.other.MeasureTimeAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -86,7 +82,7 @@ public class ActionsHandler {
         this.variables = mainHandler.variables;
         this.action = action;
         this.selectedTargets = new HashSet<>(parentActionsHandler.selectedTargets);
-        this.doNotUseTryFlag = action.getActionType() == ActionType.HANDLER_CATCH_ERROR;
+        this.doNotUseTryFlag = action.getActionType() == ActionType.HANDLER_CATCH_ERROR || parentActionsHandler.doNotUseTryFlag;
     }
 
     public final void executeActions(List<Action> actions) {
@@ -107,43 +103,11 @@ public class ActionsHandler {
             return;
         }
         if (actionsQueue.isEmpty()) {
+            if (action instanceof MeasureTimeAction timer) {
+                timer.measure();
+            }
             if (getMainActionHandler() == this) {
                 executor.getPlanet().getVariables().garbageCollector(this);
-            }
-            if (action instanceof RepeatAction repeatAction) {
-                switch (action) {
-                    case RepeatForLoopAction forLoopAction -> {
-                        VariableLink link = forLoopAction.getArguments().getVariableLink("variable", forLoopAction);
-                        double add = forLoopAction.getArguments().getValue("add", 1.0d, forLoopAction);
-                        String type = forLoopAction.getArguments().getValue("type", "less", forLoopAction);
-                        double untilValue = forLoopAction.getArguments().getValue("range", 10.0d, forLoopAction);
-                        if (link == null) {
-                            return;
-                        }
-                        double currentValue = forLoopAction.getArguments().getValue("variable", 0.0d, forLoopAction);
-                        boolean execute = switch (type.toLowerCase()) {
-                            case "less" -> currentValue < untilValue;
-                            case "less-equals" -> currentValue <= untilValue;
-                            case "greater" -> currentValue > untilValue;
-                            case "greater-equals" -> currentValue >= untilValue;
-                            default -> false;
-                        };
-                        if (execute) {
-                            forLoopAction.setVarValue(link, currentValue + add);
-                            repeatAction.prepareAndExecute(this);
-                        }
-                    }
-                    case RepeatForEachAction forEachAction -> {
-                        VariableLink link = action.getArguments().getVariableLink("variable", action);
-                        List<Object> list = action.getArguments().getList("list", action);
-                        if (list.isEmpty()) return;
-                        return;
-                    }
-                    case RepeatBlocksInRegionAction forEachAction -> {
-                        return;
-                    }
-                    default -> repeatAction.prepareAndExecute(this);
-                }
             }
             return;
         }

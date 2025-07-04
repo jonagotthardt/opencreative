@@ -25,7 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.RepeatAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
+import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
 import java.util.List;
 
@@ -36,13 +36,32 @@ public final class RepeatForLoopAction extends RepeatAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
-        executeActions();
+    public boolean checkCanContinue() {
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        if (link == null) {
+            return false;
+        }
+        double add = getArguments().getValue("add", 1.0d, this);
+        String type = getArguments().getValue("type", "less", this);
+        double untilValue = getArguments().getValue("range", 10.0d, this);
+        double currentValue = getArguments().getValue("variable", 0.0d, this);
+        boolean execute = switch (type.toLowerCase()) {
+            case "less" -> currentValue < untilValue;
+            case "less-equals" -> currentValue <= untilValue;
+            case "greater" -> currentValue > untilValue;
+            case "greater-equals" -> currentValue >= untilValue;
+            default -> false;
+        };
+        if (execute) {
+            this.setVarValue(link, currentValue + add);
+            return true;
+        }
+        return false;
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.REPEAT_FOR_LOOP;
+        return ActionType.REPEAT_FOR_NUMBERS;
     }
 }
 

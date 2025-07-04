@@ -37,7 +37,7 @@ public final class ItemPickupEvent extends WorldEvent implements Cancellable {
 
     @Override
     public void setCancelled(boolean cancelled) {
-        event.setCancelled(true);
+        event.setCancelled(cancelled);
     }
 
     @Override

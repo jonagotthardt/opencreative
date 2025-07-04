@@ -34,7 +34,6 @@ public class BlockExperienceDropExecutor extends WorldExecutor {
     @Override
     protected void setTempVars(WorldEvent event) {
         if (event instanceof BlockExperienceDropEvent blockEvent) {
-            setTempVar(EventValues.Variable.BLOCK, blockEvent.getBlock());
             setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getBlock());
             setTempVar(EventValues.Variable.BLOCK_LOCATION, blockEvent.getBlock());
             setTempVar(EventValues.Variable.EXPERIENCE, blockEvent.getExp());

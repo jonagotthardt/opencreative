@@ -180,6 +180,7 @@ public class Argument {
         setEventVariable(action, EventValues.Variable.UNIX_TIME_MINUTES,Integer.parseInt(minutesFormat.format(date)));
         setEventVariable(action, EventValues.Variable.UNIX_TIME_SECONDS,Integer.parseInt(secondsFormat.format(date)));
         setEventVariable(action, EventValues.Variable.WORLD_TIME, planet.getTerritory().getWorld().getTime());
+        setEventVariable(action, EventValues.Variable.WORLD_SPAWN, planet.getTerritory().getWorld().getSpawnLocation());
         setEventVariable(action, EventValues.Variable.CLEAR_WEATHER_DURATION, planet.getTerritory().getWorld().getClearWeatherDuration());
         setEventVariable(action, EventValues.Variable.THUNDER_WEATHER_DURATION, planet.getTerritory().getWorld().getThunderDuration());
     }

@@ -22,10 +22,12 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.KillerVictimEvent;
 
-public final class MobInteractionEvent extends WorldEvent implements Cancellable {
+public final class MobInteractionEvent extends WorldEvent implements KillerVictimEvent, Cancellable {
 
     private final Cancellable event;
     private final Entity entity;
@@ -54,5 +56,15 @@ public final class MobInteractionEvent extends WorldEvent implements Cancellable
     @Override
     public void setCancelled(boolean cancelled) {
         event.setCancelled(cancelled);
+    }
+
+    @Override
+    public @NotNull Entity getVictim() {
+        return entity;
+    }
+
+    @Override
+    public @NotNull Entity getKiller() {
+        return getSelection().getFirst();
     }
 }
