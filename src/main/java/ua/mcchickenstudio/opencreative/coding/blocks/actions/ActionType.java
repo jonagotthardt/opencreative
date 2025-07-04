@@ -847,7 +847,10 @@ public enum ActionType {
     }
 
     public boolean isDisabled() {
-        return getActionClass() == null || (requiredPlugin != null && !HookUtils.isPluginEnabled(requiredPlugin));
+        return getActionClass() == null
+                || (requiredPlugin != null && !HookUtils.isPluginEnabled(requiredPlugin))
+                || (isCondition() && OpenCreative.getSettings().isDisabledCondition(this))
+                || OpenCreative.getSettings().isDisabledAction(this);
     }
 
     public String getRequiredPlugin() {

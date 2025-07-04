@@ -133,13 +133,24 @@ messages:
   version: "&f \n &fPowered by Open&7Creative&b+ &3%version%\n &f%codename% \n \n &fContributors: &7McChicken Team\n &fTranslators: &7initzero, Nagibator6000Lol \n \n &cMcChicken Studio 2017-2025\n &c"
   critical-errors: true # Will send critical errors in console
   warnings: true # Will send warning in console
-  not-found: true # Will send not found message in console
+  not-found: false # Will send not found message in console
 
 allowed-links:
   # These links are allowed to use in Request Resource Pack action.
   resource-pack:
     - "dropbox.com"
     - "drive.google.com"
+
+coding:
+  #
+  # You can disable some coding blocks,
+  # if they're useless or harming performance.
+  # disabled-actions:
+  #  - "world_set_block_type"
+  #
+  disabled-events: []
+  disabled-actions: []
+  disabled-conditions: []
 
 item-fixer:
   #

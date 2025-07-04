@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors;
 
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.entities.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.state.*;
@@ -76,9 +77,9 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * <h1>ExecutorType</h1>
  * This enum defines different types of all executors in coding.
  * Every type contains event class, executor class, item material, cancellable.
- * Foe example: PLAYER_JOIN, WORLD_START, FUNCTION_EXEC.
+ * Foe example: PLAYER_JOIN, WORLD_START, FUNCTION.
  * @since 5.0
- * @version 5.0
+ * @version 5.6
  * @author McChicken Studio
  */
 public enum ExecutorType {
@@ -197,7 +198,6 @@ public enum ExecutorType {
     //WORLD_WEATHER_CHANGED(      ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, null, null, Material.WATER_BUCKET),
     //WORLD_CODE_ERROR_OCCURRED(  ExecutorCategory.EVENT_WORLD, MenusCategory.OTHER, null, null, Material.BARRIER),
 
-
     ENTITY_PIG_ZOMBIE_ANGERED(      ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_STATE, PigZombieAngeredExecutor.class, PigZombieAngeredEvent.class, Material.ZOMBIFIED_PIGLIN_SPAWN_EGG),
     ENTITY_BAT_TOGGLED_SLEEP_MODE(  ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_STATE, EntityBatToggledSleepModeExecutor.class, EntityBatToggledSleepModeEvent.class, Material.BAT_SPAWN_EGG),
     ENTITY_SLIME_SPLIT(             ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_STATE, SlimeSplittedExecutor.class, SlimeSplittedEvent.class, Material.SLIME_SPAWN_EGG),
@@ -234,30 +234,7 @@ public enum ExecutorType {
     ENTITY_WITCH_THROWN_POTION(     ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_FIGHTING, WitchThrownPotionExecutor.class, WitchThrownPotionEvent.class, Material.SPLASH_POTION),
     ENTITY_WITCH_CONSUMED_POTION(   ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_FIGHTING, WitchConsumedPotionExecutor.class, WitchConsumedPotionEvent.class, Material.POTION),
     ENTITY_LOADED_CROSSBOW(         ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_FIGHTING, EntityLoadedCrossbowExecutor.class, EntityLoadedCrossbowEvent.class, Material.CROSSBOW),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ;
-
-
 
     private final Class<? extends Executor> executor;
     private final Class<? extends WorldEvent> creativeEvent;
@@ -282,7 +259,7 @@ public enum ExecutorType {
     }
 
     public boolean isDisabled() {
-        return getExecutorClass() == null;
+        return getExecutorClass() == null || OpenCreative.getSettings().isDisabledEvent(this);
     }
 
     public final ItemStack getIcon() {

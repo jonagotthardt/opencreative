@@ -27,8 +27,11 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceEndEvent;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceStartEvent;
 import ua.mcchickenstudio.opencreative.indev.Items;
@@ -84,6 +87,9 @@ public class Settings {
     private final Commands commands;
     private final Set<Integer> recommendedWorldsIDs = new HashSet<>();
     private final Set<String> allowedResourcePackLinks = new HashSet<>();
+    private final Set<String> disabledEvents = new HashSet<>();
+    private final Set<String> disabledActions= new HashSet<>();
+    private final Set<String> disabledConditions = new HashSet<>();
 
     private final Map<Sounds,SettingsSound> sounds = new HashMap<>();
     private final Map<Items,SettingsItem> items = new HashMap<>();
@@ -140,6 +146,7 @@ public class Settings {
         String soundsTheme = config.getString("sounds.theme","default");
         loadSounds(config, soundsTheme);
         loadItems(config);
+        loadDisabledBlocks(config);
 
         if (maintenance) {
             OpenCreative.getPlugin().getLogger().warning("Maintenance mode is still enabled in config.yml, to disable: /maintenance end");
@@ -148,6 +155,50 @@ public class Settings {
             OpenCreative.getPlugin().getLogger().warning("Debug Mode is enabled in config.yml, some logs will appear in console.");
         }
         checkDebugAnnouncer();
+    }
+
+    private void loadDisabledBlocks(FileConfiguration config) {
+        disabledEvents.clear();
+        disabledConditions.clear();
+        disabledActions.clear();
+        int count = 0;
+        List<String> unknownBlocks = new ArrayList<>();
+        for (String disabled : config.getStringList("coding.disabled-actions")) {
+            try {
+                disabled = disabled.toUpperCase().replace("-","_");
+                ActionType type = ActionType.valueOf(disabled);
+                disabledActions.add(type.name());
+                count++;
+            } catch (Exception ignored) {
+                unknownBlocks.add(disabled);
+            }
+        }
+        for (String disabled : config.getStringList("coding.disabled-conditions")) {
+            try {
+                disabled = disabled.toUpperCase().replace("-","_");
+                ActionType type = ActionType.valueOf(disabled);
+                disabledConditions.add(type.name());
+                count++;
+            } catch (Exception ignored) {
+                unknownBlocks.add(disabled);
+            }
+        }
+        for (String disabled : config.getStringList("coding.disabled-events")) {
+            try {
+                disabled = disabled.toUpperCase().replace("-","_");
+                ExecutorType type = ExecutorType.valueOf(disabled);
+                disabledEvents.add(type.name());
+                count++;
+            } catch (Exception ignored) {
+                unknownBlocks.add(disabled);
+            }
+        }
+        if (count >= 1) {
+            OpenCreative.getPlugin().getLogger().info("Disabled " + count + " coding blocks!");
+        }
+        if (!unknownBlocks.isEmpty()) {
+            sendWarningErrorMessage("Can't recognize these coding blocks in disabled list, do they exist? " + unknownBlocks);
+        }
     }
 
     private void loadSounds(FileConfiguration config, String soundsTheme) {
@@ -330,6 +381,18 @@ public class Settings {
             }
             return FULL;
         }
+    }
+
+    public boolean isDisabledEvent(@NotNull ExecutorType event) {
+        return disabledEvents.contains(event.name());
+    }
+
+    public boolean isDisabledAction(@NotNull ActionType action) {
+        return disabledActions.contains(action.name());
+    }
+
+    public boolean isDisabledCondition(@NotNull ActionType condition) {
+        return disabledConditions.contains(condition.name());
     }
 
     public Groups getGroups() {
