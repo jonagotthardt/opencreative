@@ -109,7 +109,8 @@ public class ErrorUtils {
                 "Errors in the plugin that never ends", "It might just work if we can try not to go insane",
                 "Try not to panic when you see this", "This is not supposed to be here",
                 ":( Your PLUGIN ran into a problem.", "Why is this happening?", "Dum dum, this sucks..",
-                "Error the Troublemaker..", "Knocks off worlds like a terminator", "Gotta hate it cause' you just can't like it"
+                "Error the Troublemaker..", "Knocks off worlds like a terminator", "Gotta hate it cause' you just can't like it",
+                "We had something to learn from that experience"
         };
         return phrases[new Random().nextInt(phrases.length)];
     }

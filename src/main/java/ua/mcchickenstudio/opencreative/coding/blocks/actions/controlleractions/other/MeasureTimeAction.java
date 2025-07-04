@@ -16,20 +16,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.handleractions.other;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.controlleractions.other;
 
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.handleractions.HandlerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlleractions.ControllerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
 import java.util.List;
 
-public final class MeasureTimeAction extends HandlerAction {
+public final class MeasureTimeAction extends ControllerAction {
 
     long time = 0;
 

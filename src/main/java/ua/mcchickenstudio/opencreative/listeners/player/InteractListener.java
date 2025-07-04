@@ -281,7 +281,7 @@ public final class InteractListener implements Listener {
                     case PLAYER_ACTION, PLAYER_CONDITION, VARIABLE_ACTION,
                          VARIABLE_CONDITION, ENTITY_ACTION, ENTITY_CONDITION,
                          WORLD_ACTION, WORLD_CONDITION, CONTROL_ACTION,
-                         REPEAT_ACTION, HANDLER_ACTION -> new BlocksCategorySelectionMenu(player, clickedLocation, actionBlockCategory);
+                         REPEAT_ACTION, CONTROLLER_ACTION -> new BlocksCategorySelectionMenu(player, clickedLocation, actionBlockCategory);
                     case SELECTION_ACTION -> new SelectionActionsMenu(player,clickedLocation);
                     case LAUNCH_FUNCTION_ACTION -> new FunctionChooserMenu(player, devPlanet,clickedLocation);
                     case LAUNCH_METHOD_ACTION -> new MethodChooserMenu(player, devPlanet,clickedLocation);

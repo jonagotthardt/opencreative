@@ -847,6 +847,30 @@ items:
         - "&7> Select players with variable"
         - " "
         - "&fCategory: &cAction"
+    repeat-action:
+      name: "&bRepeat"
+      lore:
+        - "&7Used for executing same"
+        - "&7actions between pistons"
+        - "&7for period of time."
+        - " "
+        - "&fExamples:"
+        - "&7> Repeat while number below 10"
+        - "&7> Repeat always"
+        - "&7> Iterate list elements"
+        - " "
+        - "&fCategory: &cAction"
+    controller-action:
+      name: "&3Controller"
+      lore:
+        - "&7Controls actions run"
+        - "&7between pistons."
+        - " "
+        - "&fExamples:"
+        - "&7> Catch an error"
+        - "&7> Calculate time usage"
+        - " "
+        - "&fCategory: &cAction"
     categories:
       event-values:
         world:

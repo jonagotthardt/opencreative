@@ -20,7 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines.WaitAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.handleractions.other.MeasureTimeAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlleractions.other.MeasureTimeAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
