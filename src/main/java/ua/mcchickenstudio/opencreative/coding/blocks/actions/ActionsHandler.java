@@ -82,7 +82,7 @@ public class ActionsHandler {
         this.variables = mainHandler.variables;
         this.action = action;
         this.selectedTargets = new HashSet<>(parentActionsHandler.selectedTargets);
-        this.doNotUseTryFlag = action.getActionType() == ActionType.HANDLER_CATCH_ERROR || parentActionsHandler.doNotUseTryFlag;
+        this.doNotUseTryFlag = action.getActionType() == ActionType.CONTROLLER_CATCH_ERROR || parentActionsHandler.doNotUseTryFlag;
     }
 
     public final void executeActions(List<Action> actions) {

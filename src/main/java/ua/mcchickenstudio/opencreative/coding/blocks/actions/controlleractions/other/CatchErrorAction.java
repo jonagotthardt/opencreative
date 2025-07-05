@@ -47,6 +47,6 @@ public final class CatchErrorAction extends ControllerAction {
 
     @Override
     public ActionType getActionType() {
-        return ActionType.HANDLER_CATCH_ERROR;
+        return ActionType.CONTROLLER_CATCH_ERROR;
     }
 }

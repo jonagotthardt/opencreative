@@ -52,6 +52,6 @@ public final class MeasureTimeAction extends ControllerAction {
 
     @Override
     public ActionType getActionType() {
-        return ActionType.HANDLER_MEASURE_TIME;
+        return ActionType.CONTROLLER_MEASURE_TIME;
     }
 }
