@@ -8273,6 +8273,30 @@ items:
           - "&b Вектор &7- Для запуска"
           - " "
           - "&eНажми, чтобы установить действие."
+      controller-catch-error:
+        name: "&cПоймать ошибку"
+        lore:
+          - "&7Выполнит действия между"
+          - "&7поршнями и вместо отправки"
+          - "&7сообщения об ошибке уловит"
+          - "&7и присвоит переменной её имя."
+          - " "
+          - "&fВ сундуке:"
+          - "&e Переменная &7- Для сохранения"
+          - " "
+          - "&eНажми, чтобы установить действие."
+      controller-measure-time:
+        name: "&eИзмерить время выполнения"
+        lore:
+          - "&7Выполнит действия между"
+          - "&7поршнями и замерит сколько"
+          - "&7миллисекунд ушло на их"
+          - "&7выполнение."
+          - " "
+          - "&fВ сундуке:"
+          - "&e Переменная &7- Для сохранения"
+          - " "
+          - "&eНажми, чтобы установить действие."
       repeat-always:
         name: "&bПовторять всегда"
         lore:
@@ -12960,7 +12984,7 @@ blocks:
   condition_player: "&6Если игрок"
   launch_function_action: "&9Вызвать функцию"
   launch_method_action: "&aВызвать метод"
-  handler_action: "&aОбработчик кода"
+  controller_action: "&aОбработчик кода"
   repeat_action: "&bПовторять"
   repeat_for_loop: "&aПо числам"
   repeat_for_blocks: "&eПо региону"
@@ -13240,8 +13264,8 @@ blocks:
   entity_set_leash_holder: "Связ. поводком"
   entity_remove_passenger: "Убр. пассажира"
 
-  handler_catch_error: "Поймать ошибку"
-  handler_measure_time: "Замер. время"
+  controller_catch_error: "Поймать ошибку"
+  controller_measure_time: "Замер. время"
 
   control_cancel_event: "&cОтмена события"
   control_uncancel_event: "&bВозврат события"

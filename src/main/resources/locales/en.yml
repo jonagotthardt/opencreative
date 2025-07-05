@@ -8123,6 +8123,30 @@ items:
           - "&b Vector &7- For launch"
           - " "
           - "&eClick to set action."
+      contoller-catch-error:
+        name: "&cCatch an error"
+        lore:
+          - "&7Executes actions between"
+          - "&7pistons and instead of sending"
+          - "&7error message it will assign"
+          - "&7error name to variable."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- To store an error"
+          - " "
+          - "&eClick to set the action."
+      contoller-measure-time:
+        name: "&eMeasure execution time"
+        lore:
+          - "&7Executes actions between"
+          - "&7pistons and measures how"
+          - "&7much time took to execute"
+          - "&7in milliseconds."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- To store an time"
+          - " "
+          - "&eClick to set the action."
       repeat-always:
         name: "&bRepeat Always"
         lore:
@@ -8130,7 +8154,7 @@ items:
           - "&7pistons under any conditions."
           - " "
           - "&7&nDon’t forget to add the"
-          - "&7&naction &eWait&7 at the end!"
+          - "&7&naction&e Wait&7 at the end!"
           - " "
           - "&eClick to set the action."
       repeat-for-numbers:
@@ -12778,7 +12802,7 @@ blocks:
   condition_player: "&6If player"
   launch_function_action: "&9Call function"
   launch_method_action: "&aCall method"
-  handler_action: "&aCode handler"
+  controller_action: "&aCode handler"
   repeat_action: "&bRepeat"
   repeat_for_numbers: "&aFor numbers"
   repeat_for_blocks: "&eFor blocks"
@@ -13058,8 +13082,8 @@ blocks:
   entity_set_leash_holder: "Set Leash Holder"
   entity_remove_passenger: "Remove Passenger"
 
-  handler_catch_error: "Catch error"
-  handler_measure_time: "Measure time"
+  controller_catch_error: "Catch error"
+  controller_measure_time: "Measure time"
 
   control_cancel_event: "&cCancel event"
   control_uncancel_event: "&bUncancel event"
