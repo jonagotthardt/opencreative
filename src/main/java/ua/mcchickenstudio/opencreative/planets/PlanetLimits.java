@@ -105,6 +105,14 @@ public class PlanetLimits {
     }
 
     /**
+     * Returns maximum repeats activations per 1 second amount in the planet.
+     * @return limit of repeats.
+     */
+    public int getRepeatsAmountLimit() {
+        return planet.getGroup().getLimit(LimitType.REPEATS_AMOUNT).calculateLimit(planet.getPlayers().size());
+    }
+
+    /**
      * Returns maximum code operations amount in the planet.
      * @return limit of executor calls.
      */

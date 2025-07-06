@@ -232,6 +232,7 @@ groups:
         entities-amount: 50 # limit for spawned entities in world
         modifying-blocks: 5000 # limit for changing blocks with world actions per second
         redstone-changes: 100 # limit for redstone operations in world
+        repeats-amount: 100 # limit for repeat action per 1 second.
         opening-inventories: 5 # limit for opening inventories per 5 seconds for preventing anti-exit
         sending-web-requests: 5 # limit for sending web requests per 5 seconds for preventing attacks
         variables-amount: 50 # limit for amount of all variables in world (saved, global, local)
@@ -255,6 +256,7 @@ groups:
         redstone-changes: 20
         variables-amount: 50
         scoreboards-amount: 3
+        repeats-amount: 10
         changing-list-elements: 10
         bossbars-amount: 3
         physical-objects: 5
@@ -299,6 +301,7 @@ groups:
         scoreboards-amount: 50
         bossbars-amount: 10
         coding-platforms: 4
+        repeats-amount: 100
         changing-list-elements: 50
         builders-amount: 10
         developers-amount: 10
@@ -310,6 +313,7 @@ groups:
         entities-amount: 50
         modifying-blocks: 0
         redstone-changes: 20
+        repeats-amount: 10
         changing-list-elements: 10
         variables-amount: 50
         scoreboards-amount: 10

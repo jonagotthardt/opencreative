@@ -32,7 +32,7 @@ import org.bukkit.block.Container;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyOpenedMenus;
+import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyOpenedMenusException;
 
 public final class OpenContainerAction extends PlayerAction {
     public OpenContainerAction(Executor executor, Target target, int x, Arguments args) {
@@ -54,7 +54,7 @@ public final class OpenContainerAction extends PlayerAction {
                 inventory = copyInventory(container.getInventory(),container.customName());
             }
             if (getPlanet().getLimits().cantOpenMenu(player)) {
-                throw new TooManyOpenedMenus(player.getName());
+                throw new TooManyOpenedMenusException(player.getName());
             }
             player.openInventory(inventory);
         } else if (block.getType() == Material.ENDER_CHEST) {
@@ -69,7 +69,7 @@ public final class OpenContainerAction extends PlayerAction {
                  * too many menus, that can prevent from
                  * quiting the game.
                  */
-                throw new TooManyOpenedMenus(player.getName());
+                throw new TooManyOpenedMenusException(player.getName());
             }
             player.openInventory(inventory);
         } else if (block.getType() == Material.CRAFTING_TABLE) {

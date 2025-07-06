@@ -25,7 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyOpenedMenus;
+import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyOpenedMenusException;
 
 public final class OpenInventoryAction extends PlayerAction {
     public OpenInventoryAction(Executor executor, Target target, int x, Arguments args) {
@@ -40,7 +40,7 @@ public final class OpenInventoryAction extends PlayerAction {
              * too many menus, that can prevent from
              * quiting the game.
              */
-            throw new TooManyOpenedMenus(player.getName());
+            throw new TooManyOpenedMenusException(player.getName());
         }
         String inventoryTypeString = getArguments().getValue("type","chest",this);
         InventoryType inventoryType = InventoryType.CHEST;

@@ -31,6 +31,7 @@ public enum LimitType {
     VARIABLES("variables-amount"),
     CODING_PLATFORMS("coding-platforms"),
     LIST_ELEMENTS_CHANGES("changing-list-elements"),
+    REPEATS_AMOUNT("repeats-amount"),
     MODIFYING_BLOCKS("modifying-blocks"),
     BUILDERS_AMOUNT("builders-amount"),
     DEVELOPERS_AMOUNT("developers-amount"),

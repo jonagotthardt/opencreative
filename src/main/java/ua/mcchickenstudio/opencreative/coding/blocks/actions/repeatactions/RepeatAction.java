@@ -23,6 +23,7 @@ import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyRepeatsException;
 import ua.mcchickenstudio.opencreative.planets.PlanetRunnable;
 
 import java.util.List;
@@ -33,7 +34,6 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 
 public abstract class RepeatAction extends MultiAction {
 
-    private final int callsLimit = 200;
     private int calls = 0;
 
     public RepeatAction(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
@@ -68,8 +68,8 @@ public abstract class RepeatAction extends MultiAction {
 
     public void increaseCalls() {
         calls++;
-        if (calls > callsLimit) {
-            throw new RuntimeException("Out of repeats");
+        if (calls > getPlanet().getLimits().getRepeatsAmountLimit()) {
+            throw new TooManyRepeatsException();
         }
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
