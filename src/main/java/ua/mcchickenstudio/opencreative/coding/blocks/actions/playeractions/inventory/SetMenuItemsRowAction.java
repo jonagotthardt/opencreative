@@ -27,7 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyOpenedMenus;
+import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyOpenedMenusException;
 
 import java.util.List;
 
@@ -59,7 +59,7 @@ public final class SetMenuItemsRowAction extends PlayerAction {
                  * too many menus, that can prevent from
                  * quiting the game.
                  */
-                throw new TooManyOpenedMenus(player.getName());
+                throw new TooManyOpenedMenusException(player.getName());
             }
             player.openInventory(inventory);
         }

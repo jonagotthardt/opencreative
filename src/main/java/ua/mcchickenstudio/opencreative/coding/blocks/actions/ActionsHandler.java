@@ -24,6 +24,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlleractions.o
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.PlayerException;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -82,7 +83,7 @@ public class ActionsHandler {
         this.variables = mainHandler.variables;
         this.action = action;
         this.selectedTargets = new HashSet<>(parentActionsHandler.selectedTargets);
-        this.doNotUseTryFlag = action.getActionType() == ActionType.HANDLER_CATCH_ERROR || parentActionsHandler.doNotUseTryFlag;
+        this.doNotUseTryFlag = action.getActionType() == ActionType.CONTROLLER_CATCH_ERROR || parentActionsHandler.doNotUseTryFlag;
     }
 
     public final void executeActions(List<Action> actions) {
@@ -147,7 +148,10 @@ public class ActionsHandler {
                     action.prepareAndExecute(this);
                 } catch (Exception error) {
                     String id = error.getClass().getSimpleName().toLowerCase();
-                    sendPlanetCodeErrorMessage(executor, action, getLocaleMessage("coding-error." + (messageExists("coding-error." + id) ? id : "unknown")) + (error.getMessage() == null ? error.getClass().getSimpleName() : error.getMessage()).replace("ua.mcchickenstudio.opencreative.coding.",""), error);
+                    sendPlanetCodeErrorMessage(executor, action,
+                            getLocaleMessage("coding-error." + (messageExists("coding-error." + id) ? id : "unknown")) + (error.getMessage() == null ? error.getClass().getSimpleName() : error.getMessage()).replace("ua.mcchickenstudio.opencreative.coding.","")
+                                    .replace("%player%", error instanceof PlayerException playerException ? playerException.getPlayerName() : ""),
+                            error);
                     removeAllActions();
                 }
             }

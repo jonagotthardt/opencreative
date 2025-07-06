@@ -18,10 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.coding.exceptions;
 
-public class TooManyOpenedMenus extends RuntimeException {
+public class TooManyOpenedMenusException extends PlayerException {
 
-    public TooManyOpenedMenus(String player) {
-        super("Too many actions with inventory was called for " + player + " in short time.");
+    public TooManyOpenedMenusException(String player) {
+        super(player, "Too many actions with inventory was called for " + player + " in short time.");
     }
 
 }

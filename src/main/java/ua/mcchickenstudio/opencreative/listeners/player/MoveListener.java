@@ -48,7 +48,7 @@ public final class MoveListener implements Listener {
         Player player = event.getPlayer();
         if (player.getY() < 0 && isEntityInDevPlanet(player)) {
             player.setVelocity(new Vector(0,0.6f * Math.ceil(Math.abs(player.getY())),0));
-            if (player.getLocation().add(0,1.5d,-0.8).getBlock().isSolid()) {
+            if (player.getLocation().add(0,1.9d,-0.8).getBlock().isSolid()) {
                 player.teleport(player.getLocation().add(0,2.5,1));
             }
         }

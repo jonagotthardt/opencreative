@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyOpenedMenus;
+import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyOpenedMenusException;
 
 public final class SetMenuSizeAction extends PlayerAction {
     public SetMenuSizeAction(Executor executor, Target target, int x, Arguments args) {
@@ -57,7 +57,7 @@ public final class SetMenuSizeAction extends PlayerAction {
              * too many menus, that can prevent from
              * quiting the game.
              */
-            throw new TooManyOpenedMenus(player.getName());
+            throw new TooManyOpenedMenusException(player.getName());
         }
         player.openInventory(newInventory);
     }

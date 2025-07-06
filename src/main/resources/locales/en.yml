@@ -23,6 +23,11 @@
 #     title: "Text"
 #
 
+#
+# Translated by:
+# McChicken Team, initzero, Nagibator6000Lol, DrakesWeb
+#
+
 no-perms: "%prefix%&cInsufficient permissions!"
 disabled: "&cThis feature is disabled :("
 too-few-args: "&cNot enough arguments :("
@@ -195,6 +200,10 @@ coding-error:
   message-event: "&6 Error &8| &fAn error occurred during the execution of the code &f%event% &7(%x%,%y%,%z%).\n &fError information: &6%error%"
   message-compile: "\n &c &m                   &c ☹ ERROR &m                   \n&f\n &fA problem occurred while saving the block &7(%x%,%y%,%z%)\n \n&f Information: &6%error%\n \n &c &m                                                    \n&f"
   numberformatexception: "A number was expected, but the item did not contain one. Check the items in the chest for this action."
+  toolongtextexception: "Too long text was tried to write to variable. Please substring it with variable action Substring text. "
+  collectionwithcollectionexception: "Tried to store a list as element of list. Use Merge Lists action instead."
+  toomanyopenedmenusexception: "Opened too many menus for %player%. Please add cooldown between opening menus."
+  toomanyrepeatsexception: "Too many repeats at once! Please add control action Wait to the end of repeat before closing piston."
   illegalargumentexception: "An incorrect value was found in the chest. You might have specified a negative number, or a variable returned an incorrect value, or something couldn't be retrieved from the value. Check the chest's contents!"
   nullpointerexception: "Some value is null, such as a variable or event value. Perhaps you didn't set a variable, or the event value is not supported by this event."
   bad-piston: "An extra piston was detected, which needs to be removed. If it’s not extra, select the condition type."
@@ -4877,6 +4886,191 @@ items:
           - "&a Number &7- Z offset"
           - ""
           - "&eClick to set the action."
+      world-spawn-arrow:
+        name: "&fSpawn Arrow"
+        lore:
+          - "&7Spawns an arrow at"
+          - "&7the specified location."
+          - ""
+          - "&fIn the chest:"
+          - "&f Location(s) &7- Where"
+          - "&c Item &7- Arrow"
+          - " "
+          - "&eClick to set the action."
+      world-spawn-firework:
+        name: "&fSpawn Firework"
+        lore:
+          - "&7Spawns a firework at"
+          - "&7the specified location."
+          - ""
+          - "&fIn the chest:"
+          - "&f Location(s) &7- Where"
+          - "&c Item &7- Firework"
+          - " "
+          - "&eClick to set the action."
+      world-create-firework-explosion:
+        name: "&fCreate Firework Explosion"
+        lore:
+          - "&7Creates a firework explosion at"
+          - "&7the specified location."
+          - ""
+          - "&fIn the chest:"
+          - "&f Location(s) &7- Where"
+          - "&c Item &7- Firework"
+          - " "
+          - "&eClick to set the action."
+      world-create-experience-orb:
+        name: "&aSpawn Experience Orb"
+        lore:
+          - "&7Spawns an experience orb at"
+          - "&7the specified location."
+          - ""
+          - "&fIn the chest:"
+          - "&f Location(s) &7- Where"
+          - "&a Number &7- Amount"
+          - " "
+          - "&eClick to set the action."
+      world-spawn-particles-line:
+        name: "&bCreate Particle Line"
+        lore:
+          - "&7Creates a line of particles at"
+          - "&7the specified location with"
+          - "&7offsets along X, Y, Z axes."
+          - ""
+          - "&fIn the chest:"
+          - "&f Location &7- Start"
+          - "&f Location &7- End"
+          - "&5 Particle &7- Which"
+          - "&a Number &7- Count"
+          - "&a Number &7- X Offset"
+          - "&a Number &7- Y Offset"
+          - "&a Number &7- Z Offset"
+          - " "
+          - "&eClick to set the action."
+      world-create-team:
+        name: "&aCreate Team"
+        lore:
+          - "&7Creates a new team in the world,"
+          - "&7which can include mobs"
+          - "&7and players. Useful for games"
+          - "&7with battles and fights."
+          - ""
+          - "&fIn the chest:"
+          - "&6 Text &7- Scoreboard Name"
+          - "&6 Text &7- Team Name"
+          - " "
+          - "&eClick to set the action."
+      world-team-set-color:
+        name: "&bSet Team Color"
+        lore:
+          - "&7Sets the color for the"
+          - "&7specified team."
+          - ""
+          - "&fIn the chest:"
+          - "&6 Text &7- Scoreboard Name"
+          - "&6 Text &7- Team Name"
+          - "&b Color &7- Dye"
+          - " "
+          - "&eClick to set the action."
+      world-team-set-collision-rule:
+        name: "&6Team Collision Rule"
+        lore:
+          - "&7Sets the rule for when a player"
+          - "&7can push another player upon"
+          - "&7collision."
+          - ""
+          - "&fIn the chest:"
+          - "&6 Text &7- Scoreboard Name"
+          - "&6 Text &7- Team Name"
+          - "&3 Parameter &7- Collision Rule"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          option:
+            name: "&6Collision Rule"
+            lore:
+              - "&7Sets the rules for "
+              - "&7collision between teams."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+              - "%4%"
+            choices:
+              always: "Always"
+              for-own-team: "For Own Team Only"
+              for-other-teams: "For Other Teams Only"
+              never: "Never"
+      world-team-set-name-tag-visible:
+        name: "&fTeam Name Tag Visibility"
+        lore:
+          - "&7Sets the rules for"
+          - "&7name tag visibility"
+          - "&7in a team."
+          - ""
+          - "&fIn the chest:"
+          - "&6 Text &7- Scoreboard Name"
+          - "&6 Text &7- Team Name"
+          - "&3 Parameter &7- Tag Visibility"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          option:
+            name: "&fName Tag Visibility"
+            lore:
+              - "&7Sets the visibility"
+              - "&7of name tags between teams."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+              - "%4%"
+            choices:
+              always: "Always"
+              for-own-team: "For Own Team Only"
+              for-other-teams: "For Other Teams Only"
+              never: "Never"
+      world-delete-team:
+        name: "&cDelete Team"
+        lore:
+          - "&7Deletes a team in the world,"
+          - "&7making operations with it"
+          - "&7unavailable afterward."
+          - ""
+          - "&fIn the chest:"
+          - "&6 Text &7- Scoreboard Name"
+          - "&6 Text &7- Team Name"
+          - " "
+          - "&eClick to set the action."
+      world-team-set-can-see-invisible:
+        name: "&fSee When Invisible"
+        lore:
+          - "&7Allows players in the team"
+          - "&7to see each other semi-transparent"
+          - "&7when under invisibility effect."
+          - ""
+          - "&fIn the chest:"
+          - "&6 Text &7- Scoreboard Name"
+          - "&6 Text &7- Team Name"
+          - "&3 Parameter &7- Visibility Rule"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          visible:
+            name: "&fVisibility Rule"
+            lore:
+              - "&7Sets the"
+              - "&7invisibility rules"
+              - "&7between teams."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              true: "Can See"
+              false: "Cannot See"
       world-set-block-type:
         name: "&3Set Block Type"
         lore:
@@ -4923,6 +5117,59 @@ items:
           - "&3 Option &7- Side"
           - "&3 Option &7- Yes or No"
           - ""
+          - "&eClick to set the action."
+      var-clone-list:
+        name: "&6Clone List"
+        lore:
+          - "&7Sets the variable to a list"
+          - "&7with the same elements as"
+          - "&7the original list."
+          - ""
+          - "&fIn the chest:"
+          - "&e Variable &7- To save the list"
+          - "&e Variable &7- Source list"
+          - " "
+          - "&eClick to set the action."
+
+      var-merge-lists:
+        name: "&6Merge Lists"
+        lore:
+          - "&7Merges the contents of the second"
+          - "&7list into the first list."
+          - ""
+          - "&fIn the chest:"
+          - "&e Variable &7- First list"
+          - "&7 to be updated"
+          - "&e Variable &7- Second list"
+          - " "
+          - "&eClick to set the action."
+
+      var-set-item-skull-textures:
+        name: "&6Set Head Texture"
+        lore:
+          - "&7Sets the variable to a head item"
+          - "&7with the specified texture given"
+          - "&7in Base64 format."
+          - ""
+          - "&fIn the chest:"
+          - "&e Variable &7- Save head"
+          - "&c Item &7- Head item"
+          - "&6 Text &7- Texture (base64)"
+          - " "
+          - "&eClick to set the action."
+      var-set-item-skull-owner:
+        name: "&6Set Head Owner"
+        lore:
+          - "&7Sets the variable to a head item"
+          - "&7that has the specified owner,"
+          - "&7changing its appearance."
+          - ""
+          - "&fIn the chest:"
+          - "&e Variable &7- Save head"
+          - "&c Item &7- Head item"
+          - "&6 Text &7- Owner’s username"
+          - "&7 of the head"
+          - " "
           - "&eClick to set the action."
       world-clear-container:
         name: "&cClear Container"
@@ -4996,8 +5243,9 @@ items:
       world-set-block-biome:
         name: "&5Set Block Biome"
         lore:
-          - "&7This will set the biome of a block,"
-          - "&7which affects its color or behavior."
+          - "&7This will set biome of block"
+          - "&7which affects its color or"
+          - "&7behaviour."
           - ""
           - "&fIn the chest:"
           - "&f Locations &7- Where"
@@ -5007,7 +5255,7 @@ items:
       world-set-difficulty:
         name: "&9Set World Difficulty"
         lore:
-          - "&7This will change the world's difficulty,"
+          - "&7Changes the world's difficulty,"
           - "&7affecting hunger speed and"
           - "&7players' health regeneration."
           - ""
@@ -5015,6 +5263,23 @@ items:
           - "&3 Option &7- Difficulty type"
           - ""
           - "&eClick to set the action."
+        arguments:
+          difficulty:
+            name: "&cDifficulty Level"
+            lore:
+              - "&7Specifies the level of"
+              - "&7difficulty for world."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+              - "%4%"
+            choices:
+              peaceful: "Peaceful"
+              easy: "Easy"
+              normal: "Normal"
+              hard: "Hard"
       world-destroy-block:
         name: "&cDestroy Block"
         lore:
@@ -5028,7 +5293,6 @@ items:
           - "&3 Option &7- Drop XP"
           - ""
           - "&eClick to set the action."
-
       world-set-block-powered:
         name: "&cActivate Block"
         lore:
@@ -5778,6 +6042,275 @@ items:
             choices:
               false: "Set"
               true: "Add"
+      entity-set-custom-name:
+        name: "&eRename Mob"
+        lore:
+          - "&7Sets a new name for the mob,"
+          - "&7which will be visible when"
+          - "&7hovering over it."
+          - ""
+          - "&fIn the chest:"
+          - "&6 Text &7- New name"
+          - " "
+          - "&eClick to set the action."
+      entity-set-sheep-color:
+        name: "&dRecolor Sheep"
+        lore:
+          - "&7Changes the sheep’s wool"
+          - "&7to the specified color."
+          - ""
+          - "&fIn the chest:"
+          - "&3 Parameter &7- Color"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          color:
+            name: "&dSheep Wool Color"
+            lore:
+              - "&7Select a color for the wool."
+              - ""
+              - "&fOptions"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+              - "%4%"
+              - "%5%"
+              - "%6%"
+              - "%7%"
+              - "%8%"
+              - "%9%"
+              - "%10%"
+              - "%11%"
+              - "%12%"
+              - "%13%"
+              - "%14%"
+              - "%15%"
+              - "%16%"
+            choices:
+              white: "White"
+              light-gray: "Light Gray"
+              gray: "Gray"
+              black: "Black"
+              red: "Red"
+              orange: "Orange"
+              yellow: "Yellow"
+              lime: "Lime"
+              light-green: "Light Green"
+              light-blue: "Light Blue"
+              cyan: "Cyan"
+              blue: "Blue"
+              purple: "Purple"
+              magenta: "Magenta"
+              pink: "Pink"
+              brown: "Brown"
+      entity-set-dog-collar-color:
+        name: "&dDog Collar Color"
+        lore:
+          - "&7Changes the dog’s collar"
+          - "&7to the specified color."
+          - ""
+          - "&fIn the chest:"
+          - "&3 Parameter &7- Color"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          color:
+            name: "&dCollar Color"
+            lore:
+              - "&7Select a color for the collar."
+              - ""
+              - "&fOptions"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+              - "%4%"
+              - "%5%"
+              - "%6%"
+              - "%7%"
+              - "%8%"
+              - "%9%"
+              - "%10%"
+              - "%11%"
+              - "%12%"
+              - "%13%"
+              - "%14%"
+              - "%15%"
+              - "%16%"
+            choices:
+              white: "White"
+              light-gray: "Light Gray"
+              gray: "Gray"
+              black: "Black"
+              red: "Red"
+              orange: "Orange"
+              yellow: "Yellow"
+              lime: "Lime"
+              light-green: "Light Green"
+              light-blue: "Light Blue"
+              cyan: "Cyan"
+              blue: "Blue"
+              purple: "Purple"
+              magenta: "Magenta"
+              pink: "Pink"
+              brown: "Brown"
+      entity-set-display-text:
+        name: "&6Set Display Text"
+        lore:
+          - "&7Sets new text for the"
+          - "&7text display entity."
+          - ""
+          - "&fIn the chest:"
+          - "&6 Text &7- New text."
+          - " "
+          - "&eClick to set the action."
+      entity-set-display-scale:
+        name: "&fScale Display"
+        lore:
+          - "&7Sets the scale for the"
+          - "&7display along the X, Y, Z axes,"
+          - "&7changing its size."
+          - ""
+          - "&fIn the chest:"
+          - "&a Number &7- Scale X"
+          - "&a Number &7- Scale Y"
+          - "&a Number &7- Scale Z"
+          - "&3 Parameter &7- Add or set"
+          - "&7 the value"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or Add"
+            lore:
+              - "&7If Add is selected, your value"
+              - "&7will be added to the current"
+              - "&7value of the display entity."
+              - " "
+              - "&eClick to change."
+              - " "
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
+      entity-set-display-translation:
+        name: "&fTranslate Display"
+        lore:
+          - "&7Sets the offset along"
+          - "&7the X, Y, Z axes to move"
+          - "&7the display without changing location."
+          - ""
+          - "&fIn the chest:"
+          - "&a Number &7- Offset X"
+          - "&a Number &7- Offset Y"
+          - "&a Number &7- Offset Z"
+          - "&3 Parameter &7- Add or set"
+          - "&7 the value"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or Add"
+            lore:
+              - "&7If Add is selected, your value"
+              - "&7will be added to the current"
+              - "&7value of the display entity."
+              - " "
+              - "&eClick to change."
+              - " "
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
+      entity-set-display-item:
+        name: "&6Set Display Item"
+        lore:
+          - "&7Sets a new item for the"
+          - "&7item display entity."
+          - ""
+          - "&fIn the chest:"
+          - "&c Item &7- New item"
+          - " "
+          - "&eClick to set the action."
+      entity-set-text-display-see-through:
+        name: "&6See-Through Text"
+        lore:
+          - "&7Changes whether players can see"
+          - "&7the text display through walls."
+          - ""
+          - "&fIn the chest:"
+          - "&3 Parameter &7- See-through visibility"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          see:
+            name: "&6See-Through Visibility"
+            lore:
+              - "&7If set to 'visible', the text will"
+              - "&7be visible through blocks."
+              - ""
+              - "&fOptions"
+              - "%1%"
+              - "%2%"
+            choices:
+              true: "Visible"
+              false: "Not Visible"
+      entity-set-text-display-shadow:
+        name: "&6Text Shadow"
+        lore:
+          - "&7Sets whether the text in the"
+          - "&7text display has a shadow."
+          - ""
+          - "&fIn the chest:"
+          - "&3 Parameter &7- Shadow visibility"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          shadow:
+            name: "&6Shadow Visibility"
+            lore:
+              - "&7If set to 'visible',"
+              - "&7the text shadow will appear."
+              - ""
+              - "&fOptions"
+              - "%1%"
+              - "%2%"
+            choices:
+              true: "Visible"
+              false: "Not Visible"
+      entity-set-text-display-opacity:
+        name: "&fText Opacity"
+        lore:
+          - "&7Sets the opacity level for the"
+          - "&7text in the text display."
+          - ""
+          - "&fIn the chest:"
+          - "&a Number &7- Opacity level"
+          - " "
+          - "&eClick to set the action."
+      entity-set-text-display-width:
+        name: "&6Text Display Width"
+        lore:
+          - "&7Sets the width of the text in"
+          - "&7the text display."
+          - ""
+          - "&fIn the chest:"
+          - "&a Number &7- Width"
+          - " "
+          - "&eClick to set the action."
+      entity-set-display-brightness:
+        name: "&eSet Display Brightness"
+        lore:
+          - "&7Sets the brightness level"
+          - "&7for the display entity."
+          - ""
+          - "&fIn the chest:"
+          - "&a Number &7- Light level"
+          - " "
+          - "&eClick to set the action."
       player-set-walk-speed:
         name: "&eSet Walk Speed"
         lore:
@@ -8123,6 +8656,30 @@ items:
           - "&b Vector &7- For launch"
           - " "
           - "&eClick to set action."
+      contoller-catch-error:
+        name: "&cCatch an error"
+        lore:
+          - "&7Executes actions between"
+          - "&7pistons and instead of sending"
+          - "&7error message it will assign"
+          - "&7error name to variable."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- To store an error"
+          - " "
+          - "&eClick to set the action."
+      contoller-measure-time:
+        name: "&eMeasure execution time"
+        lore:
+          - "&7Executes actions between"
+          - "&7pistons and measures how"
+          - "&7much time took to execute"
+          - "&7in milliseconds."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- To store an time"
+          - " "
+          - "&eClick to set the action."
       repeat-always:
         name: "&bRepeat Always"
         lore:
@@ -8130,7 +8687,7 @@ items:
           - "&7pistons under any conditions."
           - " "
           - "&7&nDon’t forget to add the"
-          - "&7&naction &eWait&7 at the end!"
+          - "&7&naction&e Wait&7 at the end!"
           - " "
           - "&eClick to set the action."
       repeat-for-numbers:
@@ -12778,7 +13335,7 @@ blocks:
   condition_player: "&6If player"
   launch_function_action: "&9Call function"
   launch_method_action: "&aCall method"
-  handler_action: "&aCode handler"
+  controller_action: "&aCode handler"
   repeat_action: "&bRepeat"
   repeat_for_numbers: "&aFor numbers"
   repeat_for_blocks: "&eFor blocks"
@@ -13057,9 +13614,25 @@ blocks:
   entity_release_shoulders: "Release Shoulders"
   entity_set_leash_holder: "Set Leash Holder"
   entity_remove_passenger: "Remove Passenger"
+  entity_set_custom_name: "Mob Name"
+  entity_set_sheep_color: "Sheep Color"
+  entity_set_dog_collar_color: "Collar Color"
+  entity_set_display_text: "Display Text"
+  entity_set_display_scale: "Display Scale"
+  entity_set_display_translation: "Display Offset"
+  entity_set_display_item: "Display Item"
+  entity_set_text_display_see_through: "See-Through Text"
+  entity_set_text_display_shadow: "Text Shadow"
+  entity_set_text_display_opacity: "Text Opacity"
+  entity_set_text_display_width: "Text Width"
+  entity_set_display_brightness: "Display Brightness"
 
-  handler_catch_error: "Catch error"
-  handler_measure_time: "Measure time"
+  var_clone_list: "Clone List"
+  var_merge_lists: "Merge Lists"
+  var_set_item_skull_textures: "Set Texture"
+
+  controller_catch_error: "Catch error"
+  controller_measure_time: "Measure time"
 
   control_cancel_event: "&cCancel event"
   control_uncancel_event: "&bUncancel event"

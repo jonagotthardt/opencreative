@@ -28,7 +28,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
-import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyOpenedMenus;
+import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyOpenedMenusException;
 
 public final class OpenSignAction extends PlayerAction {
     public OpenSignAction(Executor executor, Target target, int x, Arguments args) {
@@ -48,7 +48,7 @@ public final class OpenSignAction extends PlayerAction {
              * too many menus, that can prevent from
              * quiting the game.
              */
-            throw new TooManyOpenedMenus(player.getName());
+            throw new TooManyOpenedMenusException(player.getName());
         }
         player.openSign(sign,side);
     }
