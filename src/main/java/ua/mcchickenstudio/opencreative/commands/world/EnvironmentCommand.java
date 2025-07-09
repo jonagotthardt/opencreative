@@ -217,6 +217,7 @@ public class EnvironmentCommand extends CommandHandler {
                                 player.sendMessage(getLocaleMessage("environment.variables.list.variable", false).replace("%name%", name).replace("%type%", type.getLocalized()).replace("%value%", value));
                             }
                             Component navigation = toComponent(getLocaleMessage("environment.variables.list.navigation"));
+                            page += 1;
                             if (page * 20 > 20) {
                                 navigation = navigation.append(toComponent(getLocaleMessage("environment.variables.list.previous-page")).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/environment variables list " + (page - 1))));
                             }
