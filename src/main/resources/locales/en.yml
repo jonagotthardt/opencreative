@@ -6095,7 +6095,7 @@ items:
               orange: "Orange"
               yellow: "Yellow"
               lime: "Lime"
-              light-green: "Light Green"
+              green: "Green"
               light-blue: "Light Blue"
               cyan: "Cyan"
               blue: "Blue"
@@ -6145,7 +6145,7 @@ items:
               orange: "Orange"
               yellow: "Yellow"
               lime: "Lime"
-              light-green: "Light Green"
+              green: "Green"
               light-blue: "Light Blue"
               cyan: "Cyan"
               blue: "Blue"
@@ -8656,7 +8656,7 @@ items:
           - "&b Vector &7- For launch"
           - " "
           - "&eClick to set action."
-      contoller-catch-error:
+      controller-catch-error:
         name: "&cCatch an error"
         lore:
           - "&7Executes actions between"
@@ -8668,7 +8668,7 @@ items:
           - "&e Variable &7- To store an error"
           - " "
           - "&eClick to set the action."
-      contoller-measure-time:
+      controller-measure-time:
         name: "&eMeasure execution time"
         lore:
           - "&7Executes actions between"
@@ -12248,8 +12248,8 @@ menus:
       no-worlds:
         name: "&c&oNo Worlds!"
         lore:
-          - "&7It looks like you haven't &ccreated&f your own world yet!"
-          - "&7What are you waiting for? Create your&d first&f world!"
+          - "&7It looks like you haven't &ccreated&7 your own world yet!"
+          - "&7What are you waiting for? Create your&d first&7 world!"
       limit:
         name: "&c&oWorld Limit Reached!"
         lore:
