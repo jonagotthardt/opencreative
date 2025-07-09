@@ -8656,7 +8656,7 @@ items:
           - "&b Vector &7- For launch"
           - " "
           - "&eClick to set action."
-      contoller-catch-error:
+      controller-catch-error:
         name: "&cCatch an error"
         lore:
           - "&7Executes actions between"
@@ -8668,7 +8668,7 @@ items:
           - "&e Variable &7- To store an error"
           - " "
           - "&eClick to set the action."
-      contoller-measure-time:
+      controller-measure-time:
         name: "&eMeasure execution time"
         lore:
           - "&7Executes actions between"
