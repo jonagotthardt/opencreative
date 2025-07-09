@@ -12248,8 +12248,8 @@ menus:
       no-worlds:
         name: "&c&oNo Worlds!"
         lore:
-          - "&7It looks like you haven't &ccreated&f your own world yet!"
-          - "&7What are you waiting for? Create your&d first&f world!"
+          - "&7It looks like you haven't &ccreated&7 your own world yet!"
+          - "&7What are you waiting for? Create your&d first&7 world!"
       limit:
         name: "&c&oWorld Limit Reached!"
         lore:

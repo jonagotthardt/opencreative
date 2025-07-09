@@ -106,7 +106,7 @@ public final class OpenCreative extends JavaPlugin {
     @Override
     public void onLoad() {
         getLogger().info(String.join("\n",
-                        "",
+                        "", "",
                         "This software was made by Ukrainians, suffering from never-ending air alerts, explosions, and deaths.",
                         "We're AGAINST THE WAR. This software IS NOT DESIGNED for those who support killing and robbing another country.",
                         "",
