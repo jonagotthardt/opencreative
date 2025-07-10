@@ -73,7 +73,6 @@ public class SpawnCommand extends CommandHandler {
         }
         new QuitEvent(player).callEvent();
         teleportToLobby(player);
-        return;
     }
 
     @Override

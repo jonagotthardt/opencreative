@@ -30,8 +30,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
-
 public final class SpawnEntityAction extends WorldAction {
 
     public SpawnEntityAction(Executor executor, Target target, int x, Arguments args) {

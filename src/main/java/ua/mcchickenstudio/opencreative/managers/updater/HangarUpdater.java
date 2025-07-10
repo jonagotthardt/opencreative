@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.managers.updater;
 
 import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import java.io.BufferedReader;
@@ -28,6 +27,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 
@@ -40,7 +40,7 @@ public final class HangarUpdater implements Updater {
     @Override
     public CompletableFuture<String> checkUpdates() {
         CompletableFuture<String> future = new CompletableFuture<>();
-        Bukkit.getScheduler().runTaskAsynchronously(OpenCreative.getPlugin(),() -> {
+        Bukkit.getAsyncScheduler().runDelayed(OpenCreative.getPlugin(), (task) -> {
             try {
                 HttpURLConnection connection = getHttpURLConnection();
                 int code = connection.getResponseCode();
@@ -68,7 +68,7 @@ public final class HangarUpdater implements Updater {
                 sendDebugError("Can't check updates: " + apiUrl,error);
                 future.completeExceptionally(error);
             }
-        });
+        },1, TimeUnit.SECONDS);
         return future;
     }
 
@@ -138,12 +138,9 @@ public final class HangarUpdater implements Updater {
 
     @Override
     public void init() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                checkUpdates();
-            }
-        }.runTaskLaterAsynchronously(OpenCreative.getPlugin(),60L);
+        Bukkit.getAsyncScheduler().runDelayed(OpenCreative.getPlugin(), (task) -> {
+            checkUpdates();
+        },3, TimeUnit.SECONDS);
     }
 
     @Override

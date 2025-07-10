@@ -31,8 +31,6 @@ import ua.mcchickenstudio.opencreative.coding.exceptions.TooLongTextException;
 
 import java.util.List;
 
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
-
 public final class ShowActionbarAction extends PlayerAction {
     public ShowActionbarAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);

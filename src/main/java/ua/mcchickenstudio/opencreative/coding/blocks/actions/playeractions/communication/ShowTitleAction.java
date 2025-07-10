@@ -29,8 +29,6 @@ import org.bukkit.entity.Player;
 
 import java.time.Duration;
 
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
-
 public final class ShowTitleAction extends PlayerAction {
     public ShowTitleAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);

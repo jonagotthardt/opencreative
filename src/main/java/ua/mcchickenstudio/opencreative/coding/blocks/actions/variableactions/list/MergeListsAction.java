@@ -29,8 +29,6 @@ import org.bukkit.entity.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
-
 public final class MergeListsAction extends VariableAction {
     public MergeListsAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);

@@ -740,7 +740,6 @@ public class CreativeCommand extends CommandHandler {
                 new CreativeMenu().open(player);
             }
         }
-        return;
     }
 
     public void handleMaintenanceCommand(@NotNull CommandSender sender, String[] args) {

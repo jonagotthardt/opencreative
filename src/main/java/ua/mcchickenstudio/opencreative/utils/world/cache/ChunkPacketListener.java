@@ -9,6 +9,7 @@ import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebugError;
 
@@ -16,7 +17,7 @@ public class ChunkPacketListener extends PacketAdapter {
 
     public ChunkPacketListener(Plugin plugin) {
         super(plugin, ListenerPriority.HIGHEST,
-                        Arrays.asList(PacketType.Play.Server.MAP_CHUNK),
+                        Collections.singletonList(PacketType.Play.Server.MAP_CHUNK),
                         ListenerOptions.ASYNC);
     }
 

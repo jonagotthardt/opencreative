@@ -132,7 +132,6 @@ public class PlaySoundCommand extends CommandHandler {
             }
             sender.sendMessage(getLocaleMessage("commands.play-sound.played").replace("%sound%",soundString).replace("%volume%",String.valueOf(volume)).replace("%pitch%",String.valueOf(pitch)).replace("%player%",target.getName()));
         }
-        return;
     }
 
     @Override

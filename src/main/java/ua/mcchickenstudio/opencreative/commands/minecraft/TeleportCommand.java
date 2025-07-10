@@ -194,7 +194,6 @@ public class TeleportCommand extends CommandHandler {
             sender.sendMessage(getLocaleMessage("commands.teleport.help"));
             return;
         }
-        return;
     }
 
     private double parseCoordinate(String arg, double current) throws NumberFormatException {

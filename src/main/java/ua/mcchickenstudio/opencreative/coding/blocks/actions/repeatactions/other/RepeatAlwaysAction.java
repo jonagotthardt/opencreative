@@ -25,7 +25,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.RepeatAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 
 import java.util.List;
 

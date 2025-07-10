@@ -151,7 +151,6 @@ public class GamemodeCommand extends CommandHandler {
             sender.sendMessage(getLocaleMessage("commands.game-mode.help"));
             return;
         }
-        return;
     }
 
     @Override

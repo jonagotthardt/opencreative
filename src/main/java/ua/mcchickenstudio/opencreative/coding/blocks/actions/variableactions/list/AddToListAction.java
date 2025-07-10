@@ -32,8 +32,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
-
 public final class AddToListAction extends VariableAction {
     public AddToListAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);

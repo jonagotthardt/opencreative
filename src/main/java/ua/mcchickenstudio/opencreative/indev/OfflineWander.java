@@ -22,11 +22,8 @@ import com.google.gson.*;
 import com.google.gson.annotations.Since;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -226,7 +223,7 @@ public class OfflineWander {
         }
         if (!favoriteWorlds.isEmpty()) json.add("favoriteWorlds", favoriteWorlds);
         if (lastPlayedWorldId != -1) json.addProperty("lastPlayedWorldId", lastPlayedWorldId);
-        if (hideHints) json.addProperty("hideHints", hideHints);
+        if (hideHints) json.addProperty("hideHints", true);
         return json;
     }
 

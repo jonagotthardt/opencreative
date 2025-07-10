@@ -25,10 +25,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.planets.PlanetRunnable;
 
-import java.util.List;
-
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
-
 public abstract class VariableAction extends Action {
 
     public VariableAction(Executor executor, Target target, int x, Arguments args) {

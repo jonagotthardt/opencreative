@@ -18,9 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
-import net.kyori.adventure.inventory.Book;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.EntitySnapshot;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.BookMeta;
