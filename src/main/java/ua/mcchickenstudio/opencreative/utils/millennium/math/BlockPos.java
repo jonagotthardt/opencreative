@@ -343,8 +343,5 @@ public class BlockPos extends Vec3i {
             return this.z;
         }
 
-        public Vec3i crossProduct(Vec3i vec) {
-            return super.crossProductBP(vec);
-        }
     }
 }

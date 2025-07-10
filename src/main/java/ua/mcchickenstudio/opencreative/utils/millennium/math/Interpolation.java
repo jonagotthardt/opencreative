@@ -3,30 +3,19 @@ package ua.mcchickenstudio.opencreative.utils.millennium.math;
 public final class Interpolation {
 
     public static double interpolate(double from, double to, double percent, Type type, Ease ease) {
-        switch (type) {
-            case SINE:
-                return sineInterpolation(from, to, percent, ease);
-            case QUAD:
-                return quadInterpolation(from, to, percent, ease);
-            case CUBIC:
-                return cubicInterpolation(from, to, percent, ease);
-            case QUART:
-                return quartInterpolation(from, to, percent, ease);
-            case QUINT:
-                return quintInterpolation(from, to, percent, ease);
-            case EXPO:
-                return expoInterpolation(from, to, percent, ease);
-            case CIRC:
-                return circInterpolation(from, to, percent, ease);
-            case BACK:
-                return backInterpolation(from, to, percent, ease);
-            case BOUNCE:
-                return bounceInterpolation(from, to, percent, ease);
-            case ELASTIC:
-                return elasticInterpolation(from, to, percent, ease);
-            default:
-                return linearInterpolation(from, to, percent);
-        }
+        return switch (type) {
+            case SINE -> sineInterpolation(from, to, percent, ease);
+            case QUAD -> quadInterpolation(from, to, percent, ease);
+            case CUBIC -> cubicInterpolation(from, to, percent, ease);
+            case QUART -> quartInterpolation(from, to, percent, ease);
+            case QUINT -> quintInterpolation(from, to, percent, ease);
+            case EXPO -> expoInterpolation(from, to, percent, ease);
+            case CIRC -> circInterpolation(from, to, percent, ease);
+            case BACK -> backInterpolation(from, to, percent, ease);
+            case BOUNCE -> bounceInterpolation(from, to, percent, ease);
+            case ELASTIC -> elasticInterpolation(from, to, percent, ease);
+            default -> linearInterpolation(from, to, percent);
+        };
     }
 
     public static double linearInterpolation(double from, double to, double percent) {

@@ -138,9 +138,7 @@ public final class HangarUpdater implements Updater {
 
     @Override
     public void init() {
-        Bukkit.getAsyncScheduler().runDelayed(OpenCreative.getPlugin(), (task) -> {
-            checkUpdates();
-        },3, TimeUnit.SECONDS);
+        Bukkit.getAsyncScheduler().runDelayed(OpenCreative.getPlugin(), (task) -> checkUpdates(),3, TimeUnit.SECONDS);
     }
 
     @Override

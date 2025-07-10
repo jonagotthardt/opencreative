@@ -156,122 +156,82 @@ public enum EnumFacing {
      * returns this facing without rotating.
      */
     public EnumFacing rotateAround(Axis axis) {
-        switch (SwitchPlane.AXIS_LOOKUP[axis.ordinal()]) {
-            case 1:
+        return switch (SwitchPlane.AXIS_LOOKUP[axis.ordinal()]) {
+            case 1 -> {
                 if (this != WEST && this != EAST) {
-                    return this.rotateX();
+                    yield this.rotateX();
                 }
 
-                return this;
-
-            case 2:
+                yield this;
+            }
+            case 2 -> {
                 if (this != UP && this != DOWN) {
-                    return this.rotateY();
+                    yield this.rotateY();
                 }
 
-                return this;
-
-            case 3:
+                yield this;
+            }
+            case 3 -> {
                 if (this != NORTH && this != SOUTH) {
-                    return this.rotateZ();
+                    yield this.rotateZ();
                 }
 
-                return this;
-
-            default:
-                throw new IllegalStateException("Unable to get CW facing for axis " + axis);
-        }
+                yield this;
+            }
+            default -> throw new IllegalStateException("Unable to get CW facing for axis " + axis);
+        };
     }
 
     /**
      * Rotate this Facing around the Y axis clockwise (NORTH => EAST => SOUTH => WEST => NORTH)
      */
     public EnumFacing rotateY() {
-        switch (SwitchPlane.FACING_LOOKUP[this.ordinal()]) {
-            case 1:
-                return EAST;
-
-            case 2:
-                return SOUTH;
-
-            case 3:
-                return WEST;
-
-            case 4:
-                return NORTH;
-
-            default:
-                throw new IllegalStateException("Unable to get Y-rotated facing of " + this);
-        }
+        return switch (SwitchPlane.FACING_LOOKUP[this.ordinal()]) {
+            case 1 -> EAST;
+            case 2 -> SOUTH;
+            case 3 -> WEST;
+            case 4 -> NORTH;
+            default -> throw new IllegalStateException("Unable to get Y-rotated facing of " + this);
+        };
     }
 
     /**
      * Rotate this Facing around the X axis (NORTH => DOWN => SOUTH => UP => NORTH)
      */
     private EnumFacing rotateX() {
-        switch (SwitchPlane.FACING_LOOKUP[this.ordinal()]) {
-            case 1:
-                return DOWN;
-
-            case 2:
-            case 4:
-            default:
-                throw new IllegalStateException("Unable to get X-rotated facing of " + this);
-
-            case 3:
-                return UP;
-
-            case 5:
-                return NORTH;
-
-            case 6:
-                return SOUTH;
-        }
+        return switch (SwitchPlane.FACING_LOOKUP[this.ordinal()]) {
+            case 1 -> DOWN;
+            default -> throw new IllegalStateException("Unable to get X-rotated facing of " + this);
+            case 3 -> UP;
+            case 5 -> NORTH;
+            case 6 -> SOUTH;
+        };
     }
 
     /**
      * Rotate this Facing around the Z axis (EAST => DOWN => WEST => UP => EAST)
      */
     private EnumFacing rotateZ() {
-        switch (SwitchPlane.FACING_LOOKUP[this.ordinal()]) {
-            case 2:
-                return DOWN;
-
-            case 3:
-            default:
-                throw new IllegalStateException("Unable to get Z-rotated facing of " + this);
-
-            case 4:
-                return UP;
-
-            case 5:
-                return EAST;
-
-            case 6:
-                return WEST;
-        }
+        return switch (SwitchPlane.FACING_LOOKUP[this.ordinal()]) {
+            case 2 -> DOWN;
+            default -> throw new IllegalStateException("Unable to get Z-rotated facing of " + this);
+            case 4 -> UP;
+            case 5 -> EAST;
+            case 6 -> WEST;
+        };
     }
 
     /**
      * Rotate this Facing around the Y axis counter-clockwise (NORTH => WEST => SOUTH => EAST => NORTH)
      */
     public EnumFacing rotateYCCW() {
-        switch (SwitchPlane.FACING_LOOKUP[this.ordinal()]) {
-            case 1:
-                return WEST;
-
-            case 2:
-                return NORTH;
-
-            case 3:
-                return EAST;
-
-            case 4:
-                return SOUTH;
-
-            default:
-                throw new IllegalStateException("Unable to get CCW facing of " + this);
-        }
+        return switch (SwitchPlane.FACING_LOOKUP[this.ordinal()]) {
+            case 1 -> WEST;
+            case 2 -> NORTH;
+            case 3 -> EAST;
+            case 4 -> SOUTH;
+            default -> throw new IllegalStateException("Unable to get CCW facing of " + this);
+        };
     }
 
     /**
@@ -388,14 +348,11 @@ public enum EnumFacing {
         }
 
         public EnumFacing[] facings() {
-            switch (SwitchPlane.PLANE_LOOKUP[this.ordinal()]) {
-                case 1:
-                    return new EnumFacing[]{EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST};
-                case 2:
-                    return new EnumFacing[]{EnumFacing.UP, EnumFacing.DOWN};
-                default:
-                    throw new Error("Someone's been tampering with the universe!");
-            }
+            return switch (SwitchPlane.PLANE_LOOKUP[this.ordinal()]) {
+                case 1 -> new EnumFacing[]{EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST};
+                case 2 -> new EnumFacing[]{EnumFacing.UP, EnumFacing.DOWN};
+                default -> throw new Error("Someone's been tampering with the universe!");
+            };
         }
 
         public EnumFacing random(Random rand) {
@@ -425,63 +382,51 @@ public enum EnumFacing {
         static {
             try {
                 PLANE_LOOKUP[Plane.HORIZONTAL.ordinal()] = 1;
-            } catch (NoSuchFieldError var11) {
-                ;
-            }
+            } catch (NoSuchFieldError ignored) {}
 
             try {
                 PLANE_LOOKUP[Plane.VERTICAL.ordinal()] = 2;
-            } catch (NoSuchFieldError var10) {
-            }
+            } catch (NoSuchFieldError ignored) {}
 
             FACING_LOOKUP = new int[EnumFacing.values().length];
 
             try {
                 FACING_LOOKUP[EnumFacing.NORTH.ordinal()] = 1;
-            } catch (NoSuchFieldError var9) {
-            }
+            } catch (NoSuchFieldError ignored) {}
 
             try {
                 FACING_LOOKUP[EnumFacing.EAST.ordinal()] = 2;
-            } catch (NoSuchFieldError var8) {
-            }
+            } catch (NoSuchFieldError ignored) {}
 
             try {
                 FACING_LOOKUP[EnumFacing.SOUTH.ordinal()] = 3;
-            } catch (NoSuchFieldError ignored) {
-            }
+            } catch (NoSuchFieldError ignored) {}
 
             try {
                 FACING_LOOKUP[EnumFacing.WEST.ordinal()] = 4;
-            } catch (NoSuchFieldError var6) {
-            }
+            } catch (NoSuchFieldError ignored) {}
 
             try {
                 FACING_LOOKUP[EnumFacing.UP.ordinal()] = 5;
-            } catch (NoSuchFieldError var5) {
-            }
+            } catch (NoSuchFieldError ignored) {}
 
             try {
                 FACING_LOOKUP[EnumFacing.DOWN.ordinal()] = 6;
-            } catch (NoSuchFieldError var4) {
-            }
+            } catch (NoSuchFieldError ignored) {}
 
             AXIS_LOOKUP = new int[Axis.values().length];
 
             try {
                 AXIS_LOOKUP[Axis.X.ordinal()] = 1;
-            } catch (NoSuchFieldError var3) {
-            }
+            } catch (NoSuchFieldError ignored) {}
 
             try {
                 AXIS_LOOKUP[Axis.Y.ordinal()] = 2;
-            } catch (NoSuchFieldError var2) {
-            }
+            } catch (NoSuchFieldError ignored) {}
 
             try {
                 AXIS_LOOKUP[Axis.Z.ordinal()] = 3;
-            } catch (NoSuchFieldError var1) {
-            }
+            } catch (NoSuchFieldError ignored) {}
         }
     }
 }

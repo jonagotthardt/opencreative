@@ -238,7 +238,7 @@ public final class Statistics {
     }
 
     public static float gcdRational(final List<Float> numbers) {
-        float result = numbers.get(0);
+        float result = numbers.getFirst();
 
         for (int i = 1; i < numbers.size(); i++) {
             result = gcdRational(numbers.get(i), result);
@@ -568,7 +568,7 @@ public final class Statistics {
 
     public static List<Double> exponentialMovingAverage(List<? extends Number> data, double smoothingFactor) {
         List<Double> result = new ArrayList<>();
-        double ema = data.get(0).doubleValue();
+        double ema = data.getFirst().doubleValue();
         result.add(ema);
         for (int i = 1; i < data.size(); i++) {
             double value = data.get(i).doubleValue();
@@ -639,7 +639,7 @@ public final class Statistics {
     }
 
     public static double getExponentiallyWeightedVariance(final List<? extends Number> data, double alpha) {
-        double ewMean = data.get(0).doubleValue();
+        double ewMean = data.getFirst().doubleValue();
         double ewVariance = 0;
         for (int i = 1; i < data.size(); i++) {
             double value = data.get(i).doubleValue();
@@ -675,7 +675,7 @@ public final class Statistics {
                                                    double processVariance, double measurementVariance) {
         int n = measurements.size();
         List<Double> predictions = new ArrayList<>(n);
-        double estimate = measurements.get(0).doubleValue();
+        double estimate = measurements.getFirst().doubleValue();
         double errorCovariance = 1;
 
         predictions.add(estimate);

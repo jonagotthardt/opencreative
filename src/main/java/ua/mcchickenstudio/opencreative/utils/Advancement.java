@@ -57,6 +57,7 @@ public class Advancement {
         Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> player.getAdvancementProgress(Bukkit.getAdvancement(nameSpacedKey)).revokeCriteria("trigger"), 10);
     }
 
+    @SuppressWarnings("deprecation")
     private void load() {
         Bukkit.getUnsafe().loadAdvancement(nameSpacedKey, "{\n" +
                 "    \"criteria\": {\n" +

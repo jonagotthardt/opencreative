@@ -58,7 +58,7 @@ public abstract class Action {
     protected ActionsHandler handler;
 
     protected final Arguments arguments;
-    protected final String EMPTY_STRING = ChatColor.translateAlternateColorCodes('&',"&f");
+    protected final String EMPTY_STRING = "";
 
     /**
      * Creates an Action with linked executor and specified arguments.

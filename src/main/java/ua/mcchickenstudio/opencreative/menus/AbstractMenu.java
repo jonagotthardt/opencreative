@@ -105,9 +105,6 @@ public abstract class AbstractMenu implements InventoryMenu {
     public abstract void fillItems(Player player);
     public abstract void onClick(@NotNull InventoryClickEvent event);
     public abstract void onOpen(@NotNull InventoryOpenEvent event);
-    public void onClose(@NotNull InventoryCloseEvent event) {
-        destroy();
-    }
 
     protected final boolean isClickedInMenuSlots(InventoryClickEvent event) {
         if (event.getClickedInventory() == null) return false;
