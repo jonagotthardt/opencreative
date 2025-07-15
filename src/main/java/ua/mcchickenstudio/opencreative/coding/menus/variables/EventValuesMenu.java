@@ -105,7 +105,7 @@ public class EventValuesMenu extends ListBrowserMenu<EventValues.Variable> {
     }
 
     @Override
-    protected List<EventValues.Variable> getElements() {
+    public List<EventValues.Variable> getElements() {
         if (currentCategory == null) currentCategory = MenusCategory.ENTITY;
         return new ArrayList<>(EventValues.Variable.getByCategories(currentCategory));
     }

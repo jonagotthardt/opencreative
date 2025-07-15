@@ -22,7 +22,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -181,7 +180,7 @@ public class Arguments {
                 if (listSection == null) {
                     return new ItemStack(Material.AIR);
                 }
-                return ItemStack.deserialize(listSection.getValues(true));
+                return ItemStack.deserialize(listSection.getValues(false));
             case PARTICLE:
                 if (listSection == null) {
                     return stringValue;
@@ -656,7 +655,7 @@ public class Arguments {
         argumentList.add(new Argument(planet,type,path,value));
     }
 
-    public List<Argument> getArgumentList() {
+    public @NotNull List<Argument> getArgumentList() {
         return argumentList;
     }
 }

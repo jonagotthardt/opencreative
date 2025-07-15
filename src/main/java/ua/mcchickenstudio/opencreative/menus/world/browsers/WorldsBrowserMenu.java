@@ -196,7 +196,7 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
     }
 
     @Override
-    protected List<Planet> getElements() {
+    public List<Planet> getElements() {
         return new ArrayList<>(planets);
     }
 

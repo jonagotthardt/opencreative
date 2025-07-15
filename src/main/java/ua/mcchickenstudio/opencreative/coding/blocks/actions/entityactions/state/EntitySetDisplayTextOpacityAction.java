@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.state;
 
-import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.TextDisplay;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;

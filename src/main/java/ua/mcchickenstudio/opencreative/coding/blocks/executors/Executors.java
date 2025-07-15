@@ -302,6 +302,7 @@ public class Executors {
             }
             return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class).newInstance(executor,target,config.getInt(path+".location.x"),args);
         } catch (Exception error) {
+            sendDebugError("Can't create an action", error);
             return null;
         }
     }

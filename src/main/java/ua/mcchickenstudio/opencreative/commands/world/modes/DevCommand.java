@@ -179,7 +179,6 @@ public class DevCommand extends CommandHandler {
                 }
             }
         }
-        return;
     }
 
     private void giveItems(Player player) {

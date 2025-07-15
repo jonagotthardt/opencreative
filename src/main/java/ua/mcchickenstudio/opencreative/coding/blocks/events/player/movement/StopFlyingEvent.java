@@ -34,7 +34,7 @@ public final class StopFlyingEvent extends WorldEvent implements Cancellable {
 
     @Override
     public void setCancelled(boolean cancel) {
-        event.setCancelled(cancelled);
+        event.setCancelled(cancel);
     }
 
     @Override

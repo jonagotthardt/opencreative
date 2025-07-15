@@ -82,7 +82,6 @@ public class JoinCommand extends CommandHandler {
             }
         } else if (args.length != 1) {
             sender.sendMessage(getLocaleMessage("commands.join.help"));
-            return;
         } else if (sender instanceof Player player) {
             handlePlayerConnection(player, args[0]);
         } else {

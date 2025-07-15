@@ -72,7 +72,7 @@ public class Argument {
      * Returns a name of argument.
      * @return name of argument.
      */
-    public String getPath() {
+    public @NotNull String getPath() {
         return path;
     }
 
@@ -80,7 +80,7 @@ public class Argument {
      * Returns type of value.
      * @return type of value.
      */
-    public ValueType getType() {
+    public @NotNull ValueType getType() {
         return type;
     }
 

@@ -72,7 +72,7 @@ public abstract class ListBrowserMenu<T> extends AbstractListMenu<T> {
     protected abstract void onCharmsBarClick(InventoryClickEvent event);
     protected abstract void onElementClick(InventoryClickEvent event);
 
-    protected abstract List<T> getElements();
+    public abstract List<T> getElements();
     protected abstract ItemStack getNextPageButton();
     protected abstract ItemStack getPreviousPageButton();
     protected abstract ItemStack getNoElementsButton();
@@ -158,6 +158,22 @@ public abstract class ListBrowserMenu<T> extends AbstractListMenu<T> {
         } else {
             event.setCancelled(true);
         }
+    }
+
+    public ItemStack getElementIcon(int index) {
+        if (index < 0 || index >= elements.size()) {
+            return AIR_ITEM.clone();
+        }
+        return getElementIcon(elements.get(index));
+    }
+
+    public void updateElements() {
+        elements.clear();
+        elements.addAll(getElements());
+    }
+
+    public List<T> getCurrentElements() {
+        return elements;
     }
 
     protected void nextPage() {

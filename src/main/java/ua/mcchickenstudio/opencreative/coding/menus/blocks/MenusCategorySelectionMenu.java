@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.menus.blocks;
 
-import net.bytebuddy.asm.Advice;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -26,7 +25,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
+import ua.mcchickenstudio.opencreative.menus.AbstractListMenu;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
@@ -51,6 +52,7 @@ public abstract class MenusCategorySelectionMenu extends AbstractMenu {
     protected final List<MenusCategory> menusCategories = new ArrayList<>();
     protected final Location location;
     protected final Object frequency;
+    protected final boolean legacy = false;
 
     public MenusCategorySelectionMenu(@NotNull Player player,
                                       @NotNull ItemStack mainItem,
@@ -77,6 +79,44 @@ public abstract class MenusCategorySelectionMenu extends AbstractMenu {
 
     @Override
     public void fillItems(Player player) {
+        if (legacy) {
+            if (getItem(45).isEmpty()) {
+                setRows(6);
+                setTitle(contentMenu.getTitle());
+                setItem(DECORATION_PANE_ITEM,36,37,38,39,40,41,42,43,44);
+                int category = 0;
+                for (int slot = 45; slot < 54; slot++) {
+                    if (category == menusCategories.size()) {
+                        setItem(slot, DECORATION_ITEM);
+                    } else {
+                        setItem(slot, menusCategories.get(category).getItem(mainCategory));
+                        category++;
+                    }
+                }
+                contentMenu.updateElements();
+            }
+            int element = 0;
+            int size = contentMenu.getCurrentElements().size();
+            if (contentMenu.getCurrentPage() > 1) {
+                setItem(27, contentMenu.getPreviousPageButton());
+            } else {
+                setItem(27, AIR_ITEM);
+            }
+            if (contentMenu.getCurrentPage() < contentMenu.getPages()) {
+                setItem(35, contentMenu.getNextPageButton());
+            } else {
+                setItem(35, AIR_ITEM);
+            }
+            for (int slot : AbstractListMenu.PlacementLayout.BOTTOM_CHARMS_BAR.getElementsSlots()) {
+                if (element == size) {
+                    setItem(slot, AIR_ITEM);
+                } else {
+                    setItem(slot, contentMenu.getElementIcon(element));
+                    element++;
+                }
+            }
+            return;
+        }
         switch (menusCategories.size()) {
             case 0 -> {
                 setRows(4);
@@ -194,7 +234,14 @@ public abstract class MenusCategorySelectionMenu extends AbstractMenu {
         if (category != null) {
             Sounds.DEV_CHANGE_CATEGORY.play(event.getWhoClicked());
             contentMenu.setCurrentCategory(category);
+            if (legacy) {
+                contentMenu.updateElements();
+                fillItems(player);
+                return;
+            }
             contentMenu.open(player);
+        } else {
+            contentMenu.onClick(event);
         }
     }
 

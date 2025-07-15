@@ -18,9 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
-import net.kyori.adventure.inventory.Book;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.EntitySnapshot;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.BookMeta;
@@ -402,46 +400,51 @@ public class ItemUtils {
                     }
                 }
             }
-            if (meta instanceof BlockStateMeta blockMeta && blockMeta.getBlockState() instanceof InventoryHolder holder) {
-                // If item is Chest or Shulker
-                int insideLimit = containerBigItemsLimit;
-                int insideContainers = 0;
-                for (ItemStack insideItem : holder.getInventory().getContents()) {
-                    if (insideItem == null) continue;
-                    if (insideItem instanceof BlockStateMeta insideMeta && insideMeta.getBlockState() instanceof InventoryHolder insideHolder && !insideHolder.getInventory().isEmpty()) {
-                        insideContainers++;
-                    } else if (insideItem.getItemMeta() instanceof BookMeta book) {
-                        insideContainers++;
+            switch (meta) {
+                case BlockStateMeta blockMeta when blockMeta.getBlockState() instanceof InventoryHolder holder -> {
+                    // If item is Chest or Shulker
+                    int insideLimit = containerBigItemsLimit;
+                    int insideContainers = 0;
+                    for (ItemStack insideItem : holder.getInventory().getContents()) {
+                        if (insideItem == null) continue;
+                        if (insideItem instanceof BlockStateMeta insideMeta && insideMeta.getBlockState() instanceof InventoryHolder insideHolder && !insideHolder.getInventory().isEmpty()) {
+                            insideContainers++;
+                        } else if (insideItem.getItemMeta() instanceof BookMeta book) {
+                            insideContainers++;
+                        }
+                        if (insideContainers > insideLimit) break;
                     }
-                    if (insideContainers > insideLimit) break;
-                }
-                if (insideContainers > insideLimit) {
-                    item.setType(Material.AIR);
-                    sendDebug("Destroyed container with a lot of items");
-                }
-            } else if (meta instanceof BookMeta book) {
-                if (book.pages().size() > bookPagesLimit) {
-                    item.setType(Material.AIR);
-                    sendDebug("Destroyed book with a lot of pages");
-                } else if (removeClickableBooks) {
-                    List<Component> pages = book.pages();
-                    boolean cleared = false;
-                    for (int i = 0; i < pages.size(); i++) {
-                        Component component = pages.get(i);
-                        if (component.clickEvent() != null) cleared = true;
-                        component = component.clickEvent() != null ? component.clickEvent(null) : component;
-                        book.page(i+1,component);
-                    }
-                    if (cleared) {
-                        sendDebug("Cleared book with clickable components");
-                        item.setItemMeta(book);
+                    if (insideContainers > insideLimit) {
+                        item.setType(Material.AIR);
+                        sendDebug("Destroyed container with a lot of items");
                     }
                 }
-            } else if (meta instanceof SpawnEggMeta egg && removeCustomEggs) {
-                if (egg.getCustomSpawnedType() != null) {
-                    item.setType(Material.AIR);
-                    sendDebug("Destroyed spawn egg");
+                case BookMeta book -> {
+                    if (book.pages().size() > bookPagesLimit) {
+                        item.setType(Material.AIR);
+                        sendDebug("Destroyed book with a lot of pages");
+                    } else if (removeClickableBooks) {
+                        List<Component> pages = book.pages();
+                        boolean cleared = false;
+                        for (int i = 0; i < pages.size(); i++) {
+                            Component component = pages.get(i);
+                            if (component.clickEvent() != null) cleared = true;
+                            component = component.clickEvent() != null ? component.clickEvent(null) : component;
+                            book.page(i + 1, component);
+                        }
+                        if (cleared) {
+                            sendDebug("Cleared book with clickable components");
+                            item.setItemMeta(book);
+                        }
+                    }
                 }
+                case SpawnEggMeta egg when removeCustomEggs -> {
+                    if (egg.getCustomSpawnedType() != null) {
+                        item.setType(Material.AIR);
+                        sendDebug("Destroyed spawn egg");
+                    }
+                }
+                default -> {}
             }
         } catch (Exception exception) {
             sendDebugError("Can't fix item: " + item, exception);

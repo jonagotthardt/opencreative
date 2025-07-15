@@ -50,11 +50,11 @@ public class HookUtils {
         isVaultEnabled = isPluginEnabled("Vault");
         isWorldEditEnabled = isPluginEnabled("WorldEdit");
         isLibsDisguisesEnabled = isProtocolLibEnabled && isPluginEnabled("LibsDisguises");
-        OpenCreative.getPlugin().getLogger().info((isPlaceholderAPIEnabled ? "Creative+ hooked into PlaceholderAPI." : "Creative+ didn't detect PlaceholderAPI."));
-        OpenCreative.getPlugin().getLogger().info((isProtocolLibEnabled ? "Creative+ hooked into ProtocolLib." : "Creative+ didn't detect ProtocolLib, some block effects will be not available."));
-        OpenCreative.getPlugin().getLogger().info((isVaultEnabled ? "Creative+ hooked into Vault." : "Creative+ didn't detect Vault, action Request Purchase will be not available."));
-        OpenCreative.getPlugin().getLogger().info((isLibsDisguisesEnabled ? "Creative+ hooked into LibsDisguises." : "Creative+ didn't detect LibsDisguises or ProtocolLib, disguise actions will be not available."));
-        OpenCreative.getPlugin().getLogger().info((isWorldEditEnabled ? "Creative+ hooked into WorldEdit." : "Creative+ didn't detect WorldEdit."));
+        OpenCreative.getPlugin().getLogger().info((isPlaceholderAPIEnabled ? "Successfully integrated to PlaceholderAPI: Added placeholders." : "Didn't detect PlaceholderAPI."));
+        OpenCreative.getPlugin().getLogger().info((isProtocolLibEnabled ? "Successfully integrated to ProtocolLib: Added blocks effects and animations." : "Didn't detect ProtocolLib, some block effects will be not available."));
+        OpenCreative.getPlugin().getLogger().info((isVaultEnabled ? "Successfully integrated to Vault: Economy actions are working." : "Didn't detect Vault, action Request Purchase will be not available."));
+        OpenCreative.getPlugin().getLogger().info((isLibsDisguisesEnabled ? "Successfully integrated to LibsDisguises: Added morph actions." : "Didn't detect LibsDisguises or ProtocolLib, disguise actions will be not available."));
+        OpenCreative.getPlugin().getLogger().info((isWorldEditEnabled ? "Successfully integrated to WorldEdit: Added out-of-borders limit." : "Didn't detect WorldEdit."));
         if (isPlaceholderAPIEnabled) {
             PAPIUtils.registerPlaceholder();
         }

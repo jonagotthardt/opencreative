@@ -30,7 +30,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 

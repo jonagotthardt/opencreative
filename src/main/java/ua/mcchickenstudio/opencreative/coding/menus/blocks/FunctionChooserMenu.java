@@ -145,7 +145,7 @@ public class FunctionChooserMenu extends ListBrowserMenu<Location> {
     }
 
     @Override
-    protected List<Location> getElements() {
+    public List<Location> getElements() {
         return new ArrayList<>(devPlanet.getPlacedFunctions());
     }
 

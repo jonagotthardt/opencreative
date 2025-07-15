@@ -20,8 +20,6 @@ package ua.mcchickenstudio.opencreative.utils.world.cache;
 
 import lombok.experimental.UtilityClass;
 import org.bukkit.World;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

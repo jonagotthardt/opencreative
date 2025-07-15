@@ -18,8 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
-import com.destroystokyo.paper.profile.PlayerProfile;
-import com.destroystokyo.paper.profile.ProfileProperty;
 import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
@@ -35,16 +33,12 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import ua.mcchickenstudio.opencreative.menus.buttons.RadioButton;
 import ua.mcchickenstudio.opencreative.planets.*;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerConfirmation;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
-
-import java.util.Set;
-import java.util.UUID;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.addPlayerWithLocation;
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.isPlayerWithLocation;

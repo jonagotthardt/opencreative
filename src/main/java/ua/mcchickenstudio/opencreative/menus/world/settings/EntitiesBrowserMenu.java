@@ -147,7 +147,7 @@ public class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
                     p.sendMessage(getLocaleMessage("menus.entities-browser.removed-all", getPlayer()).replace("%count%",String.valueOf(count)));
                 }
             }
-            elements.removeIf(e -> e.isDead());
+            elements.removeIf(Entity::isDead);
             fillElements(getCurrentPage());
             fillArrowsItems(getCurrentPage());
         }
@@ -172,7 +172,7 @@ public class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
         Entity entity = Bukkit.getEntity(uuid);
         if (entity == null) {
             elements.removeIf(e -> e.getUniqueId().equals(uuid));
-            elements.removeIf(e -> e.isDead());
+            elements.removeIf(Entity::isDead);
             fillElements(getCurrentPage());
             fillArrowsItems(getCurrentPage());
             return;
@@ -194,7 +194,7 @@ public class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
                 }
                 Sounds.WORLD_TELEPORT_ENTITY_TO_ME.play(getPlayer());
                 entity.teleport(getPlayer().getLocation());
-                if (elements.removeIf(e -> e.isDead())) {
+                if (elements.removeIf(Entity::isDead)) {
                     fillElements(getCurrentPage());
                     fillArrowsItems(getCurrentPage());
                 }
@@ -212,7 +212,7 @@ public class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
                 Sounds.WORLD_REMOVE_ENTITY.play(getPlayer());
                 elements.remove(entity);
                 entity.remove();
-                elements.removeIf(e -> e.isDead());
+                elements.removeIf(Entity::isDead);
                 fillElements(getCurrentPage());
                 fillArrowsItems(getCurrentPage());
                 getPlayer().updateInventory();
@@ -239,7 +239,7 @@ public class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
     }
 
     @Override
-    protected List<Entity> getElements() {
+    public List<Entity> getElements() {
         if (!planet.isLoaded()) {
             return List.of();
         }

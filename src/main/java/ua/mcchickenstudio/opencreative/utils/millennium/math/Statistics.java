@@ -238,7 +238,7 @@ public final class Statistics {
     }
 
     public static float gcdRational(final List<Float> numbers) {
-        float result = numbers.get(0);
+        float result = numbers.getFirst();
 
         for (int i = 1; i < numbers.size(); i++) {
             result = gcdRational(numbers.get(i), result);
@@ -342,7 +342,7 @@ public final class Statistics {
         List<Double> sortedValues = data.stream()
                 .map(Number::doubleValue)
                 .sorted()
-                .collect(Collectors.toList());
+                .toList();
 
         int index = (int) Math.ceil(percentile / 100.0 * sortedValues.size()) - 1;
         if (index < 0) index = 0;
@@ -442,13 +442,13 @@ public final class Statistics {
     }
 
     public static double getQuantile(final Collection<? extends Number> data, double quantile) {
-        List<Double> sorted = data.stream().map(Number::doubleValue).sorted().collect(Collectors.toList());
+        List<Double> sorted = data.stream().map(Number::doubleValue).sorted().toList();
         int index = (int) Math.ceil(quantile * sorted.size()) - 1;
         return sorted.get(Math.max(0, Math.min(index, sorted.size() - 1)));
     }
 
     public static double getGiniIndex(final Collection<? extends Number> data) {
-        List<Double> sorted = data.stream().map(Number::doubleValue).sorted().collect(Collectors.toList());
+        List<Double> sorted = data.stream().map(Number::doubleValue).sorted().toList();
         int n = sorted.size();
         double sum = 0;
         for (Double aDouble : sorted) {
@@ -568,7 +568,7 @@ public final class Statistics {
 
     public static List<Double> exponentialMovingAverage(List<? extends Number> data, double smoothingFactor) {
         List<Double> result = new ArrayList<>();
-        double ema = data.get(0).doubleValue();
+        double ema = data.getFirst().doubleValue();
         result.add(ema);
         for (int i = 1; i < data.size(); i++) {
             double value = data.get(i).doubleValue();
@@ -612,7 +612,7 @@ public final class Statistics {
         List<Double> sorted = data.stream()
                 .map(Number::doubleValue)
                 .sorted()
-                .collect(Collectors.toList());
+                .toList();
         int n = sorted.size();
         int trimCount = (int) (n * trimFraction);
         double lowerBound = sorted.get(trimCount - 1);
@@ -621,17 +621,13 @@ public final class Statistics {
         for (double value : sorted) {
             if (value < lowerBound) {
                 winsorized.add(lowerBound);
-            } else if (value > upperBound) {
-                winsorized.add(upperBound);
-            } else {
-                winsorized.add(value);
-            }
+            } else winsorized.add(Math.min(value, upperBound));
         }
         return winsorized.stream().mapToDouble(Double::doubleValue).average().orElse(0);
     }
 
     public static double kolmogorovSmirnovTest(final List<? extends Number> data, Function<Double, Double> cdfFunction) {
-        List<Double> sorted = data.stream().map(Number::doubleValue).sorted().collect(Collectors.toList());
+        List<Double> sorted = data.stream().map(Number::doubleValue).sorted().toList();
         int n = sorted.size();
         double dStatistic = 0;
         for (int i = 0; i < n; i++) {
@@ -643,7 +639,7 @@ public final class Statistics {
     }
 
     public static double getExponentiallyWeightedVariance(final List<? extends Number> data, double alpha) {
-        double ewMean = data.get(0).doubleValue();
+        double ewMean = data.getFirst().doubleValue();
         double ewVariance = 0;
         for (int i = 1; i < data.size(); i++) {
             double value = data.get(i).doubleValue();
@@ -679,7 +675,7 @@ public final class Statistics {
                                                    double processVariance, double measurementVariance) {
         int n = measurements.size();
         List<Double> predictions = new ArrayList<>(n);
-        double estimate = measurements.get(0).doubleValue();
+        double estimate = measurements.getFirst().doubleValue();
         double errorCovariance = 1;
 
         predictions.add(estimate);
@@ -720,7 +716,7 @@ public final class Statistics {
     }
 
     public static List<Integer> cusumDetection(final List<? extends Number> data, double threshold, double drift) {
-        List<Double> series = data.stream().map(Number::doubleValue).collect(Collectors.toList());
+        List<Double> series = data.stream().map(Number::doubleValue).toList();
         List<Integer> changePoints = new ArrayList<>();
         double posSum = 0;
         double negSum = 0;
@@ -760,7 +756,7 @@ public final class Statistics {
     }
 
     public static List<Double> getRanks(List<? extends Number> data) {
-        List<Double> sorted = data.stream().map(Number::doubleValue).sorted().collect(Collectors.toList());
+        List<Double> sorted = data.stream().map(Number::doubleValue).sorted().toList();
         return data.stream().map(v -> (double) (sorted.indexOf(v.doubleValue()) + 1)).collect(Collectors.toList());
     }
 

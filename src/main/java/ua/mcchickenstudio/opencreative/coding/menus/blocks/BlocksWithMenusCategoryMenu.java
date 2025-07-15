@@ -29,7 +29,7 @@ import ua.mcchickenstudio.opencreative.menus.BlockMenu;
 
 /**
  * This class represents a menus where player can select type of coding block.
- * Every category of coding blocks has this menus.
+ * Every category of coding blocks has this menu.
  */
 public abstract class BlocksWithMenusCategoryMenu<T> extends ContentWithMenusCategoryMenu<T> implements BlockMenu {
 

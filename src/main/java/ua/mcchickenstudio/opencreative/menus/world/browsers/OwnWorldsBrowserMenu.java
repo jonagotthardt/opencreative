@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.menus.world.browsers;
 
-import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -168,7 +167,7 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
     }
 
     @Override
-    protected List<Planet> getElements() {
+    public List<Planet> getElements() {
         return new ArrayList<>(planets);
     }
 

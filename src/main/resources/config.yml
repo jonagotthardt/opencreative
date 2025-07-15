@@ -107,7 +107,7 @@
 # Discord: https://discord.gg/sSFCXUeq63
 #
 
-version: 5.6.0
+version: 5.6.1
 last-world-id: 0
 hide-from-tab: spectator # Hides players, that aren't in same world: spectator - Transparent nickname (requires ProtocolLib), full - Full hide from tab list, none - Not hide.
 
@@ -142,6 +142,7 @@ allowed-links:
     - "drive.google.com"
 
 coding:
+  old-selection-menu: true # Set true to use old coding blocks selection menu
   #
   # You can disable some coding blocks,
   # if they're useless or harming performance.

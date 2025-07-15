@@ -598,7 +598,6 @@ public class EnvironmentCommand extends CommandHandler {
                 }
             }
         }
-        return;
     }
 
     @Override

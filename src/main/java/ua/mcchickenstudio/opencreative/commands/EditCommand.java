@@ -92,7 +92,6 @@ public class EditCommand extends CommandHandler {
                 break;
         }
 
-        return;
     }
 
     private boolean checkPermissions(Player player) {

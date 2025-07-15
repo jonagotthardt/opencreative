@@ -167,7 +167,6 @@ public class ValueCommand extends CommandHandler {
             Sounds.DEV_TAKE_VALUE.play(player);
             player.getInventory().addItem(itemStack);
         }
-        return;
     }
 
     @Override

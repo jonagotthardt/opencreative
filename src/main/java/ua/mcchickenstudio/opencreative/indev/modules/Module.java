@@ -152,6 +152,7 @@ public class Module {
         } catch (Exception error) {
             sendPlanetErrorMessage(devPlanet.getPlanet(),"Cannot load module",error);
             error.printStackTrace();
+            return false;
         }
         return true;
     }

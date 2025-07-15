@@ -102,7 +102,7 @@ public abstract class AbstractListMenu<T> extends AbstractMenu {
         return elements.subList(fromIndex,toIndex);
     }
 
-    protected final int getPages() {
+    public final int getPages() {
         return (elements.size() + elementsSlots.length - 1) / elementsSlots.length;
     }
 
@@ -217,15 +217,15 @@ public abstract class AbstractListMenu<T> extends AbstractMenu {
             this.decorationSlots = decorationSlots;
         }
 
-        private int[] getCharmsBarSlots() {
+        public int[] getCharmsBarSlots() {
             return charmsBarSlots;
         }
 
-        private int[] getElementsSlots() {
+        public int[] getElementsSlots() {
             return elementsSlots;
         }
 
-        private int[] getDecorationSlots() {
+        public int[] getDecorationSlots() {
             return decorationSlots;
         }
     }

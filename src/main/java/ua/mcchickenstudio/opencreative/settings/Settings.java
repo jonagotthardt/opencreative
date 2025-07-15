@@ -55,7 +55,7 @@ public class Settings {
     private boolean creativeChatEnabled = true;
 
     private boolean consoleCriticalErrors = true;
-    private boolean consoleNotFoundMessage = true;
+    private boolean consoleNotFoundMessage = false;
     private boolean consoleWarnings = true;
 
     private int itemsMaxEnchantLevel = 10;
@@ -66,6 +66,7 @@ public class Settings {
     private boolean itemsRemoveClickableBooks = true;
 
     private boolean lobbyClearInventory = true;
+    private boolean legacySelectionMenu = false;
 
     private BukkitRunnable announcer;
     private PlayerListChanger listChanger = PlayerListChanger.FULL;
@@ -116,9 +117,10 @@ public class Settings {
         debug = config.getBoolean("debug",false);
         maintenance = config.getBoolean("maintenance",false);
         consoleCriticalErrors = config.getBoolean("messages.critical-errors",true);
-        consoleNotFoundMessage = config.getBoolean("messages.not-found",true);
+        consoleNotFoundMessage = config.getBoolean("messages.not-found",false);
         consoleWarnings = config.getBoolean("messages.warnings",true);
         lobbyClearInventory = config.getBoolean("lobby.clear-inventory",true);
+        legacySelectionMenu = config.getBoolean("coding.old-selection-menu",true);
 
         worldCreationMinSeconds = config.getInt("requirements.world-creation.played-seconds",30);
         worldReputationMinSeconds = config.getInt("requirements.world-reputation.creation-seconds",300);
@@ -481,5 +483,9 @@ public class Settings {
 
     public boolean isItemsRemoveCustomSpawnEggs() {
         return itemsRemoveCustomSpawnEggs;
+    }
+
+    public boolean isLegacySelectionMenu() {
+        return legacySelectionMenu;
     }
 }

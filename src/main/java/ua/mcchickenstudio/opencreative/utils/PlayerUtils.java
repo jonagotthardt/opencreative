@@ -23,7 +23,6 @@ import org.bukkit.boss.KeyedBossBar;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.player.PlayerLobbyEvent;
-import ua.mcchickenstudio.opencreative.indev.Wander;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.async.AsyncScheduler;
@@ -148,7 +147,8 @@ public class PlayerUtils {
      **/
     public static void teleportToLobby(Player player) {
         World lobbyWorld = getLobbyWorld();
-        player.teleport(lobbyWorld != null ? lobbyWorld.getSpawnLocation() : player.getLocation());
+        Location location = lobbyWorld != null ? lobbyWorld.getSpawnLocation() : player.getLocation();
+        player.teleport(location);
         clearPlayer(player);
         player.showTitle(Title.title(
                 toComponent(getLocaleMessage("lobby.title")), toComponent(getLocaleMessage("lobby.subtitle")),

@@ -39,7 +39,6 @@ public abstract class WorldEvent extends Event  {
     private static final HandlerList HANDLER_LIST = new HandlerList();
 
     protected List<Entity> selection = new ArrayList<>();
-    protected boolean cancelled = false;
     protected final World world;
 
     public WorldEvent(@NotNull Planet planet, @NotNull List<Entity> selection) {

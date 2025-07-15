@@ -107,7 +107,7 @@ public class ModulesBrowserMenu extends ListBrowserMenu<Module> {
     }
 
     @Override
-    protected List<Module> getElements() {
+    public List<Module> getElements() {
         return elements;
     }
 

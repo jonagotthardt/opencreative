@@ -96,7 +96,7 @@ public final class OpenCreative extends JavaPlugin {
     private StabilityManager watchdog;
     private BlocksManager blocks;
 
-    private static final String version = "5.6.0";
+    private static final String version = "5.6.1";
     private static final String codename = "Well, it's possible";
 
     /**
@@ -117,8 +117,8 @@ public final class OpenCreative extends JavaPlugin {
     }
 
     /**
-     Plugin startup operations. It registers commands, events; loads config, worlds, localization file.
-     @see #onDisable
+     * Plugin startup operations. It registers commands, events; loads config, worlds, localization file.
+     * @see #onDisable
      **/
     @Override
     public void onEnable() {
@@ -185,10 +185,11 @@ public final class OpenCreative extends JavaPlugin {
         new Metrics(this, 22001);
     }
 
+
     /**
-     Plugin shutdown operations. It unloads worlds when plugin is being disabled.
-     @see #onEnable
-     **/
+     * Plugin shutdown operations. It unloads worlds when plugin is being disabled.
+     * @see #onEnable
+     */
     @Override
     public void onDisable() {
         getLogger().info("Shutting down OpenCreative+, please wait...");
@@ -212,15 +213,17 @@ public final class OpenCreative extends JavaPlugin {
 
 
     /**
-     Get a plugin instance for operations with it. For example: for accessing config.yml.
-     @return plugin instance.
+     * Get a plugin instance for operations with it. For example: for accessing config.yml.
+     * @return plugin instance.
      **/
     public static OpenCreative getPlugin() {
         return plugin;
     }
 
     /**
-     * Registers commands and their tab completer in server.
+     * Registers plugin's commands and their tab completer. If some
+     * commands failed to register, it notifies, but doesn't disable
+     * entire plugin.
      */
     private void registerCommands() {
         this.getLogger().info("Registering OpenCreative+ commands...");
@@ -267,7 +270,8 @@ public final class OpenCreative extends JavaPlugin {
     }
 
     /**
-     * Registers event listeners in server.
+     * Registers plugin's event listeners. If some listener is failed
+     * to register, then it notifies, but doesn't disable entire plugin.
      */
     private void registerEvents() {
         getLogger().info("Registering OpenCreative+ event listeners...");

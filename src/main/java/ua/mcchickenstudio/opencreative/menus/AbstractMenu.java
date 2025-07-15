@@ -68,15 +68,14 @@ public abstract class AbstractMenu implements InventoryMenu {
 
     public void setItem(ItemStack item, int... slots) {
         for (int slot : slots) {
-            slot = Math.clamp(0,slot,getSize());
-            if (item == null) item = ItemStack.empty();
-            getInventory().setItem(slot,item);
+            setItem(slot, item);
         }
     }
 
-    public ItemStack getItem(int slot) {
-        if (slot < 0 || slot >= getInventory().getSize()) return new ItemStack(Material.AIR);
-        return getInventory().getItem(slot);
+    public @NotNull ItemStack getItem(int slot) {
+        if (slot < 0 || slot >= getInventory().getSize()) return AIR_ITEM.clone();
+        ItemStack item = getInventory().getItem(slot);
+        return item == null ? AIR_ITEM.clone() : item;
     }
 
     public void setTitle(String title) {
@@ -105,9 +104,6 @@ public abstract class AbstractMenu implements InventoryMenu {
     public abstract void fillItems(Player player);
     public abstract void onClick(@NotNull InventoryClickEvent event);
     public abstract void onOpen(@NotNull InventoryOpenEvent event);
-    public void onClose(@NotNull InventoryCloseEvent event) {
-        destroy();
-    }
 
     protected final boolean isClickedInMenuSlots(InventoryClickEvent event) {
         if (event.getClickedInventory() == null) return false;
@@ -147,6 +143,10 @@ public abstract class AbstractMenu implements InventoryMenu {
             slot = slot-9;
         }
         return 8-slot;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     @Override

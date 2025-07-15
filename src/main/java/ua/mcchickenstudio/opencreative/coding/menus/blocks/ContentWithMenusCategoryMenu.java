@@ -33,7 +33,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 
 /**
  * This class represents a menus where player can select type of coding block.
- * Every category of coding blocks has this menus.
+ * Every category of coding blocks has this menu.
  */
 public abstract class ContentWithMenusCategoryMenu<T> extends ListBrowserMenu<T> {
 
@@ -66,6 +66,10 @@ public abstract class ContentWithMenusCategoryMenu<T> extends ListBrowserMenu<T>
 
     public void setCurrentCategory(MenusCategory currentCategory) {
         this.currentCategory = currentCategory;
+    }
+
+    public MenusCategory getCurrentCategory() {
+        return currentCategory;
     }
 
     @Override
