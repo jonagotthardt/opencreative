@@ -89,6 +89,7 @@ public class PlanetPlayer {
         Arrays.fill(savedInventory, new ItemStack(Material.AIR));
         int slot = 0;
         for (ItemStack item : items) {
+            if (savedInventory.length == slot) break;
             savedInventory[slot] = item;
             slot++;
         }
@@ -103,6 +104,7 @@ public class PlanetPlayer {
         Arrays.fill(savedEnderChest, null);
         int slot = 0;
         for (ItemStack item : items) {
+            if (savedEnderChest.length == slot) break;
             savedEnderChest[slot] = item;
             slot++;
         }

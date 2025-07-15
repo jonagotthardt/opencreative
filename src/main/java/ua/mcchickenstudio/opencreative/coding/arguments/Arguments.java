@@ -180,7 +180,7 @@ public class Arguments {
                 if (listSection == null) {
                     return new ItemStack(Material.AIR);
                 }
-                return ItemStack.deserialize(listSection.getValues(true));
+                return ItemStack.deserialize(listSection.getValues(false));
             case PARTICLE:
                 if (listSection == null) {
                     return stringValue;

@@ -483,7 +483,7 @@ items:
         - "&7This book will teach you"
         - "&7the basic concepts of coding."
       pages:
-        - "&9☻ You are in the coding world!&r\n \nHere you will create code for your world using &3b&7l&6o&9c&cks in the inventory.\n \nThis book will help you learn the basics of coding, &cturn the page to continue..."
+        - "&9☻ You are in the coding world!&r\n \nHere you will create code for your world using &3b&7l&6o&9c&c&rks in the inventory.\n \nThis book will help you learn the basics of coding, &cturn the page to continue..."
         - "&3⚂ Get to know the blocks!&r\n \nPlace &3event&0 blocks on &9blue glass&0 to trigger &7actions&0 and &6conditions&0, which you place on &8gray&0 glass."
         - "&3⚂ Get to know the blocks!&r\n \n&lWhat are events?!\n \n&3Player events&r happen when a player performs an action in the world, and then in the code, we execute actions and conditions on the player."
         - "&3⚂ Get to know the blocks!&r\n \n&lWhat are actions?\n \n&7Actions&r allow you to control the player: give items, teleport, or kick them from the world. And that's not all!"

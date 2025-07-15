@@ -192,7 +192,7 @@ public class ParticlesMenu extends ListBrowserMenu<Particle> {
     }
 
     @Override
-    protected List<Particle> getElements() {
+    public List<Particle> getElements() {
         return Arrays.asList(Particle.values());
     }
 

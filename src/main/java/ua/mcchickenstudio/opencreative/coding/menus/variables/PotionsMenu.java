@@ -89,7 +89,7 @@ public class PotionsMenu extends ListBrowserMenu<PotionEffectType> {
     }
 
     @Override
-    protected List<PotionEffectType> getElements() {
+    public List<PotionEffectType> getElements() {
         return Arrays.asList(PotionEffectType.values());
     }
 

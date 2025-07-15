@@ -122,7 +122,7 @@ public class ActionTypeSelectionMenu extends BlocksWithMenusCategoryMenu<ActionT
     }
 
     @Override
-    protected List<ActionType> getElements() {
+    public List<ActionType> getElements() {
         return ActionType.getActionsByCategories(action, currentCategory);
     }
 }

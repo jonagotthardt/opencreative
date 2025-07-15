@@ -90,7 +90,7 @@ public class ExecutorTypeSelectionMenu extends BlocksWithMenusCategoryMenu<Execu
     }
 
     @Override
-    protected List<ExecutorType> getElements() {
+    public List<ExecutorType> getElements() {
         return ExecutorType.getExecutorsByCategories(executor,currentCategory);
     }
 }

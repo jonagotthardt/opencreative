@@ -239,7 +239,7 @@ public class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
     }
 
     @Override
-    protected List<Entity> getElements() {
+    public List<Entity> getElements() {
         if (!planet.isLoaded()) {
             return List.of();
         }
