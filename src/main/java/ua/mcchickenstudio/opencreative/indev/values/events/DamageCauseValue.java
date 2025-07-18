@@ -25,7 +25,6 @@ import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDamagedEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.BlockInteractionEvent;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.indev.values.TextEventValue;
 

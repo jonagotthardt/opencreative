@@ -23,7 +23,6 @@ import java.util.*;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebug;
 
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.indev.values.world.WorldIdValue;
 

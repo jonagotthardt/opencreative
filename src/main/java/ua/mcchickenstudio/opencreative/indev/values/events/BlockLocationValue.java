@@ -28,7 +28,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.indev.values.LocationEventValue;
-import ua.mcchickenstudio.opencreative.indev.values.TextEventValue;
 
 public class BlockLocationValue extends LocationEventValue {
 

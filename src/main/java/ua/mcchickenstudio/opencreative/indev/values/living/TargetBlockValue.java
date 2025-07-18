@@ -21,7 +21,6 @@ package ua.mcchickenstudio.opencreative.indev.values.living;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +29,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.indev.values.LocationEventValue;
-import ua.mcchickenstudio.opencreative.indev.values.TextEventValue;
 
 public class TargetBlockValue extends LocationEventValue {
 

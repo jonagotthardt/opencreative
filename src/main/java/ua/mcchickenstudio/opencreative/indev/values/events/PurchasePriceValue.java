@@ -27,7 +27,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.PlayerPurchaseEvent;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.indev.values.NumberEventValue;
-import ua.mcchickenstudio.opencreative.indev.values.TextEventValue;
 
 public class PurchasePriceValue extends NumberEventValue {
 

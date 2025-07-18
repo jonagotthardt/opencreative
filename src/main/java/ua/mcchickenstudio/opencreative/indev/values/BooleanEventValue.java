@@ -18,15 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.indev.values;
 
-import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
-
-import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 
 public abstract class BooleanEventValue extends EventValueTest {
 

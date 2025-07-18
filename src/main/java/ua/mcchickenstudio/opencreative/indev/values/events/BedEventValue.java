@@ -25,11 +25,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.BedEnterEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.BedLeaveEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.BookWriteEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.ItemConsumeEvent;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.indev.values.LocationEventValue;
 

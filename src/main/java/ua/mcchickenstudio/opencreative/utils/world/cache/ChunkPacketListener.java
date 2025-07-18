@@ -8,7 +8,6 @@ import com.comphenix.protocol.events.PacketEvent;
 import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebugError;

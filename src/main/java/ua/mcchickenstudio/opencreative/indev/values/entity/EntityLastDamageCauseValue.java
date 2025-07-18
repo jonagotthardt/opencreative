@@ -21,14 +21,12 @@ package ua.mcchickenstudio.opencreative.indev.values.entity;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.indev.values.TextEventValue;
-import ua.mcchickenstudio.opencreative.indev.values.VectorEventValue;
 
 public class EntityLastDamageCauseValue extends TextEventValue {
 
