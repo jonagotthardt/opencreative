@@ -23,10 +23,9 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
-import ua.mcchickenstudio.opencreative.indev.values.events.ClickedSlotValue;
+import ua.mcchickenstudio.opencreative.coding.values.events.ClickedSlotValue;
 
 import java.util.List;
 

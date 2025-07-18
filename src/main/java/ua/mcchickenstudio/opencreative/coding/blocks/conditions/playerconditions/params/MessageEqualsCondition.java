@@ -25,7 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
-import ua.mcchickenstudio.opencreative.indev.values.events.ChatMessageValue;
+import ua.mcchickenstudio.opencreative.coding.values.events.ChatMessageValue;
 
 import java.util.List;
 

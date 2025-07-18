@@ -19,8 +19,6 @@
 package ua.mcchickenstudio.opencreative.coding.variables;
 
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 /**
  * This record represents a link to Event value, that can exists or can be empty.

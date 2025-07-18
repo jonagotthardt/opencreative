@@ -27,7 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import ua.mcchickenstudio.opencreative.indev.values.events.BlockMaterialValue;
+import ua.mcchickenstudio.opencreative.coding.values.events.BlockMaterialValue;
 
 import java.util.List;
 

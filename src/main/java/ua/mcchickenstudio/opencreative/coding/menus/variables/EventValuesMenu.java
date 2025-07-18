@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.coding.menus.variables;
 
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
@@ -30,8 +29,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import ua.mcchickenstudio.opencreative.indev.values.EventValueTest;
-import ua.mcchickenstudio.opencreative.indev.values.EventValuesConcept;
+import ua.mcchickenstudio.opencreative.coding.values.EventValueTest;
+import ua.mcchickenstudio.opencreative.coding.values.EventValuesConcept;
 import ua.mcchickenstudio.opencreative.menus.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
