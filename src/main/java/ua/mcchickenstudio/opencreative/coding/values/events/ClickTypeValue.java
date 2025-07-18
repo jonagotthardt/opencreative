@@ -46,6 +46,6 @@ public final class ClickTypeValue extends TextEventValue {
 
     @Override
     public @NotNull String getDescription() {
-        return "Returns click type from click event";
+        return "Returns click id from click event";
     }
 }

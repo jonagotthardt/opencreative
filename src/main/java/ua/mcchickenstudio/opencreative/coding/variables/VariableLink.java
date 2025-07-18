@@ -27,7 +27,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 /**
  * <h1>VariableLink</h1>
  * This class represents a link to existing or not existing world variable.
- * Links, as variables, have specified name and type. It's used for searching
+ * Links, as variables, have specified name and id. It's used for searching
  * and getting variables values.
  */
 public final class VariableLink {
@@ -38,7 +38,7 @@ public final class VariableLink {
     /**
      * Creates instance of variable link.
      * @param name name of variable.
-     * @param type type of variable (local, global, saved).
+     * @param type id of variable (local, global, saved).
      */
     public VariableLink(@NotNull String name, @NotNull VariableType type) {
         this.name = name;
@@ -46,8 +46,8 @@ public final class VariableLink {
     }
 
     /**
-     * Returns type of variable (local, global, saved).
-     * @return type of variable.
+     * Returns id of variable (local, global, saved).
+     * @return id of variable.
      */
     public @NotNull VariableType getVariableType() {
         return type;

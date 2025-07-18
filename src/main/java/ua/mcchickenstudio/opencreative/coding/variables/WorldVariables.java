@@ -119,7 +119,7 @@ public final class WorldVariables {
     /**
      * Sets variable value to new specified one. Used in actions.
      * @param link variable link to set.
-     * @param type new type of value.
+     * @param type new id of value.
      * @param value new value.
      * @param handler handler of setting.
      * @param action action of setting.
@@ -131,7 +131,7 @@ public final class WorldVariables {
     /**
      * Sets variable value to new specified one.
      * @param link variable link to set.
-     * @param type new type of value.
+     * @param type new id of value.
      * @param value new value.
      * @return true - if successfully set, false - failed.
      */
@@ -204,7 +204,7 @@ public final class WorldVariables {
     }
 
     /**
-     * Saves variables with type saved into /planet/variables.json file.
+     * Saves variables with id saved into /planet/variables.json file.
      */
     public void save() {
         long startTime = System.currentTimeMillis();
@@ -299,7 +299,7 @@ public final class WorldVariables {
                 return particleMap;
             } else if (value instanceof EventValueLink link) {
                 Map<String, String> valueMap = new HashMap<>();
-                valueMap.put("name", link.type());
+                valueMap.put("name", link.id());
                 return valueMap;
             } else if (value instanceof VariableLink link) {
                 Map<String, String> variableMap = new HashMap<>();
@@ -410,7 +410,7 @@ public final class WorldVariables {
     }
 
     /**
-     * Clears local variables with action handler type.
+     * Clears local variables with action handler id.
      * @param actionsHandler handler.
      */
     public void garbageCollector(ActionsHandler actionsHandler) {

@@ -197,7 +197,7 @@ public class ValueCommand extends CommandHandler {
             case "eventvalue", "gamevalue", "worldvalue", "value" -> {
                 if (args.length != 1) return null;
                 completer.addAll(EventValues.getInstance().getEventValues().stream()
-                        .map(EventValue::getName)
+                        .map(EventValue::getID)
                         .filter(name -> name.startsWith(args[0])).toList());
             }
         }

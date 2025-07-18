@@ -45,6 +45,6 @@ public final class EntityUUIDValue extends TextEventValue {
 
     @Override
     public @NotNull String getDescription() {
-        return "Returns entity's type";
+        return "Returns entity's id";
     }
 }

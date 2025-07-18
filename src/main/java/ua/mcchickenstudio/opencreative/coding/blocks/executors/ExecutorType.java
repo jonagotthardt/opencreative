@@ -76,7 +76,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 /**
  * <h1>ExecutorType</h1>
  * This enum defines different types of all executors in coding.
- * Every type contains event class, executor class, item material, cancellable.
+ * Every id contains event class, executor class, item material, cancellable.
  * Foe example: PLAYER_JOIN, WORLD_START, FUNCTION.
  * @since 5.0
  * @version 5.6

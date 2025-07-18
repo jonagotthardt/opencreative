@@ -87,7 +87,7 @@ public interface PacketManager extends Manager {
      * Shows fake phantom block for player.
      * @param player player to change display name.
      * @param location player that will see this change.
-     * @param material type of block.
+     * @param material id of block.
      */
     void showBlockForPlayer(@NotNull Player player, @NotNull Location location, @NotNull Material material);
 

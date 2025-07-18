@@ -117,7 +117,7 @@ public class ItemUtils {
      **/
     public static ItemStack createItem(ItemStack item, String localizationPath, String persistentData) {
 
-        ItemStack itemStack = item.clone();
+        ItemStack itemStack = clearItemFlags(item.clone());
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(getLocaleItemName(localizationPath + ".name"));
         itemMeta.setLore(getLocaleItemDescription(localizationPath + ".lore"));
@@ -161,7 +161,7 @@ public class ItemUtils {
      **/
     public static ItemStack createItem(ItemStack item, String localizationPath) {
 
-        ItemStack itemStack = item.clone();
+        ItemStack itemStack = clearItemFlags(item.clone());
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(getLocaleItemName(localizationPath + ".name"));
         itemMeta.setLore(getLocaleItemDescription(localizationPath + ".lore"));

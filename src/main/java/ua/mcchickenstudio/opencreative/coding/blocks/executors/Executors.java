@@ -134,7 +134,7 @@ public class Executors {
             String path;
             for (String key : keys) {
                 path = "code.blocks." + key;
-                if (config.getString(path + ".type") != null) {
+                if (config.getString(path + ".id") != null) {
                     Executor executor = createExecutor(config,path);
                     if (executor != null) {
                         if (executor.getExecutorType() == null) continue;
@@ -192,7 +192,7 @@ public class Executors {
         Executor executor = null;
         try {
             int[] coords = getCoords(config,path);
-            ExecutorType type = ExecutorType.valueOf(config.getString(path+".type"));
+            ExecutorType type = ExecutorType.valueOf(config.getString(path+".id"));
             if (type == ExecutorType.CYCLE) {
                 String name = config.getString(path+".name");
                 int time = config.getInt(path+".time");
@@ -255,7 +255,7 @@ public class Executors {
      */
     private Action createAction(Executor executor, String path, YamlConfiguration config) {
 
-        String type = config.getString(path + ".type");
+        String type = config.getString(path + ".id");
         if (type == null) return null;
 
         try {
@@ -278,7 +278,7 @@ public class Executors {
                 if (config.getConfigurationSection(path+".condition") != null) {
                     boolean isOpposed = config.getBoolean(path+".condition.opposed",false);
                     ActionCategory conditionCategory = ActionCategory.valueOf(config.getString(path+".condition.category"));
-                    ActionType conditionType = ActionType.valueOf(config.getString(path+".condition.type"));
+                    ActionType conditionType = ActionType.valueOf(config.getString(path+".condition.id"));
                     return actionType.getActionClass().getConstructor(Executor.class,int.class, Arguments.class, ActionCategory.class, ActionType.class, boolean.class).newInstance(executor,config.getInt(path+".location.x"),args,conditionCategory,conditionType,isOpposed);
                 } else if (config.getString(path+".target") != null){
                     if (targetString != null && !targetString.isEmpty()) {
@@ -286,7 +286,7 @@ public class Executors {
                     }
                     return actionType.getActionClass().getConstructor(Executor.class,int.class, Arguments.class, Target.class).newInstance(executor,config.getInt(path+".location.x"),args,target);
                 }
-                if (config.getString(path+".condition.type") != null) {
+                if (config.getString(path+".condition.id") != null) {
                     args.setArgumentValue("name", ValueType.TEXT,config.getString(path+".name",""));
                 }
             }

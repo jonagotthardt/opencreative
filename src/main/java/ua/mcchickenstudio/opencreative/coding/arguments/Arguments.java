@@ -77,7 +77,7 @@ public class Arguments {
     }
 
     private Argument loadArgument(ConfigurationSection section, String name) {
-        String configType = section.getString(name+".type");
+        String configType = section.getString(name+".id");
         Object configValue = section.get(name+".value");
         if (configType == null || configType.isEmpty() || configValue == null) {
             return null;

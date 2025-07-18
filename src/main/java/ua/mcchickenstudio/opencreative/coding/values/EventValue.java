@@ -82,13 +82,16 @@ public abstract class EventValue implements ExtensionContent {
      */
     public abstract @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action);
 
-    @Override
     public @NotNull String getName() {
-        return StringUtils.capitalize(id);
+        return StringUtils.capitalize(id.replace("_"," "));
+    }
+
+    public @NotNull String getID() {
+        return id;
     }
 
     public String getLocaleName() {
-        return getLocaleMessage("menus.developer.event-values.items." + this.getName().replace("_","-") + ".name" ,false);
+        return getLocaleMessage("menus.developer.event-values.items." + this.getID().replace("_","-") + ".name" ,false);
     }
 
 }

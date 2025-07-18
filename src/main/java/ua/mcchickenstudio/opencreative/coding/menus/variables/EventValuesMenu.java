@@ -45,13 +45,14 @@ public class EventValuesMenu extends ListBrowserMenu<EventValue> {
     protected MenusCategory currentCategory = MenusCategory.WORLD;
 
     public EventValuesMenu(Player player) {
-        super(player,ChatColor.stripColor(getLocaleMessage("menus.developer.event-values.title",false)));
+        super(player, ChatColor.stripColor(getLocaleMessage("menus.developer.event-values.title",false)));
     }
 
     @Override
     protected ItemStack getElementIcon(EventValue value) {
-        ItemStack icon = createItem(value.getDisplayIcon(), "menus.developer.event-values.items." + value.getName().toLowerCase().replace("_","-"));
-        setPersistentData(icon,getCodingVariableTypeKey(), value.getName().toUpperCase());
+        ItemStack icon = createItem(value.getDisplayIcon(), "menus.developer.event-values.items." + value.getID().toLowerCase().replace("_","-"));
+        setPersistentData(icon, getCodingValueKey(), "EVENT_VALUE");
+        setPersistentData(icon, getCodingVariableTypeKey(), value.getID().toUpperCase());
         return icon;
     }
 
@@ -91,15 +92,18 @@ public class EventValuesMenu extends ListBrowserMenu<EventValue> {
         event.setCancelled(true);
         if (item == null) return;
         if (item.getItemMeta() == null) return;
-        ItemMeta meta = itemInHand.getItemMeta();
-        String typeString = getPersistentData(item,getCodingVariableTypeKey());
-        meta.displayName(Component.text(item.getItemMeta().getDisplayName()));
-        itemInHand.setItemMeta(meta);
-        setPersistentData(itemInHand,getCodingValueKey(), "EVENT_VALUE");
-        setPersistentData(itemInHand,getCodingVariableTypeKey(), typeString.toUpperCase());
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        Component displayName = meta.displayName();
+        if (displayName == null) return;
+        ItemMeta handMeta = itemInHand.getItemMeta();
+        handMeta.displayName(displayName);
+        itemInHand.setItemMeta(handMeta);
+        setPersistentData(itemInHand, getCodingValueKey(), "EVENT_VALUE");
+        setPersistentData(itemInHand, getCodingVariableTypeKey(), getPersistentData(item, getCodingVariableTypeKey()));
         getPlayer().closeInventory();
         getPlayer().showTitle(Title.title(
-                toComponent(getLocaleMessage("world.dev-mode.set-variable")), item.displayName(),
+                toComponent(getLocaleMessage("world.dev-mode.set-variable")), displayName,
                 Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
         ));
         Sounds.DEV_EVENT_VALUE_SET.play(event.getWhoClicked());

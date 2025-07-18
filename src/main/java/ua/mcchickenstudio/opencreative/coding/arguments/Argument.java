@@ -33,7 +33,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.substring;
 /**
  * <h1>Argument</h1>
  * This class represents an argument, a field that
- * has type, name (path) and value. It's used to
+ * has id, name (path) and value. It's used to
  * get values, like text, numbers, locations etc.
  * @see Arguments
  */
@@ -47,7 +47,7 @@ public class Argument {
     /**
      * Creates instance of argument.
      * @param planet associated planet.
-     * @param type type of value.
+     * @param type id of value.
      * @param path name of argument.
      * @param value value.
      */
@@ -67,8 +67,8 @@ public class Argument {
     }
 
     /**
-     * Returns type of value.
-     * @return type of value.
+     * Returns id of value.
+     * @return id of value.
      */
     public @NotNull ValueType getType() {
         return type;
@@ -91,7 +91,7 @@ public class Argument {
                 }
             }
             case EventValueLink link -> {
-                Object value = EventValues.getInstance().getValue(link.type(), action.getHandler(), action);
+                Object value = EventValues.getInstance().getValue(link.id().toLowerCase(), action.getHandler(), action);
                 if (value != null) {
                     return value;
                 }

@@ -56,7 +56,7 @@ public final class EventValues {
      * @param value event value to register.
      */
     public void registerEventValue(@NotNull EventValue value) {
-        sendDebug("[VALUES] Registered " + value);
+        sendDebug("[VALUES] Registered event value: " + value.getName() + " (from " + value.getExtensionId() + ")");
         eventValues.add(value);
     }
 
@@ -145,7 +145,7 @@ public final class EventValues {
 
     public @Nullable EventValue getByName(@NotNull String name) {
         for (EventValue eventValue : eventValues) {
-            if (eventValue.getName().equals(name)) {
+            if (eventValue.getID().equals(name)) {
                 return eventValue;
             }
         }

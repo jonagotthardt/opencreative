@@ -267,7 +267,7 @@ public class PlanetInfo {
 
     /**
      * Returns icon of planet. If planet is closed,
-     * it will have type of barrier.
+     * it will have id of barrier.
      * @return
      */
     public ItemStack getIcon() {

@@ -159,11 +159,11 @@ public class Module {
 
     /*private Action createAction(YamlConfiguration config) {
 
-        String type = config.getString(path + ".type");
-        if (type == null) return null;
+        String id = config.getString(path + ".id");
+        if (id == null) return null;
 
         try {
-            ActionType actionType = ActionType.valueOf(type);
+            ActionType actionType = ActionType.valueOf(id);
             Arguments args = new Arguments(executor.getPlanet(),executor);
             Target target = Target.DEFAULT;
             String targetString = config.getString(path + ".target");
@@ -182,7 +182,7 @@ public class Module {
                 if (config.getConfigurationSection(path+".condition") != null) {
                     boolean isOpposed = config.getBoolean(path+".condition.opposed",false);
                     ActionCategory conditionCategory = ActionCategory.valueOf(config.getString(path+".condition.category"));
-                    ActionType conditionType = ActionType.valueOf(config.getString(path+".condition.type"));
+                    ActionType conditionType = ActionType.valueOf(config.getString(path+".condition.id"));
                     return actionType.getActionClass().getConstructor(Executor.class,int.class, Arguments.class, ActionCategory.class, ActionType.class, boolean.class).newInstance(executor,config.getInt(path+".location.x"),args,conditionCategory,conditionType,isOpposed);
                 } else if (config.getString(path+".target") != null){
                     if (targetString != null && !targetString.isEmpty()) {
@@ -190,7 +190,7 @@ public class Module {
                     }
                     return actionType.getActionClass().getConstructor(Executor.class,int.class, Arguments.class, Target.class).newInstance(executor,config.getInt(path+".location.x"),args,target);
                 }
-                if (config.getString(path+".condition.type") != null) {
+                if (config.getString(path+".condition.id") != null) {
                     args.setArgumentValue("name", ValueType.TEXT,config.getString(path+".name"));
                 }
             }

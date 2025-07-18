@@ -23,6 +23,12 @@ import org.jetbrains.annotations.NotNull;
 /**
  * This record represents a link to Event value, that can exists or can be empty.
  * It's used for searching and getting real event value.
- * @param type
+ * @param id id of event value.
  */
-public record EventValueLink(@NotNull String type)  {}
+public record EventValueLink(@NotNull String id)  {
+
+    public @NotNull String toString() {
+        return "null! " + id;
+    }
+
+}

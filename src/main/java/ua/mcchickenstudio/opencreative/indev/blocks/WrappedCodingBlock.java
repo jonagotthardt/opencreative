@@ -27,7 +27,7 @@ import java.util.Map;
  * <h1>WrappedCodingBlock</h1>
  * This class represents a coding metadata provider
  * for coding block, for example: coordinates in coding world.
- * @param <T> coding block type to store data.
+ * @param <T> coding block id to store data.
  */
 public abstract class WrappedCodingBlock<T extends CodingBlock> implements ConfigurationSerializable {
 

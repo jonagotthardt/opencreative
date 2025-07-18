@@ -74,7 +74,7 @@ public class CodeConfiguration extends YamlConfiguration {
      * Saves executor block data in configuration file.
      * @param block executor coding block.
      * @param category category of executor.
-     * @param type type of executor.
+     * @param type id of executor.
      */
     public void saveExecutorBlock(Block block, ExecutorCategory category, ExecutorType type) {
         int x = block.getX();
@@ -83,7 +83,7 @@ public class CodeConfiguration extends YamlConfiguration {
 
         String path = "code.blocks.exec_block_" + z + "_" + x;
         set(path + ".category", category.name());
-        set(path + ".type", type.name());
+        set(path + ".id", type.name());
 
         String firstSignLine = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 1);
         String thirdSignLine = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
@@ -111,14 +111,14 @@ public class CodeConfiguration extends YamlConfiguration {
      * @param multiActions list of multi actions.
      * @param actionBlock action coding block.
      * @param category category of action.
-     * @param type type of action.
+     * @param type id of action.
      * @param target target for action.
      */
     public void saveActionBlock(Block executorBlock, List<String> multiActions, Block actionBlock, ActionCategory category, ActionType type, Target target) {
         String path = getActionBlockPath(executorBlock,actionBlock,multiActions);
 
         set(path + ".category", category.name());
-        set(path + ".type", type.name());
+        set(path + ".id", type.name());
 
         if (type == ActionType.LAUNCH_FUNCTION || type == ActionType.LAUNCH_METHOD) {
             String thirdSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
@@ -133,7 +133,7 @@ public class CodeConfiguration extends YamlConfiguration {
             String thirdSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
             if (secondSignLine != null && !secondSignLine.isEmpty() && thirdSignLine != null && !thirdSignLine.isEmpty()) {
                 set(path + ".condition.category", secondSignLine.toUpperCase());
-                set(path + ".condition.type", thirdSignLine.toUpperCase());
+                set(path + ".condition.id", thirdSignLine.toUpperCase());
                 if (firstSignLine != null && firstSignLine.equalsIgnoreCase("not")) {
                     set(path + ".condition.opposed",true);
                 }
@@ -161,11 +161,11 @@ public class CodeConfiguration extends YamlConfiguration {
      * @param actionBlock action block to set arguments.
      * @param argument argument to set.
      * @param value value of argument.
-     * @param type value type.
+     * @param type value id.
      */
     public void saveArguments(Block executorBlock, List<String> multiActions, Block actionBlock, String argument, Object value, ValueType type) {
         String path = getActionBlockPath(executorBlock,actionBlock,multiActions);
-        set(path + ".arguments." + argument + ".type",type.name());
+        set(path + ".arguments." + argument + ".id",type.name());
         set(path + ".arguments." + argument + ".value",value);
     }
 

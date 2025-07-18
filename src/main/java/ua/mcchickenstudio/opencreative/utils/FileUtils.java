@@ -657,7 +657,7 @@ public class FileUtils {
     /**
      * Returns a specified list of players nicknames.
      * @param planet planet to get list.
-     * @param type type of players list.
+     * @param type id of players list.
      * @return list of nicknames.
      */
     public static List<String> getPlayersFromPlanetList(Planet planet, Planet.PlayersType type) {
@@ -668,7 +668,7 @@ public class FileUtils {
      * Adds player to list, that located in planet's settings.yml file.
      * @param planet planet to add player.
      * @param nickname nickname of player.
-     * @param type type of player list.
+     * @param type id of player list.
      * @return true - if successfully added, false - if failed.
      */
     public static boolean addPlayerInPlanetList(Planet planet, String nickname, Planet.PlayersType type) {

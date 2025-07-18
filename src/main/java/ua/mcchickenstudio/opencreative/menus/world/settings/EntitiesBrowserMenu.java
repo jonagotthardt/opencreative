@@ -65,7 +65,7 @@ public class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
     private ItemStack createEntityItem(Entity entity) {
         ItemStack item = createItem(getEntityMaterial(entity),1,"menus.entities-browser.items.entity");
         replacePlaceholderInLore(item,"%name%",entity.getName().substring(0,Math.min(20,entity.getName().length())));
-        replacePlaceholderInLore(item,"%type%", WordUtils.capitalize(entity.getType().name().toLowerCase().replace('_',' ')));
+        replacePlaceholderInLore(item,"%id%", WordUtils.capitalize(entity.getType().name().toLowerCase().replace('_',' ')));
         replacePlaceholderInLore(item,"%x%",entity.getLocation().getBlockX());
         replacePlaceholderInLore(item,"%y%",entity.getLocation().getBlockY());
         replacePlaceholderInLore(item,"%z%",entity.getLocation().getBlockZ());
@@ -92,7 +92,7 @@ public class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
                 List.of("all","friendly","monsters","items","transport","decoration","not-living"),
                 "type",
                 "menus.all-worlds",
-                "menus.entities-browser.items.type",
+                "menus.entities-browser.items.id",
                 List.of(Material.HOPPER, Material.PIGLIN_HEAD, Material.ZOMBIE_HEAD, Material.POISONOUS_POTATO, Material.BIRCH_CHEST_BOAT, Material.PAINTING,Material.PUMPKIN_SEEDS)
         );
         buttons.add(type);

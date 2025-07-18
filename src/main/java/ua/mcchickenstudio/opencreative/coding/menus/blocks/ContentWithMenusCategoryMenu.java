@@ -32,7 +32,7 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
- * This class represents a menus where player can select type of coding block.
+ * This class represents a menus where player can select id of coding block.
  * Every category of coding blocks has this menu.
  */
 public abstract class ContentWithMenusCategoryMenu<T> extends ListBrowserMenu<T> {

@@ -114,14 +114,14 @@ hide-from-tab: spectator # Hides players, that aren't in same world: spectator -
 lobby:
   #
   # Lobby is a world, where player teleports on server join,
-  # or on command type: /lobby, /hub, /spawn. It gives player
+  # or on command id: /lobby, /hub, /spawn. It gives player
   # items for opening menus. To change spawn location use
   # /setworldspawn command.
   #
   world: "world"
   clear-inventory: true # Inventory will be cleared on server join, world change, should be enabled due to security reasons.
 
-recommended-worlds: [1,2,3,4,5] # List of featured worlds in /games, type world number IDs here.
+recommended-worlds: [1,2,3,4,5] # List of featured worlds in /games, id world number IDs here.
 
 messages:
   locale: en # Supported: en, ru - Для русского языка: ru

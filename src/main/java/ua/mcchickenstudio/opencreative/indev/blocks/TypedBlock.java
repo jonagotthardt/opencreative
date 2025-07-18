@@ -23,14 +23,14 @@ import org.jetbrains.annotations.NotNull;
 /**
  * <h1>TypedBlock</h1>
  * This interface represents a coding block, that
- * has specified type. Coding block execution will
- * depend on type.
+ * has specified id. Coding block execution will
+ * depend on id.
  */
 public interface TypedBlock {
 
     /**
-     * Returns a specific type of block.
-     * @return type of coding block.
+     * Returns a specific id of block.
+     * @return id of coding block.
      */
     @NotNull String getType();
 
