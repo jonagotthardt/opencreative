@@ -151,19 +151,17 @@ public class Arguments {
                 if (listSection == null) {
                     return stringValue;
                 }
-                String typeString = listSection.getString("name");
-                if (typeString == null) return stringValue;
-                EventValues.Variable varType;
-                if (typeString.isEmpty()) return stringValue;
+                String valueType = listSection.getString("name");
+                if (valueType == null) return stringValue;
+                if (valueType.isEmpty()) return stringValue;
                 try {
-                    if (typeString.startsWith("PLOT")) {
-                        typeString = typeString.replace("PLOT","PLANET");
+                    if (valueType.startsWith("PLOT")) {
+                        valueType = valueType.replace("PLOT","PLANET");
                     }
-                    varType = EventValues.Variable.valueOf(typeString);
+                    return new EventValueLink(valueType);
                 } catch (Exception e) {
                     return stringValue;
                 }
-                return new EventValueLink(varType,executor);
             }
             case NUMBER:
                 if (INT_PATTERN.matcher(stringValue).matches()) {

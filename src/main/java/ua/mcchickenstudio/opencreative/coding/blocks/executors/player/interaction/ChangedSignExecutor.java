@@ -32,18 +32,8 @@ public class ChangedSignExecutor extends WorldExecutor {
     }
 
     @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof BlockEvent blockEvent) {
-            setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getBlock());
-            setTempVar(EventValues.Variable.BLOCK_LOCATION, blockEvent.getBlock());
-        }
-    }
-
-    @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_CHANGED_SIGN;
     }
-
-    
 
 }

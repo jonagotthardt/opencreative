@@ -27,14 +27,6 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class EntityInteractedBlockExecutor extends EntityExecutor {
 
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof BlockEvent blockEvent) {
-            setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getBlock());
-            setTempVar(EventValues.Variable.BLOCK_LOCATION, blockEvent.getBlock());
-        }
-    }
-
     public EntityInteractedBlockExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
     }

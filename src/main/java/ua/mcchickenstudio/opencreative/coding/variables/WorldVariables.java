@@ -300,12 +300,12 @@ public final class WorldVariables {
                 return particleMap;
             } else if (value instanceof EventValueLink link) {
                 Map<String, String> valueMap = new HashMap<>();
-                valueMap.put("name",link.type().name());
+                valueMap.put("name", link.type());
                 return valueMap;
             } else if (value instanceof VariableLink link) {
                 Map<String, String> variableMap = new HashMap<>();
-                variableMap.put("name",link.getName());
-                variableMap.put("type",link.getVariableType().name());
+                variableMap.put("name", link.getName());
+                variableMap.put("type", link.getVariableType().name());
                 return variableMap;
             }
         } catch (Exception e) {
@@ -382,7 +382,7 @@ public final class WorldVariables {
             } else if (type == ValueType.EVENT_VALUE) {
                 Map<?,?> eventValueMap = (Map<?,?>) value;
                 String eventValueType = (String) eventValueMap.get("name");
-                return EventValues.Variable.valueOf(eventValueType);
+                return new EventValueLink(eventValueType);
             } else if (type == ValueType.VARIABLE) {
                 Map<?,?> varMap = (Map<?,?>) value;
                 String varName = (String) varMap.get("name");

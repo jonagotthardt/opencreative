@@ -32,13 +32,6 @@ public class ChatExecutor extends PlayerExecutor {
     }
 
     @Override
-    public void setTempVars(WorldEvent event) {
-        if (event instanceof ChatEvent chatEvent) {
-            setTempVar(EventValues.Variable.MESSAGE, chatEvent.getMessage());
-        }
-    }
-
-    @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_CHAT;
     }

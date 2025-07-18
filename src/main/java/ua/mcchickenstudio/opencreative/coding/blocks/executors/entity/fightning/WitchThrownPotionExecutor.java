@@ -27,13 +27,6 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class WitchThrownPotionExecutor extends EntityExecutor {
 
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof ItemEvent itemEvent) {
-            setTempVar(EventValues.Variable.ITEM, itemEvent.getItem());
-        }
-    }
-
     public WitchThrownPotionExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
     }

@@ -27,13 +27,6 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class ItemMergedExecutor extends EntityExecutor {
 
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof ItemEvent itemEvent) {
-            setTempVar(EventValues.Variable.ITEM, itemEvent.getItem());
-        }
-    }
-
     public ItemMergedExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
     }

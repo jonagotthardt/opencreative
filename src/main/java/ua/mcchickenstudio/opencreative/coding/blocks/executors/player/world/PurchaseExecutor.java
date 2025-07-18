@@ -32,16 +32,6 @@ public class PurchaseExecutor extends PlayerExecutor{
     }
 
     @Override
-    public void setTempVars(WorldEvent event) {
-        if (event instanceof PlayerPurchaseEvent purchaseEvent) {
-            setTempVar(EventValues.Variable.PURCHASE_ID, purchaseEvent.getId());
-            setTempVar(EventValues.Variable.PURCHASE_NAME, purchaseEvent.getName());
-            setTempVar(EventValues.Variable.PURCHASE_SAVE, purchaseEvent.isSave());
-            setTempVar(EventValues.Variable.PURCHASE_PRICE, purchaseEvent.getPrice());
-        }
-    }
-
-    @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_PURCHASE;
     }

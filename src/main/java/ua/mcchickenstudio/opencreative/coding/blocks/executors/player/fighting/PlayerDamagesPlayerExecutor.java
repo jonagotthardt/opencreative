@@ -32,13 +32,6 @@ public class PlayerDamagesPlayerExecutor extends PlayerExecutor {
     }
 
     @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof PlayerDamagesPlayerEvent damagesPlayerEvent) {
-            setTempVar(EventValues.Variable.DAMAGE,damagesPlayerEvent.getDamage());
-        }
-    }
-
-    @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_DAMAGE_PLAYER;
     }

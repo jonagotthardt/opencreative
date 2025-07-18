@@ -32,13 +32,6 @@ public class FishExecutor extends PlayerExecutor {
     }
 
     @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof FishEvent) {
-            setTempVar(EventValues.Variable.ITEM,((FishEvent) event).getCaughtItem());
-        }
-    }
-
-    @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_FISHING;
     }

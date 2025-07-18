@@ -91,7 +91,7 @@ public enum ValueType {
      */
     VARIABLE(Material.MAGMA_CREAM, Material.YELLOW_STAINED_GLASS_PANE),
     /**
-     * Event Value Link stores type of EventVariable for getting value.
+     * Event Value Link stores type of event value for getting value.
      */
     EVENT_VALUE(Material.NAME_TAG, Material.YELLOW_STAINED_GLASS_PANE),
     /**

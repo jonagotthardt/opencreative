@@ -71,24 +71,14 @@ public abstract class Executor {
             return;
         }
         sendCodingDebugExecutor(this);
-        setTempVars(event);
         executeActions(event);
     }
 
-    protected void setTempVars(WorldEvent event) {}
     protected void executeActions(WorldEvent event) {
         this.event = event;
         handler = new ActionsHandler(this);
         handler.executeActions(actions);
         variables.clear();
-    }
-
-    public void setTempVar(EventValues.Variable var, Object value) {
-        variables.setVariable(var,value);
-    }
-
-    public Object getVarValue(EventValues.Variable var) {
-        return variables.getVarValue(var);
     }
 
     /**

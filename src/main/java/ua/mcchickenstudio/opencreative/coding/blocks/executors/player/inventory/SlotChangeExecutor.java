@@ -27,14 +27,6 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class SlotChangeExecutor extends PlayerExecutor {
 
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof SlotChangeEvent slotChangeEvent) {
-            setTempVar(EventValues.Variable.OLD_SLOT,slotChangeEvent.getOldSlot());
-            setTempVar(EventValues.Variable.NEW_SLOT,slotChangeEvent.getNewSlot());
-        }
-    }
-
     public SlotChangeExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
     }

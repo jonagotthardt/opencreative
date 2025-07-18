@@ -29,6 +29,8 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
+import ua.mcchickenstudio.opencreative.indev.values.EventValueTest;
+import ua.mcchickenstudio.opencreative.indev.values.EventValuesConcept;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
@@ -141,7 +143,8 @@ public class ValueCommand extends CommandHandler {
                 itemStack = createItem(Material.NAME_TAG,1,"menus.developer.variables.items.event-value");
                 if (args.length > 0) {
                     try {
-                        EventValues.Variable value = EventValues.Variable.valueOf(args[0].toUpperCase());
+                        EventValueTest value = EventValuesConcept.getInstance().getByName(args[0]);
+                        if (value == null) return;
                         setDisplayName(itemStack,value.getLocaleName());
                         setPersistentData(itemStack,getCodingVariableTypeKey(),args[0].toUpperCase());
                     } catch (Exception ignored) {}
@@ -194,9 +197,9 @@ public class ValueCommand extends CommandHandler {
             }
             case "eventvalue", "gamevalue", "worldvalue", "value" -> {
                 if (args.length != 1) return null;
-                completer.addAll(Arrays.stream(EventValues.Variable.values())
-                        .filter(e -> e.name().toLowerCase().startsWith(args[0]))
-                        .map(m -> m.name().toLowerCase()).toList());
+                completer.addAll(EventValuesConcept.getInstance().getEventValueTests().stream()
+                        .map(EventValueTest::getName)
+                        .filter(name -> name.startsWith(args[0])).toList());
             }
         }
         return completer;

@@ -32,15 +32,6 @@ public class BedLeaveExecutor extends PlayerExecutor {
     }
 
     @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof BedLeaveEvent leaveEvent) {
-            setTempVar(EventValues.Variable.BED,leaveEvent.getBlock());
-            setTempVar(EventValues.Variable.BLOCK_MATERIAL,leaveEvent.getBlock().getType().name().toLowerCase());
-            setTempVar(EventValues.Variable.BLOCK_LOCATION,leaveEvent.getBlock().getLocation());
-        }
-    }
-
-    @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_BED_LEAVE;
     }

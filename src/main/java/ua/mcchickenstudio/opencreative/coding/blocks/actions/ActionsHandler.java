@@ -65,10 +65,6 @@ public class ActionsHandler {
         this.executor = executor;
         this.event = executor.getEvent();
         this.variables = new EventValues();
-        Map<EventValues.Variable,Object> oldVars = executor.getVariables().getMap();
-        for (EventValues.Variable var : oldVars.keySet()) {
-            this.variables.setVariable(var,oldVars.get(var));
-        }
         this.selectedTargets = new HashSet<>(event.getSelection());
         this.parentActionsHandler = null;
         this.action = null;
@@ -208,18 +204,6 @@ public class ActionsHandler {
 
     public Executor getExecutor() {
         return executor;
-    }
-
-    public void setVarValue(EventValues.Variable var, Object value) {
-        getVariables().setVariable(var,value);
-    }
-
-    public Object getVarValue(EventValues.Variable var) {
-        return getVariables().getVarValue(var);
-    }
-
-    public boolean hasTempVariable(EventValues.Variable var) {
-        return getVariables().getVarValue(var) == null;
     }
 
     @Override

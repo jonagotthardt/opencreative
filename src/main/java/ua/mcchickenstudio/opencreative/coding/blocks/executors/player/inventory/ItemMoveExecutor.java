@@ -32,13 +32,6 @@ public class ItemMoveExecutor extends PlayerExecutor {
     }
 
     @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof ItemMoveEvent) {
-            setTempVar(EventValues.Variable.ITEM,((ItemMoveEvent) event).getItem());
-        }
-    }
-
-    @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_DRAG_ITEM;
     }

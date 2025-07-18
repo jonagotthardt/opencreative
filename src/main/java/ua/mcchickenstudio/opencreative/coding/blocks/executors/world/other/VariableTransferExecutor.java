@@ -32,14 +32,6 @@ public class VariableTransferExecutor extends WorldExecutor {
     }
 
     @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof VariableTransferEvent varEvent) {
-            setTempVar(EventValues.Variable.TRANSFER_KEY,varEvent.getKey());
-            setTempVar(EventValues.Variable.TRANSFER_VALUE,varEvent.getValue());
-        }
-    }
-
-    @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.WORLD_VARIABLE_TRANSFER;
     }

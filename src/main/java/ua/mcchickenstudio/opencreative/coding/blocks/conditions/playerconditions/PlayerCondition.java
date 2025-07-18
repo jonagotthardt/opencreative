@@ -33,7 +33,7 @@ import java.util.List;
 public abstract class PlayerCondition extends Condition {
 
     /**
-     * Creates an Condition with linked executor and specified arguments.
+     * Creates a Condition with linked executor and specified arguments.
      *
      * @param executor Executor where this action will be added.
      * @param x        X from Action's block location in developers planet.

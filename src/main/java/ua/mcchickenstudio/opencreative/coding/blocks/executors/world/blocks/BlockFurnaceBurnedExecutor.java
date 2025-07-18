@@ -32,16 +32,6 @@ public class BlockFurnaceBurnedExecutor extends WorldExecutor {
     }
 
     @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof BlockFurnaceBurnedEvent blockEvent) {
-            setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getBlock());
-            setTempVar(EventValues.Variable.BLOCK_LOCATION, blockEvent.getBlock());
-            setTempVar(EventValues.Variable.ITEM, blockEvent.getItem());
-        }
-
-    }
-
-    @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.WORLD_BLOCK_BREWING_FUEL;
     }

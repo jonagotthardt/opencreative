@@ -27,13 +27,6 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class ItemPickupExecutor extends PlayerExecutor {
 
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof ItemPickupEvent) {
-            setTempVar(EventValues.Variable.ITEM,((ItemPickupEvent) event).getItem());
-        }
-    }
-
     public ItemPickupExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
     }

@@ -30,6 +30,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import ua.mcchickenstudio.opencreative.indev.values.EventValueTest;
+import ua.mcchickenstudio.opencreative.indev.values.EventValuesConcept;
 import ua.mcchickenstudio.opencreative.menus.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
@@ -39,7 +41,7 @@ import java.util.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
-public class EventValuesMenu extends ListBrowserMenu<EventValues.Variable> {
+public class EventValuesMenu extends ListBrowserMenu<EventValueTest> {
 
     protected MenusCategory currentCategory = MenusCategory.WORLD;
 
@@ -48,9 +50,9 @@ public class EventValuesMenu extends ListBrowserMenu<EventValues.Variable> {
     }
 
     @Override
-    protected ItemStack getElementIcon(EventValues.Variable variable) {
-        ItemStack icon = createItem(variable.getIcon(),1,"menus.developer.event-values.items." + variable.name().toLowerCase().replace("_","-"));
-        setPersistentData(icon,getCodingVariableTypeKey(),variable.name());
+    protected ItemStack getElementIcon(EventValueTest value) {
+        ItemStack icon = createItem(value.getDisplayIcon(), "menus.developer.event-values.items." + value.getName().toLowerCase().replace("_","-"));
+        setPersistentData(icon,getCodingVariableTypeKey(), value.getName().toUpperCase());
         return icon;
     }
 
@@ -94,8 +96,8 @@ public class EventValuesMenu extends ListBrowserMenu<EventValues.Variable> {
         String typeString = getPersistentData(item,getCodingVariableTypeKey());
         meta.displayName(Component.text(item.getItemMeta().getDisplayName()));
         itemInHand.setItemMeta(meta);
-        setPersistentData(itemInHand,getCodingValueKey(),"EVENT_VALUE");
-        setPersistentData(itemInHand,getCodingVariableTypeKey(),typeString.toUpperCase());
+        setPersistentData(itemInHand,getCodingValueKey(), "EVENT_VALUE");
+        setPersistentData(itemInHand,getCodingVariableTypeKey(), typeString.toUpperCase());
         getPlayer().closeInventory();
         getPlayer().showTitle(Title.title(
                 toComponent(getLocaleMessage("world.dev-mode.set-variable")), item.displayName(),
@@ -105,9 +107,9 @@ public class EventValuesMenu extends ListBrowserMenu<EventValues.Variable> {
     }
 
     @Override
-    public List<EventValues.Variable> getElements() {
+    public List<EventValueTest> getElements() {
         if (currentCategory == null) currentCategory = MenusCategory.ENTITY;
-        return new ArrayList<>(EventValues.Variable.getByCategories(currentCategory));
+        return new ArrayList<>(EventValuesConcept.getInstance().getByCategories(currentCategory));
     }
 
     @Override

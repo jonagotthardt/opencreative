@@ -27,13 +27,6 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class ItemBreakExecutor extends PlayerExecutor {
 
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof ItemBreakEvent breakEvent) {
-            setTempVar(EventValues.Variable.ITEM,breakEvent.getItem());
-        }
-    }
-
     public ItemBreakExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
     }

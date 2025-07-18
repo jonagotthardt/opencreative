@@ -27,14 +27,6 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class BookWriteExecutor extends PlayerExecutor {
 
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof BookWriteEvent bookWriteEvent) {
-            setTempVar(EventValues.Variable.ITEM,bookWriteEvent.getOldBook());
-            setTempVar(EventValues.Variable.NEW_ITEM,bookWriteEvent.getNewBook());
-        }
-    }
-
     public BookWriteExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
     }

@@ -27,14 +27,6 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class ItemDamageExecutor extends PlayerExecutor {
 
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof PlayerItemDamagedEvent craftEvent) {
-            setTempVar(EventValues.Variable.ITEM,craftEvent.getItem());
-            setTempVar(EventValues.Variable.DAMAGE,craftEvent.getDamage());
-        }
-    }
-
     public ItemDamageExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
     }

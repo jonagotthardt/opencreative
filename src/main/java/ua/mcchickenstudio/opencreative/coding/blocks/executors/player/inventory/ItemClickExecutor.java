@@ -32,16 +32,6 @@ public class ItemClickExecutor extends PlayerExecutor {
     }
 
     @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof ItemClickEvent clickEvent) {
-            setTempVar(EventValues.Variable.ITEM,clickEvent.getItem());
-            setTempVar(EventValues.Variable.CURSOR_ITEM,clickEvent.getCursor());
-            setTempVar(EventValues.Variable.CLICKED_SLOT,clickEvent.getSlot()+1);
-            setTempVar(EventValues.Variable.CLICK_TYPE,clickEvent.getClick().name().toLowerCase());
-        }
-    }
-
-    @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_CLICK_INVENTORY;
     }

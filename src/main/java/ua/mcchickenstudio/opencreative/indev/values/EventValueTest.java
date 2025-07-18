@@ -27,6 +27,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+
 /**
  * <h1>EventValue</h1>
  * This class represents a value, that can be got
@@ -48,7 +50,7 @@ public abstract class EventValueTest implements ExtensionContent {
      * @param category category of event value for event values list.
      */
     public EventValueTest(String id, ItemStack displayIcon, MenusCategory category) {
-        this.id = id.replace("-","_");
+        this.id = id.replace("-","_").toLowerCase();
         this.displayIcon = displayIcon;
         this.category = category;
     }
@@ -84,4 +86,9 @@ public abstract class EventValueTest implements ExtensionContent {
     public @NotNull String getName() {
         return StringUtils.capitalize(id);
     }
+
+    public String getLocaleName() {
+        return getLocaleMessage("menus.developer.event-values.items." + this.getName().replace("_","-") + ".name" ,false);
+    }
+
 }

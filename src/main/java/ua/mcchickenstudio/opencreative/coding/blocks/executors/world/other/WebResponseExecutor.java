@@ -32,15 +32,6 @@ public class WebResponseExecutor extends WorldExecutor {
     }
 
     @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof WebResponseEvent webEvent) {
-            setTempVar(EventValues.Variable.URL,webEvent.getUrl());
-            setTempVar(EventValues.Variable.URL_RESPONSE_CODE,webEvent.getCode());
-            setTempVar(EventValues.Variable.URL_RESPONSE,webEvent.getResponse());
-        }
-    }
-
-    @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.WORLD_WEB_RESPONSE;
     }

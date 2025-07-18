@@ -32,14 +32,6 @@ public class HungerChangeExecutor extends PlayerExecutor {
     }
 
     @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof HungerChangeEvent hungerChangeEvent) {
-            setTempVar(EventValues.Variable.ITEM,hungerChangeEvent.getItemStack());
-            setTempVar(EventValues.Variable.FOOD_LEVEL,hungerChangeEvent.getFoodLevel());
-        }
-    }
-
-    @Override
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_HUNGER_CHANGE;
     }

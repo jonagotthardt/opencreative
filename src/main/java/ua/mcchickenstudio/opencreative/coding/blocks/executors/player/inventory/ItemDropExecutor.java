@@ -27,13 +27,6 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class ItemDropExecutor extends PlayerExecutor {
 
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof ItemDropEvent) {
-            setTempVar(EventValues.Variable.ITEM,((ItemDropEvent) event).getItem());
-        }
-    }
-
     public ItemDropExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
     }
