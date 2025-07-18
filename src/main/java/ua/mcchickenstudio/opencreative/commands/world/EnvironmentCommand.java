@@ -175,7 +175,7 @@ public class EnvironmentCommand extends CommandHandler {
                             } else {
                                 String message = getLocaleMessage("environment.variables.get.message")
                                         .replace("%variable%",varName)
-                                        .replace("%type%",var.getType().getLocaleName())
+                                        .replace("%id%",var.getType().getLocaleName())
                                         .replace("%valuetype%",var.getVarType().getLocalized());
                                 message = message.replace("%value%",message.length()+var.getValue().toString().length() > 700 ? var.getValue().toString().substring(0,Math.min(var.getValue().toString().length(),700)) + "..." : var.getValue().toString());
                                 player.sendMessage(message);
@@ -214,7 +214,7 @@ public class EnvironmentCommand extends CommandHandler {
                                 if (value.length() > 40) {
                                     value = value.substring(0, 40) + "...";
                                 }
-                                player.sendMessage(getLocaleMessage("environment.variables.list.variable", false).replace("%name%", name).replace("%type%", type.getLocalized()).replace("%value%", value));
+                                player.sendMessage(getLocaleMessage("environment.variables.list.variable", false).replace("%name%", name).replace("%id%", type.getLocalized()).replace("%value%", value));
                             }
                             Component navigation = toComponent(getLocaleMessage("environment.variables.list.navigation"));
                             page += 1;

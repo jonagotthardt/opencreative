@@ -18,9 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.fighting;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.HungerChangeEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -29,14 +26,6 @@ public class HungerChangeExecutor extends PlayerExecutor {
 
     public HungerChangeExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
-    }
-
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof HungerChangeEvent hungerChangeEvent) {
-            setTempVar(EventValues.Variable.ITEM,hungerChangeEvent.getItemStack());
-            setTempVar(EventValues.Variable.FOOD_LEVEL,hungerChangeEvent.getFoodLevel());
-        }
     }
 
     @Override

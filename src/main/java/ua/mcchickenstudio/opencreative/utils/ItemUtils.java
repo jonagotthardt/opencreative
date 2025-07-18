@@ -115,6 +115,21 @@ public class ItemUtils {
     /**
      Returns item stack with name, description found in localization file and persistent data.
      **/
+    public static ItemStack createItem(ItemStack item, String localizationPath, String persistentData) {
+
+        ItemStack itemStack = clearItemFlags(item.clone());
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName(getLocaleItemName(localizationPath + ".name"));
+        itemMeta.setLore(getLocaleItemDescription(localizationPath + ".lore"));
+        itemStack.setItemMeta(itemMeta);
+        setPersistentData(itemStack,getItemTypeKey(),persistentData);
+        return itemStack;
+
+    }
+
+    /**
+     Returns item stack with name, description found in localization file and persistent data.
+     **/
     public static ItemStack createItem(Material material, int amount, String localizationPath, String persistentData) {
 
         ItemStack itemStack = createItem(material,amount);
@@ -133,6 +148,20 @@ public class ItemUtils {
     public static ItemStack createItem(Material material, int amount, String localizationPath) {
 
         ItemStack itemStack = createItem(material,amount);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName(getLocaleItemName(localizationPath + ".name"));
+        itemMeta.setLore(getLocaleItemDescription(localizationPath + ".lore"));
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+
+    }
+
+    /**
+     Returns item stack with name and description found in localization file.
+     **/
+    public static ItemStack createItem(ItemStack item, String localizationPath) {
+
+        ItemStack itemStack = clearItemFlags(item.clone());
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(getLocaleItemName(localizationPath + ".name"));
         itemMeta.setLore(getLocaleItemDescription(localizationPath + ".lore"));

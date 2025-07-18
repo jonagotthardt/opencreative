@@ -18,13 +18,17 @@
 
 package ua.mcchickenstudio.opencreative.coding.variables;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This record represents a link to Event value, that can exists or can be empty.
  * It's used for searching and getting real event value.
- * @param type
- * @param executor
+ * @param id id of event value.
  */
-public record EventValueLink(EventValues.Variable type, Executor executor)  {}
+public record EventValueLink(@NotNull String id)  {
+
+    public @NotNull String toString() {
+        return "null! " + id;
+    }
+
+}

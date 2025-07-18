@@ -18,9 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.world.other;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.WebResponseEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.world.WorldExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -29,15 +26,6 @@ public class WebResponseExecutor extends WorldExecutor {
 
     public WebResponseExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
-    }
-
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof WebResponseEvent webEvent) {
-            setTempVar(EventValues.Variable.URL,webEvent.getUrl());
-            setTempVar(EventValues.Variable.URL_RESPONSE_CODE,webEvent.getCode());
-            setTempVar(EventValues.Variable.URL_RESPONSE,webEvent.getResponse());
-        }
     }
 
     @Override

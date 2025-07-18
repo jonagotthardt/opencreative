@@ -18,22 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.inventory;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.SlotChangeEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class SlotChangeExecutor extends PlayerExecutor {
-
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof SlotChangeEvent slotChangeEvent) {
-            setTempVar(EventValues.Variable.OLD_SLOT,slotChangeEvent.getOldSlot());
-            setTempVar(EventValues.Variable.NEW_SLOT,slotChangeEvent.getNewSlot());
-        }
-    }
 
     public SlotChangeExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);

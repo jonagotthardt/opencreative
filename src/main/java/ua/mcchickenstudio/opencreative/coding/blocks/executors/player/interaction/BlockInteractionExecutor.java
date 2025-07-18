@@ -18,24 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.interaction;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.BlockInteractionEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class BlockInteractionExecutor extends PlayerExecutor {
-
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof BlockInteractionEvent blockEvent) {
-            setTempVar(EventValues.Variable.BLOCK_INTERACTION_TYPE,blockEvent.getInteractionType().name().toLowerCase());
-            if (blockEvent.getBlock() == null) return;
-            setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getBlock().getType().name().toLowerCase());
-            setTempVar(EventValues.Variable.BLOCK_LOCATION, blockEvent.getBlock().getLocation());
-        }
-    }
 
     public BlockInteractionExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);

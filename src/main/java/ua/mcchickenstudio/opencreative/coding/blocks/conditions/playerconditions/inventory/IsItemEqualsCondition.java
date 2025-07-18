@@ -23,15 +23,14 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.values.events.EventItemValue;
+import ua.mcchickenstudio.opencreative.utils.ErrorUtils;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
-
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingNotFoundTempVar;
 
 public class IsItemEqualsCondition extends PlayerCondition {
 
@@ -41,10 +40,11 @@ public class IsItemEqualsCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
-        if (getHandler().hasTempVariable(EventValues.Variable.ITEM)) {
-            sendCodingNotFoundTempVar(getPlanet(),getExecutor(), EventValues.Variable.ITEM);
+        if (!(getEventValue(EventItemValue.class) instanceof ItemStack eventItem)) {
+            ErrorUtils.sendCodingNotFoundEventValue(getPlanet(),getExecutor(), EventItemValue.class);
             return false;
         }
+
         boolean ignoreAmount = getArguments().getValue("ignore-amount",true,this);
         boolean ignoreName = getArguments().getValue("ignore-name",false,this);
         boolean ignoreLore = getArguments().getValue("ignore-lore",false,this);
@@ -56,7 +56,6 @@ public class IsItemEqualsCondition extends PlayerCondition {
         List<ItemStack> items = getArguments().getItemList("items",this);
         if (items.isEmpty()) return false;
 
-        ItemStack eventItem = (ItemStack) getHandler().getVarValue(EventValues.Variable.ITEM);
         eventItem = ItemUtils.getItemWithIgnoreData(eventItem,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial);
         for (ItemStack checkItem : items) {
             checkItem = ItemUtils.getItemWithIgnoreData(checkItem,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial);

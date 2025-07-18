@@ -24,14 +24,12 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.coding.values.events.BlockMaterialValue;
 
 import java.util.List;
-
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingNotFoundTempVar;
 
 public class IsBlockEqualsCondition extends PlayerCondition {
 
@@ -41,11 +39,11 @@ public class IsBlockEqualsCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
-        if (getHandler().hasTempVariable(EventValues.Variable.BLOCK_MATERIAL)) {
-            sendCodingNotFoundTempVar(getPlanet(),getExecutor(), EventValues.Variable.BLOCK_MATERIAL);
+        if (!(getEventValue(BlockMaterialValue.class) instanceof String string)) {
             return false;
         }
-        if (!(getHandler().getVarValue(EventValues.Variable.BLOCK_MATERIAL) instanceof Material material)) {
+        Material material = Material.getMaterial(string.toUpperCase());
+        if (material == null) {
             return false;
         }
         List<ItemStack> blocks = getArguments().getItemList("blocks",this);

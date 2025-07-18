@@ -18,9 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.world;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.ChatEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -29,13 +26,6 @@ public class ChatExecutor extends PlayerExecutor {
 
     public ChatExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
-    }
-
-    @Override
-    public void setTempVars(WorldEvent event) {
-        if (event instanceof ChatEvent chatEvent) {
-            setTempVar(EventValues.Variable.MESSAGE, chatEvent.getMessage());
-        }
     }
 
     @Override

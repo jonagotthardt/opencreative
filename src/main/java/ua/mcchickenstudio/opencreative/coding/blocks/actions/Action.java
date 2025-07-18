@@ -30,7 +30,6 @@ import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -44,7 +43,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLo
  * <h1>Action</h1>
  * This class represents Action that will be executed in executor.
  * @since 5.0
- * @version 5.0
+ * @version 5.6
  * @author McChicken Studio
  */
 public abstract class Action {

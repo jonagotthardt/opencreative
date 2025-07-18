@@ -18,9 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.inventory;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.ItemClickEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -29,16 +26,6 @@ public class ItemClickExecutor extends PlayerExecutor {
 
     public ItemClickExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
-    }
-
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof ItemClickEvent clickEvent) {
-            setTempVar(EventValues.Variable.ITEM,clickEvent.getItem());
-            setTempVar(EventValues.Variable.CURSOR_ITEM,clickEvent.getCursor());
-            setTempVar(EventValues.Variable.CLICKED_SLOT,clickEvent.getSlot()+1);
-            setTempVar(EventValues.Variable.CLICK_TYPE,clickEvent.getClick().name().toLowerCase());
-        }
     }
 
     @Override

@@ -27,4 +27,5 @@ public final class ChunkLoadEvent extends WorldEvent {
     public ChunkLoadEvent(Player player, PlayerChunkLoadEvent event) {
         super(player);
     }
+
 }

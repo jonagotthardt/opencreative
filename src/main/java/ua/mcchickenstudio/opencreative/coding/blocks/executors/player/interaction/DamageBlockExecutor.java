@@ -18,9 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.interaction;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.DamageBlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -29,14 +26,6 @@ public class DamageBlockExecutor extends PlayerExecutor {
 
     public DamageBlockExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
-    }
-
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof DamageBlockEvent blockEvent) {
-            setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getBlock().getType().name().toLowerCase());
-            setTempVar(EventValues.Variable.BLOCK_LOCATION, blockEvent.getBlock().getLocation());
-        }
     }
 
     @Override

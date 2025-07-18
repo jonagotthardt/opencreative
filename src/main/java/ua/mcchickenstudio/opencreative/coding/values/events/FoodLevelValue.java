@@ -16,30 +16,36 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.indev.values;
+package ua.mcchickenstudio.opencreative.coding.values.events;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.HungerChangeEvent;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
+import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public abstract class NumberEventValue extends EventValueTest {
+public final class FoodLevelValue extends NumberEventValue {
 
-    public NumberEventValue(String id, ItemStack displayIcon, MenusCategory category) {
-        super(id, displayIcon, category);
+    public FoodLevelValue() {
+        super("food_level", new ItemStack(Material.COOKED_CHICKEN), MenusCategory.EVENTS);
     }
 
-    /**
-     * Returns a number that can be got from
-     * player, event, action, or null.
-     * @return number, or null.
-     */
-    public abstract @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action);
+    @Override
+    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action) {
+        return action.getEvent() instanceof HungerChangeEvent event ? event.getFoodLevel() : null;
+    }
 
     @Override
-    public @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
-        return getNumber(handler, action);
+    public @NotNull String getExtensionId() {
+        return "default";
+    }
+
+    @Override
+    public @NotNull String getDescription() {
+        return "Returns food level from hunger event";
     }
 }

@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
@@ -25,6 +27,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
+import ua.mcchickenstudio.opencreative.coding.values.EventValue;
+import ua.mcchickenstudio.opencreative.coding.values.EventValues;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +74,7 @@ public abstract class Condition extends Action {
                 }
             }
         }
-        sendCodingDebugLog(getPlanet(), getLocaleMessage("coding-debug.condition.returned-" + check,false).replace("%type%",getActionType().getLocaleName()));
+        sendCodingDebugLog(getPlanet(), getLocaleMessage("coding-debug.condition.returned-" + check,false).replace("%id%",getActionType().getLocaleName()));
         if (check ^ isOpposed) {
             new ActionsHandler(this).executeActions(actions);
         } else {
@@ -89,6 +93,10 @@ public abstract class Condition extends Action {
 
     public boolean isOpposed() {
         return isOpposed;
+    }
+
+    protected @Nullable Object getEventValue(@NotNull Class<? extends EventValue> clazz) {
+        return EventValues.getInstance().getValue(clazz, handler, this);
     }
 
 }

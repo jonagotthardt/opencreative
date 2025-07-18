@@ -4,7 +4,7 @@ import ua.mcchickenstudio.opencreative.utils.millennium.vectors.Vec3;
 
 public final class MovingObjectPosition {
     /**
-     * What type of ray trace hit was this? 0 = block, 1 = entity
+     * What id of ray trace hit was this? 0 = block, 1 = entity
      */
     public MovingObjectType typeOfHit;
     public EnumFacing sideHit;
@@ -47,7 +47,7 @@ public final class MovingObjectPosition {
     }
 
     public String toString() {
-        return "HitResult{type=" + this.typeOfHit + ", blockpos=" + this.blockPos + ", f=" + this.sideHit + ", pos=" + this.hitVec + '}';
+        return "HitResult{id=" + this.typeOfHit + ", blockpos=" + this.blockPos + ", f=" + this.sideHit + ", pos=" + this.hitVec + '}';
     }
 
     public static enum MovingObjectType {

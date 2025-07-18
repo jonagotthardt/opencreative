@@ -64,7 +64,7 @@ public final class SpawnEntityAction extends WorldAction {
             type = EntityType.CHICKEN;
         }
         if (isBannedEntity(type)) {
-            throw new IllegalArgumentException("Cannot spawn " + type.name() + ", because it's disallowed entity type.");
+            throw new IllegalArgumentException("Cannot spawn " + type.name() + ", because it's disallowed entity id.");
         }
 
         for (Location location : getArguments().getLocationList("locations",this)) {

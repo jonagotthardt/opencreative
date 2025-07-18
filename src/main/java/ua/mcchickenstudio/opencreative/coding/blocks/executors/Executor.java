@@ -21,7 +21,6 @@ package ua.mcchickenstudio.opencreative.coding.blocks.executors;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.util.ArrayList;
@@ -44,7 +43,6 @@ public abstract class Executor {
     private final int y;
     private final int z;
     private final List<Action> actions = new ArrayList<>();
-    private final EventValues variables = new EventValues();
     private WorldEvent event;
     private ActionsHandler handler;
 
@@ -71,24 +69,13 @@ public abstract class Executor {
             return;
         }
         sendCodingDebugExecutor(this);
-        setTempVars(event);
         executeActions(event);
     }
 
-    protected void setTempVars(WorldEvent event) {}
     protected void executeActions(WorldEvent event) {
         this.event = event;
         handler = new ActionsHandler(this);
         handler.executeActions(actions);
-        variables.clear();
-    }
-
-    public void setTempVar(EventValues.Variable var, Object value) {
-        variables.setVariable(var,value);
-    }
-
-    public Object getVarValue(EventValues.Variable var) {
-        return variables.getVarValue(var);
     }
 
     /**
@@ -126,10 +113,6 @@ public abstract class Executor {
 
     public final Planet getPlanet() {
         return planet;
-    }
-
-    public EventValues getVariables() {
-        return variables;
     }
 
     public WorldEvent getEvent() {

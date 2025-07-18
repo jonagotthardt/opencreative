@@ -18,9 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.interaction;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.BedEnterEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -29,16 +26,6 @@ public class BedEnterExecutor extends PlayerExecutor {
 
     public BedEnterExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
-    }
-
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof BedEnterEvent enterEvent) {
-            setTempVar(EventValues.Variable.BED_ENTER_RESULT,enterEvent.getBedEnterResult().toString());
-            setTempVar(EventValues.Variable.BED,enterEvent.getBlock());
-            setTempVar(EventValues.Variable.BLOCK_MATERIAL,enterEvent.getBlock().getType().name().toLowerCase());
-            setTempVar(EventValues.Variable.BLOCK_LOCATION,enterEvent.getBlock().getLocation());
-        }
     }
 
     @Override

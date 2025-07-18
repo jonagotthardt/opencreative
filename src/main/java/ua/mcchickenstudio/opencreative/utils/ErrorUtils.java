@@ -23,10 +23,11 @@ import ua.mcchickenstudio.opencreative.coding.arguments.Argument;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.Condition;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
+import ua.mcchickenstudio.opencreative.coding.values.EventValue;
+import ua.mcchickenstudio.opencreative.coding.values.EventValues;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -305,7 +306,7 @@ public class ErrorUtils {
                             .replace("%y%", String.valueOf(block.getLocation().getY()))
                             .replace("%z%", String.valueOf(block.getLocation().getZ()))
                             .replace("%category%",category)
-                            .replace("%type%",type))
+                            .replace("%id%",type))
                         .color(color)
                         .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("coding-error.hover-message"))))
                         .clickEvent(ClickEvent.runCommand("/dev " + block.getLocation().getX() + " " + block.getLocation().getY() + " " + block.getLocation().getZ()));
@@ -382,9 +383,11 @@ public class ErrorUtils {
         }
     }
 
-    public static void sendCodingNotFoundTempVar(Planet planet, Executor executor, EventValues.Variable variable) {
+    public static void sendCodingNotFoundEventValue(Planet planet, Executor executor, Class<? extends EventValue> clazz) {
         if (planet == null) return;
-        sendPlanetCodeErrorMessage(planet,executor,getLocaleMessage("coding-error.temp-var-not-exists",false).replace("%variable%", variable.getLocaleName()));
+        EventValue eventValue = EventValues.getInstance().getByClass(clazz);
+        sendPlanetCodeErrorMessage(planet,executor, getLocaleMessage("coding-error.temp-var-not-exists",false)
+                .replace("%variable%", eventValue != null ? eventValue.getLocaleName() : clazz.getSimpleName()));
     }
 
     public static void sendCodingDebugLog(Planet planet, String log) {
@@ -409,7 +412,7 @@ public class ErrorUtils {
         Planet planet = executor.getPlanet();
         if (planet == null || !planet.isDebug()) return;
         for (Player player : planet.getPlayers()) {
-            player.sendMessage(getLocaleMessage("coding-debug.executor-message",false).replace("%type%",executor.getExecutorType().getLocaleName()).replace("%x%",String.valueOf(executor.getX())).replace("%y%",String.valueOf(executor.getY())).replace("%z%",String.valueOf(executor.getZ())));
+            player.sendMessage(getLocaleMessage("coding-debug.executor-message",false).replace("%id%",executor.getExecutorType().getLocaleName()).replace("%x%",String.valueOf(executor.getX())).replace("%y%",String.valueOf(executor.getY())).replace("%z%",String.valueOf(executor.getZ())));
         }
     }
 
@@ -420,16 +423,16 @@ public class ErrorUtils {
         List<Argument> arguments = action.getArgumentsList();
         String message = getLocaleMessage("coding-debug.hover." + (action.getActionType().isCondition() ? "condition" : "action"));
         message = message.replace("%category%",action.getActionCategory().getLocaleName());
-        message = message.replace("%type%",action.getActionType().getLocaleName());
+        message = message.replace("%id%",action.getActionType().getLocaleName());
         if (action instanceof Condition condition) {
             message = message.replace("%opposed%",getLocaleMessage("coding-debug.condition.opposed." + condition.isOpposed()));
         }
         List<String> argumentsString = new ArrayList<>();
         for (Argument arg : arguments) {
-            argumentsString.add(getLocaleMessage("coding-debug.hover.argument").replace("%name%",arg.getPath()).replace("%type%",arg.getType().getLocaleName()).replace("%value%",arg.getValue(action).toString().substring(0, Math.min(30, arg.getValue(action).toString().length()))));
+            argumentsString.add(getLocaleMessage("coding-debug.hover.argument").replace("%name%",arg.getPath()).replace("%id%",arg.getType().getLocaleName()).replace("%value%",arg.getValue(action).toString().substring(0, Math.min(30, arg.getValue(action).toString().length()))));
         }
         message = message.replace("%arguments%",String.join(" \n",argumentsString));
-        String actionMessage = getLocaleMessage("coding-debug.action-message",false).replace("%type%",action.getActionType().getLocaleName()).replace("%x%",String.valueOf(action.getX())).replace("%y%",String.valueOf(action.getExecutor().getY())).replace("%z%",String.valueOf(action.getExecutor().getZ()));
+        String actionMessage = getLocaleMessage("coding-debug.action-message",false).replace("%id%",action.getActionType().getLocaleName()).replace("%x%",String.valueOf(action.getX())).replace("%y%",String.valueOf(action.getExecutor().getY())).replace("%z%",String.valueOf(action.getExecutor().getZ()));
         for (Player player : planet.getPlayers()) {
             player.sendMessage(Component.text(actionMessage).hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(Component.text(message))));
         }

@@ -18,9 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.world.blocks;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks.BlockBrewingFuelEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.world.WorldExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -29,16 +26,6 @@ public class BlockBrewingFuelExecutor extends WorldExecutor {
 
     public BlockBrewingFuelExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
-    }
-
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof BlockBrewingFuelEvent blockEvent) {
-            setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getBlock());
-            setTempVar(EventValues.Variable.BLOCK_LOCATION, blockEvent.getBlock());
-            setTempVar(EventValues.Variable.ITEM, blockEvent.getItem());
-        }
-
     }
 
     @Override

@@ -18,21 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.inventory;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.ItemPickupEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class ItemPickupExecutor extends PlayerExecutor {
-
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof ItemPickupEvent) {
-            setTempVar(EventValues.Variable.ITEM,((ItemPickupEvent) event).getItem());
-        }
-    }
 
     public ItemPickupExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);

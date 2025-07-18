@@ -18,22 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.inventory;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.BookWriteEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class BookWriteExecutor extends PlayerExecutor {
-
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof BookWriteEvent bookWriteEvent) {
-            setTempVar(EventValues.Variable.ITEM,bookWriteEvent.getOldBook());
-            setTempVar(EventValues.Variable.NEW_ITEM,bookWriteEvent.getNewBook());
-        }
-    }
 
     public BookWriteExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);

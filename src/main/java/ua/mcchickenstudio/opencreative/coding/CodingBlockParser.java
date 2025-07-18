@@ -21,12 +21,12 @@ package ua.mcchickenstudio.opencreative.coding;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.ArgumentSlot;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
+import ua.mcchickenstudio.opencreative.coding.values.EventValues;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
@@ -339,18 +339,17 @@ public class CodingBlockParser {
                 } catch (Exception ignored) {}
             }
             case EVENT_VALUE -> {
-                PersistentDataContainer container = itemMeta.getPersistentDataContainer();
-                String variableType = container.get(getCodingVariableTypeKey(), PersistentDataType.STRING);
-                if (variableType == null) break;
+                String variableType = getPersistentData(item, getCodingVariableTypeKey());
                 if (variableType.startsWith("PLOT")) {
-                    variableType = variableType.replace("PLOT","PLANET");
-                    ItemUtils.setPersistentData(item,getCodingVariableTypeKey(),variableType);
+                    variableType = variableType.replace("PLOT", "PLANET");
+                    ItemUtils.setPersistentData(item, getCodingVariableTypeKey(), variableType);
                 }
-                EventValues.Variable type;
+                if (!EventValues.getInstance().exists(variableType.toLowerCase())) {
+                    break;
+                }
                 Map<String, String> valueMap = new HashMap<>();
                 try {
-                    type = EventValues.Variable.valueOf(variableType);
-                    valueMap.put("name",type.name());
+                    valueMap.put("name", variableType);
                     return valueMap;
                 } catch (Exception ignored) {}
             }

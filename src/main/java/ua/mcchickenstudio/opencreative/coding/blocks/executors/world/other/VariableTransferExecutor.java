@@ -18,9 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.world.other;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.VariableTransferEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.world.WorldExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -29,14 +26,6 @@ public class VariableTransferExecutor extends WorldExecutor {
 
     public VariableTransferExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
-    }
-
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof VariableTransferEvent varEvent) {
-            setTempVar(EventValues.Variable.TRANSFER_KEY,varEvent.getKey());
-            setTempVar(EventValues.Variable.TRANSFER_VALUE,varEvent.getValue());
-        }
     }
 
     @Override

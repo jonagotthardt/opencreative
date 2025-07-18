@@ -16,32 +16,43 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.indev.values;
+package ua.mcchickenstudio.opencreative.coding.values.living;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
+import ua.mcchickenstudio.opencreative.coding.values.LocationEventValue;
 
-public abstract class TextEventValue extends EventValueTest {
+public final class TargetBlockValue extends LocationEventValue {
 
-    public TextEventValue(String id, ItemStack displayIcon, MenusCategory category) {
-        super(id, displayIcon, category);
+    public TargetBlockValue() {
+        super("target_block", new ItemStack(Material.END_PORTAL_FRAME), MenusCategory.ENTITY);
     }
 
-    /**
-     * Returns a string that can be got from
-     * player, event, action, or null.
-     * @return string, or null.
-     */
-    public abstract @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action);
+    @Override
+    public @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action) {
+        if (action.getEntity() instanceof LivingEntity living) {
+            Block target = living.getTargetBlockExact(10);
+            if (target == null) return null;
+            return target.getLocation();
+        }
+        return null;
+    }
 
     @Override
-    public @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
-        String text = getText(handler, action);
-        if (text == null) return null;
-        return new StringBuilder(text).substring(0,Math.min(1024,text.length()));
+    public @NotNull String getExtensionId() {
+        return "default";
+    }
+
+    @Override
+    public @NotNull String getDescription() {
+        return "Returns location of living entity's target block";
     }
 }

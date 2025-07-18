@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.coding.menus.variables;
 
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
@@ -30,6 +29,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import ua.mcchickenstudio.opencreative.coding.values.EventValue;
+import ua.mcchickenstudio.opencreative.coding.values.EventValues;
 import ua.mcchickenstudio.opencreative.menus.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
@@ -39,18 +40,19 @@ import java.util.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
-public class EventValuesMenu extends ListBrowserMenu<EventValues.Variable> {
+public class EventValuesMenu extends ListBrowserMenu<EventValue> {
 
     protected MenusCategory currentCategory = MenusCategory.WORLD;
 
     public EventValuesMenu(Player player) {
-        super(player,ChatColor.stripColor(getLocaleMessage("menus.developer.event-values.title",false)));
+        super(player, ChatColor.stripColor(getLocaleMessage("menus.developer.event-values.title",false)));
     }
 
     @Override
-    protected ItemStack getElementIcon(EventValues.Variable variable) {
-        ItemStack icon = createItem(variable.getIcon(),1,"menus.developer.event-values.items." + variable.name().toLowerCase().replace("_","-"));
-        setPersistentData(icon,getCodingVariableTypeKey(),variable.name());
+    protected ItemStack getElementIcon(EventValue value) {
+        ItemStack icon = createItem(value.getDisplayIcon(), "menus.developer.event-values.items." + value.getID().toLowerCase().replace("_","-"));
+        setPersistentData(icon, getCodingValueKey(), "EVENT_VALUE");
+        setPersistentData(icon, getCodingVariableTypeKey(), value.getID().toUpperCase());
         return icon;
     }
 
@@ -90,24 +92,27 @@ public class EventValuesMenu extends ListBrowserMenu<EventValues.Variable> {
         event.setCancelled(true);
         if (item == null) return;
         if (item.getItemMeta() == null) return;
-        ItemMeta meta = itemInHand.getItemMeta();
-        String typeString = getPersistentData(item,getCodingVariableTypeKey());
-        meta.displayName(Component.text(item.getItemMeta().getDisplayName()));
-        itemInHand.setItemMeta(meta);
-        setPersistentData(itemInHand,getCodingValueKey(),"EVENT_VALUE");
-        setPersistentData(itemInHand,getCodingVariableTypeKey(),typeString.toUpperCase());
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        Component displayName = meta.displayName();
+        if (displayName == null) return;
+        ItemMeta handMeta = itemInHand.getItemMeta();
+        handMeta.displayName(displayName);
+        itemInHand.setItemMeta(handMeta);
+        setPersistentData(itemInHand, getCodingValueKey(), "EVENT_VALUE");
+        setPersistentData(itemInHand, getCodingVariableTypeKey(), getPersistentData(item, getCodingVariableTypeKey()));
         getPlayer().closeInventory();
         getPlayer().showTitle(Title.title(
-                toComponent(getLocaleMessage("world.dev-mode.set-variable")), item.displayName(),
+                toComponent(getLocaleMessage("world.dev-mode.set-variable")), displayName,
                 Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
         ));
         Sounds.DEV_EVENT_VALUE_SET.play(event.getWhoClicked());
     }
 
     @Override
-    public List<EventValues.Variable> getElements() {
+    public List<EventValue> getElements() {
         if (currentCategory == null) currentCategory = MenusCategory.ENTITY;
-        return new ArrayList<>(EventValues.Variable.getByCategories(currentCategory));
+        return new ArrayList<>(EventValues.getInstance().getByCategories(currentCategory));
     }
 
     @Override

@@ -27,7 +27,6 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.EventValueLink;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
@@ -78,7 +77,7 @@ public class Arguments {
     }
 
     private Argument loadArgument(ConfigurationSection section, String name) {
-        String configType = section.getString(name+".type");
+        String configType = section.getString(name+".id");
         Object configValue = section.get(name+".value");
         if (configType == null || configType.isEmpty() || configValue == null) {
             return null;
@@ -151,19 +150,17 @@ public class Arguments {
                 if (listSection == null) {
                     return stringValue;
                 }
-                String typeString = listSection.getString("name");
-                if (typeString == null) return stringValue;
-                EventValues.Variable varType;
-                if (typeString.isEmpty()) return stringValue;
+                String valueType = listSection.getString("name");
+                if (valueType == null) return stringValue;
+                if (valueType.isEmpty()) return stringValue;
                 try {
-                    if (typeString.startsWith("PLOT")) {
-                        typeString = typeString.replace("PLOT","PLANET");
+                    if (valueType.startsWith("PLOT")) {
+                        valueType = valueType.replace("PLOT","PLANET");
                     }
-                    varType = EventValues.Variable.valueOf(typeString);
+                    return new EventValueLink(valueType);
                 } catch (Exception e) {
                     return stringValue;
                 }
-                return new EventValueLink(varType,executor);
             }
             case NUMBER:
                 if (INT_PATTERN.matcher(stringValue).matches()) {

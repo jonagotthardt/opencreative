@@ -212,7 +212,7 @@ public final class InteractListener implements Listener {
 
     /**
      * Handles event, when player clicks WALL_SIGN block.
-     * Used for opening menus (executor, action type selection),
+     * Used for opening menus (executor, action id selection),
      * renaming (function, cycle), changing time (cycle),
      * reversing condition (if conditions).
      */
@@ -228,7 +228,7 @@ public final class InteractListener implements Listener {
             if (event.getHand() == EquipmentSlot.HAND) {
                 /*
                  * We cancel changing NOT in selection action,
-                 * when sign doesn't have specified condition type
+                 * when sign doesn't have specified condition id
                  * in third sign line, because we can't select
                  * ALL PLAYERS with NOT parameter, it's useless.
                  */

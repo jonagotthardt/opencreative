@@ -23,13 +23,11 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.coding.values.events.ChatMessageValue;
 
 import java.util.List;
-
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingNotFoundTempVar;
 
 public class MessageEqualsCondition extends PlayerCondition {
     public MessageEqualsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
@@ -38,21 +36,19 @@ public class MessageEqualsCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
-        if (getHandler().hasTempVariable(EventValues.Variable.MESSAGE)) {
-            sendCodingNotFoundTempVar(getPlanet(),getExecutor(), EventValues.Variable.MESSAGE);
+        if (!(getEventValue(ChatMessageValue.class) instanceof String text)) {
             return false;
         }
         boolean check = false;
-        String originalMessage = getHandler().getVarValue(EventValues.Variable.MESSAGE).toString();
         List<String> messages = getArguments().getTextList("messages",this);
         boolean caps = getArguments().getValue("require-caps",false,this);
         for (String message : messages) {
             if (caps) {
-                if (message.equals(originalMessage)) {
+                if (message.equals(text)) {
                     return true;
                 }
             } else {
-                if (message.equalsIgnoreCase(originalMessage)) {
+                if (message.equalsIgnoreCase(text)) {
                     return true;
                 }
             }

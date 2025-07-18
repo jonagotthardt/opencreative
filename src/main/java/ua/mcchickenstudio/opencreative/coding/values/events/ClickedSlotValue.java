@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.indev.values.entity;
+package ua.mcchickenstudio.opencreative.coding.values.events;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -24,18 +24,19 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.ItemClickEvent;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
-import ua.mcchickenstudio.opencreative.indev.values.TextEventValue;
+import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class EntityNameValue extends TextEventValue {
+public final class ClickedSlotValue extends NumberEventValue {
 
-    public EntityNameValue() {
-        super("nickname", new ItemStack(Material.NAME_TAG), MenusCategory.ENTITY);
+    public ClickedSlotValue() {
+        super("clicked_slot", new ItemStack(Material.SLIME_BALL), MenusCategory.EVENTS);
     }
 
     @Override
-    public @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action) {
-        return action.getEntity() != null ? action.getEntity().getName() : null;
+    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action) {
+        return action.getEvent() instanceof ItemClickEvent event ? event.getSlot(): null;
     }
 
     @Override
@@ -45,6 +46,6 @@ public class EntityNameValue extends TextEventValue {
 
     @Override
     public @NotNull String getDescription() {
-        return "Returns entity name";
+        return "Returns new slot from inventory click event";
     }
 }

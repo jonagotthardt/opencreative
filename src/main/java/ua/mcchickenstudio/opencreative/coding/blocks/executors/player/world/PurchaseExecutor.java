@@ -18,9 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.world;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.PlayerPurchaseEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -29,16 +26,6 @@ public class PurchaseExecutor extends PlayerExecutor{
 
     public PurchaseExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
-    }
-
-    @Override
-    public void setTempVars(WorldEvent event) {
-        if (event instanceof PlayerPurchaseEvent purchaseEvent) {
-            setTempVar(EventValues.Variable.PURCHASE_ID, purchaseEvent.getId());
-            setTempVar(EventValues.Variable.PURCHASE_NAME, purchaseEvent.getName());
-            setTempVar(EventValues.Variable.PURCHASE_SAVE, purchaseEvent.isSave());
-            setTempVar(EventValues.Variable.PURCHASE_PRICE, purchaseEvent.getPrice());
-        }
     }
 
     @Override

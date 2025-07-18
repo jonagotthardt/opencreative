@@ -47,7 +47,7 @@ public enum ValueType {
      */
     BOOLEAN(Material.CLOCK, Material.YELLOW_STAINED_GLASS_PANE),
     /**
-     * Entity Type stores Minecraft mob type, for example: AXOLOTL.
+     * Entity Type stores Minecraft mob id, for example: AXOLOTL.
      */
     ENTITY_TYPE(Material.PIG_SPAWN_EGG, Material.RED_STAINED_GLASS_PANE),
     /**
@@ -55,11 +55,11 @@ public enum ValueType {
      */
     ITEM(Material.ITEM_FRAME, Material.ORANGE_STAINED_GLASS_PANE),
     /**
-     * List can store any value with any type. From list, we can get value, or we can add value to list.
+     * List can store any value with any id. From list, we can get value, or we can add value to list.
      */
     LIST(Material.PAINTING, Material.GREEN_STAINED_GLASS_PANE),
     /**
-     * Map stores keys and values with any type.
+     * Map stores keys and values with any id.
      */
     MAP(Material.CHEST_MINECART, Material.BROWN_STAINED_GLASS_PANE),
     /**
@@ -75,7 +75,7 @@ public enum ValueType {
      */
     PARAMETER(Material.ANVIL, Material.BLACK_STAINED_GLASS_PANE),
     /**
-     * Particle stores Minecraft particle type, for example: EXPLOSION.
+     * Particle stores Minecraft particle id, for example: EXPLOSION.
      */
     PARTICLE(Material.FIRE_CHARGE, Material.PURPLE_STAINED_GLASS_PANE),
     /**
@@ -91,7 +91,7 @@ public enum ValueType {
      */
     VARIABLE(Material.MAGMA_CREAM, Material.YELLOW_STAINED_GLASS_PANE),
     /**
-     * Event Value Link stores type of EventVariable for getting value.
+     * Event Value Link stores id of event value for getting value.
      */
     EVENT_VALUE(Material.NAME_TAG, Material.YELLOW_STAINED_GLASS_PANE),
     /**
@@ -127,7 +127,7 @@ public enum ValueType {
     /**
      * Returns localized glass item stack,
      * that's displayed in layout menu.
-     * @param action type of action.
+     * @param action id of action.
      * @param path name of argument.
      * @return stained-glass pane item with name and description.
      */
@@ -150,10 +150,10 @@ public enum ValueType {
     }
 
     /**
-     * Returns type of value by comparing
+     * Returns id of value by comparing
      * it with value types names.
-     * @param type text with type name.
-     * @return value type, or text value.
+     * @param type text with id name.
+     * @return value id, or text value.
      */
     public static @NotNull ValueType parseString(String type) {
         for (ValueType varType : values()) {
@@ -163,10 +163,10 @@ public enum ValueType {
     }
 
     /**
-     * Returns type of value by comparing
+     * Returns id of value by comparing
      * material with value types materials.
      * @param material material to check.
-     * @return value type, or text value.
+     * @return value id, or text value.
      */
     public static @NotNull ValueType getByMaterial(Material material) {
         for (ValueType varType : values()) {
@@ -176,9 +176,9 @@ public enum ValueType {
     }
 
     /**
-     * Returns value type of object.
+     * Returns value id of object.
      * @param object object to check.
-     * @return value type, or null if it's unknown type.
+     * @return value id, or null if it's unknown id.
      */
     public static @Nullable ValueType getByObject(Object object) {
         if (object instanceof Float || object instanceof Double || object instanceof Integer || object instanceof Byte) {
@@ -210,8 +210,8 @@ public enum ValueType {
     }
 
     /**
-     * Returns localized name of value type.
-     * @return localized name of value type.
+     * Returns localized name of value id.
+     * @return localized name of value id.
      */
     public String getLocaleName() {
         return getLocaleMessage("environment.values." + name().toLowerCase().replace("_","-"),false);

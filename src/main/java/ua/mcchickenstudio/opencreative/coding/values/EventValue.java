@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.indev.values;
+package ua.mcchickenstudio.opencreative.coding.values;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.inventory.ItemStack;
@@ -27,12 +27,14 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+
 /**
  * <h1>EventValue</h1>
  * This class represents a value, that can be got
  * from event, actions handler, action and target.
  */
-public abstract class EventValueTest implements ExtensionContent {
+public abstract class EventValue implements ExtensionContent {
 
     private final String id;
     private final ItemStack displayIcon;
@@ -47,8 +49,8 @@ public abstract class EventValueTest implements ExtensionContent {
      * @param displayIcon icon of event value that will be displayed in event values list.
      * @param category category of event value for event values list.
      */
-    public EventValueTest(String id, ItemStack displayIcon, MenusCategory category) {
-        this.id = id.replace("-","_");
+    public EventValue(String id, ItemStack displayIcon, MenusCategory category) {
+        this.id = id.replace("-","_").toLowerCase();
         this.displayIcon = displayIcon;
         this.category = category;
     }
@@ -80,8 +82,16 @@ public abstract class EventValueTest implements ExtensionContent {
      */
     public abstract @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action);
 
-    @Override
     public @NotNull String getName() {
-        return StringUtils.capitalize(id);
+        return StringUtils.capitalize(id.replace("_"," "));
     }
+
+    public @NotNull String getID() {
+        return id;
+    }
+
+    public String getLocaleName() {
+        return getLocaleMessage("menus.developer.event-values.items." + this.getID().replace("_","-") + ".name" ,false);
+    }
+
 }

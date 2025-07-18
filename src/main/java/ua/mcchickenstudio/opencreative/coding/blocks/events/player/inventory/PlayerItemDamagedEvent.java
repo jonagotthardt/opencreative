@@ -22,9 +22,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.ItemEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
-public final class PlayerItemDamagedEvent extends WorldEvent implements Cancellable {
+public final class PlayerItemDamagedEvent extends WorldEvent implements Cancellable, ItemEvent {
 
     private final PlayerItemDamageEvent event;
     private final ItemStack item;
@@ -47,7 +49,8 @@ public final class PlayerItemDamagedEvent extends WorldEvent implements Cancella
         return event.isCancelled();
     }
 
-    public ItemStack getItem() {
+    @Override
+    public @NotNull ItemStack getItem() {
         return item;
     }
 

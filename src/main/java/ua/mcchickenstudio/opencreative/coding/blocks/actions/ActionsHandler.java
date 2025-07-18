@@ -22,7 +22,6 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines.WaitAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlleractions.other.MeasureTimeAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.exceptions.PlayerException;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -50,7 +49,6 @@ public class ActionsHandler {
 
     private final Executor executor;
     private final WorldEvent event;
-    private final EventValues variables;
     private final Action action;
 
     private final Set<Entity> selectedTargets;
@@ -64,11 +62,6 @@ public class ActionsHandler {
     public ActionsHandler(Executor executor) {
         this.executor = executor;
         this.event = executor.getEvent();
-        this.variables = new EventValues();
-        Map<EventValues.Variable,Object> oldVars = executor.getVariables().getMap();
-        for (EventValues.Variable var : oldVars.keySet()) {
-            this.variables.setVariable(var,oldVars.get(var));
-        }
         this.selectedTargets = new HashSet<>(event.getSelection());
         this.parentActionsHandler = null;
         this.action = null;
@@ -80,7 +73,6 @@ public class ActionsHandler {
         ActionsHandler mainHandler = getMainActionHandler();
         this.executor = mainHandler.executor;
         this.event = mainHandler.event;
-        this.variables = mainHandler.variables;
         this.action = action;
         this.selectedTargets = new HashSet<>(parentActionsHandler.selectedTargets);
         this.doNotUseTryFlag = action.getActionType() == ActionType.CONTROLLER_CATCH_ERROR || parentActionsHandler.doNotUseTryFlag;
@@ -202,24 +194,8 @@ public class ActionsHandler {
         return event;
     }
 
-    public EventValues getVariables() {
-        return getMainActionHandler().variables;
-    }
-
     public Executor getExecutor() {
         return executor;
-    }
-
-    public void setVarValue(EventValues.Variable var, Object value) {
-        getVariables().setVariable(var,value);
-    }
-
-    public Object getVarValue(EventValues.Variable var) {
-        return getVariables().getVarValue(var);
-    }
-
-    public boolean hasTempVariable(EventValues.Variable var) {
-        return getVariables().getVarValue(var) == null;
     }
 
     @Override

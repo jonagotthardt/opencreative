@@ -18,21 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.interaction;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.ItemEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.EntityExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class FireworkExplodedExecutor extends EntityExecutor {
-
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof ItemEvent itemEvent) {
-            setTempVar(EventValues.Variable.ITEM, itemEvent.getItem());
-        }
-    }
 
     public FireworkExplodedExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);

@@ -18,22 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.inventory;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.ItemConsumeEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public class ItemConsumeExecutor extends PlayerExecutor {
-
-    @Override
-    protected void setTempVars(WorldEvent event) {
-        if (event instanceof ItemConsumeEvent consumeEvent) {
-            setTempVar(EventValues.Variable.ITEM,consumeEvent.getItem());
-            setTempVar(EventValues.Variable.NEW_ITEM,consumeEvent.getNewItem());
-        }
-    }
 
     public ItemConsumeExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
