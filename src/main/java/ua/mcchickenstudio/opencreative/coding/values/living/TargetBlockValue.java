@@ -30,7 +30,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.LocationEventValue;
 
-public class TargetBlockValue extends LocationEventValue {
+public final class TargetBlockValue extends LocationEventValue {
 
     public TargetBlockValue() {
         super("target_block", new ItemStack(Material.END_PORTAL_FRAME), MenusCategory.ENTITY);

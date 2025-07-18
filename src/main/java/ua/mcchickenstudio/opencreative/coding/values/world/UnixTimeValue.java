@@ -9,7 +9,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class UnixTimeValue extends NumberEventValue {
+public final class UnixTimeValue extends NumberEventValue {
 
     public UnixTimeValue() {
         super("unix_time", new ItemStack(Material.CLOCK), MenusCategory.WORLD);

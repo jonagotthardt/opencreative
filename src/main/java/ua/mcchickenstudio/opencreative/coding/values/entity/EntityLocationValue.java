@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.LocationEventValue;
 
-public class EntityLocationValue extends LocationEventValue {
+public final class EntityLocationValue extends LocationEventValue {
 
     public EntityLocationValue() {
         super("location", new ItemStack(Material.PAPER), MenusCategory.ENTITY);

@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class LivingMaxNoDamageTicksValue extends NumberEventValue {
+public final class LivingMaxNoDamageTicksValue extends NumberEventValue {
 
     public LivingMaxNoDamageTicksValue() {
         super("max_no_damage_ticks", new ItemStack(Material.ENCHANTED_GOLDEN_APPLE), MenusCategory.ENTITY);

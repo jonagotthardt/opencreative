@@ -10,7 +10,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class PlayerExperienceValue extends NumberEventValue {
+public final class PlayerExperienceValue extends NumberEventValue {
 
     public PlayerExperienceValue() {
         super("experience", new ItemStack(Material.SLIME_SPAWN_EGG), MenusCategory.PLAYER);

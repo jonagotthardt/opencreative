@@ -27,7 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.TextEventValue;
 
-public class EntityUUIDValue extends TextEventValue {
+public final class EntityUUIDValue extends TextEventValue {
 
     public EntityUUIDValue() {
         super("uuid", new ItemStack(Material.KNOWLEDGE_BOOK), MenusCategory.ENTITY);

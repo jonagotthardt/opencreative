@@ -34,7 +34,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * This class represents a value, that can be got
  * from event, actions handler, action and target.
  */
-public abstract class EventValueTest implements ExtensionContent {
+public abstract class EventValue implements ExtensionContent {
 
     private final String id;
     private final ItemStack displayIcon;
@@ -49,7 +49,7 @@ public abstract class EventValueTest implements ExtensionContent {
      * @param displayIcon icon of event value that will be displayed in event values list.
      * @param category category of event value for event values list.
      */
-    public EventValueTest(String id, ItemStack displayIcon, MenusCategory category) {
+    public EventValue(String id, ItemStack displayIcon, MenusCategory category) {
         this.id = id.replace("-","_").toLowerCase();
         this.displayIcon = displayIcon;
         this.category = category;

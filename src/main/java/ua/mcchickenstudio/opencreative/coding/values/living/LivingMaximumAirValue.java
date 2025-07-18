@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class LivingMaximumAirValue extends NumberEventValue {
+public final class LivingMaximumAirValue extends NumberEventValue {
 
     public LivingMaximumAirValue() {
         super("maximum_air", new ItemStack(Material.POTION), MenusCategory.ENTITY);

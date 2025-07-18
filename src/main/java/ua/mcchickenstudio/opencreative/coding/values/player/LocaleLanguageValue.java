@@ -10,7 +10,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.TextEventValue;
 
-public class LocaleLanguageValue extends TextEventValue {
+public final class LocaleLanguageValue extends TextEventValue {
 
     public LocaleLanguageValue() {
         super("locale_language", new ItemStack(Material.HEARTBREAK_POTTERY_SHERD), MenusCategory.PLAYER);

@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.Slo
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class OldSlotValue extends NumberEventValue {
+public final class OldSlotValue extends NumberEventValue {
 
     public OldSlotValue() {
         super("old_slot", new ItemStack(Material.SLIME_BALL), MenusCategory.EVENTS);

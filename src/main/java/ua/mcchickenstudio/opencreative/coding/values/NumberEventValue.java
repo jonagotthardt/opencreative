@@ -25,7 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 
-public abstract class NumberEventValue extends EventValueTest {
+public abstract class NumberEventValue extends EventValue {
 
     public NumberEventValue(String id, ItemStack displayIcon, MenusCategory category) {
         super(id, displayIcon, category);

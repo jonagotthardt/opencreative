@@ -27,7 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class EntityFallDistanceValue extends NumberEventValue {
+public final class EntityFallDistanceValue extends NumberEventValue {
 
     public EntityFallDistanceValue() {
         super("fall_distance", new ItemStack(Material.RABBIT_FOOT), MenusCategory.ENTITY);

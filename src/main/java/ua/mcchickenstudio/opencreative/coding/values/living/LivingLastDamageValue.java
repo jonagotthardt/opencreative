@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class LivingLastDamageValue extends NumberEventValue {
+public final class LivingLastDamageValue extends NumberEventValue {
 
     public LivingLastDamageValue() {
         super("last_damage", new ItemStack(Material.REDSTONE), MenusCategory.ENTITY);

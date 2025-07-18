@@ -27,7 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class EntityFreezeTicksValue extends NumberEventValue {
+public final class EntityFreezeTicksValue extends NumberEventValue {
 
     public EntityFreezeTicksValue() {
         super("freeze_ticks", new ItemStack(Material.ICE), MenusCategory.ENTITY);

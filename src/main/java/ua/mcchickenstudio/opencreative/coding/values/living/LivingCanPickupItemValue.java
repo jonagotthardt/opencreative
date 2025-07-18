@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.BooleanEventValue;
 
-public class LivingCanPickupItemValue extends BooleanEventValue {
+public final class LivingCanPickupItemValue extends BooleanEventValue {
 
     public LivingCanPickupItemValue() {
         super("can_pickup_item", new ItemStack(Material.GLOWSTONE_DUST), MenusCategory.ENTITY);

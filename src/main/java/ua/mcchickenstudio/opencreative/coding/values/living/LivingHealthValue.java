@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class LivingHealthValue extends NumberEventValue {
+public final class LivingHealthValue extends NumberEventValue {
 
     public LivingHealthValue() {
         super("health", new ItemStack(Material.APPLE), MenusCategory.ENTITY);

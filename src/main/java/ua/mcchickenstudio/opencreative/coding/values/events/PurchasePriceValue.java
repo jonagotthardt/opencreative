@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.PlayerP
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class PurchasePriceValue extends NumberEventValue {
+public final class PurchasePriceValue extends NumberEventValue {
 
     public PurchasePriceValue() {
         super("purchase_price", new ItemStack(Material.GOLD_INGOT), MenusCategory.EVENTS);

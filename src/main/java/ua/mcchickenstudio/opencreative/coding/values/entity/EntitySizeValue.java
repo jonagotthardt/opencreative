@@ -30,7 +30,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class EntitySizeValue extends NumberEventValue {
+public final class EntitySizeValue extends NumberEventValue {
 
     public EntitySizeValue() {
         super("size", new ItemStack(Material.SLIME_BLOCK), MenusCategory.ENTITY);

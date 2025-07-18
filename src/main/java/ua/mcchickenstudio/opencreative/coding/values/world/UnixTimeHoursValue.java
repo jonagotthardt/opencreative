@@ -12,7 +12,7 @@ import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class UnixTimeHoursValue extends NumberEventValue {
+public final class UnixTimeHoursValue extends NumberEventValue {
 
     public UnixTimeHoursValue() {
         super("unix_time_hours", new ItemStack(Material.CHEST_MINECART), MenusCategory.WORLD);

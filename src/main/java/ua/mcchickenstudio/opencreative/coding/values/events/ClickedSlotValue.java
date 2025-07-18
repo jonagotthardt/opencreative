@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.Ite
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class ClickedSlotValue extends NumberEventValue {
+public final class ClickedSlotValue extends NumberEventValue {
 
     public ClickedSlotValue() {
         super("clicked_slot", new ItemStack(Material.SLIME_BALL), MenusCategory.EVENTS);

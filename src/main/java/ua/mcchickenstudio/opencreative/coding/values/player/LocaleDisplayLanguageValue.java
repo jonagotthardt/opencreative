@@ -10,7 +10,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.TextEventValue;
 
-public class LocaleDisplayLanguageValue extends TextEventValue {
+public final class LocaleDisplayLanguageValue extends TextEventValue {
 
     public LocaleDisplayLanguageValue() {
         super("locale_display_language", new ItemStack(Material.BLUE_STAINED_GLASS), MenusCategory.PLAYER);

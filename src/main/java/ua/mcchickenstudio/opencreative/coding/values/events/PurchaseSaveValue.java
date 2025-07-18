@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.PlayerP
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.BooleanEventValue;
 
-public class PurchaseSaveValue extends BooleanEventValue {
+public final class PurchaseSaveValue extends BooleanEventValue {
 
     public PurchaseSaveValue() {
         super("purchase_save", new ItemStack(Material.YELLOW_SHULKER_BOX), MenusCategory.EVENTS);

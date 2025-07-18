@@ -10,7 +10,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.ItemEventValue;
 
-public class HumanHelmetValue extends ItemEventValue {
+public final class HumanHelmetValue extends ItemEventValue {
 
     public HumanHelmetValue() {
         super("helmet", new ItemStack(Material.NETHERITE_HELMET), MenusCategory.PLAYER);

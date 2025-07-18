@@ -27,8 +27,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
-import ua.mcchickenstudio.opencreative.coding.values.EventValueTest;
-import ua.mcchickenstudio.opencreative.coding.values.EventValuesConcept;
+import ua.mcchickenstudio.opencreative.coding.values.EventValue;
+import ua.mcchickenstudio.opencreative.coding.values.EventValues;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,8 +95,8 @@ public abstract class Condition extends Action {
         return isOpposed;
     }
 
-    protected @Nullable Object getEventValue(@NotNull Class<? extends EventValueTest> clazz) {
-        return EventValuesConcept.getInstance().getValue(clazz, handler, this);
+    protected @Nullable Object getEventValue(@NotNull Class<? extends EventValue> clazz) {
+        return EventValues.getInstance().getValue(clazz, handler, this);
     }
 
 }

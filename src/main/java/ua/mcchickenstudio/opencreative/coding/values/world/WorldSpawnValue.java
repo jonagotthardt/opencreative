@@ -10,7 +10,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.LocationEventValue;
 
-public class WorldSpawnValue extends LocationEventValue {
+public final class WorldSpawnValue extends LocationEventValue {
 
     public WorldSpawnValue() {
         super("world_spawn", new ItemStack(Material.SPAWNER), MenusCategory.WORLD);

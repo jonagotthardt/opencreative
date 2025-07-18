@@ -30,7 +30,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.B
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.LocationEventValue;
 
-public class BedEventValue extends LocationEventValue {
+public final class BedEventValue extends LocationEventValue {
 
     public BedEventValue() {
         super("bed", new ItemStack(Material.RED_BED), MenusCategory.EVENTS);

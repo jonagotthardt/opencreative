@@ -29,7 +29,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.TextEventValue;
 
-public class TargetEntityValue extends TextEventValue {
+public final class TargetEntityValue extends TextEventValue {
 
     public TargetEntityValue() {
         super("target_entity", new ItemStack(Material.ENDER_PEARL), MenusCategory.ENTITY);

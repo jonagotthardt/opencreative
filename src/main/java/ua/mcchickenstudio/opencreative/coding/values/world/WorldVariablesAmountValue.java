@@ -9,7 +9,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class WorldVariablesAmountValue extends NumberEventValue {
+public final class WorldVariablesAmountValue extends NumberEventValue {
 
     public WorldVariablesAmountValue() {
         super("planet_variables_amount", new ItemStack(Material.MAGMA_CREAM), MenusCategory.WORLD);

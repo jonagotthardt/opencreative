@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.Ite
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.ItemEventValue;
 
-public class CursorItemValue extends ItemEventValue {
+public final class CursorItemValue extends ItemEventValue {
 
     public CursorItemValue() {
         super("cursor_item", new ItemStack(Material.TRIPWIRE_HOOK), MenusCategory.EVENTS);

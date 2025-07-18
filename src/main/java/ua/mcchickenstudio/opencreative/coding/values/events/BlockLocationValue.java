@@ -29,7 +29,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.LocationEventValue;
 
-public class BlockLocationValue extends LocationEventValue {
+public final class BlockLocationValue extends LocationEventValue {
 
     public BlockLocationValue() {
         super("block_material", new ItemStack(Material.PAPER), MenusCategory.EVENTS);

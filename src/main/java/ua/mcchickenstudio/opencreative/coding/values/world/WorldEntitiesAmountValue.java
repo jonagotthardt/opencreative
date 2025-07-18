@@ -10,7 +10,7 @@ import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public class WorldEntitiesAmountValue extends NumberEventValue {
+public final class WorldEntitiesAmountValue extends NumberEventValue {
 
     public WorldEntitiesAmountValue() {
         super("planet_entities_amount", new ItemStack(Material.CHICKEN_SPAWN_EGG), MenusCategory.WORLD);

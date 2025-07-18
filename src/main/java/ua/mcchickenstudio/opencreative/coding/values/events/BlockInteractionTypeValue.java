@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.B
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.TextEventValue;
 
-public class BlockInteractionTypeValue extends TextEventValue {
+public final class BlockInteractionTypeValue extends TextEventValue {
 
     public BlockInteractionTypeValue() {
         super("block_interaction_type", new ItemStack(Material.GOLDEN_HOE), MenusCategory.EVENTS);

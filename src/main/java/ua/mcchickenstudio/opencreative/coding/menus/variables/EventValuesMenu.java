@@ -29,8 +29,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import ua.mcchickenstudio.opencreative.coding.values.EventValueTest;
-import ua.mcchickenstudio.opencreative.coding.values.EventValuesConcept;
+import ua.mcchickenstudio.opencreative.coding.values.EventValue;
+import ua.mcchickenstudio.opencreative.coding.values.EventValues;
 import ua.mcchickenstudio.opencreative.menus.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
@@ -40,7 +40,7 @@ import java.util.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
-public class EventValuesMenu extends ListBrowserMenu<EventValueTest> {
+public class EventValuesMenu extends ListBrowserMenu<EventValue> {
 
     protected MenusCategory currentCategory = MenusCategory.WORLD;
 
@@ -49,7 +49,7 @@ public class EventValuesMenu extends ListBrowserMenu<EventValueTest> {
     }
 
     @Override
-    protected ItemStack getElementIcon(EventValueTest value) {
+    protected ItemStack getElementIcon(EventValue value) {
         ItemStack icon = createItem(value.getDisplayIcon(), "menus.developer.event-values.items." + value.getName().toLowerCase().replace("_","-"));
         setPersistentData(icon,getCodingVariableTypeKey(), value.getName().toUpperCase());
         return icon;
@@ -106,9 +106,9 @@ public class EventValuesMenu extends ListBrowserMenu<EventValueTest> {
     }
 
     @Override
-    public List<EventValueTest> getElements() {
+    public List<EventValue> getElements() {
         if (currentCategory == null) currentCategory = MenusCategory.ENTITY;
-        return new ArrayList<>(EventValuesConcept.getInstance().getByCategories(currentCategory));
+        return new ArrayList<>(EventValues.getInstance().getByCategories(currentCategory));
     }
 
     @Override

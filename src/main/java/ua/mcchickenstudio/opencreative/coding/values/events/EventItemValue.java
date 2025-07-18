@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.ItemEvent;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.ItemEventValue;
 
-public class EventItemValue extends ItemEventValue {
+public final class EventItemValue extends ItemEventValue {
 
     public EventItemValue() {
         super("item", new ItemStack(Material.ITEM_FRAME), MenusCategory.EVENTS);

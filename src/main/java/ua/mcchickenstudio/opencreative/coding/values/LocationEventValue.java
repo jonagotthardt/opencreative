@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 
-public abstract class LocationEventValue extends EventValueTest {
+public abstract class LocationEventValue extends EventValue {
 
     public LocationEventValue(String id, ItemStack displayIcon, MenusCategory category) {
         super(id, displayIcon, category);

@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.Hung
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class FoodLevelValue extends NumberEventValue {
+public final class FoodLevelValue extends NumberEventValue {
 
     public FoodLevelValue() {
         super("food_level", new ItemStack(Material.COOKED_CHICKEN), MenusCategory.EVENTS);

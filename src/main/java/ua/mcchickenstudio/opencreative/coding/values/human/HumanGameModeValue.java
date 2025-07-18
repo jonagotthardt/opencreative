@@ -10,7 +10,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.TextEventValue;
 
-public class HumanGameModeValue extends TextEventValue {
+public final class HumanGameModeValue extends TextEventValue {
 
     public HumanGameModeValue() {
         super("game_mode", new ItemStack(Material.CRAFTING_TABLE), MenusCategory.PLAYER);

@@ -10,7 +10,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class PlayerExperienceLevelValue extends NumberEventValue {
+public final class PlayerExperienceLevelValue extends NumberEventValue {
 
     public PlayerExperienceLevelValue() {
         super("experience_level", new ItemStack(Material.SUGAR_CANE), MenusCategory.PLAYER);

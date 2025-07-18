@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 
-public abstract class VectorEventValue extends EventValueTest {
+public abstract class VectorEventValue extends EventValue {
 
     public VectorEventValue(String id, ItemStack displayIcon, MenusCategory category) {
         super(id, displayIcon, category);

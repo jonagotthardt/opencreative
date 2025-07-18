@@ -10,7 +10,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.TextEventValue;
 
-public class ClientBrandValue extends TextEventValue {
+public final class ClientBrandValue extends TextEventValue {
 
     public ClientBrandValue() {
         super("client_brand", new ItemStack(Material.GRASS_BLOCK), MenusCategory.PLAYER);

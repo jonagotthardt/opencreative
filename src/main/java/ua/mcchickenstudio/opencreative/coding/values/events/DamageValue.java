@@ -30,7 +30,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.Pla
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class DamageValue extends NumberEventValue {
+public final class DamageValue extends NumberEventValue {
 
     public DamageValue() {
         super("damage", new ItemStack(Material.SOUL_TORCH), MenusCategory.EVENTS);

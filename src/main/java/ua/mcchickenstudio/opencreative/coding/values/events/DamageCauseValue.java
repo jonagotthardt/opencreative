@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.Play
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.TextEventValue;
 
-public class DamageCauseValue extends TextEventValue {
+public final class DamageCauseValue extends TextEventValue {
 
     public DamageCauseValue() {
         super("damage_cause", new ItemStack(Material.REDSTONE_TORCH), MenusCategory.EVENTS);

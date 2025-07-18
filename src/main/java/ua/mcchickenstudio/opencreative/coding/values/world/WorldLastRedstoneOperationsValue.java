@@ -9,7 +9,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class WorldLastRedstoneOperationsValue extends NumberEventValue {
+public final class WorldLastRedstoneOperationsValue extends NumberEventValue {
 
     public WorldLastRedstoneOperationsValue() {
         super("planet_last_redstone_operations", new ItemStack(Material.REDSTONE), MenusCategory.WORLD);

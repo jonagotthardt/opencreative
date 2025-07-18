@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.WebRespo
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.TextEventValue;
 
-public class WebResponseValue extends TextEventValue {
+public final class WebResponseValue extends TextEventValue {
 
     public WebResponseValue() {
         super("url_response", new ItemStack(Material.KNOWLEDGE_BOOK), MenusCategory.EVENTS);

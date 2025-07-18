@@ -10,7 +10,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class HumanHungerValue extends NumberEventValue {
+public final class HumanHungerValue extends NumberEventValue {
 
     public HumanHungerValue() {
         super("hunger", new ItemStack(Material.COOKED_CHICKEN), MenusCategory.PLAYER);

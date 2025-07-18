@@ -9,7 +9,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class WorldRatingValue extends NumberEventValue {
+public final class WorldRatingValue extends NumberEventValue {
 
     public WorldRatingValue() {
         super("planet_reputation", new ItemStack(Material.TURTLE_HELMET), MenusCategory.WORLD);

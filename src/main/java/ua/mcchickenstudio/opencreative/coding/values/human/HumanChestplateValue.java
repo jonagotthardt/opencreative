@@ -10,7 +10,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.ItemEventValue;
 
-public class HumanChestplateValue extends ItemEventValue {
+public final class HumanChestplateValue extends ItemEventValue {
 
     public HumanChestplateValue() {
         super("chestplate", new ItemStack(Material.NETHERITE_CHESTPLATE), MenusCategory.PLAYER);

@@ -9,7 +9,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class WorldIdValue extends NumberEventValue {
+public final class WorldIdValue extends NumberEventValue {
 
     public WorldIdValue() {
         super("planet_id", new ItemStack(Material.SLIME_BALL), MenusCategory.WORLD);

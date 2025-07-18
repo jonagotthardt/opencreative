@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.ChatEve
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.TextEventValue;
 
-public class ChatMessageValue extends TextEventValue {
+public final class ChatMessageValue extends TextEventValue {
 
     public ChatMessageValue() {
         super("message", new ItemStack(Material.BOOK), MenusCategory.EVENTS);

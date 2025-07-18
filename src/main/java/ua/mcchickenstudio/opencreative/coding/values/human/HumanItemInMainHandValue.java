@@ -10,7 +10,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.ItemEventValue;
 
-public class HumanItemInMainHandValue extends ItemEventValue {
+public final class HumanItemInMainHandValue extends ItemEventValue {
 
     public HumanItemInMainHandValue() {
         super("item_in_main_hand", new ItemStack(Material.WOODEN_SWORD), MenusCategory.PLAYER);

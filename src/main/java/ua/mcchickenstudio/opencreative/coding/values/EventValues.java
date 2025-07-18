@@ -34,18 +34,18 @@ import ua.mcchickenstudio.opencreative.coding.values.living.*;
 import ua.mcchickenstudio.opencreative.coding.values.player.*;
 import ua.mcchickenstudio.opencreative.coding.values.world.*;
 
-public class EventValuesConcept {
+public final class EventValues {
     
-    private static EventValuesConcept instance;
-    private final List<EventValueTest> eventValues = new LinkedList<>();
+    private static EventValues instance;
+    private final List<EventValue> eventValues = new LinkedList<>();
 
     /**
      * Returns instance of event values controller class.
      * @return instance of event values.
      */
-    public synchronized static EventValuesConcept getInstance() {
+    public synchronized static EventValues getInstance() {
         if (instance == null) {
-            instance = new EventValuesConcept();
+            instance = new EventValues();
             instance.registerDefaults();
         }
         return instance;
@@ -55,7 +55,7 @@ public class EventValuesConcept {
      * Registers event value, that will be replaced in coding.
      * @param value event value to register.
      */
-    public void registerEventValue(@NotNull EventValueTest value) {
+    public void registerEventValue(@NotNull EventValue value) {
         sendDebug("[VALUES] Registered " + value);
         eventValues.add(value);
     }
@@ -64,8 +64,8 @@ public class EventValuesConcept {
      * Registers event values, that will be replaced in coding.
      * @param values event values to register.
      */
-    public void registerEventValue(@NotNull EventValueTest... values) {
-        for (EventValueTest value : values) {
+    public void registerEventValue(@NotNull EventValue... values) {
+        for (EventValue value : values) {
             registerEventValue(value);
         }
     }
@@ -74,7 +74,7 @@ public class EventValuesConcept {
      * Unregisters event value if list contains it.
      * @param value event value to unregister.
      */
-    public void unregisterEventValue(@NotNull EventValueTest value) {
+    public void unregisterEventValue(@NotNull EventValue value) {
         eventValues.remove(value);
     }
 
@@ -82,7 +82,7 @@ public class EventValuesConcept {
      * Returns a copy of list that contains all registered event values.
      * @return event values list.
      */
-    public @NotNull List<EventValueTest> getEventValueTests() {
+    public @NotNull List<EventValue> getEventValues() {
         return new ArrayList<>(eventValues);
     }
 
@@ -116,9 +116,9 @@ public class EventValuesConcept {
                 new LivingRemainingAirValue(), new LivingMaximumAirValue());
     }
 
-    public @NotNull List<EventValueTest> getByCategories(@NotNull MenusCategory menusCategory) {
-        List<EventValueTest> list = new ArrayList<>();
-        for (EventValueTest name : eventValues) {
+    public @NotNull List<EventValue> getByCategories(@NotNull MenusCategory menusCategory) {
+        List<EventValue> list = new ArrayList<>();
+        for (EventValue name : eventValues) {
             if (name.getCategory() == menusCategory) {
                 list.add(name);
             }
@@ -130,12 +130,12 @@ public class EventValuesConcept {
         return getByName(name) != null;
     }
 
-    public boolean exists(@NotNull Class<? extends EventValueTest> clazz) {
+    public boolean exists(@NotNull Class<? extends EventValue> clazz) {
         return getByClass(clazz) != null;
     }
 
-    public @Nullable EventValueTest getByClass(@NotNull Class<? extends EventValueTest> clazz) {
-        for (EventValueTest eventValue : eventValues) {
+    public @Nullable EventValue getByClass(@NotNull Class<? extends EventValue> clazz) {
+        for (EventValue eventValue : eventValues) {
             if (eventValue.getClass().equals(clazz)) {
                 return eventValue;
             }
@@ -143,8 +143,8 @@ public class EventValuesConcept {
         return null;
     }
 
-    public @Nullable EventValueTest getByName(@NotNull String name) {
-        for (EventValueTest eventValue : eventValues) {
+    public @Nullable EventValue getByName(@NotNull String name) {
+        for (EventValue eventValue : eventValues) {
             if (eventValue.getName().equals(name)) {
                 return eventValue;
             }
@@ -153,13 +153,13 @@ public class EventValuesConcept {
     }
 
     public @Nullable Object getValue(@NotNull String name, @NotNull ActionsHandler handler, @NotNull Action action) {
-        EventValueTest value = getByName(name);
+        EventValue value = getByName(name);
         if (value == null) return null;
         return value.getValue(handler, action);
     }
 
-    public @Nullable Object getValue(@NotNull Class<? extends EventValueTest> clazz, @NotNull ActionsHandler handler, @NotNull Action action) {
-        EventValueTest value = getByClass(clazz);
+    public @Nullable Object getValue(@NotNull Class<? extends EventValue> clazz, @NotNull ActionsHandler handler, @NotNull Action action) {
+        EventValue value = getByClass(clazz);
         if (value == null) return null;
         return value.getValue(handler, action);
     }

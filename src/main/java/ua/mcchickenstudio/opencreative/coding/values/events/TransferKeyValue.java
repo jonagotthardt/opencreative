@@ -26,9 +26,9 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.VariableTransferEvent;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
-import ua.mcchickenstudio.opencreative.coding.values.EventValueTest;
+import ua.mcchickenstudio.opencreative.coding.values.EventValue;
 
-public class TransferKeyValue extends EventValueTest {
+public final class TransferKeyValue extends EventValue {
 
     public TransferKeyValue() {
         super("transfer_key", new ItemStack(Material.SCULK_SENSOR), MenusCategory.EVENTS);

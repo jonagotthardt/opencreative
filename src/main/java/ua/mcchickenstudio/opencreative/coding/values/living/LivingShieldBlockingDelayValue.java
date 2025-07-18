@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class LivingShieldBlockingDelayValue extends NumberEventValue {
+public final class LivingShieldBlockingDelayValue extends NumberEventValue {
 
     public LivingShieldBlockingDelayValue() {
         super("shield_blocking_delay", new ItemStack(Material.SHIELD), MenusCategory.ENTITY);

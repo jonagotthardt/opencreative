@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.VectorEventValue;
 
-public class EntityVelocityValue extends VectorEventValue {
+public final class EntityVelocityValue extends VectorEventValue {
 
     public EntityVelocityValue() {
         super("velocity", new ItemStack(Material.PRISMARINE_SHARD), MenusCategory.ENTITY);

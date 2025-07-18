@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class LivingRemainingAirValue extends NumberEventValue {
+public final class LivingRemainingAirValue extends NumberEventValue {
 
     public LivingRemainingAirValue() {
         super("remaining_air", new ItemStack(Material.SPONGE), MenusCategory.ENTITY);

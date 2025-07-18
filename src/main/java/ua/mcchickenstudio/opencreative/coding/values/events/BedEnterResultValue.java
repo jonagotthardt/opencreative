@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.B
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.TextEventValue;
 
-public class BedEnterResultValue extends TextEventValue {
+public final class BedEnterResultValue extends TextEventValue {
 
     public BedEnterResultValue() {
         super("bed_enter_result", new ItemStack(Material.WHITE_BED), MenusCategory.EVENTS);

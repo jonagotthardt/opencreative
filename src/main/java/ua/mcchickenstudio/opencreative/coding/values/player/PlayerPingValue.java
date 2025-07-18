@@ -10,7 +10,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class PlayerPingValue extends NumberEventValue {
+public final class PlayerPingValue extends NumberEventValue {
 
     public PlayerPingValue() {
         super("ping", new ItemStack(Material.SCULK_SENSOR), MenusCategory.PLAYER);

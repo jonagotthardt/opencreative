@@ -29,7 +29,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.LocationEventValue;
 
-public class EyeLocationValue extends LocationEventValue {
+public final class EyeLocationValue extends LocationEventValue {
 
     public EyeLocationValue() {
         super("eye_location", new ItemStack(Material.ENDER_EYE), MenusCategory.ENTITY);

@@ -26,8 +26,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.conditions.Condition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
-import ua.mcchickenstudio.opencreative.coding.values.EventValueTest;
-import ua.mcchickenstudio.opencreative.coding.values.EventValuesConcept;
+import ua.mcchickenstudio.opencreative.coding.values.EventValue;
+import ua.mcchickenstudio.opencreative.coding.values.EventValues;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -383,9 +383,9 @@ public class ErrorUtils {
         }
     }
 
-    public static void sendCodingNotFoundEventValue(Planet planet, Executor executor, Class<? extends EventValueTest> clazz) {
+    public static void sendCodingNotFoundEventValue(Planet planet, Executor executor, Class<? extends EventValue> clazz) {
         if (planet == null) return;
-        EventValueTest eventValue = EventValuesConcept.getInstance().getByClass(clazz);
+        EventValue eventValue = EventValues.getInstance().getByClass(clazz);
         sendPlanetCodeErrorMessage(planet,executor, getLocaleMessage("coding-error.temp-var-not-exists",false)
                 .replace("%variable%", eventValue != null ? eventValue.getLocaleName() : clazz.getSimpleName()));
     }

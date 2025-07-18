@@ -9,7 +9,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class ThunderWeatherDurationValue extends NumberEventValue {
+public final class ThunderWeatherDurationValue extends NumberEventValue {
 
     public ThunderWeatherDurationValue() {
         super("thunder_weather_duration", new ItemStack(Material.WATER_BUCKET), MenusCategory.WORLD);

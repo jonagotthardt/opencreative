@@ -27,7 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.BooleanEventValue;
 
-public class IsChunkNewValue extends BooleanEventValue {
+public final class IsChunkNewValue extends BooleanEventValue {
 
     public IsChunkNewValue() {
         super("is_chunk_new", new ItemStack(Material.GLASS), MenusCategory.EVENTS);

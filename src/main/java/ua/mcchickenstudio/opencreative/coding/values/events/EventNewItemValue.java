@@ -29,7 +29,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.Ite
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.ItemEventValue;
 
-public class EventNewItemValue extends ItemEventValue {
+public final class EventNewItemValue extends ItemEventValue {
 
     public EventNewItemValue() {
         super("new_item", new ItemStack(Material.GLOW_ITEM_FRAME), MenusCategory.EVENTS);

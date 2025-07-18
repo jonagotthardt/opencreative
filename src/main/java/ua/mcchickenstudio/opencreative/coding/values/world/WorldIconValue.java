@@ -9,7 +9,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.ItemEventValue;
 
-public class WorldIconValue extends ItemEventValue {
+public final class WorldIconValue extends ItemEventValue {
 
     public WorldIconValue() {
         super("planet_icon", new ItemStack(Material.DIAMOND), MenusCategory.WORLD);

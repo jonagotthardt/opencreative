@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.ArgumentSlot;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import ua.mcchickenstudio.opencreative.coding.values.EventValuesConcept;
+import ua.mcchickenstudio.opencreative.coding.values.EventValues;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
@@ -344,7 +344,7 @@ public class CodingBlockParser {
                     variableType = variableType.replace("PLOT", "PLANET");
                     ItemUtils.setPersistentData(item, getCodingVariableTypeKey(), variableType);
                 }
-                if (!EventValuesConcept.getInstance().exists(variableType.toLowerCase())) {
+                if (!EventValues.getInstance().exists(variableType.toLowerCase())) {
                     break;
                 }
                 Map<String, String> valueMap = new HashMap<>();

@@ -27,7 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class EntityFireTicksValue extends NumberEventValue {
+public final class EntityFireTicksValue extends NumberEventValue {
 
     public EntityFireTicksValue() {
         super("fire_ticks", new ItemStack(Material.CAMPFIRE), MenusCategory.ENTITY);

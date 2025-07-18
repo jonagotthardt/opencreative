@@ -25,7 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 
-public abstract class BooleanEventValue extends EventValueTest {
+public abstract class BooleanEventValue extends EventValue {
 
     public BooleanEventValue(String id, ItemStack displayIcon, MenusCategory category) {
         super(id, displayIcon, category);

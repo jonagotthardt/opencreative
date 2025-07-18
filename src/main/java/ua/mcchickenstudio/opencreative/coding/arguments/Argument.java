@@ -25,7 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.placeholders.Placeholders;
 import ua.mcchickenstudio.opencreative.coding.variables.EventValueLink;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import ua.mcchickenstudio.opencreative.coding.values.EventValuesConcept;
+import ua.mcchickenstudio.opencreative.coding.values.EventValues;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.substring;
@@ -91,7 +91,7 @@ public class Argument {
                 }
             }
             case EventValueLink link -> {
-                Object value = EventValuesConcept.getInstance().getValue(link.type(), action.getHandler(), action);
+                Object value = EventValues.getInstance().getValue(link.type(), action.getHandler(), action);
                 if (value != null) {
                     return value;
                 }

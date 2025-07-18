@@ -11,7 +11,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.LocationEventValue;
 
-public class PlayerCompassTargetValue extends LocationEventValue {
+public final class PlayerCompassTargetValue extends LocationEventValue {
 
     public PlayerCompassTargetValue() {
         super("compass_target", new ItemStack(Material.COMPASS), MenusCategory.PLAYER);

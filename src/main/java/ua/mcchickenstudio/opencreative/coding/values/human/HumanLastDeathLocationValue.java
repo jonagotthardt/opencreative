@@ -11,7 +11,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.LocationEventValue;
 
-public class HumanLastDeathLocationValue extends LocationEventValue {
+public final class HumanLastDeathLocationValue extends LocationEventValue {
 
     public HumanLastDeathLocationValue() {
         super("last_death_location", new ItemStack(Material.SKELETON_SKULL), MenusCategory.PLAYER);

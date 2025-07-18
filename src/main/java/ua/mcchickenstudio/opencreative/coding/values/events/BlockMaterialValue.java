@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.TextEventValue;
 
-public class BlockMaterialValue extends TextEventValue {
+public final class BlockMaterialValue extends TextEventValue {
 
     public BlockMaterialValue() {
         super("block_material", new ItemStack(Material.GLOBE_BANNER_PATTERN), MenusCategory.EVENTS);

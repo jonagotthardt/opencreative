@@ -9,7 +9,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class WorldOnlineValue extends NumberEventValue {
+public final class WorldOnlineValue extends NumberEventValue {
 
     public WorldOnlineValue() {
         super("planet_online", new ItemStack(Material.PUFFERFISH), MenusCategory.WORLD);

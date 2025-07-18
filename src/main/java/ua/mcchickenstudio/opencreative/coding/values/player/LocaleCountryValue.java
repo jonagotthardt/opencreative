@@ -10,7 +10,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.TextEventValue;
 
-public class LocaleCountryValue extends TextEventValue {
+public final class LocaleCountryValue extends TextEventValue {
 
     public LocaleCountryValue() {
         super("locale_country", new ItemStack(Material.HEART_OF_THE_SEA), MenusCategory.PLAYER);

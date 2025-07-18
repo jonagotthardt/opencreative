@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class LivingArrowsInBodyValue extends NumberEventValue {
+public final class LivingArrowsInBodyValue extends NumberEventValue {
 
     public LivingArrowsInBodyValue() {
         super("arrows_in_body", new ItemStack(Material.ARROW), MenusCategory.ENTITY);

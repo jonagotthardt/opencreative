@@ -9,7 +9,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class ClearWeatherDurationValue extends NumberEventValue {
+public final class ClearWeatherDurationValue extends NumberEventValue {
 
     public ClearWeatherDurationValue() {
         super("clear_weather_duration", new ItemStack(Material.SUNFLOWER), MenusCategory.WORLD);

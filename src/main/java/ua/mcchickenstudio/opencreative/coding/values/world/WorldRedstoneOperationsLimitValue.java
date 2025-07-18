@@ -9,7 +9,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class WorldRedstoneOperationsLimitValue extends NumberEventValue {
+public final class WorldRedstoneOperationsLimitValue extends NumberEventValue {
 
     public WorldRedstoneOperationsLimitValue() {
         super("planet_redstone_operations_limit", new ItemStack(Material.REDSTONE_ORE), MenusCategory.WORLD);

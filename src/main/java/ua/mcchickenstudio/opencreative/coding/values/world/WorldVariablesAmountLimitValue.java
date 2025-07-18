@@ -9,7 +9,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class WorldVariablesAmountLimitValue extends NumberEventValue {
+public final class WorldVariablesAmountLimitValue extends NumberEventValue {
 
     public WorldVariablesAmountLimitValue() {
         super("planet_variables_amount_limit", new ItemStack(Material.MAGMA_BLOCK), MenusCategory.WORLD);

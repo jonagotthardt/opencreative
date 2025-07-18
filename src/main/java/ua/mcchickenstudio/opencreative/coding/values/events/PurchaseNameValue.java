@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.PlayerP
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.TextEventValue;
 
-public class PurchaseNameValue extends TextEventValue {
+public final class PurchaseNameValue extends TextEventValue {
 
     public PurchaseNameValue() {
         super("purchase_name", new ItemStack(Material.GOLD_BLOCK), MenusCategory.EVENTS);

@@ -9,7 +9,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class WorldEntitiesAmountLimitValue extends NumberEventValue {
+public final class WorldEntitiesAmountLimitValue extends NumberEventValue {
 
     public WorldEntitiesAmountLimitValue() {
         super("planet_entities_amount_limit", new ItemStack(Material.STRIDER_SPAWN_EGG), MenusCategory.WORLD);

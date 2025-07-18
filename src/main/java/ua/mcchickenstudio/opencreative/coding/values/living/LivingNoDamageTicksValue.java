@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class LivingNoDamageTicksValue extends NumberEventValue {
+public final class LivingNoDamageTicksValue extends NumberEventValue {
 
     public LivingNoDamageTicksValue() {
         super("no_damage_ticks", new ItemStack(Material.TOTEM_OF_UNDYING), MenusCategory.ENTITY);

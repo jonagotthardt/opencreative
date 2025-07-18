@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.Ite
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.TextEventValue;
 
-public class ClickTypeValue extends TextEventValue {
+public final class ClickTypeValue extends TextEventValue {
 
     public ClickTypeValue() {
         super("click_type", new ItemStack(Material.LEVER), MenusCategory.EVENTS);

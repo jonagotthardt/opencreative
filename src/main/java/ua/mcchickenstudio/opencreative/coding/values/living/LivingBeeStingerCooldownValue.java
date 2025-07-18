@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class LivingBeeStingerCooldownValue extends NumberEventValue {
+public final class LivingBeeStingerCooldownValue extends NumberEventValue {
 
     public LivingBeeStingerCooldownValue() {
         super("bee_stinger_cooldown", new ItemStack(Material.BEE_NEST), MenusCategory.ENTITY);

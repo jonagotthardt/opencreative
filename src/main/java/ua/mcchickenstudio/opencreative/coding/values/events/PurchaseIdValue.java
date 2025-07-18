@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.PlayerP
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.TextEventValue;
 
-public class PurchaseIdValue extends TextEventValue {
+public final class PurchaseIdValue extends TextEventValue {
 
     public PurchaseIdValue() {
         super("purchase_id", new ItemStack(Material.GOLDEN_APPLE), MenusCategory.EVENTS);

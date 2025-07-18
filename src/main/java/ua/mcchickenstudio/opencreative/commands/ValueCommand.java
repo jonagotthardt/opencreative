@@ -28,8 +28,8 @@ import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import ua.mcchickenstudio.opencreative.coding.values.EventValueTest;
-import ua.mcchickenstudio.opencreative.coding.values.EventValuesConcept;
+import ua.mcchickenstudio.opencreative.coding.values.EventValue;
+import ua.mcchickenstudio.opencreative.coding.values.EventValues;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
@@ -142,7 +142,7 @@ public class ValueCommand extends CommandHandler {
                 itemStack = createItem(Material.NAME_TAG,1,"menus.developer.variables.items.event-value");
                 if (args.length > 0) {
                     try {
-                        EventValueTest value = EventValuesConcept.getInstance().getByName(args[0]);
+                        EventValue value = EventValues.getInstance().getByName(args[0]);
                         if (value == null) return;
                         setDisplayName(itemStack,value.getLocaleName());
                         setPersistentData(itemStack,getCodingVariableTypeKey(),args[0].toUpperCase());
@@ -196,8 +196,8 @@ public class ValueCommand extends CommandHandler {
             }
             case "eventvalue", "gamevalue", "worldvalue", "value" -> {
                 if (args.length != 1) return null;
-                completer.addAll(EventValuesConcept.getInstance().getEventValueTests().stream()
-                        .map(EventValueTest::getName)
+                completer.addAll(EventValues.getInstance().getEventValues().stream()
+                        .map(EventValue::getName)
                         .filter(name -> name.startsWith(args[0])).toList());
             }
         }

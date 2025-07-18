@@ -10,7 +10,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.ItemEventValue;
 
-public class HumanBootsValue extends ItemEventValue {
+public final class HumanBootsValue extends ItemEventValue {
 
     public HumanBootsValue() {
         super("boots", new ItemStack(Material.NETHERITE_BOOTS), MenusCategory.PLAYER);

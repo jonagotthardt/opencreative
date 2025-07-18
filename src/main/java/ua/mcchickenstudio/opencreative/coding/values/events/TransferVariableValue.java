@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.Variable
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.TextEventValue;
 
-public class TransferVariableValue extends TextEventValue {
+public final class TransferVariableValue extends TextEventValue {
 
     public TransferVariableValue() {
         super("transfer_value", new ItemStack(Material.CALIBRATED_SCULK_SENSOR), MenusCategory.EVENTS);

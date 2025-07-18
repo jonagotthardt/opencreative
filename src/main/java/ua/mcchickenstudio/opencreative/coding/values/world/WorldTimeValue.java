@@ -9,7 +9,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class WorldTimeValue extends NumberEventValue {
+public final class WorldTimeValue extends NumberEventValue {
 
     public WorldTimeValue() {
         super("world_time", new ItemStack(Material.GRASS_BLOCK), MenusCategory.WORLD);

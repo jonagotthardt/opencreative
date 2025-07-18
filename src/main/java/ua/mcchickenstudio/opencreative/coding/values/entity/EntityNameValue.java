@@ -27,7 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.TextEventValue;
 
-public class EntityNameValue extends TextEventValue {
+public final class EntityNameValue extends TextEventValue {
 
     public EntityNameValue() {
         super("nickname", new ItemStack(Material.NAME_TAG), MenusCategory.ENTITY);

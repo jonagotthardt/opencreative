@@ -10,7 +10,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class PlayerWalkSpeedValue extends NumberEventValue {
+public final class PlayerWalkSpeedValue extends NumberEventValue {
 
     public PlayerWalkSpeedValue() {
         super("walk_speed", new ItemStack(Material.CHAINMAIL_BOOTS), MenusCategory.PLAYER);

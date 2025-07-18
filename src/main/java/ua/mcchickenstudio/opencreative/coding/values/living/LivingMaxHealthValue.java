@@ -30,7 +30,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class LivingMaxHealthValue extends NumberEventValue {
+public final class LivingMaxHealthValue extends NumberEventValue {
 
     public LivingMaxHealthValue() {
         super("max_health", new ItemStack(Material.GOLDEN_APPLE), MenusCategory.ENTITY);
