@@ -18,20 +18,79 @@
 
 package ua.mcchickenstudio.opencreative.indev.values;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebug;
+
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.EventValues;
+import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
+import ua.mcchickenstudio.opencreative.indev.values.world.WorldIdValue;
 
 public class EventValuesConcept {
-
+    
     private static EventValuesConcept instance;
-    private final List<EventValueTest> eventValues = new ArrayList<>();
+    private final List<EventValueTest> eventValues = new LinkedList<>();
 
-    public static EventValuesConcept getInstance() {
+    /**
+     * Returns instance of event values controller class.
+     * @return instance of event values.
+     */
+    public synchronized static EventValuesConcept getInstance() {
         if (instance == null) {
             instance = new EventValuesConcept();
+            instance.registerDefaults();
         }
         return instance;
     }
 
+    /**
+     * Registers event value, that will be replaced in coding.
+     * @param value event value to register.
+     */
+    public void registerEventValue(@NotNull EventValueTest value) {
+        sendDebug("[VALUES] Registered " + value);
+        eventValues.add(value);
+    }
+
+    /**
+     * Registers event values, that will be replaced in coding.
+     * @param values event values to register.
+     */
+    public void registerEventValue(@NotNull EventValueTest... values) {
+        for (EventValueTest value : values) {
+            registerEventValue(value);
+        }
+    }
+
+    /**
+     * Unregisters event value if list contains it.
+     * @param value event value to unregister.
+     */
+    public void unregisterEventValue(@NotNull EventValueTest value) {
+        eventValues.remove(value);
+    }
+
+    /**
+     * Returns a copy of list that contains all registered event values.
+     * @return event values list.
+     */
+    public @NotNull List<EventValueTest> getEventValueTests() {
+        return new ArrayList<>(eventValues);
+    }
+
+    private void registerDefaults() {
+        registerEventValue(new WorldIdValue());
+    }
+
+    public @NotNull List<EventValueTest> getByCategories(@NotNull MenusCategory menusCategory) {
+        List<EventValueTest> list = new ArrayList<>();
+        for (EventValueTest type : eventValues) {
+            if (type.getCategory() == menusCategory) {
+                list.add(type);
+            }
+        }
+        return list;
+    }
 
 }

@@ -31,7 +31,7 @@ public class ItemDamageExecutor extends PlayerExecutor {
     protected void setTempVars(WorldEvent event) {
         if (event instanceof PlayerItemDamagedEvent craftEvent) {
             setTempVar(EventValues.Variable.ITEM,craftEvent.getItem());
-            setTempVar(EventValues.Variable.DAMAGE,craftEvent.getItem());
+            setTempVar(EventValues.Variable.DAMAGE,craftEvent.getDamage());
         }
     }
 

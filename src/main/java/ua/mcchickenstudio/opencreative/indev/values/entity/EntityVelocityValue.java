@@ -19,30 +19,25 @@
 package ua.mcchickenstudio.opencreative.indev.values.entity;
 
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.indev.values.NumberEventValue;
+import ua.mcchickenstudio.opencreative.indev.values.VectorEventValue;
 
-public class EntitySizeValue extends NumberEventValue {
+public class EntityVelocityValue extends VectorEventValue {
 
-    public EntitySizeValue() {
-        super("size", new ItemStack(Material.SLIME_BLOCK), MenusCategory.ENTITY);
+    public EntityVelocityValue() {
+        super("velocity", new ItemStack(Material.PRISMARINE_SHARD), MenusCategory.ENTITY);
     }
 
     @Override
-    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action) {
-        if (action.getEntity() instanceof LivingEntity livingEntity) {
-            AttributeInstance attribute = livingEntity.getAttribute(Attribute.GENERIC_SCALE);
-            return attribute == null ? null : attribute.getValue();
-        }
-        return null;
+    public @Nullable Vector getVector(@NotNull ActionsHandler handler, @NotNull Action action) {
+        return action.getEntity() != null ? action.getEntity().getVelocity() : null;
     }
 
     @Override
@@ -52,6 +47,6 @@ public class EntitySizeValue extends NumberEventValue {
 
     @Override
     public @NotNull String getDescription() {
-        return "Returns entity's size";
+        return "Returns entity's velocity";
     }
 }

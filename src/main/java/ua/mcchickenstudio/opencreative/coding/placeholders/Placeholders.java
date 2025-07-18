@@ -41,7 +41,7 @@ public class Placeholders {
      * Returns instance of placeholders controller class.
      * @return instance of placeholders.
      */
-    public synchronized static Placeholders getInstance() {
+    public synchronized static @NotNull Placeholders getInstance() {
         if (instance == null) {
             instance = new Placeholders();
             instance.registerPlaceholder(new SymbolPlaceholder());
@@ -61,7 +61,7 @@ public class Placeholders {
      * Registers placeholder, that will be parsed in text coding values.
      * @param placeholder placeholder to register.
      */
-    public void registerPlaceholder(Placeholder placeholder) {
+    public void registerPlaceholder(@NotNull Placeholder placeholder) {
         if (placeholder instanceof KeyPlaceholder key) {
             if (key.getKeys().length == 0) {
                 sendWarningErrorMessage("[PLACEHOLDERS] " + placeholder + " will be not registered, because has 0 keys.");
@@ -83,7 +83,7 @@ public class Placeholders {
      * Unregisters placeholder if list contains it.
      * @param placeholder placeholder to unregister.
      */
-    public void unregisterPlaceholder(Placeholder placeholder) {
+    public void unregisterPlaceholder(@NotNull Placeholder placeholder) {
         placeholders.remove(placeholder);
     }
 
@@ -91,21 +91,11 @@ public class Placeholders {
      * Returns a copy of list that contains all registered placeholders.
      * @return placeholders list.
      */
-    public List<Placeholder> getPlaceholders() {
+    public @NotNull List<Placeholder> getPlaceholders() {
         return new ArrayList<>(placeholders);
     }
 
-    private Set<String> getSameKeys(KeyPlaceholder first, KeyPlaceholder second) {
-        Set<String> sameKeys = new HashSet<>();
-        for (String key : first.getKeys()) {
-            if (Arrays.asList(second.getKeys()).contains(key)) {
-                sameKeys.add(key);
-            }
-        }
-        return sameKeys;
-    }
-
-    private Set<String> getSameKeys(KeyValuePlaceholder first, KeyValuePlaceholder second) {
+    private @NotNull Set<String> getSameKeys(@NotNull KeyPlaceholder first, @NotNull KeyPlaceholder second) {
         Set<String> sameKeys = new HashSet<>();
         for (String key : first.getKeys()) {
             if (Arrays.asList(second.getKeys()).contains(key)) {
@@ -131,7 +121,7 @@ public class Placeholders {
                 }
             }
         } catch (Exception error) {
-            sendCriticalErrorMessage("[PLACEHOLDERS] Can't parse placeholder",error);
+            sendCriticalErrorMessage("[PLACEHOLDERS] Can't parse placeholder", error);
         }
         return text;
     }

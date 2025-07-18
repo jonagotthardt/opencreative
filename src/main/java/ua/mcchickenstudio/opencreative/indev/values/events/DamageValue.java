@@ -16,33 +16,39 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.indev.values.entity;
+package ua.mcchickenstudio.opencreative.indev.values.events;
 
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.HungerChangeEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.KillerVictimEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDamagesMobEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDamagesPlayerEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.BedEnterEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.BedLeaveEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.PlayerItemDamagedEvent;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.indev.values.NumberEventValue;
 
-public class EntitySizeValue extends NumberEventValue {
+public class DamageValue extends NumberEventValue {
 
-    public EntitySizeValue() {
-        super("size", new ItemStack(Material.SLIME_BLOCK), MenusCategory.ENTITY);
+    public DamageValue() {
+        super("damage", new ItemStack(Material.SOUL_TORCH), MenusCategory.EVENTS);
     }
 
     @Override
     public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action) {
-        if (action.getEntity() instanceof LivingEntity livingEntity) {
-            AttributeInstance attribute = livingEntity.getAttribute(Attribute.GENERIC_SCALE);
-            return attribute == null ? null : attribute.getValue();
-        }
-        return null;
+        return switch (action.getEvent()) {
+            case PlayerItemDamagedEvent event -> event.getDamage();
+            case PlayerDamagesPlayerEvent event -> event.getDamage();
+            case PlayerDamagesMobEvent event -> event.getDamage();
+            default -> null;
+        };
     }
 
     @Override
@@ -52,6 +58,6 @@ public class EntitySizeValue extends NumberEventValue {
 
     @Override
     public @NotNull String getDescription() {
-        return "Returns entity's size";
+        return "Returns damage amount from damage event";
     }
 }

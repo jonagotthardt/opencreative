@@ -16,42 +16,30 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.indev.values.entity;
+package ua.mcchickenstudio.opencreative.indev.values;
 
-import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
-import ua.mcchickenstudio.opencreative.indev.values.NumberEventValue;
 
-public class EntitySizeValue extends NumberEventValue {
+public abstract class ItemEventValue extends EventValueTest {
 
-    public EntitySizeValue() {
-        super("size", new ItemStack(Material.SLIME_BLOCK), MenusCategory.ENTITY);
+    public ItemEventValue(String id, ItemStack displayIcon, MenusCategory category) {
+        super(id, displayIcon, category);
     }
 
-    @Override
-    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action) {
-        if (action.getEntity() instanceof LivingEntity livingEntity) {
-            AttributeInstance attribute = livingEntity.getAttribute(Attribute.GENERIC_SCALE);
-            return attribute == null ? null : attribute.getValue();
-        }
-        return null;
-    }
+    /**
+     * Returns an item stack that can be got from
+     * player, event, action, or null.
+     * @return item, or null.
+     */
+    public abstract @Nullable ItemStack getItem(@NotNull ActionsHandler handler, @NotNull Action action);
 
     @Override
-    public @NotNull String getExtensionId() {
-        return "default";
-    }
-
-    @Override
-    public @NotNull String getDescription() {
-        return "Returns entity's size";
+    public @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
+        return getItem(handler, action);
     }
 }

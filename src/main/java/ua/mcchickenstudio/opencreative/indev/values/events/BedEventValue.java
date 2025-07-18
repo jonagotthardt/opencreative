@@ -16,33 +16,36 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.indev.values.entity;
+package ua.mcchickenstudio.opencreative.indev.values.events;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.BedEnterEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.BedLeaveEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.BookWriteEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.ItemConsumeEvent;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
-import ua.mcchickenstudio.opencreative.indev.values.NumberEventValue;
+import ua.mcchickenstudio.opencreative.indev.values.LocationEventValue;
 
-public class EntitySizeValue extends NumberEventValue {
+public class BedEventValue extends LocationEventValue {
 
-    public EntitySizeValue() {
-        super("size", new ItemStack(Material.SLIME_BLOCK), MenusCategory.ENTITY);
+    public BedEventValue() {
+        super("bed", new ItemStack(Material.RED_BED), MenusCategory.EVENTS);
     }
 
     @Override
-    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action) {
-        if (action.getEntity() instanceof LivingEntity livingEntity) {
-            AttributeInstance attribute = livingEntity.getAttribute(Attribute.GENERIC_SCALE);
-            return attribute == null ? null : attribute.getValue();
-        }
-        return null;
+    public @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action) {
+        return switch (action.getEvent()) {
+            case BedLeaveEvent event -> event.getBlock().getLocation();
+            case BedEnterEvent event -> event.getBlock().getLocation();
+            default -> null;
+        };
     }
 
     @Override
@@ -52,6 +55,6 @@ public class EntitySizeValue extends NumberEventValue {
 
     @Override
     public @NotNull String getDescription() {
-        return "Returns entity's size";
+        return "Returns bed location from event";
     }
 }

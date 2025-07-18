@@ -16,33 +16,28 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.indev.values.entity;
+package ua.mcchickenstudio.opencreative.indev.values.events;
 
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.HungerChangeEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.PlayerPurchaseEvent;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.indev.values.NumberEventValue;
 
-public class EntitySizeValue extends NumberEventValue {
+public class FoodLevelValue extends NumberEventValue {
 
-    public EntitySizeValue() {
-        super("size", new ItemStack(Material.SLIME_BLOCK), MenusCategory.ENTITY);
+    public FoodLevelValue() {
+        super("food_level", new ItemStack(Material.COOKED_CHICKEN), MenusCategory.EVENTS);
     }
 
     @Override
     public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action) {
-        if (action.getEntity() instanceof LivingEntity livingEntity) {
-            AttributeInstance attribute = livingEntity.getAttribute(Attribute.GENERIC_SCALE);
-            return attribute == null ? null : attribute.getValue();
-        }
-        return null;
+        return action.getEvent() instanceof HungerChangeEvent event ? event.getFoodLevel() : null;
     }
 
     @Override
@@ -52,6 +47,6 @@ public class EntitySizeValue extends NumberEventValue {
 
     @Override
     public @NotNull String getDescription() {
-        return "Returns entity's size";
+        return "Returns food level from hunger event";
     }
 }

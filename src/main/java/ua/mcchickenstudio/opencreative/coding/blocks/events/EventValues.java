@@ -87,15 +87,14 @@ public class EventValues {
         CURSOR_ITEM             (Material.TRIPWIRE_HOOK,                     MenusCategory.EVENTS, ItemStack.class),
         CLICK_TYPE              (Material.LEVER,                     MenusCategory.EVENTS, String.class),
         CLICKED_SLOT            (Material.SLIME_BALL,                     MenusCategory.EVENTS, Integer.class),
-        EQUIPMENT_SLOT          (Material.NETHERITE_SWORD,                     MenusCategory.EVENTS, String.class),
+        //EQUIPMENT_SLOT          (Material.NETHERITE_SWORD,                     MenusCategory.EVENTS, String.class),
         OLD_SLOT                (Material.SLIME_BALL,                     MenusCategory.EVENTS, Integer.class),
         NEW_SLOT                (Material.SLIME_BALL,                     MenusCategory.EVENTS, Integer.class),
 
         MESSAGE                 (Material.BOOK,                     MenusCategory.EVENTS, String.class),
-        BLOCK                   (Material.GRASS_BLOCK,              MenusCategory.EVENTS, Block.class),
         BLOCK_MATERIAL          (Material.GLOBE_BANNER_PATTERN,              MenusCategory.EVENTS, Block.class),
         BLOCK_LOCATION          (Material.PAPER,              MenusCategory.EVENTS, Block.class),
-        IS_CHUNK_NEW            (Material.GLASS,               MenusCategory.EVENTS, Boolean.class),
+        //IS_CHUNK_NEW            (Material.GLASS,               MenusCategory.EVENTS, Boolean.class),
         TRANSFER_KEY            (Material.CALIBRATED_SCULK_SENSOR,               MenusCategory.EVENTS, String.class),
         TRANSFER_VALUE            (Material.SCULK_SENSOR,               MenusCategory.EVENTS, Object.class),
         URL                     (Material.NAME_TAG,               MenusCategory.EVENTS, String.class),
@@ -109,7 +108,7 @@ public class EventValues {
         FOOD_LEVEL              (Material.COOKED_CHICKEN, MenusCategory.EVENTS, Integer.class),
         DAMAGE_CAUSE            (Material.REDSTONE_TORCH,           MenusCategory.EVENTS, String.class),
         DAMAGE                  (Material.SOUL_TORCH,           MenusCategory.EVENTS, String.class),
-        EVENT_EXPERIENCE        (Material.SLIME_SPAWN_EGG,          MenusCategory.EVENTS, Float.class),
+        //EVENT_EXPERIENCE        (Material.SLIME_SPAWN_EGG,          MenusCategory.EVENTS, Float.class),
 
 
         CLIENT_BRAND            (Material.GRASS_BLOCK,              MenusCategory.PLAYER, String.class),

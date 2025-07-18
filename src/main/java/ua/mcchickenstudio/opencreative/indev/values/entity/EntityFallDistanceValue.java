@@ -30,19 +30,15 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.indev.values.NumberEventValue;
 
-public class EntitySizeValue extends NumberEventValue {
+public class EntityFallDistanceValue extends NumberEventValue {
 
-    public EntitySizeValue() {
-        super("size", new ItemStack(Material.SLIME_BLOCK), MenusCategory.ENTITY);
+    public EntityFallDistanceValue() {
+        super("fall_distance", new ItemStack(Material.RABBIT_FOOT), MenusCategory.ENTITY);
     }
 
     @Override
     public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action) {
-        if (action.getEntity() instanceof LivingEntity livingEntity) {
-            AttributeInstance attribute = livingEntity.getAttribute(Attribute.GENERIC_SCALE);
-            return attribute == null ? null : attribute.getValue();
-        }
-        return null;
+        return action.getEntity() != null ? action.getEntity().getFallDistance() : null;
     }
 
     @Override
@@ -52,6 +48,6 @@ public class EntitySizeValue extends NumberEventValue {
 
     @Override
     public @NotNull String getDescription() {
-        return "Returns entity's size";
+        return "Returns entity's fall distance";
     }
 }

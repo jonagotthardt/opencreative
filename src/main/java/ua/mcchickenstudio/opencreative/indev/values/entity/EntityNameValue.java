@@ -45,6 +45,6 @@ public class EntityNameValue extends TextEventValue {
 
     @Override
     public @NotNull String getDescription() {
-        return "Returns entity name";
+        return "Returns entity's name";
     }
 }

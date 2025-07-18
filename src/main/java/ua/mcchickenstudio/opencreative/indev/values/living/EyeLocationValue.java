@@ -16,11 +16,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.indev.values.entity;
+package ua.mcchickenstudio.opencreative.indev.values.living;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -28,21 +28,18 @@ import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
-import ua.mcchickenstudio.opencreative.indev.values.NumberEventValue;
+import ua.mcchickenstudio.opencreative.indev.values.LocationEventValue;
+import ua.mcchickenstudio.opencreative.indev.values.TextEventValue;
 
-public class EntitySizeValue extends NumberEventValue {
+public class EyeLocationValue extends LocationEventValue {
 
-    public EntitySizeValue() {
-        super("size", new ItemStack(Material.SLIME_BLOCK), MenusCategory.ENTITY);
+    public EyeLocationValue() {
+        super("eye_location", new ItemStack(Material.ENDER_EYE), MenusCategory.ENTITY);
     }
 
     @Override
-    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action) {
-        if (action.getEntity() instanceof LivingEntity livingEntity) {
-            AttributeInstance attribute = livingEntity.getAttribute(Attribute.GENERIC_SCALE);
-            return attribute == null ? null : attribute.getValue();
-        }
-        return null;
+    public @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action) {
+        return action.getEntity() instanceof LivingEntity living ? living.getEyeLocation() : null;
     }
 
     @Override
@@ -52,6 +49,6 @@ public class EntitySizeValue extends NumberEventValue {
 
     @Override
     public @NotNull String getDescription() {
-        return "Returns entity's size";
+        return "Returns eye location of living entity";
     }
 }

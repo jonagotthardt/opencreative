@@ -30,7 +30,6 @@ public class WorldInteractExecutor extends PlayerExecutor {
     @Override
     protected void setTempVars(WorldEvent event) {
         if (event instanceof WorldInteractEvent blockEvent) {
-            setTempVar(EventValues.Variable.BLOCK, blockEvent.getClickedBlock());
             setTempVar(EventValues.Variable.BLOCK_MATERIAL, blockEvent.getClickedBlock().getType().name().toLowerCase());
             setTempVar(EventValues.Variable.BLOCK_LOCATION, blockEvent.getClickedBlock().getLocation());
         }
