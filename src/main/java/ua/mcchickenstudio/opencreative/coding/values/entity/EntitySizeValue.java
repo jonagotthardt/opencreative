@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.values.entity;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.LivingEntity;
@@ -37,8 +38,8 @@ public final class EntitySizeValue extends NumberEventValue {
     }
 
     @Override
-    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action) {
-        if (action.getEntity() instanceof LivingEntity livingEntity) {
+    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        if (entity instanceof LivingEntity livingEntity) {
             AttributeInstance attribute = livingEntity.getAttribute(Attribute.GENERIC_SCALE);
             return attribute == null ? null : attribute.getValue();
         }

@@ -19,13 +19,14 @@
 package ua.mcchickenstudio.opencreative.coding.variables;
 
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 
 /**
  * This record represents a link to Event value, that can exists or can be empty.
  * It's used for searching and getting real event value.
  * @param id id of event value.
  */
-public record EventValueLink(@NotNull String id)  {
+public record EventValueLink(@NotNull String id, @NotNull Target target)  {
 
     public @NotNull String toString() {
         return "null! " + id;

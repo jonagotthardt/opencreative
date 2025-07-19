@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.values;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,6 +34,13 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * <h1>EventValue</h1>
  * This class represents a value, that can be got
  * from event, actions handler, action and target.
+ * <p>
+ * To create custom event value create a class,
+ * that extends one of prepared: {@link TextEventValue},
+ * {@link NumberEventValue}, {@link VectorEventValue},
+ * {@link LocationEventValue}, {@link ItemEventValue},
+ * {@link BooleanEventValue} and register with
+ * {@link EventValues#registerEventValue(EventValue)}.
  */
 public abstract class EventValue implements ExtensionContent {
 
@@ -49,7 +57,7 @@ public abstract class EventValue implements ExtensionContent {
      * @param displayIcon icon of event value that will be displayed in event values list.
      * @param category category of event value for event values list.
      */
-    public EventValue(String id, ItemStack displayIcon, MenusCategory category) {
+    public EventValue(@NotNull String id, @NotNull ItemStack displayIcon, @NotNull MenusCategory category) {
         this.id = id.replace("-","_").toLowerCase();
         this.displayIcon = displayIcon;
         this.category = category;
@@ -78,20 +86,40 @@ public abstract class EventValue implements ExtensionContent {
      * event value name tag item.
      * @param handler handler of action to get value.
      * @param action action to get value.
-     * @return string, number, boolean, location, vector, or null.
+     * @param entity entity to get value, can be null.
+     * @return string, number, boolean, item, location, vector, or null.
      */
-    public abstract @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action);
+    public abstract @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity);
 
+    /**
+     * Returns name of event value for displaying in
+     * registry by converting id. Not used in menus.
+     * @return display name of event value.
+     */
     public @NotNull String getName() {
         return StringUtils.capitalize(id.replace("_"," "));
     }
 
-    public @NotNull String getID() {
+    /**
+     * Returns id of event value, that will be used
+     * to find it in registry.
+     * @return id of event value.
+     */
+    public final @NotNull String getID() {
         return id;
     }
 
-    public String getLocaleName() {
+    /**
+     * Returns localized name of event value,
+     * that will be used in menus.
+     * @return localized name.
+     */
+    public @NotNull String getLocaleName() {
         return getLocaleMessage("menus.developer.event-values.items." + this.getID().replace("_","-") + ".name" ,false);
     }
 
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

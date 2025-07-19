@@ -1,5 +1,6 @@
 package ua.mcchickenstudio.opencreative.coding.values.player;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,8 +18,8 @@ public final class PlayerTotalExperienceValue extends NumberEventValue {
     }
 
     @Override
-    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action) {
-        return action.getEntity() instanceof Player player ? player.getTotalExperience() : null;
+    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        return entity instanceof Player player ? player.getTotalExperience() : null;
     }
 
     @Override

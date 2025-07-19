@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.values.living;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -37,8 +38,8 @@ public final class LivingMaxHealthValue extends NumberEventValue {
     }
 
     @Override
-    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action) {
-        if (!(action.getEntity() instanceof LivingEntity living)) {
+    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        if (!(entity instanceof LivingEntity living)) {
             return null;
         }
         AttributeInstance attribute = living.getAttribute(Attribute.GENERIC_MAX_HEALTH);

@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.values.living;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
@@ -37,8 +38,8 @@ public final class TargetBlockValue extends LocationEventValue {
     }
 
     @Override
-    public @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action) {
-        if (action.getEntity() instanceof LivingEntity living) {
+    public @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        if (entity instanceof LivingEntity living) {
             Block target = living.getTargetBlockExact(10);
             if (target == null) return null;
             return target.getLocation();

@@ -1,6 +1,7 @@
 package ua.mcchickenstudio.opencreative.coding.values.human;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -17,8 +18,8 @@ public final class HumanHungerValue extends NumberEventValue {
     }
 
     @Override
-    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action) {
-        return action.getEntity() instanceof HumanEntity humanEntity ? humanEntity.getFoodLevel() : null;
+    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        return entity instanceof HumanEntity humanEntity ? humanEntity.getFoodLevel() : null;
     }
 
     @Override

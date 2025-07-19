@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.values;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,9 +29,14 @@ import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 
+/**
+ * <h1>LocationEventValue</h1>
+ * This class represents an event value,
+ * that returns location, or null.
+ */
 public abstract class LocationEventValue extends EventValue {
 
-    public LocationEventValue(String id, ItemStack displayIcon, MenusCategory category) {
+    public LocationEventValue(@NotNull String id, @NotNull ItemStack displayIcon, @NotNull MenusCategory category) {
         super(id, displayIcon, category);
     }
 
@@ -39,11 +45,11 @@ public abstract class LocationEventValue extends EventValue {
      * player, event, action, or null.
      * @return location, or null.
      */
-    public abstract @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action);
+    public abstract @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity);
 
     @Override
-    public @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
-        Location location = getLocation(handler, action);
+    public final @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        Location location = getLocation(handler, action, entity);
         if (location == null) return null;
         if (isOutOfBorders(location)) return null;
         return location;

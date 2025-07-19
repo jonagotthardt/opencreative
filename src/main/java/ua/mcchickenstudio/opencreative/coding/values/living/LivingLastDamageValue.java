@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.values.living;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -35,8 +36,8 @@ public final class LivingLastDamageValue extends NumberEventValue {
     }
 
     @Override
-    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action) {
-        return action.getEntity() instanceof LivingEntity living ? living.getLastDamage() : null;
+    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        return entity instanceof LivingEntity living ? living.getLastDamage() : null;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package ua.mcchickenstudio.opencreative.coding.values.world;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +20,7 @@ public final class UnixTimeMinutesValue extends NumberEventValue {
     }
 
     @Override
-    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action) {
+    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
         SimpleDateFormat minutesFormat = new SimpleDateFormat("mm");
         Date date = new Date(System.currentTimeMillis());
         return Integer.parseInt(minutesFormat.format(date));

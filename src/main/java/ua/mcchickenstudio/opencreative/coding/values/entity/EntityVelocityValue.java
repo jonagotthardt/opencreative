@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.values.entity;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -35,8 +36,8 @@ public final class EntityVelocityValue extends VectorEventValue {
     }
 
     @Override
-    public @Nullable Vector getVector(@NotNull ActionsHandler handler, @NotNull Action action) {
-        return action.getEntity() != null ? action.getEntity().getVelocity() : null;
+    public @Nullable Vector getVector(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        return entity != null ? entity.getVelocity() : null;
     }
 
     @Override

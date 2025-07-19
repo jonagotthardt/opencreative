@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.values.events;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +37,7 @@ public final class EventNewItemValue extends ItemEventValue {
     }
 
     @Override
-    public @Nullable ItemStack getItem(@NotNull ActionsHandler handler, @NotNull Action action) {
+    public @Nullable ItemStack getItem(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
         return switch (action.getEvent()) {
             case ItemConsumeEvent event -> event.getNewItem();
             case BookWriteEvent event -> event.getNewBook();

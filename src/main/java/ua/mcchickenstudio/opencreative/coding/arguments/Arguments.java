@@ -27,6 +27,7 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.EventValueLink;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
@@ -151,13 +152,15 @@ public class Arguments {
                     return stringValue;
                 }
                 String valueType = listSection.getString("name");
+                String targetType = listSection.getString("target","selected");
                 if (valueType == null) return stringValue;
                 if (valueType.isEmpty()) return stringValue;
+                Target target = Target.getByText(targetType);
                 try {
                     if (valueType.startsWith("PLOT")) {
                         valueType = valueType.replace("PLOT","PLANET");
                     }
-                    return new EventValueLink(valueType);
+                    return new EventValueLink(valueType, target);
                 } catch (Exception e) {
                     return stringValue;
                 }

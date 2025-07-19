@@ -127,7 +127,11 @@ public final class InteractListener implements Listener {
             case PAPER -> handlePaperInteraction(event, player, currentItem);
             case PRISMARINE_SHARD -> handlePrismarineShardClick(event, player, currentItem);
             case NAME_TAG -> {
-                new EventValuesMenu(player).open(player);
+                if (player.isSneaking()) {
+                    new ValueTargetSelectionMenu(player).open(player);
+                } else {
+                    new EventValuesMenu(player).open(player);
+                }
                 event.setCancelled(true);
             }
             case COMPARATOR -> {

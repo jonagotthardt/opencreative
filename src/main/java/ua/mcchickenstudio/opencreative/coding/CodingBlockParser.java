@@ -347,11 +347,13 @@ public class CodingBlockParser {
                 if (!EventValues.getInstance().exists(variableType.toLowerCase())) {
                     break;
                 }
+                String targetType = getPersistentData(item, getCodingTargetTypeKey());
                 Map<String, String> valueMap = new HashMap<>();
-                try {
-                    valueMap.put("name", variableType);
-                    return valueMap;
-                } catch (Exception ignored) {}
+                valueMap.put("name", variableType);
+                if (!targetType.isEmpty()) {
+                    valueMap.put("target", targetType);
+                }
+                return valueMap;
             }
             case PARTICLE -> {
                 PersistentDataContainer container = itemMeta.getPersistentDataContainer();

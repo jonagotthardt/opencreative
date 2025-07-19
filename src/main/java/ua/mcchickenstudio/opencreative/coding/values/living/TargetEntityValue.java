@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.values.living;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -36,8 +37,8 @@ public final class TargetEntityValue extends TextEventValue {
     }
 
     @Override
-    public @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action) {
-        if (action.getEntity() instanceof LivingEntity living) {
+    public @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        if (entity instanceof LivingEntity living) {
             Entity target = living.getTargetEntity(10);
             if (target == null) return null;
             return target.getUniqueId().toString();

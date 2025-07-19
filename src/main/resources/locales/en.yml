@@ -345,6 +345,7 @@ world:
     cant-place-action-on-event: "%prefix%&cThis block must be placed with &bEVENTS&c, &aCYCLES&c, or &9FUNCTIONS&c."
     click-to-copy: "&eClick to copy."
     set-variable: "&aValue set:"
+    set-target: "&dTarget set:"
     set-variable-number-error: "&cEnter a number in the chat, for example, 1"
     set-variable-color-error: "&cEnter a color code in the chat, for example, 255 255 255"
     set-events: "&bEvent set:"
@@ -10889,6 +10890,16 @@ menus:
             - ""
     selection:
       title: "Select a Target for Action"
+      title-values: "Select a Target for Game Value"
+      targets:
+        default: "&3⌘ Default"
+        selected: "&d☒ Selected Target"
+        all-players: "&b☻ All Players"
+        random-player: "&6🎣 Random Player"
+        killer: "&c🗡 Killer"
+        victim: "&4☠ Victim"
+        all-entities: "&6🍖 All Entities"
+        random-target: "&5⭐ Random Target"
       items:
         default:
           name: " "
@@ -11070,6 +11081,7 @@ menus:
     event-values:
       title: "Game Values"
       nullable: "&c May not return value!"
+      target: "&7Target: &f%target%"
       items:
         next-page:
           name: " "
@@ -12174,7 +12186,8 @@ menus:
             - "&7entity, or world."
             - ""
             - "&fIn hand:"
-            - " &eRight-click &7- Select value id"
+            - " &eRight-click &7- Select type"
+            - " &eSHIFT+RMB &7- Choose target"
             - ""
             - "&7Some values may be &3empty&7."
   modules:
@@ -13389,7 +13402,7 @@ blocks:
   player_bed_enter: "Entered bed"
   player_bed_leave: "Left bed"
   player_purchase: "&ePurchased"
-  player_item_damaged: "Damaged item"
+  player_item_damage: "Damaged item"
   player_item_consume: "Consumed item"
   player_item_craft: "Crafted item"
   player_item_break: "Broke item"

@@ -22,8 +22,10 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.jetbrains.annotations.NotNull;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getSignLine;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
  * <h1>Target</h1>
@@ -36,26 +38,36 @@ import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getSignLine;
  */
 public enum Target {
 
-    DEFAULT(Material.LIGHT_BLUE_STAINED_GLASS),
-    SELECTED(Material.PURPUR_BLOCK),
-    ALL_PLAYERS(Material.BEACON),
-    ALL_ENTITIES(Material.PUFFERFISH),
-    RANDOM_PLAYER(Material.PLAYER_HEAD),
-    RANDOM_TARGET(Material.PURPUR_STAIRS),
-    KILLER(Material.NETHERITE_SWORD),
-    VICTIM(Material.SKELETON_SKULL);
+    DEFAULT(Material.LIGHT_BLUE_STAINED_GLASS, true),
+    SELECTED(Material.PURPUR_BLOCK, true),
+    ALL_PLAYERS(Material.BEACON, false),
+    ALL_ENTITIES(Material.PUFFERFISH, false),
+    RANDOM_PLAYER(Material.PLAYER_HEAD, true),
+    RANDOM_TARGET(Material.PURPUR_STAIRS, true),
+    KILLER(Material.NETHERITE_SWORD, true),
+    VICTIM(Material.SKELETON_SKULL, true);
 
     private final Material icon;
+    private final boolean supportsEventValue;
 
-    Target(Material icon) {
+    Target(Material icon, boolean supportsEventValue) {
         this.icon = icon;
+        this.supportsEventValue = supportsEventValue;
     }
 
     public Material getIcon() {
         return icon;
     }
 
-    public static Target getByMaterial(Material material) {
+    public boolean isSupportsEventValue() {
+        return supportsEventValue;
+    }
+
+    public @NotNull String getLocaleName() {
+        return getLocaleMessage("menus.developer.selection.targets." + this.name().toLowerCase().replace("_","-"), false);
+    }
+
+    public static @NotNull Target getByMaterial(Material material) {
         for (Target target : values()) {
             if (target.getIcon() == material) {
                 return target;
@@ -64,7 +76,16 @@ public enum Target {
         return DEFAULT;
     }
 
-    public static Target getBySign(Location location) {
+    public static @NotNull Target getByText(@NotNull String text) {
+        for (Target target : values()) {
+            if (target.name().equals(text)) {
+                return target;
+            }
+        }
+        return SELECTED;
+    }
+
+    public static @NotNull Target getBySign(Location location) {
         Block signBlock = location.getBlock().getRelative(BlockFace.SOUTH);
         String string = getSignLine(signBlock.getLocation(), (byte) 4);
         if (string != null && !string.isEmpty()) {

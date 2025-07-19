@@ -27,6 +27,7 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedVariablesEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
@@ -381,7 +382,12 @@ public final class WorldVariables {
             } else if (type == ValueType.EVENT_VALUE) {
                 Map<?,?> eventValueMap = (Map<?,?>) value;
                 String eventValueType = (String) eventValueMap.get("name");
-                return new EventValueLink(eventValueType);
+                Target target = Target.SELECTED;
+                if (eventValueMap.containsKey("target")) {
+                    String targetType = (String) eventValueMap.get("target");
+                    target = Target.getByText(targetType);
+                }
+                return new EventValueLink(eventValueType, target);
             } else if (type == ValueType.VARIABLE) {
                 Map<?,?> varMap = (Map<?,?>) value;
                 String varName = (String) varMap.get("name");
