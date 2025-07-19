@@ -35,8 +35,7 @@ public final class EntityLastDamageCauseValue extends TextEventValue {
     }
 
     @Override
-    public @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action) {
-        Entity entity = action.getEntity();
+    public @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
         if (entity == null) return null;
         return entity.getLastDamageCause() != null ? entity.getLastDamageCause().getCause().name().toLowerCase() : null;
     }

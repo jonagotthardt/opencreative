@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.values;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,11 +42,11 @@ public abstract class NumberEventValue extends EventValue {
      * player, event, action, or null.
      * @return number, or null.
      */
-    public abstract @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action);
+    public abstract @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity);
 
     @Override
-    public final @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
-        return getNumber(handler, action);
+    public final @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        return getNumber(handler, action, entity);
     }
 
 }

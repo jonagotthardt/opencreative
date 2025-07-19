@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.values.living;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -36,8 +37,8 @@ public final class EyeLocationValue extends LocationEventValue {
     }
 
     @Override
-    public @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action) {
-        return action.getEntity() instanceof LivingEntity living ? living.getEyeLocation() : null;
+    public @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        return entity instanceof LivingEntity living ? living.getEyeLocation() : null;
     }
 
     @Override

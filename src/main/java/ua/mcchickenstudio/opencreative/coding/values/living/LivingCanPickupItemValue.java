@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.values.living;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -35,8 +36,8 @@ public final class LivingCanPickupItemValue extends BooleanEventValue {
     }
 
     @Override
-    public @Nullable Boolean getBoolean(@NotNull ActionsHandler handler, @NotNull Action action) {
-        return action.getEntity() instanceof LivingEntity living ? living.getCanPickupItems() : null;
+    public @Nullable Boolean getBoolean(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        return entity instanceof LivingEntity living ? living.getCanPickupItems() : null;
     }
 
     @Override

@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.values.events;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +35,7 @@ public final class IsChunkNewValue extends BooleanEventValue {
     }
 
     @Override
-    public @Nullable Boolean getBoolean(@NotNull ActionsHandler handler, @NotNull Action action) {
+    public @Nullable Boolean getBoolean(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
         return false;
     }
 

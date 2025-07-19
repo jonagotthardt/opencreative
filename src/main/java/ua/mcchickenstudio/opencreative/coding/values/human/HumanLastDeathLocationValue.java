@@ -2,6 +2,7 @@ package ua.mcchickenstudio.opencreative.coding.values.human;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -18,8 +19,8 @@ public final class HumanLastDeathLocationValue extends LocationEventValue {
     }
 
     @Override
-    public @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action) {
-        return action.getEntity() instanceof HumanEntity humanEntity ? humanEntity.getLastDeathLocation() : null;
+    public @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        return entity instanceof HumanEntity humanEntity ? humanEntity.getLastDeathLocation() : null;
     }
 
     @Override

@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.values.entity;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,8 +35,8 @@ public final class EntityFreezeTicksValue extends NumberEventValue {
     }
 
     @Override
-    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action) {
-        return action.getEntity() != null ? action.getEntity().getFreezeTicks() : null;
+    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        return entity != null ? entity.getFreezeTicks() : null;
     }
 
     @Override

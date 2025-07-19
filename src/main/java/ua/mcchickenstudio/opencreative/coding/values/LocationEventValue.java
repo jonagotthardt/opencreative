@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.values;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,11 +45,11 @@ public abstract class LocationEventValue extends EventValue {
      * player, event, action, or null.
      * @return location, or null.
      */
-    public abstract @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action);
+    public abstract @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity);
 
     @Override
-    public final @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
-        Location location = getLocation(handler, action);
+    public final @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        Location location = getLocation(handler, action, entity);
         if (location == null) return null;
         if (isOutOfBorders(location)) return null;
         return location;

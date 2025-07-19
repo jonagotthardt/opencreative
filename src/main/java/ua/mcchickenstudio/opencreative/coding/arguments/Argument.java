@@ -18,15 +18,22 @@
 
 package ua.mcchickenstudio.opencreative.coding.arguments;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.KillerVictimEvent;
 import ua.mcchickenstudio.opencreative.coding.placeholders.Placeholders;
 import ua.mcchickenstudio.opencreative.coding.variables.EventValueLink;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import ua.mcchickenstudio.opencreative.coding.values.EventValues;
 import ua.mcchickenstudio.opencreative.planets.Planet;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.substring;
 
@@ -91,7 +98,39 @@ public class Argument {
                 }
             }
             case EventValueLink link -> {
-                Object value = EventValues.getInstance().getValue(link.id().toLowerCase(), action.getHandler(), action);
+                Entity target = switch (link.target()) {
+                    case RANDOM_PLAYER -> {
+                        List<Player> playerList = action.getExecutor().getPlanet().getTerritory().getWorld().getPlayers();
+                        if (!playerList.isEmpty()) {
+                            Random r = new Random();
+                            int i = r.nextInt(playerList.size());
+                            yield playerList.get(i);
+                        } else {
+                            yield null;
+                        }
+                    }
+                    case KILLER -> {
+                        if (action.getExecutor().getEvent() instanceof KillerVictimEvent mobEvent) {
+                            yield mobEvent.getKiller();
+                        }
+                        yield null;
+                    }
+                    case VICTIM -> {
+                        if (action.getExecutor().getEvent() instanceof KillerVictimEvent mobEvent) {
+                            yield mobEvent.getVictim();
+                        }
+                        yield null;
+                    }
+                    case RANDOM_TARGET -> {
+                        List<Entity> selectedTargets = new ArrayList<>(action.getHandler().getSelectedTargets());
+                        if (selectedTargets.isEmpty()) {
+                            yield null;
+                        }
+                        yield selectedTargets.get(new Random().nextInt(selectedTargets.size()));
+                    }
+                    default -> action.getEntity();
+                };
+                Object value = EventValues.getInstance().getValue(link.id().toLowerCase(), action.getHandler(), action, target);
                 if (value != null) {
                     return value;
                 }

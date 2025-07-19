@@ -1,5 +1,6 @@
 package ua.mcchickenstudio.opencreative.coding.values.world;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +17,7 @@ public final class WorldRedstoneOperationsLimitValue extends NumberEventValue {
     }
 
     @Override
-    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action) {
+    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
         return action.getExecutor().getPlanet().getLimits().getRedstoneOperationsLimit();
     }
 

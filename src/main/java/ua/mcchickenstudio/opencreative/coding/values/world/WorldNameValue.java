@@ -1,5 +1,6 @@
 package ua.mcchickenstudio.opencreative.coding.values.world;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +17,7 @@ public final class WorldNameValue extends TextEventValue {
     }
 
     @Override
-    public @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action) {
+    public @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
         return action.getExecutor().getPlanet().getInformation().getDisplayName();
     }
 

@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.values;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,10 +42,10 @@ public abstract class BooleanEventValue extends EventValue {
      * player, event, action, or null.
      * @return boolean, or null.
      */
-    public abstract @Nullable Boolean getBoolean(@NotNull ActionsHandler handler, @NotNull Action action);
+    public abstract @Nullable Boolean getBoolean(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity);
 
     @Override
-    public final @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
-        return getBoolean(handler, action);
+    public final @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        return getBoolean(handler, action, entity);
     }
 }

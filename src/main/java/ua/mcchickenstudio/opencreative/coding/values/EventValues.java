@@ -22,6 +22,7 @@ import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebug;
 
+import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
@@ -195,35 +196,37 @@ public final class EventValues {
     }
 
     /**
-     * Returns replaced value of event value if it's exists,
+     * Returns replaced value of event value if it exists,
      * otherwise it will return null.
      * <p>
      * Replaced value can also be null by some conditions.
      * @param id id of event value.
      * @param handler handler of action.
      * @param action action, where it executes.
+     * @param entity entity, or null.
      * @return value of event value, or null.
      */
-    public @Nullable Object getValue(@NotNull String id, @NotNull ActionsHandler handler, @NotNull Action action) {
+    public @Nullable Object getValue(@NotNull String id, @NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
         EventValue value = getById(id);
         if (value == null) return null;
-        return value.getValue(handler, action);
+        return value.getValue(handler, action, entity);
     }
 
     /**
-     * Returns replaced value of event value if it's exists,
+     * Returns replaced value of event value if it exists,
      * otherwise it will return null.
      * <p>
      * Replaced value can also be null by some conditions.
      * @param clazz class of event value.
      * @param handler handler of action.
      * @param action action, where it executes.
+     * @param entity entity, or null.
      * @return value of event value, or null.
      */
-    public @Nullable Object getValue(@NotNull Class<? extends EventValue> clazz, @NotNull ActionsHandler handler, @NotNull Action action) {
+    public @Nullable Object getValue(@NotNull Class<? extends EventValue> clazz, @NotNull ActionsHandler handler, @NotNull Action action, @NotNull Entity entity) {
         EventValue value = getByClass(clazz);
         if (value == null) return null;
-        return value.getValue(handler, action);
+        return value.getValue(handler, action, entity);
     }
 
 }

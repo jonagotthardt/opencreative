@@ -22,6 +22,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.jetbrains.annotations.NotNull;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getSignLine;
 
@@ -62,6 +63,15 @@ public enum Target {
             }
         }
         return DEFAULT;
+    }
+
+    public static @NotNull Target getByText(@NotNull String text) {
+        for (Target target : values()) {
+            if (target.name().equals(text)) {
+                return target;
+            }
+        }
+        return SELECTED;
     }
 
     public static Target getBySign(Location location) {

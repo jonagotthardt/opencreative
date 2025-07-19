@@ -1,6 +1,7 @@
 package ua.mcchickenstudio.opencreative.coding.values.player;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -18,8 +19,8 @@ public final class PlayerCompassTargetValue extends LocationEventValue {
     }
 
     @Override
-    public @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action) {
-        return action.getEntity() instanceof Player player ? player.getCompassTarget() : null;
+    public @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        return entity instanceof Player player ? player.getCompassTarget() : null;
     }
 
     @Override

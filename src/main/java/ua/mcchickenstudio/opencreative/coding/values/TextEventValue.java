@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.values;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,11 +42,11 @@ public abstract class TextEventValue extends EventValue {
      * player, event, action, or null.
      * @return string, or null.
      */
-    public abstract @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action);
+    public abstract @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity);
 
     @Override
-    public final @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
-        String text = getText(handler, action);
+    public final @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        String text = getText(handler, action, entity);
         if (text == null) return null;
         return new StringBuilder(text).substring(0,Math.min(1024,text.length()));
     }

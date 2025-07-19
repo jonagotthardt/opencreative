@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.values;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -85,9 +86,10 @@ public abstract class EventValue implements ExtensionContent {
      * event value name tag item.
      * @param handler handler of action to get value.
      * @param action action to get value.
+     * @param entity entity to get value, can be null.
      * @return string, number, boolean, item, location, vector, or null.
      */
-    public abstract @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action);
+    public abstract @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity);
 
     /**
      * Returns name of event value for displaying in

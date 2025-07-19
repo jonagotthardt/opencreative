@@ -1,6 +1,7 @@
 package ua.mcchickenstudio.opencreative.coding.values.human;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -17,8 +18,8 @@ public final class HumanGameModeValue extends TextEventValue {
     }
 
     @Override
-    public @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action) {
-        return action.getEntity() instanceof HumanEntity humanEntity ? humanEntity.getGameMode().name().toLowerCase() : null;
+    public @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        return entity instanceof HumanEntity humanEntity ? humanEntity.getGameMode().name().toLowerCase() : null;
     }
 
     @Override

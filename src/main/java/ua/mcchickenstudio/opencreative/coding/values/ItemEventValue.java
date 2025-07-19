@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.values;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,10 +42,10 @@ public abstract class ItemEventValue extends EventValue {
      * player, event, action, or null.
      * @return item, or null.
      */
-    public abstract @Nullable ItemStack getItem(@NotNull ActionsHandler handler, @NotNull Action action);
+    public abstract @Nullable ItemStack getItem(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity);
 
     @Override
-    public final @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
-        return getItem(handler, action);
+    public final @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        return getItem(handler, action, entity);
     }
 }

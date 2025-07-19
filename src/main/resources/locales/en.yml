@@ -13389,7 +13389,7 @@ blocks:
   player_bed_enter: "Entered bed"
   player_bed_leave: "Left bed"
   player_purchase: "&ePurchased"
-  player_item_damaged: "Damaged item"
+  player_item_damage: "Damaged item"
   player_item_consume: "Consumed item"
   player_item_craft: "Crafted item"
   player_item_break: "Broke item"

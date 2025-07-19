@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.values;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -42,10 +43,10 @@ public abstract class VectorEventValue extends EventValue {
      * player, event, action, or null.
      * @return vector, or null.
      */
-    public abstract @Nullable Vector getVector(@NotNull ActionsHandler handler, @NotNull Action action);
+    public abstract @Nullable Vector getVector(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity);
 
     @Override
-    public final @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
-        return getVector(handler, action);
+    public final @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        return getVector(handler, action, entity);
     }
 }

@@ -96,7 +96,7 @@ public abstract class Condition extends Action {
     }
 
     protected @Nullable Object getEventValue(@NotNull Class<? extends EventValue> clazz) {
-        return EventValues.getInstance().getValue(clazz, handler, this);
+        return EventValues.getInstance().getValue(clazz, handler, this, this.getEntity());
     }
 
 }
