@@ -128,6 +128,12 @@ public class Argument {
                         }
                         yield selectedTargets.get(new Random().nextInt(selectedTargets.size()));
                     }
+                    case DEFAULT -> {
+                        if (!action.getEvent().getSelection().isEmpty()) {
+                            yield action.getEvent().getSelection().getFirst();
+                        }
+                        yield null;
+                    }
                     default -> action.getEntity();
                 };
                 Object value = EventValues.getInstance().getValue(link.id().toLowerCase(), action.getHandler(), action, target);

@@ -37,23 +37,29 @@ import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getSignLine;
  */
 public enum Target {
 
-    DEFAULT(Material.LIGHT_BLUE_STAINED_GLASS),
-    SELECTED(Material.PURPUR_BLOCK),
-    ALL_PLAYERS(Material.BEACON),
-    ALL_ENTITIES(Material.PUFFERFISH),
-    RANDOM_PLAYER(Material.PLAYER_HEAD),
-    RANDOM_TARGET(Material.PURPUR_STAIRS),
-    KILLER(Material.NETHERITE_SWORD),
-    VICTIM(Material.SKELETON_SKULL);
+    DEFAULT(Material.LIGHT_BLUE_STAINED_GLASS, true),
+    SELECTED(Material.PURPUR_BLOCK, true),
+    ALL_PLAYERS(Material.BEACON, false),
+    ALL_ENTITIES(Material.PUFFERFISH, false),
+    RANDOM_PLAYER(Material.PLAYER_HEAD, true),
+    RANDOM_TARGET(Material.PURPUR_STAIRS, true),
+    KILLER(Material.NETHERITE_SWORD, true),
+    VICTIM(Material.SKELETON_SKULL, true);
 
     private final Material icon;
+    private final boolean supportsEventValue;
 
-    Target(Material icon) {
+    Target(Material icon, boolean supportsEventValue) {
         this.icon = icon;
+        this.supportsEventValue = supportsEventValue;
     }
 
     public Material getIcon() {
         return icon;
+    }
+
+    public boolean isSupportsEventValue() {
+        return supportsEventValue;
     }
 
     public static Target getByMaterial(Material material) {
