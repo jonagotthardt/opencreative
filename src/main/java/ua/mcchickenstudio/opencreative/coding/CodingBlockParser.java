@@ -349,8 +349,8 @@ public class CodingBlockParser {
                 }
                 String targetType = getPersistentData(item, getCodingTargetTypeKey());
                 Map<String, String> valueMap = new HashMap<>();
+                valueMap.put("name", variableType);
                 if (!targetType.isEmpty()) {
-                    valueMap.put("name", variableType);
                     valueMap.put("target", targetType);
                 }
                 return valueMap;
