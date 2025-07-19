@@ -64,7 +64,7 @@ public enum Target {
     }
 
     public @NotNull String getLocaleName() {
-        return getLocaleMessage("blocks." + this.name().toLowerCase(), false);
+        return getLocaleMessage("menus.developer.selection.targets." + this.name().toLowerCase().replace("_","-"), false);
     }
 
     public static @NotNull Target getByMaterial(Material material) {

@@ -10891,6 +10891,15 @@ menus:
     selection:
       title: "Select a Target for Action"
       title-values: "Select a Target for Game Value"
+      targets:
+        default: "&3⌘ Default"
+        selected: "&d☒ Selected Target"
+        all-players: "&b☻ All Players"
+        random-player: "&6🎣 Random Player"
+        killer: "&c🗡 Killer"
+        victim: "&4☠ Victim"
+        all-entities: "&6🍖 All Entities"
+        random-target: "&5⭐ Random Target"
       items:
         default:
           name: " "

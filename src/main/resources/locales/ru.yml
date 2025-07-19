@@ -10947,6 +10947,15 @@ menus:
     selection:
       title: "Выберите цель для действия"
       title-values: "Выберите цель для значения"
+      targets:
+        default: "&3⌘ По умолчанию"
+        selected: "&d☒ Выбранная цель"
+        all-players: "&b☻ Все игроки"
+        random-player: "&6🎣 Случайный игрок"
+        killer: "&c🗡 Убийца"
+        victim: "&4☠ Жертва"
+        all-entities: "&6🍖 Все сущности"
+        random-target: "&5⭐ Случайная цель"
       items:
         default:
           name: " "
