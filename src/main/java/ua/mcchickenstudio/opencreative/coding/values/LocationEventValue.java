@@ -28,9 +28,14 @@ import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 
+/**
+ * <h1>LocationEventValue</h1>
+ * This class represents an event value,
+ * that returns location, or null.
+ */
 public abstract class LocationEventValue extends EventValue {
 
-    public LocationEventValue(String id, ItemStack displayIcon, MenusCategory category) {
+    public LocationEventValue(@NotNull String id, @NotNull ItemStack displayIcon, @NotNull MenusCategory category) {
         super(id, displayIcon, category);
     }
 
@@ -42,7 +47,7 @@ public abstract class LocationEventValue extends EventValue {
     public abstract @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action);
 
     @Override
-    public @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
+    public final @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
         Location location = getLocation(handler, action);
         if (location == null) return null;
         if (isOutOfBorders(location)) return null;

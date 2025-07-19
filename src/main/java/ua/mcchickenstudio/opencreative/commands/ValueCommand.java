@@ -142,7 +142,7 @@ public class ValueCommand extends CommandHandler {
                 itemStack = createItem(Material.NAME_TAG,1,"menus.developer.variables.items.event-value");
                 if (args.length > 0) {
                     try {
-                        EventValue value = EventValues.getInstance().getByName(args[0]);
+                        EventValue value = EventValues.getInstance().getById(args[0]);
                         if (value == null) return;
                         setDisplayName(itemStack,value.getLocaleName());
                         setPersistentData(itemStack,getCodingVariableTypeKey(),args[0].toUpperCase());

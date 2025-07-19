@@ -26,9 +26,14 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 
+/**
+ * <h1>VectorEventValue</h1>
+ * This class represents an event value,
+ * that returns vector, or null.
+ */
 public abstract class VectorEventValue extends EventValue {
 
-    public VectorEventValue(String id, ItemStack displayIcon, MenusCategory category) {
+    public VectorEventValue(@NotNull String id, @NotNull ItemStack displayIcon, @NotNull MenusCategory category) {
         super(id, displayIcon, category);
     }
 
@@ -40,7 +45,7 @@ public abstract class VectorEventValue extends EventValue {
     public abstract @Nullable Vector getVector(@NotNull ActionsHandler handler, @NotNull Action action);
 
     @Override
-    public @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
+    public final @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
         return getVector(handler, action);
     }
 }

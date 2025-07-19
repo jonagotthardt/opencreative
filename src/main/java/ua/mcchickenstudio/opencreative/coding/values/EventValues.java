@@ -34,6 +34,19 @@ import ua.mcchickenstudio.opencreative.coding.values.living.*;
 import ua.mcchickenstudio.opencreative.coding.values.player.*;
 import ua.mcchickenstudio.opencreative.coding.values.world.*;
 
+/**
+ * <h1>EventValues</h1>
+ * This class represents registry of event values,
+ * that can register new event values for coding.
+ * <p>
+ * To get instance use {@link #getInstance()}.
+ * To add custom event value create a class, that
+ * extends one of prepared: {@link TextEventValue},
+ * {@link NumberEventValue}, {@link VectorEventValue},
+ * {@link LocationEventValue}, {@link ItemEventValue},
+ * {@link BooleanEventValue}, and register it with
+ * {@link #registerEventValue(EventValue)} method.
+ */
 public final class EventValues {
     
     private static EventValues instance;
@@ -43,7 +56,7 @@ public final class EventValues {
      * Returns instance of event values controller class.
      * @return instance of event values.
      */
-    public synchronized static EventValues getInstance() {
+    public synchronized static @NotNull EventValues getInstance() {
         if (instance == null) {
             instance = new EventValues();
             instance.registerDefaults();
@@ -56,6 +69,13 @@ public final class EventValues {
      * @param value event value to register.
      */
     public void registerEventValue(@NotNull EventValue value) {
+        EventValue existing = getById(value.getID());
+        if (existing != null) {
+            sendDebug("[VALUES] Can't register event value " + value.getName() + " (from " + value.getExtensionId() + "), "
+                + "because there's already registered event value " + existing.getName() + " (from " + existing.getExtensionId() + ") "
+                + "with same ID: " + value.getID());
+            return;
+        }
         sendDebug("[VALUES] Registered event value: " + value.getName() + " (from " + value.getExtensionId() + ")");
         eventValues.add(value);
     }
@@ -126,14 +146,30 @@ public final class EventValues {
         return list;
     }
 
-    public boolean exists(@NotNull String name) {
-        return getByName(name) != null;
+    /**
+     * Checks if event value with specified ID exists in registry.
+     * @param id id of event value.
+     * @return true - exists, false - not exists.
+     */
+    public boolean exists(@NotNull String id) {
+        return getById(id) != null;
     }
 
+    /**
+     * Checks if event value with specified class exists in registry.
+     * @param clazz class of event value.
+     * @return true - exists, false - not exists.
+     */
     public boolean exists(@NotNull Class<? extends EventValue> clazz) {
         return getByClass(clazz) != null;
     }
 
+    /**
+     * Returns event value from registry by specified class
+     * if it exists, otherwise will return null.
+     * @param clazz class to get event value.
+     * @return event value - if exists, or null - not exists.
+     */
     public @Nullable EventValue getByClass(@NotNull Class<? extends EventValue> clazz) {
         for (EventValue eventValue : eventValues) {
             if (eventValue.getClass().equals(clazz)) {
@@ -143,21 +179,47 @@ public final class EventValues {
         return null;
     }
 
-    public @Nullable EventValue getByName(@NotNull String name) {
+    /**
+     * Returns event value from registry by specified id
+     * if it exists, otherwise will return null.
+     * @param id id to get event value.
+     * @return event value - if exists, or null - not exists.
+     */
+    public @Nullable EventValue getById(@NotNull String id) {
         for (EventValue eventValue : eventValues) {
-            if (eventValue.getID().equals(name)) {
+            if (eventValue.getID().equals(id)) {
                 return eventValue;
             }
         }
         return null;
     }
 
-    public @Nullable Object getValue(@NotNull String name, @NotNull ActionsHandler handler, @NotNull Action action) {
-        EventValue value = getByName(name);
+    /**
+     * Returns replaced value of event value if it's exists,
+     * otherwise it will return null.
+     * <p>
+     * Replaced value can also be null by some conditions.
+     * @param id id of event value.
+     * @param handler handler of action.
+     * @param action action, where it executes.
+     * @return value of event value, or null.
+     */
+    public @Nullable Object getValue(@NotNull String id, @NotNull ActionsHandler handler, @NotNull Action action) {
+        EventValue value = getById(id);
         if (value == null) return null;
         return value.getValue(handler, action);
     }
 
+    /**
+     * Returns replaced value of event value if it's exists,
+     * otherwise it will return null.
+     * <p>
+     * Replaced value can also be null by some conditions.
+     * @param clazz class of event value.
+     * @param handler handler of action.
+     * @param action action, where it executes.
+     * @return value of event value, or null.
+     */
     public @Nullable Object getValue(@NotNull Class<? extends EventValue> clazz, @NotNull ActionsHandler handler, @NotNull Action action) {
         EventValue value = getByClass(clazz);
         if (value == null) return null;

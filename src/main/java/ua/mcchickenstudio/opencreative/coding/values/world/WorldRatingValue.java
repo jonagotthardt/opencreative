@@ -16,7 +16,7 @@ public final class WorldRatingValue extends NumberEventValue {
     }
 
     @Override
-    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action) {
+    public @NotNull Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action) {
         return action.getExecutor().getPlanet().getInformation().getReputation();
     }
 

@@ -25,9 +25,14 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 
+/**
+ * <h1>TextEventValue</h1>
+ * This class represents an event value, that
+ * returns string, or null.
+ */
 public abstract class TextEventValue extends EventValue {
 
-    public TextEventValue(String id, ItemStack displayIcon, MenusCategory category) {
+    public TextEventValue(@NotNull String id, @NotNull ItemStack displayIcon, @NotNull MenusCategory category) {
         super(id, displayIcon, category);
     }
 
@@ -39,7 +44,7 @@ public abstract class TextEventValue extends EventValue {
     public abstract @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action);
 
     @Override
-    public @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
+    public final @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
         String text = getText(handler, action);
         if (text == null) return null;
         return new StringBuilder(text).substring(0,Math.min(1024,text.length()));

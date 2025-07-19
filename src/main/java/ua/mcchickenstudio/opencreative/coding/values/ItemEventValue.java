@@ -25,9 +25,14 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 
+/**
+ * <h1>ItemEventValue</h1>
+ * This class represents an event value,
+ * that returns item stack, or null.
+ */
 public abstract class ItemEventValue extends EventValue {
 
-    public ItemEventValue(String id, ItemStack displayIcon, MenusCategory category) {
+    public ItemEventValue(@NotNull String id, @NotNull ItemStack displayIcon, @NotNull MenusCategory category) {
         super(id, displayIcon, category);
     }
 
@@ -39,7 +44,7 @@ public abstract class ItemEventValue extends EventValue {
     public abstract @Nullable ItemStack getItem(@NotNull ActionsHandler handler, @NotNull Action action);
 
     @Override
-    public @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
+    public final @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action) {
         return getItem(handler, action);
     }
 }
