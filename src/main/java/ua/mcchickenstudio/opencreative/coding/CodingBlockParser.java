@@ -353,6 +353,7 @@ public class CodingBlockParser {
                     valueMap.put("name", variableType);
                     valueMap.put("target", targetType);
                 }
+                return valueMap;
             }
             case PARTICLE -> {
                 PersistentDataContainer container = itemMeta.getPersistentDataContainer();
