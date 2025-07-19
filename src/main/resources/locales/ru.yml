@@ -351,6 +351,7 @@ world:
     cant-place-action-on-event: "%prefix%&cНа этот блок ставить нужно блоки &bСОБЫТИЙ&c, &aЦИКЛОВ&c или &9ФУНКЦИЙ&c."
     click-to-copy: "&eНажми, чтобы скопировать."
     set-variable: "&aУстановлено значение:"
+    set-target: "&dУстановлена цель:"
     set-potion: "&7Длительность: &f%duration% &7Сила: &f%amplifier%"
     set-variable-number-error: "&cВведите в чат число, например 1"
     set-variable-color-error: "&cВведите в чат код цвета, например 255 255 255"
@@ -10945,6 +10946,7 @@ menus:
             - ""
     selection:
       title: "Выберите цель для действия"
+      title-values: "Выберите цель для значения"
       items:
         default:
           name: " "
@@ -11134,6 +11136,7 @@ menus:
     event-values:
       title: "Игровые значения"
       nullable: "&c Может не вернуть значение!"
+      target: "&7Цель: &f%target%"
       items:
         next-page:
           name: " "
@@ -12262,6 +12265,7 @@ menus:
             - ""
             - "&fВ руке: "
             - " &eПКМ &7- Выбрать тип значения"
+            - " &eShift+ПКМ &7- Установить цель"
             - ""
             - "&7Некоторые могут быть &3пустыми&7."
   world-access:

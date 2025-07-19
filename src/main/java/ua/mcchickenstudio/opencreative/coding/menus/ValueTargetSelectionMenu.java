@@ -18,25 +18,29 @@
 
 package ua.mcchickenstudio.opencreative.coding.menus;
 
+import net.kyori.adventure.title.Title;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
+import java.time.Duration;
+
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 public class ValueTargetSelectionMenu extends AbstractMenu {
 
     private final Player player;
 
     public ValueTargetSelectionMenu(@NotNull Player player) {
-        super(1, getLocaleMessage("menus.developer.selection.title"));
+        super(1, getLocaleMessage("menus.developer.selection.title-values"));
         this.player = player;
     }
 
@@ -60,14 +64,24 @@ public class ValueTargetSelectionMenu extends AbstractMenu {
     public void onClick(@NotNull InventoryClickEvent event) {
         if (isPlayerClicked(event) && isClickedInMenuSlots(event)) {
             ItemStack item = event.getCurrentItem();
-            ItemStack itemInHand = player.getInventory().getItemInMainHand();
             event.setCancelled(true);
-            if (item != null && !item.equals(DECORATION_ITEM)) {
-                Target target = Target.getByMaterial(item.getType());
-                setPersistentData(itemInHand, getCodingTargetTypeKey(), target.name());
-                player.closeInventory();
-                Sounds.DEV_SET_TARGET.play(player);
+            if (item == null || item.equals(DECORATION_ITEM)) {
+                return;
             }
+            ItemStack itemInHand = player.getInventory().getItemInMainHand();
+            Target target = Target.getByMaterial(item.getType());
+            setPersistentData(itemInHand, getCodingTargetTypeKey(), target.name());
+            ItemMeta meta = itemInHand.getItemMeta();
+            meta.setLore(getLocaleItemDescription("menus.developer.variables.items.event-value.lore"));
+            itemInHand.setItemMeta(meta);
+            addLoreAtBegin(itemInHand, getLocaleMessage("menus.developer.event-values.target")
+                    .replace("%target%", target.getLocaleName()));
+            player.showTitle(Title.title(
+                    toComponent(getLocaleMessage("world.dev-mode.set-target")), meta.displayName(),
+                    Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
+            ));
+            player.closeInventory();
+            Sounds.DEV_SET_TARGET.play(player);
         }
     }
 

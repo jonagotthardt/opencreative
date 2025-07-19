@@ -25,6 +25,7 @@ import org.bukkit.block.BlockFace;
 import org.jetbrains.annotations.NotNull;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getSignLine;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
  * <h1>Target</h1>
@@ -62,7 +63,11 @@ public enum Target {
         return supportsEventValue;
     }
 
-    public static Target getByMaterial(Material material) {
+    public @NotNull String getLocaleName() {
+        return getLocaleMessage("blocks." + this.name().toLowerCase(), false);
+    }
+
+    public static @NotNull Target getByMaterial(Material material) {
         for (Target target : values()) {
             if (target.getIcon() == material) {
                 return target;
@@ -80,7 +85,7 @@ public enum Target {
         return SELECTED;
     }
 
-    public static Target getBySign(Location location) {
+    public static @NotNull Target getBySign(Location location) {
         Block signBlock = location.getBlock().getRelative(BlockFace.SOUTH);
         String string = getSignLine(signBlock.getLocation(), (byte) 4);
         if (string != null && !string.isEmpty()) {
