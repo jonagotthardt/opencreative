@@ -77,7 +77,7 @@ public class ValueTargetSelectionMenu extends AbstractMenu {
             addLoreAtBegin(itemInHand, getLocaleMessage("menus.developer.event-values.target")
                     .replace("%target%", target.getLocaleName()));
             player.showTitle(Title.title(
-                    toComponent(getLocaleMessage("world.dev-mode.set-target")), meta.displayName(),
+                    toComponent(getLocaleMessage("world.dev-mode.set-target")), toComponent(target.getLocaleName()),
                     Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
             ));
             player.closeInventory();
