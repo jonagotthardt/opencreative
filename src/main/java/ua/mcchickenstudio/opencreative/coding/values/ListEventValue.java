@@ -44,7 +44,7 @@ public abstract class ListEventValue extends EventValue {
      * player, event, action, or null.
      * @return item, or null.
      */
-    public abstract @Nullable List<Object> getList(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity);
+    public abstract @Nullable List<@NotNull Object> getList(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity);
 
     @Override
     public final @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {

@@ -16,14 +16,16 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.values.entity;
+package ua.mcchickenstudio.opencreative.coding.values.living;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.Damageable;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Merchant;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
@@ -31,19 +33,15 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public final class EntitySizeValue extends NumberEventValue {
+public final class AbsorptionAmountValue extends NumberEventValue {
 
-    public EntitySizeValue() {
-        super("size", new ItemStack(Material.SLIME_BLOCK), MenusCategory.ENTITY);
+    public AbsorptionAmountValue() {
+        super("absorption_amount", new ItemStack(Material.GOLDEN_APPLE), MenusCategory.ENTITY);
     }
 
     @Override
     public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
-        if (entity instanceof LivingEntity livingEntity) {
-            AttributeInstance attribute = livingEntity.getAttribute(Attribute.GENERIC_SCALE);
-            return attribute == null ? null : attribute.getValue();
-        }
-        return null;
+        return entity instanceof Damageable damageable ? damageable.getAbsorptionAmount() : null;
     }
 
     @Override
@@ -53,6 +51,6 @@ public final class EntitySizeValue extends NumberEventValue {
 
     @Override
     public @NotNull String getDescription() {
-        return "Returns entity's size";
+        return "Returns living entity's absorption amount";
     }
 }
