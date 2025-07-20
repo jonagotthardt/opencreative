@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.values.living;
 
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -37,7 +38,7 @@ public final class LivingHealthValue extends NumberEventValue {
 
     @Override
     public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
-        return entity instanceof LivingEntity living ? living.getHealth() : null;
+        return entity instanceof Damageable damageable ? damageable.getHealth() : null;
     }
 
     @Override
@@ -47,6 +48,6 @@ public final class LivingHealthValue extends NumberEventValue {
 
     @Override
     public @NotNull String getDescription() {
-        return "Returns living entity's health";
+        return "Returns damageable entity's health";
     }
 }
