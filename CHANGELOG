@@ -46,7 +46,99 @@ Changelogs.
   Second release version of OpenCreative+. Most stable and powerful.
   - Improved development mode (/dev) with platforms customization.
   - Added a lot of coding blocks.
+  - Added conditions.
+  - Added NOT arrow, block mover items.
   - Added variables (local, global, saved).
   - Added new values (Number, Location, Boolean, Variable...).
   - Changed menus.
-  2024  
+  2024
+
+5.1 - Well, it's possiblle.
+  
+  - Added requirements in config
+  - Added custom heads, banners support for world icons
+  - Fixed issues
+  2025
+
+5.2 - Well, it's possible.
+  
+  - Duplicated 30 player actions as 30 entity actions
+  - Added new player event
+  - Added new world action 
+  2025
+
+5.3 - Well, it's possible.
+ 
+  - Changed /unloadedWorlds/ to /planets/
+  - Now worlds don't move between world container and planets folders 
+  - New entities browser menu
+  - New requirements in config.yml
+  - Added /like and /ad costs in config.yml
+  2025
+
+5.3.1 - Well, it's possible.
+
+  - Fixed kill potions issue
+  2025
+
+5.4 - Well, it's possible.
+
+  - Added moderation menu
+  - Added world access menu
+  - Added customizable sounds in config.yml
+  2025
+
+5.4.1 - Well, it's possible.
+
+  - Added new environment and world subcommands
+  - Default sign is Birch instead of Oak
+  2025
+
+5.4.2 - Well, it's possible.
+
+  - Added %list(name, index) placeholder
+  2025
+
+5.4.3 - Well, it's possible.
+ 
+  - Fixed selection action issues
+  2025
+
+5.5 - Well, it's possible.
+
+  - Added 32 entity events
+  - Added 35 world events
+  - Added 2 player events
+  - Added 3 player actions
+  2025
+  
+5.5.1 - Well, it's possible.
+
+  - Fixed custom containers issue
+  - Fixed platforms issue
+  2025
+
+5.6 - Well, it's possible.
+
+  - Added repeat and controller coding blocks
+  - Added %event% placeholder
+  - Added 4 repeat actions
+  - Added 2 controller actions
+  - Added 1 entity conditions
+  - Added 9 entity actions
+  - Added 1 player action
+  - Added 4 world actions
+  - Added 1 control action
+  - Added physical objects by pawsashatoy
+  - Added world's whitelist
+  - Added /oc register and /oc unregister commands
+  - Added bad items fixer
+  - Added lobby permissions for player groups
+  - Added disabling coding blocks in config.yml
+  2025
+
+5.7 - Well, it's possible
+
+  - :-)
+  
+  2025
