@@ -60,7 +60,7 @@ public class EventValuesMenu extends ListBrowserMenu<EventValue> {
     protected void fillOtherItems() {
         int slot = 0;
         for (MenusCategory category : getMenusCategories()) {
-            setItem(getCharmsBarSlots()[slot],category.getItem("event-values"));
+            setItem(getCharmsBarSlots()[slot], category.getItem("event-values"));
             slot++;
         }
     }
@@ -76,6 +76,7 @@ public class EventValuesMenu extends ListBrowserMenu<EventValue> {
         event.setCancelled(true);
         MenusCategory category = MenusCategory.getByIcon(clicked);
         if (category != null) {
+            setCurrentPage(1);
             Sounds.DEV_CHANGE_CATEGORY.play(event.getWhoClicked());
             currentCategory = category;
             elements.clear();

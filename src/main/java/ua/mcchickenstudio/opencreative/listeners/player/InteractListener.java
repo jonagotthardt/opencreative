@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 
 import com.destroystokyo.paper.event.player.PlayerStartSpectatingEntityEvent;
 import com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent;
+import org.bukkit.block.sign.Side;
 import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
@@ -91,14 +92,15 @@ public final class InteractListener implements Listener {
             return;
         }
         Block clickedBlock = event.getClickedBlock();
+        boolean doNotUseItem = false;
         if (clickedBlock != null) {
             if (clickedBlock.getType().toString().contains("WALL_SIGN")) {
-                handleSignClick(event, player, currentItem, clickedBlock, devPlanet);
+                doNotUseItem = handleSignClick(event, player, currentItem, clickedBlock, devPlanet);
             } else if (clickedBlock.getState() instanceof InventoryHolder) {
-                handleContainerClick(event, player, devPlanet, event.getClickedBlock());
+                doNotUseItem = handleContainerClick(event, player, devPlanet, event.getClickedBlock());
             }
         }
-        if (currentItem.getItemMeta() != null) {
+        if (currentItem.getItemMeta() != null && !doNotUseItem) {
             handleCodingItemInteraction(event, player, currentItem, clickedBlock);
         }
     }
@@ -186,31 +188,33 @@ public final class InteractListener implements Listener {
     /**
      * Handles event, when player clicks coding container block, like chest or barrel.
      * Used for creating and opening layout menus of action.
+     * @return true - opened container inventory, false - not opened.
      */
-    private void handleContainerClick(PlayerInteractEvent event, Player player, DevPlanet devPlanet, Block clickedBlock) {
-        if (!event.getPlayer().isSneaking() && clickedBlock.getState() instanceof InventoryHolder && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            Block actionBlock = clickedBlock.getRelative(BlockFace.DOWN);
-            Block signBlock = actionBlock.getRelative(BlockFace.SOUTH);
-            if (signBlock.getType().toString().contains("WALL_SIGN")) {
-                Sign sign = (Sign) signBlock.getState();
-                if (sign.lines().size() < 3) return;
-                String type = sign.getLine(2);
-                try {
-                    ActionType action = ActionType.valueOf(type.toUpperCase());
-                    Layout layout = devPlanet.getOpenedMenu(clickedBlock.getLocation());
-                    event.setCancelled(true);
-                    if (layout == null) {
-                        layout = new LayoutMaker(action,clickedBlock);
-                        layout.open(player);
-                        devPlanet.registerOpenedMenu(clickedBlock.getLocation(),layout);
-                    } else {
-                        player.openInventory(layout.getInventory());
-                    }
-                } catch (IllegalArgumentException e) {
-                    player.sendActionBar(getLocaleMessage("coding-error.unknown-layout"));
-                    event.setCancelled(false);
-                }
+    private boolean handleContainerClick(PlayerInteractEvent event, Player player, DevPlanet devPlanet, Block clickedBlock) {
+        if (!(clickedBlock.getState() instanceof InventoryHolder)) return false;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return false;
+        if (player.isSneaking()) return true;
+        Block actionBlock = clickedBlock.getRelative(BlockFace.DOWN);
+        Block signBlock = actionBlock.getRelative(BlockFace.SOUTH);
+        if (!(signBlock.getState() instanceof Sign sign)) return false;
+        if (sign.getSide(Side.FRONT).lines().size() < 3) return false;
+        String type = sign.getSide(Side.FRONT).getLine(2);
+        try {
+            ActionType action = ActionType.valueOf(type.toUpperCase());
+            Layout layout = devPlanet.getOpenedMenu(clickedBlock.getLocation());
+            event.setCancelled(true);
+            if (layout == null) {
+                layout = new LayoutMaker(action,clickedBlock);
+                layout.open(player);
+                devPlanet.registerOpenedMenu(clickedBlock.getLocation(),layout);
+            } else {
+                player.openInventory(layout.getInventory());
             }
+            return true;
+        } catch (IllegalArgumentException e) {
+            player.sendActionBar(getLocaleMessage("coding-error.unknown-layout"));
+            event.setCancelled(false);
+            return true;
         }
     }
 
@@ -220,10 +224,10 @@ public final class InteractListener implements Listener {
      * renaming (function, cycle), changing time (cycle),
      * reversing condition (if conditions).
      */
-    private void handleSignClick(PlayerInteractEvent event, Player player, ItemStack currentItem, Block clickedBlock, DevPlanet devPlanet) {
+    private boolean handleSignClick(PlayerInteractEvent event, Player player, ItemStack currentItem, Block clickedBlock, DevPlanet devPlanet) {
         event.setCancelled(true);
         if (currentItem.getType() == Material.COMPARATOR) {
-            return;
+            return false;
         }
         Block mainBlock = clickedBlock.getRelative(BlockFace.NORTH);
         ExecutorCategory mainBlockCategory = ExecutorCategory.getByMaterial(mainBlock.getType());
@@ -237,10 +241,10 @@ public final class InteractListener implements Listener {
                  * ALL PLAYERS with NOT parameter, it's useless.
                  */
                 if (actionBlockCategory == ActionCategory.SELECTION_ACTION && isSignLineEmpty(clickedBlock.getLocation(),(byte) 3)) {
-                    return;
+                    return false;
                 }
                 if (actionBlockCategory == ActionCategory.ELSE_CONDITION) {
-                    return;
+                    return false;
                 }
                 if (isSignLineEmpty(clickedBlock.getLocation(),(byte) 1)) {
                     setSignLine(clickedBlock.getLocation(),(byte) 1,"not");
@@ -294,6 +298,7 @@ public final class InteractListener implements Listener {
             }
             if (menu != null) {
                 menu.open(player);
+                return true;
             } else if (mainBlockCategory == ExecutorCategory.CYCLE) {
                 String cycleTicksString = getSignLine(clickedBlock.getLocation(),(byte) 3);
                 if (cycleTicksString != null && !cycleTicksString.isEmpty()) {
@@ -348,6 +353,7 @@ public final class InteractListener implements Listener {
                 }
             }
         }
+        return false;
     }
 
     private void handleDyeClick(PlayerInteractEvent event, Player player, ItemStack currentItem) {

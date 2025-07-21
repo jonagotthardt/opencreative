@@ -419,18 +419,20 @@ public class ItemUtils {
                         badEnchants.add(enchant);
                     }
                 }
-                for (Enchantment enchantment : badEnchants) {
-                    meta.removeEnchant(enchantment);
+                if (!badEnchants.isEmpty()) {
+                    for (Enchantment enchantment : badEnchants) {
+                        meta.removeEnchant(enchantment);
+                    }
+                    item.setItemMeta(meta);
+                    sendDebug("[ITEMS] Cleared enchants");
                 }
-                item.setItemMeta(meta);
-                sendDebug("Cleared enchants");
             }
             if (meta.hasAttributeModifiers() && meta.getAttributeModifiers() != null && removeAttributes) {
                 Set<Attribute> attributes = meta.getAttributeModifiers().keySet();
                 for (Attribute attribute : attributes) {
                     if (attribute != Attribute.GENERIC_ARMOR) {
                         meta.removeAttributeModifier(attribute);
-                        sendDebug("Cleared attributes");
+                        sendDebug("[ITEMS] Cleared attributes");
                     }
                 }
             }
@@ -450,13 +452,13 @@ public class ItemUtils {
                     }
                     if (insideContainers > insideLimit) {
                         item.setType(Material.AIR);
-                        sendDebug("Destroyed container with a lot of items");
+                        sendDebug("[ITEMS] Destroyed container with a lot of items");
                     }
                 }
                 case BookMeta book -> {
                     if (book.pages().size() > bookPagesLimit) {
                         item.setType(Material.AIR);
-                        sendDebug("Destroyed book with a lot of pages");
+                        sendDebug("[ITEMS] Destroyed book with a lot of pages");
                     } else if (removeClickableBooks) {
                         List<Component> pages = book.pages();
                         boolean cleared = false;
@@ -467,7 +469,7 @@ public class ItemUtils {
                             book.page(i + 1, component);
                         }
                         if (cleared) {
-                            sendDebug("Cleared book with clickable components");
+                            sendDebug("[ITEMS] Cleared book with clickable components");
                             item.setItemMeta(book);
                         }
                     }
@@ -475,13 +477,13 @@ public class ItemUtils {
                 case SpawnEggMeta egg when removeCustomEggs -> {
                     if (egg.getCustomSpawnedType() != null) {
                         item.setType(Material.AIR);
-                        sendDebug("Destroyed spawn egg");
+                        sendDebug("[ITEMS] Destroyed spawn egg");
                     }
                 }
                 default -> {}
             }
         } catch (Exception exception) {
-            sendDebugError("Can't fix item: " + item, exception);
+            sendDebugError("[ITEMS] Can't fix item: " + item, exception);
         }
         return item;
     }
