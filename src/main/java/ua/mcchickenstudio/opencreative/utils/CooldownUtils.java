@@ -91,7 +91,7 @@ public class CooldownUtils {
      *
      * @param player Player to check and set cooldown
      * @param group Group object for retrieving cooldown durations
-     * @param type Cooldown id to check/set
+     * @param type Cooldown type to check/set
      * @return true if cooldown was not active and now set; false if still on cooldown
      */
     public static boolean checkAndSetCooldown(Player player, Group group, CooldownType type) {

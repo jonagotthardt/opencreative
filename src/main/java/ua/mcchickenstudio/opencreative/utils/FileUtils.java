@@ -657,7 +657,7 @@ public class FileUtils {
     /**
      * Returns a specified list of players nicknames.
      * @param planet planet to get list.
-     * @param type id of players list.
+     * @param type type of players list.
      * @return list of nicknames.
      */
     public static List<String> getPlayersFromPlanetList(Planet planet, Planet.PlayersType type) {

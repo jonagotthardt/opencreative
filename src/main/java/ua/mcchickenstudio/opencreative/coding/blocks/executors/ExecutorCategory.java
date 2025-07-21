@@ -28,7 +28,7 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 
 /**
  * <h1>ExecutorCategory</h1>
- * This enum defines different categories for coding blocks with executor id.
+ * This enum defines different categories for coding blocks with executor type.
  * Every category has material of block that player will place. Members are:
  * EVENT_PLAYER, EVENT_WORLD, CYCLE, FUNCTION and etc.
  * @since 5.0

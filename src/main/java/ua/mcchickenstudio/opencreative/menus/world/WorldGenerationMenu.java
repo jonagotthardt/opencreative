@@ -48,7 +48,7 @@ public class WorldGenerationMenu extends AbstractMenu {
     public WorldGenerationMenu(Player player, String generator, String environment, boolean generateStructures) {
         super(3, getLocaleMessage("menus.world-creation.title",false));
         this.player = player;
-        this.generatorButton = new ParameterButton(generator, List.of("flat","empty","water","survival","large_biomes"), "type", "menus.world-creation", "menus.world-creation.items.id", List.of(Material.MOSS_BLOCK, Material.GLASS, Material.WATER_BUCKET, Material.OAK_SAPLING, Material.MYCELIUM));
+        this.generatorButton = new ParameterButton(generator, List.of("flat","empty","water","survival","large_biomes"), "type", "menus.world-creation", "menus.world-creation.items.type", List.of(Material.MOSS_BLOCK, Material.GLASS, Material.WATER_BUCKET, Material.OAK_SAPLING, Material.MYCELIUM));
         this.environmentButton = new ParameterButton(environment, List.of("normal","nether","the_end"), "environment", "menus.world-creation", "menus.world-creation.items.environment", List.of(Material.GRASS_BLOCK, Material.NETHERRACK, Material.END_STONE));
         this.generateStructures = new ParameterButton(generateStructures, List.of(false,true), "generate-structures", "menus.world-creation", "menus.world-creation.items.generate-structures", List.of(Material.DECORATED_POT, Material.BOOKSHELF));
     }

@@ -6,7 +6,7 @@
 #
 # Translation can be changed in next updates,
 # to remove this file and replace with new plugin's
-# one, id command /oc resetlocale.
+# one, type command /oc resetlocale.
 #
 
 #
@@ -66,7 +66,7 @@ commands:
     stopped-category: "%prefix%&fStopped sounds of category &6%category%&f for player &6%player%&f."
     stopped-all: "%prefix%&fStopped all sounds for player &6%player%&f."
 locate:
-  help: "%prefix%To find the world where a player is playing, id in the chat: &6/locate Username"
+  help: "%prefix%To find the world where a player is playing, type in the chat: &6/locate Username"
   found: "%prefix%&fPlayer &6%player%&f is currently playing in the world: \n&f %planetName%\n &f\n&a &a &n[Click to join]&f\n &f"
   offline: "%prefix%&cThe player is not currently playing in any worlds."
 modules:
@@ -86,16 +86,16 @@ environment:
     size: "%prefix%There are currently &6%count% variables&f in the world.\n &fThis includes all list contents and keys with values from dictionaries."
     get:
       empty: "%prefix%&cThis variable does not exist :("
-      message: "%prefix%Variable data &6%variable%&f:\n &fVariable id: %id%\n &fValue id: %valuetype%\n &fValue: &6%value%"
+      message: "%prefix%Variable data &6%variable%&f:\n &fVariable type: %type%\n &fValue type: %valuetype%\n &fValue: &6%value%"
     list:
       empty: "%prefix%There are currently no variables set in the world."
       header: "\n%prefix%List of variables in the world (&6%current% &fout of &6%amount%&f total):"
-      variable: "&f  &6 %name% &fType: &6%id%&f Value: &6%value%"
+      variable: "&f  &6 %name% &fType: &6%type%&f Value: &6%value%"
       next-page: "&a                   [Next →]"
       previous-page: "&c[← Back]"
       navigation: "\n&f Navigation: "
     set:
-      help: "%prefix%To change variable value id in chat:\n &6/env var set [Variable Name] [global/saved] [text,number,item,location] (Value)\n&f Item, that will be used in setting item is from main hand."
+      help: "%prefix%To change variable value type in chat:\n &6/env var set [Variable Name] [global/saved] [text,number,item,location] (Value)\n&f Item, that will be used in setting item is from main hand."
       limit: "%prefix%&cReached limit of variables (%limit%)!"
       message: "%prefix%Assigned variable %variable%&f: &7%value%"
   save-location:
@@ -206,39 +206,39 @@ coding-error:
   toomanyrepeatsexception: "Too many repeats at once! Please add control action Wait to the end of repeat before closing piston."
   illegalargumentexception: "An incorrect value was found in the chest. You might have specified a negative number, or a variable returned an incorrect value, or something couldn't be retrieved from the value. Check the chest's contents!"
   nullpointerexception: "Some value is null, such as a variable or event value. Perhaps you didn't set a variable, or the event value is not supported by this event."
-  bad-piston: "An extra piston was detected, which needs to be removed. If it’s not extra, select the condition id."
+  bad-piston: "An extra piston was detected, which needs to be removed. If it’s not extra, select the condition type."
   indexoutofboundsexception: "Values were expected in the chest, but they are either missing or insufficient. Check the items in the chest for this action!"
   operations-limit: "The code line was called multiple times in a row and reached the limit of %limit% calls. It seems there's a line that calls itself repeatedly. Find it and fix it. This line's execution has been stopped."
   unknown: "Oops... It seems this is an unknown error, details: "
   unknown-block-detected: "&f\n&6 Error &8| &fWhile saving coding blocks, some were found that were removed in updates. Click their sign and remove unnecessary chest contents (SHIFT+Right-click)."
-  unknown-block-coords: " Block %category% &8-&7 %id%: &7(%x%, %y%, %z%)"
+  unknown-block-coords: " Block %category% &8-&7 %type%: &7(%x%, %y%, %z%)"
   unknown-layout: "&cThis block opened a menu without hints, as there is a problem loading them..."
   hover-message: "&fClick to teleport to the block."
   temp-var-not-exists: "The temporary value %variable% for this event was not found because the event is not compatible with this value. Replace the event with a more suitable one."
 coding-debug:
   condition:
-    returned-true: "&fCondition %id%&f executed, &aTrue&f."
-    returned-false: "&fCondition %id%&f did not execute, &cFalse&f."
+    returned-true: "&fCondition %type%&f executed, &aTrue&f."
+    returned-false: "&fCondition %type%&f did not execute, &cFalse&f."
     opposed:
       true: "&aYes"
       false: "&cNo"
   hover:
-    argument: "&7%name%: %id%&7 = &6%value%"
-    executor: "&7Category: %category%\n&7Executor: %id%\n \n&7Actions to execute: &e%actions%"
-    action: "&7Category: %category%\n&7Action: %id%\n \n&7Arguments:\n%arguments%"
-    condition: "&7Category: %category%\n&7Condition: %id%\n&7Opposed: %opposed%\n \n&7Arguments:\n%arguments%"
+    argument: "&7%name%: %type%&7 = &6%value%"
+    executor: "&7Category: %category%\n&7Executor: %type%\n \n&7Actions to execute: &e%actions%"
+    action: "&7Category: %category%\n&7Action: %type%\n \n&7Arguments:\n%arguments%"
+    condition: "&7Category: %category%\n&7Condition: %type%\n&7Opposed: %opposed%\n \n&7Arguments:\n%arguments%"
   variable:
     set: "&6 Debug &8| &fNew value for %variable%&f: &7%value%"
     created: "&6 Debug &8| &fVariable %variable%&f created: &7%value%"
   log: "&8 [&6⌘&8] &f%log%"
-  event-message: "&7 Event Call &8| &7Event %id%&f occurred, finding the trigger..."
+  event-message: "&7 Event Call &8| &7Event %type%&f occurred, finding the trigger..."
   variable-found: "&7           %name% &a=&7 %value%"
   variable-not-found: "&7           %name% &cdefault&7: %value%"
-  executor-message: "&7 &7%id%&7 &8(%x% %y% %z%)"
-  action-message: "&7 | %id%&7 &8(%x% %y% %z%)"
-  action-hover: "&7Type %id% &7Argument &6%name%&7 Value: &6%value%"
-  condition-message-true: "&7 Condition &8| &7%id%&7 (%x% %y% %z%) returned &aYES&7: Executing actions..."
-  condition-message-false: "&7 Condition &8| &7%id%&7 (%x% %y% %z%) returned &cNO&7: Executing otherwise..."
+  executor-message: "&7 &7%type%&7 &8(%x% %y% %z%)"
+  action-message: "&7 | %type%&7 &8(%x% %y% %z%)"
+  action-hover: "&7Type %type% &7Argument &6%name%&7 Value: &6%value%"
+  condition-message-true: "&7 Condition &8| &7%type%&7 (%x% %y% %z%) returned &aYES&7: Executing actions..."
+  condition-message-false: "&7 Condition &8| &7%type%&7 (%x% %y% %z%) returned &cNO&7: Executing otherwise..."
 coding-warning:
   message: "&f\n &8 [&6⚠&8] &f%warning% \n&f"
   variables-limit:
@@ -385,7 +385,7 @@ world:
   sharing:
     public: "&a&lPUBLIC"
     private: "&c&lPRIVATE"
-  liked: "&f \n &8&l| &7%player% &f&nliked&f this world!\n &8&l| &fIf you liked it too, id &e/like\n &f"
+  liked: "&f \n &8&l| &7%player% &f&nliked&f this world!\n &8&l| &fIf you liked it too, type &e/like\n &f"
   disliked: "%prefix%You &6didn't like&f this world :("
   unliked: "%prefix%&fYou have &6removed your rating&f for this world."
   already-rated: "%prefix%You have &6already&f rated this world."
@@ -400,15 +400,15 @@ world:
       added: "%prefix%You made &6%player%&f a builder, and they can now build in the world &6while you are online.\n &fIf you trust this player, you can make them a permanent builder in the player management settings."
       trusted: "%prefix%&6%player%&f can now build even when you are offline."
       removed: "%prefix%&6%player%&f is no longer a builder."
-      player: "%prefix%You have been given permission to build in this world!\n &fTo do so, id the command &6/build"
+      player: "%prefix%You have been given permission to build in this world!\n &fTo do so, type the command &6/build"
       limit: "%prefix%You reached limit of &6%limit% builders&f, to add new builder remove old one in world settings."
     developers:
       guest: "%prefix%&6%player%&f can now visit the coding world but cannot make changes."
       added: "%prefix%You made &6%player%&f a coder, and they can now code in the world &6while you are online.\n &fIf you trust this player, you can make them a permanent coder in the player management settings."
       trusted: "%prefix%&6%player%&f can now code even when you are offline."
       removed: "%prefix%&6%player%&f is no longer a coder."
-      player: "%prefix%You can now code in this world!\n &fTo do so, id the command &6/dev"
-      player-guest: "%prefix%You have been given access to view the code in this world!\n &fTo do so, id the command &6/dev"
+      player: "%prefix%You can now code in this world!\n &fTo do so, type the command &6/dev"
+      player-guest: "%prefix%You have been given access to view the code in this world!\n &fTo do so, type the command &6/dev"
       limit: "%prefix%You reached limit of &6%limit% developers&f, to add new developer remove old one in world settings."
     black-list:
       added: "%prefix%You have added &6%player%&f to the &7blacklist&f. They can no longer enter your world."
@@ -422,8 +422,8 @@ world:
       player: "%prefix%You have been added to the &lwhitelist&f of this world! This means you can enter the world even if it's closed."
       limit: "%prefix%You reached limit of &6%limit% whitelisted players&f, to whitelist player remove old one in world settings."
     transfer-ownership:
-      confirm-new: "%prefix%The world owner &6wants to transfer ownership of the world&f to you, which means you will have full control over it. If you want to accept, id in the chat: &6%id%"
-      confirm-old: "%prefix%Are you sure you want to &6transfer ownership of this world&f to %player%? This means &6this player will have full control over the world&f, but &6you will lose the ability to manage it&f. To confirm, id in the chat: &6%id%"
+      confirm-new: "%prefix%The world owner &6wants to transfer ownership of the world&f to you, which means you will have full control over it. If you want to accept, type in the chat: &6%id%"
+      confirm-old: "%prefix%Are you sure you want to &6transfer ownership of this world&f to %player%? This means &6this player will have full control over the world&f, but &6you will lose the ability to manage it&f. To confirm, type in the chat: &6%id%"
       transferred-old: "%prefix%You have &6transferred ownership&f of this world to %player%. You no longer have any rights to manage the world."
       transferred-new: "%prefix%You have &6received ownership&f of this world. The previous owner no longer has any rights to manage it, but you can grant them permissions in the player management settings."
       wrong-id: "%prefix%You entered the &6wrong world ID&f, the transfer process was canceled."
@@ -444,8 +444,8 @@ world:
 creative-chat:
   turned-on: "%cc-prefix%&fYou have &6enabled&f creative chat, you can now communicate. Type /cc Hello!"
   turned-off: "%cc-prefix%&fYou have &6disabled&f creative chat, you will no longer receive messages."
-  on-usage: "%cc-prefix%&fTo &6enable&f creative chat, id: &6/cc on"
-  cc-usage: "%cc-prefix%&fTo chat in creative chat, id: &6/cc Hello!"
+  on-usage: "%cc-prefix%&fTo &6enable&f creative chat, type: &6/cc on"
+  cc-usage: "%cc-prefix%&fTo chat in creative chat, type: &6/cc Hello!"
   cooldown: "%cc-prefix%&fPlease wait &6%cooldown% seconds&f before sending another message."
 advertisement:
   message: "%prefix%&6Invitation:\n&f &7%player% &f&ninvites&f you to the world: \n&f %world%\n &f\n&a &a &n[Click to join]&f\n &f"
@@ -853,7 +853,7 @@ items:
         - " "
         - "&fExamples:"
         - "&7> Select entities with name"
-        - "&7> Select entities by id"
+        - "&7> Select entities by type"
         - "&7> Select players with variable"
         - " "
         - "&fCategory: &cAction"
@@ -908,7 +908,7 @@ items:
           name: "&5Event Values"
           lore:
             - "&7Clicked slot, item or"
-            - "&7block id from the event."
+            - "&7block type from the event."
             - " "
             - "&eClick to choose category."
       events:
@@ -1086,8 +1086,8 @@ items:
         blocks:
           name: "&cBlock Manipulation"
           lore:
-            - "&7Set block id, copy blocks,"
-            - "&7check block id."
+            - "&7Set block type, copy blocks,"
+            - "&7check block type."
             - " "
             - "&eClick to choose category."
         other:
@@ -1249,7 +1249,7 @@ items:
         blocks:
           name: "&cBlocks"
           lore:
-            - "&7Block id equals, is solid,"
+            - "&7Block type equals, is solid,"
             - "&7is liquid, is burnable."
             - " "
             - "&eClick to choose category."
@@ -1372,7 +1372,7 @@ items:
           - "&7bed, this event is triggered."
           - " "
           - "&7Available values:"
-          - "&c Block id"
+          - "&c Block type"
           - "&2 Block location"
           - "&e Result of bed enter"
           - " "
@@ -1385,7 +1385,7 @@ items:
           - "&7the bed."
           - " "
           - "&7Available values:"
-          - "&c Block id"
+          - "&c Block type"
           - "&2 Block location"
           - " "
           - "&eClick to set event."
@@ -1452,7 +1452,7 @@ items:
           - "&7activates a plate, button, or lever."
           - " "
           - "&7Available values:"
-          - "&c Block id"
+          - "&c Block type"
           - "&2 Block location"
           - " "
           - "&eClick to set event."
@@ -1463,7 +1463,7 @@ items:
           - "&7the following code is executed."
           - " "
           - "&7Available values:"
-          - "&c Block id"
+          - "&c Block type"
           - "&2 Block location"
           - " "
           - "&eClick to set event."
@@ -1474,7 +1474,7 @@ items:
           - "&7this event is triggered!"
           - " "
           - "&7Available values:"
-          - "&c Block id"
+          - "&c Block type"
           - "&2 Block location"
           - " "
           - "&eClick to set event."
@@ -1485,7 +1485,7 @@ items:
           - "&7this event is triggered."
           - " "
           - "&7Available values:"
-          - "&c Block id"
+          - "&c Block type"
           - "&2 Block location"
           - " "
           - "&eClick to set event."
@@ -1496,7 +1496,7 @@ items:
           - "&7a block, this event is triggered."
           - " "
           - "&7Available values:"
-          - "&c Block id"
+          - "&c Block type"
           - "&2 Block location"
           - " "
           - "&eClick to set event."
@@ -1794,9 +1794,9 @@ items:
           - "&7clicks a block."
           - " "
           - "&7Available values:"
-          - "&c Block id"
+          - "&c Block type"
           - "&2 Block location"
-          - "&e Block interaction id"
+          - "&e Block interaction type"
           - " "
           - "&eClick to set event."
       player-mob-interact:
@@ -3430,7 +3430,7 @@ items:
         name: "&6Open an inventory menus"
         lore:
           - "&7It will open an empty inventory"
-          - "&7for player with specified id."
+          - "&7for player with specified type."
           - " "
           - "&fIn chest:"
           - "&3 Option &7- Type of menus"
@@ -3439,7 +3439,7 @@ items:
           - "&eClick to set action."
         arguments:
           type:
-            name: "&fMenu's id"
+            name: "&fMenu's type"
             lore:
               - ""
               - "&eClick to change."
@@ -4068,7 +4068,7 @@ items:
           - " "
           - "&fIn chest:"
           - "&c Item &7- Advancement item"
-          - "&3 Option &7- Advancement id"
+          - "&3 Option &7- Advancement type"
           - "&6 Text &7- Title"
           - "&6 Text &7- Subtitle"
           - " "
@@ -4880,7 +4880,7 @@ items:
           - ""
           - "&fIn the chest:"
           - "&f Location &7- Where to create"
-          - "&5 Particle &7- Particle id"
+          - "&5 Particle &7- Particle type"
           - "&a Number &7- Amount of particles"
           - "&a Number &7- X offset"
           - "&a Number &7- Y offset"
@@ -5261,7 +5261,7 @@ items:
           - "&7players' health regeneration."
           - ""
           - "&fIn the chest:"
-          - "&3 Option &7- Difficulty id"
+          - "&3 Option &7- Difficulty type"
           - ""
           - "&eClick to set the action."
         arguments:
@@ -5319,20 +5319,20 @@ items:
           - ""
           - "&fIn the chest:"
           - "&f Location &7- Where to display it"
-          - "&c Item &7- Block id"
+          - "&c Item &7- Block type"
           - ""
           - "&eClick to set the action."
 
       world-set-blocks-area-type:
         name: "&bFill Region with Blocks"
         lore:
-          - "&7This will change the block id"
+          - "&7This will change the block type"
           - "&7in the area between two locations."
           - ""
           - "&fIn the chest:"
           - "&f Location &7- From"
           - "&f Location &7- To"
-          - "&c Item &7- Block id"
+          - "&c Item &7- Block type"
           - ""
           - "&eClick to set the action."
 
@@ -5478,7 +5478,7 @@ items:
           - ""
           - "&fIn the chest:"
           - "&6 Text &7- Boss bar name"
-          - "&3 Option &7- Overlay id"
+          - "&3 Option &7- Overlay type"
           - ""
           - "&eClick to set the action."
 
@@ -7141,11 +7141,11 @@ items:
         name: "&6Get Variable Type"
         lore:
           - "&7This will assign to a variable"
-          - "&7the id of another variable (location, number...)"
+          - "&7the type of another variable (location, number...)"
           - " "
           - "&fIn the chest:"
-          - "&9 Variable &7- To save the id into"
-          - "&e Variable &7- To check the id of"
+          - "&9 Variable &7- To save the type into"
+          - "&e Variable &7- To check the type of"
           - " "
           - "&eClick to set action."
       var-delete-variable:
@@ -7755,7 +7755,7 @@ items:
           - "&fIn the chest:"
           - "&e Variable &7- Result (to save)"
           - "&e Variable &7- List"
-          - "&3 Option &7 - Calculation id"
+          - "&3 Option &7 - Calculation type"
           - " "
           - "&eClick to set action."
       var-create-map:
@@ -8106,7 +8106,7 @@ items:
           - "&fIn chest:"
           - "&e Variable &7- To save"
           - "&a Number &7- Number to round"
-          - "&3 Option &7- Round id"
+          - "&3 Option &7- Round type"
           - ""
           - "&fExamples:"
           - " &a30.67 &7floor &7= &e30"
@@ -8612,7 +8612,7 @@ items:
           - "&f Location &7- Starting location of the ray"
           - "&c Number &7- Distance the ray will travel"
           - "&3 Option &7- Entity filter"
-          - "&3 Option &7- Calculation id"
+          - "&3 Option &7- Calculation type"
           - " "
           - "&eClick to set action."
       var-normalize-vector:
@@ -8714,7 +8714,7 @@ items:
           type:
             name: "&cExecute while the variable is..."
             lore:
-              - "&7Select the condition id for"
+              - "&7Select the condition type for"
               - "&7numbers; if it is met,"
               - "&7the actions between pistons"
               - "&7will also execute."
@@ -8808,7 +8808,7 @@ items:
       if-world-block-type-equals:
         name: "&aBlock Type Equals"
         lore:
-          - "&7Checks if the block id"
+          - "&7Checks if the block type"
           - "&7matches the specified one."
           - " "
           - "&fIn the chest:"
@@ -9336,7 +9336,7 @@ items:
           - "&c Item &7- Enchanted Book"
           - "&3 Option &7- Item must have"
           - "&7  all or any of the enchantments"
-          - "&3 Option &7- Level check id"
+          - "&3 Option &7- Level check type"
           - " "
           - "&eClick to set the condition."
         placeholders:
@@ -9365,7 +9365,7 @@ items:
               - "&7enchantment levels must match the"
               - "&7ones in the book. If level is ignored,"
               - "&7it will only check if the"
-              - "&7enchantment id exists."
+              - "&7enchantment type exists."
               - ""
               - "&eClick to change."
               - ""
@@ -9785,7 +9785,7 @@ items:
               false: "Consider tags"
               true: "Ignore tags"
           ignore-material:
-            name: "&cIgnore item id"
+            name: "&cIgnore item type"
             lore:
               - "&7Useful when comparing"
               - "&7items with the same name."
@@ -9796,8 +9796,8 @@ items:
               - "%1%"
               - "%2%"
             choices:
-              false: "Consider item id"
-              true: "Ignore item id"
+              false: "Consider item type"
+              true: "Ignore item type"
       if-player-item-equals:
         name: "&6Item equals"
         lore:
@@ -9892,7 +9892,7 @@ items:
               false: "Consider tags"
               true: "Ignore tags"
           ignore-material:
-            name: "&cIgnore item id"
+            name: "&cIgnore item type"
             lore:
               - "&7Useful if comparing"
               - "&7items with same"
@@ -9904,8 +9904,8 @@ items:
               - "%1%"
               - "%2%"
             choices:
-              false: "Consider item id"
-              true: "Ignore item id"
+              false: "Consider item type"
+              true: "Ignore item type"
       if-player-has-item-in-amount:
         name: "&6Has Item in Amount"
         lore:
@@ -10101,7 +10101,7 @@ menus:
         lore:
           - "&7 Name: &e%name%"
           - ""
-          - "&7 Type: &f%id%"
+          - "&7 Type: &f%type%"
           - "&7 Location: &f%x% %y% %z%"
           - ""
           - "&e Left click &7- Teleport to him"
@@ -10120,10 +10120,10 @@ menus:
           decoration: "Decoration"
           not-living: "Not alive"
         lore:
-          - "&3 🍖 Entity id"
+          - "&3 🍖 Entity type"
           - ""
           - "&e  Click to change"
-          - "&e  current entity id."
+          - "&e  current entity type."
           - ""
           - "&f  Choices:"
           - "%1%"
@@ -10145,7 +10145,7 @@ menus:
       remove-all:
         name: " "
         lore:
-          - " &c⌀ Remove entities with id"
+          - " &c⌀ Remove entities with type"
           - ""
           - "&7  Deletes every entity"
           - "&7  that listed here."
@@ -11331,11 +11331,11 @@ menus:
             - ""
             - "&eClick to set."
         type:
-          name: "&bEntity id"
+          name: "&bEntity type"
           lore:
             - "&7Type: &6Text"
             - ""
-            - "&7Gets the id of the entity"
+            - "&7Gets the type of the entity"
             - "&7related to the event."
             - ""
             - "&f Examples:"
@@ -11511,7 +11511,7 @@ menus:
           lore:
             - "&7Type: &cItem"
             - ""
-            - "&7Gets the item id that"
+            - "&7Gets the item type that"
             - "&7matches the world icon."
             - ""
             - "&eClick to set."
@@ -11826,7 +11826,7 @@ menus:
             - "&7Type: &6Text"
             - ""
             - "&7 Gets the name of the damage"
-            - "&7 id received by the entity."
+            - "&7 type received by the entity."
             - ""
             - "&f Examples:"
             - "&6  entity_attack &7- Mob attack"
@@ -12154,7 +12154,7 @@ menus:
             - "&7be applied to a player or mob."
             - " "
             - "&fIn hand:"
-            - " &eRight click &7- Select effect id"
+            - " &eRight click &7- Select effect type"
             - " &eShift+Right click &7- Give potion effect"
             - " &eChat message &7- Set effect duration"
         particle:
@@ -12164,7 +12164,7 @@ menus:
             - "&7can be displayed for players. "
             - " "
             - "&fIn hand: "
-            - " &eRight Click &7- Select particle id"
+            - " &eRight Click &7- Select particle type"
             - " &eShift+Right Click &7- Show particle"
         variable:
           name: "&eVariable"
@@ -12173,7 +12173,7 @@ menus:
             - "&7list, location, item."
             - ""
             - "&fIn hand:"
-            - " &eRight-click &7- Switch id"
+            - " &eRight-click &7- Switch type"
             - " "
             - "&7&cLocal&7 variables are only available"
             - "&7within one code line, while &eGlobal"
@@ -13656,7 +13656,7 @@ blocks:
   control_stop_cycles: "&3Stop cycle"
 
   var_set_value: "Assign value"
-  var_get_type: "Get id of var"
+  var_get_type: "Get type of var"
   var_set_random_value: "Random value"
   var_sum_numbers: "&aSum numbers +"
   var_subtract_numbers: "&cSubtract numbers -"
@@ -13787,7 +13787,7 @@ blocks:
   world_boss_bar_display_name: "Boss bar name"
   world_boss_bar_color: "&dBoss bar color"
   world_boss_bar_progress: "&aBoss bar progress"
-  world_boss_bar_overlay: "&eBoss bar id"
+  world_boss_bar_overlay: "&eBoss bar type"
   #
   if_player_stands_on_block: "Is standing on block"
   if_player_looks_at_block: "Looking at block"
