@@ -96,7 +96,7 @@ public final class OpenCreative extends JavaPlugin {
     private StabilityManager watchdog;
     private BlocksManager blocks;
 
-    private static final String version = "5.6.1";
+    private static final String version = "5.7.0";
     private static final String codename = "Well, it's possible";
 
     /**

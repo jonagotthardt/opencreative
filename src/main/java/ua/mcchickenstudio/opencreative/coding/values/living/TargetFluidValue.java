@@ -16,29 +16,36 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.values.events;
+package ua.mcchickenstudio.opencreative.coding.values.living;
 
+import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.LocationEventValue;
 
-public final class BlockLocationValue extends LocationEventValue {
+public final class TargetFluidValue extends LocationEventValue {
 
-    public BlockLocationValue() {
-        super("block_location", new ItemStack(Material.PAPER), MenusCategory.EVENTS);
+    public TargetFluidValue() {
+        super("target_fluid", new ItemStack(Material.WATER_BUCKET), MenusCategory.ENTITY);
     }
 
     @Override
     public @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
-        return action.getEvent() instanceof BlockEvent event ? event.getBlock().getLocation() : null;
+        if (entity instanceof LivingEntity living) {
+            Block target = living.getTargetBlockExact(10, FluidCollisionMode.ALWAYS);
+            if (target == null) return null;
+            return target.getLocation();
+        }
+        return null;
     }
 
     @Override
@@ -48,6 +55,6 @@ public final class BlockLocationValue extends LocationEventValue {
 
     @Override
     public @NotNull String getDescription() {
-        return "Returns block's location from event";
+        return "Returns location of living entity's target fluid";
     }
 }

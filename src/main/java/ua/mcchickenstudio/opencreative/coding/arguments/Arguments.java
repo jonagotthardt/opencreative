@@ -236,12 +236,14 @@ public class Arguments {
         Argument arg = getArg(path);
         if (arg != null) {
             try {
-                if (arg.getType() == ValueType.VARIABLE) {
-                    return (List<T>) arg.getValue(action);
-                } else if (arg.isList()) {
+                if (arg.isList()) {
                     List<Argument> args = (List<Argument>) arg.getValue(action);
                     for (Argument argument : args) {
                         list.add((T) (argument.getValue(action)));
+                    }
+                } else if (arg.getValue(action) instanceof List<?> argList) {
+                    for (Object object : argList) {
+                        list.add((T) object);
                     }
                 }
             } catch(ClassCastException e) {

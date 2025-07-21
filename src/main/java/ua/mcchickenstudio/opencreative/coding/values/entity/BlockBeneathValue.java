@@ -16,29 +16,30 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.values.events;
+package ua.mcchickenstudio.opencreative.coding.values.entity;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.LocationEventValue;
+import ua.mcchickenstudio.opencreative.coding.values.TextEventValue;
 
-public final class BlockLocationValue extends LocationEventValue {
+public final class BlockBeneathValue extends LocationEventValue {
 
-    public BlockLocationValue() {
-        super("block_location", new ItemStack(Material.PAPER), MenusCategory.EVENTS);
+    public BlockBeneathValue() {
+        super("block_beneath", new ItemStack(Material.CHERRY_PRESSURE_PLATE), MenusCategory.ENTITY);
     }
 
     @Override
     public @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
-        return action.getEvent() instanceof BlockEvent event ? event.getBlock().getLocation() : null;
+        return entity != null ? entity.getLocation().getBlock().getRelative(BlockFace.DOWN).getLocation() : null;
     }
 
     @Override
@@ -48,6 +49,6 @@ public final class BlockLocationValue extends LocationEventValue {
 
     @Override
     public @NotNull String getDescription() {
-        return "Returns block's location from event";
+        return "Returns block, that is beneath the entity";
     }
 }

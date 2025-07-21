@@ -16,29 +16,45 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.values.events;
+package ua.mcchickenstudio.opencreative.coding.values.player;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.inventory.CustomMenu;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
-import ua.mcchickenstudio.opencreative.coding.values.LocationEventValue;
+import ua.mcchickenstudio.opencreative.coding.values.ListEventValue;
 
-public final class BlockLocationValue extends LocationEventValue {
+import java.util.ArrayList;
+import java.util.List;
 
-    public BlockLocationValue() {
-        super("block_location", new ItemStack(Material.PAPER), MenusCategory.EVENTS);
+public final class MenuItemsValue extends ListEventValue {
+
+    public MenuItemsValue() {
+        super("custom_inventory_items", new ItemStack(Material.CHEST_MINECART), MenusCategory.PLAYER);
     }
 
     @Override
-    public @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
-        return action.getEvent() instanceof BlockEvent event ? event.getBlock().getLocation() : null;
+    public @NotNull List<@NotNull Object> getList(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        List<@NotNull Object> objects = new ArrayList<>();
+        if (!(entity instanceof Player player)) {
+            return objects;
+        }
+        if (!(player.getOpenInventory().getTopInventory().getHolder() instanceof CustomMenu menu)) {
+            return objects;
+        }
+        for (ItemStack item : menu.getInventory().getContents()) {
+            if (item == null) {
+                item = new ItemStack(Material.AIR);
+            }
+            objects.add(item);
+        }
+        return objects;
     }
 
     @Override
@@ -48,6 +64,6 @@ public final class BlockLocationValue extends LocationEventValue {
 
     @Override
     public @NotNull String getDescription() {
-        return "Returns block's location from event";
+        return "Returns list of items of player's opened custom menu";
     }
 }

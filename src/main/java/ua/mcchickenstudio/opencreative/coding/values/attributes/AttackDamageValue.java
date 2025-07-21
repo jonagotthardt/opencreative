@@ -16,29 +16,37 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.values.events;
+package ua.mcchickenstudio.opencreative.coding.values.attributes;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attributable;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
-import ua.mcchickenstudio.opencreative.coding.values.LocationEventValue;
+import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public final class BlockLocationValue extends LocationEventValue {
+public final class AttackDamageValue extends NumberEventValue {
 
-    public BlockLocationValue() {
-        super("block_location", new ItemStack(Material.PAPER), MenusCategory.EVENTS);
+    public AttackDamageValue() {
+        super("attack_damage", new ItemStack(Material.NETHERITE_SWORD), MenusCategory.ENTITY);
     }
 
     @Override
-    public @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
-        return action.getEvent() instanceof BlockEvent event ? event.getBlock().getLocation() : null;
+    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        if (!(entity instanceof Attributable attributable)) {
+            return null;
+        }
+        AttributeInstance attribute = attributable.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
+        if (attribute == null) {
+            return null;
+        }
+        return attribute.getValue();
     }
 
     @Override
@@ -48,6 +56,6 @@ public final class BlockLocationValue extends LocationEventValue {
 
     @Override
     public @NotNull String getDescription() {
-        return "Returns block's location from event";
+        return "Returns attributable entity's attack damage";
     }
 }

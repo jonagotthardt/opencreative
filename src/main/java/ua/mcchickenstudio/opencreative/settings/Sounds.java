@@ -28,7 +28,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningMessag
 public enum Sounds {
 
     LOBBY("block.beacon.deactivate",1.5f),
-    LOBBY_MUSIC("music_disc.creator",0.3f),
+    LOBBY_MUSIC("music_disc.creator",0.9f),
     OPENCREATIVE("block.beacon.activate",2),
     RELOADING("block.beacon.ambient",2),
     RELOADED("block.beacon.deactivate",2),

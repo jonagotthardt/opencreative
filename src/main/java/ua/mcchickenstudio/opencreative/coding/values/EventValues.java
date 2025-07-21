@@ -25,9 +25,11 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebug;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
+import ua.mcchickenstudio.opencreative.coding.values.attributes.*;
 import ua.mcchickenstudio.opencreative.coding.values.entity.*;
 import ua.mcchickenstudio.opencreative.coding.values.events.*;
 import ua.mcchickenstudio.opencreative.coding.values.human.*;
@@ -95,6 +97,7 @@ public final class EventValues {
      * Unregisters event value if list contains it.
      * @param value event value to unregister.
      */
+    @SuppressWarnings("unused")
     public void unregisterEventValue(@NotNull EventValue value) {
         eventValues.remove(value);
     }
@@ -123,7 +126,7 @@ public final class EventValues {
                 new PurchaseIdValue(), new PurchaseNameValue(), new PurchasePriceValue(), new PurchaseSaveValue(),
                 new FoodLevelValue(), new DamageCauseValue(), new DamageValue());
         registerEventValue(new ClientBrandValue(), new HumanHungerValue(), new HumanLastDeathLocationValue(),
-                new PlayerPingValue(), new PlayerExperienceValue(), new PlayerExperienceValue(), new PlayerTotalExperienceValue(),
+                new PlayerPingValue(), new PlayerExperienceValue(), new PlayerExperienceLevelValue(), new PlayerTotalExperienceValue(),
                 new HumanGameModeValue(), new LocaleCountryValue(), new LocaleDisplayCountryValue(), new LocaleLanguageValue(),
                 new LocaleDisplayLanguageValue(), new PlayerCompassTargetValue());
         registerEventValue(new EntityNameValue(), new EntityTypeValue(), new EntityUUIDValue(), new EntityLocationValue(),
@@ -135,6 +138,24 @@ public final class EventValues {
                 new EntityFreezeTicksValue(), new LivingMaxNoDamageTicksValue(), new LivingCanPickupItemValue(),
                 new LivingArrowsInBodyValue(), new LivingShieldBlockingDelayValue(), new LivingBeeStingerCooldownValue(),
                 new LivingRemainingAirValue(), new LivingMaximumAirValue());
+        // 5.7.0 Preview
+
+        registerEventValue(new EntityGravityValue(), new BurningTimeValue(), new EntityStepHeightValue(),
+                new KnockbackResistanceValue(), new ExplosionKnockbackResistanceValue(), new AttackKnockbackValue(),
+                new AttackDamageValue(), new ArmorToughnessValue(), new EntityScaleValue(), new AttackSpeedValue(),
+                new ArmorPointsValue());
+        registerEventValue(new EntityTargetValue(), new PassengersValue(), new EntityItemValue(), new EntityFacingValue(),
+                new EntityLocationDirectionValue(), new EntityLocationPitchValue(), new EntityLocationYawValue(),
+                new EntityLocationXValue(), new EntityLocationYValue(), new EntityLocationZValue(),
+                new BlockBeneathValue(), new ProjectileOwnerValue(), new EntityVehicleValue(), new EntitySpawnReasonValue(),
+                new EntityPoseValue(), new EntityWidthZValue(), new EntityWidthXValue(), new EntityFuseTicksValue(),
+                new EntityHeightValue(), new EntityAgeValue(), new EntityTicksLivedValue(), new MerchantTradesCountValue(),
+                new LivingPotionsValue(), new HolderInventoryValue(), new TargetFluidValue(), new LivingBodyYawValue(),
+                new LivingLeashHolderValue(), new SaddleItemValue(), new AbsorptionAmountValue());
+        registerEventValue(new MenuItemsValue(), new HotBarItemsValue(), new PlayerMainHandValue(),
+                new PlayerChatVisibilityValue(), new PlayerClientViewDistanceValue());
+        registerEventValue(new ServerTicksPerSecondValue(), new WorldSizeValue(), new WorldGameTimeValue(),
+                new WorldMoonPhaseValue());
     }
 
     public @NotNull List<EventValue> getByCategories(@NotNull MenusCategory menusCategory) {

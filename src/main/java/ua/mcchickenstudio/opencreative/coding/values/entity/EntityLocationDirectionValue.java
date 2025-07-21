@@ -16,29 +16,30 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.values.events;
+package ua.mcchickenstudio.opencreative.coding.values.entity;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
-import ua.mcchickenstudio.opencreative.coding.values.LocationEventValue;
+import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
+import ua.mcchickenstudio.opencreative.coding.values.VectorEventValue;
 
-public final class BlockLocationValue extends LocationEventValue {
+public final class EntityLocationDirectionValue extends VectorEventValue {
 
-    public BlockLocationValue() {
-        super("block_location", new ItemStack(Material.PAPER), MenusCategory.EVENTS);
+    public EntityLocationDirectionValue() {
+        super("direction", new ItemStack(Material.ENDER_EYE), MenusCategory.ENTITY);
     }
 
     @Override
-    public @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
-        return action.getEvent() instanceof BlockEvent event ? event.getBlock().getLocation() : null;
+    public @Nullable Vector getVector(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+        if (entity == null) return null;
+        return entity.getLocation().getDirection();
     }
 
     @Override
@@ -48,6 +49,6 @@ public final class BlockLocationValue extends LocationEventValue {
 
     @Override
     public @NotNull String getDescription() {
-        return "Returns block's location from event";
+        return "Returns direction vector of entity";
     }
 }

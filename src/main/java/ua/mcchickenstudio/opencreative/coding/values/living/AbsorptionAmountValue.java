@@ -36,7 +36,7 @@ import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 public final class AbsorptionAmountValue extends NumberEventValue {
 
     public AbsorptionAmountValue() {
-        super("absorption_amount", new ItemStack(Material.GOLDEN_APPLE), MenusCategory.ENTITY);
+        super("absorption_amount", new ItemStack(Material.HONEY_BOTTLE), MenusCategory.ENTITY);
     }
 
     @Override

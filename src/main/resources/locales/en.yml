@@ -1,5 +1,5 @@
 #
-# OpenCreative+ 5.6 - Well, it's possible.
+# OpenCreative+ 5.7 - Well, it's possible.
 # (C) McChicken Studio 2017-2025.
 #
 
@@ -114,7 +114,7 @@ environment:
   values:
     text: "&6Text"
     number: "&aNumber"
-    event_value: "&6Event Value"
+    event-value: "&6Event Value"
     variable: "&eVariable"
     location: "&fLocation"
     boolean: "&eBoolean"
@@ -228,8 +228,8 @@ coding-debug:
     action: "&7Category: %category%\n&7Action: %type%\n \n&7Arguments:\n%arguments%"
     condition: "&7Category: %category%\n&7Condition: %type%\n&7Opposed: %opposed%\n \n&7Arguments:\n%arguments%"
   variable:
-    set: "&6 Debug &8| &fNew value for %variable%&f: &7%value%"
-    created: "&6 Debug &8| &fVariable %variable%&f created: &7%value%"
+    set: "&fNew value for %variable%&f: &7%value%"
+    created: "&fVariable %variable%&f created: &7%value%"
   log: "&8 [&6⌘&8] &f%log%"
   event-message: "&7 Event Call &8| &7Event %type%&f occurred, finding the trigger..."
   variable-found: "&7           %name% &a=&7 %value%"
@@ -262,7 +262,7 @@ coding-warning:
 lobby:
   title: "%branding%"
   subtitle: "&fLet's &acreate&f in your worlds!"
-  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.6\n<green> Well, it's possible!\n <white>\n<gold> ⭐ <white>Explore all <gold>worlds<white> using the compass!\n<light_purple> ❤ <white>Create your own world and <light_purple>invite <white>your friends!\n <yellow>⌚<white> Have fun and <yellow>create <white>whatever you want!\n \n<white>\n <white>"
+  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.7\n<green> Well, it's possible!\n <white>\n<gold> ⭐ <white>Explore all <gold>worlds<white> using the compass!\n<light_purple> ❤ <white>Create your own world and <light_purple>invite <white>your friends!\n <yellow>⌚<white> Have fun and <yellow>create <white>whatever you want!\n \n<white>\n <white>"
 creating-world:
   not-enough-played: "%prefix%&fYou need to play &6%time%&f in other worlds before creating a new world."
   title: "&eCreating World ◌"
