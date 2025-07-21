@@ -43,19 +43,20 @@ public final class GetItemLoreLineAction extends VariableAction {
         int index = getArguments().getValue("index",1,this);
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
+            setVarValue(link, "");
             return;
         }
         List<String> lore = meta.getLore();
         if (lore == null) {
-            setVarValue(link,null);
+            setVarValue(link,"");
             return;
         }
         if (lore.size() > 64 || index > 64) {
-            setVarValue(link,null);
+            setVarValue(link,"");
             return;
         }
         if (index > lore.size()) {
-            setVarValue(link,null);
+            setVarValue(link,"");
             return;
         }
         setVarValue(link,lore.get(index-1));

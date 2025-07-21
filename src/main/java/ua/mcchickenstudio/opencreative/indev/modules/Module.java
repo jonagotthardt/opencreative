@@ -159,7 +159,7 @@ public class Module {
 
     /*private Action createAction(YamlConfiguration config) {
 
-        String id = config.getString(path + ".id");
+        String id = config.getString(path + ".type");
         if (id == null) return null;
 
         try {
@@ -182,7 +182,7 @@ public class Module {
                 if (config.getConfigurationSection(path+".condition") != null) {
                     boolean isOpposed = config.getBoolean(path+".condition.opposed",false);
                     ActionCategory conditionCategory = ActionCategory.valueOf(config.getString(path+".condition.category"));
-                    ActionType conditionType = ActionType.valueOf(config.getString(path+".condition.id"));
+                    ActionType conditionType = ActionType.valueOf(config.getString(path+".condition.type"));
                     return actionType.getActionClass().getConstructor(Executor.class,int.class, Arguments.class, ActionCategory.class, ActionType.class, boolean.class).newInstance(executor,config.getInt(path+".location.x"),args,conditionCategory,conditionType,isOpposed);
                 } else if (config.getString(path+".target") != null){
                     if (targetString != null && !targetString.isEmpty()) {
@@ -190,7 +190,7 @@ public class Module {
                     }
                     return actionType.getActionClass().getConstructor(Executor.class,int.class, Arguments.class, Target.class).newInstance(executor,config.getInt(path+".location.x"),args,target);
                 }
-                if (config.getString(path+".condition.id") != null) {
+                if (config.getString(path+".condition.type") != null) {
                     args.setArgumentValue("name", ValueType.TEXT,config.getString(path+".name"));
                 }
             }

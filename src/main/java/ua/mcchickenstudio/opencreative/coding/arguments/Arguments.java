@@ -78,7 +78,7 @@ public class Arguments {
     }
 
     private Argument loadArgument(ConfigurationSection section, String name) {
-        String configType = section.getString(name+".id");
+        String configType = section.getString(name+".type");
         Object configValue = section.get(name+".value");
         if (configType == null || configType.isEmpty() || configValue == null) {
             return null;
@@ -236,12 +236,14 @@ public class Arguments {
         Argument arg = getArg(path);
         if (arg != null) {
             try {
-                if (arg.getType() == ValueType.VARIABLE) {
-                    return (List<T>) arg.getValue(action);
-                } else if (arg.isList()) {
+                if (arg.isList()) {
                     List<Argument> args = (List<Argument>) arg.getValue(action);
                     for (Argument argument : args) {
                         list.add((T) (argument.getValue(action)));
+                    }
+                } else if (arg.getValue(action) instanceof List<?> argList) {
+                    for (Object object : argList) {
+                        list.add((T) object);
                     }
                 }
             } catch(ClassCastException e) {
@@ -653,6 +655,12 @@ public class Arguments {
     public void setArgumentValue(@NotNull String path, @NotNull ValueType type, @NotNull Object value) {
         argumentList.removeIf(it -> path.equals(it.path));
         argumentList.add(new Argument(planet,type,path,value));
+    }
+
+    public void removeArgumentValue(@NotNull String... paths) {
+        for (String path : paths) {
+            argumentList.removeIf(it -> path.equals(it.path));
+        }
     }
 
     public @NotNull List<Argument> getArgumentList() {

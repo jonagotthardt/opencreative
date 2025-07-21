@@ -20,9 +20,6 @@ package ua.mcchickenstudio.opencreative.coding.values.entity;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,19 +28,16 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public final class EntitySizeValue extends NumberEventValue {
+public final class EntityLocationXValue extends NumberEventValue {
 
-    public EntitySizeValue() {
-        super("size", new ItemStack(Material.SLIME_BLOCK), MenusCategory.ENTITY);
+    public EntityLocationXValue() {
+        super("x_coordinate", new ItemStack(Material.RED_STAINED_GLASS), MenusCategory.ENTITY);
     }
 
     @Override
     public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
-        if (entity instanceof LivingEntity livingEntity) {
-            AttributeInstance attribute = livingEntity.getAttribute(Attribute.GENERIC_SCALE);
-            return attribute == null ? null : attribute.getValue();
-        }
-        return null;
+        if (entity == null) return null;
+        return entity.getX();
     }
 
     @Override
@@ -53,6 +47,6 @@ public final class EntitySizeValue extends NumberEventValue {
 
     @Override
     public @NotNull String getDescription() {
-        return "Returns entity's size";
+        return "Returns X coordinate from entity's location";
     }
 }

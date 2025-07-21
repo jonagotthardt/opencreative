@@ -54,7 +54,7 @@ public class Argument {
     /**
      * Creates instance of argument.
      * @param planet associated planet.
-     * @param type id of value.
+     * @param type type of value.
      * @param path name of argument.
      * @param value value.
      */
@@ -74,8 +74,8 @@ public class Argument {
     }
 
     /**
-     * Returns id of value.
-     * @return id of value.
+     * Returns type of value.
+     * @return type of value.
      */
     public @NotNull ValueType getType() {
         return type;

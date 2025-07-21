@@ -39,10 +39,11 @@ public final class GetItemDisplayNameAction extends VariableAction {
         VariableLink link = getArguments().getVariableLink("variable",this);
         ItemStack item = getArguments().getValue("item",getArguments().getValue("variable",new ItemStack(Material.APPLE),this),this);
         ItemMeta meta = item.getItemMeta();
-        if (meta == null) {
+        if (meta == null || !meta.hasDisplayName()) {
+            setVarValue(link, "");
             return;
         }
-        setVarValue(link,meta.getDisplayName());
+        setVarValue(link, meta.getDisplayName());
     }
 
     @Override

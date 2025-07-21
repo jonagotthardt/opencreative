@@ -240,7 +240,9 @@ public abstract class MenusCategorySelectionMenu extends AbstractMenu {
             }
             contentMenu.open(player);
         } else {
-            contentMenu.onClick(event);
+            if (legacy) {
+                contentMenu.onClick(event);
+            }
         }
     }
 

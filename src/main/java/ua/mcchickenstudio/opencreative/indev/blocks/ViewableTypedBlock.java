@@ -25,7 +25,7 @@ public interface ViewableTypedBlock extends TypedBlock {
 
     /**
      * Returns an icon that will be shown
-     * in action id selection menus.
+     * in action type selection menus.
      * @return icon of typed block.
      */
     @NotNull ItemStack getIcon();

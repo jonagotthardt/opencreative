@@ -1,5 +1,5 @@
 #
-# OpenCreative+ 5.6 - Well, it's possible.
+# OpenCreative+ 5.7 - Well, it's possible.
 # (C) McChicken Studio 2017-2025.
 #
 
@@ -107,21 +107,21 @@
 # Discord: https://discord.gg/sSFCXUeq63
 #
 
-version: 5.6.1
+version: 5.7.0
 last-world-id: 0
 hide-from-tab: spectator # Hides players, that aren't in same world: spectator - Transparent nickname (requires ProtocolLib), full - Full hide from tab list, none - Not hide.
 
 lobby:
   #
   # Lobby is a world, where player teleports on server join,
-  # or on command id: /lobby, /hub, /spawn. It gives player
+  # or on command type: /lobby, /hub, /spawn. It gives player
   # items for opening menus. To change spawn location use
   # /setworldspawn command.
   #
   world: "world"
   clear-inventory: true # Inventory will be cleared on server join, world change, should be enabled due to security reasons.
 
-recommended-worlds: [1,2,3,4,5] # List of featured worlds in /games, id world number IDs here.
+recommended-worlds: [1,2,3,4,5] # List of featured worlds in /games, type world number IDs here.
 
 messages:
   locale: en # Supported: en, ru - Для русского языка: ru
@@ -369,8 +369,8 @@ sounds:
   theme: "default"
   default:
     lobby-music:
-      name: "music_disc.precipice"
-      pitch: 0.1
+      name: "music_disc.creator"
+      pitch: 0.9
   christmas:
     lobby-music:
       name: "music_disc.chirp"

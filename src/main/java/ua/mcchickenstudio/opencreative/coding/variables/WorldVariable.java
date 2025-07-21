@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * <h1>WorldVariable</h1>
  * This class represents a variable in world, that
- * has id and stores value.
+ * has type and stores value.
  *
  * <p>Variables can be <b>local, global, saved</b>.
  * <p>Local - stores only in ActionsHandler
@@ -46,11 +46,11 @@ public final class WorldVariable {
     private @NotNull ValueType valueType;
 
     /**
-     * Creates instance of variable, that has name, value, id,
-     * value id and actions handler.
+     * Creates instance of variable, that has name, value, type,
+     * value type and actions handler.
      * @param name name of variable.
-     * @param varType id of variable (local, global, saved).
-     * @param type id of value.
+     * @param varType type of variable (local, global, saved).
+     * @param type type of value.
      * @param value value.
      * @param handler actions handler.
      */
@@ -83,16 +83,16 @@ public final class WorldVariable {
     }
 
     /**
-     * Returns id of value.
-     * @return value id.
+     * Returns type of value.
+     * @return value type.
      */
     public @NotNull ValueType getType() {
         return valueType;
     }
 
     /**
-     * Returns id of variable (local, global, saved).
-     * @return id of variable.
+     * Returns type of variable (local, global, saved).
+     * @return type of variable.
      */
     public @NotNull VariableLink.VariableType getVarType() {
         return varType;
@@ -107,8 +107,8 @@ public final class WorldVariable {
     }
 
     /**
-     * Sets a new value id to variable.
-     * @param type new id.
+     * Sets a new value type to variable.
+     * @param type new type.
      */
     public void setType(@NotNull ValueType type) {
         this.valueType = type;

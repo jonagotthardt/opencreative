@@ -76,6 +76,7 @@ public final class RepeatForBlocksAction extends RepeatAction {
         }
 
         if (currentY > maxY) {
+            arguments.removeArgumentValue("current-x","current-y","current-z");
             return false;
         }
 

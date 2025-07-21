@@ -38,7 +38,7 @@ public final class VariableLink {
     /**
      * Creates instance of variable link.
      * @param name name of variable.
-     * @param type id of variable (local, global, saved).
+     * @param type type of variable (local, global, saved).
      */
     public VariableLink(@NotNull String name, @NotNull VariableType type) {
         this.name = name;
@@ -46,8 +46,8 @@ public final class VariableLink {
     }
 
     /**
-     * Returns id of variable (local, global, saved).
-     * @return id of variable.
+     * Returns type of variable (local, global, saved).
+     * @return type of variable.
      */
     public @NotNull VariableType getVariableType() {
         return type;

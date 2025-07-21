@@ -33,7 +33,7 @@ import ua.mcchickenstudio.opencreative.coding.values.LocationEventValue;
 public final class BlockLocationValue extends LocationEventValue {
 
     public BlockLocationValue() {
-        super("block_material", new ItemStack(Material.PAPER), MenusCategory.EVENTS);
+        super("block_location", new ItemStack(Material.PAPER), MenusCategory.EVENTS);
     }
 
     @Override
