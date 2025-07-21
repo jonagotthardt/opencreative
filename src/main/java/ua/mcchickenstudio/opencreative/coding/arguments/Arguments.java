@@ -655,6 +655,12 @@ public class Arguments {
         argumentList.add(new Argument(planet,type,path,value));
     }
 
+    public void removeArgumentValue(@NotNull String... paths) {
+        for (String path : paths) {
+            argumentList.removeIf(it -> path.equals(it.path));
+        }
+    }
+
     public @NotNull List<Argument> getArgumentList() {
         return argumentList;
     }

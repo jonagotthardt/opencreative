@@ -45,6 +45,7 @@ public final class RepeatForEachAction extends RepeatAction {
         }
         int index = getArguments().getValue("index",1,this);
         if (index > list.size()) {
+            arguments.removeArgumentValue("index");
             return false;
         }
         setVarValue(link, list.get(index-1));
