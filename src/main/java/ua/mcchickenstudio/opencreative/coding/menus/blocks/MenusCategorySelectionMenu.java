@@ -25,6 +25,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.menus.AbstractListMenu;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
@@ -35,6 +36,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
 
 /**
  * <h1>MenusCategorySelectionMenu</h1>
@@ -51,7 +53,7 @@ public abstract class MenusCategorySelectionMenu extends AbstractMenu {
     protected final List<MenusCategory> menusCategories = new ArrayList<>();
     protected final Location location;
     protected final Object frequency;
-    protected final boolean legacy = false;
+    protected final boolean legacy = OpenCreative.getSettings().isLegacySelectionMenu();
 
     public MenusCategorySelectionMenu(@NotNull Player player,
                                       @NotNull ItemStack mainItem,
@@ -94,7 +96,6 @@ public abstract class MenusCategorySelectionMenu extends AbstractMenu {
                 }
                 contentMenu.updateElements();
             }
-            int element = 0;
             int size = contentMenu.getCurrentElements().size();
             if (contentMenu.getCurrentPage() > 1) {
                 setItem(27, contentMenu.getPreviousPageButton());
@@ -106,6 +107,7 @@ public abstract class MenusCategorySelectionMenu extends AbstractMenu {
             } else {
                 setItem(35, AIR_ITEM);
             }
+            int element = AbstractListMenu.PlacementLayout.BOTTOM_CHARMS_BAR.getElementsSlots().length * (contentMenu.getCurrentPage() - 1);
             for (int slot : AbstractListMenu.PlacementLayout.BOTTOM_CHARMS_BAR.getElementsSlots()) {
                 if (element == size) {
                     setItem(slot, AIR_ITEM);
@@ -242,6 +244,9 @@ public abstract class MenusCategorySelectionMenu extends AbstractMenu {
         } else {
             if (legacy) {
                 contentMenu.onClick(event);
+                if (itemEquals(clicked, contentMenu.getNextPageButton()) || itemEquals(clicked, contentMenu.getPreviousPageButton())) {
+                    fillItems(player);
+                }
             }
         }
     }
