@@ -19,13 +19,15 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction;
 
 import org.bukkit.event.Cancellable;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public final class BlockInteractionEvent extends WorldEvent implements Cancellable {
+public final class BlockInteractionEvent extends WorldEvent implements Cancellable, BlockEvent {
 
     private final PlayerInteractEvent event;
     private final Action action;
@@ -52,7 +54,8 @@ public final class BlockInteractionEvent extends WorldEvent implements Cancellab
         return event.isCancelled();
     }
 
-    public Block getBlock() {
+    @Override
+    public @NotNull Block getBlock() {
         return block;
     }
 }
