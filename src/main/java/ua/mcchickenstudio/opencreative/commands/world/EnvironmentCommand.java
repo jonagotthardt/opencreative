@@ -401,7 +401,8 @@ public class EnvironmentCommand extends CommandHandler {
                         }
                         Material material = Material.WHITE_STAINED_GLASS;
                         try {
-                            material = Material.valueOf(args[1].equalsIgnoreCase("barrier") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
+                            material = Material.valueOf(args[1].equalsIgnoreCase("barrier")
+                                    || args[1].equalsIgnoreCase("glass") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
                         } catch (Exception ignored) {}
                         DevPlatform currentPlatform = devPlanet.getPlatformInLocation(player.getX(),player.getZ());
                         if (currentPlatform == null) {
@@ -426,7 +427,8 @@ public class EnvironmentCommand extends CommandHandler {
                         }
                         Material material = Material.GRAY_STAINED_GLASS;
                         try {
-                            material = Material.valueOf(args[1].equalsIgnoreCase("barrier") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
+                            material = Material.valueOf(args[1].equalsIgnoreCase("barrier")
+                                    || args[1].equalsIgnoreCase("glass") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
                         } catch (Exception ignored) {}
                         DevPlatform currentPlatform = devPlanet.getPlatformInLocation(player.getX(),player.getZ());
                         if (currentPlatform == null) {
@@ -451,7 +453,8 @@ public class EnvironmentCommand extends CommandHandler {
                         }
                         Material material = Material.BLUE_STAINED_GLASS;
                         try {
-                            material = Material.valueOf(args[1].equalsIgnoreCase("barrier") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
+                            material = Material.valueOf(args[1].equalsIgnoreCase("barrier")
+                                    || args[1].equalsIgnoreCase("glass") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
                         } catch (Exception ignored) {}
                         DevPlatform currentPlatform = devPlanet.getPlatformInLocation(player.getX(),player.getZ());
                         if (currentPlatform == null) {

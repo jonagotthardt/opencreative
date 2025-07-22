@@ -69,6 +69,7 @@ public class WorldEnvironmentColorMenu extends AbstractListMenu<Material> {
         materials.add(Material.GRAY_STAINED_GLASS);
         materials.add(Material.LIGHT_GRAY_STAINED_GLASS);
         materials.add(Material.WHITE_STAINED_GLASS);
+        materials.add(Material.GLASS);
         materials.add(Material.BARRIER);
         if (devPlatform == null) {
             devPlatform = new DevPlatform(devPlanet.getWorld(),1,1);
