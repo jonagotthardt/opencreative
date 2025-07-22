@@ -45,15 +45,19 @@ public final class PlaySoundAction extends PlayerAction {
         float volume = getArguments().getValue("volume",100f,this);
         float pitch = getArguments().getValue("pitch",1f,this);
         String categoryString = getArguments().getValue("category","ambient",this);
-        Location location;
+        Location location = getArguments().getValue("location",player.getLocation(),this);
+        long seed = getArguments().getValue("seed",0L,this);
         SoundCategory category;
         try {
             category = SoundCategory.valueOf(categoryString.toUpperCase());
         } catch (Exception error) {
             category = SoundCategory.AMBIENT;
         }
-        location = getArguments().getValue("location",player.getLocation(),this);
-        player.playSound(location,sound,category,volume,pitch);
+        if (getArguments().pathExists("seed")) {
+            player.playSound(location,sound,category,volume,pitch,seed);
+        } else {
+            player.playSound(location,sound,category,volume,pitch);
+        }
     }
 
     @Override
