@@ -45,15 +45,16 @@ public class VarItemEqualsCondition extends VariableCondition {
         boolean ignoreEnchantments = getArguments().getValue("ignore-enchantments",false,this);
         boolean ignoreFlags = getArguments().getValue("ignore-flags",false,this);
         boolean ignoreMaterial = getArguments().getValue("ignore-material",false,this);
+        boolean ignoreDamage = getArguments().getValue("ignore-damage",false,this);
 
         boolean check = false;
         List<ItemStack> items = getArguments().getItemList("items",this);
         if (items.isEmpty()) return false;
 
         ItemStack comparedItem = getArguments().getValue("item",new ItemStack(Material.AIR,1),this);
-        comparedItem = ItemUtils.getItemWithIgnoreData(comparedItem,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial);
+        comparedItem = ItemUtils.getItemWithIgnoreData(comparedItem,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial,ignoreDamage);
         for (ItemStack checkItem : items) {
-            checkItem = ItemUtils.getItemWithIgnoreData(checkItem,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial);
+            checkItem = ItemUtils.getItemWithIgnoreData(checkItem,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial,ignoreDamage);
             if (comparedItem.equals(checkItem)) {
                 check = true;
             }
