@@ -335,6 +335,16 @@ public abstract class Layout extends AbstractMenu {
                 slots.add((row*9-3));
                 slots.add((row*9-2));
                 break;
+            case 8:
+                slots.add((row*9-9));
+                slots.add((row*9-8));
+                slots.add((row*9-7));
+                slots.add((row*9-6));
+                slots.add((row*9-4));
+                slots.add((row*9-3));
+                slots.add((row*9-2));
+                slots.add((row*9-1));
+                break;
             default:
                 slots.add((row*9-9));
                 slots.add((row*9-8));
