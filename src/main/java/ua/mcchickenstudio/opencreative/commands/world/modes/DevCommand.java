@@ -190,23 +190,26 @@ public class DevCommand extends CommandHandler {
         setItemIfAbsent(inventory, 1,  ActionCategory.PLAYER_ACTION.getItem());
         setItemIfAbsent(inventory, 2,  ActionCategory.PLAYER_CONDITION.getItem());
         setItemIfAbsent(inventory, 3,  ActionCategory.ELSE_CONDITION.getItem());
+
+        setItemIfAbsent(inventory, 9, ExecutorCategory.CYCLE.getItem());
+        setItemIfAbsent(inventory, 10, ActionCategory.REPEAT_ACTION.getItem());
+        setItemIfAbsent(inventory, 11, ActionCategory.CONTROLLER_ACTION.getItem());
+        setItemIfAbsent(inventory, 12, ActionCategory.CONTROL_ACTION.getItem());
         setItemIfAbsent(inventory, 13, ActionCategory.VARIABLE_ACTION.getItem());
-        setItemIfAbsent(inventory, 22, ActionCategory.VARIABLE_CONDITION.getItem());
-        setItemIfAbsent(inventory, 14, ActionCategory.CONTROLLER_ACTION.getItem());
-        setItemIfAbsent(inventory, 23, ActionCategory.REPEAT_ACTION.getItem());
-        setItemIfAbsent(inventory, 9,  ExecutorCategory.FUNCTION.getItem());
-        setItemIfAbsent(inventory, 10, ActionCategory.LAUNCH_FUNCTION_ACTION.getItem());
-        setItemIfAbsent(inventory, 11, ActionCategory.CONTROL_ACTION.getItem());
-        setItemIfAbsent(inventory, 12, ActionCategory.ENTITY_CONDITION.getItem());
+        setItemIfAbsent(inventory, 14, ActionCategory.VARIABLE_CONDITION.getItem());
+
+        setItemIfAbsent(inventory, 18, ExecutorCategory.EVENT_WORLD.getItem());
+        setItemIfAbsent(inventory, 19, ActionCategory.WORLD_CONDITION.getItem());
         setItemIfAbsent(inventory, 20, ActionCategory.WORLD_ACTION.getItem());
-        setItemIfAbsent(inventory, 21, ActionCategory.ENTITY_ACTION.getItem());
+        setItemIfAbsent(inventory, 21, ExecutorCategory.METHOD.getItem());
+        setItemIfAbsent(inventory, 22, ActionCategory.LAUNCH_METHOD_ACTION.getItem());
+        setItemIfAbsent(inventory, 23, ActionCategory.SELECTION_ACTION.getItem());
+
         setItemIfAbsent(inventory, 27, ExecutorCategory.EVENT_ENTITY.getItem());
-        setItemIfAbsent(inventory, 28, ActionCategory.WORLD_CONDITION.getItem());
-        setItemIfAbsent(inventory, 29, ExecutorCategory.EVENT_WORLD.getItem());
-        setItemIfAbsent(inventory, 30, ExecutorCategory.METHOD.getItem());
-        setItemIfAbsent(inventory, 31, ActionCategory.LAUNCH_METHOD_ACTION.getItem());
-        setItemIfAbsent(inventory, 18, ExecutorCategory.CYCLE.getItem());
-        setItemIfAbsent(inventory, 19, ActionCategory.SELECTION_ACTION.getItem());
+        setItemIfAbsent(inventory, 28, ActionCategory.ENTITY_CONDITION.getItem());
+        setItemIfAbsent(inventory, 29, ActionCategory.ENTITY_ACTION.getItem());
+        setItemIfAbsent(inventory, 30,  ExecutorCategory.FUNCTION.getItem());
+        setItemIfAbsent(inventory, 31, ActionCategory.LAUNCH_FUNCTION_ACTION.getItem());
 
         ItemStack linesControllerItem = createItem(Material.COMPARATOR,1,"items.developer.lines-controller");
         setItemIfAbsent(inventory, 26, linesControllerItem);

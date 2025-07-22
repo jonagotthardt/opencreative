@@ -4174,6 +4174,15 @@ items:
               - ""
               - "&7Default: &a1"
               - "&cRange: 0.1 to 2"
+          seed:
+            name: "&aSound seed"
+            lore:
+              - "&7Put a number here a number of"
+              - "&7sound seed. Can be used to specify"
+              - "&7variation of sound, if it has many"
+              - "&7variations to play."
+              - ""
+              - "&7Default: &aRandom"
           location:
             name: "&fSound location"
             lore:
@@ -9680,6 +9689,120 @@ items:
             choices:
               false: "Ignore case"
               true: "Require case match"
+      if-var-item-equals:
+        name: "&6If item equals"
+        lore:
+          - "&7Checks if the item is same"
+          - "&7as specified items."
+          - " "
+          - "&fIn chest:"
+          - "&c Item(s) &7- Items for"
+          - "&7 comparison"
+          - "&3 Options &7- Ignoring"
+          - "&7 options"
+          - " "
+          - "&eClick to set condition."
+        arguments:
+          ignore-amount:
+            name: "&eIgnore amount"
+            lore:
+              - "&7Sometimes you need to check"
+              - "&7if the player has enough"
+              - "&7of an item."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Consider amount"
+              true: "Ignore amount"
+          ignore-name:
+            name: "&6Ignore name"
+            lore:
+              - "&7Items can be renamed via"
+              - "&7an anvil."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Consider name"
+              true: "Ignore name"
+          ignore-lore:
+            name: "&3Ignore lore"
+            lore:
+              - "&7For setting an item lore"
+              - "&7a code or mod and creative"
+              - "&7may be needed."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Consider lore"
+              true: "Ignore lore"
+          ignore-enchantments:
+            name: "&dIgnore enchantments"
+            lore:
+              - "&7Items can be enchanted via"
+              - "&7an anvil or enchanting table."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Consider enchantments"
+              true: "Ignore enchantments"
+          ignore-flags:
+            name: "&eIgnore item tags"
+            lore:
+              - "&7These special tags"
+              - "&7are set via NBT editor (mod)."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Consider tags"
+              true: "Ignore tags"
+          ignore-material:
+            name: "&cIgnore item type"
+            lore:
+              - "&7Useful when comparing"
+              - "&7items with the same name."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Consider item type"
+              true: "Ignore item type"
+          ignore-damage:
+            name: "&eIgnore item durability"
+            lore:
+              - "&7Useful when item is tool,"
+              - "&7weapon or armor."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Consider item durability"
+              true: "Ignore item durability"
       if-player-has-item-in-hand:
         name: "&eHolds item in hand"
         lore:
@@ -9798,6 +9921,20 @@ items:
             choices:
               false: "Consider item type"
               true: "Ignore item type"
+          ignore-damage:
+            name: "&eIgnore item durability"
+            lore:
+              - "&7Useful when item is tool,"
+              - "&7weapon or armor."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Consider item durability"
+              true: "Ignore item durability"
       if-player-item-equals:
         name: "&6Item equals"
         lore:
@@ -9906,6 +10043,20 @@ items:
             choices:
               false: "Consider item type"
               true: "Ignore item type"
+          ignore-damage:
+            name: "&eIgnore item durability"
+            lore:
+              - "&7Useful when item is tool,"
+              - "&7weapon or armor."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Consider item durability"
+              true: "Ignore item durability"
       if-player-has-item-in-amount:
         name: "&6Has Item in Amount"
         lore:

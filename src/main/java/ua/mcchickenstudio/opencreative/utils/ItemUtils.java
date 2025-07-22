@@ -20,9 +20,7 @@ package ua.mcchickenstudio.opencreative.utils;
 
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.meta.BlockStateMeta;
-import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.inventory.meta.SpawnEggMeta;
+import org.bukkit.inventory.meta.*;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
@@ -33,7 +31,6 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import ua.mcchickenstudio.opencreative.settings.Settings;
@@ -347,7 +344,7 @@ public class ItemUtils {
         return dataType;
     }
 
-    public static ItemStack getItemWithIgnoreData(ItemStack item, boolean removeAmount, boolean removeName, boolean removeLore, boolean removeFlags, boolean removeEnchantments, boolean removeMaterial) {
+    public static ItemStack getItemWithIgnoreData(ItemStack item, boolean removeAmount, boolean removeName, boolean removeLore, boolean removeFlags, boolean removeEnchantments, boolean removeMaterial, boolean removeDurability) {
         ItemStack newItem = item.clone();
         ItemMeta meta = newItem.getItemMeta();
         if (removeAmount) {
@@ -359,6 +356,11 @@ public class ItemUtils {
             }
             if (removeLore) {
                 meta.lore(new ArrayList<>());
+            }
+            if (removeDurability) {
+                if (meta instanceof Damageable damageable) {
+                    damageable.setDamage(0);
+                }
             }
             newItem.setItemMeta(meta);
         }

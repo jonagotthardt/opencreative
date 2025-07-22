@@ -142,7 +142,7 @@ allowed-links:
     - "drive.google.com"
 
 coding:
-  old-selection-menu: true # Set true to use old coding blocks selection menu
+  old-selection-menu: false # Set true to use old coding blocks selection menu
   #
   # You can disable some coding blocks,
   # if they're useless or harming performance.

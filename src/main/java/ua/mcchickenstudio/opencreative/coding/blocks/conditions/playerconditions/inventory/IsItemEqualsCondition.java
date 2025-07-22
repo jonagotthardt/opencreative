@@ -51,14 +51,15 @@ public class IsItemEqualsCondition extends PlayerCondition {
         boolean ignoreEnchantments = getArguments().getValue("ignore-enchantments",false,this);
         boolean ignoreFlags = getArguments().getValue("ignore-flags",false,this);
         boolean ignoreMaterial = getArguments().getValue("ignore-material",false,this);
+        boolean ignoreDamage = getArguments().getValue("ignore-damage",false,this);
 
         boolean check = false;
         List<ItemStack> items = getArguments().getItemList("items",this);
         if (items.isEmpty()) return false;
 
-        eventItem = ItemUtils.getItemWithIgnoreData(eventItem,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial);
+        eventItem = ItemUtils.getItemWithIgnoreData(eventItem,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial,ignoreDamage);
         for (ItemStack checkItem : items) {
-            checkItem = ItemUtils.getItemWithIgnoreData(checkItem,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial);
+            checkItem = ItemUtils.getItemWithIgnoreData(checkItem,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial,ignoreDamage);
             if (eventItem.equals(checkItem)) {
                 check = true;
             }

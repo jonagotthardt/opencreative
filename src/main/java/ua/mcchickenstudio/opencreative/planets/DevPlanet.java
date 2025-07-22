@@ -254,6 +254,9 @@ public class DevPlanet {
         indestructibleBlocks.add(DEFAULT_ACTION_MATERIAL);
         indestructibleBlocks.add(DEFAULT_EVENT_MATERIAL);
         indestructibleBlocks.add(DEFAULT_FLOOR_MATERIAL);
+        indestructibleBlocks.add(Material.DIAMOND_ORE);
+        indestructibleBlocks.add(Material.GOLD_ORE);
+        indestructibleBlocks.add(Material.REDSTONE_ORE);
         indestructibleBlocks.addAll(Arrays.stream(ExecutorCategory.values()).map(ExecutorCategory::getAdditionalBlock).toList());
         indestructibleBlocks.addAll(Arrays.stream(ActionCategory.values()).map(ActionCategory::getAdditionalBlock).toList());
         indestructibleBlocks.remove(Material.PISTON);

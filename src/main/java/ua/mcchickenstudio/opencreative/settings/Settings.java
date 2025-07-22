@@ -120,7 +120,7 @@ public class Settings {
         consoleNotFoundMessage = config.getBoolean("messages.not-found",false);
         consoleWarnings = config.getBoolean("messages.warnings",true);
         lobbyClearInventory = config.getBoolean("lobby.clear-inventory",true);
-        legacySelectionMenu = config.getBoolean("coding.old-selection-menu",true);
+        legacySelectionMenu = config.getBoolean("coding.old-selection-menu",false);
 
         worldCreationMinSeconds = config.getInt("requirements.world-creation.played-seconds",30);
         worldReputationMinSeconds = config.getInt("requirements.world-reputation.creation-seconds",300);

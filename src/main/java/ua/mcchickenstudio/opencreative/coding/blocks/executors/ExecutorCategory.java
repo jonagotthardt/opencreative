@@ -37,9 +37,9 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
  */
 public enum ExecutorCategory {
 
-    EVENT_PLAYER(Material.DIAMOND_BLOCK, Material.DIAMOND_ORE, NamedTextColor.AQUA, Material.LIGHT_BLUE_STAINED_GLASS_PANE, MenusCategory.WORLD),
-    EVENT_ENTITY(Material.GOLD_BLOCK, Material.GOLD_ORE, NamedTextColor.YELLOW, Material.YELLOW_STAINED_GLASS_PANE, MenusCategory.ENTITY_INTERACTION),
-    EVENT_WORLD(Material.REDSTONE_BLOCK, Material.REDSTONE_ORE, NamedTextColor.RED, Material.RED_STAINED_GLASS_PANE, MenusCategory.WORLD_OTHER),
+    EVENT_PLAYER(Material.DIAMOND_BLOCK, Material.DEEPSLATE_DIAMOND_ORE, NamedTextColor.AQUA, Material.LIGHT_BLUE_STAINED_GLASS_PANE, MenusCategory.WORLD),
+    EVENT_ENTITY(Material.GOLD_BLOCK, Material.DEEPSLATE_GOLD_ORE, NamedTextColor.YELLOW, Material.YELLOW_STAINED_GLASS_PANE, MenusCategory.ENTITY_INTERACTION),
+    EVENT_WORLD(Material.REDSTONE_BLOCK, Material.DEEPSLATE_REDSTONE_ORE, NamedTextColor.RED, Material.RED_STAINED_GLASS_PANE, MenusCategory.WORLD_OTHER),
     CYCLE(Material.OXIDIZED_COPPER, Material.WAXED_OXIDIZED_CUT_COPPER, NamedTextColor.DARK_AQUA, Material.LIGHT_BLUE_STAINED_GLASS_PANE),
     FUNCTION(Material.LAPIS_BLOCK, Material.DEEPSLATE_LAPIS_ORE, NamedTextColor.BLUE, Material.BLUE_STAINED_GLASS_PANE),
     METHOD(Material.EMERALD_BLOCK, Material.DEEPSLATE_EMERALD_ORE, NamedTextColor.GREEN, Material.LIME_STAINED_GLASS_PANE);

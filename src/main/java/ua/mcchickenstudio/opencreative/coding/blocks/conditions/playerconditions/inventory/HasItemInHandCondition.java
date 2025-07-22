@@ -48,13 +48,14 @@ public class HasItemInHandCondition extends PlayerCondition {
         boolean ignoreEnchantments = getArguments().getValue("ignore-enchantments",false,this);
         boolean ignoreFlags = getArguments().getValue("ignore-flags",false,this);
         boolean ignoreMaterial = getArguments().getValue("ignore-material",false,this);
+        boolean ignoreDamage = getArguments().getValue("ignore-damage",false,this);
 
         ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
-        itemInMainHand = ItemUtils.getItemWithIgnoreData(itemInMainHand,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial);
+        itemInMainHand = ItemUtils.getItemWithIgnoreData(itemInMainHand,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial, ignoreDamage);
         ItemStack itemInOffHand = player.getInventory().getItemInOffHand();
-        itemInOffHand = ItemUtils.getItemWithIgnoreData(itemInOffHand,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial);
+        itemInOffHand = ItemUtils.getItemWithIgnoreData(itemInOffHand,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial, ignoreDamage);
         for (ItemStack checkItem : items) {
-            checkItem = ItemUtils.getItemWithIgnoreData(checkItem, ignoreAmount, ignoreName, ignoreLore, ignoreFlags, ignoreEnchantments, ignoreMaterial);
+            checkItem = ItemUtils.getItemWithIgnoreData(checkItem, ignoreAmount, ignoreName, ignoreLore, ignoreFlags, ignoreEnchantments, ignoreMaterial, ignoreDamage);
             if (hand.equals("main-hand")) {
                 return itemInMainHand.equals(checkItem);
             } else if (hand.equals("off-hand")) {
