@@ -145,7 +145,7 @@ public abstract class AbstractListMenu<T> extends AbstractMenu {
         return player;
     }
 
-    protected void setCurrentPage(int currentPage) {
+    public void setCurrentPage(int currentPage) {
         this.currentPage = currentPage;
     }
 

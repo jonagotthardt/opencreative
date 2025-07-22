@@ -29,8 +29,8 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 public enum ActionCategory {
 
     PLAYER_ACTION(Material.COBBLESTONE, Material.STONE, NamedTextColor.GRAY, Material.GRAY_STAINED_GLASS_PANE, MenusCategory.COMMUNICATION),
-    ENTITY_ACTION(Material.MOSSY_COBBLESTONE, Material.STONE, NamedTextColor.GREEN, Material.GREEN_STAINED_GLASS_PANE, MenusCategory.ENTITY_INTERACTION),
-    WORLD_ACTION(Material.NETHER_BRICKS, Material.NETHERRACK, NamedTextColor.RED, Material.RED_STAINED_GLASS_PANE, MenusCategory.WORLD_OTHER),
+    ENTITY_ACTION(Material.MOSSY_COBBLESTONE, Material.STONE, NamedTextColor.GREEN, Material.GREEN_STAINED_GLASS_PANE, MenusCategory.ENTITY_PARAMS),
+    WORLD_ACTION(Material.NETHER_BRICKS, Material.NETHERRACK, NamedTextColor.RED, Material.RED_STAINED_GLASS_PANE, MenusCategory.WORLD),
     VARIABLE_ACTION(Material.IRON_BLOCK, Material.IRON_ORE, NamedTextColor.WHITE, Material.WHITE_STAINED_GLASS_PANE, MenusCategory.OTHER),
     SELECTION_ACTION(Material.PURPUR_BLOCK, Material.PURPUR_PILLAR, NamedTextColor.LIGHT_PURPLE, Material.PINK_STAINED_GLASS_PANE),
     LAUNCH_FUNCTION_ACTION(Material.LAPIS_ORE, Material.STONE, NamedTextColor.AQUA, Material.BLUE_STAINED_GLASS_PANE),
@@ -42,7 +42,7 @@ public enum ActionCategory {
     PLAYER_CONDITION(Material.OAK_PLANKS, Material.PISTON, NamedTextColor.GOLD, Material.ORANGE_STAINED_GLASS_PANE, MenusCategory.PARAMS),
     VARIABLE_CONDITION(Material.OBSIDIAN, Material.PISTON, NamedTextColor.BLUE, Material.BLUE_STAINED_GLASS_PANE, MenusCategory.OTHER),
     WORLD_CONDITION(Material.RED_NETHER_BRICKS, Material.PISTON, NamedTextColor.RED, Material.RED_STAINED_GLASS_PANE, MenusCategory.BLOCKS),
-    ENTITY_CONDITION(Material.BRICKS, Material.PISTON, NamedTextColor.RED, Material.RED_STAINED_GLASS_PANE, MenusCategory.PARAMS),
+    ENTITY_CONDITION(Material.BRICKS, Material.PISTON, NamedTextColor.RED, Material.RED_STAINED_GLASS_PANE, MenusCategory.ENTITY_INTERACTION),
     ELSE_CONDITION(Material.END_STONE, Material.PISTON, NamedTextColor.YELLOW, Material.YELLOW_STAINED_GLASS_PANE);
 
     private final Material block;
