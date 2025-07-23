@@ -37,6 +37,7 @@ public final class CatchErrorAction extends ControllerAction {
 
     @Override
     protected void execute(Entity entity) {
+        this.entity = entity;
         VariableLink link = getArguments().getVariableLink("variable",this);
         try {
             executeActions();

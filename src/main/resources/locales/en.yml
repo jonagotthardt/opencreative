@@ -14149,9 +14149,12 @@ blocks:
   # selection
   selected: "Selection"
   all_players: "All players"
+  all_entities: "All entities"
   random_player: "Random player"
+  random_target: "Random target"
   killer: "Killer"
   victim: "Victim"
+
   # blocks
   event_player: "&bPlayer event"
   event_world: "&cWorld event"

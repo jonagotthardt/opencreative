@@ -38,23 +38,27 @@ public abstract class RepeatAction extends MultiAction {
 
     @Override
     public final void executeActions() {
-        if (!checkCanContinue()) {
-            return;
+        for (Entity entity : getTargets()) {
+            this.entity = entity;
+            if (!checkCanContinue()) {
+                return;
+            }
+            ActionsHandler handler = new ActionsHandler(this);
+            handler.executeActions(getActions());
+            increaseCalls();
+            if (handler.getWaitDelay() > 0) {
+                getPlanet().getTerritory().scheduleRunnable(
+                        new PlanetRunnable(getPlanet()) {
+                            @Override
+                            public void execute() {
+                                executeActions();
+                            }
+                        }, handler.getWaitDelay());
+            } else {
+                executeActions();
+            }
         }
-        ActionsHandler handler = new ActionsHandler(this);
-        handler.executeActions(getActions());
-        increaseCalls();
-        if (handler.getWaitDelay() > 0) {
-            getPlanet().getTerritory().scheduleRunnable(
-                    new PlanetRunnable(getPlanet()) {
-                        @Override
-                        public void execute() {
-                            executeActions();
-                        }
-                    }, handler.getWaitDelay());
-        } else {
-            executeActions();
-        }
+
     }
 
     @Override

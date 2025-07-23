@@ -42,6 +42,7 @@ public final class HotBarItemsValue extends ListEventValue {
     public @NotNull List<@NotNull Object> getList(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
         List<@NotNull Object> objects = new ArrayList<>();
         if (!(entity instanceof Player player)) {
+            System.out.println("Its not player");
             return objects;
         }
         for (int slot = 0; slot < 9; slot++) {
@@ -51,6 +52,7 @@ public final class HotBarItemsValue extends ListEventValue {
             }
             objects.add(item);
         }
+        System.out.println("Return normal " + objects );
         return objects;
     }
 
