@@ -46,10 +46,12 @@ public class FileUtils {
 
     /**
      * Creates planet's settings.yml file.
-     * @param id        Planet's ID.
-     * @param owner     Owner of new world.
+     * @param id          Planet's ID.
+     * @param owner       Owner of new world.
+     * @param environment Environment of world.
+     * @param generatorID ID of world generator.
      */
-    public static void createWorldSettings(int id, Player owner, World.Environment environment) {
+    public static void createWorldSettings(int id, Player owner, World.Environment environment, String generatorID) {
         String worldFolderPath = getPlanetsStorageFolder().getPath() + File.separator  + "planet" + id + File.separator;
         File folder = new File(worldFolderPath);
         if (!folder.exists()) {
@@ -65,7 +67,7 @@ public class FileUtils {
             }
         }
         FileConfiguration worldFile = YamlConfiguration.loadConfiguration(file);
-        fillDefaultSettings(worldFile,id,owner,environment);
+        fillDefaultSettings(worldFile,id,owner,environment,generatorID);
         try {
             worldFile.save(file);
         } catch (IOException | IllegalArgumentException error) {
@@ -80,11 +82,12 @@ public class FileUtils {
      * @param owner world's owner.
      * @param environment environment on world creation.
      */
-    public static void fillDefaultSettings(FileConfiguration config, int id, Player owner, World.Environment environment) {
+    public static void fillDefaultSettings(FileConfiguration config, int id, Player owner, World.Environment environment, String generatorID) {
         config.set("owner", owner.getName());
         config.set("owner-uuid", owner.getUniqueId().toString());
         config.set("owner-group",OpenCreative.getSettings().getGroups().getGroup(owner).getName().toLowerCase());
         config.set("environment", environment.name());
+        config.set("generator", generatorID);
         config.set("world","planet"+id);
         config.set("creation-time",System.currentTimeMillis());
         config.set("last-activity-time",System.currentTimeMillis());

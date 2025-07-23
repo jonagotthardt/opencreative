@@ -376,6 +376,39 @@ sounds:
       name: "music_disc.chirp"
       pitch: 1.7
 
+generators:
+  #
+  # You can turn off world generators
+  # and add own custom flats or templates.
+  #
+  # Custom flats require string in format:
+  # "first_block_material,3*second_layer_material"
+  # Not existing materials will be replaced with air.
+  # If height is not specified, it will be 1.
+  #
+  # Templates can be added in /plugins/OpenCreative/templates/
+  # folder. Just move saved folder of your world to this path.
+  # Dev worlds with code can be added, if folder's name ends
+  # with "dev".
+  #
+  # When you're changing this, please change in localization
+  # files options and item description: menus.world-creation.items.type
+  #
+  flat: true
+  water: true
+  empty: true
+  survival: true
+  large-biomes: true
+  custom-flats: {}
+    #desert:
+    #  generation: "bedrock,3*sandstone,sand"
+    #  icon: "SAND"
+  templates: {}
+    #pvp:
+    #  enabled: true
+    #  icon: "DIAMOND_SWORD"
+    #  folder: pvp
+
 #
 # Maintenance mode unloads all worlds and
 # prevents players without admin permissions

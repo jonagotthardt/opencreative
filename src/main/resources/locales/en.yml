@@ -454,6 +454,11 @@ advertisement:
   cooldown: "%prefix%Please wait &6%cooldown% seconds&f before advertising again."
   closed-world: "%prefix%&fTo advertise your world, &6you need to first allow player entry&f in the world settings."
 items:
+  disabled:
+    name: "&c"
+    lore:
+      - "&c :( Function is disabled"
+      - "&c"
   lobby:
     games:
       name: "&aWorlds from all players &3[Right-click]"
@@ -11827,13 +11832,31 @@ menus:
             - "&7 items from the mob's inventory."
             - ""
             - "&eClick to set."
+        target-entity:
+          name: "&3Target Entity"
+          lore:
+            - "&7Type: &6Text"
+            - ""
+            - "&7 Gets the unique ID of the mob"
+            - "&7 that entity is looking at."
+            - ""
+            - "&eClick to set."
+        target-block:
+          name: "&9Target Block"
+          lore:
+            - "&7Type: &fLocation"
+            - ""
+            - "&7 Gets the location of the block"
+            - "&7 the entity is looking at."
+            - ""
+            - "&eClick to set."
         target-fluid:
           name: "&9Target Fluid"
           lore:
             - "&7Type: &fLocation"
             - ""
             - "&7 Gets the location of the fluid"
-            - "&7 the player is looking at."
+            - "&7 the entity is looking at."
             - ""
             - "&eClick to set."
         body-yaw:

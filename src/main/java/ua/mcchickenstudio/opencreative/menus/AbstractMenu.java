@@ -48,6 +48,7 @@ public abstract class AbstractMenu implements InventoryMenu {
 
     protected final ItemStack AIR_ITEM = new ItemStack(Material.AIR);
     protected final ItemStack NO_PERMS_ITEM = createItem(Material.RED_STAINED_GLASS,1);
+    protected final ItemStack DISABLED_ITEM = createItem(Material.RED_STAINED_GLASS,1, "items.disabled");
     protected final ItemStack DECORATION_ITEM = createItem(Material.LIGHT_GRAY_STAINED_GLASS,1);
     protected final ItemStack DECORATION_PANE_ITEM = createItem(Material.GRAY_STAINED_GLASS_PANE,1);
 

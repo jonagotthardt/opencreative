@@ -22,10 +22,11 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.utils.world.generators.WorldGenerator;
+import ua.mcchickenstudio.opencreative.utils.world.generators.WorldTemplate;
 import ua.mcchickenstudio.opencreative.managers.Manager;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 import java.util.List;
 import java.util.Set;
@@ -149,12 +150,20 @@ public interface PlanetsManager extends Manager {
     @NotNull Set<Planet> getPlanetsContainingName(@NotNull String name);
 
     /**
+     * Copies template world folder and creates a new planet for player.
+     * @param owner owner of planet.
+     * @param id ID of planet.
+     * @param template template of world.
+     */
+    void createPlanet(@NotNull Player owner, int id, @NotNull WorldTemplate template);
+
+    /**
      * Creates and loads a new planet for player with specified world generator.
      * @param owner Owner of planet.
      * @param id ID of planet.
      * @param generator Generator of world.
      */
-    void createPlanet(@NotNull Player owner, int id, @NotNull WorldUtils.WorldGenerator generator);
+    void createPlanet(@NotNull Player owner, int id, @NotNull WorldGenerator generator);
 
     /**
      * Creates and loads a new planet for player with specified world generator, environment, seed and generate sturctures option.
@@ -165,7 +174,7 @@ public interface PlanetsManager extends Manager {
      * @param seed Seed for generation.
      * @param generateStructures Generate or not generate structures.
      */
-    void createPlanet(@NotNull Player owner, int id, @NotNull WorldUtils.WorldGenerator generator, @NotNull World.Environment environment, long seed, boolean generateStructures);
+    void createPlanet(@NotNull Player owner, int id, @NotNull WorldGenerator generator, @NotNull World.Environment environment, long seed, boolean generateStructures);
 
     /**
      * Unregisters planet, teleports planet players to lobby,

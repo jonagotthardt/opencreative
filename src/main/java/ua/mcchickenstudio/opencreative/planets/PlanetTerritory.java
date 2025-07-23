@@ -24,6 +24,8 @@ import ua.mcchickenstudio.opencreative.coding.CodeScript;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetLoadEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetUnloadEvent;
+import ua.mcchickenstudio.opencreative.utils.world.generators.WorldGenerator;
+import ua.mcchickenstudio.opencreative.utils.world.generators.WorldGenerators;
 import ua.mcchickenstudio.opencreative.utils.*;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.util.TriState;
@@ -31,9 +33,6 @@ import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
-import ua.mcchickenstudio.opencreative.utils.world.EmptyChunkGenerator;
-import ua.mcchickenstudio.opencreative.utils.world.WaterChunkGenerator;
-import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,6 +59,7 @@ public class PlanetTerritory {
     private final List<BukkitRunnable> runningBukkitRunnables = new ArrayList<>();
 
     private final CodeScript script;
+    private String generator = "";
     private int worldSize = 25;
     private World.Environment environment;
     private boolean autoSave = true;
@@ -99,6 +99,7 @@ public class PlanetTerritory {
             }
         }
         autoSave = config.getBoolean("autosave",true);
+        this.generator = config.getString("generator","");
         this.environment = environment;
     }
 
@@ -111,7 +112,14 @@ public class PlanetTerritory {
         loadInformation();
         flags.loadFlags();
         planet.getWorldPlayers().loadPlayers();
-        World world = new WorldCreator(planet.getWorldName()).environment(planet.getTerritory().getEnvironment()).keepSpawnLoaded(TriState.FALSE).createWorld();
+        WorldGenerator worldGenerator = WorldGenerators.getInstance().getById(generator);
+        WorldCreator creator = new WorldCreator(planet.getWorldName())
+                .environment(planet.getTerritory().getEnvironment())
+                .keepSpawnLoaded(TriState.FALSE);
+        if (worldGenerator != null) {
+            worldGenerator.modifyWorldCreator(creator);
+        }
+        World world = creator.createWorld();
         if (world == null) return;
         world.setAutoSave(autoSave);
         world.setGameRule(GameRule.SPAWN_CHUNK_RADIUS,1);
@@ -250,7 +258,7 @@ public class PlanetTerritory {
         return script;
     }
 
-    public World generateWorld(WorldUtils.WorldGenerator worldGenerator, World.Environment environment, long seed, boolean generateStructures) {
+    public World generateWorld(WorldGenerator generator, World.Environment environment, long seed, boolean generateStructures) {
 
         WorldCreator worldCreator = new WorldCreator(planet.getWorldName());
         worldCreator.generateStructures(generateStructures);
@@ -259,12 +267,7 @@ public class PlanetTerritory {
         worldCreator.generateStructures(generateStructures);
         worldCreator.seed(seed);
 
-        switch (worldGenerator) {
-            case EMPTY -> worldCreator.generator(new EmptyChunkGenerator());
-            case WATER -> worldCreator.generator(new WaterChunkGenerator());
-            case SURVIVAL -> worldCreator.type(WorldType.NORMAL);
-            case LARGE_BIOMES ->  worldCreator.type(WorldType.LARGE_BIOMES);
-        }
+        generator.modifyWorldCreator(worldCreator);
 
         worldCreator.keepSpawnLoaded(TriState.FALSE);
         World world = Bukkit.createWorld(worldCreator);
@@ -287,23 +290,11 @@ public class PlanetTerritory {
             world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
 
             world.setTime(0);
-
-            if (worldGenerator == WorldUtils.WorldGenerator.EMPTY) {
-                world.setSpawnLocation(0, 5, 0);
-
-                for (int x = 1; x >= -1; x--) {
-                    for (int z = 1; z >= -1; z--) {
-                        world.getBlockAt(x, 4, z).setType(Material.STONE);
-                    }
-                }
-
-            } else if (worldGenerator == WorldUtils.WorldGenerator.WATER) {
-                world.setSpawnLocation(0, 8, 0);
-            }
-
             for (Entity entity : world.getEntities()) {
                 if (entity.getType() != EntityType.PLAYER) entity.remove();
             }
+
+            generator.afterCreation(world);
 
             BukkitRunnable runnable = new BukkitRunnable() {
                 @Override

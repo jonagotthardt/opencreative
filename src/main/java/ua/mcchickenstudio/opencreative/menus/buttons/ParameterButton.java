@@ -65,7 +65,9 @@ public class ParameterButton {
             }
         }
         this.currentValue = currentValue;
-        this.item = createItem(materialList.get(currentChoice-1),1,localizationPath);
+        this.item = materialList.size() == currentChoice-1 ?
+                createItem(Material.BARRIER,1,localizationPath) :
+                createItem(materialList.get(currentChoice-1),1,localizationPath);
         if (!messageExists(localizationPath+".name")) {
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&fParameter: &6" + name));
@@ -150,6 +152,7 @@ public class ParameterButton {
         } else {
             currentChoice++;
         }
+        if (currentChoice-1 == valueList.size()) return;
         currentValue = valueList.get(currentChoice-1);
         if (currentChoice <= materialList.size()) {
             item.setType(materialList.get(currentChoice-1));
@@ -167,6 +170,7 @@ public class ParameterButton {
             String content = loreLine;
             if (content.matches("%[0-9]+%")) {
                 int choiceNumber = Integer.parseInt(content.replace("%",""));
+                if (choiceNumber > valueList.size()) continue;
                 if (choiceNumber == currentChoice) {
                     turned = turnedOn;
                 } else {

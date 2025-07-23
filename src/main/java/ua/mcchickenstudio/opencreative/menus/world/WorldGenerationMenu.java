@@ -20,6 +20,9 @@ package ua.mcchickenstudio.opencreative.menus.world;
 
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.utils.world.generators.WorldGenerator;
+import ua.mcchickenstudio.opencreative.utils.world.generators.WorldGenerators;
+import ua.mcchickenstudio.opencreative.utils.world.generators.WorldTemplate;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
@@ -48,7 +51,10 @@ public class WorldGenerationMenu extends AbstractMenu {
     public WorldGenerationMenu(Player player, String generator, String environment, boolean generateStructures) {
         super(3, getLocaleMessage("menus.world-creation.title",false));
         this.player = player;
-        this.generatorButton = new ParameterButton(generator, List.of("flat","empty","water","survival","large_biomes"), "type", "menus.world-creation", "menus.world-creation.items.type", List.of(Material.MOSS_BLOCK, Material.GLASS, Material.WATER_BUCKET, Material.OAK_SAPLING, Material.MYCELIUM));
+        this.generatorButton = new ParameterButton(generator,
+                WorldGenerators.getInstance().getGeneratorsIDs(),
+                "type", "menus.world-creation", "menus.world-creation.items.type",
+                WorldGenerators.getInstance().getGeneratorsMaterials());
         this.environmentButton = new ParameterButton(environment, List.of("normal","nether","the_end"), "environment", "menus.world-creation", "menus.world-creation.items.environment", List.of(Material.GRASS_BLOCK, Material.NETHERRACK, Material.END_STONE));
         this.generateStructures = new ParameterButton(generateStructures, List.of(false,true), "generate-structures", "menus.world-creation", "menus.world-creation.items.generate-structures", List.of(Material.DECORATED_POT, Material.BOOKSHELF));
     }
@@ -100,7 +106,18 @@ public class WorldGenerationMenu extends AbstractMenu {
                 if (notReachedWorldsLimit) {
                     Sounds.WORLD_GENERATION.play(player);
                     player.closeInventory();
-                    OpenCreative.getPlanetsManager().createPlanet(player, WorldUtils.generateWorldID(), WorldUtils.WorldGenerator.valueOf(generatorButton.getCurrentValue().toString().toUpperCase()), World.Environment.valueOf(environmentButton.getCurrentValue().toString().toUpperCase()),new Random().nextInt(),Boolean.parseBoolean(generateStructures.getCurrentValue().toString()));
+                    WorldGenerator generator = WorldGenerators.getInstance().getById(generatorButton.getCurrentValue().toString());
+                    if (generator == null) return;
+                    if (generator instanceof WorldTemplate template) {
+                        OpenCreative.getPlanetsManager().createPlanet(player, WorldUtils.generateWorldID(),
+                                template);
+                    } else {
+                        World.Environment environment = World.Environment.valueOf(environmentButton.getCurrentValue().toString().toUpperCase());
+                        int seed = new Random().nextInt();
+                        boolean generateStructure = Boolean.parseBoolean(generateStructures.getCurrentValue().toString());
+                        OpenCreative.getPlanetsManager().createPlanet(player, WorldUtils.generateWorldID(),
+                                generator, environment, seed, generateStructure);
+                    }
                 }
             }
         }
