@@ -178,7 +178,8 @@ public class Settings {
                 String iconMaterial = customFlatsSection.getString(customFlatId + ".icon","GRASS_BLOCK");
                 Material material = Material.getMaterial(iconMaterial.toUpperCase());
                 if (material == null || !material.isItem()) material = Material.GRASS_BLOCK;
-                instance.registerWorldGenerator(new CustomFlatGenerator(customFlatId, new ItemStack(material), generation));
+                boolean generateTrees = customFlatsSection.getBoolean(customFlatId + ".generate-trees",true);
+                instance.registerWorldGenerator(new CustomFlatGenerator(customFlatId, new ItemStack(material), generation, generateTrees));
             }
         }
         ConfigurationSection templatesSection = config.getConfigurationSection("generators.templates");

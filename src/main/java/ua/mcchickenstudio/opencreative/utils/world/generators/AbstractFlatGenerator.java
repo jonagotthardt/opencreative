@@ -1,16 +1,16 @@
 package ua.mcchickenstudio.opencreative.utils.world.generators;
 
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
-import org.bukkit.WorldType;
+import org.bukkit.*;
+import org.bukkit.block.Biome;
+import org.bukkit.generator.BiomeProvider;
+import org.bukkit.generator.BlockPopulator;
+import org.bukkit.generator.LimitedRegion;
 import org.bukkit.generator.WorldInfo;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * <h1>AbstractFlatGenerator</h1>
@@ -22,6 +22,8 @@ import java.util.Random;
 public abstract class AbstractFlatGenerator extends WorldGenerator {
 
     protected final Map<Integer, Material> blocks = new HashMap<>();
+    protected Biome biome = Biome.PLAINS;
+    protected boolean generateTrees = false;
 
     public AbstractFlatGenerator(@NotNull String id, @NotNull ItemStack displayIcon) {
         super(id, displayIcon);
@@ -51,4 +53,58 @@ public abstract class AbstractFlatGenerator extends WorldGenerator {
         }
     }
 
+    @Override
+    public @Nullable BiomeProvider getDefaultBiomeProvider(@NotNull WorldInfo worldInfo) {
+        return new BiomeProvider() {
+            @Override
+            public @NotNull Biome getBiome(@NotNull WorldInfo worldInfo, int x, int y, int z) {
+                return biome;
+            }
+
+            @Override
+            public @NotNull List<Biome> getBiomes(@NotNull WorldInfo worldInfo) {
+                return List.of(biome);
+            }
+        };
+    }
+
+    @Override
+    public @NotNull List<BlockPopulator> getDefaultPopulators(@NotNull World world) {
+        List<BlockPopulator> list = new ArrayList<>();
+        if (!generateTrees) return list;
+        list.add(new BlockPopulator() {
+            @Override
+            public void populate(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull LimitedRegion limitedRegion) {
+                if (random.nextBoolean()) {
+                    TreeType type = getTreeFromBiome(biome);
+                    if (type == null) return;
+                    int amount = random.nextInt(2) + 1;
+                    for (int tree = 1; tree < amount; tree++) {
+                        int treeX = (chunkX << 4) + random.nextInt(9) + 3;
+                        int treeZ = (chunkZ << 4) + random.nextInt(9) + 3;
+                        int treeY = limitedRegion.getHighestBlockYAt(treeX, treeZ);
+                        limitedRegion.generateTree(new Location(null, treeX, treeY, treeZ), random, type);
+                    }
+                }
+            }
+
+            public @Nullable TreeType getTreeFromBiome(@NotNull Biome biome) {
+                return switch (biome)  {
+                    case PLAINS, TAIGA, WINDSWEPT_FOREST, SNOWY_TAIGA, OLD_GROWTH_SPRUCE_TAIGA -> TreeType.TREE;
+                    case DARK_FOREST -> TreeType.DARK_OAK;
+                    case BIRCH_FOREST -> TreeType.BIRCH;
+                    case JUNGLE -> TreeType.JUNGLE;
+                    case SAVANNA -> TreeType.ACACIA;
+                    case LUSH_CAVES -> TreeType.AZALEA;
+                    case MANGROVE_SWAMP -> TreeType.MANGROVE;
+                    case CHERRY_GROVE -> TreeType.CHERRY;
+                    case MUSHROOM_FIELDS -> TreeType.RED_MUSHROOM;
+                    case SMALL_END_ISLANDS -> TreeType.CHORUS_PLANT;
+                    case ICE_SPIKES, SNOWY_PLAINS -> TreeType.MEGA_PINE;
+                    default -> null;
+                };
+            }
+        });
+        return list;
+    }
 }
