@@ -85,6 +85,7 @@ public class ExecutorTypeSelectionMenu extends BlocksWithMenusCategoryMenu<Execu
                         Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(1), Duration.ofMillis(750))
                 ));
                 Sounds.DEV_SET_EVENT.play(event.getWhoClicked());
+                event.getWhoClicked().swingMainHand();
             }
         }
     }

@@ -90,6 +90,7 @@ public class ActionTypeSelectionMenu extends BlocksWithMenusCategoryMenu<ActionT
                         Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(1), Duration.ofMillis(750))
                 ));
                 (action.isCondition() ? Sounds.DEV_SET_CONDITION : Sounds.DEV_SET_ACTION).play(event.getWhoClicked());
+                event.getWhoClicked().swingMainHand();
             }
             /*
              Setting a chest block if action requires container.

@@ -365,6 +365,7 @@ public final class InteractListener implements Listener {
             Component displayName = meta.displayName();
             if (displayName != null) {
                 player.sendMessage(displayName.hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("world.dev-mode.click-to-copy")))).clickEvent(ClickEvent.suggestCommand(ChatColor.stripColor(meta.getDisplayName()))));
+                player.swingMainHand();
             }
         }
     }
@@ -393,6 +394,7 @@ public final class InteractListener implements Listener {
             if (displayName != null) {
                 player.sendMessage(displayName.hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("world.dev-mode.click-to-copy")))).clickEvent(ClickEvent.suggestCommand(meta.getDisplayName().replace("§","&"))));
                 setPersistentData(currentItem,getCodingValueKey(),"TEXT");
+                player.swingMainHand();
             }
         }
     }
@@ -418,6 +420,7 @@ public final class InteractListener implements Listener {
                 if (displayName != null) {
                     player.sendMessage(displayName.hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("world.dev-mode.click-to-copy")))).clickEvent(ClickEvent.suggestCommand(ChatColor.stripColor(meta.getDisplayName()))));
                     setPersistentData(currentItem,getCodingValueKey(),"VECTOR");
+                    player.swingMainHand();
                 }
             }
         }
@@ -479,6 +482,7 @@ public final class InteractListener implements Listener {
         setPersistentData(currentItem,getCodingValueKey(),"VARIABLE");
         setPersistentData(currentItem,getCodingVariableTypeKey(),type.name());
         Sounds.DEV_VARIABLE_CHANGE.play(player);
+        player.swingMainHand();
         player.sendMessage(Component.text(meta.getDisplayName()).clickEvent(ClickEvent.copyToClipboard(ChatColor.stripColor(meta.getDisplayName()))));
     }
 
@@ -534,6 +538,7 @@ public final class InteractListener implements Listener {
         String displayName = ChatColor.translateAlternateColorCodes('&',!value ? "&atrue" : "&cfalse");
         setDisplayName(currentItem,displayName);
         (!value ? Sounds.DEV_BOOLEAN_TRUE : Sounds.DEV_BOOLEAN_FALSE).play(player);
+        player.swingMainHand();
         player.showTitle(Title.title(
                 toComponent(getLocaleMessage("world.dev-mode.set-variable")), Component.text(displayName),
                 Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))

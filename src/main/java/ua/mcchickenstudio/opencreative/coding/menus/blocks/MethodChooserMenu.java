@@ -124,6 +124,7 @@ public class MethodChooserMenu extends ListBrowserMenu<Location> {
                         Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
                 Sounds.DEV_SET_METHOD.play(event.getWhoClicked());
+                event.getWhoClicked().swingMainHand();
             }
         }
         event.setCancelled(true);
