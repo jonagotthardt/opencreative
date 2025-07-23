@@ -1,8 +1,10 @@
 package ua.mcchickenstudio.opencreative.utils.world.generators;
 
 import org.bukkit.Material;
+import org.bukkit.block.Biome;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -26,23 +28,27 @@ public final class CustomFlatGenerator extends AbstractFlatGenerator {
      * "bedrock" // Generates only 1 layer with bedrock
      * "bedrock,2*sand" // Generates bedrock on Y = 0, and sand on Y = 1, 2.
      * "bedrock,2*air,stone" // Generates bedrock on Y = 0, and stone on Y = 3.
+     * "bedrock,grass_block;ice_spikes" // Generates bedrock, grass_block with ice_spikes biome.
      * } </pre>
+     * @param generateTrees generate trees or not.
      */
-    public CustomFlatGenerator(@NotNull String id, @NotNull ItemStack displayIcon, @NotNull String generation) {
+    public CustomFlatGenerator(@NotNull String id, @NotNull ItemStack displayIcon, @NotNull String generation, boolean generateTrees) {
         super(id, displayIcon);
         Map<Integer, Material> generationBlocks = getBlocksFromText(generation);
         for (int y : generationBlocks.keySet()) {
             blocks.put(y, generationBlocks.get(y));
         }
+        this.generateTrees = generateTrees;
     }
 
     private @NotNull Map<Integer, Material> getBlocksFromText(@NotNull String text) {
         Map<Integer, Material> blocksMap = new LinkedHashMap<>();
         try {
-            // minecraft:bedrock,2*minecraft:dirt,1*minecraft:grass_block
+            // minecraft:bedrock,2*minecraft:dirt,1*minecraft:grass_block;ice_spikes
             text = text.toUpperCase().replace("-","_").replace("MINECRAFT:", "");
-            // bedrock,2*dirt,1*grass_block
-            String[] blocks = text.split(",");
+            // BEDROCK,2*DIRT,1*GRASS_BLOCK;ICE_SPIKES
+            String[] blocksAndBiome = text.split(";");
+            String[] blocks = blocksAndBiome[0].split(",");
             int y = 0;
             for (String blockData : blocks) {
                 String[] amountAndMaterial = blockData.split("\\*");
@@ -71,10 +77,27 @@ public final class CustomFlatGenerator extends AbstractFlatGenerator {
                     y++;
                 }
             }
+            if (blocksAndBiome.length == 1) return blocksMap;
+            String biomeString = blocksAndBiome[1];
+            Biome biome = getBiome(biomeString);
+            if (biome != null) {
+                this.biome = biome;
+            } else {
+                sendWarningErrorMessage("Can't recognize biome for " + getID() + ": " + biomeString);
+            }
         } catch (Exception error) {
             sendWarningErrorMessage("Can't parse custom flat generation pattern for " + getID() + ": " + text);
         }
         return blocksMap;
+    }
+
+    private @Nullable Biome getBiome(@Nullable String text) {
+        if (text == null) return null;
+        try {
+            return Biome.valueOf(text);
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 
     @Override

@@ -382,7 +382,7 @@ generators:
   # and add own custom flats or templates.
   #
   # Custom flats require string in format:
-  # "first_block_material,3*second_layer_material"
+  # "first_block_material,3*second_layer_material;biome_name"
   # Not existing materials will be replaced with air.
   # If height is not specified, it will be 1.
   #
@@ -401,7 +401,8 @@ generators:
   large-biomes: true
   custom-flats: {}
     #desert:
-    #  generation: "bedrock,3*sandstone,sand"
+    #  generation: "bedrock,3*sandstone,sand;plains"
+    #  generate-trees: true
     #  icon: "SAND"
   templates: {}
     #pvp:
