@@ -266,7 +266,7 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
     public void fillItems(Player player) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         setItem(46,BACK_ITEM);
-        setItem(DECORATION_PANE_ITEM,45,47,48,49,51,52,53);
+        setItem(DECORATION_PANE_ITEM,45,47,48,49,50,51,52,53);
         if (planet == null) return;
         if (!planet.isOwner(player.getName())) return;
         setItem(10, getPlayerDamageFlagButton(planet).getButtonItem());
