@@ -234,7 +234,6 @@ public class Arguments {
     public final <T> List<T> getList(String path, Action action) {
         List<T> list = new ArrayList<>();
         Argument arg = getArg(path);
-        System.out.println("get arg " + path);
         if (arg != null) {
             try {
                 if (arg.isList()) {
@@ -242,23 +241,15 @@ public class Arguments {
                     for (Argument argument : args) {
                         list.add((T) (argument.getValue(action)));
                     }
-                    System.out.println("this is list.");
                 } else if (arg.getValue(action) instanceof List<?>) {
                     List<Object> argList = (List<Object>) arg.getValue(action);
-                    System.out.println("its arg list " + argList);
                     for (Object object : argList) {
-                        System.out.println("Supported: " + object.toString());
                         list.add((T) object);
                     }
-                } else {
-                    System.out.println("i dont know what is " + arg.getValue(action).toString() );
                 }
             } catch(ClassCastException e) {
-                System.out.println("Unsupported opration ");
                 return list;
             }
-        } else {
-            System.out.println("arg is null.");
         }
         sendCodingDebugVariable(planet,path,list);
         return list;
