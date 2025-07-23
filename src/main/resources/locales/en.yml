@@ -346,6 +346,7 @@ world:
     click-to-copy: "&eClick to copy."
     set-variable: "&aValue set:"
     set-target: "&dTarget set:"
+    set-potion: "&7Duration: &f%duration% &7Amplifier: &f%amplifier%"
     set-variable-number-error: "&cEnter a number in the chat, for example, 1"
     set-variable-color-error: "&cEnter a color code in the chat, for example, 255 255 255"
     set-events: "&bEvent set:"
@@ -14148,9 +14149,12 @@ blocks:
   # selection
   selected: "Selection"
   all_players: "All players"
+  all_entities: "All entities"
   random_player: "Random player"
+  random_target: "Random target"
   killer: "Killer"
   victim: "Victim"
+
   # blocks
   event_player: "&bPlayer event"
   event_world: "&cWorld event"

@@ -142,6 +142,7 @@ public final class ChatListener implements Listener {
                         toComponent(getLocaleMessage("world.dev-mode.set-variable")), meta.displayName(),
                         Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
+                player.swingMainHand();
             } else if (itemInHand.getType() == Material.SLIME_BALL) {
                 String numberString = ChatColor.stripColor(message);
                 if (numberString.equalsIgnoreCase("p") || numberString.equalsIgnoreCase("pi")) {
@@ -159,6 +160,7 @@ public final class ChatListener implements Listener {
                             toComponent(getLocaleMessage("world.dev-mode.set-variable")), meta.displayName(),
                             Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                     ));
+                    player.swingMainHand();
                 } catch (NumberFormatException exception) {
                     player.showTitle(Title.title(
                             Component.empty(), toComponent(getLocaleMessage("world.dev-mode.set-variable-number-error")),
@@ -186,6 +188,7 @@ public final class ChatListener implements Listener {
                         toComponent(getLocaleMessage("world.dev-mode.set-variable")), meta.displayName(),
                         Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
+                player.swingMainHand();
             } else if (itemInHand.getType() == Material.BLACK_DYE) {
                 int[] rgbColor = parseRGB(message);
                 int red = rgbColor[0];
@@ -203,6 +206,7 @@ public final class ChatListener implements Listener {
                 ));
                 Sounds.DEV_VALUE_SET.play(player);
                 player.getInventory().setItemInMainHand(itemInHand);
+                player.swingMainHand();
             } else if (itemInHand.getType() == Material.POTION || itemInHand.getType() == Material.LINGERING_POTION || itemInHand.getType() == Material.SPLASH_POTION) {
                 if (!(itemInHand.getItemMeta() instanceof PotionMeta oldMeta)) {
                     return;
@@ -294,6 +298,7 @@ public final class ChatListener implements Listener {
                         Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(2), Duration.ofMillis(500))
                 ));
                 Sounds.DEV_VECTOR_SET.play(player);
+                player.swingMainHand();
             }
         }
     }

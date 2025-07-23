@@ -98,26 +98,32 @@ public class SelectionActionsMenu extends AbstractMenu {
         } else if (itemEquals(currentItem, allPlayers)) {
             setLine("all_players");
             Sounds.DEV_SET_TARGET.play(player);
+            event.getWhoClicked().swingMainHand();
             player.closeInventory();
         } else if (itemEquals(currentItem, randomPlayer)) {
             setLine("random_player");
             Sounds.DEV_SET_TARGET.play(player);
+            event.getWhoClicked().swingMainHand();
             player.closeInventory();
         } else if (itemEquals(currentItem, killer)) {
             setLine("killer");
             Sounds.DEV_SET_TARGET.play(player);
+            event.getWhoClicked().swingMainHand();
             player.closeInventory();
         } else if (itemEquals(currentItem, victim)) {
             setLine("victim");
             Sounds.DEV_SET_TARGET.play(player);
+            event.getWhoClicked().swingMainHand();
             player.closeInventory();
         } else if (itemEquals(currentItem, randomTarget)) {
             setLine("random_target");
             Sounds.DEV_SET_TARGET.play(player);
+            event.getWhoClicked().swingMainHand();
             player.closeInventory();
         } else if (itemEquals(currentItem, allEntities)) {
             setLine("all_entities");
             Sounds.DEV_SET_TARGET.play(player);
+            event.getWhoClicked().swingMainHand();
             player.closeInventory();
         }
     }

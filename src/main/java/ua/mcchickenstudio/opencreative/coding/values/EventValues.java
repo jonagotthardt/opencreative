@@ -138,7 +138,6 @@ public final class EventValues {
                 new EntityFreezeTicksValue(), new LivingMaxNoDamageTicksValue(), new LivingCanPickupItemValue(),
                 new LivingArrowsInBodyValue(), new LivingShieldBlockingDelayValue(), new LivingBeeStingerCooldownValue(),
                 new LivingRemainingAirValue(), new LivingMaximumAirValue());
-        // 5.7.0 Preview
 
         registerEventValue(new EntityGravityValue(), new BurningTimeValue(), new EntityStepHeightValue(),
                 new KnockbackResistanceValue(), new ExplosionKnockbackResistanceValue(), new AttackKnockbackValue(),

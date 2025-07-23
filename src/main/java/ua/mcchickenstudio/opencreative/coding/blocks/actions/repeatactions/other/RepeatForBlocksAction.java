@@ -57,7 +57,7 @@ public final class RepeatForBlocksAction extends RepeatAction {
         int maxZ = Math.max(first.getBlockZ(), second.getBlockZ());
 
         int count = (maxX-minX+1) * (maxY - minY+1) * (maxZ - minZ+1);
-        if (count > 5000) {
+        if (count > getPlanet().getLimits().getModifyingBlocksLimit()) {
             return false;
         }
 

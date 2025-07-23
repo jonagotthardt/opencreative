@@ -39,6 +39,7 @@ public final class MeasureTimeAction extends ControllerAction {
 
     @Override
     protected void execute(Entity entity) {
+        this.entity = entity;
         time = System.currentTimeMillis();
         executeActions();
     }
