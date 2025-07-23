@@ -81,6 +81,7 @@ public abstract class AbstractFlatGenerator extends WorldGenerator {
             public void populate(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull LimitedRegion limitedRegion) {
                 if (random.nextBoolean()) {
                     TreeType type = getTreeFromBiome(biome);
+                    if (type == null) return;
                     int amount = random.nextInt(2) + 1;
                     for (int tree = 1; tree < amount; tree++) {
                         int treeX = (chunkX << 4) + random.nextInt(9) + 3;
