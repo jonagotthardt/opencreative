@@ -4,12 +4,21 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.generator.ChunkGenerator;
+import org.bukkit.generator.WorldInfo;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.ExtensionContent;
 
+import java.util.Random;
+
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
+/**
+ * <h1>WorldGenerator</h1>
+ * This class represents world generator, that
+ * can be used for generating new player worlds
+ * or on loading old worlds of planets.
+ */
 public abstract class WorldGenerator extends ChunkGenerator implements ExtensionContent {
 
     private final String id;
@@ -28,8 +37,18 @@ public abstract class WorldGenerator extends ChunkGenerator implements Extension
         this.displayIcon = displayIcon;
     }
 
+    /**
+     * Changes world creator before creating or loading world.
+     * Useful to set generator as itself, if it overrides
+     * {@link ChunkGenerator#generateSurface(WorldInfo, Random, int, int, ChunkData) generateSurface} method.
+     * @param creator creator to change.
+     */
     public abstract void modifyWorldCreator(@NotNull WorldCreator creator);
 
+    /**
+     * Executes world operations, when it's created or loaded.
+     * @param world world to execute code in it.
+     */
     public abstract void afterCreation(@NotNull World world);
 
     /**

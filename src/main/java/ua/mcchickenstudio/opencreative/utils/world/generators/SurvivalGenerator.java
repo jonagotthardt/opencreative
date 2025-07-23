@@ -7,7 +7,7 @@ import org.bukkit.WorldType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class SurvivalGenerator extends WorldGenerator {
+public final class SurvivalGenerator extends WorldGenerator {
 
     public SurvivalGenerator() {
         super("survival", new ItemStack(Material.OAK_SAPLING));

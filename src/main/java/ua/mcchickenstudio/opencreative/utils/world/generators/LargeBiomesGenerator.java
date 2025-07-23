@@ -7,7 +7,7 @@ import org.bukkit.WorldType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class LargeBiomesGenerator extends WorldGenerator {
+public final class LargeBiomesGenerator extends WorldGenerator {
 
     public LargeBiomesGenerator() {
         super("large_biomes", new ItemStack(Material.MYCELIUM));

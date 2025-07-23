@@ -12,6 +12,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * <h1>AbstractFlatGenerator</h1>
+ * This class represents a flat world generator, that
+ * will generate layers of blocks. To add layers, just
+ * put them in {@link AbstractFlatGenerator#blocks blocks map}, that contains
+ * Y coordinates and materials of blocks.
+ */
 public abstract class AbstractFlatGenerator extends WorldGenerator {
 
     protected final Map<Integer, Material> blocks = new HashMap<>();

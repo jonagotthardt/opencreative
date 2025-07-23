@@ -5,12 +5,20 @@ import org.bukkit.WorldCreator;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * <h1>WorldTemplate</h1>
+ * This class represents a world template, that can be
+ * used for creating a new worlds. Template folders are
+ * located in /plugins/OpenCreative/templates/ directory.
+ * <p>
+ * Template folder must be Minecraft world folder.
+ */
 public class WorldTemplate extends WorldGenerator {
 
     private final String folderName;
 
     /**
-     * Constructor of world generator.
+     * Constructor of world template.
      *
      * @param id          short id of world generator that will be used in world generation menu.
      *                    <p>

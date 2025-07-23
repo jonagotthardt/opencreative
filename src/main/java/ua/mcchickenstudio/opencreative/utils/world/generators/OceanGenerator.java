@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-public class OceanGenerator extends WorldGenerator {
+public final class OceanGenerator extends WorldGenerator {
 
     public OceanGenerator() {
         super("water", new ItemStack(Material.WATER_BUCKET));

@@ -8,11 +8,26 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningErrorMessage;
 
-public class CustomFlatGenerator extends AbstractFlatGenerator {
+/**
+ * <h1>CustomFlatGenerator</h1>
+ * This class represents a custom flat world generator,
+ * that has generation pattern to set blocks.
+ */
+public final class CustomFlatGenerator extends AbstractFlatGenerator {
 
+    /**
+     * @param id id of generator.
+     * @param displayIcon icon to display.
+     * @param generation generation pattern, that consists of amounts and material layers.
+     * <pre>
+     * {@code
+     * "bedrock" // Generates only 1 layer with bedrock
+     * "bedrock,2*sand" // Generates bedrock on Y = 0, and sand on Y = 1, 2.
+     * "bedrock,2*air,stone" // Generates bedrock on Y = 0, and stone on Y = 3.
+     * } </pre>
+     */
     public CustomFlatGenerator(@NotNull String id, @NotNull ItemStack displayIcon, @NotNull String generation) {
         super(id, displayIcon);
         Map<Integer, Material> generationBlocks = getBlocksFromText(generation);

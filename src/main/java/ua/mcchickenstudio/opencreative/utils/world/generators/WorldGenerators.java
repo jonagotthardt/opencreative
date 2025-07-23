@@ -10,6 +10,16 @@ import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebug;
 
+/**
+ * <h1>WorldGenerators</h1>
+ * This class represents world generators registry, that
+ * contains all generators, that can be used for creating
+ * or loading worlds.
+ * <p>
+ * To add your own world generator, create a class, that
+ * extends {@link WorldGenerator} or {@link AbstractFlatGenerator}, then register
+ * it with {@link WorldGenerators#registerWorldGenerator(WorldGenerator)} method.
+ */
 public final class WorldGenerators {
 
     private static WorldGenerators instance;

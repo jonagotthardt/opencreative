@@ -7,7 +7,7 @@ import org.bukkit.WorldType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class FlatGenerator extends WorldGenerator {
+public final class FlatGenerator extends WorldGenerator {
 
     public FlatGenerator() {
         super("flat", new ItemStack(Material.MOSS_BLOCK));
