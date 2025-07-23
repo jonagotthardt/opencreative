@@ -38,10 +38,6 @@ public abstract class AbstractFlatGenerator extends WorldGenerator {
     @Override
     public void afterCreation(@NotNull World world) {}
 
-    public void setGenerateTrees(boolean generateTrees) {
-        this.generateTrees = generateTrees;
-    }
-
     @Override
     public void generateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
         for (int i = 0; i < 16; i++) {
@@ -94,7 +90,7 @@ public abstract class AbstractFlatGenerator extends WorldGenerator {
 
             public @Nullable TreeType getTreeFromBiome(@NotNull Biome biome) {
                 return switch (biome)  {
-                    case PLAINS, TAIGA, WINDSWEPT_FOREST, SNOWY_PLAINS, SNOWY_TAIGA, OLD_GROWTH_SPRUCE_TAIGA -> TreeType.TREE;
+                    case PLAINS, TAIGA, WINDSWEPT_FOREST, SNOWY_TAIGA, OLD_GROWTH_SPRUCE_TAIGA -> TreeType.TREE;
                     case DARK_FOREST -> TreeType.DARK_OAK;
                     case BIRCH_FOREST -> TreeType.BIRCH;
                     case JUNGLE -> TreeType.JUNGLE;
@@ -104,6 +100,7 @@ public abstract class AbstractFlatGenerator extends WorldGenerator {
                     case CHERRY_GROVE -> TreeType.CHERRY;
                     case MUSHROOM_FIELDS -> TreeType.RED_MUSHROOM;
                     case SMALL_END_ISLANDS -> TreeType.CHORUS_PLANT;
+                    case ICE_SPIKES, SNOWY_PLAINS -> TreeType.MEGA_PINE;
                     default -> null;
                 };
             }

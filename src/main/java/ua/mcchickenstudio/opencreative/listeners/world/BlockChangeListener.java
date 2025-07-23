@@ -44,6 +44,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
+import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 
 public final class BlockChangeListener implements Listener {
@@ -154,10 +155,17 @@ public final class BlockChangeListener implements Listener {
     }
 
     @EventHandler
-    public void onPhysics(EntityChangeBlockEvent event) {
+    public void onFallingBlock(EntityChangeBlockEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
         if (planet != null && event.getEntityType() == EntityType.FALLING_BLOCK) {
             new BlockPhysicsEvent(planet,event).callEvent();
+        }
+    }
+
+    @EventHandler
+    public void onPhysics(org.bukkit.event.block.BlockPhysicsEvent event) {
+        if (isOutOfBorders(event.getBlock().getLocation())) {
+            event.setCancelled(true);
         }
     }
 
