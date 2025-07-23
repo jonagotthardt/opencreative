@@ -97,15 +97,18 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
         setItem(45,RECOMMENDED);
         int amount = OpenCreative.getPlanetsManager().getPlanetsByOwner(getPlayer()).size();
         int limit = OpenCreative.getSettings().getGroups().getGroup(getPlayer()).getWorldsLimit();
+        if (OpenCreative.getSettings().isWorldGenerationUnavailable()) {
+            setItem(createItem(Material.RED_STAINED_GLASS_PANE,1),47,51);
+            setItem(49, DISABLED_ITEM);
+            return;
+        }
         if (amount >= limit) {
-            setItem(47,createItem(Material.RED_STAINED_GLASS_PANE,1));
-            setItem(51,createItem(Material.RED_STAINED_GLASS_PANE,1));
+            setItem(createItem(Material.RED_STAINED_GLASS_PANE,1),47,51);
             replacePlaceholderInLore(WORLDS_LIMIT,"%limit%",limit);
             replacePlaceholderInLore(WORLDS_LIMIT,"%planets%",amount);
             setItem(49, WORLDS_LIMIT);
         } else {
-            setItem(47,createItem(Material.LIME_STAINED_GLASS_PANE,1));
-            setItem(51,createItem(Material.LIME_STAINED_GLASS_PANE,1));
+            setItem(createItem(Material.LIME_STAINED_GLASS_PANE,1),47,51);
             setItem(49, CREATE_WORLD);
         }
     }

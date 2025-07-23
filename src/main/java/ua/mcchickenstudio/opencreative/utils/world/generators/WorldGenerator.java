@@ -1,10 +1,14 @@
-package ua.mcchickenstudio.opencreative.indev.generators;
+package ua.mcchickenstudio.opencreative.utils.world.generators;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.ExtensionContent;
+
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 public abstract class WorldGenerator extends ChunkGenerator implements ExtensionContent {
 
@@ -24,6 +28,10 @@ public abstract class WorldGenerator extends ChunkGenerator implements Extension
         this.displayIcon = displayIcon;
     }
 
+    public abstract void modifyWorldCreator(@NotNull WorldCreator creator);
+
+    public abstract void afterCreation(@NotNull World world);
+
     /**
      * Returns an icon that will be used
      * in world generation menu.
@@ -40,6 +48,14 @@ public abstract class WorldGenerator extends ChunkGenerator implements Extension
      */
     public @NotNull String getName() {
         return StringUtils.capitalize(id.replace("_"," "));
+    }
+
+    /**
+     * Returns localized name for displaying.
+     * @return localized name.
+     */
+    public @NotNull String getLocaleName() {
+        return getLocaleMessage("menus.world-creation.items.type.choices." + id,false);
     }
 
     /**

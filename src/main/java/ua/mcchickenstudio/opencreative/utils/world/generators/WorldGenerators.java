@@ -1,5 +1,6 @@
-package ua.mcchickenstudio.opencreative.indev.generators;
+package ua.mcchickenstudio.opencreative.utils.world.generators;
 
+import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,37 +28,44 @@ public final class WorldGenerators {
 
     /**
      * Registers world generator, that can be used for world generation.
-     * @param value world generator to register.
+     * @param generator world generator to register.
      */
-    public void registerWorldGenerator(@NotNull WorldGenerator value) {
-        WorldGenerator existing = getById(value.getID());
+    public void registerWorldGenerator(@NotNull WorldGenerator generator) {
+        WorldGenerator existing = getById(generator.getID());
         if (existing != null) {
-            sendDebug("[GENERATORS] Can't register world generator " + value.getName() + " (from " + value.getExtensionId() + "), "
+            sendDebug("[GENERATORS] Can't register world generator " + generator.getName() + " (from " + generator.getExtensionId() + "), "
                     + "because there's already registered world generator " + existing.getName() + " (from " + existing.getExtensionId() + ") "
-                    + "with same ID: " + value.getID());
+                    + "with same ID: " + generator.getID());
             return;
         }
-        sendDebug("[GENERATORS] Registered world generator: " + value.getName() + " (from " + value.getExtensionId() + ")");
-        generators.add(value);
+        sendDebug("[GENERATORS] Registered world generator: " + generator.getName() + " (from " + generator.getExtensionId() + ")");
+        generators.add(generator);
     }
 
     /**
      * Registers world generators, that can be used for world generation.
-     * @param values world generators to register.
+     * @param generator world generators to register.
      */
-    public void registerWorldGenerator(@NotNull WorldGenerator... values) {
-        for (WorldGenerator value : values) {
+    public void registerWorldGenerator(@NotNull WorldGenerator... generator) {
+        for (WorldGenerator value : generator) {
             registerWorldGenerator(value);
         }
     }
 
     /**
      * Unregisters world generator if list contains it.
-     * @param value world generator to unregister.
+     * @param generator world generator to unregister.
      */
     @SuppressWarnings("unused")
-    public void unregisterWorldGenerator(@NotNull WorldGenerator value) {
-        generators.remove(value);
+    public void unregisterWorldGenerator(@NotNull WorldGenerator generator) {
+        generators.remove(generator);
+    }
+
+    /**
+     * Unregisters all world generators.
+     */
+    public void clearWorldGenerators() {
+        generators.clear();
     }
 
     /**
@@ -66,6 +74,30 @@ public final class WorldGenerators {
      */
     public @NotNull List<WorldGenerator> getWorldGenerators() {
         return new ArrayList<>(generators);
+    }
+
+    /**
+     * Returns a list of all registered generators IDs.
+     * @return generators ID list.
+     */
+    public @NotNull List<Object> getGeneratorsIDs() {
+        List<Object> list = new ArrayList<>();
+        for (WorldGenerator generator : generators) {
+            list.add(generator.getID());
+        }
+        return list;
+    }
+
+    /**
+     * Returns a list of all registered generators materials.
+     * @return generators materials list.
+     */
+    public @NotNull List<Material> getGeneratorsMaterials() {
+        List<Material> list = new ArrayList<>();
+        for (WorldGenerator generator : generators) {
+            list.add(generator.getDisplayIcon().getType());
+        }
+        return list;
     }
 
     /**

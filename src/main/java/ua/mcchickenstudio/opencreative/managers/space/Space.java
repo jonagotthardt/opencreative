@@ -22,6 +22,9 @@ import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetDeletionEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetRegisterEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
+import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
+import ua.mcchickenstudio.opencreative.utils.world.generators.WorldGenerator;
+import ua.mcchickenstudio.opencreative.utils.world.generators.WorldTemplate;
 import ua.mcchickenstudio.opencreative.menus.world.WorldMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -30,11 +33,12 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
+import java.io.File;
 import java.time.Duration;
 import java.util.*;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
@@ -74,12 +78,32 @@ public class Space implements PlanetsManager {
     }
 
     @Override
-    public void createPlanet(@NotNull Player owner, int id, WorldUtils.@NotNull WorldGenerator generator) {
-        createPlanet(owner,id,generator, World.Environment.NORMAL,new Random().nextInt(),false);
+    public void createPlanet(@NotNull Player owner, int id, @NotNull WorldGenerator generator) {
+        createPlanet(owner, id, generator, World.Environment.NORMAL, new Random().nextInt(),false);
     }
 
     @Override
-    public void createPlanet(@NotNull Player owner, int id, WorldUtils.@NotNull WorldGenerator generator, World.@NotNull Environment environment, long seed, boolean generateStructures) {
+    public void createPlanet(@NotNull Player owner, int id, @NotNull WorldTemplate template) {
+        File worldTemplateFolder = new File(OpenCreative.getPlugin().getDataPath()
+                + File.separator + "templates" + File.separator + template.getFolderName());
+        if (!worldTemplateFolder.exists() || !worldTemplateFolder.isDirectory()) {
+            sendPlayerErrorMessage(owner,"Failed to create world by template " + template.getID() + ", because folder doesn't exists.");
+            sendCriticalErrorMessage("Failed to create world for planet " + id + " by " + owner.getName() + ". Folder " + template.getFolderName()
+                    + " doesn't exists, or it's not directory.");
+            return;
+        }
+        File devTemplateFolder = new File(worldTemplateFolder.getPath() + "dev");
+        File planetFolder = new File(Bukkit.getWorldContainer().getPath() + File.separator + "planets" + File.separator + "planet" + id + File.separator);
+        File planetDevFolder = new File(planetFolder.getPath() + "dev");
+        FileUtils.copyFilesToDirectory(worldTemplateFolder, planetFolder);
+        if (devTemplateFolder.exists() && devTemplateFolder.isDirectory()) {
+            FileUtils.copyFilesToDirectory(devTemplateFolder, planetDevFolder);
+        }
+        createPlanet(owner, id, new FlatGenerator());
+    }
+
+    @Override
+    public void createPlanet(@NotNull Player owner, int id, @NotNull WorldGenerator generator, World.@NotNull Environment environment, long seed, boolean generateStructures) {
         long startTime = System.currentTimeMillis();
 
         owner.showTitle(Title.title(
@@ -88,13 +112,12 @@ public class Space implements PlanetsManager {
         ));
         OpenCreative.getPlugin().getLogger().info("Creating new planet " + id + " by " + owner.getName() + "...");
 
-        createWorldSettings(id, owner, environment);
+        createWorldSettings(id, owner, environment, generator.getID());
         Planet planet = new Planet(id);
 
         if (planet.getTerritory().generateWorld(generator,environment,seed,generateStructures) != null) {
             long endTime = System.currentTimeMillis();
             OpenCreative.getPlugin().getLogger().info("World for planet " + id + " successfully generated in " + (endTime - startTime) + " ms");
-
             planet.connectPlayer(owner);
         } else {
             ErrorUtils.sendCriticalErrorMessage("Failed to create world for planet " + id + " by " + owner.getName() + ". World is null.");

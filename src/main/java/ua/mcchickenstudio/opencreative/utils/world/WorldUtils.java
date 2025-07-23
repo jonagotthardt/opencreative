@@ -37,35 +37,6 @@ import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
  */
 public class WorldUtils {
 
-    public enum WorldGenerator {
-
-        /**
-         * Default flat vanilla world with 4 blocks in height.
-         */
-        FLAT,
-
-        /**
-         * Empty world with a little platform to stand and place blocks.
-         */
-        EMPTY,
-
-        /**
-         * Ocean world filled with water.
-         */
-        WATER,
-
-        /**
-         * Default vanilla world with landscapes.
-         */
-        SURVIVAL,
-
-        /**
-         * Default vanilla world with large biomes.
-         */
-        LARGE_BIOMES,
-
-    }
-
     /**
      * Returns planet id from world's name
      * by splitting it and removing path to

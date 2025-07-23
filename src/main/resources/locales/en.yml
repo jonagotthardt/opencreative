@@ -454,6 +454,11 @@ advertisement:
   cooldown: "%prefix%Please wait &6%cooldown% seconds&f before advertising again."
   closed-world: "%prefix%&fTo advertise your world, &6you need to first allow player entry&f in the world settings."
 items:
+  disabled:
+    name: "&c"
+    lore:
+      - "&c :( Function is disabled"
+      - "&c"
   lobby:
     games:
       name: "&aWorlds from all players &3[Right-click]"

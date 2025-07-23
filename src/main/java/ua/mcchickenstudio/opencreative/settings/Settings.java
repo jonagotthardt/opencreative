@@ -35,9 +35,11 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceEndEvent;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceStartEvent;
 import ua.mcchickenstudio.opencreative.indev.Items;
+import ua.mcchickenstudio.opencreative.utils.world.generators.*;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.groups.Groups;
 
+import java.io.File;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningErrorMessage;
@@ -149,6 +151,7 @@ public class Settings {
         loadSounds(config, soundsTheme);
         loadItems(config);
         loadDisabledBlocks(config);
+        loadWorldGenerators(config);
 
         if (maintenance) {
             OpenCreative.getPlugin().getLogger().warning("Maintenance mode is still enabled in config.yml, to disable: /maintenance end");
@@ -157,6 +160,54 @@ public class Settings {
             OpenCreative.getPlugin().getLogger().warning("Debug Mode is enabled in config.yml, some logs will appear in console.");
         }
         checkDebugAnnouncer();
+    }
+
+    private void loadWorldGenerators(FileConfiguration config) {
+        WorldGenerators instance = WorldGenerators.getInstance();
+        instance.clearWorldGenerators();
+        if (config.getBoolean("generators.flat",true)) instance.registerWorldGenerator(new FlatGenerator());
+        if (config.getBoolean("generators.empty",true)) instance.registerWorldGenerator(new EmptyGenerator());
+        if (config.getBoolean("generators.water",true)) instance.registerWorldGenerator(new OceanGenerator());
+        if (config.getBoolean("generators.survival",true)) instance.registerWorldGenerator(new SurvivalGenerator());
+        if (config.getBoolean("generators.large-biomes",true)) instance.registerWorldGenerator(new LargeBiomesGenerator());
+        ConfigurationSection customFlatsSection = config.getConfigurationSection("generators.custom-flats");
+        if (customFlatsSection != null) {
+            for (String customFlatId : customFlatsSection.getKeys(false)) {
+                String generation = customFlatsSection.getString(customFlatId + ".generation");
+                if (generation == null) continue;
+                String iconMaterial = customFlatsSection.getString(customFlatId + ".icon","GRASS_BLOCK");
+                Material material = Material.getMaterial(iconMaterial.toUpperCase());
+                if (material == null || !material.isItem()) material = Material.GRASS_BLOCK;
+                instance.registerWorldGenerator(new CustomFlatGenerator(customFlatId, new ItemStack(material), generation));
+            }
+        }
+        ConfigurationSection templatesSection = config.getConfigurationSection("generators.templates");
+        if (templatesSection != null) {
+            for (String templateId : templatesSection.getKeys(false)) {
+                boolean enabled = templatesSection.getBoolean(templateId + ".enabled",true);
+                if (!enabled) continue;
+                String folderName = templatesSection.getString(templateId + ".folder");
+                if (folderName == null) continue;
+                File template = new File(OpenCreative.getPlugin().getDataPath()
+                        + File.separator + "templates" + File.separator + folderName);
+                if (!template.exists() || !template.isDirectory()) {
+                    sendWarningErrorMessage("Can't register template world " + templateId + " because it's folder " + folderName + " doesn't exists.");
+                    continue;
+                }
+                String iconMaterial = templatesSection.getString(templateId + ".icon","GRASS_BLOCK");
+                Material material = Material.getMaterial(iconMaterial.toUpperCase());
+                if (material == null || !material.isItem()) material = Material.GRASS_BLOCK;
+                instance.registerWorldGenerator(new WorldTemplate(templateId, new ItemStack(material), folderName));
+            }
+        }
+        int registeredGenerators = instance.getWorldGenerators().size();
+        if (registeredGenerators != 5) {
+            OpenCreative.getPlugin().getLogger().info("Registered " + registeredGenerators + " world generators");
+        }
+    }
+
+    public boolean isWorldGenerationUnavailable() {
+        return WorldGenerators.getInstance().getWorldGenerators().isEmpty();
     }
 
     private void loadDisabledBlocks(FileConfiguration config) {

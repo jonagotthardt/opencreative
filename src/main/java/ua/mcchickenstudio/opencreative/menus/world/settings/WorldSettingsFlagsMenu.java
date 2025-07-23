@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
 
 public class WorldSettingsFlagsMenu extends AbstractMenu {
 
@@ -265,6 +266,7 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
     public void fillItems(Player player) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         setItem(46,BACK_ITEM);
+        setItem(DECORATION_PANE_ITEM,45,47,48,49,51,52,53);
         if (planet == null) return;
         if (!planet.isOwner(player.getName())) return;
         setItem(10, getPlayerDamageFlagButton(planet).getButtonItem());
@@ -292,6 +294,7 @@ public class WorldSettingsFlagsMenu extends AbstractMenu {
         if (!isClickedInMenuSlots(event)) return;
         if (event.getCurrentItem() == null) return;
         if (event.getCurrentItem().getType().isAir()) return;
+        if (itemEquals(event.getCurrentItem(), DECORATION_PANE_ITEM)) return;
 
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer((Player) event.getWhoClicked());
         if (event.getCurrentItem().getType() == Material.SPECTRAL_ARROW) {

@@ -22,6 +22,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.indev.Items;
+import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
 import ua.mcchickenstudio.opencreative.indev.modules.Module;
 import ua.mcchickenstudio.opencreative.menus.CreativeMenu;
 import ua.mcchickenstudio.opencreative.menus.world.WorldModerationMenu;
@@ -718,10 +719,15 @@ public class CreativeCommand extends CommandHandler {
                         Sounds.PLAYER_FAIL.play(player);
                         return;
                     }
+                    File templateDev = new File(OpenCreative.getPlugin().getDataPath()+File.separator+"templates"+File.separator+args[1]+"dev");
                     int id = WorldUtils.generateWorldID();
                     File world = new File(Bukkit.getWorldContainer().getPath()+File.separator+"planets"+File.separator+"planet"+id+File.separator);
+                    File worldDev = new File(Bukkit.getWorldContainer().getPath()+File.separator+"planets"+File.separator+"planet"+id+File.separator+"dev");
                     FileUtils.copyFilesToDirectory(template,world);
-                    OpenCreative.getPlanetsManager().createPlanet(player, id, WorldUtils.WorldGenerator.FLAT);
+                    if (templateDev.exists()) {
+                        FileUtils.copyFilesToDirectory(templateDev,worldDev);
+                    }
+                    OpenCreative.getPlanetsManager().createPlanet(player, id, new FlatGenerator());
                 }
                 default -> {
                     String copyright = OpenCreative.getPlugin().getConfig().getString("messages.version","\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2025\n ");
