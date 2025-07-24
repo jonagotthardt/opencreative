@@ -7,7 +7,7 @@ name: 'OpenCreative'
 main: ua.mcchickenstudio.opencreative.OpenCreative
 api-version: 1.21
 
-version: '5.7.0 Beta'
+version: '5.7.0'
 description: 'Let players create the worlds'
 build: ${maven.build.timestamp}
 
@@ -33,7 +33,7 @@ loadbefore:
 commands:
   creative:
     description: 'Shows OpenCreative+ information.'
-    aliases: [coding,creativecoding,скуфешму,creative,oc]
+    aliases: [coding, creativecoding, скуфешму, creative, oc]
   edit:
     description: 'Edits item in hand.'
     aliases: [увше, itemedit, edititem]
@@ -42,19 +42,19 @@ commands:
     aliases: [дщсфеу, find, аштв]
   chat:
     description: 'Sends message to all players.'
-    aliases: [cc,сс]
+    aliases: [cc, сс]
   build:
     description: 'Changes world`s mode to build.'
     aliases: [игшдв]
   dev:
     description: 'Connects to developer world.'
-    aliases: [develop,code,вум,d]
+    aliases: [develop, code, вум, d]
   play:
     description: 'Changes world`s mode to play.'
-    aliases: [start,здфн,ыефке,run,кгт]
+    aliases: [start, здфн, ыефке, run, кгт]
   join:
     description: 'Joins world by specified id.'
-    aliases: [ощшт,id,j,о]
+    aliases: [ощшт, id, j, о]
   ad:
     description: 'Advertises world to all players.'
     aliases: [фв]

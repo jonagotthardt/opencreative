@@ -92,7 +92,7 @@ public class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
                 List.of("all","friendly","monsters","items","transport","decoration","not-living"),
                 "type",
                 "menus.all-worlds",
-                "menus.entities-browser.items.id",
+                "menus.entities-browser.items.type",
                 List.of(Material.HOPPER, Material.PIGLIN_HEAD, Material.ZOMBIE_HEAD, Material.POISONOUS_POTATO, Material.BIRCH_CHEST_BOAT, Material.PAINTING,Material.PUMPKIN_SEEDS)
         );
         buttons.add(type);

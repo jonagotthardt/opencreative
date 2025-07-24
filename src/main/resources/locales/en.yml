@@ -11616,6 +11616,15 @@ menus:
             - "&6  east&7 - East"
             - ""
             - "&eClick to set."
+        velocity:
+          name: "&bEntity Velocity"
+          lore:
+            - "&7Type: &bVector"
+            - ""
+            - "&7 Gets the vector of"
+            - "&7 mob's velocity."
+            - ""
+            - "&eClick to set."
         direction:
           name: "&aEntity Direction"
           lore:

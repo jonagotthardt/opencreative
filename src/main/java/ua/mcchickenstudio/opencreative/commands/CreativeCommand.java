@@ -386,9 +386,7 @@ public class CreativeCommand extends CommandHandler {
                     try {
                         Sounds sound = Sounds.valueOf(args[1].toUpperCase());
                         sound.play(sender);
-                    } catch (Exception e) {
-                        return;
-                    }
+                    } catch (Exception ignored) {}
                 }
                 case "item", "items" -> {
                     if (!sender.hasPermission("opencreative.items.get") && !sender.hasPermission("opencreative.items.set")) {
@@ -464,9 +462,7 @@ public class CreativeCommand extends CommandHandler {
                         }
                     }
                 }
-                case "maintenance" -> {
-                    handleMaintenanceCommand(sender, Arrays.copyOfRange(args, 0,args.length));
-                }
+                case "maintenance" -> handleMaintenanceCommand(sender, Arrays.copyOfRange(args, 0,args.length));
                 case "unload" -> {
                     if (!sender.hasPermission("opencreative.world.unload")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
@@ -668,7 +664,7 @@ public class CreativeCommand extends CommandHandler {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return;
                     }
-                    player.sendMessage(getLocaleMessage("creative.stability.actionbar")
+                    sender.sendMessage(getLocaleMessage("creative.stability.actionbar")
                             .replace("%memory%", OpenCreative.getStability().getMemoryState().getLocalized())
                             .replace("%storage%", OpenCreative.getStability().getStorageState().getLocalized())
                             .replace("%tps%", OpenCreative.getStability().getTicksState().getLocalized())
@@ -794,7 +790,6 @@ public class CreativeCommand extends CommandHandler {
         } else if ("end".equalsIgnoreCase(args[1])) {
             OpenCreative.getSettings().setMaintenance(false);
         }
-        return;
     }
 
     @Override
@@ -838,7 +833,7 @@ public class CreativeCommand extends CommandHandler {
             }  else if ("debug".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");
-            } else if (List.of("load","unload","moderate","moderation","updateworld","unregister").contains(args[0].toLowerCase())) {
+            } else if (List.of("load","unload","moderate","moderation","updateworld","unregister","delete").contains(args[0].toLowerCase())) {
                 tabCompleter.addAll(OpenCreative.getPlanetsManager().getPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());
             } else if ("corrupted".equalsIgnoreCase(args[0])) {
                 tabCompleter.addAll(OpenCreative.getPlanetsManager().getCorruptedPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());

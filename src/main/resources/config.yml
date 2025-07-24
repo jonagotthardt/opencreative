@@ -415,8 +415,8 @@ generators:
 # prevents players without admin permissions
 # from loading or creating worlds.
 #
-# /creative maintenance start 30
-# /creative maintenance end
+# /oc maintenance start 30
+# /oc maintenance end
 #
 maintenance: false
 #

@@ -48,10 +48,6 @@ public class MessageUtils {
     private static File localizationFile;
     private static FileConfiguration localizationConfig;
 
-    public static String getStringFromComponent(Component component) {
-        return LegacyComponentSerializer.legacyAmpersand().serialize(component);
-    }
-
     public static Component toComponent(String text) {
         if (isLegacyFormat(text)) {
             return LegacyComponentSerializer.legacyAmpersand().deserialize(text);

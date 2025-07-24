@@ -363,6 +363,7 @@ public final class OpenCreative extends JavaPlugin {
      * of blocks in world.
      * @return blocks manager.
      */
+    @SuppressWarnings("unused")
     public static BlocksManager getBlocksManager() {
         return getPlugin().blocks;
     }
