@@ -1089,6 +1089,22 @@ items:
             - "&7show particle, explode."
             - " "
             - "&eClick to choose category."
+        entity_params:
+          name: "&cEntity Parameters"
+          lore:
+            - "&7Rename, set the health,"
+            - "&7damage, walk speed, burning,"
+            - "&7freezing, potion effects."
+            - " "
+            - "&eClick to choose category."
+        entity_state:
+          name: "&3Состояние моба"
+          lore:
+            - "&7Set glowing, change text"
+            - "&7of display entity, change"
+            - "&7color of sheep or dog's collar."
+            - " "
+            - "&eClick to choose category."
         blocks:
           name: "&cBlock Manipulation"
           lore:
