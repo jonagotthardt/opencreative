@@ -1098,7 +1098,7 @@ items:
             - " "
             - "&eClick to choose category."
         entity_state:
-          name: "&3Состояние моба"
+          name: "&3Entity State"
           lore:
             - "&7Set glowing, change text"
             - "&7of display entity, change"
