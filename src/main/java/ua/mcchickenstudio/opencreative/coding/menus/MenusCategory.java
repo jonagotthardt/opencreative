@@ -57,7 +57,10 @@ public enum MenusCategory {
     ITEM_OPERATIONS(Material.GLOW_ITEM_FRAME),
     LIST_OPERATIONS(Material.BOOKSHELF),
     MAP_OPERATIONS(Material.CHEST_MINECART),
-    VECTOR_OPERATIONS(Material.PRISMARINE_SHARD);
+    VECTOR_OPERATIONS(Material.PRISMARINE_SHARD),
+
+    REPEATS(Material.PRISMARINE_CRYSTALS),
+    CONTROLLER(Material.COMPASS);
 
     private final Material material;
 

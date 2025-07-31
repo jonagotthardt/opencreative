@@ -1097,6 +1097,22 @@ items:
             - "&7freezing, potion effects."
             - " "
             - "&eClick to choose category."
+        controller:
+          name: "&3Other for controller"
+          lore:
+            - "&7Catch an error between the"
+            - "&7pistons, or measure time of"
+            - "&7executing code."
+            - " "
+            - "&eClick to choose category."
+        repeats:
+          name: "&bOther for repeats"
+          lore:
+            - "&7Repeat forever, or iterate"
+            - "&7through numbers, list elements,"
+            - "&7or even blocks in region."
+            - " "
+            - "&eClick to choose category."
         entity_state:
           name: "&3Entity State"
           lore:

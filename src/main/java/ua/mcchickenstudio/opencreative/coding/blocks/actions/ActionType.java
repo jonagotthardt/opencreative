@@ -651,13 +651,13 @@ public enum ActionType {
      * <h1>Other Actions.</h1>
      */
 
-    CONTROLLER_CATCH_ERROR(ActionCategory.CONTROLLER_ACTION, MenusCategory.OTHER, CatchErrorAction.class, Material.RED_DYE, new ArgumentSlot("variable", ValueType.VARIABLE)),
-    CONTROLLER_MEASURE_TIME(ActionCategory.CONTROLLER_ACTION, MenusCategory.OTHER, MeasureTimeAction.class, Material.CLOCK, new ArgumentSlot("variable", ValueType.VARIABLE)),
+    CONTROLLER_CATCH_ERROR(ActionCategory.CONTROLLER_ACTION, MenusCategory.CONTROLLER, CatchErrorAction.class, Material.RED_DYE, new ArgumentSlot("variable", ValueType.VARIABLE)),
+    CONTROLLER_MEASURE_TIME(ActionCategory.CONTROLLER_ACTION, MenusCategory.CONTROLLER, MeasureTimeAction.class, Material.CLOCK, new ArgumentSlot("variable", ValueType.VARIABLE)),
 
-    REPEAT_ALWAYS(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatAlwaysAction.class, Material.BEACON),
-    REPEAT_FOR_NUMBERS(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatForLoopAction.class, Material.SLIME_BALL, new ArgumentSlot("variable", ValueType.VARIABLE), new ParameterSlot("type", Arrays.asList("less","less-equals","greater","greater-equals"), Material.BRICK, Material.BRICKS, Material.NETHER_BRICK, Material.NETHER_BRICKS), new ArgumentSlot("range", ValueType.NUMBER), new ArgumentSlot("add", ValueType.NUMBER)),
-    REPEAT_FOR_LIST(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatForEachAction.class, Material.BOOKSHELF, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE)),
-    REPEAT_FOR_BLOCKS(ActionCategory.REPEAT_ACTION, MenusCategory.OTHER, RepeatForBlocksAction.class, Material.PAPER, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("first", ValueType.LOCATION), new ArgumentSlot("second", ValueType.LOCATION)),
+    REPEAT_ALWAYS(ActionCategory.REPEAT_ACTION, MenusCategory.REPEATS, RepeatAlwaysAction.class, Material.BEACON),
+    REPEAT_FOR_NUMBERS(ActionCategory.REPEAT_ACTION, MenusCategory.REPEATS, RepeatForLoopAction.class, Material.SLIME_BALL, new ArgumentSlot("variable", ValueType.VARIABLE), new ParameterSlot("type", Arrays.asList("less","less-equals","greater","greater-equals"), Material.BRICK, Material.BRICKS, Material.NETHER_BRICK, Material.NETHER_BRICKS), new ArgumentSlot("range", ValueType.NUMBER), new ArgumentSlot("add", ValueType.NUMBER)),
+    REPEAT_FOR_LIST(ActionCategory.REPEAT_ACTION, MenusCategory.REPEATS, RepeatForEachAction.class, Material.BOOKSHELF, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE)),
+    REPEAT_FOR_BLOCKS(ActionCategory.REPEAT_ACTION, MenusCategory.REPEATS, RepeatForBlocksAction.class, Material.PAPER, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("first", ValueType.LOCATION), new ArgumentSlot("second", ValueType.LOCATION)),
 
     LAUNCH_FUNCTION(ActionCategory.LAUNCH_FUNCTION_ACTION, MenusCategory.OTHER, LaunchFunctionAction.class, Material.LAPIS_ORE),
     LAUNCH_METHOD(ActionCategory.LAUNCH_METHOD_ACTION, MenusCategory.OTHER, LaunchMethodAction.class, Material.EMERALD),
