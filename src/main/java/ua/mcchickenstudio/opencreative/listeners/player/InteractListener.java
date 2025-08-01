@@ -661,7 +661,7 @@ public final class InteractListener implements Listener {
             ItemStack item = event.getItem();
             if (item == null) return;
             if (!(item.getItemMeta() instanceof SpawnEggMeta) && item.getType() != Material.ITEM_FRAME
-                    && item.getType() != Material.GLOW_ITEM_FRAME) {
+                    && item.getType() != Material.GLOW_ITEM_FRAME && item.getType() != Material.PAINTING) {
                 return;
             }
             event.setCancelled(true);
