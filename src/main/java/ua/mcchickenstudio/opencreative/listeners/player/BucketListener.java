@@ -22,17 +22,35 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerBucketFillEvent;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
 
 public final class BucketListener implements Listener {
 
     @EventHandler
-    public void onBucket(PlayerBucketEmptyEvent event) {
+    public void onBucketEmpty(PlayerBucketEmptyEvent event) {
         Player player = event.getPlayer();
         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
         if (devPlanet != null) {
             event.setCancelled(true);
+        } else if (isEntityInLobby(player) && OpenCreative.getSettings().isLobbyDisallowPlacingBlocks()
+                && !player.hasPermission("opencreative.lobby.placing-blocks.bypass")) {
+            event.setCancelled(true);
+            player.sendActionBar(getLocaleMessage("not-for-lobby"));
+        }
+    }
+
+    @EventHandler
+    public void onBucketFill(PlayerBucketFillEvent event) {
+        Player player = event.getPlayer();
+        if (isEntityInLobby(player) && OpenCreative.getSettings().isLobbyDisallowDestroyingBlocks()
+                && !player.hasPermission("opencreative.lobby.destroying-blocks.bypass")) {
+            event.setCancelled(true);
+            player.sendActionBar(getLocaleMessage("not-for-lobby"));
         }
     }
 

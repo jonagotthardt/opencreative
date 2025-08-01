@@ -323,9 +323,10 @@ public class PlayerUtils {
         int maxX = player.getLocation().getBlockX()+radius;
         int minZ = player.getLocation().getBlockZ()-radius;
         int maxZ = player.getLocation().getBlockZ()+radius;
+        int y = player.getLocation().getBlockY();
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
-                Block block = player.getWorld().getBlockAt(x,1,z);
+                Block block = player.getWorld().getBlockAt(x,y,z);
                 if (block.getType().name().contains("WALL_SIGN")) {
                     translateBlockSign(block,player);
                 }

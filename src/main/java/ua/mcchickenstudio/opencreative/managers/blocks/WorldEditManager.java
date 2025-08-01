@@ -42,6 +42,8 @@ import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isLobbyWorld;
+
 public class WorldEditManager implements BlocksManager {
 
     @Override
@@ -65,7 +67,13 @@ public class WorldEditManager implements BlocksManager {
                 if (event.getActor() == null) return;
                 org.bukkit.World bukkitWorld = BukkitAdapter.adapt(event.getWorld());
                 Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(bukkitWorld);
-                if (planet == null) return;
+                if (planet == null) {
+                    if (isLobbyWorld(bukkitWorld) && OpenCreative.getSettings().isLobbyDisallowWorldEdit()
+                            && !event.getActor().hasPermission("opencreative.lobby.world-edit.bypass")) {
+                        event.setExtent(new DisallowedExtent(event.getExtent()));
+                    }
+                    return;
+                }
                 event.setExtent(new PlanetExtent(planet, event.getExtent()));
             }
         });
@@ -140,6 +148,41 @@ public class WorldEditManager implements BlocksManager {
             )) {
                 return super.getFullBlock(location);
             }
+            return AIRBASE;
+        }
+    }
+
+    static class DisallowedExtent extends AbstractDelegateExtent {
+
+        public DisallowedExtent(Extent extent) {
+            super(extent);
+        }
+
+        public static BlockState AIRSTATE = BlockTypes.AIR.getDefaultState();
+        public static BaseBlock AIRBASE = BlockTypes.AIR.getDefaultState().toBaseBlock();
+
+        @Override
+        public boolean setBlock(BlockVector3 location, BlockStateHolder block) {
+            return false;
+        }
+
+        @Override
+        public com.sk89q.worldedit.entity.Entity createEntity(com.sk89q.worldedit.util.Location location, BaseEntity entity) {
+            return null;
+        }
+
+        @Override
+        public boolean setBiome(BlockVector3 location, BiomeType biome) {
+            return false;
+        }
+
+        @Override
+        public BlockState getBlock(BlockVector3 location) {
+            return AIRSTATE;
+        }
+
+        @Override
+        public BaseBlock getFullBlock(BlockVector3 location) {
             return AIRBASE;
         }
     }

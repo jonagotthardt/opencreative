@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding;
 
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -87,8 +88,11 @@ public class CodingBlockParser {
         // For platforms
         for (DevPlatform platform : platforms) {
             // For coding executors
-            for (int z = platform.getBeginZ() + 4; z <= platform.getEndZ() - 4; z = z + 4) {
-                Block executorBlock = devPlanet.getWorld().getBlockAt(platform.getBeginX() + 4, 1, z);
+            Location begin = OpenCreative.getDevPlatformer().getPlatformBeginLocation(platform);
+            int y = begin.getBlockY() + 1;
+            int x = begin.getBlockX() + 4;
+            for (int z = begin.getBlockZ() + 4; z <= platform.getEndCoordinate() - 4; z = z + 4) {
+                Block executorBlock = devPlanet.getWorld().getBlockAt(x, y, z);
                 locations.add(executorBlock.getLocation());
             }
         }
@@ -117,9 +121,10 @@ public class CodingBlockParser {
         for (Location executorLocation : executorsLocations) {
 
             int executorX = executorLocation.getBlockX();
+            int y = executorLocation.getBlockY();
             int z = executorLocation.getBlockZ();
 
-            Block executorBlock = world.getBlockAt(executorX,1, z);
+            Block executorBlock = world.getBlockAt(executorX, y, z);
             ExecutorCategory executorCategory = ExecutorCategory.getByMaterial(executorBlock.getType());
             ExecutorType executorType = ExecutorType.getType(executorBlock);
 
@@ -140,7 +145,7 @@ public class CodingBlockParser {
             List<String> multiActions = new ArrayList<>();
             for (int x = executorX+2; x <= executorX+92; x = x+2) {
 
-                Block actionBlock = world.getBlockAt(x,1, z);
+                Block actionBlock = world.getBlockAt(x, y, z);
                 ActionCategory actionCategory = ActionCategory.getByMaterial(actionBlock.getType());
                 ActionType actionType = ActionType.getType(actionBlock);
                 Target actionTarget = Target.getBySign(actionBlock.getLocation());
@@ -161,16 +166,16 @@ public class CodingBlockParser {
                      * Checking condition's piston. If it is beginning piston,
                      * we already added condition in conditions list..
                      */
-                    if (world.getBlockAt(x+1,1,z).getType() == Material.PISTON) {
+                    if (world.getBlockAt(x+1,y,z).getType() == Material.PISTON) {
                         if (!multiActions.isEmpty()) {
                             String last = multiActions.getLast();
                             multiActions.remove(last);
-                            if (world.getBlockAt(x+2,1,z).getType() == Material.END_STONE) {
+                            if (world.getBlockAt(x+2,y,z).getType() == Material.END_STONE) {
                                 multiActions.add(last+".else");
                                 x=x+2;
                             }
                         } else {
-                            sendPlanetCompileErrorMessage(devPlanet.getPlanet(),world.getBlockAt(x+1,1,z),getLocaleMessage("coding-error.bad-piston"));
+                            sendPlanetCompileErrorMessage(devPlanet.getPlanet(),world.getBlockAt(x+1,y,z),getLocaleMessage("coding-error.bad-piston"));
                             isCodeFine = false;
                             continue;
                         }

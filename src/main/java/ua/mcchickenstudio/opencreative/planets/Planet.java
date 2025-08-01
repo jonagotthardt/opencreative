@@ -569,12 +569,7 @@ public class Planet {
                 if (devPlanet.isNightVision()) player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,Integer.MAX_VALUE,0,false,false,false));
                 Sounds.DEV_CONNECTED.play(player);
                 Sounds.WORLD_MODE_DEV.play(player);
-                for (Player developer : getDevPlanet().getWorld().getPlayers()) {
-                    WorldBorder border = Bukkit.createWorldBorder();
-                    border.setCenter(getDevPlanet().getWorld().getWorldBorder().getCenter());
-                    border.setSize(getDevPlanet().getWorld().getWorldBorder().getSize()*5);
-                    developer.setWorldBorder(border);
-                }
+                devPlanet.displayWorldBorders();
                 player.showTitle(Title.title(
                         toComponent(getLocaleMessage("world.dev-mode.title")), toComponent(getLocaleMessage("world.dev-mode.subtitle")),
                         Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(2), Duration.ofMillis(750))

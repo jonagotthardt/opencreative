@@ -356,16 +356,7 @@ public class EnvironmentCommand extends CommandHandler {
                             sender.sendMessage(getLocaleMessage("environment.platform.limit").replace("%amount%",String.valueOf(devPlanet.getPlanet().getLimits().getCodingPlatformsLimit())));
                             return;
                         }
-                        int[][] platformCoordinates = {
-                                {2, 1}, {1, 2}, {2, 2}, {3, 1}, {1, 3}, {2, 3}, {3, 2}, {3, 3}
-                        };
-                        DevPlatform platform = null;
-                        for (int[] coords : platformCoordinates) {
-                            platform = new DevPlatform(devPlanet.getWorld(), coords[0], coords[1]);
-                            if (!platform.exists()) {
-                                break;
-                            }
-                        }
+                        DevPlatform platform = OpenCreative.getDevPlatformer().getNextAvailablePlatform(devPlanet);
                         devPlanet.claimPlatform(platform, player);
                         break;
                     }
@@ -404,15 +395,16 @@ public class EnvironmentCommand extends CommandHandler {
                             material = Material.valueOf(args[1].equalsIgnoreCase("barrier")
                                     || args[1].equalsIgnoreCase("glass") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
                         } catch (Exception ignored) {}
-                        DevPlatform currentPlatform = devPlanet.getPlatformInLocation(player.getX(),player.getZ());
+                        DevPlatform currentPlatform = devPlanet.getPlatformInLocation(player.getLocation());
+                        boolean changed = false;
                         if (currentPlatform == null) {
                             for (DevPlatform platform : devPlanet.getPlatforms()) {
-                                platform.setFloorMaterial(material);
+                                if (platform.setFloorMaterial(material)) changed = true;
                             }
                         } else {
-                            currentPlatform.setFloorMaterial(material);
+                            changed = currentPlatform.setFloorMaterial(material);
                         }
-                        Sounds.DEV_PLATFORM_COLOR.play(player);
+                        if (changed) Sounds.DEV_PLATFORM_COLOR.play(player);
                         break;
                     }
                     case "action": {
@@ -430,15 +422,16 @@ public class EnvironmentCommand extends CommandHandler {
                             material = Material.valueOf(args[1].equalsIgnoreCase("barrier")
                                     || args[1].equalsIgnoreCase("glass") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
                         } catch (Exception ignored) {}
-                        DevPlatform currentPlatform = devPlanet.getPlatformInLocation(player.getX(),player.getZ());
+                        DevPlatform currentPlatform = devPlanet.getPlatformInLocation(player.getLocation());
+                        boolean changed = false;
                         if (currentPlatform == null) {
                             for (DevPlatform platform : devPlanet.getPlatforms()) {
-                                platform.setActionMaterial(material);
+                                if (platform.setActionMaterial(material)) changed = true;
                             }
                         } else {
-                            currentPlatform.setActionMaterial(material);
+                            changed = currentPlatform.setActionMaterial(material);
                         }
-                        Sounds.DEV_PLATFORM_COLOR.play(player);
+                        if (changed) Sounds.DEV_PLATFORM_COLOR.play(player);
                         break;
                     }
                     case "event", "executor": {
@@ -456,15 +449,16 @@ public class EnvironmentCommand extends CommandHandler {
                             material = Material.valueOf(args[1].equalsIgnoreCase("barrier")
                                     || args[1].equalsIgnoreCase("glass") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
                         } catch (Exception ignored) {}
-                        DevPlatform currentPlatform = devPlanet.getPlatformInLocation(player.getX(),player.getZ());
+                        DevPlatform currentPlatform = devPlanet.getPlatformInLocation(player.getLocation());
+                        boolean changed = false;
                         if (currentPlatform == null) {
                             for (DevPlatform platform : devPlanet.getPlatforms()) {
-                                platform.setEventMaterial(material);
+                                if (platform.setEventMaterial(material)) changed = true;
                             }
                         } else {
-                            currentPlatform.setEventMaterial(material);
+                            changed = currentPlatform.setEventMaterial(material);
                         }
-                        Sounds.DEV_PLATFORM_COLOR.play(player);
+                        if (changed) Sounds.DEV_PLATFORM_COLOR.play(player);
                         break;
                     }
                     case "theme", "settheme", "themes": {
@@ -477,7 +471,7 @@ public class EnvironmentCommand extends CommandHandler {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return;
                         }
-                        DevPlatform platform = devPlanet.getPlatformInLocation(player.getX(),player.getZ());
+                        DevPlatform platform = devPlanet.getPlatformInLocation(player.getLocation());
                         if (platform == null) {
                             return;
                         }

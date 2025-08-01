@@ -46,6 +46,7 @@ import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isLobbyWorld;
 
 public final class BlockChangeListener implements Listener {
 
@@ -98,6 +99,13 @@ public final class BlockChangeListener implements Listener {
     @EventHandler
     public void onEntityExplosion(EntityExplodeEvent event) {
         World world = event.getLocation().getWorld();
+        if (isLobbyWorld(world)) {
+            if (OpenCreative.getSettings().isLobbyDisableExplosions()) {
+                event.blockList().clear();
+                event.setCancelled(true);
+            }
+            return;
+        }
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(world);
         if (planet != null) {
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_EXPLOSION) == 2) {
@@ -112,6 +120,13 @@ public final class BlockChangeListener implements Listener {
     @EventHandler
     public void onBlockExplosion(BlockExplodeEvent event) {
         World world = event.getBlock().getLocation().getWorld();
+        if (isLobbyWorld(world)) {
+            if (OpenCreative.getSettings().isLobbyDisableExplosions()) {
+                event.blockList().clear();
+                event.setCancelled(true);
+            }
+            return;
+        }
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(world);
         if (planet != null) {
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_EXPLOSION) == 2) {

@@ -119,6 +119,12 @@ lobby:
   # /setworldspawn command.
   #
   world: "world"
+  disallow-placing-blocks: true    # To bypass with true, add permission: opencreative.lobby.placing-blocks.bypass
+  disallow-destroying-blocks: true # To bypass with true, add permission: opencreative.lobby.destroying-blocks.bypass
+  disallow-spawning-mobs: true     # To bypass with true, add permission: opencreative.lobby.spawning-mobs.bypass
+  disallow-damaging-mobs: true     # To bypass with true, add permission: opencreative.lobby.damaging-mobs.bypass
+  disallow-world-edit: true        # To bypass with true, add permission: opencreative.lobby.world-edit.bypass
+  disable-explosions: true # If true, any explosion in lobby will be cancelled.
   clear-inventory: true # Inventory will be cleared on server join, world change, should be enabled due to security reasons.
 
 recommended-worlds: [1,2,3,4,5] # List of featured worlds in /games, type world number IDs here.
@@ -143,6 +149,7 @@ allowed-links:
 
 coding:
   old-selection-menu: false # Set true to use old coding blocks selection menu
+  old-floors: false # Set true to generate coding platforms on each other. Can break current worlds using new platforms!
   #
   # You can disable some coding blocks,
   # if they're useless or harming performance.

@@ -103,7 +103,7 @@ public class BlockUtils {
         World world = location.getWorld();
         List<String> conditions = new ArrayList<>();
         try {
-            for (double x = location.getX()+2; x < platform.getEndX()-4; x += 2) {
+            for (double x = location.getX()+2; x < platform.getEndCoordinate()-4; x += 2) {
                 Block block = world.getBlockAt(new Location(world,x,location.getBlockY(),location.getBlockZ()));
                 ActionCategory category = ActionCategory.getByMaterial(block.getType());
                 if (block.getType() == Material.AIR) {

@@ -44,6 +44,7 @@ import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.copySignData;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
 public final class PlaceBlockListener implements Listener {
@@ -80,7 +81,7 @@ public final class PlaceBlockListener implements Listener {
                 return;
             }
             if (blockAgainst.getType() == platform.getFloorMaterial()) {
-                if (block.getType() == Material.PISTON && ((blockAgainst.getZ()-platform.getBeginZ()) % 4) == 0 && blockAgainst.getRelative(BlockFace.WEST).getType() == platform.getActionMaterial()) {
+                if (block.getType() == Material.PISTON && ((blockAgainst.getZ()-platform.getBeginCoordinate()) % 4) == 0 && blockAgainst.getRelative(BlockFace.WEST).getType() == platform.getActionMaterial()) {
                     Directional directional = (Directional) block.getBlockData();
                     if (directional.getFacing() != BlockFace.EAST && directional.getFacing() != BlockFace.WEST) {
                         directional.setFacing(player.getFacing().getOppositeFace());
@@ -148,6 +149,10 @@ public final class PlaceBlockListener implements Listener {
                 return;
             }
             new PlaceBlockEvent(event.getPlayer(),event).callEvent();
+        } else if (isEntityInLobby(player) && OpenCreative.getSettings().isLobbyDisallowPlacingBlocks()
+                && !player.hasPermission("opencreative.lobby.placing-blocks.bypass")) {
+            event.setCancelled(true);
+            player.sendActionBar(getLocaleMessage("not-for-lobby"));
         }
     }
 
@@ -194,13 +199,15 @@ public final class PlaceBlockListener implements Listener {
         if (devPlanet == null) return false;
         DevPlatform platform = devPlanet.getPlatformInLocation(location);
         if (platform == null) return false;
+        Location begin = OpenCreative.getDevPlatformer().getPlatformBeginLocation(platform);
+        Location end = OpenCreative.getDevPlatformer().getPlatformEndLocation(platform);
         if (face == BlockFace.EAST) {
             /*
              Moves blocks to right
              */
-            if (location.getX() >= platform.getEndX()-4) return false;
+            if (location.getX() >= end.getBlockX()-4) return false;
             Set<Block> movedBlocks = new HashSet<>();
-            for (double x = platform.getEndX()-5; x > location.getX(); x--) {
+            for (double x = end.getBlockX()-5; x > location.getX(); x--) {
                 Block oldBlock = location.getWorld().getBlockAt((int) x, location.getBlockY(), location.getBlockZ());
                 if (oldBlock.getType() == Material.AIR) continue;
                 if (!movedBlocks.contains(oldBlock)) {
@@ -213,11 +220,11 @@ public final class PlaceBlockListener implements Listener {
             /*
              Moves blocks to left.
              */
-            if (location.getX() <= platform.getBeginX()+5) return false;
+            if (location.getX() <= begin.getBlockX()+5) return false;
             if (!location.getBlock().isEmpty()) return false;
             //if (!location.getBlock().getRelative(BlockFace.WEST).isEmpty()) return false;
             Set<Block> movedBlocks = new HashSet<>();
-            for (double x = location.getX()+1; x < platform.getEndX(); x++) {
+            for (double x = location.getX()+1; x < end.getBlockX(); x++) {
                 Block oldBlock = location.getWorld().getBlockAt((int) x, location.getBlockY(), location.getBlockZ());
                 if (oldBlock.getType() == Material.AIR) continue;
                 if (!movedBlocks.contains(oldBlock)) {
