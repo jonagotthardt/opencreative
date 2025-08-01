@@ -147,13 +147,13 @@ public class DevPlanet {
         this.getWorld().setGameRule(GameRule.MOB_GRIEFING,false);
         this.getWorld().setGameRule(GameRule.DO_PATROL_SPAWNING,false);
         this.getWorld().setGameRule(GameRule.DO_FIRE_TICK,false);
-        setWorldBorder();
+        OpenCreative.getDevPlatformer().setWorldBorder(this);
     }
 
     public boolean exists() {
         boolean exists = false;
         for (File folder : getWorldsFolders()) {
-            if (folder.getName().equalsIgnoreCase("planet"+planet.getId()+"dev")) {
+            if (folder.getName().equalsIgnoreCase("planet" + planet.getId() + "dev")) {
                 exists = true;
                 break;
             }
@@ -202,51 +202,21 @@ public class DevPlanet {
         if (platformX >= 30 || platformZ >= 30 || platformX <= 0 || platformZ <= 0) {
             return false;
         }
-        int beginX = getPlatformBeginCoordinate(platformX);
-        int endX = getPlatformEndCoordinate(platformX);
-        int beginZ = getPlatformBeginCoordinate(platformZ);
-        int endZ = getPlatformEndCoordinate(platformZ);
-        int executorX = beginX+4;
-        for (int x = beginX; x <= endX; x++) {
-            for (int z = beginZ; z <= endZ; z++) {
-                Block block = getWorld().getBlockAt(x,0,z);
-                if (x == executorX && (z - beginZ) % 4 == 0 && z != beginZ && z != endZ) {
-                    block.setType(DEFAULT_EVENT_MATERIAL);
-                } else if (x > executorX && (x - executorX) % 2 == 0 && x < endX - 2 && (z - beginZ) % 4 == 0 && z != beginZ && z != endZ) {
-                    block.setType(DEFAULT_ACTION_MATERIAL);
-                } else {
-                    block.setType(DEFAULT_FLOOR_MATERIAL);
-                }
-                block.setBiome(Biome.ICE_SPIKES);
-            }
-        }
-        return true;
+        return OpenCreative.getDevPlatformer().buildPlatform(new DevPlatform(getWorld(), platformX, platformZ),
+                DEFAULT_FLOOR_MATERIAL, DEFAULT_EVENT_MATERIAL, DEFAULT_ACTION_MATERIAL);
     }
 
     public boolean claimPlatform(DevPlatform platform, Player player) {
-        if (platform.exists()) return false;
-        player.setAllowFlight(true);
-        player.setFlying(true);
-        platform.build(DEFAULT_FLOOR_MATERIAL,DEFAULT_EVENT_MATERIAL,DEFAULT_ACTION_MATERIAL);
-        setWorldBorder();
-        player.teleport(platform.getSpawnLocation());
-        for (Player developer : getWorld().getPlayers()) {
-            WorldBorder border = Bukkit.createWorldBorder();
-            border.setCenter(getWorld().getWorldBorder().getCenter());
-            border.setSize(getWorld().getWorldBorder().getSize()*5);
-            developer.setWorldBorder(border);
+        if (OpenCreative.getDevPlatformer().claimPlatform(this, platform)) {
+            player.setAllowFlight(true);
+            player.setFlying(true);
+            player.teleport(platform.getSpawnLocation());
+            player.sendMessage(getLocaleMessage("environment.platform.claimed"));
+            Sounds.DEV_PLATFORM_CLAIM.play(player);
+            return true;
+        } else {
+            return false;
         }
-        player.sendMessage(getLocaleMessage("environment.platform.claimed"));
-        Sounds.DEV_PLATFORM_CLAIM.play(player);
-        return true;
-    }
-
-    public int getPlatformBeginCoordinate(int platformNumber) {
-        return (platformNumber - 1) * 102;
-    }
-
-    public int getPlatformEndCoordinate(int platformNumber) {
-        return getPlatformBeginCoordinate(platformNumber) + 100;
     }
 
     public Set<Material> getIndestructibleBlocks() {
@@ -317,13 +287,7 @@ public class DevPlanet {
     public List<Location> getPlacedExecutors(ExecutorCategory category) {
         List<Location> locations = new ArrayList<>();
         for (DevPlatform platform : getPlatforms()) {
-            for (int z = platform.getBeginZ()+4; z <= platform.getEndZ()-4; z =z+4) {
-                Block block = getWorld().getBlockAt(platform.getBeginX()+4,1,z);
-                ExecutorCategory blockCategory = ExecutorCategory.getByMaterial(block.getType());
-                if (blockCategory == category) {
-                    locations.add(block.getLocation());
-                }
-            }
+            locations.addAll(platform.getPlacedExecutors(category));
         }
         return locations;
     }
@@ -355,45 +319,14 @@ public class DevPlanet {
     public void updateContainers() {
         if (!isLoaded()) return;
         for (DevPlatform platform : getPlatforms()) {
-            for (int z = platform.getBeginZ()+4; z < platform.getEndZ()-4; z = z + 4) {
-                for (int x = platform.getBeginX()+6; x <= platform.getEndX()-4; x = x + 2) {
-                    Block containerBlock = new Location(getWorld(), x, 2, z).getBlock();
-                    if (containerBlock.getState() instanceof InventoryHolder container) {
-                        ItemStack[] data = container.getInventory().getContents();
-                        containerBlock.setType(containerMaterial);
-                        ((Container) containerBlock.getState()).getInventory().setContents(data);
-                        BlockData blockData = containerBlock.getBlockData();
-                        ((Directional) blockData).setFacing(BlockFace.SOUTH);
-                        containerBlock.setBlockData(blockData);
-                        containerBlock.getState().update();
-                    }
-                }
-            }
+            platform.setContainerMaterial(containerMaterial);
         }
     }
 
     public void updateSigns() {
         if (!isLoaded()) return;
         for (DevPlatform platform : getPlatforms()) {
-            for (int z = platform.getBeginZ()+5; z < platform.getEndZ()-4; z = z + 4) {
-                for (int x = platform.getBeginX()+4; x <= platform.getEndX()-4; x = x + 2) {
-                    Block signBlock = new Location(getWorld(), x, 1, z).getBlock();
-                    if (signBlock.getType().name().contains("WALL_SIGN")) {
-                        Sign oldSign = (Sign) signBlock.getState();
-                        signBlock.setType(signMaterial);
-                        Sign sign = (Sign) signBlock.getState();
-                        for (byte i = 0; i < oldSign.getSide(Side.FRONT).lines().size(); i++) {
-                            sign.getSide(Side.FRONT).line(i,oldSign.getSide(Side.FRONT).line(i));
-                        }
-                        sign.getSide(Side.FRONT).setGlowingText(oldSign.getSide(Side.FRONT).isGlowingText());
-                        BlockData blockData = signBlock.getBlockData();
-                        ((Directional) blockData).setFacing(BlockFace.SOUTH);
-                        sign.setBlockData(blockData);
-                        sign.update();
-                        PlayerUtils.translateBlockSign(signBlock);
-                    }
-                }
-            }
+            platform.setSignMaterial(signMaterial);
         }
     }
 
@@ -471,80 +404,21 @@ public class DevPlanet {
     }
 
     public List<DevPlatform> getPlatforms() {
-        List<DevPlatform> platforms = new ArrayList<>();
-        if (!isLoaded()) return platforms;
-        for (int x = 1; x <= getFarPlatformByX().getX(); x++) {
-            for (int z = 1; z <= getFarPlatformByZ().getZ(); z++) {
-                DevPlatform platform = new DevPlatform(getWorld(),x,z);
-                if (platform.exists()) {
-                    platforms.add(platform);
-                }
-            }
-        }
-        return platforms;
-    }
-
-    public DevPlatform getFarPlatformByX() {
-        DevPlatform farPlatform = new DevPlatform(getWorld(),1,1);
-        if (!isLoaded()) return farPlatform;
-        for (int x = 2; x <= 5; x++) {
-            DevPlatform current = new DevPlatform(getWorld(),x,1);
-            if (current.exists()) {
-                farPlatform = current;
-            }
-        }
-        return farPlatform;
-    }
-
-    public DevPlatform getFarPlatformByZ() {
-        DevPlatform farPlatform = new DevPlatform(getWorld(),1,1);
-        if (!isLoaded()) return farPlatform;
-        for (int z = 2; z <= 5; z++) {
-            DevPlatform current = new DevPlatform(getWorld(),1,z);
-            if (current.exists()) {
-                farPlatform = current;
-            }
-        }
-        return farPlatform;
-    }
-
-    public DevPlatform getPlatformInLocation(double x, double z) {
-        for (DevPlatform platform : getPlatforms()) {
-            if (x >= platform.getBeginX() && x <= platform.getEndX()) {
-                if (z >= platform.getBeginZ() && z <= platform.getEndZ()) {
-                    return platform;
-                }
-            }
-        }
-        return null;
+        return OpenCreative.getDevPlatformer().getPlatforms(this);
     }
 
     public DevPlatform getPlatformInLocation(Location location) {
-        return getPlatformInLocation(location.getX(),location.getZ());
+        return OpenCreative.getDevPlatformer().getPlatformInLocation(this, location);
     }
 
-    public void setWorldBorder() {
-        getWorld().getWorldBorder().setWarningDistance(0);
-        getWorld().getWorldBorder().setCenter(50,50);
-        getWorld().getWorldBorder().setSize(120);
-        DevPlatform platformZ = getFarPlatformByZ();
-        DevPlatform platformX = getFarPlatformByX();
-        double endZ = platformZ.getEndZ();
-        double endX = platformX.getEndX();
-        /*
-         * We find center of world border by dividing
-         * most far platform end coordinate by 2.
-         * (the start coordinate is 0)
-         */
-        double centerZ = endZ/2;
-        double centerX = endX/2;
-        getWorld().getWorldBorder().setCenter(centerX,centerZ);
-        /*
-         * We find size by subtracting most far
-         * coordinate with center coordinate.
-         */
-        double size = ((Math.max(endX, endZ))-(Math.max(centerX, centerZ)))*2+20;
-        getWorld().getWorldBorder().setSize(size);
+    public void displayWorldBorders() {
+        if (!isLoaded()) return;
+        for (Player player : getWorld().getPlayers()) {
+            WorldBorder border = Bukkit.createWorldBorder();
+            border.setCenter(getWorld().getWorldBorder().getCenter());
+            border.setSize(getWorld().getWorldBorder().getSize()*5);
+            player.setWorldBorder(border);
+        }
     }
 
     public static Material getDefaultActionMaterial() {

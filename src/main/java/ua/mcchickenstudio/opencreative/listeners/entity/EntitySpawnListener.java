@@ -43,7 +43,7 @@ import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.sendMessageOnce;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
-import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isEntityHostile;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.*;
 
 public final class EntitySpawnListener implements Listener {
 
@@ -99,10 +99,15 @@ public final class EntitySpawnListener implements Listener {
                 sendMessageOnce(planet,warning,3);
                 new LimitReachedEntitiesEvent(planet).callEvent();
             }
-        }
-        String worldName = world.getName();
-        if (worldName.contains("dev")) {
+        } else if (isDevPlanet(world)) {
             event.setCancelled(true);
+        } else if (isLobbyWorld(world)) {
+            Player player = event.getPlayer();
+            if (player == null) return;
+            if (OpenCreative.getSettings().isLobbyDisallowSpawningMobs() && !player.hasPermission("opencreative.lobby.spawning-mobs.bypass")) {
+                event.setCancelled(true);
+                player.sendActionBar(getLocaleMessage("not-for-lobby"));
+            }
         }
     }
 

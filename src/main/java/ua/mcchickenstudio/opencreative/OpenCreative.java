@@ -57,6 +57,9 @@ import ua.mcchickenstudio.opencreative.listeners.world.RedstoneListener;
 import ua.mcchickenstudio.opencreative.managers.blocks.BlocksManager;
 import ua.mcchickenstudio.opencreative.managers.economy.Economy;
 import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
+import ua.mcchickenstudio.opencreative.managers.platforms.DevPlatformer;
+import ua.mcchickenstudio.opencreative.managers.platforms.HorizontalPlatformer;
+import ua.mcchickenstudio.opencreative.managers.platforms.VerticalPlatformer;
 import ua.mcchickenstudio.opencreative.managers.stability.DisabledWatchdog;
 import ua.mcchickenstudio.opencreative.managers.stability.StabilityManager;
 import ua.mcchickenstudio.opencreative.managers.updater.HangarUpdater;
@@ -95,6 +98,7 @@ public final class OpenCreative extends JavaPlugin {
     private PlanetsManager space;
     private StabilityManager watchdog;
     private BlocksManager blocks;
+    private DevPlatformer devPlatformer;
 
     private static final String version = "5.7.0";
     private static final String codename = "Well, it's possible";
@@ -143,6 +147,8 @@ public final class OpenCreative extends JavaPlugin {
 
         space = new Space();
         space.init();
+        devPlatformer = settings.isLegacyFloors() ? new VerticalPlatformer() : new HorizontalPlatformer();
+        devPlatformer.init();
 
         PlayerUtils.loadPermissions();
         HookUtils.loadHooks();
@@ -317,7 +323,7 @@ public final class OpenCreative extends JavaPlugin {
      * @param economy economy manager.
      */
     @SuppressWarnings("unused")
-    public static void setEconomy(Economy economy) {
+    public static void setEconomy(@NotNull Economy economy) {
         getPlugin().getLogger().info("Now using economy manager: " + economy.getName());
         getPlugin().economy = economy;
     }
@@ -335,7 +341,7 @@ public final class OpenCreative extends JavaPlugin {
      * @param packetManager packet manager.
      */
     @SuppressWarnings("unused")
-    public static void setPacketManager(PacketManager packetManager) {
+    public static void setPacketManager(@NotNull PacketManager packetManager) {
         getPlugin().getLogger().info("Now using packet manager: " + packetManager.getName());
         getPlugin().packet = packetManager;
     }
@@ -353,7 +359,7 @@ public final class OpenCreative extends JavaPlugin {
      * @param blocksManager blocks manager.
      */
     @SuppressWarnings("unused")
-    public static void setBlocksManager(BlocksManager blocksManager) {
+    public static void setBlocksManager(@NotNull BlocksManager blocksManager) {
         getPlugin().getLogger().info("Now using blocks manager: " + blocksManager.getName());
         getPlugin().blocks = blocksManager;
     }
@@ -363,8 +369,32 @@ public final class OpenCreative extends JavaPlugin {
      * of blocks in world.
      * @return blocks manager.
      */
+    @SuppressWarnings("unused")
     public static BlocksManager getBlocksManager() {
         return getPlugin().blocks;
+    }
+
+    /**
+     * Sets custom coding platforms manager.
+     * @param platformsManager developer platforms manager.
+     */
+    @SuppressWarnings("unused")
+    public static void setDevPlatformer(@NotNull DevPlatformer platformsManager) {
+        if (!(platformsManager instanceof VerticalPlatformer || platformsManager instanceof HorizontalPlatformer)) {
+            getPlugin().getLogger().info("Now using dev platforms manager: " + platformsManager.getName());
+        }
+        getPlugin().devPlatformer = platformsManager;
+    }
+
+    /**
+     * Gets coding platforms manager, that
+     * creates and manipulates with dev platforms
+     * in developer worlds.
+     * @return coding platforms manager.
+     */
+    @SuppressWarnings("unused")
+    public static DevPlatformer getDevPlatformer() {
+        return getPlugin().devPlatformer;
     }
 
     /**
@@ -372,7 +402,7 @@ public final class OpenCreative extends JavaPlugin {
      * @param planetsManager planets manager.
      */
     @SuppressWarnings("unused")
-    public static void setPlanetsManager(PlanetsManager planetsManager) {
+    public static void setPlanetsManager(@NotNull PlanetsManager planetsManager) {
         getPlugin().getLogger().info("Now using planets manager: " + planetsManager.getName());
         getPlugin().space = planetsManager;
     }
@@ -391,7 +421,7 @@ public final class OpenCreative extends JavaPlugin {
      * @param stabilityManager planets manager.
      */
     @SuppressWarnings("unused")
-    public static void setStability(StabilityManager stabilityManager) {
+    public static void setStability(@NotNull StabilityManager stabilityManager) {
         getPlugin().getLogger().info("Now using stability manager: " + stabilityManager.getName());
         getPlugin().watchdog = stabilityManager;
     }

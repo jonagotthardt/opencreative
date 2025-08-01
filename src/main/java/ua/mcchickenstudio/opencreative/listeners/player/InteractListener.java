@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 import com.destroystokyo.paper.event.player.PlayerStartSpectatingEntityEvent;
 import com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent;
 import org.bukkit.block.sign.Side;
+import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
@@ -655,6 +656,18 @@ public final class InteractListener implements Listener {
     @EventHandler
     public void onUsing(PlayerInteractEvent event) {
         Player player = event.getPlayer();
+        if (isEntityInLobby(player) && OpenCreative.getSettings().isLobbyDisallowSpawningMobs()
+                && !player.hasPermission("opencreative.lobby.spawning-mobs.bypass")) {
+            ItemStack item = event.getItem();
+            if (item == null) return;
+            if (!(item.getItemMeta() instanceof SpawnEggMeta) && item.getType() != Material.ITEM_FRAME
+                    && item.getType() != Material.GLOW_ITEM_FRAME && item.getType() != Material.PAINTING) {
+                return;
+            }
+            event.setCancelled(true);
+            player.sendActionBar(getLocaleMessage("not-for-lobby"));
+            return;
+        }
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet == null) {
             return;
@@ -765,6 +778,12 @@ public final class InteractListener implements Listener {
     @EventHandler
     public void onHang(HangingBreakByEntityEvent event) {
         if (!(event.getRemover() instanceof Player player)) return;
+        if (isEntityInLobby(player) && OpenCreative.getSettings().isLobbyDisallowDestroyingBlocks()
+                && !player.hasPermission("opencreative.lobby.destroying-blocks.bypass")) {
+            event.setCancelled(true);
+            player.sendActionBar(getLocaleMessage("not-for-lobby"));
+            return;
+        }
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet != null) {
             new MobInteractionEvent(player,event).callEvent();

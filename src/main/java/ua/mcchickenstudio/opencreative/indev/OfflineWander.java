@@ -44,11 +44,17 @@ public class OfflineWander {
 
     @Since(5.6)
     protected final @NotNull UUID uuid;
+    @Since(5.6)
     protected @Nullable String name;
+    @Since(5.6)
     protected @Nullable String description;
+    @Since(5.6)
     protected @Nullable Gender gender;
+    @Since(5.6)
     protected @Nullable List<Integer> favoriteWorlds;
+    @Since(5.6)
     protected int lastPlayedWorldId = -1;
+    @Since(5.6)
     protected boolean hideHints;
 
     public OfflineWander(@NotNull UUID uuid) {

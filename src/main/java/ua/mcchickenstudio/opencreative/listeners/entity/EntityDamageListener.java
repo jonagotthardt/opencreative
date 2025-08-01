@@ -33,13 +33,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isLobbyWorld;
 
 public final class EntityDamageListener implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
-
         if (event.getEntity() instanceof Player victim) {
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(victim);
             if (planet != null) {
@@ -72,7 +73,6 @@ public final class EntityDamageListener implements Listener {
                 if (playerDamageFlag == 5 && (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK || event.getCause() == EntityDamageEvent.DamageCause.FALL)) event.setCancelled(true);
 
                 new PlayerDamagedEvent(victim,event).callEvent();
-
             } else if (isEntityInLobby(victim)) {
                 event.setCancelled(true);
                 if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
@@ -88,7 +88,6 @@ public final class EntityDamageListener implements Listener {
                     runnable.runTaskLater(OpenCreative.getPlugin(),1L);
                 }
             }
-
         }
     }
 
@@ -115,8 +114,26 @@ public final class EntityDamageListener implements Listener {
                 Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(damager);
                 if (planet != null) {
                     new PlayerDamagesMobEvent(damager,event).callEvent();
+                } else {
+                    if (isEntityInLobby(damager) && OpenCreative.getSettings().isLobbyDisallowDamagingMobs()
+                            && !damager.hasPermission("opencreative.lobby.damaging-mobs.bypass")) {
+                        event.setCancelled(true);
+                        damager.sendActionBar(getLocaleMessage("not-for-lobby"));
+                    }
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onExplosionDamage(EntityDamageEvent event) {
+        if (event.getCause() != EntityDamageEvent.DamageCause.BLOCK_EXPLOSION &&
+                event.getCause() != EntityDamageEvent.DamageCause.ENTITY_EXPLOSION) {
+            return;
+        }
+        if (isLobbyWorld(event.getEntity().getWorld())
+                && OpenCreative.getSettings().isLobbyDisableExplosions()) {
+            event.setCancelled(true);
         }
     }
 

@@ -35,6 +35,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceEndEvent;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceStartEvent;
 import ua.mcchickenstudio.opencreative.indev.Items;
+import ua.mcchickenstudio.opencreative.managers.platforms.HorizontalPlatformer;
+import ua.mcchickenstudio.opencreative.managers.platforms.VerticalPlatformer;
 import ua.mcchickenstudio.opencreative.utils.world.generators.*;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.groups.Groups;
@@ -68,7 +70,15 @@ public class Settings {
     private boolean itemsRemoveClickableBooks = true;
 
     private boolean lobbyClearInventory = true;
+    private boolean lobbyDisallowPlacingBlocks = true;
+    private boolean lobbyDisallowDestroyingBlocks = true;
+    private boolean lobbyDisallowSpawningMobs = true;
+    private boolean lobbyDisallowDamagingMobs = true;
+    private boolean lobbyDisallowWorldEdit = true;
+    private boolean lobbyDisableExplosions = true;
+
     private boolean legacySelectionMenu = false;
+    private boolean legacyFloors = false;
 
     private BukkitRunnable announcer;
     private PlayerListChanger listChanger = PlayerListChanger.FULL;
@@ -121,8 +131,17 @@ public class Settings {
         consoleCriticalErrors = config.getBoolean("messages.critical-errors",true);
         consoleNotFoundMessage = config.getBoolean("messages.not-found",false);
         consoleWarnings = config.getBoolean("messages.warnings",true);
+
         lobbyClearInventory = config.getBoolean("lobby.clear-inventory",true);
+        lobbyDisableExplosions = config.getBoolean("lobby.disable-explosions",true);
+        lobbyDisallowWorldEdit = config.getBoolean("lobby.disallow-world-edit",true);
+        lobbyDisallowDamagingMobs = config.getBoolean("lobby.disallow-damaging-mobs",true);
+        lobbyDisallowSpawningMobs = config.getBoolean("lobby.disallow-spawning-mobs",true);
+        lobbyDisallowPlacingBlocks = config.getBoolean("lobby.disallow-placing-blocks",true);
+        lobbyDisallowDestroyingBlocks = config.getBoolean("lobby.disallow-destroying-blocks",true);
+
         legacySelectionMenu = config.getBoolean("coding.old-selection-menu",false);
+        legacyFloors = config.getBoolean("coding.old-floors",false);
 
         worldCreationMinSeconds = config.getInt("requirements.world-creation.played-seconds",30);
         worldReputationMinSeconds = config.getInt("requirements.world-reputation.creation-seconds",300);
@@ -158,6 +177,11 @@ public class Settings {
         }
         if (debug) {
             OpenCreative.getPlugin().getLogger().warning("Debug Mode is enabled in config.yml, some logs will appear in console.");
+        }
+        if (legacyFloors) {
+            OpenCreative.setDevPlatformer(new VerticalPlatformer());
+        } else if (OpenCreative.getDevPlatformer() instanceof VerticalPlatformer) {
+            OpenCreative.setDevPlatformer(new HorizontalPlatformer());
         }
         checkDebugAnnouncer();
     }
@@ -539,5 +563,33 @@ public class Settings {
 
     public boolean isLegacySelectionMenu() {
         return legacySelectionMenu;
+    }
+
+    public boolean isLegacyFloors() {
+        return legacyFloors;
+    }
+
+    public boolean isLobbyDisableExplosions() {
+        return lobbyDisableExplosions;
+    }
+
+    public boolean isLobbyDisallowDamagingMobs() {
+        return lobbyDisallowDamagingMobs;
+    }
+
+    public boolean isLobbyDisallowDestroyingBlocks() {
+        return lobbyDisallowDestroyingBlocks;
+    }
+
+    public boolean isLobbyDisallowPlacingBlocks() {
+        return lobbyDisallowPlacingBlocks;
+    }
+
+    public boolean isLobbyDisallowSpawningMobs() {
+        return lobbyDisallowSpawningMobs;
+    }
+
+    public boolean isLobbyDisallowWorldEdit() {
+        return lobbyDisallowWorldEdit;
     }
 }

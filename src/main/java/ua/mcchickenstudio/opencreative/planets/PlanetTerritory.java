@@ -87,7 +87,7 @@ public class PlanetTerritory {
         }
         FileUtils.setPlanetConfigParameter(planet,"autosave",!autoSave ? false : null);
     }
-
+    
     private void loadInformation() {
         worldSize = OpenCreative.getSettings().getGroups().getGroup(planet.getOwnerGroup()).getWorldSize();
         FileConfiguration config = getPlanetConfig(planet);
@@ -95,8 +95,7 @@ public class PlanetTerritory {
         if (config.getString("environment") != null) {
             try {
                 environment = World.Environment.valueOf(config.getString("environment"));
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
         }
         autoSave = config.getBoolean("autosave",true);
         this.generator = config.getString("generator","");

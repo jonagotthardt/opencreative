@@ -81,7 +81,8 @@ public class CodeConfiguration extends YamlConfiguration {
         int y = block.getY();
         int z = block.getZ();
 
-        String path = "code.blocks.exec_block_" + z + "_" + x;
+        String path = "code.blocks.exec_block_" +
+                (OpenCreative.getDevPlatformer().isHorizontal() ? z : y) + "_" + x;
         set(path + ".category", category.name());
         set(path + ".type", type.name());
 
@@ -176,7 +177,7 @@ public class CodeConfiguration extends YamlConfiguration {
      * @return Configuration path of action block.
      */
     private String getActionBlockPath(Block executorBlock, Block actionBlock, List<String> multiActions) {
-        int z = actionBlock.getZ();
+        int z = OpenCreative.getDevPlatformer().isHorizontal() ? actionBlock.getZ() : actionBlock.getY();
         StringBuilder conditionsPath = new StringBuilder();
         for (String condition : multiActions) {
             conditionsPath

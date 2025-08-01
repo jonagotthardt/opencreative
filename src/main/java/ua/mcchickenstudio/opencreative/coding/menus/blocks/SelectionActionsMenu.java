@@ -50,7 +50,7 @@ public class SelectionActionsMenu extends AbstractMenu {
     private final ItemStack playerCondition = createItem(Material.OAK_PLANKS,1,"items.developer.player-condition");
     private final ItemStack entityCondition = createItem(Material.BRICKS,1,"items.developer.entity-condition");
 
-    private final ItemStack defaultItem = createItem(Target.RANDOM_TARGET.getIcon(),1,"menus.developer.selection.items.default");
+    private final ItemStack defaultItem = createItem(Target.DEFAULT.getIcon(),1,"menus.developer.selection.items.default");
     private final ItemStack allPlayers = createItem(Target.ALL_PLAYERS.getIcon(),1,"menus.developer.selection.items.all-players");
     private final ItemStack allEntities = createItem(Target.ALL_ENTITIES.getIcon(),1,"menus.developer.selection.items.all-entities");
     private final ItemStack randomTarget = createItem(Target.RANDOM_TARGET.getIcon(),1,"menus.developer.selection.items.random-target");
@@ -122,6 +122,11 @@ public class SelectionActionsMenu extends AbstractMenu {
             player.closeInventory();
         } else if (itemEquals(currentItem, allEntities)) {
             setLine("all_entities");
+            Sounds.DEV_SET_TARGET.play(player);
+            event.getWhoClicked().swingMainHand();
+            player.closeInventory();
+        } else if (itemEquals(currentItem, defaultItem)) {
+            setLine("");
             Sounds.DEV_SET_TARGET.play(player);
             event.getWhoClicked().swingMainHand();
             player.closeInventory();

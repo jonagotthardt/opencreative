@@ -19,6 +19,8 @@
 package ua.mcchickenstudio.opencreative.utils;
 
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.block.sign.Side;
 import org.bukkit.boss.KeyedBossBar;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -122,9 +124,14 @@ public class PlayerUtils {
         player.setRemainingAir(player.getMaximumAir());
         player.setCanPickupItems(true);
         player.setGlowing(false);
-        player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.1f);
-        player.getAttribute(Attribute.GENERIC_SCALE).setBaseValue(1);
-        player.getAttribute(Attribute.GENERIC_STEP_HEIGHT).setBaseValue(0.6f);
+        AttributeInstance movementSpeed = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+        if (movementSpeed != null) movementSpeed.setBaseValue(0.1f);
+
+        AttributeInstance scale = player.getAttribute(Attribute.GENERIC_SCALE);
+        if (scale != null) scale.setBaseValue(1);
+
+        AttributeInstance stepHeight = player.getAttribute(Attribute.GENERIC_STEP_HEIGHT);
+        if (stepHeight != null) stepHeight.setBaseValue(0.6f);
     }
 
     /**
@@ -262,7 +269,7 @@ public class PlayerUtils {
         Sign sign = (Sign) block.getState();
         AsyncScheduler.run(() -> {
             List<Component> newLines = new ArrayList<>();
-            for (Component line : sign.lines()) {
+            for (Component line : sign.getSide(Side.FRONT).lines()) {
                 String content = ((TextComponent) line).content();
                 String path = "blocks." + content;
                 if (content.isEmpty()) {
@@ -290,7 +297,7 @@ public class PlayerUtils {
         if (!block.getType().toString().contains("SIGN")) return;
         Sign sign = (Sign) block.getState();
         List<Component> newLines = new ArrayList<>();
-        for (Component line : sign.lines()) {
+        for (Component line : sign.getSide(Side.FRONT).lines()) {
             String content = ((TextComponent) line).content();
             String path = "blocks." + content;
             if (content.isEmpty()) {
@@ -316,9 +323,10 @@ public class PlayerUtils {
         int maxX = player.getLocation().getBlockX()+radius;
         int minZ = player.getLocation().getBlockZ()-radius;
         int maxZ = player.getLocation().getBlockZ()+radius;
+        int y = player.getLocation().getBlockY();
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
-                Block block = player.getWorld().getBlockAt(x,1,z);
+                Block block = player.getWorld().getBlockAt(x,y,z);
                 if (block.getType().name().contains("WALL_SIGN")) {
                     translateBlockSign(block,player);
                 }

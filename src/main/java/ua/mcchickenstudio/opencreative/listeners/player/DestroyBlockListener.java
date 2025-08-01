@@ -44,6 +44,7 @@ import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListene
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getClosingBracketX;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.getCodingDoNotDropMeKey;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
 public final class DestroyBlockListener implements Listener {
@@ -82,7 +83,7 @@ public final class DestroyBlockListener implements Listener {
                 } else {
                     if (ExecutorCategory.getByMaterial(block.getType()) != null) {
                         if (event.getPlayer().isSneaking()) {
-                            for (int x = block.getX(); x < platform.getEndX()-1; x = x + 2) {
+                            for (int x = block.getX(); x < platform.getEndCoordinate()-1; x = x + 2) {
                                 Block actionBlock = block.getWorld().getBlockAt(x, block.getY(), block.getZ());
                                 destroyAdditionalBlocks(platform,actionBlock,devPlanet.isDropItems());
                                 actionBlock.setType(Material.AIR);
@@ -116,6 +117,10 @@ public final class DestroyBlockListener implements Listener {
             if (!event.isCancelled()) {
                 Menus.onBlockDestroy(event.getBlock().getLocation());
             }
+        } else if (isEntityInLobby(player) && OpenCreative.getSettings().isLobbyDisallowDestroyingBlocks()
+                && !player.hasPermission("opencreative.lobby.destroying-blocks.bypass")) {
+            event.setCancelled(true);
+            player.sendActionBar(getLocaleMessage("not-for-lobby"));
         }
     }
 

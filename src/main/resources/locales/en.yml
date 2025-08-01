@@ -185,6 +185,7 @@ not-developer: "%prefix%&cYou are not the developer of this world."
 not-builder: "%prefix%&cYou are not the builder of this world."
 only-in-world: "%prefix%&cThis can only be used in the world."
 only-in-dev-world: "%prefix%&cThis can only be used in the world for developers (/dev)."
+not-for-lobby: "%prefix%&cCreate your own world to do it!"
 no-money: "%prefix%&cIt seems you don't have enough coins! You need at least %money% coins!"
 no-planet-found: "%prefix%&cThis world does not exist."
 private-planet: "%prefix%This world is currently &6private&f, only the owner can enter."
@@ -1087,6 +1088,38 @@ items:
           lore:
             - "&7Summon mob, create lightning,"
             - "&7show particle, explode."
+            - " "
+            - "&eClick to choose category."
+        entity_params:
+          name: "&cEntity Parameters"
+          lore:
+            - "&7Rename, set the health,"
+            - "&7damage, walk speed, burning,"
+            - "&7freezing, potion effects."
+            - " "
+            - "&eClick to choose category."
+        controller:
+          name: "&3Other for controller"
+          lore:
+            - "&7Catch an error between the"
+            - "&7pistons, or measure time of"
+            - "&7executing code."
+            - " "
+            - "&eClick to choose category."
+        repeats:
+          name: "&bOther for repeats"
+          lore:
+            - "&7Repeat forever, or iterate"
+            - "&7through numbers, list elements,"
+            - "&7or even blocks in region."
+            - " "
+            - "&eClick to choose category."
+        entity_state:
+          name: "&3Entity State"
+          lore:
+            - "&7Set glowing, change text"
+            - "&7of display entity, change"
+            - "&7color of sheep or dog's collar."
             - " "
             - "&eClick to choose category."
         blocks:
@@ -11614,6 +11647,15 @@ menus:
             - "&6  south&7 - South"
             - "&6  west&7 - West"
             - "&6  east&7 - East"
+            - ""
+            - "&eClick to set."
+        velocity:
+          name: "&bEntity Velocity"
+          lore:
+            - "&7Type: &bVector"
+            - ""
+            - "&7 Gets the vector of"
+            - "&7 mob's velocity."
             - ""
             - "&eClick to set."
         direction:

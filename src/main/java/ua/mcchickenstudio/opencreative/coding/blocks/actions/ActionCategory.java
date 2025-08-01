@@ -36,8 +36,8 @@ public enum ActionCategory {
     LAUNCH_FUNCTION_ACTION(Material.LAPIS_ORE, Material.STONE, NamedTextColor.AQUA, Material.BLUE_STAINED_GLASS_PANE),
     LAUNCH_METHOD_ACTION(Material.EMERALD_ORE, Material.STONE, NamedTextColor.GREEN, Material.LIME_STAINED_GLASS_PANE),
     CONTROL_ACTION(Material.COAL_BLOCK, Material.COAL_ORE, NamedTextColor.DARK_GRAY, Material.GRAY_STAINED_GLASS_PANE, MenusCategory.LINES),
-    CONTROLLER_ACTION(Material.DARK_PRISMARINE, Material.PISTON, NamedTextColor.GREEN, Material.BLUE_STAINED_GLASS_PANE, MenusCategory.OTHER),
-    REPEAT_ACTION(Material.PRISMARINE, Material.PISTON, NamedTextColor.AQUA, Material.LIGHT_BLUE_STAINED_GLASS_PANE, MenusCategory.OTHER),
+    CONTROLLER_ACTION(Material.DARK_PRISMARINE, Material.PISTON, NamedTextColor.GREEN, Material.BLUE_STAINED_GLASS_PANE, MenusCategory.CONTROLLER),
+    REPEAT_ACTION(Material.PRISMARINE, Material.PISTON, NamedTextColor.AQUA, Material.LIGHT_BLUE_STAINED_GLASS_PANE, MenusCategory.REPEATS),
 
     PLAYER_CONDITION(Material.OAK_PLANKS, Material.PISTON, NamedTextColor.GOLD, Material.ORANGE_STAINED_GLASS_PANE, MenusCategory.PARAMS),
     VARIABLE_CONDITION(Material.OBSIDIAN, Material.PISTON, NamedTextColor.BLUE, Material.BLUE_STAINED_GLASS_PANE, MenusCategory.OTHER),
