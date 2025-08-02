@@ -76,13 +76,13 @@ public class CodeConfiguration extends YamlConfiguration {
      * @param category category of executor.
      * @param type type of executor.
      */
-    public void saveExecutorBlock(Block block, ExecutorCategory category, ExecutorType type) {
+    public void saveExecutorBlock(Block block, boolean notDependsOnHeight, ExecutorCategory category, ExecutorType type) {
         int x = block.getX();
         int y = block.getY();
         int z = block.getZ();
 
         String path = "code.blocks.exec_block_" +
-                (OpenCreative.getDevPlatformer().notDependsOnHeight() ? z : y) + "_" + x;
+                (notDependsOnHeight ? z : y) + "_" + x;
         set(path + ".category", category.name());
         set(path + ".type", type.name());
 
@@ -115,8 +115,8 @@ public class CodeConfiguration extends YamlConfiguration {
      * @param type type of action.
      * @param target target for action.
      */
-    public void saveActionBlock(Block executorBlock, List<String> multiActions, Block actionBlock, ActionCategory category, ActionType type, Target target) {
-        String path = getActionBlockPath(executorBlock,actionBlock,multiActions);
+    public void saveActionBlock(Block executorBlock, boolean notDependsOnHeight, List<String> multiActions, Block actionBlock, ActionCategory category, ActionType type, Target target) {
+        String path = getActionBlockPath(executorBlock,notDependsOnHeight,actionBlock,multiActions);
 
         set(path + ".category", category.name());
         set(path + ".type", type.name());
@@ -164,8 +164,8 @@ public class CodeConfiguration extends YamlConfiguration {
      * @param value value of argument.
      * @param type value type.
      */
-    public void saveArguments(Block executorBlock, List<String> multiActions, Block actionBlock, String argument, Object value, ValueType type) {
-        String path = getActionBlockPath(executorBlock,actionBlock,multiActions);
+    public void saveArguments(Block executorBlock, boolean notDependsOnHeight, List<String> multiActions, Block actionBlock, String argument, Object value, ValueType type) {
+        String path = getActionBlockPath(executorBlock,notDependsOnHeight,actionBlock,multiActions);
         set(path + ".arguments." + argument + ".type",type.name());
         set(path + ".arguments." + argument + ".value",value);
     }
@@ -176,8 +176,8 @@ public class CodeConfiguration extends YamlConfiguration {
      * @param multiActions list of multi actions that have brackets and inside actions.
      * @return Configuration path of action block.
      */
-    private String getActionBlockPath(Block executorBlock, Block actionBlock, List<String> multiActions) {
-        int z = OpenCreative.getDevPlatformer().notDependsOnHeight() ? actionBlock.getZ() : actionBlock.getY();
+    private String getActionBlockPath(Block executorBlock, boolean notDependsOnHeight, Block actionBlock, List<String> multiActions) {
+        int z = notDependsOnHeight ? actionBlock.getZ() : actionBlock.getY();
         StringBuilder conditionsPath = new StringBuilder();
         for (String condition : multiActions) {
             conditionsPath

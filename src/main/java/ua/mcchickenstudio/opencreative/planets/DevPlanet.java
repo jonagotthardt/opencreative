@@ -19,12 +19,7 @@
 package ua.mcchickenstudio.opencreative.planets;
 
 import org.bukkit.block.*;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Directional;
-import org.bukkit.block.sign.Side;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;

@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.coding.menus;
 
 import net.kyori.adventure.title.Title;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;

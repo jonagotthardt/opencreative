@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.coding.values.entity;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -38,7 +38,6 @@ import ua.mcchickenstudio.opencreative.indev.Items;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformer;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformers;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.HorizontalPlatformer;
-import ua.mcchickenstudio.opencreative.utils.world.platforms.VerticalPlatformer;
 import ua.mcchickenstudio.opencreative.utils.world.generators.*;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.groups.Groups;
@@ -47,7 +46,6 @@ import java.io.File;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningErrorMessage;
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 

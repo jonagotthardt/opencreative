@@ -7,7 +7,6 @@ import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 
@@ -130,7 +129,7 @@ public final class LegacyPlatformer extends DevPlatformer implements HasVisibleB
     }
 
     public @NotNull Location getPlatformBeginLocation(@NotNull DevPlatform platform) {
-        return new Location(platform.getWorld(), 0, (platform.getZ() - 1) * 5, 0);
+        return new Location(platform.getWorld(), 0, (platform.getZ() - 1) * 10, 0);
     }
 
 
@@ -156,12 +155,12 @@ public final class LegacyPlatformer extends DevPlatformer implements HasVisibleB
 
     @Override
     public @NotNull String getName() {
-        return "Vertical Platforms Generator";
+        return "Legacy Platforms Generator";
     }
 
     @Override
     public @NotNull String getDescription() {
-        return "Builds coding platforms like floors";
+        return "Builds coding platforms like legacy floors";
     }
 
     @Override

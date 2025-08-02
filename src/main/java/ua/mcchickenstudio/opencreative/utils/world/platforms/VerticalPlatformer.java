@@ -7,7 +7,6 @@ import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 
@@ -48,7 +47,7 @@ public final class VerticalPlatformer extends DevPlatformer {
             int end = platform.getEndCoordinate();
             if (x >= begin && x <= end) {
                 if (z >= begin && z <= end) {
-                    if (y >= height && y <= height+3) {
+                    if (y >= height && y <= height+9) {
                         return platform;
                     }
                 }

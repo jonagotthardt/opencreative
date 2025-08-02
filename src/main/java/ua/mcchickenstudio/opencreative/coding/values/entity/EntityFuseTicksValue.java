@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.coding.values.entity;
 
 import org.bukkit.Material;
-import org.bukkit.block.data.type.TNT;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
