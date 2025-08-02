@@ -42,7 +42,7 @@ public final class VerticalPlatformer extends DevPlatformer {
         double y = location.getY();
         double z = location.getZ();
         for (DevPlatform platform : getPlatforms(devPlanet)) {
-            Location beginLocation = OpenCreative.getDevPlatformer().getPlatformBeginLocation(platform);
+            Location beginLocation = getPlatformBeginLocation(platform);
             int height = beginLocation.getBlockY();
             int begin = beginLocation.getBlockX();
             int end = platform.getEndCoordinate();

@@ -73,7 +73,7 @@ public class DevPlatform {
     }
 
     public boolean exists() {
-        Location begin = platformer.getPlatformBeginLocation(this);
+        Location begin = platformer.getPlatformBeginLocation(this).add(4,0,4);
         if (!ChunkCache.isChunkGenerated(world, begin.getBlockX() >> 4, begin.getBlockZ() >> 4)) {
             return false;
         }

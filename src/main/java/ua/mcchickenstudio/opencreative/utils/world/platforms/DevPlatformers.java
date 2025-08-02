@@ -32,6 +32,7 @@ public final class DevPlatformers {
             instance = new DevPlatformers();
             instance.registerDevPlatformer(new HorizontalPlatformer());
             instance.registerDevPlatformer(new VerticalPlatformer());
+            instance.registerDevPlatformer(new LegacyPlatformer());
         }
         return instance;
     }

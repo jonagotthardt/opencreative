@@ -38,6 +38,7 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformer;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformers;
+import ua.mcchickenstudio.opencreative.utils.world.platforms.HasVisibleBorder;
 
 import java.io.File;
 import java.util.*;
@@ -423,6 +424,7 @@ public class DevPlanet {
 
     public void displayWorldBorders() {
         if (!isLoaded()) return;
+        if (getDevPlatformer() instanceof HasVisibleBorder) return;
         for (Player player : getWorld().getPlayers()) {
             WorldBorder border = Bukkit.createWorldBorder();
             border.setCenter(getWorld().getWorldBorder().getCenter());

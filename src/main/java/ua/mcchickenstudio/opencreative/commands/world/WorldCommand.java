@@ -346,7 +346,10 @@ public class WorldCommand extends CommandHandler {
                     planet.getDevPlanet().setPlatformerID(platformer.getID());
                     sender.sendMessage(getLocaleMessage("world.platformer.reset")
                             .replace("%id%", platformer.getID()));
-                    if (planet.getDevPlanet().isLoaded()) platformer.setWorldBorder(planet.getDevPlanet());
+                    if (planet.getDevPlanet().isLoaded()) {
+                        platformer.setWorldBorder(planet.getDevPlanet());
+                        planet.getDevPlanet().displayWorldBorders();
+                    }
                     return;
                 }
                 if (platformer == null) {
@@ -357,7 +360,10 @@ public class WorldCommand extends CommandHandler {
                 planet.getDevPlanet().setPlatformerID(platformer.getID());
                 sender.sendMessage(getLocaleMessage("world.platformer.set")
                         .replace("%id%", platformer.getID()));
-                if (planet.getDevPlanet().isLoaded()) platformer.setWorldBorder(planet.getDevPlanet());
+                if (planet.getDevPlanet().isLoaded()) {
+                    platformer.setWorldBorder(planet.getDevPlanet());
+                    planet.getDevPlanet().displayWorldBorders();
+                }
             }
             case "info" -> sendPlanetInfo(player,planet);
             default -> {
@@ -397,7 +403,7 @@ public class WorldCommand extends CommandHandler {
             } else if (List.of("ban","blacklist","kick","whitelist","white").contains(args[0].toLowerCase())) {
                 if (args[0].equalsIgnoreCase("kick")) tabCompleter.add("*");
                 tabCompleter.addAll(planet.getPlayers().stream().filter(p -> !planet.isOwner(p) && p.getName().startsWith(args[1])).map(Player::getName).toList());
-            } else if (args[1].equalsIgnoreCase("platformer") && player.hasPermission("opencreative.world.set-platformer")) {
+            } else if (args[0].equalsIgnoreCase("platformer") && player.hasPermission("opencreative.world.set-platformer")) {
                 tabCompleter.addAll(DevPlatformers.getInstance().getPlatformersIDs());
             }
         }

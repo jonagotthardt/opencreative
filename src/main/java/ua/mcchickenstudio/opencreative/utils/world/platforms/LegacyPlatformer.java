@@ -20,7 +20,7 @@ import java.util.List;
  * and returns platforms in vertical way, but with a little bit
  * of fun for our closed-sourced competitors.
  */
-public final class LegacyPlatformer extends DevPlatformer {
+public final class LegacyPlatformer extends DevPlatformer implements HasVisibleBorder {
 
     public LegacyPlatformer() {
         super("legacy");
@@ -43,7 +43,7 @@ public final class LegacyPlatformer extends DevPlatformer {
         double y = location.getY();
         double z = location.getZ();
         for (DevPlatform platform : getPlatforms(devPlanet)) {
-            Location beginLocation = OpenCreative.getDevPlatformer().getPlatformBeginLocation(platform);
+            Location beginLocation = getPlatformBeginLocation(platform);
             int height = beginLocation.getBlockY();
             int begin = beginLocation.getBlockX();
             int end = platform.getEndCoordinate();
