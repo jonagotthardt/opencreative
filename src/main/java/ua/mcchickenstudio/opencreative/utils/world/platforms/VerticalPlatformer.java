@@ -1,6 +1,5 @@
-package ua.mcchickenstudio.opencreative.managers.platforms;
+package ua.mcchickenstudio.opencreative.utils.world.platforms;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -8,7 +7,6 @@ import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 
@@ -17,10 +15,14 @@ import java.util.List;
 
 /**
  * <h1>VerticalPlatformer</h1>
- * This class represents a platforms manager, that creates
+ * This class represents a platforms generator, that creates
  * and returns platforms in vertical way, like old floors.
  */
-public final class VerticalPlatformer implements DevPlatformer {
+public final class VerticalPlatformer extends DevPlatformer {
+
+    public VerticalPlatformer() {
+        super("vertical");
+    }
 
     @Override
     public void setWorldBorder(@NotNull DevPlanet devPlanet) {
@@ -39,13 +41,13 @@ public final class VerticalPlatformer implements DevPlatformer {
         double y = location.getY();
         double z = location.getZ();
         for (DevPlatform platform : getPlatforms(devPlanet)) {
-            Location beginLocation = OpenCreative.getDevPlatformer().getPlatformBeginLocation(platform);
+            Location beginLocation = getPlatformBeginLocation(platform);
             int height = beginLocation.getBlockY();
             int begin = beginLocation.getBlockX();
             int end = platform.getEndCoordinate();
             if (x >= begin && x <= end) {
                 if (z >= begin && z <= end) {
-                    if (y >= height && y <= height+3) {
+                    if (y >= height && y <= height+9) {
                         return platform;
                     }
                 }
@@ -57,15 +59,15 @@ public final class VerticalPlatformer implements DevPlatformer {
     @Override
     public @NotNull DevPlatform getFarPlatformByX(@NotNull DevPlanet devPlanet) {
         // Floors are stacking on each other, so we return 1, 1.
-        return new DevPlatform(devPlanet.getWorld(),1,1);
+        return new DevPlatform(devPlanet,1,1);
     }
 
     @Override
     public @NotNull DevPlatform getFarPlatformByZ(@NotNull DevPlanet devPlanet) {
-        DevPlatform farPlatform = new DevPlatform(devPlanet.getWorld(),1,1);
+        DevPlatform farPlatform = new DevPlatform(devPlanet,1,1);
         if (!devPlanet.isLoaded()) return farPlatform;
         for (int z = 2; z <= 25; z++) {
-            DevPlatform current = new DevPlatform(devPlanet.getWorld(),1,z);
+            DevPlatform current = new DevPlatform(devPlanet,1,z);
             if (current.exists()) {
                 farPlatform = current;
             }
@@ -78,7 +80,7 @@ public final class VerticalPlatformer implements DevPlatformer {
         List<DevPlatform> platforms = new ArrayList<>();
         if (!devPlanet.isLoaded()) return platforms;
         for (int z = 1; z <= getFarPlatformByZ(devPlanet).getZ(); z++) {
-            DevPlatform platform = new DevPlatform(devPlanet.getWorld(),1,z);
+            DevPlatform platform = new DevPlatform(devPlanet,1,z);
             if (platform.exists()) {
                 platforms.add(platform);
             }
@@ -135,29 +137,32 @@ public final class VerticalPlatformer implements DevPlatformer {
 
     @Override
     public @NotNull DevPlatform getNextAvailablePlatform(@NotNull DevPlanet planet) {
-        DevPlatform platform = new DevPlatform(planet.getWorld(), 1, 1);;
+        DevPlatform platform = new DevPlatform(planet, 1, 1);;
         for (int y = 1; y <= 25; y++) {
-            platform = new DevPlatform(planet.getWorld(), 1, y);
+            platform = new DevPlatform(planet, 1, y);
             if (!platform.exists()) return platform;
         }
         return platform;
     }
 
     @Override
-    public boolean isHorizontal() {
+    public boolean notDependsOnHeight() {
         return false;
     }
 
     @Override
-    public void init() {}
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+    public @NotNull String getName() {
+        return "Vertical Platforms Generator";
     }
 
     @Override
-    public String getName() {
-        return "Vertical Coding Platforms Manager";
+    public @NotNull String getDescription() {
+        return "Builds coding platforms like floors";
     }
+
+    @Override
+    public @NotNull String getExtensionId() {
+        return "default";
+    }
+
 }

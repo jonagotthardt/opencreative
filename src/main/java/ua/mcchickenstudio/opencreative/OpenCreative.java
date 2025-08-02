@@ -57,9 +57,9 @@ import ua.mcchickenstudio.opencreative.listeners.world.RedstoneListener;
 import ua.mcchickenstudio.opencreative.managers.blocks.BlocksManager;
 import ua.mcchickenstudio.opencreative.managers.economy.Economy;
 import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
-import ua.mcchickenstudio.opencreative.managers.platforms.DevPlatformer;
-import ua.mcchickenstudio.opencreative.managers.platforms.HorizontalPlatformer;
-import ua.mcchickenstudio.opencreative.managers.platforms.VerticalPlatformer;
+import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformer;
+import ua.mcchickenstudio.opencreative.utils.world.platforms.HorizontalPlatformer;
+import ua.mcchickenstudio.opencreative.utils.world.platforms.VerticalPlatformer;
 import ua.mcchickenstudio.opencreative.managers.stability.DisabledWatchdog;
 import ua.mcchickenstudio.opencreative.managers.stability.StabilityManager;
 import ua.mcchickenstudio.opencreative.managers.updater.HangarUpdater;
@@ -147,8 +147,7 @@ public final class OpenCreative extends JavaPlugin {
 
         space = new Space();
         space.init();
-        devPlatformer = settings.isLegacyFloors() ? new VerticalPlatformer() : new HorizontalPlatformer();
-        devPlatformer.init();
+        if (devPlatformer == null) devPlatformer = new HorizontalPlatformer();
 
         PlayerUtils.loadPermissions();
         HookUtils.loadHooks();
@@ -182,8 +181,8 @@ public final class OpenCreative extends JavaPlugin {
                         "",
                         "  Running on " + Bukkit.getMinecraftVersion() + " server",
                         "  Current time " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()),
-                        isChristmas() ? "  Ho-ho-ho! Merry Christmas, server owners! :-) ❆" :
-                                        isHalloween() ? "  Spo-o-o-oky Halloween, server owners! O_o 🎃" : "",
+                                isChristmas() ? "  Ho-ho-ho! Merry Christmas, server owners! :-) ❆" :
+                                isHalloween() ? "  Spo-o-o-oky Halloween, server owners! O_o 🎃" : "",
                         "  " + codename,
                         "  Made by McChicken Studio 2017–2025",
                         ""
@@ -418,7 +417,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Sets custom stability manager.
-     * @param stabilityManager planets manager.
+     * @param stabilityManager stability manager.
      */
     @SuppressWarnings("unused")
     public static void setStability(@NotNull StabilityManager stabilityManager) {
@@ -429,7 +428,7 @@ public final class OpenCreative extends JavaPlugin {
     /**
      * Gets stability manager, that checks server's
      * performance and makes sure everything is fine.
-     * @return planets manager.
+     * @return stability manager.
      */
     public static StabilityManager getStability() {
         return getPlugin().watchdog;

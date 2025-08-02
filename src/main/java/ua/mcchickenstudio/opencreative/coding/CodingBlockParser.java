@@ -88,7 +88,7 @@ public class CodingBlockParser {
         // For platforms
         for (DevPlatform platform : platforms) {
             // For coding executors
-            Location begin = OpenCreative.getDevPlatformer().getPlatformBeginLocation(platform);
+            Location begin = devPlanet.getDevPlatformer().getPlatformBeginLocation(platform);
             int y = begin.getBlockY() + 1;
             int x = begin.getBlockX() + 4;
             for (int z = begin.getBlockZ() + 4; z <= platform.getEndCoordinate() - 4; z = z + 4) {
@@ -116,6 +116,7 @@ public class CodingBlockParser {
         List<Block> unknownBlocks = new ArrayList<>();
         List<DevPlatform> platforms = devPlanet.getPlatforms();
         Collections.reverse(platforms); // Reversing to make executors from first platform as first
+        boolean notDependsOnHeight = devPlanet.getDevPlatformer().notDependsOnHeight();
 
         // For coding executors
         for (Location executorLocation : executorsLocations) {
@@ -139,7 +140,7 @@ public class CodingBlockParser {
                 }
                 continue;
             }
-            config.saveExecutorBlock(executorBlock,executorCategory,executorType);
+            config.saveExecutorBlock(executorBlock,notDependsOnHeight,executorCategory,executorType);
 
             // For coding actions
             List<String> multiActions = new ArrayList<>();
@@ -182,7 +183,7 @@ public class CodingBlockParser {
                     }
                     continue;
                 }
-                config.saveActionBlock(executorBlock,multiActions,actionBlock,actionCategory,actionType,actionTarget);
+                config.saveActionBlock(executorBlock,notDependsOnHeight,multiActions,actionBlock,actionCategory,actionType,actionTarget);
                 /*
                  * Checking items in container and saving
                  * them as arguments for action.
@@ -201,24 +202,24 @@ public class CodingBlockParser {
                      * handle and save every item into list.
                      */
                     if (argSlot.isList()) {
-                        config.saveArguments(executorBlock,multiActions,actionBlock,argSlot.getPath(),null, ValueType.LIST);
+                        config.saveArguments(executorBlock,notDependsOnHeight,multiActions,actionBlock,argSlot.getPath(),null, ValueType.LIST);
                         for (byte i = 1; i < argSlot.getListSize()+1; i++) {
                             if (slot < content.length) {
                                 item = content[slot];
                                 if (item == null) {
                                     if (argSlot.acceptEmptyItems()) {
                                         item = new ItemStack(Material.AIR);
-                                        config.saveArguments(executorBlock,multiActions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
+                                        config.saveArguments(executorBlock,notDependsOnHeight,multiActions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
                                     }
                                 } else {
-                                    config.saveArguments(executorBlock,multiActions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
+                                    config.saveArguments(executorBlock,notDependsOnHeight,multiActions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
                                 }
                             }
                             slot++;
                         }
                     } else {
                         if (item != null) {
-                            config.saveArguments(executorBlock,multiActions,actionBlock,argSlot.getPath(),parseItemValue(item),parseItemType(item));
+                            config.saveArguments(executorBlock,notDependsOnHeight,multiActions,actionBlock,argSlot.getPath(),parseItemValue(item),parseItemType(item));
                         }
                         slot++;
                     }

@@ -34,6 +34,7 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import ua.mcchickenstudio.opencreative.utils.world.cache.ChunkCache;
+import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,15 +49,31 @@ public class DevPlatform {
     private final int x;
     private final int z;
     private final World world;
+    private final DevPlatformer platformer;
+
+    public DevPlatform(DevPlanet devPlanet, int x, int z) {
+        this.x = x;
+        this.z = z;
+        this.world = devPlanet.getWorld();
+        this.platformer = devPlanet.getDevPlatformer();
+    }
+
+    public DevPlatform(World world, DevPlatformer platformer, int x, int z) {
+        this.x = x;
+        this.z = z;
+        this.world = world;
+        this.platformer = platformer;
+    }
 
     public DevPlatform(World world, int x, int z) {
         this.x = x;
         this.z = z;
         this.world = world;
+        this.platformer = OpenCreative.getDevPlatformer();
     }
 
     public boolean exists() {
-        Location begin = OpenCreative.getDevPlatformer().getPlatformBeginLocation(this);
+        Location begin = platformer.getPlatformBeginLocation(this).add(4,0,4);
         if (!ChunkCache.isChunkGenerated(world, begin.getBlockX() >> 4, begin.getBlockZ() >> 4)) {
             return false;
         }
@@ -70,8 +87,8 @@ public class DevPlatform {
      */
     public boolean isEmptyColumn(int column) {
         if (column < 1 || column > 24) throw new IllegalArgumentException("Developer platform column must be in range from 1 to 24.");
-        Location begin = OpenCreative.getDevPlatformer().getPlatformBeginLocation(this);
-        Location end = OpenCreative.getDevPlatformer().getPlatformEndLocation(this);
+        Location begin = platformer.getPlatformBeginLocation(this);
+        Location end = platformer.getPlatformEndLocation(this);
         int z = begin.getBlockZ() + (column*4);
         for (int x = begin.getBlockX() + 4; x <= end.getBlockX() - 3; x++) {
             Block block = world.getBlockAt(x,begin.getBlockY(),z);
@@ -86,7 +103,7 @@ public class DevPlatform {
         List<Location> columns = new ArrayList<>();
         for (int column = 1; column <= 24; column++) {
             if (isEmptyColumn(column)) {
-                columns.add(OpenCreative.getDevPlatformer().getPlatformBeginLocation(this).clone()
+                columns.add(platformer.getPlatformBeginLocation(this).clone()
                         .add(4,0,column * 4));
             }
         }
@@ -94,16 +111,16 @@ public class DevPlatform {
     }
 
     public Material getFloorMaterial() {
-        return world.getBlockAt(OpenCreative.getDevPlatformer().getPlatformBeginLocation(this)).getType();
+        return world.getBlockAt(platformer.getPlatformBeginLocation(this)).getType();
     }
 
     public Material getEventMaterial() {
-        return world.getBlockAt(OpenCreative.getDevPlatformer().getPlatformBeginLocation(this)
+        return world.getBlockAt(platformer.getPlatformBeginLocation(this)
                 .clone().add(4,0,4)).getType();
     }
 
     public Material getActionMaterial() {
-        return world.getBlockAt(OpenCreative.getDevPlatformer().getPlatformBeginLocation(this)
+        return world.getBlockAt(platformer.getPlatformBeginLocation(this)
                 .clone().add(6,0,4)).getType();
     }
 
@@ -117,33 +134,33 @@ public class DevPlatform {
     public boolean setMaterials(Material floor, Material event, Material action) {
         if (cantBePlatformMaterial(floor) || cantBePlatformMaterial(event) || cantBePlatformMaterial(action)) return false;
         if (floor == event || floor == action || event == action) return false;
-        return OpenCreative.getDevPlatformer().buildPlatform(this, floor, event, action);
+        return platformer.buildPlatform(this, floor, event, action);
     }
 
     public boolean setFloorMaterial(Material floor) {
         if (cantBePlatformMaterial(floor)) return false;
         if (floor == getEventMaterial()) return false;
         if (floor == getActionMaterial()) return false;
-        return OpenCreative.getDevPlatformer().buildPlatform(this, floor, getEventMaterial(), getActionMaterial());
+        return platformer.buildPlatform(this, floor, getEventMaterial(), getActionMaterial());
     }
 
     public boolean setEventMaterial(Material event) {
         if (cantBePlatformMaterial(event)) return false;
         if (event == getFloorMaterial()) return false;
         if (event == getActionMaterial()) return false;
-        return OpenCreative.getDevPlatformer().buildPlatform(this, getFloorMaterial(), event, getActionMaterial());
+        return platformer.buildPlatform(this, getFloorMaterial(), event, getActionMaterial());
     }
 
     public boolean setActionMaterial(Material action) {
         if (cantBePlatformMaterial(action)) return false;
         if (action == getEventMaterial()) return false;
         if (action == getActionMaterial()) return false;
-        return OpenCreative.getDevPlatformer().buildPlatform(this, getFloorMaterial(), getEventMaterial(), action);
+        return platformer.buildPlatform(this, getFloorMaterial(), getEventMaterial(), action);
     }
 
     public void setContainerMaterial(Material containerMaterial) {
-        Location begin = OpenCreative.getDevPlatformer().getPlatformBeginLocation(this);
-        Location end = OpenCreative.getDevPlatformer().getPlatformEndLocation(this);
+        Location begin = platformer.getPlatformBeginLocation(this);
+        Location end = platformer.getPlatformEndLocation(this);
         for (int z = begin.getBlockZ()+4; z < end.getBlockZ()-4; z = z + 4) {
             for (int x = begin.getBlockX()+6; x <= end.getBlockX()-4; x = x + 2) {
                 Block containerBlock = new Location(getWorld(), x, 2, z).getBlock();
@@ -161,8 +178,8 @@ public class DevPlatform {
     }
 
     public void setSignMaterial(Material signMaterial) {
-        Location begin = OpenCreative.getDevPlatformer().getPlatformBeginLocation(this);
-        Location end = OpenCreative.getDevPlatformer().getPlatformEndLocation(this);
+        Location begin = platformer.getPlatformBeginLocation(this);
+        Location end = platformer.getPlatformEndLocation(this);
         for (int z = begin.getBlockZ() + 5; z < end.getBlockZ() - 4; z = z + 4) {
             for (int x = begin.getBlockX()+4; x <= end.getBlockX() - 4; x = x + 2) {
                 Block signBlock = new Location(getWorld(), x, 1, z).getBlock();
@@ -185,8 +202,8 @@ public class DevPlatform {
     }
 
     public List<Location> getPlacedExecutors(ExecutorCategory category) {
-        Location begin = OpenCreative.getDevPlatformer().getPlatformBeginLocation(this);
-        Location end = OpenCreative.getDevPlatformer().getPlatformEndLocation(this);
+        Location begin = platformer.getPlatformBeginLocation(this);
+        Location end = platformer.getPlatformEndLocation(this);
         List<Location> locations = new ArrayList<>();
         for (int z = begin.getBlockZ()+4; z <= end.getBlockZ()-4; z =z+4) {
             Block block = getWorld().getBlockAt(begin.getBlockX()+4,1,z);
@@ -199,11 +216,11 @@ public class DevPlatform {
     }
 
     public int getBeginCoordinate() {
-        return OpenCreative.getDevPlatformer().getPlatformBeginLocation(this).getBlockX();
+        return platformer.getPlatformBeginLocation(this).getBlockX();
     }
 
     public int getEndCoordinate() {
-        return OpenCreative.getDevPlatformer().getPlatformEndLocation(this).getBlockX();
+        return platformer.getPlatformEndLocation(this).getBlockX();
     }
 
     public int getX() {
@@ -219,7 +236,7 @@ public class DevPlatform {
     }
 
     public Location getSpawnLocation() {
-        Location spawn = OpenCreative.getDevPlatformer().getPlatformBeginLocation(this).clone();
+        Location spawn = platformer.getPlatformBeginLocation(this).clone();
         spawn.add(2.5,1,2.5);
         spawn.setYaw(-45);
         spawn.setPitch(0);

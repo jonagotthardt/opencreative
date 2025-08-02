@@ -23,12 +23,13 @@
 #    /world info - Displays world's info.
 #    /world delete - Deletes world.
 #    /world deletemobs - Removes mobs.
-#    /world size - Displays size of world folder.       (opencreative.world.size)
 #    /world kick [Player] - Kicks player from world.
 #    /world ban [Player] - Bans player in world.
 #    /world unban [Player] - Unbans player in world.
 #    /world whitelist [Player] - Allows player to visit world, if it's closed.
 #    /world unwhitelist [Player] - Removes player from whitelist.
+#    /world size - Displays size of world folder.       (opencreative.world.size)
+#    /world platformer [ID] - Changes coding platforms generator.   (opencreative.world.set-platformer)
 #
 #  /ad - Advertises world in chat for all players.
 #  /build - Changes world's mode to Build, disables PvP,
@@ -88,6 +89,10 @@
 #  opencreative.world.kick.bypass - Prevents admin from kicking from world.
 #  opencreative.world.ban.bypass - Prevents admin from banning in world.
 #  opencreative.world.banned.bypass - Allows player to join world, even if he's banned.
+#  opencreative.lobby.placing-blocks - Ability to place blocks, paintings, item frames in lobby.
+#  opencreative.lobby.destroying-blocks - Ability to destroy blocks, paintings, item frames in lobby.
+#  opencreative.lobby.spawning-mobs - Ability to spawn mobs in lobby.
+#  opencreative.lobby.damaging-mobs - Ability to damage mobs in lobby.
 #  opencreative.creative-chat.bypass - Allows player to use creative chat, even if it's disabled.
 #  opencreative.moderation.clear-name - Ability to clear world's display name in moderation menu.
 #  opencreative.moderation.clear-description - Ability to clear world's description in moderation menu.
@@ -149,7 +154,9 @@ allowed-links:
 
 coding:
   old-selection-menu: false # Set true to use old coding blocks selection menu
-  old-floors: false # Set true to generate coding platforms on each other. Can break current worlds using new platforms!
+  platforms-generator: "horizontal" # Default generator for coding platforms, if not exists will use default Horizontal.
+    # Available: "horizontal", "vertical", "legacy". Please do not change platforms generator, if there's already existing worlds.
+    # To test them, use /world platformer [ID].
   #
   # You can disable some coding blocks,
   # if they're useless or harming performance.

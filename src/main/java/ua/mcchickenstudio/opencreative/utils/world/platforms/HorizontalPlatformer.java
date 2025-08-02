@@ -1,9 +1,8 @@
-package ua.mcchickenstudio.opencreative.managers.platforms;
+package ua.mcchickenstudio.opencreative.utils.world.platforms;
 
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -15,10 +14,14 @@ import java.util.List;
 
 /**
  * <h1>HorizontalPlatformer</h1>
- * This class represents a platforms manager, that creates
+ * This class represents a platforms generator, that creates
  * and returns platforms in horizontal way.
  */
-public final class HorizontalPlatformer implements DevPlatformer {
+public final class HorizontalPlatformer extends DevPlatformer {
+
+    public HorizontalPlatformer() {
+        super("horizontal");
+    }
 
     @Override
     public void setWorldBorder(@NotNull DevPlanet devPlanet) {
@@ -31,8 +34,8 @@ public final class HorizontalPlatformer implements DevPlatformer {
 
         DevPlatform platformZ = getFarPlatformByZ(devPlanet);
         DevPlatform platformX = getFarPlatformByX(devPlanet);
-        double endZ = OpenCreative.getDevPlatformer().getPlatformEndLocation(platformZ).getBlockZ();
-        double endX = OpenCreative.getDevPlatformer().getPlatformEndLocation(platformX).getBlockX();
+        double endZ = getPlatformEndLocation(platformZ).getBlockZ();
+        double endX = getPlatformEndLocation(platformX).getBlockX();
         /*
          * We find center of world border by dividing
          * most far platform end coordinate by 2.
@@ -55,8 +58,8 @@ public final class HorizontalPlatformer implements DevPlatformer {
         double x = location.getX();
         double z = location.getZ();
         for (DevPlatform platform : getPlatforms(devPlanet)) {
-            Location begin = OpenCreative.getDevPlatformer().getPlatformBeginLocation(platform);
-            Location end = OpenCreative.getDevPlatformer().getPlatformEndLocation(platform);
+            Location begin = getPlatformBeginLocation(platform);
+            Location end = getPlatformEndLocation(platform);
             if (x >= begin.getBlockX() && x <= end.getBlockX()) {
                 if (z >= begin.getBlockZ() && z <= end.getBlockZ()) {
                     return platform;
@@ -68,10 +71,10 @@ public final class HorizontalPlatformer implements DevPlatformer {
 
     @Override
     public @NotNull DevPlatform getFarPlatformByX(@NotNull DevPlanet devPlanet) {
-        DevPlatform farPlatform = new DevPlatform(devPlanet.getWorld(),1,1);
+        DevPlatform farPlatform = new DevPlatform(devPlanet,1,1);
         if (!devPlanet.isLoaded()) return farPlatform;
         for (int x = 2; x <= 5; x++) {
-            DevPlatform current = new DevPlatform(devPlanet.getWorld(), x,1);
+            DevPlatform current = new DevPlatform(devPlanet, x,1);
             if (current.exists()) {
                 farPlatform = current;
             }
@@ -81,10 +84,10 @@ public final class HorizontalPlatformer implements DevPlatformer {
 
     @Override
     public @NotNull DevPlatform getFarPlatformByZ(@NotNull DevPlanet devPlanet) {
-        DevPlatform farPlatform = new DevPlatform(devPlanet.getWorld(),1,1);
+        DevPlatform farPlatform = new DevPlatform(devPlanet,1,1);
         if (!devPlanet.isLoaded()) return farPlatform;
         for (int z = 2; z <= 5; z++) {
-            DevPlatform current = new DevPlatform(devPlanet.getWorld(),1,z);
+            DevPlatform current = new DevPlatform(devPlanet,1,z);
             if (current.exists()) {
                 farPlatform = current;
             }
@@ -98,7 +101,7 @@ public final class HorizontalPlatformer implements DevPlatformer {
         if (!devPlanet.isLoaded()) return platforms;
         for (int x = 1; x <= getFarPlatformByX(devPlanet).getX(); x++) {
             for (int z = 1; z <= getFarPlatformByZ(devPlanet).getZ(); z++) {
-                DevPlatform platform = new DevPlatform(devPlanet.getWorld(),x,z);
+                DevPlatform platform = new DevPlatform(devPlanet,x,z);
                 if (platform.exists()) {
                     platforms.add(platform);
                 }
@@ -161,7 +164,7 @@ public final class HorizontalPlatformer implements DevPlatformer {
         };
         DevPlatform platform = null;
         for (int[] coords : platformCoordinates) {
-            platform = new DevPlatform(planet.getWorld(), coords[0], coords[1]);
+            platform = new DevPlatform(planet, coords[0], coords[1]);
             if (!platform.exists()) {
                 break;
             }
@@ -170,20 +173,23 @@ public final class HorizontalPlatformer implements DevPlatformer {
     }
 
     @Override
-    public boolean isHorizontal() {
+    public boolean notDependsOnHeight() {
         return true;
     }
 
     @Override
-    public void init() {}
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+    public @NotNull String getName() {
+        return "Horizontal Platforms Generator";
     }
 
     @Override
-    public String getName() {
-        return "Horizontal Coding Platforms Manager";
+    public @NotNull String getDescription() {
+        return "Builds coding platforms like plots";
     }
+
+    @Override
+    public @NotNull String getExtensionId() {
+        return "default";
+    }
+
 }

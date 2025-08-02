@@ -27,7 +27,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.ItemEventValue;
-import ua.mcchickenstudio.opencreative.coding.values.TextEventValue;
 
 public final class EntityItemValue extends ItemEventValue {
 
