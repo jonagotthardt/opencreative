@@ -34,6 +34,8 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformer;
+import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformers;
 
 
 import java.io.File;
@@ -328,6 +330,33 @@ public class WorldCommand extends CommandHandler {
                 sender.sendMessage(" Entities: " + entities);
                 sender.sendMessage("");
             }
+            case "platformer" -> {
+                if (!sender.hasPermission("opencreative.world.set-platformer")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length == 1) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                String platformerID = args[1].toLowerCase();
+                DevPlatformer platformer = DevPlatformers.getInstance().getById(platformerID);
+                if (platformerID.equals("reset") || platformerID.equals("default")) {
+                    platformer = OpenCreative.getDevPlatformer();
+                    planet.getDevPlanet().setPlatformerID(platformer.getID());
+                    sender.sendMessage(getLocaleMessage("world.platformer.reset")
+                            .replace("%id%", platformer.getID()));
+                    return;
+                }
+                if (platformer == null) {
+                    sender.sendMessage(getLocaleMessage("world.platformer.not-found")
+                            .replace("%id%", platformerID));
+                    return;
+                }
+                planet.getDevPlanet().setPlatformerID(platformer.getID());
+                sender.sendMessage(getLocaleMessage("world.platformer.set")
+                        .replace("%id%", platformer.getID()));
+            }
             case "info" -> sendPlanetInfo(player,planet);
             default -> {
                 if (planet.isOwner(player)) {
@@ -366,6 +395,8 @@ public class WorldCommand extends CommandHandler {
             } else if (List.of("ban","blacklist","kick","whitelist","white").contains(args[0].toLowerCase())) {
                 if (args[0].equalsIgnoreCase("kick")) tabCompleter.add("*");
                 tabCompleter.addAll(planet.getPlayers().stream().filter(p -> !planet.isOwner(p) && p.getName().startsWith(args[1])).map(Player::getName).toList());
+            } else if (args[1].equalsIgnoreCase("platformer") && player.hasPermission("opencreative.world.set-platformer")) {
+                tabCompleter.addAll(DevPlatformers.getInstance().getPlatformersIDs());
             }
         }
         return tabCompleter;

@@ -443,6 +443,10 @@ world:
   updated-info: "%prefix%&fUpdated world information for &6%id%&f."
   registered: "%prefix%&fRegistered a world &6%id%&f. Now it can appear in worlds browser menu and can be visited by &6/join %id%&f!"
   unregistered: "%prefix%&fUnregistered a world &6%id%&f. It will not appear in worlds browser menu &6til next server restart&f, if world files exist."
+  platformer:
+    set: "%prefix%&fSuccessfully &6changed&f world's coding platforms generator to: &6%id%&f."
+    reset: "%prefix%&fSuccessfully &6changed&f world's coding platforms generator to server's default."
+    not-found: "%prefix%&cCan't find registered coding platforms generator with ID: %id%."
 creative-chat:
   turned-on: "%cc-prefix%&fYou have &6enabled&f creative chat, you can now communicate. Type /cc Hello!"
   turned-off: "%cc-prefix%&fYou have &6disabled&f creative chat, you will no longer receive messages."

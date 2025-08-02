@@ -55,7 +55,7 @@ public final class MoveListener implements Listener {
         if (isBlockChanged(event.getFrom(),event.getTo())) {
             new ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement.PlayerMoveEvent(event.getPlayer(),event).callEvent();
             if (isEntityInDevPlanet(player)) {
-                if (player.getY() >= 0 && player.getY() <= 4 || !OpenCreative.getDevPlatformer().isHorizontal()) {
+                if (player.getY() >= 0 && player.getY() <= 4 || !OpenCreative.getDevPlatformer().notDependsOnHeight()) {
                     translateSigns(player,10);
                 }
             }

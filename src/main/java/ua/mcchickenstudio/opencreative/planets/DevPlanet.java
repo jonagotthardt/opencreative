@@ -25,6 +25,7 @@ import org.bukkit.block.sign.Side;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
@@ -35,6 +36,8 @@ import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import org.bukkit.*;
 
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformer;
+import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformers;
 
 import java.io.File;
 import java.util.*;
@@ -60,6 +63,7 @@ public class DevPlanet {
 
     private final Planet planet;
 
+    private String platformerID = "";
     private Material signMaterial = Material.BIRCH_WALL_SIGN;
     private Material containerMaterial = Material.CHEST;
 
@@ -93,9 +97,10 @@ public class DevPlanet {
                 signMaterial = Material.BIRCH_WALL_SIGN;
             }
         } catch (Exception ignored) {}
-        dropItems = config.getBoolean("dev.drops",true);
-        saveLocation = config.getBoolean("dev.save-location",true);
-        nightVision = config.getBoolean("dev.night-vision",true);
+        dropItems = config.getBoolean("dev.drops", true);
+        saveLocation = config.getBoolean("dev.save-location", true);
+        nightVision = config.getBoolean("dev.night-vision", true);
+        platformerID = config.getString("dev.platformer", "");
     }
 
     public void loadDevPlanetWorld() {
@@ -147,7 +152,7 @@ public class DevPlanet {
         this.getWorld().setGameRule(GameRule.MOB_GRIEFING,false);
         this.getWorld().setGameRule(GameRule.DO_PATROL_SPAWNING,false);
         this.getWorld().setGameRule(GameRule.DO_FIRE_TICK,false);
-        OpenCreative.getDevPlatformer().setWorldBorder(this);
+        getDevPlatformer().setWorldBorder(this);
     }
 
     public boolean exists() {
@@ -202,12 +207,12 @@ public class DevPlanet {
         if (platformX >= 30 || platformZ >= 30 || platformX <= 0 || platformZ <= 0) {
             return false;
         }
-        return OpenCreative.getDevPlatformer().buildPlatform(new DevPlatform(getWorld(), platformX, platformZ),
+        return getDevPlatformer().buildPlatform(new DevPlatform(getWorld(), getDevPlatformer(), platformX, platformZ),
                 DEFAULT_FLOOR_MATERIAL, DEFAULT_EVENT_MATERIAL, DEFAULT_ACTION_MATERIAL);
     }
 
     public boolean claimPlatform(DevPlatform platform, Player player) {
-        if (OpenCreative.getDevPlatformer().claimPlatform(this, platform)) {
+        if (getDevPlatformer().claimPlatform(this, platform)) {
             player.setAllowFlight(true);
             player.setFlying(true);
             player.teleport(platform.getSpawnLocation());
@@ -366,6 +371,11 @@ public class DevPlanet {
         return dropItems;
     }
 
+    public void setPlatformerID(String platformer) {
+        this.platformerID = platformer;
+        setPlanetConfigParameter(planet,"dev.platformer",platformerID);
+    }
+
     public void setNightVision(boolean nightVision) {
         this.nightVision = nightVision;
         setPlanetConfigParameter(planet,"dev.night-vision",nightVision);
@@ -404,11 +414,11 @@ public class DevPlanet {
     }
 
     public List<DevPlatform> getPlatforms() {
-        return OpenCreative.getDevPlatformer().getPlatforms(this);
+        return getDevPlatformer().getPlatforms(this);
     }
 
     public DevPlatform getPlatformInLocation(Location location) {
-        return OpenCreative.getDevPlatformer().getPlatformInLocation(this, location);
+        return getDevPlatformer().getPlatformInLocation(this, location);
     }
 
     public void displayWorldBorders() {
@@ -419,6 +429,13 @@ public class DevPlanet {
             border.setSize(getWorld().getWorldBorder().getSize()*5);
             player.setWorldBorder(border);
         }
+    }
+
+    public @NotNull DevPlatformer getDevPlatformer() {
+        if (platformerID == null || platformerID.isEmpty()) return OpenCreative.getDevPlatformer();
+        DevPlatformer platformer = DevPlatformers.getInstance().getById(platformerID);
+        if (platformer == null) return OpenCreative.getDevPlatformer();
+        return platformer;
     }
 
     public static Material getDefaultActionMaterial() {

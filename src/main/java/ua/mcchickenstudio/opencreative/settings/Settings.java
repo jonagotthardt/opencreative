@@ -35,8 +35,10 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceEndEvent;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceStartEvent;
 import ua.mcchickenstudio.opencreative.indev.Items;
-import ua.mcchickenstudio.opencreative.managers.platforms.HorizontalPlatformer;
-import ua.mcchickenstudio.opencreative.managers.platforms.VerticalPlatformer;
+import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformer;
+import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformers;
+import ua.mcchickenstudio.opencreative.utils.world.platforms.HorizontalPlatformer;
+import ua.mcchickenstudio.opencreative.utils.world.platforms.VerticalPlatformer;
 import ua.mcchickenstudio.opencreative.utils.world.generators.*;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.groups.Groups;
@@ -45,6 +47,7 @@ import java.io.File;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningErrorMessage;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 
@@ -78,7 +81,7 @@ public class Settings {
     private boolean lobbyDisableExplosions = true;
 
     private boolean legacySelectionMenu = false;
-    private boolean legacyFloors = false;
+    private String platformsGeneratorId = "horizontal";
 
     private BukkitRunnable announcer;
     private PlayerListChanger listChanger = PlayerListChanger.FULL;
@@ -141,7 +144,7 @@ public class Settings {
         lobbyDisallowDestroyingBlocks = config.getBoolean("lobby.disallow-destroying-blocks",true);
 
         legacySelectionMenu = config.getBoolean("coding.old-selection-menu",false);
-        legacyFloors = config.getBoolean("coding.old-floors",false);
+        platformsGeneratorId = config.getString("coding.platforms-generator","horizontal");
 
         worldCreationMinSeconds = config.getInt("requirements.world-creation.played-seconds",30);
         worldReputationMinSeconds = config.getInt("requirements.world-reputation.creation-seconds",300);
@@ -178,11 +181,12 @@ public class Settings {
         if (debug) {
             OpenCreative.getPlugin().getLogger().warning("Debug Mode is enabled in config.yml, some logs will appear in console.");
         }
-        if (legacyFloors) {
-            OpenCreative.setDevPlatformer(new VerticalPlatformer());
-        } else if (OpenCreative.getDevPlatformer() instanceof VerticalPlatformer) {
-            OpenCreative.setDevPlatformer(new HorizontalPlatformer());
+        DevPlatformer platformer = DevPlatformers.getInstance().getById(platformsGeneratorId);
+        if (platformer == null) {
+            sendWarningErrorMessage("[PLATFORMERS] Unknown coding platform generator: " + platformsGeneratorId + ", using the default horizontal.");
+            platformer = new HorizontalPlatformer();
         }
+        OpenCreative.setDevPlatformer(platformer);
         checkDebugAnnouncer();
     }
 
@@ -563,10 +567,6 @@ public class Settings {
 
     public boolean isLegacySelectionMenu() {
         return legacySelectionMenu;
-    }
-
-    public boolean isLegacyFloors() {
-        return legacyFloors;
     }
 
     public boolean isLobbyDisableExplosions() {

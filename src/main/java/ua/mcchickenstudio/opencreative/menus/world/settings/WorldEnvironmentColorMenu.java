@@ -72,7 +72,7 @@ public class WorldEnvironmentColorMenu extends AbstractListMenu<Material> {
         materials.add(Material.GLASS);
         materials.add(Material.BARRIER);
         if (devPlatform == null) {
-            devPlatform = new DevPlatform(devPlanet.getWorld(),1,1);
+            devPlatform = new DevPlatform(devPlanet, 1,1);
         }
         switch (type.toLowerCase()) {
             case "floor" -> {

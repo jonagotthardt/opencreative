@@ -7,7 +7,7 @@ name: 'OpenCreative'
 main: ua.mcchickenstudio.opencreative.OpenCreative
 api-version: 1.21
 
-version: '5.7.0'
+version: '5.7.0 Beta 2'
 description: 'Let players create the worlds'
 build: ${maven.build.timestamp}
 

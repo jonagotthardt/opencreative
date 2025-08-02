@@ -463,66 +463,8 @@ public class CreativeCommand extends CommandHandler {
                     }
                 }
                 case "maintenance" -> handleMaintenanceCommand(sender, Arrays.copyOfRange(args, 0,args.length));
-                case "unload" -> {
-                    if (!sender.hasPermission("opencreative.world.unload")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length < 2) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("*")) {
-                        if (!sender.hasPermission("opencreative.world.unload.all")) {
-                            sender.sendMessage(getLocaleMessage("no-perms"));
-                            return;
-                        }
-                        for (Planet planet : OpenCreative.getPlanetsManager().getPlanets()) {
-                            if (planet.isLoaded()) {
-                                planet.getTerritory().unload();
-                            } else if (planet.getDevPlanet().isLoaded()) {
-                                planet.getDevPlanet().unload();
-                            }
-                        }
-                        OpenCreative.getPlugin().getLogger().info("All worlds were unloaded by " + sender.getName());
-                        return;
-                    }
-                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1]);
-                    if (planet == null) {
-                        sender.sendMessage(getLocaleMessage("no-planet-found"));
-                        return;
-                    }
-                    if (planet.isLoaded()) {
-                        planet.getTerritory().unload();
-                        sender.sendMessage(getLocaleMessage("world.unloaded").replace("%id%",args[1]));
-                    } else if (args[1].contains("dev") && planet.getDevPlanet().isLoaded()) {
-                        planet.getDevPlanet().unload();
-                        sender.sendMessage(getLocaleMessage("world.unloaded").replace("%id%",args[1]));
-                    } else {
-                        sender.sendMessage(getLocaleMessage("world.already-unloaded").replace("%id%",args[1]));
-                    }
-                }
-                case "update", "updates", "checkupdate" -> {
-                    if (!sender.hasPermission("opencreative.update")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    OpenCreative.getUpdater().checkUpdates().thenAccept(
-                            version -> {
-                                if (version.isEmpty()) {
-                                    sender.sendMessage(getLocaleMessage("creative.updates.up-to-date")
-                                            .replace("%version%",OpenCreative.getPlugin().getPluginMeta().getVersion()));
-                                } else {
-                                    sender.sendMessage(getLocaleMessage("creative.updates.available")
-                                            .replace("%new%",version)
-                                            .replace("%old%",OpenCreative.getPlugin().getPluginMeta().getVersion()));
-                                }
-                            }
-                    ).exceptionally(e -> {
-                        sender.sendMessage(getLocaleMessage("creative.updates.cant-check"));
-                        return null;
-                    });
-                }
+                case "unload" -> handleUnloadCommand(sender, args);
+                case "update", "updates", "checkupdate" -> handleUpdateCommand(sender);
                 case "list" -> {
                     if (!sender.hasPermission("opencreative.list.loaded")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
@@ -537,105 +479,9 @@ public class CreativeCommand extends CommandHandler {
                             + String.join(", ",worlds));
                 }
                 case "deprecated" -> {
-                    if (!sender.hasPermission("opencreative.list.deprecated")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    int months = 1;
-                    if (args.length >= 2) {
-                        try {
-                            months = Integer.parseInt(args[1]);
-                        } catch (NumberFormatException ignored) {}
-                    }
-                    if (months < 1) months = 1;
-                    long currentTime = System.currentTimeMillis();
-                    List<Planet> deprecatedWorlds = new ArrayList<>();
-                    for (Planet planet : OpenCreative.getPlanetsManager().getPlanets()) {
-                        long monthsInMillis = 2592000000L*months;
-                        if (currentTime- planet.getCreationTime() > monthsInMillis && !OpenCreative.getPlanetsManager().getRecommendedPlanets().contains(planet)) {
-                            OfflinePlayer planetOwner = Bukkit.getOfflinePlayer(planet.getOwner());
-                            if (planetOwner.getLastSeen() == 0 || currentTime-planetOwner.getLastLogin() > monthsInMillis) {
-                                deprecatedWorlds.add(planet);
-                            }
-                        }
-                    }
-                    String worldMessage = getLocaleMessage("creative.deprecated-worlds.world");
-                    for (Planet planet : deprecatedWorlds) {
-                        sender.sendMessage(Component.text(worldMessage
-                                .replace("%id%", String.valueOf(planet.getId()))
-                                .replace("%owner%", planet.getOwner())
-                                .replace("%created%",getElapsedTime(currentTime, planet.getCreationTime()))
-                                .replace("%seen%",getElapsedTime(currentTime,Bukkit.getOfflinePlayer(planet.getOwner()).getLastSeen())
-                                )).clickEvent(ClickEvent.runCommand("/oc delete " + planet.getId()))
-                        );
-                    }
-                    sender.sendMessage(getLocaleMessage("creative.deprecated-worlds.list")
-                            .replace("%amount%",String.valueOf(deprecatedWorlds.size())));
+                    handleDeprecatedCommand(sender, args);
                 }
-                case "corrupted" -> {
-                    if (args.length < 3) {
-                        if (!sender.hasPermission("opencreative.list.corrupted")) {
-                            sender.sendMessage(getLocaleMessage("no-perms"));
-                            return;
-                        }
-                        Set<Planet> corruptedPlanets = OpenCreative.getPlanetsManager().getCorruptedPlanets();
-                        sender.sendMessage(getLocaleMessage("creative.corrupted-worlds.list")
-                                .replace("%amount%",String.valueOf(corruptedPlanets.size())));
-                        String worldMessage = getLocaleMessage("creative.corrupted-worlds.world");
-                        for (Planet planet : corruptedPlanets) {
-                            sender.sendMessage(Component.text(worldMessage
-                                            .replace("%id%", String.valueOf(planet.getId()))
-                                    ).clickEvent(ClickEvent.runCommand("/oc corrupted " + planet.getId() + " join"))
-                            );
-                        }
-                        return;
-                    }
-                    if (!sender.hasPermission("opencreative.corrupted.recovery")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    int id = -1;
-                    try {
-                        id = Integer.parseInt(args[1]);
-                    } catch (NumberFormatException ignored) {}
-                    if (id < 0) return;
-                    Planet foundPlanet = null;
-                    for (Planet planet : OpenCreative.getPlanetsManager().getCorruptedPlanets()) {
-                        if (planet.getId() == id) {
-                            foundPlanet = planet;
-                            break;
-                        }
-                    }
-                    if (foundPlanet == null) {
-                        sender.sendMessage(getLocaleMessage("no-planet-found"));
-                        return;
-                    }
-                    String action = args[2];
-                    switch (action.toLowerCase()) {
-                        case "teleport", "tp", "join", "load" -> {
-                            if (player == null) return;
-                            foundPlanet.getTerritory().load();
-                            foundPlanet.connectPlayer(player);
-                        }
-                        case "unload" -> {
-                            if (player == null) return;
-                            foundPlanet.getTerritory().unload();
-                        }
-                        case "owner", "setowner" -> {
-                            if (args.length < 4) {
-                                sender.sendMessage(getLocaleMessage("too-few-args"));
-                                return;
-                            }
-                            sender.sendMessage(getLocaleMessage("creative.corrupted-worlds.set-owner").replace("%replace%",args[3]));
-                            if (foundPlanet.getCreationTime() == 0) setPlanetConfigParameter(foundPlanet,"creation-time",System.currentTimeMillis());
-                            if (foundPlanet.getLastActivityTime() == 0) setPlanetConfigParameter(foundPlanet,"last-activity-time",System.currentTimeMillis());
-                            foundPlanet.setOwner(args[3]);
-                            OpenCreative.getPlanetsManager().getCorruptedPlanets().remove(foundPlanet);
-                            Planet planet = new Planet(foundPlanet.getId());
-                            OpenCreative.getPlanetsManager().registerPlanet(planet);
-                        }
-                    }
-                }
+                case "corrupted" -> handleCorruptedCommand(sender, args);
                 case "print" -> {
                     if (!sender.hasPermission("opencreative.print")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
@@ -698,33 +544,7 @@ public class CreativeCommand extends CommandHandler {
                     WorldsBrowserMenu menu = new WorldsPickerMenu(player, new HashSet<>(OpenCreative.getPlanetsManager().getPlanets().stream().filter(planet -> planet.getInformation().isDownloadable()).toList()));
                     menu.open(player);
                 }
-                case "template" -> {
-                    if (!sender.hasPermission("opencreative.template")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (player == null) return;
-                    if (args.length == 1) return;
-                    File template = new File(OpenCreative.getPlugin().getDataPath()+File.separator+"templates"+File.separator+args[1]);
-                    if (!template.exists()) {
-                        sender.sendMessage("Template doesn't exists.");
-                        return;
-                    }
-                    if (!OpenCreative.getStability().isFine()) {
-                        player.sendMessage(getLocaleMessage("creative.stability.cannot"));
-                        Sounds.PLAYER_FAIL.play(player);
-                        return;
-                    }
-                    File templateDev = new File(OpenCreative.getPlugin().getDataPath()+File.separator+"templates"+File.separator+args[1]+"dev");
-                    int id = WorldUtils.generateWorldID();
-                    File world = new File(Bukkit.getWorldContainer().getPath()+File.separator+"planets"+File.separator+"planet"+id+File.separator);
-                    File worldDev = new File(Bukkit.getWorldContainer().getPath()+File.separator+"planets"+File.separator+"planet"+id+File.separator+"dev");
-                    FileUtils.copyFilesToDirectory(template,world);
-                    if (templateDev.exists()) {
-                        FileUtils.copyFilesToDirectory(templateDev,worldDev);
-                    }
-                    OpenCreative.getPlanetsManager().createPlanet(player, id, new FlatGenerator());
-                }
+                case "template" -> handleTemplateCommand(sender, args);
                 default -> {
                     String copyright = OpenCreative.getPlugin().getConfig().getString("messages.version","\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2025\n ");
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', copyright.replace("%version%", OpenCreative.getVersion()).replace("%codename%", OpenCreative.getCodename())));
@@ -790,6 +610,200 @@ public class CreativeCommand extends CommandHandler {
         } else if ("end".equalsIgnoreCase(args[1])) {
             OpenCreative.getSettings().setMaintenance(false);
         }
+    }
+
+    public void handleTemplateCommand(@NotNull CommandSender sender, String[] args) {
+        if (!sender.hasPermission("opencreative.template")) {
+            sender.sendMessage(getLocaleMessage("no-perms"));
+            return;
+        }
+        if (!(sender instanceof Player player)) return;
+        if (args.length == 1) return;
+        File template = new File(OpenCreative.getPlugin().getDataPath()+File.separator+"templates"+File.separator+args[1]);
+        if (!template.exists()) {
+            sender.sendMessage("Template doesn't exists.");
+            return;
+        }
+        if (!OpenCreative.getStability().isFine()) {
+            player.sendMessage(getLocaleMessage("creative.stability.cannot"));
+            Sounds.PLAYER_FAIL.play(player);
+            return;
+        }
+        File templateDev = new File(OpenCreative.getPlugin().getDataPath()+File.separator+"templates"+File.separator+args[1]+"dev");
+        int id = WorldUtils.generateWorldID();
+        File world = new File(Bukkit.getWorldContainer().getPath()+File.separator+"planets"+File.separator+"planet"+id+File.separator);
+        File worldDev = new File(Bukkit.getWorldContainer().getPath()+File.separator+"planets"+File.separator+"planet"+id+File.separator+"dev");
+        FileUtils.copyFilesToDirectory(template,world);
+        if (templateDev.exists()) {
+            FileUtils.copyFilesToDirectory(templateDev,worldDev);
+        }
+        OpenCreative.getPlanetsManager().createPlanet(player, id, new FlatGenerator());
+    }
+
+    public void handleUpdateCommand(@NotNull CommandSender sender) {
+        if (!sender.hasPermission("opencreative.update")) {
+            sender.sendMessage(getLocaleMessage("no-perms"));
+            return;
+        }
+        OpenCreative.getUpdater().checkUpdates().thenAccept(
+                version -> {
+                    if (version.isEmpty()) {
+                        sender.sendMessage(getLocaleMessage("creative.updates.up-to-date")
+                                .replace("%version%",OpenCreative.getPlugin().getPluginMeta().getVersion()));
+                    } else {
+                        sender.sendMessage(getLocaleMessage("creative.updates.available")
+                                .replace("%new%",version)
+                                .replace("%old%",OpenCreative.getPlugin().getPluginMeta().getVersion()));
+                    }
+                }
+        ).exceptionally(e -> {
+            sender.sendMessage(getLocaleMessage("creative.updates.cant-check"));
+            return null;
+        });
+    }
+
+    public void handleUnloadCommand(@NotNull CommandSender sender, String[] args) {
+        if (!sender.hasPermission("opencreative.world.unload")) {
+            sender.sendMessage(getLocaleMessage("no-perms"));
+            return;
+        }
+        if (args.length < 2) {
+            sender.sendMessage(getLocaleMessage("too-few-args"));
+            return;
+        }
+        if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("*")) {
+            if (!sender.hasPermission("opencreative.world.unload.all")) {
+                sender.sendMessage(getLocaleMessage("no-perms"));
+                return;
+            }
+            for (Planet planet : OpenCreative.getPlanetsManager().getPlanets()) {
+                if (planet.isLoaded()) {
+                    planet.getTerritory().unload();
+                } else if (planet.getDevPlanet().isLoaded()) {
+                    planet.getDevPlanet().unload();
+                }
+            }
+            OpenCreative.getPlugin().getLogger().info("All worlds were unloaded by " + sender.getName());
+            return;
+        }
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1]);
+        if (planet == null) {
+            sender.sendMessage(getLocaleMessage("no-planet-found"));
+            return;
+        }
+        if (planet.isLoaded()) {
+            planet.getTerritory().unload();
+            sender.sendMessage(getLocaleMessage("world.unloaded").replace("%id%",args[1]));
+        } else if (args[1].contains("dev") && planet.getDevPlanet().isLoaded()) {
+            planet.getDevPlanet().unload();
+            sender.sendMessage(getLocaleMessage("world.unloaded").replace("%id%",args[1]));
+        } else {
+            sender.sendMessage(getLocaleMessage("world.already-unloaded").replace("%id%",args[1]));
+        }
+    }
+
+    public void handleLoadCommand(@NotNull CommandSender sender, String[] args) {
+
+    }
+
+    public void handleCorruptedCommand(@NotNull CommandSender sender, String[] args) {
+        if (args.length < 3) {
+            if (!sender.hasPermission("opencreative.list.corrupted")) {
+                sender.sendMessage(getLocaleMessage("no-perms"));
+                return;
+            }
+            Set<Planet> corruptedPlanets = OpenCreative.getPlanetsManager().getCorruptedPlanets();
+            sender.sendMessage(getLocaleMessage("creative.corrupted-worlds.list")
+                    .replace("%amount%",String.valueOf(corruptedPlanets.size())));
+            String worldMessage = getLocaleMessage("creative.corrupted-worlds.world");
+            for (Planet planet : corruptedPlanets) {
+                sender.sendMessage(Component.text(worldMessage
+                                .replace("%id%", String.valueOf(planet.getId()))
+                        ).clickEvent(ClickEvent.runCommand("/oc corrupted " + planet.getId() + " join"))
+                );
+            }
+            return;
+        }
+        if (!sender.hasPermission("opencreative.corrupted.recovery")) {
+            sender.sendMessage(getLocaleMessage("no-perms"));
+            return;
+        }
+        int id = -1;
+        try {
+            id = Integer.parseInt(args[1]);
+        } catch (NumberFormatException ignored) {}
+        if (id < 0) return;
+        Planet foundPlanet = null;
+        for (Planet planet : OpenCreative.getPlanetsManager().getCorruptedPlanets()) {
+            if (planet.getId() == id) {
+                foundPlanet = planet;
+                break;
+            }
+        }
+        if (foundPlanet == null) {
+            sender.sendMessage(getLocaleMessage("no-planet-found"));
+            return;
+        }
+        String action = args[2];
+        switch (action.toLowerCase()) {
+            case "teleport", "tp", "join", "load" -> {
+                foundPlanet.getTerritory().load();
+                if (sender instanceof Player player) {
+                    foundPlanet.connectPlayer(player);
+                }
+            }
+            case "unload" -> foundPlanet.getTerritory().unload();
+            case "owner", "setowner" -> {
+                if (args.length < 4) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                sender.sendMessage(getLocaleMessage("creative.corrupted-worlds.set-owner").replace("%replace%",args[3]));
+                if (foundPlanet.getCreationTime() == 0) setPlanetConfigParameter(foundPlanet,"creation-time",System.currentTimeMillis());
+                if (foundPlanet.getLastActivityTime() == 0) setPlanetConfigParameter(foundPlanet,"last-activity-time",System.currentTimeMillis());
+                foundPlanet.setOwner(args[3]);
+                OpenCreative.getPlanetsManager().getCorruptedPlanets().remove(foundPlanet);
+                Planet planet = new Planet(foundPlanet.getId());
+                OpenCreative.getPlanetsManager().registerPlanet(planet);
+            }
+        }
+    }
+
+    public void handleDeprecatedCommand(@NotNull CommandSender sender, String[] args) {
+        if (!sender.hasPermission("opencreative.list.deprecated")) {
+            sender.sendMessage(getLocaleMessage("no-perms"));
+            return;
+        }
+        int months = 1;
+        if (args.length >= 2) {
+            try {
+                months = Integer.parseInt(args[1]);
+            } catch (NumberFormatException ignored) {}
+        }
+        if (months < 1) months = 1;
+        long currentTime = System.currentTimeMillis();
+        List<Planet> deprecatedWorlds = new ArrayList<>();
+        for (Planet planet : OpenCreative.getPlanetsManager().getPlanets()) {
+            long monthsInMillis = 2592000000L*months;
+            if (currentTime- planet.getCreationTime() > monthsInMillis && !OpenCreative.getPlanetsManager().getRecommendedPlanets().contains(planet)) {
+                OfflinePlayer planetOwner = Bukkit.getOfflinePlayer(planet.getOwner());
+                if (planetOwner.getLastSeen() == 0 || currentTime-planetOwner.getLastLogin() > monthsInMillis) {
+                    deprecatedWorlds.add(planet);
+                }
+            }
+        }
+        String worldMessage = getLocaleMessage("creative.deprecated-worlds.world");
+        for (Planet planet : deprecatedWorlds) {
+            sender.sendMessage(Component.text(worldMessage
+                    .replace("%id%", String.valueOf(planet.getId()))
+                    .replace("%owner%", planet.getOwner())
+                    .replace("%created%",getElapsedTime(currentTime, planet.getCreationTime()))
+                    .replace("%seen%",getElapsedTime(currentTime,Bukkit.getOfflinePlayer(planet.getOwner()).getLastSeen())
+                    )).clickEvent(ClickEvent.runCommand("/oc delete " + planet.getId()))
+            );
+        }
+        sender.sendMessage(getLocaleMessage("creative.deprecated-worlds.list")
+                .replace("%amount%",String.valueOf(deprecatedWorlds.size())));
     }
 
     @Override
