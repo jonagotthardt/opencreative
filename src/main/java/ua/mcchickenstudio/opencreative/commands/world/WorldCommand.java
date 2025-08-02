@@ -346,6 +346,7 @@ public class WorldCommand extends CommandHandler {
                     planet.getDevPlanet().setPlatformerID(platformer.getID());
                     sender.sendMessage(getLocaleMessage("world.platformer.reset")
                             .replace("%id%", platformer.getID()));
+                    if (planet.getDevPlanet().isLoaded()) platformer.setWorldBorder(planet.getDevPlanet());
                     return;
                 }
                 if (platformer == null) {
@@ -356,6 +357,7 @@ public class WorldCommand extends CommandHandler {
                 planet.getDevPlanet().setPlatformerID(platformer.getID());
                 sender.sendMessage(getLocaleMessage("world.platformer.set")
                         .replace("%id%", platformer.getID()));
+                if (planet.getDevPlanet().isLoaded()) platformer.setWorldBorder(planet.getDevPlanet());
             }
             case "info" -> sendPlanetInfo(player,planet);
             default -> {
