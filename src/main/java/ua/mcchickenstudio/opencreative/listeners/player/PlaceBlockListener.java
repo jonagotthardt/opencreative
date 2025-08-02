@@ -199,8 +199,8 @@ public final class PlaceBlockListener implements Listener {
         if (devPlanet == null) return false;
         DevPlatform platform = devPlanet.getPlatformInLocation(location);
         if (platform == null) return false;
-        Location begin = OpenCreative.getDevPlatformer().getPlatformBeginLocation(platform);
-        Location end = OpenCreative.getDevPlatformer().getPlatformEndLocation(platform);
+        Location begin = devPlanet.getDevPlatformer().getPlatformBeginLocation(platform);
+        Location end = devPlanet.getDevPlatformer().getPlatformEndLocation(platform);
         if (face == BlockFace.EAST) {
             /*
              Moves blocks to right

@@ -356,7 +356,7 @@ public class EnvironmentCommand extends CommandHandler {
                             sender.sendMessage(getLocaleMessage("environment.platform.limit").replace("%amount%",String.valueOf(devPlanet.getPlanet().getLimits().getCodingPlatformsLimit())));
                             return;
                         }
-                        DevPlatform platform = OpenCreative.getDevPlatformer().getNextAvailablePlatform(devPlanet);
+                        DevPlatform platform = devPlanet.getDevPlatformer().getNextAvailablePlatform(devPlanet);
                         devPlanet.claimPlatform(platform, player);
                         break;
                     }

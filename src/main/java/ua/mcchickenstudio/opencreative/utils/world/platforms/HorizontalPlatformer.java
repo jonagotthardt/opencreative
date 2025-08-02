@@ -34,8 +34,8 @@ public final class HorizontalPlatformer extends DevPlatformer {
 
         DevPlatform platformZ = getFarPlatformByZ(devPlanet);
         DevPlatform platformX = getFarPlatformByX(devPlanet);
-        double endZ = OpenCreative.getDevPlatformer().getPlatformEndLocation(platformZ).getBlockZ();
-        double endX = OpenCreative.getDevPlatformer().getPlatformEndLocation(platformX).getBlockX();
+        double endZ = getPlatformEndLocation(platformZ).getBlockZ();
+        double endX = getPlatformEndLocation(platformX).getBlockX();
         /*
          * We find center of world border by dividing
          * most far platform end coordinate by 2.
@@ -58,8 +58,8 @@ public final class HorizontalPlatformer extends DevPlatformer {
         double x = location.getX();
         double z = location.getZ();
         for (DevPlatform platform : getPlatforms(devPlanet)) {
-            Location begin = OpenCreative.getDevPlatformer().getPlatformBeginLocation(platform);
-            Location end = OpenCreative.getDevPlatformer().getPlatformEndLocation(platform);
+            Location begin = getPlatformBeginLocation(platform);
+            Location end = getPlatformEndLocation(platform);
             if (x >= begin.getBlockX() && x <= end.getBlockX()) {
                 if (z >= begin.getBlockZ() && z <= end.getBlockZ()) {
                     return platform;

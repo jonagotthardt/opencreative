@@ -88,7 +88,7 @@ public class CodingBlockParser {
         // For platforms
         for (DevPlatform platform : platforms) {
             // For coding executors
-            Location begin = OpenCreative.getDevPlatformer().getPlatformBeginLocation(platform);
+            Location begin = devPlanet.getDevPlatformer().getPlatformBeginLocation(platform);
             int y = begin.getBlockY() + 1;
             int x = begin.getBlockX() + 4;
             for (int z = begin.getBlockZ() + 4; z <= platform.getEndCoordinate() - 4; z = z + 4) {
