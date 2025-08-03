@@ -57,6 +57,7 @@ public final class SetBlockTypeAction extends WorldAction {
                 case WATER_BUCKET -> Material.WATER;
                 case LAVA_BUCKET -> Material.LAVA;
                 case POWDER_SNOW_BUCKET -> Material.POWDER_SNOW;
+                case FLINT_AND_STEEL -> Material.FIRE;
                 default -> material;
             };
             if (material.isBlock()) {
