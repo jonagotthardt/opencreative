@@ -141,6 +141,9 @@ creative:
   reloaded: "%prefix%Plugin has been &6successfully&f reloaded!"
   resetting-locale: "%prefix%Loading default localization files, please wait..."
   reset-locale: "%prefix%Plugin has &6successfully&f reset the localization files to defaults!"
+  updated-locale: "%prefix%Plugin has &6successfully&f added the missing &6%amount% message lines&f to localization file!"
+  cant-update-locale: "%prefix%Current localization file &6is not built in plugin &fby default."
+  not-updated-locale: "%prefix%Localization file is &6up to date&f, no missing lines :)"
   loaded-worlds-list: "%prefix%List of loaded worlds, total %amount%: &6"
   stability:
     cannot: "%prefix%&cServer experiences a stability problem, action cannot be done. Please try again later..."

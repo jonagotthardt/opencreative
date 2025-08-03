@@ -33,6 +33,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
@@ -151,7 +152,7 @@ public class FileUtils {
             OpenCreative.getPlugin().getConfig().set("messages.locale","en");
         }
         MessageUtils.loadLocalizationFile();
-        OpenCreative.getPlugin().getLogger().info("Loaded Creative localization file...");
+        OpenCreative.getPlugin().getLogger().info("Loaded localization file...");
 
     }
 
@@ -168,7 +169,7 @@ public class FileUtils {
      Resets localization file from OpenCreative/locales/ folder. If localization file is detected in folder, then it will be removed and replaced with plugin's new one.
      **/
     public static void resetLocales() {
-        OpenCreative.getPlugin().getLogger().info("Resseting Creative localization file...");
+        OpenCreative.getPlugin().getLogger().info("Resetting Creative localization file...");
         File folder = new File(OpenCreative.getPlugin().getDataFolder() + File.separator + "locales" + File.separator);
         if (!folder.exists()) {
             if (!folder.mkdirs()) {
@@ -431,15 +432,14 @@ public class FileUtils {
                     if (convertOldPlanetFolder(file)) count++;
                 }
                 unloadedWorlds = unloadedWorldsFolder.listFiles();
-            }
-            if (unloadedWorlds.length == 0) {
-                unloadedWorldsFolder.delete();
+                if (unloadedWorlds != null && unloadedWorlds.length == 0) {
+                    unloadedWorldsFolder.delete();
+                }
             }
         }
         if (count > 0) {
             OpenCreative.getPlugin().getLogger().info("Converted " + count + " old worlds!");
         }
-
     }
 
     /**

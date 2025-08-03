@@ -67,6 +67,7 @@ public class Settings {
     private int itemsMaxBookPagesAmount = 50;
     private int itemsContainerBigItemsLimit = 3;
     private boolean itemsRemoveAttributes = true;
+    private boolean itemsRemoveBossSpawnEggs = true;
     private boolean itemsRemoveCustomSpawnEggs = true;
     private boolean itemsRemoveClickableBooks = true;
 
@@ -160,6 +161,7 @@ public class Settings {
         itemsRemoveAttributes = config.getBoolean("item-fixer.remove-attribute-modifiers",true);
         itemsRemoveClickableBooks = config.getBoolean("item-fixer.remove-clickable-in-books",true);
         itemsRemoveCustomSpawnEggs = config.getBoolean("item-fixer.remove-custom-spawn-eggs",true);
+        itemsRemoveBossSpawnEggs = config.getBoolean("item-fixer.remove-boss-spawn-eggs",true);
         itemsMaxEnchantLevel = config.getInt("item-fixer.max-enchantment-level",10);
         itemsMaxBookPagesAmount = config.getInt("item-fixer.books-pages-max-amount:",50);
         itemsContainerBigItemsLimit = config.getInt("item-fixer.container-big-items-max-amount",3);
@@ -561,6 +563,10 @@ public class Settings {
 
     public boolean isItemsRemoveCustomSpawnEggs() {
         return itemsRemoveCustomSpawnEggs;
+    }
+
+    public boolean isItemsRemoveBossSpawnEggs() {
+        return itemsRemoveBossSpawnEggs;
     }
 
     public boolean isLegacySelectionMenu() {

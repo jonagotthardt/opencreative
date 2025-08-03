@@ -36,7 +36,12 @@ import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
+
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 
 /**
  * <h1>MessageUtils</h1>
@@ -97,7 +102,38 @@ public class MessageUtils {
             localeFile = new File((OpenCreative.getPlugin().getDataFolder() + File.separator + "locales" + File.separator),  defaultLanguage + ".yml");
         }
 
+        addMissingMessageLines();
         localizationConfig = YamlConfiguration.loadConfiguration(localeFile);
+    }
+
+    public static int addMissingMessageLines() {
+        String selectedLang = OpenCreative.getPlugin().getConfig().getString("messages.locale","en");
+        File folder = new File(OpenCreative.getPlugin().getDataFolder() + File.separator + "locales" + File.separator);
+        File file = new File(folder.getPath() + File.separator + selectedLang + ".yml");
+        if (!file.exists()) {
+            return 0;
+        }
+        InputStream input = OpenCreative.getPlugin().getResource("locales/" + selectedLang + ".yml");
+        if (input == null) {
+            return 0;
+        }
+        YamlConfiguration resource = YamlConfiguration.loadConfiguration(new InputStreamReader(input, StandardCharsets.UTF_8));
+        YamlConfiguration localization = YamlConfiguration.loadConfiguration(file);
+        int changes = 0;
+        for (String key : resource.getKeys(true)) {
+            if (!localization.contains(key)) {
+                localization.set(key, resource.get(key));
+                changes++;
+            }
+        }
+        if (changes == 0) return 0;
+        try {
+            localization.save(file);
+            OpenCreative.getPlugin().getLogger().info("Added " + changes + " lines to localization file.");
+        } catch (Exception error) {
+            sendCriticalErrorMessage("Failed to update lines in localization file " + file.getName(), error);
+        }
+        return changes;
     }
 
     public static boolean localizationFileExists(String languageName) {
