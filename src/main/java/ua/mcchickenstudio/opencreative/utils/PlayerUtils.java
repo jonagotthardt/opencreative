@@ -22,6 +22,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.sign.Side;
 import org.bukkit.boss.KeyedBossBar;
+import org.bukkit.inventory.meta.BookMeta;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.player.PlayerLobbyEvent;
@@ -169,6 +170,14 @@ public class PlayerUtils {
 
         ItemStack myWorldsItem = createItem(Material.NETHER_STAR, 1, "items.lobby.own", "own_worlds");
         player.getInventory().setItem(5, myWorldsItem);
+
+        ItemStack changelogsItems = createItem(Material.WRITTEN_BOOK, 1, "items.lobby.changelogs", "changelogs");
+        if (changelogsItems.getItemMeta() instanceof BookMeta bookMeta) {
+            bookMeta.setPages(getBookPages("items.lobby.changelogs.pages"));
+            changelogsItems.setItemMeta(bookMeta);
+        }
+        player.getInventory().setItem(0, changelogsItems);
+        player.getInventory().setHeldItemSlot(4);
 
         giveLobbyPermissions(player);
         PlayerLobbyEvent event = new PlayerLobbyEvent(player);

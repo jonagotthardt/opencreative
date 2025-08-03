@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 
 import com.destroystokyo.paper.event.player.PlayerStartSpectatingEntityEvent;
 import com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent;
+import net.kyori.adventure.inventory.Book;
 import org.bukkit.block.sign.Side;
 import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.scheduler.BukkitRunnable;

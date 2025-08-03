@@ -486,6 +486,24 @@ items:
         - ""
         - "&e If you don’t have any, it’s time to create one!"
         - ""
+    changelogs:
+      name: "&dChangelogs &3[Right-click]"
+      lore:
+        - ""
+        - "&7 Discover about last &dupdate&7,"
+        - "&7 that adds new features and fixes"
+        - "&7 annoying errors."
+        - ""
+        - "&e You should read it all!"
+        - ""
+      pages:
+        - "&0Version: &8%version%\n \n \n&6☻ New 48 Game Values!\n \n&0Now you can get more info from entities, players and world.\n \n&aContinue..."
+        - "&0New &3world values&0 (4):\n&2+ &0Server TPS\n&2+ &0World size\n&2+ &0Game time\n&2+ &0Moon phase\n \n&0New &6player values&0 (5):\n&2+ &0Main hand\n&2+ &0Chat Visibility\n&2+ &0Render distance\n&2+ &0Hotbar Items\n&2+ &0Items from menu"
+        - "&0New &5entity values&0 (39):\n&2+ &0Gravity\n&2+ &0Burning Time\n&2+ &0Jump Height\n&2+ &0Knockback Resistance\n&2+ &0Explosion Knockback Restistance\n&2+ &0Knockback when hitting\n&2+ &0Damage when hitting\n&2+ &0Armor Toughness\n&2+ &0Size\n&2+ &0Attack Speed"
+        - "&2+ &0Armor Points\n&2+ &0Target Entity\n&2+ &0Passengers list\n&2+ &0Entity Item\n&2+ &0Facing\n&2+ &0Facing Vector\n&2+ &0X, Y, Z coordinates\n&2+ &0Yaw, Pitch rotations\n&2+ &0Block beneath\n&2+ &0Projectile shooter\n&2+ &0Vehicle entity\n&2+ &0Spawn Reason\n&2+ &0Pose\n&2+ &0Hitbox Width (X, Z)"
+        - "&2+ &0Hitbox Height\n&2+ &0Time until explosion\n&2+ &0Age\n&2+ &0Life Time\n&2+ &0Villager's Trades Count\n&2+ &0Active Potion Effects\n&2+ &0Inventory Items\n&2+ &0Target Fluid\n&2+ &0Body Yaw Rotation\n&2+ &0Leash Holder UUID\n&2+ &0Saddle Item\n&2+ &0Absorption Amount"
+        - "&8🎣 Other Changes\n \n&8- &0Added &3Seed &0argument for &3Player Play Sound action&0.\n&8- &0Added &6Ignore Durability&0 argument for &6Item Equals&0 conditions.\n&8- &0Added default glass for customization in /env."
+        - "&8- &0Changed some additional event blocks to deepslate ores.\n&8- &0Fixed some repeat actions issues."
   developer:
     turned-on: "&a ● "
     turned-off: "&7 ○ "
@@ -10592,7 +10610,8 @@ menus:
           - "&7 to &bcreate&7 their own worlds."
           - ""
           - "&c McChicken Studio 2017-2025"
-          - "&3 Translators: &7initzero, Nagibator6000LoL"
+          - "&3 Translators: &7initzero, Nagibator6000LoL,"
+          - "&7  DrakesWeb."
           - ""
       reload:
         name: " "

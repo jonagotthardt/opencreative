@@ -263,7 +263,11 @@ public class MessageUtils {
             pages.add("§4Not found pages: §0" + localizationID + " \nPlease report server administration, they need to fill this line in locales" + File.separator + getLanguage() + ".yml");
         } else {
             for (String page : foundPages) {
-                pages.add(ChatColor.translateAlternateColorCodes('&',page.replace("%prefix%",getPrefix()).replace("%cc-prefix%",getCreativeChatPrefix())));
+                pages.add(ChatColor.translateAlternateColorCodes('&', page
+                        .replace("%prefix%",getPrefix())
+                        .replace("%cc-prefix%",getCreativeChatPrefix())
+                        .replace("%version%",OpenCreative.getVersion())
+                ));
             }
         }
         return pages;
