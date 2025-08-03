@@ -180,6 +180,7 @@ item-fixer:
   remove-attribute-modifiers: true # Removes some attribute modifiers from item (scale, speed, strength)
   remove-clickable-in-books: true # Removes clickable components from books
   remove-custom-spawn-eggs: true # Removes custom data in spawn eggs
+  remove-boss-spawn-eggs: true # Removes ender dragon and wither spawn eggs
 
 commands:
   #
@@ -236,7 +237,7 @@ groups:
     lobby-permissions: # Permissions will be given when player teleports to lobby
       - "music.play"
     world:
-      size: 25
+      size: 128
       like-reward: 1
       advertisement-cost: 0
       limits:
@@ -302,7 +303,7 @@ groups:
     lobby-permissions:
       - "music.play"
     world:
-      size: 50
+      size: 256
       like-reward: 1
       advertisement-cost: 0
       limits:

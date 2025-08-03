@@ -64,6 +64,7 @@ public final class SetBlocksAreaTypeAction extends WorldAction {
             case WATER_BUCKET -> Material.WATER;
             case LAVA_BUCKET -> Material.LAVA;
             case POWDER_SNOW_BUCKET -> Material.POWDER_SNOW;
+            case FLINT_AND_STEEL -> Material.FIRE;
             default -> type;
         };
         for (int x = minX; x <= maxX; x++) {

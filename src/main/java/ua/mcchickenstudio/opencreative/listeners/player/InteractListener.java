@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 
 import com.destroystokyo.paper.event.player.PlayerStartSpectatingEntityEvent;
 import com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent;
+import net.kyori.adventure.inventory.Book;
 import org.bukkit.block.sign.Side;
 import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -84,8 +85,14 @@ public final class InteractListener implements Listener {
     @EventHandler
     public void onInteraction(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        ItemUtils.fixItem(event.getPlayer().getInventory().getItemInMainHand());
-        ItemUtils.fixItem(event.getPlayer().getInventory().getItemInOffHand());
+        ItemStack fixedMain = ItemUtils.fixItem(player.getInventory().getItemInMainHand().clone());
+        ItemStack fixedOff = ItemUtils.fixItem(player.getInventory().getItemInOffHand().clone());
+        if (!fixedMain.equals(player.getInventory().getItemInMainHand())) {
+            player.getInventory().setItemInMainHand(fixedMain);
+        }
+        if (!fixedOff.equals(player.getInventory().getItemInOffHand())) {
+            player.getInventory().setItemInOffHand(fixedOff);
+        }
         ItemStack currentItem = player.getInventory().getItemInMainHand();
         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
         if (devPlanet == null) {

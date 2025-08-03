@@ -242,9 +242,15 @@ public final class ClickListener implements Listener {
 
     @EventHandler
     public void onSwap(PlayerSwapHandItemsEvent event) {
-        ItemUtils.fixItem(event.getPlayer().getInventory().getItemInMainHand());
-        ItemUtils.fixItem(event.getPlayer().getInventory().getItemInOffHand());
         Player player = event.getPlayer();
+        ItemStack fixedMain = ItemUtils.fixItem(player.getInventory().getItemInMainHand().clone());
+        ItemStack fixedOff = ItemUtils.fixItem(player.getInventory().getItemInOffHand().clone());
+        if (!fixedMain.equals(player.getInventory().getItemInMainHand())) {
+            player.getInventory().setItemInMainHand(fixedMain);
+        }
+        if (!fixedOff.equals(player.getInventory().getItemInOffHand())) {
+            player.getInventory().setItemInOffHand(fixedOff);
+        }
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
         ItemStack currentItem = event.getOffHandItem();

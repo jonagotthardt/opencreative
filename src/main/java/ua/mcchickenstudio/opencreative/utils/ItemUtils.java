@@ -19,6 +19,8 @@
 package ua.mcchickenstudio.opencreative.utils;
 
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntitySnapshot;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.meta.*;
 import org.jetbrains.annotations.NotNull;
@@ -392,6 +394,7 @@ public class ItemUtils {
                 settings.isItemsRemoveClickableBooks(),
                 settings.getItemsContainerBigItemsLimit(),
                 settings.isItemsRemoveCustomSpawnEggs(),
+                settings.isItemsRemoveBossSpawnEggs(),
                 settings.isItemsRemoveAttributes());
     }
 
@@ -405,12 +408,13 @@ public class ItemUtils {
      * @param removeClickableBooks remove clickable components in books or not.
      * @param containerBigItemsLimit limit of big items (books, containers) in container.
      * @param removeCustomEggs removes custom spawn eggs.
+     * @param removeBossEggs removes boss spawn eggs.
      * @param removeAttributes removes attribute modifiers (scale).
      */
     public static ItemStack fixItem(@NotNull ItemStack item, int maxEnchantLevel,
                                     int bookPagesLimit, boolean removeClickableBooks,
                                     int containerBigItemsLimit, boolean removeCustomEggs,
-                                    boolean removeAttributes) {
+                                    boolean removeBossEggs, boolean removeAttributes) {
         try {
             ItemMeta meta = item.getItemMeta();
             if (meta == null) return item;
@@ -476,10 +480,19 @@ public class ItemUtils {
                         }
                     }
                 }
-                case SpawnEggMeta egg when removeCustomEggs -> {
+                case SpawnEggMeta egg when removeCustomEggs || removeBossEggs -> {
                     if (egg.getCustomSpawnedType() != null) {
                         item.setType(Material.AIR);
-                        sendDebug("[ITEMS] Destroyed spawn egg");
+                        item.setItemMeta(null);
+                        sendDebug("[ITEMS] Destroyed custom spawn egg");
+                    }
+                    if (removeBossEggs) {
+                        if (item.getType() == Material.ENDER_DRAGON_SPAWN_EGG
+                                || item.getType() == Material.WITHER_SPAWN_EGG) {
+                            item.setType(Material.AIR);
+                            item.setItemMeta(null);
+                            sendDebug("[ITEMS] Destroyed boss spawn egg");
+                        }
                     }
                 }
                 default -> {}

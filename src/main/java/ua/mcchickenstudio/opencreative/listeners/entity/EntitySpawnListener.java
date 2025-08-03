@@ -115,6 +115,13 @@ public final class EntitySpawnListener implements Listener {
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         World world = event.getEntity().getWorld();
         Entity entity = event.getEntity();
+        switch (event.getSpawnReason()) {
+            case EGG, SPAWNER_EGG, SPAWNER, DISPENSE_EGG, TRIAL_SPAWNER -> {
+                if (OpenCreative.getSettings().isItemsRemoveBossSpawnEggs() && entity instanceof Boss) {
+                    event.setCancelled(true);
+                }
+            }
+        }
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(world);
         if (isEntityInDevPlanet(entity) && !(event.getEntity() instanceof Item)) {
             event.setCancelled(true);

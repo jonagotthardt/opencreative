@@ -22,6 +22,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.indev.Items;
+import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
 import ua.mcchickenstudio.opencreative.indev.modules.Module;
 import ua.mcchickenstudio.opencreative.menus.CreativeMenu;
@@ -91,6 +92,27 @@ public class CreativeCommand extends CommandHandler {
                     OpenCreative.getSettings().load(OpenCreative.getPlugin().getConfig());
                     loadLocales();
                     sender.sendMessage(getLocaleMessage("creative.reloaded"));
+                    if (player != null) {
+                        Sounds.RELOADED.play(player);
+                    }
+                }
+                case "updatelocale" -> {
+                    if (!sender.hasPermission("opencreative.updatelocale")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    if (player != null) {
+                        Sounds.RELOADING.play(player);
+                    }
+                    int added = MessageUtils.addMissingMessageLines();
+                    if (added == -1) {
+                        sender.sendMessage(getLocaleMessage("creative.cant-update-locale"));
+                    } else if (added == 0) {
+                        sender.sendMessage(getLocaleMessage("creative.not-updated-locale"));
+                    } else {
+                        sender.sendMessage(getLocaleMessage("creative.updated-locale")
+                                .replace("%amount%", String.valueOf(added)));
+                    }
                     if (player != null) {
                         Sounds.RELOADED.play(player);
                     }
@@ -821,6 +843,7 @@ public class CreativeCommand extends CommandHandler {
             tabCompleter.add("load");
             tabCompleter.add("unload");
             tabCompleter.add("resetlocale");
+            tabCompleter.add("updatelocale");
             tabCompleter.add("creative-chat");
             tabCompleter.add("kick-all");
             tabCompleter.add("list");
