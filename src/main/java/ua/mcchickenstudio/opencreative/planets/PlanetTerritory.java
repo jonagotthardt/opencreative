@@ -122,6 +122,7 @@ public class PlanetTerritory {
         if (world == null) return;
         world.setAutoSave(autoSave);
         world.setGameRule(GameRule.SPAWN_CHUNK_RADIUS,1);
+        world.setGameRule(GameRule.GLOBAL_SOUND_EVENTS, false);
         if (world.getEnvironment() == World.Environment.THE_END) {
             if (world.getEnderDragonBattle() != null) {
                 world.getEnderDragonBattle().setPreviouslyKilled(true);
@@ -287,6 +288,7 @@ public class PlanetTerritory {
             world.setGameRule(GameRule.DO_FIRE_TICK, true);
             world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
             world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+            world.setGameRule(GameRule.GLOBAL_SOUND_EVENTS, false);
 
             world.setTime(0);
             for (Entity entity : world.getEntities()) {

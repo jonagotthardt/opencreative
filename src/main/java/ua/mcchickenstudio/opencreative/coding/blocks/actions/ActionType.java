@@ -437,7 +437,27 @@ public enum ActionType {
     VAR_MODIFY_LOCATION( ActionCategory.VARIABLE_ACTION, MenusCategory.LOCATION_OPERATIONS, ModifyLocationAction.class, Material.WHITE_STAINED_GLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("location", ValueType.LOCATION), new ArgumentSlot("yaw", ValueType.NUMBER), new ArgumentSlot("pitch", ValueType.NUMBER), new ArgumentSlot("x", ValueType.NUMBER), new ArgumentSlot("y", ValueType.NUMBER), new ArgumentSlot("z", ValueType.NUMBER), new ParameterSlot("add")),
     VAR_LOCATION_TO_VECTOR( ActionCategory.VARIABLE_ACTION, MenusCategory.LOCATION_OPERATIONS, LocationToVectorAction.class, Material.PRISMARINE_SHARD, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("location", ValueType.LOCATION)),
     VAR_GET_DISTANCE( ActionCategory.VARIABLE_ACTION, MenusCategory.LOCATION_OPERATIONS, GetDistanceAction.class, Material.SPYGLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("first", ValueType.LOCATION), new ArgumentSlot("second", ValueType.LOCATION)),
-    VAR_GET_LOCATION_X( ActionCategory.VARIABLE_ACTION, MenusCategory.LOCATION_OPERATIONS, GetLocationXAction.class, Material.RED_STAINED_GLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("location", ValueType.LOCATION)),
+        VAR_GET_LOCATION_ALL(
+            ActionCategory.VARIABLE_ACTION,
+            MenusCategory.LOCATION_OPERATIONS,
+            GetLocationAllCoordinateAction.class,
+            Material.QUARTZ,
+            new ArgumentSlot("location", ValueType.LOCATION),
+            new ArgumentSlot("yaw", ValueType.VARIABLE),
+            new ArgumentSlot("pitch", ValueType.VARIABLE),
+            new ArgumentSlot("x", ValueType.VARIABLE),
+            new ArgumentSlot("y", ValueType.VARIABLE),
+            new ArgumentSlot("z", ValueType.VARIABLE)
+    ),
+
+    VAR_GET_LOCATION_X(
+            ActionCategory.VARIABLE_ACTION,
+            MenusCategory.LOCATION_OPERATIONS,
+            GetLocationXAction.class,
+            Material.RED_STAINED_GLASS,
+            new ArgumentSlot("variable", ValueType.VARIABLE),
+            new ArgumentSlot("location", ValueType.LOCATION)
+    ),
     VAR_GET_LOCATION_Y( ActionCategory.VARIABLE_ACTION, MenusCategory.LOCATION_OPERATIONS, GetLocationYAction.class, Material.GREEN_STAINED_GLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("location", ValueType.LOCATION)),
     VAR_GET_LOCATION_Z( ActionCategory.VARIABLE_ACTION, MenusCategory.LOCATION_OPERATIONS, GetLocationZAction.class, Material.BLUE_STAINED_GLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("location", ValueType.LOCATION)),
     VAR_GET_LOCATION_YAW( ActionCategory.VARIABLE_ACTION, MenusCategory.LOCATION_OPERATIONS, ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.location.GetLocationYawAction.class, Material.YELLOW_STAINED_GLASS_PANE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("location", ValueType.LOCATION)),

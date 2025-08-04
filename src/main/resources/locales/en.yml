@@ -585,6 +585,7 @@ items:
         lore:
           - "&7Place an item here"
           - "&7with paper containing a location."
+          - "&eDefault player location"
       var-parameter:
         lore:
           - "&7This variable should store"
@@ -8207,6 +8208,32 @@ items:
           - " &a295.0 &7- &a-5.0 &7= &e300.0"
           - " "
           - "&eClick to set action."
+      var-get-location-all:
+        name: "&eGet all coordinates of position"
+        lore:
+          - “&7This action was added with the help of lwjenni, kogtyv”
+          - “&7By the power of the gods and blood and sweat”
+          - " "
+          - "&fIn chest:"
+          - "&f Location &7- Location"
+          - "&e Variable &7- To save Yaw"
+          - "&e Variable &7- To save Pitch"
+          - "&e Variable &7- To save X"
+          - "&e Variable &7- To save Y"
+          - "&e Variable &7- To save Z"
+        placeholders:
+          location:
+            name: "&fКоординаты"
+          yaw:
+            name: "&aYaw"
+          pitch:
+            name: "&aPitch"
+          x:
+            name: "&aX"
+          y:
+            name: "&aY"
+          z:
+            name: "&aZ"
       var-set-random-number:
         name: "&3Random number"
         lore:
