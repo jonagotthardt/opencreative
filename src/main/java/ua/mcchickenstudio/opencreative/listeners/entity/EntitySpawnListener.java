@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.listeners.entity;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
@@ -49,12 +51,22 @@ public final class EntitySpawnListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEntitySpawn(EntitySpawnEvent event) {
-        if (event.getEntity() instanceof Item item) {
+        Entity entity = event.getEntity();
+        if (entity instanceof Item item) {
             ItemStack newItem = ItemUtils.fixItem(item.getItemStack());
             if (newItem.getType().isAir()) {
                 event.setCancelled(true);
             } else {
                 item.setItemStack(newItem);
+            }
+        }
+        Component customName = entity.customName();
+        if (customName != null) {
+            String text = PlainTextComponentSerializer.plainText().serialize(customName);
+            int limit = OpenCreative.getSettings().getItemsMaxEntityNameLength();
+            if (text.length() > limit) {
+                entity.customName(PlainTextComponentSerializer.plainText()
+                        .deserialize(text.substring(0,limit)));
             }
         }
         World world = event.getLocation().getWorld();

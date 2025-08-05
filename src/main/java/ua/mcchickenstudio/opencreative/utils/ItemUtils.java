@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
+import io.papermc.paper.persistence.PersistentDataContainerView;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntitySnapshot;
 import org.bukkit.entity.EntityType;
@@ -411,6 +412,7 @@ public class ItemUtils {
      * @param removeBossEggs removes boss spawn eggs.
      * @param removeAttributes removes attribute modifiers (scale).
      */
+    @SuppressWarnings("deprecation")
     public static ItemStack fixItem(@NotNull ItemStack item, int maxEnchantLevel,
                                     int bookPagesLimit, boolean removeClickableBooks,
                                     int containerBigItemsLimit, boolean removeCustomEggs,
@@ -442,10 +444,18 @@ public class ItemUtils {
                     }
                 }
             }
+            if (!meta.getPersistentDataContainer().isEmpty()) {
+                if (getPersistentDataAmount(item) > OpenCreative.getSettings().getItemsMaxPersistentDataSize()) {
+                    for (NamespacedKey key : item.getPersistentDataContainer().getKeys()) {
+                        meta.getPersistentDataContainer().remove(key);
+                    }
+                    item.setItemMeta(meta);
+                    sendDebug("[ITEMS] Cleared persistent data");
+                }
+            }
             switch (meta) {
                 case BlockStateMeta blockMeta when blockMeta.getBlockState() instanceof InventoryHolder holder -> {
                     // If item is Chest or Shulker
-                    int insideLimit = containerBigItemsLimit;
                     int insideContainers = 0;
                     for (ItemStack insideItem : holder.getInventory().getContents()) {
                         if (insideItem == null) continue;
@@ -454,9 +464,9 @@ public class ItemUtils {
                         } else if (insideItem.getItemMeta() instanceof BookMeta book) {
                             insideContainers++;
                         }
-                        if (insideContainers > insideLimit) break;
+                        if (insideContainers > containerBigItemsLimit) break;
                     }
-                    if (insideContainers > insideLimit) {
+                    if (insideContainers > containerBigItemsLimit) {
                         item.setType(Material.AIR);
                         sendDebug("[ITEMS] Destroyed container with a lot of items");
                     }
@@ -501,5 +511,42 @@ public class ItemUtils {
             sendDebugError("[ITEMS] Can't fix item: " + item, exception);
         }
         return item;
+    }
+
+    public static int getPersistentDataAmount(@NotNull ItemStack item) {
+        int length = 0;
+        int limit = OpenCreative.getSettings().getItemsMaxPersistentDataSize();
+        PersistentDataContainerView container = item.getPersistentDataContainer();
+        for (NamespacedKey key : container.getKeys()) {
+            /*
+             * We do that, because we can't access the type
+             * of persistent data directly.
+             */
+            length += key.getKey().length();
+            if (container.has(key, PersistentDataType.STRING)) {
+                String val = container.get(key, PersistentDataType.STRING);
+                if (val != null) length += val.length();
+            } else if (container.has(key, PersistentDataType.BYTE_ARRAY)) {
+                byte[] val = container.get(key, PersistentDataType.BYTE_ARRAY);
+                if (val != null) length += val.length;
+            } else if (container.has(key, PersistentDataType.INTEGER)) {
+                length += Integer.BYTES;
+            } else if (container.has(key, PersistentDataType.LONG)) {
+                length += Long.BYTES;
+            } else if (container.has(key, PersistentDataType.BYTE)) {
+                length += Byte.BYTES;
+            } else if (container.has(key, PersistentDataType.BYTE_ARRAY)) {
+                byte[] val = container.get(key, PersistentDataType.BYTE_ARRAY);
+                if (val != null) length += val.length;
+            } else if (container.has(key, PersistentDataType.DOUBLE)) {
+                length += Double.BYTES;
+            } else if (container.has(key, PersistentDataType.FLOAT)) {
+                length += Float.BYTES;
+            } else if (container.has(key, PersistentDataType.SHORT)) {
+                length += Short.BYTES;
+            }
+            if (length >= limit) break;
+        }
+        return length;
     }
 }

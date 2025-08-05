@@ -20,7 +20,9 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 
 import com.destroystokyo.paper.event.player.PlayerStartSpectatingEntityEvent;
 import com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent;
+import io.papermc.paper.event.player.PlayerNameEntityEvent;
 import net.kyori.adventure.inventory.Book;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.block.sign.Side;
 import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -840,5 +842,16 @@ public final class InteractListener implements Listener {
     public void onBedInteract(PlayerBedLeaveEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) new BedLeaveEvent(event.getPlayer(),event).callEvent();
+    }
+
+    @EventHandler
+    public void onEntityRename(PlayerNameEntityEvent event) {
+        if (event.getName() == null) return;
+        String text = PlainTextComponentSerializer.plainText().serialize(event.getName());
+        int limit = OpenCreative.getSettings().getItemsMaxEntityNameLength();
+        if (text.length() > limit) {
+            event.setName(PlainTextComponentSerializer.plainText()
+                    .deserialize(text.substring(0,limit)));
+        }
     }
 }
