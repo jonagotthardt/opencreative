@@ -89,6 +89,7 @@ public class WorldEnvironmentMenu extends AbstractMenu {
         replacePlaceholderInLore(info,"%bossbars-limit%", devPlanet.getPlanet().getLimits().getBossBarsLimit());
         replacePlaceholderInLore(info,"%variables%", devPlanet.getPlanet().getVariables().getTotalVariablesAmount());
         replacePlaceholderInLore(info,"%variables-limit%", devPlanet.getPlanet().getLimits().getVariablesAmountLimit());
+        replacePlaceholderInLore(info,"%executor-calls-limit%", devPlanet.getPlanet().getLimits().getCodeOperationsLimit());
         replacePlaceholderInLore(info,"%planetID%", devPlanet.getPlanet().getId());
         replacePlaceholderInLore(info,"%version%", OpenCreative.getVersion());
         return info;
