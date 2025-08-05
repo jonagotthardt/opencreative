@@ -65,7 +65,9 @@ public class Settings {
 
     private int itemsMaxEnchantLevel = 10;
     private int itemsMaxBookPagesAmount = 50;
+    private int itemsMaxEntityNameLength = 48;
     private int itemsContainerBigItemsLimit = 3;
+    private int itemsMaxPersistentDataSize = 2048;
     private boolean itemsRemoveAttributes = true;
     private boolean itemsRemoveBossSpawnEggs = true;
     private boolean itemsRemoveCustomSpawnEggs = true;
@@ -80,7 +82,6 @@ public class Settings {
     private boolean lobbyDisableExplosions = true;
 
     private boolean legacySelectionMenu = false;
-    private String platformsGeneratorId = "horizontal";
 
     private BukkitRunnable announcer;
     private PlayerListChanger listChanger = PlayerListChanger.FULL;
@@ -143,7 +144,6 @@ public class Settings {
         lobbyDisallowDestroyingBlocks = config.getBoolean("lobby.disallow-destroying-blocks",true);
 
         legacySelectionMenu = config.getBoolean("coding.old-selection-menu",false);
-        platformsGeneratorId = config.getString("coding.platforms-generator","horizontal");
 
         worldCreationMinSeconds = config.getInt("requirements.world-creation.played-seconds",30);
         worldReputationMinSeconds = config.getInt("requirements.world-reputation.creation-seconds",300);
@@ -163,7 +163,9 @@ public class Settings {
         itemsRemoveCustomSpawnEggs = config.getBoolean("item-fixer.remove-custom-spawn-eggs",true);
         itemsRemoveBossSpawnEggs = config.getBoolean("item-fixer.remove-boss-spawn-eggs",true);
         itemsMaxEnchantLevel = config.getInt("item-fixer.max-enchantment-level",10);
-        itemsMaxBookPagesAmount = config.getInt("item-fixer.books-pages-max-amount:",50);
+        itemsMaxEntityNameLength = config.getInt("item-fixer.entity-name-max-length",48);
+        itemsMaxPersistentDataSize = config.getInt("item-fixer.persistent-data-max-size",2048);
+        itemsMaxBookPagesAmount = config.getInt("item-fixer.books-pages-max-amount",50);
         itemsContainerBigItemsLimit = config.getInt("item-fixer.container-big-items-max-amount",3);
 
         groups.load();
@@ -181,6 +183,7 @@ public class Settings {
         if (debug) {
             OpenCreative.getPlugin().getLogger().warning("Debug Mode is enabled in config.yml, some logs will appear in console.");
         }
+        String platformsGeneratorId = config.getString("coding.platforms-generator", "horizontal");
         DevPlatformer platformer = DevPlatformers.getInstance().getById(platformsGeneratorId);
         if (platformer == null) {
             sendWarningErrorMessage("[PLATFORMERS] Unknown coding platform generator: " + platformsGeneratorId + ", using the default horizontal.");
@@ -595,5 +598,13 @@ public class Settings {
 
     public boolean isLobbyDisallowWorldEdit() {
         return lobbyDisallowWorldEdit;
+    }
+
+    public int getItemsMaxEntityNameLength() {
+        return itemsMaxEntityNameLength;
+    }
+
+    public int getItemsMaxPersistentDataSize() {
+        return itemsMaxPersistentDataSize;
     }
 }

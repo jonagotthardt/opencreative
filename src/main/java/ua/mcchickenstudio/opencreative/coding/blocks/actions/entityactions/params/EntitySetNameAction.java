@@ -23,6 +23,7 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -51,8 +52,9 @@ public final class EntitySetNameAction extends EntityAction {
         }
         Component name = builder.build();
         String plainText = PlainTextComponentSerializer.plainText().serialize(name);
-        if (plainText.length() > 16) {
-            throw new TooLongTextException(16);
+        int limit = OpenCreative.getSettings().getItemsMaxEntityNameLength();
+        if (plainText.length() > limit) {
+            throw new TooLongTextException(limit);
         }
         entity.customName(name);
     }

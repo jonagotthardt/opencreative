@@ -181,6 +181,8 @@ item-fixer:
   remove-clickable-in-books: true # Removes clickable components from books
   remove-custom-spawn-eggs: true # Removes custom data in spawn eggs
   remove-boss-spawn-eggs: true # Removes ender dragon and wither spawn eggs
+  entity-name-max-length: 48 # Maximum length of entity's name
+  persistent-data-max-size: 2048 # Maximum size of persistent data container
 
 commands:
   #
