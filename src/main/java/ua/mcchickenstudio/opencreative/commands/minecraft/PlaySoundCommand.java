@@ -18,13 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.commands.minecraft;
 
-import org.bukkit.Registry;
+import org.bukkit.*;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -70,65 +68,81 @@ public class PlaySoundCommand extends CommandHandler {
                     return;
                 }
             }
+
             if (args.length == 0) {
                 sender.sendMessage(getLocaleMessage("commands.play-sound.help"));
                 return;
             }
+
             Player target = player;
             String soundString;
             Sound sound = null;
             float volume = 100f;
             float pitch = 1f;
-            // playsound entity.villager.yes
-            if (args.length <= 3) {
-                soundString = args[args.length == 1 ? 0 : 1];
-                if (args.length > 1) {
-                    try {
-                        volume = Float.parseFloat(args[1]);
-                    } catch (NumberFormatException ignored) {}
-                }
-                if (args.length > 2) {
-                     try {
-                         pitch = Float.parseFloat(args[2]);
-                     } catch (NumberFormatException ignored) {}
-                }
-            } else if (args.length == 4) {
-                target = Bukkit.getPlayer(args[0]);
-                if (target == null) {
-                    sender.sendMessage(getLocaleMessage("no-player-found"));
-                    return;
-                } else if (!sender.hasPermission("opencreative.play-sound.bypass")) {
-                    Planet targetPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(target);
-                    if (!player.hasPermission("opencreative.play-sound.bypass")) {
-                        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-                        if (planet == null || !planet.equals(targetPlanet)) {
-                            player.sendMessage(getLocaleMessage("no-player-found"));
-                            return;
-                        }
-                    }
-                }
-                soundString = args[1];
+            Long seed = null;
+            boolean isCustomTarget = false;
+
+            if (args.length >= 2) {
                 try {
-                    volume = Float.parseFloat(args[2]);
-                } catch (NumberFormatException ignored) {}
-                try {
-                    pitch = Float.parseFloat(args[3]);
-                } catch (NumberFormatException ignored) {}
+                    // playsound entity.villager.yes 100 -> false, 0
+                    // playsound playername entity.villager.yes -> true, 1
+                    volume = Float.parseFloat(args[1]);
+                } catch (NumberFormatException ignored) {
+                    isCustomTarget = true;
+                }
+                soundString = args[isCustomTarget ? 1 : 0];
             } else {
-                sender.sendMessage(getLocaleMessage("commands.play-sound.help"));
-                return;
+                soundString = args[0];
             }
+
+            if (args.length >= 3) {
+                // playsound entity.villager.yes 100 2
+                try {
+                    pitch = Float.parseFloat(args[isCustomTarget ? 3 : 2]);
+                } catch (NumberFormatException ignored) {}
+            }
+
+            if (args.length >= 4) {
+                // playsound entity.villager.yes 100 2 seed
+                try {
+                    seed = Long.parseLong(args[isCustomTarget ? 4 : 3]);
+                } catch (NumberFormatException ignored) {}
+            }
+
+            if (isCustomTarget) target = Bukkit.getPlayer(args[0]);
+            if (target == null) {
+                sender.sendMessage(getLocaleMessage("no-player-found"));
+                return;
+            } else if (!sender.hasPermission("opencreative.play-sound.bypass")) {
+                Planet targetPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(target);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+                if (planet == null || !planet.equals(targetPlanet)) {
+                    player.sendMessage(getLocaleMessage("no-player-found"));
+                    return;
+                }
+            }
+
             try {
                 sound = Sound.valueOf(soundString.toUpperCase());
             } catch (IllegalArgumentException ignored) {}
             volume = Math.clamp(volume,1,100);
             pitch = Math.clamp(pitch,0.1f,2.0f);
+            Location location = target.getLocation().clone();
+            if (volume < 100) {
+                location = location.add(0,-50,0);
+            }
             if (sound == null) {
-                try {
-                    target.playSound(target.getLocation(),soundString,volume,pitch);
-                } catch (Exception ignored) {}
+                if (seed != null) {
+                    target.playSound(location,soundString,SoundCategory.AMBIENT,volume,pitch,seed);
+                } else {
+                    target.playSound(location,soundString,volume,pitch);
+                }
             } else {
-                target.playSound(target.getLocation(),sound,volume,pitch);
+                if (seed != null) {
+                    target.playSound(location,sound,SoundCategory.AMBIENT,volume,pitch,seed);
+                } else {
+                    target.playSound(location,sound,volume,pitch);
+                }
             }
             sender.sendMessage(getLocaleMessage("commands.play-sound.played").replace("%sound%",soundString).replace("%volume%",String.valueOf(volume)).replace("%pitch%",String.valueOf(pitch)).replace("%player%",target.getName()));
         }
