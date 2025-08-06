@@ -39,6 +39,7 @@ import java.io.File;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getSignLine;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
@@ -101,24 +102,23 @@ public class DevPlanet {
 
     public void loadDevPlanetWorld() {
         long startTime = System.currentTimeMillis();
-
-        if (this.exists()) {
-            Bukkit.createWorld(new WorldCreator(this.getWorldName())
-                    .type(WorldType.FLAT)
-                    .generator(new DevPlanetChunkGenerator()));
-            if (getWorld() != null) {
-                if (getWorld().getBlockAt(4,0,4).isEmpty()) {
-                    createPlatform(1,1);
-                }
-                setupWorld();
+        boolean existed = this.exists();
+        World world = Bukkit.createWorld(new WorldCreator(this.getWorldName())
+                .type(WorldType.FLAT)
+                .generator(new DevPlanetChunkGenerator()));
+        if (world == null) {
+            sendCriticalErrorMessage("Failed to load Dev planet world " + planet.getId());
+            return;
+        }
+        if (existed) {
+            if (world.getBlockAt(4,0,4).isEmpty()) {
+                createPlatform(1,1);
             }
         } else {
-            Bukkit.createWorld(new WorldCreator(this.getWorldName()).type(WorldType.FLAT).generator(new DevPlanetChunkGenerator()));
             createPlatform(1,1);
-            this.getWorld().setTime(12500);
-            setupWorld();
+            world.setTime(12500);
         }
-
+        setupWorld();
         long endTime = System.currentTimeMillis();
         OpenCreative.getPlugin().getLogger().info("Dev planet world " + planet.getId() + " loaded in " + (endTime - startTime) + " ms");
     }

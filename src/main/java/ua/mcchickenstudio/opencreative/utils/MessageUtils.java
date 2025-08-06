@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.utils;
 
 import net.kyori.adventure.text.TextReplacementConfig;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.indev.modules.Module;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
@@ -111,11 +112,11 @@ public class MessageUtils {
         File folder = new File(OpenCreative.getPlugin().getDataFolder() + File.separator + "locales" + File.separator);
         File file = new File(folder.getPath() + File.separator + selectedLang + ".yml");
         if (!file.exists()) {
-            return 0;
+            return -1;
         }
         InputStream input = OpenCreative.getPlugin().getResource("locales/" + selectedLang + ".yml");
         if (input == null) {
-            return 0;
+            return -1;
         }
         YamlConfiguration resource = YamlConfiguration.loadConfiguration(new InputStreamReader(input, StandardCharsets.UTF_8));
         YamlConfiguration localization = YamlConfiguration.loadConfiguration(file);
@@ -291,7 +292,7 @@ public class MessageUtils {
     /**
      Returns book's pages from localization file.
      **/
-    public static List<String> getBookPages(String localizationID) {
+    public static @NotNull List<String> getBookPages(@NotNull String localizationID) {
         List<String> foundPages = getLocalization().getStringList(localizationID);
         List<String> pages = new ArrayList<>();
         if (foundPages.isEmpty()) {
@@ -401,6 +402,10 @@ public class MessageUtils {
         }
         messagesOnce.put(planet,currentTime);
 
+    }
+
+    public static void clearOnceMessages(Planet planet) {
+        messagesOnce.remove(planet);
     }
 
     /**
