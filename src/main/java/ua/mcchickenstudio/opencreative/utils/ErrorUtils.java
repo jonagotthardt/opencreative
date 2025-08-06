@@ -197,10 +197,10 @@ public class ErrorUtils {
                             .replace("%action%",action.getActionType().getLocaleName())
                             .replace("%error%",errorMessage)
                             .replace("%x%",String.valueOf(action.getX()))
-                            .replace("%y%",String.valueOf(executor.getY()))
-                            .replace("%z%",String.valueOf(executor.getZ())))
+                            .replace("%y%",String.valueOf(action.getExecutor().getY()))
+                            .replace("%z%",String.valueOf(action.getExecutor().getZ())))
                     .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("coding-error.hover-message") + "\n" + parseException(error,true))))
-                    .clickEvent(ClickEvent.runCommand("/dev " + action.getX() + " " + executor.getY() + " " + executor.getZ()));
+                    .clickEvent(ClickEvent.runCommand("/dev " + (action.getX()-0.5) + " " + action.getExecutor().getY() + " " + (action.getExecutor().getZ()-0.5)));
             player.sendMessage(message);
             Sounds.WORLD_CODE_ERROR.play(player);
         }
@@ -213,7 +213,14 @@ public class ErrorUtils {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(entity.getWorld());
         if (planet == null) return;
         for (Player player : planet.getPlayers()) {
-            player.sendMessage(getLocaleMessage("coding-error.message").replace("%event%",executor.getExecutorType().getLocaleName()).replace("%action%", action.getActionType().toString()).replace("%error%",errorMessage).replace("%x%",String.valueOf(action.getX())).replace("%y%",String.valueOf(executor.getY())).replace("%z%",String.valueOf(executor.getZ())));
+            player.sendMessage(
+                    getLocaleMessage("coding-error.message")
+                            .replace("%event%",executor.getExecutorType().getLocaleName())
+                            .replace("%action%", action.getActionType().toString())
+                            .replace("%error%",errorMessage)
+                            .replace("%x%",String.valueOf(action.getX()))
+                            .replace("%y%",String.valueOf(executor.getY()))
+                            .replace("%z%",String.valueOf(executor.getZ())));
             Sounds.WORLD_CODE_ERROR.play(player);
         }
     }

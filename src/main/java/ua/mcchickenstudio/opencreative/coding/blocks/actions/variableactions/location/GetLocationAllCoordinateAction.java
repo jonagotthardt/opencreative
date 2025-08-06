@@ -17,19 +17,21 @@ public class GetLocationAllCoordinateAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         Location location = getArguments().getValue("location",entity.getLocation(),this);
+
         VariableLink x = getArguments().getVariableLink("x",this);
         VariableLink y = getArguments().getVariableLink("y",this);
         VariableLink z = getArguments().getVariableLink("z",this);
         VariableLink pitch = getArguments().getVariableLink("pitch",this);
         VariableLink yaw = getArguments().getVariableLink("yaw",this);
-        if (location != null) {
+
+        if (getArguments().pathExists("location")) {
             if (x != null) setVarValue(x, location.getX());
             if (y != null) setVarValue(y, location.getY());
             if (z != null) setVarValue(z, location.getZ());
             if (pitch != null) setVarValue(pitch, location.getPitch());
             if (yaw != null) setVarValue(yaw, location.getYaw());
         } else {
-            if (x != null || y != null || z != null || pitch != null || yaw != null) {
+            if (getArguments().pathExists("x") || getArguments().pathExists("y") || getArguments().pathExists("z") || getArguments().pathExists("pitch") || getArguments().pathExists("yaw")) {
                 throw new IllegalArgumentException("Not found location");
             }
         }
