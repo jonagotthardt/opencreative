@@ -14738,6 +14738,7 @@ blocks:
   var_get_location_z: "&9Z coordinate"
   var_get_location_yaw: "&eYAW direction"
   var_get_location_pitch: "&6PITCH direction"
+  var_get_location_all: "Coordinates"
   var_get_distance: "Get distance"
   var_create_map: "&aCreate dictionary"
   var_put_into_map: "&6Add to dictionary"

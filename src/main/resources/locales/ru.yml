@@ -14989,7 +14989,7 @@ blocks:
   var_get_random_from_list: "Случ. из списка"
   var_calculate_from_list: "&3Вычис. из списка"
   var_modify_location: "Измен. локацию"
-  var_get_location_all: "&9Получ. все корд."
+  var_get_location_all: "Координаты"
   var_get_location_x: "&cX координата"
   var_get_location_y: "&aY координата"
   var_get_location_z: "&9Z координата"
