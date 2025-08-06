@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.events.CancelEventAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.events.UncancelEventAction;
@@ -848,6 +850,15 @@ public enum ActionType {
                 if (actionType.name().equals(signLine.toUpperCase())) {
                     return actionType;
                 }
+            }
+        }
+        return null;
+    }
+
+    public static @Nullable ActionType getType(@NotNull String text) {
+        for (ActionType actionType : values()) {
+            if (actionType.name().equalsIgnoreCase(text)) {
+                return actionType;
             }
         }
         return null;

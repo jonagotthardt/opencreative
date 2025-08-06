@@ -149,6 +149,11 @@ public final class LegacyPlatformer extends DevPlatformer implements HasVisibleB
     }
 
     @Override
+    public int getCodingBlocksLimit(@NotNull DevPlanet planet) {
+        return 25;
+    }
+
+    @Override
     public boolean notDependsOnHeight() {
         return false;
     }

@@ -77,6 +77,7 @@ modules:
   installed: "%prefix%&6%player%&f installed module &6%moduleName% &fby %moduleOwner%"
   few-space: "%prefix%&cSeems like all your coding platforms are filled with code! To load this module we need %required% free rows of code."
   error: "%prefix%&cCan't save code for module, please fix problems in code!"
+  fail: "%prefix%&cFailed to load module %moduleName%&c by %moduleOwner%"
   default-name: "&7%player%'s Module"
   default-description: "&7My cool module!"
 environment:

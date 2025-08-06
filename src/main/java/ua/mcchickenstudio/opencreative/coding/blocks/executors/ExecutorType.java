@@ -18,6 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors;
 
+import org.bukkit.block.sign.Side;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.entities.*;
@@ -296,12 +299,18 @@ public enum ExecutorType {
         Block signBlock = block.getRelative(BlockFace.SOUTH);
         if (signBlock.getType().toString().contains("WALL_SIGN")) {
             Sign sign = (Sign) signBlock.getState();
-            if (sign.lines().size() >= 3) {
-                Component signText = sign.line(2);
-                for (ExecutorType executorType : values()) {
-                    if (executorType.name().equals(((TextComponent) signText).content().toUpperCase())) return executorType;
-                }
+            if (sign.getSide(Side.FRONT).lines().size() >= 3) {
+                Component signText = sign.getSide(Side.FRONT).line(2);
+                String text = ((TextComponent) signText).content().toUpperCase();
+                return getType(text);
             }
+        }
+        return null;
+    }
+
+    public static @Nullable ExecutorType getType(@NotNull String text) {
+        for (ExecutorType executorType : values()) {
+            if (executorType.name().equalsIgnoreCase(text)) return executorType;
         }
         return null;
     }
