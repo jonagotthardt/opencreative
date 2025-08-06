@@ -8209,10 +8209,10 @@ items:
           - " "
           - "&eClick to set action."
       var-get-location-all:
-        name: "&eGet all coordinates of position"
+        name: "&eGet all coordinates"
         lore:
-          - “&7This action was added with the help of lwjenni, kogtyv”
-          - “&7By the power of the gods and blood and sweat”
+          - "&7Sets variables values to"
+          - "&7coordinates of location."
           - " "
           - "&fIn the chest:"
           - "&f Location &7- Location"
@@ -8221,9 +8221,9 @@ items:
           - "&e Variable &7- To save X"
           - "&e Variable &7- To save Y"
           - "&e Variable &7- To save Z"
+          - " "
+          - "&eClick to set action."
         placeholders:
-          location:
-            name: "&fКоординаты"
           yaw:
             name: "&aYaw"
           pitch:
