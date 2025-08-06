@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.clearOnceMessages;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
@@ -201,6 +202,7 @@ public class PlanetTerritory {
         planet.getWorldPlayers().clear();
         planet.getLimits().clear();
         script.unload();
+        clearOnceMessages(planet);
     }
 
     public void addBukkitRunnable(BukkitRunnable runnable) {

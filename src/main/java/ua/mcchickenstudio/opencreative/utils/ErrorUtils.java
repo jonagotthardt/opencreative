@@ -197,10 +197,10 @@ public class ErrorUtils {
                             .replace("%action%",action.getActionType().getLocaleName())
                             .replace("%error%",errorMessage)
                             .replace("%x%",String.valueOf(action.getX()))
-                            .replace("%y%",String.valueOf(1))
-                            .replace("%z%",String.valueOf(action.getExecutor().getZ())))
+                            .replace("%y%",String.valueOf(executor.getY()))
+                            .replace("%z%",String.valueOf(executor.getZ())))
                     .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("coding-error.hover-message") + "\n" + parseException(error,true))))
-                    .clickEvent(ClickEvent.runCommand("/dev " + action.getX() + " " + 1 + " " + action.getExecutor().getZ()));
+                    .clickEvent(ClickEvent.runCommand("/dev " + action.getX() + " " + executor.getY() + " " + executor.getZ()));
             player.sendMessage(message);
             Sounds.WORLD_CODE_ERROR.play(player);
         }

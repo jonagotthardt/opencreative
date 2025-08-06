@@ -141,7 +141,7 @@ messages:
   cc-prefix: "&6 Creative Chat &8| &7"
   cc-chat: "%cc-prefix%&7%player%&7: %message%" # You can use PAPI placeholders here
   world-chat: "&7 %player% &8» &f%message%" # and here
-  version: "&f \n &fPowered by Open&7Creative&b+ &3%version%\n &f%codename% \n \n &fContributors: &7McChicken Team\n &fTranslators: &7initzero, Nagibator6000Lol, DrakesWeb \n \n &cMcChicken Studio 2017-2025\n &c"
+  version: "&f \n &fPowered by Open&7Creative&b+ &3%version%\n &f%codename% \n \n &fContributors: &7McChicken Team\n &fTranslators: &7initzero, Nagibator6000Lol, DrakesWeb, kogtyv \n \n &cMcChicken Studio 2017-2025\n &c"
   critical-errors: true # Will send critical errors in console
   warnings: true # Will send warning in console
   not-found: false # Will send not found message in console
