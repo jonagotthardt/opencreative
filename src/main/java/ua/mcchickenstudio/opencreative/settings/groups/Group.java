@@ -38,12 +38,15 @@ public class Group {
 
     private final int worldSize;
     private final int worldsLimit;
+    private final int modulesLimit;
     private final int codingPlatformsLimit;
 
+    private final int chatCooldown;
     private final int genericCommandCooldown;
     private final int creativeChatCooldown;
     private final int advertisementCooldown;
-    private final int chatCooldown;
+    private final int modulesUsageCooldown;
+    private final int blocksDuplicationCooldown;
 
     private final double likeReward;
     private final double advertisementPrice;
@@ -60,6 +63,7 @@ public class Group {
         String path = "groups." + name + ".";
         this.permission = config.getString(path + "permission","default");
         worldsLimit = config.getInt(path + "creating-world.limit",1);
+        modulesLimit = config.getInt(path + "creating-module.limit",1);
         worldSize = config.getInt(path + "world.size",25);
         likeReward = config.getInt(path + "world.like-reward",1);
         advertisementPrice = config.getInt(path + "world.advertisement-cost",0);
@@ -67,6 +71,8 @@ public class Group {
         genericCommandCooldown = config.getInt(path + "cooldowns.generic-command",5);
         advertisementCooldown = config.getInt(path + "cooldowns.advertisement",120);
         creativeChatCooldown = config.getInt(path + "cooldowns.creative-chat",5);
+        modulesUsageCooldown = config.getInt(path + "cooldowns.module-usage",7);
+        blocksDuplicationCooldown = config.getInt(path + "cooldowns.duplication-usage",7);
         chatCooldown = config.getInt(path + "cooldowns.world-chat",2);
         playPermissions.addAll(config.getStringList(path + "world.play-permissions"));
         buildPermissions.addAll(config.getStringList(path + "world.build-permissions"));
@@ -97,6 +103,14 @@ public class Group {
         return creativeChatCooldown;
     }
 
+    public int getBlocksDuplicationCooldown() {
+        return blocksDuplicationCooldown;
+    }
+
+    public int getModuleManipulationCooldown() {
+        return modulesUsageCooldown;
+    }
+
     public int getGenericCommandCooldown() {
         return genericCommandCooldown;
     }
@@ -107,6 +121,10 @@ public class Group {
 
     public int getWorldsLimit() {
         return worldsLimit;
+    }
+
+    public int getModulesLimit() {
+        return modulesLimit;
     }
 
     public Set<String> getBuildPermissions() {

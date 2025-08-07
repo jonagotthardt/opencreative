@@ -22,6 +22,7 @@ import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.*;
+import ua.mcchickenstudio.opencreative.indev.modules.BlocksManipulatorMenu;
 import ua.mcchickenstudio.opencreative.menus.EnderChestMenu;
 import ua.mcchickenstudio.opencreative.menus.world.settings.*;
 import org.bukkit.*;
@@ -288,6 +289,22 @@ public final class ClickListener implements Listener {
                         player.setCooldown(currentItem.getType(),60);
                     }
                 }
+            } else if (currentItem.getType() == Material.COMPARATOR) {
+                if (!devPlanet.getPlanet().getWorldPlayers().canDevelop(player)) {
+                    return;
+                }
+                event.setCancelled(true);
+                if (player.hasCooldown(currentItem.getType())) {
+                    return;
+                }
+                player.setCooldown(currentItem.getType(), 40);
+                int size = devPlanet.getMarkedExecutors(player).size();
+                if (size == 0) {
+                    player.sendActionBar(getLocaleMessage("menus.developer.manipulator.not-selected"));
+                    Sounds.DEV_NOT_ALLOWED.play(player);
+                    return;
+                }
+                new BlocksManipulatorMenu(player, devPlanet, size).open(player);
             }
         } else {
             if (planet != null) {

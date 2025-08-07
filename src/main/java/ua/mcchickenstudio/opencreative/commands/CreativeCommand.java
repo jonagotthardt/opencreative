@@ -540,23 +540,6 @@ public class CreativeCommand extends CommandHandler {
                             .replace("%database%", OpenCreative.getStability().getDatabaseState().getLocalized())
                     );
                 }
-                case "test" -> {
-                    if (!sender.hasPermission("opencreative.test")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (player == null) return;
-                    if (args.length == 1) return;
-                    DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
-                    if (devPlanet == null) {
-                        player.sendMessage("only dev planet");
-                        return;
-                    }
-                    DevPlatform platform = devPlanet.getPlatformInLocation(player.getLocation());
-                    if (platform == null) return;
-                    Module module = new Module(1);
-                    module.place(devPlanet, player);
-                }
                 case "test2" -> {
                     if (!sender.hasPermission("opencreative.test")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
@@ -576,6 +559,18 @@ public class CreativeCommand extends CommandHandler {
                     player.sendMessage("Test of worlds downloader");
                     WorldsBrowserMenu menu = new WorldsPickerMenu(player, new HashSet<>(OpenCreative.getPlanetsManager().getPlanets().stream().filter(planet -> planet.getInformation().isDownloadable()).toList()));
                     menu.open(player);
+                }
+                case "uuid", "getuuid" -> {
+                    if (!sender.hasPermission("opencreative.getuuid")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    String text = sender.getName();
+                    if (args.length >= 2) {
+                        text = args[1];
+                    }
+                    String uuid = Bukkit.getOfflinePlayer(text).getUniqueId().toString();
+                    sender.sendMessage(Component.text(uuid).clickEvent(ClickEvent.suggestCommand(uuid)));
                 }
                 case "template" -> handleTemplateCommand(sender, args);
                 default -> {

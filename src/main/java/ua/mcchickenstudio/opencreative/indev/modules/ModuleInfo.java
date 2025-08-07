@@ -25,15 +25,19 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static ua.mcchickenstudio.opencreative.planets.Planet.Sharing.PUBLIC;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
@@ -73,7 +77,10 @@ public class ModuleInfo {
     }
 
     public @NotNull ItemStack getIcon() {
-        return icon;
+        if (module.getInformation().isPublic()) return icon;
+        else {
+            return icon.clone().withType(Material.BARRIER);
+        }
     }
 
     public boolean isPublic() {
@@ -116,7 +123,7 @@ public class ModuleInfo {
         setPersistentData(icon, getItemIdKey(), String.valueOf(module.getId()));
         creationTime = config.getLong("creation-time",1670573410000L);
         reputation = config.getStringList("players.liked").size()-config.getStringList("players.disliked").size();
-        downloads = config.getStringList("planets").size();
+        downloads = config.getIntegerList("planets").size();
     }
 
     public void updateIcon() {
@@ -188,6 +195,50 @@ public class ModuleInfo {
         updateIconAsync();
     }
 
+    public boolean wasDownloadedBefore(@NotNull Planet planet) {
+        FileConfiguration config = getModuleConfig(module);
+        List<Integer> planets = config.getIntegerList("planets");
+        return planets.contains(planet.getId());
+    }
+
+    /**
+     * Marks planet as module downloader.
+     * @param planet planet that has installed module.
+     * @return true - planet just installed module, false - planet already installed this module before.
+     */
+    public boolean addDownload(@NotNull Planet planet) {
+        FileConfiguration config = getModuleConfig(module);
+        List<Integer> planets = config.getIntegerList("planets");
+        if (planets.contains(planet.getId())) {
+            return false;
+        }
+        planets.add(planet.getId());
+        setModuleConfigParameter(module, "planets", planets);
+        return true;
+    }
+
+    public boolean addLike(@NotNull Player player) {
+        FileConfiguration config = getModuleConfig(module);
+        List<String> likedUUIDs = config.getStringList("players.liked");
+        if (likedUUIDs.contains(player.getUniqueId().toString())) return false;
+        List<String> dislikedUUIDs = config.getStringList("players.disliked");
+        if (dislikedUUIDs.contains(player.getUniqueId().toString())) return false;
+        likedUUIDs.add(player.getUniqueId().toString());
+        setModuleConfigParameter(module, "players.liked", likedUUIDs);
+        return true;
+    }
+
+    public boolean addDislike(@NotNull Player player) {
+        FileConfiguration config = getModuleConfig(module);
+        List<String> dislikedUUIDs = config.getStringList("players.disliked");
+        if (dislikedUUIDs.contains(player.getUniqueId().toString())) return false;
+        List<String> likedUUIDs = config.getStringList("players.liked");
+        if (likedUUIDs.contains(player.getUniqueId().toString())) return false;
+        dislikedUUIDs.add(player.getUniqueId().toString());
+        setModuleConfigParameter(module, "players.disliked", dislikedUUIDs);
+        return true;
+    }
+
     /**
      * Updates icon in asynchronous task. Used to not
      * load the main thread.
@@ -200,4 +251,5 @@ public class ModuleInfo {
             }
         }.runTaskAsynchronously(OpenCreative.getPlugin());
     }
+
 }

@@ -25,6 +25,7 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.ChatEvent;
 import ua.mcchickenstudio.opencreative.events.player.WorldChatEvent;
 import ua.mcchickenstudio.opencreative.indev.modules.Module;
+import ua.mcchickenstudio.opencreative.indev.modules.ModuleSettingsMenu;
 import ua.mcchickenstudio.opencreative.menus.world.browsers.WorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.world.settings.WorldSettingsPlayersMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
@@ -451,8 +452,9 @@ public final class ChatListener implements Listener {
                 }
             }
             case MODULE_NAME_CHANGE -> {
-                Module module = new Module(1);
-                if (!module.isOwner(player)) return;
+                Module module = ModuleSettingsMenu.getCurrentEditingModule(player);
+                ModuleSettingsMenu.removeFromCurrentEditing(player);
+                if (module == null || !module.isOwner(player)) return;
                 String newName = "§f" + ChatColor.translateAlternateColorCodes('&',input);
                 String uncoloredName = ChatColor.stripColor(newName);
                 if (uncoloredName.length() > OpenCreative.getSettings().getWorldNameMaxLength() || uncoloredName.length() < OpenCreative.getSettings().getWorldNameMinLength()) {
@@ -465,8 +467,9 @@ public final class ChatListener implements Listener {
                 player.sendMessage(getLocaleMessage("settings.module-name.changed").replace("%name%",newName));
             }
             case MODULE_DESCRIPTION_CHANGE -> {
-                Module module = new Module(1);
-                if (!module.isOwner(player)) return;
+                Module module = ModuleSettingsMenu.getCurrentEditingModule(player);
+                ModuleSettingsMenu.removeFromCurrentEditing(player);
+                if (module == null || !module.isOwner(player)) return;
                 String newDescription = "§f" + ChatColor.translateAlternateColorCodes('&',input);
                 String uncoloredDescription = ChatColor.stripColor(newDescription);
                 if (uncoloredDescription.length() > OpenCreative.getSettings().getWorldDescriptionMaxLength() ||

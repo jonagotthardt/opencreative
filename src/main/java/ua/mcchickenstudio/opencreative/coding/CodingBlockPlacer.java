@@ -60,14 +60,18 @@ public class CodingBlockPlacer {
         this.blocksPerColumnLimit = maximumBlocks;
     }
 
+    public CodingBlockPlacer(@NotNull DevPlanet devPlanet) {
+        this(devPlanet.getSignMaterial(), devPlanet.getContainerMaterial(),
+                devPlanet.getDevPlatformer().getCodingBlocksLimit(devPlanet));
+    }
+
     public enum CodePlacementResult {
 
         SUCCESSFULLY,
         NOTHING_TO_BUILD,
         ERROR,
         CANNOT_PLACE,
-        NOT_ENOUGH_CODING_LINES,
-        NOT_ENOUGH_ROWS;
+        NOT_ENOUGH_CODING_LINES;
 
         public boolean isSuccess() {
             return this == SUCCESSFULLY || this == NOTHING_TO_BUILD;

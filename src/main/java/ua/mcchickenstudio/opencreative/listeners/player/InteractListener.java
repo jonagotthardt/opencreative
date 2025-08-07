@@ -69,11 +69,14 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
+import ua.mcchickenstudio.opencreative.settings.groups.LimitType;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.*;
 import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.move;
@@ -453,6 +456,39 @@ public final class InteractListener implements Listener {
                 } else {
                     Sounds.DEV_NOT_ALLOWED.play(player);
                 }
+            }
+        } else if (ExecutorCategory.getByMaterial(clickedBlock.getType()) != null) {
+            if (event.getAction() != Action.LEFT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+                return;
+            }
+            if (player.hasCooldown(Material.COMPARATOR)) {
+                return;
+            }
+            player.setCooldown(Material.COMPARATOR, 20);
+            DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
+            if (devPlanet == null) return;
+
+            Location location = clickedBlock.getLocation();
+            Set<Location> locations = devPlanet.getMarkedExecutors(player);
+            int limit = OpenCreative.getSettings().getGroups().getGroup(player).getLimit(LimitType.SELECTED_LINES_AMOUNT).calculateLimit(1);
+            if (locations.contains(location)) {
+                devPlanet.unselectMarkedExecutor(player, location);
+                player.sendActionBar(getLocaleMessage("menus.developer.manipulator.unmarked")
+                        .replace("%amount%", String.valueOf(devPlanet.getMarkedExecutors(player).size()))
+                        .replace("%limit%", String.valueOf(limit)));
+                Sounds.DEV_UNMARK_EXECUTOR.play(player);
+            } else {
+                if (locations.size() >= limit) {
+                    player.sendActionBar(getLocaleMessage("menus.developer.manipulator.limit")
+                            .replace("%amount%", String.valueOf(devPlanet.getMarkedExecutors(player).size())));
+                    Sounds.DEV_NOT_ALLOWED.play(player);
+                    return;
+                }
+                devPlanet.markExecutorAsSelected(player, location);
+                player.sendActionBar(getLocaleMessage("menus.developer.manipulator.marked")
+                        .replace("%amount%", String.valueOf(devPlanet.getMarkedExecutors(player).size()))
+                        .replace("%limit%", String.valueOf(limit)));
+                Sounds.DEV_MARK_EXECUTOR.play(player);
             }
         }
     }

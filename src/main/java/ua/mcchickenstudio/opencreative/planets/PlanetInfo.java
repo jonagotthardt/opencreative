@@ -268,7 +268,7 @@ public class PlanetInfo {
     /**
      * Returns icon of planet. If planet is closed,
      * it will have type of barrier.
-     * @return
+     * @return icon of planet
      */
     public ItemStack getIcon() {
         if (planet.getSharing() == PUBLIC) return icon;

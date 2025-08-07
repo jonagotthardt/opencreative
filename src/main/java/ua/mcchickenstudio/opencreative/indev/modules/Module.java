@@ -31,6 +31,7 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockPlacer;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,6 +105,10 @@ public class Module {
 
         if (!devPlanet.isLoaded()) return false;
         if (!devPlanet.getWorld().getPlayers().contains(player)) return false;
+        if (!getInformation().isPublic() && !isOwner(player) && !player.hasPermission("opencreative.modules.private.bypass")) {
+            player.sendMessage(getLocaleMessage("modules.private"));
+            return true;
+        }
 
         FileConfiguration config = getModuleConfig(this);
         ConfigurationSection section = config.getConfigurationSection("code.blocks");
@@ -120,22 +125,25 @@ public class Module {
             }
         }
 
-        CodingBlockPlacer placer = new CodingBlockPlacer(devPlanet.getSignMaterial(), devPlanet.getContainerMaterial(),
-                devPlanet.getDevPlatformer().getCodingBlocksLimit(devPlanet));
+        CodingBlockPlacer placer = new CodingBlockPlacer(devPlanet);
         CodingBlockPlacer.CodePlacementResult result = placer.placeCodingLine(devPlanet, section);
         if (result == CodingBlockPlacer.CodePlacementResult.NOT_ENOUGH_CODING_LINES) {
             player.sendMessage(getLocaleMessage("modules.few-space")
                     .replace("%required%", String.valueOf(requiredColumns)));
+            Sounds.DEV_NOT_ALLOWED.play(player);
             return false;
         } else if (result == CodingBlockPlacer.CodePlacementResult.ERROR) {
             player.sendMessage(parseModuleLines(this,getLocaleMessage("modules.fail",player)));
+            Sounds.PLAYER_FAIL.play(player);
             return false;
         } else {
+            Sounds.DEV_MODULE_INSTALLED.play(player);
             for (Player planetPlayer : devPlanet.getPlanet().getPlayers()) {
                 if (devPlanet.getPlanet().getWorldPlayers().canDevelop(planetPlayer)) {
                     planetPlayer.sendMessage(parseModuleLines(this,getLocaleMessage("modules.installed",player)));
                 }
             }
+            getInformation().addDownload(devPlanet.getPlanet());
             return true;
         }
     }

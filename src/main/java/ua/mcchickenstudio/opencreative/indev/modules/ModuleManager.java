@@ -31,9 +31,7 @@ import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMessage;
@@ -65,16 +63,26 @@ public class ModuleManager {
     }
 
     public @NotNull Set<Module> getModules() {
-        return modules;
+        return new HashSet<>(modules);
+    }
+
+    public @NotNull Set<Module> getPlayerModules(@NotNull UUID uuid) {
+        Set<Module> playerModules = new HashSet<>();
+        for (Module module : modules) {
+            if (module.getOwner().equals(uuid)) {
+                playerModules.add(module);
+            }
+        }
+        return playerModules;
     }
 
     public void registerModule(@NotNull Module module) {
         modules.add(module);
     }
 
-    public void createModule(@NotNull Player owner, @NotNull DevPlanet devPlanet, @NotNull List<Location> locations) {
+    public void createModule(@NotNull Player owner, @NotNull DevPlanet devPlanet, @NotNull Set<Location> locations) {
         CodeConfiguration configuration = new CodeConfiguration();
-        if (!new CodingBlockParser().parseExecutors(devPlanet, configuration, locations)) {
+        if (!new CodingBlockParser().parseExecutors(devPlanet, configuration, new LinkedList<>(locations))) {
             owner.sendMessage(getLocaleMessage("modules.error"));
             return;
         }
@@ -82,9 +90,11 @@ public class ModuleManager {
         configuration.set("name",getLocaleMessage("modules.default-name",owner));
         configuration.set("description",getLocaleMessage("modules.default-description",owner));
         configuration.set("icon", Material.CHEST.name());
+        configuration.set("creation-time", System.currentTimeMillis());
         try {
             int id = generateModuleId();
             configuration.save(new File(getModuleConfigFile(id).getPath()));
+            ModuleManager.getInstance().registerModule(new Module(id));
             owner.sendMessage(getLocaleMessage("modules.created"));
             Sounds.DEV_MODULE_CREATED.play(owner);
         } catch (Exception e) {
@@ -95,6 +105,7 @@ public class ModuleManager {
     }
 
     public void deleteModule(Module module) {
+        ModuleSettingsMenu.removeFromCurrentEditing(module);
         modules.remove(module);
         File file = getModuleConfigFile(module.getId());
         try {
