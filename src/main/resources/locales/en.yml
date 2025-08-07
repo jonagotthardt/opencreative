@@ -80,6 +80,8 @@ modules:
   fail: "%prefix%&cFailed to load module %moduleName%&c by %moduleOwner%"
   default-name: "&7%player%'s Module"
   default-description: "&7My cool module!"
+  settings:
+    name:
 environment:
   help: "%prefix%Manage code, variables, and the world for developers.\n \n&6 /env variables clear &f- Clear variables\n&6 /env variables size &f- Number of variables\n&6 /env variables list &f- List of variables"
   variables:
@@ -312,6 +314,24 @@ settings:
     enabled: "%prefix%Auto-saving is &6enabled&f, now you can build safely and your buildings will be saved."
     disabled: "%prefix%&cAuto-saving is disabled by world owner, &nnew buildings will be not saved&c!"
     warning: "%prefix%&cNew buildings will be not saved in world, because auto-saving is disabled by world owner."
+  module-name:
+    title: "&fEnter the"
+    subtitle: "&fnew &6name&f for the module."
+    usage: "%prefix%Enter a new &6name&f for the module, for example &7WorldEditor by %player%&f.\n&f - The name must comply with the server rules."
+    error: "%prefix%The module name does not meet one of the requirements:\n&f- The name must be at least %min% characters long and no more than %max%."
+    changed: "%prefix%You have set a new &6name&f for the module: %name%"
+  module-description:
+    title: "&fEnter the"
+    subtitle: "&fnew &6description&f for the module."
+    usage: "%prefix%Enter a new &6description&f for the module, for example &eUseful utils for world owners&f.\n&f - The description must comply with the server rules."
+    error: "%prefix%The module description does not meet one of the requirements:\n&f- The description must be at least 5 characters long and no more than 30."
+    changed: "%prefix%You have set a new &6description&f for the module: %description%"
+  module-icon:
+    changed: "%prefix%Icon changed."
+    error: "%prefix%&cNot an item."
+  module-sharing:
+    enabled: "%prefix%Players &6can&f now download your module."
+    disabled: "%prefix%You have &6disabled&f players from downloading your module."
 deleting-world:
   title: "&cDeleting ◌"
   subtitle: "&fPlease wait a few seconds..."
@@ -13294,6 +13314,134 @@ menus:
           - "&5 ⌛ &7Created: &d%moduleCreationTime%"
           - " "
           - "&e Left-click &7- install module."
+          - " "
+  module-settings:
+    title: "&1✎ Your Module Settings"
+    turned-on: "&a ● &n"
+    turned-off: "&7 ○ "
+    items:
+      change-name:
+        name: " "
+        lore:
+          - "&e ✎ Module Name"
+          - "&7 A brief essence of your module."
+          - ""
+          - "&7 The module name reflects the purpose of the module,"
+          - "&7 and what kind of players you want to attract."
+          - "&7 Displayed in the modules list and advertisements."
+          - " "
+          - "&f Examples:"
+          - "&7  &aWorldEditor &71.2"
+          - "&7  &eSit Addon"
+          - "&7  &6Flying Messages"
+          - " "
+          - "&e Click to rename the module."
+          - ""
+      change-description:
+        name: " "
+        lore:
+          - "&6 ✂ Module Description"
+          - "&7 Describe your module in more detail."
+          - ""
+          - "&7 The description talks about the features"
+          - "&7 of your module and should attract"
+          - "&7 players if everything is clear from the start."
+          - " "
+          - "&f Examples:"
+          - "&7  &aAdds moderation commands for world"
+          - "&7  &5Disables griefing in world"
+          - "&7  &6Adds cool mechanics"
+          - " "
+          - "&e Click to change the description."
+          - ""
+      change-sharing:
+        name: " "
+        choices:
+          public: "Let players download the module"
+          private: "Prohibit downloading the module"
+        lore:
+          - "&a ⛨ Module Accessibility"
+          - "&7 Can players download the module?"
+          - " "
+          - "&7 If this is your module for"
+          - "&7 private usage, then prohibit"
+          - "&7 others from downloading it."
+          - " "
+          - "&f Options:"
+          - "%1%"
+          - "%2%"
+          - " "
+          - "&e Click to open"
+          - "&e or close the module."
+          - " "
+      module:
+        name: "&f%moduleName%"
+        lore:
+          - "&8Created by %moduleOwner%"
+          - " "
+          - "&7 %moduleDescription%"
+          - " "
+          - "&e ⭐ &7Rating: &a%moduleReputation%"
+          - "&6 🍖 &7Downloads: &a%moduleDownloads%"
+          - " "
+          - "&5 ⌛ &7Created: &d%moduleCreationTime%"
+          - " "
+          - "&e &nDrag an item here for an icon!&e"
+          - " "
+  own-modules:
+    title: "&4☄ My Modules"
+    items:
+      previous-page:
+        name: " "
+        lore:
+          - " &6← &eBack... #%page%"
+          - ""
+          - "&7  Click to see"
+          - "&7  previous modules."
+          - ""
+      next-page:
+        name: " "
+        lore:
+          - "&e Next... #%page% &6→"
+          - ""
+          - "&7  Click to see"
+          - "&7  next modules."
+          - ""
+      no-modules:
+        name: "&c&oNo Modules!"
+        lore:
+          - "&7It looks like you haven't &ccreated&7 your own module yet!"
+          - "&7What are you waiting for? Create your&d first&7 module!"
+      tutorial:
+        name: " "
+        lore:
+          - ""
+          - "&7  Coming soon "
+          - ""
+      all-modules:
+        name: " "
+        lore:
+          - "&6 ⭐ All Modules"
+          - ""
+          - "&7  Click to view"
+          - "&7  all modules from"
+          - "&7  server players."
+          - ""
+      module:
+        name: "&f%moduleName%"
+        lore:
+          - "&8Created by %moduleOwner%"
+          - " "
+          - "&7 %moduleDescription%"
+          - " "
+          - "&e ⭐ &7Rating: &a%moduleReputation%"
+          - "&6 🍖 &7Downloads: &a%moduleDownloads%"
+          - " "
+          - "&5 ⌛ &7Created: &d%moduleCreationTime%"
+          - " "
+          - "&e Left-click &7- Open settings."
+          - "&e Right-click &7- Install module."
+          - "&e SHIFT+RMB &7- Delete module."
           - " "
   own-worlds:
     title: "&2☄ My Worlds"

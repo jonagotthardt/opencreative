@@ -21,46 +21,22 @@ package ua.mcchickenstudio.opencreative.indev.modules;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Directional;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockPlacer;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
-import ua.mcchickenstudio.opencreative.coding.menus.layouts.ArgumentSlot;
-import ua.mcchickenstudio.opencreative.coding.values.EventValue;
-import ua.mcchickenstudio.opencreative.coding.values.EventValues;
-import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
-import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import ua.mcchickenstudio.opencreative.listeners.player.InteractListener;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
-import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.placeDevBlock;
-import static ua.mcchickenstudio.opencreative.utils.BlockUtils.setSignLine;
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.getModuleConfig;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.getCodingValueKey;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.parseModuleLines;
 
@@ -102,7 +78,12 @@ public class Module {
 
     public @NotNull String getOwnerName() {
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(owner);
-        return offlinePlayer.hasPlayedBefore() ? offlinePlayer.getName() : "Unknown owner";
+        String offlineName = offlinePlayer.getName();
+        return offlinePlayer.hasPlayedBefore() ? (offlineName == null ? "Unknown owner" : offlineName) : "Unknown owner";
+    }
+
+    public boolean isOwner(@NotNull OfflinePlayer player) {
+        return owner.equals(player.getUniqueId());
     }
 
     public int getId() {
@@ -159,4 +140,8 @@ public class Module {
         }
     }
 
+    @Override
+    public int hashCode() {
+        return String.valueOf(id).hashCode();
+    }
 }

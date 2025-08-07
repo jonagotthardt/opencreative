@@ -607,6 +607,23 @@ public class FileUtils {
     }
 
     /**
+     * Sets parameter to Object value in module's settings.
+     * @param module module to set.
+     * @param parameterPath path of parameter in config.
+     * @param parameterValue value.
+     */
+    public static void setModuleConfigParameter(Module module, String parameterPath, Object parameterValue) {
+        FileConfiguration moduleConfig = getModuleConfig(module);
+        File moduleConfigFile = getModuleConfigFile(module.getId());
+        moduleConfig.set(parameterPath,parameterValue);
+        try {
+            moduleConfig.save(moduleConfigFile);
+        } catch (IOException error) {
+            sendCriticalErrorMessage("Can't save module's settings configuration to file.",error);
+        }
+    }
+
+    /**
      * Sets parameter to String value in planet's settings.
      * @param planet planet to set.
      * @param parameterPath path of parameter in config.

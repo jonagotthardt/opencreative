@@ -41,6 +41,7 @@ public enum Sounds {
     MENU_OPEN_WORLD_MODERATION("entity.warden.listening",0.1f),
     MENU_OPEN_ENVIRONMENT("block.amethyst_block.chime",0.1f),
     MENU_OPEN_WORLD_SETTINGS("block.amethyst_block.resonate",0.1f),
+    MENU_OPEN_MODULE_SETTINGS("block.amethyst_block.resonate",0.1f),
     MENU_OPEN_RECOMMENDATIONS("block.ender_chest.open",0.1f),
     MENU_OPEN_OWN_WORLDS_BROWSER("block.enchantment_table.use",1.4f),
     MENU_OPEN_WORLDS_BROWSER("block.vault.activate"),

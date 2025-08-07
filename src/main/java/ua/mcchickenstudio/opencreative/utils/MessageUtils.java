@@ -488,7 +488,7 @@ public class MessageUtils {
                 .replace("%moduleID%", String.valueOf(module.getId()))
                 .replace("%moduleDownloads%", String.valueOf(module.getInformation().getDownloads()))
                 .replace("%moduleReputation%", reputation)
-                .replace("%planetCreationTime%", getElapsedTime(System.currentTimeMillis(), module.getInformation().getCreationTime()))
+                .replace("%moduleCreationTime%", getElapsedTime(System.currentTimeMillis(), module.getInformation().getCreationTime()))
         );
     }
 

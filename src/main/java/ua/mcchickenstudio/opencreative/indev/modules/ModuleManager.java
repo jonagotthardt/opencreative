@@ -21,6 +21,9 @@ package ua.mcchickenstudio.opencreative.indev.modules;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodeConfiguration;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
@@ -37,6 +40,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMe
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
+@ApiStatus.Experimental
 public class ModuleManager {
 
     private static ModuleManager instance;
@@ -44,14 +48,14 @@ public class ModuleManager {
     private final Set<Module> modules = new HashSet<>();
 
     private ModuleManager() {}
-    public static ModuleManager getInstance() {
+    public static @NotNull ModuleManager getInstance() {
         if (instance == null) {
             instance = new ModuleManager();
         }
         return instance;
     }
 
-    public Module getModuleById(String id) {
+    public @Nullable Module getModuleById(@NotNull String id) {
         for (Module module : modules) {
             if (String.valueOf(module.getId()).equals(id)) {
                 return module;
@@ -60,15 +64,15 @@ public class ModuleManager {
         return null;
     }
 
-    public Set<Module> getModules() {
+    public @NotNull Set<Module> getModules() {
         return modules;
     }
 
-    public void registerModule(Module module) {
+    public void registerModule(@NotNull Module module) {
         modules.add(module);
     }
 
-    public void createModule(Player owner, DevPlanet devPlanet, List<Location> locations) {
+    public void createModule(@NotNull Player owner, @NotNull DevPlanet devPlanet, @NotNull List<Location> locations) {
         CodeConfiguration configuration = new CodeConfiguration();
         if (!new CodingBlockParser().parseExecutors(devPlanet, configuration, locations)) {
             owner.sendMessage(getLocaleMessage("modules.error"));

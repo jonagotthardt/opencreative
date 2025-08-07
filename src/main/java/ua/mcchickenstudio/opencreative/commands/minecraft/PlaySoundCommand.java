@@ -90,6 +90,11 @@ public class PlaySoundCommand extends CommandHandler {
                 } catch (NumberFormatException ignored) {
                     isCustomTarget = true;
                 }
+                if (isCustomTarget && args.length >= 3) {
+                    try {
+                        volume = Float.parseFloat(args[2]);
+                    } catch (NumberFormatException ignored) {}
+                }
                 soundString = args[isCustomTarget ? 1 : 0];
             } else {
                 soundString = args[0];
@@ -98,14 +103,18 @@ public class PlaySoundCommand extends CommandHandler {
             if (args.length >= 3) {
                 // playsound entity.villager.yes 100 2
                 try {
-                    pitch = Float.parseFloat(args[isCustomTarget ? 3 : 2]);
+                    if (!(args.length == 3 && isCustomTarget)) {
+                        pitch = Float.parseFloat(args[isCustomTarget ? 3 : 2]);
+                    }
                 } catch (NumberFormatException ignored) {}
             }
 
             if (args.length >= 4) {
                 // playsound entity.villager.yes 100 2 seed
                 try {
-                    seed = Long.parseLong(args[isCustomTarget ? 4 : 3]);
+                    if (!(args.length == 4 && isCustomTarget)) {
+                        seed = Long.parseLong(args[isCustomTarget ? 4 : 3]);
+                    }
                 } catch (NumberFormatException ignored) {}
             }
 

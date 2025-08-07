@@ -18,11 +18,18 @@
 
 package ua.mcchickenstudio.opencreative.indev.modules;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,22 +48,36 @@ public class ModuleInfo {
     private int reputation;
     private int downloads;
     private long creationTime;
+    private boolean isPublic;
 
-    public ModuleInfo(Module module) {
+    public ModuleInfo(@NotNull Module module) {
         this.module = module;
         loadInformation();
     }
 
-    public String getDisplayName() {
+    public @NotNull String getDisplayName() {
         return displayName;
     }
 
-    public String getDescription() {
+    /**
+     * Returns text component of display name, that can be
+     * used in item stacks or texts.
+     * @return display name of planet.
+     */
+    public Component displayName() {
+        return LegacyComponentSerializer.legacySection().deserialize(displayName).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
+    }
+
+    public @NotNull String getDescription() {
         return description;
     }
 
-    public ItemStack getIcon() {
+    public @NotNull ItemStack getIcon() {
         return icon;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
     }
 
     public long getCreationTime() {
@@ -78,6 +99,7 @@ public class ModuleInfo {
         FileConfiguration config = getModuleConfig(module);
         displayName = config.getString("name","Unknown name");
         description = config.getString("description","Unknown description");
+        isPublic = config.getBoolean("public",true);
         if (config.get("icon") != null) {
             try {
                 if (config.isString("icon")) {
@@ -86,11 +108,12 @@ public class ModuleInfo {
                     icon = ItemStack.deserialize(config.getConfigurationSection("icon").getValues(true));
                 }
             } catch (Exception ignored) {
-                icon = new ItemStack(Material.REDSTONE);
+                icon = new ItemStack(Material.BARREL);
             }
         } else {
-            icon = new ItemStack(Material.REDSTONE);
+            icon = new ItemStack(Material.BARREL);
         }
+        setPersistentData(icon, getItemIdKey(), String.valueOf(module.getId()));
         creationTime = config.getLong("creation-time",1670573410000L);
         reputation = config.getStringList("players.liked").size()-config.getStringList("players.disliked").size();
         downloads = config.getStringList("planets").size();
@@ -99,7 +122,11 @@ public class ModuleInfo {
     public void updateIcon() {
         ItemStack item = icon.clone();
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(getLocaleItemName("menus.modules.items.module.name").replace("%planetName%", displayName));
+        meta.displayName(
+                getLocaleComponent("menus.modules.items.module.name")
+                        .replaceText(TextReplacementConfig.builder()
+                                .match("%moduleName%")
+                                .replacement(displayName()).build()));
         List<String> lore = new ArrayList<>();
         for (String loreLine : getLocaleItemDescription("menus.modules.items.module.lore")) {
             if (loreLine.contains("%moduleDescription%")) {
@@ -117,5 +144,60 @@ public class ModuleInfo {
         clearItemFlags(item);
         setPersistentData(item, getItemIdKey(), String.valueOf(module.getId()));
         icon = item;
+    }
+
+    /**
+     * Sets new item stack as module's icon. Name, lore
+     * and enchantments will be removed from item.
+     * @param itemStack new icon.
+     */
+    public void setIcon(ItemStack itemStack) {
+        ItemStack newIcon = clearItemMeta(itemStack.clone());
+        newIcon.setAmount(1);
+        setModuleConfigParameter(module,"icon",newIcon.serialize());
+        this.icon = newIcon;
+        updateIcon();
+    }
+
+    public void setPublic(boolean isPublic) {
+        if (isPublic == this.isPublic) return;
+        this.isPublic = isPublic;
+        setModuleConfigParameter(module,"public", isPublic);
+        updateIconAsync();
+    }
+
+    /**
+     * Sets new display name of module, that will be displayed
+     * in modules browser menu.
+     * @param name new display name.
+     */
+    public void setDisplayName(String name) {
+        this.displayName = name;
+        setModuleConfigParameter(module,"name",name);
+        updateIconAsync();
+    }
+
+    /**
+     * Sets new description of module, that will be displayed
+     * in worlds browser menu.
+     * @param description new description.
+     */
+    public void setDescription(String description) {
+        this.description = description;
+        setModuleConfigParameter(module,"description",description);
+        updateIconAsync();
+    }
+
+    /**
+     * Updates icon in asynchronous task. Used to not
+     * load the main thread.
+     */
+    public void updateIconAsync() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                updateIcon();
+            }
+        }.runTaskAsynchronously(OpenCreative.getPlugin());
     }
 }

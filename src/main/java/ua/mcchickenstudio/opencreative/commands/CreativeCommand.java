@@ -22,6 +22,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.indev.Items;
+import ua.mcchickenstudio.opencreative.indev.modules.ModulesBrowserMenu;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
 import ua.mcchickenstudio.opencreative.indev.modules.Module;
@@ -555,6 +556,16 @@ public class CreativeCommand extends CommandHandler {
                     if (platform == null) return;
                     Module module = new Module(1);
                     module.place(devPlanet, player);
+                }
+                case "test2" -> {
+                    if (!sender.hasPermission("opencreative.test")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    if (player == null) return;
+                    player.sendMessage("Test of modules menu");
+                    ModulesBrowserMenu menu = new ModulesBrowserMenu(player);
+                    menu.open(player);
                 }
                 case "test3" -> {
                     if (!sender.hasPermission("opencreative.test")) {
