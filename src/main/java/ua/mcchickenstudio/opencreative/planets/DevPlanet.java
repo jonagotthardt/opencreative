@@ -70,6 +70,7 @@ public class DevPlanet {
 
     private final Map<Player, Location> lastLocations = new HashMap<>();
     private final Map<Location, Layout> openedBlocksMenus = new HashMap<>();
+    private final Map<Player, Set<Location>> selectedExecutors = new HashMap<>();
 
     private final static Material DEFAULT_EVENT_MATERIAL = Material.BLUE_STAINED_GLASS;
     private final static Material DEFAULT_ACTION_MATERIAL = Material.GRAY_STAINED_GLASS;
@@ -449,6 +450,39 @@ public class DevPlanet {
 
     public Map<Player, Location> getLastLocations() {
         return lastLocations;
+    }
+
+    public @NotNull Set<Location> getMarkedExecutors(@NotNull Player player) {
+        return selectedExecutors.getOrDefault(player, new LinkedHashSet<>());
+    }
+
+    public void markExecutorAsSelected(@NotNull Player player, @NotNull Location location) {
+        Set<Location> locations = selectedExecutors.getOrDefault(player, new LinkedHashSet<>());
+        locations.add(location);
+        selectedExecutors.put(player, locations);
+    }
+
+    public void unselectMarkedExecutor(@NotNull Player player, @NotNull Location location) {
+        Set<Location> locations = selectedExecutors.getOrDefault(player, new LinkedHashSet<>());
+        locations.remove(location);
+        if (locations.isEmpty()) {
+            selectedExecutors.remove(player);
+        } else {
+            selectedExecutors.put(player, locations);
+        }
+    }
+
+    public void clearMarkedExecutors(@NotNull Location location) {
+        for (Player player : new HashSet<>(selectedExecutors.keySet())) {
+            Set<Location> locations = selectedExecutors.get(player);
+            if (locations == null || locations.isEmpty()) continue;
+            locations.remove(location);
+            selectedExecutors.put(player, locations);
+        }
+    }
+
+    public void clearMarkedExecutors(@NotNull Player player) {
+        selectedExecutors.remove(player);
     }
 
     public World getWorld() {

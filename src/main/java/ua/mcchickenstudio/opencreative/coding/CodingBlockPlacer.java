@@ -66,8 +66,7 @@ public class CodingBlockPlacer {
         NOTHING_TO_BUILD,
         ERROR,
         CANNOT_PLACE,
-        NOT_ENOUGH_CODING_LINES,
-        NOT_ENOUGH_ROWS;
+        NOT_ENOUGH_CODING_LINES;
 
         public boolean isSuccess() {
             return this == SUCCESSFULLY || this == NOTHING_TO_BUILD;

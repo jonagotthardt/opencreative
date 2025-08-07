@@ -44,6 +44,7 @@ public enum Sounds {
     MENU_OPEN_MODULE_SETTINGS("block.amethyst_block.resonate",0.1f),
     MENU_OPEN_RECOMMENDATIONS("block.ender_chest.open",0.1f),
     MENU_OPEN_OWN_WORLDS_BROWSER("block.enchantment_table.use",1.4f),
+    MENU_OPEN_OWN_MODULES_BROWSER("block.enchantment_table.use",1.4f),
     MENU_OPEN_WORLDS_BROWSER("block.vault.activate"),
     MENU_OPEN_ENTITIES_BROWSER("entity.panda.worried_ambient",0.1f),
     MENU_OPEN_VALUES_BROWSER("ui.loom.select_pattern"),
@@ -162,6 +163,8 @@ public enum Sounds {
     DEV_MOVE_BLOCKS_LEFT("block.barrel.close",1.5f),
     DEV_DEBUG_ON("entity.allay.ambient_without_item"),
     DEV_DEBUG_OFF("entity.allay.ambient_with_item"),
+    DEV_MODULE_LIKED("item.bottle.fill_dragonbreath",1.3f),
+    DEV_MODULE_DISLIKED("item.bottle.fill_dragonbreath",0.7f),
 
     MAINTENANCE_NOTIFY("block.bell.use",0.1f),
     MAINTENANCE_COUNT("block.end_portal_frame.fill",2),

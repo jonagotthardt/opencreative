@@ -418,7 +418,7 @@ public class MessageUtils {
         else if (planet.getInformation().getReputation() <= -1) planetReputation = "§c" + planetReputation;
         else planetReputation = "§e" + planetReputation;
 
-        return parsePAPI(Bukkit.getOfflinePlayer(planet.getOwner()), string
+        return parsePAPI(Bukkit.getOfflinePlayer(planet.getOwner()), string)
                 .replace("%planetName%", planet.getInformation().getDisplayName())
                 .replace("%planetOnline%", String.valueOf(planet.getOnline()))
                 .replace("%planetOwner%", planet.getOwner())
@@ -428,8 +428,7 @@ public class MessageUtils {
                 .replace("%planetUniques%", String.valueOf(planet.getInformation().getUniques()))
                 .replace("%planetReputation%", planetReputation)
                 .replace("%planetLastTime%", getElapsedTime(System.currentTimeMillis(), planet.getLastActivityTime()))
-                .replace("%planetCreationTime%", getElapsedTime(System.currentTimeMillis(), planet.getCreationTime()))
-        );
+                .replace("%planetCreationTime%", getElapsedTime(System.currentTimeMillis(), planet.getCreationTime()));
     }
 
     public static Component parsePlanetLines(Planet planet, Component component) {
@@ -482,14 +481,15 @@ public class MessageUtils {
         else if (module.getInformation().getReputation() <= -1) reputation = "§c" + reputation;
         else reputation = "§e" + reputation;
 
-        return parsePAPI(Bukkit.getOfflinePlayer(module.getOwner()), string
+        return parsePAPI(Bukkit.getOfflinePlayer(module.getOwner()), string)
                 .replace("%moduleName%", module.getInformation().getDisplayName())
+                .replace("%moduleDescription%", module.getInformation().getDescription())
                 .replace("%moduleOwner%", module.getOwnerName())
                 .replace("%moduleID%", String.valueOf(module.getId()))
                 .replace("%moduleDownloads%", String.valueOf(module.getInformation().getDownloads()))
                 .replace("%moduleReputation%", reputation)
                 .replace("%moduleCreationTime%", getElapsedTime(System.currentTimeMillis(), module.getInformation().getCreationTime()))
-        );
+                .replace("%moduleSharing%", getLocaleMessage("modules.sharing." + (module.getInformation().isPublic() ? "public" : "private"),false));
     }
 
     /**

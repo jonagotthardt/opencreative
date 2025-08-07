@@ -67,6 +67,7 @@ public class PlanetPlayers {
     public void unregisterPlayer(Player player) {
         planetPlayers.removeIf(planetPlayer -> planetPlayer.getPlayer().equals(player));
         planet.getDevPlanet().getLastLocations().remove(player);
+        planet.getDevPlanet().clearMarkedExecutors(player);
         planet.getLimits().clearPlayerLimits(player);
     }
 

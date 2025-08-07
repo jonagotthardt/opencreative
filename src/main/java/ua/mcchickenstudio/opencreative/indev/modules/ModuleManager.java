@@ -95,6 +95,7 @@ public class ModuleManager {
     }
 
     public void deleteModule(Module module) {
+        ModuleSettingsMenu.removeFromCurrentEditing(module);
         modules.remove(module);
         File file = getModuleConfigFile(module.getId());
         try {

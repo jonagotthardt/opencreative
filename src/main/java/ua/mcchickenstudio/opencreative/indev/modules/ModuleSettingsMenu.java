@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.indev.modules;
 
 import net.kyori.adventure.title.Title;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -26,31 +27,42 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.listeners.player.ChatListener;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
+import ua.mcchickenstudio.opencreative.menus.ConfirmationMenu;
 import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerConfirmation;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemDescription;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemName;
 
 public class ModuleSettingsMenu extends AbstractMenu {
 
     private final Module module;
     private final Player player;
 
-    private final ItemStack name = createItem(Material.BIRCH_SIGN,1,"menus.module-settings.items.change-name");
-    private final ItemStack description = createItem(Material.WRITABLE_BOOK,1,"menus.module-settings.items.change-description");
+    private final ItemStack name = createItem(Material.JUNGLE_SIGN,1,"menus.module-settings.items.change-name","name");
+    private final ItemStack description = createItem(Material.WRITABLE_BOOK,1,"menus.module-settings.items.change-description","description");
+    private final ItemStack install = createItem(Material.CHERRY_CHEST_BOAT,1,"menus.module-settings.items.install","install");
+    private final ItemStack delete = createItem(Material.TNT_MINECART,1,"menus.module-settings.items.delete","delete");
+
     private final ParameterButton access;
     private ItemStack moduleIcon;
+
+    private static final Map<UUID, Integer> settingsSessions = new HashMap<>();
 
     public ModuleSettingsMenu(Module module, Player player) {
         super(4, getLocaleMessage("menus.module-settings.title",false));
@@ -68,6 +80,7 @@ public class ModuleSettingsMenu extends AbstractMenu {
         setItem(11, description);
         setItem(16, access.getItem());
 
+        setItem(27, install);
         setItem(28, DECORATION_PANE_ITEM);
         setItem(29, createItem(Material.BROWN_STAINED_GLASS_PANE,1));
 
@@ -75,6 +88,30 @@ public class ModuleSettingsMenu extends AbstractMenu {
 
         setItem(33, createItem(Material.BROWN_STAINED_GLASS_PANE,1));
         setItem(34, DECORATION_PANE_ITEM);
+        setItem(35, delete);
+    }
+
+    public static void setCurrentEditingModule(@NotNull Player player, @NotNull Module module) {
+        settingsSessions.put(player.getUniqueId(), module.getId());
+    }
+
+    public static @Nullable Module getCurrentEditingModule(@NotNull Player player) {
+        Integer id = settingsSessions.get(player.getUniqueId());
+        if (id == null) return null;
+        Module module = ModuleManager.getInstance().getModuleById(String.valueOf(id));
+        if (module == null) {
+            settingsSessions.values().removeIf(i -> i.equals(id));
+            return null;
+        }
+        return module;
+    }
+
+    public static void removeFromCurrentEditing(@NotNull Player player) {
+        settingsSessions.remove(player.getUniqueId());
+    }
+
+    public static void removeFromCurrentEditing(@NotNull Module module) {
+        settingsSessions.values().removeIf(i -> i.equals(module.getId()));
     }
 
     public ItemStack getModuleIcon() {
@@ -118,6 +155,7 @@ public class ModuleSettingsMenu extends AbstractMenu {
             player.closeInventory();
             if (!(ChatListener.confirmation.containsKey(player))) {
                 ChatListener.confirmation.put(player, PlayerConfirmation.MODULE_NAME_CHANGE);
+                setCurrentEditingModule(player, module);
             }
         } else if (itemEquals(currentItem,description)) {
             player.showTitle(Title.title(
@@ -127,6 +165,7 @@ public class ModuleSettingsMenu extends AbstractMenu {
             player.closeInventory();
             if (!(ChatListener.confirmation.containsKey(player))) {
                 ChatListener.confirmation.put(player, PlayerConfirmation.MODULE_DESCRIPTION_CHANGE);
+                setCurrentEditingModule(player, module);
             }
         } else if (itemEquals(currentItem,access.getItem())) {
             access.next();
@@ -153,6 +192,47 @@ public class ModuleSettingsMenu extends AbstractMenu {
                 setItem(31, moduleIcon);
                 event.setCursor(null);
             }
+        } else if (itemEquals(currentItem, install)) {
+            player.closeInventory();
+            DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
+            if (devPlanet == null) {
+                player.sendMessage(getLocaleMessage("only-in-dev-world"));
+                Sounds.PLAYER_FAIL.play(player);
+                return;
+            }
+            if (!devPlanet.getPlanet().getWorldPlayers().canDevelop(player)) {
+                player.sendMessage(getLocaleMessage("not-developer"));
+                Sounds.PLAYER_FAIL.play(player);
+                return;
+            }
+            module.place(devPlanet, player);
+        } else if (itemEquals(currentItem, delete)) {
+            player.closeInventory();
+            Bukkit.getScheduler().scheduleSyncDelayedTask(OpenCreative.getPlugin(),
+                    () -> new ConfirmationMenu(
+                            getLocaleMessage("menus.confirmation.delete-module", false).replace("%name%", substring(ChatColor.stripColor(module.getInformation().getDisplayName()),20)),
+                            Material.TNT,
+                            getLocaleItemName("menus.confirmation.items.delete-module.name"),
+                            getLocaleItemDescription("menus.confirmation.items.delete-module.lore"),
+                            new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    player.closeInventory();
+                                    if (!ModuleManager.getInstance().getModules().contains(module)) {
+                                        cancel();
+                                        return;
+                                    }
+                                    if (!module.isOwner(player)) {
+                                        cancel();
+                                        return;
+                                    }
+                                    Sounds.WORLD_DELETION.play(player);
+                                    ModuleManager.getInstance().deleteModule(module);
+                                    Bukkit.getServer().getScheduler().runTaskLater(OpenCreative.getPlugin(), () ->
+                                            player.sendMessage(MessageUtils.getLocaleMessage("modules.deleted")
+                                                    .replace("%moduleID%", String.valueOf(module.getId()))), 60);
+                                }
+                            }).open(player), 5L);
         }
 
     }
@@ -163,6 +243,6 @@ public class ModuleSettingsMenu extends AbstractMenu {
             event.setCancelled(true);
             return;
         }
-        Sounds.MENU_OPEN_WORLD_SETTINGS.play(player);
+        Sounds.MENU_OPEN_MODULE_SETTINGS.play(player);
     }
 }

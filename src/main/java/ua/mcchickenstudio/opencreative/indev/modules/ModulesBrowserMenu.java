@@ -102,11 +102,12 @@ public class ModulesBrowserMenu extends ListBrowserMenu<Module> {
         Module module = ModuleManager.getInstance().getModuleById(id);
         if (module == null) return;
         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(getPlayer());
+        event.getWhoClicked().closeInventory();
         if (devPlanet == null) {
+            getPlayer().sendMessage(getLocaleMessage("only-in-dev-world"));
             Sounds.PLAYER_FAIL.play(event.getWhoClicked());
             return;
         }
-        event.getWhoClicked().closeInventory();
         module.place(devPlanet, getPlayer());
     }
 

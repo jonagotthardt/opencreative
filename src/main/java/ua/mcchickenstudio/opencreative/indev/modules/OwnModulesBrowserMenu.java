@@ -43,11 +43,11 @@ public class OwnModulesBrowserMenu extends ListBrowserMenu<Module> {
     private final List<Module> modules;
 
     private final ItemStack TUTORIAL = createItem(Material.ENDER_EYE,1,"menus.own-modules.items.tutorial");
-    private final ItemStack BACK_TO_ALL_MODULES = createItem(Material.WIND_CHARGE,1,"menus.own-modules.items.all-modules");
+    private final ItemStack BACK_TO_ALL_MODULES = createItem(Material.MANGROVE_CHEST_BOAT,1,"menus.own-modules.items.all-modules");
 
     public OwnModulesBrowserMenu(Player player) {
-        super(player,getLocaleMessage("menus.own-worlds.title",false),PlacementLayout.BOTTOM_NO_DECORATION,
-                new int[]{45,49},new int[]{45,46,47,51,52,53});
+        super(player,getLocaleMessage("menus.own-modules.title",false),PlacementLayout.BOTTOM_NO_DECORATION,
+                new int[]{45},new int[]{45,46,52,53});
         this.modules = new ArrayList<>(ModuleManager.getInstance().getModules());
         Comparator<Module> sortByOnline = Comparator.comparingLong(module -> module.getInformation().getCreationTime());
         this.modules.sort(sortByOnline);
@@ -59,7 +59,7 @@ public class OwnModulesBrowserMenu extends ListBrowserMenu<Module> {
         ItemMeta meta = item.getItemMeta();
         meta.displayName(module.getInformation().displayName());
         List<String> lore = new ArrayList<>();
-        for (String loreLine : MessageUtils.getLocaleItemDescription("menus.own-worlds.items.world.lore")) {
+        for (String loreLine : MessageUtils.getLocaleItemDescription("menus.own-modules.items.module.lore")) {
             if (loreLine.contains("%moduleDescription%")) {
                 String[] newLines = module.getInformation().getDescription().split("\\\\n");
                 for (String newLine : newLines) {
@@ -78,13 +78,14 @@ public class OwnModulesBrowserMenu extends ListBrowserMenu<Module> {
         meta.addItemFlags(ItemFlag.HIDE_DYE);
         meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
         item.setItemMeta(meta);
-        setPersistentData(item, getItemIdKey(),String.valueOf(module.getId()));
+        setPersistentData(item, getItemIdKey(), String.valueOf(module.getId()));
         return item;
     }
 
     @Override
     protected void fillOtherItems() {
         setItem(45, BACK_TO_ALL_MODULES);
+        setItem(createItem(Material.GREEN_STAINED_GLASS_PANE, 1), 47,51);
         setItem(49, TUTORIAL);
     }
 
@@ -150,12 +151,12 @@ public class OwnModulesBrowserMenu extends ListBrowserMenu<Module> {
 
     @Override
     protected ItemStack getNoElementsButton() {
-        return createItem(Material.BARRIER,1,"menus.own-modules.items.no-worlds");
+        return createItem(Material.BARRIER,1,"menus.own-modules.items.no-modules");
     }
 
     @Override
     public void onOpen(@NotNull InventoryOpenEvent event) {
-        Sounds.MENU_OPEN_OWN_WORLDS_BROWSER.play(event.getPlayer());
+        Sounds.MENU_OPEN_OWN_MODULES_BROWSER.play(event.getPlayer());
     }
 
 }
