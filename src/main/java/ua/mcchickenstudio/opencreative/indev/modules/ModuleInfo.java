@@ -214,6 +214,8 @@ public class ModuleInfo {
         }
         planets.add(planet.getId());
         setModuleConfigParameter(module, "planets", planets);
+        downloads = planets.size();
+        updateIconAsync();
         return true;
     }
 
@@ -225,6 +227,8 @@ public class ModuleInfo {
         if (dislikedUUIDs.contains(player.getUniqueId().toString())) return false;
         likedUUIDs.add(player.getUniqueId().toString());
         setModuleConfigParameter(module, "players.liked", likedUUIDs);
+        reputation = likedUUIDs.size() - dislikedUUIDs.size();
+        updateIconAsync();
         return true;
     }
 
@@ -236,6 +240,8 @@ public class ModuleInfo {
         if (likedUUIDs.contains(player.getUniqueId().toString())) return false;
         dislikedUUIDs.add(player.getUniqueId().toString());
         setModuleConfigParameter(module, "players.disliked", dislikedUUIDs);
+        reputation = likedUUIDs.size() - dislikedUUIDs.size();
+        updateIconAsync();
         return true;
     }
 
