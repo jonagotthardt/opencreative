@@ -234,7 +234,11 @@ groups:
       advertisement: 120 # /ad
       creative-chat: 10 # /cc
       world-chat: 2 # chat in the world
+      module-usage: 7 # creating, pasting modules
+      duplication-usage: 7 # duplicating blocks with manipulator
     creating-world:
+      limit: 2
+    creating-module:
       limit: 2
     lobby-permissions: # Permissions will be given when player teleports to lobby
       - "music.play"
@@ -263,6 +267,7 @@ groups:
         blacklisted-amount: 10 # limit of banned players
         whitelisted-amount: 10 # limit of whitelisted players
         physical-objects: 140 # limit of special physical objects (it's not sand, gravels; they can be spawned with code)
+        selected-lines-amount: 3
       per-player-limit-modifiers:
         #
         # When a player joins a world or leaves from world,
@@ -300,7 +305,11 @@ groups:
       advertisement: 100
       creative-chat: 4
       world-chat: 1
+      module-usage: 7
+      duplication-usage: 7
     creating-world:
+      limit: 4
+    creating-module:
       limit: 4
     lobby-permissions:
       - "music.play"
@@ -326,6 +335,7 @@ groups:
         blacklisted-amount: 10
         whitelisted-amount: 10
         physical-objects: 140
+        selected-lines-amount: 3
       per-player-limit-modifiers:
         executor-calls: 30
         entities-amount: 50

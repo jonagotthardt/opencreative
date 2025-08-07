@@ -558,21 +558,23 @@ items:
         - "&6🪣 Variables&r\n \n&lA list&r can store multiple values.\n \nYou can sort, add new values, retrieve, or delete them."
         - "&6🪣 Variables&r\n \n&lDictionaries&r store values by &lkeys&r!\n \nEach key has a value. You can add keys with values or retrieve values by key. It's very convenient!"
     lines-controller:
-      name: "&cBlock Mover &a[← Left-click] [Right-click →]"
+      name: "&cManipulator &a[← LMB] [RMB →] [F]"
       lore:
-        - "&7Allows you to move"
-        - "&7action and condition blocks left"
-        - "&7or right. &aPerfect for adding"
-        - "&amore actions!"
+        - "&7Allows you to move action and"
+        - "&7conditions block to left or right."
+        - "&aPerfect for adding more actions!"
         - ""
-        - "&7To move, click"
-        - "&7on the &nmain block&7."
+        - "&7Also selects event blocks and allows"
+        - "&7you to &acreate modules&7 or duplicate"
+        - "&7blocks by pressing &eF&7."
         - ""
         - "&fIn hand:"
-        - "&e SHIFT + Right-click:"
+        - "&e Right-click:"
         - "&7  Move action blocks to the right"
-        - "&e SHIFT + Left-click:"
+        - "&e Left-click:"
         - "&7  Move action blocks to the left"
+        - "&e F:"
+        - "&7  Opens coding lines menu"
     arrow-not:
       name: "&cNOT Arrow &a[Right-click]"
       lore:
@@ -11097,6 +11099,50 @@ menus:
           - "&8 &8 &8 ID: %planetCustomID%"
           - ""
   developer:
+    manipulator:
+      title: "&0Selected &3%amount%&0/&8%limit% &0coding lines"
+      marked: "&aMarked&f, selected &b%amount%&f/&7%limit%&f coding lines. &f[&eF&f] - Open menu"
+      unmarked: "&cUnmarked&f, selected &b%amount%&f/&7%limit%&f coding lines. &f[&eF&f] - Open menu"
+      limit: "&cLimit of selected coding lines (%amount%) reached."
+      not-selected: "&cFirstly you have to selected lines: Click on event blocks"
+      items:
+        duplicate:
+          name: " "
+          lore:
+            - "&6 📄 Duplicate coding lines"
+            - "&7 Copy and pastes coding blocks"
+            - ""
+            - "&7  Adds the same coding lines"
+            - "&7  on the free platforms."
+            - " "
+            - "&e  Click to duplicate."
+            - " "
+        create-module:
+          name: " "
+          lore:
+            - "&a ⌘ Save as module"
+            - "&7 Creates a new module"
+            - ""
+            - "&7  Every player will be able"
+            - "&7  to copy these coding lines"
+            - "&7  and use in their worlds."
+            - " "
+            - "&7  You can create %left% more modules."
+            - "&e  Click to create a module."
+            - " "
+        create-module-limit:
+          name: " "
+          lore:
+            - "&c ⌘ Save as module"
+            - "&7 Creates a new module"
+            - ""
+            - "&7  You reached maximum amount of"
+            - "&7  saved modules, please remove one"
+            - "&7  of them to create a new module."
+            - " "
+            - "&7  Created %amount%/%limit%"
+            - "&c  Cannot create until removing old. "
+            - " "
     method-chooser:
       title: "&1Choose a Method"
       chosen: "&aSelected Method:"

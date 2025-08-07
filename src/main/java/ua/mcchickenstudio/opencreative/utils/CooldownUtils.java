@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.utils;
 
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.settings.groups.Group;
 
 import java.util.HashMap;
@@ -34,9 +35,12 @@ public class CooldownUtils {
     static final HashMap<Player, Long> advertisementCommandCooldown = new HashMap<>();
     static final HashMap<Player, Long> creativeChatCooldown = new HashMap<>();
     static final HashMap<Player, Long> worldChatCooldown = new HashMap<>();
+    static final HashMap<Player, Long> modulesManipulationsCooldown = new HashMap<>();
+    static final HashMap<Player, Long> blocksDuplicationCooldown = new HashMap<>();
 
     public enum CooldownType {
-        GENERIC_COMMAND, ADVERTISEMENT_COMMAND, CREATIVE_CHAT, WORLD_CHAT
+        GENERIC_COMMAND, ADVERTISEMENT_COMMAND, CREATIVE_CHAT, WORLD_CHAT,
+        MODULE_MANIPULATION, BLOCKS_DUPLICATION
     }
 
     public static long getCooldownFromMap(Player player, CooldownType type) {
@@ -116,6 +120,8 @@ public class CooldownUtils {
         advertisementCommandCooldown.remove(player);
         creativeChatCooldown.remove(player);
         worldChatCooldown.remove(player);
+        modulesManipulationsCooldown.remove(player);
+        blocksDuplicationCooldown.remove(player);
     }
 
     private static HashMap<Player, Long> getCooldownMap(CooldownType type) {
@@ -124,6 +130,8 @@ public class CooldownUtils {
             case ADVERTISEMENT_COMMAND -> advertisementCommandCooldown;
             case CREATIVE_CHAT -> creativeChatCooldown;
             case WORLD_CHAT -> worldChatCooldown;
+            case MODULE_MANIPULATION -> modulesManipulationsCooldown;
+            case BLOCKS_DUPLICATION -> blocksDuplicationCooldown;
         };
     }
 
@@ -133,6 +141,8 @@ public class CooldownUtils {
             case ADVERTISEMENT_COMMAND -> group.getAdvertisementCooldown();
             case CREATIVE_CHAT -> group.getCreativeChatCooldown();
             case WORLD_CHAT -> group.getChatCooldown();
+            case MODULE_MANIPULATION -> group.getModuleManipulationCooldown();
+            case BLOCKS_DUPLICATION -> group.getBlocksDuplicationCooldown();
         };
     }
 }

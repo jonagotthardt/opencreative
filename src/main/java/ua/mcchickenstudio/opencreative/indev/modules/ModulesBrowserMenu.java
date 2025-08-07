@@ -46,7 +46,7 @@ public class ModulesBrowserMenu extends ListBrowserMenu<Module> {
     }
 
     public ModulesBrowserMenu(Player player) {
-        this(player, ModuleManager.getInstance().getModules().stream().toList());
+        this(player, ModuleManager.getInstance().getPlayerModules(player.getUniqueId()).stream().toList());
     }
 
     @Override

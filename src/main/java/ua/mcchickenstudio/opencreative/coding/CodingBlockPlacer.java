@@ -60,6 +60,11 @@ public class CodingBlockPlacer {
         this.blocksPerColumnLimit = maximumBlocks;
     }
 
+    public CodingBlockPlacer(@NotNull DevPlanet devPlanet) {
+        this(devPlanet.getSignMaterial(), devPlanet.getContainerMaterial(),
+                devPlanet.getDevPlatformer().getCodingBlocksLimit(devPlanet));
+    }
+
     public enum CodePlacementResult {
 
         SUCCESSFULLY,

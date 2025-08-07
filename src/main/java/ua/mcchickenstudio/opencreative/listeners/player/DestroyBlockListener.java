@@ -93,6 +93,7 @@ public final class DestroyBlockListener implements Listener {
                     }
                     destroyAdditionalBlocks(platform,block,devPlanet.isDropItems());
                     block.setType(Material.AIR);
+                    devPlanet.clearMarkedExecutors(block.getLocation());
                 }
                 event.setCancelled(true);
             }

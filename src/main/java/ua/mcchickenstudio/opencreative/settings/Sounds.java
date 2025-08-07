@@ -50,6 +50,7 @@ public enum Sounds {
     MENU_OPEN_VALUES_BROWSER("ui.loom.select_pattern"),
     MENU_OPEN_CONFIRMATION("block.amethyst_block.resonate",0.5f),
     MENU_OPEN_MODULES_BROWSER("block.shulker_box.open",0.1f),
+    MENU_OPEN_BLOCKS_MANIPULATOR("block.amethyst_block.resonate",0.5f),
     MENU_GENERATION_CHANGE("block.amethyst_block.resonate"),
     MENU_ENVIRONMENT_CHANGE("block.amethyst_block.step",0.1f),
     MENU_ENTITIES_BROWSER_SORT("block.trial_spawner.spawn_item",1.2f),
@@ -139,6 +140,9 @@ public enum Sounds {
     DEV_CYCLE_NAMED("block.chain.fall",0.7f),
     DEV_FUNCTION_NAMED("block.enchantment_table.use",0.7f),
     DEV_METHOD_NAMED("block.enchantment_table.use",0.7f),
+    DEV_MARK_EXECUTOR("block.trial_spawner.close_shutter"),
+    DEV_UNMARK_EXECUTOR("block.trial_spawner.close_shutter", 0.7f),
+    DEV_BLOCKS_DUPLICATED("entity.allay.item_given",0.3f),
 
     DEV_VARIABLE_PARAMETER("block.vault.activate",0.7f),
     DEV_NEXT_PARAMETER("block.amethyst_block.resonate",1.7f),

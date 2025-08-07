@@ -125,8 +125,7 @@ public class Module {
             }
         }
 
-        CodingBlockPlacer placer = new CodingBlockPlacer(devPlanet.getSignMaterial(), devPlanet.getContainerMaterial(),
-                devPlanet.getDevPlatformer().getCodingBlocksLimit(devPlanet));
+        CodingBlockPlacer placer = new CodingBlockPlacer(devPlanet);
         CodingBlockPlacer.CodePlacementResult result = placer.placeCodingLine(devPlanet, section);
         if (result == CodingBlockPlacer.CodePlacementResult.NOT_ENOUGH_CODING_LINES) {
             player.sendMessage(getLocaleMessage("modules.few-space")

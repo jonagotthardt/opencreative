@@ -36,7 +36,8 @@ public enum LimitType {
     BUILDERS_AMOUNT("builders-amount"),
     DEVELOPERS_AMOUNT("developers-amount"),
     BLACKLISTED_AMOUNT("blacklisted-amount"),
-    WHITELISTED_AMOUNT("whitelisted-amount");
+    WHITELISTED_AMOUNT("whitelisted-amount"),
+    SELECTED_LINES_AMOUNT("selected-lines-amount");
 
     private final String path;
 
