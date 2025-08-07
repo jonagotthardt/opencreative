@@ -595,11 +595,10 @@ public enum ActionType {
      * <h1>Entity Actions.</h1>
      */
 
-    ENTITY_REMOVE(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, RemoveEntityAction.class, Material.BARRIER),
-
-    ENTITY_RELEASE_SHOULDERS(ActionCategory.ENTITY_ACTION, MenusCategory.STATE, EntityReleaseShouldersAction.class, Material.PARROT_SPAWN_EGG, new ParameterSlot("type",List.of("all","left","right"),Material.PARROT_SPAWN_EGG,Material.SHIELD,Material.NETHERITE_SWORD)),
-    ENTITY_SET_TEAM(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, SetTeamAction.class, Material.LIME_BANNER, new ArgumentSlot("scoreboard", ValueType.TEXT), new ArgumentSlot("team", ValueType.TEXT)),
-    ENTITY_UNSET_TEAM(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, UnsetTeamAction.class, Material.RED_BANNER, new ArgumentSlot("scoreboard", ValueType.TEXT), new ArgumentSlot("team", ValueType.TEXT)),
+    ENTITY_REMOVE(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, RemoveEntityAction.class, Material.BARRIER),
+    ENTITY_RELEASE_SHOULDERS(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntityReleaseShouldersAction.class, Material.PARROT_SPAWN_EGG, new ParameterSlot("type",List.of("all","left","right"),Material.PARROT_SPAWN_EGG,Material.SHIELD,Material.NETHERITE_SWORD)),
+    ENTITY_SET_TEAM(ActionCategory.ENTITY_ACTION, MenusCategory.APPEARANCE, SetTeamAction.class, Material.LIME_BANNER, new ArgumentSlot("scoreboard", ValueType.TEXT), new ArgumentSlot("team", ValueType.TEXT)),
+    ENTITY_UNSET_TEAM(ActionCategory.ENTITY_ACTION, MenusCategory.APPEARANCE, UnsetTeamAction.class, Material.RED_BANNER, new ArgumentSlot("scoreboard", ValueType.TEXT), new ArgumentSlot("team", ValueType.TEXT)),
 
     ENTITY_SET_CUSTOM_NAME(             ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_PARAMS, EntitySetNameAction.class, Material.NAME_TAG,  new ArgumentSlot("name", ValueType.TEXT, (byte) 18)),
     ENTITY_ADD_DAMAGE(                  ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_PARAMS, DamageEntityAction.class, Material.NETHERITE_SWORD,             new ArgumentSlot("damage", ValueType.NUMBER)),
