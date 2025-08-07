@@ -39,10 +39,14 @@ public class ModulesBrowserMenu extends ListBrowserMenu<Module> {
 
     private final List<Module> modules = new ArrayList<>();
 
-    public ModulesBrowserMenu(Player player) {
+    public ModulesBrowserMenu(Player player, List<Module> modules) {
         super(player, getLocaleMessage("menus.modules.title",false),PlacementLayout.BOTTOM_NO_DECORATION,
                 new int[]{49},new int[]{45,46,52,53});
-        modules.addAll(ModuleManager.getInstance().getModules());
+        this.modules.addAll(modules);
+    }
+
+    public ModulesBrowserMenu(Player player) {
+        this(player, ModuleManager.getInstance().getModules().stream().toList());
     }
 
     @Override
@@ -64,7 +68,7 @@ public class ModulesBrowserMenu extends ListBrowserMenu<Module> {
             return;
         }
         if (getItemType(currentItem).equalsIgnoreCase("own-modules")) {
-
+            new OwnModulesBrowserMenu(getPlayer()).open(getPlayer());
         }
     }
 
@@ -108,7 +112,7 @@ public class ModulesBrowserMenu extends ListBrowserMenu<Module> {
 
     @Override
     public List<Module> getElements() {
-        return elements;
+        return modules;
     }
 
     @Override

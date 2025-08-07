@@ -153,7 +153,7 @@ public final class OpenCreative extends JavaPlugin {
         HookUtils.loadHooks();
         FileUtils.loadPlanets();
         PhysService.run();
-        //FileUtils.loadModules();
+        FileUtils.loadModules();
 
         economy = HookUtils.getEconomy();
         economy.init();

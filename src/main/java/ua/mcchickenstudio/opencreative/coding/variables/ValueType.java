@@ -210,6 +210,15 @@ public enum ValueType {
     }
 
     /**
+     * Returns material of item, that will be
+     * displayed in values menu.
+     * @return material of value's item.
+     */
+    public Material getMaterial() {
+        return material;
+    }
+
+    /**
      * Returns localized name of value type.
      * @return localized name of value type.
      */

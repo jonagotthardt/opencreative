@@ -118,6 +118,13 @@ public abstract class DevPlatformer implements ExtensionContent {
     public abstract @NotNull DevPlatform getNextAvailablePlatform(@NotNull DevPlanet planet);
 
     /**
+     * Returns maximum amount of coding blocks in 1 column.
+     * Includes executor and all actions blocks through coding line.
+     * @return limit of coding blocks.
+     */
+    public abstract int getCodingBlocksLimit(@NotNull DevPlanet planet);
+
+    /**
      * Checks if this manager creates platforms
      * on Z coordinate instead of Y coordinate.
      * Useful for skipping additional checks while

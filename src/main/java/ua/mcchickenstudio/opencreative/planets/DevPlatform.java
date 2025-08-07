@@ -91,7 +91,7 @@ public class DevPlatform {
         Location end = platformer.getPlatformEndLocation(this);
         int z = begin.getBlockZ() + (column*4);
         for (int x = begin.getBlockX() + 4; x <= end.getBlockX() - 3; x++) {
-            Block block = world.getBlockAt(x,begin.getBlockY(),z);
+            Block block = world.getBlockAt(x,begin.getBlockY()+1,z);
             if (!block.isEmpty()) {
                 return false;
             }

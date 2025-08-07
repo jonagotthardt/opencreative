@@ -24,6 +24,7 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.ChatEvent;
 import ua.mcchickenstudio.opencreative.events.player.WorldChatEvent;
+import ua.mcchickenstudio.opencreative.indev.modules.Module;
 import ua.mcchickenstudio.opencreative.menus.world.browsers.WorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.world.settings.WorldSettingsPlayersMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
@@ -448,6 +449,36 @@ public final class ChatListener implements Listener {
                         planet.setChangingOwner(false);
                     }
                 }
+            }
+            case MODULE_NAME_CHANGE -> {
+                Module module = new Module(1);
+                if (!module.isOwner(player)) return;
+                String newName = "§f" + ChatColor.translateAlternateColorCodes('&',input);
+                String uncoloredName = ChatColor.stripColor(newName);
+                if (uncoloredName.length() > OpenCreative.getSettings().getWorldNameMaxLength() || uncoloredName.length() < OpenCreative.getSettings().getWorldNameMinLength()) {
+                    player.sendMessage(getLocaleMessage("settings.module-name.error")
+                            .replace("%min%",String.valueOf(OpenCreative.getSettings().getWorldNameMinLength()))
+                            .replace("%max%",String.valueOf(OpenCreative.getSettings().getWorldNameMaxLength())));
+                    return;
+                }
+                module.getInformation().setDisplayName(newName);
+                player.sendMessage(getLocaleMessage("settings.module-name.changed").replace("%name%",newName));
+            }
+            case MODULE_DESCRIPTION_CHANGE -> {
+                Module module = new Module(1);
+                if (!module.isOwner(player)) return;
+                String newDescription = "§f" + ChatColor.translateAlternateColorCodes('&',input);
+                String uncoloredDescription = ChatColor.stripColor(newDescription);
+                if (uncoloredDescription.length() > OpenCreative.getSettings().getWorldDescriptionMaxLength() ||
+                        uncoloredDescription.length() < OpenCreative.getSettings().getWorldDescriptionMinLength()) {
+                    player.sendMessage(getLocaleMessage("settings.module-description.error")
+                            .replace("%min%",String.valueOf(OpenCreative.getSettings().getWorldDescriptionMinLength()))
+                            .replace("%max%",String.valueOf(OpenCreative.getSettings().getWorldDescriptionMaxLength())));
+                    return;
+                }
+                newDescription = String.join("\\n", splitDescription(newDescription, 39));
+                module.getInformation().setDescription(newDescription);
+                player.sendMessage(getLocaleMessage("settings.module-description.changed").replace("%description%", newDescription));
             }
         }
     }
