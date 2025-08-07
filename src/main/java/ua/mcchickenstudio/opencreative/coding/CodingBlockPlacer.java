@@ -311,6 +311,11 @@ public class CodingBlockPlacer {
                         type.getCategory().getAdditionalBlock(),
                         wallSign, type.getCategory().name().toLowerCase());
                 setSignLine(signLocation,3, type.name().toLowerCase());
+                if (type.getCategory().isCondition()) {
+                    if (data.getBoolean("opposed",false)) {
+                        setSignLine(signLocation, 1, "not");
+                    }
+                }
                 if (type.getCategory().isMultiAction()) {
                     buildMultiActionBlock(location, data, maximumX);
                 }

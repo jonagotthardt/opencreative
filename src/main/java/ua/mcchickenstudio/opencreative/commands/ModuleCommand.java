@@ -44,10 +44,6 @@ public class ModuleCommand extends CommandHandler {
 
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!sender.hasPermission("opencreative.module")) {
-            sender.sendMessage(getLocaleMessage("no-perms"));
-            return;
-        }
         Player player = null;
         DevPlanet devPlanet = null;
         if (sender instanceof Player senderPlayer) {
