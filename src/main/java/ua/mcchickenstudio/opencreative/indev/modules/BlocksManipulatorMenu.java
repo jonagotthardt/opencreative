@@ -104,6 +104,7 @@ public class BlocksManipulatorMenu extends AbstractMenu {
             player.closeInventory();
             CodeConfiguration temporary = new CodeConfiguration();
             new CodingBlockParser().parseExecutors(devPlanet, temporary, new ArrayList<>(devPlanet.getMarkedExecutors(player)));
+            devPlanet.clearMarkedExecutors(player);
             ConfigurationSection section = temporary.getConfigurationSection("code.blocks");
             if (section == null) return;
             new CodingBlockPlacer(devPlanet).placeCodingLine(devPlanet, section);
@@ -121,6 +122,7 @@ public class BlocksManipulatorMenu extends AbstractMenu {
             }
             player.closeInventory();
             ModuleManager.getInstance().createModule(player, devPlanet, devPlanet.getMarkedExecutors(player));
+            devPlanet.clearMarkedExecutors(player);
         }
 
     }
