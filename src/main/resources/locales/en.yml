@@ -9527,6 +9527,38 @@ items:
           - "&3 Option &7- Ignore case"
           - " "
           - "&eClick to set condition."
+        arguments:
+          ignore-caps:
+            name: "&3Ignore Letter CaSe"
+            lore:
+              - "&7If set to Yes, the condition"
+              - "&7will pass even if the letters"
+              - "&7in the text differ in"
+              - "&7UPPERCASE or lowercase."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Require case match"
+              true: "Ignore letter case"
+          ignore-colors:
+            name: "&dIgnore color codes"
+            lore:
+              - "&7You might want to ignore"
+              - "&7color codes, since it's quite"
+              - "&7rare to require them."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Require color match"
+              true: "Ignore colors in text"
       if-var-text-contains:
         name: "&eText contains"
         lore:
@@ -9540,6 +9572,38 @@ items:
           - "&3 Option &7- Ignore case"
           - " "
           - "&eClick to set condition."
+        arguments:
+          ignore-caps:
+            name: "&3Ignore Letter CaSe"
+            lore:
+              - "&7If set to Yes, the condition"
+              - "&7will pass even if the letters"
+              - "&7in the text differ in"
+              - "&7UPPERCASE or lowercase."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Require case match"
+              true: "Ignore letter case"
+          ignore-colors:
+            name: "&dIgnore color codes"
+            lore:
+              - "&7You might want to ignore"
+              - "&7color codes, since it's quite"
+              - "&7rare to require them."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Require color match"
+              true: "Ignore colors in text"
       if-var-text-ends-with:
         name: "&cText ends with"
         lore:
@@ -9553,6 +9617,38 @@ items:
           - "&3 Option &7- Ignore case"
           - " "
           - "&eClick to set condition."
+        arguments:
+          ignore-caps:
+            name: "&3Ignore Letter CaSe"
+            lore:
+              - "&7If set to Yes, the condition"
+              - "&7will pass even if the letters"
+              - "&7in the text differ in"
+              - "&7UPPERCASE or lowercase."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Require case match"
+              true: "Ignore letter case"
+          ignore-colors:
+            name: "&dIgnore color codes"
+            lore:
+              - "&7You might want to ignore"
+              - "&7color codes, since it's quite"
+              - "&7rare to require them."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Require color match"
+              true: "Ignore colors in text"
       if-var-text-starts-with:
         name: "&aText starts with"
         lore:
@@ -9566,6 +9662,38 @@ items:
           - "&3 Option &7- Ignore case"
           - " "
           - "&eClick to set condition."
+        arguments:
+          ignore-caps:
+            name: "&3Ignore Letter CaSe"
+            lore:
+              - "&7If set to Yes, the condition"
+              - "&7will pass even if the letters"
+              - "&7in the text differ in"
+              - "&7UPPERCASE or lowercase."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Require case match"
+              true: "Ignore letter case"
+          ignore-colors:
+            name: "&dIgnore color codes"
+            lore:
+              - "&7You might want to ignore"
+              - "&7color codes, since it's quite"
+              - "&7rare to require them."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Require color match"
+              true: "Ignore colors in text"
       if-var-list-is-empty:
         name: "&3List is empty"
         lore:
@@ -9588,6 +9716,22 @@ items:
           - "&7 all values or any of them"
           - " "
           - "&eClick to set condition."
+        arguments:
+          all:
+            name: "&fRequire all values or any"
+            lore:
+              - "&7If set to Yes, the condition"
+              - "&7will pass only if the list contains"
+              - "&7all specified values."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "If any match"
+              true: "Require all values"
       if-var-number-greater:
         name: "&9Number greater than >"
         lore:
@@ -9605,6 +9749,23 @@ items:
           - " &a10 &7>= &a10 &7= &aYes"
           - " "
           - "&eClick to set condition."
+        arguments:
+          equals:
+            name: "&aGreater > or equal >="
+            lore:
+              - "&7In normal comparison, the number"
+              - "&7must be greater, but with 'equal'"
+              - "&7it can also be equal to the"
+              - "&7specified number."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "> Greater"
+              true: ">= Greater or equal"
       if-var-number-less:
         name: "&cNumber less than <"
         lore:
@@ -9622,6 +9783,23 @@ items:
           - " &a14 &7<= &a88 &7= &aYes"
           - " "
           - "&eClick to set condition."
+        arguments:
+          equals:
+            name: "&cLess < or equal <="
+            lore:
+              - "&7In normal comparison, the number"
+              - "&7must be smaller, but with 'equal'"
+              - "&7it can also be equal to the"
+              - "&7specified number."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "< Less"
+              true: "<= Less or equal"
       if-var-number-in-range:
         name: "&bNumber in range"
         lore:
@@ -9641,6 +9819,39 @@ items:
           - " &a4&7, &a0&7, &a64 &7= &cNo"
           - " "
           - "&eClick to set condition."
+        arguments:
+          min-equals:
+            name: "&cLess < or equal <="
+            lore:
+              - "&7In normal comparison, the number"
+              - "&7must be smaller, but with 'equal'"
+              - "&7it can also be equal to the"
+              - "&7specified number."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "< Less"
+              true: "<= Less or equal"
+          max-equals:
+            name: "&aGreater > or equal >="
+            lore:
+              - "&7In normal comparison, the number"
+              - "&7must be greater, but with 'equal'"
+              - "&7it can also be equal to the"
+              - "&7specified number."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "> Greater"
+              true: ">= Greater or equal"
       if-var-is-null:
         name: "&3Variable is empty"
         lore:
@@ -9665,6 +9876,125 @@ items:
           - "&7 must exist or any"
           - " "
           - "&eClick to set condition."
+      if-player-is-inventory-full:
+        name: "&6Inventory is full"
+        lore:
+          - "&7Executes the code if the player"
+          - "&7has no space in the inventory."
+          - " "
+          - "&eClick to set the condition."
+      if-player-game-mode-equals:
+        name: "&eGame mode equals"
+        lore:
+          - "&7Checks the player's current"
+          - "&7game mode. In Adventure mode,"
+          - "&7the player cannot break or"
+          - "&7place blocks."
+          - " "
+          - "&fIn the chest:"
+          - "&3 Parameter &7- Game mode"
+          - " "
+          - "&eClick to set the condition."
+        arguments:
+          game-mode:
+            name: "&6Game mode"
+            lore:
+              - "&7In Adventure mode, the player"
+              - "&7cannot break or place blocks,"
+              - "&7while in Creative mode they can"
+              - "&7even destroy the entire world."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+              - "%4%"
+            choices:
+              adventure: "Adventure"
+              survival: "Survival"
+              creative: "Creative"
+              spectator: "Spectator"
+      if-player-is-sprinting:
+        name: "&ePlayer is sprinting"
+        lore:
+          - "&7Checks whether the player"
+          - "&7is sprinting while moving."
+          - " "
+          - "&eClick to set the condition."
+      if-player-is-glowing:
+        name: "&5Player is glowing"
+        lore:
+          - "&7Checks whether the player"
+          - "&7has the glowing effect."
+          - " "
+          - "&eClick to set the condition."
+      if-player-is-gliding:
+        name: "&5Player is gliding with elytra"
+        lore:
+          - "&7Checks whether the player"
+          - "&7is flying with elytra."
+          - " "
+          - "&eClick to set the condition."
+      if-player-is-blocking:
+        name: "&9Player is blocking with shield"
+        lore:
+          - "&7Checks whether the player"
+          - "&7is blocking using a shield."
+          - " "
+          - "&eClick to set the condition."
+      if-player-is-flight-allowed:
+        name: "&cPlayer can fly"
+        lore:
+          - "&7Checks whether the player"
+          - "&7can start flying if they"
+          - "&7double-tap the space bar."
+          - " "
+          - "&eClick to set the condition."
+      if-player-has-world-permission:
+        name: "&6Has world permissions"
+        lore:
+          - "&7Checks whether the player is"
+          - "&7the owner, builder, or"
+          - "&7developer of the world."
+          - " "
+          - "&fIn the chest:"
+          - "&3 Parameter &7- Permission type"
+          - " "
+          - "&eClick to set the condition."
+        arguments:
+          permission:
+            name: "&6Permission type"
+            lore:
+              - "&7A builder can use the"
+              - "&7/build command, while a developer"
+              - "&7can develop in /dev and"
+              - "&7run the game with /play."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+              - "%4%"
+            choices:
+              owner: "Owner"
+              build: "Builder"
+              develop: "Developer"
+      if-var-location-in-area:
+        name: "&6Location in region"
+        lore:
+          - "&7Checks whether the location"
+          - "&7is between two points."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location &7- First point"
+          - "&f Location &7- Location to check"
+          - "&f Location &7- Second point"
+          - " "
+          - "&eClick to set the condition."
       if-player-name-equals:
         name: "&eNickname equals"
         lore:

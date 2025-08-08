@@ -50,7 +50,7 @@ public final class SetItemLoreLineAction extends VariableAction {
         if (newLore == null) {
             return;
         }
-        Component text = Component.text(getArguments().getValue("line","",this));
+        Component text = getArguments().getValue("line",Component.text(""),this);
         if (newLore.size() > 64 || index > 64) {
             return;
         }
@@ -64,6 +64,7 @@ public final class SetItemLoreLineAction extends VariableAction {
         newLore.set(index-1,text);
         meta.lore(newLore);
         item.setItemMeta(meta);
+        if (link == null) return;
         setVarValue(link,item);
     }
 
