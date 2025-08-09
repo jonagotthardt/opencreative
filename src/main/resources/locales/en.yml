@@ -13711,9 +13711,8 @@ menus:
           - "&e ⭐ &7Rating: &a%moduleReputation%"
           - "&6 🍖 &7Downloads: &a%moduleDownloads%"
           - " "
-          - "&5 ⌛ &7Created: &d%moduleCreationTime%"
-          - " "
           - "&2 ⏵ &nClick to install&2..."
+          - "&8  ID: %moduleID%"
           - " "
   module-settings:
     title: "&4✎ Module Settings"
@@ -13808,9 +13807,8 @@ menus:
           - "&e ⭐ &7Rating: &a%moduleReputation%"
           - "&6 🍖 &7Downloads: &a%moduleDownloads%"
           - " "
-          - "&5 ⌛ &7Created: &d%moduleCreationTime%"
-          - " "
-          - "&e &nDrag an item here for an icon!&e"
+          - "&e ⏵ &nDrag item here to change icon&e..."
+          - "&8  ID: %moduleID%"
           - " "
   own-modules:
     title: "&2☄ My Modules"
@@ -13869,7 +13867,8 @@ menus:
           - " "
           - "&5 ⌛ &7Created: &d%moduleCreationTime%"
           - " "
-          - "&e Left-click &7- Open settings."
+          - "&e ⏵ &nClick to open settings&e..."
+          - "&8  ID: %moduleID%"
           - " "
   own-worlds:
     title: "&2☄ My Worlds"

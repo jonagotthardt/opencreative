@@ -56,7 +56,6 @@ public class Module {
 
     public Module(int id) {
         this.id = id;
-        this.info = new ModuleInfo(this);
 
         String uuid = getModuleConfig(this).getString("owner","");
         try {
@@ -65,6 +64,7 @@ public class Module {
             owner = new UUID(0,0);
         }
 
+        this.info = new ModuleInfo(this);
         new BukkitRunnable() {
             @Override
             public void run() {
