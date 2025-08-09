@@ -60,6 +60,7 @@ public class ItemUtils {
     private final static NamespacedKey CODING_LOCATION_X = new NamespacedKey(OpenCreative.getPlugin(), "oc_loc_x");
     private final static NamespacedKey CODING_LOCATION_Y = new NamespacedKey(OpenCreative.getPlugin(), "oc_loc_y");
     private final static NamespacedKey CODING_LOCATION_Z = new NamespacedKey(OpenCreative.getPlugin(), "oc_loc_z");
+    private final static int LIMIT_OF_ITEM_CHECKS = 100;
 
     public static NamespacedKey getCodingValueKey() {
         return CODING_VALUE_KEY;
@@ -421,6 +422,13 @@ public class ItemUtils {
             ItemMeta meta = item.getItemMeta();
             if (meta == null) return item;
             if (meta.hasEnchants()) {
+                int enchantsLimit = 15;
+                if (meta.getEnchants().size() > enchantsLimit) {
+                    sendDebug("[ITEMS] Destroyed item with too many enchantments.");
+                    item.setType(Material.AIR);
+                    item.setItemMeta(null);
+                    return item;
+                }
                 List<Enchantment> badEnchants = new ArrayList<>();
                 for (Enchantment enchant : meta.getEnchants().keySet()) {
                     if (meta.getEnchantLevel(enchant) > maxEnchantLevel) {
@@ -437,6 +445,13 @@ public class ItemUtils {
             }
             if (meta.hasAttributeModifiers() && meta.getAttributeModifiers() != null && removeAttributes) {
                 Set<Attribute> attributes = meta.getAttributeModifiers().keySet();
+                int attributesLimit = 20;
+                if (meta.getEnchants().size() > attributesLimit) {
+                    sendDebug("[ITEMS] Destroyed item with too many attributes.");
+                    item.setType(Material.AIR);
+                    item.setItemMeta(null);
+                    return item;
+                }
                 for (Attribute attribute : attributes) {
                     if (attribute != Attribute.GENERIC_ARMOR) {
                         meta.removeAttributeModifier(attribute);
@@ -445,6 +460,13 @@ public class ItemUtils {
                 }
             }
             if (!meta.getPersistentDataContainer().isEmpty()) {
+                int persistentDataKeysLimit = 15;
+                if (meta.getPersistentDataContainer().getKeys().size() > persistentDataKeysLimit) {
+                    sendDebug("[ITEMS] Destroyed item with too many persistent data keys.");
+                    item.setType(Material.AIR);
+                    item.setItemMeta(null);
+                    return item;
+                }
                 if (getPersistentDataAmount(item) > OpenCreative.getSettings().getItemsMaxPersistentDataSize()) {
                     for (NamespacedKey key : item.getPersistentDataContainer().getKeys()) {
                         meta.getPersistentDataContainer().remove(key);
@@ -457,23 +479,33 @@ public class ItemUtils {
                 case BlockStateMeta blockMeta when blockMeta.getBlockState() instanceof InventoryHolder holder -> {
                     // If item is Chest or Shulker
                     int insideContainers = 0;
-                    for (ItemStack insideItem : holder.getInventory().getContents()) {
+                    ItemStack[] items = holder.getInventory().getContents();
+                    int itemsLimit = 30;
+                    if (meta.getEnchants().size() > itemsLimit) {
+                        sendDebug("[ITEMS] Destroyed container item with too many items.");
+                        item.setType(Material.AIR);
+                        item.setItemMeta(null);
+                        return item;
+                    }
+                    for (ItemStack insideItem : items) {
                         if (insideItem == null) continue;
                         if (insideItem instanceof BlockStateMeta insideMeta && insideMeta.getBlockState() instanceof InventoryHolder insideHolder && !insideHolder.getInventory().isEmpty()) {
                             insideContainers++;
-                        } else if (insideItem.getItemMeta() instanceof BookMeta book) {
+                        } else if (insideItem.getItemMeta() instanceof BookMeta) {
                             insideContainers++;
                         }
                         if (insideContainers > containerBigItemsLimit) break;
                     }
                     if (insideContainers > containerBigItemsLimit) {
                         item.setType(Material.AIR);
+                        item.setItemMeta(null);
                         sendDebug("[ITEMS] Destroyed container with a lot of items");
                     }
                 }
                 case BookMeta book -> {
                     if (book.pages().size() > bookPagesLimit) {
                         item.setType(Material.AIR);
+                        item.setItemMeta(null);
                         sendDebug("[ITEMS] Destroyed book with a lot of pages");
                     } else if (removeClickableBooks) {
                         List<Component> pages = book.pages();
