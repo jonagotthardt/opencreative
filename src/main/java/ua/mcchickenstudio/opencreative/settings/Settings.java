@@ -64,6 +64,7 @@ public class Settings {
     private boolean consoleWarnings = true;
 
     private int itemsMaxEnchantLevel = 10;
+    private int itemsEntitiesMaxAmount = 3;
     private int itemsMaxBookPagesAmount = 50;
     private int itemsMaxEntityNameLength = 48;
     private int itemsContainerBigItemsLimit = 3;
@@ -104,7 +105,7 @@ public class Settings {
     private final Set<Integer> recommendedWorldsIDs = new HashSet<>();
     private final Set<String> allowedResourcePackLinks = new HashSet<>();
     private final Set<String> disabledEvents = new HashSet<>();
-    private final Set<String> disabledActions= new HashSet<>();
+    private final Set<String> disabledActions = new HashSet<>();
     private final Set<String> disabledConditions = new HashSet<>();
 
     private final Map<Sounds,SettingsSound> sounds = new HashMap<>();
@@ -165,6 +166,7 @@ public class Settings {
         itemsMaxEnchantLevel = config.getInt("item-fixer.max-enchantment-level",10);
         itemsMaxEntityNameLength = config.getInt("item-fixer.entity-name-max-length",48);
         itemsMaxPersistentDataSize = config.getInt("item-fixer.persistent-data-max-size",2048);
+        itemsEntitiesMaxAmount = config.getInt("item-fixer.entities-max-amount",3);
         itemsMaxBookPagesAmount = config.getInt("item-fixer.books-pages-max-amount",50);
         itemsContainerBigItemsLimit = config.getInt("item-fixer.container-big-items-max-amount",3);
 
@@ -606,5 +608,9 @@ public class Settings {
 
     public int getItemsMaxPersistentDataSize() {
         return itemsMaxPersistentDataSize;
+    }
+
+    public int getItemsEntitiesMaxAmount() {
+        return itemsEntitiesMaxAmount;
     }
 }
