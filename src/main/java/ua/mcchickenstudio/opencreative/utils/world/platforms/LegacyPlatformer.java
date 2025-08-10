@@ -150,7 +150,7 @@ public final class LegacyPlatformer extends DevPlatformer implements HasVisibleB
 
     @Override
     public int getCodingBlocksLimit(@NotNull DevPlanet planet) {
-        return 25;
+        return 46;
     }
 
     @Override

@@ -80,9 +80,11 @@ public class ActionTypeSelectionMenu extends BlocksWithMenusCategoryMenu<ActionT
             } catch (Exception ignored) {}
             ActionCategory actionCategory = actionType == null ? null : actionType.getCategory();
             if (actionCategory != null) {
+                devPlanet.setCodeChanged(true);
                 setSignLine(signLocation,2, actionCategory.name().toLowerCase());
             }
             if (setSignLine(signLocation,3,typeString.toLowerCase())) {
+                devPlanet.setCodeChanged(true);
                 translateBlockSign(signLocation.getBlock());
                 getPlayer().closeInventory();
                 getPlayer().showTitle(Title.title(

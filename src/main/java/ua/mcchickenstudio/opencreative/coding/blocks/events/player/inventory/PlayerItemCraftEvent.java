@@ -22,9 +22,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.ItemEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
-public final class PlayerItemCraftEvent extends WorldEvent implements Cancellable {
+public final class PlayerItemCraftEvent extends WorldEvent implements Cancellable, ItemEvent {
 
     private final CraftItemEvent event;
     private final ItemStack item;
@@ -45,7 +47,8 @@ public final class PlayerItemCraftEvent extends WorldEvent implements Cancellabl
         return event.isCancelled();
     }
 
-    public ItemStack getItem() {
+    @Override
+    public @NotNull ItemStack getItem() {
         return item;
     }
 

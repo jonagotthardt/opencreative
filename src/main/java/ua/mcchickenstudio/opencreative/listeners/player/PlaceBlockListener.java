@@ -108,6 +108,7 @@ public final class PlaceBlockListener implements Listener {
                         signText = actionCategory.name().toLowerCase();
                         additionalBlockMaterial = actionCategory.getAdditionalBlock();
                     }
+                    devPlanet.setCodeChanged(true);
                     placeDevBlock(block.getLocation(), block.getType(), additionalBlockMaterial, devPlanet.getSignMaterial(), signText);
                 } else {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-action-on-event"));
@@ -130,6 +131,7 @@ public final class PlaceBlockListener implements Listener {
                     if (block.getRelative(BlockFace.EAST).getType() == Material.PISTON) {
                         move(block.getLocation(), BlockFace.EAST);
                     }
+                    devPlanet.setCodeChanged(true);
                     placeDevBlock(block.getLocation(), block.getType(), additionalBlockMaterial, devPlanet.getSignMaterial(), signText);
                 } else {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-event-on-action"));

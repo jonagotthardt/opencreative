@@ -174,7 +174,7 @@ public final class HorizontalPlatformer extends DevPlatformer {
 
     @Override
     public int getCodingBlocksLimit(@NotNull DevPlanet planet) {
-        return 25;
+        return 46;
     }
 
     @Override

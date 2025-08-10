@@ -25,7 +25,6 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -37,7 +36,6 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ua.mcchickenstudio.opencreative.planets.Planet.Sharing.PUBLIC;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;

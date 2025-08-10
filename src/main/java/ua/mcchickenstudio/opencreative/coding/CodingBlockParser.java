@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding;
 
+import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -40,6 +42,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
@@ -55,12 +58,26 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  */
 public class CodingBlockParser {
 
+    private final long maxScriptSize;
+
+    public CodingBlockParser(@NotNull DevPlanet devPlanet) {
+        this(devPlanet.getPlanet().getGroup().getScriptSizeLimit());
+    }
+
+    public CodingBlockParser(int scriptSizeLimit) {
+        this.maxScriptSize = scriptSizeLimit * 1024L * 1024L;
+    }
+
     /**
      * Saves all code lines in developer planet and
      * launches new code.
      * @param devPlanet developer planet to parse code.
      */
     public void parseCode(DevPlanet devPlanet) {
+        if (!devPlanet.isCodeChanged()) {
+            sendCodingDebugLog(devPlanet.getPlanet(),"Not parsing code, nothing was changed.");
+            return;
+        }
         long time = System.currentTimeMillis();
         sendCodingDebugLog(devPlanet.getPlanet(),"Shutting down executors and clearing...");
         devPlanet.getPlanet().getTerritory().stopBukkitRunnables();
@@ -117,6 +134,7 @@ public class CodingBlockParser {
         List<DevPlatform> platforms = devPlanet.getPlatforms();
         Collections.reverse(platforms); // Reversing to make executors from first platform as first
         boolean notDependsOnHeight = devPlanet.getDevPlatformer().notDependsOnHeight();
+        long argumentsSize = 0;
 
         // For coding executors
         for (Location executorLocation : executorsLocations) {
@@ -209,17 +227,40 @@ public class CodingBlockParser {
                                 if (item == null) {
                                     if (argSlot.acceptEmptyItems()) {
                                         item = new ItemStack(Material.AIR);
-                                        config.saveArguments(executorBlock,notDependsOnHeight,multiActions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
+                                        Object value = parseItemValue(item);
+                                        argumentsSize += value.toString().getBytes(StandardCharsets.UTF_8).length;
+                                        if (argumentsSize > maxScriptSize) {
+                                            onArgumentsTooBig(devPlanet, actionBlock, argumentsSize);
+                                            return false;
+                                        }
+                                        config.saveArguments(executorBlock,notDependsOnHeight,multiActions,actionBlock,
+                                                argSlot.getPath()+".value."+i,
+                                                value, parseItemType(item));
                                     }
                                 } else {
-                                    config.saveArguments(executorBlock,notDependsOnHeight,multiActions,actionBlock,argSlot.getPath()+".value."+i,parseItemValue(item),parseItemType(item));
+                                    Object value = parseItemValue(item);
+                                    argumentsSize += value.toString().getBytes(StandardCharsets.UTF_8).length;
+                                    if (argumentsSize > maxScriptSize) {
+                                        onArgumentsTooBig(devPlanet, actionBlock, argumentsSize);
+                                        return false;
+                                    }
+                                    config.saveArguments(executorBlock,notDependsOnHeight,multiActions,actionBlock,
+                                            argSlot.getPath()+".value."+i,
+                                            value, parseItemType(item));
                                 }
                             }
                             slot++;
                         }
                     } else {
                         if (item != null) {
-                            config.saveArguments(executorBlock,notDependsOnHeight,multiActions,actionBlock,argSlot.getPath(),parseItemValue(item),parseItemType(item));
+                            Object value = parseItemValue(item);
+                            argumentsSize += value.toString().getBytes(StandardCharsets.UTF_8).length;
+                            if (argumentsSize > maxScriptSize) {
+                                onArgumentsTooBig(devPlanet, actionBlock, argumentsSize);
+                                return false;
+                            }
+                            config.saveArguments(executorBlock,notDependsOnHeight,multiActions,actionBlock,
+                                    argSlot.getPath(), value, parseItemType(item));
                         }
                         slot++;
                     }
@@ -388,4 +429,11 @@ public class CodingBlockParser {
         }
         return false;
     }
+
+    private void onArgumentsTooBig(DevPlanet devPlanet, Block block, long argsSize) {
+        sendPlanetCompileErrorMessage(devPlanet.getPlanet(), block, getLocaleMessage("world.script-size-limit")
+                .replace("%amount%", FileUtils.byteCountToDisplaySize(argsSize))
+                .replace("%limit%", String.valueOf(maxScriptSize / 1024 / 1024)));
+    }
+
 }

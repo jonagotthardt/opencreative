@@ -18,12 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory;
 
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.ItemEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-public final class ItemBreakEvent extends WorldEvent {
+public final class ItemBreakEvent extends WorldEvent implements ItemEvent {
 
     private final ItemStack item;
 
@@ -32,7 +34,8 @@ public final class ItemBreakEvent extends WorldEvent {
         this.item = event.getBrokenItem();
     }
 
-    public ItemStack getItem() {
+    @Override
+    public @NotNull ItemStack getItem() {
         return item;
     }
 

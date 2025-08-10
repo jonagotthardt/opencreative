@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.item;
 
+import net.kyori.adventure.text.Component;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -44,8 +45,8 @@ public final class SetItemLoreAction extends VariableAction {
         if (meta == null) {
             return;
         }
-        List<String> text = getArguments().getTextList("lore",this);
-        meta.setLore(text);
+        List<Component> text = getArguments().getComponentList("lore",this);
+        meta.lore(text);
         item.setItemMeta(meta);
         setVarValue(link,item);
     }

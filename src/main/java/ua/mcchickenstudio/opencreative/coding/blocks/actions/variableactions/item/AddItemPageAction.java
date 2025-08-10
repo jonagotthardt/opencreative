@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.item;
 
+import net.kyori.adventure.text.Component;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -43,9 +44,9 @@ public final class AddItemPageAction extends VariableAction {
         if (meta == null) {
             return;
         }
-        String text = getArguments().getValue("page","",this);
+        Component text = getArguments().getValue("page", Component.text(""),this);
         if (meta instanceof BookMeta bookMeta) {
-            bookMeta.addPage(text);
+            bookMeta.addPages(text);
             item.setItemMeta(bookMeta);
         }
         setVarValue(link,item);

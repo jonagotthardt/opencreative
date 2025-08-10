@@ -117,7 +117,7 @@ public class PlayCommand extends CommandHandler {
                             player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
                             if (!Arrays.asList(args).contains("--no-compile")) {
                                 if (planet.getDevPlanet().isLoaded()) {
-                                    new CodingBlockParser().parseCode(planet.getDevPlanet());
+                                    new CodingBlockParser(planet.getDevPlanet()).parseCode(planet.getDevPlanet());
                                 } else {
                                     planet.getTerritory().getScript().loadCode();
                                 }

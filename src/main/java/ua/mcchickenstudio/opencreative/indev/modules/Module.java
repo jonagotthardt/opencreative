@@ -18,8 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.indev.modules;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -56,7 +54,6 @@ public class Module {
 
     public Module(int id) {
         this.id = id;
-        this.info = new ModuleInfo(this);
 
         String uuid = getModuleConfig(this).getString("owner","");
         try {
@@ -65,6 +62,7 @@ public class Module {
             owner = new UUID(0,0);
         }
 
+        this.info = new ModuleInfo(this);
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -126,17 +124,19 @@ public class Module {
         }
 
         CodingBlockPlacer placer = new CodingBlockPlacer(devPlanet);
-        CodingBlockPlacer.CodePlacementResult result = placer.placeCodingLine(devPlanet, section);
+        CodingBlockPlacer.CodePlacementResult result = placer.placeCodingLines(devPlanet, section);
         if (result == CodingBlockPlacer.CodePlacementResult.NOT_ENOUGH_CODING_LINES) {
             player.sendMessage(getLocaleMessage("modules.few-space")
                     .replace("%required%", String.valueOf(requiredColumns)));
             Sounds.DEV_NOT_ALLOWED.play(player);
             return false;
         } else if (result == CodingBlockPlacer.CodePlacementResult.ERROR) {
+            devPlanet.setCodeChanged(true);
             player.sendMessage(parseModuleLines(this,getLocaleMessage("modules.fail",player)));
             Sounds.PLAYER_FAIL.play(player);
             return false;
         } else {
+            devPlanet.setCodeChanged(true);
             Sounds.DEV_MODULE_INSTALLED.play(player);
             for (Player planetPlayer : devPlanet.getPlanet().getPlayers()) {
                 if (devPlanet.getPlanet().getWorldPlayers().canDevelop(planetPlayer)) {

@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.utils;
 
 import io.papermc.paper.persistence.PersistentDataContainerView;
+import org.bukkit.block.EntityBlockStorage;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntitySnapshot;
 import org.bukkit.entity.EntityType;
@@ -395,6 +396,7 @@ public class ItemUtils {
                 settings.getItemsMaxBookPagesAmount(),
                 settings.isItemsRemoveClickableBooks(),
                 settings.getItemsContainerBigItemsLimit(),
+                settings.getItemsEntitiesMaxAmount(),
                 settings.isItemsRemoveCustomSpawnEggs(),
                 settings.isItemsRemoveBossSpawnEggs(),
                 settings.isItemsRemoveAttributes());
@@ -409,6 +411,7 @@ public class ItemUtils {
      * @param bookPagesLimit limit of books pages.
      * @param removeClickableBooks remove clickable components in books or not.
      * @param containerBigItemsLimit limit of big items (books, containers) in container.
+     * @param entitiesLimit limit of entities in entities blocks storage (beehives).
      * @param removeCustomEggs removes custom spawn eggs.
      * @param removeBossEggs removes boss spawn eggs.
      * @param removeAttributes removes attribute modifiers (scale).
@@ -416,7 +419,7 @@ public class ItemUtils {
     @SuppressWarnings("deprecation")
     public static ItemStack fixItem(@NotNull ItemStack item, int maxEnchantLevel,
                                     int bookPagesLimit, boolean removeClickableBooks,
-                                    int containerBigItemsLimit, boolean removeCustomEggs,
+                                    int containerBigItemsLimit, int entitiesLimit, boolean removeCustomEggs,
                                     boolean removeBossEggs, boolean removeAttributes) {
         try {
             ItemMeta meta = item.getItemMeta();
@@ -500,6 +503,13 @@ public class ItemUtils {
                         item.setType(Material.AIR);
                         item.setItemMeta(null);
                         sendDebug("[ITEMS] Destroyed container with a lot of items");
+                    }
+                }
+                case BlockStateMeta blockMeta when blockMeta.getBlockState() instanceof EntityBlockStorage<?> storage -> {
+                    if (storage.getEntityCount() > entitiesLimit) {
+                        item.setType(Material.AIR);
+                        item.setItemMeta(null);
+                        sendDebug("[ITEMS] Destroyed entities block storage with a lot of entities");
                     }
                 }
                 case BookMeta book -> {

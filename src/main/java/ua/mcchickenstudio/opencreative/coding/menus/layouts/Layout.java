@@ -139,6 +139,7 @@ public abstract class Layout extends AbstractMenu {
         if (viewers.isEmpty()) {
             DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet((Player) event.getPlayer());
             if (devPlanet != null) {
+                devPlanet.setCodeChanged(true);
                 devPlanet.unregisterOpenedMenu(containerBlock.getLocation());
                 for (Player onlinePlayer : event.getPlayer().getWorld().getPlayers()) {
                     sendClosedChestAnimation(onlinePlayer,containerBlock);

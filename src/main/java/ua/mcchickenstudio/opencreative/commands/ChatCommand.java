@@ -67,11 +67,11 @@ public class ChatCommand extends CommandHandler {
             return;
         }
         if (sender instanceof Player player) {
-            if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-                sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
+            if (getCooldown(player, CooldownUtils.CooldownType.CREATIVE_CHAT) > 0) {
+                sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.CREATIVE_CHAT))));
                 return;
             }
-            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
+            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.CREATIVE_CHAT);
         }
         if (args.length == 1 && (args[0].equalsIgnoreCase("off")
                 || args[0].equalsIgnoreCase("on")

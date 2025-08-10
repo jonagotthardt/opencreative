@@ -103,11 +103,12 @@ public class BlocksManipulatorMenu extends AbstractMenu {
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getBlocksDuplicationCooldown(), CooldownUtils.CooldownType.BLOCKS_DUPLICATION);
             player.closeInventory();
             CodeConfiguration temporary = new CodeConfiguration();
-            new CodingBlockParser().parseExecutors(devPlanet, temporary, new ArrayList<>(devPlanet.getMarkedExecutors(player)));
+            new CodingBlockParser(devPlanet).parseExecutors(devPlanet, temporary, new ArrayList<>(devPlanet.getMarkedExecutors(player)));
             devPlanet.clearMarkedExecutors(player);
             ConfigurationSection section = temporary.getConfigurationSection("code.blocks");
             if (section == null) return;
-            new CodingBlockPlacer(devPlanet).placeCodingLine(devPlanet, section);
+            new CodingBlockPlacer(devPlanet).placeCodingLines(devPlanet, section);
+            devPlanet.setCodeChanged(true);
             Sounds.DEV_BLOCKS_DUPLICATED.play(player);
         } else if (itemEquals(currentItem, createModule)) {
             if (getCooldown(player, CooldownUtils.CooldownType.MODULE_MANIPULATION) > 0) {

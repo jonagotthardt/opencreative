@@ -67,6 +67,7 @@ public class DevPlanet {
     private boolean dropItems = true;
     private boolean saveLocation = true;
     private boolean nightVision = true;
+    private boolean isCodeChanged = false;
 
     private final Map<Player, Location> lastLocations = new HashMap<>();
     private final Map<Location, Layout> openedBlocksMenus = new HashMap<>();
@@ -150,6 +151,7 @@ public class DevPlanet {
         this.getWorld().setGameRule(GameRule.DO_PATROL_SPAWNING,false);
         this.getWorld().setGameRule(GameRule.DO_FIRE_TICK,false);
         getDevPlatformer().setWorldBorder(this);
+        isCodeChanged = false;
     }
 
     public boolean exists() {
@@ -479,6 +481,14 @@ public class DevPlanet {
             locations.remove(location);
             selectedExecutors.put(player, locations);
         }
+    }
+
+    public boolean isCodeChanged() {
+        return isCodeChanged;
+    }
+
+    public void setCodeChanged(boolean codeChanged) {
+        isCodeChanged = codeChanged;
     }
 
     public void clearMarkedExecutors(@NotNull Player player) {

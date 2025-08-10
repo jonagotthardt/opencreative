@@ -44,8 +44,8 @@ public final class SetItemDisplayNameAction extends VariableAction {
         if (meta == null) {
             return;
         }
-        String text = getArguments().getValue("name",((TextComponent) (meta.displayName() != null ? meta.displayName() : Component.text("Display name")) ).content(),this);
-        meta.setDisplayName(text);
+        Component displayName = getArguments().getValue("name", Component.text(""), this);
+        meta.displayName(displayName);
         item.setItemMeta(meta);
         setVarValue(link,item);
     }

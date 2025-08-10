@@ -80,6 +80,7 @@ public final class DestroyBlockListener implements Listener {
                 if (ActionCategory.getByMaterial(block.getType()) != null) {
                     destroyAdditionalBlocks(platform,block,devPlanet.isDropItems());
                     block.setType(Material.AIR);
+                    devPlanet.setCodeChanged(true);
                     move(block.getLocation(), BlockFace.WEST);
                 } else {
                     if (ExecutorCategory.getByMaterial(block.getType()) != null) {
@@ -91,6 +92,7 @@ public final class DestroyBlockListener implements Listener {
                             }
                         }
                     }
+                    devPlanet.setCodeChanged(true);
                     destroyAdditionalBlocks(platform,block,devPlanet.isDropItems());
                     block.setType(Material.AIR);
                     devPlanet.clearMarkedExecutors(block.getLocation());

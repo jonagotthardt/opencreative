@@ -18,13 +18,37 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory;
 
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.ItemEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 
-public final class ItemChangeEvent extends WorldEvent {
+public final class ItemChangeEvent extends WorldEvent implements ItemEvent, Cancellable {
 
-    public ItemChangeEvent(Player player) {
+    private final ItemStack mainItem;
+    private final PlayerSwapHandItemsEvent event;
+
+    public ItemChangeEvent(Player player, PlayerSwapHandItemsEvent event) {
         super(player);
+        this.event = event;
+        this.mainItem = event.getMainHandItem();
     }
 
+    @Override
+    public @NotNull ItemStack getItem() {
+        return mainItem;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        event.setCancelled(cancel);
+    }
 }

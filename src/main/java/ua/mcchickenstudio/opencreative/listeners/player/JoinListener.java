@@ -52,12 +52,17 @@ public final class JoinListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         loadPermissions(event.getPlayer());
         PlayerUtils.teleportToLobby(event.getPlayer());
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (event.getPlayer().getWorld() != onlinePlayer.getWorld()) {
-                hidePlayerInTab(onlinePlayer,event.getPlayer());
-                hidePlayerInTab(event.getPlayer(),onlinePlayer);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                    if (event.getPlayer().getWorld() != onlinePlayer.getWorld()) {
+                        hidePlayerInTab(onlinePlayer,event.getPlayer());
+                        hidePlayerInTab(event.getPlayer(),onlinePlayer);
+                    }
+                }
             }
-        }
+        }.runTaskLater(OpenCreative.getPlugin(), 1L);
         if (isBlocked(event.getPlayer().getName())) {
             new BukkitRunnable() {
                 @Override

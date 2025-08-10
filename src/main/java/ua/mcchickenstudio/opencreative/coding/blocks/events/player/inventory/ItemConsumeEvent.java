@@ -19,12 +19,14 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory;
 
 import org.bukkit.event.Cancellable;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.ItemEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 
-public final class ItemConsumeEvent extends WorldEvent implements Cancellable {
+public final class ItemConsumeEvent extends WorldEvent implements Cancellable, ItemEvent {
 
     private final PlayerItemConsumeEvent event;
     private final ItemStack item;
@@ -41,7 +43,8 @@ public final class ItemConsumeEvent extends WorldEvent implements Cancellable {
         return newItem;
     }
 
-    public ItemStack getItem() {
+    @Override
+    public @NotNull ItemStack getItem() {
         return item;
     }
 

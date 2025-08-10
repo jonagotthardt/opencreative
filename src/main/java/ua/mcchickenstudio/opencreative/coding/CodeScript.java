@@ -18,16 +18,19 @@
 
 package ua.mcchickenstudio.opencreative.coding;
 
+import org.apache.commons.io.FileUtils;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
 import org.bukkit.configuration.ConfigurationSection;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.getPlanetScriptFile;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
  * <h1>CodeScript</h1>
@@ -51,8 +54,18 @@ public class CodeScript {
      * Loads code from codeScript.yml file.
      */
     public void loadCode() {
-        scriptConfig = CodeConfiguration.loadConfiguration(getPlanetScriptFile(planet));
         sendCodingDebugLog(planet,"Starting code, please wait...");
+        File scriptFile = getPlanetScriptFile(planet);
+        long totalSize = ua.mcchickenstudio.opencreative.utils.FileUtils.getFileSize(scriptFile);
+        long limit = planet.getGroup().getScriptSizeLimit() * 1024L * 1024L;
+        if (totalSize > limit) {
+            sendPlanetErrorMessage(planet, getLocaleMessage("world.script-size-limit")
+                    .replace("%amount%", FileUtils.byteCountToDisplaySize(totalSize))
+                    .replace("%limit%", String.valueOf(planet.getGroup().getScriptSizeLimit())));
+            sendCodingDebugLog(planet,"Script File is too large to load :(");
+            return;
+        }
+        scriptConfig = CodeConfiguration.loadConfiguration(scriptFile);
         new BukkitRunnable() {
             @Override
             public void run() {

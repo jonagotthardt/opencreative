@@ -144,6 +144,7 @@ public class SelectionActionsMenu extends AbstractMenu {
             containerBlock.setType(Material.AIR);
             return;
         }
+        devPlanet.setCodeChanged(true);
         Layout layout = devPlanet.getOpenedMenu(containerBlock.getLocation());
         if (layout != null) {
             for (Player viewer : layout.getViewers()) {

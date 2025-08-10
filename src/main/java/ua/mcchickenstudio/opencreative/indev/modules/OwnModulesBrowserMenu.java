@@ -48,7 +48,7 @@ public class OwnModulesBrowserMenu extends ListBrowserMenu<Module> {
     public OwnModulesBrowserMenu(Player player) {
         super(player,getLocaleMessage("menus.own-modules.title",false),PlacementLayout.BOTTOM_NO_DECORATION,
                 new int[]{45},new int[]{45,46,52,53});
-        this.modules = new ArrayList<>(ModuleManager.getInstance().getModules());
+        this.modules = new ArrayList<>(ModuleManager.getInstance().getPlayerModules(player.getUniqueId()));
         Comparator<Module> sortByOnline = Comparator.comparingLong(module -> module.getInformation().getCreationTime());
         this.modules.sort(sortByOnline);
     }
