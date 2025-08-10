@@ -30,6 +30,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class AddItemLoreLineAction extends VariableAction {
@@ -47,9 +48,9 @@ public final class AddItemLoreLineAction extends VariableAction {
         }
         List<Component> newLore = meta.lore();
         if (newLore == null) {
-            return;
+            newLore = new ArrayList<>();
         }
-        Component text = Component.text(getArguments().getValue("line","",this));
+        Component text = getArguments().getValue("line",Component.text(""),this);
         newLore.add(text);
         meta.lore(newLore);
         item.setItemMeta(meta);
