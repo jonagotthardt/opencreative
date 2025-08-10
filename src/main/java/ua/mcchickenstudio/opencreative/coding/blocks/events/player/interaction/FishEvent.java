@@ -19,13 +19,15 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction;
 
 import org.bukkit.event.Cancellable;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.ItemEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 
-public final class FishEvent extends WorldEvent implements Cancellable {
+public final class FishEvent extends WorldEvent implements Cancellable, ItemEvent {
 
     private final PlayerFishEvent event;
     private ItemStack caughtItem = null;
@@ -33,9 +35,14 @@ public final class FishEvent extends WorldEvent implements Cancellable {
     public FishEvent(Player player, PlayerFishEvent event) {
         super(player);
         this.event = event;
-        if (event.getCaught() instanceof Item) {
-            caughtItem = ((Item) event.getCaught()).getItemStack();
+        if (event.getCaught() instanceof Item item) {
+            caughtItem = item.getItemStack();
         }
+    }
+
+    @Override
+    public @NotNull ItemStack getItem() {
+        return caughtItem == null ? ItemStack.empty() : caughtItem;
     }
 
     @Override
@@ -48,7 +55,4 @@ public final class FishEvent extends WorldEvent implements Cancellable {
         return event.isCancelled();
     }
 
-    public ItemStack getCaughtItem() {
-        return caughtItem;
-    }
 }

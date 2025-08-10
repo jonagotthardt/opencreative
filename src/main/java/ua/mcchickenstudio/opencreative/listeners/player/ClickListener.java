@@ -336,7 +336,7 @@ public final class ClickListener implements Listener {
                         }
                     }
                 } else {
-                    new ItemChangeEvent(event.getPlayer()).callEvent();
+                    new ItemChangeEvent(event.getPlayer(), event).callEvent();
                 }
             }
         }

@@ -19,12 +19,14 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory;
 
 import org.bukkit.event.Cancellable;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.ItemEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-public final class ItemPickupEvent extends WorldEvent implements Cancellable {
+public final class ItemPickupEvent extends WorldEvent implements Cancellable, ItemEvent {
 
     private final ItemStack item;
     private final EntityPickupItemEvent event;
@@ -45,7 +47,8 @@ public final class ItemPickupEvent extends WorldEvent implements Cancellable {
         return event.isCancelled();
     }
 
-    public ItemStack getItem() {
+    @Override
+    public @NotNull ItemStack getItem() {
         return item;
     }
 }
