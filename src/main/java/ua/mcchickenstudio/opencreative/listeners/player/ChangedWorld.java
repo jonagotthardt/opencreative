@@ -74,6 +74,16 @@ public final class ChangedWorld implements Listener {
         Planet oldPlanet = OpenCreative.getPlanetsManager().getPlanetByWorld(oldWorld);
         Planet newPlanet = OpenCreative.getPlanetsManager().getPlanetByWorld(newWorld);
 
+
+        for (Player oldWorldPlayer : oldWorld.getPlayers()) {
+            hidePlayerInTab(player,oldWorldPlayer);
+            hidePlayerInTab(oldWorldPlayer,player);
+        }
+        for (Player newWorldPlayer : newWorld.getPlayers()) {
+            showPlayerFromTab(player,newWorldPlayer);
+            showPlayerFromTab(newWorldPlayer,player);
+        }
+
         if (oldPlanet != null && oldPlanet == newPlanet) {
             if (isDevPlanet(newWorld)) {
                 // Player entered developers world
@@ -82,6 +92,7 @@ public final class ChangedWorld implements Listener {
                 }
                 for (Player onlinePlayer : newPlanet.getPlayers()) {
                     showPlayerFromTab(onlinePlayer,player);
+                    showPlayerFromTab(player,onlinePlayer);
                 }
             } else {
                 // Player entered build world
@@ -168,15 +179,6 @@ public final class ChangedWorld implements Listener {
                 }
                 newPlanet.getInformation().updateIconAsync();
             }
-        }
-
-        for (Player oldWorldPlayer : oldWorld.getPlayers()) {
-            hidePlayerInTab(player,oldWorldPlayer);
-            hidePlayerInTab(oldWorldPlayer,player);
-        }
-        for (Player newWorldPlayer : newWorld.getPlayers()) {
-            showPlayerFromTab(player,newWorldPlayer);
-            showPlayerFromTab(newWorldPlayer,player);
         }
     }
 
