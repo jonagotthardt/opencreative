@@ -87,7 +87,7 @@ public class CodingBlockPlacer {
      * @param blocks configuration section containing coding blocks.
      * @return result of placing blocks.
      */
-    public @NotNull CodePlacementResult placeCodingLine(@NotNull DevPlanet devPlanet, @NotNull ConfigurationSection blocks) {
+    public @NotNull CodePlacementResult placeCodingLines(@NotNull DevPlanet devPlanet, @NotNull ConfigurationSection blocks) {
 
         if (!devPlanet.isLoaded()) return CodePlacementResult.CANNOT_PLACE;
 
@@ -100,7 +100,7 @@ public class CodingBlockPlacer {
             }
         }
 
-        return placeCodingLine(freeColumns, blocks);
+        return placeCodingLines(freeColumns, blocks);
 
     }
 
@@ -112,7 +112,7 @@ public class CodingBlockPlacer {
      * @param blocks configuration section containing coding blocks.
      * @return result of placing blocks.
      */
-    public @NotNull CodePlacementResult placeCodingLine(@NotNull List<Location> freeColumns, @NotNull ConfigurationSection blocks) {
+    public @NotNull CodePlacementResult placeCodingLines(@NotNull List<Location> freeColumns, @NotNull ConfigurationSection blocks) {
 
         int requiredColumns = blocks.getKeys(false).size();
         if (requiredColumns == 0) return CodePlacementResult.NOTHING_TO_BUILD;
@@ -397,7 +397,8 @@ public class CodingBlockPlacer {
                 x = data.getDouble("x");
                 y = data.getDouble("y");
                 z = data.getDouble("z");
-                setDisplayName(item, x + " " + y + " " + z);
+                setDisplayName(item, ChatColor.translateAlternateColorCodes('&',
+                        "&b" + x + " " + y + " " + z));
                 setPersistentData(item,getCodingValueKey(),"VECTOR");
                 return item;
             }
@@ -437,7 +438,7 @@ public class CodingBlockPlacer {
                 if (valueType.startsWith("PLOT")) {
                     valueType = valueType.replace("PLOT","PLANET");
                 }
-                EventValue eventValue = EventValues.getInstance().getById(valueType);
+                EventValue eventValue = EventValues.getInstance().getById(valueType.toLowerCase());
                 if (eventValue != null) {
                     setDisplayName(item, eventValue.getLocaleName());
                 } else {

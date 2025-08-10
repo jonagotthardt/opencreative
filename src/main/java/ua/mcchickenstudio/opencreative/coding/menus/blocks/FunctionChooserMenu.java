@@ -116,6 +116,7 @@ public class FunctionChooserMenu extends ListBrowserMenu<Location> {
                     } catch (NullPointerException ignored) {}
                 }
             } else {
+                devPlanet.setCodeChanged(true);
                 setSignLine(signLocation,3,name);
                 translateBlockSign(signLocation.getBlock());
                 getPlayer().showTitle(Title.title(

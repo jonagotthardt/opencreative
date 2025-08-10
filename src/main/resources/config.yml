@@ -268,7 +268,8 @@ groups:
         blacklisted-amount: 10 # limit of banned players
         whitelisted-amount: 10 # limit of whitelisted players
         physical-objects: 140 # limit of special physical objects (it's not sand, gravels; they can be spawned with code)
-        selected-lines-amount: 3
+        selected-lines-amount: 3 # limit of selected lines with manipulator
+        script-size: 10 # maximum size of script file in megabytes
       per-player-limit-modifiers:
         #
         # When a player joins a world or leaves from world,
@@ -337,6 +338,7 @@ groups:
         whitelisted-amount: 10
         physical-objects: 140
         selected-lines-amount: 3
+        script-size: 10
       per-player-limit-modifiers:
         executor-calls: 30
         entities-amount: 50

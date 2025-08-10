@@ -75,9 +75,11 @@ public class ExecutorTypeSelectionMenu extends BlocksWithMenusCategoryMenu<Execu
             } catch (Exception ignored) {}
             ExecutorCategory executorCategory = executorType == null ? null : ExecutorCategory.getByMaterial(codingBlock.getType());
             if (executorCategory != null) {
+                devPlanet.setCodeChanged(true);
                 setSignLine(signLocation,2, executorCategory.name().toLowerCase());
             }
             if (setSignLine(signLocation,3,typeString.toLowerCase())) {
+                devPlanet.setCodeChanged(true);
                 translateBlockSign(signLocation.getBlock());
                 getPlayer().closeInventory();
                 getPlayer().showTitle(Title.title(

@@ -259,6 +259,7 @@ public final class InteractListener implements Listener {
                 if (actionBlockCategory == ActionCategory.ELSE_CONDITION) {
                     return false;
                 }
+                devPlanet.setCodeChanged(true);
                 if (isSignLineEmpty(clickedBlock.getLocation(),(byte) 1)) {
                     setSignLine(clickedBlock.getLocation(),(byte) 1,"not");
                     Sounds.DEV_CONDITION_NOT.play(player);
@@ -443,6 +444,8 @@ public final class InteractListener implements Listener {
         if (clickedBlock.getType().name().contains("WALL_SIGN")) {
             clickedBlock = clickedBlock.getRelative(BlockFace.NORTH);
         }
+        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
+        if (devPlanet == null) return;
         if (ActionCategory.getByMaterial(clickedBlock.getType()) != null) {
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if (move(clickedBlock.getRelative(BlockFace.WEST).getLocation(),BlockFace.EAST)) {
@@ -450,12 +453,14 @@ public final class InteractListener implements Listener {
                 } else {
                     Sounds.DEV_NOT_ALLOWED.play(player);
                 }
+                devPlanet.setCodeChanged(true);
             } else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
                 if (move(clickedBlock.getRelative(-2,0,0).getLocation(),BlockFace.WEST)) {
                     Sounds.DEV_MOVE_BLOCKS_LEFT.play(player);
                 } else {
                     Sounds.DEV_NOT_ALLOWED.play(player);
                 }
+                devPlanet.setCodeChanged(true);
             }
         } else if (ExecutorCategory.getByMaterial(clickedBlock.getType()) != null) {
             if (event.getAction() != Action.LEFT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
@@ -465,9 +470,6 @@ public final class InteractListener implements Listener {
                 return;
             }
             player.setCooldown(Material.COMPARATOR, 20);
-            DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
-            if (devPlanet == null) return;
-
             Location location = clickedBlock.getLocation();
             Set<Location> locations = devPlanet.getMarkedExecutors(player);
             int limit = OpenCreative.getSettings().getGroups().getGroup(player).getLimit(LimitType.SELECTED_LINES_AMOUNT).calculateLimit(1);

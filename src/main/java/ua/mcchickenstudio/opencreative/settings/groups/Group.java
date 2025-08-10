@@ -40,6 +40,7 @@ public class Group {
     private final int worldsLimit;
     private final int modulesLimit;
     private final int codingPlatformsLimit;
+    private final int scriptSizeLimit;
 
     private final int chatCooldown;
     private final int genericCommandCooldown;
@@ -68,6 +69,7 @@ public class Group {
         likeReward = config.getInt(path + "world.like-reward",1);
         advertisementPrice = config.getInt(path + "world.advertisement-cost",0);
         codingPlatformsLimit = config.getInt(path + "world.limits.coding-platforms",1);
+        scriptSizeLimit = config.getInt(path + "world.limits.script-size",10);
         genericCommandCooldown = config.getInt(path + "cooldowns.generic-command",5);
         advertisementCooldown = config.getInt(path + "cooldowns.advertisement",120);
         creativeChatCooldown = config.getInt(path + "cooldowns.creative-chat",5);
@@ -166,5 +168,9 @@ public class Group {
 
     public double getLikeReward() {
         return likeReward;
+    }
+
+    public int getScriptSizeLimit() {
+        return scriptSizeLimit;
     }
 }

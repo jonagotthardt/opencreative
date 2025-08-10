@@ -483,6 +483,7 @@ world:
     set: "%prefix%&fSuccessfully &6changed&f world's coding platforms generator to: &6%id%&f."
     reset: "%prefix%&fSuccessfully &6changed&f world's coding platforms generator to server's default."
     not-found: "%prefix%&cCan't find registered coding platforms generator with ID: %id%."
+  script-size-limit: "Code won't be started, because script file is too big (%amount%/%limit% MB). Please try to reduce code amount or coding items in containers (/dev)."
 creative-chat:
   turned-on: "%cc-prefix%&fYou have &6enabled&f creative chat, you can now communicate. Type /cc Hello!"
   turned-off: "%cc-prefix%&fYou have &6disabled&f creative chat, you will no longer receive messages."

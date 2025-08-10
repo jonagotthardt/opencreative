@@ -195,7 +195,7 @@ public class Planet {
                     }
                 }
                 if (devPlanet.isLoaded()) {
-                    new CodingBlockParser().parseCode(devPlanet);
+                    new CodingBlockParser(devPlanet).parseCode(devPlanet);
                 } else {
                     territory.getScript().loadCode();
                 }
@@ -502,7 +502,7 @@ public class Planet {
                     ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
                     player.getInventory().setItem(8,worldSettingsItem);
                     if (this.getDevPlanet().isLoaded() && OpenCreative.getStability().isFine()) {
-                        new CodingBlockParser().parseCode(this.getDevPlanet());
+                        new CodingBlockParser(devPlanet).parseCode(this.getDevPlanet());
                     }
                 }
                 if (!territory.isAutoSave() && worldPlayers.canBuild(player)) {
