@@ -118,7 +118,7 @@ public enum ValueType {
     /**
      * Returns stained-glass pane material,
      * that's displayed in layout menu.
-     * @return
+     * @return material of glass pane.
      */
     public Material getGlass() {
         return glass;

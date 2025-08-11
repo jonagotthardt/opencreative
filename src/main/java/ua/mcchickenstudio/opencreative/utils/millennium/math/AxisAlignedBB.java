@@ -371,7 +371,4 @@ public final class AxisAlignedBB {
         return new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
-//    public net.minecraft.server.v1_8_R3.AxisAlignedBB toNMS() {
-//        return new net.minecraft.server.v1_8_R3.AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
-//    }
 }

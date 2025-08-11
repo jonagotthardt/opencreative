@@ -34,13 +34,6 @@ public abstract class ExecutorBlock extends CodingBlock {
     }
 
     public void execute(@NotNull WorldEvent event, @NotNull List<WrappedActionBlock> actions) {
-        for (WrappedActionBlock block : actions) {
-
-        }
-        /*ActionsHandler handler = new ActionsHandler();
-        for (ActionBlock action : actions) {
-            action.execute(actionsHandler,arguments);
-        }*/
     }
 
     @Override

@@ -48,18 +48,16 @@ public class PhysService {
     }
 
     public void run() {
-        Bukkit.getScheduler().runTaskTimerAsynchronously(OpenCreative.getPlugin(), () -> {
-            AsyncScheduler.run(() -> {
-                for (final List<PhysObject> objects : objects.values()) {
-                    if (objects.isEmpty()) continue;
-                    final Set<PhysObject> toDelete = new HashSet<>();
-                    for (final PhysObject object : objects) {
-                        object.tick();
-                        if (!object.isLiving()) toDelete.add(object);
-                    }
-                    objects.removeAll(toDelete);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(OpenCreative.getPlugin(), () -> AsyncScheduler.run(() -> {
+            for (final List<PhysObject> objects : objects.values()) {
+                if (objects.isEmpty()) continue;
+                final Set<PhysObject> toDelete = new HashSet<>();
+                for (final PhysObject object : objects) {
+                    object.tick();
+                    if (!object.isLiving()) toDelete.add(object);
                 }
-            }, scheduler);
-        }, 1L, 1L);
+                objects.removeAll(toDelete);
+            }
+        }, scheduler), 1L, 1L);
     }
 }
