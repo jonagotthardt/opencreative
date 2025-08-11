@@ -319,6 +319,7 @@ public final class WorldVariables {
         return String.valueOf(value);
     }
 
+    @SuppressWarnings("unchecked")
     private Object deserializeObject(Object value, ValueType type) {
         try {
             if (type == ValueType.ITEM) {
