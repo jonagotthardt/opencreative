@@ -1,5 +1,6 @@
 package ua.mcchickenstudio.opencreative.utils.millennium.phys;
 
+@SuppressWarnings("unused")
 public final class MotionValue {
 
     private double alpha;

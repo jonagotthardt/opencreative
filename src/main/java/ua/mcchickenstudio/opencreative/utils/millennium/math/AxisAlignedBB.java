@@ -4,6 +4,7 @@ import lombok.Getter;
 import ua.mcchickenstudio.opencreative.utils.millennium.vectors.Vec3;
 
 @Getter
+@SuppressWarnings("unused")
 public final class AxisAlignedBB {
 
     public double minX;

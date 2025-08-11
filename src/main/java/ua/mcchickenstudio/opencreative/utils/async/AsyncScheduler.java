@@ -35,6 +35,7 @@ import java.util.function.Function;
  * @author kireikosasha
  * @since 5.0
  */
+@SuppressWarnings("unused")
 public class AsyncScheduler {
 
     private static final char INNER_CLASS_SEPARATOR_CHAR = '$';

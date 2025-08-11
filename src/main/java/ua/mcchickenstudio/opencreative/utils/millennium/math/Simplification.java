@@ -2,8 +2,7 @@ package ua.mcchickenstudio.opencreative.utils.millennium.math;
 
 public final class Simplification {
     public static float castTo360(float num) {
-        float value = Math.abs((num + 360) % 360 - 180);
-        return value;
+        return Math.abs((num + 360) % 360 - 180);
     }
 
     public static double scaleVal(double value, double scale) {

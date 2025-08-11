@@ -883,10 +883,6 @@ public enum ActionType {
                 || OpenCreative.getSettings().isDisabledAction(this);
     }
 
-    public String getRequiredPlugin() {
-        return requiredPlugin;
-    }
-
     public static Set<MenusCategory> getMenusCategories(ActionCategory category) {
         Set<MenusCategory> set = new HashSet<>();
         for (ActionType type : values()) {

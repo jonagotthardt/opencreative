@@ -219,11 +219,6 @@ public final class ClickListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onDrag(InventoryDragEvent event) {
-        InventoryHolder inventoryHolder = event.getInventory().getHolder();
-    }
-
     private static void cantDev(Player player) {
         player.closeInventory();
         player.sendActionBar(getLocaleMessage("world.dev-mode.cant-dev"));

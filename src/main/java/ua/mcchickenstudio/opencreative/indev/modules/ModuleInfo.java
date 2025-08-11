@@ -202,19 +202,17 @@ public class ModuleInfo {
     /**
      * Marks planet as module downloader.
      * @param planet planet that has installed module.
-     * @return true - planet just installed module, false - planet already installed this module before.
      */
-    public boolean addDownload(@NotNull Planet planet) {
+    public void addDownload(@NotNull Planet planet) {
         FileConfiguration config = getModuleConfig(module);
         List<Integer> planets = config.getIntegerList("planets");
         if (planets.contains(planet.getId())) {
-            return false;
+            return;
         }
         planets.add(planet.getId());
         setModuleConfigParameter(module, "planets", planets);
         downloads = planets.size();
         updateIconAsync();
-        return true;
     }
 
     public boolean addLike(@NotNull Player player) {

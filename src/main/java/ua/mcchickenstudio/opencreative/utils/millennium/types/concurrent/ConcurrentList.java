@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import java.util.*;
 
+@SuppressWarnings("unused")
 public final class ConcurrentList<T> {
 
     @Getter
