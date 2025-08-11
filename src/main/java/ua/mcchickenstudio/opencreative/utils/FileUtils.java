@@ -137,7 +137,7 @@ public class FileUtils {
      Loads localization file from OpenCreative/locales/ folder. If no localization file was found, then it creates a new one.
      **/
     public static void loadLocales() {
-        OpenCreative.getPlugin().getLogger().info("Loading Creative localization file...");
+        OpenCreative.getPlugin().getLogger().info("Loading localization file...");
         File folder = new File(OpenCreative.getPlugin().getDataFolder() + File.separator + "locales" + File.separator);
         if (!folder.exists()) {
             if (!folder.mkdirs()) {
@@ -168,7 +168,7 @@ public class FileUtils {
      Resets localization file from OpenCreative/locales/ folder. If localization file is detected in folder, then it will be removed and replaced with plugin's new one.
      **/
     public static void resetLocales() {
-        OpenCreative.getPlugin().getLogger().info("Resetting Creative localization file...");
+        OpenCreative.getPlugin().getLogger().info("Resetting localization file...");
         File folder = new File(OpenCreative.getPlugin().getDataFolder() + File.separator + "locales" + File.separator);
         if (!folder.exists()) {
             if (!folder.mkdirs()) {
@@ -182,7 +182,7 @@ public class FileUtils {
         }
         setDefaultLocales();
         MessageUtils.loadLocalizationFile();
-        OpenCreative.getPlugin().getLogger().info("Reset Creative localization file!");
+        OpenCreative.getPlugin().getLogger().info("Reset localization file!");
     }
 
     /**
