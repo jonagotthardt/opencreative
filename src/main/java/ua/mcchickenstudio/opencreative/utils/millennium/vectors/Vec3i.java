@@ -94,7 +94,7 @@ public class Vec3i implements Comparable {
      * Calculate squared distance to the given Vector
      */
     public double distanceSq(Vec3i to) {
-        return this.distanceSq((double) to.getX(), (double) to.getY(), (double) to.getZ());
+        return this.distanceSq(to.getX(), to.getY(), to.getZ());
     }
 
     public int compareTo(Object p_compareTo_1_) {

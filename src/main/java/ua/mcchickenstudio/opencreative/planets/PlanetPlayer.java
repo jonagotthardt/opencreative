@@ -18,21 +18,18 @@
 
 package ua.mcchickenstudio.opencreative.planets;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
@@ -53,14 +50,17 @@ public class PlanetPlayer {
     private final ItemStack[] savedInventory = new ItemStack[41];
     private final ItemStack[] savedEnderChest = new ItemStack[54];
 
-    private final Map<Location, BlockData> codingBlocksBuffer = new HashMap<>();
-
-    public PlanetPlayer(Planet currentPlanet, Player player) {
+    public PlanetPlayer(@NotNull Planet currentPlanet, @NotNull Player player) {
         this.currentPlanet = currentPlanet;
         this.player = player;
     }
 
-    public Planet getCurrentPlanet() {
+    /**
+     * Returns planet, where player is registered.
+     * @return associated planet.
+     */
+    @SuppressWarnings("unused")
+    public @NotNull Planet getCurrentPlanet() {
         return currentPlanet;
     }
 
@@ -117,7 +117,7 @@ public class PlanetPlayer {
      */
     @SuppressWarnings("unchecked")
     public boolean load() {
-        File playerDataJson = getPlayerDataJson(currentPlanet,player);
+        File playerDataJson = getPlayerDataJson(currentPlanet, player);
         if (playerDataJson == null) {
             return false;
         }
@@ -169,33 +169,17 @@ public class PlanetPlayer {
         if (playerDataJson == null) {
             return false;
         }
-        try {
-            Files.newBufferedWriter(playerDataJson.toPath() , StandardOpenOption.TRUNCATE_EXISTING);
-            FileWriter writer = new FileWriter(playerDataJson);
+        try (FileWriter writer = new FileWriter(playerDataJson)) {
+
             JSONObject playerObject = new JSONObject();
 
             JSONArray purchasesJson = new JSONArray();
             purchasesJson.addAll(purchases);
             playerObject.put("purchases",purchasesJson);
 
-            JSONArray savedInventoryJson = new JSONArray();
-            for (ItemStack item : savedInventory) {
-                final ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
-                final BukkitObjectOutputStream objectOutputStream = new BukkitObjectOutputStream(arrayOutputStream);
-                objectOutputStream.writeObject(item);
-                String itemString = Base64Coder.encodeLines(arrayOutputStream.toByteArray());
-                savedInventoryJson.add(itemString);
-            }
+            JSONArray savedInventoryJson = serializeItems(savedInventory);
             playerObject.put("saved-inventory",savedInventoryJson);
-
-            JSONArray enderChestJson = new JSONArray();
-            for (ItemStack item : savedEnderChest) {
-                final ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
-                final BukkitObjectOutputStream objectOutputStream = new BukkitObjectOutputStream(arrayOutputStream);
-                objectOutputStream.writeObject(item);
-                String itemString = Base64Coder.encodeLines(arrayOutputStream.toByteArray());
-                enderChestJson.add(itemString);
-            }
+            JSONArray enderChestJson = serializeItems(savedEnderChest);
             playerObject.put("saved-ender-chest",enderChestJson);
 
             writer.write(playerObject.toString());
@@ -207,6 +191,22 @@ public class PlanetPlayer {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private JSONArray serializeItems(ItemStack[] items) throws IOException {
+        JSONArray json = new JSONArray();
+        if (items == null) {
+            return json;
+        }
+        for (ItemStack item : items) {
+            try (ByteArrayOutputStream out = new ByteArrayOutputStream();
+                 BukkitObjectOutputStream dataOut = new BukkitObjectOutputStream(out)) {
+                 dataOut.writeObject(item);
+                 json.add(Base64Coder.encodeLines(out.toByteArray()));
+            }
+        }
+        return json;
+    }
+
     /**
      * Returns set of saved purchases IDs.
      * @return Set of saved purchases IDs.
@@ -216,19 +216,15 @@ public class PlanetPlayer {
     }
 
     /**
-     * Returns map of buffered location and block data, that
-     * are used when player copies coding lines in development planet.
-     * @return Map of location and block data of coding blocks.
-     */
-    public Map<Location, BlockData> getCodingBlocksBuffer() {
-        return codingBlocksBuffer;
-    }
-
-    /**
      * Adds purchase ID into set of saved player's purchases.
      * @param id ID of purchase.
      */
     public void addPurchase(String id) {
         purchases.add(id);
+    }
+
+    @Override
+    public int hashCode() {
+        return player.hashCode();
     }
 }

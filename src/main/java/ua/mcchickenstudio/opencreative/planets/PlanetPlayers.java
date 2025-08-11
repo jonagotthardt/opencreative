@@ -22,6 +22,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
@@ -60,8 +61,12 @@ public class PlanetPlayers {
         this.planet = planet;
     }
 
-    public void registerPlayer(Player player) {
-        planetPlayers.add(new PlanetPlayer(planet,player));
+    /**
+     * Registers player to planet.
+     * @param player online player to register.
+     */
+    public void registerPlayer(@NotNull Player player) {
+        planetPlayers.add(new PlanetPlayer(planet, player));
     }
 
     public void unregisterPlayer(Player player) {

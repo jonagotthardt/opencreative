@@ -2,6 +2,7 @@ package ua.mcchickenstudio.opencreative.indev.messages;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
+import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class PlaceholderReplacer {
         Component output = input;
         for (int i = 0; i < placeholders.size(); i++) {
             if (i >= replacements.size()) break;
-            String placeholder = "<" + placeholders.get(i) + ">";
+            @RegExp String placeholder = "<" + placeholders.get(i) + ">";
             Component replacement = replacements.get(i);
             output = output.replaceText(TextReplacementConfig.builder()
                     .match(placeholder)
