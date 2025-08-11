@@ -21,8 +21,6 @@ package ua.mcchickenstudio.opencreative.utils;
 import io.papermc.paper.persistence.PersistentDataContainerView;
 import org.bukkit.block.EntityBlockStorage;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.EntitySnapshot;
-import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.meta.*;
 import org.jetbrains.annotations.NotNull;
@@ -61,7 +59,6 @@ public class ItemUtils {
     private final static NamespacedKey CODING_LOCATION_X = new NamespacedKey(OpenCreative.getPlugin(), "oc_loc_x");
     private final static NamespacedKey CODING_LOCATION_Y = new NamespacedKey(OpenCreative.getPlugin(), "oc_loc_y");
     private final static NamespacedKey CODING_LOCATION_Z = new NamespacedKey(OpenCreative.getPlugin(), "oc_loc_z");
-    private final static int LIMIT_OF_ITEM_CHECKS = 100;
 
     public static NamespacedKey getCodingValueKey() {
         return CODING_VALUE_KEY;

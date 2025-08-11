@@ -37,7 +37,6 @@ import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListene
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.setSignLine;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebugError;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.getCodingParticleTypeKey;
 
 /**
  * <h1>CodingBlockPlacer</h1>
