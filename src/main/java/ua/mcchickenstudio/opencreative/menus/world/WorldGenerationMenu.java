@@ -20,9 +20,7 @@ package ua.mcchickenstudio.opencreative.menus.world;
 
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.utils.world.generators.WorldGenerator;
-import ua.mcchickenstudio.opencreative.utils.world.generators.WorldGenerators;
-import ua.mcchickenstudio.opencreative.utils.world.generators.WorldTemplate;
+import ua.mcchickenstudio.opencreative.utils.world.generators.*;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
@@ -83,6 +81,12 @@ public class WorldGenerationMenu extends AbstractMenu {
             case 10 -> {
                 generatorButton.next();
                 setItem(event.getRawSlot(),generatorButton.getItem());
+                WorldGenerator generator = WorldGenerators.getInstance().getById(generatorButton.getCurrentValue().toString());
+                if (generator != null) {
+                    setItem(11, generator instanceof EnvironmentCapable ? environmentButton.getItem() : DECORATION_ITEM);
+                    setItem(12, generator instanceof StructuresCapable ? generateStructures.getItem() : DECORATION_ITEM);
+                }
+
                 Sounds.MENU_GENERATION_CHANGE.play(player);
             }
             case 11 -> {

@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * Template folder must be Minecraft world folder.
  */
-public class WorldTemplate extends WorldGenerator {
+public final class WorldTemplate extends WorldGenerator {
 
     private final String folderName;
 

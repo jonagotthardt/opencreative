@@ -19,11 +19,14 @@
 package ua.mcchickenstudio.opencreative.planets;
 
 import org.bukkit.entity.*;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodeScript;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetLoadEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetUnloadEvent;
+import ua.mcchickenstudio.opencreative.utils.world.generators.EnvironmentCapable;
+import ua.mcchickenstudio.opencreative.utils.world.generators.StructuresCapable;
 import ua.mcchickenstudio.opencreative.utils.world.generators.WorldGenerator;
 import ua.mcchickenstudio.opencreative.utils.world.generators.WorldGenerators;
 import ua.mcchickenstudio.opencreative.utils.*;
@@ -192,6 +195,10 @@ public class PlanetTerritory {
         OpenCreative.getPlugin().getLogger().info("Planet " + planet.getId() + " unloaded in " + (endTime - startTime) + " ms");
     }
 
+    /**
+     * Clears temporary information stored in memory.
+     * Used on world unload.
+     */
     public void clearData() {
         stopBukkitRunnables();
         bossBars.clear();
@@ -260,13 +267,16 @@ public class PlanetTerritory {
         return script;
     }
 
-    public World generateWorld(WorldGenerator generator, World.Environment environment, long seed, boolean generateStructures) {
+    public @Nullable World generateWorld(WorldGenerator generator, World.Environment environment, long seed, boolean generateStructures) {
 
         WorldCreator worldCreator = new WorldCreator(planet.getWorldName());
-        worldCreator.generateStructures(generateStructures);
+        if (generator instanceof StructuresCapable) {
+            worldCreator.generateStructures(generateStructures);
+        }
         worldCreator.type(WorldType.FLAT);
-        worldCreator.environment(environment);
-        worldCreator.generateStructures(generateStructures);
+        if (generator instanceof EnvironmentCapable capable) {
+            worldCreator.environment(environment);
+        }
         worldCreator.seed(seed);
 
         generator.modifyWorldCreator(worldCreator);
