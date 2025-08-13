@@ -213,6 +213,7 @@ same-player: "%prefix%&cYou cannot specify yourself."
 same-world: "%prefix%&cYou are already playing in this world."
 player-error: "&6 Worlds &8| &fA player error occurred. Please report this to the developer: &6%error%"
 planet-error: "&6 Worlds &8| &fAn error occurred in the world: &6%error%"
+chat-no-near-players: "&c Seems like there's no players in world.. Maybe you can try to use global chat?\n &cAdd ! in the begin of message, or use /cc command."
 coding-error:
   message: "\n &c &m                   &c ☹ ERROR &m                   \n&f\n &fOops, it seems there was a problem executing &f%event% &7-> &f%action% &7(%x%,%y%,%z%)\n \n&f Information: &6%error%\n \n &c &m                                                    \n&f"
   message-event-critical: "\n &4 &m          &4 ☠ CRITICAL ERROR &m          \n&f\n &cATTENTION! &fThe world has been put into build mode because a serious issue occurred during the execution of the code &f%event% &7(%x%,%y%,%z%)...\n \n&f Information: &6%error%\n \n &4 &m                                                    \n&f"

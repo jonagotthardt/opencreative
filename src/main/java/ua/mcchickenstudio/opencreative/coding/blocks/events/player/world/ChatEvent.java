@@ -28,6 +28,7 @@ public final class ChatEvent extends WorldEvent implements Cancellable {
 
     private final String message;
     private boolean cancelled;
+    private boolean handledByCode;
 
     public ChatEvent(Player player, String message) {
         super(player);
@@ -38,6 +39,14 @@ public final class ChatEvent extends WorldEvent implements Cancellable {
         string = string.replace("\\n"," ");
         string = KeyPlaceholder.getPatternPlaceholder().matcher(string).replaceAll(" ");
         return KeyValuePlaceholder.getPattern().matcher(string).replaceAll(" ");
+    }
+
+    public void setHandledByCode(boolean handledByCode) {
+        this.handledByCode = handledByCode;
+    }
+
+    public boolean isHandledByCode() {
+        return handledByCode;
     }
 
     public String getMessage() {
