@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.utils;
 
 import io.papermc.paper.persistence.PersistentDataContainerView;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.block.EntityBlockStorage;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.InventoryHolder;
@@ -389,6 +390,9 @@ public class ItemUtils {
     public static ItemStack fixItem(@NotNull ItemStack item) {
         Settings settings = OpenCreative.getSettings();
         return fixItem(item,
+                settings.getItemsDisplayNameMaxLength(),
+                settings.getItemsLoreLineMaxLength(),
+                settings.getItemsLoreLinesMaxAmount(),
                 settings.getItemsMaxEnchantLevel(),
                 settings.getItemsMaxBookPagesAmount(),
                 settings.isItemsRemoveClickableBooks(),
@@ -414,7 +418,11 @@ public class ItemUtils {
      * @param removeAttributes removes attribute modifiers (scale).
      */
     @SuppressWarnings("deprecation")
-    public static ItemStack fixItem(@NotNull ItemStack item, int maxEnchantLevel,
+    public static ItemStack fixItem(@NotNull ItemStack item,
+                                    int displayNameMaxLength,
+                                    int loreLineMaxLength,
+                                    int loreLinesLimit,
+                                    int maxEnchantLevel,
                                     int bookPagesLimit, boolean removeClickableBooks,
                                     int containerBigItemsLimit, int entitiesLimit, boolean removeCustomEggs,
                                     boolean removeBossEggs, boolean removeAttributes) {
@@ -427,20 +435,20 @@ public class ItemUtils {
                     sendDebug("[ITEMS] Destroyed item with too many enchantments.");
                     item.setType(Material.AIR);
                     item.setItemMeta(null);
-                    return item;
-                }
-                List<Enchantment> badEnchants = new ArrayList<>();
-                for (Enchantment enchant : meta.getEnchants().keySet()) {
-                    if (meta.getEnchantLevel(enchant) > maxEnchantLevel) {
-                        badEnchants.add(enchant);
+                } else {
+                    List<Enchantment> badEnchants = new ArrayList<>();
+                    for (Enchantment enchant : meta.getEnchants().keySet()) {
+                        if (meta.getEnchantLevel(enchant) > maxEnchantLevel) {
+                            badEnchants.add(enchant);
+                        }
                     }
-                }
-                if (!badEnchants.isEmpty()) {
-                    for (Enchantment enchantment : badEnchants) {
-                        meta.removeEnchant(enchantment);
+                    if (!badEnchants.isEmpty()) {
+                        for (Enchantment enchantment : badEnchants) {
+                            meta.removeEnchant(enchantment);
+                        }
+                        item.setItemMeta(meta);
+                        sendDebug("[ITEMS] Cleared enchants");
                     }
-                    item.setItemMeta(meta);
-                    sendDebug("[ITEMS] Cleared enchants");
                 }
             }
             if (meta.hasAttributeModifiers() && meta.getAttributeModifiers() != null && removeAttributes) {
@@ -473,6 +481,45 @@ public class ItemUtils {
                     }
                     item.setItemMeta(meta);
                     sendDebug("[ITEMS] Cleared persistent data");
+                }
+            }
+            if (meta.hasDisplayName()) {
+                Component component = meta.displayName();
+                if (component != null) {
+                    String displayName = LegacyComponentSerializer.legacySection().serialize(component);
+                    if (displayName.length() > displayNameMaxLength) {
+                        displayName = displayName.substring(0, displayNameMaxLength);
+                        meta.displayName(LegacyComponentSerializer.legacySection().deserialize(displayName));
+                        item.setItemMeta(meta);
+                        sendDebug("[ITEMS] Fixed too long display name");
+                    }
+                }
+            }
+            if (meta.hasLore()) {
+                List<Component> lore = item.lore();
+                if (lore != null) {
+                    if (lore.size() > loreLinesLimit) {
+                        meta.lore(null);
+                        item.setItemMeta(meta);
+                        sendDebug("[ITEMS] Fixed too many lore lines");
+                    }
+                    List<Component> newLore = new ArrayList<>(lore);
+                    int loreIndex = 0;
+                    boolean needsToChange = false;
+                    for (Component loreLine : lore) {
+                        String line = LegacyComponentSerializer.legacySection().serialize(loreLine);
+                        if (line.length() > loreLineMaxLength) {
+                            needsToChange = true;
+                            line = line.substring(0, loreLineMaxLength);
+                            newLore.set(loreIndex, LegacyComponentSerializer.legacySection().deserialize(line));
+                            sendDebug("[ITEMS] Fixed too long lore line");
+                        }
+                        loreIndex++;
+                    }
+                    if (needsToChange) {
+                        meta.lore(newLore);
+                        item.setItemMeta(meta);
+                    }
                 }
             }
             switch (meta) {
