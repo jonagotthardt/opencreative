@@ -1,9 +1,6 @@
 package ua.mcchickenstudio.opencreative.utils.world.generators;
 
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
-import org.bukkit.WorldType;
+import org.bukkit.*;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +16,11 @@ public final class LargeBiomesGenerator extends WorldGenerator {
     }
 
     @Override
-    public void afterCreation(@NotNull World world) {}
+    public void afterCreation(@NotNull World world) {
+        int y = world.getHighestBlockYAt(0,0)+3;
+        Location spawn = new Location(world, 0, y+1, 0, -90, -6);
+        world.setSpawnLocation(spawn);
+    }
 
     @Override
     public @NotNull String getExtensionId() {
