@@ -119,7 +119,7 @@ public class AdvertisementCommand extends CommandHandler {
             double advertisementPrice = OpenCreative.getSettings().getGroups().getGroup(player).getAdvertisementPrice();
 
             if (playerBalance < advertisementPrice) {
-                player.sendMessage(getLocaleMessage("advertisement.no-money", player)
+                player.sendMessage(getPlayerLocaleMessage("advertisement.no-money", player)
                         .replace("%money%", String.valueOf(Math.round(advertisementPrice - playerBalance))));
                 return;
             } else {
@@ -141,12 +141,12 @@ public class AdvertisementCommand extends CommandHandler {
         Player inviteReceiver = Bukkit.getPlayer(inviteeName);
 
         if (inviteReceiver == null) {
-            player.sendMessage(getLocaleMessage("no-player-found", player));
+            player.sendMessage(getPlayerLocaleMessage("no-player-found", player));
             return;
         }
 
         if (player.equals(inviteReceiver)) {
-            player.sendMessage(getLocaleMessage("same-world", player));
+            player.sendMessage(getPlayerLocaleMessage("same-world", player));
             return;
         }
 
@@ -155,7 +155,7 @@ public class AdvertisementCommand extends CommandHandler {
         if (foundPlanet == null) {
             Sounds.PLAYER_FAIL.play(player);
             player.clearTitle();
-            player.sendMessage(getLocaleMessage("no-planet-found", player));
+            player.sendMessage(getPlayerLocaleMessage("no-planet-found", player));
             return;
         }
 

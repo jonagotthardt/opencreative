@@ -41,8 +41,6 @@ import org.json.simple.parser.JSONParser;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 import static org.apache.commons.io.FileUtils.byteCountToDisplaySize;
@@ -207,6 +205,7 @@ public final class WorldVariables {
     /**
      * Saves variables with type saved into /planet/variables.json file.
      */
+    @SuppressWarnings("unchecked")
     public void save() {
         long startTime = System.currentTimeMillis();
         OpenCreative.getPlugin().getLogger().info("Saving variables for planet " + planet.getId());
@@ -217,7 +216,6 @@ public final class WorldVariables {
         }
         JSONArray jsonArray = new JSONArray();
         try (FileWriter file = new FileWriter(variablesJson.getPath())) {
-            Files.newBufferedWriter(variablesJson.toPath() , StandardOpenOption.TRUNCATE_EXISTING);
             for (WorldVariable worldVariable : variables) {
                 if (worldVariable.getVarType() != VariableLink.VariableType.SAVED) {
                     continue;
@@ -270,8 +268,10 @@ public final class WorldVariables {
                 List<Object> newList = new ArrayList<>();
                 for (Object element : list) {
                     Map<String,Object> parsedElement = new HashMap<>();
-                    parsedElement.put("type",ValueType.getByObject(element).name());
-                    parsedElement.put("value",serializeObject(element));
+                    ValueType insideType = ValueType.getByObject(element);
+                    if (insideType == null) insideType = ValueType.TEXT;
+                    parsedElement.put("type", insideType.name());
+                    parsedElement.put("value", serializeObject(element));
                     newList.add(parsedElement);
                 }
                 return newList;
@@ -279,11 +279,16 @@ public final class WorldVariables {
                 Map<Object,Object> newMap = new HashMap<>();
                 for (Object key : map.keySet()) {
                     Map<String,Object> newKey = new HashMap<>();
-                    newKey.put("type",ValueType.getByObject(key).name());
-                    newKey.put("value",serializeObject(key));
+                    ValueType insideKeyType = ValueType.getByObject(key);
+                    if (insideKeyType == null) insideKeyType = ValueType.TEXT;
+                    newKey.put("type", insideKeyType.name());
+                    newKey.put("value", serializeObject(key));
+
                     Map<String,Object> newValue = new HashMap<>();
-                    newValue.put("type",ValueType.getByObject(map.get(key)).name());
-                    newValue.put("value",serializeObject(map.get(key)));
+                    ValueType insideValueType = ValueType.getByObject(key);
+                    if (insideValueType == null) insideValueType = ValueType.TEXT;
+                    newValue.put("type", insideValueType.name());
+                    newValue.put("value", serializeObject(map.get(key)));
                     String serializedKey = new JSONObject(newKey).toString();
                     newMap.put(serializedKey, newValue);
                 }
@@ -314,6 +319,7 @@ public final class WorldVariables {
         return String.valueOf(value);
     }
 
+    @SuppressWarnings("unchecked")
     private Object deserializeObject(Object value, ValueType type) {
         try {
             if (type == ValueType.ITEM) {

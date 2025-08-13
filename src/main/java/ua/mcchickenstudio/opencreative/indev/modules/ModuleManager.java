@@ -29,6 +29,7 @@ import ua.mcchickenstudio.opencreative.coding.CodeConfiguration;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
+import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 
 import java.io.File;
 import java.util.*;
@@ -87,8 +88,8 @@ public class ModuleManager {
             return;
         }
         configuration.set("owner",owner.getUniqueId().toString());
-        configuration.set("name",getLocaleMessage("modules.default-name",owner));
-        configuration.set("description",getLocaleMessage("modules.default-description",owner));
+        configuration.set("name", MessageUtils.getPlayerLocaleMessage("modules.default-name",owner));
+        configuration.set("description", MessageUtils.getPlayerLocaleMessage("modules.default-description",owner));
         configuration.set("icon", Material.CHEST.name());
         configuration.set("creation-time", System.currentTimeMillis());
         try {

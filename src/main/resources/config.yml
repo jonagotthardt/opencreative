@@ -174,6 +174,10 @@ item-fixer:
   # will be edited or entirely removed from
   # player's inventory.
   #
+  display-name-max-length: 64 # Maximum length of item's display name
+  lore-line-max-length: 100 # Maximum length of lore line in item
+  lore-lines-max-amount: 25 # Maximum lines amount in item
+
   max-enchantment-level: 10 # Maximum enchantment level (swords, armor...)
   container-big-items-max-amount: 3 # Limit of bad items (containers, books) inside container
   books-pages-max-amount: 50 # Limit of book pages

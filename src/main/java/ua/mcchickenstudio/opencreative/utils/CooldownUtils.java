@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.utils;
 
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.settings.groups.Group;
 
 import java.util.HashMap;

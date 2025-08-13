@@ -68,10 +68,6 @@ public abstract class ContentWithMenusCategoryMenu<T> extends ListBrowserMenu<T>
         this.currentCategory = currentCategory;
     }
 
-    public MenusCategory getCurrentCategory() {
-        return currentCategory;
-    }
-
     @Override
     protected void fillArrowsItems(int currentPage) {
         if (elements.isEmpty()) {

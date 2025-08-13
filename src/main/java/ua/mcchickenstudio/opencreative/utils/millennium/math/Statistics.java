@@ -283,9 +283,8 @@ public final class Statistics {
     }
 
     /**
-     * @param - The collection of numbers you want analyze
-     * @return - A pair of the high and low outliers
-     * @See - https://en.wikipedia.org/wiki/Outlier
+     * @param collection The collection of numbers you want to analyze.
+     * @return A pair of the high and low <a href="https://en.wikipedia.org/wiki/Outlier">outliers</a>.
      */
     public static Pair<List<Double>, List<Double>> getOutliers(final Collection<? extends Number> collection) {
         final List<Double> values = new ArrayList<>();

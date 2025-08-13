@@ -4,6 +4,7 @@ import lombok.Getter;
 import ua.mcchickenstudio.opencreative.utils.millennium.vectors.Vec3;
 
 @Getter
+@SuppressWarnings("unused")
 public final class AxisAlignedBB {
 
     public double minX;
@@ -371,7 +372,4 @@ public final class AxisAlignedBB {
         return new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
-//    public net.minecraft.server.v1_8_R3.AxisAlignedBB toNMS() {
-//        return new net.minecraft.server.v1_8_R3.AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
-//    }
 }

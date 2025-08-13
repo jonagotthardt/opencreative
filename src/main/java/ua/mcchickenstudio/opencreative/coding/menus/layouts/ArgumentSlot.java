@@ -75,10 +75,6 @@ public class ArgumentSlot {
         return path;
     }
 
-    public final boolean isItemStack() {
-        return varType == ValueType.ITEM || varType == ValueType.ANY;
-    }
-
     public boolean isParameter() {
         return varType == ValueType.PARAMETER;
     }

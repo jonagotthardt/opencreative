@@ -30,13 +30,6 @@ public final class MovingObjectPosition {
         this.hitVec = new Vec3(hitVecIn.xCoord, hitVecIn.yCoord, hitVecIn.zCoord);
     }
 
-//    public MovingObjectPosition(Entity entityHitIn, Vec3 hitVecIn)
-//    {
-//        this.typeOfHit = MovingObjectType.ENTITY;
-//        this.entityHit = entityHitIn;
-//        this.hitVec = hitVecIn;
-//    }
-
     public MovingObjectPosition(Vec3 hitVecIn) {
         this.typeOfHit = MovingObjectType.ENTITY;
         this.hitVec = hitVecIn;

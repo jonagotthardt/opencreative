@@ -30,6 +30,7 @@ import ua.mcchickenstudio.opencreative.menus.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
+import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
 import java.util.*;
@@ -144,7 +145,7 @@ public class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
             }
             for (Player p : planet.getPlayers()) {
                 if (planet.getWorldPlayers().canBuild(p)) {
-                    p.sendMessage(getLocaleMessage("menus.entities-browser.removed-all", getPlayer()).replace("%count%",String.valueOf(count)));
+                    p.sendMessage(MessageUtils.getPlayerLocaleMessage("menus.entities-browser.removed-all", getPlayer()).replace("%count%",String.valueOf(count)));
                 }
             }
             elements.removeIf(Entity::isDead);
@@ -202,7 +203,7 @@ public class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
             case SHIFT_LEFT -> {
                 for (Player p : planet.getPlayers()) {
                     if (planet.getWorldPlayers().canBuild(p)) {
-                        p.sendMessage(getLocaleMessage("menus.entities-browser.removed", getPlayer())
+                        p.sendMessage(MessageUtils.getPlayerLocaleMessage("menus.entities-browser.removed", getPlayer())
                                 .replace("%name%",entity.getName().substring(0,Math.min(20,entity.getName().length())))
                                 .replace("%x%",String.valueOf(entity.getLocation().getBlockX()))
                                 .replace("%y%",String.valueOf(entity.getLocation().getBlockY()))

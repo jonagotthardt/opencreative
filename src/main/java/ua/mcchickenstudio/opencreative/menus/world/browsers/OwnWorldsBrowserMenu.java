@@ -123,16 +123,20 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
         if (itemEquals(item,RECOMMENDED)) {
             new RecommendedWorldsMenu().open(getPlayer());
         } else if (itemEquals(item,CREATE_WORLD)) {
-            if (isLimitReached()) {
-                long playedSeconds = (System.currentTimeMillis()-getPlayer().getFirstPlayed())/1000;
-                if (OpenCreative.getSettings().getWorldCreationMinSeconds() > playedSeconds) {
+            if (isNotLimitReached()) {
+                long now = System.currentTimeMillis();
+                long minSeconds = OpenCreative.getSettings().getWorldCreationMinSeconds();
+                long playedSeconds = (now - getPlayer().getFirstPlayed()) / 1000;
+
+                if (playedSeconds < minSeconds) {
+                    long unlockTime = now + ((minSeconds - playedSeconds) * 1000);
+
                     Sounds.PLAYER_CANCEL.play(getPlayer());
                     getPlayer().closeInventory();
-                    getPlayer().sendMessage(getLocaleMessage("creating-world.not-enough-played", getPlayer())
-                            .replace("%time%", convertTime(
-                                    System.currentTimeMillis() +
-                                            (OpenCreative.getSettings().getWorldCreationMinSeconds()-playedSeconds)*1000
-                                    )));
+                    getPlayer().sendMessage(
+                            MessageUtils.getPlayerLocaleMessage("creating-world.not-enough-played", getPlayer())
+                                    .replace("%time%", convertTime(unlockTime))
+                    );
                     return;
                 }
                 new WorldGenerationMenu(getPlayer()).open(getPlayer());
@@ -198,7 +202,7 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
         Sounds.MENU_OPEN_OWN_WORLDS_BROWSER.play(event.getPlayer());
     }
 
-    private boolean isLimitReached() {
+    private boolean isNotLimitReached() {
         int planetsAmount = OpenCreative.getPlanetsManager().getPlanetsByOwner(getPlayer()).size();
         int planetsLimit = OpenCreative.getSettings().getGroups().getGroup(getPlayer()).getWorldsLimit();
         return planetsAmount < planetsLimit;

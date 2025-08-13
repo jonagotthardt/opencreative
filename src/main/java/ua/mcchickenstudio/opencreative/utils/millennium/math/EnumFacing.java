@@ -201,10 +201,10 @@ public enum EnumFacing {
     private EnumFacing rotateX() {
         return switch (SwitchPlane.FACING_LOOKUP[this.ordinal()]) {
             case 1 -> DOWN;
-            default -> throw new IllegalStateException("Unable to get X-rotated facing of " + this);
             case 3 -> UP;
             case 5 -> NORTH;
             case 6 -> SOUTH;
+            default -> throw new IllegalStateException("Unable to get X-rotated facing of " + this);
         };
     }
 
@@ -214,10 +214,10 @@ public enum EnumFacing {
     private EnumFacing rotateZ() {
         return switch (SwitchPlane.FACING_LOOKUP[this.ordinal()]) {
             case 2 -> DOWN;
-            default -> throw new IllegalStateException("Unable to get Z-rotated facing of " + this);
             case 4 -> UP;
             case 5 -> EAST;
             case 6 -> WEST;
+            default -> throw new IllegalStateException("Unable to get Z-rotated facing of " + this);
         };
     }
 

@@ -172,7 +172,7 @@ public class WorldCommand extends CommandHandler {
                     sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
                     return;
                 }
-                sender.sendMessage(getLocaleMessage("world.players.white-list.added", playerToWhitelist));
+                sender.sendMessage(getPlayerLocaleMessage("world.players.white-list.added", playerToWhitelist));
                 planet.getWorldPlayers().banPlayer(args[1]);
             }
             case "ban", "block", "blacklist" -> {
@@ -199,10 +199,10 @@ public class WorldCommand extends CommandHandler {
                     return;
                 }
                 if (playerToBan.hasPermission("opencreative.world.ban.bypass")) {
-                    sender.sendMessage(getLocaleMessage("world.players.black-list.cannot", playerToBan));
+                    sender.sendMessage(getPlayerLocaleMessage("world.players.black-list.cannot", playerToBan));
                     return;
                 }
-                sender.sendMessage(getLocaleMessage("world.players.black-list.added", playerToBan));
+                sender.sendMessage(getPlayerLocaleMessage("world.players.black-list.added", playerToBan));
                 planet.getWorldPlayers().banPlayer(args[1]);
             }
             case "kick" -> {
@@ -230,7 +230,7 @@ public class WorldCommand extends CommandHandler {
                         return;
                     }
                     if (playerToKick.hasPermission("opencreative.world.kick.bypass")) {
-                        sender.sendMessage(getLocaleMessage("world.players.kick.cannot", playerToKick));
+                        sender.sendMessage(getPlayerLocaleMessage("world.players.kick.cannot", playerToKick));
                         return;
                     }
                     playersToKick.add(playerToKick);
@@ -257,7 +257,7 @@ public class WorldCommand extends CommandHandler {
                     return;
                 }
                 planet.getWorldPlayers().unbanPlayer(args[1]);
-                sender.sendMessage(getLocaleMessage("world.players.black-list.removed",Bukkit.getOfflinePlayer(args[1])));
+                sender.sendMessage(getPlayerLocaleMessage("world.players.black-list.removed",Bukkit.getOfflinePlayer(args[1])));
             }
             case "unwhitelist", "unwhite" -> {
                 if (!planet.isOwner(player)) {
@@ -277,7 +277,7 @@ public class WorldCommand extends CommandHandler {
                     return;
                 }
                 planet.getWorldPlayers().removeFromWhitelist(args[1]);
-                sender.sendMessage(getLocaleMessage("world.players.white-list.removed",Bukkit.getOfflinePlayer(args[1])));
+                sender.sendMessage(getPlayerLocaleMessage("world.players.white-list.removed",Bukkit.getOfflinePlayer(args[1])));
             }
             case "exp", "e", "experiment", "experiments" -> {
                 if (!planet.isOwner(player)) {

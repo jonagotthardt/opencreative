@@ -7,7 +7,7 @@ import org.bukkit.WorldType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public final class EmptyGenerator extends WorldGenerator {
+public final class EmptyGenerator extends WorldGenerator implements EnvironmentCapable {
 
     public EmptyGenerator() {
         super("empty", new ItemStack(Material.GLASS));

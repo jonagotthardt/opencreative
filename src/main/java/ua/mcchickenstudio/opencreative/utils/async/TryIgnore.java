@@ -21,6 +21,8 @@ package ua.mcchickenstudio.opencreative.utils.async;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+
+@SuppressWarnings("unused")
 public class TryIgnore {
 
     public static ThrowableHandler throwableHandler = Throwable::printStackTrace;
@@ -98,17 +100,17 @@ public class TryIgnore {
 
     public interface SupplierThrows<T> {
 
-        T get() throws Exception;
+        T get();
     }
 
     public interface RunnableThrows {
 
-        void run() throws Exception;
+        void run();
     }
 
     public interface PredicateThrows<T> {
 
-        boolean test(T val) throws Exception;
+        boolean test(T val);
     }
 
     public interface ThrowableHandler {

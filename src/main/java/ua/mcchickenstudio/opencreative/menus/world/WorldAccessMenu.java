@@ -94,7 +94,7 @@ public class WorldAccessMenu extends AbstractMenu implements WorldMenu {
             case "connect" -> {
                 player.closeInventory();
                 if (planet.equals(OpenCreative.getPlanetsManager().getPlanetByPlayer(player))) {
-                    player.sendMessage(getLocaleMessage("same-world", player));
+                    player.sendMessage(getPlayerLocaleMessage("same-world", player));
                     Sounds.PLAYER_FAIL.play(player);
                     return;
                 }
@@ -153,7 +153,7 @@ public class WorldAccessMenu extends AbstractMenu implements WorldMenu {
                     double playerBalance = OpenCreative.getEconomy().getBalance(player).doubleValue();
                     double advertisementPrice = OpenCreative.getSettings().getGroups().getGroup(player).getAdvertisementPrice();
                     if (playerBalance < advertisementPrice) {
-                        player.sendMessage(getLocaleMessage("advertisement.no-money", player)
+                        player.sendMessage(getPlayerLocaleMessage("advertisement.no-money", player)
                                 .replace("%money%", String.valueOf(Math.round(advertisementPrice - playerBalance))));
                         Sounds.PLAYER_FAIL.play(player);
                         player.setCooldown(item.getType(), OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown()*20);

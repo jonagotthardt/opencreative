@@ -29,6 +29,7 @@ import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.groups.Group;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 
 
 import java.util.Collections;
@@ -76,9 +77,9 @@ public class JoinCommand extends CommandHandler {
                 sender.sendMessage(getLocaleMessage("not-found-player"));
                 return;
             }
-            sender.sendMessage(getLocaleMessage("commands.join.connecting", player).replace("%id%",args[0]));
+            sender.sendMessage(MessageUtils.getPlayerLocaleMessage("commands.join.connecting", player).replace("%id%",args[0]));
             if (!handlePlayerConnection(player, args[0])) {
-                sender.sendMessage(getLocaleMessage("commands.join.failed", player));
+                sender.sendMessage(MessageUtils.getPlayerLocaleMessage("commands.join.failed", player));
             }
         } else if (args.length != 1) {
             sender.sendMessage(getLocaleMessage("commands.join.help"));
@@ -95,12 +96,12 @@ public class JoinCommand extends CommandHandler {
         if (foundPlanet == null) {
             Sounds.PLAYER_FAIL.play(player);
             player.clearTitle();
-            player.sendMessage(getLocaleMessage("no-planet-found", player));
+            player.sendMessage(MessageUtils.getPlayerLocaleMessage("no-planet-found", player));
             return false;
         }
 
         if (foundPlanet.equals(OpenCreative.getPlanetsManager().getPlanetByPlayer(player))) {
-            player.sendMessage(getLocaleMessage("same-world", player));
+            player.sendMessage(MessageUtils.getPlayerLocaleMessage("same-world", player));
             return false;
         }
 

@@ -40,6 +40,7 @@ import ua.mcchickenstudio.opencreative.managers.stability.StabilityState;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.groups.Group;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
+import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 
 import java.time.Duration;
@@ -444,11 +445,11 @@ public class Planet {
         }
         if (!isOwner(player.getName())) {
             if (getSharing() != Sharing.PUBLIC && !player.hasPermission("opencreative.world.private.bypass") && !worldPlayers.isWhitelisted(player.getName())) {
-                player.sendMessage(getLocaleMessage("private-planet", player));
+                player.sendMessage(MessageUtils.getPlayerLocaleMessage("private-planet", player));
                 return;
             }
             if (worldPlayers.isBanned(player.getName()) && !player.hasPermission("opencreative.world.banned.bypass")) {
-                player.sendMessage(getLocaleMessage("blacklisted-in-planet", player));
+                player.sendMessage(MessageUtils.getPlayerLocaleMessage("blacklisted-in-planet", player));
                 return;
             }
         }
@@ -469,7 +470,7 @@ public class Planet {
             if (success) {
                 if (!hidePlayer && getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
                     for (Player onlinePlayer : getPlayers()) {
-                        onlinePlayer.sendMessage(getLocaleMessage("world.joined", player));
+                        onlinePlayer.sendMessage(MessageUtils.getPlayerLocaleMessage("world.joined", player));
                     }
                 }
                 clearPlayer(player);
@@ -483,7 +484,7 @@ public class Planet {
                     info.setUniques(info.getUniques()+1);
                     if (this.isOwner(player)) {
                         player.showTitle(Title.title(
-                                toComponent(getLocaleMessage("creating-world.welcome-title",player)), toComponent(getLocaleMessage("creating-world.welcome-subtitle",player)),
+                                toComponent(MessageUtils.getPlayerLocaleMessage("creating-world.welcome-title",player)), toComponent(MessageUtils.getPlayerLocaleMessage("creating-world.welcome-subtitle",player)),
                                 Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(9), Duration.ofSeconds(2))
                         ));
                         player.sendMessage(getLocaleMessage("creating-world.welcome"));
@@ -494,7 +495,7 @@ public class Planet {
                     }
                 } else {
                     if (isOwner(player) && getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
-                        player.sendMessage(getLocaleMessage("world.connecting.owner-help",player));
+                        player.sendMessage(MessageUtils.getPlayerLocaleMessage("world.connecting.owner-help",player));
                     }
                 }
                 if (this.isOwner(player.getName())) {
@@ -557,7 +558,7 @@ public class Planet {
             if (success) {
                 if (!hidePlayer) {
                     for (Player onlinePlayer : player.getWorld().getPlayers()) {
-                        onlinePlayer.sendMessage(getLocaleMessage("world.dev-mode.joined", player));
+                        onlinePlayer.sendMessage(MessageUtils.getPlayerLocaleMessage("world.dev-mode.joined", player));
                     }
                 } else {
                     player.setGameMode(GameMode.SPECTATOR);

@@ -79,7 +79,7 @@ public class WorldModerationMenu extends AbstractMenu implements WorldMenu {
             case "connect" -> {
                 player.closeInventory();
                 if (planet.equals(OpenCreative.getPlanetsManager().getPlanetByPlayer(player))) {
-                    player.sendMessage(getLocaleMessage("same-world", player));
+                    player.sendMessage(MessageUtils.getPlayerLocaleMessage("same-world", player));
                     Sounds.PLAYER_FAIL.play(player);
                     return;
                 }
@@ -88,7 +88,7 @@ public class WorldModerationMenu extends AbstractMenu implements WorldMenu {
             case "connect-silent" -> {
                 player.closeInventory();
                 if (planet.equals(OpenCreative.getPlanetsManager().getPlanetByPlayer(player))) {
-                    player.sendMessage(getLocaleMessage("same-world", player));
+                    player.sendMessage(MessageUtils.getPlayerLocaleMessage("same-world", player));
                     Sounds.PLAYER_FAIL.play(player);
                     return;
                 }

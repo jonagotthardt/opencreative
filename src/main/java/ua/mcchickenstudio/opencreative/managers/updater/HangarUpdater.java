@@ -25,6 +25,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -72,9 +74,8 @@ public final class HangarUpdater implements Updater {
         return future;
     }
 
-    private HttpURLConnection getHttpURLConnection() throws IOException {
-        String url = apiUrl;
-        URL requestUrl = new URL(url);
+    private HttpURLConnection getHttpURLConnection() throws IOException, URISyntaxException {
+        URL requestUrl = new URI(apiUrl).toURL();
         HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
         connection.setConnectTimeout(3000);
         connection.setReadTimeout(5000);

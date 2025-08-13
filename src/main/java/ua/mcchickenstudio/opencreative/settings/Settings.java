@@ -69,6 +69,9 @@ public class Settings {
     private int itemsMaxEntityNameLength = 48;
     private int itemsContainerBigItemsLimit = 3;
     private int itemsMaxPersistentDataSize = 2048;
+    private int itemsDisplayNameMaxLength = 64;
+    private int itemsLoreLineMaxLength = 100;
+    private int itemsLoreLinesMaxAmount = 25;
     private boolean itemsRemoveAttributes = true;
     private boolean itemsRemoveBossSpawnEggs = true;
     private boolean itemsRemoveCustomSpawnEggs = true;
@@ -169,6 +172,9 @@ public class Settings {
         itemsEntitiesMaxAmount = config.getInt("item-fixer.entities-max-amount",3);
         itemsMaxBookPagesAmount = config.getInt("item-fixer.books-pages-max-amount",50);
         itemsContainerBigItemsLimit = config.getInt("item-fixer.container-big-items-max-amount",3);
+        itemsDisplayNameMaxLength = config.getInt("item-fixer.display-name-max-length",64);
+        itemsLoreLineMaxLength = config.getInt("item-fixer.lore-line-max-length",100);
+        itemsLoreLinesMaxAmount = config.getInt("item-fixer.container-lore-lines-max-amount",25);
 
         groups.load();
         commands.load();
@@ -612,5 +618,17 @@ public class Settings {
 
     public int getItemsEntitiesMaxAmount() {
         return itemsEntitiesMaxAmount;
+    }
+
+    public int getItemsDisplayNameMaxLength() {
+        return itemsDisplayNameMaxLength;
+    }
+
+    public int getItemsLoreLineMaxLength() {
+        return itemsLoreLineMaxLength;
+    }
+
+    public int getItemsLoreLinesMaxAmount() {
+        return itemsLoreLinesMaxAmount;
     }
 }

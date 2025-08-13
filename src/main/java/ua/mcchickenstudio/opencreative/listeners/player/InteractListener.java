@@ -21,7 +21,6 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 import com.destroystokyo.paper.event.player.PlayerStartSpectatingEntityEvent;
 import com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent;
 import io.papermc.paper.event.player.PlayerNameEntityEvent;
-import net.kyori.adventure.inventory.Book;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.block.sign.Side;
 import org.bukkit.inventory.meta.SpawnEggMeta;
@@ -74,7 +73,6 @@ import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 

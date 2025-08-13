@@ -63,9 +63,7 @@ public class ExecutorsNew implements EventExecutor, Listener {
                 //event.getPlanet().getTerritory().getScript().execute(event, executorBlock);
                 /*List<WrappedExecutor> registeredExecutors = new ArrayList<>();
 
-                *//**
-                 * Not for usage.
-                 *//*
+                *//*
                 @ApiStatus.Experimental
                 public void execute(WorldEvent event, ExecutorBlock executorBlock) {
                     if (!planet.isLoaded()) return;

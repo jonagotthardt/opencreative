@@ -141,8 +141,9 @@ public class ActionsHandler {
                 } catch (Exception error) {
                     String id = error.getClass().getSimpleName().toLowerCase();
                     sendPlanetCodeErrorMessage(executor, action,
-                            getLocaleMessage("coding-error." + (messageExists("coding-error." + id) ? id : "unknown")) + (error.getMessage() == null ? error.getClass().getSimpleName() : error.getMessage()).replace("ua.mcchickenstudio.opencreative.coding.","")
-                                    .replace("%player%", error instanceof PlayerException playerException ? playerException.getPlayerName() : ""),
+                            getLocaleMessage("coding-error." + (messageExists("coding-error." + id) ? id : "unknown"))
+                                    .replace("%player%", error instanceof PlayerException playerException ? playerException.getPlayerName() : "")
+                            + (error.getMessage() == null ? error.getClass().getSimpleName() : error.getMessage()).replace("ua.mcchickenstudio.opencreative.coding.",""),
                             error);
                     removeAllActions();
                 }

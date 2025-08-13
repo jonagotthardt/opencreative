@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.executors;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.ChatEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.util.ArrayList;
@@ -75,6 +76,9 @@ public abstract class Executor {
     protected void executeActions(WorldEvent event) {
         this.event = event;
         handler = new ActionsHandler(this);
+        if (event instanceof ChatEvent chatEvent && !actions.isEmpty()) {
+            chatEvent.setHandledByCode(true);
+        }
         handler.executeActions(actions);
     }
 

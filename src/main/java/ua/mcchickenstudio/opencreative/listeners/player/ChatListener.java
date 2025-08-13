@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.listeners.player;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
@@ -88,7 +89,7 @@ public final class ChatListener implements Listener {
             Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
                 creativeEvent.callEvent();
                 if (creativeEvent.isCancelled()) return;
-                String finalMessage = formatted;
+                String finalMessage = creativeEvent.getFormattedMessage();
                 if (planet != null) {
                     DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                     if (devPlanet != null) {
@@ -110,12 +111,20 @@ public final class ChatListener implements Listener {
                             event.setCancelled(true);
                             return;
                         }
+                        if (planet.getPlayers().size() == 1 && !chatEvent.isHandledByCode()) {
+                            player.sendMessage(getLocaleComponent("chat-no-near-players", player)
+                                    .clickEvent(ClickEvent.suggestCommand("!" + message)));
+                        }
                         for (Player p : planet.getPlayers()) {
                             p.sendMessage(finalMessage);
                         }
                         OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + planet.getId() + "] " + player.getName() + ": " + message);
                     }
                 } else {
+                    if (player.getWorld().getPlayers().size() == 1) {
+                        player.sendMessage(getLocaleComponent("chat-no-near-players", player)
+                                .clickEvent(ClickEvent.suggestCommand("!" + message)));
+                    }
                     for (Player p : player.getWorld().getPlayers()) {
                         p.sendMessage(finalMessage);
                     }

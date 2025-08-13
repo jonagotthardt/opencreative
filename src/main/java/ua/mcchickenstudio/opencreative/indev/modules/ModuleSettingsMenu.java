@@ -36,7 +36,6 @@ import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menus.ConfirmationMenu;
 import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
-import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerConfirmation;
@@ -46,8 +45,6 @@ import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemDescription;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemName;
 
 public class ModuleSettingsMenu extends AbstractMenu {
 
