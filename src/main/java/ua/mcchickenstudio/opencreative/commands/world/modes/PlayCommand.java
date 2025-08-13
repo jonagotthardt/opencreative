@@ -105,7 +105,7 @@ public class PlayCommand extends CommandHandler {
                         new JoinEvent(player).callEvent();
                     }
                 } else {
-                    sender.sendMessage(getLocaleMessage("not-owner", player));
+                    sender.sendMessage(getPlayerLocaleMessage("not-owner", player));
                 }
             } else {
                 if (!new PlayEvent(player).callEvent() || planet.getWorldPlayers().canDevelop(player)) {

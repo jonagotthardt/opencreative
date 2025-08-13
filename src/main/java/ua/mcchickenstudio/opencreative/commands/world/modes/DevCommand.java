@@ -91,7 +91,7 @@ public class DevCommand extends CommandHandler {
                     PlayerInventory playerInventory = player.getInventory();
                     ItemStack[] playerInventoryItems = (OpenCreative.getPlanetsManager().getDevPlanet(player) == null ?  playerInventory.getContents() : new ItemStack[]{});
                     clearPlayer(player);
-                    sender.sendMessage(getLocaleMessage("world.dev-mode.help", player));
+                    sender.sendMessage(getPlayerLocaleMessage("world.dev-mode.help", player));
                     if (args.length == 3) {
                         try {
                             double x = Double.parseDouble(args[0]);
@@ -125,7 +125,7 @@ public class DevCommand extends CommandHandler {
                         }
                     }
                 } else {
-                    sender.sendMessage(getLocaleMessage("not-owner", player));
+                    sender.sendMessage(getPlayerLocaleMessage("not-owner", player));
                 }
             } else {
                 if (!planet.isOwner(sender.getName())) {

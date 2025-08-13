@@ -30,6 +30,7 @@ import ua.mcchickenstudio.opencreative.coding.CodingBlockPlacer;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
+import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,7 +133,7 @@ public class Module {
             return false;
         } else if (result == CodingBlockPlacer.CodePlacementResult.ERROR) {
             devPlanet.setCodeChanged(true);
-            player.sendMessage(parseModuleLines(this,getLocaleMessage("modules.fail",player)));
+            player.sendMessage(parseModuleLines(this, MessageUtils.getPlayerLocaleMessage("modules.fail",player)));
             Sounds.PLAYER_FAIL.play(player);
             return false;
         } else {
@@ -140,7 +141,7 @@ public class Module {
             Sounds.DEV_MODULE_INSTALLED.play(player);
             for (Player planetPlayer : devPlanet.getPlanet().getPlayers()) {
                 if (devPlanet.getPlanet().getWorldPlayers().canDevelop(planetPlayer)) {
-                    planetPlayer.sendMessage(parseModuleLines(this,getLocaleMessage("modules.installed",player)));
+                    planetPlayer.sendMessage(parseModuleLines(this, MessageUtils.getPlayerLocaleMessage("modules.installed",player)));
                 }
             }
             getInformation().addDownload(devPlanet.getPlanet());

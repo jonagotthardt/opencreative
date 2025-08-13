@@ -128,7 +128,7 @@ public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
                 if (OpenCreative.getSettings().getWorldCreationMinSeconds() > playedSeconds) {
                     Sounds.PLAYER_CANCEL.play(getPlayer());
                     getPlayer().closeInventory();
-                    getPlayer().sendMessage(getLocaleMessage("creating-world.not-enough-played", getPlayer())
+                    getPlayer().sendMessage(MessageUtils.getPlayerLocaleMessage("creating-world.not-enough-played", getPlayer())
                             .replace("%time%", convertTime(
                                     System.currentTimeMillis() +
                                             (OpenCreative.getSettings().getWorldCreationMinSeconds()-playedSeconds)*1000

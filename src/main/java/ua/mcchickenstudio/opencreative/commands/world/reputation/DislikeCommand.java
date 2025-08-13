@@ -61,7 +61,7 @@ public class DislikeCommand extends CommandHandler {
             long createdSeconds = (System.currentTimeMillis()-planet.getCreationTime())/1000;
             if (OpenCreative.getSettings().getWorldReputationMinSeconds() > createdSeconds) {
                 Sounds.PLAYER_CANCEL.play(player);
-                player.sendMessage(getLocaleMessage("world.cant-rate",player).replace("%time%",convertTime(OpenCreative.getSettings().getWorldReputationMinSeconds()-createdSeconds)));
+                player.sendMessage(MessageUtils.getPlayerLocaleMessage("world.cant-rate",player).replace("%time%",convertTime(OpenCreative.getSettings().getWorldReputationMinSeconds()-createdSeconds)));
                 return;
             }
             if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.LIKED).contains(sender.getName())) {
@@ -72,7 +72,7 @@ public class DislikeCommand extends CommandHandler {
                 if (FileUtils.addPlayerInPlanetList(planet,sender.getName(), Planet.PlayersType.DISLIKED)) {
                     planet.getInformation().setPlanetReputation(planet.getInformation().getReputation() -1);
                     Sounds.WORLD_DISLIKED.play(player);
-                    sender.sendMessage(MessageUtils.getLocaleMessage("world.disliked",player));
+                    sender.sendMessage(MessageUtils.getPlayerLocaleMessage("world.disliked",player));
                 }
             }
         }

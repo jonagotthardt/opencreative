@@ -31,6 +31,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
+import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 
 import java.util.*;
 
@@ -98,7 +99,7 @@ public final class ChangedWorld implements Listener {
                 // Player entered build world
                 if (!isPlayerWithLocation(player)) {
                     for (Player onlinePlayer : oldWorld.getPlayers()) {
-                        onlinePlayer.sendMessage(getLocaleMessage("world.dev-mode.left", player));
+                        onlinePlayer.sendMessage(MessageUtils.getPlayerLocaleMessage("world.dev-mode.left", player));
                     }
                     for (Player onlinePlayer : newWorld.getPlayers()) {
                         newPlanet.getTerritory().showBorders(onlinePlayer);
@@ -119,7 +120,7 @@ public final class ChangedWorld implements Listener {
                 if (oldPlanet.getOnline() > 0) {
                     if (oldPlanet.getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
                         for (Player onlinePlayer : oldPlanet.getPlayers()) {
-                            onlinePlayer.sendMessage(getLocaleMessage("world.left", player));
+                            onlinePlayer.sendMessage(MessageUtils.getPlayerLocaleMessage("world.left", player));
                         }
                     }
                     if (oldPlanet.isOwner(player)) {

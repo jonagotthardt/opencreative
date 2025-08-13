@@ -579,13 +579,13 @@ public class EnvironmentCommand extends CommandHandler {
                         }
                         if (args[1].equalsIgnoreCase("enable") || args[1].equalsIgnoreCase("on")) {
                             for (Player planetPlayer : planet.getPlayers()){
-                                planetPlayer.sendMessage(getLocaleMessage("environment.debug.enabled",player));
+                                planetPlayer.sendMessage(getPlayerLocaleMessage("environment.debug.enabled",player));
                             }
                             Sounds.DEV_DEBUG_ON.play(player);
                             planet.setDebug(true);
                         } else if (args[1].equalsIgnoreCase("disable") || args[1].equalsIgnoreCase("off")) {
                             for (Player planetPlayer : planet.getPlayers()){
-                                planetPlayer.sendMessage(getLocaleMessage("environment.debug.disabled",player));
+                                planetPlayer.sendMessage(getPlayerLocaleMessage("environment.debug.disabled",player));
                             }
                             Sounds.DEV_DEBUG_OFF.play(player);
                             planet.setDebug(false);
