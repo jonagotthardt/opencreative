@@ -20,9 +20,14 @@ package ua.mcchickenstudio.opencreative.commands;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.coding.CodeConfiguration;
+import ua.mcchickenstudio.opencreative.coding.CodingBlockPlacer;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.WebResponseEvent;
 import ua.mcchickenstudio.opencreative.indev.Items;
 import ua.mcchickenstudio.opencreative.indev.modules.ModulesBrowserMenu;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
 import ua.mcchickenstudio.opencreative.menus.CreativeMenu;
@@ -44,11 +49,20 @@ import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
+import java.net.http.HttpRequest;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.loadLocales;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.setPlanetConfigParameter;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
@@ -537,15 +551,80 @@ public class CreativeCommand extends CommandHandler {
                             .replace("%database%", OpenCreative.getStability().getDatabaseState().getLocalized())
                     );
                 }
-                case "test2" -> {
+                case "test" -> {
                     if (!sender.hasPermission("opencreative.test")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return;
                     }
                     if (player == null) return;
-                    player.sendMessage("Test of modules menu");
-                    ModulesBrowserMenu menu = new ModulesBrowserMenu(player);
-                    menu.open(player);
+                    player.sendMessage("Test of code downloader");
+                    if (args.length == 1) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return;
+                    }
+                    DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
+                    if (devPlanet == null) {
+                        sender.sendMessage(getLocaleMessage("only-in-dev-world"));
+                        return;
+                    }
+                    if (!devPlanet.getPlanet().getWorldPlayers().canDevelop(player)) {
+                        sender.sendMessage(getLocaleMessage("not-developer"));
+                        return;
+                    }
+                    String link = args[1];
+                    if (!link.startsWith("https://")) {
+                        sender.sendMessage(getLocaleMessage("Not save link. Needs to start with https://"));
+                        return;
+                    }
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                URL requestUrl = new URI(link).toURL();
+                                HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
+                                connection.setConnectTimeout(5000);
+                                connection.setReadTimeout(5000);
+                                connection.setRequestMethod("GET");
+                                connection.setRequestProperty("User-Agent", "OpenCreative+ Code Downloader");
+                                connection.setDoOutput(false);
+                                int code = connection.getResponseCode();
+                                StringBuilder responseBuilder = new StringBuilder();
+                                try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                                        code >= 400 ? connection.getErrorStream() : connection.getInputStream(),
+                                        StandardCharsets.UTF_8))) {
+                                    char[] buffer = new char[4096]; // читаем большими блоками
+                                    int read;
+                                    while ((read = reader.read(buffer)) != -1) {
+                                        responseBuilder.append(buffer, 0, read);
+                                        if (responseBuilder.length() > 1024 * 1024) {
+                                            sender.sendMessage("Too large file");
+                                            return;
+                                        }
+                                    }
+                                }
+                                String response = responseBuilder.toString();
+                                CodeConfiguration config = new CodeConfiguration();
+                                config.loadFromString(response);
+                                ConfigurationSection section = config.getConfigurationSection("code.blocks");
+                                if (section == null) {
+                                    sender.sendMessage("Section does not exists.");
+                                    return;
+                                }
+                                Bukkit.getScheduler().runTask(OpenCreative.getPlugin(),
+                                    () -> {
+                                        if ((new CodingBlockPlacer(devPlanet).placeCodingLines(devPlanet, section)).isSuccess()) {
+                                            sender.sendMessage("Placed");
+                                        } else {
+                                            sender.sendMessage("Failed to place");
+                                        }
+                                    });
+                            } catch (Exception e) {
+                                sender.sendMessage("Failed to download code");
+                            }
+                        }
+                    }.runTaskAsynchronously(OpenCreative.getPlugin());
+
+
                 }
                 case "test3" -> {
                     if (!sender.hasPermission("opencreative.test")) {
