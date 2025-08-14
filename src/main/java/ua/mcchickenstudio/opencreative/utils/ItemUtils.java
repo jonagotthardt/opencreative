@@ -18,8 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
+import io.papermc.paper.command.CommandBlockHolder;
 import io.papermc.paper.persistence.PersistentDataContainerView;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.block.CommandBlock;
 import org.bukkit.block.EntityBlockStorage;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.InventoryHolder;
@@ -400,7 +402,9 @@ public class ItemUtils {
                 settings.getItemsEntitiesMaxAmount(),
                 settings.isItemsRemoveCustomSpawnEggs(),
                 settings.isItemsRemoveBossSpawnEggs(),
-                settings.isItemsRemoveAttributes());
+                settings.isItemsRemoveAttributes(),
+                settings.isItemsClearCommandBlocksData()
+        );
     }
 
     /**
@@ -408,6 +412,9 @@ public class ItemUtils {
      * attribute modifiers, books with a lot of pages,
      * containers with containers; or replaces items with air.
      * @param item item to fix.
+     * @param displayNameMaxLength maximum length of item's display name.
+     * @param loreLineMaxLength maximum length of item's lore line.
+     * @param loreLinesLimit maximum amount of item's lore lines.
      * @param maxEnchantLevel maximum enchant level.
      * @param bookPagesLimit limit of books pages.
      * @param removeClickableBooks remove clickable components in books or not.
@@ -416,6 +423,7 @@ public class ItemUtils {
      * @param removeCustomEggs removes custom spawn eggs.
      * @param removeBossEggs removes boss spawn eggs.
      * @param removeAttributes removes attribute modifiers (scale).
+     * @param clearCommandBlocksData removes commands from command blocks.
      */
     @SuppressWarnings("deprecation")
     public static ItemStack fixItem(@NotNull ItemStack item,
@@ -425,7 +433,7 @@ public class ItemUtils {
                                     int maxEnchantLevel,
                                     int bookPagesLimit, boolean removeClickableBooks,
                                     int containerBigItemsLimit, int entitiesLimit, boolean removeCustomEggs,
-                                    boolean removeBossEggs, boolean removeAttributes) {
+                                    boolean removeBossEggs, boolean removeAttributes, boolean clearCommandBlocksData) {
         try {
             ItemMeta meta = item.getItemMeta();
             if (meta == null) return item;
@@ -547,6 +555,14 @@ public class ItemUtils {
                         item.setType(Material.AIR);
                         item.setItemMeta(null);
                         sendDebug("[ITEMS] Destroyed container with a lot of items");
+                    }
+                }
+                case BlockStateMeta blockMeta when blockMeta.getBlockState() instanceof CommandBlock block -> {
+                    if (clearCommandBlocksData) {
+                        block.name(null);
+                        block.setCommand(null);
+                        blockMeta.setBlockState(block);
+                        item.setItemMeta(blockMeta);
                     }
                 }
                 case BlockStateMeta blockMeta when blockMeta.getBlockState() instanceof EntityBlockStorage<?> storage -> {

@@ -18,8 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.listeners.entity;
 
+import io.papermc.paper.command.CommandBlockHolder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.entity.minecart.CommandMinecart;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
@@ -58,6 +61,16 @@ public final class EntitySpawnListener implements Listener {
                 event.setCancelled(true);
             } else {
                 item.setItemStack(newItem);
+            }
+        } else if (entity instanceof InventoryHolder holder) {
+            for (ItemStack insideItem : holder.getInventory().getContents()) {
+                if (insideItem == null) continue;
+                ItemUtils.fixItem(insideItem);
+            }
+        } else if (entity instanceof CommandMinecart minecart) {
+            if (OpenCreative.getSettings().isItemsClearCommandBlocksData()) {
+                minecart.setCommand(null);
+                minecart.customName(Component.text(""));
             }
         }
         Component customName = entity.customName();

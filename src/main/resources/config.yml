@@ -188,6 +188,7 @@ item-fixer:
   entity-name-max-length: 48 # Maximum length of entity's name
   persistent-data-max-size: 2048 # Maximum size of persistent data container
   entities-max-amount: 3 # Maximum amount of entities, that blocks (beehives) can hold.
+  clear-command-blocks-data: true # Removes commands inside command block items
 
 commands:
   #

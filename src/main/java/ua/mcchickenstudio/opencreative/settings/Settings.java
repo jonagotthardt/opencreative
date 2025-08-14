@@ -76,6 +76,7 @@ public class Settings {
     private boolean itemsRemoveBossSpawnEggs = true;
     private boolean itemsRemoveCustomSpawnEggs = true;
     private boolean itemsRemoveClickableBooks = true;
+    private boolean itemsClearCommandBlocksData = true;
 
     private boolean lobbyClearInventory = true;
     private boolean lobbyDisallowPlacingBlocks = true;
@@ -166,6 +167,7 @@ public class Settings {
         itemsRemoveClickableBooks = config.getBoolean("item-fixer.remove-clickable-in-books",true);
         itemsRemoveCustomSpawnEggs = config.getBoolean("item-fixer.remove-custom-spawn-eggs",true);
         itemsRemoveBossSpawnEggs = config.getBoolean("item-fixer.remove-boss-spawn-eggs",true);
+        itemsClearCommandBlocksData = config.getBoolean("item-fixer.clear-command-blocks-data",true);
         itemsMaxEnchantLevel = config.getInt("item-fixer.max-enchantment-level",10);
         itemsMaxEntityNameLength = config.getInt("item-fixer.entity-name-max-length",48);
         itemsMaxPersistentDataSize = config.getInt("item-fixer.persistent-data-max-size",2048);
@@ -630,5 +632,9 @@ public class Settings {
 
     public int getItemsLoreLinesMaxAmount() {
         return itemsLoreLinesMaxAmount;
+    }
+
+    public boolean isItemsClearCommandBlocksData() {
+        return itemsClearCommandBlocksData;
     }
 }
