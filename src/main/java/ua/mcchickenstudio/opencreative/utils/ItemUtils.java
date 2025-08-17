@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.utils;
 import io.papermc.paper.command.CommandBlockHolder;
 import io.papermc.paper.persistence.PersistentDataContainerView;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.block.CommandBlock;
 import org.bukkit.block.EntityBlockStorage;
 import org.bukkit.enchantments.Enchantment;
@@ -183,7 +184,7 @@ public class ItemUtils {
     public static ItemStack createItem(Material material, int amount, String localizationPath, Object value) {
 
         ItemStack itemStack = createItem(material,amount,localizationPath);
-        ItemMeta meta = itemStack.getItemMeta();
+        ItemMeta meta = getOrCreateItemMeta(itemStack);
         PersistentDataContainer container = itemStack.getItemMeta().getPersistentDataContainer();
         container.set(CODING_VALUE_KEY, PersistentDataType.BYTE, (Byte) value);
         itemStack.setItemMeta(meta);
@@ -195,7 +196,7 @@ public class ItemUtils {
     public static ItemStack createItem(Material material, int amount) {
 
         ItemStack itemStack = new ItemStack(material,amount);
-        ItemMeta itemMeta = itemStack.getItemMeta();
+        ItemMeta itemMeta = getOrCreateItemMeta(itemStack);
         itemMeta.setDisplayName(" ");
         itemStack.setItemMeta(itemMeta);
         return clearItemFlags(itemStack);
@@ -223,7 +224,7 @@ public class ItemUtils {
     }
 
     public static ItemStack clearItemMeta(ItemStack itemStack) {
-        ItemMeta meta = itemStack.getItemMeta();
+        ItemMeta meta = getOrCreateItemMeta(itemStack);
         meta.displayName(null);
         meta.lore(null);
         meta.removeEnchantments();
@@ -381,6 +382,10 @@ public class ItemUtils {
             }
         }
         return newItem;
+    }
+
+    public static @NotNull ItemMeta getOrCreateItemMeta(@NotNull ItemStack item) {
+        return item.hasItemMeta() ? item.getItemMeta() : Bukkit.getItemFactory().getItemMeta(item.getType());
     }
 
     /**
