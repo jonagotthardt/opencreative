@@ -18,8 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.listeners.entity;
 
+import io.papermc.paper.command.CommandBlockHolder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.entity.minecart.CommandMinecart;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
@@ -52,13 +55,28 @@ public final class EntitySpawnListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEntitySpawn(EntitySpawnEvent event) {
         Entity entity = event.getEntity();
-        if (entity instanceof Item item) {
-            ItemStack newItem = ItemUtils.fixItem(item.getItemStack());
-            if (newItem.getType().isAir()) {
-                event.setCancelled(true);
-            } else {
-                item.setItemStack(newItem);
+        switch (entity) {
+            case Item item -> {
+                ItemStack newItem = ItemUtils.fixItem(item.getItemStack());
+                if (newItem.getType().isAir()) {
+                    event.setCancelled(true);
+                } else {
+                    item.setItemStack(newItem);
+                }
             }
+            case InventoryHolder holder -> {
+                for (ItemStack insideItem : holder.getInventory().getContents()) {
+                    if (insideItem == null) continue;
+                    ItemUtils.fixItem(insideItem);
+                }
+            }
+            case CommandMinecart minecart -> {
+                if (OpenCreative.getSettings().isItemsClearCommandBlocksData()) {
+                    minecart.setCommand(null);
+                    minecart.customName(Component.text(""));
+                }
+            }
+            default -> {}
         }
         Component customName = entity.customName();
         if (customName != null) {
@@ -139,6 +157,11 @@ public final class EntitySpawnListener implements Listener {
             event.setCancelled(true);
         }
         if (planet != null) {
+            if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.BEEHIVE) {
+                if (!planet.getLimits().canBeeSpawnFromBeehive()) {
+                    event.setCancelled(true);
+                }
+            }
             if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL) {
                 switch (planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_SPAWN)) {
                     case 3:

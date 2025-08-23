@@ -22,8 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.indev.OfflineWander;
-import ua.mcchickenstudio.opencreative.indev.modules.Module;
-import ua.mcchickenstudio.opencreative.indev.modules.ModuleManager;
+import ua.mcchickenstudio.opencreative.coding.modules.Module;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetInfo;
@@ -254,9 +253,9 @@ public class FileUtils {
                 } catch (NumberFormatException ignored) {}
                 if (id == -1) continue;
                 Module module = new Module(id);
-                ModuleManager.getInstance().registerModule(module);
+                OpenCreative.getModuleManager().registerModule(module);
             }
-            OpenCreative.getPlugin().getLogger().info("Loaded " + ModuleManager.getInstance().getModules().size() + " modules for " + (System.currentTimeMillis()-currentTime) + " ms.");
+            OpenCreative.getPlugin().getLogger().info("Loaded " + OpenCreative.getModuleManager().getModules().size() + " modules for " + (System.currentTimeMillis()-currentTime) + " ms.");
         } catch (Exception error) {
             sendCriticalErrorMessage("An error has occurred while loading modules...",error);
         }

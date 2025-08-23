@@ -39,6 +39,7 @@ public class PlanetLimits {
 
     private final LinkedList<Long> lastWebRequests = new LinkedList<>();
     private final LinkedList<Long> lastLightningsStrikes = new LinkedList<>();
+    private final LinkedList<Long> lastBeesSpawns = new LinkedList<>();
 
     private final Map<UUID, Deque<Long>> lastPlayerMenuOpens = new HashMap<>();
 
@@ -261,6 +262,30 @@ public class PlanetLimits {
     }
 
     /**
+     * Checks if bee for beehive can spawn in world to prevent
+     * "too many bees at once" crash. Checks if the amount
+     * of spawned bees in last 5 seconds is not greater than 5.
+     * @return true - if it's allowed to exit from beehive for bee, false - it's disallowed.
+     */
+    public boolean canBeeSpawnFromBeehive() {
+
+        long now = System.currentTimeMillis();
+
+        // Removes time from list, if it's more than 5 seconds.
+        while (!lastBeesSpawns.isEmpty() && (now - lastBeesSpawns.peek()) > 5000) {
+            lastBeesSpawns.poll();
+        }
+
+        if (lastBeesSpawns.size() >= 5) {
+            return false;
+        } else {
+            lastBeesSpawns.add(now);
+            return true;
+        }
+
+    }
+
+    /**
      * Checks if world can send web request. Used to prevent
      * web attacks. Checks if the amount of sent web requests
      * in last 5 seconds is not greater than limit.
@@ -334,6 +359,7 @@ public class PlanetLimits {
         lastRedstoneOperationsAmount = 0;
         lastListElementsChangesAmount = 0;
         lastLightningsStrikes.clear();
+        lastBeesSpawns.clear();
         lastPlayerMenuOpens.clear();
         lastWebRequests.clear();
     }

@@ -25,8 +25,8 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.ChatEvent;
 import ua.mcchickenstudio.opencreative.events.player.WorldChatEvent;
-import ua.mcchickenstudio.opencreative.indev.modules.Module;
-import ua.mcchickenstudio.opencreative.indev.modules.ModuleSettingsMenu;
+import ua.mcchickenstudio.opencreative.coding.modules.Module;
+import ua.mcchickenstudio.opencreative.coding.modules.ModuleSettingsMenu;
 import ua.mcchickenstudio.opencreative.menus.world.browsers.WorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.world.settings.WorldSettingsPlayersMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
@@ -466,10 +466,10 @@ public final class ChatListener implements Listener {
                 if (module == null || !module.isOwner(player)) return;
                 String newName = "§f" + ChatColor.translateAlternateColorCodes('&',input);
                 String uncoloredName = ChatColor.stripColor(newName);
-                if (uncoloredName.length() > OpenCreative.getSettings().getWorldNameMaxLength() || uncoloredName.length() < OpenCreative.getSettings().getWorldNameMinLength()) {
+                if (uncoloredName.length() > OpenCreative.getSettings().getModuleNameMaxLength() || uncoloredName.length() < OpenCreative.getSettings().getModuleNameMinLength()) {
                     player.sendMessage(getLocaleMessage("settings.module-name.error")
-                            .replace("%min%",String.valueOf(OpenCreative.getSettings().getWorldNameMinLength()))
-                            .replace("%max%",String.valueOf(OpenCreative.getSettings().getWorldNameMaxLength())));
+                            .replace("%min%",String.valueOf(OpenCreative.getSettings().getModuleNameMinLength()))
+                            .replace("%max%",String.valueOf(OpenCreative.getSettings().getModuleNameMaxLength())));
                     return;
                 }
                 module.getInformation().setDisplayName(newName);
@@ -481,11 +481,11 @@ public final class ChatListener implements Listener {
                 if (module == null || !module.isOwner(player)) return;
                 String newDescription = "§f" + ChatColor.translateAlternateColorCodes('&',input);
                 String uncoloredDescription = ChatColor.stripColor(newDescription);
-                if (uncoloredDescription.length() > OpenCreative.getSettings().getWorldDescriptionMaxLength() ||
-                        uncoloredDescription.length() < OpenCreative.getSettings().getWorldDescriptionMinLength()) {
+                if (uncoloredDescription.length() > OpenCreative.getSettings().getModuleDescriptionMaxLength() ||
+                        uncoloredDescription.length() < OpenCreative.getSettings().getModuleDescriptionMinLength()) {
                     player.sendMessage(getLocaleMessage("settings.module-description.error")
-                            .replace("%min%",String.valueOf(OpenCreative.getSettings().getWorldDescriptionMinLength()))
-                            .replace("%max%",String.valueOf(OpenCreative.getSettings().getWorldDescriptionMaxLength())));
+                            .replace("%min%",String.valueOf(OpenCreative.getSettings().getModuleDescriptionMinLength()))
+                            .replace("%max%",String.valueOf(OpenCreative.getSettings().getModuleDescriptionMaxLength())));
                     return;
                 }
                 newDescription = String.join("\\n", splitDescription(newDescription, 39));

@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.indev.modules;
+package ua.mcchickenstudio.opencreative.coding.modules;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -46,7 +46,7 @@ public class ModulesBrowserMenu extends ListBrowserMenu<Module> {
     }
 
     public ModulesBrowserMenu(Player player) {
-        this(player, ModuleManager.getInstance().getPlayerModules(player.getUniqueId()).stream().toList());
+        this(player, new ArrayList<>(OpenCreative.getModuleManager().getModules()));
     }
 
     @Override
@@ -99,7 +99,7 @@ public class ModulesBrowserMenu extends ListBrowserMenu<Module> {
         if (id.isEmpty()) {
             return;
         }
-        Module module = ModuleManager.getInstance().getModuleById(id);
+        Module module = OpenCreative.getModuleManager().getModuleById(id);
         if (module == null) return;
         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(getPlayer());
         event.getWhoClicked().closeInventory();

@@ -16,20 +16,24 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.indev.modules;
+package ua.mcchickenstudio.opencreative.managers.modules;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodeConfiguration;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
+import ua.mcchickenstudio.opencreative.coding.modules.ModuleSettingsMenu;
+import ua.mcchickenstudio.opencreative.events.module.ModuleCreationEvent;
+import ua.mcchickenstudio.opencreative.events.module.ModuleDeletionEvent;
+import ua.mcchickenstudio.opencreative.events.module.ModuleRegisterEvent;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
+import ua.mcchickenstudio.opencreative.coding.modules.Module;
 
 import java.io.File;
 import java.util.*;
@@ -39,20 +43,9 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMe
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-@ApiStatus.Experimental
-public class ModuleManager {
-
-    private static ModuleManager instance;
-
+public class Moduler implements ModuleManager {
+    
     private final Set<Module> modules = new HashSet<>();
-
-    private ModuleManager() {}
-    public static @NotNull ModuleManager getInstance() {
-        if (instance == null) {
-            instance = new ModuleManager();
-        }
-        return instance;
-    }
 
     public @Nullable Module getModuleById(@NotNull String id) {
         for (Module module : modules) {
@@ -79,6 +72,8 @@ public class ModuleManager {
 
     public void registerModule(@NotNull Module module) {
         modules.add(module);
+        ModuleRegisterEvent event = new ModuleRegisterEvent(module);
+        event.callEvent();
     }
 
     public void createModule(@NotNull Player owner, @NotNull DevPlanet devPlanet, @NotNull Set<Location> locations) {
@@ -95,7 +90,13 @@ public class ModuleManager {
         try {
             int id = generateModuleId();
             configuration.save(new File(getModuleConfigFile(id).getPath()));
-            ModuleManager.getInstance().registerModule(new Module(id));
+            Module module = new Module(id);
+            ModuleCreationEvent event = new ModuleCreationEvent(module, owner);
+            event.callEvent();
+            if (event.isCancelled()) {
+                return;
+            }
+            OpenCreative.getModuleManager().registerModule(module);
             owner.sendMessage(getLocaleMessage("modules.created"));
             Sounds.DEV_MODULE_CREATED.play(owner);
         } catch (Exception e) {
@@ -105,7 +106,9 @@ public class ModuleManager {
 
     }
 
-    public void deleteModule(Module module) {
+    public void deleteModule(@NotNull Module module) {
+        ModuleDeletionEvent event = new ModuleDeletionEvent(module);
+        event.callEvent();
         ModuleSettingsMenu.removeFromCurrentEditing(module);
         modules.remove(module);
         File file = getModuleConfigFile(module.getId());
@@ -137,4 +140,16 @@ public class ModuleManager {
         }
     }
 
+    @Override
+    public void init() {}
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public String getName() {
+        return "Module Manager";
+    }
 }

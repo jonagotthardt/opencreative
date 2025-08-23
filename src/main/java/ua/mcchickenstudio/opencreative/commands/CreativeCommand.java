@@ -20,13 +20,10 @@ package ua.mcchickenstudio.opencreative.commands;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.CodeConfiguration;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockPlacer;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.WebResponseEvent;
 import ua.mcchickenstudio.opencreative.indev.Items;
-import ua.mcchickenstudio.opencreative.indev.modules.ModulesBrowserMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
@@ -52,11 +49,9 @@ import org.jetbrains.annotations.NotNull;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.net.http.HttpRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 

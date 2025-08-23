@@ -22,7 +22,7 @@ import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.*;
-import ua.mcchickenstudio.opencreative.indev.modules.BlocksManipulatorMenu;
+import ua.mcchickenstudio.opencreative.coding.modules.BlocksManipulatorMenu;
 import ua.mcchickenstudio.opencreative.menus.EnderChestMenu;
 import ua.mcchickenstudio.opencreative.menus.world.settings.*;
 import org.bukkit.*;

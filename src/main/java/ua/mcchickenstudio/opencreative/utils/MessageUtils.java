@@ -20,7 +20,7 @@ package ua.mcchickenstudio.opencreative.utils;
 
 import net.kyori.adventure.text.TextReplacementConfig;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.indev.modules.Module;
+import ua.mcchickenstudio.opencreative.coding.modules.Module;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.PAPIUtils;

@@ -24,9 +24,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.indev.modules.Module;
-import ua.mcchickenstudio.opencreative.indev.modules.ModuleManager;
-import ua.mcchickenstudio.opencreative.indev.modules.ModulesBrowserMenu;
+import ua.mcchickenstudio.opencreative.coding.modules.Module;
+import ua.mcchickenstudio.opencreative.coding.modules.ModulesBrowserMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
@@ -77,7 +76,7 @@ public class ModuleCommand extends CommandHandler {
                     return;
                 }
                 if (devPlanet == null) return;
-                Module module = ModuleManager.getInstance().getModuleById(args[1]);
+                Module module = OpenCreative.getModuleManager().getModuleById(args[1]);
                 if (module == null) {
                     sender.sendMessage(getLocaleMessage("modules.not-found")
                             .replace("%id%", args[1]));
@@ -91,7 +90,7 @@ public class ModuleCommand extends CommandHandler {
                     sender.sendMessage(getLocaleMessage("too-few-args"));
                     return;
                 }
-                Module module = ModuleManager.getInstance().getModuleById(args[1]);
+                Module module = OpenCreative.getModuleManager().getModuleById(args[1]);
                 if (module == null) {
                     sender.sendMessage(getLocaleMessage("modules.not-found")
                             .replace("%id%", args[1]));
@@ -109,7 +108,7 @@ public class ModuleCommand extends CommandHandler {
                     sender.sendMessage(getLocaleMessage("no-perms"));
                     return;
                 }
-                Module module = ModuleManager.getInstance().getModuleById(args[1]);
+                Module module = OpenCreative.getModuleManager().getModuleById(args[1]);
                 if (module == null) {
                     sender.sendMessage(getLocaleMessage("modules.not-found")
                             .replace("%id%", args[1]));
@@ -117,14 +116,14 @@ public class ModuleCommand extends CommandHandler {
                 }
                 sender.sendMessage(getLocaleMessage("module.deleted")
                         .replace("%id%", String.valueOf(module.getId())));
-                ModuleManager.getInstance().deleteModule(module);
+                OpenCreative.getModuleManager().deleteModule(module);
             }
             case "list" -> {
                 if (!sender.hasPermission("opencreative.modules.list")) {
                     sender.sendMessage(getLocaleMessage("no-perms"));
                     return;
                 }
-                Set<Module> modules = ModuleManager.getInstance().getModules();
+                Set<Module> modules = OpenCreative.getModuleManager().getModules();
                 sender.sendMessage(getLocaleMessage("modules.list.amount")
                         .replace("%amount%", String.valueOf(modules.size())));
                 for (Module module : modules) {
@@ -140,7 +139,7 @@ public class ModuleCommand extends CommandHandler {
                     return;
                 }
                 if (devPlanet == null) return;
-                Module module = ModuleManager.getInstance().getModuleById(args[1]);
+                Module module = OpenCreative.getModuleManager().getModuleById(args[1]);
                 if (module == null) {
                     sender.sendMessage(getLocaleMessage("modules.not-found")
                             .replace("%id%", args[1]));
@@ -168,7 +167,7 @@ public class ModuleCommand extends CommandHandler {
                     return;
                 }
                 if (devPlanet == null) return;
-                Module module = ModuleManager.getInstance().getModuleById(args[1]);
+                Module module = OpenCreative.getModuleManager().getModuleById(args[1]);
                 if (module == null) {
                     sender.sendMessage(getLocaleMessage("modules.not-found")
                             .replace("%id%", args[1]));
@@ -213,7 +212,7 @@ public class ModuleCommand extends CommandHandler {
             if (args.length == 1) {
                 return List.of("delete", "list", "info");
             } else if (args.length == 2 && List.of("delete","info","load","like","dislike").contains(args[0].toLowerCase())) {
-                return ModuleManager.getInstance().getModules().stream()
+                return OpenCreative.getModuleManager().getModules().stream()
                         .map(module -> String.valueOf(module.getId()))
                         .toList();
             }
@@ -238,7 +237,7 @@ public class ModuleCommand extends CommandHandler {
             if (player.hasPermission("opencreative.modules.delete")
                     && args[0].equalsIgnoreCase("delete") || (devPlanet != null
                     && List.of("like","dislike","load").contains(args[0].toLowerCase()))) {
-                return ModuleManager.getInstance().getModules().stream()
+                return OpenCreative.getModuleManager().getModules().stream()
                         .map(module -> String.valueOf(module.getId()))
                         .toList();
             }

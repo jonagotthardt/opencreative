@@ -22,7 +22,7 @@ import org.bukkit.*;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import ua.mcchickenstudio.opencreative.events.planet.PlanetDisconnectPlayerEvent;
-import ua.mcchickenstudio.opencreative.indev.modules.ModuleSettingsMenu;
+import ua.mcchickenstudio.opencreative.coding.modules.ModuleSettingsMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetPlayer;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
