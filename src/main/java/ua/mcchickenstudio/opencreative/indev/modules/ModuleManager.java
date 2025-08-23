@@ -26,6 +26,9 @@ import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodeConfiguration;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
+import ua.mcchickenstudio.opencreative.events.module.ModuleCreationEvent;
+import ua.mcchickenstudio.opencreative.events.module.ModuleDeletionEvent;
+import ua.mcchickenstudio.opencreative.events.module.ModuleRegisterEvent;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
@@ -77,6 +80,8 @@ public class ModuleManager {
 
     public void registerModule(@NotNull Module module) {
         modules.add(module);
+        ModuleRegisterEvent event = new ModuleRegisterEvent(module);
+        event.callEvent();
     }
 
     public void createModule(@NotNull Player owner, @NotNull DevPlanet devPlanet, @NotNull Set<Location> locations) {
@@ -93,7 +98,13 @@ public class ModuleManager {
         try {
             int id = generateModuleId();
             configuration.save(new File(getModuleConfigFile(id).getPath()));
-            ModuleManager.getInstance().registerModule(new Module(id));
+            Module module = new Module(id);
+            ModuleCreationEvent event = new ModuleCreationEvent(module, owner);
+            event.callEvent();
+            if (event.isCancelled()) {
+                return;
+            }
+            ModuleManager.getInstance().registerModule(module);
             owner.sendMessage(getLocaleMessage("modules.created"));
             Sounds.DEV_MODULE_CREATED.play(owner);
         } catch (Exception e) {
@@ -104,6 +115,8 @@ public class ModuleManager {
     }
 
     public void deleteModule(Module module) {
+        ModuleDeletionEvent event = new ModuleDeletionEvent(module);
+        event.callEvent();
         ModuleSettingsMenu.removeFromCurrentEditing(module);
         modules.remove(module);
         File file = getModuleConfigFile(module.getId());

@@ -23,10 +23,10 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockPlacer;
+import ua.mcchickenstudio.opencreative.events.module.ModuleInstallationEvent;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
@@ -46,7 +46,6 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.parseModuleLine
  * can be pasted in developer world.
  * <p>Modules are stored in ./modules/moduleID.yml files.
  */
-@ApiStatus.Experimental
 public class Module {
 
     private final int id;
@@ -124,6 +123,11 @@ public class Module {
             }
         }
 
+        ModuleInstallationEvent event = new ModuleInstallationEvent(this, player);
+        event.callEvent();
+        if (event.isCancelled()) {
+            return false;
+        }
         CodingBlockPlacer placer = new CodingBlockPlacer(devPlanet);
         CodingBlockPlacer.CodePlacementResult result = placer.placeCodingLines(devPlanet, section);
         if (result == CodingBlockPlacer.CodePlacementResult.NOT_ENOUGH_CODING_LINES) {

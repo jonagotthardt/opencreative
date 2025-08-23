@@ -104,6 +104,12 @@ public class Settings {
     private int worldDescriptionMinLength = 4;
     private int worldDescriptionMaxLength = 256;
 
+    private int moduleNameMinLength = 4;
+    private int moduleNameMaxLength = 30;
+
+    private int moduleDescriptionMinLength = 4;
+    private int moduleDescriptionMaxLength = 256;
+
     private final Groups groups;
     private final Commands commands;
     private final Set<Integer> recommendedWorldsIDs = new HashSet<>();
@@ -162,6 +168,12 @@ public class Settings {
 
         worldDescriptionMinLength = config.getInt("requirements.world-description.min-length",2);
         worldDescriptionMaxLength = config.getInt("requirements.world-description.max-length",256);
+
+        moduleNameMinLength = config.getInt("requirements.module-name.min-length",2);
+        moduleNameMaxLength = config.getInt("requirements.module-name.max-length",16);
+
+        moduleDescriptionMinLength = config.getInt("requirements.module-description.min-length",2);
+        moduleDescriptionMaxLength = config.getInt("requirements.module-description.max-length",256);
 
         itemsRemoveAttributes = config.getBoolean("item-fixer.remove-attribute-modifiers",true);
         itemsRemoveClickableBooks = config.getBoolean("item-fixer.remove-clickable-in-books",true);
@@ -632,6 +644,22 @@ public class Settings {
 
     public int getItemsLoreLinesMaxAmount() {
         return itemsLoreLinesMaxAmount;
+    }
+
+    public int getModuleDescriptionMaxLength() {
+        return moduleDescriptionMaxLength;
+    }
+
+    public int getModuleDescriptionMinLength() {
+        return moduleDescriptionMinLength;
+    }
+
+    public int getModuleNameMaxLength() {
+        return moduleNameMaxLength;
+    }
+
+    public int getModuleNameMinLength() {
+        return moduleNameMinLength;
     }
 
     public boolean isItemsClearCommandBlocksData() {
