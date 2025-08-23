@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.indev.modules;
+package ua.mcchickenstudio.opencreative.coding.modules;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

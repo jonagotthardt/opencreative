@@ -20,7 +20,7 @@ package ua.mcchickenstudio.opencreative.events.module;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import ua.mcchickenstudio.opencreative.indev.modules.Module;
+import ua.mcchickenstudio.opencreative.coding.modules.Module;
 
 /**
  * Called when module is installed in developers world by player.

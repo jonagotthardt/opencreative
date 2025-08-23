@@ -18,7 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.events.module;
 
-import ua.mcchickenstudio.opencreative.indev.modules.Module;
+import ua.mcchickenstudio.opencreative.coding.modules.Module;
 import ua.mcchickenstudio.opencreative.events.CreativeEvent;
 
 /**

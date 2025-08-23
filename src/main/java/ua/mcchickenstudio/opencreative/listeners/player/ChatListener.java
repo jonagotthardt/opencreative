@@ -25,8 +25,8 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.ChatEvent;
 import ua.mcchickenstudio.opencreative.events.player.WorldChatEvent;
-import ua.mcchickenstudio.opencreative.indev.modules.Module;
-import ua.mcchickenstudio.opencreative.indev.modules.ModuleSettingsMenu;
+import ua.mcchickenstudio.opencreative.coding.modules.Module;
+import ua.mcchickenstudio.opencreative.coding.modules.ModuleSettingsMenu;
 import ua.mcchickenstudio.opencreative.menus.world.browsers.WorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.world.settings.WorldSettingsPlayersMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;

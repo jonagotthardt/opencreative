@@ -18,7 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.events.module;
 
-import ua.mcchickenstudio.opencreative.indev.modules.Module;
+import ua.mcchickenstudio.opencreative.coding.modules.Module;
 
 /**
  * Called when module is registered in modules base.
