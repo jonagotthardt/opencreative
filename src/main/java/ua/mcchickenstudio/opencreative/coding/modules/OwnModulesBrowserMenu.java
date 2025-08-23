@@ -27,6 +27,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menus.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
@@ -48,7 +49,7 @@ public class OwnModulesBrowserMenu extends ListBrowserMenu<Module> {
     public OwnModulesBrowserMenu(Player player) {
         super(player,getLocaleMessage("menus.own-modules.title",false),PlacementLayout.BOTTOM_NO_DECORATION,
                 new int[]{45},new int[]{45,46,52,53});
-        this.modules = new ArrayList<>(ModuleManager.getInstance().getPlayerModules(player.getUniqueId()));
+        this.modules = new ArrayList<>(OpenCreative.getModuleManager().getPlayerModules(player.getUniqueId()));
         Comparator<Module> sortByOnline = Comparator.comparingLong(module -> module.getInformation().getCreationTime());
         this.modules.sort(sortByOnline);
     }
@@ -112,7 +113,7 @@ public class OwnModulesBrowserMenu extends ListBrowserMenu<Module> {
         if (moduleID.isEmpty()) {
             return;
         }
-        Module module = ModuleManager.getInstance().getModuleById(moduleID);
+        Module module = OpenCreative.getModuleManager().getModuleById(moduleID);
         if (module != null) {
             new ModuleSettingsMenu(module, getPlayer()).open(getPlayer());
         }

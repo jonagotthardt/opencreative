@@ -46,7 +46,7 @@ public class ModulesBrowserMenu extends ListBrowserMenu<Module> {
     }
 
     public ModulesBrowserMenu(Player player) {
-        this(player, new ArrayList<>(ModuleManager.getInstance().getModules()));
+        this(player, new ArrayList<>(OpenCreative.getModuleManager().getModules()));
     }
 
     @Override
@@ -99,7 +99,7 @@ public class ModulesBrowserMenu extends ListBrowserMenu<Module> {
         if (id.isEmpty()) {
             return;
         }
-        Module module = ModuleManager.getInstance().getModuleById(id);
+        Module module = OpenCreative.getModuleManager().getModuleById(id);
         if (module == null) return;
         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(getPlayer());
         event.getWhoClicked().closeInventory();

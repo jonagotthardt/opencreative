@@ -95,7 +95,7 @@ public class ModuleSettingsMenu extends AbstractMenu {
     public static @Nullable Module getCurrentEditingModule(@NotNull Player player) {
         Integer id = settingsSessions.get(player.getUniqueId());
         if (id == null) return null;
-        Module module = ModuleManager.getInstance().getModuleById(String.valueOf(id));
+        Module module = OpenCreative.getModuleManager().getModuleById(String.valueOf(id));
         if (module == null) {
             settingsSessions.values().removeIf(i -> i.equals(id));
             return null;
@@ -215,7 +215,7 @@ public class ModuleSettingsMenu extends AbstractMenu {
                                 @Override
                                 public void run() {
                                     player.closeInventory();
-                                    if (!ModuleManager.getInstance().getModules().contains(module)) {
+                                    if (!OpenCreative.getModuleManager().getModules().contains(module)) {
                                         cancel();
                                         return;
                                     }
@@ -224,7 +224,7 @@ public class ModuleSettingsMenu extends AbstractMenu {
                                         return;
                                     }
                                     Sounds.WORLD_DELETION.play(player);
-                                    ModuleManager.getInstance().deleteModule(module);
+                                    OpenCreative.getModuleManager().deleteModule(module);
                                     Bukkit.getServer().getScheduler().runTaskLater(OpenCreative.getPlugin(), () ->
                                             player.sendMessage(MessageUtils.getLocaleMessage("modules.deleted")
                                                     .replace("%moduleID%", String.valueOf(module.getId()))), 60);

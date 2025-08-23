@@ -64,7 +64,7 @@ public class BlocksManipulatorMenu extends AbstractMenu {
     @Override
     public void fillItems(Player player) {
         setItem(12, duplicate);
-        int amount = ModuleManager.getInstance().getPlayerModules(player.getUniqueId()).size();
+        int amount = OpenCreative.getModuleManager().getPlayerModules(player.getUniqueId()).size();
         int limit = OpenCreative.getSettings().getGroups().getGroup(player).getModulesLimit();
         int left = limit-amount;
         if (left >= 1) {
@@ -117,12 +117,12 @@ public class BlocksManipulatorMenu extends AbstractMenu {
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getBlocksDuplicationCooldown(), CooldownUtils.CooldownType.MODULE_MANIPULATION);
             int limit = OpenCreative.getSettings().getGroups().getGroup(player).getModulesLimit();
-            if (ModuleManager.getInstance().getPlayerModules(player.getUniqueId()).size() > limit) {
+            if (OpenCreative.getModuleManager().getPlayerModules(player.getUniqueId()).size() > limit) {
                 player.closeInventory();
                 return;
             }
             player.closeInventory();
-            ModuleManager.getInstance().createModule(player, devPlanet, devPlanet.getMarkedExecutors(player));
+            OpenCreative.getModuleManager().createModule(player, devPlanet, devPlanet.getMarkedExecutors(player));
             devPlanet.clearMarkedExecutors(player);
         }
 

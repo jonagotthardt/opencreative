@@ -56,6 +56,8 @@ import ua.mcchickenstudio.opencreative.listeners.world.BlockChangeListener;
 import ua.mcchickenstudio.opencreative.listeners.world.RedstoneListener;
 import ua.mcchickenstudio.opencreative.managers.blocks.BlocksManager;
 import ua.mcchickenstudio.opencreative.managers.economy.Economy;
+import ua.mcchickenstudio.opencreative.managers.modules.Moduler;
+import ua.mcchickenstudio.opencreative.managers.modules.ModuleManager;
 import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformer;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.HorizontalPlatformer;
@@ -96,6 +98,7 @@ public final class OpenCreative extends JavaPlugin {
     private Updater updater;
     private PacketManager packet;
     private PlanetsManager space;
+    private ModuleManager moduler;
     private StabilityManager watchdog;
     private BlocksManager blocks;
     private DevPlatformer devPlatformer;
@@ -147,6 +150,8 @@ public final class OpenCreative extends JavaPlugin {
 
         space = new Space();
         space.init();
+        moduler = new Moduler();
+        moduler.init();
         if (devPlatformer == null) devPlatformer = new HorizontalPlatformer();
 
         PlayerUtils.loadPermissions();
@@ -371,6 +376,25 @@ public final class OpenCreative extends JavaPlugin {
     @SuppressWarnings("unused")
     public static BlocksManager getBlocksManager() {
         return getPlugin().blocks;
+    }
+
+    /**
+     * Sets custom module manager.
+     * @param moduleManager module manager.
+     */
+    @SuppressWarnings("unused")
+    public static void setBlocksManager(@NotNull ModuleManager moduleManager) {
+        getPlugin().getLogger().info("Now using module manager: " + moduleManager.getName());
+        getPlugin().moduler = moduleManager;
+    }
+
+    /**
+     * Gets module manager, that creates
+     * or deletes modules.
+     * @return modules manager.
+     */
+    public static ModuleManager getModuleManager() {
+        return getPlugin().moduler;
     }
 
     /**
