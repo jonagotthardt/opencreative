@@ -114,7 +114,7 @@ public class ModuleCommand extends CommandHandler {
                             .replace("%id%", args[1]));
                     return;
                 }
-                sender.sendMessage(getLocaleMessage("module.deleted")
+                sender.sendMessage(getLocaleMessage("modules.deleted")
                         .replace("%id%", String.valueOf(module.getId())));
                 OpenCreative.getModuleManager().deleteModule(module);
             }

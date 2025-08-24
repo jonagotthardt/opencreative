@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Random;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 public class WorldGenerationMenu extends AbstractMenu {
@@ -74,6 +75,9 @@ public class WorldGenerationMenu extends AbstractMenu {
     @Override
     public void onClick(@NotNull InventoryClickEvent event) {
         if (!isPlayerClicked(event) || !isClickedInMenuSlots(event)) {
+            return;
+        }
+        if (itemEquals(DECORATION_ITEM, event.getCurrentItem())) {
             return;
         }
         event.setCancelled(true);

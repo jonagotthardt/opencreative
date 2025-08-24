@@ -595,7 +595,7 @@ public class Planet {
             Location location = new Location(this.getDevPlanet().getWorld(), x+1,y,z+2,180,5);
             player.teleportAsync(location).thenAccept(success -> {
                 if (success) {
-                    if (y == 1) spawnGlowingBlock(player,new Location(this.getDevPlanet().getWorld(),x,y,z));
+                    spawnGlowingBlock(player,new Location(this.getDevPlanet().getWorld(),x+0.5,y,z+0.5));
                 }
             });
         }

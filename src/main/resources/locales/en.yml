@@ -1161,6 +1161,13 @@ items:
             - "&7freezing, potion effects."
             - " "
             - "&eClick to choose category."
+        entity_movement:
+          name: "&9Entity Movement"
+          lore:
+            - "&7Teleport an entity, launch"
+            - "&7up or down, with vector."
+            - " "
+            - "&eClick to select category."
         controller:
           name: "&3Other for controller"
           lore:
@@ -1409,6 +1416,20 @@ items:
           lore:
             - "&7Greater or equal, less or equal,"
             - "&7in number range."
+            - " "
+            - "&eClick to choose category."
+        entity_state:
+          name: "&3Entity State"
+          lore:
+            - "&7Name equals, is a player, projectile,"
+            - "&7dead, alive, can grow."
+            - " "
+            - "&eClick to choose category."
+        entity_interaction:
+          name: "&5Entity Interaction"
+          lore:
+            - "&7Swims in lava or water, is a team"
+            - "&7member, stands on solid block."
             - " "
             - "&eClick to choose category."
     events:
@@ -15426,6 +15447,8 @@ blocks:
   world_boss_bar_color: "&dBoss bar color"
   world_boss_bar_progress: "&aBoss bar progress"
   world_boss_bar_overlay: "&eBoss bar type"
+  world_send_web_request: "Web Request"
+  world_transfer_variable: "Send Value"
   #
   if_player_stands_on_block: "Is standing on block"
   if_player_looks_at_block: "Looking at block"
