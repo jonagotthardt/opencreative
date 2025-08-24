@@ -279,7 +279,7 @@ public class CodingBlockPlacer {
     private void buildActionBlock(@NotNull Location location, @NotNull ConfigurationSection data,
                                   @NotNull ActionType type, int maximumX) {
         Location signLocation = location.getBlock().getRelative(BlockFace.SOUTH).getLocation();
-        String target = data.getString("target","");
+        String target = data.getString("target","").toLowerCase();
         switch (type) {
             case LAUNCH_FUNCTION, LAUNCH_METHOD -> {
                 placeDevBlock(location, type.getCategory().getBlock(),
@@ -310,6 +310,7 @@ public class CodingBlockPlacer {
                         type.getCategory().getAdditionalBlock(),
                         wallSign, type.getCategory().name().toLowerCase());
                 setSignLine(signLocation,3, type.name().toLowerCase());
+                setSignLine(signLocation,4, target);
                 if (type.getCategory().isCondition()) {
                     if (data.getBoolean("opposed",false)) {
                         setSignLine(signLocation, 1, "not");

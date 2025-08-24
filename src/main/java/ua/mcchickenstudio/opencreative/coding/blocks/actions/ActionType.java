@@ -620,6 +620,7 @@ public enum ActionType {
     ENTITY_SET_BEE_STINGER_COOLDOWN(    ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_PARAMS, EntitySetBeeStingerCooldownAction.class, Material.BEE_NEST, new ArgumentSlot("cooldown", ValueType.NUMBER),new ParameterSlot("add")),
     ENTITY_SET_MAXIMUM_NO_DAMAGE_TICKS( ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_PARAMS, EntitySetMaxNoDamageTicksAction.class, Material.ENCHANTED_GOLDEN_APPLE, new ArgumentSlot("ticks", ValueType.NUMBER),new ParameterSlot("add")),
     ENTITY_SET_MAXIMUM_AIR(             ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_PARAMS, EntitySetMaximumAirAction.class, Material.POTION,  new ArgumentSlot("ticks", ValueType.NUMBER),new ParameterSlot("add")),
+    ENTITY_SET_TARGET(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_PARAMS, SetEntityTargetAction.class, Material.NETHER_STAR, new ArgumentSlot("entity",ValueType.TEXT)),
 
     ENTITY_GIVE_ITEMS(                  ActionCategory.ENTITY_ACTION, MenusCategory.INVENTORY, EntityGiveItemsAction.class, Material.CHEST_MINECART,  new ArgumentSlot("items", ValueType.ITEM,(byte) 27)),
     ENTITY_SET_ITEMS(                   ActionCategory.ENTITY_ACTION, MenusCategory.INVENTORY, EntitySetItemsAction.class, Material.DARK_OAK_CHEST_BOAT,          new ArgumentSlot("items", ValueType.ITEM,(byte) 27,true)),
@@ -660,8 +661,6 @@ public enum ActionType {
     ENTITY_LAUNCH_HORIZONTAL(           ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_MOVEMENT, EntityLaunchHorizontalAction.class, Material.FEATHER,         new ArgumentSlot("power",ValueType.NUMBER)),
     ENTITY_LAUNCH_TO_LOCATION(          ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_MOVEMENT, EntityLaunchToLocationAction.class, Material.MAP,         new ArgumentSlot("location",ValueType.LOCATION)),
     ENTITY_SET_VELOCITY(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_MOVEMENT, SetVelocityAction.class, Material.PRISMARINE_SHARD, new ArgumentSlot("vector", ValueType.VECTOR)),
-
-    ENTITY_SET_TARGET(ActionCategory.ENTITY_ACTION, MenusCategory.OTHER, SetEntityTargetAction.class, Material.NETHER_STAR, new ArgumentSlot("entity",ValueType.TEXT)),
 
     ENTITY_SET_SCALE(ActionCategory.ENTITY_ACTION, MenusCategory.APPEARANCE, SetScaleAction.class, Material.SHULKER_SHELL, new ArgumentSlot("scale", ValueType.NUMBER), new ParameterSlot("add")),
     ENTITY_SET_STEP_HEIGHT(ActionCategory.ENTITY_ACTION, MenusCategory.APPEARANCE, SetStepHeightAction.class, Material.RABBIT_FOOT, new ArgumentSlot("height", ValueType.NUMBER), new ParameterSlot("add")),
