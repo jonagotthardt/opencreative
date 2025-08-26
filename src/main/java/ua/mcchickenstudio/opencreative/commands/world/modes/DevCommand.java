@@ -40,12 +40,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.clearPlayer;
 
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.giveDevPermissions;
 
@@ -68,11 +67,9 @@ public class DevCommand extends CommandHandler {
                 player.sendMessage(getLocaleMessage("only-in-world"));
                 return;
             }
-            if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-                player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
-                return;
-            }
-            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
+
+            if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
+
             if (args.length == 0 || args.length == 3) {
                 if (planet.getWorldPlayers().canDevelop(player) || planet.getWorldPlayers().isDeveloperGuest(player)) {
                     if (!planet.getWorldPlayers().isTrustedDeveloper(player)) {

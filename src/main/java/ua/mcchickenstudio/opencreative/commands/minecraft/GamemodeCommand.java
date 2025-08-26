@@ -33,8 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
@@ -56,12 +55,9 @@ public class GamemodeCommand extends CommandHandler {
             Bukkit.getServer().dispatchCommand(sender, "minecraft:gamemode " + String.join(" ", args));
             return;
         }
-        int cooldown = getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND);
-        if (cooldown > 0) {
-            sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(cooldown)));
-            return;
-        }
-        setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
+
+        if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
+
         if (!player.hasPermission("opencreative.game-mode.bypass")) {
             /*
              * Checking is player owner, builder or developer of world.

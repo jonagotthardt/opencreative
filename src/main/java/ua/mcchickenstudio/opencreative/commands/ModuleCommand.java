@@ -34,8 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.parseModuleLines;
 
@@ -47,11 +46,9 @@ public class ModuleCommand extends CommandHandler {
         DevPlanet devPlanet = null;
         if (sender instanceof Player senderPlayer) {
             player = senderPlayer;
-            if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-                sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
-                return;
-            }
-            setCooldown(player,OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
+
+            if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
+
             devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
         }
         if (args.length == 0) {

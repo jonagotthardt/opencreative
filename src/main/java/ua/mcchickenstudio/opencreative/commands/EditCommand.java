@@ -95,9 +95,7 @@ public class EditCommand extends CommandHandler {
     }
 
     private boolean checkPermissions(Player player) {
-        if (!checkAndSetCooldownWithMessage(player, OpenCreative.getSettings().getGroups().getGroup(player), CooldownUtils.CooldownType.GENERIC_COMMAND)) {
-            return false;
-        }
+        if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return false;
 
         if (player.hasPermission("opencreative.edit.bypass")) return true;
 

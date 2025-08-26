@@ -55,8 +55,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.loadLocales;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.setPlanetConfigParameter;
@@ -78,12 +77,7 @@ public class CreativeCommand extends CommandHandler {
             Player player = null;
             if (sender instanceof Player) {
                 player = (Player) sender;
-                int cooldown = getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND);
-                if (cooldown > 0) {
-                    sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(cooldown)));
-                    return;
-                }
-                setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
+                if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
             }
             switch (args[0].toLowerCase()) {
                 case "reload" -> {

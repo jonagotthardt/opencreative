@@ -44,8 +44,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
@@ -64,11 +63,9 @@ public class WorldCommand extends CommandHandler {
             sender.sendMessage(getLocaleMessage("only-players"));
             return;
         }
-        if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-            player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.GENERIC_COMMAND))));
-            return;
-        }
-        setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
+
+        if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
+
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet == null) {
             player.sendMessage(getLocaleMessage("only-in-world"));

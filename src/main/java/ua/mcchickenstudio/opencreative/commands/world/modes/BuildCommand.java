@@ -40,11 +40,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.removePlayerWithLocation;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 
 
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
@@ -66,11 +65,9 @@ public class BuildCommand extends CommandHandler {
                 player.sendMessage(getLocaleMessage("only-in-world"));
                 return;
             }
-            if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-                player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%",String.valueOf(getCooldown(player,CooldownUtils.CooldownType.GENERIC_COMMAND))));
-                return;
-            }
-            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
+            
+            if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
+
             if (args.length == 0) {
                 removePlayerWithLocation(player);
                 if (planet.getMode() != Planet.Mode.BUILD) {
