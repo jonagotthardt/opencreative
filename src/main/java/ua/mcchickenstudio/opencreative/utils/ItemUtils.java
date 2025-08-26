@@ -564,7 +564,6 @@ public class ItemUtils {
                 }
                 case BlockStateMeta blockMeta when blockMeta.getBlockState() instanceof CommandBlock block -> {
                     if (clearCommandBlocksData) {
-                        if (!block.name().contains(Component.text("@"))) block.name(null);
                         if (!block.getCommand().isEmpty()) block.setCommand(null);
                         blockMeta.setBlockState(block);
                         item.setItemMeta(blockMeta);
