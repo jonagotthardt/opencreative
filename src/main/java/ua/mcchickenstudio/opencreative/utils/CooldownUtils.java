@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.utils;
 
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.settings.groups.Group;
 
 import java.util.HashMap;
@@ -112,6 +113,11 @@ public class CooldownUtils {
             return false;
         }
         return true;
+    }
+
+    public static boolean checkAndSetCooldownWithMessage(Player player, CooldownType type) {
+        Group group = OpenCreative.getSettings().getGroups().getGroup(player);
+        return checkAndSetCooldownWithMessage(player, group, type);
     }
 
     public static void clearPlayerCooldowns(Player player) {
