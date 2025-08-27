@@ -51,10 +51,7 @@ public class JoinCommand extends CommandHandler {
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
-            Group group = OpenCreative.getSettings().getGroups().getGroup(player);
-            if (!checkAndSetCooldownWithMessage(player, group, CooldownUtils.CooldownType.GENERIC_COMMAND)) {
-                return;
-            }
+            if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
         }
 
         if (OpenCreative.getSettings().isMaintenance() && !sender.hasPermission("opencreative.maintenance.bypass")) {

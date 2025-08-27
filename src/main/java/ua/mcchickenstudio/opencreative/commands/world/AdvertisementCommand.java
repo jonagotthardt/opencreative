@@ -42,8 +42,7 @@ import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.commands.world.JoinCommand.findPlanet;
 import static ua.mcchickenstudio.opencreative.commands.world.JoinCommand.handlePlayerConnection;
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 /**
@@ -79,11 +78,7 @@ public class AdvertisementCommand extends CommandHandler {
                 handlePlanetAdvertisement(player, OpenCreative.getPlanetsManager().getPlanetByPlayer(player));
                 break;
             case 1:  // /ad [planet id]
-                if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-                    player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND))));
-                    return;
-                }
-                setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.GENERIC_COMMAND);
+                if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
                 handlePlayerConnection(player, args[0]);
                 break;
             case 2:  // /ad [planet id] [player]
