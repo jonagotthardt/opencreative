@@ -81,7 +81,7 @@ public final class PlaceBlockListener implements Listener {
                 return;
             }
             if (blockAgainst.getType() == platform.getFloorMaterial()) {
-                if (block.getType() == Material.PISTON && ((blockAgainst.getZ()-platform.getBeginCoordinate()) % 4) == 0 && blockAgainst.getRelative(BlockFace.WEST).getType() == platform.getActionMaterial()) {
+                if (block.getType() == Material.PISTON && ((blockAgainst.getZ()-devPlanet.getDevPlatformer().getPlatformBeginLocation(platform).getBlockZ()) % 4) == 0 && blockAgainst.getRelative(BlockFace.WEST).getType() == platform.getActionMaterial()) {
                     Directional directional = (Directional) block.getBlockData();
                     if (directional.getFacing() != BlockFace.EAST && directional.getFacing() != BlockFace.WEST) {
                         directional.setFacing(player.getFacing().getOppositeFace());
