@@ -71,7 +71,9 @@ public final class DestroyBlockListener implements Listener {
             if (devPlanet.getIndestructibleBlocks().contains(block.getType())
                     || block.getType() == platform.getFloorMaterial()
                     || block.getType() == platform.getEventMaterial()
-                    || block.getType() == platform.getActionMaterial()) {
+                    || block.getType() == platform.getActionMaterial()
+                    || (block.getType() == Material.PISTON && block.getRelative(BlockFace.WEST).isSolid())
+            ) {
                 Sounds.DEV_NOT_ALLOWED.play(player);
                 event.setCancelled(true);
             }

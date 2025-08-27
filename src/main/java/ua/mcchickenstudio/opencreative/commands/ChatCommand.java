@@ -33,8 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.parsePAPI;
 
@@ -67,11 +66,7 @@ public class ChatCommand extends CommandHandler {
             return;
         }
         if (sender instanceof Player player) {
-            if (getCooldown(player, CooldownUtils.CooldownType.CREATIVE_CHAT) > 0) {
-                sender.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.CREATIVE_CHAT))));
-                return;
-            }
-            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown(), CooldownUtils.CooldownType.CREATIVE_CHAT);
+            if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.CREATIVE_CHAT)) return;
         }
         if (args.length == 1 && (args[0].equalsIgnoreCase("off")
                 || args[0].equalsIgnoreCase("on")
