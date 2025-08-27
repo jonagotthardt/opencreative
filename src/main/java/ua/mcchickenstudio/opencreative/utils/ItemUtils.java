@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
-import io.papermc.paper.command.CommandBlockHolder;
 import io.papermc.paper.persistence.PersistentDataContainerView;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
@@ -51,7 +50,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebugError;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemDescription;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemName;
 
-public class ItemUtils {
+public final class ItemUtils {
 
     private final static NamespacedKey ITEM_ID_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_item_id");
     private final static NamespacedKey ITEM_TYPE_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_item_type");

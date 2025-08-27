@@ -31,7 +31,7 @@ import ua.mcchickenstudio.opencreative.settings.Sounds;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class VariablesMenu extends AbstractMenu  {
+public final class VariablesMenu extends AbstractMenu  {
 
     private final ItemStack TEXT_ITEM = createItem(Material.BOOK,1,"menus.developer.variables.items.text");
     private final ItemStack NUMBER_ITEM = createItem(Material.SLIME_BALL,1,"menus.developer.variables.items.number");

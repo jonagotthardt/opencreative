@@ -35,7 +35,7 @@ import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
  * or manipulating worlds, like checking if
  * world is a planet.
  */
-public class WorldUtils {
+public final class WorldUtils {
 
     /**
      * Returns planet id from world's name

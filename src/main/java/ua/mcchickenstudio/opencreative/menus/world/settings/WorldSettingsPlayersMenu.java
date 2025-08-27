@@ -38,7 +38,7 @@ import java.util.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class WorldSettingsPlayersMenu extends LegacyMenu {
+public final class WorldSettingsPlayersMenu extends LegacyMenu {
 
     private final Player player;
     public static final Map<Player,String> playersSelected = new HashMap<>();

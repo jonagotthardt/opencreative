@@ -34,7 +34,7 @@ import java.time.Duration;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
-public class ValueTargetSelectionMenu extends AbstractMenu {
+public final class ValueTargetSelectionMenu extends AbstractMenu {
 
     private final Player player;
 

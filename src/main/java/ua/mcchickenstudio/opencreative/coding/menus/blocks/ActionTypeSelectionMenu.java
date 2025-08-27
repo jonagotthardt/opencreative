@@ -46,7 +46,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
-public class ActionTypeSelectionMenu extends BlocksWithMenusCategoryMenu<ActionType> {
+public final class ActionTypeSelectionMenu extends BlocksWithMenusCategoryMenu<ActionType> {
 
     private final ActionCategory action;
 

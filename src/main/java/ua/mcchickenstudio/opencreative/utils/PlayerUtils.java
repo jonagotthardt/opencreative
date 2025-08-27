@@ -57,7 +57,7 @@ import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet
  * This class contains most used utilities for manipulating
  * with player and his data.
  */
-public class PlayerUtils {
+public final class PlayerUtils {
 
     private final static Map<UUID, PermissionAttachment> permissionAttachmentMap = new HashMap<>();
 

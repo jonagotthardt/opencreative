@@ -43,7 +43,7 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
-public class WorldAccessMenu extends AbstractMenu implements WorldMenu {
+public final class WorldAccessMenu extends AbstractMenu implements WorldMenu {
 
     private final Planet planet;
     private final ItemStack CONNECT = createItem(Material.NETHER_STAR,1,"menus.world-access.items.connect","connect");

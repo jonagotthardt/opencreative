@@ -33,7 +33,7 @@ import ua.mcchickenstudio.opencreative.managers.packets.DisabledPacketManager;
 import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
 import ua.mcchickenstudio.opencreative.managers.packets.ProtocolLibManager;
 
-public class HookUtils {
+public final class HookUtils {
 
     public static boolean isPlaceholderAPIEnabled = false;
     public static boolean isProtocolLibEnabled = false;

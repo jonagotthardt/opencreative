@@ -35,7 +35,7 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static org.bukkit.Material.*;
 
-public class WorldSettingsCategoryMenu extends AbstractMenu {
+public final class WorldSettingsCategoryMenu extends AbstractMenu {
 
     private final PlanetInfo.Category currentCategory;
     private final ItemStack BACK_ITEM = createItem(SPECTRAL_ARROW,1,"menus.world-settings-categories.items.back");

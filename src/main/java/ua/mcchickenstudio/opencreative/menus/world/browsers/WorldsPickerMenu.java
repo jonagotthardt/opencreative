@@ -28,7 +28,7 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.util.Set;
 
-public class WorldsPickerMenu extends WorldsBrowserMenu{
+public final class WorldsPickerMenu extends WorldsBrowserMenu {
 
     public WorldsPickerMenu(Player player, Set<Planet> planets) {
         super(player, planets, false);

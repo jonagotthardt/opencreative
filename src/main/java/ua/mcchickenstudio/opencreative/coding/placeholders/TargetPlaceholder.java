@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 
-public class TargetPlaceholder extends KeyPlaceholder {
+public final class TargetPlaceholder extends KeyPlaceholder {
 
     public TargetPlaceholder() {
         super("selected","selected_uuid","target","target_uuid","targets","selection");

@@ -50,7 +50,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
  * This class contains utilities for handling exceptions
  * and logging them in console with friendly look.
  */
-public class ErrorUtils {
+public final class ErrorUtils {
 
     private static String cutClassesName(String text) {
         String newText = text == null ? "Error message is not available" : text;

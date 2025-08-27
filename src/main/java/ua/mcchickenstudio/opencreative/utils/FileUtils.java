@@ -41,7 +41,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
  * This class contains utils for creating, reading, modifying
  * and removing files for worlds.
  */
-public class FileUtils {
+public final class FileUtils {
 
     /**
      * Creates planet's settings.yml file.

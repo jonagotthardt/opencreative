@@ -26,7 +26,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class PAPIUtils {
+public final class PAPIUtils {
 
     public static String parsePlaceholdersAPI(OfflinePlayer offlinePlayer, String string) {
         return PlaceholderAPI.setPlaceholders(offlinePlayer,string);

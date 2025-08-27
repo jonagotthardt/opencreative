@@ -25,7 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public class PlanetPlaceholder extends KeyPlaceholder {
+public final class PlanetPlaceholder extends KeyPlaceholder {
 
     public PlanetPlaceholder() {
         super("online","players_amount","entities_amount");

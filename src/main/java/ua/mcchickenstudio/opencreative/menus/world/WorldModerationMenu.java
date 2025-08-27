@@ -35,7 +35,7 @@ import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class WorldModerationMenu extends AbstractMenu implements WorldMenu {
+public final class WorldModerationMenu extends AbstractMenu implements WorldMenu {
 
     private final Planet planet;
     private final ItemStack CLEAR_NAME = createItem(Material.NAME_TAG,1,"menus.world-moderation.items.clear-name","clear-name");

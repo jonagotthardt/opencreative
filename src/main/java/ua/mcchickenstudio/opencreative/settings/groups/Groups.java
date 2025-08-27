@@ -35,7 +35,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalError
  * when getting player's or world's owner group to
  * get some limits or modifiers.
  */
-public class Groups {
+public final class Groups {
 
     private final Set<Group> groups = new LinkedHashSet<>();
 

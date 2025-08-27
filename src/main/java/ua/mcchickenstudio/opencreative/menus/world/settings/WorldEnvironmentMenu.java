@@ -37,7 +37,7 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 
-public class WorldEnvironmentMenu extends AbstractMenu {
+public final class WorldEnvironmentMenu extends AbstractMenu {
 
     private final Player player;
     private final DevPlanet devPlanet;

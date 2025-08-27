@@ -40,9 +40,9 @@ import java.util.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
-public class EventValuesMenu extends ListBrowserMenu<EventValue> {
+public final class EventValuesMenu extends ListBrowserMenu<EventValue> {
 
-    protected MenusCategory currentCategory = MenusCategory.WORLD;
+    private MenusCategory currentCategory = MenusCategory.WORLD;
 
     public EventValuesMenu(Player player) {
         super(player, ChatColor.stripColor(getLocaleMessage("menus.developer.event-values.title",false)));
@@ -65,7 +65,7 @@ public class EventValuesMenu extends ListBrowserMenu<EventValue> {
         }
     }
 
-    protected Set<MenusCategory> getMenusCategories() {
+    private Set<MenusCategory> getMenusCategories() {
         return new HashSet<>(List.of(MenusCategory.PLAYER,MenusCategory.ENTITY,MenusCategory.EVENTS,MenusCategory.WORLD));
     }
 

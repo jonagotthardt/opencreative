@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.variables.WorldVariables;
 
 import java.util.List;
 
-public class ListPlaceholder extends KeyValuePlaceholder {
+public final class ListPlaceholder extends KeyValuePlaceholder {
 
     public ListPlaceholder() {
         super("list","list_local","list_game","list_global","list_saved","list_save");

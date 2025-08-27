@@ -37,7 +37,7 @@ import java.util.Set;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class WorldEnvironmentColorMenu extends AbstractListMenu<Material> {
+public final class WorldEnvironmentColorMenu extends AbstractListMenu<Material> {
 
     private final Set<Material> materials = new HashSet<>();
     private final String type;

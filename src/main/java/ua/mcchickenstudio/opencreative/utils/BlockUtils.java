@@ -42,7 +42,7 @@ import java.util.List;
  * <h1>BlockUtils</h1>
  * This class represents useful utils for manipulating with blocks.
  */
-public class BlockUtils {
+public final class BlockUtils {
 
     /**
      * Change text into line on sign.

@@ -42,7 +42,7 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
-public class BlocksManipulatorMenu extends AbstractMenu {
+public final class BlocksManipulatorMenu extends AbstractMenu {
 
     private final Player player;
     private final DevPlanet devPlanet;

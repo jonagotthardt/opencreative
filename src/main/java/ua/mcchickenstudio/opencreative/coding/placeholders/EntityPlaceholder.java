@@ -25,7 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.MobInteractionEvent;
 
-public class EntityPlaceholder extends KeyPlaceholder {
+public final class EntityPlaceholder extends KeyPlaceholder {
 
     public EntityPlaceholder() {
         super("entity","entity_uuid");

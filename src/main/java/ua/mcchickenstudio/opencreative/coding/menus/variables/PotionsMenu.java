@@ -39,7 +39,7 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemName;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class PotionsMenu extends ListBrowserMenu<PotionEffectType> {
+public final class PotionsMenu extends ListBrowserMenu<PotionEffectType> {
 
     private final Material potionMaterial;
 

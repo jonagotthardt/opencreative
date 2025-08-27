@@ -53,7 +53,7 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
  * This class represents Settings, that stores
  * values which are used in plugin.
  */
-public class Settings {
+public final class Settings {
 
     private boolean debug = false;
     private boolean maintenance = false;

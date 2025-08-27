@@ -32,7 +32,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
  * has methods to register custom placeholders.
  * @see Placeholder
  */
-public class Placeholders {
+public final class Placeholders {
 
     private static Placeholders instance;
     private final List<Placeholder> placeholders = new ArrayList<>();
