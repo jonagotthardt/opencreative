@@ -34,7 +34,7 @@ import java.nio.file.Paths;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class Watchdog implements StabilityManager {
+public final class Watchdog implements StabilityManager {
 
     private FileStore STORAGE_VOLUME;
     private BukkitRunnable runnable;

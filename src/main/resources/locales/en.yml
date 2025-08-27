@@ -149,6 +149,26 @@ environment:
   platform:
     claimed: "%prefix%Created a &6new platform &ffor coding, now you can place coding blocks here too!"
     limit: "%prefix%&cYou reached a limit of %amount% platforms, you can't create new coding platforms anymore :("
+  hints:
+    cycle: "&aNumber &f- Time in ticks, &6Text&f - Name"
+    function: "&fClick with &6Text&f in hand to rename"
+    method: "&fClick with &6Text&f in hand to rename"
+    launch-function: "&7RMB &f- Select a function, &7Shift+RMB &f- Set target"
+    launch-method: "&7RMB &f- Select a method, &7Shift+RMB &f- Set target"
+    event: "&7RMB &f- Select an event"
+    action: "&7RMB &f- Select an action, &7Shift+RMB &f- Set target"
+    condition: "&7RMB &f- Select a condition, &7Shift+RMB &f- Set target"
+    variable: "&7Chat &f- Rename, &7RMB &f- Change type"
+    event-value: "&7RMB &f- Select a type, &7Shift+RMB &f- Set target"
+    number: "&7Chat &f- Set the number, &7LMB &f- Copy in chat"
+    text: "&7Chat &f- Set the text, &7LMB &f- Copy in chat"
+    potion: "&7Chat &f- Set duration and strength"
+    boolean: "&7RMB &f- Change type"
+    location:
+      build: "&7RMB &f- Set location, &7LMB &f- Return to coding"
+      dev: "&7LMB &f- Teleport to world, &7SHIFT+LMB &f- Teleport to location"
+    vector: "&7Chat &f- Set coordinates of vector"
+    particle: "&7RMB &f- Select a type"
 help:
   placeholders: "%prefix%List of placeholders: &6%player% %player_uuid% %entity% %entity_uuid% %target% %target_uuid% %players_amount% %entities_amount% %online%"
 creative:

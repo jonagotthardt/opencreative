@@ -29,7 +29,7 @@ import org.bukkit.inventory.ItemStack;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class CreativeMenu extends AbstractMenu {
+public final class CreativeMenu extends AbstractMenu {
 
     private final ItemStack RELOAD_ITEM = createItem(Material.STRUCTURE_VOID,1,"menus.creative.items.reload","reload");
     private final ItemStack RESET_LOCALE_ITEM = createItem(Material.KNOWLEDGE_BOOK,1,"menus.creative.items.reset-locale","reset-locale");

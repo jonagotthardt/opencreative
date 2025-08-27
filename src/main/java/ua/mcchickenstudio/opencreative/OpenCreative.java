@@ -56,6 +56,8 @@ import ua.mcchickenstudio.opencreative.listeners.world.BlockChangeListener;
 import ua.mcchickenstudio.opencreative.listeners.world.RedstoneListener;
 import ua.mcchickenstudio.opencreative.managers.blocks.BlocksManager;
 import ua.mcchickenstudio.opencreative.managers.economy.Economy;
+import ua.mcchickenstudio.opencreative.managers.hints.HintManager;
+import ua.mcchickenstudio.opencreative.managers.hints.Hints;
 import ua.mcchickenstudio.opencreative.managers.modules.Moduler;
 import ua.mcchickenstudio.opencreative.managers.modules.ModuleManager;
 import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
@@ -101,6 +103,7 @@ public final class OpenCreative extends JavaPlugin {
     private ModuleManager moduler;
     private StabilityManager watchdog;
     private BlocksManager blocks;
+    private HintManager hints;
     private DevPlatformer devPlatformer;
 
     private static final String version = "5.7.0";
@@ -170,6 +173,8 @@ public final class OpenCreative extends JavaPlugin {
         watchdog.init();
         blocks = HookUtils.getBlocks();
         blocks.init();
+        hints = new Hints();
+        hints.init();
 
         long loadedTime = System.currentTimeMillis()-startTime;
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -356,6 +361,25 @@ public final class OpenCreative extends JavaPlugin {
      */
     public static PacketManager getPacketManager() {
         return getPlugin().packet;
+    }
+
+    /**
+     * Sets custom hint manager.
+     * @param hintManager hint manager.
+     */
+    @SuppressWarnings("unused")
+    public static void setHintManager(@NotNull HintManager hintManager) {
+        getPlugin().getLogger().info("Now using hint manager: " + hintManager.getName());
+        getPlugin().hints = hintManager;
+    }
+
+    /**
+     * Gets hint manager, that sends suggestions to players in action bar.
+     * @return hint manager.
+     */
+    @SuppressWarnings("unused")
+    public static HintManager getHintManager() {
+        return getPlugin().hints;
     }
 
     /**

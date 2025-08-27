@@ -20,7 +20,7 @@ package ua.mcchickenstudio.opencreative.managers.stability;
 
 import org.jetbrains.annotations.NotNull;
 
-public class DisabledWatchdog implements StabilityManager {
+public final class DisabledWatchdog implements StabilityManager {
 
     @Override
     public void init() {

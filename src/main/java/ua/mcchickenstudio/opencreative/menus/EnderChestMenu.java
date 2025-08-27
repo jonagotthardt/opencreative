@@ -37,7 +37,7 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetPlayer;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
-public class EnderChestMenu extends AbstractMenu implements WorldMenu, BlockMenu {
+public final class EnderChestMenu extends AbstractMenu implements WorldMenu, BlockMenu {
 
     private final @NotNull Planet planet;
     private final @Nullable Location location;

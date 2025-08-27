@@ -44,7 +44,7 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isLobbyWorld;
 
-public class WorldEditManager implements BlocksManager {
+public final class WorldEditManager implements BlocksManager {
 
     @Override
     public int setBlocksType(@NotNull Location first, @NotNull Location second, @NotNull Material material, int limit) {
