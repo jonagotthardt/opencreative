@@ -16,22 +16,25 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.utils.millennium.math;
+package ua.mcchickenstudio.opencreative.managers.hints;
 
-public final class GeneralMath {
-    public static float sin(float value, BuildSpeed s) {
-        return (s.equals(BuildSpeed.NORMAL))
-                ? (float) Math.sin(value)
-                : (s.equals(BuildSpeed.FAST)
-                ? FastMath.sin(value)
-                : FastMath.fastCos(value));
-    }
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.managers.Manager;
 
-    public static float cos(float value, BuildSpeed s) {
-        return (s.equals(BuildSpeed.NORMAL))
-                ? (float) Math.cos(value)
-                : (s.equals(BuildSpeed.FAST)
-                ? FastMath.cos(value)
-                : FastMath.fastCos(value));
-    }
+/**
+ * <h1>HintManager</h1>
+ * This interface represents a hint manager,
+ * that sends suggestions for players, when they
+ * are holding coding item or looking on coding block.
+ */
+public interface HintManager extends Manager {
+
+    /**
+     * Checks player for suggestions and sends hint
+     * in action bar if it's necessary.
+     * @param player player to check.
+     */
+    void checkForHints(@NotNull Player player);
+
 }

@@ -29,7 +29,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 /**
  * This class contains utils for checking and modifying player's cooldown.
  */
-public class CooldownUtils {
+public final class CooldownUtils {
 
     static final HashMap<Player, Long> genericCommandCooldown = new HashMap<>();
     static final HashMap<Player, Long> advertisementCommandCooldown = new HashMap<>();

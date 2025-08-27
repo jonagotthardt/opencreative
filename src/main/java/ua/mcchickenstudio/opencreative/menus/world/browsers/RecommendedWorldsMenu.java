@@ -42,7 +42,7 @@ import java.util.List;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class RecommendedWorldsMenu extends AbstractMenu {
+public final class RecommendedWorldsMenu extends AbstractMenu {
 
     private final int[] featuredWorldsSlots = {10,11,12,13,14,15,16, 19,20,21,22,23,24,25, 28,29,30,31,32,33,34};
     private final ItemStack OWN_WORLDS = createItem(Material.REPEATING_COMMAND_BLOCK,1,"menus.all-worlds.items.own-worlds");

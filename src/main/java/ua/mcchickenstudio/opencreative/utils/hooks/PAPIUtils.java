@@ -26,7 +26,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class PAPIUtils {
+public final class PAPIUtils {
 
     public static String parsePlaceholdersAPI(OfflinePlayer offlinePlayer, String string) {
         return PlaceholderAPI.setPlaceholders(offlinePlayer,string);
@@ -112,7 +112,7 @@ class Placeholder extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "5.7";
+        return "5.8";
     }
 
     @Override

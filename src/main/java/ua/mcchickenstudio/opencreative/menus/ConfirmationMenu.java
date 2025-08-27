@@ -31,7 +31,7 @@ import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 
-public class ConfirmationMenu extends AbstractMenu{
+public final class ConfirmationMenu extends AbstractMenu {
 
     private final Material infoMaterial;
     private final String infoName;

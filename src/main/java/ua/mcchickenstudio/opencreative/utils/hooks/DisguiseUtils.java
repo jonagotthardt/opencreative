@@ -28,7 +28,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-public class DisguiseUtils {
+public final class DisguiseUtils {
 
     public static void clearDisguises(World world) {
         for (Entity entity : world.getEntities()) {

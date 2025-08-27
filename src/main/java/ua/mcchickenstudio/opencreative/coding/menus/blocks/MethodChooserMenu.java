@@ -49,7 +49,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
-public class MethodChooserMenu extends ListBrowserMenu<Location> {
+public final class MethodChooserMenu extends ListBrowserMenu<Location> {
 
     private final DevPlanet devPlanet;
     private final Location signLocation;

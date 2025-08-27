@@ -50,7 +50,7 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
- * <h1>BlockParser</h1>
+ * <h1>CodingBlockParser</h1>
  * This class represents parser of coding blocks. It has methods to
  * read coding block information and save it into planet's code script.getConfig().
  * @see CodeScript

@@ -46,7 +46,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isPlanet;
 
-public class Space implements PlanetsManager {
+public final class Space implements PlanetsManager {
 
     private final Set<Planet> planets = new HashSet<>();
     private final Set<Planet> corruptedPlanets = new HashSet<>();

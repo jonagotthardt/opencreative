@@ -31,7 +31,7 @@ import java.util.List;
  * With this players can just select parameter value instead of putting tems in chest.
  * @see ArgumentSlot
  */
-public class ParameterSlot extends ArgumentSlot {
+public final class ParameterSlot extends ArgumentSlot {
 
     private final List<Object> values = new ArrayList<>();
     private final List<Material> icons = new ArrayList<>();

@@ -35,7 +35,7 @@ import java.util.List;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class ModulesBrowserMenu extends ListBrowserMenu<Module> {
+public final class ModulesBrowserMenu extends ListBrowserMenu<Module> {
 
     private final List<Module> modules = new ArrayList<>();
 

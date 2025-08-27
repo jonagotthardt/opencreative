@@ -37,7 +37,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * This class represents a menu for selecting menus category
  * and opening a coding block type selection menu.
  */
-public class BlocksCategorySelectionMenu extends MenusCategorySelectionMenu implements BlockMenu {
+public final class BlocksCategorySelectionMenu extends MenusCategorySelectionMenu implements BlockMenu {
 
     private ExecutorCategory executorCategory = null;
     private ActionCategory actionCategory = null;

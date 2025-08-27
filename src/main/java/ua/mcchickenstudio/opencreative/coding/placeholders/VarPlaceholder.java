@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import ua.mcchickenstudio.opencreative.coding.variables.WorldVariable;
 import ua.mcchickenstudio.opencreative.coding.variables.WorldVariables;
 
-public class VarPlaceholder extends KeyValuePlaceholder {
+public final class VarPlaceholder extends KeyValuePlaceholder {
 
     public VarPlaceholder() {
         super("var","var_local","var_game","var_global","var_save","var_saved");

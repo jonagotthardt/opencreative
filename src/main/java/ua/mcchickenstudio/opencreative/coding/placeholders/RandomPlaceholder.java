@@ -27,7 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import java.util.List;
 import java.util.Random;
 
-public class RandomPlaceholder extends KeyPlaceholder {
+public final class RandomPlaceholder extends KeyPlaceholder {
 
     public RandomPlaceholder() {
         super("random","random_uuid");

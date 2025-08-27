@@ -43,7 +43,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMe
  * {@link Menus#addMenu(InventoryMenu)} method. To avoid memory leaks, please unregister it
  * on inventory close event with {@link Menus#removeMenu(InventoryMenu)}
  */
-public class Menus implements Listener {
+public final class Menus implements Listener {
 
     private static final List<InventoryMenu> activeMenus = new ArrayList<>();
     private final BukkitRunnable runnable;

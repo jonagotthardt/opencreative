@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.*;
 
-public class EventPlaceholder extends KeyPlaceholder {
+public final class EventPlaceholder extends KeyPlaceholder {
 
     public EventPlaceholder() {
         super("killer","damager","killer_uuid","damager_uuid","victim","victim_uuid","shooter","shooter_uuid","event");

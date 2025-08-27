@@ -39,7 +39,7 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class WorldGenerationMenu extends AbstractMenu {
+public final class WorldGenerationMenu extends AbstractMenu {
 
     private final Player player;
     private final ParameterButton generatorButton;

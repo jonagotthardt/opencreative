@@ -41,7 +41,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
-public class ExecutorTypeSelectionMenu extends BlocksWithMenusCategoryMenu<ExecutorType> {
+public final class ExecutorTypeSelectionMenu extends BlocksWithMenusCategoryMenu<ExecutorType> {
 
     private final ExecutorCategory executor;
 

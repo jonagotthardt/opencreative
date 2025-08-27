@@ -47,7 +47,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * This class represents a menus, that displays specified list of worlds.
  * Player can sort worlds and change pages.
  */
-public class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
+public final class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
 
     private final List<Planet> planets;
 

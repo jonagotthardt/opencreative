@@ -36,7 +36,7 @@ import java.util.Map;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class ParticlesMenu extends ListBrowserMenu<Particle> {
+public final class ParticlesMenu extends ListBrowserMenu<Particle> {
 
     private static final Map<Particle,Material> particles = new HashMap<>();
 

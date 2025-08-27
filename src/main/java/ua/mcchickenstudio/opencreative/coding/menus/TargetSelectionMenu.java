@@ -33,7 +33,7 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
-public class TargetSelectionMenu extends AbstractMenu {
+public final class TargetSelectionMenu extends AbstractMenu {
 
     private final Location signLocation;
 

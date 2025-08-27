@@ -21,7 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.menus.layouts;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import org.bukkit.block.Block;
 
-public class LayoutMaker extends Layout {
+public final class LayoutMaker extends Layout {
 
     public LayoutMaker(ActionType action, Block chestBlock) {
         super(3, action, chestBlock);

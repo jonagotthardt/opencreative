@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 
-public class PlayerPlaceholder extends KeyPlaceholder {
+public final class PlayerPlaceholder extends KeyPlaceholder {
 
     public PlayerPlaceholder() {
         super("player","player_uuid","display_name");

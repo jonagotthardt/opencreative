@@ -42,7 +42,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * This class represents a menus, that displays specified list of entities in world.
  * Player can teleport to entity or remove it.
  */
-public class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
+public final class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
 
     private final Planet planet;
     private final List<ParameterButton> buttons = new ArrayList<>();

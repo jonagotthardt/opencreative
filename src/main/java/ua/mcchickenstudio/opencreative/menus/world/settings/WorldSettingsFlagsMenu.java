@@ -39,7 +39,7 @@ import java.util.List;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
 
-public class WorldSettingsFlagsMenu extends AbstractMenu {
+public final class WorldSettingsFlagsMenu extends AbstractMenu {
 
     private final ItemStack BACK_ITEM = createItem(Material.SPECTRAL_ARROW,1,"menus.world-settings-flags.items.back");
 

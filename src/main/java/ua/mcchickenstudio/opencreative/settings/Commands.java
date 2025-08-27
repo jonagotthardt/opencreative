@@ -27,7 +27,7 @@ import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningErrorMessage;
 
-public class Commands  {
+public final class Commands  {
 
     private final Map<String,Command> onLobbyCommands = new LinkedHashMap<>();
     private final Map<String,Command> onPlanetConnectCommands = new LinkedHashMap<>();

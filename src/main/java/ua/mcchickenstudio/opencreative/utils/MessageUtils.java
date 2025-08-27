@@ -1,5 +1,5 @@
 /*
- * OpenCreative+, Minecraft OpenCreative.getPlugin().
+ * OpenCreative+, Minecraft plugin.
  * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
@@ -49,7 +49,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalError
  * This class contains utils, that can return messages,
  * modify and format them. Uses translation files.
  */
-public class MessageUtils {
+public final class MessageUtils {
     
     private static File localizationFile;
     private static FileConfiguration localizationConfig;

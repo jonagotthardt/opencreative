@@ -32,7 +32,7 @@ import java.util.UUID;
  * This class represents a custom advancement, used in
  * {@link ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.communication.ShowAdvancementAction Show Advancement Action}.
  */
-public class Advancement {
+public final class Advancement {
 
     private final Material material;
     private final AdvancementStyle advancementStyle;

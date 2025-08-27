@@ -22,7 +22,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
-public class DisabledBlocksManager implements BlocksManager {
+public final class DisabledBlocksManager implements BlocksManager {
 
     @Override
     public int setBlocksType(@NotNull Location first, @NotNull Location second, @NotNull Material material, int limit) {

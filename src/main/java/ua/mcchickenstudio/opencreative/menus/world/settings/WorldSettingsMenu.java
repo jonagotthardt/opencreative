@@ -47,7 +47,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
 
-public class WorldSettingsMenu extends AbstractMenu {
+public final class WorldSettingsMenu extends AbstractMenu {
 
     private final Planet planet;
     private final Player player;

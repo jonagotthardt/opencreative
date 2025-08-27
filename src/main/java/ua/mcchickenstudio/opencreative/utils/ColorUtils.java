@@ -18,7 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
-public class ColorUtils {
+public final class ColorUtils {
 
     public static int[] parseRGB(String string) {
         int[] rgbColor = new int[3];

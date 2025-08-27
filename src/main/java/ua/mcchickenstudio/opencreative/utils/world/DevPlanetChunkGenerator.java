@@ -29,7 +29,7 @@ import java.util.Random;
  * This class represents a ChunkGenerator, that
  * generates empty world without any terrain.
  */
-public class DevPlanetChunkGenerator extends ChunkGenerator {
+public final class DevPlanetChunkGenerator extends ChunkGenerator {
 
     @Override
     public @NotNull ChunkData generateChunkData(@NotNull World world, @NotNull Random random, int x, int z, @NotNull BiomeGrid biome) {

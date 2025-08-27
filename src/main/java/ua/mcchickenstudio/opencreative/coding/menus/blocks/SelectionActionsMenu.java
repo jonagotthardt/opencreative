@@ -41,7 +41,7 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
-public class SelectionActionsMenu extends AbstractMenu {
+public final class SelectionActionsMenu extends AbstractMenu {
 
     private final Player player;
     private final Location signLocation;

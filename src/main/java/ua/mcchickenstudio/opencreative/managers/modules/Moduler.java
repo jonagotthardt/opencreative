@@ -43,7 +43,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMe
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public class Moduler implements ModuleManager {
+public final class Moduler implements ModuleManager {
     
     private final Set<Module> modules = new HashSet<>();
 

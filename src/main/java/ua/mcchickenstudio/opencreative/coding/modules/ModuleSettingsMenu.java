@@ -46,7 +46,7 @@ import java.util.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
-public class ModuleSettingsMenu extends AbstractMenu {
+public final class ModuleSettingsMenu extends AbstractMenu {
 
     private final Module module;
     private final Player player;
