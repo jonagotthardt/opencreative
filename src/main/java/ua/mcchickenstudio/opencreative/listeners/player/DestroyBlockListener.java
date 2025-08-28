@@ -114,41 +114,12 @@ public final class DestroyBlockListener implements Listener {
                 translateBlockSign(block, player);
             }
 
-            if (block.getState() instanceof InventoryHolder holder) {
+            if (block.getState() instanceof InventoryHolder) {
                 Block blockAtDown = block.getRelative(BlockFace.DOWN).getRelative(BlockFace.DOWN);
                 if (blockAtDown.getType() != platform.getEventMaterial() && blockAtDown.getType() != platform.getActionMaterial()) {
                     return;
                 }
                 event.setCancelled(true);
-                ItemStack item = player.getInventory().getItemInMainHand();
-                if (item.isEmpty()) return;
-                ActionType action = ActionType.getType(block.getRelative(BlockFace.DOWN));
-                if (action == null) return;
-                if (action.getArgumentsSlots().length == 0) return;
-                int maximumSlots = 0;
-                List<Integer> ignored = new ArrayList<>();
-                for (ArgumentSlot argument : action.getArgumentsSlots()) {
-                    if (argument.isParameter()) ignored.add(maximumSlots);
-                    maximumSlots += argument.getListSize();
-                }
-                Inventory inventory = holder.getInventory();
-                for (int slot = 0; slot < maximumSlots; slot++) {
-                    if (slot >= inventory.getSize()) {
-                        Sounds.DEV_NOT_ALLOWED.play(player);
-                        return;
-                    }
-                    if (ignored.contains(slot)) continue;
-                    if (inventory.getItem(slot) == null) {
-                        inventory.setItem(slot, item);
-                        player.getInventory().setItemInMainHand(null);
-                        Sounds.DEV_INSERTED_IN_CONTAINER.play(player);
-                        Layout layout = devPlanet.getOpenedMenu(inventory.getLocation());
-                        if (layout != null && slot < layout.getArgsSlots().size()) {
-                            layout.setItem(layout.getArgsSlots().get(slot), item);
-                        }
-                        break;
-                    }
-                }
             }
         } else if (planet != null) {
             if (ChangedWorld.isPlayerWithLocation(player) && !planet.getWorldPlayers().canBuild(player)) {

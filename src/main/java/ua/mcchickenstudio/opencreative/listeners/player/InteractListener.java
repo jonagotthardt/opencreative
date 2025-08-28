@@ -23,6 +23,7 @@ import com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent;
 import io.papermc.paper.event.player.PlayerNameEntityEvent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.block.sign.Side;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -33,6 +34,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.*
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.menus.*;
 import ua.mcchickenstudio.opencreative.coding.menus.blocks.*;
+import ua.mcchickenstudio.opencreative.coding.menus.layouts.ArgumentSlot;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
 import ua.mcchickenstudio.opencreative.coding.menus.variables.EventValuesMenu;
 import ua.mcchickenstudio.opencreative.coding.menus.variables.ParticlesMenu;
@@ -205,7 +207,39 @@ public final class InteractListener implements Listener {
      * @return true - opened container inventory, false - not opened.
      */
     private boolean handleContainerClick(PlayerInteractEvent event, Player player, DevPlanet devPlanet, Block clickedBlock) {
-        if (!(clickedBlock.getState() instanceof InventoryHolder)) return false;
+        if (!(clickedBlock.getState() instanceof InventoryHolder holder)) return false;
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+            ItemStack item = player.getInventory().getItemInMainHand();
+            if (item.isEmpty()) return true;
+            ActionType action = ActionType.getType(clickedBlock.getRelative(BlockFace.DOWN));
+            if (action == null) return true;
+            if (action.getArgumentsSlots().length == 0) return true;
+            int maximumSlots = 0;
+            List<Integer> ignored = new ArrayList<>();
+            for (ArgumentSlot argument : action.getArgumentsSlots()) {
+                if (argument.isParameter()) ignored.add(maximumSlots);
+                maximumSlots += argument.getListSize();
+            }
+            Inventory inventory = holder.getInventory();
+            for (int slot = 0; slot < maximumSlots; slot++) {
+                if (slot >= inventory.getSize()) {
+                    break;
+                }
+                if (ignored.contains(slot)) continue;
+                if (inventory.getItem(slot) == null) {
+                    inventory.setItem(slot, item);
+                    player.getInventory().setItemInMainHand(null);
+                    Sounds.DEV_INSERTED_IN_CONTAINER.play(player);
+                    Layout layout = devPlanet.getOpenedMenu(inventory.getLocation());
+                    if (layout != null && slot < layout.getArgsSlots().size()) {
+                        layout.setItem(layout.getArgsSlots().get(slot), item);
+                    }
+                    return true;
+                }
+            }
+            Sounds.DEV_NOT_ALLOWED.play(player);
+            return true;
+        }
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return false;
         if (player.isSneaking()) return true;
         Block actionBlock = clickedBlock.getRelative(BlockFace.DOWN);
