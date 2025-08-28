@@ -57,9 +57,10 @@ public final class PlaceBlockListener implements Listener {
         if (event.isCancelled()) return;
         Block block = event.getBlock();
         if (!(block.getState() instanceof InventoryHolder container)) return;
-        for (ItemStack insideItem : container.getInventory().getContents()) {
+        for (int i = 0; i < container.getInventory().getSize(); i++) {
+            ItemStack insideItem = container.getInventory().getItem(i);
             if (insideItem == null) continue;
-            ItemUtils.fixItem(insideItem);
+            container.getInventory().setItem(i, ItemUtils.fixItem(insideItem));
         }
     }
 

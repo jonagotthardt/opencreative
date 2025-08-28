@@ -140,12 +140,13 @@ public final class InteractListener implements Listener {
             case PAPER -> handlePaperInteraction(event, player, currentItem);
             case PRISMARINE_SHARD -> handlePrismarineShardClick(event, player, currentItem);
             case NAME_TAG -> {
+                event.setCancelled(true);
+                if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) return;
                 if (player.isSneaking()) {
                     new ValueTargetSelectionMenu(player).open(player);
                 } else {
                     new EventValuesMenu(player).open(player);
                 }
-                event.setCancelled(true);
             }
             case COMPARATOR -> {
                 if (clickedBlock != null) {
@@ -153,6 +154,8 @@ public final class InteractListener implements Listener {
                 }
             }
             case NETHER_STAR -> {
+                event.setCancelled(true);
+                if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) return;
                 if (player.isSneaking()) {
                     String particleType = getPersistentData(currentItem,getCodingParticleTypeKey());
                     if (particleType.isEmpty()) return;
@@ -165,10 +168,10 @@ public final class InteractListener implements Listener {
                 } else {
                     new ParticlesMenu(player).open(player);
                 }
-                event.setCancelled(true);
             }
             case POTION, GLASS_BOTTLE, LINGERING_POTION, SPLASH_POTION -> {
                 event.setCancelled(true);
+                if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) return;
                 if (player.isSneaking() && currentItem.getType() != Material.GLASS_BOTTLE) {
                     if (player.hasCooldown(currentItem.getType())) return;
                     player.setCooldown(currentItem.getType(),10);
@@ -529,7 +532,8 @@ public final class InteractListener implements Listener {
         setPersistentData(currentItem,getCodingVariableTypeKey(),type.name());
         Sounds.DEV_VARIABLE_CHANGE.play(player);
         player.swingMainHand();
-        player.sendMessage(Component.text(meta.getDisplayName()).clickEvent(ClickEvent.copyToClipboard(ChatColor.stripColor(meta.getDisplayName()))));
+        player.sendMessage(Component.text(meta.getDisplayName())
+                .clickEvent(ClickEvent.suggestCommand(ChatColor.stripColor(meta.getDisplayName()))));
     }
 
     private static VariableLink.VariableType getVariableType(ItemMeta meta) {

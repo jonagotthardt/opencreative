@@ -52,7 +52,7 @@ public final class Hints implements HintManager {
             return;
         }
         Block block = player.getTargetBlockExact(5);
-        if (block instanceof WallSign) {
+        if (block != null && block.getBlockData() instanceof WallSign) {
             Block farBlock = block.getRelative(BlockFace.NORTH);
             ExecutorCategory executor = ExecutorCategory.getByMaterial(farBlock.getType());
             if (executor != null) {
@@ -83,6 +83,9 @@ public final class Hints implements HintManager {
         if (item.isEmpty()) return;
         ValueType type = ValueType.getByMaterial(item.getType());
         if (type == ValueType.TEXT && item.getType() != Material.BOOK) {
+            if (item.getType() == Material.SPLASH_POTION || item.getType() == Material.LINGERING_POTION) {
+                player.sendActionBar(getLocaleComponent("environment.hints.potion", player));
+            }
             return;
         }
         String hint = switch (type) {
@@ -101,7 +104,7 @@ public final class Hints implements HintManager {
             public void run() {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     if (isEntityInLobby(player)) {
-                        return;
+                        continue;
                     }
                     checkForHints(player);
                 }

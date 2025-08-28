@@ -160,15 +160,15 @@ environment:
     condition: "&7RMB &f- Select a condition, &7Shift+RMB &f- Set target"
     variable: "&7Chat &f- Rename, &7RMB &f- Change type"
     event-value: "&7RMB &f- Select a type, &7Shift+RMB &f- Set target"
-    number: "&7Chat &f- Set the number, &7LMB &f- Copy in chat"
-    text: "&7Chat &f- Set the text, &7LMB &f- Copy in chat"
+    number: "&7Chat &f- Set the number, &7RMB &f- Copy in chat"
+    text: "&7Chat &f- Set the text, &7RMB &f- Copy in chat"
     potion: "&7Chat &f- Set duration and strength"
     boolean: "&7RMB &f- Change type"
     location:
       build: "&7RMB &f- Set location, &7LMB &f- Return to coding"
       dev: "&7LMB &f- Teleport to world, &7SHIFT+LMB &f- Teleport to location"
     vector: "&7Chat &f- Set coordinates of vector"
-    particle: "&7RMB &f- Select a type"
+    particle: "&7RMB &f- Select a type, &7Shift+RMB &f- Show particle"
 help:
   placeholders: "%prefix%List of placeholders: &6%player% %player_uuid% %entity% %entity_uuid% %target% %target_uuid% %players_amount% %entities_amount% %online%"
 creative:

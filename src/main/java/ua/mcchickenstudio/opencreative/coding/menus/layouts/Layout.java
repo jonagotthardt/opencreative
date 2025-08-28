@@ -256,6 +256,9 @@ public abstract class Layout extends AbstractMenu {
         argsSlots.add(slot);
     }
 
+    public List<Integer> getArgsSlots() {
+        return argsSlots;
+    }
 
     protected ParameterButton createParamButton(ParameterSlot argumentSlot, Object value) {
         String path = "items.developer." + (actionType.isCondition() ? "conditions" : "actions") + "." + actionType.name().toLowerCase().replace("_","-") + ".arguments." + argumentSlot.getPath();
