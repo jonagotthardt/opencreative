@@ -234,6 +234,7 @@ public final class InteractListener implements Listener {
                     if (layout != null && slot < layout.getArgsSlots().size()) {
                         layout.setItem(layout.getArgsSlots().get(slot), item);
                     }
+                    devPlanet.setCodeChanged(true);
                     return true;
                 }
             }
