@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Argument;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
@@ -52,8 +54,17 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
  */
 public final class ErrorUtils {
 
-    private static String cutClassesName(String text) {
-        String newText = text == null ? "Error message is not available" : text;
+    /**
+     * Cuts common packages paths from stack trace text.
+     * @param text stack trace to cut.
+     * @return stack trace without package paths,
+     * or Error message is not available, if text is null.
+     */
+    public static String cutClassesName(@Nullable String text) {
+        if (text == null) {
+            return "Error message is not available";
+        }
+        String newText = text;
         newText = newText.replace("ua.mcchickenstudio.opencreative.coding.","");
         newText = newText.replace("ua.mcchickenstudio.opencreative.","");
         newText = newText.replace("org.bukkit.","");
@@ -64,7 +75,14 @@ public final class ErrorUtils {
         return newText;
     }
 
-    public static String parseException(Exception error, boolean colored) {
+    /**
+     * Parses exception into user-friendly message, that can be
+     * printed into console or sent to player.
+     * @param error exception to parse.
+     * @param colored true - for player, false - for console.
+     * @return user-friendly exception.
+     */
+    public static @NotNull String parseException(@NotNull Exception error, boolean colored) {
         Set<String> lastStacks = new HashSet<>();
         byte i = 0;
         for (StackTraceElement stackTraceElement : error.getStackTrace()) {
@@ -117,8 +135,11 @@ public final class ErrorUtils {
     }
 
     /**
-     Sends error message to player.
-     **/
+     * Notifies player about error by sending message with error
+     * description in chat and sends warning log in console.
+     * @param player player to send error message.
+     * @param errorMessage message of exception.
+     */
     public static void sendPlayerErrorMessage(Player player, String errorMessage) {
         OpenCreative.getPlugin().getLogger().warning("An player error has occurred for " + player.getName() + ": " + errorMessage);
         player.sendMessage(getLocaleMessage("player-error").replace("%error%",errorMessage));
@@ -126,46 +147,71 @@ public final class ErrorUtils {
     }
 
     /**
-     Sends error message to player.
-     **/
+     * Notifies player about error by sending message with error
+     * description in chat and sends warning log in console
+     * with stack traces to find line, where error has occurred.
+     * @param player player to send error message.
+     * @param errorMessage description of error.
+     * @param error exception, that has occurred.
+     */
     public static void sendPlayerErrorMessage(Player player, String errorMessage, Exception error) {
         if (OpenCreative.getSettings().isConsoleWarnings()) OpenCreative.getPlugin().getLogger().warning("An player error has occurred for " + player.getName() + ": " + errorMessage + " " + parseException(error,false));
         Component message = Component
                 .text(getLocaleMessage("player-error").replace("%error%",errorMessage))
-                .hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(Component.text(parseException(error,true))));
+                .hoverEvent(HoverEvent.showText(Component.text(parseException(error,true))));
         player.sendMessage(message);
         Sounds.PLAYER_ERROR.play(player);
     }
 
     /**
-     Sends error message for planet's players.
-     **/
-    public static void sendPlanetErrorMessage(Planet planet, String errorMessage) {
-        if (OpenCreative.getSettings().isConsoleWarnings()) OpenCreative.getPlugin().getLogger().warning("An error has occurred in planet " + planet.getWorldName() + ": " + errorMessage);
+     * Notifies planet players about general error by sending message
+     * with error description in chat and sends warning log in console.
+     * <p>
+     * Not related to coding errors.
+     * @param planet planet to send error message.
+     * @param error description of error.
+     */
+    public static void sendPlanetErrorMessage(@NotNull Planet planet, @NotNull String error) {
+        if (OpenCreative.getSettings().isConsoleWarnings()) OpenCreative.getPlugin().getLogger().warning("An error has occurred in planet " + planet.getWorldName() + ": " + error);
         for (Player player : planet.getPlayers()) {
-            player.sendMessage(getLocaleMessage("planet-error").replace("%error%",errorMessage));
+            player.sendMessage(getLocaleMessage("planet-error").replace("%error%",error));
             Sounds.PLAYER_ERROR.play(player);
         }
     }
 
     /**
-     Sends error message for planet's players.
-     **/
+     * Notifies planet players about general error by sending message
+     * with error description in chat and sends warning log in console
+     * with stack traces to find line, where error has occurred.
+     * <p>
+     * Not related to coding errors.
+     * @param planet planet to send error message.
+     * @param errorMessage description of error.
+     * @param error exception, that has occurred.
+     */
     public static void sendPlanetErrorMessage(Planet planet, String errorMessage, Exception error) {
         if (OpenCreative.getSettings().isConsoleWarnings()) OpenCreative.getPlugin().getLogger().warning("An error has occurred in planet " + planet.getWorldName() + ": " + errorMessage + " " + parseException(error,false));
         for (Player player : planet.getPlayers()) {
             Component message = Component
                     .text(getLocaleMessage("planet-error").replace("%error%",errorMessage))
-                    .hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(Component.text(parseException(error,true))));
+                    .hoverEvent(HoverEvent.showText(Component.text(parseException(error,true))));
             player.sendMessage(message);
             Sounds.PLAYER_ERROR.play(player);
         }
     }
 
     /**
-     Sends error message about planet's code exception on running Action for planet's players.
-     **/
-    public static void sendPlanetCodeWarningMessage(Executor executor, Action action, String warningMessage) {
+     * Notifies planet players about coding warning, that has
+     * happened while executing action in executor.
+     * <p>
+     * Warnings don't stop executing the code, they just
+     * send notification, that something can be improved.
+     * @param executor executor, that executed action.
+     * @param action action, that produced warning.
+     * @param warning description of warning.
+     */
+    public static void sendPlanetCodeWarningMessage(@NotNull Executor executor, @NotNull Action action,
+                                                    @NotNull String warning) {
         Planet planet = executor.getPlanet();
         if (planet == null) return;
         for (Player player : planet.getPlayers()) {
@@ -173,7 +219,7 @@ public final class ErrorUtils {
                     .text(getLocaleMessage("planet-code-warning.message")
                             .replace("%event%", executor.getExecutorType().getLocaleName())
                             .replace("%action%",action.getActionType().getLocaleName())
-                            .replace("%warning%",warningMessage)
+                            .replace("%warning%",warning)
                             .replace("%x%",String.valueOf(action.getX()))
                             .replace("%y%",String.valueOf(executor.getY()))
                             .replace("%z%",String.valueOf(executor.getZ())))
@@ -185,8 +231,18 @@ public final class ErrorUtils {
     }
 
     /**
-     Sends error message about planet's code exception on running Action for planet's players.
-     **/
+     * Notifies planet players about coding exception, that has
+     * happened while executing action in executor.
+     * <p>
+     * Errors stop executing next actions to prevent
+     * happening new errors in same coding line. They
+     * tell that something went wrong, and it needs
+     * to be fixed.
+     * @param executor executor, that executed action.
+     * @param action action, that produced error.
+     * @param errorMessage description of error.
+     * @param error exception, that has occurred.
+     */
     public static void sendPlanetCodeErrorMessage(Executor executor, Action action, String errorMessage, Exception error) {
         Planet planet = executor.getPlanet();
         if (planet == null) return;
@@ -207,8 +263,18 @@ public final class ErrorUtils {
     }
 
     /**
-     Sends error message about planet's code exception on running Action for planet's players.
-     **/
+     * Notifies planet players about coding exception, that has
+     * happened while executing action in executor.
+     * <p>
+     * Errors stop executing next actions to prevent
+     * happening new errors in same coding line. They
+     * tell that something went wrong, and it needs
+     * to be fixed.
+     * @param executor executor, that executed action.
+     * @param action action, that produced error.
+     * @param entity target of action.
+     * @param errorMessage description of error.
+     */
     public static void sendPlanetCodeErrorMessage(Executor executor, Action action, Entity entity, String errorMessage) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(entity.getWorld());
         if (planet == null) return;
@@ -226,8 +292,15 @@ public final class ErrorUtils {
     }
 
     /**
-     Sends error message about planet's code exception on executing Executor for planet's players.
-     **/
+     * Notifies planet players about coding fatal error,
+     * that has happened while executing code.
+     * <p>
+     * Critical errors stop entire code in planet,
+     * and change its mode to Build.
+     * @param planet planet to send error message.
+     * @param executor executor, that executed action.
+     * @param errorMessage description of error.
+     */
     public static void sendPlanetCodeCriticalErrorMessage(Planet planet, Executor executor, String errorMessage) {
         if (planet == null) return;
         for (Player player : planet.getPlayers()) {
@@ -246,8 +319,17 @@ public final class ErrorUtils {
     }
 
     /**
-     Sends error message about planet's code exception on executing Executor for planet's players.
-     **/
+     * Notifies planet players about coding exception, that has
+     * happened while executing action in executor.
+     * <p>
+     * Errors stop executing next actions to prevent
+     * happening new errors in same coding line. They
+     * tell that something went wrong, and it needs
+     * to be fixed.
+     * @param planet planet to send error message.
+     * @param executor executor, that executed action.
+     * @param errorMessage description of error.
+     */
     public static void sendPlanetCodeErrorMessage(Planet planet, Executor executor, String errorMessage) {
         if (planet == null) return;
         for (Player player : planet.getPlayers()) {
@@ -266,8 +348,12 @@ public final class ErrorUtils {
     }
 
     /**
-     Sends error message about planet's code exception on executing Executor for planet's players.
-     **/
+     * Notifies planet players about coding issue, that has
+     * happened while compiling new code from dev planet.
+     * @param planet planet to send error message.
+     * @param block block, that caused issue.
+     * @param errorMessage description of error.
+     */
     public static void sendPlanetCompileErrorMessage(Planet planet, Block block, String errorMessage) {
         if (planet == null) return;
         for (Player player : planet.getPlayers()) {
@@ -285,8 +371,12 @@ public final class ErrorUtils {
     }
 
     /**
-     Sends error message about planet's code exception on compiling unknown blocks
-     **/
+     * Notifies planet players about unknown coding blocks,
+     * that were found while compiling a new code from
+     * dev planet.
+     * @param planet planet to send error message.
+     * @param unknownBlocks list of unknown blocks.
+     */
     public static void sendPlanetCompileErrorMessage(Planet planet, List<Block> unknownBlocks) {
         if (planet == null) return;
         for (Player player : planet.getPlayers()) {
@@ -325,8 +415,10 @@ public final class ErrorUtils {
     }
 
     /**
-     Stops planet's code execution and changes planet's mode to BUILD.
-     **/
+     * Stops code in planet by setting its mode to Build
+     * and sends log in console.
+     * @param planet planet to stop the code.
+     */
     public static void stopPlanetCode(Planet planet) {
         OpenCreative.getPlugin().getLogger().info("Planet code has been stopped in " + planet.getWorldName() + " because of operations limit.");
         if (planet.getMode() != Planet.Mode.BUILD) {
@@ -339,45 +431,85 @@ public final class ErrorUtils {
     }
 
     /**
-     Sends warning message about problem with plugin.
-     **/
-    public static void sendWarningErrorMessage(String errorMessage) {
-        if (OpenCreative.getSettings().isConsoleWarnings()) OpenCreative.getPlugin().getLogger().warning("Warning! An error has occured: " + errorMessage);
+     * Sends warning log in console about issue with plugin.
+     * @param warning description of warning.
+     */
+    public static void sendWarningErrorMessage(String warning) {
+        if (OpenCreative.getSettings().isConsoleWarnings()) {
+            OpenCreative.getPlugin().getLogger().warning("Warning! " + warning);
+        }
     }
 
     /**
-     Sends warning message about problem with plugin.
-     **/
+     * Sends warning log in console with stack traces
+     * to find line, that produced not too serious error.
+     * @param errorMessage description of warning.
+     * @param error exception, that has occurred.
+     */
     public static void sendWarningMessage(String errorMessage, Exception error) {
-        if (OpenCreative.getSettings().isConsoleWarnings()) OpenCreative.getPlugin().getLogger().warning("Warning! " + errorMessage + " " + parseException(error,false));
+        if (OpenCreative.getSettings().isConsoleWarnings()) {
+            OpenCreative.getPlugin().getLogger().warning("Warning! " + errorMessage + " " + parseException(error, false));
+        }
     }
 
     /**
-     Sends critical error message about problem with plugin.
-     **/
+     * Sends error log in console about problem with plugin.
+     * @param errorMessage description of error.
+     */
     public static void sendCriticalErrorMessage(String errorMessage) {
-        if (OpenCreative.getSettings().isConsoleCriticalErrors()) OpenCreative.getPlugin().getLogger().severe("CRITICAL ERROR has occured: " + errorMessage);
+        if (OpenCreative.getSettings().isConsoleCriticalErrors()) {
+            OpenCreative.getPlugin().getLogger().severe("CRITICAL ERROR has occured: " + errorMessage);
+        }
     }
 
     /**
-     Sends critical error message about problem with plugin.
-     **/
+     * Sends error log in console with stack traces
+     * to find line, that produced critical error.
+     * @param errorMessage description of critical error.
+     * @param error exception, that has occurred.
+     */
     public static void sendCriticalErrorMessage(String errorMessage, Exception error) {
-        if (OpenCreative.getSettings().isConsoleCriticalErrors()) OpenCreative.getPlugin().getLogger().severe("CRITICAL ERROR has occurred: " + errorMessage + " " + parseException(error,false));
+        if (OpenCreative.getSettings().isConsoleCriticalErrors()) {
+            OpenCreative.getPlugin().getLogger().severe("CRITICAL ERROR has occurred: " + errorMessage + " " + parseException(error,false));
+        }
     }
 
+    /**
+     * Sends debug log in console, only if debug mode
+     * is enabled in plugin's settings.
+     * @param message debug log.
+     */
     public static void sendDebug(String message) {
         if (OpenCreative.getSettings().isDebug()) {
             OpenCreative.getPlugin().getLogger().info("[DEBUG] " + message);
         }
     }
 
+    /**
+     * Sends error log in console with stack traces,
+     * only if debug mode is enabled in plugin's
+     * settings.
+     * <p>
+     * Used for not serious errors for server owners.
+     * @param errorMessage description of critical error.
+     * @param error exception, that has occurred.
+     */
     public static void sendDebugError(String errorMessage, Exception error) {
         if (OpenCreative.getSettings().isDebug()) {
             OpenCreative.getPlugin().getLogger().severe("CRITICAL ERROR has occurred: " + errorMessage + " " + parseException(error,false));
         }
     }
 
+    /**
+     * Sends notification to planet players about not
+     * found value while filling arguments in action,
+     * only if planet's debug mode is enabled.
+     * <p>
+     * Happens when player forgets to fill items
+     * in coding container.
+     * @param planet planet to send error message.
+     * @param name name of value.
+     */
     public static void sendCodingDebugNotFoundVariable(Planet planet, String name) {
         if (true) {
             return;
@@ -390,6 +522,17 @@ public final class ErrorUtils {
         }
     }
 
+    /**
+     * Sends notification to planet players about not
+     * found event value while executing actions or
+     * conditions, that require event value.
+     * <p>
+     * Happens when player uses wrong coding block
+     * in event.
+     * @param planet planet to send message.
+     * @param executor executor, that stores event.
+     * @param clazz class of event value, that was not found.
+     */
     public static void sendCodingNotFoundEventValue(Planet planet, Executor executor, Class<? extends EventValue> clazz) {
         if (planet == null) return;
         EventValue eventValue = EventValues.getInstance().getByClass(clazz);
@@ -397,6 +540,16 @@ public final class ErrorUtils {
                 .replace("%variable%", eventValue != null ? eventValue.getLocaleName() : clazz.getSimpleName()));
     }
 
+    /**
+     * Sends debug log message to planet players,
+     * if planet's debug mode is enabled.
+     * <p>
+     * Used to describe some reasons of
+     * events cancellations, actions fails
+     * or processes.
+     * @param planet planet to send log.
+     * @param log debug log.
+     */
     public static void sendCodingDebugLog(Planet planet, String log) {
         if (!planet.isDebug()) return;
         for (Player player : planet.getPlayers()) {
@@ -404,6 +557,14 @@ public final class ErrorUtils {
         }
     }
 
+    /**
+     * Sends notification to planet players about
+     * found value while filling arguments in action,
+     * only if planet's debug mode is enabled.
+     * @param planet planet to send message.
+     * @param name executor, that stores event.
+     * @param value value.
+     */
     public static void sendCodingDebugVariable(Planet planet, String name, Object value) {
         if (true) {
             return;
@@ -415,6 +576,11 @@ public final class ErrorUtils {
         }
     }
 
+    /**
+     * Sends notification to planet players about
+     * calling executor.
+     * @param executor executor, that has activated.
+     */
     public static void sendCodingDebugExecutor(Executor executor) {
         Planet planet = executor.getPlanet();
         if (planet == null || !planet.isDebug()) return;
@@ -423,6 +589,12 @@ public final class ErrorUtils {
         }
     }
 
+    /**
+     * Sends notification to planet players about
+     * action information, that will be executed.
+     * Only if planet's debug mode is enabled.
+     * @param action action, that will be executed.
+     */
     public static void sendCodingDebugAction(Action action) {
         if (action.getExecutor() == null) return;
         Planet planet = action.getExecutor().getPlanet();

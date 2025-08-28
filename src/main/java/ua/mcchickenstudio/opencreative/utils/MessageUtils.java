@@ -317,7 +317,7 @@ public final class MessageUtils {
     /**
      Returns elapsed time from old time to current with localized message. For example: if elapsed time is 2 seconds, it will return "2 sec ago".
      **/
-    public static String getElapsedTime(long currentTime, long oldTime) {
+    public static @NotNull String getElapsedTime(long currentTime, long oldTime) {
 
         String elapsedTime = "";
 
@@ -340,11 +340,24 @@ public final class MessageUtils {
 
     }
 
-    public static String convertTime(long currentTime) {
+    /**
+     * Converts duration in millis to user-friendly text.
+     * <pre>
+     * {@code
+     * convertTime(1000); // 1 sec
+     * convertTime(1); // less a second
+     * convertTime(60000); // 1 min
+     * convertTime(121000); // 2 min 1 sec
+     * }
+     * </pre>
+     * @param duration duration to convert
+     * @return user-friendly duration text.
+     */
+    public static @NotNull String convertTime(long duration) {
 
         String convertedTime = "";
 
-        long seconds = currentTime / 1000;
+        long seconds = duration / 1000;
         long minutes = seconds / 60;
         long hours = minutes / 60;
         long days = hours / 24;
@@ -357,8 +370,8 @@ public final class MessageUtils {
         if (hours > 0) convertedTime = convertedTime.concat(hours + " "+ getLocaleMessage("time.hours",false) +" ");
         if (minutes > 0) convertedTime = convertedTime.concat(minutes + " "+ getLocaleMessage("time.minutes",false) +" ");
         if (seconds > 0) convertedTime = convertedTime.concat(seconds + " "+ getLocaleMessage("time.seconds",false));
-        if (currentTime < 1000) convertedTime = getLocaleMessage("time.less-second",false);
-        if (currentTime < 0) convertedTime = "∞";
+        if (duration < 1000) convertedTime = getLocaleMessage("time.less-second",false);
+        if (duration < 0) convertedTime = "∞";
 
         return convertedTime;
 

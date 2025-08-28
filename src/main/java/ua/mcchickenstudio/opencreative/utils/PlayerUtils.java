@@ -196,14 +196,29 @@ public final class PlayerUtils {
         return Bukkit.getWorld(spawnWorld);
     }
 
-    public static boolean isEntityInDevPlanet(Entity entity) {
+    /**
+     * Checks if entity is probably in developers planet.
+     * <p>
+     * <b>Note: Can return true, even if planet will be not registered in base.</b>
+     * @param entity entity to check.
+     * @return true - if entity is probably in developers planet, false - in planet world or lobby.
+     */
+    public static boolean isEntityInDevPlanet(@NotNull Entity entity) {
         return isDevPlanet(entity.getWorld());
     }
 
-    public static boolean isEntityInLobby(Entity entity) {
+    /**
+     * Checks if entity is in lobby.
+     * @param entity entity to check.
+     * @return true - if entity in lobby, false - in planet or dev planet.
+     */
+    public static boolean isEntityInLobby(@NotNull Entity entity) {
         return getLobbyWorld().equals(entity.getWorld());
     }
 
+    /**
+     * Registers permission attachments in memory for all online players.
+     */
     public static void loadPermissions() {
         permissionAttachmentMap.clear();
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -211,17 +226,29 @@ public final class PlayerUtils {
         }
     }
 
-    public static void loadPermissions(Player player) {
+    /**
+     * Registers player's permission attachment to memory.
+     * @param player player to load permissions.
+     */
+    public static void loadPermissions(@NotNull Player player) {
         PermissionAttachment permissionAttachment = player.addAttachment(OpenCreative.getPlugin());
-        permissionAttachmentMap.put(player.getUniqueId(),permissionAttachment);
+        permissionAttachmentMap.put(player.getUniqueId(), permissionAttachment);
     }
 
-    public static void removeFromPermissionsMap(Player player) {
+    /**
+     * Removes stored player's permission attachment from memory.
+     * @param player player to remove attachment.
+     */
+    public static void removeFromPermissionsMap(@NotNull Player player) {
         clearWorldModePermissions(player);
         permissionAttachmentMap.remove(player.getUniqueId());
     }
 
-    public static void giveDevPermissions(Player player) {
+    /**
+     * Sets player's permissions when they enter developers planet.
+     * @param player player to give permissions.
+     */
+    public static void giveDevPermissions(@NotNull Player player) {
         PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
         Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getDevPermissions();
         for (String permission : perms) {
@@ -229,7 +256,11 @@ public final class PlayerUtils {
         }
     }
 
-    public static void givePlayPermissions(Player player) {
+    /**
+     * Sets player's permissions when they enter planet in play mode.
+     * @param player player to give permissions.
+     */
+    public static void givePlayPermissions(@NotNull Player player) {
         PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
         Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getPlayPermissions();
         for (String permission : perms) {
@@ -237,7 +268,11 @@ public final class PlayerUtils {
         }
     }
 
-    public static void giveBuildPermissions(Player player) {
+    /**
+     * Sets player's permissions when they enter planet in build mode.
+     * @param player player to give permissions.
+     */
+    public static void giveBuildPermissions(@NotNull Player player) {
         PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
         Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getBuildPermissions();
         for (String permission : perms) {
@@ -245,7 +280,11 @@ public final class PlayerUtils {
         }
     }
 
-    public static void giveLobbyPermissions(Player player) {
+    /**
+     * Sets player's permissions when they enter lobby.
+     * @param player player to give permissions.
+     */
+    public static void giveLobbyPermissions(@NotNull Player player) {
         PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
         Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getLobbyPermissions();
         for (String permission : perms) {
@@ -257,7 +296,7 @@ public final class PlayerUtils {
      * Removes player's permissions that he got in world in Build, Play, Dev mode, or in lobby.
      * @param player player to remove permissions.
      */
-    public static void clearWorldModePermissions(Player player) {
+    public static void clearWorldModePermissions(@NotNull Player player) {
         PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
         if (permissionAttachment == null) return;
         Map<String, Boolean> permissions = permissionAttachment.getPermissions();
