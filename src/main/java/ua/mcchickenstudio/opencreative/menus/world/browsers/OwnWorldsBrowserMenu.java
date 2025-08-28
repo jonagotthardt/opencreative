@@ -129,7 +129,7 @@ public final class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
                 long playedSeconds = (now - getPlayer().getFirstPlayed()) / 1000;
 
                 if (playedSeconds < minSeconds) {
-                    long unlockTime = now + ((minSeconds - playedSeconds) * 1000);
+                    long unlockTime = ((minSeconds - playedSeconds) * 1000);
 
                     Sounds.PLAYER_CANCEL.play(getPlayer());
                     getPlayer().closeInventory();

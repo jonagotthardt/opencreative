@@ -106,7 +106,7 @@ public final class OpenCreative extends JavaPlugin {
     private HintManager hints;
     private DevPlatformer devPlatformer;
 
-    private static final String version = "5.8.0";
+    private static final String version = "5.7.1";
     private static final String codename = "Well, it's possible";
 
     /**
