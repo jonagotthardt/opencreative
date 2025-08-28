@@ -69,7 +69,9 @@ public class LikeCommand extends CommandHandler {
             long createdSeconds = (System.currentTimeMillis()-planet.getCreationTime())/1000;
             if (OpenCreative.getSettings().getWorldReputationMinSeconds() > createdSeconds) {
                 Sounds.PLAYER_CANCEL.play(player);
-                player.sendMessage(MessageUtils.getPlayerLocaleMessage("world.cant-rate",player).replace("%time%",convertTime(OpenCreative.getSettings().getWorldReputationMinSeconds()-createdSeconds)));
+                long unlockTime = (OpenCreative.getSettings().getWorldReputationMinSeconds()-createdSeconds)*1000;
+                player.sendMessage(MessageUtils.getPlayerLocaleMessage("world.cant-rate",player).replace("%time%",
+                        convertTime(unlockTime)));
                 return;
             }
             if (getPlayersFromPlanetList(planet, Planet.PlayersType.LIKED).contains(sender.getName())) {
