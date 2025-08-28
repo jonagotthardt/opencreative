@@ -6,14 +6,17 @@
 [![bStats Players](https://img.shields.io/bstats/players/22001?=blue)](https://bstats.org/plugin/bukkit/OpenCreative/22001)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Discord](https://img.shields.io/discord/1300864436076286069.svg?label=Discord&color=purple)](https://discord.com/invite/sSFCXUeq63)
+[![Wiki](https://img.shields.io/badge/Wiki-Gitlab-orange)](https://gitlab.com/eagles-creative/opencreative/-/wikis/home)
 
-</div>
-
-# OpenCreative+
+# Let your players create the worlds
 
 Minecraft plugin for PaperMC servers that allows players to create their worlds.
 
+### [Showcase Video](https://www.youtube.com/watch?v=dXLuH8MwmJ8) - [Modrinth](https://modrinth.com/plugin/opencreative) - [Hangar](https://hangar.papermc.io/mcchickenstudio/OpenCreative) - [Builds](https://gitlab.com/eagles-creative/opencreative/-/packages) - [Installation](https://gitlab.com/eagles-creative/opencreative/-/wikis/home/Installation) - [Permissions](https://gitlab.com/eagles-creative/opencreative/-/wikis/Home/Permissions)
+
 ![Screenshot](https://i.imgur.com/4jzB4F9.png)
+
+</div>
 
 ## Features
 
@@ -37,6 +40,8 @@ You can change world's sizes with player's permissions in config.yml.
 
 ![](https://i.imgur.com/sID0dxv.png)
 
+![World Creation](https://gitlab.com/eagles-creative/opencreative/-/wikis/uploads/82d2118f4aee556c146a22b1419ed0df/WorldCreation.mp4)
+
 ### Worlds Browser
 Players can search, sort and like worlds. World can be found by name or ID. Also worlds list can be sorted by:
 - Categories (Fighting, Sandbox, Arcade...)
@@ -56,8 +61,14 @@ Every owner of world can change in his world:
 
 ![](https://i.imgur.com/iMJjFh0.png)
 
+![World Settings](https://gitlab.com/eagles-creative/opencreative/-/wikis/uploads/9a1cfb155d1391f4cba17be23a1fc13a/WorldSettings.mp4)
+
 ### Coding
 Players can create code for their worlds with coding blocks and run it.
+
+![](https://i.imgur.com/1SkIjhv.png)
+
+![Coding World](https://gitlab.com/eagles-creative/opencreative/-/wikis/uploads/1eda4a8c0ee3dcdb4b9a23954fa6d7e6/DevelopersWorld.mp4)
 
 Coding blocks will be parsed into codeScript.yml.
 Example: Send a message "Hello world!"
