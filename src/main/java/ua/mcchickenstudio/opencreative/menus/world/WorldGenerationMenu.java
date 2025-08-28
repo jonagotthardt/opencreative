@@ -78,6 +78,7 @@ public final class WorldGenerationMenu extends AbstractMenu {
             return;
         }
         if (itemEquals(DECORATION_ITEM, event.getCurrentItem())) {
+            event.setCancelled(true);
             return;
         }
         event.setCancelled(true);

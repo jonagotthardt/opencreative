@@ -35,7 +35,6 @@ import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.convertTime;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
  * <h1>DislikeCommand</h1>
@@ -60,7 +59,9 @@ public class DislikeCommand extends CommandHandler {
             long createdSeconds = (System.currentTimeMillis()-planet.getCreationTime())/1000;
             if (OpenCreative.getSettings().getWorldReputationMinSeconds() > createdSeconds) {
                 Sounds.PLAYER_CANCEL.play(player);
-                player.sendMessage(MessageUtils.getPlayerLocaleMessage("world.cant-rate",player).replace("%time%",convertTime(OpenCreative.getSettings().getWorldReputationMinSeconds()-createdSeconds)));
+                long unlockTime = (OpenCreative.getSettings().getWorldReputationMinSeconds()-createdSeconds)*1000;
+                player.sendMessage(MessageUtils.getPlayerLocaleMessage("world.cant-rate",player).replace("%time%",
+                        convertTime(unlockTime)));
                 return;
             }
             if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.LIKED).contains(sender.getName())) {

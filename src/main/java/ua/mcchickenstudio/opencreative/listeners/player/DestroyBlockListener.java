@@ -18,12 +18,16 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
+import org.bukkit.inventory.Inventory;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.DamageBlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.DestroyBlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
+import ua.mcchickenstudio.opencreative.coding.menus.layouts.ArgumentSlot;
+import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
 import ua.mcchickenstudio.opencreative.menus.Menus;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
@@ -39,6 +43,9 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.move;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getClosingBracketX;
@@ -102,16 +109,17 @@ public final class DestroyBlockListener implements Listener {
                 event.setCancelled(true);
             }
 
-            if (block.getType() == devPlanet.getContainerMaterial()) {
-                Block blockAtDown = block.getRelative(BlockFace.DOWN).getRelative(BlockFace.DOWN);
-                if (blockAtDown.getType() == platform.getEventMaterial() || blockAtDown.getType() == platform.getActionMaterial()) {
-                    event.setCancelled(true);
-                }
-            }
-
             if (block.getType().name().contains("WALL_SIGN")) {
                 event.setCancelled(true);
                 translateBlockSign(block, player);
+            }
+
+            if (block.getState() instanceof InventoryHolder) {
+                Block blockAtDown = block.getRelative(BlockFace.DOWN).getRelative(BlockFace.DOWN);
+                if (blockAtDown.getType() != platform.getEventMaterial() && blockAtDown.getType() != platform.getActionMaterial()) {
+                    return;
+                }
+                event.setCancelled(true);
             }
         } else if (planet != null) {
             if (ChangedWorld.isPlayerWithLocation(player) && !planet.getWorldPlayers().canBuild(player)) {

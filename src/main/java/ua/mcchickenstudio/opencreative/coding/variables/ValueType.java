@@ -77,7 +77,7 @@ public enum ValueType {
     /**
      * Particle stores Minecraft particle type, for example: EXPLOSION.
      */
-    PARTICLE(Material.FIRE_CHARGE, Material.PURPLE_STAINED_GLASS_PANE),
+    PARTICLE(Material.NETHER_STAR, Material.PURPLE_STAINED_GLASS_PANE),
     /**
      * Potion stores Minecraft potion, for example: BLINDNESS.
      */
