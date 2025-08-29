@@ -143,6 +143,9 @@ public class Planet {
             this.mode = mode;
             return;
         }
+        if (mode == Mode.PLAYING && !OpenCreative.getSettings().isEnabledCoding()) {
+            mode = Mode.BUILD;
+        }
         try {
             territory.getWorld().getSpawnLocation().getChunk().load(true);
             if (mode == Mode.BUILD) {
@@ -341,7 +344,7 @@ public class Planet {
         if (config.getString("owner-group") != null) {
             ownerGroup = config.getString("owner-group");
         }
-        if (config.getString("mode") != null) {
+        if (config.getString("mode") != null && OpenCreative.getSettings().isEnabledCoding()) {
             try {
                 mode = Mode.valueOf(config.getString("mode"));
             } catch (Exception ignored) {}

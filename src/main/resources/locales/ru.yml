@@ -419,6 +419,7 @@ world:
     cant-dev: "%prefix%&cВы не можете менять код, обратитесь к владельцу мира."
     cant-dev-when-offline: "%prefix%&cВы не можете менять код, пока нет владельца мира."
     changed-fly-speed: "%prefix%&fТеперь ваша скорость полёта равна &7%speed%"
+    disabled: "%prefix%&cСейчас режим разработчика отключён и остаётся лишь режим строительства.. :("
   cant-block-interact: "%prefix%&cВ этом мире отключено взаимодействие с блоками для посетителей."
   cant-mob-interact: "%prefix%&cВ этом мире отключено взаимодействие с сущностями для посетителей."
   info: "%prefix%&fИнформация о мире: &6%name%\n &f Описание: &6%description%&r\n &f Владелец: &6%owner%\n &f ID: &6%id%\n &f Создан: &6%creation-time%\n &f Последний запуск: &6%activity-time%\n &f Строители: &6%builders%\n &f Разработчики: &6%coders%\n &f Доступ к миру: &6%sharing%\n &f Режим мира: &6%mode%\n &f Онлайн: &6%online%"

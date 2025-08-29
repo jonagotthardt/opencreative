@@ -395,6 +395,7 @@ public final class ItemUtils {
      */
     public static ItemStack fixItem(@NotNull ItemStack item) {
         Settings settings = OpenCreative.getSettings();
+        if (!settings.isItemFixerEnabled()) return item;
         return fixItem(item,
                 settings.getItemsDisplayNameMaxLength(),
                 settings.getItemsLoreLineMaxLength(),

@@ -27,6 +27,7 @@ import java.util.HashMap;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
+ * <h1>CooldownUtils</h1>
  * This class contains utils for checking and modifying player's cooldown.
  */
 public final class CooldownUtils {

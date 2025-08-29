@@ -113,7 +113,11 @@ public final class ErrorUtils {
                 String.join("\n", lastStacks);
     }
 
-    private static String getRandomPhrase() {
+    /**
+     * Returns random phrase for displaying error log.
+     * @return random phrase.
+     */
+    private static @NotNull String getRandomPhrase() {
         String[] phrases = new String[]{
                 "Things aren't so different..", "Seems like we messed up..",
                 "We never gonna give console up..", "We'll meet again, some sunny day..",
