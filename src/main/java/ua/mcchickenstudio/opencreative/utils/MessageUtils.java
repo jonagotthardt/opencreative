@@ -54,6 +54,13 @@ public final class MessageUtils {
     private static File localizationFile;
     private static FileConfiguration localizationConfig;
 
+    /**
+     * Converts text into component by deserializing it with
+     * legacy serializer (if message has & symbol), or with
+     * minimessage format.
+     * @param text text to convert.
+     * @return text component.
+     */
     public static Component toComponent(String text) {
         if (isLegacyFormat(text)) {
             return LegacyComponentSerializer.legacyAmpersand().deserialize(text);
@@ -62,6 +69,11 @@ public final class MessageUtils {
         }
     }
 
+    /**
+     * Checks if text has & or § symbol.
+     * @param text text to check.
+     * @return true - if contains & or §, false - otherwise.
+     */
     public static boolean isLegacyFormat(String text) {
         return text.indexOf(LegacyComponentSerializer.AMPERSAND_CHAR) != -1 || text.indexOf(LegacyComponentSerializer.SECTION_CHAR) != -1;
     }
@@ -137,10 +149,20 @@ public final class MessageUtils {
         return changes;
     }
 
+    /**
+     * Checks if localization file exists in locales directory.
+     * @param languageName name of language, without ".yml".
+     * @return true - exists, false - not exists.
+     */
     public static boolean localizationFileExists(String languageName) {
         return "en".equalsIgnoreCase(languageName) || "ru".equalsIgnoreCase(languageName) || new File(OpenCreative.getPlugin().getDataFolder() + File.separator + "locales" + File.separator, languageName + ".yml").exists();
     }
 
+    /**
+     * Returns prefix of plugin, that will be used for
+     * sending some messages in game.
+     * @return prefix of plugin.
+     */
     private static String getPrefix() {
         String prefix = OpenCreative.getPlugin().getConfig().getString("messages.prefix");
         if (prefix == null || prefix.equalsIgnoreCase("null")) {
@@ -153,6 +175,11 @@ public final class MessageUtils {
         }
     }
 
+    /**
+     * Returns creative chat prefix, that will be used
+     * in creative chat messages.
+     * @return prefix of creative chat.
+     */
     private static String getCreativeChatPrefix() {
         String prefix = OpenCreative.getPlugin().getConfig().getString("messages.cc-prefix");
         if (prefix == null || prefix.equalsIgnoreCase("null")) {
@@ -165,6 +192,12 @@ public final class MessageUtils {
         }
     }
 
+    /**
+     * Returns server branding, that should be changed by
+     * server owners in plugin's config.yml. Used in lobby
+     * message.
+     * @return server branding.
+     */
     private static String getBranding() {
         String prefix = OpenCreative.getPlugin().getConfig().getString("messages.branding");
         if (prefix == null || prefix.equalsIgnoreCase("null")) {
@@ -177,6 +210,10 @@ public final class MessageUtils {
         }
     }
 
+    /**
+     * Returns current language of OpenCreative+.
+     * @return global language of plugin.
+     */
     public static String getLanguage() {
         Object language = OpenCreative.getPlugin().getConfig().get("messages.locale");
         if (language != null) {
@@ -191,29 +228,59 @@ public final class MessageUtils {
         }
     }
 
+    /**
+     * Returns current localization file.
+     * @return localization file.
+     */
     private static File getLocalizationFile() {
         return localizationFile;
     }
 
+    /**
+     * Returns translation stored in FileConfiguration.
+     * @return translation config.
+     */
     private static FileConfiguration getLocalization() {
         return localizationConfig;
     }
 
+    /**
+     * Returns component message from translation.
+     * @param messageID id of message.
+     * @return component message.
+     */
     public static Component getLocaleComponent(String messageID) {
         return toComponent(getLocaleMessage(messageID));
     }
 
+    /**
+     * Returns component message from translation
+     * with parsed player placeholders.
+     * @param messageID id of message.
+     * @param player player to parse.
+     * @return component message.
+     */
     public static Component getLocaleComponent(String messageID, OfflinePlayer player) {
         return toComponent(getPlayerLocaleMessage(messageID, player));
     }
 
+    /**
+     * Returns component message from translation
+     * with parsed player placeholders.
+     * @param messageID id of message.
+     * @param returnDetailedError if true - returns detailed error when message
+     *                            was not found, false - will return only path.
+     * @return component message.
+     */
     public static Component getLocaleComponent(String messageID, boolean returnDetailedError) {
         return toComponent(getLocaleMessage(messageID, returnDetailedError));
     }
 
     /**
-     Returns message from localization file. If message is not found, then returns a detailed error message, that message is not found.
-     **/
+     * Returns message from translation.
+     * @param messageID id of message.
+     * @return translated message, or "Error | Not found message.path...", if message was not found.
+     */
     public static String getLocaleMessage(String messageID) {
         String originalMessage = getLocalization().getString(messageID);
         if (originalMessage == null || originalMessage.equalsIgnoreCase("null")) {
@@ -225,8 +292,12 @@ public final class MessageUtils {
     }
 
     /**
-     Returns message from localization file, that parsed player's placeholders with PlaceholderAPI. If message is not found, then returns a detailed error message, that message is not found.
-     **/
+     * Returns message from translation
+     * with parsed player placeholders.
+     * @param messageID id of message.
+     * @param player player to parse.
+     * @return translated message, or "Error | Not found message.path...", if message was not found.
+     */
     public static String getPlayerLocaleMessage(String messageID, OfflinePlayer player) {
         String originalMessage = getLocalization().getString(messageID);
         if (originalMessage == null || originalMessage.equalsIgnoreCase("null")) {
@@ -242,8 +313,13 @@ public final class MessageUtils {
     }
 
     /**
-     Returns message from localization file. If message is not found and "returnDetailedError" is true, then returns a detailed error message, that message is not found, or else will return only path to message.
-     **/
+     * Returns message from translation
+     * with parsed player placeholders.
+     * @param messageID id of message.
+     * @param returnDetailedError if true - returns detailed error when message
+     *                            was not found, false - will return only path.
+     * @return translated message.
+     */
     public static String getLocaleMessage(String messageID, boolean returnDetailedError) {
         String originalMessage = getLocalization().getString(messageID);
         if (originalMessage == null || originalMessage.equalsIgnoreCase("null")) {
@@ -259,8 +335,10 @@ public final class MessageUtils {
     }
 
     /**
-     Returns item's name from localization file. If message is not found, then returns a detailed error message, that message is not found.
-     **/
+     * Returns item name from translation.
+     * @param nameID id of message.
+     * @return translated item name, or "Not found: message.path", if message was not found.
+     */
     public static String getLocaleItemName(String nameID) {
         String originalName = getLocalization().getString(nameID);
         if (originalName == null || originalName.equalsIgnoreCase("null")) {
@@ -273,8 +351,10 @@ public final class MessageUtils {
     }
 
     /**
-     Returns item's description from localization file. If message is not found, then returns a detailed error message, that message is not found.
-     **/
+     * Returns item description from translation
+     * @param descriptionID id of message.
+     * @return translated item description, or "Not found item description...", if message was not found.
+     */
     public static List<String> getLocaleItemDescription(String descriptionID) {
         List<String> originalDescription = getLocalization().getStringList(descriptionID);
         List<String> parsedDescription = new ArrayList<>();
@@ -294,8 +374,10 @@ public final class MessageUtils {
     }
 
     /**
-     Returns book's pages from localization file.
-     **/
+     * Returns book pages from translation.
+     * @param localizationID id of message.
+     * @return translated book pages, or "Not found pages...", if message was not found.
+     */
     public static @NotNull List<String> getBookPages(@NotNull String localizationID) {
         List<String> foundPages = getLocalization().getStringList(localizationID);
         List<String> pages = new ArrayList<>();
@@ -317,7 +399,7 @@ public final class MessageUtils {
     /**
      Returns elapsed time from old time to current with localized message. For example: if elapsed time is 2 seconds, it will return "2 sec ago".
      **/
-    public static String getElapsedTime(long currentTime, long oldTime) {
+    public static @NotNull String getElapsedTime(long currentTime, long oldTime) {
 
         String elapsedTime = "";
 
@@ -340,11 +422,24 @@ public final class MessageUtils {
 
     }
 
-    public static String convertTime(long currentTime) {
+    /**
+     * Converts duration in millis to user-friendly text.
+     * <pre>
+     * {@code
+     * convertTime(1000); // 1 sec
+     * convertTime(1); // less a second
+     * convertTime(60000); // 1 min
+     * convertTime(121000); // 2 min 1 sec
+     * }
+     * </pre>
+     * @param duration duration to convert
+     * @return user-friendly duration text.
+     */
+    public static @NotNull String convertTime(long duration) {
 
         String convertedTime = "";
 
-        long seconds = currentTime / 1000;
+        long seconds = duration / 1000;
         long minutes = seconds / 60;
         long hours = minutes / 60;
         long days = hours / 24;
@@ -357,8 +452,8 @@ public final class MessageUtils {
         if (hours > 0) convertedTime = convertedTime.concat(hours + " "+ getLocaleMessage("time.hours",false) +" ");
         if (minutes > 0) convertedTime = convertedTime.concat(minutes + " "+ getLocaleMessage("time.minutes",false) +" ");
         if (seconds > 0) convertedTime = convertedTime.concat(seconds + " "+ getLocaleMessage("time.seconds",false));
-        if (currentTime < 1000) convertedTime = getLocaleMessage("time.less-second",false);
-        if (currentTime < 0) convertedTime = "∞";
+        if (duration < 1000) convertedTime = getLocaleMessage("time.less-second",false);
+        if (duration < 0) convertedTime = "∞";
 
         return convertedTime;
 

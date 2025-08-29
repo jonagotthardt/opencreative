@@ -414,6 +414,7 @@ world:
     cant-dev: "%prefix%&cYou cannot change the code, contact the world owner."
     cant-dev-when-offline: "%prefix%&cYou cannot change the code while the world owner is offline."
     changed-fly-speed: "%prefix%&fYour flight speed is now set to &f%speed%"
+    disabled: "%prefix%&cCoding is disabled, the only available mode is Build! :("
   cant-block-interact: "%prefix%&cBlock interaction is disabled for visitors in this world."
   cant-mob-interact: "%prefix%&cEntity interaction is disabled for visitors in this world."
   delete-mobs:

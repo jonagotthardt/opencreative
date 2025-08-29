@@ -153,6 +153,8 @@ allowed-links:
     - "drive.google.com"
 
 coding:
+  enabled: true # Set false to disable entire coding: play mode, dev mode.
+                # All worlds will be launched in Build mode.
   old-selection-menu: false # Set true to use old coding blocks selection menu
   platforms-generator: "horizontal" # Default generator for coding platforms, if not exists will use default Horizontal.
     # Available: "horizontal", "vertical", "legacy". Please do not change platforms generator, if there's already existing worlds.
@@ -174,6 +176,7 @@ item-fixer:
   # will be edited or entirely removed from
   # player's inventory.
   #
+  enabled: true # Set false to disable Item Fixer, or true to enable.
   display-name-max-length: 64 # Maximum length of item's display name
   lore-line-max-length: 100 # Maximum length of lore line in item
   lore-lines-max-amount: 25 # Maximum lines amount in item

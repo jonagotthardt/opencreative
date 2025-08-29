@@ -61,86 +61,92 @@ public class PlayCommand extends CommandHandler {
 
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (sender instanceof Player player) {
-            Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-            if (planet == null) {
-                player.sendMessage(getLocaleMessage("only-in-world"));
-                return;
-            }
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(getLocaleMessage("only-players"));
+            return;
+        }
 
-            if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
+        if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
 
-            // Проверка на владельца мира
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+        if (planet == null) {
+            player.sendMessage(getLocaleMessage("only-in-world"));
+            return;
+        }
 
-            DevPlanet playerDevPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
-            if (playerDevPlanet != null) {
-                playerDevPlanet.getLastLocations().put(player,player.getLocation());
-            }
+        if (!OpenCreative.getSettings().isEnabledCoding()) {
+            player.sendMessage(getLocaleMessage("world.dev-mode.disabled"));
+            return;
+        }
 
-            removePlayerWithLocation(player);
-            if (planet.getMode() != Planet.Mode.PLAYING) {
-                if (planet.getWorldPlayers().canDevelop(player)) {
-                    PlanetModeChangeEvent event = new PlanetModeChangeEvent(planet, planet.getMode(), Planet.Mode.PLAYING,player);
-                    event.callEvent();
-                    if (event.isCancelled()) {
-                        return;
-                    }
-                    if (!OpenCreative.getStability().isFine()) {
-                        player.sendMessage(getLocaleMessage("creative.stability.cannot"));
-                        Sounds.PLAYER_FAIL.play(player);
-                        return;
-                    }
-                    planet.setMode(Planet.Mode.PLAYING);
-                    if (isEntityInDevPlanet(player)) {
-                        clearPlayer(player);
-                        player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
-                        planet.getTerritory().showBorders(player);
-                        if (planet.isOwner(sender.getName())) {
-                            player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
-                        }
-                        givePlayPermissions(player);
-                        new JoinEvent(player).callEvent();
-                    }
-                } else {
-                    sender.sendMessage(getPlayerLocaleMessage("not-owner", player));
+        DevPlanet playerDevPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
+        if (playerDevPlanet != null) {
+            playerDevPlanet.getLastLocations().put(player,player.getLocation());
+        }
+
+        removePlayerWithLocation(player);
+        if (planet.getMode() != Planet.Mode.PLAYING) {
+            if (planet.getWorldPlayers().canDevelop(player)) {
+                PlanetModeChangeEvent event = new PlanetModeChangeEvent(planet, planet.getMode(), Planet.Mode.PLAYING,player);
+                event.callEvent();
+                if (event.isCancelled()) {
+                    return;
                 }
-            } else {
-                if (!new PlayEvent(player).callEvent() || planet.getWorldPlayers().canDevelop(player)) {
-                    if (planet.getWorldPlayers().canDevelop(player)) {
-                        if (!OpenCreative.getStability().isFine()) {
-                            player.sendMessage(getLocaleMessage("creative.stability.cannot"));
-                            Sounds.PLAYER_FAIL.play(player);
-                        } else {
-                            player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
-                            if (!Arrays.asList(args).contains("--no-compile")) {
-                                if (planet.getDevPlanet().isLoaded()) {
-                                    new CodingBlockParser(planet.getDevPlanet()).parseCode(planet.getDevPlanet());
-                                } else {
-                                    planet.getTerritory().getScript().loadCode();
-                                }
-                            }
-                        }
-                    } else {
-                        player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
-                    }
-                    planet.getTerritory().getWorld().getSpawnLocation().getChunk().load(true);
-                    DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
-                    if (devPlanet != null) {
-                        clearPlayer(player);
-                    } else {
-                        new QuitEvent(player).callEvent();
-                    }
+                if (!OpenCreative.getStability().isFine()) {
+                    player.sendMessage(getLocaleMessage("creative.stability.cannot"));
+                    Sounds.PLAYER_FAIL.play(player);
+                    return;
+                }
+                planet.setMode(Planet.Mode.PLAYING);
+                if (isEntityInDevPlanet(player)) {
                     clearPlayer(player);
                     player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
                     planet.getTerritory().showBorders(player);
                     if (planet.isOwner(sender.getName())) {
                         player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
                     }
-                    if (planet.getWorldPlayers().canDevelop(player)) {
-                        givePlayPermissions(player);
-                    }
+                    givePlayPermissions(player);
                     new JoinEvent(player).callEvent();
                 }
+            } else {
+                sender.sendMessage(getPlayerLocaleMessage("not-owner", player));
+            }
+        } else {
+            if (new PlayEvent(player).callEvent() || planet.getWorldPlayers().canDevelop(player)) {
+                if (planet.getWorldPlayers().canDevelop(player)) {
+                    if (!OpenCreative.getStability().isFine()) {
+                        player.sendMessage(getLocaleMessage("creative.stability.cannot"));
+                        Sounds.PLAYER_FAIL.play(player);
+                    } else {
+                        player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
+                        if (!Arrays.asList(args).contains("--no-compile")) {
+                            if (planet.getDevPlanet().isLoaded()) {
+                                new CodingBlockParser(planet.getDevPlanet()).parseCode(planet.getDevPlanet());
+                            } else {
+                                planet.getTerritory().getScript().loadCode();
+                            }
+                        }
+                    }
+                } else {
+                    player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
+                }
+                planet.getTerritory().getWorld().getSpawnLocation().getChunk().load(true);
+                DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
+                if (devPlanet != null) {
+                    clearPlayer(player);
+                } else {
+                    new QuitEvent(player).callEvent();
+                }
+                clearPlayer(player);
+                player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
+                planet.getTerritory().showBorders(player);
+                if (planet.isOwner(sender.getName())) {
+                    player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
+                }
+                if (planet.getWorldPlayers().canDevelop(player)) {
+                    givePlayPermissions(player);
+                }
+                new JoinEvent(player).callEvent();
             }
         }
     }

@@ -63,6 +63,7 @@ public final class Settings {
     private boolean consoleNotFoundMessage = false;
     private boolean consoleWarnings = true;
 
+    private boolean itemFixerEnabled = true;
     private int itemsMaxEnchantLevel = 10;
     private int itemsEntitiesMaxAmount = 3;
     private int itemsMaxBookPagesAmount = 50;
@@ -114,6 +115,8 @@ public final class Settings {
     private final Commands commands;
     private final Set<Integer> recommendedWorldsIDs = new HashSet<>();
     private final Set<String> allowedResourcePackLinks = new HashSet<>();
+
+    private boolean enabledCoding = true;
     private final Set<String> disabledEvents = new HashSet<>();
     private final Set<String> disabledActions = new HashSet<>();
     private final Set<String> disabledConditions = new HashSet<>();
@@ -155,6 +158,7 @@ public final class Settings {
         lobbyDisallowDestroyingBlocks = config.getBoolean("lobby.disallow-destroying-blocks",true);
 
         legacySelectionMenu = config.getBoolean("coding.old-selection-menu",false);
+        enabledCoding = config.getBoolean("coding.enabled",true);
 
         worldCreationMinSeconds = config.getInt("requirements.world-creation.played-seconds",30);
         worldReputationMinSeconds = config.getInt("requirements.world-reputation.creation-seconds",300);
@@ -175,6 +179,7 @@ public final class Settings {
         moduleDescriptionMinLength = config.getInt("requirements.module-description.min-length",2);
         moduleDescriptionMaxLength = config.getInt("requirements.module-description.max-length",256);
 
+        itemFixerEnabled = config.getBoolean("item-fixer.enabled", true);
         itemsRemoveAttributes = config.getBoolean("item-fixer.remove-attribute-modifiers",true);
         itemsRemoveClickableBooks = config.getBoolean("item-fixer.remove-clickable-in-books",true);
         itemsRemoveCustomSpawnEggs = config.getBoolean("item-fixer.remove-custom-spawn-eggs",true);
@@ -660,6 +665,14 @@ public final class Settings {
 
     public int getModuleNameMinLength() {
         return moduleNameMinLength;
+    }
+
+    public boolean isItemFixerEnabled() {
+        return itemFixerEnabled;
+    }
+
+    public boolean isEnabledCoding() {
+        return enabledCoding;
     }
 
     public boolean isItemsClearCommandBlocksData() {

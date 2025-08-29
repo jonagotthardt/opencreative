@@ -18,9 +18,29 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * <h1>ColorUtils</h1>
+ * This class represents utils for
+ * manipulating with colors.
+ */
 public final class ColorUtils {
 
-    public static int[] parseRGB(String string) {
+    /**
+     * Parses string to RGB code.
+     * <pre>
+     * {@code
+     * parseRGB("100,100,100"); // 100 100 100
+     * parseRGB("250, 13, 2"); // 250 13 2
+     * parseRGB("1 3 5"); // 1 3 5
+     * parseRGB("999,1,99"); // Unknown colors, 255 255 255
+     * }
+     * </pre>
+     * @param string text to parse RGB colors.
+     * @return int array with 3 elements: red, green, blue colors.
+     */
+    public static int[] parseRGB(@NotNull String string) {
         int[] rgbColor = new int[3];
         rgbColor[0] = 255;
         rgbColor[1] = 255;

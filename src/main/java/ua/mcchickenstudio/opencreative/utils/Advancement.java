@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -35,26 +36,32 @@ import java.util.UUID;
 public final class Advancement {
 
     private final Material material;
-    private final AdvancementStyle advancementStyle;
+    private final AdvancementStyle style;
     private final String title;
     private final String message;
     private final NamespacedKey nameSpacedKey = new NamespacedKey(OpenCreative.getPlugin(), UUID.randomUUID().toString());
 
-    private Advancement(ItemStack itemStack, AdvancementStyle style, String title, String message) {
+    private Advancement(@NotNull ItemStack itemStack, @NotNull AdvancementStyle style,
+                        @NotNull String title, @NotNull String message) {
         this.material = itemStack.getType();
-        this.advancementStyle = style;
+        this.style = style;
         this.title = title;
         this.message = message;
     }
 
-    public static Advancement make(ItemStack itemStack, AdvancementStyle style, String title, String message) {
+    public static Advancement make(@NotNull ItemStack itemStack, @NotNull AdvancementStyle style,
+                                   @NotNull String title, @NotNull String message) {
         return new Advancement(itemStack,style,title,message);
     }
 
-    public void show(Player player) {
+    public void show(@NotNull Player player) {
         load();
-        player.getAdvancementProgress(Bukkit.getAdvancement(nameSpacedKey)).awardCriteria("trigger");
-        Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> player.getAdvancementProgress(Bukkit.getAdvancement(nameSpacedKey)).revokeCriteria("trigger"), 10);
+        org.bukkit.advancement.Advancement advancement = Bukkit.getAdvancement(nameSpacedKey);
+        if (advancement == null) return;
+        player.getAdvancementProgress(advancement).awardCriteria("trigger");
+        Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
+            player.getAdvancementProgress(advancement).revokeCriteria("trigger");
+        }, 10);
     }
 
     @SuppressWarnings("deprecation")
@@ -76,7 +83,7 @@ public final class Advancement {
                 "            \"text\": \"\"\n" +
                 "        },\n" +
                 "        \"background\": \"minecraft:textures/gui/advancements/backgrounds/adventure.png\",\n" +
-                "        \"frame\": \"" + advancementStyle.toString().toLowerCase() + "\",\n" +
+                "        \"frame\": \"" + style.toString().toLowerCase() + "\",\n" +
                 "        \"announce_to_chat\": false,\n" +
                 "        \"show_toast\": true,\n" +
                 "        \"hidden\": true\n" +

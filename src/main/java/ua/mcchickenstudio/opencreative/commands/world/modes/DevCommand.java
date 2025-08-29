@@ -61,119 +61,127 @@ public class DevCommand extends CommandHandler {
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
-        if (sender instanceof Player player) {
-            Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-            if (planet == null) {
-                player.sendMessage(getLocaleMessage("only-in-world"));
-                return;
-            }
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(getLocaleMessage("only-players"));
+            return;
+        }
 
-            if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
+        if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
 
-            if (args.length == 0 || args.length == 3) {
-                if (planet.getWorldPlayers().canDevelop(player) || planet.getWorldPlayers().isDeveloperGuest(player)) {
-                    if (!planet.getWorldPlayers().isTrustedDeveloper(player)) {
-                        Player planetOwner = Bukkit.getPlayer(planet.getOwner());
-                        if (planetOwner == null) {
-                            sender.sendMessage(getLocaleMessage("world.dev-mode.cant-dev-when-offline"));
-                            return;
-                        }
-                        Planet ownerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(planetOwner);
-                        if (!planet.equals(ownerPlanet)) {
-                            sender.sendMessage(getLocaleMessage("world.dev-mode.cant-dev-when-offline"));
-                            return;
-                        }
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+        if (planet == null) {
+            player.sendMessage(getLocaleMessage("only-in-world"));
+            return;
+        }
+
+        if (!OpenCreative.getSettings().isEnabledCoding()) {
+            player.sendMessage(getLocaleMessage("world.dev-mode.disabled"));
+            return;
+        }
+
+        if (args.length == 0 || args.length == 3) {
+            if (planet.getWorldPlayers().canDevelop(player) || planet.getWorldPlayers().isDeveloperGuest(player)) {
+                if (!planet.getWorldPlayers().isTrustedDeveloper(player)) {
+                    Player planetOwner = Bukkit.getPlayer(planet.getOwner());
+                    if (planetOwner == null) {
+                        sender.sendMessage(getLocaleMessage("world.dev-mode.cant-dev-when-offline"));
+                        return;
                     }
-                    new QuitEvent(player).callEvent();
-                    PlayerInventory playerInventory = player.getInventory();
-                    ItemStack[] playerInventoryItems = (OpenCreative.getPlanetsManager().getDevPlanet(player) == null ?  playerInventory.getContents() : new ItemStack[]{});
-                    clearPlayer(player);
-                    sender.sendMessage(getPlayerLocaleMessage("world.dev-mode.help", player));
-                    if (args.length == 3) {
-                        try {
-                            double x = Double.parseDouble(args[0]);
-                            double y = Double.parseDouble(args[1]);
-                            double z = Double.parseDouble(args[2]);
-                            planet.connectToDevPlanet(player,x,y,z);
-                        } catch (Exception error) {
-                            planet.connectToDevPlanet(player);
-                        }
-                    } else {
+                    Planet ownerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(planetOwner);
+                    if (!planet.equals(ownerPlanet)) {
+                        sender.sendMessage(getLocaleMessage("world.dev-mode.cant-dev-when-offline"));
+                        return;
+                    }
+                }
+                new QuitEvent(player).callEvent();
+                PlayerInventory playerInventory = player.getInventory();
+                ItemStack[] playerInventoryItems = (OpenCreative.getPlanetsManager().getDevPlanet(player) == null ?  playerInventory.getContents() : new ItemStack[]{});
+                clearPlayer(player);
+                sender.sendMessage(getPlayerLocaleMessage("world.dev-mode.help", player));
+                if (args.length == 3) {
+                    try {
+                        double x = Double.parseDouble(args[0]);
+                        double y = Double.parseDouble(args[1]);
+                        double z = Double.parseDouble(args[2]);
+                        planet.connectToDevPlanet(player,x,y,z);
+                    } catch (Exception error) {
                         planet.connectToDevPlanet(player);
                     }
-                    if (planet.getWorldPlayers().isDeveloperGuest(player)) {
-                        player.setGameMode(GameMode.ADVENTURE);
-                        player.setAllowFlight(true);
-                        player.setFlying(true);
-                    } else {
-                        player.setGameMode(GameMode.CREATIVE);
-                        player.setAllowFlight(true);
-                        player.setFlying(true);
-                        giveDevPermissions(player);
-                    }
-                    ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
-                    if (planet.isOwner(player)) {
-                        player.getInventory().setItem(8, worldSettingsItem);
-                    }
-                    giveItems(player);
-                    for (ItemStack item : playerInventoryItems) {
-                        if (item != null && !itemEquals(item,worldSettingsItem) && !player.getInventory().containsAtLeast(item,1)) {
-                            player.getInventory().addItem(item);
-                        }
-                    }
                 } else {
-                    sender.sendMessage(getPlayerLocaleMessage("not-owner", player));
+                    planet.connectToDevPlanet(player);
+                }
+                if (planet.getWorldPlayers().isDeveloperGuest(player)) {
+                    player.setGameMode(GameMode.ADVENTURE);
+                    player.setAllowFlight(true);
+                    player.setFlying(true);
+                } else {
+                    player.setGameMode(GameMode.CREATIVE);
+                    player.setAllowFlight(true);
+                    player.setFlying(true);
+                    giveDevPermissions(player);
+                }
+                ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
+                if (planet.isOwner(player)) {
+                    player.getInventory().setItem(8, worldSettingsItem);
+                }
+                giveItems(player);
+                for (ItemStack item : playerInventoryItems) {
+                    if (item != null && !itemEquals(item,worldSettingsItem) && !player.getInventory().containsAtLeast(item,1)) {
+                        player.getInventory().addItem(item);
+                    }
                 }
             } else {
-                if (!planet.isOwner(sender.getName())) {
-                    sender.sendMessage(getLocaleMessage("not-owner"));
-                    return;
-                }
-                String nickname = args[0];
-                Player onlinePlayer = Bukkit.getPlayer(nickname);
-                if (!planet.getWorldPlayers().getAllDevelopers().contains(nickname)) {
-                    if (onlinePlayer != null) {
-                        nickname = onlinePlayer.getName();
-                    }
-                }
-                if (planet.isOwner(nickname)) {
-                    sender.sendMessage(getLocaleMessage("same-player"));
-                    return;
-                }
-                /*
-                 * Checks if player's name contains in not trusted
-                 * or trusted developers.
-                 */
-                if (planet.getWorldPlayers().getDevelopersNotTrusted().contains(nickname)) {
-                    planet.getWorldPlayers().addDeveloper(nickname,true);
-                    sender.sendMessage(getLocaleMessage("world.players.developers.trusted").replace("%player%", nickname));
-                    return;
-                }
-                if (planet.getWorldPlayers().getDevelopersTrusted().contains(nickname)) {
-                    planet.getWorldPlayers().removeDeveloper(nickname);
-                    sender.sendMessage(getLocaleMessage("world.players.developers.removed").replace("%player%", nickname));
-                    return;
-                }
-                /*
-                 * Adds online player as not trusted developers, if he's not
-                 * listed in developers.
-                 */
-                int limit = planet.getLimits().getDevelopersLimit();
-                if (planet.getWorldPlayers().getAllDevelopers().size() > limit) {
-                    sender.sendMessage(getLocaleMessage("world.players.developers.limit").replace("%limit%",String.valueOf(limit)));
-                    return;
-                }
+                sender.sendMessage(getPlayerLocaleMessage("not-owner", player));
+            }
+        } else {
+            if (!planet.isOwner(sender.getName())) {
+                sender.sendMessage(getLocaleMessage("not-owner"));
+                return;
+            }
+            String nickname = args[0];
+            Player onlinePlayer = Bukkit.getPlayer(nickname);
+            if (!planet.getWorldPlayers().getAllDevelopers().contains(nickname)) {
                 if (onlinePlayer != null) {
-                    Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(onlinePlayer);
-                    if (planet.equals(playerPlanet)) {
-                        sender.sendMessage(getLocaleMessage("world.players.developers.added").replace("%player%", onlinePlayer.getName()));
-                        planet.getWorldPlayers().addDeveloper(onlinePlayer.getName(),false);
-                    } else {
-                        sender.sendMessage(getLocaleMessage("no-player-found"));
-                    }
+                    nickname = onlinePlayer.getName();
+                }
+            }
+            if (planet.isOwner(nickname)) {
+                sender.sendMessage(getLocaleMessage("same-player"));
+                return;
+            }
+            /*
+             * Checks if player's name contains in not trusted
+             * or trusted developers.
+             */
+            if (planet.getWorldPlayers().getDevelopersNotTrusted().contains(nickname)) {
+                planet.getWorldPlayers().addDeveloper(nickname,true);
+                sender.sendMessage(getLocaleMessage("world.players.developers.trusted").replace("%player%", nickname));
+                return;
+            }
+            if (planet.getWorldPlayers().getDevelopersTrusted().contains(nickname)) {
+                planet.getWorldPlayers().removeDeveloper(nickname);
+                sender.sendMessage(getLocaleMessage("world.players.developers.removed").replace("%player%", nickname));
+                return;
+            }
+            /*
+             * Adds online player as not trusted developers, if he's not
+             * listed in developers.
+             */
+            int limit = planet.getLimits().getDevelopersLimit();
+            if (planet.getWorldPlayers().getAllDevelopers().size() > limit) {
+                sender.sendMessage(getLocaleMessage("world.players.developers.limit").replace("%limit%",String.valueOf(limit)));
+                return;
+            }
+            if (onlinePlayer != null) {
+                Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(onlinePlayer);
+                if (planet.equals(playerPlanet)) {
+                    sender.sendMessage(getLocaleMessage("world.players.developers.added").replace("%player%", onlinePlayer.getName()));
+                    planet.getWorldPlayers().addDeveloper(onlinePlayer.getName(),false);
                 } else {
                     sender.sendMessage(getLocaleMessage("no-player-found"));
                 }
+            } else {
+                sender.sendMessage(getLocaleMessage("no-player-found"));
             }
         }
     }
