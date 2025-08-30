@@ -213,6 +213,12 @@ public final class InteractListener implements Listener {
             if (item.isEmpty()) return true;
             ActionType action = ActionType.getType(clickedBlock.getRelative(BlockFace.DOWN));
             if (action == null) return true;
+            if (action.getCategory() == ActionCategory.SELECTION_ACTION) {
+                String selectionAction = getSignLine(clickedBlock.getRelative(BlockFace.DOWN).getRelative(BlockFace.SOUTH).getLocation(), (byte) 3);
+                if (selectionAction == null || selectionAction.isEmpty()) return true;
+                action = ActionType.getType(selectionAction);
+                if (action == null) return true;
+            }
             if (action.getArgumentsSlots().length == 0) return true;
             int maximumSlots = 0;
             List<Integer> ignored = new ArrayList<>();
