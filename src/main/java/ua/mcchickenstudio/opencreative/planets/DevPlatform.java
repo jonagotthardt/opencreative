@@ -161,9 +161,10 @@ public class DevPlatform {
     public void setContainerMaterial(Material containerMaterial) {
         Location begin = platformer.getPlatformBeginLocation(this);
         Location end = platformer.getPlatformEndLocation(this);
+        int y = begin.getBlockY()+2;
         for (int z = begin.getBlockZ()+4; z < end.getBlockZ()-4; z = z + 4) {
             for (int x = begin.getBlockX()+6; x <= end.getBlockX()-4; x = x + 2) {
-                Block containerBlock = new Location(getWorld(), x, 2, z).getBlock();
+                Block containerBlock = new Location(getWorld(), x, y, z).getBlock();
                 if (containerBlock.getState() instanceof InventoryHolder container) {
                     ItemStack[] data = container.getInventory().getContents();
                     containerBlock.setType(containerMaterial);
@@ -180,9 +181,10 @@ public class DevPlatform {
     public void setSignMaterial(Material signMaterial) {
         Location begin = platformer.getPlatformBeginLocation(this);
         Location end = platformer.getPlatformEndLocation(this);
+        int y = begin.getBlockY()+1;
         for (int z = begin.getBlockZ() + 5; z < end.getBlockZ() - 4; z = z + 4) {
             for (int x = begin.getBlockX()+4; x <= end.getBlockX() - 4; x = x + 2) {
-                Block signBlock = new Location(getWorld(), x, 1, z).getBlock();
+                Block signBlock = new Location(getWorld(), x, y, z).getBlock();
                 if (signBlock.getType().name().contains("WALL_SIGN")) {
                     Sign oldSign = (Sign) signBlock.getState();
                     signBlock.setType(signMaterial);
@@ -206,7 +208,7 @@ public class DevPlatform {
         Location end = platformer.getPlatformEndLocation(this);
         List<Location> locations = new ArrayList<>();
         for (int z = begin.getBlockZ()+4; z <= end.getBlockZ()-4; z =z+4) {
-            Block block = getWorld().getBlockAt(begin.getBlockX()+4,1,z);
+            Block block = getWorld().getBlockAt(begin.getBlockX()+4,begin.getBlockY(),z);
             ExecutorCategory blockCategory = ExecutorCategory.getByMaterial(block.getType());
             if (blockCategory == category) {
                 locations.add(block.getLocation());
