@@ -39,10 +39,14 @@ Minecraft plugin for PaperMC servers that allows players to create their worlds.
  You can achieve more security by using [WorldGuard](https://dev.bukkit.org/projects/worldguard), [Panilla](https://www.spigotmc.org/resources/panilla-prevent-hacked-items.65694/),
  [CoreProtect](https://modrinth.com/plugin/coreprotect) and other plugins. 
 
-- Change messages, items names and descriptions as you want, because it's **translatable**. By default we have English and Russian translations.
+- Change messages, items names, descriptions and even plugin sounds as you want, because it's **translatable**. By default we have English and Russian translations.
 
 - You can get donations by players by adding **player groups** in config.yml with custom limits, cooldowns,
   lobby permissions, world permissions, world advertisement price and like reward amount.
+
+- Be able to **execute any commands by console or player** on different events: Lobby Teleport, World Join, World Quit, World Chat,
+  Global Chat, Maintenance Start, Maintenance End. Useful, if you have some plugins (Skript, MyCommand) to do your own things without 
+  rewriting the plugin.
 
 - Add more features with other plugins:
   - [Vault](https://www.spigotmc.org/resources/vault.34315/) - Adds economy support.
@@ -50,11 +54,13 @@ Minecraft plugin for PaperMC servers that allows players to create their worlds.
   - [LibsDisguises](https://www.spigotmc.org/resources/libs-disguises-free.81/) - Adds entity disguise action.
   - [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) - Adds placeholders and parses them in some messages (world join, world icon).
 
-- You're welcome to create forks of this plugin, because it's **open-sourced**. Download source code, edit it, publish it
- and use on your own servers.
-
 - Plugin **developers can easily add own** [world generators](https://gitlab.com/eagles-creative/opencreative/-/wikis/home/Configuration/World-Generators), [coding platformers](https://gitlab.com/eagles-creative/opencreative/-/wikis/Plugin-Development/Coding-Platformers), [coding placeholders, coding game values](https://gitlab.com/eagles-creative/opencreative/-/wikis/Plugin-Development/Adding-new-features)
- and [set their managers](https://gitlab.com/eagles-creative/opencreative/-/wikis/Plugin-Development/Managers) (economy, packets).
+ and [set their managers](https://gitlab.com/eagles-creative/opencreative/-/wikis/Plugin-Development/Managers) (economy, packets). Also we have our plugin events (Lobby Teleport, World Chat, Global Chat, Maintenance Start/End,
+ 4 module events, 10 world events), so you can listen on them,
+ maybe cancel and execute your code. 
+
+ - You're welcome to create forks of this plugin, because it's **open-sourced**. Download source code, edit it, publish it
+ and use on your own servers.
 
 ## Usage
 
@@ -71,7 +77,7 @@ You can change world's sizes with player's permissions in config.yml.
 
 ![World Creation](https://gitlab.com/eagles-creative/opencreative/-/wikis/uploads/82d2118f4aee556c146a22b1419ed0df/WorldCreation.mp4)
 
-### Worlds Browser
+### Browsing worlds
 Players can search, sort and like worlds. World can be found by name or ID. Also worlds list can be sorted by:
 - Categories (Fighting, Sandbox, Arcade...)
 - Amount of online players in world.
@@ -214,7 +220,7 @@ They will work only if command sender is owner of world, or if he has bypass per
 
 ## Development
 
-To develop this plugin, simply download this project and use Intellij IDEA to code.
+To develop this plugin, you can fork it, then simply download project sources and use Intellij IDEA to code.
 
 We use Maven to compile plugin into jar file.
 
@@ -227,3 +233,7 @@ Contribute your code into [`development branch`](https://gitlab.com/eagles-creat
 ## License
 
 This plugin is licensed under GNU GPL v3, because it uses Paper API. When you use or edit source code of this plugin, please open your source code.
+
+## Special thanks
+
+[![GPLv3 Logo](https://www.gnu.org/graphics/gplv3-with-text-136x68.png)](https://www.gnu.org/licenses/gpl-3.0.txt) &nbsp; &nbsp; &nbsp; &nbsp; [![IntelliJ IDEA Logo](https://resources.jetbrains.com/storage/products/company/brand/logos/IntelliJ_IDEA.svg)](https://www.jetbrains.com/idea/) &nbsp; &nbsp; &nbsp; &nbsp; [![](https://assets.papermc.io/brand/papermc_combination_mark_light.min.svg)](https://papermc.io/)
