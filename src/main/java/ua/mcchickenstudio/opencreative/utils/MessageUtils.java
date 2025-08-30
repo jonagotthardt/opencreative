@@ -247,7 +247,7 @@ public final class MessageUtils {
     /**
      * Returns component message from translation.
      * @param messageID id of message.
-     * @return component message.
+     * @return component message, or "Error | Not found message.path...", if message was not found.
      */
     public static Component getLocaleComponent(String messageID) {
         return toComponent(getLocaleMessage(messageID));
@@ -258,7 +258,7 @@ public final class MessageUtils {
      * with parsed player placeholders.
      * @param messageID id of message.
      * @param player player to parse.
-     * @return component message.
+     * @return component message, or "Error | Not found message.path...", if message was not found.
      */
     public static Component getLocaleComponent(String messageID, OfflinePlayer player) {
         return toComponent(getPlayerLocaleMessage(messageID, player));

@@ -28,6 +28,13 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.util.UUID;
 
+/**
+ * <h1>Wander</h1>
+ * This class represents wander, that could be online.
+ * Wander is a player, who plays on planets.
+ * He has nickname, description, gender, favorite
+ * worlds and last played world.
+ */
 public final class Wander extends OfflineWander {
 
     public Wander(@NotNull UUID uuid) {
@@ -38,6 +45,10 @@ public final class Wander extends OfflineWander {
         super(offlinePlayer);
     }
 
+    /**
+     * Returns current planet, where wander is currently in.
+     * @return current planet, or null.
+     */
     public @Nullable Planet getCurrentPlanet() {
         Player player = Bukkit.getPlayer(uuid);
         if (player == null) return null;
