@@ -464,6 +464,7 @@ public class Planet {
         boolean wasLoaded = isLoaded();
         if (!isLoaded()) {
             OpenCreative.getPlugin().getLogger().info("Loading planet " + id + " and teleporting " + player.getName());
+            if (!OpenCreative.getSettings().isEnabledCoding() && mode == Mode.PLAYING) mode = Mode.BUILD;
             territory.load();
         } else {
             OpenCreative.getPlugin().getLogger().info("Planet " + id + " is already loaded, teleporting " + player.getName());
