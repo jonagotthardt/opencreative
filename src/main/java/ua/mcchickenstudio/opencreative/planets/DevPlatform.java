@@ -206,9 +206,10 @@ public class DevPlatform {
     public List<Location> getPlacedExecutors(ExecutorCategory category) {
         Location begin = platformer.getPlatformBeginLocation(this);
         Location end = platformer.getPlatformEndLocation(this);
+        int y = begin.getBlockY()+1;
         List<Location> locations = new ArrayList<>();
         for (int z = begin.getBlockZ()+4; z <= end.getBlockZ()-4; z =z+4) {
-            Block block = getWorld().getBlockAt(begin.getBlockX()+4,begin.getBlockY(),z);
+            Block block = getWorld().getBlockAt(begin.getBlockX()+4,y,z);
             ExecutorCategory blockCategory = ExecutorCategory.getByMaterial(block.getType());
             if (blockCategory == category) {
                 locations.add(block.getLocation());
