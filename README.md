@@ -20,12 +20,41 @@ Minecraft plugin for PaperMC servers that allows players to create their worlds.
 
 ## Features
 
-- **Let your players create entire worlds**, where they can build and even create mini-games with code.
-- **World Generators**. Players can create flat, normal, ocean and large biomes worlds with normal, nether, the end environment.
-- **World Settings**. World owners can change world's name, description, icon and other options. 
-- **Translatable**. You can change every single message for your server, and some of them has PlaceholderAPI support.
-- **Player Ranks**. Change world size, cooldowns, limits, modifiers, play/build/dev permissions for player groups.
-- **Open-sourced**. You can download source code and create similar plugins with your own features.
+- An **unique gamemode**, where **players can build** and even **create mini-games with coding**.
+ It's completely new experience compared to classic Creative servers with plots.
+
+- **A lot of options for worlds generation**: players can choose terrain (Flat, Empty, Ocean, Normal) and
+ environment (Overworld, Nether, The End). You can add own custom generators (Flat, Folders) in config.yml.
+
+- **Players can easily change their worlds** with settings. They can set a time, weather, game rules and world's name, description,
+ icon and even set custom ID for join command.
+
+- **It's better to create together**, because world owners can add players to builders, developers, white list or even ban list.
+ Not trusted players will lose their permissions, when owner leaves the server.
+
+- **Coding on blocks** allows players to create mini-games. With simple and friendly syntax, 120+ events, 320+ actions, 90 conditions, 
+ 9 values and variables it's easy to code something cool.
+
+- **Built-in security things**. Plugin has redstone limiter, bad items fixer and lobby protection. 
+ You can achieve more security by using [WorldGuard](https://dev.bukkit.org/projects/worldguard), [Panilla](https://www.spigotmc.org/resources/panilla-prevent-hacked-items.65694/),
+ [CoreProtect](https://modrinth.com/plugin/coreprotect) and other plugins. 
+
+- Change messages, items names and descriptions as you want, because it's **translatable**. By default we have English and Russian translations.
+
+- You can get donations by players by adding **player groups** in config.yml with custom limits, cooldowns,
+  lobby permissions, world permissions, world advertisement price and like reward amount.
+
+- Add more features with other plugins:
+  - [Vault](https://www.spigotmc.org/resources/vault.34315/) - Adds economy support.
+  - [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/) - Adds coding chests animations, glowing blocks while selecting location.
+  - [LibsDisguises](https://www.spigotmc.org/resources/libs-disguises-free.81/) - Adds entity disguise action.
+  - [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) - Adds placeholders and parses them in some messages (world join, world icon).
+
+- You're welcome to create forks of this plugin, because it's **open-sourced**. Download source code, edit it, publish it
+ and use on your own servers.
+
+- Plugin **developers can easily add own** [world generators](https://gitlab.com/eagles-creative/opencreative/-/wikis/home/Configuration/World-Generators), [coding platformers](https://gitlab.com/eagles-creative/opencreative/-/wikis/Plugin-Development/Coding-Platformers), [coding placeholders, coding game values](https://gitlab.com/eagles-creative/opencreative/-/wikis/Plugin-Development/Adding-new-features)
+ and [set their managers](https://gitlab.com/eagles-creative/opencreative/-/wikis/Plugin-Development/Managers) (economy, packets).
 
 ## Usage
 
