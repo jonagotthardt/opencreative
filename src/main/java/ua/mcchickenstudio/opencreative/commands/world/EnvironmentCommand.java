@@ -18,10 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.commands.world;
 
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.CodingBlockPlacer;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.GamePlayEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
@@ -31,6 +35,9 @@ import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.WorldVariable;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import ua.mcchickenstudio.opencreative.commands.CommandHandler;
+import ua.mcchickenstudio.opencreative.indev.agents.AgentDownException;
+import ua.mcchickenstudio.opencreative.indev.agents.OpenAIAgent;
+import ua.mcchickenstudio.opencreative.indev.agents.UnauthorizedAgentException;
 import ua.mcchickenstudio.opencreative.menus.world.settings.WorldEnvironmentMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
@@ -46,6 +53,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
+import java.io.StringReader;
+import java.net.UnknownHostException;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
@@ -585,6 +594,67 @@ public class EnvironmentCommand extends CommandHandler {
                             Sounds.DEV_DEBUG_OFF.play(player);
                             planet.setDebug(false);
                         }
+                    }
+                    case "generate": {
+                        if (args.length <= 4) { // /env generate a code that does something...
+                            player.sendMessage(getLocaleMessage("too-few-args"));
+                            return;
+                        }
+                        if (!OpenCreative.getSettings().isDebug()) {
+                            player.sendMessage(getLocaleMessage("only-debug"));
+                            return;
+                        }
+                        if (!player.hasPermission("opencreative.test.generate")) {
+                            player.sendMessage(getLocaleMessage("no-perms"));
+                            return;
+                        }
+                        if (!OpenCreative.getCodingPromptAgent().isEnabled()) {
+                            sender.sendMessage(getLocaleMessage("environment.prompter.disabled"));
+                            return;
+                        }
+                        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
+                        if (devPlanet == null) {
+                            sender.sendMessage(getLocaleMessage("only-in-dev-world"));
+                            return;
+                        }
+                        String request = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                OpenCreative.getCodingPromptAgent().generateCode(request).thenAccept(
+                                        response -> {
+                                            player.sendMessage("Test of code generation");
+                                            YamlConfiguration config = YamlConfiguration.loadConfiguration(new StringReader(response));
+                                            ConfigurationSection section = config.getConfigurationSection("coding.blocks");
+                                            if (section == null) {
+                                                player.sendMessage(getLocaleMessage("environment.prompter.bad-prompt"));
+                                                return;
+                                            }
+                                            if (!player.isOnline() || !devPlanet.equals(OpenCreative.getPlanetsManager().getDevPlanet(player))) {
+                                                return;
+                                            }
+                                            CodingBlockPlacer placer = new CodingBlockPlacer(devPlanet);
+                                            CodingBlockPlacer.CodePlacementResult result = placer.placeCodingLines(devPlanet, section);
+                                            if (result == CodingBlockPlacer.CodePlacementResult.NOT_ENOUGH_CODING_LINES) {
+                                                player.sendMessage(getLocaleMessage("environment.prompter.few-space"));
+                                            } else if (result.isSuccess()) {
+                                                player.sendMessage(getLocaleMessage("environment.prompter.success"));
+                                            }
+                                        }
+                                ).exceptionally(
+                                        error -> {
+                                            if (error instanceof UnauthorizedAgentException) {
+                                                player.sendMessage(getLocaleMessage("environment.prompter.unauthorized"));
+                                            } else if (error instanceof AgentDownException) {
+                                                player.sendMessage(getLocaleMessage("environment.prompter.unavailable"));
+                                            } else if (error instanceof UnknownHostException) {
+                                                player.sendMessage(getLocaleMessage("environment.prompter.unknown-host"));
+                                            }
+                                            return null;
+                                        }
+                                );
+                            }
+                        }.runTaskAsynchronously(OpenCreative.getPlugin());
                     }
 
                 }

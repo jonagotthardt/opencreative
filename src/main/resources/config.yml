@@ -159,6 +159,7 @@ coding:
   platforms-generator: "horizontal" # Default generator for coding platforms, if not exists will use default Horizontal.
     # Available: "horizontal", "vertical", "legacy". Please do not change platforms generator, if there's already existing worlds.
     # To test them, use /world platformer [ID].
+
   #
   # You can disable some coding blocks,
   # if they're useless or harming performance.
@@ -168,6 +169,16 @@ coding:
   disabled-events: []
   disabled-actions: []
   disabled-conditions: []
+
+  #
+  # Prompt handler is responsible for generating
+  # code from players wishes by using command:
+  # /env generate [prompt]
+  # For example: /env generate when player right clicks on
+  #                   magma block it gives random item
+  prompt-handler:
+    type: none # Set to "none" to disable. Available: "chatgpt"
+    token: "sk-insert-secret-key-here-but-do-not-share-it-with-others"
 
 item-fixer:
   #

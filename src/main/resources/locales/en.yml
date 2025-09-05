@@ -169,6 +169,15 @@ environment:
       dev: "&7LMB &f- Teleport to world, &7SHIFT+LMB &f- Teleport to location"
     vector: "&7Chat &f- Set coordinates of vector"
     particle: "&7RMB &f- Select a type, &7Shift+RMB &f- Show particle"
+  prompter:
+    help: "%prefix%You can try to generate a simple code by your words:\n &6/env generate [Your wishes]"
+    disabled: "%prefix%&cPrompt generation is disabled :("
+    bad-prompt: "%prefix%&cTry to explain your wishes more clear, for example: When player clicks on magma block, it will give random item to player."
+    unauthorized: "%prefix%&cSeems like token of prompt handler is expired, contact the admins :("
+    unavailable: "%prefix%&cSeems like the prompt handler is down, try again later :("
+    unknown-host: "%prefix%&cSeems like server is not connected to the Internet, or site of prompt handler doesn't exist :("
+    few-space: "%prefix%&cSeems like the code you requested requires a lot of space! Try to split your wishes, or free space in coding world."
+    success: "%prefix%Successfully&a generated&f a code from your wish :)"
 help:
   placeholders: "%prefix%List of placeholders: &6%player% %player_uuid% %entity% %entity_uuid% %target% %target_uuid% %players_amount% %entities_amount% %online%"
 creative:

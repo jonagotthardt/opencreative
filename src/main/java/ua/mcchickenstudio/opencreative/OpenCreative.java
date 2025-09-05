@@ -46,6 +46,9 @@ import ua.mcchickenstudio.opencreative.commands.world.reputation.DislikeCommand;
 import ua.mcchickenstudio.opencreative.commands.world.reputation.LikeCommand;
 import ua.mcchickenstudio.opencreative.indev.OfflineWander;
 import ua.mcchickenstudio.opencreative.indev.Wander;
+import ua.mcchickenstudio.opencreative.indev.agents.CodingAgent;
+import ua.mcchickenstudio.opencreative.indev.agents.DisabledCodingAgent;
+import ua.mcchickenstudio.opencreative.indev.agents.OpenAIAgent;
 import ua.mcchickenstudio.opencreative.listeners.CreativeListener;
 import ua.mcchickenstudio.opencreative.listeners.creative.PlanetListener;
 import ua.mcchickenstudio.opencreative.listeners.entity.EntityDamageListener;
@@ -105,6 +108,7 @@ public final class OpenCreative extends JavaPlugin {
     private BlocksManager blocks;
     private HintManager hints;
     private DevPlatformer devPlatformer;
+    private CodingAgent codingAgent;
 
     private static final String version = "5.7.1";
     private static final String codename = "Well, it's possible";
@@ -156,6 +160,7 @@ public final class OpenCreative extends JavaPlugin {
         moduler = new Moduler();
         moduler.init();
         if (devPlatformer == null) devPlatformer = new HorizontalPlatformer();
+        if (codingAgent == null) codingAgent = new DisabledCodingAgent();
 
         PlayerUtils.loadPermissions();
         HookUtils.loadHooks();
@@ -442,6 +447,28 @@ public final class OpenCreative extends JavaPlugin {
     @SuppressWarnings("unused")
     public static DevPlatformer getDevPlatformer() {
         return getPlugin().devPlatformer;
+    }
+
+    /**
+     * Sets custom coding prompt agent manager.
+     * @param codingAgent coding prompt agent.
+     */
+    @SuppressWarnings("unused")
+    public static void setCodingPromptAgent(@NotNull CodingAgent codingAgent) {
+        if (!(codingAgent instanceof DisabledCodingAgent || codingAgent instanceof OpenAIAgent)) {
+            getPlugin().getLogger().info("Now using coding prompt agent: " + codingAgent.getName());
+        }
+        getPlugin().codingAgent = codingAgent;
+    }
+
+    /**
+     * Gets coding prompt manager, that
+     * generates code by players prompts.
+     * @return coding prompt manager.
+     */
+    @SuppressWarnings("unused")
+    public static CodingAgent getCodingPromptAgent() {
+        return getPlugin().codingAgent;
     }
 
     /**

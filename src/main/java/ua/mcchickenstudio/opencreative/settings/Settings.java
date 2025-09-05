@@ -35,6 +35,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceEndEvent;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceStartEvent;
 import ua.mcchickenstudio.opencreative.indev.Items;
+import ua.mcchickenstudio.opencreative.indev.agents.DisabledCodingAgent;
+import ua.mcchickenstudio.opencreative.indev.agents.OpenAIAgent;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformer;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformers;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.HorizontalPlatformer;
@@ -217,6 +219,18 @@ public final class Settings {
             platformer = new HorizontalPlatformer();
         }
         OpenCreative.setDevPlatformer(platformer);
+        if (config.getString("coding.prompt-handler.type","none").equalsIgnoreCase("chatgpt")) {
+            String token = config.getString("coding.prompt-handler.token","");
+            if (token.length() <= 10) {
+                sendWarningErrorMessage("[CODING PROMPT] The token for ChatGPT is not valid, disabling prompt handler.");
+                OpenCreative.setCodingPromptAgent(new DisabledCodingAgent());
+            } else {
+                OpenCreative.setCodingPromptAgent(new OpenAIAgent());
+                OpenCreative.getCodingPromptAgent().setToken(token);
+            }
+        } else {
+            OpenCreative.setCodingPromptAgent(new DisabledCodingAgent());
+        }
         checkDebugAnnouncer();
     }
 
