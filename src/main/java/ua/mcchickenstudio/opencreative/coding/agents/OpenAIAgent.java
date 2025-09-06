@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.indev.agents;
+package ua.mcchickenstudio.opencreative.coding.agents;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -32,7 +32,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -45,7 +44,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebugError;
  */
 public final class OpenAIAgent implements CodingAgent {
 
-    private char[] token = new char[130];
+    private char[] token = new char[200];
 
     @Override
     public @NotNull CompletableFuture<String> generateCode(@NotNull String text) {
@@ -53,18 +52,21 @@ public final class OpenAIAgent implements CodingAgent {
         new BukkitRunnable() {
             @Override
             public void run() {
+                System.out.println("sending request: " + text);
                 HttpClient client = HttpClient.newBuilder()
-                        .connectTimeout(Duration.ofSeconds(2))
+                        .connectTimeout(Duration.ofSeconds(3))
                         .build();
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create("https://api.openai.com/v1/chat/completions"))
-                        .header("Authorization", "Bearer " + Arrays.toString(token))
+                        .header("Authorization", "Bearer " + new String(token))
                         .header("Content-Type", "application/json")
                         .header("User-Agent", "OpenCreative+ Coding Agent")
                         .POST(HttpRequest.BodyPublishers.ofString(getRequest(text)))
                         .build();
                 try {
                     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                    System.out.println("CODE: " + response.statusCode());
+                    System.out.println("BODY: " + response.body());
                     if (response.statusCode() == 401) {
                         future.completeExceptionally(new UnauthorizedAgentException());
                     } else if (response.statusCode() != 200) {
@@ -74,7 +76,17 @@ public final class OpenAIAgent implements CodingAgent {
                         JsonObject root = JsonParser.parseString(response.body()).getAsJsonObject();
                         JsonArray choices = root.getAsJsonArray("choices");
                         JsonObject message = choices.get(0).getAsJsonObject().getAsJsonObject("message");
-                        future.complete(message.get("content").getAsString());
+                        String code = message.get("content").getAsString();
+                        if (code.startsWith("```yaml")) {
+                            code = code.substring(7);
+                        }
+                        if (code.startsWith("```")) {
+                            code = code.substring(3);
+                        }
+                        if (code.endsWith("```")) {
+                            code = code.substring(0, code.length()-3);
+                        }
+                        future.complete(code);
                     }
                 } catch (UnknownHostException error) {
                     future.completeExceptionally(error);
@@ -87,8 +99,10 @@ public final class OpenAIAgent implements CodingAgent {
     }
 
     private @NotNull String getRequest(@NotNull String text) {
+        String instruction = new AgentInstruction(text).get();
+        System.out.println(instruction);
         return new Gson().toJson(new OpenAIRequest("gpt-4o-mini",
-                List.of(new Message("system", new AgentInstruction(text).get()),
+                List.of(new Message("system", instruction),
                         new Message("user", text))));
     }
 

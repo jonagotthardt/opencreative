@@ -173,8 +173,18 @@ coding:
   #
   # Prompt handler is responsible for generating
   # code from players wishes by using command:
-  # /env generate [prompt]
-  # For example: /env generate when player right clicks on
+  # /env make [prompt]
+  #
+  # Prompter can and will do mistakes in coding,
+  # and it's still experimental feature.
+  #
+  # Prompter requires token to work.
+  # For ChatGPT - https://platform.openai.com/api-keys
+  # Note: Services give you free trial, but
+  #       for general usage you can be forced
+  #       to pay services for using prompter.
+  #
+  # For example: /env make when player right clicks on
   #                   magma block it gives random item
   prompt-handler:
     type: none # Set to "none" to disable. Available: "chatgpt"
@@ -272,6 +282,7 @@ groups:
       size: 128
       like-reward: 1
       advertisement-cost: 0
+      coding-prompter: false # Access to /env make command
       limits:
         #
         # Limits for a world, that player created.
@@ -344,6 +355,7 @@ groups:
       size: 256
       like-reward: 1
       advertisement-cost: 0
+      coding-prompter: true
       limits:
         executor-calls: 120
         entities-amount: 200

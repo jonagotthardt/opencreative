@@ -35,9 +35,8 @@ import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.WorldVariable;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import ua.mcchickenstudio.opencreative.commands.CommandHandler;
-import ua.mcchickenstudio.opencreative.indev.agents.AgentDownException;
-import ua.mcchickenstudio.opencreative.indev.agents.OpenAIAgent;
-import ua.mcchickenstudio.opencreative.indev.agents.UnauthorizedAgentException;
+import ua.mcchickenstudio.opencreative.coding.agents.AgentDownException;
+import ua.mcchickenstudio.opencreative.coding.agents.UnauthorizedAgentException;
 import ua.mcchickenstudio.opencreative.menus.world.settings.WorldEnvironmentMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
@@ -58,6 +57,7 @@ import java.net.UnknownHostException;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebug;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 /**
@@ -595,16 +595,16 @@ public class EnvironmentCommand extends CommandHandler {
                             planet.setDebug(false);
                         }
                     }
-                    case "generate": {
-                        if (args.length <= 4) { // /env generate a code that does something...
+                    case "generate", "make": {
+                        if (args.length == 1) { // /env make a code that does something...
+                            player.sendMessage(getLocaleMessage("environment.prompter.help"));
+                            return;
+                        }
+                        if (args.length <= 4) {
                             player.sendMessage(getLocaleMessage("too-few-args"));
                             return;
                         }
-                        if (!OpenCreative.getSettings().isDebug()) {
-                            player.sendMessage(getLocaleMessage("only-debug"));
-                            return;
-                        }
-                        if (!player.hasPermission("opencreative.test.generate")) {
+                        if (!OpenCreative.getSettings().getGroups().getGroup(player).canUsePrompter() && !player.hasPermission("opencreative.prompter.bypass")) {
                             player.sendMessage(getLocaleMessage("no-perms"));
                             return;
                         }
@@ -617,37 +617,50 @@ public class EnvironmentCommand extends CommandHandler {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
                             return;
                         }
+                        if (!checkAndSetCooldownWithMessage(player, CooldownType.MODULE_MANIPULATION)) return;
                         String request = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+                        sendDebug("[CODING PROMPT] Player " + player.getName() + "requested to create a code: " + request);
+                        player.sendMessage(getLocaleMessage("environment.prompter.thinking"));
+                        Sounds.DEV_PROMPTER_THINKING.play(player);
+                        long time = System.currentTimeMillis();
                         new BukkitRunnable() {
                             @Override
                             public void run() {
                                 OpenCreative.getCodingPromptAgent().generateCode(request).thenAccept(
                                         response -> {
-                                            player.sendMessage("Test of code generation");
+                                            sendDebug("[CODING PROMPT] Responded to " + player.getName() + "'s wish: "
+                                                    + request + " in " + (System.currentTimeMillis()-time) + "  ms.");
+                                            sendDebug("The response:\n" + response);
                                             YamlConfiguration config = YamlConfiguration.loadConfiguration(new StringReader(response));
-                                            ConfigurationSection section = config.getConfigurationSection("coding.blocks");
+                                            ConfigurationSection section = config.getConfigurationSection("code.blocks");
                                             if (section == null) {
                                                 player.sendMessage(getLocaleMessage("environment.prompter.bad-prompt"));
+                                                Sounds.PLAYER_FAIL.play(player);
                                                 return;
                                             }
                                             if (!player.isOnline() || !devPlanet.equals(OpenCreative.getPlanetsManager().getDevPlanet(player))) {
                                                 return;
                                             }
-                                            CodingBlockPlacer placer = new CodingBlockPlacer(devPlanet);
-                                            CodingBlockPlacer.CodePlacementResult result = placer.placeCodingLines(devPlanet, section);
-                                            if (result == CodingBlockPlacer.CodePlacementResult.NOT_ENOUGH_CODING_LINES) {
-                                                player.sendMessage(getLocaleMessage("environment.prompter.few-space"));
-                                            } else if (result.isSuccess()) {
-                                                player.sendMessage(getLocaleMessage("environment.prompter.success"));
-                                            }
+                                            Bukkit.getScheduler().runTask(OpenCreative.getPlugin(),
+                                                () -> {
+                                                    CodingBlockPlacer placer = new CodingBlockPlacer(devPlanet);
+                                                    CodingBlockPlacer.CodePlacementResult result = placer.placeCodingLines(devPlanet, section);
+                                                    if (result == CodingBlockPlacer.CodePlacementResult.NOT_ENOUGH_CODING_LINES) {
+                                                        player.sendMessage(getLocaleMessage("environment.prompter.few-space"));
+                                                        Sounds.PLAYER_FAIL.play(player);
+                                                    } else if (result.isSuccess()) {
+                                                        player.sendMessage(getLocaleMessage("environment.prompter.success"));
+                                                        Sounds.DEV_PROMPTER_DONE.play(player);
+                                                    }
+                                            });
                                         }
                                 ).exceptionally(
                                         error -> {
-                                            if (error instanceof UnauthorizedAgentException) {
+                                            if (error.getCause() instanceof UnauthorizedAgentException) {
                                                 player.sendMessage(getLocaleMessage("environment.prompter.unauthorized"));
-                                            } else if (error instanceof AgentDownException) {
+                                            } else if (error.getCause() instanceof AgentDownException) {
                                                 player.sendMessage(getLocaleMessage("environment.prompter.unavailable"));
-                                            } else if (error instanceof UnknownHostException) {
+                                            } else if (error.getCause() instanceof UnknownHostException) {
                                                 player.sendMessage(getLocaleMessage("environment.prompter.unknown-host"));
                                             }
                                             return null;
@@ -667,6 +680,7 @@ public class EnvironmentCommand extends CommandHandler {
         List<String> tabCompleter = new ArrayList<>();
         if (args.length == 1) {
             Collections.addAll(tabCompleter,"platform","variables","debug","execute","barrel","floor","action","theme","event","sign","save-location","night-vision","drops");
+            if (OpenCreative.getCodingPromptAgent().isEnabled()) tabCompleter.add("make");
             return tabCompleter;
         }
         if (args.length == 2) {

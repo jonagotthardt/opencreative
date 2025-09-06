@@ -51,6 +51,7 @@ public class Group {
 
     private final double likeReward;
     private final double advertisementPrice;
+    private final boolean canUsePrompter;
 
     private final Set<String> playPermissions = new HashSet<>();
     private final Set<String> buildPermissions = new HashSet<>();
@@ -76,6 +77,7 @@ public class Group {
         modulesUsageCooldown = config.getInt(path + "cooldowns.module-usage",7);
         blocksDuplicationCooldown = config.getInt(path + "cooldowns.duplication-usage",7);
         chatCooldown = config.getInt(path + "cooldowns.world-chat",2);
+        canUsePrompter = config.getBoolean(path + "world.coding-prompter", false);
         playPermissions.addAll(config.getStringList(path + "world.play-permissions"));
         buildPermissions.addAll(config.getStringList(path + "world.build-permissions"));
         devPermissions.addAll(config.getStringList(path + "world.dev-permissions"));
@@ -168,6 +170,10 @@ public class Group {
 
     public double getLikeReward() {
         return likeReward;
+    }
+
+    public boolean canUsePrompter() {
+        return canUsePrompter;
     }
 
     public int getScriptSizeLimit() {

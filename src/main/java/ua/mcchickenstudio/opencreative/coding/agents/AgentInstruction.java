@@ -16,13 +16,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.indev.agents;
+package ua.mcchickenstudio.opencreative.coding.agents;
 
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.ArgumentSlot;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.ParameterSlot;
+import ua.mcchickenstudio.opencreative.coding.values.*;
 
 import java.util.StringJoiner;
 
@@ -122,6 +123,15 @@ public final class AgentInstruction {
                   target: TARGET_TYPE
                   name: "Name to execute" # Function's or method's name
         
+        Targets
+        In actions and conditions use targets only:
+        - If it's kill event executor: VICTIM, KILLER
+        - If code requires SELECTION_ACTION then use SELECTED
+        - If user requires SELECTION_ACTION and asked from random then use RANDOM_TARGET
+        - If user asked from random then use RANDOM_PLAYER
+        - If user asked for all players/entities use ALL_PLAYERS or ALL_ENTITIES
+        In ALL OTHER CASES USE target: DEFAULT
+        
         Saving arguments format
         MAXIMUM AMOUNT OF ARGUMENTS PER ACTION IS 27.
         
@@ -198,8 +208,8 @@ public final class AgentInstruction {
                 - HIDE_ENCHANT
         
         List of available executors:
-        
-        """;
+        """ + getExecutors() + "\n \n List of available actions and conditions: " + "\n" + getActions()
+                + "\n" + "List of available Game Values: " + getGameValues();
     }
 
     private @NotNull String getExecutors() {
@@ -209,6 +219,26 @@ public final class AgentInstruction {
             joiner.add(type.name());
         }
         return joiner.toString();
+    }
+
+    private @NotNull String getGameValues() {
+        StringJoiner joiner = new StringJoiner(", ");
+        for (EventValue value : EventValues.getInstance().getEventValues()) {
+            joiner.add(value.getID().toUpperCase() + "(" + getGameValueType(value) + ")");
+        }
+        return joiner.toString();
+    }
+
+    private @NotNull String getGameValueType(@NotNull EventValue eventValue) {
+        return switch (eventValue) {
+            case NumberEventValue ignored -> "NUMBER";
+            case VectorEventValue ignored -> "VECTOR";
+            case BooleanEventValue ignored -> "BOOLEAN";
+            case ListEventValue ignored -> "LIST";
+            case ItemEventValue ignored -> "ITEM";
+            case LocationEventValue ignored -> "LOCATION";
+            default -> "TEXT";
+        };
     }
 
     private @NotNull String getActions() {
@@ -222,6 +252,7 @@ public final class AgentInstruction {
 
     private @NotNull String getActionArguments(@NotNull ActionType type) {
         ArgumentSlot[] args = type.getArgumentsSlots();
+        if (args == null) return "";
         if (args.length == 0) return "";
         StringJoiner joiner = new StringJoiner(", ");
         for (ArgumentSlot arg : args) {
