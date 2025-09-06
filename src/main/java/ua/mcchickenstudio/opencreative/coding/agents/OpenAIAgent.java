@@ -52,7 +52,6 @@ public final class OpenAIAgent implements CodingAgent {
         new BukkitRunnable() {
             @Override
             public void run() {
-                System.out.println("sending request: " + text);
                 HttpClient client = HttpClient.newBuilder()
                         .connectTimeout(Duration.ofSeconds(3))
                         .build();
@@ -65,8 +64,6 @@ public final class OpenAIAgent implements CodingAgent {
                         .build();
                 try {
                     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-                    System.out.println("CODE: " + response.statusCode());
-                    System.out.println("BODY: " + response.body());
                     if (response.statusCode() == 401) {
                         future.completeExceptionally(new UnauthorizedAgentException());
                     } else if (response.statusCode() != 200) {
@@ -99,10 +96,8 @@ public final class OpenAIAgent implements CodingAgent {
     }
 
     private @NotNull String getRequest(@NotNull String text) {
-        String instruction = new AgentInstruction(text).get();
-        System.out.println(instruction);
         return new Gson().toJson(new OpenAIRequest("gpt-4o-mini",
-                List.of(new Message("system", instruction),
+                List.of(new Message("system", new AgentInstruction(text).get()),
                         new Message("user", text))));
     }
 

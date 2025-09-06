@@ -634,17 +634,21 @@ public class EnvironmentCommand extends CommandHandler {
                                             YamlConfiguration config = YamlConfiguration.loadConfiguration(new StringReader(response));
                                             ConfigurationSection section = config.getConfigurationSection("code.blocks");
                                             if (section == null) {
-                                                player.sendMessage(getLocaleMessage("environment.prompter.bad-prompt"));
-                                                Sounds.PLAYER_FAIL.play(player);
-                                                return;
+                                                section = config.getConfigurationSection("blocks");
+                                                if (section == null) {
+                                                    player.sendMessage(getLocaleMessage("environment.prompter.bad-prompt"));
+                                                    Sounds.PLAYER_FAIL.play(player);
+                                                    return;
+                                                }
                                             }
                                             if (!player.isOnline() || !devPlanet.equals(OpenCreative.getPlanetsManager().getDevPlanet(player))) {
                                                 return;
                                             }
+                                            ConfigurationSection finalSection = section;
                                             Bukkit.getScheduler().runTask(OpenCreative.getPlugin(),
                                                 () -> {
                                                     CodingBlockPlacer placer = new CodingBlockPlacer(devPlanet);
-                                                    CodingBlockPlacer.CodePlacementResult result = placer.placeCodingLines(devPlanet, section);
+                                                    CodingBlockPlacer.CodePlacementResult result = placer.placeCodingLines(devPlanet, finalSection);
                                                     if (result == CodingBlockPlacer.CodePlacementResult.NOT_ENOUGH_CODING_LINES) {
                                                         player.sendMessage(getLocaleMessage("environment.prompter.few-space"));
                                                         Sounds.PLAYER_FAIL.play(player);
