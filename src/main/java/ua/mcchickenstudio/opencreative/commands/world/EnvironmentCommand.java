@@ -18,10 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.commands.world;
 
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.CodingBlockPlacer;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.GamePlayEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
@@ -31,6 +35,8 @@ import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.WorldVariable;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import ua.mcchickenstudio.opencreative.commands.CommandHandler;
+import ua.mcchickenstudio.opencreative.coding.agents.AgentDownException;
+import ua.mcchickenstudio.opencreative.coding.agents.UnauthorizedAgentException;
 import ua.mcchickenstudio.opencreative.menus.world.settings.WorldEnvironmentMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
@@ -46,9 +52,12 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
+import java.io.StringReader;
+import java.net.UnknownHostException;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebug;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 /**
@@ -586,6 +595,80 @@ public class EnvironmentCommand extends CommandHandler {
                             planet.setDebug(false);
                         }
                     }
+                    case "generate", "make": {
+                        if (args.length == 1) { // /env make a code that does something...
+                            player.sendMessage(getLocaleMessage("environment.prompter.help"));
+                            return;
+                        }
+                        if (args.length <= 4) {
+                            player.sendMessage(getLocaleMessage("too-few-args"));
+                            return;
+                        }
+                        if (!OpenCreative.getSettings().getGroups().getGroup(player).canUsePrompter() && !player.hasPermission("opencreative.prompter.bypass")) {
+                            player.sendMessage(getLocaleMessage("no-perms"));
+                            return;
+                        }
+                        if (!OpenCreative.getCodingPromptAgent().isEnabled()) {
+                            sender.sendMessage(getLocaleMessage("environment.prompter.disabled"));
+                            return;
+                        }
+                        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
+                        if (devPlanet == null) {
+                            sender.sendMessage(getLocaleMessage("only-in-dev-world"));
+                            return;
+                        }
+                        if (!checkAndSetCooldownWithMessage(player, CooldownType.MODULE_MANIPULATION)) return;
+                        String request = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+                        sendDebug("[CODING PROMPT] Player " + player.getName() + "requested to create a code: " + request);
+                        player.sendMessage(getLocaleMessage("environment.prompter.thinking"));
+                        Sounds.DEV_PROMPTER_THINKING.play(player);
+                        long time = System.currentTimeMillis();
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                OpenCreative.getCodingPromptAgent().generateCode(request).thenAccept(
+                                        response -> {
+                                            sendDebug("[CODING PROMPT] Responded to " + player.getName() + "'s wish: "
+                                                    + request + " in " + (System.currentTimeMillis()-time) + "  ms.");
+                                            sendDebug("The response:\n" + response);
+                                            YamlConfiguration config = YamlConfiguration.loadConfiguration(new StringReader(response));
+                                            ConfigurationSection section = config.getConfigurationSection("code.blocks");
+                                            if (section == null) {
+                                                player.sendMessage(getLocaleMessage("environment.prompter.bad-prompt"));
+                                                Sounds.PLAYER_FAIL.play(player);
+                                                return;
+                                            }
+                                            if (!player.isOnline() || !devPlanet.equals(OpenCreative.getPlanetsManager().getDevPlanet(player))) {
+                                                return;
+                                            }
+                                            Bukkit.getScheduler().runTask(OpenCreative.getPlugin(),
+                                                () -> {
+                                                    CodingBlockPlacer placer = new CodingBlockPlacer(devPlanet);
+                                                    CodingBlockPlacer.CodePlacementResult result = placer.placeCodingLines(devPlanet, section);
+                                                    if (result == CodingBlockPlacer.CodePlacementResult.NOT_ENOUGH_CODING_LINES) {
+                                                        player.sendMessage(getLocaleMessage("environment.prompter.few-space"));
+                                                        Sounds.PLAYER_FAIL.play(player);
+                                                    } else if (result.isSuccess()) {
+                                                        player.sendMessage(getLocaleMessage("environment.prompter.success"));
+                                                        Sounds.DEV_PROMPTER_DONE.play(player);
+                                                    }
+                                            });
+                                        }
+                                ).exceptionally(
+                                        error -> {
+                                            if (error.getCause() instanceof UnauthorizedAgentException) {
+                                                player.sendMessage(getLocaleMessage("environment.prompter.unauthorized"));
+                                            } else if (error.getCause() instanceof AgentDownException) {
+                                                player.sendMessage(getLocaleMessage("environment.prompter.unavailable"));
+                                            } else if (error.getCause() instanceof UnknownHostException) {
+                                                player.sendMessage(getLocaleMessage("environment.prompter.unknown-host"));
+                                            }
+                                            return null;
+                                        }
+                                );
+                            }
+                        }.runTaskAsynchronously(OpenCreative.getPlugin());
+                    }
 
                 }
             }
@@ -597,6 +680,7 @@ public class EnvironmentCommand extends CommandHandler {
         List<String> tabCompleter = new ArrayList<>();
         if (args.length == 1) {
             Collections.addAll(tabCompleter,"platform","variables","debug","execute","barrel","floor","action","theme","event","sign","save-location","night-vision","drops");
+            if (OpenCreative.getCodingPromptAgent().isEnabled()) tabCompleter.add("make");
             return tabCompleter;
         }
         if (args.length == 2) {

@@ -1,5 +1,5 @@
 #
-# OpenCreative+ 5.7.1 - Well, it's possible.
+# OpenCreative+ 5.7.2 - Well, it's possible.
 # (C) McChicken Studio 2017-2025.
 #
 
@@ -112,7 +112,7 @@
 # Discord: https://discord.gg/sSFCXUeq63
 #
 
-version: 5.7.1
+version: 5.7.2
 last-world-id: 0
 hide-from-tab: spectator # Hides players, that aren't in same world: spectator - Transparent nickname (requires ProtocolLib), full - Full hide from tab list, none - Not hide.
 
@@ -159,6 +159,7 @@ coding:
   platforms-generator: "horizontal" # Default generator for coding platforms, if not exists will use default Horizontal.
     # Available: "horizontal", "vertical", "legacy". Please do not change platforms generator, if there's already existing worlds.
     # To test them, use /world platformer [ID].
+
   #
   # You can disable some coding blocks,
   # if they're useless or harming performance.
@@ -168,6 +169,26 @@ coding:
   disabled-events: []
   disabled-actions: []
   disabled-conditions: []
+
+  #
+  # Prompt handler is responsible for generating
+  # code from players wishes by using command:
+  # /env make [prompt]
+  #
+  # Prompter can and will do mistakes in coding,
+  # and it's still experimental feature.
+  #
+  # Prompter requires token to work.
+  # For ChatGPT - https://platform.openai.com/api-keys
+  # Note: Services give you free trial, but
+  #       for general usage you can be forced
+  #       to pay services for using prompter.
+  #
+  # For example: /env make when player right clicks on
+  #                   magma block it gives random item
+  prompt-handler:
+    type: none # Set to "none" to disable. Available: "chatgpt"
+    token: "sk-insert-secret-key-here-but-do-not-share-it-with-others"
 
 item-fixer:
   #
@@ -261,6 +282,7 @@ groups:
       size: 128
       like-reward: 1
       advertisement-cost: 0
+      coding-prompter: false # Access to /env make command
       limits:
         #
         # Limits for a world, that player created.
@@ -333,6 +355,7 @@ groups:
       size: 256
       like-reward: 1
       advertisement-cost: 0
+      coding-prompter: true
       limits:
         executor-calls: 120
         entities-amount: 200

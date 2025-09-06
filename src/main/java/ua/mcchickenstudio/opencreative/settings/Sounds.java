@@ -170,6 +170,8 @@ public enum Sounds {
     DEV_MODULE_LIKED("item.bottle.fill_dragonbreath",1.3f),
     DEV_MODULE_DISLIKED("item.bottle.fill_dragonbreath",0.7f),
     DEV_INSERTED_IN_CONTAINER("block.bamboo_wood_fence_gate.open",0.1f),
+    DEV_PROMPTER_THINKING("block.beacon.activate",0.1f),
+    DEV_PROMPTER_DONE("block.vault.reject_rewarded_player",0.6f),
 
     MAINTENANCE_NOTIFY("block.bell.use",0.1f),
     MAINTENANCE_COUNT("block.end_portal_frame.fill",2),
