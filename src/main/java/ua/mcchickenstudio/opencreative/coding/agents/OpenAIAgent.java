@@ -66,6 +66,8 @@ public final class OpenAIAgent implements CodingAgent {
                     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
                     if (response.statusCode() == 401) {
                         future.completeExceptionally(new UnauthorizedAgentException());
+                    } else if (response.statusCode() == 429) {
+                        future.completeExceptionally(new AgentLimitedException());
                     } else if (response.statusCode() != 200) {
                         future.completeExceptionally(new AgentDownException());
                     } else {

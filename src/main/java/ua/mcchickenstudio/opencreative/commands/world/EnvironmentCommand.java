@@ -26,6 +26,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockPlacer;
+import ua.mcchickenstudio.opencreative.coding.agents.AgentLimitedException;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.GamePlayEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
@@ -619,7 +620,7 @@ public class EnvironmentCommand extends CommandHandler {
                         }
                         if (!checkAndSetCooldownWithMessage(player, CooldownType.MODULE_MANIPULATION)) return;
                         String request = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
-                        sendDebug("[CODING PROMPT] Player " + player.getName() + "requested to create a code: " + request);
+                        sendDebug("[CODING PROMPT] Player " + player.getName() + " requested to create a code: " + request);
                         player.sendMessage(getLocaleMessage("environment.prompter.thinking"));
                         Sounds.DEV_PROMPTER_THINKING.play(player);
                         long time = System.currentTimeMillis();
@@ -662,6 +663,8 @@ public class EnvironmentCommand extends CommandHandler {
                                         error -> {
                                             if (error.getCause() instanceof UnauthorizedAgentException) {
                                                 player.sendMessage(getLocaleMessage("environment.prompter.unauthorized"));
+                                            } else if (error.getCause() instanceof AgentLimitedException) {
+                                                player.sendMessage(getLocaleMessage("environment.prompter.limited"));
                                             } else if (error.getCause() instanceof AgentDownException) {
                                                 player.sendMessage(getLocaleMessage("environment.prompter.unavailable"));
                                             } else if (error.getCause() instanceof UnknownHostException) {

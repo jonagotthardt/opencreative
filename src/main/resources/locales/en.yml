@@ -173,6 +173,7 @@ environment:
     help: "%prefix%You can try to generate a simple code by your words:\n &6/env make [Your wishes]"
     thinking: "%prefix%Thinking, please wait..."
     disabled: "%prefix%&cPrompt generation is disabled :("
+    limited: "%prefix%&cSeems like the prompt handler reached limit of requests, try again later :("
     bad-prompt: "%prefix%&cTry to explain your wishes more clear, for example: When player clicks on magma block, it will give random item to player."
     unauthorized: "%prefix%&cSeems like token of prompt handler is expired, contact the admins :("
     unavailable: "%prefix%&cSeems like the prompt handler is down, try again later :("
