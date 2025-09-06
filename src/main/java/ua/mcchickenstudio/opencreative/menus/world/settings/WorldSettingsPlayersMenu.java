@@ -301,7 +301,7 @@ public final class WorldSettingsPlayersMenu extends LegacyMenu {
             canDev = 4;
         }
 
-        RadioButton radioButton = new RadioButton(Material.COMMAND_BLOCK, MessageUtils.getLocaleItemName("menus.world-settings-players.items.dev.name"),
+        RadioButton radioButton = new RadioButton(Material.BEACON, MessageUtils.getLocaleItemName("menus.world-settings-players.items.dev.name"),
                 MessageUtils.getLocaleItemDescription("menus.world-settings-players.items.dev.lore"), canDev, 4, actions,
                 "menus.world-settings-players.items.dev.choices", "menus.world-settings-players");
 

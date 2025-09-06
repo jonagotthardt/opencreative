@@ -30,6 +30,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.agents.AgentModelCapable;
+import ua.mcchickenstudio.opencreative.coding.agents.CodingAgent;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceEndEvent;
@@ -47,6 +49,7 @@ import ua.mcchickenstudio.opencreative.settings.groups.Groups;
 import java.io.File;
 import java.util.*;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebug;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
@@ -219,10 +222,15 @@ public final class Settings {
             platformer = new HorizontalPlatformer();
         }
         OpenCreative.setDevPlatformer(platformer);
+        setupPromptHandler(config);
+        checkDebugAnnouncer();
+    }
+
+    private static void setupPromptHandler(FileConfiguration config) {
         if (config.getString("coding.prompt-handler.type","none").equalsIgnoreCase("chatgpt")) {
-            String token = config.getString("coding.prompt-handler.token","");
+            String token = config.getString("coding.prompt-handler.token", "");
             if (token.length() <= 10) {
-                sendWarningErrorMessage("[CODING PROMPT] The token for ChatGPT is not valid, disabling prompt handler.");
+                sendWarningErrorMessage("[CODING PROMPT] The token is not valid, disabling prompt handler.");
                 OpenCreative.setCodingPromptAgent(new DisabledCodingAgent());
             } else {
                 OpenCreative.setCodingPromptAgent(new OpenAIAgent());
@@ -231,7 +239,16 @@ public final class Settings {
         } else {
             OpenCreative.setCodingPromptAgent(new DisabledCodingAgent());
         }
-        checkDebugAnnouncer();
+        if (OpenCreative.getCodingPromptAgent() instanceof AgentModelCapable modelable) {
+            String model = config.getString("coding.prompt-handler.model", "");
+            if (!model.isEmpty()) modelable.setModel(model);
+        }
+        CodingAgent agent = OpenCreative.getCodingPromptAgent();
+        if (!OpenCreative.getCodingPromptAgent().isEnabled()) {
+            sendDebug("[CODING PROMPT] Using prompter (" + agent.getName() +")" +
+                    (agent instanceof AgentModelCapable model ? " with model: " + model.getModel() : "")
+                    + " for /env make");
+        }
     }
 
     private void loadWorldGenerators(FileConfiguration config) {

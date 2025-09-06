@@ -26,8 +26,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
+import java.net.ConnectException;
 import java.net.URI;
-import java.net.UnknownHostException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -42,9 +42,10 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebugError;
  * This class represents a coding agent, that uses
  * ChatGPT to generate a code
  */
-public final class OpenAIAgent implements CodingAgent {
+public final class OpenAIAgent implements CodingAgent, AgentModelCapable {
 
     private char[] token = new char[200];
+    private String model = "gpt-4o-mini";
 
     @Override
     public @NotNull CompletableFuture<String> generateCode(@NotNull String text) {
@@ -52,7 +53,6 @@ public final class OpenAIAgent implements CodingAgent {
         new BukkitRunnable() {
             @Override
             public void run() {
-                System.out.println("sending request: " + text);
                 HttpClient client = HttpClient.newBuilder()
                         .connectTimeout(Duration.ofSeconds(3))
                         .build();
@@ -65,10 +65,10 @@ public final class OpenAIAgent implements CodingAgent {
                         .build();
                 try {
                     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-                    System.out.println("CODE: " + response.statusCode());
-                    System.out.println("BODY: " + response.body());
                     if (response.statusCode() == 401) {
                         future.completeExceptionally(new UnauthorizedAgentException());
+                    } else if (response.statusCode() == 429) {
+                        future.completeExceptionally(new AgentLimitedException());
                     } else if (response.statusCode() != 200) {
                         future.completeExceptionally(new AgentDownException());
                     } else {
@@ -88,7 +88,7 @@ public final class OpenAIAgent implements CodingAgent {
                         }
                         future.complete(code);
                     }
-                } catch (UnknownHostException error) {
+                } catch (ConnectException error) {
                     future.completeExceptionally(error);
                 } catch (Exception error) {
                     sendDebugError("Failed to respond for code generation: " + text, error);
@@ -99,11 +99,19 @@ public final class OpenAIAgent implements CodingAgent {
     }
 
     private @NotNull String getRequest(@NotNull String text) {
-        String instruction = new AgentInstruction(text).get();
-        System.out.println(instruction);
-        return new Gson().toJson(new OpenAIRequest("gpt-4o-mini",
-                List.of(new Message("system", instruction),
+        return new Gson().toJson(new OpenAIRequest(model,
+                List.of(new Message("system", new AgentInstruction(text).get()),
                         new Message("user", text))));
+    }
+
+    @Override
+    public void setModel(@NotNull String model) {
+        this.model = model;
+    }
+
+    @Override
+    public @NotNull String getModel() {
+        return model;
     }
 
     @Override

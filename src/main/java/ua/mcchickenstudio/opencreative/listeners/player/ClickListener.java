@@ -170,7 +170,7 @@ public final class ClickListener implements Listener {
                         }
                     }
                 }
-                } else if (item.getType() == Material.FEATHER || item.getType() == Material.BRICKS || item.getType() == Material.COMMAND_BLOCK) {
+                } else if (item.getType() == Material.FEATHER || item.getType() == Material.BRICKS || item.getType() == Material.BEACON) {
                 RadioButton rd = RadioButton.getRadioButtonByItemStack(item);
                     if (rd != null) {
                         rd.onChoice();
