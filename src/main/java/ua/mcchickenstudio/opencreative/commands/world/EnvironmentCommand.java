@@ -54,6 +54,7 @@ import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
 import java.io.StringReader;
+import java.net.ConnectException;
 import java.net.UnknownHostException;
 import java.util.*;
 
@@ -667,7 +668,7 @@ public class EnvironmentCommand extends CommandHandler {
                                                 player.sendMessage(getLocaleMessage("environment.prompter.limited"));
                                             } else if (error.getCause() instanceof AgentDownException) {
                                                 player.sendMessage(getLocaleMessage("environment.prompter.unavailable"));
-                                            } else if (error.getCause() instanceof UnknownHostException) {
+                                            } else if (error.getCause() instanceof ConnectException) {
                                                 player.sendMessage(getLocaleMessage("environment.prompter.unknown-host"));
                                             }
                                             return null;
