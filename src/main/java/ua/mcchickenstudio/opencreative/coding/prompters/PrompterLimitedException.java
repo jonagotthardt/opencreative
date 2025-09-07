@@ -16,12 +16,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.agents;
+package ua.mcchickenstudio.opencreative.coding.prompters;
 
-public final class UnauthorizedAgentException extends RuntimeException {
+public final class PrompterLimitedException extends RuntimeException {
 
-    public UnauthorizedAgentException() {
-        super("Token is expired or it is not valid, cannot authorize.");
+    public PrompterLimitedException() {
+        super("Seems like prompter is rate limited or the limit of requests amount is reached.");
     }
 
 }

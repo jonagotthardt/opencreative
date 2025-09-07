@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.agents;
+package ua.mcchickenstudio.opencreative.coding.prompters;
 
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.managers.Manager;
@@ -24,11 +24,11 @@ import ua.mcchickenstudio.opencreative.managers.Manager;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * <h1>CodingAgent</h1>
- * This interface represents a coding agent, that
+ * <h1>CodingPrompter</h1>
+ * This interface represents a coding prompter, that
  * will generate a code by players prompts.
  */
-public interface CodingAgent extends Manager {
+public interface CodingPrompter extends Manager {
 
     /**
      * Generates a code by player's prompt. Returns
@@ -38,7 +38,7 @@ public interface CodingAgent extends Manager {
     @NotNull CompletableFuture<String> generateCode(@NotNull String prompt);
 
     /**
-     * Sets the token for coding agent.
+     * Sets the token for coding prompter.
      * @param token new token.
      */
     void setToken(@NotNull String token);

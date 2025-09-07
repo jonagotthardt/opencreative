@@ -26,7 +26,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockPlacer;
-import ua.mcchickenstudio.opencreative.coding.agents.AgentLimitedException;
+import ua.mcchickenstudio.opencreative.coding.prompters.PrompterLimitedException;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.GamePlayEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
@@ -36,8 +36,8 @@ import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.WorldVariable;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import ua.mcchickenstudio.opencreative.commands.CommandHandler;
-import ua.mcchickenstudio.opencreative.coding.agents.AgentDownException;
-import ua.mcchickenstudio.opencreative.coding.agents.UnauthorizedAgentException;
+import ua.mcchickenstudio.opencreative.coding.prompters.PrompterDownException;
+import ua.mcchickenstudio.opencreative.coding.prompters.UnauthorizedPrompterException;
 import ua.mcchickenstudio.opencreative.menus.world.settings.WorldEnvironmentMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
@@ -55,7 +55,6 @@ import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
 import java.io.StringReader;
 import java.net.ConnectException;
-import java.net.UnknownHostException;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
@@ -610,7 +609,7 @@ public class EnvironmentCommand extends CommandHandler {
                             player.sendMessage(getLocaleMessage("no-perms"));
                             return;
                         }
-                        if (!OpenCreative.getCodingPromptAgent().isEnabled()) {
+                        if (!OpenCreative.getCodingPrompter().isEnabled()) {
                             sender.sendMessage(getLocaleMessage("environment.prompter.disabled"));
                             return;
                         }
@@ -628,7 +627,7 @@ public class EnvironmentCommand extends CommandHandler {
                         new BukkitRunnable() {
                             @Override
                             public void run() {
-                                OpenCreative.getCodingPromptAgent().generateCode(request).thenAccept(
+                                OpenCreative.getCodingPrompter().generateCode(request).thenAccept(
                                         response -> {
                                             sendDebug("[CODING PROMPT] Responded to " + player.getName() + "'s wish: "
                                                     + request + " in " + (System.currentTimeMillis()-time) + "  ms.");
@@ -662,11 +661,11 @@ public class EnvironmentCommand extends CommandHandler {
                                         }
                                 ).exceptionally(
                                         error -> {
-                                            if (error.getCause() instanceof UnauthorizedAgentException) {
+                                            if (error.getCause() instanceof UnauthorizedPrompterException) {
                                                 player.sendMessage(getLocaleMessage("environment.prompter.unauthorized"));
-                                            } else if (error.getCause() instanceof AgentLimitedException) {
+                                            } else if (error.getCause() instanceof PrompterLimitedException) {
                                                 player.sendMessage(getLocaleMessage("environment.prompter.limited"));
-                                            } else if (error.getCause() instanceof AgentDownException) {
+                                            } else if (error.getCause() instanceof PrompterDownException) {
                                                 player.sendMessage(getLocaleMessage("environment.prompter.unavailable"));
                                             } else if (error.getCause() instanceof ConnectException) {
                                                 player.sendMessage(getLocaleMessage("environment.prompter.unknown-host"));
@@ -688,7 +687,7 @@ public class EnvironmentCommand extends CommandHandler {
         List<String> tabCompleter = new ArrayList<>();
         if (args.length == 1) {
             Collections.addAll(tabCompleter,"platform","variables","debug","execute","barrel","floor","action","theme","event","sign","save-location","night-vision","drops");
-            if (OpenCreative.getCodingPromptAgent().isEnabled()) tabCompleter.add("make");
+            if (OpenCreative.getCodingPrompter().isEnabled()) tabCompleter.add("make");
             return tabCompleter;
         }
         if (args.length == 2) {

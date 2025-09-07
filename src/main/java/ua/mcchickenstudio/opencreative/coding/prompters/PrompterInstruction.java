@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.agents;
+package ua.mcchickenstudio.opencreative.coding.prompters;
 
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -27,11 +27,11 @@ import ua.mcchickenstudio.opencreative.coding.values.*;
 
 import java.util.StringJoiner;
 
-public final class AgentInstruction {
+public final class PrompterInstruction {
 
     private final String input;
 
-    public AgentInstruction(@NotNull String playerRequest) {
+    public PrompterInstruction(@NotNull String playerRequest) {
         this.input = playerRequest;
     }
 

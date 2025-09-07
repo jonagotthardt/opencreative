@@ -16,19 +16,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.agents;
+package ua.mcchickenstudio.opencreative.coding.prompters;
 
-import org.jetbrains.annotations.NotNull;
+public final class UnauthorizedPrompterException extends RuntimeException {
 
-/**
- * <h1>AgentModelCapable</h1>
- * This interface is used in prompt agents, that
- * have models to customize.
- */
-public interface AgentModelCapable {
-
-    void setModel(@NotNull String model);
-
-    @NotNull String getModel();
+    public UnauthorizedPrompterException() {
+        super("Token is expired or it is not valid, cannot authorize.");
+    }
 
 }

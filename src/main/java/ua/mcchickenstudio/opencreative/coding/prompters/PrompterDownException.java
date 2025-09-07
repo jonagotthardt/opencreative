@@ -16,11 +16,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.agents;
+package ua.mcchickenstudio.opencreative.coding.prompters;
 
-public final class AgentDownException extends RuntimeException {
+public final class PrompterDownException extends RuntimeException {
 
-    public AgentDownException() {
+    public PrompterDownException() {
         super("Site is not responding, maybe it's down.");
     }
 
