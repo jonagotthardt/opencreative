@@ -253,7 +253,7 @@ public final class Settings {
         }
 
         CodingPrompter prompter = OpenCreative.getCodingPrompter();
-        if (!OpenCreative.getCodingPrompter().isEnabled()) {
+        if (OpenCreative.getCodingPrompter().isEnabled()) {
             sendDebug("[CODING PROMPT] Using prompter (" + prompter.getName() +")" +
                     (prompter instanceof PrompterModelCapable model ? " with model: " + model.getModel() : "")
                     + " for /env make");

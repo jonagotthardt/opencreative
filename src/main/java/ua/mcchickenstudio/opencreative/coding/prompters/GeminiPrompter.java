@@ -63,6 +63,7 @@ public final class GeminiPrompter implements CodingPrompter, PrompterModelCapabl
                         .header("Content-Type", "application/json")
                         .header("User-Agent", "OpenCreative+ Coding Prompter")
                         .POST(HttpRequest.BodyPublishers.ofString(getRequest(text)))
+                        .timeout(Duration.ofSeconds(120))
                         .build();
                 try {
                     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -153,9 +154,8 @@ public final class GeminiPrompter implements CodingPrompter, PrompterModelCapabl
 
     @Override
     public String getName() {
-        return "OpenAI Coding Prompter";
+        return "Gemini Coding Prompter";
     }
-
 
     @SuppressWarnings({"unused", "FieldCanBeLocal"})
     static class GeminiInstruction {

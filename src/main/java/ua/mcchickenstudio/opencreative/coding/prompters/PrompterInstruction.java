@@ -40,6 +40,7 @@ public final class PrompterInstruction {
         You're coding writer, and user asked you to write a code:
         \"""" + input + "\"" + """
         YOU MUST RETURN ONLY YAML CODE.
+        DO NOT WRITE COMMENTS, BECAUSE THEY WILL BE IGNORED.
        \s
         Example of code, that sends "Hello World" message when player joins the world.
         code:

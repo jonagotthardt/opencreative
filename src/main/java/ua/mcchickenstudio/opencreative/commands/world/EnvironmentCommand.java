@@ -597,6 +597,7 @@ public class EnvironmentCommand extends CommandHandler {
                             Sounds.DEV_DEBUG_OFF.play(player);
                             planet.setDebug(false);
                         }
+                        break;
                     }
                     case "generate", "make": {
                         if (args.length == 1) { // /env make a code that does something...
@@ -656,7 +657,10 @@ public class EnvironmentCommand extends CommandHandler {
                                                     player.sendMessage(getLocaleMessage("environment.prompter.few-space"));
                                                     Sounds.PLAYER_FAIL.play(player);
                                                 } else if (result.isSuccess()) {
-                                                    player.sendMessage(getLocaleMessage("environment.prompter.success"));
+                                                    long responseTime = System.currentTimeMillis()-time;
+                                                    player.sendMessage(getLocaleMessage("environment.prompter.success")
+                                                            .replace("%time%", String.valueOf(responseTime))
+                                                            .replace("%idea%", request));
                                                     Sounds.DEV_PROMPTER_DONE.play(player);
                                                 }
                                         });
@@ -676,7 +680,6 @@ public class EnvironmentCommand extends CommandHandler {
                             }
                         }.runTaskAsynchronously(OpenCreative.getPlugin());
                     }
-
                 }
             }
         }

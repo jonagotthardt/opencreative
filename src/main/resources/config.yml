@@ -188,7 +188,7 @@ coding:
   # For example: /env make when player right clicks on
   #                   magma block it gives random item
   prompt-handler:
-    type: "none" # Set to "none" to disable. Available: "chatgpt"
+    type: "none" # Set to "none" to disable. Available: "chatgpt", "gemini"
     model: "gpt-4o-mini" # Set model of LLM. For Gemini: "gemini-2.5-flash"
     token: "sk-insert-secret-key-here-but-do-not-share-it-with-others"
 
