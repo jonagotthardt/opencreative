@@ -143,9 +143,9 @@ environment:
     help: "%prefix%Call executors by yourself, and they will execute code.\n &6/env execute function [Name] &f- Call Function.\n &6/env execute method [Name] &f- Call Method.\n &6/env execute player_join [Player] &f- Call Player Join event."
     offline: "%prefix%&cPlayer is not in world."
     function: "%prefix%Calling function &9%function%&f..."
-    function-not-found: "%prefix%&cThis function doesn't exists O_o"
+    function-not-found: "%prefix%&cThis function doesn't exist O_o"
     method: "%prefix%Calling method &a%method%&f..."
-    method-not-found: "%prefix%&cThis method doesn't exists O_o"
+    method-not-found: "%prefix%&cThis method doesn't exist O_o"
   platform:
     claimed: "%prefix%Created a &6new platform &ffor coding, now you can place coding blocks here too!"
     limit: "%prefix%&cYou reached a limit of %amount% platforms, you can't create new coding platforms anymore :("
@@ -175,11 +175,12 @@ environment:
     disabled: "%prefix%&cPrompt generation is disabled :("
     limited: "%prefix%&cSeems like the prompt handler reached limit of requests, try again later :("
     bad-prompt: "%prefix%&cTry to explain your wishes more clear, for example: When player clicks on magma block, it will give random item to player."
+    timeout: "%prefix%&cSeems like the prompt handler was thinking for too long.. Well, you have to make your wishes smaller :("
     unauthorized: "%prefix%&cSeems like token of prompt handler is expired, contact the admins :("
     unavailable: "%prefix%&cSeems like the prompt handler is down, try again later :("
     unknown-host: "%prefix%&cSeems like server is not connected to the Internet, or site of prompt handler doesn't exist :("
     few-space: "%prefix%&cSeems like the code you requested requires a lot of space! Try to split your wishes, or free space in coding world."
-    success: "%prefix%Successfully&a generated&f a code from your wish :)"
+    success: "%prefix%Successfully&a generated&f a code from your wish in %time% seconds :)\n &6%idea%\n&fTo apply changes type &6/play&f."
 help:
   placeholders: "%prefix%List of placeholders: &6%player% %player_uuid% %entity% %entity_uuid% %target% %target_uuid% %players_amount% %entities_amount% %online%"
 creative:

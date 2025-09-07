@@ -16,21 +16,22 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.agents;
+package ua.mcchickenstudio.opencreative.coding.prompters;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * <h1>DisabledCodingAgent</h1>
- * This class represents a coding agent, that
+ * <h1>DisabledCodingPrompter</h1>
+ * This class represents a coding prompter, that
  * does nothing, because it's disabled.
  */
-public final class DisabledCodingAgent implements CodingAgent {
+public final class DisabledCodingPrompter implements CodingPrompter {
 
     @Override
-    public @NotNull CompletableFuture<String> generateCode(@NotNull String text) {
+    public @NotNull CompletableFuture<String> generateCode(@NotNull String nickname, @NotNull UUID uuid, @NotNull String text) {
         CompletableFuture<String> future = new CompletableFuture<>();
         future.complete("Disabled");
         return future;
@@ -50,7 +51,7 @@ public final class DisabledCodingAgent implements CodingAgent {
 
     @Override
     public String getName() {
-        return "Disabled Coding Agent";
+        return "Disabled Coding Prompter";
     }
 
 }

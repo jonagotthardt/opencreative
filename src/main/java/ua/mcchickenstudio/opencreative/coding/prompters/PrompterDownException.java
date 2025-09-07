@@ -16,12 +16,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.agents;
+package ua.mcchickenstudio.opencreative.coding.prompters;
 
-public final class AgentLimitedException extends RuntimeException {
+public final class PrompterDownException extends RuntimeException {
 
-    public AgentLimitedException() {
-        super("Seems like agent is rate limited or the limit of requests amount is reached.");
+    public PrompterDownException() {
+        super("Site is not responding, maybe it's down.");
     }
 
 }

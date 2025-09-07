@@ -87,9 +87,9 @@ public final class Space implements PlanetsManager {
         File worldTemplateFolder = new File(OpenCreative.getPlugin().getDataPath()
                 + File.separator + "templates" + File.separator + template.getFolderName());
         if (!worldTemplateFolder.exists() || !worldTemplateFolder.isDirectory()) {
-            sendPlayerErrorMessage(owner,"Failed to create world by template " + template.getID() + ", because folder doesn't exists.");
+            sendPlayerErrorMessage(owner,"Failed to create world by template " + template.getID() + ", because folder doesn't exist.");
             sendCriticalErrorMessage("Failed to create world for planet " + id + " by " + owner.getName() + ". Folder " + template.getFolderName()
-                    + " doesn't exists, or it's not directory.");
+                    + " doesn't exist, or it's not directory.");
             return;
         }
         File devTemplateFolder = new File(worldTemplateFolder.getPath() + "dev");

@@ -714,7 +714,7 @@ public class CreativeCommand extends CommandHandler {
         if (args.length == 1) return;
         File template = new File(OpenCreative.getPlugin().getDataPath()+File.separator+"templates"+File.separator+args[1]);
         if (!template.exists()) {
-            sender.sendMessage("Template doesn't exists.");
+            sender.sendMessage("Template doesn't exist.");
             return;
         }
         if (!OpenCreative.getStability().isFine()) {

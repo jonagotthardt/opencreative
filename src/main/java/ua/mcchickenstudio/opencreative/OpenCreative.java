@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.data.PhysService;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldListener;
+import ua.mcchickenstudio.opencreative.coding.prompters.GeminiPrompter;
 import ua.mcchickenstudio.opencreative.commands.*;
 import ua.mcchickenstudio.opencreative.commands.minecraft.*;
 import ua.mcchickenstudio.opencreative.commands.world.AdvertisementCommand;
@@ -46,9 +47,9 @@ import ua.mcchickenstudio.opencreative.commands.world.reputation.DislikeCommand;
 import ua.mcchickenstudio.opencreative.commands.world.reputation.LikeCommand;
 import ua.mcchickenstudio.opencreative.indev.OfflineWander;
 import ua.mcchickenstudio.opencreative.indev.Wander;
-import ua.mcchickenstudio.opencreative.coding.agents.CodingAgent;
-import ua.mcchickenstudio.opencreative.coding.agents.DisabledCodingAgent;
-import ua.mcchickenstudio.opencreative.coding.agents.OpenAIAgent;
+import ua.mcchickenstudio.opencreative.coding.prompters.CodingPrompter;
+import ua.mcchickenstudio.opencreative.coding.prompters.DisabledCodingPrompter;
+import ua.mcchickenstudio.opencreative.coding.prompters.OpenAIPrompter;
 import ua.mcchickenstudio.opencreative.listeners.CreativeListener;
 import ua.mcchickenstudio.opencreative.listeners.creative.PlanetListener;
 import ua.mcchickenstudio.opencreative.listeners.entity.EntityDamageListener;
@@ -108,7 +109,7 @@ public final class OpenCreative extends JavaPlugin {
     private BlocksManager blocks;
     private HintManager hints;
     private DevPlatformer devPlatformer;
-    private CodingAgent codingAgent;
+    private CodingPrompter prompter;
 
     private static final String version = "5.7.2";
     private static final String codename = "Well, it's possible";
@@ -160,7 +161,7 @@ public final class OpenCreative extends JavaPlugin {
         moduler = new Moduler();
         moduler.init();
         if (devPlatformer == null) devPlatformer = new HorizontalPlatformer();
-        if (codingAgent == null) codingAgent = new DisabledCodingAgent();
+        if (prompter == null) prompter = new DisabledCodingPrompter();
 
         PlayerUtils.loadPermissions();
         HookUtils.loadHooks();
@@ -450,25 +451,26 @@ public final class OpenCreative extends JavaPlugin {
     }
 
     /**
-     * Sets custom coding prompt agent manager.
-     * @param codingAgent coding prompt agent.
+     * Sets custom coding prompt manager.
+     * @param codingPrompter coding prompter.
      */
     @SuppressWarnings("unused")
-    public static void setCodingPromptAgent(@NotNull CodingAgent codingAgent) {
-        if (!(codingAgent instanceof DisabledCodingAgent || codingAgent instanceof OpenAIAgent)) {
-            getPlugin().getLogger().info("Now using coding prompt agent: " + codingAgent.getName());
+    public static void setCodingPrompter(@NotNull CodingPrompter codingPrompter) {
+        if (!(codingPrompter instanceof DisabledCodingPrompter
+                || codingPrompter instanceof OpenAIPrompter || codingPrompter instanceof GeminiPrompter)) {
+            getPlugin().getLogger().info("Now using coding prompter: " + codingPrompter.getName());
         }
-        getPlugin().codingAgent = codingAgent;
+        getPlugin().prompter = codingPrompter;
     }
 
     /**
      * Gets coding prompt manager, that
      * generates code by players prompts.
-     * @return coding prompt manager.
+     * @return coding prompter.
      */
     @SuppressWarnings("unused")
-    public static CodingAgent getCodingPromptAgent() {
-        return getPlugin().codingAgent;
+    public static CodingPrompter getCodingPrompter() {
+        return getPlugin().prompter;
     }
 
     /**
@@ -604,6 +606,5 @@ public final class OpenCreative extends JavaPlugin {
     public static @NotNull OfflineWander getOfflineWander(@NotNull UUID uuid) {
         return new OfflineWander(uuid);
     }
-
 
 }

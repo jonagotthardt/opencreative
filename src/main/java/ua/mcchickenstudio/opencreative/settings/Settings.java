@@ -30,15 +30,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.agents.AgentModelCapable;
-import ua.mcchickenstudio.opencreative.coding.agents.CodingAgent;
+import ua.mcchickenstudio.opencreative.coding.prompters.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceEndEvent;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceStartEvent;
 import ua.mcchickenstudio.opencreative.indev.Items;
-import ua.mcchickenstudio.opencreative.coding.agents.DisabledCodingAgent;
-import ua.mcchickenstudio.opencreative.coding.agents.OpenAIAgent;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformer;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformers;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.HorizontalPlatformer;
@@ -227,26 +224,38 @@ public final class Settings {
     }
 
     private static void setupPromptHandler(FileConfiguration config) {
-        if (config.getString("coding.prompt-handler.type","none").equalsIgnoreCase("chatgpt")) {
-            String token = config.getString("coding.prompt-handler.token", "");
-            if (token.length() <= 10) {
-                sendWarningErrorMessage("[CODING PROMPT] The token is not valid, disabling prompt handler.");
-                OpenCreative.setCodingPromptAgent(new DisabledCodingAgent());
-            } else {
-                OpenCreative.setCodingPromptAgent(new OpenAIAgent());
-                OpenCreative.getCodingPromptAgent().setToken(token);
-            }
-        } else {
-            OpenCreative.setCodingPromptAgent(new DisabledCodingAgent());
+        String type = config.getString("coding.prompt-handler.type","none");
+        if (type.equalsIgnoreCase("none")) {
+            OpenCreative.setCodingPrompter(new DisabledCodingPrompter());
+            return;
         }
-        if (OpenCreative.getCodingPromptAgent() instanceof AgentModelCapable modelable) {
+
+        String token = config.getString("coding.prompt-handler.token", "");
+        if (token.length() <= 10) {
+            sendWarningErrorMessage("[CODING PROMPT] The token is not valid, disabling prompt handler.");
+            OpenCreative.setCodingPrompter(new DisabledCodingPrompter());
+        } else {
+            switch (type.toLowerCase()) {
+                case "chatgpt", "openai" -> OpenCreative.setCodingPrompter(new OpenAIPrompter());
+                case "gemini", "google" -> OpenCreative.setCodingPrompter(new GeminiPrompter());
+                default -> {
+                    sendWarningErrorMessage("[CODING PROMPT] Unknown prompter: " + type + ", using disabled prompt handler.");
+                    OpenCreative.setCodingPrompter(new DisabledCodingPrompter());
+                    return;
+                }
+            }
+            OpenCreative.getCodingPrompter().setToken(token);
+        }
+
+        if (OpenCreative.getCodingPrompter() instanceof PrompterModelCapable modelable) {
             String model = config.getString("coding.prompt-handler.model", "");
             if (!model.isEmpty()) modelable.setModel(model);
         }
-        CodingAgent agent = OpenCreative.getCodingPromptAgent();
-        if (!OpenCreative.getCodingPromptAgent().isEnabled()) {
-            sendDebug("[CODING PROMPT] Using prompter (" + agent.getName() +")" +
-                    (agent instanceof AgentModelCapable model ? " with model: " + model.getModel() : "")
+
+        CodingPrompter prompter = OpenCreative.getCodingPrompter();
+        if (OpenCreative.getCodingPrompter().isEnabled()) {
+            sendDebug("[CODING PROMPT] Using prompter (" + prompter.getName() +")" +
+                    (prompter instanceof PrompterModelCapable model ? " with model: " + model.getModel() : "")
                     + " for /env make");
         }
     }
@@ -281,7 +290,7 @@ public final class Settings {
                 File template = new File(OpenCreative.getPlugin().getDataPath()
                         + File.separator + "templates" + File.separator + folderName);
                 if (!template.exists() || !template.isDirectory()) {
-                    sendWarningErrorMessage("Can't register template world " + templateId + " because it's folder " + folderName + " doesn't exists.");
+                    sendWarningErrorMessage("Can't register template world " + templateId + " because it's folder " + folderName + " doesn't exist.");
                     continue;
                 }
                 String iconMaterial = templatesSection.getString(templateId + ".icon","GRASS_BLOCK");
@@ -352,10 +361,10 @@ public final class Settings {
                 try {
                     Sounds type = Sounds.valueOf(key.toUpperCase().replace("-","_"));
                     String sound = soundsSection.getString(key+".name","");
-                    float pitch = (float) soundsSection.getDouble(key+".name",1.0f);
+                    float pitch = (float) soundsSection.getDouble(key+".pitch",1.0f);
                     sounds.put(type,new SettingsSound(sound,pitch));
                 } catch (Exception ignored) {
-                    sendWarningErrorMessage("Sound " + key.toLowerCase() + " doesn't exists.");
+                    sendWarningErrorMessage("Sound " + key.toLowerCase() + " doesn't exist.");
                 }
             }
         }
@@ -386,7 +395,7 @@ public final class Settings {
                         items.put(type,new SettingsItem(item));
                     }
                 } catch (Exception ignored) {
-                    sendWarningErrorMessage("Item " + key.toLowerCase() + " doesn't exists.");
+                    sendWarningErrorMessage("Item " + key.toLowerCase() + " doesn't exist.");
                 }
             }
         }

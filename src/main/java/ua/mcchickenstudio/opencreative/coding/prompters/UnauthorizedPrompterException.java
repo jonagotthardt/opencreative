@@ -16,12 +16,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.agents;
+package ua.mcchickenstudio.opencreative.coding.prompters;
 
-public final class AgentDownException extends RuntimeException {
+public final class UnauthorizedPrompterException extends RuntimeException {
 
-    public AgentDownException() {
-        super("Site is not responding, maybe it's down.");
+    public UnauthorizedPrompterException() {
+        super("Token is expired or it is not valid, cannot authorize.");
     }
 
 }

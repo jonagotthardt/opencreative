@@ -16,19 +16,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.agents;
+package ua.mcchickenstudio.opencreative.coding.prompters;
 
-import org.jetbrains.annotations.NotNull;
+public final class PrompterLimitedException extends RuntimeException {
 
-/**
- * <h1>AgentModelCapable</h1>
- * This interface is used in prompt agents, that
- * have models to customize.
- */
-public interface AgentModelCapable {
-
-    void setModel(@NotNull String model);
-
-    @NotNull String getModel();
+    public PrompterLimitedException() {
+        super("Seems like prompter is rate limited or the limit of requests amount is reached.");
+    }
 
 }
