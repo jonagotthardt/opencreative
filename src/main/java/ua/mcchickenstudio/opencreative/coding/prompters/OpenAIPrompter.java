@@ -32,6 +32,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.net.http.HttpTimeoutException;
 import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
@@ -91,7 +92,7 @@ public final class OpenAIPrompter implements CodingPrompter, PrompterModelCapabl
                         }
                         future.complete(code);
                     }
-                } catch (ConnectException error) {
+                } catch (ConnectException | HttpTimeoutException error) {
                     future.completeExceptionally(error);
                 } catch (Exception error) {
                     sendDebugError("Failed to respond for code generation: " + text, error);

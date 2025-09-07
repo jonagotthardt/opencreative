@@ -55,6 +55,7 @@ import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
 import java.io.StringReader;
 import java.net.ConnectException;
+import java.net.http.HttpTimeoutException;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
@@ -671,6 +672,7 @@ public class EnvironmentCommand extends CommandHandler {
                                         case UnauthorizedPrompterException ignored -> player.sendMessage(getLocaleMessage("environment.prompter.unauthorized"));
                                         case PrompterLimitedException ignored -> player.sendMessage(getLocaleMessage("environment.prompter.limited"));
                                         case PrompterDownException ignored -> player.sendMessage(getLocaleMessage("environment.prompter.unavailable"));
+                                        case HttpTimeoutException ignored -> player.sendMessage(getLocaleMessage("environment.prompter.timeout"));
                                         case ConnectException ignored -> player.sendMessage(getLocaleMessage("environment.prompter.unknown-host"));
                                         case Exception exception -> sendPlayerErrorMessage(player, "Failed to generate a code with " + OpenCreative.getCodingPrompter().getName() + ".", exception);
                                         default -> sendPlayerErrorMessage(player, "Failed to generate a code with " + OpenCreative.getCodingPrompter().getName() + ".");
