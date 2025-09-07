@@ -535,6 +535,29 @@ items:
     lore:
       - "&c :( Function is disabled"
       - "&c"
+  wander:
+    head:
+      name: "&f%player%"
+      lore: [" "]
+    info:
+      name: "&6Profile"
+      lore:
+        - "&7Online: &f%online%"
+        - "&7Last world ID: &e%last%"
+        - "&7Favorites: &e%fav%"
+    yes: "&aYes"
+    no: "&cNo"
+    hints-visible:
+      name: "&aHints: Visible"
+      lore:
+        - "&7Click to &chide &7hints"
+    hints-hidden:
+      name: "&cHints: Hidden"
+      lore:
+        - "&7Click to &ashow &7hints"
+    close:
+      name: "&cClose"
+      lore: [" "]
   lobby:
     games:
       name: "&aWorlds from all players &3[Right-click]"

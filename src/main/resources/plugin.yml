@@ -104,6 +104,10 @@ commands:
   module:
     description: 'Opens module`s browser menu.'
     aliases: [modules, ьщвгдуы, ьщвгдуі, ьщвгду]
+# Wander profile command
+  wander:
+    description: 'Opens wander profile menu.'
+    aliases: [profile, профайл, wanderer]
 #  favorite:
 #    description: 'Adds world to favorites list'
 #    aliases: [fav, афм, афмщкшеу, favourite]

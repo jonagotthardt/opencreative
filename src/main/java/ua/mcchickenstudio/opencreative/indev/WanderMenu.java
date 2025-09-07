@@ -30,15 +30,22 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemName;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.substring;
+import ua.mcchickenstudio.opencreative.indev.ItemBuilder;
 
 public class WanderMenu extends AbstractMenu {
 
     private final String nickname;
     private final OfflineWander wander;
     private final ItemStack ABOUT_WANDER;
+    private final ItemStack CLOSE_ITEM = createItem(Material.BARRIER, 1);
+    private final int SLOT_HEAD = 13;
+    private final int SLOT_INFO = 22;
+    private final int SLOT_TOGGLE_HINTS = 31;
+    private final int SLOT_CLOSE = 49;
 
     public WanderMenu(@NotNull String nickname) {
         super(6, substring(nickname,30));
@@ -63,16 +70,57 @@ public class WanderMenu extends AbstractMenu {
 
     @Override
     public void fillItems(Player player) {
+        for (int i = 0; i < getSize(); i++) setItem(DECORATION_PANE_ITEM, i);
 
+        // Head with name
+        ItemStack head = new ItemBuilder(ABOUT_WANDER.clone())
+                .translate("items.wander.head")
+                .parse("%player%", nickname)
+                .getItem();
+        setItem(SLOT_HEAD, head);
+
+        // Info item
+        ItemStack info = new ItemBuilder(Material.WRITABLE_BOOK)
+                .translate("items.wander.info")
+                .parse("%online%", wander.isOnline() ? getLocaleItemName("items.wander.yes") : getLocaleItemName("items.wander.no"))
+                .parse("%last%", wander.getLastPlayedWorldId())
+                .parse("%fav%", wander.getFavoriteWorlds().size())
+                .getItem();
+        setItem(SLOT_INFO, info);
+
+        // Toggle hints
+        boolean hidden = wander.isHideHints();
+        ItemStack toggle = new ItemBuilder(hidden ? Material.REDSTONE_TORCH : Material.LEVER)
+                .translate(hidden ? "items.wander.hints-hidden" : "items.wander.hints-visible")
+                .getItem();
+        setItem(toggle, SLOT_TOGGLE_HINTS);
+
+        // Close
+        ItemStack close = new ItemBuilder(CLOSE_ITEM.clone())
+                .translate("items.wander.close")
+                .getItem();
+        setItem(SLOT_CLOSE, close);
     }
 
     @Override
     public void onClick(@NotNull InventoryClickEvent event) {
-
+        if (!isPlayerClicked(event) || !isClickedInMenuSlots(event)) return;
+        event.setCancelled(true);
+        int slot = event.getSlot();
+        if (slot == SLOT_CLOSE) {
+            event.getWhoClicked().closeInventory();
+            return;
+        }
+        if (slot == SLOT_TOGGLE_HINTS) {
+            wander.hideHints = !wander.isHideHints();
+            wander.saveData();
+            fillItems((Player) event.getWhoClicked());
+            return;
+        }
     }
 
     @Override
     public void onOpen(@NotNull InventoryOpenEvent event) {
-
+        // No-op for now
     }
 }

@@ -273,6 +273,7 @@ public final class OpenCreative extends JavaPlugin {
         commands.put("weather",     WeatherCommand.class);
         commands.put("value",       ValueCommand.class);
         commands.put("module",      ModuleCommand.class);
+        commands.put("wander",      ua.mcchickenstudio.opencreative.commands.WanderCommand.class);
         for (String commandName : commands.keySet()) {
             PluginCommand command = getCommand(commandName);
             if (command != null) {
