@@ -352,7 +352,7 @@ public final class Settings {
                 try {
                     Sounds type = Sounds.valueOf(key.toUpperCase().replace("-","_"));
                     String sound = soundsSection.getString(key+".name","");
-                    float pitch = (float) soundsSection.getDouble(key+".name",1.0f);
+                    float pitch = (float) soundsSection.getDouble(key+".pitch",1.0f);
                     sounds.put(type,new SettingsSound(sound,pitch));
                 } catch (Exception ignored) {
                     sendWarningErrorMessage("Sound " + key.toLowerCase() + " doesn't exists.");
