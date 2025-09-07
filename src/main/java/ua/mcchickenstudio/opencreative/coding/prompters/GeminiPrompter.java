@@ -38,14 +38,14 @@ import java.util.concurrent.CompletableFuture;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebugError;
 
 /**
- * <h1>OpenAIPrompter</h1>
+ * <h1>GeminiPrompter</h1>
  * This class represents a coding prompter, that uses
- * ChatGPT to generate a code.
+ * Gemini to generate a code.
  */
-public final class OpenAIPrompter implements CodingPrompter, PrompterModelCapable {
+public final class GeminiPrompter implements CodingPrompter, PrompterModelCapable {
 
     private char[] token = new char[200];
-    private String model = "gpt-4o-mini";
+    private String model = "gemini-2.5-flash";
 
     @Override
     public @NotNull CompletableFuture<String> generateCode(@NotNull String text) {
@@ -57,8 +57,9 @@ public final class OpenAIPrompter implements CodingPrompter, PrompterModelCapabl
                         .connectTimeout(Duration.ofSeconds(3))
                         .build();
                 HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create("https://api.openai.com/v1/chat/completions"))
-                        .header("Authorization", "Bearer " + new String(token))
+                        .uri(URI.create("https://generativelanguage.googleapis.com/v1beta/models/"
+                                + model + ":generateContent"))
+                        .header("x-goog-api-key", new String(token))
                         .header("Content-Type", "application/json")
                         .header("User-Agent", "OpenCreative+ Coding Prompter")
                         .POST(HttpRequest.BodyPublishers.ofString(getRequest(text)))
@@ -73,10 +74,25 @@ public final class OpenAIPrompter implements CodingPrompter, PrompterModelCapabl
                         future.completeExceptionally(new PrompterDownException());
                     } else {
                         response.body();
+
                         JsonObject root = JsonParser.parseString(response.body()).getAsJsonObject();
-                        JsonArray choices = root.getAsJsonArray("choices");
-                        JsonObject message = choices.get(0).getAsJsonObject().getAsJsonObject("message");
-                        String code = message.get("content").getAsString();
+                        JsonArray candidates = root.getAsJsonArray("candidates");
+                        if (candidates == null || candidates.isEmpty()) {
+                            future.complete("");
+                            return;
+                        }
+
+                        JsonObject firstCandidate = candidates.get(0).getAsJsonObject();
+                        JsonObject content = firstCandidate.getAsJsonObject("content");
+                        JsonArray parts = content.getAsJsonArray("parts");
+
+                        if (parts == null || parts.isEmpty()) {
+                            future.complete("");
+                            return;
+                        }
+
+                        String code = parts.get(0).getAsJsonObject().get("text").getAsString();
+
                         if (code.startsWith("```yaml")) {
                             code = code.substring(7);
                         }
@@ -100,9 +116,16 @@ public final class OpenAIPrompter implements CodingPrompter, PrompterModelCapabl
     }
 
     private @NotNull String getRequest(@NotNull String text) {
-        return new Gson().toJson(new OpenAIRequest(model,
-                List.of(new Message("system", new PrompterInstruction(text).get()),
-                        new Message("user", text))));
+        return new Gson().toJson(
+            new GeminiRequest(
+                new GeminiInstruction(
+                    List.of(new GeminiParts(new PrompterInstruction(text).get()))
+                ),
+                List.of(
+                    new GeminiContents("user", List.of(new GeminiParts(text)))
+                )
+            )
+        );
     }
 
     @Override
@@ -133,29 +156,53 @@ public final class OpenAIPrompter implements CodingPrompter, PrompterModelCapabl
         return "OpenAI Coding Prompter";
     }
 
+
     @SuppressWarnings({"unused", "FieldCanBeLocal"})
-    static class OpenAIRequest {
+    static class GeminiInstruction {
 
-        private final String model;
-        private final List<Message> messages;
+        private final List<GeminiParts> parts;
 
-        OpenAIRequest(String model, List<Message> messages) {
-            this.model = model;
-            this.messages = messages;
+        GeminiInstruction(List<GeminiParts> parts) {
+            this.parts = parts;
         }
 
     }
 
     @SuppressWarnings({"unused", "FieldCanBeLocal"})
-    static class Message {
+    static class GeminiParts {
+
+        private final String text;
+
+        GeminiParts(String text) {
+            this.text = text;
+        }
+
+    }
+
+    @SuppressWarnings({"unused", "FieldCanBeLocal"})
+    static class GeminiContents {
 
         private final String role;
-        private final String content;
+        private final List<GeminiParts> parts;
 
-        Message(String role, String content) {
+        GeminiContents(String role, List<GeminiParts> parts) {
             this.role = role;
-            this.content = content;
+            this.parts = parts;
         }
+
+    }
+
+    @SuppressWarnings({"unused", "FieldCanBeLocal"})
+    static class GeminiRequest {
+
+        private final GeminiInstruction systemInstruction;
+        private final List<GeminiContents> contents;
+
+        GeminiRequest(GeminiInstruction systemInstruction, List<GeminiContents> contents) {
+            this.systemInstruction = systemInstruction;
+            this.contents = contents;
+        }
+
     }
 
 }

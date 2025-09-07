@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.data.PhysService;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldListener;
+import ua.mcchickenstudio.opencreative.coding.prompters.GeminiPrompter;
 import ua.mcchickenstudio.opencreative.commands.*;
 import ua.mcchickenstudio.opencreative.commands.minecraft.*;
 import ua.mcchickenstudio.opencreative.commands.world.AdvertisementCommand;
@@ -455,7 +456,8 @@ public final class OpenCreative extends JavaPlugin {
      */
     @SuppressWarnings("unused")
     public static void setCodingPrompter(@NotNull CodingPrompter codingPrompter) {
-        if (!(codingPrompter instanceof DisabledCodingPrompter || codingPrompter instanceof OpenAIPrompter)) {
+        if (!(codingPrompter instanceof DisabledCodingPrompter
+                || codingPrompter instanceof OpenAIPrompter || codingPrompter instanceof GeminiPrompter)) {
             getPlugin().getLogger().info("Now using coding prompter: " + codingPrompter.getName());
         }
         getPlugin().prompter = codingPrompter;
@@ -604,6 +606,5 @@ public final class OpenCreative extends JavaPlugin {
     public static @NotNull OfflineWander getOfflineWander(@NotNull UUID uuid) {
         return new OfflineWander(uuid);
     }
-
 
 }

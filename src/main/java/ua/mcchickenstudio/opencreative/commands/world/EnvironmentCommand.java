@@ -59,6 +59,7 @@ import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebug;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 /**
@@ -182,7 +183,8 @@ public class EnvironmentCommand extends CommandHandler {
                                         .replace("%variable%",varName)
                                         .replace("%type%",var.getType().getLocaleName())
                                         .replace("%valuetype%",var.getVarType().getLocalized());
-                                message = message.replace("%value%",message.length()+var.getValue().toString().length() > 700 ? var.getValue().toString().substring(0,Math.min(var.getValue().toString().length(),700)) + "..." : var.getValue().toString());
+                                message = message.replace("%value%", message.length()
+                                        + (var.getValue() == null ? "null" : var.getValue()).toString().length() > 700 ? var.getValue().toString().substring(0,Math.min(var.getValue().toString().length(),700)) + "..." : var.getValue().toString());
                                 player.sendMessage(message);
                             }
                         }
@@ -628,51 +630,49 @@ public class EnvironmentCommand extends CommandHandler {
                             @Override
                             public void run() {
                                 OpenCreative.getCodingPrompter().generateCode(request).thenAccept(
-                                        response -> {
-                                            sendDebug("[CODING PROMPT] Responded to " + player.getName() + "'s wish: "
-                                                    + request + " in " + (System.currentTimeMillis()-time) + "  ms.");
-                                            sendDebug("The response:\n" + response);
-                                            YamlConfiguration config = YamlConfiguration.loadConfiguration(new StringReader(response));
-                                            ConfigurationSection section = config.getConfigurationSection("code.blocks");
+                                    response -> {
+                                        sendDebug("[CODING PROMPT] Responded to " + player.getName() + "'s wish: "
+                                                + request + " in " + (System.currentTimeMillis()-time) + "  ms.");
+                                        sendDebug("The response:\n" + response);
+                                        YamlConfiguration config = YamlConfiguration.loadConfiguration(new StringReader(response));
+                                        ConfigurationSection section = config.getConfigurationSection("code.blocks");
+                                        if (section == null) {
+                                            section = config.getConfigurationSection("blocks");
                                             if (section == null) {
-                                                section = config.getConfigurationSection("blocks");
-                                                if (section == null) {
-                                                    player.sendMessage(getLocaleMessage("environment.prompter.bad-prompt"));
-                                                    Sounds.PLAYER_FAIL.play(player);
-                                                    return;
-                                                }
-                                            }
-                                            if (!player.isOnline() || !devPlanet.equals(OpenCreative.getPlanetsManager().getDevPlanet(player))) {
+                                                player.sendMessage(getLocaleMessage("environment.prompter.bad-prompt"));
+                                                Sounds.PLAYER_FAIL.play(player);
                                                 return;
                                             }
-                                            ConfigurationSection finalSection = section;
-                                            Bukkit.getScheduler().runTask(OpenCreative.getPlugin(),
-                                                () -> {
-                                                    CodingBlockPlacer placer = new CodingBlockPlacer(devPlanet);
-                                                    CodingBlockPlacer.CodePlacementResult result = placer.placeCodingLines(devPlanet, finalSection);
-                                                    if (result == CodingBlockPlacer.CodePlacementResult.NOT_ENOUGH_CODING_LINES) {
-                                                        player.sendMessage(getLocaleMessage("environment.prompter.few-space"));
-                                                        Sounds.PLAYER_FAIL.play(player);
-                                                    } else if (result.isSuccess()) {
-                                                        player.sendMessage(getLocaleMessage("environment.prompter.success"));
-                                                        Sounds.DEV_PROMPTER_DONE.play(player);
-                                                    }
-                                            });
                                         }
+                                        if (!player.isOnline() || !devPlanet.equals(OpenCreative.getPlanetsManager().getDevPlanet(player))) {
+                                            return;
+                                        }
+                                        ConfigurationSection finalSection = section;
+                                        Bukkit.getScheduler().runTask(OpenCreative.getPlugin(),
+                                            () -> {
+                                                CodingBlockPlacer placer = new CodingBlockPlacer(devPlanet);
+                                                CodingBlockPlacer.CodePlacementResult result = placer.placeCodingLines(devPlanet, finalSection);
+                                                if (result == CodingBlockPlacer.CodePlacementResult.NOT_ENOUGH_CODING_LINES) {
+                                                    player.sendMessage(getLocaleMessage("environment.prompter.few-space"));
+                                                    Sounds.PLAYER_FAIL.play(player);
+                                                } else if (result.isSuccess()) {
+                                                    player.sendMessage(getLocaleMessage("environment.prompter.success"));
+                                                    Sounds.DEV_PROMPTER_DONE.play(player);
+                                                }
+                                        });
+                                    }
                                 ).exceptionally(
-                                        error -> {
-                                            if (error.getCause() instanceof UnauthorizedPrompterException) {
-                                                player.sendMessage(getLocaleMessage("environment.prompter.unauthorized"));
-                                            } else if (error.getCause() instanceof PrompterLimitedException) {
-                                                player.sendMessage(getLocaleMessage("environment.prompter.limited"));
-                                            } else if (error.getCause() instanceof PrompterDownException) {
-                                                player.sendMessage(getLocaleMessage("environment.prompter.unavailable"));
-                                            } else if (error.getCause() instanceof ConnectException) {
-                                                player.sendMessage(getLocaleMessage("environment.prompter.unknown-host"));
-                                            }
-                                            return null;
-                                        }
-                                );
+                                error -> {
+                                    switch (error.getCause()) {
+                                        case UnauthorizedPrompterException ignored -> player.sendMessage(getLocaleMessage("environment.prompter.unauthorized"));
+                                        case PrompterLimitedException ignored -> player.sendMessage(getLocaleMessage("environment.prompter.limited"));
+                                        case PrompterDownException ignored -> player.sendMessage(getLocaleMessage("environment.prompter.unavailable"));
+                                        case ConnectException ignored -> player.sendMessage(getLocaleMessage("environment.prompter.unknown-host"));
+                                        case Exception exception -> sendPlayerErrorMessage(player, "Failed to generate a code with " + OpenCreative.getCodingPrompter().getName() + ".", exception);
+                                        default -> sendPlayerErrorMessage(player, "Failed to generate a code with " + OpenCreative.getCodingPrompter().getName() + ".");
+                                    }
+                                    return null;
+                                });
                             }
                         }.runTaskAsynchronously(OpenCreative.getPlugin());
                     }
