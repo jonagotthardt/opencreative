@@ -630,7 +630,7 @@ public class EnvironmentCommand extends CommandHandler {
                         new BukkitRunnable() {
                             @Override
                             public void run() {
-                                OpenCreative.getCodingPrompter().generateCode(request).thenAccept(
+                                OpenCreative.getCodingPrompter().generateCode(player.getName(), player.getUniqueId(), request).thenAccept(
                                     response -> {
                                         sendDebug("[CODING PROMPT] Responded to " + player.getName() + "'s wish: "
                                                 + request + " in " + (System.currentTimeMillis()-time) + "  ms.");

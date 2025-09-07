@@ -30,323 +30,391 @@ import java.util.StringJoiner;
 public final class PrompterInstruction {
 
     private final String input;
+    private final String nickname;
+    private final String uuid;
 
-    public PrompterInstruction(@NotNull String playerRequest) {
+    public PrompterInstruction(@NotNull String playerName, @NotNull String playerUUID, @NotNull String playerRequest) {
+        this.nickname = playerName;
+        this.uuid = playerUUID;
         this.input = playerRequest;
     }
 
     public @NotNull String get() {
         return """
-        You're coding writer, and user asked you to write a code:
-        \"""" + input + "\"" + """
-        YOU MUST RETURN ONLY YAML CODE.
-        DO NOT WRITE COMMENTS, BECAUSE THEY WILL BE IGNORED.
-       \s
-        Example of code, that sends "Hello World" message when player joins the world.
-        code:
-          blocks:
-            exec_block_1:
-              category: EVENT_PLAYER
-              type: PLAYER_JOIN
-              actions:
-                action_block2:
-                  category: PLAYER_ACTION
-                  type: PLAYER_SEND_MESSAGE
-                  arguments:
-                    messages:
-                      type: LIST
-                      value:
-                        '1':
-                          type: TEXT
-                          value: Hello
-                        '2':
-                          type: TEXT
-                          value: World
-                    type:
-                      type: TEXT
-                      value: join-spaces
-       \s
-        Example of code, that gives random item to player if he destroys magma block.
+    You're a coding writer. The user (""" + nickname + " " + uuid + ")" + """
+    asked you to write code:
+    \"""" + input + "\"" + """
+    
+    RULES:
+    - Return **only YAML code**.
+    - Do not write comments; they will be ignored.
+    - Maximum 45 actions per executor.
+    - Maximum 27 arguments per action.
+    
+    EXAMPLES:
+    
+    1. Send "Hello World" when player joins:
+    code:
+      blocks:
         exec_block_1:
           category: EVENT_PLAYER
-          type: PLAYER_DESTROY_BLOCK
-          actions:
-            condition_block_1:
-              category: PLAYER_CONDITION
-              type: IF_PLAYER_BLOCK_EQUALS
-              arguments:
-                blocks:
-                  type: LIST
-                  value:
-                    '1':
-                      type: ITEM
-                      value:
-                        v: 4082
-                        type: MAGMA_BLOCK
-              actions:
-                action_block1:
-                  category: PLAYER_ACTION
-                  type: PLAYER_GIVE_RANDOM_ITEM
-                  arguments:
-                    items:
-                      type: LIST
-                      value:
-                        '1':
-                          type: ITEM
-                          value:
-                            v: 4082
-                            type: DIAMOND_SWORD
-                        '2':
-                          type: ITEM
-                          value:
-                            v: 4082
-                            type: PUFFERFISH
-                        '3':
-                          type: ITEM
-                          value:
-                            v: 4082
-                            type: APPLE
-                            amount: 4
-                        '4':
-                          type: ITEM
-                          value:
-                            v: 4082
-                            type: SPRUCE_LOG
-                            amount: 2
-                        '5':
-                          type: ITEM
-                          value:
-                            v: 4082
-                            type: DIAMOND
-        \s
-        Example of code, that sends message to all players on player quit.
-        exec_block_1:
-          category: EVENT_PLAYER
-          type: PLAYER_QUIT
+          type: PLAYER_JOIN
           actions:
             action_block2:
-              category: SELECTION_ACTION
-              type: SELECTION_SET
-              target: ALL_PLAYERS
-              arguments: {}
-            action_block3:
               category: PLAYER_ACTION
               type: PLAYER_SEND_MESSAGE
-              target: SELECTED
               arguments:
                 messages:
                   type: LIST
                   value:
                     '1':
                       type: TEXT
-                      value: '%player% left the world'
+                      value: Hello
+                    '2':
+                      type: TEXT
+                      value: World
+                  type:
+                    type: TEXT
+                    value: join-spaces
+    
+    2. Give random item when player destroys magma block:
+    exec_block_1:
+      category: EVENT_PLAYER
+      type: PLAYER_DESTROY_BLOCK
+      actions:
+        condition_block_1:
+          category: PLAYER_CONDITION
+          type: IF_PLAYER_BLOCK_EQUALS
+          arguments:
+            blocks:
+              type: LIST
+              value:
+                '1':
+                  type: ITEM
+                  value:
+                    v: 3953
+                    type: MAGMA_BLOCK
+          actions:
+            action_block1:
+              category: PLAYER_ACTION
+              type: PLAYER_GIVE_RANDOM_ITEM
+              arguments:
+                items:
+                  type: LIST
+                  value:
+                    '1':
+                      type: ITEM
+                      value:
+                        v: 3953
+                        type: DIAMOND_SWORD
+                    '2':
+                      type: ITEM
+                      value:
+                        v: 3953
+                        type: PUFFERFISH
+                    '3':
+                      type: ITEM
+                      value:
+                        v: 3953
+                        type: APPLE
+                        amount: 4
+                    '4':
+                      type: ITEM
+                      value:
+                        v: 3953
+                        type: SPRUCE_LOG
+                        amount: 2
+                    '5':
+                      type: ITEM
+                      value:
+                        v: 3953
+                        type: DIAMOND
+    
+    3. Player quit message:
+    exec_block_1:
+      category: EVENT_PLAYER
+      type: PLAYER_QUIT
+      actions:
+        action_block2:
+          category: SELECTION_ACTION
+          type: SELECTION_SET
+          target: ALL_PLAYERS
+          arguments: {}
+        action_block3:
+          category: PLAYER_ACTION
+          type: PLAYER_SEND_MESSAGE
+          target: SELECTED
+          arguments:
+            messages:
+              type: LIST
+              value:
+                '1':
+                  type: TEXT
+                  value: '%player% left the world'
+              type:
+                type: TEXT
+                value: new-line
+    
+    4. Reward money for killing mob:
+    code:
+      blocks:
+        exec_block_1:
+          category: EVENT_PLAYER
+          type: PLAYER_KILLED_MOB
+          actions:
+            action_block2:
+              category: VARIABLE_ACTION
+              type: VAR_SUM_ASSIGN_NUMBER
+              arguments:
+                variable:
+                  type: VARIABLE
+                  value:
+                    name: '%player%_money'
+                    type: SAVED
+                number:
+                  type: NUMBER
+                  value: 10.0
+            action_block3:
+              category: VARIABLE_ACTION
+              type: VAR_ROUND_NUMBER
+              arguments:
+                variable:
+                  type: VARIABLE
+                  value:
+                    name: displaymoney
+                    type: LOCAL
+                number:
+                  type: VARIABLE
+                  value:
+                    name: '%player%_money'
+                    type: SAVED
                 type:
                   type: TEXT
-                  value: new-line\s
-         \s
-         Example of code, that gives 10 money to player for killing a mob
-         code:
-            blocks:
-              exec_block_1:
-                category: EVENT_PLAYER
-                type: PLAYER_KILLED_MOB
-                actions:
-                  action_block2:
-                    category: VARIABLE_ACTION
-                    type: VAR_SUM_ASSIGN_NUMBER
-                    arguments:
-                      variable:
-                        type: VARIABLE
-                        value:
-                          name: '%player%_money'
-                          type: SAVED
-                      number:
-                        type: NUMBER
-                        value: 10.0
-                  action_block3:
-                    category: VARIABLE_ACTION
-                    type: VAR_ROUND_NUMBER
-                    arguments:
-                      variable:
-                        type: VARIABLE
-                        value:
-                          name: displaymoney
-                          type: LOCAL
-                      number:
-                        type: VARIABLE
-                        value:
-                          name: '%player%_money'
-                          type: SAVED
-                      type:
-                        type: TEXT
-                        value: ceil
-                  action_block4:
-                    category: PLAYER_ACTION
-                    type: PLAYER_SEND_MESSAGE
-                    arguments:
-                      messages:
-                        type: LIST
-                        value:
-                          '1':
-                            type: TEXT
-                            value: You got §e
-                          '2':
-                            type: VARIABLE
-                            value:
-                              name: displaymoney
-                              type: LOCAL
-                          '3':
-                            type: TEXT
-                            value: §f$ for killing %victim%
-                      type:
-                        type: TEXT
-                        value: join
-       \s
-        Saving executor format
-       \s
-        code:
-          blocks:
-            # Player, Entity, World events
-            exec_block_1:
-              category: EXECUTOR_CATEGORY # EVENT_PLAYER, EVENT_ENTITY, EVENT_WORLD
-              type: EXECUTOR_TYPE # PLAYER_JOIN, ENTITY_SPAWNED, WORLD_BLOCK_BURNED, and others...
-            # Function, Method
-            exec_block_2:
-              category: EXECUTOR_CATEGORY # FUNCTION, METHOD
-              type: EXECUTOR_TYPE # FUNCTION, METHOD
-              name: "Name to execute" # Function's or method's name
-            # Cycle
-            exec_block_3:
-              category: CYCLE
-              type: CYCLE
-              name: "Name to execute" # Cycle's name
-              time: 20 # Execute code every ticks
-       \s
-        Saving action format
-        MAXIMUM AMOUNT OF ACTIONS PER EXECUTOR IS 45.
-       \s
-        code:
-          blocks:
-            exec_block_number:
-              # ...
-              actions:
-                # Player, Entity, World, Control, Variable actions
-                action_blockNUMBER:
-                  category: ACTION_CATEGORY # PLAYER_ACTION, ENTITY_ACTION, WORLD_ACTION, CONTROL_ACTION, VARIABLE_ACTION
-                  type: ACTION_TYPE # PLAYER_SEND_MESSAGE, ENTITY_REMOVE, WORLD_SET_BLOCK_TYPE, and others...
-                  target: TARGET_TYPE # SELECTED, ALL_PLAYERS, ALL_ENTITIES, RANDOM_PLAYER, RANDOM_TARGET, KILLER, VICTIM. - We don't save DEFAULT to save more space.
-       \s
-                # Selection action (Target)
-                action_block2:
-                  category: SELECTION_ACTION
-                  type: ACTION_TYPE # SELECTION_SET, SELECTION_ADD, SELECTION_REMOVE
-                  target: TARGET_TYPE
-                # Selection action (Condition)
-                action_block3:
-                  category: SELECTION_ACTION
-                  type: ACTION_TYPE # SELECTION_SET, SELECTION_ADD, SELECTION_REMOVE
-                  condition:
-                    category: CONDITION_CATEGORY
-                    type: CONDITION_TYPE
-        code:     \s
-          blocks:
-            exec_block_1:
-              # ...
-              actions:
-                # Launch Function, Launch Method actions
-                action_block4:
-                  category: SELECTION_ACTION # LAUNCH_FUNCTION_ACTION, LAUNCH_METHOD_ACTION
-                  type: ACTION_TYPE # LAUNCH_FUNCTION, LAUNCH_METHOD
-                  target: TARGET_TYPE
-                  name: "Name to execute" # Function's or method's name
-       \s
-        Targets
-        In actions and conditions use targets only:
-        - If it's kill event executor: VICTIM, KILLER
-        - If code requires SELECTION_ACTION then use SELECTED
-        - If user requires SELECTION_ACTION and asked from random then use RANDOM_TARGET
-        - If user asked from random then use RANDOM_PLAYER
-        - If user asked for all players/entities use ALL_PLAYERS or ALL_ENTITIES
-        In ALL OTHER CASES USE target: DEFAULT
-       \s
-        Saving arguments format
-        MAXIMUM AMOUNT OF ARGUMENTS PER ACTION IS 27.
-       \s
-      code:
-        blocks:
-          exec_block_1:
-            # ...
-            actions:
-              action_block5:
-                # ...
-                arguments:
-                  id-of-argument:
-                    type: VALUE_TYPE # TEXT, NUMBER, ITEM, LOCATION, PARTICLE, VARIABLE, LIST, BOOLEAN, VECTOR, COLOR, EVENT_VALUE
-                    value: value of argument # String, String List, MapValues with type: POTION, ANY will be saved as ITEM.# Examples
-                  text-value:
-                    type: TEXT\s
-                    value: &aHello World
-                  number-value:
-                    type: NUMBER
-                    value: 2.0\s
-                  location-value:
-                    type: LOCATION
-                    value:
-                      x: 1
-                      y: 2
-                      z: 3
-                      yaw: 20
-                      pitch: 25
-                  vector-value:
-                    type: VECTOR
-                    value:
-                      x: 1
-                      y: 2
-                      z: 3
-                  variable-value:
-                    type: VARIABLE
-                    value:
-                      name: Variable Name
-                      type: VARIABLE_TYPE # LOCAL, GLOBAL, SAVED
-                  event-value:
-                    type: EVENT_VALUE
-                    value:\s
-                      name: EVENT_VALUE_ID
-                      target: TARGET_TYPE # DEFAULT, SELECTED, RANDOM_PLAYER, RANDOM_TARGET, KILLER, VICTIM
-                  boolean-value:
-                    type: BOOLEAN
-                    value: true # true, false
-                  color-value:
-                    type: COLOR
-                    value:
-                      red: 0
-                      green: 50
-                      blue: 255
-                  particle-value:
-                    type: PARTICLE
-                    value:
-                      type: PARTICLE_TYPE
-                  item-value:
-                    type: ITEM
-                    value:
-                      # Item is saved by Minecraft's serialize
-                      v: 4189
-                      type: DIAMOND_SWORD
-                      meta:
-                        ==: ItemMeta
-                        meta-type: UNSPECIFIC
-                        display-name: '{"text":"","extra":["","Display Name Example"],"italic":false}'
-                        lore:
-                        - '{"text":"","extra":["",{"text":"Lore Example","color":"dark_gray"},{"text":"  ","bold":true,"color":"dark_gray"}],"italic":false,"color":"white"}'
-                        enchants:
-                          minecraft:aqua_affinity: 1
-                        attribute-modifiers: {}
-                        ItemFlags:
-                        - HIDE_ENCHANT
-       \s
-        List of available executors:
-       \s""" + getExecutors() + "\n \n List of available actions and conditions: " + "\n" + getActions()
-                + "\n" + "List of available Game Values: " + getGameValues();
+                  value: ceil
+            action_block4:
+              category: PLAYER_ACTION
+              type: PLAYER_SEND_MESSAGE
+              arguments:
+                messages:
+                  type: LIST
+                  value:
+                    '1':
+                      type: TEXT
+                      value: You got §e
+                    '2':
+                      type: VARIABLE
+                      value:
+                        name: displaymoney
+                        type: LOCAL
+                    '3':
+                      type: TEXT
+                      value: §f$ for killing %victim%
+                  type:
+                    type: TEXT
+                    value: join
+    
+    Available executors:
+    """ + getExecutors() + """
+    
+    Available actions & conditions:
+    """ + getActions() + """
+    
+    Available game values:
+    """ + getGameValues() + """
+    
+    Saving executor format:
+    
+    code:
+      blocks:
+        # Player, Entity, World events
+        exec_block_1:
+          category: EXECUTOR_CATEGORY # EVENT_PLAYER, EVENT_ENTITY, EVENT_WORLD
+          type: EXECUTOR_TYPE       # PLAYER_JOIN, ENTITY_SPAWNED, WORLD_BLOCK_BURNED, etc.
+        # Function, Method
+        exec_block_2:
+          category: EXECUTOR_CATEGORY # FUNCTION, METHOD
+          type: EXECUTOR_TYPE         # FUNCTION, METHOD
+          name: "Name to execute"     # Function or method name
+        # Cycle
+        exec_block_3:
+          category: CYCLE
+          type: CYCLE
+          name: "Name to execute"
+          time: 20                   # Execute code every ticks
+
+    Saving action format:
+    MAXIMUM AMOUNT OF ACTIONS PER EXECUTOR IS 45.
+
+    code:
+      blocks:
+        exec_block_number:
+          actions:
+            # Player, Entity, World, Control, Variable actions
+            action_blockNUMBER:
+              category: ACTION_CATEGORY # PLAYER_ACTION, ENTITY_ACTION, WORLD_ACTION, CONTROL_ACTION, VARIABLE_ACTION
+              type: ACTION_TYPE         # PLAYER_SEND_MESSAGE, ENTITY_REMOVE, WORLD_SET_BLOCK_TYPE, etc.
+              target: TARGET_TYPE       # SELECTED, ALL_PLAYERS, ALL_ENTITIES, RANDOM_PLAYER, RANDOM_TARGET, KILLER, VICTIM
+
+            # Selection action (Target)
+            action_block2:
+              category: SELECTION_ACTION
+              type: ACTION_TYPE          # SELECTION_SET, SELECTION_ADD, SELECTION_REMOVE
+              target: TARGET_TYPE
+
+            # Selection action (Condition)
+            action_block3:
+              category: SELECTION_ACTION
+              type: ACTION_TYPE
+              condition:
+                category: CONDITION_CATEGORY
+                type: CONDITION_TYPE
+
+            # Launch Function / Method actions
+            action_block4:
+              category: SELECTION_ACTION # LAUNCH_FUNCTION_ACTION, LAUNCH_METHOD_ACTION
+              type: ACTION_TYPE          # LAUNCH_FUNCTION, LAUNCH_METHOD
+              target: TARGET_TYPE
+              name: "Name to execute"
+
+    Targets:
+    - If kill event executor: VICTIM, KILLER
+    - If SELECTION_ACTION required: SELECTED
+    - Random selection: RANDOM_TARGET / RANDOM_PLAYER
+    - All players/entities: ALL_PLAYERS / ALL_ENTITIES
+    - Otherwise: target: DEFAULT
+
+    Saving arguments format:
+    MAXIMUM AMOUNT OF ARGUMENTS PER ACTION IS 27.
+
+    code:
+      blocks:
+        exec_block_1:
+          actions:
+            action_block1:
+              arguments:
+                id-of-argument:
+                  type: VALUE_TYPE   # TEXT, NUMBER, ITEM, LOCATION, PARTICLE, VARIABLE, LIST, BOOLEAN, VECTOR, COLOR, EVENT_VALUE
+                  value: value of argument
+                text-value:
+                  type: TEXT
+                  value: &aHello World
+                number-value:
+                  type: NUMBER
+                  value: 2.0
+                location-value:
+                  type: LOCATION
+                  value:
+                    x: 1
+                    y: 2
+                    z: 3
+                    yaw: 20
+                    pitch: 25
+                vector-value:
+                  type: VECTOR
+                  value:
+                    x: 1
+                    y: 2
+                    z: 3
+                variable-value:
+                  type: VARIABLE
+                  value:
+                    name: Variable Name
+                    type: VARIABLE_TYPE # LOCAL, GLOBAL, SAVED
+                event-value:
+                  type: EVENT_VALUE
+                  value:
+                    name: EVENT_VALUE_ID
+                    target: TARGET_TYPE # DEFAULT, SELECTED, RANDOM_PLAYER, RANDOM_TARGET, KILLER, VICTIM
+                boolean-value:
+                  type: BOOLEAN
+                  value: true
+                color-value:
+                  type: COLOR
+                  value:
+                    red: 0
+                    green: 50
+                    blue: 255
+                particle-value:
+                  type: PARTICLE
+                  value:
+                    type: PARTICLE_TYPE
+                item-value:
+                  type: ITEM
+                  value:
+                    v: 3953
+                    type: NETHERITE_SWORD
+                item-value-2:
+                  type: ITEM
+                  value:
+                    v: 3953
+                    type: DIAMOND
+                    amount: 64
+                item-value-example-book:
+                  type: ITEM
+                  value:
+                    v: 3953
+                    type: WRITABLE_BOOK
+                    meta:
+                      ==: ItemMeta
+                      meta-type: BOOK
+                      pages:
+                        - page 1 content
+                        - content 2
+                item-value-example-book-2:
+                  type: ITEM
+                  value:
+                    v: 3953
+                    type: WRITTEN_BOOK
+                    meta:
+                      ==: ItemMeta
+                      meta-type: BOOK_SIGNED
+                      title: signed book
+                      author: PlayerName
+                      pages:
+                        - '"page 1 content"'
+                        - '"content 2"'
+                      resolved: true
+                item-value-example-enchant:
+                  type: ITEM
+                  value:
+                    v: 3953
+                    type: ENCHANTED_BOOK
+                    meta:
+                      ==: ItemMeta
+                      meta-type: ENCHANTED
+                      stored-enchants:
+                        minecraft:bane_of_arthropods: 1
+                item-value-example-name-lore-enchant:
+                  type: ITEM
+                  value:
+                    v: 3953
+                    type: NETHERITE_SWORD
+                    meta:
+                      ==: ItemMeta
+                      meta-type: UNSPECIFIC
+                      display-name: '{"text":"","extra":[{"text":"Custom Name"}]}'
+                      lore:
+                        - '{"text":"Custom lore 1"}'
+                      enchants:
+                        minecraft:efficiency: 4
+                      repair-cost: 1
+                item-value-example-potion:
+                  type: ITEM
+                  value:
+                    v: 3953
+                    type: POTION
+                    meta:
+                      ==: ItemMeta
+                      meta-type: POTION
+                      custom-effects:
+                        - ==: PotionEffect
+                          effect: minecraft:night_vision
+                          duration: 100
+                          amplifier: 1
+                          ambient: true
+                          has-particles: true
+                          has-icon: true
+    """;
     }
 
     private @NotNull String getExecutors() {
