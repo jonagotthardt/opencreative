@@ -659,7 +659,7 @@ public class EnvironmentCommand extends CommandHandler {
                                                 } else if (result.isSuccess()) {
                                                     long responseTime = System.currentTimeMillis()-time;
                                                     player.sendMessage(getLocaleMessage("environment.prompter.success")
-                                                            .replace("%time%", String.valueOf(responseTime))
+                                                            .replace("%time%", String.valueOf(responseTime/1000))
                                                             .replace("%idea%", request));
                                                     Sounds.DEV_PROMPTER_DONE.play(player);
                                                 }
