@@ -605,10 +605,6 @@ public class EnvironmentCommand extends CommandHandler {
                             player.sendMessage(getLocaleMessage("environment.prompter.help"));
                             return;
                         }
-                        if (args.length <= 4) {
-                            player.sendMessage(getLocaleMessage("too-few-args"));
-                            return;
-                        }
                         if (!OpenCreative.getSettings().getGroups().getGroup(player).canUsePrompter() && !player.hasPermission("opencreative.prompter.bypass")) {
                             player.sendMessage(getLocaleMessage("no-perms"));
                             return;
@@ -620,6 +616,10 @@ public class EnvironmentCommand extends CommandHandler {
                         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                         if (devPlanet == null) {
                             sender.sendMessage(getLocaleMessage("only-in-dev-world"));
+                            return;
+                        }
+                        if (args.length <= 4) {
+                            player.sendMessage(getLocaleMessage("too-few-args"));
                             return;
                         }
                         if (!checkAndSetCooldownWithMessage(player, CooldownType.MODULE_MANIPULATION)) return;
