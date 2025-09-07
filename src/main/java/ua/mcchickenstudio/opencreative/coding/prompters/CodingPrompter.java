@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.prompters;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.managers.Manager;
 
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -32,10 +33,14 @@ public interface CodingPrompter extends Manager {
 
     /**
      * Generates a code by player's prompt. Returns
+     * @param nickname name of player.
+     * @param uuid uuid of player.
      * @param prompt prompt to generate code.
      * @return code script YAML, or reason why code refused to generate.
      */
-    @NotNull CompletableFuture<String> generateCode(@NotNull String prompt);
+    @NotNull CompletableFuture<String> generateCode(@NotNull String nickname,
+                                                    @NotNull UUID uuid,
+                                                    @NotNull String prompt);
 
     /**
      * Sets the token for coding prompter.

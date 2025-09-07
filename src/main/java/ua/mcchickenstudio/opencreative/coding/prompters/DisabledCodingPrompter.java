@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.prompters;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -30,7 +31,7 @@ import java.util.concurrent.CompletableFuture;
 public final class DisabledCodingPrompter implements CodingPrompter {
 
     @Override
-    public @NotNull CompletableFuture<String> generateCode(@NotNull String text) {
+    public @NotNull CompletableFuture<String> generateCode(@NotNull String nickname, @NotNull UUID uuid, @NotNull String text) {
         CompletableFuture<String> future = new CompletableFuture<>();
         future.complete("Disabled");
         return future;

@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -33,6 +34,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebugError;
@@ -48,7 +50,7 @@ public final class OpenAIPrompter implements CodingPrompter, PrompterModelCapabl
     private String model = "gpt-4o-mini";
 
     @Override
-    public @NotNull CompletableFuture<String> generateCode(@NotNull String text) {
+    public @NotNull CompletableFuture<String> generateCode(@NotNull String nickname, @NotNull UUID uuid, @NotNull String text) {
         CompletableFuture<String> future = new CompletableFuture<>();
         new BukkitRunnable() {
             @Override
@@ -62,7 +64,7 @@ public final class OpenAIPrompter implements CodingPrompter, PrompterModelCapabl
                         .header("Content-Type", "application/json")
                         .header("User-Agent", "OpenCreative+ Coding Prompter")
                         .timeout(Duration.ofSeconds(120))
-                        .POST(HttpRequest.BodyPublishers.ofString(getRequest(text)))
+                        .POST(HttpRequest.BodyPublishers.ofString(getRequest(nickname, uuid, text)))
                         .build();
                 try {
                     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -100,9 +102,10 @@ public final class OpenAIPrompter implements CodingPrompter, PrompterModelCapabl
         return future;
     }
 
-    private @NotNull String getRequest(@NotNull String text) {
+    private @NotNull String getRequest(@NotNull String nickname, @NotNull UUID uuid, @NotNull String text) {
         return new Gson().toJson(new OpenAIRequest(model,
-                List.of(new Message("system", new PrompterInstruction(text).get()),
+                List.of(new Message("system", new PrompterInstruction(
+                        nickname, uuid.toString(), text).get()),
                         new Message("user", text))));
     }
 
