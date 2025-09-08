@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.prompters;
 
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
@@ -32,11 +33,16 @@ public final class PrompterInstruction {
     private final String input;
     private final String nickname;
     private final String uuid;
+    private final int maxActions;
 
-    public PrompterInstruction(@NotNull String playerName, @NotNull String playerUUID, @NotNull String playerRequest) {
+    public PrompterInstruction(@NotNull String playerName,
+                               @NotNull String playerUUID,
+                               @NotNull String request,
+                               int maxActions) {
         this.nickname = playerName;
         this.uuid = playerUUID;
-        this.input = playerRequest;
+        this.input = request;
+        this.maxActions = maxActions;
     }
 
     public @NotNull String get() {
@@ -48,8 +54,11 @@ public final class PrompterInstruction {
     RULES:
     - Return **only YAML code**.
     - Do not write comments; they will be ignored.
-    - Maximum 45 actions per executor.
+    - Maximum\s""" + maxActions + """
+     actions per executor.
     - Maximum 27 arguments per action.
+    - To color text use § instead of &
+    Server version \s""" + Bukkit.getMinecraftVersion() + """
     
     EXAMPLES:
     
@@ -213,6 +222,55 @@ public final class PrompterInstruction {
                     type: TEXT
                     value: join
     
+    5. GameMode Command:
+    code:
+      blocks:
+        exec_block_1:
+          category: EVENT_PLAYER
+          type: PLAYER_CHAT
+          actions:
+            condition_block_1:
+              category: PLAYER_CONDITION
+              type: IF_PLAYER_MESSAGE_EQUALS
+              arguments:
+                messages:
+                  type: LIST
+                  value:
+                    '1':
+                      type: TEXT
+                      value: gm 1
+              actions:
+                condition_block_2:
+                  category: PLAYER_CONDITION
+                  type: IF_PLAYER_NAME_EQUALS
+                  arguments:
+                    messages:
+                      '1':
+                        type: TEXT
+                        value: Username
+                  actions:
+                    action_block3:
+                      category: PLAYER_ACTION
+                      type: PLAYER_SET_GAMEMODE
+                      arguments:
+                        game-mode:
+                          type: TEXT
+                          value: creative
+                  else:
+                    action_block4:
+                      category: PLAYER_ACTION
+                      type: PLAYER_SEND_MESSAGE
+                      arguments:
+                        messages:
+                          type: LIST
+                          value:
+                            '1':
+                              type: TEXT
+                              value: "You don't have permissions"
+                        type:
+                          type: TEXT
+                          value: new-line
+    
     Available executors:
     """ + getExecutors() + """
     
@@ -297,7 +355,7 @@ public final class PrompterInstruction {
                   value: value of argument
                 text-value:
                   type: TEXT
-                  value: &aHello World
+                  value: §aHello World
                 number-value:
                   type: NUMBER
                   value: 2.0

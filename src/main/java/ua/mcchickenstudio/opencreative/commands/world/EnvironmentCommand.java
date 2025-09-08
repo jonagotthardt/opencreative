@@ -628,10 +628,12 @@ public class EnvironmentCommand extends CommandHandler {
                         player.sendMessage(getLocaleMessage("environment.prompter.thinking"));
                         Sounds.DEV_PROMPTER_THINKING.play(player);
                         long time = System.currentTimeMillis();
+                        int actionsLimit = devPlanet.getDevPlatformer().getCodingBlocksLimit(devPlanet)-1; // -1 because executor counts too
                         new BukkitRunnable() {
                             @Override
                             public void run() {
-                                OpenCreative.getCodingPrompter().generateCode(player.getName(), player.getUniqueId(), request).thenAccept(
+                                OpenCreative.getCodingPrompter().generateCode(player.getName(),
+                                        player.getUniqueId(), request, actionsLimit).thenAccept(
                                     response -> {
                                         sendDebug("[CODING PROMPT] Responded to " + player.getName() + "'s wish: "
                                                 + request + " in " + (System.currentTimeMillis()-time) + "  ms.");

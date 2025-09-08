@@ -51,7 +51,10 @@ public final class OpenAIPrompter implements CodingPrompter, PrompterModelCapabl
     private String model = "gpt-4o-mini";
 
     @Override
-    public @NotNull CompletableFuture<String> generateCode(@NotNull String nickname, @NotNull UUID uuid, @NotNull String text) {
+    public @NotNull CompletableFuture<String> generateCode(@NotNull String nickname,
+                                                           @NotNull UUID uuid,
+                                                           @NotNull String text,
+                                                           int actionsLimit) {
         CompletableFuture<String> future = new CompletableFuture<>();
         new BukkitRunnable() {
             @Override
@@ -65,7 +68,7 @@ public final class OpenAIPrompter implements CodingPrompter, PrompterModelCapabl
                         .header("Content-Type", "application/json")
                         .header("User-Agent", "OpenCreative+ Coding Prompter")
                         .timeout(Duration.ofSeconds(120))
-                        .POST(HttpRequest.BodyPublishers.ofString(getRequest(nickname, uuid, text)))
+                        .POST(HttpRequest.BodyPublishers.ofString(getRequest(nickname, uuid, text, actionsLimit)))
                         .build();
                 try {
                     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -103,10 +106,13 @@ public final class OpenAIPrompter implements CodingPrompter, PrompterModelCapabl
         return future;
     }
 
-    private @NotNull String getRequest(@NotNull String nickname, @NotNull UUID uuid, @NotNull String text) {
+    private @NotNull String getRequest(@NotNull String nickname,
+                                       @NotNull UUID uuid,
+                                       @NotNull String text,
+                                       int actionsLimit) {
         return new Gson().toJson(new OpenAIRequest(model,
                 List.of(new Message("system", new PrompterInstruction(
-                        nickname, uuid.toString(), text).get()),
+                        nickname, uuid.toString(), text, actionsLimit).get()),
                         new Message("user", text))));
     }
 
