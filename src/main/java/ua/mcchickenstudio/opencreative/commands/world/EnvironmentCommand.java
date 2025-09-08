@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.commands.world;
 
+import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.potion.PotionEffect;
@@ -626,6 +628,7 @@ public class EnvironmentCommand extends CommandHandler {
                         String request = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
                         sendDebug("[CODING PROMPT] Player " + player.getName() + " requested to create a code: " + request);
                         player.sendMessage(getLocaleMessage("environment.prompter.thinking"));
+                        broadcastPrompter(planet, player, request, "request");
                         Sounds.DEV_PROMPTER_THINKING.play(player);
                         long time = System.currentTimeMillis();
                         int actionsLimit = devPlanet.getDevPlatformer().getCodingBlocksLimit(devPlanet)-1; // -1 because executor counts too
@@ -645,11 +648,18 @@ public class EnvironmentCommand extends CommandHandler {
                                             if (section == null) {
                                                 player.sendMessage(getLocaleMessage("environment.prompter.bad-prompt"));
                                                 Sounds.PLAYER_FAIL.play(player);
+                                                Bukkit.getScheduler().runTask(OpenCreative.getPlugin(),
+                                                    () -> broadcastPrompter(planet, player, request, "failed")
+                                                );
                                                 return;
                                             }
                                         }
                                         if (section.getKeys(false).size() > OpenCreative.getSettings().getPrompterMaxExecutors()) {
                                             player.sendMessage(getLocaleMessage("environment.prompter.few-space"));
+                                            Bukkit.getScheduler().runTask(OpenCreative.getPlugin(),
+                                                () -> broadcastPrompter(planet, player, request, "failed")
+                                            );
+                                            Sounds.PLAYER_FAIL.play(player);
                                             return;
                                         }
                                         if (!player.isOnline() || !devPlanet.equals(OpenCreative.getPlanetsManager().getDevPlanet(player))) {
@@ -663,12 +673,16 @@ public class EnvironmentCommand extends CommandHandler {
                                                 if (result == CodingBlockPlacer.CodePlacementResult.NOT_ENOUGH_CODING_LINES) {
                                                     player.sendMessage(getLocaleMessage("environment.prompter.few-space"));
                                                     Sounds.PLAYER_FAIL.play(player);
+                                                    broadcastPrompter(planet, player, request, "failed");
                                                 } else if (result.isSuccess()) {
                                                     long responseTime = System.currentTimeMillis()-time;
                                                     player.sendMessage(getLocaleMessage("environment.prompter.success")
                                                             .replace("%time%", String.valueOf(responseTime/1000))
                                                             .replace("%idea%", request));
                                                     Sounds.DEV_PROMPTER_DONE.play(player);
+                                                    broadcastPrompter(planet, player, request, "success");
+                                                } else {
+                                                    broadcastPrompter(planet, player, request, "failed");
                                                 }
                                         });
                                     }
@@ -808,6 +822,18 @@ public class EnvironmentCommand extends CommandHandler {
             return arg.equals("~") ? current : current + Float.parseFloat(arg.substring(1));
         } else {
             return Float.parseFloat(arg);
+        }
+    }
+
+    private void broadcastPrompter(Planet planet, Player player, String request, String messageID) {
+        for (Player developer : planet.getPlayers()) {
+            if (planet.getWorldPlayers().canDevelop(developer) && !developer.equals(player)) {
+                developer.sendMessage(getLocaleComponent("environment.prompter.broadcast." + messageID, player)
+                    .hoverEvent(HoverEvent.showText(getLocaleComponent("environment.prompter.broadcast.hover")
+                        .replaceText(TextReplacementConfig.builder().match("%idea%")
+                            .replacement(request)
+                            .build()))));
+            }
         }
     }
 }
