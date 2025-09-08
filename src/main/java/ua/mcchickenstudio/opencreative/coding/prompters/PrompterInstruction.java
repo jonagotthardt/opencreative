@@ -56,6 +56,7 @@ public final class PrompterInstruction {
     - Do not write comments; they will be ignored.
     - Maximum\s""" + maxActions + """
      actions per executor.
+    - Maximum 10 executors.
     - Maximum 27 arguments per action.
     - To color text use § instead of &
     Server version \s""" + Bukkit.getMinecraftVersion() + """

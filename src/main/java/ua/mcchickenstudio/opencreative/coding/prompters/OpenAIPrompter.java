@@ -67,7 +67,7 @@ public final class OpenAIPrompter implements CodingPrompter, PrompterModelCapabl
                         .header("Authorization", "Bearer " + new String(token))
                         .header("Content-Type", "application/json")
                         .header("User-Agent", "OpenCreative+ Coding Prompter")
-                        .timeout(Duration.ofSeconds(120))
+                        .timeout(Duration.ofSeconds(OpenCreative.getSettings().getPrompterTimeout()))
                         .POST(HttpRequest.BodyPublishers.ofString(getRequest(nickname, uuid, text, actionsLimit)))
                         .build();
                 try {

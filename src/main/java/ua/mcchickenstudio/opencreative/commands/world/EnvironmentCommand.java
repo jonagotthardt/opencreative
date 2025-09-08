@@ -648,6 +648,10 @@ public class EnvironmentCommand extends CommandHandler {
                                                 return;
                                             }
                                         }
+                                        if (section.getKeys(false).size() > OpenCreative.getSettings().getPrompterMaxExecutors()) {
+                                            player.sendMessage(getLocaleMessage("environment.prompter.few-space"));
+                                            return;
+                                        }
                                         if (!player.isOnline() || !devPlanet.equals(OpenCreative.getPlanetsManager().getDevPlanet(player))) {
                                             return;
                                         }
