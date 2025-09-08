@@ -500,7 +500,7 @@ public class CodingBlockPlacer {
             case ITEM, ANY, POTION -> {
                 if (data == null) return new ItemStack(Material.AIR);
                 try {
-                    item = ItemStack.deserialize(data.getValues(false));;
+                    item = fixItem(ItemStack.deserialize(data.getValues(false)));;
                 } catch (Exception error) {
                     item = createItem(Material.BARRIER, 1, "items.developer.broken");
                 }
