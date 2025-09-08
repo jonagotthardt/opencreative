@@ -803,7 +803,7 @@ public enum ActionType {
     }
 
     public boolean isChestRequired() {
-        return layout != null;
+        return layout != null && layout.length > 0;
     }
 
     public final String getLocaleName() {
