@@ -36,11 +36,13 @@ public interface CodingPrompter extends Manager {
      * @param nickname name of player.
      * @param uuid uuid of player.
      * @param prompt prompt to generate code.
+     * @param actionsLimit limit of actions per executor.
      * @return code script YAML, or reason why code refused to generate.
      */
     @NotNull CompletableFuture<String> generateCode(@NotNull String nickname,
                                                     @NotNull UUID uuid,
-                                                    @NotNull String prompt);
+                                                    @NotNull String prompt,
+                                                    int actionsLimit);
 
     /**
      * Sets the token for coding prompter.

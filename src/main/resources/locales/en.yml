@@ -181,6 +181,11 @@ environment:
     unknown-host: "%prefix%&cSeems like server is not connected to the Internet, or site of prompt handler doesn't exist :("
     few-space: "%prefix%&cSeems like the code you requested requires a lot of space! Try to split your wishes, or free space in coding world."
     success: "%prefix%Successfully&a generated&f a code from your wish in %time% seconds :)\n &6%idea%\n&fTo apply changes type &6/play&f."
+    broadcast:
+      request: "%prefix%&6%player%&f requested prompt handler to create code by their wish, a new code can appear soon... &3[Details]"
+      success: "%prefix%&fPrompt handler &6successfully&f installed code by &6%player%&f. "
+      failed: "%prefix%&cPrompt handler failed to create code by %player%'s wish.. :("
+      hover: "&6%idea%"
 help:
   placeholders: "%prefix%List of placeholders: &6%player% %player_uuid% %entity% %entity_uuid% %target% %target_uuid% %players_amount% %entities_amount% %online%"
 creative:
@@ -629,6 +634,12 @@ items:
       saved:  "&aSaved"
       global: "&eGlobal"
       local: "&cLocal"
+    broken:
+      name: "&cBroken Item :("
+      lore:
+        - "&7This item is failed to create,"
+        - "&7maybe its data is from newer or older"
+        - "&7versions of Minecraft."
     placeholders:
       text:
         name: "&6Text"

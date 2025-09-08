@@ -50,7 +50,10 @@ public final class GeminiPrompter implements CodingPrompter, PrompterModelCapabl
     private String model = "gemini-2.5-flash";
 
     @Override
-    public @NotNull CompletableFuture<String> generateCode(@NotNull String nickname, @NotNull UUID uuid, @NotNull String text) {
+    public @NotNull CompletableFuture<String> generateCode(@NotNull String nickname,
+                                                           @NotNull UUID uuid,
+                                                           @NotNull String text,
+                                                           int actionsLimit) {
         CompletableFuture<String> future = new CompletableFuture<>();
         new BukkitRunnable() {
             @Override
@@ -64,8 +67,8 @@ public final class GeminiPrompter implements CodingPrompter, PrompterModelCapabl
                         .header("x-goog-api-key", new String(token))
                         .header("Content-Type", "application/json")
                         .header("User-Agent", "OpenCreative+ Coding Prompter")
-                        .POST(HttpRequest.BodyPublishers.ofString(getRequest(nickname, uuid, text)))
-                        .timeout(Duration.ofSeconds(120))
+                        .POST(HttpRequest.BodyPublishers.ofString(getRequest(nickname, uuid, text, actionsLimit)))
+                        .timeout(Duration.ofSeconds(OpenCreative.getSettings().getPrompterTimeout()))
                         .build();
                 try {
                     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -118,12 +121,15 @@ public final class GeminiPrompter implements CodingPrompter, PrompterModelCapabl
         return future;
     }
 
-    private @NotNull String getRequest(@NotNull String nickname, @NotNull UUID uuid, @NotNull String text) {
+    private @NotNull String getRequest(@NotNull String nickname,
+                                       @NotNull UUID uuid,
+                                       @NotNull String text,
+                                       int actionsLimit) {
         return new Gson().toJson(
             new GeminiRequest(
                 new GeminiInstruction(
                     List.of(new GeminiParts(new PrompterInstruction(
-                            nickname, uuid.toString(), text).get()))
+                            nickname, uuid.toString(), text, actionsLimit).get()))
                 ),
                 List.of(
                     new GeminiContents("user", List.of(new GeminiParts(text)))

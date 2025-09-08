@@ -60,7 +60,7 @@ public final class WorldEditManager implements BlocksManager {
 
     @Override
     public void init() {
-        WorldEdit.getInstance().getEventBus().register(new Object() {
+        Object onSessionEvent = new Object() {
             @Subscribe
             public void onEditSessionEvent(EditSessionEvent event) {
                 if (event.getStage() != EditSession.Stage.BEFORE_HISTORY) return;
@@ -76,7 +76,9 @@ public final class WorldEditManager implements BlocksManager {
                 }
                 event.setExtent(new PlanetExtent(planet, event.getExtent()));
             }
-        });
+        };
+        WorldEdit.getInstance().getEventBus().unregister(onSessionEvent);
+        WorldEdit.getInstance().getEventBus().register(onSessionEvent);
     }
 
     static class PlanetExtent extends AbstractDelegateExtent {

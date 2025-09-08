@@ -206,6 +206,7 @@ public class CodingBlockParser {
                  * them as arguments for action.
                  */
                 if (!(containerBlock.getState() instanceof InventoryHolder container)) continue;
+                if (actionType.getArgumentsSlots() == null) continue;
                 byte slot = 0;
                 ItemStack[] content = container.getInventory().getContents();
                 if (actionType.getCategory() == ActionCategory.SELECTION_ACTION) {

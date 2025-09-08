@@ -122,6 +122,8 @@ public final class Settings {
     private final Set<String> disabledEvents = new HashSet<>();
     private final Set<String> disabledActions = new HashSet<>();
     private final Set<String> disabledConditions = new HashSet<>();
+    private int prompterMaxExecutors = 10;
+    private int prompterTimeout = 120;
 
     private final Map<Sounds,SettingsSound> sounds = new HashMap<>();
     private final Map<Items,SettingsItem> items = new HashMap<>();
@@ -223,7 +225,10 @@ public final class Settings {
         checkDebugAnnouncer();
     }
 
-    private static void setupPromptHandler(FileConfiguration config) {
+    private void setupPromptHandler(FileConfiguration config) {
+        prompterTimeout = config.getInt("coding.prompt-handler.timeout",120);
+        prompterMaxExecutors = config.getInt("coding.prompt-handler.executors-limit",10);
+
         String type = config.getString("coding.prompt-handler.type","none");
         if (type.equalsIgnoreCase("none")) {
             OpenCreative.setCodingPrompter(new DisabledCodingPrompter());
@@ -717,5 +722,13 @@ public final class Settings {
 
     public boolean isItemsClearCommandBlocksData() {
         return itemsClearCommandBlocksData;
+    }
+
+    public int getPrompterMaxExecutors() {
+        return prompterMaxExecutors;
+    }
+
+    public int getPrompterTimeout() {
+        return prompterTimeout;
     }
 }
