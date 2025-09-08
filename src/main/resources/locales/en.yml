@@ -629,6 +629,12 @@ items:
       saved:  "&aSaved"
       global: "&eGlobal"
       local: "&cLocal"
+    broken:
+      name: "&cBroken Item :("
+      lore:
+        - "&7This item is failed to create,"
+        - "&7maybe its data is from newer or older"
+        - "&7versions of Minecraft."
     placeholders:
       text:
         name: "&6Text"

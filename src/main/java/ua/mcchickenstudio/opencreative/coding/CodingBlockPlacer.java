@@ -499,7 +499,12 @@ public class CodingBlockPlacer {
             }
             case ITEM, ANY, POTION -> {
                 if (data == null) return new ItemStack(Material.AIR);
-                return ItemStack.deserialize(data.getValues(false));
+                try {
+                    item = ItemStack.deserialize(data.getValues(false));;
+                } catch (Exception error) {
+                    item = createItem(Material.BARRIER, 1, "items.developer.broken");
+                }
+                return item;
             }
             default -> {
                 return new ItemStack(Material.AIR);
