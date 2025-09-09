@@ -329,7 +329,7 @@ public final class InteractListener implements Listener {
                     }
                 }
                 translateBlockSign(clickedBlock);
-            } else {
+            } else if (actionBlockCategory != ActionCategory.ELSE_CONDITION) {
                 new TargetSelectionMenu(clickedBlock.getLocation()).open(player);
             }
         } else {

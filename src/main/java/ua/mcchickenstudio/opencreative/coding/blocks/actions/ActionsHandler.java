@@ -18,9 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines.WaitAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlleractions.other.MeasureTimeAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.RepeatAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.exceptions.PlayerException;
@@ -59,6 +61,12 @@ public class ActionsHandler {
     private boolean stopped = false;
     private long waitDelay = 0;
 
+    /**
+     * Constructor of actions handler with executor.
+     * <p>
+     * The executor is main handler of actions.
+     * @param executor executor that contains actions to execute.
+     */
     public ActionsHandler(Executor executor) {
         this.executor = executor;
         this.event = executor.getEvent();
@@ -68,6 +76,13 @@ public class ActionsHandler {
         this.doNotUseTryFlag = false;
     }
 
+    /**
+     * Constructor of actions handler with multi action (with brackets).
+     * <p>
+     * Changes (to selection, or stopping code line) will be also
+     * applied to parent actions handler.
+     * @param action multi action that contains actions to execute.
+     */
     public ActionsHandler(Action action) {
         this.parentActionsHandler = action.getHandler();
         ActionsHandler mainHandler = getMainActionHandler();
@@ -78,11 +93,22 @@ public class ActionsHandler {
         this.doNotUseTryFlag = action.getActionType() == ActionType.CONTROLLER_CATCH_ERROR || parentActionsHandler.doNotUseTryFlag;
     }
 
+    /**
+     * Adds actions to queue and executes them.
+     * @param actions actions to execute.
+     */
     public final void executeActions(List<Action> actions) {
         actionsQueue.addAll(actions);
         executeNextAction();
     }
 
+    /**
+     * Inserts actions and executes them.
+     * Used in {@link ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Function functions}.
+     * <p>
+     * Actions from previous queue will be moved to the end.
+     * @param actions actions to execute first.
+     */
     public final void addActions(List<Action> actions) {
         List<Action> current = new ArrayList<>(actionsQueue);
         actionsQueue.clear();
@@ -90,6 +116,9 @@ public class ActionsHandler {
         actionsQueue.addAll(current);
     }
 
+    /**
+     * Executes next action from queue.
+     */
     private void executeNextAction() {
         if (executor.getPlanet().getMode() != Planet.Mode.PLAYING) {
             actionsQueue.clear();
@@ -110,6 +139,10 @@ public class ActionsHandler {
         }
     }
 
+    /**
+     * Prepares action and executes it.
+     * @param action action to prepare and execute.
+     */
     public void prepareAction(Action action) {
         if (waitDelay < 1 ) {
             executeAction(action);
@@ -131,6 +164,10 @@ public class ActionsHandler {
         }
     }
 
+    /**
+     * Executes action or sends error to planet.
+     * @param action action to execute.
+     */
     private void executeAction(Action action) {
         if (!stopped) {
             if (doNotUseTryFlag) {
@@ -141,10 +178,10 @@ public class ActionsHandler {
                 } catch (Exception error) {
                     String id = error.getClass().getSimpleName().toLowerCase();
                     sendPlanetCodeErrorMessage(executor, action,
-                            getLocaleMessage("coding-error." + (messageExists("coding-error." + id) ? id : "unknown"))
-                                    .replace("%player%", error instanceof PlayerException playerException ? playerException.getPlayerName() : "")
-                            + (error.getMessage() == null ? error.getClass().getSimpleName() : error.getMessage()).replace("ua.mcchickenstudio.opencreative.coding.",""),
-                            error);
+                        getLocaleMessage("coding-error." + (messageExists("coding-error." + id) ? id : "unknown"))
+                                .replace("%player%", error instanceof PlayerException playerException ? playerException.getPlayerName() : "")
+                        + (error.getMessage() == null ? error.getClass().getSimpleName() : error.getMessage()).replace("ua.mcchickenstudio.opencreative.coding.",""),
+                        error);
                     removeAllActions();
                 }
             }
@@ -157,14 +194,28 @@ public class ActionsHandler {
         executeNextAction();
     }
 
+    /**
+     * Clears all actions from queue.
+     * <p>
+     * Nothing will be executed.
+     */
     public void removeAllActions() {
         actionsQueue.clear();
     }
 
+    /**
+     * Returns how many ticks should pass
+     * before executing next action from queue.
+     * @return wait delay.
+     */
     public long getWaitDelay() {
         return waitDelay;
     }
 
+    /**
+     * Returns the main actions handler (executor thread)
+     * @return the main handler of actions.
+     */
     public ActionsHandler getMainActionHandler() {
         ActionsHandler handler = this.getParentActionHandler();
         ActionsHandler lastHandler = this;
@@ -175,28 +226,64 @@ public class ActionsHandler {
         return lastHandler;
     }
 
+    /**
+     * Checks is action handler flagged to stop.
+     * @return true - stopped, false - not.
+     */
     public boolean isStopped() {
         return stopped;
     }
 
+    /**
+     * Sets stopped flag to actions handler.
+     * @param stopped true - will stop code, false - not.
+     */
     public void setStopped(boolean stopped) {
         this.stopped = stopped;
     }
 
-    public ActionsHandler getParentActionHandler() {
+    /**
+     * Returns parent actions handler, if exists.
+     * @return parent actions handler, or null.
+     */
+    public @Nullable ActionsHandler getParentActionHandler() {
         return parentActionsHandler;
     }
 
+    /**
+     * Sets how many ticks should pass before
+     * executing next action.
+     * @param waitDelay wait delay.
+     */
     public void setWaitDelay(long waitDelay) {
         this.waitDelay = waitDelay;
     }
 
+    /**
+     * Returns world event, that launched
+     * executor.
+     * @return world event.
+     */
     public WorldEvent getEvent() {
         return event;
     }
 
+    /**
+     * Returns executor, that launched
+     * actions handler.
+     * @return executor.
+     */
     public Executor getExecutor() {
         return executor;
+    }
+
+    /**
+     * Returns multi action with brackets,
+     * that launched actions handler, if exists.
+     * @return action, or null.
+     */
+    public @Nullable Action getAction() {
+        return action;
     }
 
     @Override
@@ -204,6 +291,11 @@ public class ActionsHandler {
         return "ActionsHandler. Planet: " + executor.getPlanet() + " WaitDelay: " + waitDelay + " Stopped: " + stopped + " Queue Size: " + actionsQueue.size();
     }
 
+    /**
+     * Returns selected targets, that can be modified
+     * with selection action.
+     * @return selected targets.
+     */
     public Set<Entity> getSelectedTargets() {
         return selectedTargets;
     }

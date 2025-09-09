@@ -31,55 +31,38 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.data.PhysService;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldListener;
-import ua.mcchickenstudio.opencreative.coding.prompters.GeminiPrompter;
+
 import ua.mcchickenstudio.opencreative.commands.*;
 import ua.mcchickenstudio.opencreative.commands.minecraft.*;
-import ua.mcchickenstudio.opencreative.commands.world.AdvertisementCommand;
-import ua.mcchickenstudio.opencreative.commands.world.EnvironmentCommand;
-import ua.mcchickenstudio.opencreative.commands.world.JoinCommand;
-import ua.mcchickenstudio.opencreative.commands.world.WorldCommand;
-import ua.mcchickenstudio.opencreative.commands.world.modes.BuildCommand;
-import ua.mcchickenstudio.opencreative.commands.world.modes.DevCommand;
-import ua.mcchickenstudio.opencreative.commands.world.modes.PlayCommand;
-import ua.mcchickenstudio.opencreative.commands.world.reputation.DislikeCommand;
-import ua.mcchickenstudio.opencreative.commands.world.reputation.LikeCommand;
+import ua.mcchickenstudio.opencreative.commands.world.*;
+import ua.mcchickenstudio.opencreative.commands.world.modes.*;
+import ua.mcchickenstudio.opencreative.commands.world.reputation.*;
 import ua.mcchickenstudio.opencreative.indev.OfflineWander;
 import ua.mcchickenstudio.opencreative.indev.Wander;
-import ua.mcchickenstudio.opencreative.coding.prompters.CodingPrompter;
-import ua.mcchickenstudio.opencreative.coding.prompters.DisabledCodingPrompter;
-import ua.mcchickenstudio.opencreative.coding.prompters.OpenAIPrompter;
+import ua.mcchickenstudio.opencreative.coding.prompters.*;
 import ua.mcchickenstudio.opencreative.listeners.CreativeListener;
 import ua.mcchickenstudio.opencreative.listeners.creative.PlanetListener;
-import ua.mcchickenstudio.opencreative.listeners.entity.EntityDamageListener;
-import ua.mcchickenstudio.opencreative.listeners.entity.EntitySpawnListener;
-import ua.mcchickenstudio.opencreative.listeners.entity.EntityStateListener;
+import ua.mcchickenstudio.opencreative.listeners.entity.*;
 import ua.mcchickenstudio.opencreative.listeners.player.*;
-import ua.mcchickenstudio.opencreative.listeners.world.BlockChangeListener;
-import ua.mcchickenstudio.opencreative.listeners.world.RedstoneListener;
+import ua.mcchickenstudio.opencreative.listeners.world.*;
 import ua.mcchickenstudio.opencreative.managers.blocks.BlocksManager;
 import ua.mcchickenstudio.opencreative.managers.economy.Economy;
-import ua.mcchickenstudio.opencreative.managers.hints.HintManager;
-import ua.mcchickenstudio.opencreative.managers.hints.Hints;
-import ua.mcchickenstudio.opencreative.managers.modules.Moduler;
-import ua.mcchickenstudio.opencreative.managers.modules.ModuleManager;
+import ua.mcchickenstudio.opencreative.managers.hints.*;
+import ua.mcchickenstudio.opencreative.managers.modules.*;
 import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
-import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformer;
-import ua.mcchickenstudio.opencreative.utils.world.platforms.HorizontalPlatformer;
-import ua.mcchickenstudio.opencreative.utils.world.platforms.VerticalPlatformer;
-import ua.mcchickenstudio.opencreative.managers.stability.DisabledWatchdog;
-import ua.mcchickenstudio.opencreative.managers.stability.StabilityManager;
-import ua.mcchickenstudio.opencreative.managers.updater.HangarUpdater;
-import ua.mcchickenstudio.opencreative.managers.updater.Updater;
+import ua.mcchickenstudio.opencreative.utils.world.platforms.*;
+import ua.mcchickenstudio.opencreative.managers.stability.*;
+import ua.mcchickenstudio.opencreative.managers.updater.*;
 import ua.mcchickenstudio.opencreative.menus.Menus;
-import ua.mcchickenstudio.opencreative.managers.space.Space;
-import ua.mcchickenstudio.opencreative.managers.space.PlanetsManager;
+import ua.mcchickenstudio.opencreative.managers.space.*;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.Metrics;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldListener;
+import ua.mcchickenstudio.opencreative.coding.prompters.GeminiPrompter;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.data.PhysService;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -121,13 +104,13 @@ public final class OpenCreative extends JavaPlugin {
     @Override
     public void onLoad() {
         getLogger().info(String.join("\n",
-                        "", "",
-                        "This software was made by Ukrainians, suffering from never-ending air alerts, explosions, and deaths.",
-                        "We're AGAINST THE WAR. This software IS NOT DESIGNED for those who support killing and robbing another country.",
-                        "",
-                        "Let us have fun, like players who create their worlds...",
-                        "McChicken Studio 2017–2025",
-                        ""
+            "", "",
+            "This software was made by Ukrainians, suffering from never-ending air alerts, explosions, and deaths.",
+            "We're AGAINST THE WAR. This software IS NOT DESIGNED for those who support killing and robbing another country.",
+            "",
+            "Let us have fun, like players who create their worlds...",
+            "McChicken Studio 2017–2025",
+            ""
         ));
     }
 
@@ -143,9 +126,9 @@ public final class OpenCreative extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,100,1));
             player.showTitle(Title.title(
-                    MiniMessage.miniMessage().deserialize("<white>Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+ <gray>" + version),
-                    Component.text("§f" + codename + "..."),
-                    Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(5), Duration.ofSeconds(0))
+                MiniMessage.miniMessage().deserialize("<white>Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+ <gray>" + version),
+                Component.text("§f" + codename + "..."),
+                Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(5), Duration.ofSeconds(0))
             ));
         }
         saveDefaultConfig();
@@ -186,22 +169,22 @@ public final class OpenCreative extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             teleportToLobby(player);
             getServer().sendActionBar(
-                    MiniMessage.miniMessage().deserialize(
-                            "<white>Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+ <gray>" + version + "<white> is loaded for " + loadedTime + " ms."
-                    ));
+                MiniMessage.miniMessage().deserialize(
+                        "<white>Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+ <gray>" + version + "<white> is loaded for " + loadedTime + " ms."
+                ));
         }
         getLogger().info(String.join("\n",
-                        "OpenCreative+ " + version + ": " + codename + " is loaded for " + loadedTime + " ms.",
-                        "",
-                        " Welcome to OpenCreative+ " + version + "!",
-                        "",
-                        "  Running on " + Bukkit.getMinecraftVersion() + " server",
-                        "  Current time " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()),
-                                isChristmas() ? "  Ho-ho-ho! Merry Christmas, server owners! :-) ❆" :
-                                isHalloween() ? "  Spo-o-o-oky Halloween, server owners! O_o 🎃" : "",
-                        "  " + codename,
-                        "  Made by McChicken Studio 2017–2025",
-                        ""
+            "OpenCreative+ " + version + ": " + codename + " is loaded for " + loadedTime + " ms.",
+            "",
+            " Welcome to OpenCreative+ " + version + "!",
+            "",
+            "  Running on " + Bukkit.getMinecraftVersion() + " server",
+            "  Current time " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()),
+                    isChristmas() ? "  Ho-ho-ho! Merry Christmas, server owners! :-) ❆" :
+                    isHalloween() ? "  Spo-o-o-oky Halloween, server owners! O_o 🎃" : "",
+            "  " + codename,
+            "  Made by McChicken Studio 2017–2025",
+            ""
         ));
         new Metrics(this, 22001);
     }
@@ -216,19 +199,19 @@ public final class OpenCreative extends JavaPlugin {
         getLogger().info("Shutting down OpenCreative+, please wait...");
         for (Player player: Bukkit.getOnlinePlayers()) {
             player.sendMessage(
-                    MiniMessage.miniMessage().deserialize(
-                            " \n<white> Shutting down Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+ <gray>" + version + "<white>, please wait...\n "
-                    ));
+                MiniMessage.miniMessage().deserialize(
+                        " \n<white> Shutting down Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+ <gray>" + version + "<white>, please wait...\n "
+                ));
             teleportToLobby(player);
         }
         FileUtils.unloadPlanets();
         getLogger().info(String.join("\n",
-                        "",
-                        "Goodbye from OpenCreative+",
-                        "",
-                        " " + codename,
-                        "  Made by McChicken Studio 2017–2025",
-                        ""
+            "",
+            "Goodbye from OpenCreative+",
+            "",
+            " " + codename,
+            "  Made by McChicken Studio 2017–2025",
+            ""
         ));
     }
 
@@ -298,19 +281,19 @@ public final class OpenCreative extends JavaPlugin {
         getLogger().info("Registering OpenCreative+ event listeners...");
         int registeredListeners = 0;
         Class<?>[] listeners = new Class[] {
-                ChangedWorld.class,       EntitySpawnListener.class,  EntityDamageListener.class,
-                JoinListener.class,       QuitListener.class,         RespawnListener.class,
-                DeathListener.class,      TeleportListener.class,     MoveListener.class,
-                ChatListener.class,       InteractListener.class,     DropItemListener.class,
-                PlaceBlockListener.class, DestroyBlockListener.class, BucketListener.class,
-                ClickListener.class,      RedstoneListener.class,     BlockChangeListener.class,
-                Menus.class,              GameModeListener.class,     EntityStateListener.class,
-                CreativeListener.class,   PotionListener.class,       PlanetListener.class
+            ChangedWorld.class,       EntitySpawnListener.class,  EntityDamageListener.class,
+            JoinListener.class,       QuitListener.class,         RespawnListener.class,
+            DeathListener.class,      TeleportListener.class,     MoveListener.class,
+            ChatListener.class,       InteractListener.class,     DropItemListener.class,
+            PlaceBlockListener.class, DestroyBlockListener.class, BucketListener.class,
+            ClickListener.class,      RedstoneListener.class,     BlockChangeListener.class,
+            Menus.class,              GameModeListener.class,     EntityStateListener.class,
+            CreativeListener.class,   PotionListener.class,       PlanetListener.class
         };
         for (Class<?> listenerClass : listeners) {
             try {
                 getServer().getPluginManager().registerEvents(
-                        (Listener) listenerClass.getDeclaredConstructor().newInstance(), this
+                    (Listener) listenerClass.getDeclaredConstructor().newInstance(), this
                 );
                 registeredListeners++;
             } catch (Exception exception) {
