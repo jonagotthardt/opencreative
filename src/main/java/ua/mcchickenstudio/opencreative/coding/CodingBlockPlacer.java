@@ -305,7 +305,7 @@ public class CodingBlockPlacer {
                         wallSign, type.getCategory().name().toLowerCase());
                 String name = data.getString("name","");
                 setSignLine(signLocation,3, name);
-                setSignLine(signLocation,4, target);
+                if (!target.equals("default")) setSignLine(signLocation,4, target);
             }
             case SELECTION_SET, SELECTION_ADD, SELECTION_REMOVE -> {
                 placeDevBlock(location, type.getCategory().getBlock(),
@@ -320,7 +320,7 @@ public class CodingBlockPlacer {
                     setSignLine(signLocation, 2, conditionCategory.name().toLowerCase());
                     setSignLine(signLocation, 3, conditionType.name().toLowerCase());
                 } else {
-                    setSignLine(signLocation, 2, target);
+                    if (!target.equals("default")) setSignLine(signLocation, 2, target);
                 }
             }
             default -> {

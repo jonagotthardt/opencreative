@@ -31,6 +31,7 @@ import java.util.List;
 public abstract class RepeatAction extends MultiAction {
 
     private int calls = 0;
+    private boolean mustStop = false;
 
     public RepeatAction(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
         super(executor, target, x, args, actions);
@@ -40,6 +41,9 @@ public abstract class RepeatAction extends MultiAction {
     public final void executeActions() {
         for (Entity entity : getTargets()) {
             this.entity = entity;
+            if (mustStop) {
+                return;
+            }
             if (!checkCanContinue()) {
                 return;
             }
@@ -48,12 +52,12 @@ public abstract class RepeatAction extends MultiAction {
             increaseCalls();
             if (handler.getWaitDelay() > 0) {
                 getPlanet().getTerritory().scheduleRunnable(
-                        new PlanetRunnable(getPlanet()) {
-                            @Override
-                            public void execute() {
-                                executeActions();
-                            }
-                        }, handler.getWaitDelay());
+                    new PlanetRunnable(getPlanet()) {
+                        @Override
+                        public void execute() {
+                            executeActions();
+                        }
+                    }, handler.getWaitDelay());
             } else {
                 executeActions();
             }
@@ -79,6 +83,10 @@ public abstract class RepeatAction extends MultiAction {
         };
         getPlanet().getTerritory().addBukkitRunnable(runnable);
         runnable.runTaskLater(OpenCreative.getPlugin(),20L);
+    }
+
+    public void setMustStop(boolean mustStop) {
+        this.mustStop = mustStop;
     }
 
     public abstract boolean checkCanContinue();

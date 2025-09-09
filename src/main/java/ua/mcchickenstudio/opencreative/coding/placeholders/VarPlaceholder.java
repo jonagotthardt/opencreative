@@ -65,6 +65,6 @@ public final class VarPlaceholder extends KeyValuePlaceholder {
 
     @Override
     public @NotNull String getDescription() {
-        return "Parses variable placeholders";
+        return "Parses variable placeholder %var(variable_name)";
     }
 }

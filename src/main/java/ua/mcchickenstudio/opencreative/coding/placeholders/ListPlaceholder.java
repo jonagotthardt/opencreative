@@ -80,6 +80,6 @@ public final class ListPlaceholder extends KeyValuePlaceholder {
 
     @Override
     public @NotNull String getDescription() {
-        return "Parses list elements placeholders";
+        return "Parses list elements placeholder %list(index_of_element)";
     }
 }
