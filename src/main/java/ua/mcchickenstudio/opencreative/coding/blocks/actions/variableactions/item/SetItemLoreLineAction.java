@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.item;
 
+import net.kyori.adventure.text.format.TextDecoration;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -61,6 +62,9 @@ public final class SetItemLoreLineAction extends VariableAction {
                 newLore.add(Component.text(""));
                 size++;
             }
+        }
+        if (!text.hasDecoration(TextDecoration.ITALIC)) {
+            text = text.decoration(TextDecoration.ITALIC, false);
         }
         newLore.set(index-1,text);
         meta.lore(newLore);

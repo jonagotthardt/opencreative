@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.item;
 
+import net.kyori.adventure.text.format.TextDecoration;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -51,6 +52,9 @@ public final class AddItemLoreLineAction extends VariableAction {
             newLore = new ArrayList<>();
         }
         Component text = getArguments().getValue("line",Component.text(""),this);
+        if (!text.hasDecoration(TextDecoration.ITALIC)) {
+            text = text.decoration(TextDecoration.ITALIC, false);
+        }
         newLore.add(text);
         meta.lore(newLore);
         item.setItemMeta(meta);
