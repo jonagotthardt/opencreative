@@ -20,10 +20,15 @@ package ua.mcchickenstudio.opencreative.coding.prompters;
 
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.ArgumentSlot;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.ParameterSlot;
+import ua.mcchickenstudio.opencreative.coding.placeholders.KeyPlaceholder;
+import ua.mcchickenstudio.opencreative.coding.placeholders.KeyValuePlaceholder;
+import ua.mcchickenstudio.opencreative.coding.placeholders.Placeholder;
+import ua.mcchickenstudio.opencreative.coding.placeholders.Placeholders;
 import ua.mcchickenstudio.opencreative.coding.values.*;
 
 import java.util.StringJoiner;
@@ -45,6 +50,22 @@ public final class PrompterInstruction {
         this.maxActions = maxActions;
     }
 
+    /**
+     * Returns instruction, that can be used for
+     * sending to prompter.
+     * <p>
+     * It contains information about:
+     * <ul>
+     *     <li>player name, uuid</li>
+     *     <li>server version</li>
+     *     <li>limits of executors and actions</li>
+     *     <li>details about some events and actions.</li>
+     *     <li>list of all events, actions, conditions, placeholders, game values</li>
+     *     <li>examples of code</li>
+     *     <li>examples of saving values</li>
+     * </ul>
+     * @return instruction text.
+     */
     public @NotNull String get() {
         return """
     You're a coding writer. The user (""" + nickname + " " + uuid + ")" + """
@@ -56,10 +77,23 @@ public final class PrompterInstruction {
     - Do not write comments; they will be ignored.
     - Maximum\s""" + maxActions + """
      actions per executor.
-    - Maximum 10 executors.
+    - Maximum\s""" + OpenCreative.getSettings().getPrompterMaxExecutors() + """
+    executors.
     - Maximum 27 arguments per action.
     - To color text use § instead of &
+    - For chat commands use @ instead of /
+    - List index starts with 1 instead of 0
     Server version \s""" + Bukkit.getMinecraftVersion() + """
+    ACTIONS INFO:
+    - In PLAYER_PLAY_SOUND action "volume" argument's number range is from 1 to 100
+    - In WORLD_SPAWN_ENTITY action in "type" argument place TEXT argument with value of entity type ("chicken", "zombie")
+    EVENTS INFO:
+    - Cycle, all events with EVENT_WORLD will use all players by default.
+    - Cycles need to be launched with CONTROL_LAUNCH_CYCLES action (you can add it on PLAYER_JOIN), they won't work without launch.
+    - Functions need to be launched with LAUNCH_FUNCTION
+    - Methods need to be launched with LAUNCH_METHOD
+    - Functions will copy it's actions to place, where it was launched, and execute, so CONTROL_STOP_CODE_LINE will stop entire code line.
+    - Methods will execute it's actions in other thread, so CONTROL_STOP_CODE_LINE will stop only method.
     
     EXAMPLES:
     
@@ -95,6 +129,7 @@ public final class PrompterInstruction {
         condition_block_1:
           category: PLAYER_CONDITION
           type: IF_PLAYER_BLOCK_EQUALS
+          opposed: false
           arguments:
             blocks:
               type: LIST
@@ -233,6 +268,7 @@ public final class PrompterInstruction {
             condition_block_1:
               category: PLAYER_CONDITION
               type: IF_PLAYER_MESSAGE_EQUALS
+              opposed: false # To reverse condition set true
               arguments:
                 messages:
                   type: LIST
@@ -281,6 +317,9 @@ public final class PrompterInstruction {
     Available game values:
     """ + getGameValues() + """
     
+    Available game values:
+    """ + getPlaceholders() + """
+    
     Saving executor format:
     
     code:
@@ -288,7 +327,7 @@ public final class PrompterInstruction {
         # Player, Entity, World events
         exec_block_1:
           category: EXECUTOR_CATEGORY # EVENT_PLAYER, EVENT_ENTITY, EVENT_WORLD
-          type: EXECUTOR_TYPE       # PLAYER_JOIN, ENTITY_SPAWNED, WORLD_BLOCK_BURNED, etc.
+          type: EXECUTOR_TYPE         # PLAYER_JOIN, ENTITY_SPAWNED, WORLD_BLOCK_BURNED, etc.
         # Function, Method
         exec_block_2:
           category: EXECUTOR_CATEGORY # FUNCTION, METHOD
@@ -474,6 +513,35 @@ public final class PrompterInstruction {
                           has-particles: true
                           has-icon: true
     """;
+    }
+
+    private @NotNull String getPlaceholders() {
+        StringJoiner joiner = new StringJoiner("\n");
+        for (Placeholder type : Placeholders.getInstance().getPlaceholders()) {
+            joiner.add(getPlaceholder(type));
+        }
+        return joiner.toString();
+    }
+
+    private @NotNull String getPlaceholder(@NotNull Placeholder placeholder) {
+        StringJoiner joiner = new StringJoiner(", ");
+        switch (placeholder) {
+            case KeyPlaceholder keyPlaceholder -> {
+                for (String key : keyPlaceholder.getKeys()) {
+                    joiner.add(key);
+                }
+                return joiner + " - " + placeholder.getDescription();
+            }
+            case KeyValuePlaceholder keyValuePlaceholder -> {
+                for (String key : keyValuePlaceholder.getKeys()) {
+                    joiner.add(key);
+                }
+                return joiner + " - " + placeholder.getDescription();
+            }
+            default -> {
+                return placeholder.getName() + " - " + placeholder.getDescription();
+            }
+        }
     }
 
     private @NotNull String getExecutors() {
