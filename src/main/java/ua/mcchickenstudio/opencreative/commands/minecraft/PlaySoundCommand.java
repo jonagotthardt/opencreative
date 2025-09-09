@@ -32,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ua.mcchickenstudio.opencreative.settings.Sounds.SOUND_REGEX;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
@@ -124,6 +125,12 @@ public class PlaySoundCommand extends CommandHandler {
                     player.sendMessage(getLocaleMessage("no-player-found"));
                     return;
                 }
+            }
+
+            if (!soundString.matches(SOUND_REGEX)) {
+                player.sendMessage(getLocaleMessage("commands.play-sound.bad-sound")
+                        .replace("%sound%", soundString));
+                return;
             }
 
             try {

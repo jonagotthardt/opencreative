@@ -67,6 +67,7 @@ commands:
   play-sound:
     help: "%prefix%Вы можете проигрывать звук себе или игроку.\n &6/playsound Звук Громкость Скорость Сид &7- Прослушать звук самому\n &6/playsound Никнейм Звук Громкость Скорость Сид &7- Проиграть звук игроку"
     played: "%prefix%&fПроигран звук &6%sound% &fс громкостью &6%volume%&f и скоростью &6%pitch%&f игроку &6%player%"
+    bad-sound: "%prefix%&cЗвука %sound% не существует.. О_о"
   stop-sound:
     stopped-sound: "%prefix%&fОстановлен звук &6%sound%&f игроку &6%player%&f."
     stopped-category: "%prefix%&fОстановлены звуки категории &6%category%&f игроку &6%player%&f."

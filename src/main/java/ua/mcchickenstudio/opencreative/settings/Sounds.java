@@ -212,4 +212,6 @@ public enum Sounds {
         }
     }
 
+    public static final String SOUND_REGEX = "^[a-z0-9/.:_-]+$";
+
 }
