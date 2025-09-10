@@ -137,13 +137,12 @@ public class YamlTranslation implements TranslationManager {
     }
 
     private static @NotNull Component textToComponent(@NotNull String text) {
+        text = text.replace(LegacyComponentSerializer.SECTION_CHAR, LegacyComponentSerializer.AMPERSAND_CHAR);
         if (text.contains("&")) {
             return LegacyComponentSerializer.legacyAmpersand().deserialize(text);
         } else {
             return MiniMessage.miniMessage().deserialize(text);
         }
     }
-
-
 
 }

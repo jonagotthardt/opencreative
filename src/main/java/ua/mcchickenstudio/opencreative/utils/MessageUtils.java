@@ -63,7 +63,9 @@ public final class MessageUtils {
      */
     public static Component toComponent(String text) {
         if (isLegacyFormat(text)) {
-            return LegacyComponentSerializer.legacyAmpersand().deserialize(text);
+            return LegacyComponentSerializer.legacyAmpersand().deserialize(
+                    text.replace(LegacyComponentSerializer.SECTION_CHAR,
+                            LegacyComponentSerializer.AMPERSAND_CHAR));
         } else {
             return MiniMessage.miniMessage().deserialize(text);
         }
@@ -630,4 +632,96 @@ public final class MessageUtils {
         String originalMessage = getLocalization().getString(messageID);
         return originalMessage != null && !originalMessage.equalsIgnoreCase("null");
     }
+
+    private static final Map<Character, String> LEGACY_TO_MINI = Map.ofEntries(
+        Map.entry('0', "<black>"),
+        Map.entry('1', "<dark_blue>"),
+        Map.entry('2', "<dark_green>"),
+        Map.entry('3', "<dark_aqua>"),
+        Map.entry('4', "<dark_red>"),
+        Map.entry('5', "<dark_purple>"),
+        Map.entry('6', "<gold>"),
+        Map.entry('7', "<gray>"),
+        Map.entry('8', "<dark_gray>"),
+        Map.entry('9', "<blue>"),
+        Map.entry('a', "<green>"),
+        Map.entry('b', "<aqua>"),
+        Map.entry('c', "<red>"),
+        Map.entry('d', "<light_purple>"),
+        Map.entry('e', "<yellow>"),
+        Map.entry('f', "<white>"),
+        Map.entry('k', "<obfuscated>"),
+        Map.entry('l', "<bold>"),
+        Map.entry('m', "<strikethrough>"),
+        Map.entry('n', "<underlined>"),
+        Map.entry('o', "<italic>"),
+        Map.entry('r', "<reset>")
+    );
+
+    /**
+     * Converts legacy text with § or & to MiniMessage format,
+     * so this text can be deserialized to MiniMessage.
+     * @param input text to convert.
+     * @return text, that can be used as MiniMessage.
+     */
+    public static @NotNull String fromLegacyToMiniMessage(@NotNull String input) {
+        if (input.contains("§")) {
+            input = input.replace('§','&');
+        }
+        if (!input.contains("&")) return input;
+        StringBuilder result = new StringBuilder();
+        for (int charIndex = 0; charIndex < input.length(); charIndex++) {
+            // for characters in text
+            char current = input.charAt(charIndex);
+            if (current == '&' && charIndex + 7 < input.length() && input.charAt(charIndex + 1) == '#') {
+                // for legacy gradient format &#ffffff
+                String hex = input.substring(charIndex + 2, charIndex + 8); // "ffffff"
+                if (hex.matches("[0-9A-Fa-f]{6}")) {
+                    result.append("<#").append(hex).append(">");
+                    charIndex += 7;
+                    continue;
+                }
+            }
+            if (current == '&' && charIndex + 13 < input.length() && input.charAt(charIndex + 1) == 'x') {
+                // for legacy gradient format &x&f&f&f&f&f&f
+                StringBuilder gradientColor = new StringBuilder(); // ffffff
+                boolean isValidFormat = true;
+                for (int colorIndex = 0; colorIndex < 6; colorIndex++) {
+                    //
+                    // &x&a&b&c&d&e&j
+                    // charIndex = 0 -> current = &
+                    //   &f
+                    //   23
+                    // j = 0 a, 1 b, 2 c, 3 d, 4 e, 5 j
+                    //
+                    int ampersandIndex = charIndex + 2 + colorIndex * 2; // f
+                    if (input.charAt(ampersandIndex) == '&' && ampersandIndex + 1 < input.length()) {
+                        gradientColor.append(input.charAt(ampersandIndex + 1));
+                    } else {
+                        isValidFormat = false;
+                        break;
+                    }
+                }
+                if (isValidFormat) {
+                    result.append("<#").append(gradientColor).append(">");
+                    charIndex += 13;
+                    continue;
+                }
+            }
+            if (current == '&' && charIndex + 1 < input.length()) {
+                // for classic legacy colors and styles
+                char code = Character.toLowerCase(input.charAt(charIndex + 1));
+                String replacement = LEGACY_TO_MINI.get(code);
+                if (replacement != null) {
+                    result.append(replacement);
+                    charIndex++;
+                    continue;
+                }
+            }
+            result.append(current);
+        }
+        return result.toString();
+    }
+
+
 }

@@ -24,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.CodeConfiguration;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockPlacer;
 import ua.mcchickenstudio.opencreative.indev.Items;
+import ua.mcchickenstudio.opencreative.indev.messages.PlaceholderReplacer;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
@@ -527,6 +528,27 @@ public class CreativeCommand extends CommandHandler {
                     }
                     sender.sendMessage(MiniMessage.miniMessage().deserialize(
                             String.join(" ", Arrays.copyOfRange(args,1,args.length))));
+                }
+                case "minimsg2" -> {
+                    if (!sender.hasPermission("opencreative.print.minimessage")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return;
+                    }
+                    if (player == null) {
+                        sender.sendMessage(getLocaleMessage("only-players"));
+                        return;
+                    }
+                    String message = String.join(" ", Arrays.copyOfRange(args,1,args.length));
+                    sender.sendMessage(fromLegacyToMiniMessage(message));
+                    sender.sendMessage(new PlaceholderReplacer("player", sender.getName(),
+                            "prefix", toComponent(OpenCreative.getPlugin().getConfig().getString("messages.prefix","&8 [&6G&8]&7")),
+                            "version", OpenCreative.getVersion())
+                            .applyPlayer(toComponent(message), player));
+
                 }
                 case "stability" -> {
                     if (!sender.hasPermission("opencreative.stability")) {

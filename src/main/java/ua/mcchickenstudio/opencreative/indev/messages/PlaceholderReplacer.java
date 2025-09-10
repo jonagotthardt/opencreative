@@ -20,11 +20,16 @@ package ua.mcchickenstudio.opencreative.indev.messages;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.OfflinePlayer;
 import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 public class PlaceholderReplacer {
 
@@ -59,17 +64,17 @@ public class PlaceholderReplacer {
             if (i >= replacements.size()) {
                 break;
             }
-            config.match("<" + placeholders.get(i) + ">")
+            config.match("%" + placeholders.get(i) + "%")
                     .replacement(replacements.get(i));
         }
         return config.build();
     }
 
-    public @NotNull Component applyPlaceholders(@NotNull Component input) {
+    public @NotNull Component apply(@NotNull Component input) {
         Component output = input;
         for (int i = 0; i < placeholders.size(); i++) {
             if (i >= replacements.size()) break;
-            @RegExp String placeholder = "<" + placeholders.get(i) + ">";
+            @RegExp String placeholder = "%" + placeholders.get(i) + "%";
             Component replacement = replacements.get(i);
             output = output.replaceText(TextReplacementConfig.builder()
                     .match(placeholder)
@@ -79,5 +84,18 @@ public class PlaceholderReplacer {
         return output;
     }
 
+    public @NotNull Component applyPlayer(@NotNull Component input,
+                                          @NotNull OfflinePlayer player) {
+        Component output = apply(input);
+
+        String text = MiniMessage.miniMessage().serialize(output);
+        text = parsePAPI(player, text);
+        text = text.replace(LegacyComponentSerializer.SECTION_CHAR,
+                LegacyComponentSerializer.AMPERSAND_CHAR);
+        text = fromLegacyToMiniMessage(text).replace("\\","");
+        System.out.println(text);
+
+        return MiniMessage.miniMessage().deserialize(text);
+    }
 
 }

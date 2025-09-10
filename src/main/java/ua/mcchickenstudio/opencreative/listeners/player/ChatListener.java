@@ -82,7 +82,10 @@ public final class ChatListener implements Listener {
                 return;
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getChatCooldown(), CooldownUtils.CooldownType.WORLD_CHAT);
-            String formatted = ChatColor.translateAlternateColorCodes('&',parsePAPI(player, OpenCreative.getPlugin().getConfig().getString("messages.world-chat")).replace("%player%",player.getName()).replace("%message%",message));
+            String formatted = ChatColor.translateAlternateColorCodes('&',
+                    parsePAPI(player, OpenCreative.getPlugin().getConfig().getString("messages.world-chat"))
+                            .replace("%player%",player.getName())
+                            .replace("%message%",message));
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             WorldChatEvent creativeEvent = new WorldChatEvent(player, message,formatted,player.getWorld(), planet);
             Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
