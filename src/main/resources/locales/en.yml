@@ -4433,6 +4433,22 @@ items:
           - " &7glowing"
           - " "
           - "&eClick to set action."
+        arguments:
+          glowing:
+            name: "&fGlowing"
+            lore:
+              - ""
+              - "&7Make the player glow"
+              - "&7or disable glowing."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              true: "Yes, let them glow"
+              false: "No, disable it"
       player-release-shoulders:
         name: "&aRelease shoulders"
         lore:
@@ -5285,6 +5301,25 @@ items:
           - "&3 Option &7- Yes or No"
           - ""
           - "&eClick to set the action."
+        arguments:
+          waxed:
+            name: "&6Wax or not"
+            lore:
+              - ""
+              - "&7If set to yes, the sign"
+              - "&7will be waxed with honey and can"
+              - "&7no longer be edited. Otherwise,"
+              - "&7the sign can still be edited"
+              - "&7by players."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              true: "Yes, don’t allow editing"
+              false: "No, allow editing"
       world-set-sign-glowing-text:
         name: "&bSign Glowing Text"
         lore:
@@ -5472,6 +5507,39 @@ items:
           - "&3 Option &7- Drop XP"
           - ""
           - "&eClick to set the action."
+        arguments:
+          show-particle:
+            name: "&3Show particles"
+            lore:
+              - ""
+              - "&7If set to yes, then when"
+              - "&7breaking a block, particles of"
+              - "&7breaking will appear around it."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              true: "Yes, make it visible"
+              false: "No"
+          drop-experience:
+            name: "&aDrop experience"
+            lore:
+              - ""
+              - "&7If set to yes, then when"
+              - "&7breaking a block, experience"
+              - "&7may appear, like when mining ores."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              true: "Yes, let experience drop"
+              false: "No"
       world-set-block-powered:
         name: "&cActivate Block"
         lore:
@@ -5487,7 +5555,22 @@ items:
           - "&7 deactivate"
           - ""
           - "&eClick to set the action."
-
+        arguments:
+          powered:
+            name: "&cRedstone state"
+            lore:
+              - ""
+              - "&7Enable redstone signal or"
+              - "&7disable and turn off the mechanism."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              true: "Yes, let it activate"
+              false: "No, deactivate"
       player-show-phantom-block:
         name: "&3Show Phantom Block"
         lore:
@@ -5526,7 +5609,22 @@ items:
           - "&c Item &7- Item"
           - ""
           - "&eClick to set the action."
-
+        arguments:
+          naturally:
+            name: "&eWith offset or not"
+            lore:
+              - ""
+              - "&7If set to yes, the item"
+              - "&7will be dropped with an offset."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              true: "Yes, with offset"
+              false: "No, without it"
       world-create-scoreboard:
         name: "&aCreate Scoreboard"
         lore:
@@ -5659,7 +5757,28 @@ items:
           - "&3 Option &7- Overlay type"
           - ""
           - "&eClick to set the action."
-
+        arguments:
+          overlay:
+            name: "&3Overlay type"
+            lore:
+              - ""
+              - "&7Choose the overlay type"
+              - "&7that the bossbar will have."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+              - "%4%"
+              - "%5%"
+            choices:
+              progress: "Solid, no segments"
+              notched_6: "Split into 6"
+              notched_10: "Split into 10"
+              notched_12: "Split into 12"
+              notched_20: "Split into 20"
       world-delete-boss-bar:
         name: "&cDelete Boss Bar"
         lore:

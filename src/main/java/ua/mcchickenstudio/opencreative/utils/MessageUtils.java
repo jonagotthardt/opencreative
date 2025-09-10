@@ -62,13 +62,7 @@ public final class MessageUtils {
      * @return text component.
      */
     public static Component toComponent(String text) {
-        if (isLegacyFormat(text)) {
-            return LegacyComponentSerializer.legacyAmpersand().deserialize(
-                    text.replace(LegacyComponentSerializer.SECTION_CHAR,
-                            LegacyComponentSerializer.AMPERSAND_CHAR));
-        } else {
-            return MiniMessage.miniMessage().deserialize(text);
-        }
+        return MiniMessage.miniMessage().deserialize(fromLegacyToMiniMessage(text));
     }
 
     /**
@@ -661,6 +655,13 @@ public final class MessageUtils {
     /**
      * Converts legacy text with § or & to MiniMessage format,
      * so this text can be deserialized to MiniMessage.
+     * <pre>
+     * {@code
+     * fromLegacyToMiniMessage("&4Hello"); // "<red>Hello"
+     * fromLegacyToMiniMessage("&nHello"); // "<underlined>Hello"
+     * fromLegacyToMiniMessage("&rHello<red>"); // "<reset>Hello<red>"
+     * }
+     * </pre>
      * @param input text to convert.
      * @return text, that can be used as MiniMessage.
      */
@@ -722,6 +723,5 @@ public final class MessageUtils {
         }
         return result.toString();
     }
-
 
 }

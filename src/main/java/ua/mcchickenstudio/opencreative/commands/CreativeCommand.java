@@ -543,11 +543,8 @@ public class CreativeCommand extends CommandHandler {
                         return;
                     }
                     String message = String.join(" ", Arrays.copyOfRange(args,1,args.length));
-                    sender.sendMessage(fromLegacyToMiniMessage(message));
-                    sender.sendMessage(new PlaceholderReplacer("player", sender.getName(),
-                            "prefix", toComponent(OpenCreative.getPlugin().getConfig().getString("messages.prefix","&8 [&6G&8]&7")),
-                            "version", OpenCreative.getVersion())
-                            .applyPlayer(toComponent(message), player));
+                    sender.sendMessage(toComponent(message));
+                    sender.sendActionBar(Component.text("Original: " + message));
 
                 }
                 case "stability" -> {
