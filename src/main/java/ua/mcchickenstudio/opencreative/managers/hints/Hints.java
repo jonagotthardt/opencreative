@@ -32,6 +32,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld;
+import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleComponent;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
@@ -47,7 +48,7 @@ public final class Hints implements HintManager {
             }
             if (ChangedWorld.isPlayerWithLocation(player)) {
                 // If player is in build world and they're setting location
-                player.sendActionBar(getLocaleComponent("environment.hints.location.build", player));
+                player.sendActionBar(MessageUtils.getPlayerLocaleComponent("environment.hints.location.build", player));
             }
             return;
         }
@@ -62,7 +63,7 @@ public final class Hints implements HintManager {
                     case ExecutorCategory.FUNCTION -> "function";
                     default -> "event";
                 };
-                player.sendActionBar(getLocaleComponent("environment.hints."+hint, player));
+                player.sendActionBar(MessageUtils.getPlayerLocaleComponent("environment.hints."+hint, player));
                 return;
             }
             ActionCategory action = ActionCategory.getByMaterial(farBlock.getType());
@@ -75,7 +76,7 @@ public final class Hints implements HintManager {
                         yield "action";
                     }
                 };
-                player.sendActionBar(getLocaleComponent("environment.hints."+hint, player));
+                player.sendActionBar(MessageUtils.getPlayerLocaleComponent("environment.hints."+hint, player));
             }
             return;
         }
@@ -84,7 +85,7 @@ public final class Hints implements HintManager {
         ValueType type = ValueType.getByMaterial(item.getType());
         if (type == ValueType.TEXT && item.getType() != Material.BOOK) {
             if (item.getType() == Material.SPLASH_POTION || item.getType() == Material.LINGERING_POTION) {
-                player.sendActionBar(getLocaleComponent("environment.hints.potion", player));
+                player.sendActionBar(MessageUtils.getPlayerLocaleComponent("environment.hints.potion", player));
             }
             return;
         }
@@ -94,7 +95,7 @@ public final class Hints implements HintManager {
             case LOCATION -> "location.dev";
             default -> "";
         };
-        if (!hint.isEmpty()) player.sendActionBar(getLocaleComponent("environment.hints."+hint, player));
+        if (!hint.isEmpty()) player.sendActionBar(MessageUtils.getPlayerLocaleComponent("environment.hints."+hint, player));
     }
 
     @Override

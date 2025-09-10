@@ -256,7 +256,7 @@ public final class MessageUtils {
      * @param player player to parse.
      * @return component message, or "Error | Not found message.path...", if message was not found.
      */
-    public static Component getLocaleComponent(String messageID, OfflinePlayer player) {
+    public static Component getPlayerLocaleComponent(String messageID, OfflinePlayer player) {
         return toComponent(getPlayerLocaleMessage(messageID, player));
     }
 

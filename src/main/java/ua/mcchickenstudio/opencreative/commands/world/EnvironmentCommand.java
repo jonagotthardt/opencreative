@@ -828,7 +828,7 @@ public class EnvironmentCommand extends CommandHandler {
     private void broadcastPrompter(Planet planet, Player player, String request, String messageID) {
         for (Player developer : planet.getPlayers()) {
             if (planet.getWorldPlayers().canDevelop(developer) && !developer.equals(player)) {
-                developer.sendMessage(getLocaleComponent("environment.prompter.broadcast." + messageID, player)
+                developer.sendMessage(getPlayerLocaleComponent("environment.prompter.broadcast." + messageID, player)
                     .hoverEvent(HoverEvent.showText(getLocaleComponent("environment.prompter.broadcast.hover")
                         .replaceText(TextReplacementConfig.builder().match("%idea%")
                             .replacement(request)

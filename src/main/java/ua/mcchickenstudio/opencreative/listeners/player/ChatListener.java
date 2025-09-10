@@ -114,7 +114,7 @@ public final class ChatListener implements Listener {
                             return;
                         }
                         if (planet.getPlayers().size() == 1 && !chatEvent.isHandledByCode()) {
-                            player.sendMessage(getLocaleComponent("chat-no-near-players", player)
+                            player.sendMessage(getPlayerLocaleComponent("chat-no-near-players", player)
                                     .clickEvent(ClickEvent.suggestCommand("!" + message)));
                         }
                         for (Player p : planet.getPlayers()) {
@@ -124,7 +124,7 @@ public final class ChatListener implements Listener {
                     }
                 } else {
                     if (player.getWorld().getPlayers().size() == 1) {
-                        player.sendMessage(getLocaleComponent("chat-no-near-players", player)
+                        player.sendMessage(getPlayerLocaleComponent("chat-no-near-players", player)
                                 .clickEvent(ClickEvent.suggestCommand("!" + message)));
                     }
                     for (Player p : player.getWorld().getPlayers()) {

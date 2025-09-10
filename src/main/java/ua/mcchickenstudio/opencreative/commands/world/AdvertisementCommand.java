@@ -177,7 +177,7 @@ public class AdvertisementCommand extends CommandHandler {
     }
 
     private static Component createAdvertisementMessage(Player player, Planet planet) {
-        Component advertisement = getLocaleComponent("advertisement.message", player)
+        Component advertisement = getPlayerLocaleComponent("advertisement.message", player)
                 .replaceText(TextReplacementConfig.builder()
                         .match("%world%")
                         .replacement(planet.getInformation().displayName()).build());
