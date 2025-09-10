@@ -56,7 +56,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.loadLocales;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.setPlanetConfigParameter;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
@@ -528,6 +527,24 @@ public class CreativeCommand extends CommandHandler {
                     sender.sendMessage(MiniMessage.miniMessage().deserialize(
                             String.join(" ", Arrays.copyOfRange(args,1,args.length))));
                 }
+                case "minimsg2" -> {
+                    if (!sender.hasPermission("opencreative.print.minimessage")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return;
+                    }
+                    if (player == null) {
+                        sender.sendMessage(getLocaleMessage("only-players"));
+                        return;
+                    }
+                    String message = String.join(" ", Arrays.copyOfRange(args,1,args.length));
+                    sender.sendMessage(toComponent(message));
+                    sender.sendActionBar(Component.text("Original: " + message));
+
+                }
                 case "stability" -> {
                     if (!sender.hasPermission("opencreative.stability")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
@@ -639,8 +656,7 @@ public class CreativeCommand extends CommandHandler {
                 }
                 case "template" -> handleTemplateCommand(sender, args);
                 default -> {
-                    String copyright = OpenCreative.getPlugin().getConfig().getString("messages.version","\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2025\n ");
-                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', copyright.replace("%version%", OpenCreative.getVersion()).replace("%codename%", OpenCreative.getCodename())));
+                    sender.sendMessage(getCopyrightMessage());
                     if (player != null) {
                         Sounds.OPENCREATIVE.play(player);
                         new CreativeMenu().open(player);
@@ -648,13 +664,18 @@ public class CreativeCommand extends CommandHandler {
                 }
             }
         } else {
-            String copyright = OpenCreative.getPlugin().getConfig().getString("messages.version","\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2025\n ");
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', copyright.replace("%version%", OpenCreative.getVersion()).replace("%codename%", OpenCreative.getCodename())));
+            sender.sendMessage(getCopyrightMessage());
             if (sender instanceof Player player) {
                 Sounds.OPENCREATIVE.play(player);
                 new CreativeMenu().open(player);
             }
         }
+    }
+
+    public Component getCopyrightMessage() {
+        return toComponent(OpenCreative.getPlugin().getConfig().getString("messages.version", "\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2025\n ")
+                .replace("%version%", OpenCreative.getVersion())
+                .replace("%codename%", OpenCreative.getCodename()));
     }
 
     public void handleMaintenanceCommand(@NotNull CommandSender sender, String[] args) {

@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.events.player;
 
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.events.CreativeEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -38,10 +39,10 @@ public class WorldChatEvent extends CreativeEvent implements Cancellable {
     private final World world;
     private final Planet planet;
 
-    private String formattedMessage;
+    private Component formattedMessage;
     private boolean cancelled;
 
-    public WorldChatEvent(Player player, String message, String formattedMessage, World world, Planet planet) {
+    public WorldChatEvent(Player player, String message, Component formattedMessage, World world, Planet planet) {
         this.player = player;
         this.message = message;
         this.formattedMessage = formattedMessage;
@@ -65,11 +66,12 @@ public class WorldChatEvent extends CreativeEvent implements Cancellable {
         return planet;
     }
 
-    public String getFormattedMessage() {
+    public Component getFormattedMessage() {
         return formattedMessage;
     }
 
-    public void setFormattedMessage(String formattedMessage) {
+    @SuppressWarnings("unused")
+    public void setFormattedMessage(Component formattedMessage) {
         this.formattedMessage = formattedMessage;
     }
 

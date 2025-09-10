@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.events.player;
 
+import net.kyori.adventure.text.Component;
 import ua.mcchickenstudio.opencreative.commands.ChatCommand;
 import ua.mcchickenstudio.opencreative.events.CreativeEvent;
 import org.bukkit.command.CommandSender;
@@ -33,20 +34,21 @@ public class CreativeChatEvent extends CreativeEvent implements Cancellable {
 
     private final CommandSender sender;
     private final String message;
-    private String formattedMessage;
+    private Component formattedMessage;
     private boolean cancelled;
 
-    public CreativeChatEvent(CommandSender sender, String message, String formattedMessage) {
+    public CreativeChatEvent(CommandSender sender, String message, Component formattedMessage) {
         this.sender = sender;
         this.message = message;
         this.formattedMessage = formattedMessage;
     }
 
-    public String getFormattedMessage() {
+    public Component getFormattedMessage() {
         return formattedMessage;
     }
 
-    public void setFormattedMessage(String formattedMessage) {
+    @SuppressWarnings("unused")
+    public void setFormattedMessage(Component formattedMessage) {
         this.formattedMessage = formattedMessage;
     }
 

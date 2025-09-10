@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.item;
 
+import net.kyori.adventure.text.format.TextDecoration;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -44,6 +45,9 @@ public final class SetItemDisplayNameAction extends VariableAction {
             return;
         }
         Component displayName = getArguments().getValue("name", Component.text(""), this);
+        if (!displayName.hasDecoration(TextDecoration.ITALIC)) {
+            displayName = displayName.decoration(TextDecoration.ITALIC, false);
+        }
         meta.displayName(displayName);
         item.setItemMeta(meta);
         setVarValue(link,item);

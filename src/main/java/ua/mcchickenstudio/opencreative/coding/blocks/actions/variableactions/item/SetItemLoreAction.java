@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.item;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -30,6 +31,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class SetItemLoreAction extends VariableAction {
@@ -45,8 +47,14 @@ public final class SetItemLoreAction extends VariableAction {
         if (meta == null) {
             return;
         }
-        List<Component> text = getArguments().getComponentList("lore",this);
-        meta.lore(text);
+        List<Component> newLore = new ArrayList<>();
+        for (Component text : getArguments().getComponentList("lore",this)) {
+            if (!text.hasDecoration(TextDecoration.ITALIC)) {
+                text = text.decoration(TextDecoration.ITALIC, false);
+            }
+            newLore.add(text);
+        }
+        meta.lore(newLore);
         item.setItemMeta(meta);
         setVarValue(link,item);
     }

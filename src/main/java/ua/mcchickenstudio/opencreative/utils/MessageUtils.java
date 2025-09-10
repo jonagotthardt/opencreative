@@ -19,7 +19,9 @@
 package ua.mcchickenstudio.opencreative.utils;
 
 import net.kyori.adventure.text.TextReplacementConfig;
+import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.modules.Module;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
@@ -41,6 +43,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 
@@ -56,17 +59,25 @@ public final class MessageUtils {
 
     /**
      * Converts text into component by deserializing it with
-     * legacy serializer (if message has & symbol), or with
+     * legacy serializer (if message has & or § symbol), or with
      * minimessage format.
      * @param text text to convert.
      * @return text component.
      */
-    public static Component toComponent(String text) {
-        if (isLegacyFormat(text)) {
-            return LegacyComponentSerializer.legacyAmpersand().deserialize(text);
-        } else {
-            return MiniMessage.miniMessage().deserialize(text);
-        }
+    public static @NotNull Component toComponent(String text) {
+        return MiniMessage.miniMessage().deserialize(fromLegacyToMiniMessage(text));
+    }
+
+    /**
+     * Converts text into component by deserializing it with
+     * legacy serializer (if message has & or § symbol), or with
+     * minimessage format, but without hover and click events.
+     * @param input text to convert.
+     * @return text component without hover and click events.
+     */
+    public static @NotNull Component fromInputToComponent(@NotNull String input) {
+        return MiniMessage.miniMessage().deserialize(fromLegacyToMiniMessage(input))
+                .clickEvent(null).hoverEvent(null);
     }
 
     /**
@@ -249,7 +260,7 @@ public final class MessageUtils {
      * @param messageID id of message.
      * @return component message, or "Error | Not found message.path...", if message was not found.
      */
-    public static Component getLocaleComponent(String messageID) {
+    public static @NotNull Component getLocaleComponent(String messageID) {
         return toComponent(getLocaleMessage(messageID));
     }
 
@@ -260,8 +271,47 @@ public final class MessageUtils {
      * @param player player to parse.
      * @return component message, or "Error | Not found message.path...", if message was not found.
      */
-    public static Component getLocaleComponent(String messageID, OfflinePlayer player) {
+    public static @NotNull Component getPlayerLocaleComponent(@NotNull String messageID, @NotNull OfflinePlayer player) {
         return toComponent(getPlayerLocaleMessage(messageID, player));
+    }
+
+    /**
+     * Returns component message from translation
+     * with parsed player placeholders and custom placeholders.
+     * @param messageID id of message.
+     * @param player player to parse.
+     * @param placeholdersAndValues placeholders and values <p>
+     *                              It must start with placeholder and end with value. <p>
+     *                              {@code "placeholder", value, "placeholder-2", value-2}
+     * @return component message, or "Error | Not found message.path...", if message was not found.
+     */
+    public static @NotNull Component getComponentWithPlaceholders(@NotNull String messageID,
+                                                         @NotNull OfflinePlayer player,
+                                                         @Nullable Object... placeholdersAndValues) {
+        Component result = toComponent(getPlayerLocaleMessage(messageID, player));
+        if (placeholdersAndValues == null || placeholdersAndValues.length == 0) return result;
+
+        for (int i = 0; i < placeholdersAndValues.length; i += 2) {
+            if (i + 1 >= placeholdersAndValues.length) break;
+            String placeholder = String.valueOf(placeholdersAndValues[i]);
+            Object rawReplacement = placeholdersAndValues[i + 1];
+
+            Component replacement;
+            if (rawReplacement instanceof Component component) {
+                replacement = component;
+            } else if (rawReplacement instanceof String string) {
+                replacement = toComponent(string);
+            } else {
+                replacement = Component.text(String.valueOf(rawReplacement));
+            }
+
+            result = result.replaceText(TextReplacementConfig.builder()
+                    .match("%" + Pattern.quote(placeholder) + "%")
+                    .replacement(replacement)
+                    .build());
+        }
+
+        return result;
     }
 
     /**
@@ -630,4 +680,102 @@ public final class MessageUtils {
         String originalMessage = getLocalization().getString(messageID);
         return originalMessage != null && !originalMessage.equalsIgnoreCase("null");
     }
+
+    private static final Map<Character, String> LEGACY_TO_MINI = Map.ofEntries(
+        Map.entry('0', "<black>"),
+        Map.entry('1', "<dark_blue>"),
+        Map.entry('2', "<dark_green>"),
+        Map.entry('3', "<dark_aqua>"),
+        Map.entry('4', "<dark_red>"),
+        Map.entry('5', "<dark_purple>"),
+        Map.entry('6', "<gold>"),
+        Map.entry('7', "<gray>"),
+        Map.entry('8', "<dark_gray>"),
+        Map.entry('9', "<blue>"),
+        Map.entry('a', "<green>"),
+        Map.entry('b', "<aqua>"),
+        Map.entry('c', "<red>"),
+        Map.entry('d', "<light_purple>"),
+        Map.entry('e', "<yellow>"),
+        Map.entry('f', "<white>"),
+        Map.entry('k', "<obfuscated>"),
+        Map.entry('l', "<bold>"),
+        Map.entry('m', "<strikethrough>"),
+        Map.entry('n', "<underlined>"),
+        Map.entry('o', "<italic>"),
+        Map.entry('r', "<reset>")
+    );
+
+    /**
+     * Converts legacy text with § or & to MiniMessage format,
+     * so this text can be deserialized to MiniMessage.
+     * <pre>
+     * {@code
+     * fromLegacyToMiniMessage("&4Hello"); // "<red>Hello"
+     * fromLegacyToMiniMessage("&nHello"); // "<underlined>Hello"
+     * fromLegacyToMiniMessage("&rHello<red>"); // "<reset>Hello<red>"
+     * }
+     * </pre>
+     * @param input text to convert.
+     * @return text, that can be used as MiniMessage.
+     */
+    public static @NotNull String fromLegacyToMiniMessage(@NotNull String input) {
+        if (input.contains("§")) {
+            input = input.replace('§','&');
+        }
+        if (!input.contains("&")) return input;
+        StringBuilder result = new StringBuilder();
+        for (int charIndex = 0; charIndex < input.length(); charIndex++) {
+            // for characters in text
+            char current = input.charAt(charIndex);
+            if (current == '&' && charIndex + 7 < input.length() && input.charAt(charIndex + 1) == '#') {
+                // for legacy gradient format &#ffffff
+                String hex = input.substring(charIndex + 2, charIndex + 8); // "ffffff"
+                if (hex.matches("[0-9A-Fa-f]{6}")) {
+                    result.append("<#").append(hex).append(">");
+                    charIndex += 7;
+                    continue;
+                }
+            }
+            if (current == '&' && charIndex + 13 < input.length() && input.charAt(charIndex + 1) == 'x') {
+                // for legacy gradient format &x&f&f&f&f&f&f
+                StringBuilder gradientColor = new StringBuilder(); // ffffff
+                boolean isValidFormat = true;
+                for (int colorIndex = 0; colorIndex < 6; colorIndex++) {
+                    //
+                    // &x&a&b&c&d&e&j
+                    // charIndex = 0 -> current = &
+                    //   &f
+                    //   23
+                    // j = 0 a, 1 b, 2 c, 3 d, 4 e, 5 j
+                    //
+                    int ampersandIndex = charIndex + 2 + colorIndex * 2; // f
+                    if (input.charAt(ampersandIndex) == '&' && ampersandIndex + 1 < input.length()) {
+                        gradientColor.append(input.charAt(ampersandIndex + 1));
+                    } else {
+                        isValidFormat = false;
+                        break;
+                    }
+                }
+                if (isValidFormat) {
+                    result.append("<#").append(gradientColor).append(">");
+                    charIndex += 13;
+                    continue;
+                }
+            }
+            if (current == '&' && charIndex + 1 < input.length()) {
+                // for classic legacy colors and styles
+                char code = Character.toLowerCase(input.charAt(charIndex + 1));
+                String replacement = LEGACY_TO_MINI.get(code);
+                if (replacement != null) {
+                    result.append(replacement);
+                    charIndex++;
+                    continue;
+                }
+            }
+            result.append(current);
+        }
+        return result.toString();
+    }
+
 }
