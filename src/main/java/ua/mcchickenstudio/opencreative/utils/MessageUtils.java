@@ -19,7 +19,9 @@
 package ua.mcchickenstudio.opencreative.utils;
 
 import net.kyori.adventure.text.TextReplacementConfig;
+import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.modules.Module;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
@@ -41,6 +43,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 
@@ -61,8 +64,20 @@ public final class MessageUtils {
      * @param text text to convert.
      * @return text component.
      */
-    public static Component toComponent(String text) {
+    public static @NotNull Component toComponent(String text) {
         return MiniMessage.miniMessage().deserialize(fromLegacyToMiniMessage(text));
+    }
+
+    /**
+     * Converts text into component by deserializing it with
+     * legacy serializer (if message has & or § symbol), or with
+     * minimessage format, but without hover and click events.
+     * @param input text to convert.
+     * @return text component without hover and click events.
+     */
+    public static @NotNull Component fromInputToComponent(@NotNull String input) {
+        return MiniMessage.miniMessage().deserialize(fromLegacyToMiniMessage(input))
+                .clickEvent(null).hoverEvent(null);
     }
 
     /**
@@ -245,7 +260,7 @@ public final class MessageUtils {
      * @param messageID id of message.
      * @return component message, or "Error | Not found message.path...", if message was not found.
      */
-    public static Component getLocaleComponent(String messageID) {
+    public static @NotNull Component getLocaleComponent(String messageID) {
         return toComponent(getLocaleMessage(messageID));
     }
 
@@ -256,8 +271,47 @@ public final class MessageUtils {
      * @param player player to parse.
      * @return component message, or "Error | Not found message.path...", if message was not found.
      */
-    public static Component getPlayerLocaleComponent(String messageID, OfflinePlayer player) {
+    public static @NotNull Component getPlayerLocaleComponent(@NotNull String messageID, @NotNull OfflinePlayer player) {
         return toComponent(getPlayerLocaleMessage(messageID, player));
+    }
+
+    /**
+     * Returns component message from translation
+     * with parsed player placeholders and custom placeholders.
+     * @param messageID id of message.
+     * @param player player to parse.
+     * @param placeholdersAndValues placeholders and values <p>
+     *                              It must start with placeholder and end with value. <p>
+     *                              {@code "placeholder", value, "placeholder-2", value-2}
+     * @return component message, or "Error | Not found message.path...", if message was not found.
+     */
+    public static @NotNull Component getComponentWithPlaceholders(@NotNull String messageID,
+                                                         @NotNull OfflinePlayer player,
+                                                         @Nullable Object... placeholdersAndValues) {
+        Component result = toComponent(getPlayerLocaleMessage(messageID, player));
+        if (placeholdersAndValues == null || placeholdersAndValues.length == 0) return result;
+
+        for (int i = 0; i < placeholdersAndValues.length; i += 2) {
+            if (i + 1 >= placeholdersAndValues.length) break;
+            String placeholder = String.valueOf(placeholdersAndValues[i]);
+            Object rawReplacement = placeholdersAndValues[i + 1];
+
+            Component replacement;
+            if (rawReplacement instanceof Component component) {
+                replacement = component;
+            } else if (rawReplacement instanceof String string) {
+                replacement = toComponent(string);
+            } else {
+                replacement = Component.text(String.valueOf(rawReplacement));
+            }
+
+            result = result.replaceText(TextReplacementConfig.builder()
+                    .match("%" + Pattern.quote(placeholder) + "%")
+                    .replacement(replacement)
+                    .build());
+        }
+
+        return result;
     }
 
     /**
