@@ -20,7 +20,9 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.ChatEvent;
@@ -63,7 +65,7 @@ public final class ChatListener implements Listener {
 
     @EventHandler
     public void onChat(AsyncChatEvent event) {
-        String message = LegacyComponentSerializer.legacyAmpersand().serialize(event.message());
+        String message = PlainTextComponentSerializer.plainText().serialize(event.message());
         try {
             Player player = event.getPlayer();
             if (message.startsWith("!")) {
@@ -82,16 +84,19 @@ public final class ChatListener implements Listener {
                 return;
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getChatCooldown(), CooldownUtils.CooldownType.WORLD_CHAT);
-            String formatted = ChatColor.translateAlternateColorCodes('&',
-                    parsePAPI(player, OpenCreative.getPlugin().getConfig().getString("messages.world-chat"))
-                            .replace("%player%",player.getName())
-                            .replace("%message%",message));
+
+            String format = OpenCreative.getPlugin().getConfig().getString("messages.world-chat", "&7 %player%&8: &f%message%");
+            Component formatted = toComponent(parsePAPI(player, format)
+                    .replace("%player%", player.getName())
+                    .replace("%message%", MiniMessage.miniMessage().escapeTags(message)));
+            if (formatted.clickEvent() == null) formatted = formatted.clickEvent(ClickEvent.suggestCommand(message));
+
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-            WorldChatEvent creativeEvent = new WorldChatEvent(player, message,formatted,player.getWorld(), planet);
+            WorldChatEvent creativeEvent = new WorldChatEvent(player, message, formatted ,player.getWorld(), planet);
             Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
                 creativeEvent.callEvent();
                 if (creativeEvent.isCancelled()) return;
-                String finalMessage = creativeEvent.getFormattedMessage();
+                Component finalMessage = creativeEvent.getFormattedMessage();
                 if (planet != null) {
                     DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                     if (devPlanet != null) {

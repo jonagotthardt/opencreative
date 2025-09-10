@@ -24,7 +24,6 @@ import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.CodeConfiguration;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockPlacer;
 import ua.mcchickenstudio.opencreative.indev.Items;
-import ua.mcchickenstudio.opencreative.indev.messages.PlaceholderReplacer;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
@@ -658,8 +657,7 @@ public class CreativeCommand extends CommandHandler {
                 }
                 case "template" -> handleTemplateCommand(sender, args);
                 default -> {
-                    String copyright = OpenCreative.getPlugin().getConfig().getString("messages.version","\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2025\n ");
-                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', copyright.replace("%version%", OpenCreative.getVersion()).replace("%codename%", OpenCreative.getCodename())));
+                    sender.sendMessage(getCopyrightMessage());
                     if (player != null) {
                         Sounds.OPENCREATIVE.play(player);
                         new CreativeMenu().open(player);
@@ -667,13 +665,18 @@ public class CreativeCommand extends CommandHandler {
                 }
             }
         } else {
-            String copyright = OpenCreative.getPlugin().getConfig().getString("messages.version","\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2025\n ");
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', copyright.replace("%version%", OpenCreative.getVersion()).replace("%codename%", OpenCreative.getCodename())));
+            sender.sendMessage(getCopyrightMessage());
             if (sender instanceof Player player) {
                 Sounds.OPENCREATIVE.play(player);
                 new CreativeMenu().open(player);
             }
         }
+    }
+
+    public Component getCopyrightMessage() {
+        return toComponent(OpenCreative.getPlugin().getConfig().getString("messages.version", "\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2025\n ")
+                .replace("%version%", OpenCreative.getVersion())
+                .replace("%codename%", OpenCreative.getCodename()));
     }
 
     public void handleMaintenanceCommand(@NotNull CommandSender sender, String[] args) {

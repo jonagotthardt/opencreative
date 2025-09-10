@@ -18,6 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.commands;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.player.CreativeChatEvent;
@@ -34,8 +37,7 @@ import java.util.List;
 
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.parsePAPI;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 /**
  * <h1>ChatCommand</h1>
@@ -89,21 +91,30 @@ public class ChatCommand extends CommandHandler {
             }
         }
         OpenCreative.getPlugin().getLogger().info("[CREATIVE-CHAT] "+sender.getName()+": "+String.join(" ",args));
-        String formattedMessage = OpenCreative.getPlugin().getConfig().getString("messages.cc-chat","&6%cc-prefix% &7%player%: %message%");
-        formattedMessage = formattedMessage.replace("%player%",sender.getName());
-        formattedMessage = formattedMessage.replace("%cc-prefix%", OpenCreative.getPlugin().getConfig().getString("messages.cc-prefix","&6 Chat &8| &7"));
-        if (sender instanceof Player) {
-            formattedMessage = parsePAPI(Bukkit.getOfflinePlayer(sender.getName()),formattedMessage);
+
+        String text = String.join(" ", args);
+        String prefix = OpenCreative.getPlugin().getConfig().getString("messages.cc-prefix","&6 Chat &8| &7");
+        String format = OpenCreative.getPlugin().getConfig().getString("messages.cc-chat","&6%cc-prefix% &7%player%: %message%")
+                .replace("%player%", sender.getName())
+                .replace("%cc-prefix%", prefix);
+
+        if (sender instanceof Player player) {
+            format = parsePAPI(player, format);
+        } else {
+            format = parsePAPI(Bukkit.getOfflinePlayer(sender.getName()), format);
         }
-        formattedMessage = formattedMessage.replace("%message%",String.join(" ",args));
-        formattedMessage = ChatColor.translateAlternateColorCodes('&',formattedMessage);
-        CreativeChatEvent event = new CreativeChatEvent(sender,String.join(" ",args),formattedMessage);
+        Component formatted = toComponent(format
+                .replace("%message%", MiniMessage.miniMessage().escapeTags(text)));
+        if (formatted.clickEvent() == null) formatted = formatted.clickEvent(ClickEvent.suggestCommand(text));
+
+        CreativeChatEvent event = new CreativeChatEvent(sender, text, formatted);
         event.callEvent();
         if (event.isCancelled()) return;
-        formattedMessage = event.getFormattedMessage();
+
+        formatted = event.getFormattedMessage();
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (!(creativeChatOff.contains(onlinePlayer))) {
-                onlinePlayer.sendMessage(formattedMessage);
+                onlinePlayer.sendMessage(formatted);
             }
         }
     }

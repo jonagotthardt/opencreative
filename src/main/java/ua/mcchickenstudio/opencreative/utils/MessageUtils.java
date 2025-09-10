@@ -56,7 +56,7 @@ public final class MessageUtils {
 
     /**
      * Converts text into component by deserializing it with
-     * legacy serializer (if message has & symbol), or with
+     * legacy serializer (if message has & or § symbol), or with
      * minimessage format.
      * @param text text to convert.
      * @return text component.
