@@ -77,11 +77,19 @@ public class DevPlanet {
     private final static Material DEFAULT_ACTION_MATERIAL = Material.GRAY_STAINED_GLASS;
     private final static Material DEFAULT_FLOOR_MATERIAL = Material.WHITE_STAINED_GLASS;
 
-    public DevPlanet(Planet planet) {
+    /**
+     * Constructor of developer planet, that
+     * loads settings from config.
+     * @param planet planet, that owns this developer planet.
+     */
+    public DevPlanet(@NotNull Planet planet) {
         this.planet = planet;
         loadInformation();
     }
 
+    /**
+     * Loads settings of developer planet.
+     */
     private void loadInformation() {
         FileConfiguration config = getPlanetConfig(planet);
         try {
@@ -102,6 +110,9 @@ public class DevPlanet {
         platformerID = config.getString("dev.platformer", "");
     }
 
+    /**
+     * Loads developer's world and setups it.
+     */
     public void loadDevPlanetWorld() {
         long startTime = System.currentTimeMillis();
         boolean existed = this.exists();
@@ -125,6 +136,10 @@ public class DevPlanet {
         OpenCreative.getPlugin().getLogger().info("Dev planet world " + planet.getId() + " loaded in " + (endTime - startTime) + " ms");
     }
 
+    /**
+     * Unloads developer's world and teleports
+     * all players in it to lobby.
+     */
     public void unload() {
         if (!isLoaded()) return;
 
@@ -140,6 +155,10 @@ public class DevPlanet {
         OpenCreative.getPlugin().getLogger().info("Dev planet world " + planet.getId() + " unloaded in " + (endTime - startTime) + " ms");
     }
 
+    /**
+     * Setups developer's world, changes spawn location,
+     * sets game rules and world border.
+     */
     public void setupWorld() {
         this.getWorld().setSpawnLocation(2,1,2);
         this.getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
@@ -150,10 +169,15 @@ public class DevPlanet {
         this.getWorld().setGameRule(GameRule.MOB_GRIEFING,false);
         this.getWorld().setGameRule(GameRule.DO_PATROL_SPAWNING,false);
         this.getWorld().setGameRule(GameRule.DO_FIRE_TICK,false);
+        this.getWorld().setGameRule(GameRule.GLOBAL_SOUND_EVENTS,false);
         getDevPlatformer().setWorldBorder(this);
         isCodeChanged = false;
     }
 
+    /**
+     * Checks whether developer planet was generated before.
+     * @return true - exists, false - not created yet.
+     */
     public boolean exists() {
         boolean exists = false;
         for (File folder : getWorldsFolders()) {
@@ -165,6 +189,10 @@ public class DevPlanet {
         return exists;
     }
 
+    /**
+     * Translates coding blocks for player.
+     * @param player player to translate coding blocks.
+     */
     public void translateCodingBlocks(Player player) {
         if (!isLoaded()) return;
         for (byte z = 4; z < 96; z = (byte) (z + 4)) {
@@ -210,6 +238,13 @@ public class DevPlanet {
                 DEFAULT_FLOOR_MATERIAL, DEFAULT_EVENT_MATERIAL, DEFAULT_ACTION_MATERIAL);
     }
 
+    /**
+     * Claims new platform and teleports player to it.
+     * @param platform platform to claim.
+     * @param player player, who will be teleported.
+     * @return true - claimed coding platform, false - already built and exists.
+     */
+    @SuppressWarnings("UnusedReturnValue")
     public boolean claimPlatform(DevPlatform platform, Player player) {
         if (getDevPlatformer().claimPlatform(this, platform)) {
             player.setAllowFlight(true);
@@ -412,14 +447,29 @@ public class DevPlanet {
         return planet.getWorldName()+"dev";
     }
 
+    /**
+     * Returns list of existing coding platforms, that
+     * can be used to place coding blocks.
+     * @return list of developer platforms.
+     */
     public List<DevPlatform> getPlatforms() {
         return getDevPlatformer().getPlatforms(this);
     }
 
+    /**
+     * Returns coding platform by location.
+     * @param location location to get platform.
+     * @return coding platform - if location contains coding platform, otherwise - null.
+     */
     public DevPlatform getPlatformInLocation(Location location) {
         return getDevPlatformer().getPlatformInLocation(this, location);
     }
 
+    /**
+     * Changes world border for all players
+     * inside developer world, used when some
+     * player joins the developer world.
+     */
     public void displayWorldBorders() {
         if (!isLoaded()) return;
         if (getDevPlatformer() instanceof HasVisibleBorder) return;
@@ -438,14 +488,38 @@ public class DevPlanet {
         return platformer;
     }
 
+    /**
+     * Returns default action block material,
+     * used for creating new coding platforms.
+     * <p>
+     * This material must be solid, so players
+     * will be able to place action blocks on it.
+     * @return default action block material.
+     */
     public static Material getDefaultActionMaterial() {
         return DEFAULT_ACTION_MATERIAL;
     }
 
+    /**
+     * Returns default event block material,
+     * used for creating new coding platforms.
+     * <p>
+     * This material must be solid, so players
+     * will be able to place event blocks on it.
+     * @return default event block material.
+     */
     public static Material getDefaultEventMaterial() {
         return DEFAULT_EVENT_MATERIAL;
     }
 
+    /**
+     * Returns default floor block material,
+     * used for creating new coding platforms.
+     * <p>
+     * This material must be solid, so players
+     * will be able to place allowed blocks on it.
+     * @return default floor block material.
+     */
     public static Material getDefaultFloorMaterial() {
         return DEFAULT_FLOOR_MATERIAL;
     }
@@ -458,12 +532,24 @@ public class DevPlanet {
         return selectedExecutors.getOrDefault(player, new LinkedHashSet<>());
     }
 
+    /**
+     * Adds executor to marked list for player,
+     * when they click it with manipulator item.
+     * @param player player, who just marked executor.
+     * @param location location of executor block.
+     */
     public void markExecutorAsSelected(@NotNull Player player, @NotNull Location location) {
         Set<Location> locations = selectedExecutors.getOrDefault(player, new LinkedHashSet<>());
         locations.add(location);
         selectedExecutors.put(player, locations);
     }
 
+    /**
+     * Removes marked executor for player,
+     * who selected it with manipulator item.
+     * @param player player, who marked executor before.
+     * @param location location of executor block.
+     */
     public void unselectMarkedExecutor(@NotNull Player player, @NotNull Location location) {
         Set<Location> locations = selectedExecutors.getOrDefault(player, new LinkedHashSet<>());
         locations.remove(location);
@@ -474,6 +560,11 @@ public class DevPlanet {
         }
     }
 
+    /**
+     * Removes marked executor for all players,
+     * who selected it with manipulator item.
+     * @param location location of executor block.
+     */
     public void clearMarkedExecutors(@NotNull Location location) {
         for (Player player : new HashSet<>(selectedExecutors.keySet())) {
             Set<Location> locations = selectedExecutors.get(player);
@@ -483,10 +574,23 @@ public class DevPlanet {
         }
     }
 
+    /**
+     * Returns whether code was changed after
+     * last parsing and saving.
+     * @return true - code was changed, false - not changed.
+     */
     public boolean isCodeChanged() {
         return isCodeChanged;
     }
 
+    /**
+     * Sets whether code was changed after last
+     * parsing and saving code.
+     * <p>
+     * If true, code will be saved and parsed
+     * when world owner or developer types /play command.
+     * @param codeChanged true - changed, false - not.
+     */
     public void setCodeChanged(boolean codeChanged) {
         isCodeChanged = codeChanged;
     }

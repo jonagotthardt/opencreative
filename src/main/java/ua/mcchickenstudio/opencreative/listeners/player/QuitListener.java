@@ -35,6 +35,12 @@ import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
+/**
+ * <h1>QuitListener</h1>
+ * This class represents a listener for when a player
+ * leaves the server. Responsible for clearing temporary
+ * player data.
+ */
 public final class QuitListener implements Listener {
 
     @EventHandler
