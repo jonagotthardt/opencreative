@@ -60,7 +60,11 @@ public abstract class Condition extends Action {
     public abstract boolean check(Entity entity);
 
     @Override
-    public void prepareAndExecute(ActionsHandler handler) {
+    public final void prepareAndExecute(ActionsHandler handler) {
+        if (getActionType() != null && getActionType().isDisabled()) {
+            sendCodingDebugLog(getPlanet(),"Action is disabled, cannot work: " + getActionType().getLocaleName());
+            return;
+        }
         this.handler = handler;
         this.event = getExecutor().getEvent();
         sendCodingDebugAction(this);

@@ -185,10 +185,10 @@ public class ActionsHandler {
                 }
             }
         }
-        if (!(action instanceof WaitAction)) {
-            setWaitDelay(0);
+        if (action instanceof WaitAction wait) {
+           setWaitDelay(wait.getTime());
         } else {
-            setWaitDelay(((WaitAction) action).getTime());
+            setWaitDelay(0);
         }
         executeNextAction();
     }
@@ -226,7 +226,7 @@ public class ActionsHandler {
     }
 
     /**
-     * Checks is action handler flagged to stop.
+     * Checks whether action handler flagged to stop.
      * @return true - stopped, false - not.
      */
     public boolean isStopped() {

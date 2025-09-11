@@ -18,12 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
+import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugAction;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 
 /**
  * <h1>MultiAction</h1>
@@ -32,7 +34,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugAc
  * as additional block.
  * @see ua.mcchickenstudio.opencreative.coding.blocks.conditions.Condition
  * @since 5.0
- * @version 5.0
+ * @version 5.7
  * @author McChicken Studio
  */
 public abstract class MultiAction extends Action {
@@ -53,14 +55,26 @@ public abstract class MultiAction extends Action {
     }
 
     @Override
-    public void prepareAndExecute(ActionsHandler handler) {
+    public final void prepareAndExecute(ActionsHandler handler) {
+        if (getActionType() != null && getActionType().isDisabled()) {
+            sendCodingDebugLog(getPlanet(),"Action is disabled, cannot work: " + getActionType().getLocaleName());
+            return;
+        }
         this.handler = handler;
         this.event = getExecutor().getEvent();
         sendCodingDebugAction(this);
-        execute(entity);
+        for (Entity entity : getTargets()) {
+            if (!getActionType().isSelectionMustBeInWorld() || (entity != null && entity.getWorld() == getPlanet().getTerritory().getWorld())) {
+                this.entity = entity;
+                execute(entity);
+            }
+        }
     }
 
-    public void executeActions() {
+    /**
+     * Executes actions in new actions handler.
+     */
+    public final void executeActions() {
         new ActionsHandler(this).executeActions(actions);
     }
 

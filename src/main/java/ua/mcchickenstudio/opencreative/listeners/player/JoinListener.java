@@ -80,7 +80,7 @@ public final class JoinListener implements Listener {
     }
 
     /**
-     * Checks is player blocked from using OpenCreative+ or not.
+     * Checks whether player is blocked from using OpenCreative+ or not.
      * Blocked players are people, who violated GNU GPL v3 license.
      * @param nickname Nickname of player that has to be checked.
      * @return true - if this player is blocked, false - is not blocked.
