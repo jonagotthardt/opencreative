@@ -68,11 +68,11 @@ public abstract class RepeatAction extends MultiAction {
                 new PlanetRunnable(getPlanet()) {
                     @Override
                     public void execute() {
-                        executeActions();
+                        RepeatAction.this.execute(entity);
                     }
                 }, handler.getWaitDelay());
         } else {
-            executeActions();
+            execute(entity);
         }
     }
 
