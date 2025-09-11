@@ -532,7 +532,7 @@ creative-chat:
   cc-usage: "%cc-prefix%&fЧтобы общаться в креатив чате напиши в чат: &6/cc Привет!"
   cooldown: "%cc-prefix%&fПеред следующим сообщением подожди &6%cooldown% секунд."
 advertisement:
-  message: "%prefix%&6Приглашение:\n&f &7%player% &f&nприглашает&f тебя в мир: \n&f %world%\n &f\n&a &a &n[Нажми, чтобы присоединиться]&f\n &f"
+  message: "%prefix%&6Приглашение:\n&f &7%player% &f&nприглашает&f тебя в мир: \n&f %world%&r\n &f\n&a &a &n[Нажми, чтобы присоединиться]&f\n &f"
   hover: "&f%planetName%\n&8Создано %planetOwner%\n \n&a ☻ &7Онлайн: &a%planetOnline%\n&e ⭐&7 Рейтинг: &f%planetReputation%\n&3 ⚐&7 Категория: &f%planetCategory%\n \n&aНажми, чтобы подключиться в мир"
   no-money: "%prefix%&cНужно собрать ещё %money% монет для рекламы мира."
   cooldown: "%prefix%Перед следующей рекламой подожди &6%cooldown% секунд."
