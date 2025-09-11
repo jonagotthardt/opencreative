@@ -18,16 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
-import org.bukkit.inventory.Inventory;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.DamageBlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.DestroyBlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
-import ua.mcchickenstudio.opencreative.coding.menus.layouts.ArgumentSlot;
-import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
 import ua.mcchickenstudio.opencreative.menus.Menus;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
@@ -40,20 +36,19 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.move;
-import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getClosingBracketX;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.getCodingDoNotDropMeKey;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getPlayerLocaleComponent;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
+/**
+ * <h1>DestroyBlockListener</h1>
+ * This class represents a listener for when a player
+ * destroys block or damages block in world.
+ */
 public final class DestroyBlockListener implements Listener {
 
     @EventHandler
@@ -87,24 +82,20 @@ public final class DestroyBlockListener implements Listener {
 
             if (devPlanet.getAllCodingBlocksForPlacing().contains(block.getType())) {
                 if (ActionCategory.getByMaterial(block.getType()) != null) {
-                    destroyAdditionalBlocks(platform,block,devPlanet.isDropItems());
-                    block.setType(Material.AIR);
+                    platform.destroyCodingBlock(block.getLocation(), devPlanet.isDropItems());
                     devPlanet.setCodeChanged(true);
                     move(block.getLocation(), BlockFace.WEST);
                 } else {
-                    if (ExecutorCategory.getByMaterial(block.getType()) != null) {
-                        if (event.getPlayer().isSneaking()) {
-                            for (int x = block.getX(); x < platform.getEndCoordinate()-1; x = x + 2) {
-                                Block actionBlock = block.getWorld().getBlockAt(x, block.getY(), block.getZ());
-                                destroyAdditionalBlocks(platform,actionBlock,devPlanet.isDropItems());
-                                actionBlock.setType(Material.AIR);
-                            }
-                        }
+                    if (ExecutorCategory.getByMaterial(block.getType()) != null
+                        && player.isSneaking()) {
+                        platform.destroyCodingLine(block.getLocation(), devPlanet.isDropItems());
+                        devPlanet.setCodeChanged(true);
+                    } else {
+                        devPlanet.setCodeChanged(true);
+                        platform.destroyCodingBlock(block.getLocation(), devPlanet.isDropItems());
+                        devPlanet.clearMarkedExecutors(block.getLocation());
                     }
-                    devPlanet.setCodeChanged(true);
-                    destroyAdditionalBlocks(platform,block,devPlanet.isDropItems());
-                    block.setType(Material.AIR);
-                    devPlanet.clearMarkedExecutors(block.getLocation());
+
                 }
                 event.setCancelled(true);
             }
@@ -123,7 +114,7 @@ public final class DestroyBlockListener implements Listener {
             }
         } else if (planet != null) {
             if (ChangedWorld.isPlayerWithLocation(player) && !planet.getWorldPlayers().canBuild(player)) {
-                player.sendActionBar(getLocaleMessage("not-builder"));
+                player.sendActionBar(getPlayerLocaleComponent("not-builder", player));
                 event.setCancelled(true);
                 return;
             }
@@ -134,35 +125,8 @@ public final class DestroyBlockListener implements Listener {
         } else if (isEntityInLobby(player) && OpenCreative.getSettings().isLobbyDisallowDestroyingBlocks()
                 && !player.hasPermission("opencreative.lobby.destroying-blocks.bypass")) {
             event.setCancelled(true);
-            player.sendActionBar(getLocaleMessage("not-for-lobby"));
+            player.sendActionBar(getPlayerLocaleComponent("not-for-lobby", player));
         }
-    }
-
-    private void destroyAdditionalBlocks(DevPlatform platform, Block block, boolean dropItems) {
-        Block containerBlock = block.getRelative(BlockFace.UP);
-        Block additionalBlock = block.getRelative(BlockFace.EAST);
-        Block signBlock = block.getRelative(BlockFace.SOUTH);
-
-        if (additionalBlock.getType() == Material.PISTON) {
-            int closingBracketX = getClosingBracketX(platform, block);
-            if (closingBracketX != -1) {
-                block.getWorld().getBlockAt(closingBracketX,block.getY(),block.getZ()).setType(Material.AIR);
-            }
-        }
-        additionalBlock.setType(Material.AIR);
-        signBlock.setType(Material.AIR);
-        Menus.onBlockDestroy(signBlock.getLocation());
-        if (dropItems && containerBlock.getState() instanceof InventoryHolder container) {
-            Menus.onBlockDestroy(containerBlock.getLocation());
-            for (ItemStack item : container.getInventory().getContents()) {
-                if (item != null) {
-                    if (item.getItemMeta() == null || !item.getItemMeta().getPersistentDataContainer().has(getCodingDoNotDropMeKey())) {
-                        containerBlock.getWorld().dropItem(containerBlock.getLocation(),item);
-                    }
-                }
-            }
-        }
-        containerBlock.setType(Material.AIR);
     }
 
     @EventHandler

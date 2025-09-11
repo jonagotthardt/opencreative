@@ -269,7 +269,9 @@ public final class WorldVariables {
                 for (Object element : list) {
                     Map<String,Object> parsedElement = new HashMap<>();
                     ValueType insideType = ValueType.getByObject(element);
-                    if (insideType == null) insideType = ValueType.TEXT;
+                    if (insideType == null || insideType == ValueType.LIST || insideType == ValueType.MAP) {
+                        insideType = ValueType.TEXT;
+                    }
                     parsedElement.put("type", insideType.name());
                     parsedElement.put("value", serializeObject(element));
                     newList.add(parsedElement);
@@ -285,10 +287,13 @@ public final class WorldVariables {
                     newKey.put("value", serializeObject(key));
 
                     Map<String,Object> newValue = new HashMap<>();
-                    ValueType insideValueType = ValueType.getByObject(key);
-                    if (insideValueType == null) insideValueType = ValueType.TEXT;
+                    Object mapValue = map.get(key);
+                    ValueType insideValueType = ValueType.getByObject(mapValue);
+                    if (insideValueType == null || insideValueType == ValueType.MAP) {
+                        insideValueType = ValueType.TEXT;
+                    }
                     newValue.put("type", insideValueType.name());
-                    newValue.put("value", serializeObject(map.get(key)));
+                    newValue.put("value", serializeObject(mapValue));
                     String serializedKey = new JSONObject(newKey).toString();
                     newMap.put(serializedKey, newValue);
                 }

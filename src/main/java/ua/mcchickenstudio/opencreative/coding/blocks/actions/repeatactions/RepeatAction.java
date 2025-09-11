@@ -23,11 +23,22 @@ import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.coding.exceptions.PlayerException;
 import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyRepeatsException;
 import ua.mcchickenstudio.opencreative.planets.PlanetRunnable;
 
 import java.util.List;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetCodeErrorMessage;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.messageExists;
+
+/**
+ * <h1>RepeatAction</h1>
+ * This class represents a repeat action, that
+ * will execute actions for many times while
+ * condition is met.
+ */
 public abstract class RepeatAction extends MultiAction {
 
     private int calls = 0;
@@ -38,38 +49,36 @@ public abstract class RepeatAction extends MultiAction {
     }
 
     @Override
-    public final void executeActions() {
-        for (Entity entity : getTargets()) {
-            this.entity = entity;
-            if (mustStop) {
-                return;
-            }
-            if (!checkCanContinue()) {
-                return;
-            }
-            ActionsHandler handler = new ActionsHandler(this);
-            handler.executeActions(getActions());
-            increaseCalls();
-            if (handler.getWaitDelay() > 0) {
-                getPlanet().getTerritory().scheduleRunnable(
-                    new PlanetRunnable(getPlanet()) {
-                        @Override
-                        public void execute() {
-                            executeActions();
-                        }
-                    }, handler.getWaitDelay());
-            } else {
-                executeActions();
-            }
-        }
-
-    }
-
-    @Override
     protected void execute(Entity entity) {
-        executeActions();
+        this.entity = entity;
+        if (mustStop || !checkCanContinue()) {
+            return;
+        }
+        ActionsHandler handler = new ActionsHandler(this);
+        handler.executeActions(getActions());
+        try {
+            increaseCalls();
+        } catch (TooManyRepeatsException exception) {
+            sendPlanetCodeErrorMessage(getExecutor(), this,
+                    getLocaleMessage("coding-error.toomanyrepeatsexception"), exception);
+            return;
+        }
+        if (handler.getWaitDelay() > 0) {
+            getPlanet().getTerritory().scheduleRunnable(
+                new PlanetRunnable(getPlanet()) {
+                    @Override
+                    public void execute() {
+                        executeActions();
+                    }
+                }, handler.getWaitDelay());
+        } else {
+            executeActions();
+        }
     }
 
+    /**
+     * Increases call by 1 and checks limits.
+     */
     public void increaseCalls() {
         calls++;
         if (calls > getPlanet().getLimits().getRepeatsAmountLimit()) {
@@ -85,10 +94,19 @@ public abstract class RepeatAction extends MultiAction {
         runnable.runTaskLater(OpenCreative.getPlugin(),20L);
     }
 
+    /**
+     * Sets whether repeat action should stop repeating itself.
+     * @param mustStop true - stop repeater, false - continue.
+     */
     public void setMustStop(boolean mustStop) {
         this.mustStop = mustStop;
     }
 
+    /**
+     * Checks whether repeat action can continue repeating and
+     * executing the same actions.
+     * @return true - can continue and execute actions, false - stop repeater.
+     */
     public abstract boolean checkCanContinue();
 
     @Override

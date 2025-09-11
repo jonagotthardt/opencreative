@@ -23,9 +23,11 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.CollectionWithCollectionException;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import org.bukkit.entity.Entity;
 
+import java.util.Collection;
 import java.util.Map;
 
 public final class PutIntoMapAction extends VariableAction {
@@ -43,6 +45,9 @@ public final class PutIntoMapAction extends VariableAction {
             return;
         }
         changeListElementsChangesAmount(1);
+        if (value instanceof Map<?,?>) {
+            throw new CollectionWithCollectionException(value.getClass(), value.getClass());
+        }
         map.put(key,value);
         setVarValue(variable, map);
     }

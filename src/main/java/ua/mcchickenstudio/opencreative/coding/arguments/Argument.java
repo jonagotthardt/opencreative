@@ -152,7 +152,7 @@ public class Argument {
     }
 
     /**
-     * Checks is variable a list.
+     * Checks whether variable is a list.
      * @return true - is list, false - not a list.
      */
     public boolean isList() {

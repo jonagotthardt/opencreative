@@ -30,14 +30,19 @@ import org.bukkit.block.data.Directional;
 import org.bukkit.block.sign.Side;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
+import ua.mcchickenstudio.opencreative.menus.Menus;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import ua.mcchickenstudio.opencreative.utils.world.cache.ChunkCache;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformer;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getClosingBracketX;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.getCodingDoNotDropMeKey;
 
 /**
  * <h1>DevPlatform</h1>
@@ -162,7 +167,7 @@ public class DevPlatform {
         Location begin = platformer.getPlatformBeginLocation(this);
         Location end = platformer.getPlatformEndLocation(this);
         int y = begin.getBlockY()+2;
-        for (int z = begin.getBlockZ()+4; z < end.getBlockZ()-4; z = z + 4) {
+        for (int z = begin.getBlockZ()+4; z <= end.getBlockZ()-4; z = z + 4) {
             for (int x = begin.getBlockX()+6; x <= end.getBlockX()-4; x = x + 2) {
                 Block containerBlock = new Location(getWorld(), x, y, z).getBlock();
                 if (containerBlock.getState() instanceof InventoryHolder container) {
@@ -182,7 +187,7 @@ public class DevPlatform {
         Location begin = platformer.getPlatformBeginLocation(this);
         Location end = platformer.getPlatformEndLocation(this);
         int y = begin.getBlockY()+1;
-        for (int z = begin.getBlockZ() + 5; z < end.getBlockZ() - 4; z = z + 4) {
+        for (int z = begin.getBlockZ() + 5; z <= end.getBlockZ() - 4; z = z + 4) {
             for (int x = begin.getBlockX()+4; x <= end.getBlockX() - 4; x = x + 2) {
                 Block signBlock = new Location(getWorld(), x, y, z).getBlock();
                 if (signBlock.getType().name().contains("WALL_SIGN")) {
@@ -216,6 +221,64 @@ public class DevPlatform {
             }
         }
         return locations;
+    }
+
+    /**
+     * Destroys all coding blocks in line.
+     * @param location location of executor block.
+     * @param dropItems drop items from upper containers or not.
+     */
+    public void destroyCodingLine(@NotNull Location location,
+                                  boolean dropItems) {
+        int endX = platformer.getPlatformEndLocation(this).getBlockX() - 1;
+        int y = location.getBlockY();
+        int z = location.getBlockZ();
+        for (int x = location.getBlockX(); x < endX; x = x + 2) {
+            Block actionBlock = world.getBlockAt(x, y, z);
+            destroyCodingBlock(actionBlock.getLocation(), dropItems);
+        }
+        destroyCodingBlock(location, dropItems);
+        location.getBlock().setType(Material.AIR);
+    }
+
+    /**
+     * Destroys event, action or condition block,
+     * its sign, additional block and container.
+     * Closes opened menus related to them.
+     * @param location location of coding block.
+     * @param dropItems drop items from upper container or not.
+     */
+    public void destroyCodingBlock(@NotNull Location location,
+                                   boolean dropItems) {
+        Block block = location.getBlock();
+        Block containerBlock = block.getRelative(BlockFace.UP);
+        Block additionalBlock = block.getRelative(BlockFace.EAST);
+        Block signBlock = block.getRelative(BlockFace.SOUTH);
+
+        if (additionalBlock.getType() == Material.PISTON) {
+            int closingBracketX = getClosingBracketX(this, block);
+            if (closingBracketX != -1) {
+                block.getWorld().getBlockAt(closingBracketX,block.getY(),block.getZ()).setType(Material.AIR);
+            }
+        }
+
+        additionalBlock.setType(Material.AIR);
+        signBlock.setType(Material.AIR);
+        Menus.onBlockDestroy(signBlock.getLocation());
+        Menus.onBlockDestroy(containerBlock.getLocation());
+
+        if (dropItems && containerBlock.getState() instanceof InventoryHolder container) {
+            Menus.onBlockDestroy(containerBlock.getLocation());
+            for (ItemStack item : container.getInventory().getContents()) {
+                if (item != null) {
+                    if (item.getItemMeta() == null || !item.getItemMeta().getPersistentDataContainer().has(getCodingDoNotDropMeKey())) {
+                        containerBlock.getWorld().dropItem(containerBlock.getLocation(),item);
+                    }
+                }
+            }
+        }
+        containerBlock.setType(Material.AIR);
+        block.setType(Material.AIR);
     }
 
     public int getBeginCoordinate() {

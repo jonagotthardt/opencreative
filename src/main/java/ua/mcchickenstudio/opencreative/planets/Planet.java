@@ -262,7 +262,7 @@ public class Planet {
     }
 
     /**
-     * Checks is loaded main world of planet.
+     * Checks if loaded main world of planet.
      * @return true - if loaded, false - unloaded.
      */
     public boolean isLoaded() {
