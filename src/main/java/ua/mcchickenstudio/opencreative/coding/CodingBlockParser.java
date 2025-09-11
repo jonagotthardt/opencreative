@@ -206,13 +206,13 @@ public class CodingBlockParser {
                  * them as arguments for action.
                  */
                 if (!(containerBlock.getState() instanceof InventoryHolder container)) continue;
-                if (actionType.getArgumentsSlots() == null) continue;
                 byte slot = 0;
                 ItemStack[] content = container.getInventory().getContents();
                 if (actionType.getCategory() == ActionCategory.SELECTION_ACTION) {
                     actionType = ActionType.getTypeFromSelectionAction(actionBlock);
                     if (actionType == null) continue;
                 }
+                if (actionType.getArgumentsSlots() == null) continue;
                 for (ArgumentSlot argSlot : actionType.getArgumentsSlots()) {
                     ItemStack item = content[slot];
                     /*

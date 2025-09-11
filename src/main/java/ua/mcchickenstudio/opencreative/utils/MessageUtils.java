@@ -725,6 +725,7 @@ public final class MessageUtils {
         }
         if (!input.contains("&")) return input;
         StringBuilder result = new StringBuilder();
+        boolean hadStyle = false;
         for (int charIndex = 0; charIndex < input.length(); charIndex++) {
             // for characters in text
             char current = input.charAt(charIndex);
@@ -734,6 +735,7 @@ public final class MessageUtils {
                 if (hex.matches("[0-9A-Fa-f]{6}")) {
                     result.append("<#").append(hex).append(">");
                     charIndex += 7;
+                    if (hadStyle) result.append("<reset>");
                     continue;
                 }
             }
@@ -760,6 +762,7 @@ public final class MessageUtils {
                 if (isValidFormat) {
                     result.append("<#").append(gradientColor).append(">");
                     charIndex += 13;
+                    if (hadStyle) result.append("<reset>");
                     continue;
                 }
             }
@@ -767,8 +770,15 @@ public final class MessageUtils {
                 // for classic legacy colors and styles
                 char code = Character.toLowerCase(input.charAt(charIndex + 1));
                 String replacement = LEGACY_TO_MINI.get(code);
+                boolean isDecoration = code == 'k' || code == 'n' || code == 'm';
                 if (replacement != null) {
                     result.append(replacement);
+                    if (hadStyle && !isDecoration) {
+                        result.append("<reset>");
+                        hadStyle = false;
+                    } else if (isDecoration) {
+                        hadStyle = true;
+                    }
                     charIndex++;
                     continue;
                 }

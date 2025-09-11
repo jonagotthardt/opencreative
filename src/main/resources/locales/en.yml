@@ -531,7 +531,7 @@ creative-chat:
   cc-usage: "%cc-prefix%&fTo chat in creative chat, type: &6/cc Hello!"
   cooldown: "%cc-prefix%&fPlease wait &6%cooldown% seconds&f before sending another message."
 advertisement:
-  message: "%prefix%&6Invitation:\n&f &7%player% &f&ninvites&f you to the world: \n&f %world%\n &f\n&a &a &n[Click to join]&f\n &f"
+  message: "%prefix%&6Invitation:\n&f &7%player% &f&ninvites&f you to the world: \n&f %world%&r\n &f\n&a &a &n[Click to join]&f\n &f"
   hover: "&f%planetName%\n&8Created by %planetOwner%\n \n&a ☻ &7Online: &a%planetOnline%\n&e ⭐&7 Rating: &f%planetReputation%\n&3 ⚐&7 Category: &f%planetCategory%\n \n&aClick to join the world"
   no-money: "%prefix%&cYou need to have %money% more coins to advertise this world."
   cooldown: "%prefix%Please wait &6%cooldown% seconds&f before advertising again."
