@@ -257,6 +257,8 @@ coding-error:
   message-event-critical: "\n &4 &m          &4 ☠ CRITICAL ERROR &m          \n&f\n &cATTENTION! &fThe world has been put into build mode because a serious issue occurred during the execution of the code &f%event% &7(%x%,%y%,%z%)...\n \n&f Information: &6%error%\n \n &4 &m                                                    \n&f"
   message-event: "&6 Error &8| &fAn error occurred during the execution of the code &f%event% &7(%x%,%y%,%z%).\n &fError information: &6%error%"
   message-compile: "\n &c &m                   &c ☹ ERROR &m                   \n&f\n &fA problem occurred while saving the block &7(%x%,%y%,%z%)\n \n&f Information: &6%error%\n \n &c &m                                                    \n&f"
+  unknownfunctionexception: "Failed to launch function %name%, because it doesn't exist in code."
+  unknownmethodexception: "Failed to launch method %name%, because it doesn't exist in code."
   numberformatexception: "A number was expected, but the item did not contain one. Check the items in the chest for this action."
   toolongtextexception: "Too long text was tried to write to variable. Please substring it with variable action Substring text. "
   collectionwithcollectionexception: "Tried to store a list as element of list. Use Merge Lists action instead."
@@ -574,13 +576,9 @@ items:
         - "&e You should read it all!"
         - ""
       pages:
-        - "&0Version: &8%version%\n \n \n&6☻ New 48 Game Values!\n \n&0Now you can get more info from entities, players and world.\n \n&aContinue..."
-        - "&0New &3world values&0 (4):\n&2+ &0Server TPS\n&2+ &0World size\n&2+ &0Game time\n&2+ &0Moon phase\n \n&0New &6player values&0 (5):\n&2+ &0Main hand\n&2+ &0Chat Visibility\n&2+ &0Render distance\n&2+ &0Hotbar Items\n&2+ &0Items from menu"
-        - "&0New &5entity values&0 (39):\n&2+ &0Gravity\n&2+ &0Burning Time\n&2+ &0Jump Height\n&2+ &0Knockback Resistance\n&2+ &0Explosion Knockback Restistance\n&2+ &0Knockback when hitting\n&2+ &0Damage when hitting\n&2+ &0Armor Toughness\n&2+ &0Size\n&2+ &0Attack Speed"
-        - "&2+ &0Armor Points\n&2+ &0Target Entity\n&2+ &0Passengers list\n&2+ &0Entity Item\n&2+ &0Facing\n&2+ &0Facing Vector\n&2+ &0X, Y, Z coordinates\n&2+ &0Yaw, Pitch rotations\n&2+ &0Block beneath\n&2+ &0Projectile shooter\n&2+ &0Vehicle entity\n&2+ &0Spawn Reason\n&2+ &0Pose\n&2+ &0Hitbox Width (X, Z)"
-        - "&2+ &0Hitbox Height\n&2+ &0Time until explosion\n&2+ &0Age\n&2+ &0Life Time\n&2+ &0Villager's Trades Count\n&2+ &0Active Potion Effects\n&2+ &0Inventory Items\n&2+ &0Target Fluid\n&2+ &0Body Yaw Rotation\n&2+ &0Leash Holder UUID\n&2+ &0Saddle Item\n&2+ &0Absorption Amount"
-        - "&8🎣 Other Changes\n \n&8- &0Added &3Seed &0argument for &3Player Play Sound action&0.\n&8- &0Added &6Ignore Durability&0 argument for &6Item Equals&0 conditions.\n&8- &0Added default glass for customization in /env."
-        - "&8- &0Changed some additional event blocks to deepslate ores.\n&8- &0Fixed some repeat actions issues."
+        - "&0Version: &8%version%\n \n \n&4🍂 AI in coding?!\n \n&0Now you can try to generate code with AI by /env make [prompt]\n \n&aContinue..."
+        - "&3🎣 Other Changes\n \n&8- &0Fixed saving values inside maps (dictionaries)&0.\n&8- &0Fixed /edit command issues.\n&8- &0Fixed /playsound command issues."
+        - "&8- &0Translated some options in actions.\n&8- &0Fixed changing coding permissions through world settings menu."
   developer:
     turned-on: "&a ● "
     turned-off: "&7 ○ "
@@ -599,6 +597,7 @@ items:
         - "&6🪣 Variables&r\n \n&lA variable&r is a storage unit that holds a value.\n \nYou can set any value in it and later use that value in an action!"
         - "&6🪣 Variables&r\n \n&lA list&r can store multiple values.\n \nYou can sort, add new values, retrieve, or delete them."
         - "&6🪣 Variables&r\n \n&lDictionaries&r store values by &lkeys&r!\n \nEach key has a value. You can add keys with values or retrieve values by key. It's very convenient!"
+        - "&4🧰 Modules&r\n \n&0You can install prepared code by players&r!\n \nTo install a module, type /modules and choose module, that's useful for you. Or create own with manipulator. "
     lines-controller:
       name: "&cManipulator &a[← LMB] [RMB →] [F]"
       lore:

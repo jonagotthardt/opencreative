@@ -18,10 +18,19 @@
 
 package ua.mcchickenstudio.opencreative.coding.exceptions;
 
-public class TooLongTextException extends RuntimeException {
+import org.jetbrains.annotations.NotNull;
 
-    public TooLongTextException(int length) {
-        super("This text has length above " + length + " symbols.");
+public class UnknownFunctionException extends RuntimeException {
+
+    private final String name;
+
+    public UnknownFunctionException(@NotNull String name) {
+        super("Function " + name + " doesn't exist.");
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
 }

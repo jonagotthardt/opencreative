@@ -27,6 +27,10 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
 import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Method;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnknownMethodException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class LaunchMethodAction extends Action {
 
@@ -38,12 +42,19 @@ public final class LaunchMethodAction extends Action {
     protected void execute(Entity entity) {
         String name = getArguments().getValue("name","",this);
         if (name.isEmpty()) return;
+        List<Method> methods = new ArrayList<>();
         for (Executor executor : getPlanet().getTerritory().getScript().getExecutors().getExecutorsList()) {
             if (executor instanceof Method method) {
                 if (method.getName().equalsIgnoreCase(name)) {
-                    Executors.activate(method, getEvent());
+                    methods.add(method);
                 }
             }
+        }
+        if (methods.isEmpty()) {
+            throw new UnknownMethodException(name);
+        }
+        for (Method method : methods) {
+            Executors.activate(method, getEvent());
         }
     }
 
