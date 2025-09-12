@@ -4877,7 +4877,17 @@ items:
           - "&a Number &7- Slot (1-9)"
           - ""
           - "&eClick to set the action."
-
+      player-apply-mending:
+        name: "&dApply Mending"
+        lore:
+          - "&7It will fix items by specified"
+          - "&7amount of experience points, if"
+          - "&7items are enchanted with Mending."
+          - ""
+          - "&fIn the chest:"
+          - "&a Number &7- Experience amount"
+          - ""
+          - "&eClick to set the action."
       player-set-compass-target:
         name: "&cSet Compass Target"
         lore:
@@ -15348,6 +15358,7 @@ blocks:
   player_set_armor: "Set armor"
   player_give_random_item: "Random item"
   player_set_slot: "Set slot"
+  player_apply_mending: "Apply mending"
   player_set_compass_target: "Set compass target"
   player_set_hotbar: "Set hotbar"
   player_set_item_cooldown: "Item cooldown"

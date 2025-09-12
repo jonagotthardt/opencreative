@@ -124,6 +124,7 @@ public enum ActionType {
     PLAYER_CLOSE_INVENTORY(             ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, CloseInventoryAction.class, Material.STRUCTURE_VOID),
     PLAYER_REMOVE_ITEMS(                ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, RemoveItemsAction.class, Material.COBWEB, new ArgumentSlot("items", ValueType.ITEM,(byte) 27)),
     PLAYER_SET_SLOT(                    ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, SetSlotAction.class, Material.SLIME_BALL,        new ArgumentSlot("slot", ValueType.NUMBER)),
+    PLAYER_APPLY_MENDING(               ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, ApplyMendingAction.class, Material.ENCHANTED_BOOK,        new ArgumentSlot("amount", ValueType.NUMBER)),
     PLAYER_SET_COMPASS_TARGET(          ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, SetCompassTarget.class, Material.COMPASS,        new ArgumentSlot("location", ValueType.LOCATION)),
     PLAYER_SET_HOTBAR(                  ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, SetHotBarAction.class, Material.BIRCH_CHEST_BOAT,         new ArgumentSlot("items", ValueType.ITEM,(byte) 9,true),new ParameterSlot("replace-with-air")),
     PLAYER_SET_ITEM_COOLDOWN(           ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, SetItemCooldownAction.class, Material.CLOCK,         new ArgumentSlot("item", ValueType.ITEM),new ArgumentSlot("cooldown", ValueType.NUMBER)),
