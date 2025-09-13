@@ -661,7 +661,7 @@ public enum ActionType {
     //ENTITY_RESET_TEXT_DISPLAY_BACKGROUND(ActionCategory.ENTITY_ACTION, MenusCategory.STATE, null, Material.LIGHT_GRAY_STAINED_GLASS),
     ENTITY_SET_FOX_SLEEPING(        ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetFoxSleepingAction.class,   Material.FOX_SPAWN_EGG,         new ParameterSlot("boolean")),
     ENTITY_SET_FOX_LEAPING(         ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetFoxLeapingAction.class,    Material.FOX_SPAWN_EGG,         new ParameterSlot("boolean")),
-    ENTITY_SET_SNOWMAN_PUMPKIN(     ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetFoxLeapingAction.class,    Material.CARVED_PUMPKIN,        new ParameterSlot("boolean")),
+    ENTITY_SET_SNOWMAN_PUMPKIN(     ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetSnowGolemPumpkinAction.class,    Material.CARVED_PUMPKIN,        new ParameterSlot("boolean")),
     ENTITY_SET_BEE_NECTAR(          ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetBeeNectarAction.class,     Material.HONEYCOMB,             new ParameterSlot("boolean")),
     ENTITY_SET_BEE_STUNG(           ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetBeeHasStungAction.class,   Material.BEE_SPAWN_EGG,         new ParameterSlot("boolean")),
     ENTITY_SET_CAT_LYING_DOWN(      ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetCatLyingDownAction.class,  Material.CAT_SPAWN_EGG,         new ParameterSlot("boolean")),
