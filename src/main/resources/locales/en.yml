@@ -1556,6 +1556,38 @@ items:
           - "&2 Block location"
           - " "
           - "&eClick to set event."
+      player-entered-vehicle:
+        name: "&3Player entered vehicle"
+        lore:
+          - "&7When a player enters"
+          - "&7a minecart or boat,"
+          - "&7this event is triggered."
+          - " "
+          - "&eClick to set the event."
+      entity-entered-vehicle:
+        name: "&3Entity entered vehicle"
+        lore:
+          - "&7When an entity enters"
+          - "&7a minecart or boat,"
+          - "&7this event is triggered."
+          - " "
+          - "&eClick to set the event."
+      player-vehicle-exit:
+        name: "&cPlayer left vehicle"
+        lore:
+          - "&7When a player exits"
+          - "&7a minecart or boat,"
+          - "&7this event is triggered."
+          - " "
+          - "&eClick to set the event."
+      entity-vehicle-exit:
+        name: "&cEntity left vehicle"
+        lore:
+          - "&7When an entity exits"
+          - "&7a minecart or boat,"
+          - "&7this event is triggered."
+          - " "
+          - "&eClick to set the event."
       player-chunk-load:
         name: "&6Player loaded a chunk"
         lore:
@@ -4420,6 +4452,23 @@ items:
           - " &7elytra gliding"
           - " "
           - "&eClick to set action."
+        arguments:
+          boolean:
+            name: "&dElytra flight"
+            lore:
+              - "&7If set to Yes, the player"
+              - "&7will start flying with an elytra."
+              - "&7It is recommended that the player"
+              - "&7is already in the air at some height."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Stop flying"
+              true: "Let them glide above map"
       player-set-glowing:
         name: "&aSet player glowing"
         lore:
@@ -4530,6 +4579,22 @@ items:
           - " &7sprinting"
           - " "
           - "&eClick to set the action."
+        arguments:
+          boolean:
+            name: "&eRunning mode"
+            lore:
+              - "&7If set to Yes, the player's"
+              - "&7movement speed will"
+              - "&7increase."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Stop running"
+              true: "Let them run"
       player-set-sneaking:
         name: "&6Set Player Sneaking"
         lore:
@@ -4541,6 +4606,544 @@ items:
           - " &7sneaking"
           - " "
           - "&eClick to set the action."
+        arguments:
+          boolean:
+            name: "&eSneaking or not"
+            lore:
+              - "&7If set to Yes, the player"
+              - "&7will start sneaking, which"
+              - "&7should reduce their speed."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Restore walking"
+              true: "Let them sneak"
+      player-set-visual-fire:
+        name: "&6Visual Fire"
+        lore:
+          - "&7Makes the player appear on fire,"
+          - "&7but they won’t take any damage."
+          - " "
+          - "&fIn the chest:"
+          - "&3 Parameter &7- Yes or No"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          boolean:
+            name: "&6Fire Mode"
+            lore:
+              - "&7If set to Yes, the player"
+              - "&7will appear burning, but"
+              - "&7won’t take any damage."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Extinguish"
+              true: "Let it burn"
+      world-spawn-item-display:
+        name: "&eSpawn Item Display"
+        lore:
+          - "&7Spawns an item display in the world"
+          - "&7that can be modified."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location &7- Where to spawn"
+          - "&c Item &7- Displayed item"
+          - "&6 Name &7- Display name"
+          - " "
+          - "&eClick to set the action."
+      world-spawn-text-display:
+        name: "&6Spawn Text Display"
+        lore:
+          - "&7Spawns a text display in the world"
+          - "&7that can be modified."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location &7- Where to spawn"
+          - "&6 Text &7- Display text"
+          - "&6 Name &7- Display name"
+          - " "
+          - "&eClick to set the action."
+      world-spawn-block-display:
+        name: "&aSpawn Block Display"
+        lore:
+          - "&7Spawns a block display in the world"
+          - "&7that can be modified."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location &7- Where to spawn"
+          - "&c Block &7- Displayed block"
+          - "&6 Name &7- Display name"
+          - " "
+          - "&eClick to set the action."
+      world-spawn-end-crystal:
+        name: "&dSpawn End Crystal"
+        lore:
+          - "&7Spawns an end crystal in the world,"
+          - "&7which may explode."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location &7- Where to spawn"
+          - "&6 Name &7- Display name"
+          - "&3 Parameter &7- Show base"
+          - "&f Location &7- For beam target"
+          - " "
+          - "&eClick to set the action."
+      entity-set-friction:
+        name: "&bSet Entity Friction"
+        lore:
+          - "&7Sets whether the entity will"
+          - "&7slide on ice or not."
+          - " "
+          - "&fIn the chest:"
+          - "&3 Parameter &7- Enable or disable"
+          - " "
+          - "&eClick to set the action."
+      entity-set-visual-fire:
+        name: "&6Visual Fire for Entity"
+        lore:
+          - "&7Makes the entity appear on fire"
+          - "&7to players, but it won’t take"
+          - "&7any damage from burning."
+          - " "
+          - "&fIn the chest:"
+          - "&3 Parameter &7- Enable or disable"
+          - " "
+          - "&eClick to set the action."
+      entity-set-fox-sleeping:
+        name: "&6Fox Sleeping State"
+        lore:
+          - "&7Sets whether the fox"
+          - "&7is sleeping on the ground."
+          - " "
+          - "&fIn the chest:"
+          - "&3 Parameter &7- Enable or disable"
+          - " "
+          - "&eClick to set the action."
+      entity-set-fox-leaping:
+        name: "&eFox Leaping State"
+        lore:
+          - "&7Sets whether the fox"
+          - "&7is leaping or not."
+          - " "
+          - "&fIn the chest:"
+          - "&3 Parameter &7- Enable or disable"
+          - " "
+          - "&eClick to set the action."
+      entity-set-snowman-pumpkin:
+        name: "&6Snowman Pumpkin"
+        lore:
+          - "&7Sets if snowman will"
+          - "&7have a pumpkin head."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-bee-nectar:
+        name: "&eBee Nectar"
+        lore:
+          - "&7Sets if bee will spread"
+          - "&7nectar while flying."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-bee-stung:
+        name: "&6Bee Stinger"
+        lore:
+          - "&7Sets if bee still has"
+          - "&7a stinger."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-cat-lying-down:
+        name: "&9Cat Lying"
+        lore:
+          - "&7Sets if cat will"
+          - "&7lie on the ground."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-carrying-chest:
+        name: "&6Carry Chest"
+        lore:
+          - "&7Sets if horse or donkey"
+          - "&7will have a chest."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-despawning:
+        name: "&cDespawning"
+        lore:
+          - "&7Sets if mob will be"
+          - "&7removed when far away."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-aggressive:
+        name: "&4Aggression"
+        lore:
+          - "&7Sets if mob will be"
+          - "&7aggressive and attack."
+          - "&7Use also &bSet Mob Target&7."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-aware:
+        name: "&eMob Awareness"
+        lore:
+          - "&7Sets if mob will move"
+          - "&7by itself."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-camel-dashing:
+        name: "&eCamel Dashing"
+        lore:
+          - "&7Sets if camel will"
+          - "&7show dash animation."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-charged:
+        name: "&bCharged Mob"
+        lore:
+          - "&7Sets if mob is charged."
+          - "&7Works on creeper and"
+          - "&7wither skulls."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-screaming:
+        name: "&3Mob Screaming"
+        lore:
+          - "&7Sets if mob will scream."
+          - "&7Works on goat and"
+          - "&7enderman."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-goat-horns:
+        name: "&fGoat Horns"
+        lore:
+          - "&7Sets if goat has left"
+          - "&7and right horns."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Left Horn"
+          - "&3 Param &7- Right Horn"
+          - " "
+          - "&eClick to set action."
+      entity-set-fox-faceplanted:
+        name: "&2Fox Faceplant"
+        lore:
+          - "&7Sets if fox is stuck"
+          - "&7face in ground."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-fox-defending:
+        name: "&3Fox Defend"
+        lore:
+          - "&7Sets if fox will"
+          - "&7defend itself."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-fox-crouching:
+        name: "&6Fox Crouch"
+        lore:
+          - "&7Sets if fox is crouch"
+          - "&7or just walk."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-breed:
+        name: "&dMob Breeding"
+        lore:
+          - "&7Sets if mob can breed"
+          - "&7with another mob."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-age:
+        name: "&aMob Age"
+        lore:
+          - "&7Sets mob age."
+          - " "
+          - "&fIn chest:"
+          - "&a Num &7- Age"
+          - "&3 Param &7- Set or Add"
+          - "&3 Param &7- Lock age"
+          - " "
+          - "&eClick to set action."
+      entity-set-panda-on-back:
+        name: "&fPanda On Back"
+        lore:
+          - "&7Sets if panda will"
+          - "&7lie on back."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-hand:
+        name: "&6Main Hand"
+        lore:
+          - "&7Sets if mob is left"
+          - "&7or right handed."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Left/Right"
+          - " "
+          - "&eClick to set action."
+      entity-set-guardian-laser:
+        name: "&3Guardian Laser"
+        lore:
+          - "&7Sets if guardian shows"
+          - "&7attack laser."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-enderman-teleport:
+        name: "&3Enderman Teleport"
+        lore:
+          - "&7Teleports enderman"
+          - "&7to nearby place."
+          - " "
+          - "&eClick to set action."
+      entity-set-eating:
+        name: "&aMob Eating"
+        lore:
+          - "&7Shows eating animation"
+          - "&7and may change block."
+          - "&7Works on horse, panda."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-interested:
+        name: "&eMob Interest"
+        lore:
+          - "&7Shows mob as"
+          - "&7interested."
+          - "&7Works on cats, dogs,"
+          - "&7and foxes."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-horse-rearing:
+        name: "&6Horse Rearing"
+        lore:
+          - "&7Shows horse rear up"
+          - "&7on two legs."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-explosive-ignite:
+        name: "&6Ignite Mob"
+        lore:
+          - "&7Ignites a creeper or"
+          - "&7a TNT minecart."
+          - " "
+          - "&eClick to set action."
+      entity-explode:
+        name: "&cExplode Mob"
+        lore:
+          - "&7Makes a creeper, ghast ball"
+          - "&7or TNT minecart explode."
+          - " "
+          - "&eClick to set action."
+      entity-set-bat-awake:
+        name: "&6Bat Sleeping"
+        lore:
+          - "&7Sets if the bat will"
+          - "&7hang and sleep."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-hook-apply-lure:
+        name: "&3Hook Lure"
+        lore:
+          - "&7Sets if fishing rod hook"
+          - "&7applies lure."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-axolotl-playind-dead:
+        name: "&dAxolotl Playing Dead"
+        lore:
+          - "&7Sets if axolotl will"
+          - "&7play dead."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-bear-standing:
+        name: "&fBear Standing"
+        lore:
+          - "&7Sets if bear will"
+          - "&7stand on 2 legs."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-allay-dancing:
+        name: "&bAllay Dancing"
+        lore:
+          - "&7Sets if allay will dance"
+          - "&7near jukebox."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - "&f Pos &7- Jukebox place"
+          - " "
+          - "&eClick to set action."
+      entity-villager-shake-head:
+        name: "&6Villager Head Shake"
+        lore:
+          - "&7Shows villager shake head"
+          - "&7like rejecting a trade."
+          - " "
+          - "&eClick to set action."
+      entity-villager-zombify:
+        name: "&2Villager Zombify"
+        lore:
+          - "&7Infect villager and"
+          - "&7turn into zombie villager."
+          - " "
+          - "&eClick to set action."
+      entity-set-sitting:
+        name: "&3Mob Sitting"
+        lore:
+          - "&7Sets if mob will sit."
+          - "&7Works on cats, dogs,"
+          - "&7and pandas."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-saddle:
+        name: "&6Mob Saddle"
+        lore:
+          - "&7Sets if mob has a"
+          - "&7saddle to ride."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-minecart-block:
+        name: "&3Minecart Block"
+        lore:
+          - "&7Sets the block"
+          - "&7shown in minecart."
+          - " "
+          - "&fIn chest:"
+          - "&c Item &7- Block"
+          - " "
+          - "&eClick to set action."
+      entity-set-piglin-crossbow:
+        name: "&6Piglin Crossbow"
+        lore:
+          - "&7Sets if piglin will"
+          - "&7charge crossbow."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-piglin-dancing:
+        name: "&dPiglin Dancing"
+        lore:
+          - "&7Shows piglin dancing."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - "&a Num &7- Dance time"
+          - " "
+          - "&eClick to set action."
+      entity-set-celebrating:
+        name: "&dMob Celebrate"
+        lore:
+          - "&7Sets if mob will"
+          - "&7celebrate. Works on"
+          - "&7raiders."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-wandering-drink-milk:
+        name: "&9Drink Milk"
+        lore:
+          - "&7Sets if wandering"
+          - "&7trader drinks milk."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
+      entity-set-wandering-drink-potion:
+        name: "&9Drink Potion"
+        lore:
+          - "&7Sets if wandering"
+          - "&7trader drinks potion."
+          - " "
+          - "&fIn chest:"
+          - "&3 Param &7- Yes/No"
+          - " "
+          - "&eClick to set action."
       player-set-gamemode:
         name: "&eSet Game Mode"
         lore:
@@ -15245,6 +15848,8 @@ blocks:
   player_killed_mob: "Killed a mob"
   player_damage_player: "Hit a player"
   player_changed_sign: "Sign changed"
+  player_entered_vehicle: "Entered Vehicle"
+  player_vehicle_exit: "Vehicle Exit"
 
   world_play_mode: "&aPlay mode"
   world_variable_transfer: "Value receive"
@@ -15301,6 +15906,8 @@ blocks:
   entity_potion_effected: "Potion Effect Applied"
   entity_warden_anger_changed: "Warden got angry"
   entity_air_changed: "Air level changed"
+  entity_entered_vehicle: "Entered Vehicle"
+  entity_vehicle_exit: "Vehicle Exit"
 
   entity_piglin_bartered: "Piglin Bartered"
   entity_interacted_block: "Block interaction"
@@ -15417,6 +16024,7 @@ blocks:
   player_set_maximum_air: "Maximum Air"
   player_set_remaining_air: "Remaining Air"
   player_release_shoulders: "Release Shoulders"
+  player_set_visual_fire: "Visual Fire"
 
   entity_remove: "&cRemove"
   entity_set_team: "Set team"
@@ -15475,6 +16083,51 @@ blocks:
   entity_set_text_display_opacity: "Text Opacity"
   entity_set_text_display_width: "Text Width"
   entity_set_display_brightness: "Display Brightness"
+  entity_set_friction: "Friction"
+  entity_set_visual_fire: "Visual Fire"
+  entity_set_parrot_color: "Parrot Color"
+  entity_set_fox_sleeping: "Fox Sleeping"
+  entity_set_fox_leaping: "Fox Leaping"
+  entity_set_snowman_pumpkin: "Snowman Pumpkin"
+  entity_set_bee_nectar: "Bee Nectar"
+  entity_set_bee_stung: "Bee Stung"
+  entity_set_cat_lying_down: "Cat Lying"
+  entity_set_carrying_chest: "Carry Chest"
+  entity_set_despawning: "&cDespawning"
+  entity_set_aggressive: "&4Aggression"
+  entity_set_aware: "Awareness"
+  entity_set_camel_dashing: "Camel Dash"
+  entity_set_charged: "&bCharged"
+  entity_set_screaming: "Screaming"
+  entity_set_goat_horns: "Goat Horns"
+  entity_set_fox_faceplanted: "Fox Faceplant"
+  entity_set_fox_defending: "Fox Defend"
+  entity_set_fox_crouching: "Fox Crouch"
+  entity_set_breed: "Breed"
+  entity_set_age: "Mob Age"
+  entity_set_panda_on_back: "Panda On Back"
+  entity_set_hand: "Set Hand"
+  entity_set_guardian_laser: "Guardian Laser"
+  entity_enderman_teleport: "Enderman Tele"
+  entity_set_eating: "Eating"
+  entity_set_interested: "Interest"
+  entity_set_horse_rearing: "Horse Rear"
+  entity_explosive_ignite: "&6Ignite"
+  entity_explode: "&4Explode"
+  entity_set_bat_awake: "Bat Awake"
+  entity_set_hook_apply_lure: "Hook Lure"
+  entity_set_axolotl_playing_dead: "Axolotl Fake"
+  entity_set_bear_standing: "Bear Stand"
+  entity_set_allay_dancing: "Allay Dance"
+  entity_villager_shake_head: "Head Shake"
+  entity_set_sitting: "Mob Sit"
+  entity_set_saddle: "Saddle"
+  entity_set_minecart_block: "Minecart Block"
+  entity_set_piglin_crossbow: "Piglin Crossbow"
+  entity_set_piglin_dancing: "Piglin Dance"
+  entity_set_celebrating: "Celebrating"
+  entity_set_wandering_drink_milk: "Drink Milk"
+  entity_set_wandering_drink_potion: "Drink Potion"
 
   var_clone_list: "Clone List"
   var_merge_lists: "Merge Lists"
@@ -15627,6 +16280,12 @@ blocks:
   world_boss_bar_overlay: "&eBoss bar type"
   world_send_web_request: "Web Request"
   world_transfer_variable: "Send Value"
+  world_spawn_item_display: "Item Display"
+  world_spawn_text_display: "Text Display"
+  world_spawn_block_display: "Block Display"
+  world_spawn_end_crystal: "End Crystal"
+  world_spawn_falling_block: "Falling Block"
+  world_spawn_eye_of_ender: "Eye of Ender"
   #
   if_player_stands_on_block: "Is standing on block"
   if_player_looks_at_block: "Looking at block"
