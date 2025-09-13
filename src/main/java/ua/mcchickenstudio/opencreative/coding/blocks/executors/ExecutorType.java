@@ -38,15 +38,9 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.entities.EntitySpawnExecutor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.fightning.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.interaction.EntityInteractedBlockExecutor;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.interaction.FireworkExplodedExecutor;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.interaction.PiglinBarteredExecutor;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.interaction.TurtleLaysEggExecutor;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.interaction.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.inventory.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.movement.EndermanEscapedExecutor;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.movement.EntityEnteredBlockExecutor;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.movement.EntityJumpedExecutor;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.movement.HorseJumpedExecutor;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.movement.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.state.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Cycle;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Function;
@@ -155,6 +149,8 @@ public enum ExecutorType {
     PLAYER_SNEAKING(        ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, StartSneakingExecutor.class, StartSneakingEvent.class, Material.CHAINMAIL_LEGGINGS),
     PLAYER_STOP_SNEAKING(   ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, StopSneakingExecutor.class, StopSneakingEvent.class, Material.IRON_LEGGINGS),
     PLAYER_TELEPORT(        ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, TeleportExecutor.class, TeleportEvent.class, Material.ENDER_PEARL),
+    PLAYER_ENTERED_VEHICLE( ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, PlayerEnteredVehicleExecutor.class, EnteredVehicleEvent.class, Material.MINECART),
+    PLAYER_VEHICLE_EXIT(    ExecutorCategory.EVENT_PLAYER, MenusCategory.MOVEMENT, PlayerVehicleExitExecutor.class, PlayerVehicleExitEvent.class, Material.TNT_MINECART),
 
     WORLD_PLAY_MODE(        ExecutorCategory.EVENT_WORLD, MenusCategory.WORLD_OTHER, GamePlayExecutor.class, GamePlayEvent.class, Material.EMERALD),
     WORLD_VARIABLE_TRANSFER(ExecutorCategory.EVENT_WORLD, MenusCategory.WORLD_OTHER, VariableTransferExecutor.class, VariableTransferEvent.class, Material.CALIBRATED_SCULK_SENSOR),
@@ -220,6 +216,8 @@ public enum ExecutorType {
     ENTITY_JUMPED(                  ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_MOVEMENT, EntityJumpedExecutor.class, EntityJumpedEvent.class, Material.RABBIT_FOOT),
     ENTITY_HORSE_JUMPED(            ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_MOVEMENT, HorseJumpedExecutor.class, HorseJumpedEvent.class, Material.HORSE_SPAWN_EGG),
     ENTITY_ENDERMAN_ESCAPED(        ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_MOVEMENT, EndermanEscapedExecutor.class, EndermanEscapedEvent.class, Material.ENDERMAN_SPAWN_EGG),
+    ENTITY_ENTERED_VEHICLE(         ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_MOVEMENT, EntityEnteredVehicleExecutor.class, EntityEnteredVehicleEvent.class, Material.MINECART),
+    ENTITY_VEHICLE_EXIT(            ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_MOVEMENT, EntityVehicleExitExecutor.class, EntityVehicleExitEvent.class, Material.TNT_MINECART),
 
     ENTITY_SPAWNED(                 ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_INTERACTION, EntitySpawnExecutor.class, EntitySpawnEvent.class, Material.CHICKEN_SPAWN_EGG),
     ENTITY_DROPPED_ITEM(            ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_INTERACTION, EntityDroppedItemExecutor.class, EntityDroppedItemEvent.class, Material.GUNPOWDER),

@@ -54,15 +54,14 @@ public final class SetBlockTypeAction extends WorldAction {
                 return;
             }
             material = switch (material) {
+                case BUCKET -> Material.AIR;
                 case WATER_BUCKET -> Material.WATER;
                 case LAVA_BUCKET -> Material.LAVA;
                 case POWDER_SNOW_BUCKET -> Material.POWDER_SNOW;
                 case FLINT_AND_STEEL -> Material.FIRE;
                 default -> material;
             };
-            if (material.isBlock()) {
-                location.getBlock().setType(material);
-            }
+            location.getBlock().setType(material);
             getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount()+1);
         }
         getPlanet().getTerritory().scheduleAsyncRunnable(planetRunnable,20L);

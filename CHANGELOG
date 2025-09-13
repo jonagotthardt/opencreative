@@ -142,3 +142,132 @@ Changelogs.
   - :-)
   
   2025
+
+  2 entity events
+  ENTITY_VEHICLE_EXIT
+  ENTITY_ENTERED_VEHICLE
+
+  2 player events
+  PLAYER_VEHICLE_EXIT
+  PLAYER_ENTERED_VEHICLE
+
+  ---
+
+  6 world actions
+  WORLD_SPAWN_END_CRYSTAL
+  WORLD_SPAWN_EYE_OF_ENDER
+  WORLD_SPAWN_FALLING_BLOCK
+  WORLD_SPAWN_TEXT_DISPLAY
+  WORLD_SPAWN_ITEM_DISPLAY
+  WORLD_SPAWN_BLOCK_DISPLAY
+
+  2 player actions
+  PLAYER_SET_BEE_STINGERS_IN_BODY
+  PLAYER_SET_VISUAL_FIRE
+
+  29 entity actions
+  ENTITY_SET_BEE_STINGERS_IN_BODY
+  ENTITY_SET_VISUAL_FIRE
+  ENTITY_SET_FRICTION
+  ENTITY_SET_FOX_SLEEPING
+  ENTITY_SET_FOX_LEAPING
+  ENTITY_SET_BEE_STUNG
+  ENTITY_SET_BEE_NECTAR
+  ENTITY_SET_CAT_LYING_DOWN
+  ENTITY_SET_SNOWMAN_PUMPKIN
+  ENTITY_SET_CARRYING_CHEST
+  ENTITY_SET_PIGLIN_DANCING
+  ENTITY_SET_PILLAGER_CELEBRATING
+  ENTITY_SET_PARROT_COLOR
+  ENTITY_SET_DESPAWNING
+  ENTITY_SET_AGGRESSIVE
+  ENTITY_SET_AWARE
+  ENTITY_SET_CAMEL_DASHING
+  ENTITY_SET_RIPTIDING
+  ENTITY_SET_CREEPER_CHARGED
+  ENTITY_SET_SCREAMING (goat, enderman)
+  ENTITY_SET_GOAT_HORNS (left, right)
+  ENTITY_SET_FOX_FACEPLANTED
+  ENTITY_SET_FOX_INTERESETED
+  ENTITY_SET_FOX_DEFENDING
+  ENTITY_SET_FOX_CROUCHING
+  ENTITY_SET_BREED
+  ENTITY_SET_AGE (age, add, lock)
+  ENTITY_SET_PANDA_ON_BACK
+  ENTITY_SET_HAND (left, right)
+
+
+
+
+
+
+
+
+
+   ENTITY_SET_FOX_SLEEPING(        ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetFoxSleepingAction.class,   Material.FOX_SPAWN_EGG,         new ParameterSlot("boolean")),
+      ENTITY_SET_FOX_LEAPING(         ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetFoxLeapingAction.class,    Material.FOX_SPAWN_EGG,         new ParameterSlot("boolean")),
+      ENTITY_SET_SNOWMAN_PUMPKIN(     ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetFoxLeapingAction.class,    Material.CARVED_PUMPKIN,        new ParameterSlot("boolean")),
+      ENTITY_SET_BEE_NECTAR(          ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetBeeNectarAction.class,     Material.HONEYCOMB,             new ParameterSlot("boolean")),
+      ENTITY_SET_BEE_STUNG(           ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetBeeHasStungAction.class,   Material.BEE_SPAWN_EGG,         new ParameterSlot("boolean")),
+      ENTITY_SET_CAT_LYING_DOWN(      ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetCatLyingDownAction.class,  Material.CAT_SPAWN_EGG,         new ParameterSlot("boolean")),
+      ENTITY_SET_CARRYING_CHEST(      ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetHasChestAction.class,      Material.CHEST,                 new ParameterSlot("boolean")),
+      ENTITY_SET_DESPAWNING(          ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetDespawningAction.class,    Material.BARRIER,               new ParameterSlot("boolean")),
+      ENTITY_SET_AGGRESSIVE(          ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetAggressiveAction.class,    Material.NETHERITE_SWORD,       new ParameterSlot("boolean")),
+      ENTITY_SET_AWARE(               ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetAwareAction.class,         Material.LIGHT,                 new ParameterSlot("boolean")),
+      ENTITY_SET_CAMEL_DASHING(       ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetCamelDashingAction.class,  Material.CAMEL_SPAWN_EGG,       new ParameterSlot("boolean")),
+      //ENTITY_SET_RIPTIDING(         ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.TRIDENT,               new ParameterSlot("boolean")),
+      ENTITY_SET_CHARGED(             ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetChargedAction.class,       Material.CREEPER_SPAWN_EGG,     new ParameterSlot("boolean")),
+      ENTITY_SET_SCREAMING(           ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetScreamingAction.class,     Material.ENDERMAN_SPAWN_EGG,    new ParameterSlot("boolean")),
+      ENTITY_SET_GOAT_HORNS(          ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetGoatHornsAction.class,     Material.GOAT_HORN,             new ParameterSlot("left"), new ParameterSlot("right")),
+      ENTITY_SET_FOX_FACEPLANTED(     ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetFoxFaceplantedAction.class,Material.FOX_SPAWN_EGG,         new ParameterSlot("boolean")),
+      ENTITY_SET_FOX_DEFENDING(       ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetFoxDefendingAction.class,  Material.FOX_SPAWN_EGG,         new ParameterSlot("boolean")),
+      ENTITY_SET_FOX_CROUCHING(       ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetFoxCrouchingAction.class,  Material.FOX_SPAWN_EGG,         new ParameterSlot("boolean")),
+      ENTITY_SET_BREED(               ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetBreedAction.class,         Material.CARROT,                 new ParameterSlot("boolean")),
+      ENTITY_SET_AGE(                 ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetAgeAction.class,           Material.EGG,                   new ArgumentSlot("age", ValueType.NUMBER), new ParameterSlot("add"), new ParameterSlot("lock")),
+      ENTITY_SET_PANDA_ON_BACK(       ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetPandaOnBackAction.class,   Material.PANDA_SPAWN_EGG,       new ParameterSlot("boolean")),
+      ENTITY_SET_HAND(                ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetHandAction.class,          Material.TRIPWIRE_HOOK,         new ParameterSlot("hand", List.of("right","left"), Material.NETHERITE_SWORD, Material.SHIELD)),
+      ENTITY_SET_GUARDIAN_LASER(      ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetGuardianLaserAction.class, Material.GUARDIAN_SPAWN_EGG,    new ParameterSlot("boolean")),
+      ENTITY_ENDERMAN_TELEPORT(       ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntityEndermanTeleportAction.class, Material.ENDERMAN_SPAWN_EGG),
+      ENTITY_SET_LLAMA_COLOR(         ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                     Material.LLAMA_SPAWN_EGG,       new ParameterSlot("color", List.of("brown","creamy","gray","white"), Material.BROWN_DYE, Material.YELLOW_DYE, Material.GRAY_DYE, Material.WHITE_DYE)),
+      ENTITY_SET_LLAMA_STRENGTH(      ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_PARAMS, null,                    Material.LLAMA_SPAWN_EGG,       new ArgumentSlot("strength", ValueType.NUMBER), new ParameterSlot("add")),
+      ENTITY_SET_EATING(              ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetEatingAction.class,        Material.PANDA_SPAWN_EGG,       new ParameterSlot("boolean")),
+      ENTITY_SET_INTERESTED(          ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetInterestedAction.class,    Material.BONE,                  new ParameterSlot("boolean")),
+      ENTITY_SET_HORSE_REARING(       ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetHorseRearingAction.class,  Material.PANDA_SPAWN_EGG,       new ParameterSlot("boolean")),
+      ENTITY_EXPLOSIVE_IGNITE(        ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntityExplosiveIgniteAction.class,  Material.FLINT_AND_STEEL,       new ParameterSlot("boolean")),
+      ENTITY_EXPLODE(                 ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntityExplodeAction.class,          Material.TNT,                   new ParameterSlot("boolean")),
+      ENTITY_SET_BAT_AWAKE(           ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetBatAwakeAction.class,      Material.BAT_SPAWN_EGG,         new ParameterSlot("boolean")),
+      ENTITY_SET_HOOK_APPLY_LURE(     ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetHookApplyLureAction.class, Material.FISHING_ROD,           new ParameterSlot("boolean")),
+      ENTITY_SET_AXOLOTL_PLAYING_DEAD(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetAxolotlPlayingDeadAction.class, Material.AXOLOTL_SPAWN_EGG, new ParameterSlot("boolean")),
+      ENTITY_SET_BEAR_STANDING(       ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetBearStandingAction.class,  Material.POLAR_BEAR_SPAWN_EGG,  new ParameterSlot("boolean")),
+      ENTITY_SET_ALLAY_DANCING(       ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetAllayDancingAction.class,  Material.ALLAY_SPAWN_EGG,       new ParameterSlot("boolean"), new ArgumentSlot("jukebox", ValueType.LOCATION)),
+      //ENTITY_HEAL_ZOMBIE_VILLAGER(    ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.ZOMBIE_VILLAGER_SPAWN_EGG, new ArgumentSlot("time", ValueType.NUMBER)),
+      ENTITY_VILLAGER_SHAKE_HEAD(     ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntityVillagerShakeHeadAction.class,Material.VILLAGER_SPAWN_EGG),
+      //ENTITY_SLEEP(                   ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.RED_BED,               new ArgumentSlot("bed", ValueType.LOCATION)),
+      //ENTITY_WAKE_UP(                 ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.GREEN_BED),
+      //ENTITY_SET_VILLAGER_LEVEL(      ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.EMERALD_BLOCK,         new ArgumentSlot("level", ValueType.NUMBER), new ParameterSlot("add")),
+      //ENTITY_SET_VILLAGER_EXPERIENCE( ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.EMERALD,               new ArgumentSlot("experience", ValueType.NUMBER), new ParameterSlot("add")),
+      //ENTITY_SET_VILLAGER_RESTOCKS(   ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.VILLAGER_SPAWN_EGG,    new ArgumentSlot("restocks", ValueType.NUMBER), new ParameterSlot("add")),
+      ENTITY_VILLAGER_ZOMBIFY(        ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntityVillagerZombifyAction.class,                               Material.ZOMBIE_HEAD),
+      //ENTITY_SET_ITEM_PICKUP(         ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.GLOWSTONE_DUST,        new ParameterSlot("mob"), new ParameterSlot("player")),
+      //ENTITY_SET_ITEM_PICKUP_DELAY(   ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.GUNPOWDER,             new ArgumentSlot("delay", ValueType.NUMBER), new ParameterSlot("add")),
+      //ENTITY_SET_SHULKER_PEEK(        ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.SHULKER_BOX,           new ArgumentSlot("peek", ValueType.NUMBER), new ParameterSlot("add")),
+      ENTITY_SET_SITTING(             ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetSittingAction.class,                               Material.WOLF_SPAWN_EGG,        new ParameterSlot("boolean")),
+      ENTITY_SET_SADDLE(              ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetSaddleAction.class,                  Material.SADDLE,                new ParameterSlot("boolean")),
+      ENTITY_SET_MINECART_BLOCK(      ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetMinecartBlockAction.class,           Material.HOPPER_MINECART,       new ArgumentSlot("item", ValueType.ITEM)),
+      ENTITY_SET_PIGLIN_CROSSBOW(     ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetPiglinChargingAction.class,          Material.CROSSBOW,              new ParameterSlot("boolean")),
+      ENTITY_SET_PIGLIN_DANCING(      ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetPiglinDancingAction.class,           Material.PIGLIN_HEAD,           new ParameterSlot("boolean"), new ArgumentSlot("time", ValueType.NUMBER)),
+      ENTITY_SET_CELEBRATING(         ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetPillagerCelebratingAction.class,     Material.PILLAGER_SPAWN_EGG, new ParameterSlot("boolean")),
+      //ENTITY_SET_TURTLE_HOME(         ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.TURTLE_SPAWN_EGG,      new ArgumentSlot("location", ValueType.LOCATION)),
+      //ENTITY_SET_BEE_HIVE(            ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.BEEHIVE,               new ArgumentSlot("location", ValueType.LOCATION)),
+      //ENTITY_SET_BEE_FLOWER(          ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.ROSE_BUSH,             new ArgumentSlot("location", ValueType.LOCATION)),
+      //ENTITY_SET_DOLPHIN_TREASURE(    ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.DOLPHIN_SPAWN_EGG,     new ArgumentSlot("location", ValueType.LOCATION)),
+      //ENTITY_SET_ENDER_CRYSTAL_BEAM(  ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.TURTLE_SPAWN_EGG,      new ArgumentSlot("location", ValueType.LOCATION)),
+      //ENTITY_SET_WANDERING_TOWARDS(   ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.WANDERING_TRADER_SPAWN_EGG, new ArgumentSlot("location", ValueType.LOCATION)),
+      ENTITY_SET_WANDERING_DRINK_MILK(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetWanderingDrinkMilkAction.class,Material.MILK_BUCKET,       new ParameterSlot("boolean")),
+      ENTITY_SET_WANDERING_DRINK_POTION(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetWanderingDrinkPotionAction.class,Material.POTION,        new ParameterSlot("boolean")),
+      //ENTITY_SET_SLIME_SIZE(          ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.SLIME_BLOCK,           new ArgumentSlot("size", ValueType.NUMBER), new ParameterSlot("add")),
+
+    ENTITY_SET_PARROT_COLOR(             ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetParrotColorAction.class, Material.PARROT_SPAWN_EGG, new ParameterSlot("color", List.of("red","blue","green","cyan","gray"), Material.RED_DYE, Material.BLUE_DYE, Material.GREEN_DYE, Material.CYAN_DYE, Material.GRAY_DYE)),
+ENTITY_SET_FRICTION(                ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetFrictionAction.class, Material.ICE, new ParameterSlot("friction", List.of("not-set", "true", "false"), Material.LIGHT_BLUE_DYE, Material.GREEN_DYE, Material.RED_DYE)),
+    ENTITY_SET_VISUAL_FIRE(             ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetVisualFireAction.class, Material.CAMPFIRE,  new ParameterSlot("boolean")),
+        ENTITY_SET_BEE_STINGERS_IN_BODY(    ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_PARAMS, EntitySetBeeStingersInBodyAction.class, Material.BEE_SPAWN_EGG, new ArgumentSlot("count", ValueType.NUMBER),new ParameterSlot("add")),

@@ -44,7 +44,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.messageExists;
  * @see Executor
  * @see ua.mcchickenstudio.opencreative.coding.blocks.conditions.Condition
  * @since 5.0
- * @version 5.7.2
+ * @version 5.8
  * @author McChicken Studio
  */
 public class ActionsHandler {

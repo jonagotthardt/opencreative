@@ -397,6 +397,13 @@ public class Arguments {
             sendCodingDebugVariable(planet,path,item.getType());
             return item.getType();
         }
+        if (arg.getValue(action) instanceof String text) {
+            Material material = Material.getMaterial(text.toUpperCase());
+            if (material != null) {
+                sendCodingDebugVariable(planet,path,material);
+                return material;
+            }
+        }
         if (arg.getValue(action) instanceof Block block) {
             sendCodingDebugVariable(planet,path,block.getType());
             return block.getType();
