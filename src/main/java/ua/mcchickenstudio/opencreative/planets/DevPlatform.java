@@ -116,7 +116,8 @@ public class DevPlatform {
     }
 
     public Material getFloorMaterial() {
-        return world.getBlockAt(platformer.getPlatformBeginLocation(this)).getType();
+        return world.getBlockAt(platformer.getPlatformBeginLocation(this)
+                .clone().add(5,0,4)).getType();
     }
 
     public Material getEventMaterial() {

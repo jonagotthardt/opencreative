@@ -27,6 +27,10 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Function;
 import org.bukkit.entity.Entity;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnknownFunctionException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class LaunchFunctionAction extends Action {
 
@@ -38,13 +42,20 @@ public final class LaunchFunctionAction extends Action {
     protected void execute(Entity entity) {
         String name = getArguments().getValue("name","",this);
         if (name.isEmpty()) return;
+        List<Function> functions = new ArrayList<>();
         for (Executor executor : getPlanet().getTerritory().getScript().getExecutors().getExecutorsList()) {
             if (executor instanceof Function function) {
                 if (function.getName().equalsIgnoreCase(name)) {
-                    getHandler().addActions(function.getActions());
-                    Executors.simulateIncreaseCall(function);
+                    functions.add(function);
                 }
             }
+        }
+        if (functions.isEmpty()) {
+            throw new UnknownFunctionException(name);
+        }
+        for (Function function : functions) {
+            getHandler().addActions(function.getActions());
+            Executors.simulateIncreaseCall(function);
         }
     }
 

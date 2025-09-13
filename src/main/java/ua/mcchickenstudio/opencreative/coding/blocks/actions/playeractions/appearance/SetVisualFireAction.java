@@ -16,32 +16,30 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.params;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.appearance;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
 
-public final class SetArrowsInBodyAction extends PlayerAction {
-    public SetArrowsInBodyAction(Executor executor, Target target, int x, Arguments args) {
+public final class SetVisualFireAction extends PlayerAction {
+    public SetVisualFireAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     public void executePlayer(Player player) {
-        boolean add = getArguments().getValue("add",false,this);
-        int count = getArguments().getValue("count",0,this);
-        if (add) {
-            count = count + player.getArrowsInBody();
-        }
-        player.setArrowsInBody(count);
+        player.setVisualFire(getArguments().getValue("boolean",true,this));
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.PLAYER_SET_ARROWS_IN_BODY;
+        return ActionType.PLAYER_SET_VISUAL_FIRE;
     }
 }

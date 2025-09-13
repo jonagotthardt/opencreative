@@ -19,7 +19,9 @@
 package ua.mcchickenstudio.opencreative.coding.exceptions;
 
 public class TooLongTextException extends RuntimeException {
+
     public TooLongTextException(int length) {
         super("This text has length above " + length + " symbols.");
     }
+
 }

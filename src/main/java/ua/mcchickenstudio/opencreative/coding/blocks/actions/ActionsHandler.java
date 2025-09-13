@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines.WaitAction;
@@ -43,7 +44,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.messageExists;
  * @see Executor
  * @see ua.mcchickenstudio.opencreative.coding.blocks.conditions.Condition
  * @since 5.0
- * @version 5.0
+ * @version 5.8
  * @author McChicken Studio
  */
 public class ActionsHandler {
@@ -175,12 +176,7 @@ public class ActionsHandler {
                 try {
                     action.prepareAndExecute(this);
                 } catch (Exception error) {
-                    String id = error.getClass().getSimpleName().toLowerCase();
-                    sendPlanetCodeErrorMessage(executor, action,
-                        getLocaleMessage("coding-error." + (messageExists("coding-error." + id) ? id : "unknown"))
-                                .replace("%player%", error instanceof PlayerException playerException ? playerException.getPlayerName() : "")
-                        + (error.getMessage() == null ? error.getClass().getSimpleName() : error.getMessage()).replace("ua.mcchickenstudio.opencreative.coding.",""),
-                        error);
+                    sendErrorMessage(action, error);
                     removeAllActions();
                 }
             }
@@ -191,6 +187,31 @@ public class ActionsHandler {
             setWaitDelay(0);
         }
         executeNextAction();
+    }
+
+    /**
+     * Notifies planet about error, that has occurred
+     * while executing action.
+     * @param action action, that caused error.
+     * @param error exception, that has occurred.
+     */
+    private void sendErrorMessage(Action action, Exception error) {
+        String errorClass = error.getClass().getSimpleName();
+
+        boolean unknown = !messageExists("coding-error." + errorClass.toLowerCase());
+        String errorID = unknown ? errorClass : "unknown";
+        String errorMessage = error.getMessage() == null ? errorClass : error.getMessage();
+        errorMessage = errorMessage.replace("ua.mcchickenstudio.opencreative.coding.", "");
+
+        StringBuilder description = new StringBuilder();
+        description.append(getLocaleMessage("coding-error." + errorID)
+                .replace("%player%", error instanceof PlayerException playerException ? playerException.getPlayerName() : ""));
+
+        if (unknown) {
+            description.append(errorClass).append(": ").append(errorMessage);
+        }
+
+        sendPlanetCodeErrorMessage(executor, action, description.toString(), error);
     }
 
     /**
@@ -215,7 +236,7 @@ public class ActionsHandler {
      * Returns the main actions handler (executor thread)
      * @return the main handler of actions.
      */
-    public ActionsHandler getMainActionHandler() {
+    public @NotNull ActionsHandler getMainActionHandler() {
         ActionsHandler handler = this.getParentActionHandler();
         ActionsHandler lastHandler = this;
         while (handler != null) {
@@ -285,11 +306,6 @@ public class ActionsHandler {
         return action;
     }
 
-    @Override
-    public String toString() {
-        return "ActionsHandler. Planet: " + executor.getPlanet() + " WaitDelay: " + waitDelay + " Stopped: " + stopped + " Queue Size: " + actionsQueue.size();
-    }
-
     /**
      * Returns selected targets, that can be modified
      * with selection action.
@@ -297,5 +313,10 @@ public class ActionsHandler {
      */
     public Set<Entity> getSelectedTargets() {
         return selectedTargets;
+    }
+
+    @Override
+    public String toString() {
+        return "ActionsHandler. Planet: " + executor.getPlanet() + " WaitDelay: " + waitDelay + " Stopped: " + stopped + " Queue Size: " + actionsQueue.size();
     }
 }
