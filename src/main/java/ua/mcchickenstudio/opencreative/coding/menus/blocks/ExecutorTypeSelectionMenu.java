@@ -72,7 +72,11 @@ public final class ExecutorTypeSelectionMenu extends BlocksWithMenusCategoryMenu
             ExecutorType executorType = null;
             try {
                 executorType = ExecutorType.valueOf(typeString);
-            } catch (Exception ignored) {}
+            } catch (IllegalArgumentException e) {
+                // Handle invalid ExecutorType gracefully
+                getPlayer().sendMessage("Invalid executor type: " + typeString);
+                return;
+            }
             ExecutorCategory executorCategory = executorType == null ? null : ExecutorCategory.getByMaterial(codingBlock.getType());
             if (executorCategory != null) {
                 devPlanet.setCodeChanged(true);

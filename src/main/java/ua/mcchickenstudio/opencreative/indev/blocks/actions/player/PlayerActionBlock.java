@@ -37,7 +37,7 @@ public abstract class PlayerActionBlock extends ActionBlock implements ViewableT
         this.type = type;
     }
 
-    public abstract void execute(@NotNull Player player, @NotNull ActionsHandler actionsHandler, @NotNull Arguments arguments);
+    public abstract void execute(Player player, @NotNull ActionsHandler actionsHandler, @NotNull Arguments arguments);
 
     @Override
     public @NotNull String getType() {
@@ -46,7 +46,7 @@ public abstract class PlayerActionBlock extends ActionBlock implements ViewableT
 
     @Override
     public final void execute(@Nullable Entity target, @NotNull ActionsHandler actionsHandler, @NotNull Arguments arguments) {
-        if (target instanceof Player player) {
+        if (target instanceof Player player && player != null) {
             execute(player, actionsHandler, arguments);
         }
     }

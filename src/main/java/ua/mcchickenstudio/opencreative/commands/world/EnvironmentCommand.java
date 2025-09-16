@@ -263,7 +263,9 @@ public class EnvironmentCommand extends CommandHandler {
                         Material material = Material.CHEST;
                         try {
                             material = Material.valueOf((args[1].equalsIgnoreCase("chest") || (args[1].equalsIgnoreCase("barrel") || args[1].equalsIgnoreCase("shulker_box")) ? args[1].toUpperCase() : args[1].toUpperCase()+"_SHULKER_BOX"));
-                        } catch (Exception ignored) {}
+                        } catch (NumberFormatException e) {
+                            sender.sendMessage(getLocaleMessage("commands.environment.invalid-number"));
+                        }
                         if (devPlanet.setContainerMaterial(material)) {
                             devPlanet.updateContainers();
                         }
@@ -347,10 +349,16 @@ public class EnvironmentCommand extends CommandHandler {
                         int z = 1;
                         try {
                             x = Integer.parseInt(args[1]);
-                        } catch (Exception ignored) {}
+                        } catch (NumberFormatException e) {
+                            sender.sendMessage(getLocaleMessage("commands.environment.invalid-number"));
+                            return;
+                        }
                         try {
                             z = Integer.parseInt(args[2]);
-                        } catch (Exception ignored) {}
+                        } catch (NumberFormatException e) {
+                            sender.sendMessage(getLocaleMessage("commands.environment.invalid-number"));
+                            return;
+                        }
                         if (devPlanet.createPlatform(x,z)) {
                             sender.sendMessage("Created platform " + x + " " + z);
                         }

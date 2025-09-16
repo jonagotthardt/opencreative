@@ -59,7 +59,7 @@ public abstract class CreativeRunnable {
                             CreativeRunnable.this.cancel();
                         }
                         if (player == null) {
-                           continue;
+                            continue;
                         }
                         if (!player.isOnline()) {
                             currentPlayers.remove(player);

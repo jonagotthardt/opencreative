@@ -36,23 +36,24 @@ public class EntityNameEqualsCondition extends EntityCondition {
 
     @Override
     public boolean check(Entity entity) {
+        if (entity == null) return false;
         boolean requiredColor = getArguments().getValue("require-color",false,this);
         boolean requiredCaps = getArguments().getValue("require-caps",false,this);
         List<String> names = getArguments().getTextList("names",this);
-        if (entity == null) return false;
         String entityName = entity.getName();
         if (entityName == null) return false;
         for (String name : names) {
+            String processedEntityName = entityName;
             if (!requiredColor) {
                 name = ChatColor.stripColor(name);
-                entityName = ChatColor.stripColor(entityName);
+                processedEntityName = ChatColor.stripColor(processedEntityName);
             }
             if (requiredCaps) {
-                if (entityName.equals(name)) {
+                if (processedEntityName.equals(name)) {
                     return true;
                 }
             } else {
-                if (entityName.equalsIgnoreCase(name)) {
+                if (processedEntityName.equalsIgnoreCase(name)) {
                     return true;
                 }
             }

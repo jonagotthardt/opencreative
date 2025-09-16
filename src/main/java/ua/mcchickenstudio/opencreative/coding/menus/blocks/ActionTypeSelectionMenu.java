@@ -77,7 +77,11 @@ public final class ActionTypeSelectionMenu extends BlocksWithMenusCategoryMenu<A
             ActionType actionType = null;
             try {
                 actionType = ActionType.valueOf(typeString);
-            } catch (Exception ignored) {}
+            } catch (IllegalArgumentException e) {
+                // Handle invalid ActionType gracefully
+                getPlayer().sendMessage("Invalid action type: " + typeString);
+                return;
+            }
             ActionCategory actionCategory = actionType == null ? null : actionType.getCategory();
             if (actionCategory != null) {
                 devPlanet.setCodeChanged(true);

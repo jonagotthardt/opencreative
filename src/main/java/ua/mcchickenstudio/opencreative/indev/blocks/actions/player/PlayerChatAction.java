@@ -32,7 +32,8 @@ public class PlayerChatAction extends PlayerActionBlock {
     }
 
     @Override
-    public void execute(@NotNull Player player, @NotNull ActionsHandler actionsHandler, @NotNull Arguments arguments) {
+    public void execute(Player player, @NotNull ActionsHandler actionsHandler, @NotNull Arguments arguments) {
+        if (player == null) return;
         player.sendMessage("Hello world");
     }
 
