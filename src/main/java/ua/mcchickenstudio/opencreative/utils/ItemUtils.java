@@ -238,7 +238,7 @@ public final class ItemUtils {
     public static boolean itemEquals(ItemStack itemStack, ItemStack itemStack2) {
         if (itemStack == null || itemStack2 == null) return false;
         if (itemStack.getType() != itemStack2.getType()) return false;
-        if (itemStack.getItemMeta() != null && itemStack.getItemMeta() != null) {
+        if (itemStack.getItemMeta() != null && itemStack2.getItemMeta() != null) {
             if (!itemStack.getItemMeta().getDisplayName().equalsIgnoreCase(itemStack2.getItemMeta().getDisplayName())) {
                 return false;
             }

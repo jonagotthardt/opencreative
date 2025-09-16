@@ -28,6 +28,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -47,7 +48,7 @@ public final class HangarUpdater implements Updater {
                 HttpURLConnection connection = getHttpURLConnection();
                 int code = connection.getResponseCode();
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                        code >= 400 ? connection.getErrorStream() : connection.getInputStream()))) {
+                        code >= 400 ? connection.getErrorStream() : connection.getInputStream(), StandardCharsets.UTF_8))) {
                     char[] buffer = new char[64];
                     int read = reader.read(buffer);
                     String response = new String(buffer, 0, Math.max(0, read));

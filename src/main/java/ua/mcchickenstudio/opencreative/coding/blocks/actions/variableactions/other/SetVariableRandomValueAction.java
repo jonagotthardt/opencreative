@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Random;
 
 public final class SetVariableRandomValueAction extends VariableAction {
+    private static final Random RANDOM = new Random();
+    
     public SetVariableRandomValueAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
@@ -41,7 +43,7 @@ public final class SetVariableRandomValueAction extends VariableAction {
         if (values.isEmpty()) return;
         Object random = values.getFirst();
         if (values.size() > 1) {
-            random = values.get(new Random().nextInt(values.size()));
+            random = values.get(RANDOM.nextInt(values.size()));
         }
         setVarValue(link,random);
     }

@@ -383,7 +383,9 @@ public class EnvironmentCommand extends CommandHandler {
                         Material material = Material.OAK_WALL_SIGN;
                         try {
                             material = Material.valueOf(args[1].toUpperCase()+"_WALL_SIGN");
-                        } catch (Exception ignored) {}
+                        } catch (IllegalArgumentException e) {
+                            player.sendMessage(getLocaleMessage("commands.environment.invalid-material"));
+                        }
                         if (devPlanet.setSignMaterial(material)) {
                             Sounds.DEV_PLATFORM_SIGN.play(player);
                             devPlanet.updateSigns();
@@ -404,7 +406,9 @@ public class EnvironmentCommand extends CommandHandler {
                         try {
                             material = Material.valueOf(args[1].equalsIgnoreCase("barrier")
                                     || args[1].equalsIgnoreCase("glass") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
-                        } catch (Exception ignored) {}
+                        } catch (IllegalArgumentException e) {
+                            player.sendMessage(getLocaleMessage("commands.environment.invalid-material"));
+                        }
                         DevPlatform currentPlatform = devPlanet.getPlatformInLocation(player.getLocation());
                         boolean changed = false;
                         if (currentPlatform == null) {
@@ -431,7 +435,9 @@ public class EnvironmentCommand extends CommandHandler {
                         try {
                             material = Material.valueOf(args[1].equalsIgnoreCase("barrier")
                                     || args[1].equalsIgnoreCase("glass") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
-                        } catch (Exception ignored) {}
+                        } catch (IllegalArgumentException e) {
+                            player.sendMessage(getLocaleMessage("commands.environment.invalid-material"));
+                        }
                         DevPlatform currentPlatform = devPlanet.getPlatformInLocation(player.getLocation());
                         boolean changed = false;
                         if (currentPlatform == null) {
@@ -458,7 +464,9 @@ public class EnvironmentCommand extends CommandHandler {
                         try {
                             material = Material.valueOf(args[1].equalsIgnoreCase("barrier")
                                     || args[1].equalsIgnoreCase("glass") ? args[1].toUpperCase() : args[1].toUpperCase()+"_STAINED_GLASS");
-                        } catch (Exception ignored) {}
+                        } catch (IllegalArgumentException e) {
+                            player.sendMessage(getLocaleMessage("commands.environment.invalid-material"));
+                        }
                         DevPlatform currentPlatform = devPlanet.getPlatformInLocation(player.getLocation());
                         boolean changed = false;
                         if (currentPlatform == null) {

@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -155,7 +156,7 @@ public class OfflineWander {
         if (jsonFile == null || !jsonFile.exists()) {
             return;
         }
-        try (Reader reader = new FileReader(jsonFile)) {
+        try (Reader reader = new FileReader(jsonFile, StandardCharsets.UTF_8)) {
             Gson gson = new Gson();
             JsonObject json = gson.fromJson(reader, JsonObject.class);
 
@@ -202,7 +203,7 @@ public class OfflineWander {
                 return;
             }
             JsonObject json = getJsonObject();
-            try (Writer writer = new FileWriter(jsonFile)) {
+            try (Writer writer = new FileWriter(jsonFile, StandardCharsets.UTF_8)) {
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 gson.toJson(json, writer);
             }

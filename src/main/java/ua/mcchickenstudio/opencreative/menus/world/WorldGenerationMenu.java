@@ -41,6 +41,8 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 
 public final class WorldGenerationMenu extends AbstractMenu {
 
+    private static final Random RANDOM = new Random();
+
     private final Player player;
     private final ParameterButton generatorButton;
     private final ParameterButton environmentButton;
@@ -122,7 +124,7 @@ public final class WorldGenerationMenu extends AbstractMenu {
                                 template);
                     } else {
                         World.Environment environment = World.Environment.valueOf(environmentButton.getCurrentValue().toString().toUpperCase());
-                        int seed = new Random().nextInt();
+                        int seed = RANDOM.nextInt();
                         boolean generateStructure = Boolean.parseBoolean(generateStructures.getCurrentValue().toString());
                         OpenCreative.getPlanetsManager().createPlanet(player, WorldUtils.generateWorldID(),
                                 generator, environment, seed, generateStructure);

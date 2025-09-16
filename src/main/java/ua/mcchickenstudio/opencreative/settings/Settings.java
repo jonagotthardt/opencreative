@@ -459,7 +459,9 @@ public final class Settings {
         try {
             OpenCreative.getPlugin().getConfig().set("maintenance",maintenance);
             OpenCreative.getPlugin().saveConfig();
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            OpenCreative.getPlugin().getLogger().severe("Failed to save maintenance setting: " + e.getMessage());
+        }
         if (maintenance) {
             OpenCreative.getPlugin().getLogger().info("Maintenance mode started! Unloading planets, please wait...");
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {

@@ -41,6 +41,7 @@ import org.json.simple.parser.JSONParser;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static org.apache.commons.io.FileUtils.byteCountToDisplaySize;
@@ -183,7 +184,7 @@ public final class WorldVariables {
         }
         try {
             JSONParser jsonParser = new JSONParser();
-            JSONArray a = (JSONArray) jsonParser.parse(new FileReader(variablesJson));
+            JSONArray a = (JSONArray) jsonParser.parse(new FileReader(variablesJson, StandardCharsets.UTF_8));
             for (Object object : a) {
                 JSONObject jsonObject = (JSONObject) object;
                 String name = (String) jsonObject.get("name");
@@ -215,7 +216,7 @@ public final class WorldVariables {
             return;
         }
         JSONArray jsonArray = new JSONArray();
-        try (FileWriter file = new FileWriter(variablesJson.getPath())) {
+        try (FileWriter file = new FileWriter(variablesJson.getPath(), StandardCharsets.UTF_8)) {
             for (WorldVariable worldVariable : variables) {
                 if (worldVariable.getVarType() != VariableLink.VariableType.SAVED) {
                     continue;

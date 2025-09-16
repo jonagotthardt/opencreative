@@ -29,6 +29,8 @@ import java.util.Random;
 
 public final class RandomPlaceholder extends KeyPlaceholder {
 
+    private static final Random RANDOM = new Random();
+
     public RandomPlaceholder() {
         super("random","random_uuid");
     }
@@ -38,8 +40,7 @@ public final class RandomPlaceholder extends KeyPlaceholder {
         Player randomPlayer = null;
         List<Player> playerList = handler.getExecutor().getPlanet().getTerritory().getWorld().getPlayers();
         if (playerList.isEmpty()) return null;
-        Random r = new Random();
-        int i = r.nextInt(playerList.size());
+        int i = RANDOM.nextInt(playerList.size());
         randomPlayer = playerList.get(i);
         if (randomPlayer != null) {
             if (key.equals("random")) {
