@@ -22,7 +22,7 @@ import lombok.Getter;
 import ua.mcchickenstudio.opencreative.utils.millennium.vectors.Vec3;
 
 @Getter
-public final class Motion {
+public final class Motion implements Cloneable {
 
     private final MotionValue x, y, z;
 
@@ -66,9 +66,9 @@ public final class Motion {
     }
 
     public double distanceSquared(final Motion other) {
-        return Math.pow(this.x.get() - other.getX().get(), 2) +
-                Math.pow(this.y.get() - other.getY().get(), 2) +
-                Math.pow(this.z.get() - other.getZ().get(), 2);
+        return Math.pow(this.x.get() - other.x.get(), 2) +
+                Math.pow(this.y.get() - other.y.get(), 2) +
+                Math.pow(this.z.get() - other.z.get(), 2);
     }
 
     public double length() {
@@ -81,6 +81,7 @@ public final class Motion {
         return d0 < 1.0E-4D ? new Motion(0.0D, 0.0D, 0.0D) : new Motion(this.x.get() / d0, this.y.get() / d0, this.z.get() / d0);
     }
 
+    @Override
     public Motion clone() {
         return new Motion(x.get(), y.get(), z.get());
     }

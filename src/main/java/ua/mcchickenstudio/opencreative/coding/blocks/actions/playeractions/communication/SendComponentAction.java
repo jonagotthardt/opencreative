@@ -37,6 +37,7 @@ public final class SendComponentAction extends PlayerAction {
     public void executePlayer(Player player) {
         String text = getArguments().getValue("message"," ",this);
         TextComponent component = new TextComponent(text);
+        player.spigot().sendMessage(component);
     }
 
     @Override
