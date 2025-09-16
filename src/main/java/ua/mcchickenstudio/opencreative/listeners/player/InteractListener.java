@@ -166,7 +166,11 @@ public final class InteractListener implements Listener {
                         Vector direction = player.getLocation().getDirection().normalize().multiply(1.5);
                         Location particleLocation = player.getLocation().add(direction).add(0,1,0);
                         player.spawnParticle(particle,particleLocation,1);
-                    } catch (Exception ignored) {}
+                    } catch (IllegalArgumentException e) {
+                        player.sendMessage("Invalid particle type: " + particleType);
+                    } catch (Exception e) {
+                        player.sendMessage("Error spawning particle: " + e.getMessage());
+                    }
                 } else {
                     new ParticlesMenu(player).open(player);
                 }
@@ -193,7 +197,11 @@ public final class InteractListener implements Listener {
                                 player.addPotionEffect(potionEffect);
                             }
                         }
-                    } catch (Exception ignored) {}
+                    } catch (ClassCastException e) {
+                        player.sendMessage("Invalid potion item: " + e.getMessage());
+                    } catch (Exception e) {
+                        player.sendMessage("Error applying potion effects: " + e.getMessage());
+                    }
                 } else {
                     new PotionsMenu(player, currentItem.getType()).open(player);
                 }

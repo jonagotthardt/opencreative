@@ -57,31 +57,14 @@ public class ExecutorsNew implements EventExecutor, Listener {
         executors.remove(executor);
     }
 
-    public void handleEvent(WorldEvent event) {
-        for (ExecutorBlock executorBlock : executors) {
-            if (event.getClass().equals(executorBlock.getEventClass())) {
-                //event.getPlanet().getTerritory().getScript().execute(event, executorBlock);
-                /*List<WrappedExecutor> registeredExecutors = new ArrayList<>();
-
-                *//*
-                @ApiStatus.Experimental
-                public void execute(WorldEvent event, ExecutorBlock executorBlock) {
-                    if (!planet.isLoaded()) return;
-                    if (planet.getMode() != Planet.Mode.PLAYING) return;
-                    for (WrappedExecutor wrapped : registeredExecutors) {
-                        if (wrapped.getBlock().equals(executorBlock)) {
-                            wrapped.execute(event);
-                        }
-                    }
-                }*/
-            }
-        }
-    }
-
     @Override
     public void execute(@NotNull Listener listener, @NotNull Event event) throws EventException {
         if (event instanceof WorldEvent worldEvent) {
-            handleEvent(worldEvent);
+            for (ExecutorBlock executorBlock : executors) {
+                if (event.getClass().equals(executorBlock.getEventClass())) {
+                    //event.getPlanet().getTerritory().getScript().execute(event, executorBlock);
+                }
+            }
         }
     }
 }
