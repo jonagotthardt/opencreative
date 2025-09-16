@@ -120,7 +120,11 @@ public final class OpenCreative extends JavaPlugin {
      **/
     @Override
     public void onEnable() {
-        plugin = this;
+        synchronized (OpenCreative.class) {
+            if (plugin == null) {
+                plugin = this;
+            }
+        }
         long startTime = System.currentTimeMillis();
         getLogger().info("Starting OpenCreative+ " + version + ": " + codename + ", please wait...");
         for (Player player : Bukkit.getOnlinePlayers()) {

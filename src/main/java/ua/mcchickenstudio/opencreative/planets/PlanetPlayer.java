@@ -153,7 +153,7 @@ public class PlanetPlayer {
                 saveEnderChest(items.toArray(new ItemStack[]{}));
             }
             return true;
-        } catch (Exception e) {
+        } catch (IOException | ClassNotFoundException | ParseException e) {
             sendCriticalErrorMessage("Couldn't read player data " + player.getName() + " " + currentPlanet.getWorldName());
             return false;
         }

@@ -219,7 +219,7 @@ public class Executors {
             if (!allActionsList.isEmpty()) {
                 executor.setActions(allActionsList);
             }
-        } catch (Exception ignored) {}
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException ignored) {}
         return executor;
     }
 

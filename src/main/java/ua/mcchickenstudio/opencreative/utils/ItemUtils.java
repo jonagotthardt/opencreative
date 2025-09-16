@@ -239,10 +239,14 @@ public final class ItemUtils {
         if (itemStack == null || itemStack2 == null) return false;
         if (itemStack.getType() != itemStack2.getType()) return false;
         if (itemStack.getItemMeta() != null && itemStack2.getItemMeta() != null) {
-            if (!itemStack.getItemMeta().getDisplayName().equalsIgnoreCase(itemStack2.getItemMeta().getDisplayName())) {
+            ItemMeta meta1 = itemStack.getItemMeta();
+            ItemMeta meta2 = itemStack2.getItemMeta();
+            if (!meta1.getDisplayName().equalsIgnoreCase(meta2.getDisplayName())) {
                 return false;
             }
-            return (!itemStack.getItemMeta().hasLore() || !itemStack2.getItemMeta().hasLore()) || (itemStack.getItemMeta().getLore().equals(itemStack2.getItemMeta().getLore()));
+            boolean hasLore1 = meta1.hasLore();
+            boolean hasLore2 = meta2.hasLore();
+            return (!hasLore1 || !hasLore2) || (hasLore1 && hasLore2 && meta1.getLore().equals(meta2.getLore()));
         }
         return true;
     }
