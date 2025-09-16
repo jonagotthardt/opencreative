@@ -42,9 +42,9 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 public final class WorldSettingsPlayersMenu extends LegacyMenu {
 
     private final Player player;
-    public static final Map<Player,String> playersSelected = new HashMap<>();
-    public static final Map<Player,Integer> openedPage = new HashMap<>();
-    public static final Map<Player,List<String>> currentPlayersList = new HashMap<>();
+    public static final Map<Player,String> playersSelected = Collections.synchronizedMap(new HashMap<>());
+    public static final Map<Player,Integer> openedPage = Collections.synchronizedMap(new HashMap<>());
+    public static final Map<Player,List<String>> currentPlayersList = Collections.synchronizedMap(new HashMap<>());
 
     public final int[] decorationSlots = {18,19,20,21,22,23,24,25,26};
     public static final int[] playerSlots = {29,30,31,32,33,38,39,40,41,42};
