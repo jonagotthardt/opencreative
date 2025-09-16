@@ -29,6 +29,8 @@ import org.bukkit.entity.Entity;
 import java.util.Random;
 
 public final class RandomNumberAction extends VariableAction {
+    private static final Random RANDOM = new Random();
+    
     public RandomNumberAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
@@ -38,7 +40,7 @@ public final class RandomNumberAction extends VariableAction {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         int min = getArguments().getValue("min",0,this);
         int max = getArguments().getValue("max",10,this);
-        int result = new Random().nextInt(max + 1 - min) + min;
+        int result = RANDOM.nextInt(max + 1 - min) + min;
         setVarValue(variable, result);
     }
 

@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Random;
 
 public final class GetRandomFromListAction extends VariableAction {
+    private static final Random RANDOM = new Random();
+    
     public GetRandomFromListAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
@@ -43,7 +45,7 @@ public final class GetRandomFromListAction extends VariableAction {
         }
         int min = 0;
         int max = elements.size()-1;
-        int randomId = new Random().nextInt(max + 1 - min) + min;
+        int randomId = RANDOM.nextInt(max + 1 - min) + min;
         Object result = elements.get(randomId);
         setVarValue(variable, result);
     }

@@ -33,6 +33,7 @@ import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -47,7 +48,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
  */
 public class ChatCommand extends CommandHandler {
 
-    public static final List<Player> creativeChatOff = new ArrayList<>();
+    public static final List<Player> creativeChatOff = Collections.synchronizedList(new ArrayList<>());
 
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {

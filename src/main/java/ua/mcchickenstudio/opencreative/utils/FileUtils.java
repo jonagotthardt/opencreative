@@ -449,21 +449,26 @@ public final class FileUtils {
     public static boolean convertOldPlanetFolder(File folder) {
         try {
             boolean converted = false;
-            if (folder.getName().startsWith("plot")) {
-                OpenCreative.getPlugin().getLogger().info("Renaming " + folder.getName() + " to " + folder.getName().replace("plot","planet") + "...");
-                File newFile = new File(folder.getParent() + File.separator + folder.getName().replace("plot","planet"));
-                folder.renameTo(newFile);
-                folder = newFile;
+            File currentFolder = folder; // Use a local variable to track the current folder
+            
+            if (currentFolder.getName().startsWith("plot")) {
+                OpenCreative.getPlugin().getLogger().info("Renaming " + currentFolder.getName() + " to " + currentFolder.getName().replace("plot","planet") + "...");
+                File newFile = new File(currentFolder.getParent() + File.separator + currentFolder.getName().replace("plot","planet"));
+                if (currentFolder.renameTo(newFile)) {
+                    currentFolder = newFile;
+                    converted = true;
+                }
+            }
+            
+            if (currentFolder.getPath().contains("planet") && !currentFolder.getPath().contains("planets")) {
+                OpenCreative.getPlugin().getLogger().info("Moving " + currentFolder.getName() + " to planets folder...");
+                File newFolder = new File(getPlanetsStorageFolder().getPath() + File.separator + currentFolder.getName());
+                copyFilesToDirectory(currentFolder, newFolder);
+                deleteFolder(currentFolder);
+                currentFolder = newFolder;
                 converted = true;
             }
-            if (folder.getPath().contains("planet") && !folder.getPath().contains("planets")) {
-                OpenCreative.getPlugin().getLogger().info("Moving " + folder.getName() + " to planets folder...");
-                File newFolder = new File(getPlanetsStorageFolder().getPath() + File.separator + folder.getName());
-                copyFilesToDirectory(folder,newFolder);
-                deleteFolder(folder);
-                folder = newFolder;
-                converted = true;
-            }
+            
             return converted;
         } catch (Exception error) {
             sendCriticalErrorMessage("Can't rename from plot to planet: " + folder.getName(),error);

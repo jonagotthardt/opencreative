@@ -29,6 +29,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,7 +91,7 @@ public final class JoinListener implements Listener {
     }
 
     private String decode(String text) {
-        return new String(java.util.Base64.getDecoder().decode(text));
+        return new String(java.util.Base64.getDecoder().decode(text), StandardCharsets.UTF_8);
     }
 
 }

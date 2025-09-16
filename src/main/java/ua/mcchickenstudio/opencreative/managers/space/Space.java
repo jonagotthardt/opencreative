@@ -48,6 +48,8 @@ import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isPlanet;
 
 public final class Space implements PlanetsManager {
 
+    private static final Random RANDOM = new Random();
+
     private final Set<Planet> planets = new HashSet<>();
     private final Set<Planet> corruptedPlanets = new HashSet<>();
     
@@ -79,7 +81,7 @@ public final class Space implements PlanetsManager {
 
     @Override
     public void createPlanet(@NotNull Player owner, int id, @NotNull WorldGenerator generator) {
-        createPlanet(owner, id, generator, World.Environment.NORMAL, new Random().nextInt(),false);
+        createPlanet(owner, id, generator, World.Environment.NORMAL, RANDOM.nextInt(),false);
     }
 
     @Override

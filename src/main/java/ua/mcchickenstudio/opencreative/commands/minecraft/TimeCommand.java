@@ -79,7 +79,9 @@ public class TimeCommand extends CommandHandler {
         boolean add = args[0].equalsIgnoreCase("add");
         try {
             time = Integer.parseInt(args[1]);
-        } catch (Exception ignored) {}
+        } catch (NumberFormatException e) {
+            player.sendMessage(getLocaleMessage("commands.time.invalid-time"));
+        }
         player.getWorld().setTime(add ? time+player.getWorld().getTime() : time);
     }
 

@@ -166,7 +166,11 @@ public final class InteractListener implements Listener {
                         Vector direction = player.getLocation().getDirection().normalize().multiply(1.5);
                         Location particleLocation = player.getLocation().add(direction).add(0,1,0);
                         player.spawnParticle(particle,particleLocation,1);
-                    } catch (Exception ignored) {}
+                    } catch (IllegalArgumentException e) {
+                        player.sendMessage("Invalid particle type: " + particleType);
+                    } catch (Exception e) {
+                        player.sendMessage("Error spawning particle: " + e.getMessage());
+                    }
                 } else {
                     new ParticlesMenu(player).open(player);
                 }
@@ -193,7 +197,11 @@ public final class InteractListener implements Listener {
                                 player.addPotionEffect(potionEffect);
                             }
                         }
-                    } catch (Exception ignored) {}
+                    } catch (ClassCastException e) {
+                        player.sendMessage("Invalid potion item: " + e.getMessage());
+                    } catch (Exception e) {
+                        player.sendMessage("Error applying potion effects: " + e.getMessage());
+                    }
                 } else {
                     new PotionsMenu(player, currentItem.getType()).open(player);
                 }
@@ -371,15 +379,23 @@ public final class InteractListener implements Listener {
                         } else {
                             ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
                             if (!item.isEmpty() && item.hasItemMeta()) {
-                                String displayName = ChatColor.stripColor(item.getItemMeta().getDisplayName());
-                                if (item.getType() == Material.SLIME_BALL) {
-                                    try {
-                                        cycleTicks = Math.round(Float.parseFloat(displayName));
-                                    } catch (NumberFormatException ignored) {}
-                                    Sounds.DEV_CYCLE_DELAY_SET.play(player);
-                                } else if (displayName.length() < 15) {
-                                    setSignLine(clickedBlock.getLocation(),(byte) 1,displayName);
-                                    Sounds.DEV_CYCLE_NAMED.play(player);
+                                ItemMeta itemMeta = item.getItemMeta();
+                                if (itemMeta != null) {
+                                    String displayName = ChatColor.stripColor(itemMeta.getDisplayName());
+                                    if (item.getType() == Material.SLIME_BALL) {
+                                        if (displayName != null) {
+                                            try {
+                                                cycleTicks = Math.round(Float.parseFloat(displayName));
+                                            } catch (NumberFormatException ignored) {
+                                                // Handle invalid number format gracefully
+                                                player.sendMessage("Invalid number format for cycle ticks");
+                                            }
+                                        }
+                                        Sounds.DEV_CYCLE_DELAY_SET.play(player);
+                                    } else if (displayName != null && displayName.length() < 15) {
+                                        setSignLine(clickedBlock.getLocation(),(byte) 1,displayName);
+                                        Sounds.DEV_CYCLE_NAMED.play(player);
+                                    }
                                 }
                             } else {
                                 cycleTicks += 1;
@@ -398,13 +414,16 @@ public final class InteractListener implements Listener {
                 }
             } else if (mainBlockCategory == ExecutorCategory.FUNCTION || mainBlockCategory == ExecutorCategory.METHOD) {
                 ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
-                if (!item.isEmpty() && item.hasItemMeta()) {
-                    String displayName = ChatColor.stripColor(item.getItemMeta().getDisplayName());
-                    if (displayName.length() < 15) {
-                        setSignLine(clickedBlock.getLocation(),(byte) 3,displayName);
-                        (mainBlockCategory == ExecutorCategory.FUNCTION ?
-                                Sounds.DEV_FUNCTION_NAMED : Sounds.DEV_METHOD_NAMED).play(player);
-                        translateBlockSign(clickedBlock);
+                if (!item.isEmpty() && item.hasItemMeta() && item.getItemMeta() != null) {
+                    ItemMeta itemMeta = item.getItemMeta();
+                    if (itemMeta != null) {
+                        String displayName = ChatColor.stripColor(itemMeta.getDisplayName());
+                        if (displayName != null && displayName.length() < 15) {
+                            setSignLine(clickedBlock.getLocation(),(byte) 3,displayName);
+                            (mainBlockCategory == ExecutorCategory.FUNCTION ?
+                                    Sounds.DEV_FUNCTION_NAMED : Sounds.DEV_METHOD_NAMED).play(player);
+                            translateBlockSign(clickedBlock);
+                        }
                     }
                 }
             }
@@ -461,15 +480,20 @@ public final class InteractListener implements Listener {
             if (meta == null || !meta.hasDisplayName()) return;
             if (player.isSneaking()) {
                 String vectorString = ChatColor.stripColor(meta.getDisplayName());
-                String[] coords = vectorString.split(" ");
-                if (coords.length == 3) {
-                    try {
-                        double x,y,z;
-                        x = Double.parseDouble(coords[0]);
-                        y = Double.parseDouble(coords[1]);
-                        z = Double.parseDouble(coords[2]);
-                        player.setVelocity(new Vector(x,y,z));
-                    } catch (Exception ignored) {}
+                if (vectorString != null) {
+                    String[] coords = vectorString.split(" ");
+                    if (coords.length == 3) {
+                        try {
+                            double x,y,z;
+                            x = Double.parseDouble(coords[0]);
+                            y = Double.parseDouble(coords[1]);
+                            z = Double.parseDouble(coords[2]);
+                            player.setVelocity(new Vector(x,y,z));
+                        } catch (NumberFormatException ignored) {
+                            // Handle invalid number format gracefully
+                            player.sendMessage("Invalid vector format. Please use: x y z");
+                        }
+                    }
                 }
             } else {
                 Component displayName = meta.displayName();

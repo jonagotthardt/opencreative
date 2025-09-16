@@ -6,23 +6,61 @@
 [![bStats Players](https://img.shields.io/bstats/players/22001?=blue)](https://bstats.org/plugin/bukkit/OpenCreative/22001)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Discord](https://img.shields.io/discord/1300864436076286069.svg?label=Discord&color=purple)](https://discord.com/invite/sSFCXUeq63)
+[![Wiki](https://img.shields.io/badge/Wiki-Gitlab-orange)](https://gitlab.com/eagles-creative/opencreative/-/wikis/home)
 
-</div>
-
-# OpenCreative+
+# Let your players create the worlds
 
 Minecraft plugin for PaperMC servers that allows players to create their worlds.
 
+### [Showcase Video](https://www.youtube.com/watch?v=dXLuH8MwmJ8) - [Modrinth](https://modrinth.com/plugin/opencreative) - [Hangar](https://hangar.papermc.io/mcchickenstudio/OpenCreative) - [Builds](https://gitlab.com/eagles-creative/opencreative/-/packages) - [Installation](https://gitlab.com/eagles-creative/opencreative/-/wikis/home/Installation) - [Permissions](https://gitlab.com/eagles-creative/opencreative/-/wikis/Home/Permissions)
+
 ![Screenshot](https://i.imgur.com/4jzB4F9.png)
+
+</div>
 
 ## Features
 
-- **Let your players create entire worlds**, where they can build and even create mini-games with code.
-- **World Generators**. Players can create flat, normal, ocean and large biomes worlds with normal, nether, the end environment.
-- **World Settings**. World owners can change world's name, description, icon and other options. 
-- **Translatable**. You can change every single message for your server, and some of them has PlaceholderAPI support.
-- **Player Ranks**. Change world size, cooldowns, limits, modifiers, play/build/dev permissions for player groups.
-- **Open-sourced**. You can download source code and create similar plugins with your own features.
+- An **unique gamemode**, where **players can build** and even **create mini-games with coding**.
+ It's completely new experience compared to classic Creative servers with plots.
+
+- **A lot of options for worlds generation**: players can choose terrain (Flat, Empty, Ocean, Normal) and
+ environment (Overworld, Nether, The End). You can add own custom generators (Flat, Folders) in config.yml.
+
+- **Players can easily change their worlds** with settings. They can set a time, weather, game rules and world's name, description,
+ icon and even set custom ID for join command.
+
+- **It's better to create together**, because world owners can add players to builders, developers, white list or even ban list.
+ Not trusted players will lose their permissions, when owner leaves the server.
+
+- **Coding on blocks** allows players to create mini-games. With simple and friendly syntax, 120+ events, 320+ actions, 90 conditions, 
+ 9 values and variables it's easy to code something cool.
+
+- **Built-in security things**. Plugin has redstone limiter, bad items fixer and lobby protection. 
+ You can achieve more security by using [WorldGuard](https://dev.bukkit.org/projects/worldguard), [Panilla](https://www.spigotmc.org/resources/panilla-prevent-hacked-items.65694/),
+ [CoreProtect](https://modrinth.com/plugin/coreprotect) and other plugins. 
+
+- Change messages, items names, descriptions and even plugin sounds as you want, because it's **translatable**. By default we have English and Russian translations.
+
+- You can get donations by players by adding **player groups** in config.yml with custom limits, cooldowns,
+  lobby permissions, world permissions, world advertisement price and like reward amount.
+
+- Be able to **execute any commands by console or player** on different events: Lobby Teleport, World Join, World Quit, World Chat,
+  Global Chat, Maintenance Start, Maintenance End. Useful, if you have some plugins (Skript, MyCommand) to do your own things without 
+  rewriting the plugin.
+
+- Add more features with other plugins:
+  - [Vault](https://www.spigotmc.org/resources/vault.34315/) - Adds economy support.
+  - [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/) - Adds coding chests animations, glowing blocks while selecting location.
+  - [LibsDisguises](https://www.spigotmc.org/resources/libs-disguises-free.81/) - Adds entity disguise action.
+  - [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) - Adds placeholders and parses them in some messages (world join, world icon).
+
+- Plugin **developers can easily add own** [world generators](https://gitlab.com/eagles-creative/opencreative/-/wikis/home/Configuration/World-Generators), [coding platformers](https://gitlab.com/eagles-creative/opencreative/-/wikis/Plugin-Development/Coding-Platformers), [coding placeholders, coding game values](https://gitlab.com/eagles-creative/opencreative/-/wikis/Plugin-Development/Adding-new-features)
+ and [set their managers](https://gitlab.com/eagles-creative/opencreative/-/wikis/Plugin-Development/Managers) (economy, packets). Also we have our plugin events (Lobby Teleport, World Chat, Global Chat, Maintenance Start/End,
+ 4 module events, 10 world events), so you can listen on them,
+ maybe cancel and execute your code. 
+
+ - You're welcome to create forks of this plugin, because it's **open-sourced**. Download source code, edit it, publish it
+ and use on your own servers.
 
 ## Usage
 
@@ -37,7 +75,9 @@ You can change world's sizes with player's permissions in config.yml.
 
 ![](https://i.imgur.com/sID0dxv.png)
 
-### Worlds Browser
+![World Creation](https://gitlab.com/eagles-creative/opencreative/-/wikis/uploads/82d2118f4aee556c146a22b1419ed0df/WorldCreation.mp4)
+
+### Browsing worlds
 Players can search, sort and like worlds. World can be found by name or ID. Also worlds list can be sorted by:
 - Categories (Fighting, Sandbox, Arcade...)
 - Amount of online players in world.
@@ -56,8 +96,14 @@ Every owner of world can change in his world:
 
 ![](https://i.imgur.com/iMJjFh0.png)
 
+![World Settings](https://gitlab.com/eagles-creative/opencreative/-/wikis/uploads/9a1cfb155d1391f4cba17be23a1fc13a/WorldSettings.mp4)
+
 ### Coding
 Players can create code for their worlds with coding blocks and run it.
+
+![](https://i.imgur.com/1SkIjhv.png)
+
+![Coding World](https://gitlab.com/eagles-creative/opencreative/-/wikis/uploads/1eda4a8c0ee3dcdb4b9a23954fa6d7e6/DevelopersWorld.mp4)
 
 Coding blocks will be parsed into codeScript.yml.
 Example: Send a message "Hello world!"
@@ -174,7 +220,7 @@ They will work only if command sender is owner of world, or if he has bypass per
 
 ## Development
 
-To develop this plugin, simply download this project and use Intellij IDEA to code.
+To develop this plugin, you can fork it, then simply download project sources and use Intellij IDEA to code.
 
 We use Maven to compile plugin into jar file.
 
@@ -187,3 +233,40 @@ Contribute your code into [`development branch`](https://gitlab.com/eagles-creat
 ## License
 
 This plugin is licensed under GNU GPL v3, because it uses Paper API. When you use or edit source code of this plugin, please open your source code.
+
+[![GPLv3 Logo](https://www.gnu.org/graphics/gplv3-with-text-136x68.png)](https://www.gnu.org/licenses/gpl-3.0.txt)
+&nbsp; &nbsp; &nbsp; &nbsp;
+
+## Special thanks
+
+### ❤️ Thanks to every server, that uses this plugin.
+
+Thank you, JetBrains, for providing most powerful tool to develop with Java. 
+
+[![IntelliJ IDEA Logo](https://resources.jetbrains.com/storage/products/company/brand/logos/IntelliJ_IDEA.svg)](https://www.jetbrains.com/idea/) 
+&nbsp; &nbsp; &nbsp; &nbsp; 
+
+Thank you, PaperMC Team, for providing stable API and support.
+
+Thank you, developers of ReActions, ProtocolLib, Vault, PlaceholderAPI, LibsDisguises.
+
+## Credits
+
+OpenCreative+ is made by McChicken Studio 2017-2025.
+
+**Contributors:**
+- McChicken Team
+- onn512
+- pawsashatoy
+- LWJENNI
+
+**Testers:**
+- tokkyo35
+
+**Translators:**
+- Nagibator6000LoL
+- initzero
+- DrakesWeb
+- kogtyv
+## Support
+Report any issues and send your ideas in **[our Discord server](https://discord.com/invite/sSFCXUeq63)**.

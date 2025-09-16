@@ -34,6 +34,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
@@ -219,7 +220,7 @@ public class Executors {
             if (!allActionsList.isEmpty()) {
                 executor.setActions(allActionsList);
             }
-        } catch (Exception ignored) {}
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException ignored) {}
         return executor;
     }
 

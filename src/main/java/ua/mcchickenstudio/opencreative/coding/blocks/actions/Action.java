@@ -48,6 +48,8 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLo
  */
 public abstract class Action {
 
+    private static final Random RANDOM = new Random();
+
     private final Executor executor;
     private final Target target;
     private final int x;
@@ -210,8 +212,7 @@ public abstract class Action {
                 Player randomPlayer = null;
                 List<Player> playerList = this.getExecutor().getPlanet().getTerritory().getWorld().getPlayers();
                 if (!playerList.isEmpty()) {
-                    Random r = new Random();
-                    int i = r.nextInt(playerList.size());
+                    int i = RANDOM.nextInt(playerList.size());
                     randomPlayer = playerList.get(i);
                 }
                 if (randomPlayer != null) {
@@ -247,7 +248,7 @@ public abstract class Action {
             case RANDOM_TARGET -> {
                 List<Entity> selectedTargets = new ArrayList<>(getHandler().getSelectedTargets());
                 if (!selectedTargets.isEmpty()) {
-                    entities.add(selectedTargets.get(new Random().nextInt(selectedTargets.size())));
+                    entities.add(selectedTargets.get(RANDOM.nextInt(selectedTargets.size())));
                 }
             }
             default -> entities.addAll(eventEntities);

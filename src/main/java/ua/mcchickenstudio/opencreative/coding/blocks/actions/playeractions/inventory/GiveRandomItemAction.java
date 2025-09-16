@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Random;
 
 public final class GiveRandomItemAction extends PlayerAction {
+    private static final Random RANDOM = new Random();
+    
     public GiveRandomItemAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
@@ -40,7 +42,7 @@ public final class GiveRandomItemAction extends PlayerAction {
         if (items.isEmpty()) return;
         ItemStack randomItem = items.getFirst();
         if (items.size() > 1) {
-            randomItem = items.get(new Random().nextInt(items.size()));
+            randomItem = items.get(RANDOM.nextInt(items.size()));
         }
         player.getInventory().addItem(randomItem);
     }

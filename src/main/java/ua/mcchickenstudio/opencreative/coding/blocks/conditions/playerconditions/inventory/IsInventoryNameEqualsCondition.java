@@ -37,21 +37,24 @@ public class IsInventoryNameEqualsCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
+        if (player == null || player.getOpenInventory() == null) return false;
         boolean requiredColor = getArguments().getValue("color",false,this);
         boolean requiredCaps = getArguments().getValue("caps",false,this);
         List<String> names = getArguments().getTextList("names",this);
         String title = player.getOpenInventory().getTitle();
+        if (title == null) return false;
         for (String name : names) {
+            String processedTitle = title;
             if (!requiredColor) {
                 name = ChatColor.stripColor(name);
-                title = ChatColor.stripColor(title);
+                processedTitle = ChatColor.stripColor(processedTitle);
             }
             if (requiredCaps) {
-                if (title.equals(name)) {
+                if (processedTitle.equals(name)) {
                     return true;
                 }
             } else {
-                if (title.equalsIgnoreCase(name)) {
+                if (processedTitle.equalsIgnoreCase(name)) {
                     return true;
                 }
             }

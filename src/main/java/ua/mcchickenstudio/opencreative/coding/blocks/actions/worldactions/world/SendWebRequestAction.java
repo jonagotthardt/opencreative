@@ -85,7 +85,7 @@ public final class SendWebRequestAction extends WorldAction {
 
                     int code = connection.getResponseCode();
                     try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                            code >= 400 ? connection.getErrorStream() : connection.getInputStream()))) {
+                            code >= 400 ? connection.getErrorStream() : connection.getInputStream(), StandardCharsets.UTF_8))) {
                         char[] buffer = new char[1024];
                         int read = reader.read(buffer);
                         String response = new String(buffer, 0, Math.max(0, read));

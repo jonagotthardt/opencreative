@@ -46,6 +46,9 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.substring;
  */
 public class Argument {
 
+    // Add a static Random instance to reuse
+    private static final Random RANDOM = new Random();
+
     protected final @NotNull Planet planet;
     protected final @NotNull String path;
     protected final @NotNull ValueType type;
@@ -89,7 +92,7 @@ public class Argument {
      * @param action action, that will be used, to parse text placeholders.
      * @return value of argument.
      */
-    public @NotNull Object getValue(@NotNull Action action) {
+    public Object getValue(Action action) {
         switch (value) {
             case VariableLink link -> {
                 Object variableValue = planet.getVariables().getVariableValue(link, action);
@@ -102,8 +105,7 @@ public class Argument {
                     case RANDOM_PLAYER -> {
                         List<Player> playerList = action.getExecutor().getPlanet().getTerritory().getWorld().getPlayers();
                         if (!playerList.isEmpty()) {
-                            Random r = new Random();
-                            int i = r.nextInt(playerList.size());
+                            int i = RANDOM.nextInt(playerList.size());
                             yield playerList.get(i);
                         } else {
                             yield null;
@@ -126,7 +128,7 @@ public class Argument {
                         if (selectedTargets.isEmpty()) {
                             yield null;
                         }
-                        yield selectedTargets.get(new Random().nextInt(selectedTargets.size()));
+                        yield selectedTargets.get(RANDOM.nextInt(selectedTargets.size()));
                     }
                     case DEFAULT -> {
                         if (!action.getEvent().getSelection().isEmpty()) {

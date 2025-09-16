@@ -54,6 +54,8 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
  */
 public final class ErrorUtils {
 
+    private static final Random RANDOM = new Random();
+
     /**
      * Cuts common packages paths from stack trace text.
      * @param text stack trace to cut.
@@ -135,7 +137,7 @@ public final class ErrorUtils {
                 "Error the Troublemaker..", "Knocks off worlds like a terminator", "Gotta hate it cause' you just can't like it",
                 "We had something to learn from that experience"
         };
-        return phrases[new Random().nextInt(phrases.length)];
+        return phrases[RANDOM.nextInt(phrases.length)];
     }
 
     /**

@@ -53,13 +53,13 @@ public abstract class CreativeRunnable {
                 if (planet != null && planet.getMode() == Planet.Mode.PLAYING) {
                     for (Player player : onlinePlayers) {
                         if (currentPlayers.isEmpty()) {
-                            cancel();
+                            CreativeRunnable.this.cancel();
                         }
                         if (planet.getMode() != Planet.Mode.PLAYING) {
-                            cancel();
+                            CreativeRunnable.this.cancel();
                         }
                         if (player == null) {
-                           continue;
+                            continue;
                         }
                         if (!player.isOnline()) {
                             currentPlayers.remove(player);
@@ -92,10 +92,10 @@ public abstract class CreativeRunnable {
                 if (planet != null && planet.getMode() == Planet.Mode.PLAYING) {
                     for (Player player : onlinePlayers) {
                         if (currentPlayers.isEmpty()) {
-                            cancel();
+                            CreativeRunnable.this.cancel();
                         }
                         if (planet.getMode() != Planet.Mode.PLAYING) {
-                            cancel();
+                            CreativeRunnable.this.cancel();
                         }
                         if (player == null) {
                             continue;

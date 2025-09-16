@@ -36,21 +36,23 @@ public class TextEqualsCondition extends VariableCondition {
 
     @Override
     public boolean check(Entity entity) {
-        if (!getArguments().pathExists("text") || !getArguments().pathExists("content")) {
+        if (entity == null || !getArguments().pathExists("text") || !getArguments().pathExists("content")) {
             return false;
         }
         String text = getArguments().getValue("text","",this);
         String content = getArguments().getValue("content","",this);
         boolean ignoreColors = getArguments().getValue("ignore-colors",false,this);
         boolean ignoreCaps = getArguments().getValue("ignore-caps",false,this);
+        String processedText = text;
+        String processedContent = content;
         if (ignoreColors) {
-            text = ChatColor.stripColor(text);
-            content = ChatColor.stripColor(content);
+            processedText = ChatColor.stripColor(processedText);
+            processedContent = ChatColor.stripColor(processedContent);
         }
         if (ignoreCaps) {
-            return text.equalsIgnoreCase(content);
+            return processedText.equalsIgnoreCase(processedContent);
         } else {
-            return text.equals(content);
+            return processedText.equals(processedContent);
         }
     }
 

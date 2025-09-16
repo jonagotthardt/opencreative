@@ -83,7 +83,7 @@ public class ValueCommand extends CommandHandler {
                         number = Double.parseDouble(args[0]);
                     } catch (NumberFormatException ignored) {}
                     if (args[0].equalsIgnoreCase("p") || args[0].equalsIgnoreCase("pi")) {
-                        number = 3.1415926d;
+                        number = Math.PI;
                     }
                     setDisplayName(itemStack,"§a" + number);
                 }

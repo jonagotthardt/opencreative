@@ -27,9 +27,11 @@ import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
@@ -125,7 +127,7 @@ public class PlanetPlayer {
             return true;
         }
         JSONParser parser = new JSONParser();
-        try (FileReader fileReader = new FileReader(playerDataJson)) {
+        try (FileReader fileReader = new FileReader(playerDataJson, StandardCharsets.UTF_8)) {
             JSONObject playerObject = (JSONObject) parser.parse(fileReader);
             Object purchases = playerObject.getOrDefault("purchases", new JSONArray());
             if (purchases instanceof JSONArray array) {
@@ -152,7 +154,7 @@ public class PlanetPlayer {
                 saveEnderChest(items.toArray(new ItemStack[]{}));
             }
             return true;
-        } catch (Exception e) {
+        } catch (IOException | ClassNotFoundException | ParseException e) {
             sendCriticalErrorMessage("Couldn't read player data " + player.getName() + " " + currentPlanet.getWorldName());
             return false;
         }
@@ -169,7 +171,7 @@ public class PlanetPlayer {
         if (playerDataJson == null) {
             return false;
         }
-        try (FileWriter writer = new FileWriter(playerDataJson)) {
+        try (FileWriter writer = new FileWriter(playerDataJson, StandardCharsets.UTF_8)) {
 
             JSONObject playerObject = new JSONObject();
 
