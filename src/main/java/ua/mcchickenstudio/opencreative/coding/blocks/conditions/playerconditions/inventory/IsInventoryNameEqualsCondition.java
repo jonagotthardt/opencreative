@@ -40,7 +40,9 @@ public class IsInventoryNameEqualsCondition extends PlayerCondition {
         boolean requiredColor = getArguments().getValue("color",false,this);
         boolean requiredCaps = getArguments().getValue("caps",false,this);
         List<String> names = getArguments().getTextList("names",this);
+        if (player.getOpenInventory() == null) return false;
         String title = player.getOpenInventory().getTitle();
+        if (title == null) return false;
         for (String name : names) {
             if (!requiredColor) {
                 name = ChatColor.stripColor(name);

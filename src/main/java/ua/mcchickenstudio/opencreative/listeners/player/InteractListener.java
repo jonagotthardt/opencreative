@@ -398,9 +398,9 @@ public final class InteractListener implements Listener {
                 }
             } else if (mainBlockCategory == ExecutorCategory.FUNCTION || mainBlockCategory == ExecutorCategory.METHOD) {
                 ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
-                if (!item.isEmpty() && item.hasItemMeta()) {
+                if (!item.isEmpty() && item.hasItemMeta() && item.getItemMeta() != null) {
                     String displayName = ChatColor.stripColor(item.getItemMeta().getDisplayName());
-                    if (displayName.length() < 15) {
+                    if (displayName != null && displayName.length() < 15) {
                         setSignLine(clickedBlock.getLocation(),(byte) 3,displayName);
                         (mainBlockCategory == ExecutorCategory.FUNCTION ?
                                 Sounds.DEV_FUNCTION_NAMED : Sounds.DEV_METHOD_NAMED).play(player);

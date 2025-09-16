@@ -39,7 +39,9 @@ public class EntityNameEqualsCondition extends EntityCondition {
         boolean requiredColor = getArguments().getValue("require-color",false,this);
         boolean requiredCaps = getArguments().getValue("require-caps",false,this);
         List<String> names = getArguments().getTextList("names",this);
+        if (entity == null) return false;
         String entityName = entity.getName();
+        if (entityName == null) return false;
         for (String name : names) {
             if (!requiredColor) {
                 name = ChatColor.stripColor(name);
