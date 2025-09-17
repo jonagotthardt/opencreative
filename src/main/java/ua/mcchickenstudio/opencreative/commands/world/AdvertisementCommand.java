@@ -180,7 +180,8 @@ public class AdvertisementCommand extends CommandHandler {
         Component advertisement = getPlayerLocaleComponent("advertisement.message", player)
                 .replaceText(TextReplacementConfig.builder()
                         .match("%world%")
-                        .replacement(planet.getInformation().displayName()).build());
+                        .replacement(planet.getInformation().displayName()
+                        ).build());
         Component hoverComponent = parsePlanetLines(planet, getLocaleComponent("advertisement.hover"));
         String clickCommand = "/ad " + planet.getId();
 
