@@ -41,6 +41,7 @@ import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.utils.SystemUtils;
 
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isLobbyWorld;
 
@@ -60,6 +61,10 @@ public final class WorldEditManager implements BlocksManager {
 
     @Override
     public void init() {
+        if (SystemUtils.getSystemProperty("worldedit.registered") != null) {
+            return;
+        }
+        SystemUtils.setSystemProperty("worldedit.registered", "true");
         Object onSessionEvent = new Object() {
             @Subscribe
             public void onEditSessionEvent(EditSessionEvent event) {
@@ -77,7 +82,6 @@ public final class WorldEditManager implements BlocksManager {
                 event.setExtent(new PlanetExtent(planet, event.getExtent()));
             }
         };
-        WorldEdit.getInstance().getEventBus().unregister(onSessionEvent);
         WorldEdit.getInstance().getEventBus().register(onSessionEvent);
     }
 

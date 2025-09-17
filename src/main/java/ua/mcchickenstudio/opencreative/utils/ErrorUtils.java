@@ -133,7 +133,9 @@ public final class ErrorUtils {
                 "Try not to panic when you see this", "This is not supposed to be here",
                 ":( Your PLUGIN ran into a problem.", "Why is this happening?", "Dum dum, this sucks..",
                 "Error the Troublemaker..", "Knocks off worlds like a terminator", "Gotta hate it cause' you just can't like it",
-                "We had something to learn from that experience"
+                "We had something to learn from that experience", "Bug toy, bug toy, bug toy...",
+                "Jester thinks there is a solution to this bug?", "Get your bug toy, get a little opposite of joy",
+                "I could say I'm sorry, but it's not that kind of party"
         };
         return phrases[new Random().nextInt(phrases.length)];
     }

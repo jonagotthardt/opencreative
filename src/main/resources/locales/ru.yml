@@ -327,7 +327,7 @@ coding-debug:
 lobby:
   title: "%branding%"
   subtitle: "&fДавайте &aтворить&f в своих мирах!"
-  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.7\n<green> Что-ж, это возможно!\n <white>\n<gold> ⭐ <white>Осмотри все <gold>миры<white> с помощью компаса!\n<light_purple> ❤ <white>Создай свой мир и <light_purple>пригласи <white>друзей!\n <yellow>⌚<white> Веселись и <yellow>твори <white>что угодно!\n \n<white>\n <white>"
+  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.8\n<green> Что-ж, это возможно!\n <white>\n<gold> ⭐ <white>Осмотри все <gold>миры<white> с помощью компаса!\n<light_purple> ❤ <white>Создай свой мир и <light_purple>пригласи <white>друзей!\n <yellow>⌚<white> Веселись и <yellow>твори <white>что угодно!\n \n<white>\n <white>"
 creating-world:
   not-enough-played: "%prefix%&fПеред созданием мира сыграйте &6%time%&f в мирах других игроков."
   title: "&eСоздание мира ◌"
