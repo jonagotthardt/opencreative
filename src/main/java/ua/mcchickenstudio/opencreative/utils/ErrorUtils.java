@@ -614,7 +614,10 @@ public final class ErrorUtils {
         }
         List<String> argumentsString = new ArrayList<>();
         for (Argument arg : arguments) {
-            argumentsString.add(getLocaleMessage("coding-debug.hover.argument").replace("%name%",arg.getPath()).replace("%type%",arg.getType().getLocaleName()).replace("%value%",arg.getValue(action).toString().substring(0, Math.min(30, arg.getValue(action).toString().length()))));
+            argumentsString.add(getLocaleMessage("coding-debug.hover.argument")
+                    .replace("%name%",arg.getPath())
+                    .replace("%type%",arg.getType().getLocaleName())
+                    .replace("%value%",arg.getValue(action).toString().substring(0, Math.min(30, arg.getValue(action).toString().length()))));
         }
         message = message.replace("%arguments%",String.join(" \n",argumentsString));
         String actionMessage = getLocaleMessage("coding-debug.action-message",false).replace("%type%",action.getActionType().getLocaleName()).replace("%x%",String.valueOf(action.getX())).replace("%y%",String.valueOf(action.getExecutor().getY())).replace("%z%",String.valueOf(action.getExecutor().getZ()));
