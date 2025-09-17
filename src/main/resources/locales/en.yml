@@ -25,7 +25,7 @@
 
 #
 # Translated by:
-# McChicken Team, initzero, Nagibator6000Lol, DrakesWeb, kogtyv
+# McChicken Team, initzero, Nagibator6000Lol
 #
 
 no-perms: "%prefix%&cInsufficient permissions!"
@@ -322,7 +322,7 @@ coding-warning:
 lobby:
   title: "%branding%"
   subtitle: "&fLet's &acreate&f in your worlds!"
-  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.7\n<green> Well, it's possible!\n <white>\n<gold> ⭐ <white>Explore all <gold>worlds<white> using the compass!\n<light_purple> ❤ <white>Create your own world and <light_purple>invite <white>your friends!\n <yellow>⌚<white> Have fun and <yellow>create <white>whatever you want!\n \n<white>\n <white>"
+  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.8\n<green> Well, it's possible!\n <white>\n<gold> ⭐ <white>Explore all <gold>worlds<white> using the compass!\n<light_purple> ❤ <white>Create your own world and <light_purple>invite <white>your friends!\n <yellow>⌚<white> Have fun and <yellow>create <white>whatever you want!\n \n<white>\n <white>"
 creating-world:
   not-enough-played: "%prefix%&fYou need to play &6%time%&f in other worlds before creating a new world."
   title: "&eCreating World ◌"
@@ -4768,7 +4768,7 @@ items:
           - "&3 Param &7- Yes/No"
           - " "
           - "&eClick to set action."
-      entity-cat-lying-down:
+      entity-set-cat-lying-down:
         name: "&9Cat Lying"
         lore:
           - "&7Sets if cat will"
@@ -5017,7 +5017,7 @@ items:
           - "&3 Param &7- Yes/No"
           - " "
           - "&eClick to set action."
-      entity-set-axolotl-playind-dead:
+      entity-set-axolotl-playing-dead:
         name: "&dAxolotl Playing Dead"
         lore:
           - "&7Sets if axolotl will"
@@ -7013,10 +7013,38 @@ items:
               magenta: "Magenta"
               pink: "Pink"
               brown: "Brown"
+      entity-set-parrot-color:
+        name: "&aRecolor Parrot"
+        lore:
+          - "&7Changes the parrot's"
+          - "&7variant to the specified."
+          - ""
+          - "&fIn the chest:"
+          - "&3 Parameter &7- Color"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          color:
+            name: "&dParrot Color"
+            lore:
+              - "&7Select a color for the parrot."
+              - ""
+              - "&fOptions"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+              - "%4%"
+              - "%5%"
+            choices:
+              red: "Red"
+              blue: "Light Gray"
+              cyan: "Cyan"
+              green: "Green"
+              gray: "Gray"
       entity-set-dog-collar-color:
         name: "&dDog Collar Color"
         lore:
-          - "&7Changes the dog’s collar"
+          - "&7Changes the dog's collar"
           - "&7to the specified color."
           - ""
           - "&fIn the chest:"
@@ -11959,7 +11987,7 @@ menus:
           - ""
           - "&c McChicken Studio 2017-2025"
           - "&3 Translators: &7initzero, Nagibator6000LoL,"
-          - "&7  DrakesWeb, kogtyv."
+          - "&7  DrakesWeb, kogtyv, Senmpai333."
           - ""
       reload:
         name: " "
@@ -11975,10 +12003,10 @@ menus:
       reset-locale:
         name: " "
         lore:
-          - "&c Reset localization files"
+          - "&c Reset localization file"
           - ""
           - "&7 This will &c&ndelete&7 the current"
-          - "&7 localization files (en.yml, ru.yml)"
+          - "&7 localization file (en.yml)"
           - "&7 and replace with plugin's one."
           - "&7 Useful after plugin's update!"
           - ""

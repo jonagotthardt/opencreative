@@ -327,7 +327,7 @@ coding-debug:
 lobby:
   title: "%branding%"
   subtitle: "&fДавайте &aтворить&f в своих мирах!"
-  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.7\n<green> Что-ж, это возможно!\n <white>\n<gold> ⭐ <white>Осмотри все <gold>миры<white> с помощью компаса!\n<light_purple> ❤ <white>Создай свой мир и <light_purple>пригласи <white>друзей!\n <yellow>⌚<white> Веселись и <yellow>твори <white>что угодно!\n \n<white>\n <white>"
+  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.8\n<green> Что-ж, это возможно!\n <white>\n<gold> ⭐ <white>Осмотри все <gold>миры<white> с помощью компаса!\n<light_purple> ❤ <white>Создай свой мир и <light_purple>пригласи <white>друзей!\n <yellow>⌚<white> Веселись и <yellow>твори <white>что угодно!\n \n<white>\n <white>"
 creating-world:
   not-enough-played: "%prefix%&fПеред созданием мира сыграйте &6%time%&f в мирах других игроков."
   title: "&eСоздание мира ◌"
@@ -4786,7 +4786,7 @@ items:
           - "&3 Параметр &7- Да или нет"
           - " "
           - "&eНажми, чтобы установить действие."
-      entity-cat-lying-down:
+      entity-set-cat-lying-down:
         name: "&9Лежание кота"
         lore:
           - "&7Установит будет ли кот"
@@ -5043,7 +5043,7 @@ items:
           - "&3 Параметр &7- Да или нет"
           - " "
           - "&eНажми, чтобы установить действие."
-      entity-set-axolotl-playind-dead:
+      entity-set-axolotl-playing-dead:
         name: "&dПретворение аксолотля мёртвым"
         lore:
           - "&7Установит будет ли аксолотль"
@@ -7129,6 +7129,34 @@ items:
               magenta: "Пурпурный"
               pink: "Розовый"
               brown: "Коричневый"
+      entity-set-sheep-color:
+        name: "&aПерекрасить попугая"
+        lore:
+          - "&7Перекрашивает попугая"
+          - "&7в указанный цвет."
+          - ""
+          - "&fВ сундуке:"
+          - "&3 Параметр &7- Цвет"
+          - " "
+          - "&eНажми, чтобы установить действие."
+        arguments:
+          color:
+            name: "&dЦвет попугая"
+            lore:
+              - "&7Выберите цвет для попугая."
+              - ""
+              - "&fВарианты"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+              - "%4%"
+              - "%5%"
+            choices:
+              red: "Красный"
+              blue: "Синий"
+              gray: "Серый"
+              green: "Зелёный"
+              cyan: "Бирюзовый"
       entity-set-dog-collar-color:
         name: "&dЦвет ошейника собаки"
         lore:
@@ -12039,7 +12067,7 @@ menus:
           - ""
           - "&c McChicken Studio 2017-2025"
           - "&3 Переводчики: &7initzero, Nagibator6000LoL,"
-          - "&7  DrakesWeb, kogtyv."
+          - "&7  DrakesWeb, kogtyv, Senmpai333."
           - ""
       reload:
         name: " "
@@ -12058,8 +12086,8 @@ menus:
         lore:
           - "&c Стереть и загрузить перевод"
           - ""
-          - "&7 Это &c&nудалит&7 текущие файлы"
-          - "&7 перевода (en.yml, ru.yml) и заменит"
+          - "&7 Это &c&nудалит&7 текущий файл"
+          - "&7 перевода (ru.yml) и заменит"
           - "&7 их файлами по умолчанию. Удобно"
           - "&7 после обновлений плагина!"
           - ""
@@ -16116,7 +16144,7 @@ blocks:
   player_advertised: "Рекламирует мир"
   player_chat: "Сообщение в чат"
   player_entered_vehicle: "В транспорте"
-  player_exit_vehicle: "Встал"
+  player_vehicle_exit: "Встал"
   player_left_click: "Левый клик"
   player_right_click: "Правый клик"
   player_interact: "Взаимодействует"

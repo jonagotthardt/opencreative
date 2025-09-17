@@ -133,7 +133,9 @@ public final class ErrorUtils {
                 "Try not to panic when you see this", "This is not supposed to be here",
                 ":( Your PLUGIN ran into a problem.", "Why is this happening?", "Dum dum, this sucks..",
                 "Error the Troublemaker..", "Knocks off worlds like a terminator", "Gotta hate it cause' you just can't like it",
-                "We had something to learn from that experience"
+                "We had something to learn from that experience", "Bug toy, bug toy, bug toy...",
+                "Jester thinks there is a solution to this bug?", "Get your bug toy, get a little opposite of joy",
+                "I could say I'm sorry, but it's not that kind of party"
         };
         return phrases[new Random().nextInt(phrases.length)];
     }
@@ -612,7 +614,10 @@ public final class ErrorUtils {
         }
         List<String> argumentsString = new ArrayList<>();
         for (Argument arg : arguments) {
-            argumentsString.add(getLocaleMessage("coding-debug.hover.argument").replace("%name%",arg.getPath()).replace("%type%",arg.getType().getLocaleName()).replace("%value%",arg.getValue(action).toString().substring(0, Math.min(30, arg.getValue(action).toString().length()))));
+            argumentsString.add(getLocaleMessage("coding-debug.hover.argument")
+                    .replace("%name%",arg.getPath())
+                    .replace("%type%",arg.getType().getLocaleName())
+                    .replace("%value%",arg.getValue(action).toString().substring(0, Math.min(30, arg.getValue(action).toString().length()))));
         }
         message = message.replace("%arguments%",String.join(" \n",argumentsString));
         String actionMessage = getLocaleMessage("coding-debug.action-message",false).replace("%type%",action.getActionType().getLocaleName()).replace("%x%",String.valueOf(action.getX())).replace("%y%",String.valueOf(action.getExecutor().getY())).replace("%z%",String.valueOf(action.getExecutor().getZ()));

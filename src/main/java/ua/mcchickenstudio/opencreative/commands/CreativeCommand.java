@@ -969,6 +969,7 @@ public class CreativeCommand extends CommandHandler {
             } else if ("locale".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("en");
                 tabCompleter.add("ru");
+                tabCompleter.add("ua");
             } else if ("sounds".equalsIgnoreCase(args[0])) {
                 ConfigurationSection config = OpenCreative.getPlugin().getConfig().getConfigurationSection("sounds");
                 if (config == null) return null;

@@ -169,20 +169,21 @@ public class ActionsHandler {
      * @param action action to execute.
      */
     private void executeAction(Action action) {
-        if (!stopped) {
-            if (doNotUseTryFlag) {
+        if (stopped) {
+            return;
+        }
+        if (doNotUseTryFlag) {
+            action.prepareAndExecute(this);
+        } else {
+            try {
                 action.prepareAndExecute(this);
-            } else {
-                try {
-                    action.prepareAndExecute(this);
-                } catch (Exception error) {
-                    sendErrorMessage(action, error);
-                    removeAllActions();
-                }
+            } catch (Exception error) {
+                sendErrorMessage(action, error);
+                removeAllActions();
             }
         }
         if (action instanceof WaitAction wait) {
-           setWaitDelay(wait.getTime());
+            setWaitDelay(wait.getTime());
         } else {
             setWaitDelay(0);
         }
