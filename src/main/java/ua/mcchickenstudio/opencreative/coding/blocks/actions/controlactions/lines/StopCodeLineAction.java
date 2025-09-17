@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines;
 
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.ControlAction;
@@ -36,10 +37,10 @@ public final class StopCodeLineAction extends ControlAction {
         if (getHandler().getAction() instanceof RepeatAction repeat) {
             repeat.setMustStop(true);
         }
-        if (getHandler().getParentActionHandler() == null) {
-            getHandler().removeAllActions();
-        } else {
-            getHandler().getParentActionHandler().removeAllActions();
+        getHandler().removeAllActions();
+        ActionsHandler parentHandler = getHandler().getParentActionHandler();
+        if (parentHandler != null) {
+            parentHandler.removeAllActions();
         }
     }
 
