@@ -16144,7 +16144,7 @@ blocks:
   player_advertised: "Рекламирует мир"
   player_chat: "Сообщение в чат"
   player_entered_vehicle: "В транспорте"
-  player_exit_vehicle: "Встал"
+  player_vehicle_exit: "Встал"
   player_left_click: "Левый клик"
   player_right_click: "Правый клик"
   player_interact: "Взаимодействует"
