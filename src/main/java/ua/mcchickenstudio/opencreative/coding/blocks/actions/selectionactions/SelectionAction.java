@@ -67,6 +67,7 @@ public abstract class SelectionAction extends Action {
             }
             try {
                 Action action = conditionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class,List.class,boolean.class).newInstance(getExecutor(),target,getX(),getArguments(),new ArrayList<>(),new ArrayList<>(),isOpposed);
+                action.setEvent(this.getHandler().getEvent());
                 if (action instanceof PlayerCondition playerCondition) {
                     playerCondition.setHandler(this.getHandler());
                     for (Player player : getPlanet().getTerritory().getWorld().getPlayers()) {

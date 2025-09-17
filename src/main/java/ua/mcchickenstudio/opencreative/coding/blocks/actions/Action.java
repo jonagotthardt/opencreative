@@ -304,6 +304,14 @@ public abstract class Action {
     }
 
     /**
+     * Sets new event.
+     * @param event new event of action.
+     */
+    public void setEvent(WorldEvent event) {
+        this.event = event;
+    }
+
+    /**
      * Returns a list of all arguments in this action.
      * @return List of action's arguments.
      */
