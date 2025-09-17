@@ -135,7 +135,7 @@ lobby:
 recommended-worlds: [1,2,3,4,5] # List of featured worlds in /games, type world number IDs here.
 
 messages:
-  locale: en # Supported: en, ru - Для русского языка: ru
+  locale: en # Supported: en, ru, ua - Для русского языка: ru, Для української мови - ua
   branding: "<white>Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+" # Branding uses minimessage (https://webui.advntr.dev/)
   prefix: "&6 Worlds &8| &f"
   cc-prefix: "&6 Creative Chat &8| &7"
