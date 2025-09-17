@@ -118,10 +118,12 @@ public final class MessageUtils {
         if (localeFile.exists()) {
             localizationFile = localeFile;
         } else {
-            String defaultLanguage = getLanguage().equalsIgnoreCase("ru") ? "ru" : "en";
+            String defaultLanguage = getLanguage().equalsIgnoreCase("ru")
+                    ? "ru" : getLanguage().equalsIgnoreCase("ua") ? "ua" : "en";
             OpenCreative.getPlugin().getConfig().set("messages.locale",defaultLanguage);
             OpenCreative.getPlugin().saveResource("locales" + File.separator + "en.yml",false);
             OpenCreative.getPlugin().saveResource("locales" + File.separator + "ru.yml",false);
+            OpenCreative.getPlugin().saveResource("locales" + File.separator + "ua.yml",false);
             OpenCreative.getPlugin().reloadConfig();
             localeFile = new File((OpenCreative.getPlugin().getDataFolder() + File.separator + "locales" + File.separator),  defaultLanguage + ".yml");
         }
@@ -166,7 +168,7 @@ public final class MessageUtils {
      * @return true - exists, false - not exists.
      */
     public static boolean localizationFileExists(String languageName) {
-        return "en".equalsIgnoreCase(languageName) || "ru".equalsIgnoreCase(languageName) || new File(OpenCreative.getPlugin().getDataFolder() + File.separator + "locales" + File.separator, languageName + ".yml").exists();
+        return "en".equalsIgnoreCase(languageName) || "ru".equalsIgnoreCase(languageName) || "ua".equalsIgnoreCase(languageName) || new File(OpenCreative.getPlugin().getDataFolder() + File.separator + "locales" + File.separator, languageName + ".yml").exists();
     }
 
     /**
@@ -234,6 +236,7 @@ public final class MessageUtils {
             OpenCreative.getPlugin().getConfig().set("messages.locale",defaultLanguage);
             OpenCreative.getPlugin().saveResource("locales" + File.separator + "en.yml",false);
             OpenCreative.getPlugin().saveResource("locales" + File.separator + "ru.yml",false);
+            OpenCreative.getPlugin().saveResource("locales" + File.separator + "ua.yml",false);
             OpenCreative.getPlugin().reloadConfig();
             return "en";
         }

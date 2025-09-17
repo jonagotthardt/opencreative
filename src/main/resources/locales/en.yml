@@ -25,7 +25,7 @@
 
 #
 # Translated by:
-# McChicken Team, initzero, Nagibator6000Lol, DrakesWeb, kogtyv
+# McChicken Team, initzero, Nagibator6000Lol
 #
 
 no-perms: "%prefix%&cInsufficient permissions!"
@@ -11987,7 +11987,7 @@ menus:
           - ""
           - "&c McChicken Studio 2017-2025"
           - "&3 Translators: &7initzero, Nagibator6000LoL,"
-          - "&7  DrakesWeb, kogtyv."
+          - "&7  DrakesWeb, kogtyv, Senmpai333."
           - ""
       reload:
         name: " "
@@ -12003,10 +12003,10 @@ menus:
       reset-locale:
         name: " "
         lore:
-          - "&c Reset localization files"
+          - "&c Reset localization file"
           - ""
           - "&7 This will &c&ndelete&7 the current"
-          - "&7 localization files (en.yml, ru.yml)"
+          - "&7 localization file (en.yml)"
           - "&7 and replace with plugin's one."
           - "&7 Useful after plugin's update!"
           - ""
