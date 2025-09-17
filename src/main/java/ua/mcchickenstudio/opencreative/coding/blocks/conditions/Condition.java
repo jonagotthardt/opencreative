@@ -66,7 +66,7 @@ public abstract class Condition extends Action {
             return;
         }
         this.handler = handler;
-        this.event = getExecutor().getEvent();
+        this.event = handler.getEvent();
         sendCodingDebugAction(this);
         boolean check = false;
         if (getTargets().isEmpty()) return;
