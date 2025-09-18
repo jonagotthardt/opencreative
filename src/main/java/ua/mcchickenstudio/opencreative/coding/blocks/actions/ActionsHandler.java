@@ -170,6 +170,10 @@ public class ActionsHandler {
      */
     private void executeAction(Action action) {
         if (stopped) {
+            if (action instanceof MeasureTimeAction timer) {
+                timer.measure();
+            }
+            executor.getPlanet().getVariables().garbageCollector(getMainActionHandler());
             return;
         }
         if (doNotUseTryFlag) {
@@ -234,7 +238,7 @@ public class ActionsHandler {
     }
 
     /**
-     * Returns the main actions handler (executor thread)
+     * Returns the main actions handler (executor thread).
      * @return the main handler of actions.
      */
     public @NotNull ActionsHandler getMainActionHandler() {
