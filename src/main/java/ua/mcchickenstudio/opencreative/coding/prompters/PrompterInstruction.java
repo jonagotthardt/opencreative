@@ -82,6 +82,9 @@ public final class PrompterInstruction {
     - Maximum 27 arguments per action.
     - To color text use § instead of &
     - For chat commands use @ instead of /
+    - When value (text) starts with with @ cover it in brackets "", example:
+      Wrong - value: @chatcommand
+      Valid - value: "@chatcommand"
     - List index starts with 1 instead of 0
     Server version \s""" + Bukkit.getMinecraftVersion() + """
     ACTIONS INFO:
