@@ -34,6 +34,7 @@ public final class SetVelocityAction extends EntityAction {
     @Override
     protected void execute(Entity entity) {
         Vector vector = getArguments().getValue("vector",new Vector(),this);
+        vector.add(entity.getVelocity());
         entity.setVelocity(vector);
     }
 

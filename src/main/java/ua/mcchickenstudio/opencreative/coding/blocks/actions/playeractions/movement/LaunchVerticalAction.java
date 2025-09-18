@@ -39,7 +39,9 @@ public final class LaunchVerticalAction extends PlayerAction {
         } else if (power > 20) {
             power = 20;
         }
-        player.setVelocity(new Vector(player.getVelocity().getX(),power,player.getVelocity().getZ()));
+        player.setVelocity(
+                player.getVelocity().add(new Vector(player.getVelocity().getX(),power,player.getVelocity().getZ()))
+        );
     }
 
     @Override
