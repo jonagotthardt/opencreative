@@ -18,6 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
@@ -29,6 +32,14 @@ public abstract class EntityAction extends Action {
     public EntityAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
+
+    public final void execute(Entity entity) {
+        if (entity != null) {
+            executeEntity(entity);
+        }
+    }
+
+    public abstract void executeEntity(@NotNull Entity entity);
 
     @Override
     public ActionCategory getActionCategory() {

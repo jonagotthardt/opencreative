@@ -18,8 +18,24 @@
 
 package ua.mcchickenstudio.opencreative.coding.exceptions;
 
-public class TooBigItemStackException extends RuntimeException {
-    public TooBigItemStackException(long size) {
-        super("ItemStack size is too big.");
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * <h1>UnknownCycleException</h1>
+ * This class represents an exception, that happens when
+ * code tries to launch unexisting cycle.
+ */
+public final class UnknownCycleException extends RuntimeException {
+
+    private final String name;
+
+    public UnknownCycleException(@NotNull String name) {
+        super("Cycle " + name + " doesn't exist.");
+        this.name = name;
     }
+
+    public @NotNull String getName() {
+        return name;
+    }
+
 }

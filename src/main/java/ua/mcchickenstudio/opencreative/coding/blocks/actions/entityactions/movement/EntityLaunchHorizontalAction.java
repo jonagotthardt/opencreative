@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.movement;
 
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -31,14 +32,14 @@ public final class EntityLaunchHorizontalAction extends EntityAction {
     }
 
     @Override
-    public void execute(Entity entity) {
+    public void executeEntity(@NotNull Entity entity) {
         float power = getArguments().getValue("power",1.0f,this);
         if (power < -20) {
             power = -20;
         } else if (power > 20) {
             power = 20;
         }
-        entity.setVelocity(entity.getLocation().getDirection().multiply(power));
+        entity.setVelocity(entity.getVelocity().add(entity.getLocation().getDirection().multiply(power)));
     }
 
     @Override

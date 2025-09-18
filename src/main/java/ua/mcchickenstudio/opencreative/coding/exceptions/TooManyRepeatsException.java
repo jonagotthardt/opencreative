@@ -18,7 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.coding.exceptions;
 
-public class TooManyRepeatsException extends RuntimeException {
+/**
+ * <h1>TooManyRepeatsException</h1>
+ * This class represents an exception, that happens when
+ * code calls too many repeat actions at short time.
+ */
+public final class TooManyRepeatsException extends RuntimeException {
 
     public TooManyRepeatsException() {
         super("Too many repeats at once! Add Wait (control action) to the end of repeat action before piston.");

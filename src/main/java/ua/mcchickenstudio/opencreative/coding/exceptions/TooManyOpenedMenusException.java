@@ -18,7 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.coding.exceptions;
 
-public class TooManyOpenedMenusException extends PlayerException {
+/**
+ * <h1>TooManyOpenedMenusException</h1>
+ * This class represents an exception, that happens when
+ * code tries to open too many menus for player at short time.
+ */
+public final class TooManyOpenedMenusException extends PlayerException {
 
     public TooManyOpenedMenusException(String player) {
         super(player, "Too many actions with inventory was called for " + player + " in short time.");

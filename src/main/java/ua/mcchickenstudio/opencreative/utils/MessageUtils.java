@@ -777,6 +777,8 @@ public final class MessageUtils {
                 if (replacement != null) {
                     result.append(replacement);
                     if (hadStyle && !isDecoration) {
+                        // If it's color, then reset decorations,
+                        // like legacy behaviour
                         result.append("<reset>");
                         hadStyle = false;
                     } else if (isDecoration) {
