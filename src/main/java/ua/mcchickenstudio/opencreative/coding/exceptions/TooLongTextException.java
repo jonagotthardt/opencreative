@@ -18,7 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.coding.exceptions;
 
-public class TooLongTextException extends RuntimeException {
+/**
+ * <h1>TooLongTextException</h1>
+ * This class represents an exception, that happens when
+ * text or component is too long than specified length.
+ */
+public final class TooLongTextException extends RuntimeException {
 
     public TooLongTextException(int length) {
         super("This text has length above " + length + " symbols.");

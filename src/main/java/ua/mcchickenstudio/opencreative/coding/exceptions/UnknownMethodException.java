@@ -20,7 +20,12 @@ package ua.mcchickenstudio.opencreative.coding.exceptions;
 
 import org.jetbrains.annotations.NotNull;
 
-public class UnknownMethodException extends RuntimeException {
+/**
+ * <h1>UnknownMethodException</h1>
+ * This class represents an exception, that happens when
+ * code tries to launch unexisting method.
+ */
+public final class UnknownMethodException extends RuntimeException {
 
     private final String name;
 
@@ -29,7 +34,7 @@ public class UnknownMethodException extends RuntimeException {
         this.name = name;
     }
 
-    public String getName() {
+    public @NotNull String getName() {
         return name;
     }
 

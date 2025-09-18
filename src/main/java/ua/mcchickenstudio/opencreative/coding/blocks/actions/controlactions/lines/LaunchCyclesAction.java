@@ -25,6 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.Cont
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Cycle;
 import org.bukkit.entity.Entity;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnknownCycleException;
 
 import java.util.List;
 
@@ -38,12 +39,17 @@ public final class LaunchCyclesAction extends ControlAction {
     protected void execute(Entity entity) {
         List<String> list = getArguments().getTextList("names",this);
         for (String name : list) {
+            boolean found = false;
             for (Executor executor : getPlanet().getTerritory().getScript().getExecutors().getExecutorsList()) {
                 if (executor instanceof Cycle cycle) {
                     if (cycle.getName().equalsIgnoreCase(name)) {
+                        found = true;
                         cycle.run(getEvent());
                     }
                 }
+            }
+            if (!found) {
+                throw new UnknownCycleException(name);
             }
         }
     }

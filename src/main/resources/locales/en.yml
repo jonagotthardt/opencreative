@@ -259,6 +259,7 @@ coding-error:
   message-compile: "\n &c &m                   &c ☹ ERROR &m                   \n&f\n &fA problem occurred while saving the block &7(%x%,%y%,%z%)\n \n&f Information: &6%error%\n \n &c &m                                                    \n&f"
   unknownfunctionexception: "Failed to launch function %name%, because it doesn't exist in code."
   unknownmethodexception: "Failed to launch method %name%, because it doesn't exist in code."
+  unknowncycleexception: "Failed to start or end cycle %name%, because it doesn't exist in code."
   numberformatexception: "A number was expected, but the item did not contain one. Check the items in the chest for this action."
   toolongtextexception: "Too long text was tried to write to variable. Please substring it with variable action Substring text. "
   collectionwithcollectionexception: "Tried to store a list as element of list. Use Merge Lists action instead."

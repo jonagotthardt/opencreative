@@ -18,8 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.coding.exceptions;
 
-public class CollectionWithCollectionException extends RuntimeException {
+/**
+ * <h1>CollectionWithCollectionException</h1>
+ * This class represents an exception, that happens when
+ * code tries to save list in list, map in list, map in map.
+ */
+public final class CollectionWithCollectionException extends RuntimeException {
+
     public CollectionWithCollectionException(Class<?> first, Class<?> second) {
         super("Adding collection (" + first.getSimpleName() + ") to collection (" + second.getSimpleName() + ") is not supported." );
     }
+
 }

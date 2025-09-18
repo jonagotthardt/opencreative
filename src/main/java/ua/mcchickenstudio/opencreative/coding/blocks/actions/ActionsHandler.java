@@ -26,6 +26,9 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlleractions.o
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.exceptions.PlayerException;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnknownCycleException;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnknownFunctionException;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnknownMethodException;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -210,7 +213,11 @@ public class ActionsHandler {
 
         StringBuilder description = new StringBuilder();
         description.append(getLocaleMessage("coding-error." + errorID)
-                .replace("%player%", error instanceof PlayerException playerException ? playerException.getPlayerName() : ""));
+                .replace("%player%", error instanceof PlayerException playerException ? playerException.getPlayerName() : "")
+                .replace("%name%", error instanceof UnknownFunctionException blockException ? blockException.getName() : "%name%")
+                .replace("%name%", error instanceof UnknownCycleException blockException ? blockException.getName() : "%name%")
+                .replace("%name%", error instanceof UnknownMethodException blockException ? blockException.getName() : "")
+        );
 
         if (unknown) {
             description.append(errorClass).append(": ").append(errorMessage);
