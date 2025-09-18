@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.para
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -33,7 +34,7 @@ public final class EntitySetLastDamageAction extends EntityAction {
     }
 
     @Override
-    public void execute(Entity entity) {
+    public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof LivingEntity livingEntity)) return;
         boolean add = getArguments().getValue("add",false,this);
         double damage = getArguments().getValue("damage",1.0d,this);

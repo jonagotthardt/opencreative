@@ -23,6 +23,7 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -39,7 +40,7 @@ public final class EntitySetNameAction extends EntityAction {
     }
 
     @Override
-    public void execute(Entity entity) {
+    public void executeEntity(@NotNull Entity entity) {
         if (entity instanceof Player) return;
         if (!getArguments().pathExists("name")) {
             entity.customName(null);

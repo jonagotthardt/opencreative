@@ -32,16 +32,41 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  */
 public final class CooldownUtils {
 
-    static final HashMap<Player, Long> genericCommandCooldown = new HashMap<>();
-    static final HashMap<Player, Long> advertisementCommandCooldown = new HashMap<>();
-    static final HashMap<Player, Long> creativeChatCooldown = new HashMap<>();
-    static final HashMap<Player, Long> worldChatCooldown = new HashMap<>();
-    static final HashMap<Player, Long> modulesManipulationsCooldown = new HashMap<>();
-    static final HashMap<Player, Long> blocksDuplicationCooldown = new HashMap<>();
+    private static final HashMap<Player, Long> genericCommandCooldown = new HashMap<>();
+    private static final HashMap<Player, Long> advertisementCommandCooldown = new HashMap<>();
+    private static final HashMap<Player, Long> creativeChatCooldown = new HashMap<>();
+    private static final HashMap<Player, Long> worldChatCooldown = new HashMap<>();
+    private static final HashMap<Player, Long> modulesManipulationsCooldown = new HashMap<>();
+    private static final HashMap<Player, Long> blocksDuplicationCooldown = new HashMap<>();
 
+    /**
+     * Represents type of cooldown.
+     */
     public enum CooldownType {
-        GENERIC_COMMAND, ADVERTISEMENT_COMMAND, CREATIVE_CHAT, WORLD_CHAT,
-        MODULE_MANIPULATION, BLOCKS_DUPLICATION
+        /**
+         * Cooldown of generic commands.
+         */
+        GENERIC_COMMAND,
+        /**
+         * World Advertisement cooldown.
+         */
+        ADVERTISEMENT_COMMAND,
+        /**
+         * Cooldown of sending message in global chat.
+         */
+        CREATIVE_CHAT,
+        /**
+         * Cooldown of sending message in world chat.
+         */
+        WORLD_CHAT,
+        /**
+         * Cooldown of creating or installing module.
+         */
+        MODULE_MANIPULATION,
+        /**
+         * Cooldown of duplicating coding blocks with manipulator.
+         */
+        BLOCKS_DUPLICATION
     }
 
     public static long getCooldownFromMap(Player player, CooldownType type) {

@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.other;
 
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -33,7 +34,7 @@ public final class DisguiseAsPlayerAction extends EntityAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    public void executeEntity(@NotNull Entity entity) {
         String name = getArguments().getValue("name","",this);
         String skin = getArguments().getValue("skin","mhf_steve",this);
         if (name.isEmpty()) return;

@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.stat
 import org.bukkit.DyeColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Wolf;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -33,7 +34,7 @@ public final class EntitySetDogCollarColorAction extends EntityAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    public void executeEntity(@NotNull Entity entity) {
         String colorName = getArguments().getValue("color", "red", this);
         DyeColor color;
         try {

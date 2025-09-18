@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.stat
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.WanderingTrader;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -32,7 +33,7 @@ public final class EntitySetWanderingDrinkPotionAction extends EntityAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof WanderingTrader trader)) {
             return;
         }

@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.move
 
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -32,7 +33,7 @@ public final class EntityLaunchVerticalAction extends EntityAction {
     }
 
     @Override
-    public void execute(Entity entity) {
+    public void executeEntity(@NotNull Entity entity) {
         float power = getArguments().getValue("power",1.0f,this);
         if (power < -20) {
             power = -20;

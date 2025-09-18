@@ -24,6 +24,7 @@ import org.bukkit.entity.BlockDisplay;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -36,7 +37,7 @@ public final class EntitySetDisplayItemAction extends EntityAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    public void executeEntity(@NotNull Entity entity) {
         ItemStack item = getArguments().getValue("item", new ItemStack(Material.AIR), this);
         if (entity instanceof ItemDisplay display) {
             display.setItemStack(item);

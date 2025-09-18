@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.movement;
 
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -31,7 +32,7 @@ public final class EntityRemovePassengerAction extends EntityAction {
     }
 
     @Override
-    public void execute(Entity entity) {
+    public void executeEntity(@NotNull Entity entity) {
         String text = getArguments().getValue("entity","",this);
         if (text.isEmpty()) {
             for (Entity passenger : entity.getPassengers()) {

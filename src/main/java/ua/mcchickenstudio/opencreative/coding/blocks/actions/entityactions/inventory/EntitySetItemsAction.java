@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.inve
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -35,7 +36,7 @@ public final class EntitySetItemsAction extends EntityAction {
     }
 
     @Override
-    public void execute(Entity entity) {
+    public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof InventoryHolder holder)) return;
         List<ItemStack> items = getArguments().getItemList("items",this);
         for (byte slot = 9; slot < 36; slot++) {

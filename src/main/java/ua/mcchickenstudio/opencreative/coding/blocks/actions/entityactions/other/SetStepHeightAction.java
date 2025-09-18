@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.othe
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -33,7 +34,7 @@ public final class SetStepHeightAction extends EntityAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof LivingEntity livingEntity)) {
             return;
         }

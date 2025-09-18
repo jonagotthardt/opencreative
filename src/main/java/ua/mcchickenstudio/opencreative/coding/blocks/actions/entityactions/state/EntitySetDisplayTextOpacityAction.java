@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.stat
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.TextDisplay;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -32,7 +33,7 @@ public final class EntitySetDisplayTextOpacityAction extends EntityAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    public void executeEntity(@NotNull Entity entity) {
         int opacity = getArguments().getValue("opacity", -1,this);
         if (entity instanceof TextDisplay display) {
             display.setTextOpacity((byte) opacity);

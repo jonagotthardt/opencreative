@@ -22,6 +22,7 @@ import io.papermc.paper.entity.Frictional;
 import net.kyori.adventure.util.TriState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -34,7 +35,7 @@ public final class EntitySetFrictionAction extends EntityAction {
     }
 
     @Override
-    public void execute(Entity entity) {
+    public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof Frictional frictional)) return;
         String frictionString = getArguments().getValue("friction", "not-set", this);
         TriState state = switch (frictionString.toLowerCase()) {

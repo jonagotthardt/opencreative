@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.stat
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.WitherSkull;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -33,7 +34,7 @@ public final class EntitySetChargedAction extends EntityAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    public void executeEntity(@NotNull Entity entity) {
         boolean value = getArguments().getValue("boolean", true, this);
         if (entity instanceof WitherSkull skull) {
             skull.setCharged(value);
