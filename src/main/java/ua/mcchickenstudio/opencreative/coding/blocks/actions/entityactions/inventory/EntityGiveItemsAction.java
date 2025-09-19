@@ -27,6 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntityGiveItemsAction extends EntityAction {
     public EntityGiveItemsAction(Executor executor, Target target, int x, Arguments args) {
@@ -35,7 +36,9 @@ public final class EntityGiveItemsAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        if (!(entity instanceof InventoryHolder holder)) return;
+        if (!(entity instanceof InventoryHolder holder)) {
+            throw new UnsupportedEntityException(InventoryHolder.class, entity);
+        }
         for (ItemStack item : getArguments().getItemList("items",this)) {
             holder.getInventory().addItem(item);
         }

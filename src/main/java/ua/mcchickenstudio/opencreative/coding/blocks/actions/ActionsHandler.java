@@ -25,10 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.line
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlleractions.other.MeasureTimeAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.coding.exceptions.PlayerException;
-import ua.mcchickenstudio.opencreative.coding.exceptions.UnknownCycleException;
-import ua.mcchickenstudio.opencreative.coding.exceptions.UnknownFunctionException;
-import ua.mcchickenstudio.opencreative.coding.exceptions.UnknownMethodException;
+import ua.mcchickenstudio.opencreative.coding.exceptions.*;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -36,8 +33,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetCodeErrorMessage;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.messageExists;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 /**
  * <h1>ActionHandler</h1>
@@ -210,14 +206,37 @@ public class ActionsHandler {
         String errorID = unknown ? errorClass : "unknown";
         String errorMessage = error.getMessage() == null ? errorClass : error.getMessage();
         errorMessage = errorMessage.replace("ua.mcchickenstudio.opencreative.coding.", "");
+        String localizedMessage = getLocaleMessage("coding-error." + errorID);
+        switch (error) {
+            case PlayerException exception -> localizedMessage = localizedMessage.replace("%player%", exception.getPlayerName());
+            case UnknownMethodException exception -> localizedMessage = localizedMessage.replace("%name%", exception.getName());
+            case UnknownCycleException exception -> localizedMessage = localizedMessage.replace("%name%", exception.getName());
+            case UnknownFunctionException exception -> localizedMessage = localizedMessage.replace("%name%", exception.getName());
+            case UnsupportedEntityException exception -> {
+                String localizedRequired = toKebabCase(exception.getRequired().getSimpleName());
+                String localizedCurrent = toKebabCase(exception.getCurrent().getSimpleName());
+
+                if (messageExists("entities." + localizedRequired)) {
+                    localizedRequired = getLocaleMessage("entities." + localizedRequired);
+                } else {
+                    localizedRequired = localizedRequired.replace("-", "_");
+                }
+
+                if (messageExists("entities." + localizedCurrent)) {
+                    localizedCurrent = getLocaleMessage("entities." + localizedCurrent);
+                } else {
+                    localizedCurrent = localizedCurrent.replace("-", "_");
+                }
+
+                localizedMessage = localizedMessage
+                        .replace("%type%", localizedRequired)
+                        .replace("%old%", localizedCurrent);
+            }
+            default -> {}
+        }
 
         StringBuilder description = new StringBuilder();
-        description.append(getLocaleMessage("coding-error." + errorID)
-                .replace("%player%", error instanceof PlayerException playerException ? playerException.getPlayerName() : "")
-                .replace("%name%", error instanceof UnknownFunctionException blockException ? blockException.getName() : "%name%")
-                .replace("%name%", error instanceof UnknownCycleException blockException ? blockException.getName() : "%name%")
-                .replace("%name%", error instanceof UnknownMethodException blockException ? blockException.getName() : "")
-        );
+        description.append(localizedMessage);
 
         if (unknown) {
             description.append(errorClass).append(": ").append(errorMessage);

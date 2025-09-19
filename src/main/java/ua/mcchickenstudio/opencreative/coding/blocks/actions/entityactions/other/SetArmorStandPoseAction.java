@@ -27,6 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.EulerAngle;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class SetArmorStandPoseAction extends EntityAction {
     public SetArmorStandPoseAction(Executor executor, Target target, int x, Arguments args) {
@@ -36,7 +37,7 @@ public final class SetArmorStandPoseAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof ArmorStand armorStand)) {
-            return;
+            throw new UnsupportedEntityException(ArmorStand.class, entity);
         }
         double x = getArguments().getValue("x",0.0d,this);
         double y = getArguments().getValue("x",0.0d,this);

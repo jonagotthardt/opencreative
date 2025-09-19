@@ -29,6 +29,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetItemInHandAction extends EntityAction {
     public EntitySetItemInHandAction(Executor executor, Target target, int x, Arguments args) {
@@ -46,6 +47,8 @@ public final class EntitySetItemInHandAction extends EntityAction {
         } else if (entity instanceof LivingEntity living && living.getEquipment() != null) {
             if (replaceWithAir || !mainItem.isEmpty()) living.getEquipment().setItemInMainHand(mainItem);
             if (replaceWithAir || !offItem.isEmpty()) living.getEquipment().setItemInOffHand(offItem);
+        } else {
+            throw new UnsupportedEntityException(LivingEntity.class, entity);
         }
 
 

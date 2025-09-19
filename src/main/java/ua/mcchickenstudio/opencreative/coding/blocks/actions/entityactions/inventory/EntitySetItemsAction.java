@@ -27,6 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 import java.util.List;
 
@@ -37,7 +38,9 @@ public final class EntitySetItemsAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        if (!(entity instanceof InventoryHolder holder)) return;
+        if (!(entity instanceof InventoryHolder holder)) {
+            throw new UnsupportedEntityException(InventoryHolder.class, entity);
+        }
         List<ItemStack> items = getArguments().getItemList("items",this);
         for (byte slot = 9; slot < 36; slot++) {
             if (slot-9 == items.size()) {

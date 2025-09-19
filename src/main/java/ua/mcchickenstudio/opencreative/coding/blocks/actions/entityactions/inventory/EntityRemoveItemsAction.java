@@ -28,6 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntityRemoveItemsAction extends EntityAction {
     public EntityRemoveItemsAction(Executor executor, Target target, int x, Arguments args) {
@@ -50,6 +51,8 @@ public final class EntityRemoveItemsAction extends EntityAction {
                 }
             }
             living.getEquipment().setArmorContents(armor);
+        } else {
+            throw new UnsupportedEntityException(InventoryHolder.class, entity);
         }
 
     }

@@ -27,6 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class SetEntityPathMoveToLocationAction extends EntityAction {
     public SetEntityPathMoveToLocationAction(Executor executor, Target target, int x, Arguments args) {
@@ -36,7 +37,7 @@ public final class SetEntityPathMoveToLocationAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof Mob mob)) {
-            return;
+            throw new UnsupportedEntityException(Mob.class, entity);
         }
         Location location = getArguments().getValue("location",entity.getLocation(),this);
         mob.getPathfinder().moveTo(location);

@@ -27,6 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetArmorAction extends EntityAction {
     public EntitySetArmorAction(Executor executor, Target target, int x, Arguments args) {
@@ -35,7 +36,9 @@ public final class EntitySetArmorAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        if (!(entity instanceof LivingEntity living)) return;
+        if (!(entity instanceof LivingEntity living)) {
+            throw new UnsupportedEntityException(LivingEntity.class, entity);
+        }
         if (living.getEquipment() == null) return;
         ItemStack helmet = getArguments().getValue("helmet", ItemStack.empty(),this);
         ItemStack chestplate = getArguments().getValue("chestplate",ItemStack.empty(),this);
