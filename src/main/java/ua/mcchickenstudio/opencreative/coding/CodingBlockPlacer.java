@@ -55,6 +55,7 @@ import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListene
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.setSignLine;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebugError;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.substring;
 
 /**
  * <h1>CodingBlockPlacer</h1>
@@ -195,6 +196,7 @@ public class CodingBlockPlacer {
         switch (type) {
             case FUNCTION, METHOD -> {
                 String callName = data.getString("name", "");
+                callName = substring(callName, 14);
                 placeDevBlock(location, type.getCategory().getBlock(),
                         type.getCategory().getAdditionalBlock(),
                         wallSign, type.getCategory().name().toLowerCase());
@@ -202,6 +204,7 @@ public class CodingBlockPlacer {
             }
             case CYCLE -> {
                 String cycleName = data.getString("name", "");
+                cycleName = substring(cycleName, 14);
                 int cycleRepeatingTime = data.getInt("time");
                 cycleRepeatingTime = Math.clamp(cycleRepeatingTime, 5, 3600);
                 placeDevBlock(location, ExecutorCategory.CYCLE.getBlock(),
