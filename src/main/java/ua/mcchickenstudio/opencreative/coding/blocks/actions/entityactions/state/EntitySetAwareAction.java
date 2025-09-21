@@ -26,6 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetAwareAction extends EntityAction {
     public EntitySetAwareAction(Executor executor, Target target, int x, Arguments args) {
@@ -35,7 +36,7 @@ public final class EntitySetAwareAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof Mob mob)) {
-           return;
+            throw new UnsupportedEntityException(Mob.class, entity);
         }
         boolean aware = getArguments().getValue("boolean", true, this);
         mob.setAware(aware);

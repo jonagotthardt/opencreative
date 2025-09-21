@@ -27,6 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetWalkSpeedAction extends EntityAction {
     public EntitySetWalkSpeedAction(Executor executor, Target target, int x, Arguments args) {
@@ -35,7 +36,9 @@ public final class EntitySetWalkSpeedAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        if (!(entity instanceof LivingEntity livingEntity)) return;
+        if (!(entity instanceof LivingEntity livingEntity)) {
+            throw new UnsupportedEntityException(LivingEntity.class, entity);
+        }
         boolean add = getArguments().getValue("add",false,this);
         double speed = getArguments().getValue("speed",0.6f,this);
         if (add) {

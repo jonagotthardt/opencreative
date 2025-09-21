@@ -30,6 +30,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetDisplayItemAction extends EntityAction {
     public EntitySetDisplayItemAction(Executor executor, Target target, int x, Arguments args) {
@@ -43,6 +44,8 @@ public final class EntitySetDisplayItemAction extends EntityAction {
             display.setItemStack(item);
         } else if (entity instanceof BlockDisplay display) {
             display.setBlock(Bukkit.createBlockData(item.getType()));
+        } else {
+            throw new UnsupportedEntityException(ItemDisplay.class, entity);
         }
     }
 

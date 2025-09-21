@@ -27,6 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetSnowGolemPumpkinAction extends EntityAction {
     public EntitySetSnowGolemPumpkinAction(Executor executor, Target target, int x, Arguments args) {
@@ -36,7 +37,7 @@ public final class EntitySetSnowGolemPumpkinAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof Snowman snowman)) {
-           return;
+            throw new UnsupportedEntityException(Snowman.class, entity);
         }
         boolean pumpkin = getArguments().getValue("boolean", true, this);
         snowman.setDerp(!pumpkin);

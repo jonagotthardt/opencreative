@@ -26,6 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 
@@ -36,8 +37,10 @@ public final class EntitySetHealthAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        if (!(entity instanceof LivingEntity livingEntity)) return;
-        
+        if (!(entity instanceof LivingEntity livingEntity)) {
+            throw new UnsupportedEntityException(LivingEntity.class, entity);
+        }
+
         if (livingEntity.isDead()) {
             sendCodingDebugLog(getPlanet(),"Can't set entity's health, livingEntity is dead.");
             return;

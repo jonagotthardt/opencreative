@@ -28,6 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetDisplayTranslationAction extends EntityAction {
     public EntitySetDisplayTranslationAction(Executor executor, Target target, int x, Arguments args) {
@@ -37,7 +38,7 @@ public final class EntitySetDisplayTranslationAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof Display display)) {
-            return;
+            throw new UnsupportedEntityException(Display.class, entity);
         }
         boolean add = getArguments().getValue("add",false,this);
         float x = (add ? 0.0f : display.getTransformation().getTranslation().x());

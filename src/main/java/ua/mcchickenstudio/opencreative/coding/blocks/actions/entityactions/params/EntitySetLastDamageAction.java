@@ -26,6 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetLastDamageAction extends EntityAction {
 
@@ -35,7 +36,9 @@ public final class EntitySetLastDamageAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        if (!(entity instanceof LivingEntity livingEntity)) return;
+        if (!(entity instanceof LivingEntity livingEntity)) {
+            throw new UnsupportedEntityException(LivingEntity.class, entity);
+        }
         boolean add = getArguments().getValue("add",false,this);
         double damage = getArguments().getValue("damage",1.0d,this);
         if (add) {

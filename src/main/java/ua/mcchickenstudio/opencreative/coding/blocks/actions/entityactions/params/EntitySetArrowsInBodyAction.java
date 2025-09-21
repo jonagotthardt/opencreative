@@ -26,6 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetArrowsInBodyAction extends EntityAction {
     public EntitySetArrowsInBodyAction(Executor executor, Target target, int x, Arguments args) {
@@ -34,7 +35,9 @@ public final class EntitySetArrowsInBodyAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        if (!(entity instanceof LivingEntity livingEntity)) return;
+        if (!(entity instanceof LivingEntity livingEntity)) {
+            throw new UnsupportedEntityException(LivingEntity.class, entity);
+        }
         boolean add = getArguments().getValue("add",false,this);
         int count = getArguments().getValue("count",0,this);
         if (add) {

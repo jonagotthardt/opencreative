@@ -25,6 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetScreamingAction extends EntityAction {
     public EntitySetScreamingAction(Executor executor, Target target, int x, Arguments args) {
@@ -38,6 +39,8 @@ public final class EntitySetScreamingAction extends EntityAction {
             goat.setScreaming(value);
         } else if (entity instanceof Enderman enderman) {
             enderman.setScreaming(value);
+        } else {
+            throw new UnsupportedEntityException(Enderman.class, entity);
         }
     }
 

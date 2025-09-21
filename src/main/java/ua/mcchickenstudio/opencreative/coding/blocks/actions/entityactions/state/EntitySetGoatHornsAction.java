@@ -27,6 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetGoatHornsAction extends EntityAction {
     public EntitySetGoatHornsAction(Executor executor, Target target, int x, Arguments args) {
@@ -36,7 +37,7 @@ public final class EntitySetGoatHornsAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof Goat goat)) {
-            return;
+            throw new UnsupportedEntityException(Goat.class, entity);
         }
         boolean left = getArguments().getValue("left", true, this);
         boolean right = getArguments().getValue("right", true, this);

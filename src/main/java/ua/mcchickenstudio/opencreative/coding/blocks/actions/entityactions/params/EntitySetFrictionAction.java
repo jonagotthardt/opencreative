@@ -28,6 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetFrictionAction extends EntityAction {
     public EntitySetFrictionAction(Executor executor, Target target, int x, Arguments args) {
@@ -36,7 +37,9 @@ public final class EntitySetFrictionAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        if (!(entity instanceof Frictional frictional)) return;
+        if (!(entity instanceof Frictional frictional)) {
+            throw new UnsupportedEntityException(Frictional.class, entity);
+        }
         String frictionString = getArguments().getValue("friction", "not-set", this);
         TriState state = switch (frictionString.toLowerCase()) {
             case "true" -> TriState.TRUE;

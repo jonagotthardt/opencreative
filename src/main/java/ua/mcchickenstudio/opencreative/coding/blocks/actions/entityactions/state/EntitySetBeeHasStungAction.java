@@ -26,6 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetBeeHasStungAction extends EntityAction {
     public EntitySetBeeHasStungAction(Executor executor, Target target, int x, Arguments args) {
@@ -35,7 +36,7 @@ public final class EntitySetBeeHasStungAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof Bee bee)) {
-           return;
+            throw new UnsupportedEntityException(Bee.class, entity);
         }
         boolean hasStung = getArguments().getValue("boolean", true, this);
         bee.setHasStung(hasStung);

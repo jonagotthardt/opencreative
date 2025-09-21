@@ -28,6 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetSittingAction extends EntityAction {
     public EntitySetSittingAction(Executor executor, Target target, int x, Arguments args) {
@@ -41,6 +42,8 @@ public final class EntitySetSittingAction extends EntityAction {
             panda.setSitting(value);
         } else if (entity instanceof Sittable sittable) {
             sittable.setSitting(value);
+        } else {
+            throw new UnsupportedEntityException(Sittable.class, entity);
         }
     }
 

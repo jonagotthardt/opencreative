@@ -27,6 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetDisplayTextAction extends EntityAction {
     public EntitySetDisplayTextAction(Executor executor, Target target, int x, Arguments args) {
@@ -38,6 +39,8 @@ public final class EntitySetDisplayTextAction extends EntityAction {
         Component text = getArguments().getValue("text", Component.text(""),this);
         if (entity instanceof TextDisplay display) {
             display.text(text);
+        } else {
+            throw new UnsupportedEntityException(TextDisplay.class, entity);
         }
     }
 

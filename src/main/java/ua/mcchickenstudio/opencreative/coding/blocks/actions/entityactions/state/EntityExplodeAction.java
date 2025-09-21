@@ -29,6 +29,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntityExplodeAction extends EntityAction {
     public EntityExplodeAction(Executor executor, Target target, int x, Arguments args) {
@@ -37,12 +38,11 @@ public final class EntityExplodeAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        if (entity instanceof Creeper creeper) {
-            creeper.explode();
-        } else if (entity instanceof ExplosiveMinecart minecart) {
-            minecart.explode();
-        } else if (entity instanceof AbstractWindCharge charge) {
-            charge.explode();
+        switch (entity) {
+            case Creeper creeper -> creeper.explode();
+            case ExplosiveMinecart minecart -> minecart.explode();
+            case AbstractWindCharge charge -> charge.explode();
+            default -> {throw new UnsupportedEntityException(Creeper.class, entity);}
         }
     }
 

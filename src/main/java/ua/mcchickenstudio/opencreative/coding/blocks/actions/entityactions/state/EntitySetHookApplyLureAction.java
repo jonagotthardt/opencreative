@@ -27,6 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetHookApplyLureAction extends EntityAction {
     public EntitySetHookApplyLureAction(Executor executor, Target target, int x, Arguments args) {
@@ -38,6 +39,8 @@ public final class EntitySetHookApplyLureAction extends EntityAction {
         boolean value = getArguments().getValue("boolean", true, this);
         if (entity instanceof FishHook hook) {
             hook.setApplyLure(value);
+        } else {
+            throw new UnsupportedEntityException(FishHook.class, entity);
         }
     }
 

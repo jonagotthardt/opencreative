@@ -27,6 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetHandAction extends EntityAction {
     public EntitySetHandAction(Executor executor, Target target, int x, Arguments args) {
@@ -36,7 +37,7 @@ public final class EntitySetHandAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof Mob mob)) {
-            return;
+            throw new UnsupportedEntityException(Mob.class, entity);
         }
         String hand = getArguments().getValue("hand", "right", this);
         mob.setLeftHanded(hand.equalsIgnoreCase("left"));

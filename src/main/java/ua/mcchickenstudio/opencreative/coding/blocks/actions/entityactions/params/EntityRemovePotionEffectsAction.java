@@ -29,6 +29,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,9 @@ public final class EntityRemovePotionEffectsAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        if (!(entity instanceof LivingEntity livingEntity)) return;
+        if (!(entity instanceof LivingEntity livingEntity)) {
+            throw new UnsupportedEntityException(LivingEntity.class, entity);
+        }
         List<ItemStack> potionsItems = getArguments().getItemList("potions",this);
         for (ItemStack potionItem : potionsItems) {
             PotionMeta potionMeta = (PotionMeta) potionItem.getItemMeta();

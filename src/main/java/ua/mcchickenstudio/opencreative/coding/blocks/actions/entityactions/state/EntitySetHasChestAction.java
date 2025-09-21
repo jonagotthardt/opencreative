@@ -28,6 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetHasChestAction extends EntityAction {
     public EntitySetHasChestAction(Executor executor, Target target, int x, Arguments args) {
@@ -37,7 +38,7 @@ public final class EntitySetHasChestAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof ChestedHorse chested)) {
-           return;
+            throw new UnsupportedEntityException(ChestedHorse.class, entity);
         }
         boolean hasChest = getArguments().getValue("boolean", true, this);
         chested.setCarryingChest(hasChest);
