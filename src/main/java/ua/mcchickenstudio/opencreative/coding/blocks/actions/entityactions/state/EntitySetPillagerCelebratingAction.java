@@ -26,6 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetPillagerCelebratingAction extends EntityAction {
     public EntitySetPillagerCelebratingAction(Executor executor, Target target, int x, Arguments args) {
@@ -35,7 +36,7 @@ public final class EntitySetPillagerCelebratingAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof Raider raider)) {
-           return;
+            throw new UnsupportedEntityException(Raider.class, entity);
         }
         boolean celebrate = getArguments().getValue("boolean", true, this);
         raider.setCelebrating(celebrate);

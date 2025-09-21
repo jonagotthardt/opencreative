@@ -26,6 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetDisplayTextWidthAction extends EntityAction {
     public EntitySetDisplayTextWidthAction(Executor executor, Target target, int x, Arguments args) {
@@ -37,6 +38,8 @@ public final class EntitySetDisplayTextWidthAction extends EntityAction {
         int width = getArguments().getValue("width", 30,this);
         if (entity instanceof TextDisplay display) {
             display.setLineWidth(width);
+        } else {
+            throw new UnsupportedEntityException(TextDisplay.class, entity);
         }
     }
 

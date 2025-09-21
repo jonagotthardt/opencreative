@@ -27,6 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetWanderingDrinkMilkAction extends EntityAction {
     public EntitySetWanderingDrinkMilkAction(Executor executor, Target target, int x, Arguments args) {
@@ -36,7 +37,7 @@ public final class EntitySetWanderingDrinkMilkAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof WanderingTrader trader)) {
-            return;
+            throw new UnsupportedEntityException(WanderingTrader.class, entity);
         }
         boolean value = getArguments().getValue("boolean", true, this);
         trader.setCanDrinkMilk(value);

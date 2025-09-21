@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.utils;
 
 import net.kyori.adventure.text.TextReplacementConfig;
-import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.modules.Module;
@@ -679,9 +678,36 @@ public final class MessageUtils {
         return ticks * modifier;
     }
 
+    /**
+     * Checks whether message exists in localization file.
+     * @param messageID id of message.
+     * @return true - message exists, false - not found.
+     */
     public static boolean messageExists(String messageID) {
         String originalMessage = getLocalization().getString(messageID);
         return originalMessage != null && !originalMessage.equalsIgnoreCase("null");
+    }
+
+    private static final Pattern CAMEL_TO_KEBAB = Pattern.compile("([a-z])([A-Z])");
+
+    /**
+     * Converts text from snake_case, camelCase and PascalCase
+     * to kebab-case, that can be used in YAML.
+     * <pre>
+     * {@code
+     * toKebabCase("EnderDragon"); // "ender-dragon"
+     * toKebabCase("ARMOR_STAND"); // "armor-stand"
+     * toKebabCase("Creeper"); // "creeper"
+     * }
+     * </pre>
+     * @param input text to convert.
+     * @return kebab-cased text.
+     */
+    public static @NotNull String toKebabCase(@NotNull String input) {
+        if (input.contains("_")) {
+            return input.toLowerCase().replace("_", "-");
+        }
+        return CAMEL_TO_KEBAB.matcher(input).replaceAll("$1-$2").toLowerCase();
     }
 
     private static final Map<Character, String> LEGACY_TO_MINI = Map.ofEntries(

@@ -27,6 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetSheepColorAction extends EntityAction {
     public EntitySetSheepColorAction(Executor executor, Target target, int x, Arguments args) {
@@ -44,6 +45,8 @@ public final class EntitySetSheepColorAction extends EntityAction {
         }
         if (entity instanceof Sheep sheep) {
             sheep.setColor(color);
+        } else {
+            throw new UnsupportedEntityException(Sheep.class, entity);
         }
     }
 

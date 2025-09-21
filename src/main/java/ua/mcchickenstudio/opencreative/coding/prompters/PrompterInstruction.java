@@ -97,6 +97,7 @@ public final class PrompterInstruction {
     - Methods need to be launched with LAUNCH_METHOD
     - Functions will copy it's actions to place, where it was launched, and execute, so CONTROL_STOP_CODE_LINE will stop entire code line.
     - Methods will execute it's actions in other thread, so CONTROL_STOP_CODE_LINE will stop only method.
+    - Maximum length of function/method/cycle name is 14 symbols.
     
     EXAMPLES:
     

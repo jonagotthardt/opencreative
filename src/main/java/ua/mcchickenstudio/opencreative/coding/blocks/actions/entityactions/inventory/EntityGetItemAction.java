@@ -29,6 +29,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
 public final class EntityGetItemAction extends EntityAction {
@@ -45,6 +46,8 @@ public final class EntityGetItemAction extends EntityAction {
             item = holder.getInventory().getItem(index-1);
         } else if (entity instanceof LivingEntity living && living.getEquipment() != null) {
             item = living.getEquipment().getItem(EquipmentSlot.values()[index-1]);
+        } else {
+            throw new UnsupportedEntityException(InventoryHolder.class, entity);
         }
         if (item != null) setVarValue(link,item);
     }

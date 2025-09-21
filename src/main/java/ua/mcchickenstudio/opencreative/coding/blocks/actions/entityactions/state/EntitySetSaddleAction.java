@@ -25,6 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetSaddleAction extends EntityAction {
     public EntitySetSaddleAction(Executor executor, Target target, int x, Arguments args) {
@@ -34,7 +35,7 @@ public final class EntitySetSaddleAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof Steerable steerable)) {
-            return;
+            throw new UnsupportedEntityException(Steerable.class, entity);
         }
         boolean value = getArguments().getValue("boolean", true, this);
         steerable.setSaddle(value);

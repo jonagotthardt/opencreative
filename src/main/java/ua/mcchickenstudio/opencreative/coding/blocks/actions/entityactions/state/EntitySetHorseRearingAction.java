@@ -25,6 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetHorseRearingAction extends EntityAction {
     public EntitySetHorseRearingAction(Executor executor, Target target, int x, Arguments args) {
@@ -36,6 +37,8 @@ public final class EntitySetHorseRearingAction extends EntityAction {
         boolean value = getArguments().getValue("boolean", true, this);
         if (entity instanceof AbstractHorse horse) {
             horse.setRearing(value);
+        } else {
+            throw new UnsupportedEntityException(AbstractHorse.class, entity);
         }
     }
 

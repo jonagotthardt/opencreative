@@ -28,6 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetAllayDancingAction extends EntityAction {
     public EntitySetAllayDancingAction(Executor executor, Target target, int x, Arguments args) {
@@ -37,7 +38,7 @@ public final class EntitySetAllayDancingAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof Allay allay)) {
-            return;
+            throw new UnsupportedEntityException(Allay.class, entity);
         }
         boolean value = getArguments().getValue("boolean", true, this);
         Location jukebox = getArguments().getValue("jukebox",

@@ -25,6 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.*;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class SetEntityTargetAction extends EntityAction {
     public SetEntityTargetAction(Executor executor, Target target, int x, Arguments args) {
@@ -34,7 +35,7 @@ public final class SetEntityTargetAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof Mob mob)) {
-            return;
+            throw new UnsupportedEntityException(Mob.class, entity);
         }
         String text = getArguments().getValue("entity","",this);
         for (Entity foundEntity : getEntitiesByNameOrUUID(text)) {

@@ -29,6 +29,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntityVillagerZombifyAction extends EntityAction {
     public EntityVillagerZombifyAction(Executor executor, Target target, int x, Arguments args) {
@@ -39,6 +40,8 @@ public final class EntityVillagerZombifyAction extends EntityAction {
     public void executeEntity(@NotNull Entity entity) {
         if (entity instanceof Villager villager) {
             villager.zombify();
+        } else {
+            throw new UnsupportedEntityException(Villager.class, entity);
         }
     }
 

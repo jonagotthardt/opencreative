@@ -27,6 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class SetStepHeightAction extends EntityAction {
     public SetStepHeightAction(Executor executor, Target target, int x, Arguments args) {
@@ -36,7 +37,7 @@ public final class SetStepHeightAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof LivingEntity livingEntity)) {
-            return;
+            throw new UnsupportedEntityException(LivingEntity.class, entity);
         }
         boolean add = getArguments().getValue("add",false,this);
         double height = getArguments().getValue("height",0.6f,this);

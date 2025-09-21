@@ -25,6 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetInterestedAction extends EntityAction {
     public EntitySetInterestedAction(Executor executor, Target target, int x, Arguments args) {
@@ -40,6 +41,8 @@ public final class EntitySetInterestedAction extends EntityAction {
             wolf.setInterested(value);
         } else if (entity instanceof Fox fox) {
             fox.setInterested(value);
+        } else {
+            throw new UnsupportedEntityException(Cat.class, entity);
         }
     }
 

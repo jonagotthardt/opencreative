@@ -26,6 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntityReleaseShouldersAction extends EntityAction {
     public EntityReleaseShouldersAction(Executor executor, Target target, int x, Arguments args) {
@@ -34,7 +35,9 @@ public final class EntityReleaseShouldersAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        if (!(entity instanceof HumanEntity humanEntity)) return;
+        if (!(entity instanceof HumanEntity humanEntity)) {
+            throw new UnsupportedEntityException(HumanEntity.class, entity);
+        }
         String type = getArguments().getValue("type", "all", this);
         switch (type.toLowerCase()) {
             case "left" -> humanEntity.releaseLeftShoulderEntity();

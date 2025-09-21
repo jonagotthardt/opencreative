@@ -28,6 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class EntitySetMinecartBlockAction extends EntityAction {
     public EntitySetMinecartBlockAction(Executor executor, Target target, int x, Arguments args) {
@@ -37,7 +38,7 @@ public final class EntitySetMinecartBlockAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof Minecart minecart)) {
-            return;
+            throw new UnsupportedEntityException(Minecart.class, entity);
         }
         Material material = getArguments().getValue("block", Material.GRASS_BLOCK, this);
         minecart.setDisplayBlockData(material.createBlockData());
