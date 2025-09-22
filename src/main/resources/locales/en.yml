@@ -13891,6 +13891,26 @@ menus:
             - "&7redstone operations."
             - ""
             - "&eClick to set."
+        planet-block-edits-limit:
+          name: "&eBlock edits limit"
+          lore:
+            - "&7Type: &aNumber"
+            - ""
+            - "&7Gets the limit of block edit"
+            - "&7operations. When exceeded, blocks"
+            - "&7won't be able to place, break or"
+            - "&7edit with coding."
+            - ""
+            - "&eClick to set."
+        planet-block-edits-amount:
+          name: "&6Block edits amount"
+          lore:
+            - "&7Type: &aNumber"
+            - ""
+            - "&7Gets the number of last"
+            - "&7block edits operations."
+            - ""
+            - "&eClick to set."
         planet-entities-amount:
           name: "&eEntities in world"
           lore:

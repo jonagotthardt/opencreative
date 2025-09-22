@@ -38,7 +38,7 @@ public final class UnixTimeMinutesValue extends NumberEventValue {
     }
 
     @Override
-    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+    public @NotNull Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
         SimpleDateFormat minutesFormat = new SimpleDateFormat("mm");
         Date date = new Date(System.currentTimeMillis());
         return Integer.parseInt(minutesFormat.format(date));

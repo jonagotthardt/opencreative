@@ -35,7 +35,7 @@ public final class WorldOnlineValue extends NumberEventValue {
     }
 
     @Override
-    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+    public @NotNull Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
         return action.getExecutor().getPlanet().getTerritory().getWorld().getPlayerCount();
     }
 

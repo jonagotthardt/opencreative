@@ -35,7 +35,7 @@ public final class WorldIconValue extends ItemEventValue {
     }
 
     @Override
-    public @Nullable ItemStack getItem(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+    public @NotNull ItemStack getItem(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
         return new ItemStack(action.getExecutor().getPlanet().getInformation().getIcon().getType(),1);
     }
 

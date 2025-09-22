@@ -18,8 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.values.world;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,15 +28,15 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public final class UnixTimeValue extends NumberEventValue {
+public final class WorldBlockEditsAmountValue extends NumberEventValue {
 
-    public UnixTimeValue() {
-        super("unix_time", new ItemStack(Material.CLOCK), MenusCategory.WORLD);
+    public WorldBlockEditsAmountValue() {
+        super("planet_block_edits_amount", new ItemStack(Material.WOODEN_AXE), MenusCategory.WORLD);
     }
 
     @Override
     public @NotNull Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
-        return System.currentTimeMillis();
+        return action.getExecutor().getPlanet().getLimits().getLastModifiedBlocksAmount();
     }
 
     @Override
@@ -46,7 +46,7 @@ public final class UnixTimeValue extends NumberEventValue {
 
     @Override
     public @NotNull String getDescription() {
-        return "Returns server time in UNIX format";
+        return "Returns world's block changes amount";
     }
 
 }

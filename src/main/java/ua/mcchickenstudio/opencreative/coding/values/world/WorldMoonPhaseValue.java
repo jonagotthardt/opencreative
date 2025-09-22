@@ -35,7 +35,7 @@ public final class WorldMoonPhaseValue extends TextEventValue {
     }
 
     @Override
-    public @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+    public @NotNull String getText(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
         return action.getExecutor().getPlanet().getWorld().getMoonPhase().name().toLowerCase();
     }
 

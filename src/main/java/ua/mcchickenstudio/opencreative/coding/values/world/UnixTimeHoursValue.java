@@ -38,7 +38,7 @@ public final class UnixTimeHoursValue extends NumberEventValue {
     }
 
     @Override
-    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+    public @NotNull Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
         SimpleDateFormat hoursFormat = new SimpleDateFormat("HH");
         Date date = new Date(System.currentTimeMillis());
         return Integer.parseInt(hoursFormat.format(date));
