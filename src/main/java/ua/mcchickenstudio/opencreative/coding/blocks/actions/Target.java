@@ -45,7 +45,8 @@ public enum Target {
     RANDOM_PLAYER(Material.PLAYER_HEAD, true),
     RANDOM_TARGET(Material.PURPUR_STAIRS, true),
     KILLER(Material.NETHERITE_SWORD, true),
-    VICTIM(Material.SKELETON_SKULL, true);
+    VICTIM(Material.SKELETON_SKULL, true),
+    LAST_SPAWNED(Material.TURTLE_EGG, true);
 
     private final Material icon;
     private final boolean supportsEventValue;

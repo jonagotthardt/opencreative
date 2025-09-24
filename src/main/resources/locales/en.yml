@@ -12536,6 +12536,7 @@ menus:
         victim: "&4☠ Victim"
         all-entities: "&6🍖 All Entities"
         random-target: "&5⭐ Random Target"
+        last-spawned: "&a🔥 Last Spawned Entity"
       items:
         default:
           name: " "
@@ -12575,6 +12576,17 @@ menus:
             - ""
             - "&7  If there are no players"
             - "&7  in the game world, the block will not work."
+            - ""
+            - "&e Click to select."
+            - ""
+        last-spawned:
+          name: " "
+          lore:
+            - "&a 🔥 Last Spawned Entity"
+            - "&7 Selects mob, that was spawned by code."
+            - ""
+            - "&7  It must have &cworld action&7,"
+            - "&c  that created entity before."
             - ""
             - "&e Click to select."
             - ""
@@ -15907,6 +15919,7 @@ blocks:
   # selection
   selected: "Selection"
   all_players: "All players"
+  last_spawned: "Spawned mob"
   all_entities: "All entities"
   random_player: "Random player"
   random_target: "Random target"

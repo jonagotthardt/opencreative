@@ -57,6 +57,7 @@ public class ActionsHandler {
     private final Queue<Action> actionsQueue = new LinkedList<>();
 
     private final boolean doNotUseTryFlag;
+    private Entity lastSpawnedEntity;
     private boolean stopped = false;
     private long waitDelay = 0;
 
@@ -73,6 +74,7 @@ public class ActionsHandler {
         this.parentActionsHandler = null;
         this.action = null;
         this.doNotUseTryFlag = false;
+        this.lastSpawnedEntity = null;
     }
 
     /**
@@ -87,6 +89,7 @@ public class ActionsHandler {
         ActionsHandler mainHandler = getMainActionHandler();
         this.executor = mainHandler.executor;
         this.event = mainHandler.event;
+        this.lastSpawnedEntity = mainHandler.lastSpawnedEntity;
         this.action = action;
         this.selectedTargets = new HashSet<>(parentActionsHandler.selectedTargets);
         this.doNotUseTryFlag = action.getActionType() == ActionType.CONTROLLER_CATCH_ERROR || parentActionsHandler.doNotUseTryFlag;
@@ -275,6 +278,22 @@ public class ActionsHandler {
             handler = handler.getParentActionHandler();
         }
         return lastHandler;
+    }
+
+    /**
+     * Returns last spawned entity by code.
+     * @return last spawned entity.
+     */
+    public @Nullable Entity getLastSpawnedEntity() {
+        return lastSpawnedEntity;
+    }
+
+    /**
+     * Sets last spawned entity.
+     * @param lastSpawnedEntity last spawned entity.
+     */
+    public void setLastSpawnedEntity(Entity lastSpawnedEntity) {
+        this.lastSpawnedEntity = lastSpawnedEntity;
     }
 
     /**

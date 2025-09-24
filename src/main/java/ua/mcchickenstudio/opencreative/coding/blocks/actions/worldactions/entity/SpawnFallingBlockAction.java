@@ -60,6 +60,7 @@ public final class SpawnFallingBlockAction extends WorldAction {
                 falling.setBlockData(block.createBlockData());
                 falling.setDamagePerBlock(damagePerBlock);
                 falling.setCancelDrop(cancelDrop);
+                setLastSpawnedEntity(falling);
             }
         }
     }

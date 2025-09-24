@@ -134,6 +134,7 @@ public class Argument {
                         }
                         yield null;
                     }
+                    case LAST_SPAWNED -> action.getHandler().getMainActionHandler().getLastSpawnedEntity();
                     default -> action.getEntity();
                 };
                 Object value = EventValues.getInstance().getValue(link.id().toLowerCase(), action.getHandler(), action, target);

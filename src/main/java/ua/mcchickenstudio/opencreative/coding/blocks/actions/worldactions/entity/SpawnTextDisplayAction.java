@@ -54,6 +54,7 @@ public final class SpawnTextDisplayAction extends WorldAction {
                     display.customName(customName);
                 }
                 display.text(text);
+                setLastSpawnedEntity(display);
             }
         }
     }

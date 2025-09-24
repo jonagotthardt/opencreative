@@ -42,6 +42,7 @@ public final class SpawnFireworkAction extends WorldAction {
             Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location,EntityType.FIREWORK_ROCKET);
             if (spawnedEntity instanceof Firework rocket) {
                 rocket.setItem(firework);
+                setLastSpawnedEntity(rocket);
             }
         }
     }

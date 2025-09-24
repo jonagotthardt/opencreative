@@ -18,15 +18,22 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions;
 
+import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+
 public abstract class WorldAction extends Action {
 
     public WorldAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
+    }
+
+    protected void setLastSpawnedEntity(@NotNull Entity entity) {
+        getHandler().getMainActionHandler().setLastSpawnedEntity(entity);
     }
 
     public ActionCategory getActionCategory() {
