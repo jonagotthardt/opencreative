@@ -57,6 +57,7 @@ public final class SpawnItemDisplayAction extends WorldAction {
                     display.customName(customName);
                 }
                 display.setItemStack(item);
+                setLastSpawnedEntity(display);
             }
         }
     }

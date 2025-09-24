@@ -39,9 +39,9 @@ public final class DropItemAction extends WorldAction {
         boolean naturally = getArguments().getValue("naturally",true,this);
         for (Location location : getArguments().getLocationList("locations",this)) {
             if (naturally) {
-                getPlanet().getTerritory().getWorld().dropItemNaturally(location,item);
+                setLastSpawnedEntity(getPlanet().getTerritory().getWorld().dropItemNaturally(location,item));
             } else {
-                getPlanet().getTerritory().getWorld().dropItem(location,item);
+                setLastSpawnedEntity(getPlanet().getTerritory().getWorld().dropItem(location,item));
             }
         }
     }

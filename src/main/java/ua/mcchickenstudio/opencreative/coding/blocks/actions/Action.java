@@ -250,6 +250,12 @@ public abstract class Action {
                     entities.add(selectedTargets.get(new Random().nextInt(selectedTargets.size())));
                 }
             }
+            case LAST_SPAWNED -> {
+                Entity spawned = getHandler().getMainActionHandler().getLastSpawnedEntity();
+                if (spawned != null) {
+                    entities.add(entity);
+                }
+            }
             default -> entities.addAll(eventEntities);
         }
         entities.removeIf(entity -> entity instanceof Player player && ChangedWorld.isPlayerWithLocation(player));

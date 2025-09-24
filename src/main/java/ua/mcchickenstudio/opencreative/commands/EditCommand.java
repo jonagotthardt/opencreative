@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.commands;
 
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -133,6 +134,9 @@ public class EditCommand extends CommandHandler {
                 player.sendMessage(toComponent(getLocaleMessage("commands.edit.text-limit").replace("%limit%",String.valueOf(TEXT_LIMIT))));
                 return;
             }
+            if (!newName.hasDecoration(TextDecoration.ITALIC)) {
+                newName = newName.decoration(TextDecoration.ITALIC, false);
+            }
             meta.displayName(newName);
             item.setItemMeta(meta);
             player.sendMessage(getComponentWithPlaceholders("commands.edit.renamed",
@@ -166,6 +170,9 @@ public class EditCommand extends CommandHandler {
         if (getComponentLength(newLoreLine) > TEXT_LIMIT) {
             player.sendMessage(toComponent(getLocaleMessage("commands.edit.text-limit").replace("%limit%",String.valueOf(TEXT_LIMIT))));
             return;
+        }
+        if (!newLoreLine.hasDecoration(TextDecoration.ITALIC)) {
+            newLoreLine = newLoreLine.decoration(TextDecoration.ITALIC, false);
         }
         List<Component> newLore = meta.lore();
         if (newLore == null) newLore = new ArrayList<>();
@@ -202,6 +209,9 @@ public class EditCommand extends CommandHandler {
             player.sendMessage(toComponent(getLocaleMessage("commands.edit.lines-limit")
                     .replace("%limit%",String.valueOf(LINES_LIMIT))));
             return;
+        }
+        if (!newLoreLine.hasDecoration(TextDecoration.ITALIC)) {
+            newLoreLine = newLoreLine.decoration(TextDecoration.ITALIC, false);
         }
         newLore.add(newLoreLine);
         meta.lore(newLore);

@@ -40,6 +40,7 @@ public final class SpawnExperienceOrbAction extends WorldAction {
             Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location,EntityType.EXPERIENCE_ORB);
             if (spawnedEntity instanceof ExperienceOrb orb) {
                 orb.setExperience(amount);
+                setLastSpawnedEntity(orb);
             }
         }
     }

@@ -41,11 +41,13 @@ public final class SpawnArrowAction extends WorldAction {
                 Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location,EntityType.ARROW);
                 if (spawnedEntity instanceof Arrow arrow) {
                     arrow.setItemStack(arrowItem);
+                    setLastSpawnedEntity(arrow);
                 }
             } else if (arrowItem.getType() == Material.SPECTRAL_ARROW) {
                 Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location,EntityType.SPECTRAL_ARROW);
                 if (spawnedEntity instanceof SpectralArrow arrow) {
                     arrow.setItemStack(arrowItem);
+                    setLastSpawnedEntity(arrow);
                 }
             }
 

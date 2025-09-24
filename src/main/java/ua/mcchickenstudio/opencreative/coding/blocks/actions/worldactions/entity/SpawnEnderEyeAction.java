@@ -58,7 +58,7 @@ public final class SpawnEnderEyeAction extends WorldAction {
                 if (getArguments().pathExists("target")) {
                     eye.setTargetLocation(targetLocation, dropType.equals("random"));
                 }
-
+                setLastSpawnedEntity(eye);
             }
         }
     }

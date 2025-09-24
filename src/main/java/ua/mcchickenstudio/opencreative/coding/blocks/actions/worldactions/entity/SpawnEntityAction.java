@@ -83,6 +83,7 @@ public final class SpawnEntityAction extends WorldAction {
             if (spawnedEntity instanceof LivingEntity living) {
                 living.setAI(ai);
             }
+            setLastSpawnedEntity(spawnedEntity);
         }
     }
 

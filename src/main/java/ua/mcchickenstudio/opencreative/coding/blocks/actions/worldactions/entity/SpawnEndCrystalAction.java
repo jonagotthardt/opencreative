@@ -54,6 +54,7 @@ public final class SpawnEndCrystalAction extends WorldAction {
                     crystal.setBeamTarget(beamLocation);
                 }
                 crystal.setShowingBottom(bottom);
+                setLastSpawnedEntity(crystal);
             }
         }
     }

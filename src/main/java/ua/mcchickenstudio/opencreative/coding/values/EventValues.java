@@ -112,11 +112,11 @@ public final class EventValues {
     private void registerDefaults() {
         registerEventValue(new WorldNameValue(), new WorldDescriptionValue(), new WorldOnlineValue(),
                 new WorldCustomIdValue(), new WorldSpawnValue(), new WorldIdValue(), new WorldIconValue(),
-                new WorldRatingValue(), new WorldEntitiesAmountValue(), new WorldEntitiesAmountLimitValue(),
+                new WorldRatingValue(), new UnixTimeValue(), new UnixTimeHoursValue(), new UnixTimeMinutesValue(),
+                new UnixTimeSecondsValue(), new WorldEntitiesAmountValue(), new WorldEntitiesAmountLimitValue(),
                 new WorldLastRedstoneOperationsValue(), new WorldRedstoneOperationsLimitValue(),
-                new WorldVariablesAmountValue(), new WorldVariablesAmountLimitValue(), new WorldTimeValue(),
-                new ClearWeatherDurationValue(), new ThunderWeatherDurationValue(), new UnixTimeValue(),
-                new UnixTimeHoursValue(), new UnixTimeMinutesValue(), new UnixTimeSecondsValue());
+                new WorldVariablesAmountValue(), new WorldVariablesAmountLimitValue(), new WorldBlockEditsAmountValue(),
+                new WorldBlockEditsLimitValue(), new ClearWeatherDurationValue(), new ThunderWeatherDurationValue(), new WorldTimeValue());
         registerEventValue(new BedEnterResultValue(), new BedEventValue(), new EventItemValue(),
                 new EventNewItemValue(), new BlockInteractionTypeValue(), new CursorItemValue(),
                 new ClickTypeValue(), new ClickedSlotValue(), new OldSlotValue(), new NewSlotValue(),

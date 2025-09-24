@@ -38,7 +38,7 @@ public final class UnixTimeSecondsValue extends NumberEventValue {
     }
 
     @Override
-    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+    public @NotNull Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
         SimpleDateFormat secondsFormat = new SimpleDateFormat("ss");
         Date date = new Date(System.currentTimeMillis());
         return Integer.parseInt(secondsFormat.format(date));

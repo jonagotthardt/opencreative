@@ -56,6 +56,7 @@ public final class SpawnBlockDisplayAction extends WorldAction {
                     display.customName(customName);
                 }
                 display.setBlock(block.createBlockData());
+                setLastSpawnedEntity(display);
             }
         }
     }

@@ -36,7 +36,7 @@ public final class WorldEntitiesAmountValue extends NumberEventValue {
     }
 
     @Override
-    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+    public @NotNull Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
         Planet planet = action.getExecutor().getPlanet();
         return planet.getTerritory().getWorld().getEntityCount() + ((planet.getDevPlanet() != null && planet.getDevPlanet().getWorld() != null) ? planet.getDevPlanet().getWorld().getEntityCount() : 0);
     }
