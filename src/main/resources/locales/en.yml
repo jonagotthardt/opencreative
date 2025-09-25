@@ -5927,7 +5927,7 @@ items:
           - ""
           - "&fIn the chest:"
           - "&f Location &7- Where to change"
-          - "&c Item &7- Block id"
+          - "&c Item &7- Block type"
           - ""
           - "&eClick to set the action."
       world-set-sign-line:
@@ -5943,6 +5943,23 @@ items:
           - "&6 Text &7- Line text"
           - ""
           - "&eClick to set the action."
+        arguments:
+          side:
+            name: "&6Sign side"
+            lore:
+              - ""
+              - "&7Choose the side of the sign"
+              - "&7on which this action"
+              - "&7should be performed."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              front: "Front"
+              back: "Back"
       world-set-sign-waxed:
         name: "&6Wax Sign"
         lore:
@@ -5955,6 +5972,22 @@ items:
           - ""
           - "&eClick to set the action."
         arguments:
+          side:
+            name: "&6Sign side"
+            lore:
+              - ""
+              - "&7Choose the side of the sign"
+              - "&7on which this action"
+              - "&7should be performed."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              front: "Front"
+              back: "Back"
           waxed:
             name: "&6Wax or not"
             lore:
@@ -5985,6 +6018,60 @@ items:
           - "&3 Option &7- Yes or No"
           - ""
           - "&eClick to set the action."
+        arguments:
+          side:
+            name: "&6Sign side"
+            lore:
+              - ""
+              - "&7Choose the side of the sign"
+              - "&7on which this action"
+              - "&7should be performed."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              front: "Front"
+              back: "Back"
+          glowing:
+            name: "&bGlowing"
+            lore:
+              - "&7Whether the text on the sign"
+              - "&7will glow or not."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              true: "Yes, make it glow"
+              false: "No, do not glow"
+      world-set-block-waterlogged:
+        name: "&9Fill slab with water"
+        lore:
+          - "&7This sets whether the block"
+          - "&7will be waterlogged or not."
+          - ""
+          - "&fIn the chest:"
+          - "&f Locations &7- Where to change"
+          - "&3 Parameter &7- Side"
+          - ""
+          - "&eClick to set the action."
+        arguments:
+          water:
+            name: "&9Waterlogging"
+            lore:
+              - "&7If yes, the slab will be"
+              - "&7in water and it will be more"
+              - "&7resistant to explosions."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              true: "Yes, keep it waterlogged"
+              false: "No, remove the water"
       var-clone-list:
         name: "&6Clone List"
         lore:
@@ -16576,6 +16663,7 @@ blocks:
   world_set_sign_line: "Sign Text Line"
   world_set_sign_waxed: "Wax Sign"
   world_set_sign_glowing_text: "Glowing Sign Text"
+  world_set_block_waterlogged: "Waterlogged"
   world_clear_container: "Clear Container"
   world_give_container_items: "Set Container Items"
   world_put_item_in_container: "Put Item in Container"

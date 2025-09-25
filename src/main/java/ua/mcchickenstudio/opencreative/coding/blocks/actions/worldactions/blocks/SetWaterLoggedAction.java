@@ -18,31 +18,31 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.blocks;
 
+import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+import org.bukkit.block.data.Waterlogged;
+import org.bukkit.entity.Entity;
+import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
-
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedBlocksEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.Location;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Entity;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
-public final class SetSignWaxedAction extends WorldAction {
-    public SetSignWaxedAction(Executor executor, Target target, int x, Arguments args) {
+public final class SetWaterLoggedAction extends WorldAction {
+    public SetWaterLoggedAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     protected void execute(Entity entity) {
         List<Location> locations = getArguments().getLocationList("locations",this);
-        boolean waxed = getArguments().getValue("waxed",true,this);
+        boolean water = getArguments().getValue("water",true,this);
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
@@ -57,10 +57,10 @@ public final class SetSignWaxedAction extends WorldAction {
                 new LimitReachedBlocksEvent(getPlanet()).callEvent();
                 return;
             }
-            Block block = location.getBlock();
-            if (block.getState() instanceof Sign sign) {
-                sign.setWaxed(waxed);
-                sign.update();
+            Block block =location.getBlock();
+            if (block.getState() instanceof Waterlogged waterlogged) {
+                waterlogged.setWaterlogged(water);
+                block.setBlockData(waterlogged);
                 getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount()+1);
             }
         }
@@ -71,6 +71,6 @@ public final class SetSignWaxedAction extends WorldAction {
 
     @Override
     public ActionType getActionType() {
-        return ActionType.WORLD_SET_SIGN_WAXED;
+        return ActionType.WORLD_SET_BLOCK_WATERLOGGED;
     }
 }
