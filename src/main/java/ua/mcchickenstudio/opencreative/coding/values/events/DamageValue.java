@@ -25,6 +25,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.fighting.EntityGetDamagedEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDamagedEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDamagesMobEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDamagesPlayerEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.PlayerItemDamagedEvent;
@@ -43,6 +45,8 @@ public final class DamageValue extends NumberEventValue {
             case PlayerItemDamagedEvent event -> event.getDamage();
             case PlayerDamagesPlayerEvent event -> event.getDamage();
             case PlayerDamagesMobEvent event -> event.getDamage();
+            case PlayerDamagedEvent event -> event.getDamage();
+            case EntityGetDamagedEvent event -> event.getDamage();
             default -> null;
         };
     }

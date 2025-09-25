@@ -16,38 +16,38 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks;
+package ua.mcchickenstudio.opencreative.coding.blocks.events.entity.fighting;
 
-import org.bukkit.block.Block;
+import com.destroystokyo.paper.event.entity.WitchThrowPotionEvent;
+import org.bukkit.Material;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.ItemEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public final class BlockExplodedEvent extends WorldEvent implements BlockEvent, Cancellable {
+public final class WitchThrownPotionEvent extends WorldEvent implements Cancellable, ItemEvent {
 
-    private final BlockExplodeEvent event;
+    private final WitchThrowPotionEvent event;
 
-    public BlockExplodedEvent(Planet planet, BlockExplodeEvent event) {
-        super(planet, event.getBlock());
+    public WitchThrownPotionEvent(WitchThrowPotionEvent event) {
+        super(event.getEntity());
         this.event = event;
     }
 
     @Override
-    public @NotNull Block getBlock() {
-        return event.getBlock();
-    }
-
-    @Override
-    public void setCancelled(boolean cancelled) {
-        event.setCancelled(cancelled);
-        if (cancelled) event.blockList().clear();
+    public @NotNull ItemStack getItem() {
+        return event.getPotion() == null ? new ItemStack(Material.SPLASH_POTION) : event.getPotion();
     }
 
     @Override
     public boolean isCancelled() {
         return event.isCancelled();
     }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
+    }
+
 }

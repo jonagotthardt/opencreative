@@ -16,28 +16,19 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.events.entity.fightning;
+package ua.mcchickenstudio.opencreative.coding.blocks.events.entity.fighting;
 
-import com.destroystokyo.paper.event.entity.WitchConsumePotionEvent;
-import org.bukkit.Material;
 import org.bukkit.event.Cancellable;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.ItemEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
-public final class WitchConsumedPotionEvent extends WorldEvent implements Cancellable, ItemEvent {
+public final class EntityShotBowEvent extends WorldEvent implements Cancellable {
 
-    private final WitchConsumePotionEvent event;
+    private final EntityShootBowEvent event;
 
-    public WitchConsumedPotionEvent(WitchConsumePotionEvent event) {
+    public EntityShotBowEvent(EntityShootBowEvent event) {
         super(event.getEntity());
         this.event = event;
-    }
-
-    @Override
-    public @NotNull ItemStack getItem() {
-        return event.getPotion() == null ? new ItemStack(Material.SPLASH_POTION) : event.getPotion();
     }
 
     @Override

@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.events.entity.fightning;
+package ua.mcchickenstudio.opencreative.coding.blocks.events.entity.fighting;
 
 import io.papermc.paper.event.entity.EntityLoadCrossbowEvent;
 import org.bukkit.event.Cancellable;

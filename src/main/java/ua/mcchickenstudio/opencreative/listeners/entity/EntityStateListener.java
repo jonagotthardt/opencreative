@@ -20,23 +20,18 @@ package ua.mcchickenstudio.opencreative.listeners.entity;
 
 import com.destroystokyo.paper.event.entity.*;
 import com.destroystokyo.paper.event.entity.WitchReadyPotionEvent;
-import io.papermc.paper.event.entity.EntityDamageItemEvent;
-import io.papermc.paper.event.entity.EntityLoadCrossbowEvent;
-import io.papermc.paper.event.entity.PufferFishStateChangeEvent;
-import io.papermc.paper.event.entity.WardenAngerChangeEvent;
+import io.papermc.paper.event.entity.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.fightning.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.interaction.EntityInteractedBlockEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.interaction.FireworkExplodedEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.interaction.PiglinBarteredEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.interaction.TurtleLaysEggEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.fighting.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.interaction.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.inventory.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.movement.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.state.*;
@@ -236,6 +231,75 @@ public final class EntityStateListener implements Listener {
     public void onLoadCrossbow(EntityLoadCrossbowEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getEntity().getWorld());
         if (planet != null) new EntityLoadedCrossbowEvent(event).callEvent();
+    }
+
+    @EventHandler
+    public void onEntityRegainedHealth(EntityRegainHealthEvent event) {
+        if (event.getEntity() instanceof Player) return;
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getEntity().getWorld());
+        if (planet != null) new EntityRegainedHealthEvent(event).callEvent();
+    }
+
+    @EventHandler
+    public void onEntityDamaged(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Player) return;
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getEntity().getWorld());
+        if (planet != null) new EntityGetDamagedEvent(event).callEvent();
+    }
+
+    @EventHandler
+    public void onShulkerDuplication(ShulkerDuplicateEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getEntity().getWorld());
+        if (planet != null) new ShulkerDuplicationEvent(event).callEvent();
+    }
+
+    @EventHandler
+    public void onHangingBreak(HangingBreakByEntityEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getEntity().getWorld());
+        if (planet != null) new HangingBreakEvent(event).callEvent();
+    }
+
+    @EventHandler
+    public void onProjectileHitBlock(ProjectileHitEvent event) {
+        if (event.getHitBlock() == null) return;
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getEntity().getWorld());
+        if (planet != null) new ProjectileHitBlockEvent(event, event.getHitBlock()).callEvent();
+    }
+
+    @EventHandler
+    public void onEntityCombustedByEntity(EntityCombustByEntityEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getEntity().getWorld());
+        if (planet != null) new EntityCombustedByEntityEvent(event).callEvent();
+    }
+
+    @EventHandler
+    public void onEntityCombustedByEntity(EntityCombustByBlockEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getEntity().getWorld());
+        if (planet != null) new EntityCombustedByBlockEvent(event).callEvent();
+    }
+
+    @EventHandler
+    public void onEntityMount(EntityMountEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getEntity().getWorld());
+        if (planet != null) new EntityMountedEvent(event).callEvent();
+    }
+
+    @EventHandler
+    public void onEntityDismount(EntityDismountEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getEntity().getWorld());
+        if (planet != null) new EntityDismountedEvent(event).callEvent();
+    }
+
+    @EventHandler
+    public void onEntityRemoved(EntityRemoveFromWorldEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getEntity().getWorld());
+        if (planet != null) new EntityRemovedEvent(event).callEvent();
+    }
+
+    @EventHandler
+    public void onEntityBorn(EntityBreedEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getEntity().getWorld());
+        if (planet != null) new EntityBornEvent(event).callEvent();
     }
 
     @EventHandler

@@ -57,7 +57,7 @@ public final class SetWaterLoggedAction extends WorldAction {
                 new LimitReachedBlocksEvent(getPlanet()).callEvent();
                 return;
             }
-            Block block =location.getBlock();
+            Block block = location.getBlock();
             if (block.getState() instanceof Waterlogged waterlogged) {
                 waterlogged.setWaterlogged(water);
                 block.setBlockData(waterlogged);

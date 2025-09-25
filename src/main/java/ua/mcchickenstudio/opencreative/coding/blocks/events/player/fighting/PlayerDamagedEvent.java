@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting;
 
 import org.bukkit.event.Cancellable;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -46,5 +47,9 @@ public final class PlayerDamagedEvent extends WorldEvent implements Cancellable 
 
     public EntityDamageEvent.DamageCause getCause() {
         return cause;
+    }
+
+    public double getDamage() {
+        return event.getDamage();
     }
 }
