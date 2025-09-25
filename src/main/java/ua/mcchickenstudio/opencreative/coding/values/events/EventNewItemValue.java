@@ -25,6 +25,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.BucketEmptyEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.BucketEntityEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.BucketFillEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.BookWriteEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.ItemConsumeEvent;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
@@ -40,8 +43,11 @@ public final class EventNewItemValue extends ItemEventValue {
     public @Nullable ItemStack getItem(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
         return switch (action.getEvent()) {
             case ItemConsumeEvent event -> event.getNewItem();
+            case BucketEntityEvent event -> event.getNewItem();
+            case BucketEmptyEvent event -> event.getNewItem();
+            case BucketFillEvent event -> event.getNewItem();
             case BookWriteEvent event -> event.getNewBook();
-            default -> null;
+            default -> new ItemStack(Material.AIR);
         };
     }
 

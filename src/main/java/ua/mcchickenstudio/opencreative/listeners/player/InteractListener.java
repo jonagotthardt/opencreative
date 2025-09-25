@@ -926,6 +926,24 @@ public final class InteractListener implements Listener {
     }
 
     @EventHandler
+    public void onBucketFill(PlayerBucketFillEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
+        if (planet != null) new BucketFillEvent(event.getPlayer(),event).callEvent();
+    }
+
+    @EventHandler
+    public void onBucketEmpty(PlayerBucketEmptyEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
+        if (planet != null) new BucketEmptyEvent(event.getPlayer(),event).callEvent();
+    }
+
+    @EventHandler
+    public void onBucketEntity(PlayerBucketEntityEvent event) {
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
+        if (planet != null) new BucketEntityEvent(event.getPlayer(),event).callEvent();
+    }
+
+    @EventHandler
     public void onEntityRename(PlayerNameEntityEvent event) {
         if (event.getName() == null) return;
         String text = PlainTextComponentSerializer.plainText().serialize(event.getName());

@@ -34,6 +34,7 @@ import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.interaction.EntityExplodedEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks.BlockPhysicsEvent;
 import ua.mcchickenstudio.opencreative.planets.*;
@@ -110,10 +111,11 @@ public final class BlockChangeListener implements Listener {
         if (planet != null) {
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_EXPLOSION) == 2) {
                 event.blockList().clear();
+            } else if (!isDevPlanet(world)) {
+                new EntityExplodedEvent(event).callEvent();
+            } else {
+                event.blockList().clear();
             }
-        }
-        if (isDevPlanet(world)) {
-            event.blockList().clear();
         }
     }
 

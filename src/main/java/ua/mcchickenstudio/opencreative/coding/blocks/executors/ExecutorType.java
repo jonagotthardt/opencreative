@@ -25,7 +25,7 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.entities.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.state.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.fightning.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.fighting.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.interaction.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.inventory.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.movement.*;
@@ -36,7 +36,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.entities.EntitySpawnExecutor;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.entities.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.fightning.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.interaction.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.inventory.*;
@@ -114,6 +114,9 @@ public enum ExecutorType {
     PLAYER_SPECTATING(      ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, StartSpectatingExecutor.class, StartSpectatingEvent.class, Material.GLASS),
     PLAYER_STOP_SPECTATING( ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, StopSpectatingExecutor.class, StopSpectatingEvent.class, Material.GLASS_PANE),
     PLAYER_CHANGED_SIGN(    ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, ChangedSignExecutor.class, ChangedSignEvent.class, Material.OAK_SIGN),
+    PLAYER_BUCKET_FILL(     ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, BucketFillExecutor.class, BucketFillEvent.class, Material.WATER_BUCKET),
+    PLAYER_BUCKET_EMPTY(     ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, BucketEmptyExecutor.class, BucketEmptyEvent.class, Material.BUCKET),
+    PLAYER_BUCKET_ENTITY(     ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, BucketEntityExecutor.class, BucketEntityEvent.class, Material.PUFFERFISH_BUCKET),
 
     PLAYER_OPEN_INVENTORY(  ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, OpenInventoryExecutor.class, OpenInventoryEvent.class, Material.CHEST),
     PLAYER_CLICK_INVENTORY( ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, ItemClickExecutor.class, ItemClickEvent.class, Material.TRIPWIRE_HOOK),
@@ -200,6 +203,7 @@ public enum ExecutorType {
     ENTITY_PIG_ZOMBIE_ANGERED(      ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_STATE, PigZombieAngeredExecutor.class, PigZombieAngeredEvent.class, Material.ZOMBIFIED_PIGLIN_SPAWN_EGG),
     ENTITY_BAT_TOGGLED_SLEEP_MODE(  ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_STATE, EntityBatToggledSleepModeExecutor.class, EntityBatToggledSleepModeEvent.class, Material.BAT_SPAWN_EGG),
     ENTITY_SLIME_SPLIT(             ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_STATE, SlimeSplittedExecutor.class, SlimeSplittedEvent.class, Material.SLIME_SPAWN_EGG),
+    ENTITY_SHULKER_DUPLICATED(      ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_STATE, ShulkerDuplicationExecutor.class, ShulkerDuplicationEvent.class, Material.SHULKER_BOX),
     ENTITY_WITCH_READY_POTION(      ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_STATE, WitchReadyPotionExecutor.class, WitchReadyPotionEvent.class, Material.SPLASH_POTION),
     ENTITY_SHEEP_REGROWN_WOOL(      ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_STATE, SheepRegrownWoolExecutor.class, SheepRegrownWoolEvent.class, Material.PINK_WOOL),
     ENTITY_PUFFERFISH_STATE_CHANGED(ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_STATE, PufferfishStateChangedExecutor.class, PufferfishStateChangedEvent.class, Material.PUFFERFISH),
@@ -212,29 +216,40 @@ public enum ExecutorType {
     ENTITY_WARDEN_ANGER_CHANGED(    ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_STATE, WardenAngerChangedExecutor.class, WardenAngerChangedEvent.class, Material.WARDEN_SPAWN_EGG),
     ENTITY_AIR_CHANGED(             ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_STATE, EntityAirChangedExecutor.class, EntityAirChangedEvent.class, Material.WATER_BUCKET),
 
+    ENTITY_PROJECTILE_HIT(          ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_MOVEMENT, ProjectileHitExecutor.class, ProjectileHitBlockEvent.class, Material.TARGET),
     ENTITY_ENTERED_BLOCK(           ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_MOVEMENT, EntityEnteredBlockExecutor.class, EntityEnteredBlockEvent.class, Material.SILVERFISH_SPAWN_EGG),
     ENTITY_JUMPED(                  ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_MOVEMENT, EntityJumpedExecutor.class, EntityJumpedEvent.class, Material.RABBIT_FOOT),
     ENTITY_HORSE_JUMPED(            ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_MOVEMENT, HorseJumpedExecutor.class, HorseJumpedEvent.class, Material.HORSE_SPAWN_EGG),
     ENTITY_ENDERMAN_ESCAPED(        ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_MOVEMENT, EndermanEscapedExecutor.class, EndermanEscapedEvent.class, Material.ENDERMAN_SPAWN_EGG),
+    ENTITY_MOUNTED(                 ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_MOVEMENT, EntityMountedExecutor.class, EntityMountedEvent.class, Material.SADDLE),
+    ENTITY_DISMOUNTED(              ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_MOVEMENT, EntityDismountedExecutor.class, EntityDismountedEvent.class, Material.SADDLE),
     ENTITY_ENTERED_VEHICLE(         ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_MOVEMENT, EntityEnteredVehicleExecutor.class, EntityEnteredVehicleEvent.class, Material.MINECART),
     ENTITY_VEHICLE_EXIT(            ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_MOVEMENT, EntityVehicleExitExecutor.class, EntityVehicleExitEvent.class, Material.TNT_MINECART),
 
     ENTITY_SPAWNED(                 ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_INTERACTION, EntitySpawnExecutor.class, EntitySpawnEvent.class, Material.CHICKEN_SPAWN_EGG),
+    ENTITY_REMOVED(                 ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_INTERACTION, EntityRemovedExecutor.class, EntityRemovedEvent.class, Material.BARRIER),
+    ENTITY_BORN(                    ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_INTERACTION, EntityBornExecutor.class, EntityBornEvent.class, Material.RABBIT_FOOT),
     ENTITY_DROPPED_ITEM(            ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_INTERACTION, EntityDroppedItemExecutor.class, EntityDroppedItemEvent.class, Material.GUNPOWDER),
     ENTITY_PICKED_UP_ITEM(          ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_INTERACTION, EntityPickedUpItemExecutor.class, EntityPickedUpItemEvent.class, Material.GLOWSTONE_DUST),
     ENTITY_ITEM_MERGED(             ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_INTERACTION, ItemMergedExecutor.class, ItemMergedEvent.class, Material.BEETROOT_SEEDS),
     ENTITY_ITEM_DESPAWNED(          ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_INTERACTION, ItemDespawnedExecutor.class, ItemDespawnedEvent.class, Material.STRUCTURE_VOID),
+    ENTITY_EXPLODED(                ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_INTERACTION, EntityExplodedExecutor.class, EntityExplodedEvent.class, Material.TNT),
     ENTITY_DAMAGED_ITEM(            ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_INTERACTION, EntityDamagedItemExecutor.class, EntityDamagedItemEvent.class, Material.GOLDEN_PICKAXE),
     ENTITY_PIGLIN_BARTERED(         ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_INTERACTION, PiglinBarteredExecutor.class, PiglinBarteredEvent.class, Material.PIGLIN_HEAD),
     ENTITY_INTERACTED_BLOCK(        ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_INTERACTION, EntityInteractedBlockExecutor.class, EntityInteractedBlockEvent.class, Material.CRAFTING_TABLE),
     ENTITY_TURTLE_LAYS_EGG(         ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_INTERACTION, TurtleLaysEggExecutor.class, TurtleLaysEggEvent.class, Material.TURTLE_EGG),
     ENTITY_FIREWORK_EXPLODED(       ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_INTERACTION, FireworkExplodedExecutor.class, FireworkExplodedEvent.class, Material.FIREWORK_ROCKET),
 
+    ENTITY_GET_DAMAGED(             ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_FIGHTING, EntityGetDamagedExecutor.class, EntityGetDamagedEvent.class, Material.DEAD_BUSH),
     ENTITY_DIED(                    ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_FIGHTING, EntityDiedExecutor.class, EntityDiedEvent.class, Material.REDSTONE),
     ENTITY_SHOT_BOW(                ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_FIGHTING, EntityShotBowExecutor.class, EntityShotBowEvent.class, Material.BOW),
     ENTITY_WITCH_THROWN_POTION(     ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_FIGHTING, WitchThrownPotionExecutor.class, WitchThrownPotionEvent.class, Material.SPLASH_POTION),
     ENTITY_WITCH_CONSUMED_POTION(   ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_FIGHTING, WitchConsumedPotionExecutor.class, WitchConsumedPotionEvent.class, Material.POTION),
     ENTITY_LOADED_CROSSBOW(         ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_FIGHTING, EntityLoadedCrossbowExecutor.class, EntityLoadedCrossbowEvent.class, Material.CROSSBOW),
+    ENTITY_COMBUSTED_BY_ENTITY(     ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_FIGHTING, EntityCombustedByEntityExecutor.class, EntityCombustedByEntityEvent.class, Material.BLAZE_POWDER),
+    ENTITY_COMBUSTED_BY_BLOCK(      ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_FIGHTING, EntityCombustedByBlockExecutor.class, EntityCombustedByBlockEvent.class, Material.LAVA_BUCKET),
+    ENTITY_REGAINED_HEALTH(         ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_FIGHTING, EntityRegainedHealthExecutor.class, EntityRegainedHealthEvent.class, Material.APPLE),
+    ENTITY_HANGING_BREAK(           ExecutorCategory.EVENT_ENTITY, MenusCategory.ENTITY_FIGHTING, HangingBreakExecutor.class, HangingBreakEvent.class, Material.ITEM_FRAME),
     ;
 
     private final Class<? extends Executor> executor;

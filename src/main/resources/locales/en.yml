@@ -2000,6 +2000,45 @@ items:
           - "&e Block interaction type"
           - " "
           - "&eClick to set event."
+      player-bucket-fill:
+        name: "&9Player filled a bucket"
+        lore:
+          - "&7This happens when a player right-clicks"
+          - "&7lava, water, or powder snow"
+          - "&7with an empty bucket."
+          - " "
+          - "&7Available values:"
+          - "&c Block material"
+          - "&2 Block location"
+          - "&6 Item in the event"
+          - "&e New item"
+          - " "
+          - "&eClick to set the event."
+      player-bucket-empty:
+        name: "&7Player emptied a bucket"
+        lore:
+          - "&7This happens when a player pours out"
+          - "&7water, lava, or powder snow onto a block."
+          - " "
+          - "&7Available values:"
+          - "&2 Block location"
+          - "&6 Item in the event"
+          - "&e New item"
+          - " "
+          - "&eClick to set the event."
+      player-bucket-entity:
+        name: "&ePlayer caught a mob in a bucket"
+        lore:
+          - "&7This happens when a player catches a fish"
+          - "&7or an axolotl in a bucket."
+          - " "
+          - "&7Available values:"
+          - "&c Block material"
+          - "&2 Block location"
+          - "&6 Item in the event"
+          - "&e New item"
+          - " "
+          - "&eClick to set the event."
       player-mob-interact:
         name: "&6Player interacts with mobs"
         lore:
@@ -5888,7 +5927,7 @@ items:
           - ""
           - "&fIn the chest:"
           - "&f Location &7- Where to change"
-          - "&c Item &7- Block id"
+          - "&c Item &7- Block type"
           - ""
           - "&eClick to set the action."
       world-set-sign-line:
@@ -5904,6 +5943,23 @@ items:
           - "&6 Text &7- Line text"
           - ""
           - "&eClick to set the action."
+        arguments:
+          side:
+            name: "&6Sign side"
+            lore:
+              - ""
+              - "&7Choose the side of the sign"
+              - "&7on which this action"
+              - "&7should be performed."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              front: "Front"
+              back: "Back"
       world-set-sign-waxed:
         name: "&6Wax Sign"
         lore:
@@ -5916,6 +5972,22 @@ items:
           - ""
           - "&eClick to set the action."
         arguments:
+          side:
+            name: "&6Sign side"
+            lore:
+              - ""
+              - "&7Choose the side of the sign"
+              - "&7on which this action"
+              - "&7should be performed."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              front: "Front"
+              back: "Back"
           waxed:
             name: "&6Wax or not"
             lore:
@@ -5946,6 +6018,60 @@ items:
           - "&3 Option &7- Yes or No"
           - ""
           - "&eClick to set the action."
+        arguments:
+          side:
+            name: "&6Sign side"
+            lore:
+              - ""
+              - "&7Choose the side of the sign"
+              - "&7on which this action"
+              - "&7should be performed."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              front: "Front"
+              back: "Back"
+          glowing:
+            name: "&bGlowing"
+            lore:
+              - "&7Whether the text on the sign"
+              - "&7will glow or not."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              true: "Yes, make it glow"
+              false: "No, do not glow"
+      world-set-block-waterlogged:
+        name: "&9Fill slab with water"
+        lore:
+          - "&7This sets whether the block"
+          - "&7will be waterlogged or not."
+          - ""
+          - "&fIn the chest:"
+          - "&f Locations &7- Where to change"
+          - "&3 Parameter &7- Side"
+          - ""
+          - "&eClick to set the action."
+        arguments:
+          water:
+            name: "&9Waterlogging"
+            lore:
+              - "&7If yes, the slab will be"
+              - "&7in water and it will be more"
+              - "&7resistant to explosions."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              true: "Yes, keep it waterlogged"
+              false: "No, remove the water"
       var-clone-list:
         name: "&6Clone List"
         lore:
@@ -8655,11 +8781,48 @@ items:
           - " &7[&6Watermelon&7, &6Pear&7], &a1.0&7 &7= &6Watermelon"
           - " "
           - "&eClick to set action."
+      var-remove-by-value-from-list:
+        name: "&cRemove values from list"
+        lore:
+          - "&7This will remove from the list the values"
+          - "&7that are specified in the chest."
+          - " "
+          - "&fIn the chest:"
+          - "&9 Any values &7- To be removed"
+          - "&e Variable &7- The list to remove from"
+          - "&3 Parameter &7- All elements or only"
+          - "&7 the first or last ones"
+          - " "
+          - "&fExamples:"
+          - " &7[&6A&7, &6A&7, &6B&7], &6A&7, &3All &7= &e[&6B&e]"
+          - " &7[&6B&7, &6B&7], &6A&7, &3First &7= &e[&6B&e]"
+          - " &7[&6S&7, &6O&7, &6S&7], &6C&7, &3Last &7= &e[&6S&e, &6O&e]"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          deletion:
+            name: "&3Deletion method"
+            lore:
+              - "&7You can delete all specified"
+              - "&7elements from the list, or only"
+              - "&7those that are the first"
+              - "&7or the last."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+            choices:
+              all: "Delete all elements"
+              first: "Only the first"
+              last: "Only the last"
       var-remove-by-id-from-list:
-        name: "&cRemove value by number"
+        name: "&cRemove value by index"
         lore:
           - "&7This will remove the value from the list,"
-          - "&7which was the item with that number."
+          - "&7which was the item with that index."
           - "&7Numbering starts from 1."
           - " "
           - "&fIn the chest:"
@@ -15965,6 +16128,9 @@ blocks:
   player_destroy_block: "Destroyed block"
   player_destroying_block: "Damaging block"
   player_block_interact: "Touched block"
+  player_bucket_fill: "Filled bucket"
+  player_bucket_empty: "Emptied bucket"
+  player_bucket_entity: "Fish in bucket"
   player_mob_interact: "Touched mob"
   player_fishing: "Fishing"
   player_spectating: "Spectating"
@@ -16318,6 +16484,7 @@ blocks:
   var_add_to_list: "Add to list"
   var_set_in_list: "Set in list"
   var_get_by_id_from_list: "&bGet from list"
+  var_remove_by_value_from_list: "&cRemove values"
   var_remove_by_id_from_list: "&cRemove from list"
   var_get_random_from_list: "Random from list"
   var_calculate_from_list: "&3Calcul. from list"
@@ -16496,6 +16663,7 @@ blocks:
   world_set_sign_line: "Sign Text Line"
   world_set_sign_waxed: "Wax Sign"
   world_set_sign_glowing_text: "Glowing Sign Text"
+  world_set_block_waterlogged: "Waterlogged"
   world_clear_container: "Clear Container"
   world_give_container_items: "Set Container Items"
   world_put_item_in_container: "Put Item in Container"

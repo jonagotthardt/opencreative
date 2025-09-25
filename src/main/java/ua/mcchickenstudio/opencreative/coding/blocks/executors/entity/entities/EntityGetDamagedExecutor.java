@@ -16,29 +16,21 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.events.entity.fightning;
+package ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.entities;
 
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.entity.EntityDeathEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.EntityExecutor;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public final class EntityDiedEvent extends WorldEvent implements Cancellable {
+public class EntityGetDamagedExecutor extends EntityExecutor {
 
-    private final EntityDeathEvent event;
-
-    public EntityDiedEvent(EntityDeathEvent event) {
-        super(event.getEntity());
-        this.event = event;
+    public EntityGetDamagedExecutor(Planet planet, int x, int y, int z) {
+        super(planet, x, y, z);
     }
 
     @Override
-    public boolean isCancelled() {
-        return event.isCancelled();
-    }
-
-    @Override
-    public void setCancelled(boolean cancelled) {
-        event.setCancelled(cancelled);
+    public ExecutorType getExecutorType() {
+        return ExecutorType.ENTITY_GET_DAMAGED;
     }
 
 }

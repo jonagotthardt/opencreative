@@ -16,23 +16,36 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks;
+package ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.ItemEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public final class BlockExplodedEvent extends WorldEvent implements BlockEvent, Cancellable {
+public final class BucketFillEvent extends WorldEvent implements Cancellable, BlockEvent, ItemEvent {
 
-    private final BlockExplodeEvent event;
+    private final PlayerBucketFillEvent event;
 
-    public BlockExplodedEvent(Planet planet, BlockExplodeEvent event) {
-        super(planet, event.getBlock());
+    public BucketFillEvent(Player player, PlayerBucketFillEvent event) {
+        super(player);
         this.event = event;
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 
     @Override
@@ -40,14 +53,13 @@ public final class BlockExplodedEvent extends WorldEvent implements BlockEvent, 
         return event.getBlock();
     }
 
-    @Override
-    public void setCancelled(boolean cancelled) {
-        event.setCancelled(cancelled);
-        if (cancelled) event.blockList().clear();
+    public @NotNull ItemStack getNewItem() {
+        ItemStack item = event.getItemStack();
+        return item == null ? new ItemStack(Material.AIR) : item;
     }
 
     @Override
-    public boolean isCancelled() {
-        return event.isCancelled();
+    public @NotNull ItemStack getItem() {
+        return new ItemStack(event.getBucket());
     }
 }

@@ -61,6 +61,7 @@ public final class SetSignGlowingTextAction extends WorldAction {
             }
             if (location.getBlock().getState() instanceof Sign sign) {
                 sign.getSide(side).setGlowingText(glowing);
+                sign.update();
                 getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount()+1);
             }
         }
