@@ -114,6 +114,9 @@ public enum ExecutorType {
     PLAYER_SPECTATING(      ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, StartSpectatingExecutor.class, StartSpectatingEvent.class, Material.GLASS),
     PLAYER_STOP_SPECTATING( ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, StopSpectatingExecutor.class, StopSpectatingEvent.class, Material.GLASS_PANE),
     PLAYER_CHANGED_SIGN(    ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, ChangedSignExecutor.class, ChangedSignEvent.class, Material.OAK_SIGN),
+    PLAYER_BUCKET_FILL(     ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, BucketFillExecutor.class, BucketFillEvent.class, Material.WATER_BUCKET),
+    PLAYER_BUCKET_EMPTY(     ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, BucketEmptyExecutor.class, BucketEmptyEvent.class, Material.BUCKET),
+    PLAYER_BUCKET_ENTITY(     ExecutorCategory.EVENT_PLAYER, MenusCategory.INTERACTION, BucketEntityExecutor.class, BucketEntityEvent.class, Material.PUFFERFISH_BUCKET),
 
     PLAYER_OPEN_INVENTORY(  ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, OpenInventoryExecutor.class, OpenInventoryEvent.class, Material.CHEST),
     PLAYER_CLICK_INVENTORY( ExecutorCategory.EVENT_PLAYER, MenusCategory.INVENTORY, ItemClickExecutor.class, ItemClickEvent.class, Material.TRIPWIRE_HOOK),
