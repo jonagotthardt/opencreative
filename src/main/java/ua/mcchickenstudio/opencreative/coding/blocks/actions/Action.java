@@ -253,7 +253,7 @@ public abstract class Action {
             case LAST_SPAWNED -> {
                 Entity spawned = getHandler().getMainActionHandler().getLastSpawnedEntity();
                 if (spawned != null) {
-                    entities.add(entity);
+                    entities.add(spawned);
                 }
             }
             default -> entities.addAll(eventEntities);
