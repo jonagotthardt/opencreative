@@ -206,7 +206,7 @@ public class ActionsHandler {
         String errorClass = error.getClass().getSimpleName();
 
         boolean unknown = !messageExists("coding-error." + errorClass.toLowerCase());
-        String errorID = unknown ? errorClass : "unknown";
+        String errorID = unknown ? "unknown" : errorClass.toLowerCase();
         String errorMessage = error.getMessage() == null ? errorClass : error.getMessage();
         errorMessage = errorMessage.replace("ua.mcchickenstudio.opencreative.coding.", "");
         String localizedMessage = getLocaleMessage("coding-error." + errorID);
