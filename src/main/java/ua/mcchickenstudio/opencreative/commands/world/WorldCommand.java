@@ -157,7 +157,7 @@ public class WorldCommand extends CommandHandler {
                 }
                 Player playerToWhitelist = Bukkit.getPlayer(args[1]);
                 if (playerToWhitelist == null || !planet.getPlayers().contains(playerToWhitelist)) {
-                    sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
+                    sender.sendMessage(getLocaleMessage("not-found-player"));
                     return;
                 }
                 if (planet.isOwner(playerToWhitelist)) {
@@ -183,7 +183,7 @@ public class WorldCommand extends CommandHandler {
                 }
                 Player playerToBan = Bukkit.getPlayer(args[1]);
                 if (playerToBan == null || !planet.getPlayers().contains(playerToBan)) {
-                    sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
+                    sender.sendMessage(getLocaleMessage("not-found-player"));
                     return;
                 }
                 if (planet.isOwner(playerToBan)) {
@@ -219,7 +219,7 @@ public class WorldCommand extends CommandHandler {
                 } else {
                     Player playerToKick = Bukkit.getPlayer(args[1]);
                     if (playerToKick == null || !planet.getPlayers().contains(playerToKick)) {
-                        sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
+                        sender.sendMessage(getLocaleMessage("not-found-player"));
                         return;
                     }
                     if (planet.isOwner(playerToKick)) {
@@ -250,7 +250,7 @@ public class WorldCommand extends CommandHandler {
                     return;
                 }
                 if (!planet.getWorldPlayers().isBanned(args[1])) {
-                    sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
+                    sender.sendMessage(getLocaleMessage("not-found-player"));
                     return;
                 }
                 planet.getWorldPlayers().unbanPlayer(args[1]);
@@ -270,7 +270,7 @@ public class WorldCommand extends CommandHandler {
                     return;
                 }
                 if (!planet.getWorldPlayers().isWhitelisted(args[1])) {
-                    sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
+                    sender.sendMessage(getLocaleMessage("not-found-player"));
                     return;
                 }
                 planet.getWorldPlayers().removeFromWhitelist(args[1]);

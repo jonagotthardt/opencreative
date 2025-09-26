@@ -24,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.CodeConfiguration;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockPlacer;
 import ua.mcchickenstudio.opencreative.indev.Items;
+import ua.mcchickenstudio.opencreative.menus.world.settings.PlayersBrowserMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
@@ -631,6 +632,25 @@ public class CreativeCommand extends CommandHandler {
                     }.runTaskAsynchronously(OpenCreative.getPlugin());
 
 
+                }
+                case "test2" -> {
+                    if (!sender.hasPermission("opencreative.test2")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    if (player == null) return;
+                    player.sendMessage("Test of new players control 2.0");
+                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+                    if (planet == null) {
+                        player.sendMessage("only in world");
+                        return;
+                    }
+                    if (!planet.isOwner(player)) {
+                        player.sendMessage("not owner of current planet");
+                        return;
+                    }
+                    PlayersBrowserMenu menu = new PlayersBrowserMenu(player, planet);
+                    menu.open(player);
                 }
                 case "test3" -> {
                     if (!sender.hasPermission("opencreative.test")) {

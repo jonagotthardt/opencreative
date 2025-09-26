@@ -365,17 +365,17 @@ public class PlanetPlayers {
     public void banPlayer(String nickname) {
         if (planet.isOwner(nickname)) return;
         if (getBannedPlayers().size() > planet.getLimits().getBlacklistedLimit()) return;
-        Player player = Bukkit.getPlayer(nickname);
+        Player player = Bukkit.getPlayerExact(nickname);
         if (player != null && !player.hasPermission("opencreative.world.ban.bypass")) {
             Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet.equals(playerPlanet)) {
                 teleportToLobby(player);
                 player.sendMessage(getLocaleMessage("world.players.black-list.player").replace("%player%",player.getName()));
                 Sounds.WORLD_BANNED.play(player);
-                bannedPlayers.add(player.getName());
             }
         }
         if (!planet.isLoaded()) loadPlayers();
+        bannedPlayers.add(nickname);
         setPlanetConfigParameter(planet,"players.blacklist",bannedPlayers);
         if (!planet.isLoaded()) clear();
     }
@@ -383,17 +383,17 @@ public class PlanetPlayers {
     public void whitelistPlayer(String nickname) {
         if (planet.isOwner(nickname)) return;
         if (getWhitelistedPlayers().size() > planet.getLimits().getWhitelistedLimit()) return;
-        Player player = Bukkit.getPlayer(nickname);
+        Player player = Bukkit.getPlayerExact(nickname);
         if (player != null) {
             Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet.equals(playerPlanet)) {
                 player.sendMessage(getLocaleMessage("world.players.white-list.player").replace("%player%",player.getName()));
-                Sounds.WORLD_WHITELIST_ADDED.play(player);
-                whitelistedPlayers.add(player.getName());
+                Sounds.WORLD_WHITELIST_ADDED.play(player);;
             }
         }
         if (!planet.isLoaded()) loadPlayers();
-        setPlanetConfigParameter(planet,"players.whitelist",whitelistedPlayers);
+        whitelistedPlayers.add(nickname);
+        setPlanetConfigParameter(planet,"players.whitelist", whitelistedPlayers);
         if (!planet.isLoaded()) clear();
     }
 

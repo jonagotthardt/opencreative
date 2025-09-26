@@ -30,7 +30,7 @@ import ua.mcchickenstudio.opencreative.events.player.WorldChatEvent;
 import ua.mcchickenstudio.opencreative.coding.modules.Module;
 import ua.mcchickenstudio.opencreative.coding.modules.ModuleSettingsMenu;
 import ua.mcchickenstudio.opencreative.menus.world.browsers.WorldsBrowserMenu;
-import ua.mcchickenstudio.opencreative.menus.world.settings.WorldSettingsPlayersMenu;
+import ua.mcchickenstudio.opencreative.menus.world.settings.PlayerControlMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import net.kyori.adventure.text.Component;
@@ -405,9 +405,9 @@ public final class ChatListener implements Listener {
                 }
             }
             case TRANSFER_OWNERSHIP -> {
-                if (planet != null && WorldSettingsPlayersMenu.playersSelected.get(player) != null && planet.isOwner(player)) {
+                if (planet != null && PlayerControlMenu.getConfirmationNewOwner(player) != null && planet.isOwner(player)) {
                     if (input.equals(String.valueOf(planet.getId()))) {
-                        String newOwner = WorldSettingsPlayersMenu.playersSelected.get(player);
+                        String newOwner = PlayerControlMenu.getConfirmationNewOwner(player);
                         Player newOwnerPlayer = Bukkit.getPlayer(newOwner);
                         if (newOwnerPlayer == null) {
                             player.sendMessage(getLocaleMessage("world.players.transfer-ownership.offline").replace("%player%", newOwner));

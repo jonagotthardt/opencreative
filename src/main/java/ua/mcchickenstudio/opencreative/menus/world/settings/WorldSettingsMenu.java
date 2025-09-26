@@ -199,7 +199,7 @@ public final class WorldSettingsMenu extends AbstractMenu {
         } else if (itemEquals(currentItem,category)) {
             new WorldSettingsCategoryMenu(planet.getInformation().getCategory()).open(player);
         } else if (itemEquals(currentItem,playersControl)) {
-            WorldSettingsPlayersMenu.openInventory(player);
+            new PlayersBrowserMenu(player, planet).open(player);
         } else if (itemEquals(currentItem,parameters)) {
             new WorldSettingsFlagsMenu().open(player);
         } else if (itemEquals(currentItem,environment)) {

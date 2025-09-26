@@ -39,7 +39,7 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
- * This class represents a menus, that displays specified list of entities in world.
+ * This class represents a menu, that displays specified list of entities in world.
  * Player can teleport to entity or remove it.
  */
 public final class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {

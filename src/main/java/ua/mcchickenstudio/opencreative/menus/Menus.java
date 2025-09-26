@@ -35,7 +35,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMe
 
 /**
  * <h1>Menus</h1>
- * This class represents a menus manager, that
+ * This class represents a menu manager, that
  * stores current opened menus for handling
  * inventory open, click and close events.
  * <p>

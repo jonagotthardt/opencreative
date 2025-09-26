@@ -41,7 +41,7 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
- * This class represents a menus, that displays specified list of worlds.
+ * This class represents a menu, that displays specified list of worlds.
  * Player can sort worlds and change pages.
  */
 public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {

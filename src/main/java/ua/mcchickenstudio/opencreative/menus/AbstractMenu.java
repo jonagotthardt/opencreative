@@ -33,7 +33,7 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 
 /**
  * <h1>AbstractMenu</h1>
- * This class represents a menus with set items. It has
+ * This class represents a menu with set items. It has
  * methods to check player's click, open and close inventory
  * events.
  */
