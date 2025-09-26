@@ -24,6 +24,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyOpenedMenusException;
 
 public final class ShowWinScreenAction extends PlayerAction {
     public ShowWinScreenAction(Executor executor, Target target, int x, Arguments args) {
@@ -32,6 +33,14 @@ public final class ShowWinScreenAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
+        if (getPlanet().getLimits().cantOpenMenu(player)) {
+            /*
+             * This check prevents player from closing
+             * too many menus, that can prevent from
+             * quiting the game.
+             */
+            throw new TooManyOpenedMenusException(player.getName());
+        }
         player.showWinScreen();
     }
 
