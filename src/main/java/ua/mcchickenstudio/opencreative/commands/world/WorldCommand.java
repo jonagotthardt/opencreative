@@ -155,18 +155,18 @@ public class WorldCommand extends CommandHandler {
                     sender.sendMessage(getLocaleMessage("too-few-args"));
                     return;
                 }
-                if (planet.isOwner(args[1])) {
+                Player playerToWhitelist = Bukkit.getPlayer(args[1]);
+                if (playerToWhitelist == null || !planet.getPlayers().contains(playerToWhitelist)) {
+                    sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
+                    return;
+                }
+                if (planet.isOwner(playerToWhitelist)) {
                     sender.sendMessage(getLocaleMessage("same-player"));
                     return;
                 }
                 int limit = planet.getLimits().getWhitelistedLimit();
                 if (planet.getWorldPlayers().getWhitelistedPlayers().size() > limit) {
                     sender.sendMessage(getLocaleMessage("world.players.white-list.limit").replace("%limit%",String.valueOf(limit)));
-                    return;
-                }
-                Player playerToWhitelist = Bukkit.getPlayer(args[1]);
-                if (playerToWhitelist == null || !planet.getPlayers().contains(playerToWhitelist)) {
-                    sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
                     return;
                 }
                 sender.sendMessage(getPlayerLocaleMessage("world.players.white-list.added", playerToWhitelist));
@@ -181,18 +181,18 @@ public class WorldCommand extends CommandHandler {
                     sender.sendMessage(getLocaleMessage("too-few-args"));
                     return;
                 }
-                if (planet.isOwner(args[1])) {
+                Player playerToBan = Bukkit.getPlayer(args[1]);
+                if (playerToBan == null || !planet.getPlayers().contains(playerToBan)) {
+                    sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
+                    return;
+                }
+                if (planet.isOwner(playerToBan)) {
                     sender.sendMessage(getLocaleMessage("same-player"));
                     return;
                 }
                 int limit = planet.getLimits().getBlacklistedLimit();
                 if (planet.getWorldPlayers().getBannedPlayers().size() > limit) {
                     sender.sendMessage(getLocaleMessage("world.players.black-list.limit").replace("%limit%",String.valueOf(limit)));
-                    return;
-                }
-                Player playerToBan = Bukkit.getPlayer(args[1]);
-                if (playerToBan == null || !planet.getPlayers().contains(playerToBan)) {
-                    sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
                     return;
                 }
                 if (playerToBan.hasPermission("opencreative.world.ban.bypass")) {
@@ -217,13 +217,13 @@ public class WorldCommand extends CommandHandler {
                     playersToKick.remove(player);
                     sender.sendMessage(getLocaleMessage("world.players.kick.all"));
                 } else {
-                    if (planet.isOwner(args[1])) {
-                        sender.sendMessage(getLocaleMessage("same-player"));
-                        return;
-                    }
                     Player playerToKick = Bukkit.getPlayer(args[1]);
                     if (playerToKick == null || !planet.getPlayers().contains(playerToKick)) {
                         sender.sendMessage(getLocaleMessage("menus.world-settings-players.not-in-world"));
+                        return;
+                    }
+                    if (planet.isOwner(playerToKick)) {
+                        sender.sendMessage(getLocaleMessage("same-player"));
                         return;
                     }
                     if (playerToKick.hasPermission("opencreative.world.kick.bypass")) {
