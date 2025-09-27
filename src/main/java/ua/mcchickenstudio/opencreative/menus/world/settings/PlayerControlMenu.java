@@ -85,7 +85,7 @@ public final class PlayerControlMenu extends AbstractMenu implements WorldMenu {
     private final ItemStack WHITELIST = createItem(Material.MAP,1,"menus.player-control.items.whitelist","whitelist");
     private final ItemStack UNWHITELIST = createItem(Material.FILLED_MAP,1,"menus.player-control.items.whitelist-remove","unwhitelist");
 
-    private final ItemStack TRANSFER = createItem(Material.CAKE,1,"menus.player-control.items.transfer","transfer");
+    private final ItemStack TRANSFER = createItem(Material.CAKE,1,"menus.player-control.items.transfer-ownership","transfer");
     
     private final ItemStack BACK = createItem(Material.ARROW,1,"menus.player-control.items.back","back");
 
