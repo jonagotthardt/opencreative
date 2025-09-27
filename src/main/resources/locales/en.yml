@@ -2289,6 +2289,106 @@ items:
           - "&7sheep regrows its wool."
           - " "
           - "&eClick to set the event."
+      entity-shulker-duplicated:
+        name: "&dShulker duplicated"
+        lore:
+          - "&7This is when a shulker spawns"
+          - "&7itself in another place."
+          - " "
+          - "&eClick to set the event."
+      entity-projectile-hit:
+        name: "&fProjectile hit block"
+        lore:
+          - "&7This is when a flying projectile"
+          - "&7collides with a block."
+          - " "
+          - "&eClick to set the event."
+      entity-born:
+        name: "&eEntity born"
+        lore:
+          - "&7This happens when breeding"
+          - "&7two mobs results in a baby."
+          - " "
+          - "&eClick to set the event."
+      entity-get-damaged:
+        name: "&6Entity took damage"
+        lore:
+          - "&7This is when an entity gets hit"
+          - "&7by someone or something and takes"
+          - "&7damage."
+          - " "
+          - "&7Available values:"
+          - "&c Damage amount"
+          - " "
+          - "&eClick to set the event."
+      entity-combusted-by-entity:
+        name: "&6Ignited by entity"
+        lore:
+          - "&7This is when an entity starts burning"
+          - "&7after being hit by someone with a"
+          - "&7fire weapon."
+          - " "
+          - "&eClick to set the event."
+      entity-combusted-by-block:
+        name: "&6Ignited by block"
+        lore:
+          - "&7This is when an entity starts burning"
+          - "&7after stepping into lava or fire."
+          - " "
+          - "&7Available values:"
+          - "&c Block material"
+          - "&2 Block location"
+          - " "
+          - "&eClick to set the event."
+      entity-regained-health:
+        name: "&dEntity regained health"
+        lore:
+          - "&7This is when an entity is fed or"
+          - "&7affected by a potion and its"
+          - "&7health is restored."
+          - " "
+          - "&eClick to set the event."
+      entity-hanging-break:
+        name: "&6Hanging entity broke"
+        lore:
+          - "&7This is when someone or something"
+          - "&7tries to break a painting or an"
+          - "&7item frame (e.g. player, explosion,"
+          - "&7or block removal)."
+          - " "
+          - "&eClick to set the event."
+      entity-exploded:
+        name: "&cEntity exploded"
+        lore:
+          - "&7This is when a creeper or TNT"
+          - "&7explodes and destroys blocks nearby."
+          - " "
+          - "&7Useful for blocking explosions"
+          - "&7and preventing griefing!"
+          - " "
+          - "&eClick to set the event."
+      entity-removed:
+        name: "&cEntity removed"
+        lore:
+          - "&7This happens when an entity is removed"
+          - "&7by code or despawns in chunks."
+          - " "
+          - "&eClick to set the event."
+      entity-mounted:
+        name: "&6Entity mounted another"
+        lore:
+          - "&7This is when one entity rides"
+          - "&7another."
+          - " "
+          - "&eClick to set the event."
+      entity-dismounted:
+        name: "&eEntity dismounted"
+        lore:
+          - "&7This is when an entity stops riding"
+          - "&7after the carrier dies or for other"
+          - "&7reasons."
+          - " "
+          - "&eClick to set the event."
       entity-pufferfish-state-changed:
         name: "&ePufferfish State Changed"
         lore:
@@ -3732,6 +3832,60 @@ items:
               grindstone: "Grindstone"
               stonecutter: "Stonecutter"
               crafter: "Crafter"
+      player-set-bee-stingers:
+        name: "&eSet number of stingers"
+        lore:
+          - "&7This sets the number of stingers"
+          - "&7in the player's body."
+          - " "
+          - "&fIn chest:"
+          - "&a Number &7- Amount of stingers"
+          - "&3 Parameter &7- Set or add"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or add"
+            lore:
+              - "&7If 'add' is chosen, the value"
+              - "&7will be added to the current"
+              - "&7amount the player has."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
+      entity-set-bee-stingers:
+        name: "&eSet number of stingers"
+        lore:
+          - "&7This sets the number of stingers"
+          - "&7in the entity's body."
+          - " "
+          - "&fIn chest:"
+          - "&a Number &7- Amount of stingers"
+          - "&3 Parameter &7- Set or add"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or add"
+            lore:
+              - "&7If 'add' is chosen, the value"
+              - "&7will be added to the current"
+              - "&7amount the entity has."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
       player-set-inventory-view-item:
         name: "&aSet item in opened menus"
         lore:
@@ -16291,6 +16445,7 @@ blocks:
   player_changed_sign: "Sign changed"
   player_entered_vehicle: "Entered Vehicle"
   player_vehicle_exit: "Vehicle Exit"
+  player_set_bee_stingers: "Number of stingers"
 
   world_play_mode: "&aPlay mode"
   world_variable_transfer: "Value receive"
@@ -16333,6 +16488,7 @@ blocks:
   world_block_sponge_absorbed: "Sponge Absorbed Water"
   world_block_bell_rung: "Bell Rung"
 
+  entity_set_bee_stingers: "Number of stingers"
   entity_pig_zombie_angered: "Zombie Pig Angered"
   entity_bat_toggled_sleep_mode: "Bat sleep mode"
   entity_slime_split: "Slime Split"
@@ -16349,6 +16505,18 @@ blocks:
   entity_air_changed: "Air level changed"
   entity_entered_vehicle: "Entered Vehicle"
   entity_vehicle_exit: "Vehicle Exit"
+  entity_projectile_hit: "Projectile hit block"
+  entity_shulker_duplicated: "Shulker duplicated"
+  entity_mounted: "Mounted a mob"
+  entity_dismounted: "Dismounted a mob"
+  entity_removed: "Entity removed"
+  entity_born: "Born"
+  entity_exploded: "Exploded"
+  entity_get_damaged: "Took damage"
+  entity_combusted_by_block: "Fire by block"
+  entity_combusted_by_entity: "Fire by entity"
+  entity_regained_health: "Regained health"
+  entity_hanging_break: "Hanging break"
 
   entity_piglin_bartered: "Piglin Bartered"
   entity_interacted_block: "Block interaction"
