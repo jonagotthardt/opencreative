@@ -506,6 +506,12 @@ world:
   already-registered: "%prefix%&fСвіт &6%id%&f вже є у списку світів. Для оновлення інформації використовуйте команду: &6/oc worlds reload %id%"
   registered: "%prefix%&fСвіт &6%id%&f був доданий до списку світів. Тепер він з'явиться у браузері світів і до нього можна підключитися командою &6/join %id%&f!"
   unregistered: "%prefix%&fСвіт &6%id%&f був прибраний зі списку світів. Він не буде з'являтися у браузері світів &6до перезавантаження сервера&f, якщо його файли все ще існують."
+  recommended: "%prefix%&fWorld &6%id%&f has been added to the recommended list, it will now appear on the first page of the world browser :)"
+  unrecommended: "%prefix%&fWorld &6%id%&f has been removed from recommendations.. :("
+  already-recommended: "%prefix%&cЦей світ %id% вже є в рекомендаціях.. О_о"
+  already-unrecommended: "%prefix%&cЦей світ %id% і так не перебуває в рекомендаціях.. О_о"
+  same-owner: "%prefix%&cУ цьому світі %id% власник той самий, що й вказаний.. О_о"
+  set-owner: "%prefix%&fA new owner has been set for world %id%: &6%player%\n&7 %uuid%"
   platformer:
     set: "%prefix%&fУспішно &6замінено&f генератор платформ кодингу на: &6%id%&f."
     reset: "%prefix%&fУспішно &6замінено&f генератор платформ кодингу на серверний, за замовчуванням."
@@ -9490,6 +9496,22 @@ items:
           - " &6хай&7, &6Пон&7, &fПробіл &7-> &6хай Пон"
           - " "
           - "&eНатисни, щоб встановити дію."
+        arguments:
+          type:
+            name: "&fРоздільник між текстами"
+            lore:
+              - "&7Виберіть, як об'єднати тексти."
+              - ""
+              - "&eНатисніть, щоб змінити."
+              - ""
+              - "&fВаріанти:"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+            choices:
+              new-line: "Кожен текст з нового рядка"
+              join-spaces: "Об'єднати текст через пробіл"
+              join: "Об'єднати текст"
       var-substring-text:
         name: "&cОбрізати текст"
         lore:

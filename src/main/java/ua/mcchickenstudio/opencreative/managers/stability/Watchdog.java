@@ -55,9 +55,15 @@ public final class Watchdog implements StabilityManager {
         if (runnable != null) {
             runnable.cancel();
         }
+        StabilityManager manager = this;
         runnable = new BukkitRunnable() {
             @Override
             public void run() {
+
+                if (!manager.equals(OpenCreative.getStability())) {
+                    cancel();
+                    return;
+                }
 
                 long availableSpace = getAvailableSpace();
                 if (availableSpace >= 200) { // 200 MB

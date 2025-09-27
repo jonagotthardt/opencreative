@@ -523,6 +523,12 @@ world:
   updated-info: "%prefix%&fUpdated world information for &6%id%&f."
   registered: "%prefix%&fRegistered a world &6%id%&f. Now it can appear in worlds browser menu and can be visited by &6/join %id%&f!"
   unregistered: "%prefix%&fUnregistered a world &6%id%&f. It will not appear in worlds browser menu &6til next server restart&f, if world files exist."
+  recommended: "%prefix%&fWorld &6%id%&f has been added to the recommended list, it will now appear on the first page of the world browser :)"
+  unrecommended: "%prefix%&fWorld &6%id%&f has been removed from recommendations.. :("
+  set-owner: "%prefix%&fA new owner has been set for world %id%: &6%player%\n&7 %uuid%"
+  already-recommended: "%prefix%&cThis world %id% is already in recommendations.. O_o"
+  already-unrecommended: "%prefix%&cThis world %id% is not in recommendations anyway.. O_o"
+  same-owner: "%prefix%&cIn this world %id% the owner is the same as the one specified.. O_o"
   platformer:
     set: "%prefix%&fSuccessfully &6changed&f world's coding platforms generator to: &6%id%&f."
     reset: "%prefix%&fSuccessfully &6changed&f world's coding platforms generator to server's default."
@@ -9510,6 +9516,22 @@ items:
           - " &6hey&7, &6There&7, &fSpace &7-> &6hey There"
           - " "
           - "&eClick to set action."
+        arguments:
+          type:
+            name: "&fText separator"
+            lore:
+              - "&7Choose how to concat the texts. "
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+            choices:
+              new-line: "Each text on new line"
+              join-spaces: "Join text with spaces"
+              join: "Join text"
       var-substring-text:
         name: "&cCut Text"
         lore:

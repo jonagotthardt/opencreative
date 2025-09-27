@@ -145,12 +145,14 @@ public final class OpenCreative extends JavaPlugin {
         moduler.init();
         if (devPlatformer == null) devPlatformer = new HorizontalPlatformer();
         if (prompter == null) prompter = new DisabledCodingPrompter();
+        if (watchdog == null) watchdog = new DisabledWatchdog();
 
         PlayerUtils.loadPermissions();
         HookUtils.loadHooks();
         FileUtils.loadPlanets();
         PhysService.run();
         FileUtils.loadModules();
+        watchdog.init();
 
         economy = HookUtils.getEconomy();
         economy.init();
@@ -158,8 +160,6 @@ public final class OpenCreative extends JavaPlugin {
         updater.init();
         packet = HookUtils.getPacketManager();
         packet.init();
-        watchdog = new DisabledWatchdog();
-        watchdog.init();
         blocks = HookUtils.getBlocks();
         blocks.init();
         hints = new Hints();
@@ -481,7 +481,9 @@ public final class OpenCreative extends JavaPlugin {
      */
     @SuppressWarnings("unused")
     public static void setStability(@NotNull StabilityManager stabilityManager) {
-        getPlugin().getLogger().info("Now using stability manager: " + stabilityManager.getName());
+        if (!(stabilityManager instanceof DisabledWatchdog || stabilityManager instanceof Watchdog)) {
+            getPlugin().getLogger().info("Now using stability manager: " + stabilityManager.getName());
+        }
         getPlugin().watchdog = stabilityManager;
     }
 

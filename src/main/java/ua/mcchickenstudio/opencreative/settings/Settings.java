@@ -36,6 +36,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceEndEvent;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceStartEvent;
 import ua.mcchickenstudio.opencreative.indev.Items;
+import ua.mcchickenstudio.opencreative.managers.stability.DisabledWatchdog;
+import ua.mcchickenstudio.opencreative.managers.stability.Watchdog;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformer;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformers;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.HorizontalPlatformer;
@@ -118,6 +120,8 @@ public final class Settings {
     private final Set<Integer> recommendedWorldsIDs = new HashSet<>();
     private final Set<String> allowedResourcePackLinks = new HashSet<>();
 
+    private boolean enabledWatchdog = true;
+
     private boolean enabledCoding = true;
     private final Set<String> disabledEvents = new HashSet<>();
     private final Set<String> disabledActions = new HashSet<>();
@@ -160,6 +164,8 @@ public final class Settings {
         lobbyDisallowSpawningMobs = config.getBoolean("lobby.disallow-spawning-mobs",true);
         lobbyDisallowPlacingBlocks = config.getBoolean("lobby.disallow-placing-blocks",true);
         lobbyDisallowDestroyingBlocks = config.getBoolean("lobby.disallow-destroying-blocks",true);
+
+        enabledWatchdog = config.getBoolean("watchdog.enabled",true);
 
         legacySelectionMenu = config.getBoolean("coding.old-selection-menu",false);
         enabledCoding = config.getBoolean("coding.enabled",true);
@@ -221,6 +227,8 @@ public final class Settings {
             platformer = new HorizontalPlatformer();
         }
         OpenCreative.setDevPlatformer(platformer);
+
+        OpenCreative.setStability(enabledWatchdog ? new Watchdog() : new DisabledWatchdog());
         setupPromptHandler(config);
         checkDebugAnnouncer();
     }
@@ -411,11 +419,31 @@ public final class Settings {
 
     public boolean setSoundsTheme(String theme) {
         FileConfiguration config = OpenCreative.getPlugin().getConfig();
-        if (config.getConfigurationSection("sounds."+theme) == null) {
+        if (config.getConfigurationSection("sounds." + theme) == null) {
             return false;
         }
         loadSounds(config, theme);
         OpenCreative.getPlugin().getConfig().set("sounds.theme",theme);
+        OpenCreative.getPlugin().saveConfig();
+        return true;
+    }
+
+    public boolean addRecommendedWorld(int worldID) {
+        if (recommendedWorldsIDs.contains(worldID)) {
+            return false;
+        }
+        recommendedWorldsIDs.add(worldID);
+        OpenCreative.getPlugin().getConfig().set("recommended-worlds", recommendedWorldsIDs);
+        OpenCreative.getPlugin().saveConfig();
+        return true;
+    }
+
+    public boolean removeRecommendedWorld(int worldID) {
+        if (!recommendedWorldsIDs.contains(worldID)) {
+            return false;
+        }
+        recommendedWorldsIDs.remove(worldID);
+        OpenCreative.getPlugin().getConfig().set("recommended-worlds", recommendedWorldsIDs);
         OpenCreative.getPlugin().saveConfig();
         return true;
     }
