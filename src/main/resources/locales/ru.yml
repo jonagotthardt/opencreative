@@ -7519,6 +7519,37 @@ items:
           - "&c Предмет &7- Новый предмет"
           - " "
           - "&eНажми, чтобы установить действие."
+      entity-set-display-billboard:
+        name: "&bСмена отображения визуализатора"
+        lore:
+          - "&7Это изменит как визуализатор"
+          - "&7будет отображаться игрокам."
+          - ""
+          - "&fВ сундуке:"
+          - "&3 Параметр &7- Тип отображения"
+          - ""
+          - "&eНажми, чтобы установить действие."
+        arguments:
+          billboard:
+            name: "&bРежим отображения"
+            lore:
+              - ""
+              - "&7Выберите как визуализатор"
+              - "&7будет виден игрокам вокруг"
+              - "&7него."
+              - ""
+              - "&eНажми, чтобы изменить."
+              - ""
+              - "&fВарианты:"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+              - "%4%"
+            choices:
+              fixed: "Пускай не поворачивается никуда"
+              vertical: "Поворот к игроку по горизонтали"
+              horizontal: "Поворот к игроку по вертикали"
+              center: "Поворачивать к игроку"
       entity-set-text-display-see-through:
         name: "&6Видимость текста сквозь"
         lore:
@@ -16971,6 +17002,7 @@ blocks:
   entity_set_display_scale: "Масштаб визуал."
   entity_set_display_translation: "Смещение визуал."
   entity_set_display_item: "Предмет визуал."
+  entity_set_display_billboard: "Отобр. визуал."
   entity_set_text_display_see_through: "Текст насквозь"
   entity_set_text_display_shadow: "Тень тексту"
   entity_set_text_display_opacity: "Прозрач. визуал."

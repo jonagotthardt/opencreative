@@ -7460,6 +7460,37 @@ items:
           - "&c Item &7- New item"
           - " "
           - "&eClick to set the action."
+      entity-set-display-billboard:
+        name: "&bChange View of Display"
+        lore:
+          - "&7This will change how the display"
+          - "&7is displayed to players."
+          - ""
+          - "&fIn the chest:"
+          - "&3 Parameter &7- Display type"
+          - ""
+          - "&eClick to set action."
+        arguments:
+          billboard:
+            name: "&bDisplay Mode"
+            lore:
+              - ""
+              - "&7Choose how the display"
+              - "&7will be seen by players"
+              - "&7around it."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+              - "%4%"
+            choices:
+              fixed: "Don't rotate anywhere"
+              vertical: "Rotate to player horizontally"
+              horizontal: "Rotate to player vertically"
+              center: "Rotate to always face player"
       entity-set-text-display-see-through:
         name: "&6See-Through Text"
         lore:
@@ -16709,6 +16740,7 @@ blocks:
   entity_set_display_scale: "Display Scale"
   entity_set_display_translation: "Display Offset"
   entity_set_display_item: "Display Item"
+  entity_set_display_billboard: "Display Type"
   entity_set_text_display_see_through: "See-Through Text"
   entity_set_text_display_shadow: "Text Shadow"
   entity_set_text_display_opacity: "Text Opacity"
