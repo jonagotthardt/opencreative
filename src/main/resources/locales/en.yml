@@ -6595,10 +6595,9 @@ items:
       world-create-boss-bar:
         name: "&aCreate Boss Bar"
         lore:
-          - "&7This will create a boss bar"
-          - "&7with a scoreboard. The higher"
-          - "&7the number, the higher the text"
-          - "&7for the previous entries."
+          - "&7Creates a bar with text,"
+          - "&7that will be displayed on"
+          - "&7top middle of player screen."
           - ""
           - "&fIn the chest:"
           - "&6 Text &7- Boss bar name"
@@ -16380,6 +16379,7 @@ blocks:
   random_target: "Random target"
   killer: "Killer"
   victim: "Victim"
+  default: "Default"
 
   # blocks
   event_player: "&bPlayer event"
