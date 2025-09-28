@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.utils.millennium.math;
 
 import com.google.common.collect.Lists;
-import lombok.val;
 import ua.mcchickenstudio.opencreative.utils.async.Pair;
 
 import java.util.*;
@@ -330,7 +329,7 @@ public final class Statistics {
         return tuple;
     }
     public static List<List<Double>> getOutliersSimply(final Collection<? extends Number> collection) {
-        val result = getOutliers(collection);
+        Pair<List<Double>, List<Double>> result = getOutliers(collection);
         return Arrays.asList(result.getX(), result.getY());
     }
 

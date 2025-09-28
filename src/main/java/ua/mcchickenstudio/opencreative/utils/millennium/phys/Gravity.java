@@ -18,11 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.utils.millennium.phys;
 
-import lombok.Data;
 
-@Data
 public final class Gravity {
-    private double gravity;
+
+    private final double gravity;
     private double motion;
 
     public Gravity(double gravity) {
@@ -48,4 +47,5 @@ public final class Gravity {
     public void reset() {
         this.motion = 0.0;
     }
+
 }

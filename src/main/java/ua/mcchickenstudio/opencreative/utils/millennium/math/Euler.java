@@ -18,7 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.utils.millennium.math;
 
-import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.utils.millennium.vectors.Vec2;
 import ua.mcchickenstudio.opencreative.utils.millennium.vectors.Vec3;
 
@@ -26,7 +26,7 @@ import static java.lang.Math.PI;
 
 public final class Euler {
 
-    public static boolean compareTwoVectorAngle(@NonNull Vec2 a, @NonNull Vec2 b, double radi) {
+    public static boolean compareTwoVectorAngle(@NotNull Vec2 a, @NotNull Vec2 b, double radi) {
         double angleA = Math.atan2(a.getY(), a.getX());
         double angleB = Math.atan2(b.getY(), b.getX());
 
@@ -39,7 +39,7 @@ public final class Euler {
         return angleDiff <= Math.toRadians(radi);
     }
 
-    public static double calculateTwoVectorAngleDifference(@NonNull Vec2 a, @NonNull Vec2 b) {
+    public static double calculateTwoVectorAngleDifference(@NotNull Vec2 a, @NotNull Vec2 b) {
         double angleA = Math.atan2(a.getY(), a.getX());
         double angleB = Math.atan2(b.getY(), b.getX());
 
@@ -92,7 +92,7 @@ public final class Euler {
         }
     }
 
-    public static double calculateVectorAngle(@NonNull Vec2 a) {
+    public static double calculateVectorAngle(@NotNull Vec2 a) {
         return Math.atan2(a.getY(), a.getX());
     }
 

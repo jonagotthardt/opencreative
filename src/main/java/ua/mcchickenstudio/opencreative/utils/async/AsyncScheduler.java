@@ -19,9 +19,6 @@
 package ua.mcchickenstudio.opencreative.utils.async;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 import ua.mcchickenstudio.opencreative.utils.ErrorUtils;
 
 import java.lang.reflect.Field;
@@ -35,15 +32,16 @@ import java.util.function.Function;
  * @author kireikosasha
  * @since 5.0
  */
-@SuppressWarnings("unused")
 public class AsyncScheduler {
 
     private static final char INNER_CLASS_SEPARATOR_CHAR = '$';
     private static final int STOP_WATCH_TIME_MILLIS = 750;
-
-    @Getter
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(36,
         new ThreadFactoryBuilder().setNameFormat("opencreative-thread-%d").build());
+
+    public static ScheduledExecutorService getScheduler() {
+        return scheduler;
+    }
 
     public static void shutdown(ScheduledExecutorService schedulerCustom) {
         TryIgnore.ignore(schedulerCustom::shutdownNow);
@@ -73,10 +71,9 @@ public class AsyncScheduler {
         }
     }
 
-    @ToString
     public static class DecoratedRunnable implements Runnable {
-        @Setter
-        private static Function<Runnable, Runnable> hotfixDecorator = runnable -> runnable;
+
+        private static final Function<Runnable, Runnable> hotfixDecorator = runnable -> runnable;
 
         private final Runnable originalRunnable;
         private final Runnable decoratedRunnable;
@@ -102,11 +99,9 @@ public class AsyncScheduler {
         }
     }
 
-    @ToString
     public static class DecoratedCallable<T> implements Callable<T> {
 
-        @Setter
-        private static Function<Callable<?>, Callable<?>> hotfixDecorator = callable -> callable;
+        private final static Function<Callable<?>, Callable<?>> hotfixDecorator = callable -> callable;
 
         private final Callable<T> originalCallable;
         private final Callable<T> decoratedCallable;

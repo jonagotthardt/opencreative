@@ -18,34 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.utils.millennium.vectors;
 
-import lombok.Getter;
-
-@Getter
 public class Vec3i implements Comparable {
     /**
      * The Null vector constant (0, 0, 0)
      */
     public static final Vec3i NULL_VECTOR = new Vec3i(0, 0, 0);
 
-    /**
-     * X coordinate
-     * -- GETTER --
-     * Get the X coordinate
-     */
     private final int x;
-
-    /**
-     * Y coordinate
-     * -- GETTER --
-     * Get the Y coordinate
-     */
     private final int y;
-
-    /**
-     * Z coordinate
-     * -- GETTER --
-     * Get the Z coordinate
-     */
     private final int z;
 
     public Vec3i(int x, int y, int z) {
@@ -118,4 +98,17 @@ public class Vec3i implements Comparable {
     public int compareTo(Object p_compareTo_1_) {
         return this.compareTo((Vec3i) p_compareTo_1_);
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getZ() {
+        return z;
+    }
+
 }

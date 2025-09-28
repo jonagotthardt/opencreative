@@ -21,7 +21,6 @@ package ua.mcchickenstudio.opencreative.utils.millennium.math;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
-import lombok.Getter;
 import ua.mcchickenstudio.opencreative.utils.millennium.vectors.Vec3i;
 
 import java.util.Iterator;
@@ -64,10 +63,7 @@ public enum EnumFacing {
 
     /**
      * Ordering index for D-U-N-S-W-E
-     * -- GETTER --
-     * Get the Index of this Facing (0-5). The order is D-U-N-S-W-E
      */
-    @Getter
     private final int index;
     /**
      * Index of the opposite Facing in the VALUES array
@@ -75,28 +71,14 @@ public enum EnumFacing {
     private final int opposite;
     /**
      * Oredering index for the HORIZONTALS field (S-W-N-E)
-     * -- GETTER --
-     * Get the index of this horizontal facing (0-3). The order is S-W-N-E
      */
-    @Getter
     private final int horizontalIndex;
-    @Getter
     private final String name;
-    @Getter
     private final Axis axis;
-    // private static final String __OBFID = "CL_00001201";
-    /**
-     * -- GETTER --
-     * Get the AxisDirection of this Facing.
-     */
-    @Getter
     private final AxisDirection axisDirection;
     /**
      * Normalized Vector that points in the direction of this Facing
-     * -- GETTER --
-     * Get a normalized Vector that points in the direction of this Facing.
      */
-    @Getter
     private final Vec3i directionVec;
 
     EnumFacing(int indexIn, int oppositeIn, int horizontalIndexIn, String nameIn, AxisDirection axisDirectionIn, Axis axisIn, Vec3i directionVecIn) {
@@ -281,8 +263,8 @@ public enum EnumFacing {
         return this.name;
     }
 
-    @Getter
-    public static enum Axis implements Predicate {
+    public enum Axis implements Predicate {
+
         X("x", Plane.HORIZONTAL),
         Y("y", Plane.VERTICAL),
         Z("z", Plane.HORIZONTAL);
@@ -335,13 +317,16 @@ public enum EnumFacing {
         public boolean apply(Object p_apply_1_) {
             return this.apply((EnumFacing) p_apply_1_);
         }
+
+        public Plane getPlane() {
+            return plane;
+        }
     }
 
     public static enum AxisDirection {
         POSITIVE(1, "Towards positive"),
         NEGATIVE(-1, "Towards negative");
         private static final AxisDirection[] $VALUES = new AxisDirection[]{POSITIVE, NEGATIVE};
-        @Getter
         private final int offset;
         private final String description;
 
@@ -349,6 +334,10 @@ public enum EnumFacing {
         AxisDirection(int offset, String description) {
             this.offset = offset;
             this.description = description;
+        }
+
+        public int getOffset() {
+            return offset;
         }
 
         public String toString() {
@@ -446,5 +435,9 @@ public enum EnumFacing {
                 AXIS_LOOKUP[Axis.Z.ordinal()] = 3;
             } catch (NoSuchFieldError ignored) {}
         }
+    }
+
+    public Axis getAxis() {
+        return axis;
     }
 }

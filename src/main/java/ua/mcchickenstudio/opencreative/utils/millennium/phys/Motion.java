@@ -18,10 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.utils.millennium.phys;
 
-import lombok.Getter;
 import ua.mcchickenstudio.opencreative.utils.millennium.vectors.Vec3;
 
-@Getter
 public final class Motion {
 
     private final MotionValue x, y, z;
@@ -84,4 +82,17 @@ public final class Motion {
     public Motion clone() {
         return new Motion(x.get(), y.get(), z.get());
     }
+
+    public MotionValue getX() {
+        return x;
+    }
+
+    public MotionValue getY() {
+        return y;
+    }
+
+    public MotionValue getZ() {
+        return z;
+    }
+
 }
