@@ -20,7 +20,6 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.data;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -33,12 +32,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 // Made by pawsashatoy :)
-@UtilityClass
 public class PhysService {
 
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(40,
                     new ThreadFactoryBuilder().setNameFormat("opencreative-phys-thread-%d").build());
     private static final Map<Integer, List<PhysObject>> objects = new ConcurrentHashMap<>();
+
+    private PhysService () {}
 
     public static void add(final PhysObject object, final int limit) {
         final World world = object.getWorld();
@@ -47,7 +47,7 @@ public class PhysService {
         objects.get(hash).add(object);
     }
 
-    public void run() {
+    public static void run() {
         Bukkit.getScheduler().runTaskTimerAsynchronously(OpenCreative.getPlugin(), () -> AsyncScheduler.run(() -> {
             for (final List<PhysObject> objects : objects.values()) {
                 if (objects.isEmpty()) continue;

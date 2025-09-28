@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.utils.millennium.shapes;
 
-import lombok.Data;
 import ua.mcchickenstudio.opencreative.utils.millennium.math.BuildSpeed;
 import ua.mcchickenstudio.opencreative.utils.millennium.math.GeneralMath;
 import ua.mcchickenstudio.opencreative.utils.millennium.vectors.Vec2;
@@ -31,7 +30,6 @@ import java.util.List;
 Draw a circle to ArrayList
  */
 
-@Data
 public final class Circle {
     private final List<Vec2> vectors;
 

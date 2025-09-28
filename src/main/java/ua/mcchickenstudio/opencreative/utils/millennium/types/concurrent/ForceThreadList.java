@@ -18,15 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.utils.millennium.types.concurrent;
 
-import lombok.Getter;
-
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public final class ForceThreadList<T> {
 
-    @Getter
     private final List<T> list;
     private final Set<T> clamp;
     private final ExecutorService service;

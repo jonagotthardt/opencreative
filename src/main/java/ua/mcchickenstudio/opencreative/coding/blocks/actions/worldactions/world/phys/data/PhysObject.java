@@ -16,11 +16,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.data;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -36,33 +33,60 @@ import ua.mcchickenstudio.opencreative.utils.millennium.vectors.Vec3;
 
 import java.util.*;
 
-@EqualsAndHashCode
 public class PhysObject {
 
-    private static final double BOX_SIZE = 0.5;
-
-    @Getter
+    private final World world;
     private boolean living = true;
 
-    @Getter
-    private World world;
+    private final Particle mainParticle;
+    private final Particle subParticle;
+    private final Particle hitParticle;
 
-    @Getter
-    private Particle mainParticle, subParticle, hitParticle;
-
-    @Getter
-    private int count, i1, i2, i3, hitCount;
-
-    @Getter
-    private Location location;
+    private final int count;
+    private final int offsetX;
+    private final int offsetY;
+    private final int offsetZ;
+    private final int hitCount;
+    private final Location location;
     public double speed, weight, speedAccel, speedLimit,
                     weightAccel, weightLimit, damage, explosion,
                     shockwaveRadius, shockwavePower;
 
-    @Getter
+    private static final double BOX_SIZE = 0.5;
+    public int timeExist = 0;
+
     private final List<PotionEffect> potionEffect;
 
-    public int timeExist = 0;
+    // Made by pawsashatoy :)
+    public PhysObject(final World world, final List<?> visual, final List<?> motion, final List<?> settings) {
+        this.world = world;
+        { // visual
+            this.mainParticle = (Particle) visual.get(0);
+            this.subParticle = (visual.get(1) instanceof Particle) ? (Particle) visual.get(1) : null;
+            this.count = ((Number) visual.get(2)).intValue();
+            this.offsetX = ((Number) visual.get(3)).intValue();
+            this.offsetY = ((Number) visual.get(4)).intValue();
+            this.offsetZ = ((Number) visual.get(5)).intValue();
+            this.hitParticle = (Particle) visual.get(6);
+            this.hitCount = ((Number) visual.get(7)).intValue();
+        }
+        { // motion
+            this.location = (Location) motion.get(0);
+            this.speed = ((Number) motion.get(1)).doubleValue();
+            this.weight = ((Number) motion.get(2)).doubleValue();
+            this.speedAccel = ((Number) motion.get(3)).doubleValue();
+            this.speedLimit = ((Number) motion.get(4)).doubleValue();
+            this.weightAccel = ((Number) motion.get(5)).doubleValue();
+            this.weightLimit = ((Number) motion.get(6)).doubleValue();
+        }
+        { // settings
+            this.damage = ((Number) settings.get(0)).doubleValue();
+            this.explosion = ((Number) settings.get(1)).doubleValue();
+            this.potionEffect = (settings.get(2) instanceof ItemStack) ? getPotionEffects(((ItemStack) settings.get(2))) : null;
+            this.shockwaveRadius = ((Number) settings.get(3)).doubleValue();
+            this.shockwavePower = ((Number) settings.get(4)).doubleValue();
+        }
+    }
 
     public void tick() {
         this.timeExist++;
@@ -74,13 +98,20 @@ public class PhysObject {
             if (checkBlockCollision(old) || checkEntityCollision(old)) {
                 living = false;
             } else {
-                world.spawnParticle(mainParticle, location, count, i1, i2, i3);
+                world.spawnParticle(mainParticle, location, count, offsetX, offsetY, offsetZ);
                 if (subParticle != null)
-                    world.spawnParticle(subParticle, location, count, i1, i2, i3);
+                    world.spawnParticle(subParticle, location, count, offsetX, offsetY, offsetZ);
             }
         }
     }
 
+    public World getWorld() {
+        return world;
+    }
+
+    public boolean isLiving() {
+        return living;
+    }
 
     public void applyMotion() {
         { // apply
@@ -227,37 +258,6 @@ public class PhysObject {
         }
     }
 
-    // Made by pawsashatoy :)
-    public PhysObject(final World world, final List<?> visual, final List<?> motion, final List<?> settings) {
-        this.world = world;
-        { // visual
-            this.mainParticle = (Particle) visual.get(0);
-            this.subParticle = (visual.get(1) instanceof Particle) ? (Particle) visual.get(1) : null;
-            this.count = ((Number) visual.get(2)).intValue();
-            this.i1 = ((Number) visual.get(3)).intValue();
-            this.i2 = ((Number) visual.get(4)).intValue();
-            this.i3 = ((Number) visual.get(5)).intValue();
-            this.hitParticle = (Particle) visual.get(6);
-            this.hitCount = ((Number) visual.get(7)).intValue();
-        }
-        { // motion
-            this.location = (Location) motion.get(0);
-            this.speed = ((Number) motion.get(1)).doubleValue();
-            this.weight = ((Number) motion.get(2)).doubleValue();
-            this.speedAccel = ((Number) motion.get(3)).doubleValue();
-            this.speedLimit = ((Number) motion.get(4)).doubleValue();
-            this.weightAccel = ((Number) motion.get(5)).doubleValue();
-            this.weightLimit = ((Number) motion.get(6)).doubleValue();
-        }
-        { // settings
-            this.damage = ((Number) settings.get(0)).doubleValue();
-            this.explosion = ((Number) settings.get(1)).doubleValue();
-            this.potionEffect = (settings.get(2) instanceof ItemStack) ? getPotionEffects(((ItemStack) settings.get(2))) : null;
-            this.shockwaveRadius = ((Number) settings.get(3)).doubleValue();
-            this.shockwavePower = ((Number) settings.get(4)).doubleValue();
-        }
-    }
-
     private static List<Entity> getEntitiesAroundPoint(Location location, double radius) {
         List<Entity> entities = new ArrayList<>();
         World world = location.getWorld();
@@ -276,10 +276,28 @@ public class PhysObject {
         entities.removeIf(entity -> entity.getLocation().distanceSquared(location) > radius * radius);
         return entities;
     }
+
     private static List<PotionEffect> getPotionEffects(ItemStack item) {
         if (item == null || item.getType() != Material.POTION) return List.of();
         if (!(item.getItemMeta() instanceof PotionMeta potionMeta)) return List.of();
-
         return potionMeta.getCustomEffects();
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof PhysObject physObject)) {
+            return false;
+        }
+        return timeExist == physObject.timeExist &&
+                living == physObject.living &&
+                Objects.equals(world, physObject.world) &&
+                Objects.equals(location, physObject.location);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(world, location, living, timeExist);
+    }
+
 }

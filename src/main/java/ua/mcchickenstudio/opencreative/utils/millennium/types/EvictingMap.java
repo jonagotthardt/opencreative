@@ -18,20 +18,19 @@
 
 package ua.mcchickenstudio.opencreative.utils.millennium.types;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-@RequiredArgsConstructor
 public final class EvictingMap<K, V> extends HashMap<K, V> {
 
-    @Getter
     private final int size;
     private final Deque<K> storedKeys = new LinkedList<>();
+
+    public EvictingMap(int size) {
+        this.size = size;
+    }
 
     @Override
     public boolean remove(final Object key, final Object value) {

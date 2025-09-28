@@ -24,7 +24,6 @@ import ua.mcchickenstudio.opencreative.utils.millennium.vectors.Vec3i;
 
 import java.util.Iterator;
 
-@SuppressWarnings("unused")
 public class BlockPos extends Vec3i {
 
     public static final BlockPos ORIGIN = new BlockPos(0, 0, 0);
@@ -45,7 +44,6 @@ public class BlockPos extends Vec3i {
     public BlockPos(double x, double y, double z) {
         super(x, y, z);
     }
-
 
     public BlockPos(Vec3 vec3) {
         this(vec3.xCoord, vec3.yCoord, vec3.zCoord);

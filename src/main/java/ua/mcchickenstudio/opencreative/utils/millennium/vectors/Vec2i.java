@@ -18,12 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.utils.millennium.vectors;
 
-import lombok.Data;
-
-@Data
 public final class Vec2i {
 
-    private int x, y;
+    private final int x;
+    private final int y;
 
     public Vec2i(int x, int y) {
         this.x = x;

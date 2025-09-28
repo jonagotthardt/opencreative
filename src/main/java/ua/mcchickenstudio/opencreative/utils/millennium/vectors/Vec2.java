@@ -18,12 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.utils.millennium.vectors;
 
-import lombok.Data;
-
-@Data
 public final class Vec2 {
 
-    private double x, y;
+    private final double x;
+    private final double y;
 
     public Vec2(double x, double y) {
         this.x = x;
@@ -53,5 +51,13 @@ public final class Vec2 {
 
     public boolean compare(Vec2 vector2) {
         return this.x == vector2.x && this.y == vector2.y;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
     }
 }

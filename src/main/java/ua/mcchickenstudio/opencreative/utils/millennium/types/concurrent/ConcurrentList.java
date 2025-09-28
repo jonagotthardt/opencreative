@@ -18,14 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.utils.millennium.types.concurrent;
 
-import lombok.Getter;
-
 import java.util.*;
 
 @SuppressWarnings("unused")
 public final class ConcurrentList<T> {
 
-    @Getter
     private final List<T> list;
     private final Set<T> clamp;
 
@@ -82,4 +79,9 @@ public final class ConcurrentList<T> {
             }
         }
     }
+
+    public List<T> getList() {
+        return list;
+    }
+
 }

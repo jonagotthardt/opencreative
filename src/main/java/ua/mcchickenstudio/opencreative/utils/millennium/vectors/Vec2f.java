@@ -18,12 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.utils.millennium.vectors;
 
-import lombok.Data;
-
-@Data
 public final class Vec2f {
 
-    private float x, y;
+    private final float x;
+    private final float y;
 
     public Vec2f(float x, float y) {
         this.x = x;
@@ -53,5 +51,13 @@ public final class Vec2f {
 
     public boolean compare(Vec2f vector2) {
         return this.x == vector2.x && this.y == vector2.y;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
     }
 }
