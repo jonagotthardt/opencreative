@@ -88,7 +88,7 @@ public abstract class ContentWithMenusCategoryMenu<T> extends ListBrowserMenu<T>
     protected void fillOtherItems() {
         setItem(BACK_TO_CATEGORIES,45);
         setItem(createItem(stainedPane,1),47,51);
-        setItem(currentCategory.getItem(mainCategory),49);
+        setItem(setPersistentData(currentCategory.getItem(mainCategory), getItemTypeKey(), "categories"),49);
     }
 
     @Override

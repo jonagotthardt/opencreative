@@ -67,11 +67,7 @@ public final class TargetSelectionMenu extends AbstractMenu {
             event.setCancelled(true);
             if (item != null && !item.equals(DECORATION_ITEM)) {
                 Target selection = Target.getByMaterial(item.getType());
-                if (selection == Target.DEFAULT) {
-                    setSignLine(signLocation,4,"");
-                } else {
-                    setSignLine(signLocation,4,selection.name().toLowerCase());
-                }
+                setSignLine(signLocation,4,selection.name().toLowerCase());
                 DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(signLocation.getWorld());
                 if (devPlanet != null) devPlanet.setCodeChanged(true);
                 translateBlockSign(signLocation.getBlock());
