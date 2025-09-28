@@ -24,6 +24,7 @@ import org.bukkit.block.sign.Side;
 import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.inventory.meta.BookMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.player.PlayerLobbyEvent;
 import ua.mcchickenstudio.opencreative.settings.Settings;
@@ -440,6 +441,14 @@ public final class PlayerUtils {
             }
         } else {
             receiver.showPlayer(OpenCreative.getPlugin(),spectator);
+        }
+    }
+
+    public static @Nullable UUID getUUIDFromText(@NotNull String text) {
+        try {
+            return UUID.fromString(text);
+        } catch (Exception ignored) {
+            return null;
         }
     }
 

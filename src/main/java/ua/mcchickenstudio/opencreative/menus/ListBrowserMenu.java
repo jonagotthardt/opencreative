@@ -25,12 +25,13 @@ import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
 
 /**
  * <h1>ListBrowserMenu</h1>
- * This class represents a menus that stores
+ * This class represents a menu that stores
  * list of elements and has arrows to change pages.
  * @see ua.mcchickenstudio.opencreative.menus.AbstractListMenu
  * @param <T> type of elements, that will be stored in list.
@@ -204,6 +205,10 @@ public abstract class ListBrowserMenu<T> extends AbstractListMenu<T> {
             }
         }
         return false;
+    }
+
+    protected List<T> filterList(List<T> list, Predicate<T> predicate) {
+        return list.stream().filter(predicate).toList();
     }
 
     protected int getNextPageButtonSlot() {

@@ -167,7 +167,7 @@ environment:
     boolean: "&7RMB &f- Change type"
     location:
       build: "&7RMB &f- Set location, &7LMB &f- Return to coding"
-      dev: "&7LMB &f- Teleport to world, &7SHIFT+LMB &f- Teleport to location"
+      dev: "&7LMB &f- Teleport to world, &7F &f- Teleport to location"
     vector: "&7Chat &f- Set coordinates of vector"
     particle: "&7RMB &f- Select a type, &7Shift+RMB &f- Show particle"
   prompter:
@@ -523,6 +523,12 @@ world:
   updated-info: "%prefix%&fUpdated world information for &6%id%&f."
   registered: "%prefix%&fRegistered a world &6%id%&f. Now it can appear in worlds browser menu and can be visited by &6/join %id%&f!"
   unregistered: "%prefix%&fUnregistered a world &6%id%&f. It will not appear in worlds browser menu &6til next server restart&f, if world files exist."
+  recommended: "%prefix%&fWorld &6%id%&f has been added to the recommended list, it will now appear on the first page of the world browser :)"
+  unrecommended: "%prefix%&fWorld &6%id%&f has been removed from recommendations.. :("
+  set-owner: "%prefix%&fA new owner has been set for world %id%: &6%player%\n&7 %uuid%"
+  already-recommended: "%prefix%&cThis world %id% is already in recommendations.. O_o"
+  already-unrecommended: "%prefix%&cThis world %id% is not in recommendations anyway.. O_o"
+  same-owner: "%prefix%&cIn this world %id% the owner is the same as the one specified.. O_o"
   platformer:
     set: "%prefix%&fSuccessfully &6changed&f world's coding platforms generator to: &6%id%&f."
     reset: "%prefix%&fSuccessfully &6changed&f world's coding platforms generator to server's default."
@@ -2289,6 +2295,106 @@ items:
           - "&7sheep regrows its wool."
           - " "
           - "&eClick to set the event."
+      entity-shulker-duplicated:
+        name: "&dShulker duplicated"
+        lore:
+          - "&7This is when a shulker spawns"
+          - "&7itself in another place."
+          - " "
+          - "&eClick to set the event."
+      entity-projectile-hit:
+        name: "&fProjectile hit block"
+        lore:
+          - "&7This is when a flying projectile"
+          - "&7collides with a block."
+          - " "
+          - "&eClick to set the event."
+      entity-born:
+        name: "&eEntity born"
+        lore:
+          - "&7This happens when breeding"
+          - "&7two mobs results in a baby."
+          - " "
+          - "&eClick to set the event."
+      entity-get-damaged:
+        name: "&6Entity took damage"
+        lore:
+          - "&7This is when an entity gets hit"
+          - "&7by someone or something and takes"
+          - "&7damage."
+          - " "
+          - "&7Available values:"
+          - "&c Damage amount"
+          - " "
+          - "&eClick to set the event."
+      entity-combusted-by-entity:
+        name: "&6Ignited by entity"
+        lore:
+          - "&7This is when an entity starts burning"
+          - "&7after being hit by someone with a"
+          - "&7fire weapon."
+          - " "
+          - "&eClick to set the event."
+      entity-combusted-by-block:
+        name: "&6Ignited by block"
+        lore:
+          - "&7This is when an entity starts burning"
+          - "&7after stepping into lava or fire."
+          - " "
+          - "&7Available values:"
+          - "&c Block material"
+          - "&2 Block location"
+          - " "
+          - "&eClick to set the event."
+      entity-regained-health:
+        name: "&dEntity regained health"
+        lore:
+          - "&7This is when an entity is fed or"
+          - "&7affected by a potion and its"
+          - "&7health is restored."
+          - " "
+          - "&eClick to set the event."
+      entity-hanging-break:
+        name: "&6Hanging entity broke"
+        lore:
+          - "&7This is when someone or something"
+          - "&7tries to break a painting or an"
+          - "&7item frame (e.g. player, explosion,"
+          - "&7or block removal)."
+          - " "
+          - "&eClick to set the event."
+      entity-exploded:
+        name: "&cEntity exploded"
+        lore:
+          - "&7This is when a creeper or TNT"
+          - "&7explodes and destroys blocks nearby."
+          - " "
+          - "&7Useful for blocking explosions"
+          - "&7and preventing griefing!"
+          - " "
+          - "&eClick to set the event."
+      entity-removed:
+        name: "&cEntity removed"
+        lore:
+          - "&7This happens when an entity is removed"
+          - "&7by code or despawns in chunks."
+          - " "
+          - "&eClick to set the event."
+      entity-mounted:
+        name: "&6Entity mounted another"
+        lore:
+          - "&7This is when one entity rides"
+          - "&7another."
+          - " "
+          - "&eClick to set the event."
+      entity-dismounted:
+        name: "&eEntity dismounted"
+        lore:
+          - "&7This is when an entity stops riding"
+          - "&7after the carrier dies or for other"
+          - "&7reasons."
+          - " "
+          - "&eClick to set the event."
       entity-pufferfish-state-changed:
         name: "&ePufferfish State Changed"
         lore:
@@ -3732,6 +3838,60 @@ items:
               grindstone: "Grindstone"
               stonecutter: "Stonecutter"
               crafter: "Crafter"
+      player-set-bee-stingers:
+        name: "&eSet number of stingers"
+        lore:
+          - "&7This sets the number of stingers"
+          - "&7in the player's body."
+          - " "
+          - "&fIn chest:"
+          - "&a Number &7- Amount of stingers"
+          - "&3 Parameter &7- Set or add"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or add"
+            lore:
+              - "&7If 'add' is chosen, the value"
+              - "&7will be added to the current"
+              - "&7amount the player has."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
+      entity-set-bee-stingers:
+        name: "&eSet number of stingers"
+        lore:
+          - "&7This sets the number of stingers"
+          - "&7in the entity's body."
+          - " "
+          - "&fIn chest:"
+          - "&a Number &7- Amount of stingers"
+          - "&3 Parameter &7- Set or add"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          add:
+            name: "&fSet or add"
+            lore:
+              - "&7If 'add' is chosen, the value"
+              - "&7will be added to the current"
+              - "&7amount the entity has."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Set"
+              true: "Add"
       player-set-inventory-view-item:
         name: "&aSet item in opened menus"
         lore:
@@ -9356,6 +9516,22 @@ items:
           - " &6hey&7, &6There&7, &fSpace &7-> &6hey There"
           - " "
           - "&eClick to set action."
+        arguments:
+          type:
+            name: "&fText separator"
+            lore:
+              - "&7Choose how to concat the texts. "
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+            choices:
+              new-line: "Each text on new line"
+              join-spaces: "Join text with spaces"
+              join: "Join text"
       var-substring-text:
         name: "&cCut Text"
         lore:
@@ -11832,6 +12008,301 @@ items:
           - " "
           - "&eClick to set condition."
 menus:
+  player-control:
+    title: "&1☻ Control: %name%"
+    items:
+      player:
+        name: " "
+        lore:
+          - "&7 Player &e%name%"
+          - ""
+          - "&7 %status%"
+          - ""
+        online: "&a☺ &nPlaying in this world&r&a!"
+        offline: "&c☹ &nCurrently not in the world&r&c."
+        banned: "&4✘ &nBanned from the world&r&4."
+      dev:
+        name: " "
+        choices:
+          none: "Cannot code"
+          guest: "Can visit, but not modify"
+          not-trusted: "Can code if the owner is in the world"
+          trusted: "Can always code"
+        lore:
+          - "&d ⌘ World Development"
+          - "&7 Access to developer mode /dev"
+          - " "
+          - "&7 Did you hire a cool coder"
+          - "&7 who can improve your world by"
+          - "&7 adding new features? Allow coding!"
+          - ""
+          - "&f Options:"
+          - "%1%"
+          - "%2%"
+          - "%3%"
+          - "%4%"
+          - ""
+          - "&e Click to change."
+          - ""
+      build:
+        name: " "
+        choices:
+          none: "Cannot build"
+          not-trusted: "Can build if the owner is in the world"
+          trusted: "Can always build"
+        lore:
+          - "&c ⛏ Building"
+          - "&7 Access to build mode /build"
+          - " "
+          - "&7 A player wants to help you build"
+          - "&7 your map? Then you can allow him"
+          - "&7 to build!"
+          - ""
+          - "&f Options:"
+          - "%1%"
+          - "%2%"
+          - "%3%"
+          - ""
+          - "&e Click to change."
+          - ""
+      flight:
+        name: " "
+        choices:
+          false: "Flight disabled"
+          true: "Can fly"
+        lore:
+          - "&f ⚡ Flight Mode"
+          - "&7 Ability to fly in the world"
+          - " "
+          - "&7 Sometimes players need to fly"
+          - "&7 over your world, for example to"
+          - "&7 take nice screenshots."
+          - ""
+          - "&f Options:"
+          - "%1%"
+          - "%2%"
+          - ""
+          - "&e Click to change."
+          - ""
+      unban:
+        name: " "
+        lore:
+          - "&a ☻ Unban player"
+          - "&7 Let him join the world"
+          - " "
+          - "&7 If you forgave a player who was"
+          - "&7 recently banned, you can unban him."
+          - ""
+          - "&7 After unbanning, he"
+          - "&7 will be able to enter your world."
+          - ""
+          - "&e Click to unban."
+          - ""
+      kick:
+        name: " "
+        lore:
+          - "&3 ⌀ Kick player from the world"
+          - "&7 Stop him from disturbing gameplay"
+          - " "
+          - "&7 Does this player disturb you?"
+          - "&7 Then it’s time to temporarily"
+          - "&7 disconnect him from the world."
+          - ""
+          - "&7 This will disconnect the player"
+          - "&7 but he can rejoin later."
+          - ""
+          - "&e Click to kick."
+          - ""
+      ban:
+        name: " "
+        lore:
+          - "&c ✘ Ban player"
+          - "&7 Deny player access to the world"
+          - " "
+          - "&7 If a player breaks rules"
+          - "&7 or disturbs others,"
+          - "&7 you should ban him."
+          - ""
+          - "&7 Banned players will not"
+          - "&7 be able to join your world."
+          - ""
+          - "&e Click to ban."
+          - ""
+      whitelist:
+        name: " "
+        lore:
+          - "&b 🛡 Add to whitelist"
+          - "&7 Allow entry to a closed world"
+          - " "
+          - "&7 You can allow a player to join"
+          - "&7 even if the world is closed."
+          - ""
+          - "&7 Useful when the world is private"
+          - "&7 but still under development."
+          - ""
+          - "&e Click to add."
+          - ""
+      whitelist-remove:
+        name: " "
+        lore:
+          - "&c 🛡 Remove from whitelist"
+          - "&7 Deny entry to a closed world"
+          - " "
+          - "&7 If you no longer trust a player,"
+          - "&7 it’s best to remove him"
+          - "&7 from the whitelist."
+          - ""
+          - "&7 He won’t be able to join"
+          - "&7 if the world is closed."
+          - ""
+          - "&e Click to remove."
+          - ""
+      transfer-ownership:
+        name: " "
+        lore:
+          - "&d 🌊 Transfer world ownership"
+          - "&7 Give this world to the player"
+          - " "
+          - "&7 If you want to completely give"
+          - "&7 the world to this player so he"
+          - "&7 becomes the owner, transfer rights."
+          - ""
+          - "&c This action is &nirreversible&c!"
+          - "&c Think twice before giving"
+          - "&c away your world."
+          - ""
+          - "&e Click to transfer ownership."
+          - ""
+      back:
+        name: " "
+        lore:
+          - " &6← &eBack..."
+          - ""
+          - "&7  Click to open"
+          - "&7  the list of players."
+          - ""
+  players-browser:
+    title: "&1☻ Player Management"
+    items:
+      player:
+        online:
+          name: " "
+          lore:
+            - "&7 Player &f%name%"
+            - "&a ☺ Playing in this world!"
+            - ""
+            - "&d ⌘&7 %dev%"
+            - "&c ⛏&7 %build%"
+            - "&b 🛡&7 %white-list%"
+            - "&f ⚡&7 %flight%"
+            - ""
+            - "&e Left click &7- Change settings"
+            - ""
+            - "&3 Right click &7- Teleport to player"
+            - "&3 SHIFT+Right click &7- Teleport to yourself"
+            - ""
+        offline:
+          name: " "
+          lore:
+            - "&7 Player &f%name%"
+            - "&c ☹ &nCurrently not in the world&r&c."
+            - ""
+            - "&d ⌘&7 %dev%"
+            - "&c ⛏&7 %build%"
+            - "&b 🛡&7 %white-list%"
+            - ""
+            - "&e Left click &7- Change settings"
+            - ""
+        banned:
+          name: " "
+          lore:
+            - "&7 Player &c%name%"
+            - "&4 ✘ &nBanned from the world&r&4."
+            - ""
+            - "&e Left click &7- Unban player"
+            - ""
+        dev:
+          none: "&7Cannot &ccode"
+          guest: "&7Can visit &fcode"
+          not-trusted: "&7Can code &ewith owner"
+          trusted: "&7Can code &aalways"
+        build:
+          none: "&7Cannot &cbuild"
+          not-trusted: "&7Can build &ewith owner"
+          trusted: "&7Can build &aalways"
+        white-list:
+          false: "&7Not in whitelist"
+          true: "&7Can join &fanytime"
+        flight:
+          offline: "&cUnavailable"
+          false: "&cDisabled"
+          true: "&aCan fly"
+      kick-all:
+        name: " "
+        lore:
+          - " &3⌀ Kick all players"
+          - ""
+          - "&7  Disconnects all players from"
+          - "&7  this world and teleports them"
+          - "&7  to the lobby. Perfect for"
+          - "&7  closing the world!"
+          - ""
+          - "&e  Click to kick all."
+          - ""
+      type:
+        name: " "
+        choices:
+          all: "All players"
+          online: "Only online"
+          builders: "Builders"
+          developers: "Developers"
+          whitelisted: "Whitelisted"
+          banned: "Banned"
+          offline: "Offline"
+        lore:
+          - "&3 ☻ Player type"
+          - ""
+          - "&e  Click to change"
+          - "&e  current player type."
+          - ""
+          - "&f  Options:"
+          - "%1%"
+          - "%2%"
+          - "%3%"
+          - "%4%"
+          - "%5%"
+          - "%6%"
+          - "%7%"
+          - ""
+      back:
+        name: " "
+        lore:
+          - " &6← &eBack..."
+          - ""
+          - "&7  Click to open"
+          - "&7  world settings."
+          - ""
+      previous-page:
+        name: " "
+        lore:
+          - " &6← &eBack... #%page%"
+          - ""
+          - "&7  Click to show"
+          - "&7  previous players."
+          - ""
+      next-page:
+        name: " "
+        lore:
+          - "&e Next... #%page% &6→"
+          - ""
+          - "&7  Click to show"
+          - "&7  next players."
+          - ""
+      no-players:
+        name: "&c&oNo players!"
+        lore:
+          - "&7You are alone in this world..."
+          - "&7Maybe you should advertise it?"
   entities-browser:
     title: "&4🍖 Entities control"
     removed: "%prefix%&fEntity &6%name%&f (%x%,%y%,%z%) was removed by %player%"
@@ -15261,185 +15732,6 @@ menus:
           - ""
           - "&c Click to change saving."
           - ""
-  world-settings-players:
-    title: "Player Management"
-    in-world: "&aPlayer is in the world!"
-    not-in-world: "&cPlayer is not in the world."
-    turned-on: "&a ● "
-    turned-off: "&7 ○ "
-    items:
-      selected-player:
-        name: "&e%player%"
-        lore:
-          - "&7"
-          - "&7 To change player rights,"
-          - "&7 click the icons on the right."
-          - "&7"
-          - "&f Current rights:"
-          - "&7 &7 %build%"
-          - "&7 &7 %dev%"
-          - "&7 &7 %fly%"
-          - "&7"
-          - "&7%online%"
-      player:
-        name: "&7%player%"
-        lore:
-          - "&7"
-          - "&7 You can change player rights,"
-          - "&7 for example, allow building."
-          - "&7"
-          - "&f Current rights:"
-          - "&7 &7 %build%"
-          - "&7 &7 %dev%"
-          - "&7 &7 %fly%"
-          - "&7"
-          - "&7%online%"
-          - "&eClick to select."
-      no-players:
-        name: "&cNo players!"
-        lore:
-          - "&7"
-          - "&7 Invite your friend to the world,"
-          - "&7 to change their rights in the world."
-          - "&7"
-      dev:
-        name: "&bDevelopment"
-        choices:
-          1: "Cannot code"
-          2: "Can enter code but not change"
-          3: "Can code if owner is in world"
-          4: "Can always code"
-        lore:
-          - " "
-          - "&7You hired a skilled coder,"
-          - "&7who will improve your world by"
-          - "&7adding new features? Let them code!"
-          - ""
-          - "&fOptions:"
-          - "%1%"
-          - "%2%"
-          - "%3%"
-          - "%4%"
-          - ""
-          - "&eClick to change."
-      build:
-        name: "&eBuilding"
-        choices:
-          1: "Cannot build"
-          2: "Can build if owner in world"
-          3: "Can always build"
-        lore:
-          - " "
-          - "&7A player came to help you"
-          - "&7build your map? You can let"
-          - "&7them build!"
-          - ""
-          - "&fOptions:"
-          - "%1%"
-          - "%2%"
-          - "%3%"
-          - ""
-          - "&eClick to change."
-      fly:
-        name: "&eFlying Ability"
-        choices:
-          1: "Flying disabled"
-          2: "Can fly"
-        lore:
-          - " "
-          - "&7Sometimes players need to fly"
-          - "&7over your world, for example, to"
-          - "&7take nice screenshots."
-          - ""
-          - "&fOptions:"
-          - "%1%"
-          - "%2%"
-          - ""
-          - "&eClick to change."
-      unban:
-        name: "&aUnban player"
-        lore:
-          - " "
-          - "&7If you forgave a player who was"
-          - "&7recently banned, you can unblock"
-          - "&7their access to the world."
-          - ""
-          - "&7Once unbanned, they"
-          - "&7can enter your world."
-          - ""
-          - "&eClick to unban."
-      kick:
-        name: "&3Kick player from world"
-        lore:
-          - " "
-          - "&7Is this player annoying?"
-          - "&7Then it's time to temporarily"
-          - "&7kick them from the world, hoping"
-          - "&7they don't return."
-          - ""
-          - "&7This will disconnect the player"
-          - "&7and they can join again later."
-          - ""
-          - "&eClick to kick."
-      ban:
-        name: "&cBan player from world"
-        lore:
-          - " "
-          - "&7If this player breaks the rules"
-          - "&7of your world or annoys others,"
-          - "&7they should be banned."
-          - ""
-          - "&7Banned players will not"
-          - "&7be able to join your world."
-          - ""
-          - "&eClick to ban."
-      whitelist:
-        name: "&bWhitelist player"
-        lore:
-          - " "
-          - "&7If you want to make player able"
-          - "&7to join your world, even if its"
-          - "&7closed, then add him into whitelist."
-          - ""
-          - "&7Whitelisted players are able"
-          - "&7to join your closed world."
-          - ""
-          - "&eClick to add into whitelist."
-      whitelist-remove:
-        name: "&cRemove from whitelist"
-        lore:
-          - " "
-          - "&7If you don't trust player anymore,"
-          - "&7and you want to disallow him to join"
-          - "&7your closed world, then remove from"
-          - "&7whitelist."
-          - ""
-          - "&7Once removed, they cannot"
-          - "&7enter closed world."
-          - ""
-          - "&eClick to remove from whitelist."
-      transfer-ownership:
-        name: "&eTransfer world ownership"
-        lore:
-          - " "
-          - "&7If you want to fully give this"
-          - "&7world to a selected player, making them"
-          - "&7the owner of the world, transfer the rights."
-          - ""
-          - "&cThis action is &nirreversible&c! Think first:"
-          - "&cIs it worth giving your world to this player?"
-          - ""
-          - "&eClick to give the world to the player."
-      next-page:
-        name: "&c▶ &aNext #%page% &c▶"
-        lore:
-          - "&7Click to show"
-          - "&7next players."
-      previous-page:
-        name: "&c◀ &aBack #%page% &c◀"
-        lore:
-          - "&7Click to show"
-          - "&7previous 20 players."
   world-settings-categories:
     title: "Choose new category"
     items:
@@ -16175,6 +16467,7 @@ blocks:
   player_changed_sign: "Sign changed"
   player_entered_vehicle: "Entered Vehicle"
   player_vehicle_exit: "Vehicle Exit"
+  player_set_bee_stingers: "Number of stingers"
 
   world_play_mode: "&aPlay mode"
   world_variable_transfer: "Value receive"
@@ -16217,6 +16510,7 @@ blocks:
   world_block_sponge_absorbed: "Sponge Absorbed Water"
   world_block_bell_rung: "Bell Rung"
 
+  entity_set_bee_stingers: "Number of stingers"
   entity_pig_zombie_angered: "Zombie Pig Angered"
   entity_bat_toggled_sleep_mode: "Bat sleep mode"
   entity_slime_split: "Slime Split"
@@ -16233,6 +16527,18 @@ blocks:
   entity_air_changed: "Air level changed"
   entity_entered_vehicle: "Entered Vehicle"
   entity_vehicle_exit: "Vehicle Exit"
+  entity_projectile_hit: "Projectile hit block"
+  entity_shulker_duplicated: "Shulker duplicated"
+  entity_mounted: "Mounted a mob"
+  entity_dismounted: "Dismounted a mob"
+  entity_removed: "Entity removed"
+  entity_born: "Born"
+  entity_exploded: "Exploded"
+  entity_get_damaged: "Took damage"
+  entity_combusted_by_block: "Fire by block"
+  entity_combusted_by_entity: "Fire by entity"
+  entity_regained_health: "Regained health"
+  entity_hanging_break: "Hanging break"
 
   entity_piglin_bartered: "Piglin Bartered"
   entity_interacted_block: "Block interaction"

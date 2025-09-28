@@ -25,6 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.PlayerPurchaseEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyOpenedMenusException;
 import ua.mcchickenstudio.opencreative.menus.ConfirmationMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.Bukkit;
@@ -42,6 +43,14 @@ public final class RequestPurchaseAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
+        if (getPlanet().getLimits().cantOpenMenu(player)) {
+            /*
+             * This check prevents player from closing
+             * too many menus, that can prevent from
+             * quiting the game.
+             */
+            throw new TooManyOpenedMenusException(player.getName());
+        }
         String id = getArguments().getValue("id","example",this);
         String name = getArguments().getValue("name","Example",this);
         boolean save = getArguments().getValue("save",false,this);

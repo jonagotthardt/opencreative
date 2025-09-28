@@ -25,6 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public abstract class PlayerAction extends Action {
 
@@ -39,6 +40,9 @@ public abstract class PlayerAction extends Action {
     public final void execute(Entity entity) {
         if (entity instanceof Player player) {
             executePlayer(player);
+        } else {
+            if (entity == null) return;
+            throw new UnsupportedEntityException(Player.class, entity);
         }
     }
     

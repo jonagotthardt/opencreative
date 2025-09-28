@@ -44,7 +44,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.convertTime;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
- * This class represents a menus, that displays specified list of worlds.
+ * This class represents a menu, that displays specified list of worlds.
  * Player can sort worlds and change pages.
  */
 public final class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {

@@ -28,6 +28,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.fixItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.messageExists;
 
@@ -41,6 +42,8 @@ public class ParameterButton {
     private final ItemStack item;
     private Object currentValue;
     private int currentChoice;
+
+    private final String name;
     private final String turnedPath;
     private final String localizationPath;
     private final List<String> originalLore;
@@ -50,6 +53,7 @@ public class ParameterButton {
     public ParameterButton(Object currentValue, List<Object> values, String name, String turnedPath, String itemPath, List<Material> materials) {
         this.turnedPath = turnedPath;
         this.localizationPath = itemPath;
+        this.name = name;
         materialList.addAll(materials);
         valueList.addAll(values);
         if (currentChoice == materialList.size() || currentChoice == valueList.size()) {
@@ -94,6 +98,7 @@ public class ParameterButton {
     public ParameterButton(Object currentValue, List<Object> values, String name, String turnedPath, String itemPath, Material material) {
         this.turnedPath = turnedPath;
         this.localizationPath = itemPath;
+        this.name = name;
         materialList.add(material);
         valueList.addAll(values);
         if (currentChoice == materialList.size() || currentChoice == valueList.size()) {
@@ -190,6 +195,7 @@ public class ParameterButton {
         ItemMeta meta = item.getItemMeta();
         meta.setLore(newLore);
         item.setItemMeta(meta);
+        fixItem(item);
     }
 
     public ItemStack getItem() {
@@ -202,6 +208,10 @@ public class ParameterButton {
             itemStack.removeItemFlags(flag);
         }
         return itemStack;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public int getCurrentChoice() {

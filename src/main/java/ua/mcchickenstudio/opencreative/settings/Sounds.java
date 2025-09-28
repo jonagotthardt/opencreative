@@ -47,6 +47,11 @@ public enum Sounds {
     MENU_OPEN_OWN_MODULES_BROWSER("block.enchantment_table.use",1.4f),
     MENU_OPEN_WORLDS_BROWSER("block.vault.activate"),
     MENU_OPEN_ENTITIES_BROWSER("entity.panda.worried_ambient",0.1f),
+
+    MENU_OPEN_PLAYERS_BROWSER("entity.panda.worried_ambient",0.1f),
+    MENU_OPEN_PLAYER_CONTROL("entity.panda.worried_ambient",0.1f),
+    MENU_PLAYERS_BROWSER_SORT("block.trial_spawner.spawn_item",1.2f),
+
     MENU_OPEN_VALUES_BROWSER("ui.loom.select_pattern"),
     MENU_OPEN_CONFIRMATION("block.amethyst_block.resonate",0.5f),
     MENU_OPEN_MODULES_BROWSER("block.shulker_box.open",0.1f),

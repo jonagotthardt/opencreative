@@ -965,7 +965,7 @@ public enum ActionType {
     }
 
     public static Set<MenusCategory> getMenusCategories(ActionCategory category) {
-        Set<MenusCategory> set = new HashSet<>();
+        Set<MenusCategory> set = new LinkedHashSet<>();
         for (ActionType type : values()) {
             if (type.category == category) {
                 set.add(type.menusCategory);

@@ -175,8 +175,8 @@ coding:
   # code from players wishes by using command:
   # /env make [prompt]
   #
-  # Prompter can and will do mistakes in coding,
-  # and it's still experimental feature.
+  # Notice: Prompter can and will do mistakes in coding,
+  # and we cannot nothing to do with it.
   #
   # Prompter requires token to work.
   # For ChatGPT - https://platform.openai.com/api-keys
@@ -480,6 +480,22 @@ generators:
     #  enabled: true
     #  icon: "DIAMOND_SWORD"
     #  folder: pvp
+
+
+watchdog:
+  #
+  # Watchdog is a system monitor, that checks TPS,
+  # RAM and Disk usage and limits loading worlds,
+  # when stability is low.
+  #
+  # Stability has 3 states:
+  #  Fine - everything works.
+  #  Not Okay - players can join loaded worlds, but can't load worlds or compile code.
+  #  Very bad - unloads all worlds, players cannot join worlds.
+  #
+  # To check status, use: /oc stability
+  #
+  enabled: true
 
 #
 # Maintenance mode unloads all worlds and

@@ -23,6 +23,7 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import ua.mcchickenstudio.opencreative.events.planet.PlanetDisconnectPlayerEvent;
 import ua.mcchickenstudio.opencreative.coding.modules.ModuleSettingsMenu;
+import ua.mcchickenstudio.opencreative.menus.world.settings.PlayerControlMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetPlayer;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
@@ -69,6 +70,7 @@ public final class ChangedWorld implements Listener {
         World oldWorld = event.getFrom();
         World newWorld = player.getWorld();
         ChatListener.confirmation.remove(player);
+        PlayerControlMenu.removeConfirmation(player);
         ModuleSettingsMenu.removeFromCurrentEditing(player);
         player.clearTitle();
 
