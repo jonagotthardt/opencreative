@@ -64,6 +64,7 @@ commands:
     played: "%prefix%&fPlayed sound &6%sound% &fwith volume &6%volume%&f and speed &6%pitch%&f to player &6%player%"
     bad-sound: "%prefix%&cCan't find sound called %sound% O_o"
   stop-sound:
+    help: "%prefix%You can stop sounds for yourself or another player.\n &6/stopsound &7- Stop all sounds for yourself\n &6/stopsound Categories/Sounds &7- Stop specific sounds or sounds from categories for yourself\n &6/stopsound Categories/Sounds Nickname &7- Stop sounds for another player"
     stopped-sound: "%prefix%&fStopped sound &6%sound%&f for player &6%player%&f."
     stopped-category: "%prefix%&fStopped sounds of category &6%category%&f for player &6%player%&f."
     stopped-all: "%prefix%&fStopped all sounds for player &6%player%&f."

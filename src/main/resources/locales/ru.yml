@@ -69,6 +69,7 @@ commands:
     played: "%prefix%&fПроигран звук &6%sound% &fс громкостью &6%volume%&f и скоростью &6%pitch%&f игроку &6%player%"
     bad-sound: "%prefix%&cЗвука %sound% не существует.. О_о"
   stop-sound:
+    help: "%prefix%Вы можете остановить звуки себе или игроку.\n &6/stopsound &7- Остановить все звуки себе\n &6/stopsound Категории/Звуки &7- Остановить конкретные звуки или звуки с категорий себе\n &6/stopsound Категории/Звуки Никнейм &7- Остановить звуки игроку"
     stopped-sound: "%prefix%&fОстановлен звук &6%sound%&f игроку &6%player%&f."
     stopped-category: "%prefix%&fОстановлены звуки категории &6%category%&f игроку &6%player%&f."
     stopped-all: "%prefix%&fОстановлены все звуки игроку &6%player%&f."
