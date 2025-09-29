@@ -2860,6 +2860,117 @@ items:
           - " "
           - "&eClick to set event."
     actions:
+      entity-set-ai:
+        name: "&cSet mob AI"
+        lore:
+          - "&7When AI is disabled,"
+          - "&7the mob won’t move anywhere"
+          - "&7or chase anyone."
+          - " "
+          - "&fIn the chest:"
+          - "&3 Parameter &7- Yes or no"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          boolean:
+            name: "&fMob AI"
+            lore:
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "No, don’t give it AI"
+              true: "Yes, let it have AI"
+      entity-set-silent:
+        name: "&eMake entity silent"
+        lore:
+          - "&7When the mob is silent,"
+          - "&7it won’t make sounds."
+          - "&7Useful for NPCs!"
+          - " "
+          - "&fIn the chest:"
+          - "&3 Parameter &7- Yes or no"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          boolean:
+            name: "&fMob silence"
+            lore:
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "No, it should make sounds"
+              true: "Yes, keep it silent"
+      entity-set-collidable:
+        name: "&fSet mob collision"
+        lore:
+          - "&7When collision is disabled,"
+          - "&7players and other mobs"
+          - "&7can pass through this mob."
+          - " "
+          - "&fIn the chest:"
+          - "&3 Parameter &7- Yes or no"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          boolean:
+            name: "&fMob pass-through"
+            lore:
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "No, allow passing through"
+              true: "Yes, make it push on movement"
+      entity-set-physics:
+        name: "&3Set entity physics"
+        lore:
+          - "&7When physics is disabled,"
+          - "&7the mob won’t fall,"
+          - "&7but will stay floating."
+          - " "
+          - "&fIn the chest:"
+          - "&3 Parameter &7- Yes or no"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          boolean:
+            name: "&fEntity physics"
+            lore:
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "No, keep it floating in the air"
+              true: "Yes, let it fall"
+      entity-set-baby:
+        name: "&eTurn mob into a baby"
+        lore:
+          - "&7Let the mob become"
+          - "&7small and cute."
+          - " "
+          - "&eClick to set the action."
+      entity-set-adult:
+        name: "&6Turn mob into an adult"
+        lore:
+          - "&7Now the mob becomes"
+          - "&7big, independent,"
+          - "&7but still cute."
+          - " "
+          - "&eClick to set the action."
       entity-set-step-height:
         name: "&dSet step height of entity"
         lore:
@@ -16541,6 +16652,12 @@ blocks:
   world_block_sponge_absorbed: "Sponge Absorbed Water"
   world_block_bell_rung: "Bell Rung"
 
+  entity_set_adult: "Into adult"
+  entity_set_baby: "Into baby"
+  entity_set_ai: "AI"
+  entity_set_silent: "Silence"
+  entity_set_physics: "Mob physics"
+  entity_set_collidable: "Mob collision"
   entity_set_bee_stingers: "Number of stingers"
   entity_pig_zombie_angered: "Zombie Pig Angered"
   entity_bat_toggled_sleep_mode: "Bat sleep mode"

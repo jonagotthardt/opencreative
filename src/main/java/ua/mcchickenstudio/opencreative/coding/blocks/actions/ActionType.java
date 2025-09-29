@@ -709,7 +709,15 @@ public enum ActionType {
     //ENTITY_SET_ITEM_PICKUP(         ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.GLOWSTONE_DUST,        new ParameterSlot("mob"), new ParameterSlot("player")),
     //ENTITY_SET_ITEM_PICKUP_DELAY(   ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.GUNPOWDER,             new ArgumentSlot("delay", ValueType.NUMBER), new ParameterSlot("add")),
     //ENTITY_SET_SHULKER_PEEK(        ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.SHULKER_BOX,           new ArgumentSlot("peek", ValueType.NUMBER), new ParameterSlot("add")),
-    ENTITY_SET_SITTING(             ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetSittingAction.class,                               Material.WOLF_SPAWN_EGG,        new ParameterSlot("boolean")),
+
+    ENTITY_SET_AI(                  ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetAIAction.class,                      Material.FERMENTED_SPIDER_EYE,  new ParameterSlot("boolean")),
+    ENTITY_SET_BABY(                ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetBabyAction.class,                    Material.EGG),
+    ENTITY_SET_ADULT(                ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetAdultAction.class,                  Material.CHICKEN),
+    ENTITY_SET_PHYSICS(          ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetPhysicsAction.class,                    Material.CHIPPED_ANVIL,         new ParameterSlot("boolean")),
+    ENTITY_SET_COLLIDABLE(          ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetCollidableAction.class,              Material.SHIELD,                new ParameterSlot("boolean")),
+    ENTITY_SET_SILENT(              ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetSilentAction.class,                  Material.NAUTILUS_SHELL,        new ParameterSlot("boolean")),
+
+    ENTITY_SET_SITTING(             ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetSittingAction.class,                 Material.WOLF_SPAWN_EGG,        new ParameterSlot("boolean")),
     ENTITY_SET_SADDLE(              ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetSaddleAction.class,                  Material.SADDLE,                new ParameterSlot("boolean")),
     ENTITY_SET_MINECART_BLOCK(      ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetMinecartBlockAction.class,           Material.HOPPER_MINECART,       new ArgumentSlot("item", ValueType.ITEM)),
     ENTITY_SET_PIGLIN_CROSSBOW(     ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetPiglinChargingAction.class,          Material.CROSSBOW,              new ParameterSlot("boolean")),
