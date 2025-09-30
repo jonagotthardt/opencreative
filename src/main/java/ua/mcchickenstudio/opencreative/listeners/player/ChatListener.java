@@ -167,6 +167,7 @@ public final class ChatListener implements Listener {
                     numberString = "3.1415926";
                 }
                 try {
+                    Integer.parseInt(numberString);
                     double number = parseTicks(numberString);
                     ItemMeta meta = itemInHand.getItemMeta();
                     meta.setDisplayName("§a" + number);

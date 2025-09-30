@@ -433,7 +433,7 @@ public final class Settings {
             return false;
         }
         recommendedWorldsIDs.add(worldID);
-        OpenCreative.getPlugin().getConfig().set("recommended-worlds", recommendedWorldsIDs);
+        OpenCreative.getPlugin().getConfig().set("recommended-worlds", new ArrayList<>(recommendedWorldsIDs));
         OpenCreative.getPlugin().saveConfig();
         return true;
     }
@@ -443,7 +443,7 @@ public final class Settings {
             return false;
         }
         recommendedWorldsIDs.remove(worldID);
-        OpenCreative.getPlugin().getConfig().set("recommended-worlds", recommendedWorldsIDs);
+        OpenCreative.getPlugin().getConfig().set("recommended-worlds", new ArrayList<>(recommendedWorldsIDs));
         OpenCreative.getPlugin().saveConfig();
         return true;
     }
