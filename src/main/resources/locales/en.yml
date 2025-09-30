@@ -59,6 +59,7 @@ commands:
     item: "%prefix%&cHold the item in your main hand."
     lines-limit: "%prefix%&cDescription limit of %limit% lines reached."
     text-limit: "%prefix%&cCharacter limit of %limit% reached."
+    not-number: "%prefix%&cNot a number: %argument%"
   play-sound:
     help: "%prefix%You can play a sound for yourself or a player.\n &6/playsound Sound Volume Speed Seed &7- Play a sound for yourself\n &6/playsound Username Sound Volume Speed Seed &7- Play a sound for a player"
     played: "%prefix%&fPlayed sound &6%sound% &fwith volume &6%volume%&f and speed &6%pitch%&f to player &6%player%"

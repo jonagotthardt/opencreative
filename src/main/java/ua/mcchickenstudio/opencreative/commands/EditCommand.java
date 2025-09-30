@@ -152,19 +152,24 @@ public class EditCommand extends CommandHandler {
     private void handleSetLore(Player player, ItemStack item, String[] args) {
         ItemMeta meta = item.getItemMeta();
         if (args.length == 1) {
-            player.sendMessage(getLocaleMessage("commands.edit.item"));
+            player.sendMessage(getLocaleMessage("commands.edit.help"));
             return;
         }
-        int lineNumber = 1;
+        int lineNumber;
         try {
             lineNumber = Integer.parseInt(args[1]);
             if (lineNumber < 1) {
                 lineNumber = 1;
             } else if (lineNumber > LINES_LIMIT) {
-                player.sendMessage(toComponent(getLocaleMessage("commands.edit.lines-limit").replace("%limit%",String.valueOf(LINES_LIMIT))));
+                player.sendMessage(toComponent(getLocaleMessage("commands.edit.lines-limit")
+                        .replace("%limit%",String.valueOf(LINES_LIMIT))));
                 return;
             }
-        } catch (NumberFormatException ignored) {}
+        } catch (NumberFormatException ignored) {
+            getComponentWithPlaceholders("commands.edit.not-number", player,
+                    "argument", args[1]);
+            return;
+        }
         String message = joinArgs(args, 2);
         Component newLoreLine = fromInputToComponent(message);
         if (getComponentLength(newLoreLine) > TEXT_LIMIT) {
@@ -226,7 +231,7 @@ public class EditCommand extends CommandHandler {
             player.sendMessage(getLocaleMessage("commands.edit.item"));
             return;
         }
-        int lineNumber = 1;
+        int lineNumber;
         try {
             lineNumber = Integer.parseInt(args[1]);
             if (lineNumber < 1) {
@@ -235,7 +240,11 @@ public class EditCommand extends CommandHandler {
                 player.sendMessage(toComponent(getLocaleMessage("commands.edit.lines-limit").replace("%limit%",String.valueOf(LINES_LIMIT))));
                 return;
             }
-        } catch (NumberFormatException ignored) {}
+        } catch (NumberFormatException ignored) {
+            getComponentWithPlaceholders("commands.edit.not-number", player,
+                    "argument", args[1]);
+            return;
+        }
         List<Component> newLore = meta.lore();
         if (newLore == null) newLore = new ArrayList<>();
         if (newLore.size() >= lineNumber) {
