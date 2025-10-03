@@ -100,8 +100,8 @@ public final class ActionTypeSelectionMenu extends BlocksWithMenusCategoryMenu<A
             ActionCategory actionCategory = actionType == null ? null : actionType.getCategory();
             if (actionCategory != null) {
                 devPlanet.setCodeChanged(true);
-                if (firstLine != null) setSignLine(signLocation, 1, firstLine);
                 if (!actionCategory.isCondition()) setSignLine(signLocation, 1, "");
+                if (firstLine != null) setSignLine(signLocation, 1, firstLine);
                 setSignLine(signLocation,2, actionCategory.name().toLowerCase());
             }
             if (setSignLine(signLocation,3,typeString.toLowerCase())) {
