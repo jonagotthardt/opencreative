@@ -67,11 +67,11 @@ public final class RepeatConditionSelectionMenu extends AbstractMenu {
         if (currentItem == null) return;
         String path = "repeat_while" + (opposed ? "_not" : "");
         if (itemEquals(currentItem, playerCondition)) {
-            new ActionTypeSelectionMenu(player, signLocation, ActionCategory.PLAYER_CONDITION, path).open(player);
+            new BlocksCategorySelectionMenu(player, signLocation, ActionCategory.PLAYER_CONDITION, path).open(player);
         } else if (itemEquals(currentItem, entityCondition)) {
-            new ActionTypeSelectionMenu(player, signLocation, ActionCategory.ENTITY_CONDITION, path).open(player);
+            new BlocksCategorySelectionMenu(player, signLocation, ActionCategory.ENTITY_CONDITION, path).open(player);
         } else if (itemEquals(currentItem, varCondition)) {
-            new ActionTypeSelectionMenu(player, signLocation, ActionCategory.VARIABLE_CONDITION, path).open(player);
+            new BlocksCategorySelectionMenu(player, signLocation, ActionCategory.VARIABLE_CONDITION, path).open(player);
         }
     }
 

@@ -31,6 +31,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -64,7 +65,7 @@ public final class ActionTypeSelectionMenu extends BlocksWithMenusCategoryMenu<A
     public ActionTypeSelectionMenu(@NotNull Player player,
                                    @NotNull Location location,
                                    @NotNull ActionCategory action,
-                                   @NotNull String firstLine) {
+                                   @Nullable String firstLine) {
         super(player, location, action.isCondition() ? "conditions" : "actions",
                 action.name().toLowerCase(),
                 action.getStainedPane(), action.getDefaultCategory());
@@ -100,6 +101,7 @@ public final class ActionTypeSelectionMenu extends BlocksWithMenusCategoryMenu<A
             if (actionCategory != null) {
                 devPlanet.setCodeChanged(true);
                 if (firstLine != null) setSignLine(signLocation, 1, firstLine);
+                if (!actionCategory.isCondition()) setSignLine(signLocation, 1, "");
                 setSignLine(signLocation,2, actionCategory.name().toLowerCase());
             }
             if (setSignLine(signLocation,3,typeString.toLowerCase())) {

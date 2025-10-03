@@ -213,7 +213,7 @@ public final class InteractListener implements Listener {
             if (item.isEmpty()) return true;
             ActionType action = ActionType.getType(clickedBlock.getRelative(BlockFace.DOWN));
             if (action == null) return true;
-            if (action.getCategory() == ActionCategory.SELECTION_ACTION) {
+            if (action.getCategory() == ActionCategory.SELECTION_ACTION || action == ActionType.REPEAT_WHILE || action == ActionType.REPEAT_WHILE_NOT) {
                 String selectionAction = getSignLine(clickedBlock.getRelative(BlockFace.DOWN).getRelative(BlockFace.SOUTH).getLocation(), (byte) 3);
                 if (selectionAction == null || selectionAction.isEmpty()) return true;
                 action = ActionType.getType(selectionAction);
