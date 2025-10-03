@@ -90,6 +90,9 @@ public final class ChangedWorld implements Listener {
         if (oldPlanet != null && oldPlanet == newPlanet) {
             if (isDevPlanet(newWorld)) {
                 // Player entered developers world
+                if (oldPlanet.getWorldPlayers().canDevelop(player)) {
+                    giveDevPermissions(player);
+                }
                 if (isPlayerWithLocation(player)) {
                     removePlayerWithLocation(player);
                 }
@@ -178,7 +181,6 @@ public final class ChangedWorld implements Listener {
                             }
                         }
                     }
-
                 }
                 newPlanet.getInformation().updateIconAsync();
             }

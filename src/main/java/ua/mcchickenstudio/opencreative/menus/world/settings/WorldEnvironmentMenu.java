@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
+import ua.mcchickenstudio.opencreative.menus.world.WorldMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import org.bukkit.Material;
@@ -29,6 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.List;
@@ -37,7 +39,7 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 
-public final class WorldEnvironmentMenu extends AbstractMenu {
+public final class WorldEnvironmentMenu extends AbstractMenu implements WorldMenu {
 
     private final Player player;
     private final DevPlanet devPlanet;
@@ -191,5 +193,10 @@ public final class WorldEnvironmentMenu extends AbstractMenu {
     public void onOpen(@NotNull InventoryOpenEvent event) {
         Player player = (Player) event.getPlayer();
         Sounds.MENU_OPEN_ENVIRONMENT.play(player);
+    }
+
+    @Override
+    public Planet getPlanet() {
+        return devPlanet.getPlanet();
     }
 }

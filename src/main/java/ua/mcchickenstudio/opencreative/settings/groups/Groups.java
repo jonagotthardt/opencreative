@@ -48,7 +48,7 @@ public final class Groups {
             return;
         }
         for (String group : section.getKeys(false)) {
-            registerGroup(new Group(group,config));
+            registerGroup(new Group(group, config));
         }
     }
 

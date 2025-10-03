@@ -49,6 +49,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.menus.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
+import ua.mcchickenstudio.opencreative.menus.world.WorldMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
@@ -62,7 +63,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 /**
  * This class represents a menu, that displays list of players in world.
  */
-public final class PlayersBrowserMenu extends ListBrowserMenu<String> {
+public final class PlayersBrowserMenu extends ListBrowserMenu<String> implements WorldMenu {
 
     private final Planet planet;
     private final List<ParameterButton> buttons = new ArrayList<>();
@@ -322,4 +323,8 @@ public final class PlayersBrowserMenu extends ListBrowserMenu<String> {
         Sounds.MENU_OPEN_PLAYERS_BROWSER.play(getPlayer());
     }
 
+    @Override
+    public Planet getPlanet() {
+        return planet;
+    }
 }

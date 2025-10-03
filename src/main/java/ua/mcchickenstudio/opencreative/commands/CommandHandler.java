@@ -38,8 +38,24 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMe
  */
 public abstract class CommandHandler implements CommandExecutor, TabCompleter {
 
+    /**
+     * Executes command for sender.
+     * @param sender sender of command, can be player or console.
+     * @param command command, that was executed.
+     * @param label label of command (name of command after slash /).
+     * @param args arguments of command.
+     */
     public abstract void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args);
 
+    /**
+     * Returns list of tab completions, that can suggest
+     * arguments for command sender, or null.
+     * @param sender sender of command.
+     * @param command command, that was requested.
+     * @param alias label of command (name of command after slash /).
+     * @param args arguments of command.
+     * @return list of suggestions for arguments, or null.
+     */
     public abstract @Nullable List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args);
 
     @Override

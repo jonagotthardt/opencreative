@@ -46,7 +46,9 @@ public final class CreativeMenu extends AbstractMenu {
     private final ItemStack DEBUG_DISABLE = createItem(Material.SOUL_TORCH,1,"menus.creative.items.debug-disable","debug-disable");
 
     public CreativeMenu() {
-        super(6, getLocaleMessage("menus.creative.title",false).replace("%version%", OpenCreative.getVersion()).replace("%codename%", OpenCreative.getCodename()));
+        super(6, getLocaleMessage("menus.creative.title",false)
+                .replace("%version%", OpenCreative.getVersion())
+                .replace("%codename%", OpenCreative.getCodename()));
     }
 
     @Override

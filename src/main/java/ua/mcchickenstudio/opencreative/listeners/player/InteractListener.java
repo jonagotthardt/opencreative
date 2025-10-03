@@ -287,29 +287,46 @@ public final class InteractListener implements Listener {
         Block mainBlock = clickedBlock.getRelative(BlockFace.NORTH);
         ExecutorCategory mainBlockCategory = ExecutorCategory.getByMaterial(mainBlock.getType());
         ActionCategory actionBlockCategory = ActionCategory.getByMaterial(mainBlock.getType());
-        if (currentItem.getType() == Material.ARROW && (actionBlockCategory != null && actionBlockCategory.isCondition() || actionBlockCategory == ActionCategory.SELECTION_ACTION)) {
-            if (event.getHand() == EquipmentSlot.HAND) {
+        if (currentItem.getType() == Material.ARROW && event.getHand() == EquipmentSlot.HAND) {
+            if (actionBlockCategory != null && actionBlockCategory.isCondition() || actionBlockCategory == ActionCategory.SELECTION_ACTION) {
                 /*
                  * We cancel changing NOT in selection action,
                  * when sign doesn't have specified condition type
                  * in third sign line, because we can't select
                  * ALL PLAYERS with NOT parameter, it's useless.
                  */
-                if (actionBlockCategory == ActionCategory.SELECTION_ACTION && isSignLineEmpty(clickedBlock.getLocation(),(byte) 3)) {
+                if (actionBlockCategory == ActionCategory.SELECTION_ACTION && isSignLineEmpty(clickedBlock.getLocation(), (byte) 3)) {
                     return false;
                 }
                 if (actionBlockCategory == ActionCategory.ELSE_CONDITION) {
                     return false;
                 }
                 devPlanet.setCodeChanged(true);
-                if (isSignLineEmpty(clickedBlock.getLocation(),(byte) 1)) {
-                    setSignLine(clickedBlock.getLocation(),(byte) 1,"not");
+                if (isSignLineEmpty(clickedBlock.getLocation(), (byte) 1)) {
+                    setSignLine(clickedBlock.getLocation(), (byte) 1, "not");
                     Sounds.DEV_CONDITION_NOT.play(player);
                 } else {
-                    setSignLine(clickedBlock.getLocation(),(byte) 1,"");
+                    setSignLine(clickedBlock.getLocation(), (byte) 1, "");
                     Sounds.DEV_CONDITION_DEFAULT.play(player);
                 }
                 translateBlockSign(clickedBlock);
+            } else if (actionBlockCategory == ActionCategory.REPEAT_ACTION) {
+                String type = getSignLine(clickedBlock.getLocation(), 1);
+                if (type == null) return false;
+                ActionType actionType = ActionType.getType(type);
+                if (actionType == ActionType.REPEAT_WHILE) {
+                    devPlanet.setCodeChanged(true);
+                    setSignLine(clickedBlock.getLocation(), (byte) 1, ActionType.REPEAT_WHILE_NOT.name().toLowerCase());
+                    Sounds.DEV_CONDITION_NOT.play(player);
+                    translateBlockSign(clickedBlock);
+                } else if (actionType == ActionType.REPEAT_WHILE_NOT) {
+                    devPlanet.setCodeChanged(true);
+                    setSignLine(clickedBlock.getLocation(), (byte) 1, ActionType.REPEAT_WHILE.name().toLowerCase());
+                    Sounds.DEV_CONDITION_DEFAULT.play(player);
+                    translateBlockSign(clickedBlock);
+                } else {
+                    return false;
+                }
             }
         } else if (player.isSneaking() && actionBlockCategory != null) {
             if (actionBlockCategory == ActionCategory.SELECTION_ACTION) {

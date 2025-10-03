@@ -24,6 +24,7 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.commands.ChatCommand;
 import ua.mcchickenstudio.opencreative.coding.modules.ModuleSettingsMenu;
+import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
 import ua.mcchickenstudio.opencreative.menus.world.settings.PlayerControlMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.entity.Player;
@@ -75,8 +76,9 @@ public final class QuitListener implements Listener {
         ModuleSettingsMenu.removeFromCurrentEditing(player);
         removeFromPermissionsMap(player);
         CooldownUtils.clearPlayerCooldowns(player);
-
+        if (Experiments.isEnabled("wanders")) {
+            OpenCreative.getPlugin().unregisterWander(player);
+        }
     }
-
 
 }

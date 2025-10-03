@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.menus.world.settings;
 
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.menus.AbstractListMenu;
+import ua.mcchickenstudio.opencreative.menus.world.WorldMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import org.bukkit.Material;
@@ -27,6 +28,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ import java.util.Set;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public final class WorldEnvironmentColorMenu extends AbstractListMenu<Material> {
+public final class WorldEnvironmentColorMenu extends AbstractListMenu<Material> implements WorldMenu {
 
     private final Set<Material> materials = new HashSet<>();
     private final String type;
@@ -92,6 +94,11 @@ public final class WorldEnvironmentColorMenu extends AbstractListMenu<Material> 
             }
         }
         materials.remove(currentMaterial);
+    }
+
+    @Override
+    public Planet getPlanet() {
+        return devPlanet.getPlanet();
     }
 
     @Override

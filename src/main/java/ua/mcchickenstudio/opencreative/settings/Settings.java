@@ -33,6 +33,8 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.prompters.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
+import ua.mcchickenstudio.opencreative.commands.experiments.Experiment;
+import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceEndEvent;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceStartEvent;
 import ua.mcchickenstudio.opencreative.indev.Items;
@@ -48,12 +50,12 @@ import ua.mcchickenstudio.opencreative.settings.groups.Groups;
 import java.io.File;
 import java.util.*;
 
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebug;
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningErrorMessage;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 
 /**
+ * <h1>Settings</h1>
  * This class represents Settings, that stores
  * values which are used in plugin.
  */
@@ -91,8 +93,6 @@ public final class Settings {
     private boolean lobbyDisallowWorldEdit = true;
     private boolean lobbyDisableExplosions = true;
 
-    private boolean legacySelectionMenu = false;
-
     private BukkitRunnable announcer;
     private PlayerListChanger listChanger = PlayerListChanger.FULL;
 
@@ -120,12 +120,11 @@ public final class Settings {
     private final Set<Integer> recommendedWorldsIDs = new HashSet<>();
     private final Set<String> allowedResourcePackLinks = new HashSet<>();
 
-    private boolean enabledWatchdog = true;
-
     private boolean enabledCoding = true;
     private final Set<String> disabledEvents = new HashSet<>();
     private final Set<String> disabledActions = new HashSet<>();
     private final Set<String> disabledConditions = new HashSet<>();
+    private boolean legacySelectionMenu = false;
     private int prompterMaxExecutors = 10;
     private int prompterTimeout = 120;
 
@@ -165,7 +164,7 @@ public final class Settings {
         lobbyDisallowPlacingBlocks = config.getBoolean("lobby.disallow-placing-blocks",true);
         lobbyDisallowDestroyingBlocks = config.getBoolean("lobby.disallow-destroying-blocks",true);
 
-        enabledWatchdog = config.getBoolean("watchdog.enabled",true);
+        boolean enabledWatchdog = config.getBoolean("watchdog.enabled", false);
 
         legacySelectionMenu = config.getBoolean("coding.old-selection-menu",false);
         enabledCoding = config.getBoolean("coding.enabled",true);
@@ -230,6 +229,7 @@ public final class Settings {
 
         OpenCreative.setStability(enabledWatchdog ? new Watchdog() : new DisabledWatchdog());
         setupPromptHandler(config);
+        loadExperiments(config);
         checkDebugAnnouncer();
     }
 
@@ -320,6 +320,20 @@ public final class Settings {
 
     public boolean isWorldGenerationUnavailable() {
         return WorldGenerators.getInstance().getWorldGenerators().isEmpty();
+    }
+
+    private void loadExperiments(FileConfiguration config) {
+        int count = 0;
+        ConfigurationSection section = config.getConfigurationSection("experiments");
+        if (section == null) return;
+        for (Experiment experiment : Experiments.getInstance().getExperiments()) {
+            boolean enabled = section.getBoolean(experiment.getId(), false);
+            Experiments.getInstance().setEnabled(experiment, enabled);
+            if (enabled) count++;
+        }
+        if (count >= 1) {
+            OpenCreative.getPlugin().getLogger().info("Enabled " + count + " experiments.");
+        }
     }
 
     private void loadDisabledBlocks(FileConfiguration config) {

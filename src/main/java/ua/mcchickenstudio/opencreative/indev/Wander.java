@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.indev;
 
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -35,14 +37,17 @@ import java.util.UUID;
  * He has nickname, description, gender, favorite
  * worlds and last played world.
  */
-public final class Wander extends OfflineWander {
+public final class Wander extends OfflineWander implements Audience {
 
-    public Wander(@NotNull UUID uuid) {
-        super(uuid);
+    private final Player player;
+
+    public Wander(@NotNull Player player) {
+        super(player);
+        this.player = player;
     }
 
-    public Wander(@NotNull OfflinePlayer offlinePlayer) {
-        super(offlinePlayer);
+    public @NotNull Player getPlayer() {
+        return player;
     }
 
     /**
@@ -54,6 +59,4 @@ public final class Wander extends OfflineWander {
         if (player == null) return null;
         return OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
     }
-
-
 }

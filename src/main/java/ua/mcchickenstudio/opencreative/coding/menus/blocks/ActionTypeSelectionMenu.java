@@ -49,6 +49,7 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSi
 public final class ActionTypeSelectionMenu extends BlocksWithMenusCategoryMenu<ActionType> {
 
     private final ActionCategory action;
+    private final String firstLine;
 
     public ActionTypeSelectionMenu(@NotNull Player player,
                                    @NotNull Location location,
@@ -57,6 +58,18 @@ public final class ActionTypeSelectionMenu extends BlocksWithMenusCategoryMenu<A
                 action.name().toLowerCase(),
                 action.getStainedPane(), action.getDefaultCategory());
         this.action = action;
+        this.firstLine = null;
+    }
+
+    public ActionTypeSelectionMenu(@NotNull Player player,
+                                   @NotNull Location location,
+                                   @NotNull ActionCategory action,
+                                   @NotNull String firstLine) {
+        super(player, location, action.isCondition() ? "conditions" : "actions",
+                action.name().toLowerCase(),
+                action.getStainedPane(), action.getDefaultCategory());
+        this.action = action;
+        this.firstLine = firstLine;
     }
 
     @Override
@@ -78,9 +91,14 @@ public final class ActionTypeSelectionMenu extends BlocksWithMenusCategoryMenu<A
             try {
                 actionType = ActionType.valueOf(typeString);
             } catch (Exception ignored) {}
+            if (actionType == ActionType.REPEAT_WHILE || actionType == ActionType.REPEAT_WHILE_NOT) {
+                new RepeatConditionSelectionMenu(getPlayer(), signLocation, actionType == ActionType.REPEAT_WHILE_NOT);
+                return;
+            }
             ActionCategory actionCategory = actionType == null ? null : actionType.getCategory();
             if (actionCategory != null) {
                 devPlanet.setCodeChanged(true);
+                if (firstLine != null) setSignLine(signLocation, 1, firstLine);
                 setSignLine(signLocation,2, actionCategory.name().toLowerCase());
             }
             if (setSignLine(signLocation,3,typeString.toLowerCase())) {
