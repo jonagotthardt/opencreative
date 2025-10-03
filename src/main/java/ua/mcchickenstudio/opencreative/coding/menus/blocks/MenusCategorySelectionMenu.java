@@ -49,7 +49,7 @@ public abstract class MenusCategorySelectionMenu extends AbstractMenu {
     protected final Material additionalPane;
     protected final ItemStack mainItem;
     protected final String mainCategory;
-    protected final ContentWithMenusCategoryMenu<?> contentMenu;
+    protected ContentWithMenusCategoryMenu<?> contentMenu;
     protected final List<MenusCategory> menusCategories = new ArrayList<>();
     protected final Location location;
     protected final Object frequency;
@@ -72,14 +72,14 @@ public abstract class MenusCategorySelectionMenu extends AbstractMenu {
         this.mainCategory = mainCategory;
         this.location = location;
         this.frequency = frequency;
-        this.contentMenu = getContentBrowserMenu(location, frequency);
-        contentMenu.setCategoriesMenu(this);
     }
 
     public abstract @NotNull ContentWithMenusCategoryMenu<?> getContentBrowserMenu(Location location, Object frequency);
 
     @Override
     public void fillItems(Player player) {
+        this.contentMenu = getContentBrowserMenu(location, frequency);
+        contentMenu.setCategoriesMenu(this);
         if (legacy) {
             fillLegacy();
             return;
@@ -274,7 +274,6 @@ public abstract class MenusCategorySelectionMenu extends AbstractMenu {
 
     @Override
     public void onOpen(@NotNull InventoryOpenEvent event) {
-
     }
 
 }
