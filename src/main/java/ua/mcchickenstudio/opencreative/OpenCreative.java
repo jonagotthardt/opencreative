@@ -170,8 +170,9 @@ public final class OpenCreative extends JavaPlugin {
             teleportToLobby(player);
             getServer().sendActionBar(
                 MiniMessage.miniMessage().deserialize(
-                        "<white>Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+ <gray>" + version + "<white> is loaded for " + loadedTime + " ms."
-                ));
+                    "<white>Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+ <gray>" + version + "<white> is loaded for " + loadedTime + " ms."
+                )
+            );
         }
         getLogger().info(String.join("\n",
             "OpenCreative+ " + version + ": " + codename + " is loaded for " + loadedTime + " ms.",
@@ -312,7 +313,7 @@ public final class OpenCreative extends JavaPlugin {
      * Returns OpenCreative+ settings.
      * @return settings of plugin.
      */
-    public static Settings getSettings() {
+    public static @NotNull Settings getSettings() {
         return getPlugin().settings;
     }
 
@@ -500,7 +501,7 @@ public final class OpenCreative extends JavaPlugin {
      * Gets version of OpenCreative+.
      * @return version of plugin.
      */
-    public static String getVersion() {
+    public static @NotNull String getVersion() {
         return version;
     }
 
@@ -516,7 +517,7 @@ public final class OpenCreative extends JavaPlugin {
      * Gets codename of current OpenCreative+ version.
      * @return codename of version.
      */
-    public static String getCodename() {
+    public static @NotNull String getCodename() {
         return codename;
     }
 
@@ -572,8 +573,8 @@ public final class OpenCreative extends JavaPlugin {
     }
 
     /**
-     * Returns online wander, that plays on server.
-     * @return wander - if online, otherwise - null
+     * Returns online wander casted by player.
+     * @return wander of player.
      */
     public static @NotNull Wander getWander(@NotNull Player player) {
         for (Wander wander : new ArrayList<>(getPlugin().wanders)) {

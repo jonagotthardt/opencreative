@@ -41,6 +41,7 @@ public final class BlocksCategorySelectionMenu extends MenusCategorySelectionMen
 
     private ExecutorCategory executorCategory = null;
     private ActionCategory actionCategory = null;
+    private String firstLine = null;
 
     public BlocksCategorySelectionMenu(@NotNull Player player,
                                        @NotNull Location location,
@@ -62,25 +63,37 @@ public final class BlocksCategorySelectionMenu extends MenusCategorySelectionMen
                 category.isCondition() ? "conditions" : "actions", location, category);
     }
 
+    public BlocksCategorySelectionMenu(@NotNull Player player,
+                                       @NotNull Location location,
+                                       @NotNull ActionCategory category,
+                                       @NotNull String firstLine) {
+        super(player,category.getItem(),
+                category.getStainedPane(),
+                ActionType.getMenusCategories(category),
+                ChatColor.stripColor(getLocaleMessage("blocks." + category.name().toLowerCase())),
+                category.isCondition() ? "conditions" : "actions", location, category);
+        this.firstLine = firstLine;
+    }
+
     @Override
     public @NotNull ContentWithMenusCategoryMenu<?> getContentBrowserMenu(final Location location, final Object frequency) {
         BlocksWithMenusCategoryMenu<?> content;
-        if (frequency instanceof ActionCategory) {
-            this.actionCategory = (ActionCategory) frequency;
-        } else if (frequency instanceof ExecutorCategory) {
-            this.executorCategory = (ExecutorCategory) frequency;
+        if (frequency instanceof ActionCategory category) {
+            this.actionCategory = category;
+        } else if (frequency instanceof ExecutorCategory category) {
+            this.executorCategory = category;
         }
         if (mainCategory.equalsIgnoreCase("events")) {
             content = new ExecutorTypeSelectionMenu(player, location, executorCategory);
         } else {
-            content = new ActionTypeSelectionMenu(player, location, actionCategory);
+            content = new ActionTypeSelectionMenu(player, location, actionCategory, firstLine);
         }
         content.setSignLocation(location);
         return content;
     }
 
     @Override
-    public @Nullable BlockState getBlockState() {
+    public @NotNull BlockState getBlockState() {
         return location.getBlock().getState();
     }
 

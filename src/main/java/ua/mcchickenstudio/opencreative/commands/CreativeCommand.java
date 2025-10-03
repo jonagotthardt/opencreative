@@ -21,10 +21,11 @@ package ua.mcchickenstudio.opencreative.commands;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-import ua.mcchickenstudio.opencreative.coding.CodeConfiguration;
-import ua.mcchickenstudio.opencreative.coding.CodingBlockPlacer;
+import ua.mcchickenstudio.opencreative.commands.experiments.Experiment;
+import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
 import ua.mcchickenstudio.opencreative.indev.Items;
-import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.indev.Wander;
+import ua.mcchickenstudio.opencreative.managers.space.PlanetsManager;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
 import ua.mcchickenstudio.opencreative.menus.CreativeMenu;
@@ -599,9 +600,7 @@ public class CreativeCommand extends CommandHandler {
                             .replace("%amount%",String.valueOf(worlds.size()))
                             + String.join(", ",worlds));
                 }
-                case "deprecated" -> {
-                    handleDeprecatedCommand(sender, args);
-                }
+                case "deprecated" -> handleDeprecatedCommand(sender, args);
                 case "corrupted" -> handleCorruptedCommand(sender, args);
                 case "print" -> {
                     if (!sender.hasPermission("opencreative.print")) {
@@ -656,91 +655,7 @@ public class CreativeCommand extends CommandHandler {
                             .replace("%database%", OpenCreative.getStability().getDatabaseState().getLocalized())
                     );
                 }
-                case "test" -> {
-                    if (!sender.hasPermission("opencreative.test")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (player == null) return;
-                    player.sendMessage("Test of code downloader");
-                    if (args.length == 1) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
-                    if (devPlanet == null) {
-                        sender.sendMessage(getLocaleMessage("only-in-dev-world"));
-                        return;
-                    }
-                    if (!devPlanet.getPlanet().getWorldPlayers().canDevelop(player)) {
-                        sender.sendMessage(getLocaleMessage("not-developer"));
-                        return;
-                    }
-                    String link = args[1];
-                    if (!link.startsWith("https://")) {
-                        sender.sendMessage(getLocaleMessage("Not save link. Needs to start with https://"));
-                        return;
-                    }
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                URL requestUrl = new URI(link).toURL();
-                                HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
-                                connection.setConnectTimeout(5000);
-                                connection.setReadTimeout(5000);
-                                connection.setRequestMethod("GET");
-                                connection.setRequestProperty("User-Agent", "OpenCreative+ Code Downloader");
-                                connection.setDoOutput(false);
-                                int code = connection.getResponseCode();
-                                StringBuilder responseBuilder = new StringBuilder();
-                                try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                                        code >= 400 ? connection.getErrorStream() : connection.getInputStream(),
-                                        StandardCharsets.UTF_8))) {
-                                    char[] buffer = new char[4096]; // читаем большими блоками
-                                    int read;
-                                    while ((read = reader.read(buffer)) != -1) {
-                                        responseBuilder.append(buffer, 0, read);
-                                        if (responseBuilder.length() > 1024 * 1024) {
-                                            sender.sendMessage("Too large file");
-                                            return;
-                                        }
-                                    }
-                                }
-                                String response = responseBuilder.toString();
-                                CodeConfiguration config = new CodeConfiguration();
-                                config.loadFromString(response);
-                                ConfigurationSection section = config.getConfigurationSection("code.blocks");
-                                if (section == null) {
-                                    sender.sendMessage("Section does not exists.");
-                                    return;
-                                }
-                                Bukkit.getScheduler().runTask(OpenCreative.getPlugin(),
-                                    () -> {
-                                        if ((new CodingBlockPlacer(devPlanet).placeCodingLines(devPlanet, section)).isSuccess()) {
-                                            sender.sendMessage("Placed");
-                                        } else {
-                                            sender.sendMessage("Failed to place");
-                                        }
-                                    });
-                            } catch (Exception e) {
-                                sender.sendMessage("Failed to download code");
-                            }
-                        }
-                    }.runTaskAsynchronously(OpenCreative.getPlugin());
-
-
-                }
-                case "test3" -> {
-                    if (!sender.hasPermission("opencreative.test")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (player == null) return;
-                    player.sendMessage("Test of worlds downloader");
-                    WorldsBrowserMenu menu = new WorldsPickerMenu(player, new HashSet<>(OpenCreative.getPlanetsManager().getPlanets().stream().filter(planet -> planet.getInformation().isDownloadable()).toList()));
-                    menu.open(player);
-                }
+                case "experiments" -> handleExperimentsCommand(sender, args);
                 case "uuid", "getuuid" -> {
                     if (!sender.hasPermission("opencreative.getuuid")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
@@ -915,8 +830,108 @@ public class CreativeCommand extends CommandHandler {
         }
     }
 
-    public void handleLoadCommand(@NotNull CommandSender sender, String[] args) {
-
+    public void handleExperimentsCommand(@NotNull CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            sender.sendMessage(getLocaleMessage("too-few-args"));
+            return;
+        }
+        if (List.of("on", "enable").contains(args[1])) {
+            if (!sender.hasPermission("opencreative.experiments.enable")) {
+                sender.sendMessage(getLocaleMessage("no-perms"));
+                return;
+            }
+            if (args.length == 2) {
+                sender.sendMessage(getLocaleMessage("too-few-args"));
+                return;
+            }
+            String experimentName = args[2].toLowerCase().replace("-", "_");
+            Experiment experiment = Experiments.getInstance().getExperiment(experimentName);
+            if (experiment == null) {
+                sender.sendMessage(getLocaleMessage("creative.experiments.not-found")
+                        .replace("%id%", args[2]));
+                return;
+            }
+            if (Experiments.getInstance().setEnabled(experiment, true)) {
+                sender.sendMessage(getLocaleMessage("creative.experiments.enabled")
+                        .replace("%id%", experimentName)
+                        .replace("%name%", experiment.getName())
+                        .replace("%description%", experiment.getDescription())
+                );
+            } else {
+                sender.sendMessage(getLocaleMessage("creative.experiments.already-enabled")
+                        .replace("%id%", experimentName)
+                        .replace("%name%", experiment.getName())
+                        .replace("%description%", experiment.getDescription())
+                );
+            }
+        } else if (List.of("off", "disable").contains(args[1])) {
+            if (!sender.hasPermission("opencreative.experiments.disable")) {
+                sender.sendMessage(getLocaleMessage("no-perms"));
+                return;
+            }
+            if (args.length == 2) {
+                sender.sendMessage(getLocaleMessage("too-few-args"));
+                return;
+            }
+            String experimentName = args[2].toLowerCase().replace("-", "_");
+            Experiment experiment = Experiments.getInstance().getExperiment(experimentName);
+            if (experiment == null) {
+                sender.sendMessage(getLocaleMessage("creative.experiments.not-found")
+                        .replace("%id%", args[2]));
+                return;
+            }
+            if (Experiments.getInstance().setEnabled(experiment, false)) {
+                sender.sendMessage(getLocaleMessage("creative.experiments.disabled")
+                        .replace("%id%", experimentName)
+                        .replace("%name%", experiment.getName())
+                        .replace("%description%", experiment.getDescription())
+                );
+            } else {
+                sender.sendMessage(getLocaleMessage("creative.experiments.already-disabled")
+                        .replace("%id%", experimentName)
+                        .replace("%name%", experiment.getName())
+                        .replace("%description%", experiment.getDescription())
+                );
+            }
+        } else if ("list".equalsIgnoreCase(args[1])) {
+            if (!sender.hasPermission("opencreative.experiments.list")) {
+                sender.sendMessage(getLocaleMessage("no-perms"));
+                return;
+            }
+            List<Experiment> experiments = Experiments.getInstance().getExperiments();
+            if (experiments.isEmpty()) {
+                sender.sendMessage(getLocaleMessage("creative.experiments.list.empty"));
+                return;
+            }
+            sender.sendMessage(getLocaleMessage("creative.experiments.list.amount")
+                    .replace("%amount%", String.valueOf(experiments.size())));
+            for (Experiment experiment : experiments) {
+                sender.sendMessage(getLocaleMessage("creative.experiments.list.element")
+                        .replace("%id%", experiment.getId())
+                        .replace("%name%", experiment.getName())
+                        .replace("%description%", experiment.getDescription())
+                        .replace("%status%", getLocaleMessage("creative.experiments.list.status."
+                                + (experiment.isEnabled() ? "enabled" : "disabled")))
+                );
+            }
+        } else {
+            if (!sender.hasPermission("opencreative.experiments.list")) {
+                sender.sendMessage(getLocaleMessage("no-perms"));
+                return;
+            }
+            String experimentName = args[1].toLowerCase().replace("-", "_");
+            Experiment experiment = Experiments.getInstance().getExperiment(experimentName);
+            if (experiment == null || !experiment.isEnabled()) {
+                sender.sendMessage(getLocaleMessage("creative.experiments.not-found")
+                        .replace("%id%", args[1]));
+                return;
+            }
+            if (!sender.hasPermission("opencreative.experiments." + experimentName.replace("_", "-"))) {
+                sender.sendMessage(getLocaleMessage("no-perms"));
+                return;
+            }
+            experiment.handleCommand(sender, Arrays.copyOfRange(args, 2, args.length));
+        }
     }
 
     public void handleCorruptedCommand(@NotNull CommandSender sender, String[] args) {
@@ -1049,6 +1064,7 @@ public class CreativeCommand extends CommandHandler {
             tabCompleter.add("recommend");
             tabCompleter.add("unrecommend");
             tabCompleter.add("setowner");
+            tabCompleter.add("experiments");
         } else if (args.length == 2) {
             if ("maintenance".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("start");
@@ -1066,10 +1082,19 @@ public class CreativeCommand extends CommandHandler {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");
             } else if (List.of("load","unload","moderate","moderation",
-                    "updateworld","unregister","delete","setowner",
-                    "recommend","unrecommend")
+                    "updateworld","unregister","delete","setowner")
                     .contains(args[0].toLowerCase())) {
                 tabCompleter.addAll(OpenCreative.getPlanetsManager().getPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());
+            } else if ("recommend".equalsIgnoreCase(args[0])) {
+                tabCompleter.addAll(OpenCreative.getPlanetsManager().getPlanets().stream()
+                        .filter(planet -> !OpenCreative.getPlanetsManager().getRecommendedPlanets().contains(planet.getId()))
+                        .map(planet -> String.valueOf(planet.getId()))
+                        .toList());
+            } else if ("unrecommend".equalsIgnoreCase(args[0])) {
+                tabCompleter.addAll(OpenCreative.getPlanetsManager().getPlanets().stream()
+                        .filter(planet -> OpenCreative.getPlanetsManager().getRecommendedPlanets().contains(planet.getId()))
+                        .map(planet -> String.valueOf(planet.getId()))
+                        .toList());
             } else if ("corrupted".equalsIgnoreCase(args[0])) {
                 tabCompleter.addAll(OpenCreative.getPlanetsManager().getCorruptedPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());
             } else if ("locale".equalsIgnoreCase(args[0])) {
@@ -1085,6 +1110,16 @@ public class CreativeCommand extends CommandHandler {
                 tabCompleter.addAll(Arrays.stream(Sounds.values()).map(s -> s.name().toLowerCase()).filter(s -> s.startsWith(args[1].toLowerCase())).toList());
             } else if ("item".equalsIgnoreCase(args[0]) || "items".equalsIgnoreCase(args[0])) {
                 tabCompleter.addAll(Arrays.stream(Items.values()).map(s -> s.name().toLowerCase()).filter(s -> s.startsWith(args[1].toLowerCase())).toList());
+            } else if ("experiments".equalsIgnoreCase(args[0])) {
+                List<Experiment> experiments = Experiments.getInstance().getExperiments();
+                if (experiments.isEmpty()) return List.of();
+                tabCompleter.add("on");
+                tabCompleter.add("off");
+                tabCompleter.add("list");
+                for (Experiment experiment : experiments) {
+                    if (!experiment.isEnabled()) continue;
+                    tabCompleter.add(experiment.getId());
+                }
             }
         } else if (args.length == 3) {
             if ("start".equalsIgnoreCase(args[1])) {
@@ -1096,6 +1131,25 @@ public class CreativeCommand extends CommandHandler {
                 tabCompleter.add("owner");
                 tabCompleter.add("join");
                 tabCompleter.add("unload");
+            } else if ("experiments".equalsIgnoreCase(args[0])) {
+                if (List.of("on", "enable").contains(args[1].toLowerCase())) {
+                    for (Experiment experiment : Experiments.getInstance().getExperiments()) {
+                        if (experiment.isEnabled()) continue;
+                        tabCompleter.add(experiment.getId());
+                    }
+                } else if (List.of("disable", "off").contains(args[1].toLowerCase())) {
+                    for (Experiment experiment : Experiments.getInstance().getExperiments()) {
+                        if (!experiment.isEnabled()) continue;
+                        tabCompleter.add(experiment.getId());
+                    }
+                } else {
+                    String experimentName = args[1].toLowerCase().replace("-", "_");
+                    Experiment experiment = Experiments.getInstance().getExperiment(experimentName);
+                    if (experiment == null || !experiment.isEnabled()) {
+                        return null;
+                    }
+                    return experiment.tabCommand(sender, Arrays.copyOfRange(args, 2, args.length));
+                }
             }
         }
         return tabCompleter;

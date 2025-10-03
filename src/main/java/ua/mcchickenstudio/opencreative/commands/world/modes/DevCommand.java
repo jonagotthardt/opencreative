@@ -46,7 +46,6 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.clearPlayer;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.giveDevPermissions;
 
 /**
  * <h1>DevCommand</h1>
@@ -118,7 +117,6 @@ public class DevCommand extends CommandHandler {
                     player.setGameMode(GameMode.CREATIVE);
                     player.setAllowFlight(true);
                     player.setFlying(true);
-                    giveDevPermissions(player);
                 }
                 ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
                 if (planet.isOwner(player)) {

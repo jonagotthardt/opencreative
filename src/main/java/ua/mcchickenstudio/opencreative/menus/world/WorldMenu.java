@@ -20,8 +20,16 @@ package ua.mcchickenstudio.opencreative.menus.world;
 
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
+/**
+ * <h1>WorldMenu</h1>
+ * This class represents a menu, that is relied on world.
+ */
 public interface WorldMenu {
 
+    /**
+     * Returns planet, that owns this menu.
+     * @return planet for menu.
+     */
     Planet getPlanet();
 
 }

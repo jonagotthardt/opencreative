@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.indev;
 import com.google.gson.*;
 import com.google.gson.annotations.Since;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -56,6 +57,8 @@ public class OfflineWander {
     protected int lastPlayedWorldId = -1;
     @Since(5.6)
     protected boolean hideHints;
+    @Since(5.8)
+    protected Location lastLocation;
 
     public OfflineWander(@NotNull UUID uuid) {
         this.uuid = uuid;
@@ -67,7 +70,7 @@ public class OfflineWander {
         loadInfo();
     }
 
-    public OfflinePlayer getOfflinePlayer() {
+    public @NotNull OfflinePlayer getOfflinePlayer() {
         return Bukkit.getOfflinePlayer(uuid);
     }
 
@@ -89,6 +92,10 @@ public class OfflineWander {
 
     public @Nullable Gender getGender() {
         return gender;
+    }
+
+    public @Nullable Location getLastLocation() {
+        return lastLocation;
     }
 
     public int getLastPlayedWorldId() {
@@ -118,35 +125,49 @@ public class OfflineWander {
         saveData();
     }
 
-    public void addFavoriteWorld(int worldId) {
+    public boolean addFavoriteWorld(int worldId) {
+        if (getFavoriteWorlds().contains(worldId)) {
+            return false;
+        }
         getFavoriteWorlds().add(worldId);
         saveData();
+        return true;
     }
 
-    public void removeFavoriteWorld(int worldId) {
+    public boolean removeFavoriteWorld(int worldId) {
+        if (!getFavoriteWorlds().contains(worldId)) {
+            return false;
+        }
         getFavoriteWorlds().remove(worldId);
         saveData();
+        return true;
     }
 
-    public void setGender(@NotNull Gender gender) {
+    public boolean setGender(@NotNull Gender gender) {
+        if (this.gender == gender) {
+            return false;
+        }
         this.gender = gender;
         saveData();
+        return true;
     }
 
-    public void clearData() {
+    public boolean clearData() {
         File jsonFile = getWanderJsonFile(this,false);
         if (jsonFile == null || !jsonFile.exists()) {
-            return;
+            return false;
         }
         this.name = null;
         this.description = null;
         this.gender = null;
         this.lastPlayedWorldId = -1;
         this.getFavoriteWorlds().clear();
+        this.lastLocation = null;
         try {
-            jsonFile.delete();
+            return jsonFile.delete();
         } catch (Exception error) {
             sendDebugError("Can't delete wander file: " + uuid, error);
+            return false;
         }
     }
 
@@ -185,6 +206,16 @@ public class OfflineWander {
 
             if (json.has("hideHints")) {
                 this.hideHints = json.get("hideHints").getAsBoolean();
+            }
+
+            if (json.has("lastLocation")) {
+                JsonObject lastLoc = json.get("lastLocation").getAsJsonObject();
+                double x = lastLoc.get("x").getAsDouble();
+                double y = lastLoc.get("y").getAsDouble();
+                double z = lastLoc.get("z").getAsDouble();
+                float yaw = lastLoc.get("yaw").getAsFloat();
+                float pitch = lastLoc.get("pitch").getAsFloat();
+                this.lastLocation = new Location(null, x, y, z, yaw, pitch);
             }
 
         } catch (Exception error) {
@@ -230,6 +261,15 @@ public class OfflineWander {
         if (!favoriteWorlds.isEmpty()) json.add("favoriteWorlds", favoriteWorlds);
         if (lastPlayedWorldId != -1) json.addProperty("lastPlayedWorldId", lastPlayedWorldId);
         if (hideHints) json.addProperty("hideHints", true);
+        if (lastLocation != null) {
+            JsonObject lastLoc = new JsonObject();
+            lastLoc.addProperty("x", lastLocation.getX());
+            lastLoc.addProperty("y", lastLocation.getY());
+            lastLoc.addProperty("z", lastLocation.getZ());
+            lastLoc.addProperty("yaw", lastLocation.getYaw());
+            lastLoc.addProperty("pitch", lastLocation.getPitch());
+            json.add("lastLocation", lastLoc);
+        }
         return json;
     }
 

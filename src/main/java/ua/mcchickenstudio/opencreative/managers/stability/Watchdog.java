@@ -82,10 +82,10 @@ public final class Watchdog implements StabilityManager {
                     databaseState = StabilityState.NIGHTMARE;
                 }
 
-                long freeMemory = Runtime.getRuntime().freeMemory()/1000000;
-                if (freeMemory >= 200) { // 200 MB
+                long freeMemory = Runtime.getRuntime().freeMemory() / 1000000;
+                if (freeMemory >= 100) { // 100 MB
                     memoryState = StabilityState.FINE;
-                } else if (freeMemory >= 100) { // 100 MB
+                } else if (freeMemory >= 50) { // 50 MB
                     memoryState = StabilityState.NOT_OKAY;
                 } else {
                     memoryState = StabilityState.NIGHTMARE;
@@ -108,7 +108,7 @@ public final class Watchdog implements StabilityManager {
 
                 if (getState() == StabilityState.NIGHTMARE) {
                     if (memoryState == StabilityState.NIGHTMARE) {
-                        sendWarningErrorMessage("Out of memory");
+                        sendWarningErrorMessage("[Watchdog] Too low available memory: " + freeMemory + " MB");
                     } else {
                         OpenCreative.getPlugin().getLogger().warning("OpenCreative+ cannot continue work due to stability issues.");
                         OpenCreative.getPlugin().getLogger().warning(" TPS: " + ticksState.getLocalized() + " (" + getTPS() + "/20)");

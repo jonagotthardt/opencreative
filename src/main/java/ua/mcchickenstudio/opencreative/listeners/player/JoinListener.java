@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 
 import net.kyori.adventure.text.format.NamedTextColor;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -76,6 +77,8 @@ public final class JoinListener implements Listener {
                                     " OpenCreative+ software.").color(NamedTextColor.GRAY)));
                 }
             }.runTaskLater(OpenCreative.getPlugin(),40L);
+        } else if (Experiments.isEnabled("wanders")) {
+            OpenCreative.getPlugin().registerWander(event.getPlayer());
         }
     }
 

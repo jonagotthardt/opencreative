@@ -25,7 +25,6 @@ import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.player.CreativeChatEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -34,7 +33,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
@@ -90,7 +88,8 @@ public class ChatCommand extends CommandHandler {
                 return;
             }
         }
-        OpenCreative.getPlugin().getLogger().info("[CREATIVE-CHAT] "+sender.getName()+": "+String.join(" ",args));
+        OpenCreative.getPlugin().getLogger().info("[CREATIVE-CHAT] " + sender.getName()
+                + ": "+String.join(" ",args));
 
         String text = String.join(" ", args);
         String prefix = OpenCreative.getPlugin().getConfig().getString("messages.cc-prefix","&6 Chat &8| &7");

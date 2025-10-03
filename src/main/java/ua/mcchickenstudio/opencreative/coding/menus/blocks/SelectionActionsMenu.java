@@ -58,7 +58,6 @@ public final class SelectionActionsMenu extends AbstractMenu {
     private final ItemStack victim = createItem(Target.VICTIM.getIcon(),1,"menus.developer.selection.items.victim");
     private final ItemStack killer = createItem(Target.KILLER.getIcon(),1,"menus.developer.selection.items.killer");
 
-
     public SelectionActionsMenu(Player player, Location location) {
         super(5, getLocaleMessage("blocks.selection_action",false));
         this.player = player;
@@ -126,7 +125,7 @@ public final class SelectionActionsMenu extends AbstractMenu {
             event.getWhoClicked().swingMainHand();
             player.closeInventory();
         } else if (itemEquals(currentItem, defaultItem)) {
-            setLine("");
+            setLine("default");
             Sounds.DEV_SET_TARGET.play(player);
             event.getWhoClicked().swingMainHand();
             player.closeInventory();

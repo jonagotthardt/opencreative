@@ -238,6 +238,19 @@ creative:
   sounds:
     set: "%prefix%&fChanged sound theme to &6%theme%&f, have a good listening!"
     not-found: "%prefix%&cNot found this sound theme in configuration O_o"
+  experiments:
+    enabled: "%prefix%&fYou have &6enabled &fexperiment &6%name% &7(%description%)&f, now its features will be available to you :)\n &cWarning: Experiments may break world data!"
+    already-enabled: "%prefix%&cThis experiment %name% is already enabled.."
+    disabled: "%prefix%&fYou have &6disabled &fexperiment &6%name%&f, its features will no longer be available.. But it’s safer!"
+    already-disabled: "%prefix%&cThis experiment %name% is already disabled.."
+    not-found: "%prefix%&cExperiment %id% does not exist.. O_o"
+    list:
+      empty: "%prefix%&fThere are no experiments in this version.. O_o"
+      amount: "%prefix%&fList of all experiments (%amount%):"
+      element: "&7 %status%&6 %id% &7%name%\n &7 &7 %description%"
+      status:
+        enabled: "&a●"
+        disabled: "&7○"
 not-owner: "%prefix%&cYou are not the owner of this world."
 not-developer: "%prefix%&cYou are not the developer of this world."
 not-builder: "%prefix%&cYou are not the builder of this world."
@@ -10138,6 +10151,20 @@ items:
           - "&7&naction&e Wait&7 at the end!"
           - " "
           - "&eClick to set the action."
+      repeat-while:
+        name: "&aRepeat While Condition is True"
+        lore:
+          - "&7Executes actions if the condition"
+          - "&7is true for all targets."
+          - " "
+          - "&eClick to set the action."
+      repeat-while-not:
+        name: "&cRepeat While Condition is False"
+        lore:
+          - "&7Executes actions if the condition"
+          - "&7is false for all targets."
+          - " "
+          - "&eClick to set the action."
       repeat-for-numbers:
         name: "&aFor Loop Over Numbers"
         lore:
@@ -16546,6 +16573,8 @@ blocks:
   launch_method_action: "&aCall method"
   controller_action: "&aCode handler"
   repeat_action: "&bRepeat"
+  repeat_while: "Repeat while"
+  repeat_while_not: "Repeat &cwhile NOT!"
   repeat_for_numbers: "&aFor numbers"
   repeat_for_blocks: "&eFor blocks"
   repeat_for_list: "&fFor list"

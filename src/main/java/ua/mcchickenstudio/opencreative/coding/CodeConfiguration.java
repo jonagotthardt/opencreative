@@ -141,6 +141,16 @@ public class CodeConfiguration extends YamlConfiguration {
             } else if (secondSignLine != null && !secondSignLine.isEmpty()) {
                 set(path + ".target", secondSignLine.toUpperCase());
             }
+        } else if (type == ActionType.REPEAT_WHILE || type == ActionType.REPEAT_WHILE_NOT) {
+            String secondSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(),(byte) 2);
+            String thirdSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
+            if (secondSignLine != null && !secondSignLine.isEmpty() && thirdSignLine != null && !thirdSignLine.isEmpty()) {
+                set(path + ".condition.category", secondSignLine.toUpperCase());
+                set(path + ".condition.type", thirdSignLine.toUpperCase());
+                if (target != Target.DEFAULT) {
+                    set(path + ".target", target.name());
+                }
+            }
         } else if (target != Target.DEFAULT) {
             set(path + ".target", target.name());
         }

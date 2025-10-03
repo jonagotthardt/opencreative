@@ -225,6 +225,19 @@ creative:
   sounds:
     set: "%prefix%&fЗмінено тему звуків на &6%theme%&f, приємного звучання!"
     not-found: "%prefix%&cТакої теми звуків не знайдено О_о"
+  experiments:
+    enabled: "%prefix%&fВи &6увімкнули &fексперимент &6%name% &7(%description%)&f, тепер його функції будуть доступні вам :)\n &cОбережно: Експерименти можуть зламати дані світів!"
+    already-enabled: "%prefix%&cЦей експеримент %name% уже увімкнено.."
+    disabled: "%prefix%&fВи &6вимкнули &fексперимент &6%name%&f, тепер його функції не будуть доступні.. Зате безпечніше!"
+    already-disabled: "%prefix%&cЦей експеримент %name% і так вимкнений.."
+    not-found: "%prefix%&cЕксперименту %id% не існує.. О_о"
+    list:
+      empty: "%prefix%&fУ цій версії немає жодних експериментів.. O_o"
+      amount: "%prefix%&fСписок усіх експериментів (%amount%):"
+      element: "&7 %status%&6 %id% &7%name%\n &7 &7 %description%"
+      status:
+        enabled: "&a●"
+        disabled: "&7○"
 not-owner: "%prefix%&cТи не власник цього світу."
 not-developer: "%prefix%&cТи не розробник цього світу."
 not-builder: "%prefix%&cТи не будівельник цього світу."
@@ -10122,6 +10135,20 @@ items:
           - "&7&nдодати дію&e Зачекати&7!"
           - " "
           - "&eНатисни, щоб встановити дію."
+      repeat-while:
+        name: "&aПовторювати, доки умова виконується"
+        lore:
+          - "&7Виконує дії, якщо умова"
+          - "&7буде істинною для всіх цілей."
+          - " "
+          - "&eНатисни, щоб встановити дію."
+      repeat-while-not:
+        name: "&cПовторювати, доки умова не збігається"
+        lore:
+          - "&7Виконує дії, якщо умова"
+          - "&7буде хибною для всіх цілей."
+          - " "
+          - "&eНатисни, щоб встановити дію."
       repeat-for-blocks:
         name: "&bПройтися по блоках"
         lore:
@@ -16597,6 +16624,8 @@ blocks:
   launch_method_action: "&aВикликати метод"
   controller_action: "&aОбробник коду"
   repeat_action: "&bПовторювати"
+  repeat_while: "Повторювати поки"
+  repeat_while_not: "Повторювати &cпоки НЕ!"
   repeat_for_loop: "&aЗа числами"
   repeat_for_blocks: "&eЗа регіоном"
   repeat_for_each: "&fЗа списком"

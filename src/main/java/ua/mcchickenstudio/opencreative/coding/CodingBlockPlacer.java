@@ -323,7 +323,21 @@ public class CodingBlockPlacer {
                     setSignLine(signLocation, 2, conditionCategory.name().toLowerCase());
                     setSignLine(signLocation, 3, conditionType.name().toLowerCase());
                 } else {
-                    if (!target.equals("default")) setSignLine(signLocation, 2, target);
+                    setSignLine(signLocation, 2, target);
+                }
+            }
+            case REPEAT_WHILE, REPEAT_WHILE_NOT -> {
+                placeDevBlock(location, type.getCategory().getBlock(),
+                        type.getCategory().getAdditionalBlock(),
+                        wallSign, "");
+                ConfigurationSection conditionInfo = data.getConfigurationSection("condition");
+                if (conditionInfo != null) {
+                    ActionCategory conditionCategory = ActionCategory.valueOf(conditionInfo.getString("category"));
+                    ActionType conditionType = ActionType.valueOf(conditionInfo.getString("type"));
+                    setSignLine(signLocation, 1, type.name().toLowerCase());
+                    setSignLine(signLocation, 2, conditionCategory.name().toLowerCase());
+                    setSignLine(signLocation, 3, conditionType.name().toLowerCase());
+                    setSignLine(signLocation, 4, target);
                 }
             }
             default -> {

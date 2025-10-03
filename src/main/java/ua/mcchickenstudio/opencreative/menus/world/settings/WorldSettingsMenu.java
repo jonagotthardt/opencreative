@@ -23,6 +23,7 @@ import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
 import ua.mcchickenstudio.opencreative.listeners.player.ChatListener;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
+import ua.mcchickenstudio.opencreative.menus.world.WorldMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
@@ -47,7 +48,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
 
-public final class WorldSettingsMenu extends AbstractMenu {
+public final class WorldSettingsMenu extends AbstractMenu implements WorldMenu {
 
     private final Planet planet;
     private final Player player;
@@ -197,7 +198,7 @@ public final class WorldSettingsMenu extends AbstractMenu {
                 Sounds.WORLD_SETTINGS_SPAWN_TELEPORT.play(player);
             }
         } else if (itemEquals(currentItem,category)) {
-            new WorldSettingsCategoryMenu(planet.getInformation().getCategory()).open(player);
+            new WorldSettingsCategoryMenu(planet).open(player);
         } else if (itemEquals(currentItem,playersControl)) {
             new PlayersBrowserMenu(player, planet).open(player);
         } else if (itemEquals(currentItem,parameters)) {
@@ -291,4 +292,10 @@ public final class WorldSettingsMenu extends AbstractMenu {
         }
         Sounds.MENU_OPEN_WORLD_SETTINGS.play(player);
     }
+
+    @Override
+    public Planet getPlanet() {
+        return planet;
+    }
+
 }

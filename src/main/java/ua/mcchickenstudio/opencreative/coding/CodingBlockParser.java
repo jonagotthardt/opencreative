@@ -208,7 +208,8 @@ public class CodingBlockParser {
                 if (!(containerBlock.getState() instanceof InventoryHolder container)) continue;
                 byte slot = 0;
                 ItemStack[] content = container.getInventory().getContents();
-                if (actionType.getCategory() == ActionCategory.SELECTION_ACTION) {
+                if (actionType.getCategory() == ActionCategory.SELECTION_ACTION ||
+                    actionType == ActionType.REPEAT_WHILE || actionType == ActionType.REPEAT_WHILE_NOT) {
                     actionType = ActionType.getTypeFromSelectionAction(actionBlock);
                     if (actionType == null) continue;
                 }

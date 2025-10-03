@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.settings.groups;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -61,9 +62,11 @@ public class Group {
     private final Map<LimitType, LimitModifier> limits = new HashMap<>();
 
     public Group(String name, FileConfiguration config) {
+
         this.name = name;
         String path = "groups." + name + ".";
         this.permission = config.getString(path + "permission","default");
+
         worldsLimit = config.getInt(path + "creating-world.limit",1);
         modulesLimit = config.getInt(path + "creating-module.limit",1);
         worldSize = config.getInt(path + "world.size",25);
@@ -83,11 +86,20 @@ public class Group {
         devPermissions.addAll(config.getStringList(path + "world.dev-permissions"));
         lobbyPermissions.addAll(config.getStringList(path + "lobby-permissions"));
         for (LimitType type : LimitType.values()) {
+            String limitPath = path + "world.limits." + type.getPath();
+            String modifierPath = path + "world.per-player-limit-modifiers." + type.getPath();
             limits.put(type,
-                    new LimitModifier(
-                            config.getInt(path + "world.limits." + type.getPath(),0),
-                            config.getInt(path + "world.per-player-limit-modifiers." + type.getPath(),0)
-                    ));
+                new LimitModifier(
+                    config.getInt(limitPath, 0),
+                    config.getInt(modifierPath, 0)
+            ));
+            if (config.get(limitPath) == null) {
+                OpenCreative.getPlugin().getConfig().set(limitPath, 0);
+            }
+            if (config.get(modifierPath) == null) {
+                OpenCreative.getPlugin().getConfig().set(modifierPath, 0);
+            }
+            OpenCreative.getPlugin().saveConfig();
         }
     }
 

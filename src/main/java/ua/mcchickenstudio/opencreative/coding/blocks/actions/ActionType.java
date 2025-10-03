@@ -765,6 +765,8 @@ public enum ActionType {
     CONTROLLER_MEASURE_TIME(ActionCategory.CONTROLLER_ACTION, MenusCategory.CONTROLLER, MeasureTimeAction.class, Material.CLOCK, new ArgumentSlot("variable", ValueType.VARIABLE)),
 
     REPEAT_ALWAYS(ActionCategory.REPEAT_ACTION, MenusCategory.REPEATS, RepeatAlwaysAction.class, Material.BEACON),
+    REPEAT_WHILE(ActionCategory.REPEAT_ACTION, MenusCategory.REPEATS, RepeatWhileConditionAction.class, Material.IRON_INGOT),
+    REPEAT_WHILE_NOT(ActionCategory.REPEAT_ACTION, MenusCategory.REPEATS, RepeatWhileConditionNotAction.class, Material.GOLD_INGOT),
     REPEAT_FOR_NUMBERS(ActionCategory.REPEAT_ACTION, MenusCategory.REPEATS, RepeatForLoopAction.class, Material.SLIME_BALL, new ArgumentSlot("variable", ValueType.VARIABLE), new ParameterSlot("type", Arrays.asList("less","less-equals","greater","greater-equals"), Material.BRICK, Material.BRICKS, Material.NETHER_BRICK, Material.NETHER_BRICKS), new ArgumentSlot("range", ValueType.NUMBER), new ArgumentSlot("add", ValueType.NUMBER)),
     REPEAT_FOR_LIST(ActionCategory.REPEAT_ACTION, MenusCategory.REPEATS, RepeatForEachAction.class, Material.BOOKSHELF, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE)),
     REPEAT_FOR_BLOCKS(ActionCategory.REPEAT_ACTION, MenusCategory.REPEATS, RepeatForBlocksAction.class, Material.PAPER, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("first", ValueType.LOCATION), new ArgumentSlot("second", ValueType.LOCATION)),
@@ -930,8 +932,17 @@ public enum ActionType {
         }
         Block signBlock = block.getRelative(BlockFace.SOUTH);
         String signLine = getSignLine(signBlock.getLocation(), (byte) 3);
-        if (block.getType() == Material.PURPUR_BLOCK) {
+        if (block.getType() == ActionCategory.SELECTION_ACTION.getBlock()) {
             signLine = getSignLine(signBlock.getLocation(), (byte) 4);
+        }
+        if (block.getType() == ActionCategory.REPEAT_ACTION.getBlock()) {
+            // Repeat while <---
+            // If player          Repeat
+            // Is sitting         For numbers
+            // Target
+            if (getSignLine(signBlock.getLocation(), (byte) 1) != null) {
+                signLine = getSignLine(signBlock.getLocation(), (byte) 1);
+            }
         }
         if (signLine != null) {
             for (ActionType actionType : values()) {

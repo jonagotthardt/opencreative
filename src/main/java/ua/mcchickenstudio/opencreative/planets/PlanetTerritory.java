@@ -339,7 +339,11 @@ public class PlanetTerritory {
             case 2 -> {
                 border.setSize(border.getSize()+0.001,3600);
             }
-            case 3 -> border.setSize(border.getSize()-0.1, 3600);
+            case 3 -> {
+                border.setSize(border.getSize()+0.1);
+                player.setWorldBorder(border);
+                border.setSize(border.getSize()-0.1, 3600);
+            }
             case 4 -> border.setSize(border.getMaxSize());
         }
         player.setWorldBorder(border);

@@ -22,6 +22,7 @@ import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
+import ua.mcchickenstudio.opencreative.menus.world.WorldMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetInfo;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
@@ -35,14 +36,16 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static org.bukkit.Material.*;
 
-public final class WorldSettingsCategoryMenu extends AbstractMenu {
+public final class WorldSettingsCategoryMenu extends AbstractMenu implements WorldMenu {
 
+    private final Planet planet;
     private final PlanetInfo.Category currentCategory;
     private final ItemStack BACK_ITEM = createItem(SPECTRAL_ARROW,1,"menus.world-settings-categories.items.back");
 
-    public WorldSettingsCategoryMenu(PlanetInfo.Category currentCategory) {
+    public WorldSettingsCategoryMenu(Planet planet) {
         super(6, MessageUtils.getLocaleMessage("menus.world-settings.title"));
-        this.currentCategory = currentCategory;
+        this.currentCategory = planet.getInformation().getCategory();
+        this.planet = planet;
     }
 
     @Override
@@ -93,6 +96,11 @@ public final class WorldSettingsCategoryMenu extends AbstractMenu {
             new WorldSettingsMenu(planet,(Player) event.getWhoClicked()).open((Player) event.getWhoClicked());
         }
 
+    }
+
+    @Override
+    public Planet getPlanet() {
+        return planet;
     }
 
     private ItemStack createButton(PlanetInfo.Category category) {

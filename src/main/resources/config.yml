@@ -484,6 +484,18 @@ generators:
     #  icon: "DIAMOND_SWORD"
     #  folder: pvp
 
+experiments:
+  #
+  # Experiments are unstable experimental features,
+  # that are in development, or are made just for fun.
+  # Useful for developers and testers of OpenCreative+.
+  #
+  # Warning: Some experiments can corrupt the worlds!
+  # Be careful! Not recommended to enable!
+  #
+  wanders: false
+  world_downloader: false
+  code_downloader: false
 
 watchdog:
   #
@@ -498,7 +510,7 @@ watchdog:
   #
   # To check status, use: /oc stability
   #
-  enabled: true
+  enabled: false
 
 #
 # Maintenance mode unloads all worlds and

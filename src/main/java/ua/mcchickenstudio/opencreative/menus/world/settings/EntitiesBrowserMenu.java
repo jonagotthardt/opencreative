@@ -28,6 +28,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.menus.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
+import ua.mcchickenstudio.opencreative.menus.world.WorldMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
@@ -42,7 +43,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * This class represents a menu, that displays specified list of entities in world.
  * Player can teleport to entity or remove it.
  */
-public final class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
+public final class EntitiesBrowserMenu extends ListBrowserMenu<Entity> implements WorldMenu {
 
     private final Planet planet;
     private final List<ParameterButton> buttons = new ArrayList<>();
@@ -269,4 +270,8 @@ public final class EntitiesBrowserMenu extends ListBrowserMenu<Entity> {
         Sounds.MENU_OPEN_ENTITIES_BROWSER.play(getPlayer());
     }
 
+    @Override
+    public Planet getPlanet() {
+        return planet;
+    }
 }
