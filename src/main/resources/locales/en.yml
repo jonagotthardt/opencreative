@@ -249,8 +249,8 @@ creative:
       amount: "%prefix%&fList of all experiments (%amount%):"
       element: "&7 %status%&6 %id% &7%name%\n &7 &7 %description%"
       status:
-        on: "&a●"
-        off: "&7○"
+        enabled: "&a●"
+        disabled: "&7○"
 not-owner: "%prefix%&cYou are not the owner of this world."
 not-developer: "%prefix%&cYou are not the developer of this world."
 not-builder: "%prefix%&cYou are not the builder of this world."

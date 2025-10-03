@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.commands.experiments;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import java.util.*;
 
@@ -123,6 +124,8 @@ public final class Experiments {
                         + experiment.getId(), error);
             }
         }
+        OpenCreative.getPlugin().getConfig().set("experiments." + experiment.getId(), enabled);
+        OpenCreative.getPlugin().saveConfig();
         return true;
     }
 

@@ -236,8 +236,8 @@ creative:
       amount: "%prefix%&fСписок усіх експериментів (%amount%):"
       element: "&7 %status%&6 %id% &7%name%\n &7 &7 %description%"
       status:
-        on: "&a●"
-        off: "&7○"
+        enabled: "&a●"
+        disabled: "&7○"
 not-owner: "%prefix%&cТи не власник цього світу."
 not-developer: "%prefix%&cТи не розробник цього світу."
 not-builder: "%prefix%&cТи не будівельник цього світу."

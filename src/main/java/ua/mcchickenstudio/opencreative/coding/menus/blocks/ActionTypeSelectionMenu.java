@@ -92,7 +92,8 @@ public final class ActionTypeSelectionMenu extends BlocksWithMenusCategoryMenu<A
                 actionType = ActionType.valueOf(typeString);
             } catch (Exception ignored) {}
             if (actionType == ActionType.REPEAT_WHILE || actionType == ActionType.REPEAT_WHILE_NOT) {
-                new RepeatConditionSelectionMenu(getPlayer(), signLocation, actionType == ActionType.REPEAT_WHILE_NOT);
+                new RepeatConditionSelectionMenu(getPlayer(), signLocation, actionType == ActionType.REPEAT_WHILE_NOT)
+                        .open(getPlayer());
                 return;
             }
             ActionCategory actionCategory = actionType == null ? null : actionType.getCategory();

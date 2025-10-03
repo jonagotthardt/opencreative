@@ -25,6 +25,7 @@ import ua.mcchickenstudio.opencreative.commands.experiments.Experiment;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
 import ua.mcchickenstudio.opencreative.indev.Items;
 import ua.mcchickenstudio.opencreative.indev.Wander;
+import ua.mcchickenstudio.opencreative.managers.space.PlanetsManager;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
 import ua.mcchickenstudio.opencreative.menus.CreativeMenu;
@@ -910,7 +911,7 @@ public class CreativeCommand extends CommandHandler {
                         .replace("%name%", experiment.getName())
                         .replace("%description%", experiment.getDescription())
                         .replace("%status%", getLocaleMessage("creative.experiments.list.status."
-                                + (experiment.isEnabled() ? "on" : "off")))
+                                + (experiment.isEnabled() ? "enabled" : "disabled")))
                 );
             }
         } else {
@@ -1081,10 +1082,19 @@ public class CreativeCommand extends CommandHandler {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");
             } else if (List.of("load","unload","moderate","moderation",
-                    "updateworld","unregister","delete","setowner",
-                    "recommend","unrecommend")
+                    "updateworld","unregister","delete","setowner")
                     .contains(args[0].toLowerCase())) {
                 tabCompleter.addAll(OpenCreative.getPlanetsManager().getPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());
+            } else if ("recommend".equalsIgnoreCase(args[0])) {
+                tabCompleter.addAll(OpenCreative.getPlanetsManager().getPlanets().stream()
+                        .filter(planet -> !OpenCreative.getPlanetsManager().getRecommendedPlanets().contains(planet.getId()))
+                        .map(planet -> String.valueOf(planet.getId()))
+                        .toList());
+            } else if ("unrecommend".equalsIgnoreCase(args[0])) {
+                tabCompleter.addAll(OpenCreative.getPlanetsManager().getPlanets().stream()
+                        .filter(planet -> OpenCreative.getPlanetsManager().getRecommendedPlanets().contains(planet.getId()))
+                        .map(planet -> String.valueOf(planet.getId()))
+                        .toList());
             } else if ("corrupted".equalsIgnoreCase(args[0])) {
                 tabCompleter.addAll(OpenCreative.getPlanetsManager().getCorruptedPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());
             } else if ("locale".equalsIgnoreCase(args[0])) {
@@ -1101,10 +1111,12 @@ public class CreativeCommand extends CommandHandler {
             } else if ("item".equalsIgnoreCase(args[0]) || "items".equalsIgnoreCase(args[0])) {
                 tabCompleter.addAll(Arrays.stream(Items.values()).map(s -> s.name().toLowerCase()).filter(s -> s.startsWith(args[1].toLowerCase())).toList());
             } else if ("experiments".equalsIgnoreCase(args[0])) {
+                List<Experiment> experiments = Experiments.getInstance().getExperiments();
+                if (experiments.isEmpty()) return List.of();
                 tabCompleter.add("on");
                 tabCompleter.add("off");
                 tabCompleter.add("list");
-                for (Experiment experiment : Experiments.getInstance().getExperiments()) {
+                for (Experiment experiment : experiments) {
                     if (!experiment.isEnabled()) continue;
                     tabCompleter.add(experiment.getId());
                 }

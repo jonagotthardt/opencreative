@@ -248,8 +248,8 @@ creative:
       amount: "%prefix%&fСписок всех экспериментов (%amount%):"
       element: "&7 %status%&6 %id% &7%name%\n &7 &7 %description%"
       status:
-        on: "&a●"
-        off: "&7○"
+        enabled: "&a●"
+        disabled: "&7○"
   locale:
     changed: "%prefix%&fУспешно изменён язык на &6русский&f!"
     not-found: "%prefix%&cНе найден файл локализации для такого языка О_о"
