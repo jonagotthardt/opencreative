@@ -571,6 +571,22 @@ public final class FileUtils {
     }
 
     /**
+     * Removes parameter from planet's config.
+     * @param planet planet to set.
+     * @param parameterPath path of parameter in config.
+     */
+    public static void removePlanetConfigParameter(Planet planet, String parameterPath) {
+        FileConfiguration planetConfig = getPlanetConfig(planet);
+        File planetConfigFile = getPlanetConfigFile(planet);
+        planetConfig.set(parameterPath, null);
+        try {
+            planetConfig.save(planetConfigFile);
+        } catch (IOException error) {
+            sendCriticalErrorMessage("Can't save planet's settings configuration to file.",error);
+        }
+    }
+
+    /**
      * Sets parameter to Int value in planet's settings.
      * @param planet planet to set.
      * @param parameterPath path of parameter in config.

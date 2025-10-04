@@ -544,6 +544,10 @@ world:
   already-recommended: "%prefix%&cThis world %id% is already in recommendations.. O_o"
   already-unrecommended: "%prefix%&cThis world %id% is not in recommendations anyway.. O_o"
   same-owner: "%prefix%&cIn this world %id% the owner is the same as the one specified.. O_o"
+  set-size: "%prefix%&fA new world size has been set for %id%: &6%size% by %size% blocks&f!"
+  same-size: "%prefix%&cThe world already has the same size &6%size% by %size% blocks.. O_o"
+  reset-size: "%prefix%&fYou have &6reset&f the size of the world %id%. Its size will now match the size of the owner’s group world."
+  bad-size: "%prefix%&cThe world size must be greater than 0.. O_o"
   platformer:
     set: "%prefix%&fSuccessfully &6changed&f world's coding platforms generator to: &6%id%&f."
     reset: "%prefix%&fSuccessfully &6changed&f world's coding platforms generator to server's default."

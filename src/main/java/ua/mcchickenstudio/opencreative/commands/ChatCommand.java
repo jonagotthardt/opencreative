@@ -19,7 +19,12 @@
 package ua.mcchickenstudio.opencreative.commands;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.PatternReplacementResult;
+import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -28,11 +33,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
@@ -105,6 +112,7 @@ public class ChatCommand extends CommandHandler {
         Component formatted = toComponent(format
                 .replace("%message%", MiniMessage.miniMessage().escapeTags(text)));
         if (formatted.clickEvent() == null) formatted = formatted.clickEvent(ClickEvent.suggestCommand(text));
+        formatted = parseAdvertisementInMessage(formatted);
 
         CreativeChatEvent event = new CreativeChatEvent(sender, text, formatted);
         event.callEvent();
@@ -116,6 +124,40 @@ public class ChatCommand extends CommandHandler {
                 onlinePlayer.sendMessage(formatted);
             }
         }
+    }
+
+    private static @NotNull Component parseAdvertisementInMessage(@NotNull Component component) {
+        Component result = parseAdvertisementCommand(component, "join");
+        if (!component.equals(result)) {
+            // If message already has /join invite then return it.
+            return result;
+        }
+        return parseAdvertisementCommand(component, "ad");
+    }
+
+    private static @NotNull Component parseAdvertisementCommand(@NotNull Component component, @NotNull String commandLabel) {
+        return component.replaceText(TextReplacementConfig.builder()
+                .match("(/" + Pattern.quote(commandLabel) + "\\s+\\S+)")
+                .once()
+                .condition((match, matchCount, replaced) -> {
+                    String id = match.group(2);
+                    Planet planet = OpenCreative.getPlanetsManager().getPlanetById(id);
+                    if (planet == null) return PatternReplacementResult.CONTINUE;
+                    return PatternReplacementResult.REPLACE;
+                })
+                .replacement((match, builder) -> {
+                    String command = match.group(1) + " " + match.group(2);
+                    String id = match.group(2);
+                    Planet planet = OpenCreative.getPlanetsManager().getPlanetById(id);
+                    if (planet == null) return Component.text(command);
+                    Component hover = parsePlanetLines(planet, getLocaleComponent("advertisement.hover"));
+                    return Component.text(command)
+                            .color(NamedTextColor.YELLOW)
+                            .decorate(TextDecoration.UNDERLINED)
+                            .hoverEvent(HoverEvent.showText(hover))
+                            .clickEvent(ClickEvent.suggestCommand(command));
+                })
+                .build());
     }
 
     @Override

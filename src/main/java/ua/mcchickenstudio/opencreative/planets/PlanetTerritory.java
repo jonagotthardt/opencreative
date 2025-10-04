@@ -91,9 +91,42 @@ public class PlanetTerritory {
         }
         FileUtils.setPlanetConfigParameter(planet,"autosave",!autoSave ? false : null);
     }
+
+    /**
+     * Resets custom world size to owner's group world size.
+     */
+    public void resetWorldSize() {
+        int worldSize = OpenCreative.getSettings().getGroups().getGroup(planet.getOwnerGroup()).getWorldSize();
+        FileUtils.removePlanetConfigParameter(planet, "size");
+        if (this.worldSize == worldSize) return;
+        this.worldSize = worldSize;
+        if (getWorld() != null) {
+            getWorld().getWorldBorder().setSize(worldSize);
+            for (Player player : planet.getPlayers()) {
+                showBorders(player);
+            }
+        }
+    }
+
+    /**
+     * Sets custom size of world borders.
+     * @param size new size of world.
+     * @param save whether ignore size from owner's group on next world load and use specified.
+     */
+    public void setWorldSize(int size, boolean save) {
+        if (this.worldSize == size) return;
+        if (size < 0) return;
+        this.worldSize = size;
+        if (getWorld() != null) {
+            getWorld().getWorldBorder().setSize(size);
+            for (Player player : planet.getPlayers()) {
+                showBorders(player);
+            }
+        }
+        if (save) FileUtils.setPlanetConfigParameter(planet,"size", size);
+    }
     
     private void loadInformation() {
-        worldSize = OpenCreative.getSettings().getGroups().getGroup(planet.getOwnerGroup()).getWorldSize();
         FileConfiguration config = getPlanetConfig(planet);
         World.Environment environment = World.Environment.NORMAL;
         if (config.getString("environment") != null) {
@@ -101,6 +134,7 @@ public class PlanetTerritory {
                 environment = World.Environment.valueOf(config.getString("environment"));
             } catch (Exception ignored) {}
         }
+        worldSize = config.getInt("size", OpenCreative.getSettings().getGroups().getGroup(planet.getOwnerGroup()).getWorldSize());
         autoSave = config.getBoolean("autosave",true);
         this.generator = config.getString("generator","");
         this.environment = environment;

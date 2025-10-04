@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.commands;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiment;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
@@ -57,8 +58,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.FileUtils.loadLocales;
-import static ua.mcchickenstudio.opencreative.utils.FileUtils.setPlanetConfigParameter;
+import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.getUUIDFromText;
 
@@ -268,6 +268,61 @@ public class CreativeCommand extends CommandHandler {
                                 .replace("%id%", id)
                                 .replace("%uuid%", newOwner.getUniqueId().toString()));
                     }
+                }
+                case "setsize" -> {
+                    if (!sender.hasPermission("opencreative.world.set-size")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return;
+                    }
+                    String id = args[1];
+                    Planet planet = OpenCreative.getPlanetsManager().getPlanetById(id);
+                    if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(id);
+                    if (planet == null) {
+                        sender.sendMessage(getLocaleMessage("world.not-found")
+                                .replace("%id%",args[1])
+                                .replace("%path%","/join " + id));
+                        return;
+                    }
+                    String sizeString = args[2];
+                    int size;
+                    try {
+                        size = Integer.parseInt(sizeString);
+                    } catch (NumberFormatException ignored) {
+                        sender.sendMessage(getLocaleMessage("world.bad-size")
+                                .replace("%size%", sizeString)
+                                .replace("%id%", id));
+                        Sounds.PLAYER_FAIL.play(sender);
+                        return;
+                    }
+                    if (size < 0) {
+                        sender.sendMessage(getLocaleMessage("world.bad-size")
+                                .replace("%size%", sizeString)
+                                .replace("%id%", id));
+                        Sounds.PLAYER_FAIL.play(sender);
+                        return;
+                    }
+                    if (size == 0) {
+                        planet.getTerritory().resetWorldSize();
+                        sender.sendMessage(getLocaleMessage("world.reset-size")
+                                .replace("%size%", sizeString)
+                                .replace("%id%", id));
+                        return;
+                    }
+                    if (planet.getTerritory().getWorldSize() == size) {
+                        sender.sendMessage(getLocaleMessage("world.same-size")
+                                .replace("%size%", sizeString)
+                                .replace("%id%", id));
+                        Sounds.PLAYER_FAIL.play(sender);
+                        return;
+                    }
+                    planet.getTerritory().setWorldSize(size, true);
+                    sender.sendMessage(getLocaleMessage("world.set-size")
+                            .replace("%size%", sizeString)
+                            .replace("%id%", id));
                 }
                 case "recommend" -> {
                     if (!sender.hasPermission("opencreative.world.recommend")) {
@@ -840,6 +895,10 @@ public class CreativeCommand extends CommandHandler {
                 sender.sendMessage(getLocaleMessage("no-perms"));
                 return;
             }
+            if (Experiments.getInstance().getExperiments().isEmpty()) {
+                sender.sendMessage(getLocaleMessage("creative.experiments.list.empty"));
+                return;
+            }
             if (args.length == 2) {
                 sender.sendMessage(getLocaleMessage("too-few-args"));
                 return;
@@ -867,6 +926,10 @@ public class CreativeCommand extends CommandHandler {
         } else if (List.of("off", "disable").contains(args[1])) {
             if (!sender.hasPermission("opencreative.experiments.disable")) {
                 sender.sendMessage(getLocaleMessage("no-perms"));
+                return;
+            }
+            if (Experiments.getInstance().getExperiments().isEmpty()) {
+                sender.sendMessage(getLocaleMessage("creative.experiments.list.empty"));
                 return;
             }
             if (args.length == 2) {
@@ -915,8 +978,12 @@ public class CreativeCommand extends CommandHandler {
                 );
             }
         } else {
-            if (!sender.hasPermission("opencreative.experiments.list")) {
+            if (!sender.hasPermission("opencreative.experiments.use")) {
                 sender.sendMessage(getLocaleMessage("no-perms"));
+                return;
+            }
+            if (Experiments.getInstance().getExperiments().isEmpty()) {
+                sender.sendMessage(getLocaleMessage("creative.experiments.list.empty"));
                 return;
             }
             String experimentName = args[1].toLowerCase().replace("-", "_");
@@ -1064,6 +1131,7 @@ public class CreativeCommand extends CommandHandler {
             tabCompleter.add("recommend");
             tabCompleter.add("unrecommend");
             tabCompleter.add("setowner");
+            tabCompleter.add("setsize");
             tabCompleter.add("experiments");
         } else if (args.length == 2) {
             if ("maintenance".equalsIgnoreCase(args[0])) {
@@ -1082,7 +1150,7 @@ public class CreativeCommand extends CommandHandler {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");
             } else if (List.of("load","unload","moderate","moderation",
-                    "updateworld","unregister","delete","setowner")
+                    "updateworld","unregister","delete","setowner","setsize")
                     .contains(args[0].toLowerCase())) {
                 tabCompleter.addAll(OpenCreative.getPlanetsManager().getPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());
             } else if ("recommend".equalsIgnoreCase(args[0])) {
@@ -1127,6 +1195,11 @@ public class CreativeCommand extends CommandHandler {
                 tabCompleter.add("60");
                 tabCompleter.add("30");
                 tabCompleter.add("15");
+            }  else if ("setsize".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("0");
+                tabCompleter.add("25");
+                tabCompleter.add("50");
+                tabCompleter.add("100");
             } else if ("corrupted".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("owner");
                 tabCompleter.add("join");

@@ -658,10 +658,14 @@ public final class MessageUtils {
         }
     }
 
-    public static double parseTicks(String message) {
-        double ticks = 0;
-        if (message == null) return ticks;
-        if (message.isEmpty()) return ticks;
+    public static double parseTicks(@NotNull String message, double defaultTicks) {
+        Double ticks = parseTicks(message);
+        return ticks == null ? defaultTicks : ticks;
+    }
+
+    public static @Nullable Double parseTicks(@NotNull String message) {
+        if (message.isEmpty()) return null;
+        double ticks;
         double modifier = switch (message.toLowerCase().charAt(message.length()-1)) {
             case 's' -> 20;
             case 'm' -> 1200;
@@ -670,11 +674,13 @@ public final class MessageUtils {
             default -> 1;
         };
         if (modifier != 1) {
-            message = message.substring(0,message.length()-1);
+            message = message.substring(0, message.length() - 1);
         }
         try {
             ticks = Double.parseDouble(message);
-        } catch (NumberFormatException ignored) {}
+        } catch (NumberFormatException ignored) {
+            return null;
+        }
         return ticks * modifier;
     }
 
