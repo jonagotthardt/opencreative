@@ -120,6 +120,14 @@ public interface PlanetsManager extends Manager {
 
     /**
      * Returns a planet, that has same
+     * numeric or custom ID as specified one.
+     * @param id to get planet.
+     * @return if exists - planet, else - null.
+     */
+    @Nullable Planet getPlanetByAnyID(@NotNull String id);
+
+    /**
+     * Returns a planet, that has same
      * custom ID as specified one.
      * @param id to get planet.
      * @return if exists - planet, else - null.

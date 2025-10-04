@@ -595,7 +595,7 @@ public final class FileUtils {
     public static void setPlanetConfigParameter(Planet planet, String parameterPath, int parameterValue) {
         FileConfiguration planetConfig = getPlanetConfig(planet);
         File planetConfigFile = getPlanetConfigFile(planet);
-        planetConfig.set(parameterPath,String.valueOf(parameterValue));
+        planetConfig.set(parameterPath, parameterValue);
         try {
             planetConfig.save(planetConfigFile);
         } catch (IOException error) {

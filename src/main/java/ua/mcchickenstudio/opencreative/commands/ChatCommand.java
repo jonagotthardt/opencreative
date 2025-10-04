@@ -26,6 +26,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.player.CreativeChatEvent;
@@ -137,19 +138,23 @@ public class ChatCommand extends CommandHandler {
 
     private static @NotNull Component parseAdvertisementCommand(@NotNull Component component, @NotNull String commandLabel) {
         return component.replaceText(TextReplacementConfig.builder()
-                .match("(/" + Pattern.quote(commandLabel) + "\\s+\\S+)")
+                .match("(/" + commandLabel + ")\\s+(\\S+)")
                 .once()
                 .condition((match, matchCount, replaced) -> {
                     String id = match.group(2);
-                    Planet planet = OpenCreative.getPlanetsManager().getPlanetById(id);
-                    if (planet == null) return PatternReplacementResult.CONTINUE;
+                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByAnyID(id);
+                    if (planet == null) {
+                        return PatternReplacementResult.CONTINUE;
+                    }
                     return PatternReplacementResult.REPLACE;
                 })
                 .replacement((match, builder) -> {
                     String command = match.group(1) + " " + match.group(2);
                     String id = match.group(2);
-                    Planet planet = OpenCreative.getPlanetsManager().getPlanetById(id);
-                    if (planet == null) return Component.text(command);
+                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByAnyID(id);
+                    if (planet == null) {
+                        return Component.text(command);
+                    }
                     Component hover = parsePlanetLines(planet, getLocaleComponent("advertisement.hover"));
                     return Component.text(command)
                             .color(NamedTextColor.YELLOW)
