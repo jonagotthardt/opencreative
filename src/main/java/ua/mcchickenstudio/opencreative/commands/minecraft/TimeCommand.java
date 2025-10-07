@@ -80,7 +80,10 @@ public class TimeCommand extends CommandHandler {
         try {
             time = Integer.parseInt(args[1]);
         } catch (Exception ignored) {}
-        player.getWorld().setTime(add ? time+player.getWorld().getTime() : time);
+        time += add ? (int) player.getWorld().getTime() : 0;
+        player.getWorld().setTime(time);
+        sender.sendMessage(getLocaleMessage("commands.time.changed")
+                .replace("%time%", String.valueOf(time)));
     }
 
     @Override

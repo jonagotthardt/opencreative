@@ -12,7 +12,6 @@
 #
 # Some messages support player's placeholders from PlaceholderAPI.
 # Some messages aren't translated and can appear as `Not found message ...`
-# Titles messages can contain only and only MiniMessage or Legacy format colors.
 #
 
 #
@@ -44,12 +43,36 @@ commands:
   give:
     help: "%prefix%To give an item to yourself or a player in your world, use:\n &6/give ID &7- Give an item to yourself\n &6/give Username ID &7- Give an item to a player\n &6/give Username ID Amount &7- Give an item with a specific amount to a player"
     wrong: "%prefix%&cThis item does not exist O_o"
+    given: "%prefix%You received item &6%material%&f x%amount%."
+    given-player: "%prefix%You gave item &6%material%&f x%amount% to player &6%player%&f."
     wrong-amount: "%prefix%&cYou specified the amount incorrectly, it should be a number, for example /give Steve apple 10"
   game-mode:
     wrong: "%prefix%&cYou specified an incorrect game mode. Allowed modes: creative, survival, adventure, spectator."
+    changed:
+      creative: "%prefix%You are now in &6creative&f mode, allowing you to get any items, fly over the world, build, and take no damage."
+      survival: "%prefix%You switched to &6survival&f mode, allowing you to modify the world and take damage."
+      spectator: "%prefix%You are now &6spectating&f the world! Possess a mob or player by left-clicking."
+      adventure: "%prefix%You are now in &6adventure&f mode, where you cannot place or break blocks. Explore the world!"
+    changed-player:
+      creative: "%prefix%You set &6creative&f mode for player &6%player%&f. Now they can fly, get any items, and build.\n &cHowever, they can still break blocks in your world. If you don't trust them, set their mode to adventure: /gamemode adventure %player%"
+      survival: "%prefix%You set &6survival&f mode for player &6%player%&f. Now they can build, break blocks, and take damage."
+      spectator: "%prefix%You set &6spectator&f mode for player &6%player%, now they can only observe the world."
+      adventure: "%prefix%You set &6adventure&f mode for player &6%player%, now they can explore and take damage, but cannot place or break blocks."
     help: "%prefix%In your world, you can switch the game mode for yourself or another player.\n &6/gamemode creative &7- Switch to creative mode\n &6/gamemode Username creative &7- Set a player to creative mode"
+  time:
+    help: "%prefix%Change the time of day in your world — this will affect the sky, block brightness, and world behavior.\n &6/time set 0 &7- Sets day\n &6/time set 12500 &7- Sets evening\n &6/time set 15000 &7- Sets night\n &6/time add 1000 &7- Skips 1000 ticks"
+    changed: "%prefix%You set the world time to: &6%time%"
+  weather:
+    help: "%prefix%Change the weather in your world to sunny, rainy, or even stormy!\n &6/weather sun &7- Sets sunny weather\n &6/weather rain &7- Sets rainy weather\n &6/weather thunder &7- Sets rain with thunder and lightning"
+    changed:
+      sun: "%prefix%The weather is now &6sunny&f and clear."
+      rain: "%prefix%It is now &6raining&f, monsters will not burn."
+      thunder: "%prefix%It is now &6thundering&f, beware of lightning!"
   teleport:
     help: "%prefix%You can teleport in your world to coordinates, or teleport players.\n &6/teleport X Y Z YAW PITCH &7- Teleport to coordinates\n &6/teleport Username &7- Teleport to a player\n &6/teleport FirstPlayer SecondPlayer &7- Teleport the first player to the second player"
+    teleported: "%prefix%You teleported to player &6%player%&f."
+    teleported-player: "%prefix%You teleported player &6%first%&f to &6%second%&f."
+    teleported-coords: "%prefix%You teleported to coordinates: &6%x% %y% %z% %yaw% %pitch%"
     out-of-borders: "%prefix%&cCannot teleport beyond the world border."
   edit:
     help: "%prefix%Edit the name and description of the item in your hand.\n &6/edit name New Name &7- Rename the item\n &6/edit lore 1 Description Line &7- Edit a specific description line by its number \n &6/edit addlore Description Line &7- Add a new description line\n &6/edit clear &7- Clear the item's name and description"
@@ -418,6 +441,7 @@ world:
     message:
       players: "%prefix%The world is now running in &6play mode&f."
       owner: "%prefix%The world is now running in &6play mode&f, the developer's world code will be active."
+    cant-damage-near-spawn: "&cYou can't harm players near the spawn point."
   build-mode:
     name: "&6Build"
     message:
@@ -426,6 +450,7 @@ world:
     title: "&fYou are in &6build mode&f!"
     subtitle: "&fBuild the &6map&f for your world"
     cant-build-when-offline: "%prefix%&cYou cannot build while the world owner is offline."
+    cant-damage: "&cYou cannot deal damage while in build mode."
   dev-mode:
     connecting:
       title: "&eConnecting... ⌘"

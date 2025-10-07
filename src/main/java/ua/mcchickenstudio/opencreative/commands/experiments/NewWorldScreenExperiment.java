@@ -19,10 +19,7 @@
 package ua.mcchickenstudio.opencreative.commands.experiments;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.util.List;
 
@@ -56,11 +53,11 @@ public final class NewWorldScreenExperiment extends Experiment {
         }
         String typeString = args[0].toLowerCase();
         switch (typeString) {
-            case "normal", "nether", "the_end", "percents" -> {
+            case "normal", "nether", "the_end", "percents", "bed", "darkness" -> {
                 type = ScreenType.valueOf(typeString.toUpperCase());
-                System.out.println(":) Changed to: " + typeString);
+                sender.sendMessage(":) Changed to: " + typeString);
             }
-            default -> sender.sendMessage("Unknown screen. Available: normal, nether, the_end, percents");
+            default -> sender.sendMessage("Unknown screen. Available: normal, nether, the_end, percents, bed, darkness");
         }
     }
 
@@ -70,11 +67,8 @@ public final class NewWorldScreenExperiment extends Experiment {
     }
 
     @Override
-    public @Nullable List<String> tabCommand(@NotNull CommandSender sender, @NotNull String[] args) {
-        if (args.length == 0) {
-            return List.of("normal", "nether", "the_end", "percents");
-        }
-        return null;
+    public @NotNull List<String> tabCommand(@NotNull CommandSender sender, @NotNull String[] args) {
+        return List.of("normal", "nether", "the_end", "percents", "bed", "darkness");
     }
 
     public static ScreenType getType() {
@@ -85,7 +79,9 @@ public final class NewWorldScreenExperiment extends Experiment {
         NORMAL,
         NETHER,
         THE_END,
-        PERCENTS
+        PERCENTS,
+        BED,
+        DARKNESS,
     }
 
 }

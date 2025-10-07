@@ -74,6 +74,9 @@ public class GiveCommand extends CommandHandler {
                 try {
                     Material material = Material.valueOf(args[0].replace("minecraft:","").toUpperCase());
                     player.getInventory().addItem(new ItemStack(material));
+                    player.sendMessage(getLocaleMessage("commands.give.given")
+                            .replace("%material%", material.name().toLowerCase())
+                            .replace("%amount%", "1"));
                 } catch (IllegalArgumentException error) {
                     player.sendMessage(getLocaleMessage("commands.give.wrong"));
                 }
@@ -97,6 +100,10 @@ public class GiveCommand extends CommandHandler {
                 try {
                     material = Material.valueOf(args[1].replace("minecraft:", "").toUpperCase());
                     givePlayer.getInventory().addItem(new ItemStack(material));
+                    player.sendMessage(getLocaleMessage("commands.give.given-player")
+                            .replace("%player%", givePlayer.getName())
+                            .replace("%material%", material.name().toLowerCase())
+                            .replace("%amount%", "1"));
                 } catch (IllegalArgumentException e) {
                     player.sendMessage(getLocaleMessage("commands.give.wrong"));
                 }
@@ -112,6 +119,10 @@ public class GiveCommand extends CommandHandler {
                     int amount = Integer.parseInt(args[2]);
                     ItemStack item = new ItemStack(material, amount);
                     givePlayer.getInventory().addItem(item);
+                    player.sendMessage(getLocaleMessage("commands.give.given-player")
+                            .replace("%player%", givePlayer.getName())
+                            .replace("%material%", material.name().toLowerCase())
+                            .replace("%amount%", String.valueOf(amount)));
                 } catch (NumberFormatException error) {
                     player.sendMessage(getLocaleMessage("commands.give.wrong-amount"));
                 } catch (IllegalArgumentException error) {

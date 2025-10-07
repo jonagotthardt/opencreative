@@ -117,6 +117,8 @@ public class TeleportCommand extends CommandHandler {
             } else {
                 player.teleport(teleportToPlayer.getLocation());
             }
+            player.sendMessage(getLocaleMessage("commands.teleport.teleported")
+                    .replace("%player%", teleportToPlayer.getName()));
             Sounds.PLAYER_TELEPORT.play(player);
             if (!player.getWorld().equals(teleportToPlayer.getWorld()) && !player.hasPermission("opencreative.teleport.clear-bypass")) {
                 clearPlayer(player);
@@ -152,6 +154,11 @@ public class TeleportCommand extends CommandHandler {
                 clearPlayer(firstPlayer);
             }
             firstPlayer.teleport(secondPlayer.getLocation());
+            player.sendMessage(getLocaleMessage("commands.teleport.teleported-player")
+                    .replace("%first%", firstPlayer.getName())
+                    .replace("%second%", secondPlayer.getName()));
+            firstPlayer.sendMessage(getLocaleMessage("commands.teleport.teleported")
+                    .replace("%player%", firstPlayer.getName()));
             Sounds.PLAYER_TELEPORT.play(firstPlayer);
             if (!firstPlayer.getWorld().equals(secondPlayer.getWorld()) && !firstPlayer.hasPermission("opencreative.teleport.clear-bypass")) {
                 clearPlayer(firstPlayer);
@@ -178,6 +185,13 @@ public class TeleportCommand extends CommandHandler {
                 Location newLocation = new Location(location.getWorld(),x,y,z,yaw,pitch);
                 if (!isOutOfBorders(newLocation)) {
                     player.teleport(newLocation);
+                    player.sendMessage(getLocaleMessage("commands.teleport.teleported-coords")
+                            .replace("%x%", String.valueOf(x))
+                            .replace("%y%", String.valueOf(y))
+                            .replace("%z%", String.valueOf(z))
+                            .replace("%yaw%", String.valueOf(yaw))
+                            .replace("%pitch%", String.valueOf(pitch))
+                    );
                     Sounds.PLAYER_TELEPORT.play(player);
                 } else {
                     sender.sendMessage(getLocaleMessage("commands.teleport.out-of-borders"));
@@ -187,7 +201,6 @@ public class TeleportCommand extends CommandHandler {
             }
         } else {
             sender.sendMessage(getLocaleMessage("commands.teleport.help"));
-            return;
         }
     }
 

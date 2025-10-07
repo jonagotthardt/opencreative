@@ -79,14 +79,17 @@ public class WeatherCommand extends CommandHandler {
             case "sun", "clear" -> {
                 player.getWorld().setStorm(false);
                 player.getWorld().setThundering(false);
+                player.sendMessage(getLocaleMessage("commands.weather.changed.sun"));
             }
             case "storm", "rain", "rainy" -> {
                 player.getWorld().setStorm(true);
                 player.getWorld().setThundering(false);
+                player.sendMessage(getLocaleMessage("commands.weather.changed.rain"));
             }
             case "thunder" -> {
                 player.getWorld().setStorm(true);
                 player.getWorld().setThundering(true);
+                player.sendMessage(getLocaleMessage("commands.weather.changed.thunder"));
             }
         }
     }
