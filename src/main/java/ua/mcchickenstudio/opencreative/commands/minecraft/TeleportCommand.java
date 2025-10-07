@@ -186,11 +186,11 @@ public class TeleportCommand extends CommandHandler {
                 if (!isOutOfBorders(newLocation)) {
                     player.teleport(newLocation);
                     player.sendMessage(getLocaleMessage("commands.teleport.teleported-coords")
-                            .replace("%x%", String.valueOf(x))
-                            .replace("%y%", String.valueOf(y))
-                            .replace("%z%", String.valueOf(z))
-                            .replace("%yaw%", String.valueOf(yaw))
-                            .replace("%pitch%", String.valueOf(pitch))
+                            .replace("%x%", String.valueOf(Math.round(x)))
+                            .replace("%y%", String.valueOf(Math.round(y)))
+                            .replace("%z%", String.valueOf(Math.round(z)))
+                            .replace("%yaw%", String.valueOf(Math.round(yaw)))
+                            .replace("%pitch%", String.valueOf(Math.round(pitch)))
                     );
                     Sounds.PLAYER_TELEPORT.play(player);
                 } else {
