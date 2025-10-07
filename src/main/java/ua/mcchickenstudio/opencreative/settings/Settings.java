@@ -121,6 +121,7 @@ public final class Settings {
     private final Set<String> allowedResourcePackLinks = new HashSet<>();
 
     private boolean enabledCoding = true;
+    private boolean cancelChatOnValueSet = false;
     private final Set<String> disabledEvents = new HashSet<>();
     private final Set<String> disabledActions = new HashSet<>();
     private final Set<String> disabledConditions = new HashSet<>();
@@ -167,6 +168,7 @@ public final class Settings {
         boolean enabledWatchdog = config.getBoolean("watchdog.enabled", false);
 
         legacySelectionMenu = config.getBoolean("coding.old-selection-menu",false);
+        cancelChatOnValueSet = config.getBoolean("coding.cancel-chat-on-value-set", false);
         enabledCoding = config.getBoolean("coding.enabled",true);
 
         worldCreationMinSeconds = config.getInt("requirements.world-creation.played-seconds",30);
@@ -760,6 +762,10 @@ public final class Settings {
 
     public boolean isEnabledCoding() {
         return enabledCoding;
+    }
+
+    public boolean isCancelChatOnValueSet() {
+        return cancelChatOnValueSet;
     }
 
     public boolean isItemsClearCommandBlocksData() {

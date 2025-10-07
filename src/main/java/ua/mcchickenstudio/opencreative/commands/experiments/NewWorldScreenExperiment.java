@@ -81,10 +81,6 @@ public final class NewWorldScreenExperiment extends Experiment {
         return type;
     }
 
-    public static void showLoadingScreen(@NotNull Player player, @NotNull Planet planet) {
-
-    }
-
     public enum ScreenType {
         NORMAL,
         NETHER,

@@ -168,6 +168,8 @@ coding:
   platforms-generator: "horizontal" # Default generator for coding platforms, if not exists will use default Horizontal.
     # Available: "horizontal", "vertical", "legacy". Please do not change platforms generator, if there's already existing worlds.
     # To test them, use /world platformer [ID].
+  cancel-chat-on-value-set: false # Cancels sending message to local chat, when player sets new value of text, number, vector,
+                                  # variable, potion, color while holding item in hand.
 
   #
   # You can disable some coding blocks,

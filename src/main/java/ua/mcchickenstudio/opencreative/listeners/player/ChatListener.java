@@ -75,7 +75,7 @@ public final class ChatListener implements Listener {
                 event.setCancelled(true);
                 return;
             }
-            checkDevItems(player,message);
+            checkDevItems(player, message, event);
             checkConfirmation(player,message);
             if (event.isCancelled()) return;
             event.setCancelled(true);
@@ -144,7 +144,7 @@ public final class ChatListener implements Listener {
         }
     }
 
-    private void checkDevItems(Player player, String message) {
+    private void checkDevItems(Player player, String message, AsyncChatEvent event) {
         if (isEntityInDevPlanet(player)) {
             ItemStack itemInHand = player.getInventory().getItemInMainHand();
             if (itemInHand.getType() == Material.BOOK) {
@@ -161,6 +161,9 @@ public final class ChatListener implements Listener {
                         Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
                 player.swingMainHand();
+                if (OpenCreative.getSettings().isCancelChatOnValueSet()) {
+                    event.setCancelled(true);
+                }
             } else if (itemInHand.getType() == Material.SLIME_BALL) {
                 String numberString = ChatColor.stripColor(message);
                 if (numberString.equalsIgnoreCase("p") || numberString.equalsIgnoreCase("pi")) {
@@ -185,6 +188,9 @@ public final class ChatListener implements Listener {
                         Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
                 player.swingMainHand();
+                if (OpenCreative.getSettings().isCancelChatOnValueSet()) {
+                    event.setCancelled(true);
+                }
             } else if (itemInHand.getType() == Material.MAGMA_CREAM) {
                 StringBuilder newValue = new StringBuilder(ChatColor.stripColor(message));
                 ItemMeta meta = itemInHand.getItemMeta();
@@ -207,6 +213,9 @@ public final class ChatListener implements Listener {
                         Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
                 player.swingMainHand();
+                if (OpenCreative.getSettings().isCancelChatOnValueSet()) {
+                    event.setCancelled(true);
+                }
             } else if (itemInHand.getType() == Material.BLACK_DYE) {
                 int[] rgbColor = parseRGB(message);
                 int red = rgbColor[0];
@@ -225,6 +234,9 @@ public final class ChatListener implements Listener {
                 Sounds.DEV_VALUE_SET.play(player);
                 player.getInventory().setItemInMainHand(itemInHand);
                 player.swingMainHand();
+                if (OpenCreative.getSettings().isCancelChatOnValueSet()) {
+                    event.setCancelled(true);
+                }
             } else if (itemInHand.getType() == Material.POTION || itemInHand.getType() == Material.LINGERING_POTION || itemInHand.getType() == Material.SPLASH_POTION) {
                 if (!(itemInHand.getItemMeta() instanceof PotionMeta oldMeta)) {
                     return;
@@ -280,6 +292,9 @@ public final class ChatListener implements Listener {
                 ));
                 Sounds.DEV_POTION_SET.play(player);
                 itemInHand.setItemMeta(newMeta);
+                if (OpenCreative.getSettings().isCancelChatOnValueSet()) {
+                    event.setCancelled(true);
+                }
             } else if (itemInHand.getType() == Material.PRISMARINE_SHARD) {
                 ItemMeta meta = itemInHand.getItemMeta();
                 if (meta == null) return;
@@ -317,6 +332,9 @@ public final class ChatListener implements Listener {
                 ));
                 Sounds.DEV_VECTOR_SET.play(player);
                 player.swingMainHand();
+                if (OpenCreative.getSettings().isCancelChatOnValueSet()) {
+                    event.setCancelled(true);
+                }
             }
         }
     }
