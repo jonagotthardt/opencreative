@@ -34,6 +34,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getPlayerLocaleComponent;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isLobbyWorld;
 
@@ -99,7 +100,11 @@ public final class EntityDamageListener implements Listener {
             if (event.getDamager() instanceof Player damager) {
                 Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(damager);
                 if (planet != null) {
-                    new PlayerDamagesPlayerEvent(damager,victim,event).callEvent();
+                    if (planet.getMode() == Planet.Mode.BUILD) {
+                        damager.sendActionBar(getPlayerLocaleComponent("world.build-mode.cant-damage", damager));
+                    } else {
+                        new PlayerDamagesPlayerEvent(damager,victim,event).callEvent();
+                    }
                 }
             // Mob damages player
             } else {

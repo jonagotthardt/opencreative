@@ -97,6 +97,7 @@ public class GamemodeCommand extends CommandHandler {
                     mode = GameMode.valueOf(args[0].toUpperCase());
                 }
                 player.setGameMode(mode);
+                player.sendMessage(getLocaleMessage("commands.game-mode.changed." + mode.name().toLowerCase()));
             } catch (IllegalArgumentException error) {
                 player.sendMessage(getLocaleMessage("commands.game-mode.wrong"));
             }
@@ -140,12 +141,14 @@ public class GamemodeCommand extends CommandHandler {
                     }
                 }
                 modePlayer.setGameMode(mode);
+                player.sendMessage(getLocaleMessage("commands.game-mode.changed-player." + mode.name().toLowerCase())
+                        .replace("%player%", modePlayer.getName()));
+                modePlayer.sendMessage(getLocaleMessage("commands.game-mode.changed." + mode.name().toLowerCase()));
             } catch (IllegalArgumentException e) {
                 player.sendMessage(getLocaleMessage("commands.game-mode.wrong"));
             }
         } else {
             sender.sendMessage(getLocaleMessage("commands.game-mode.help"));
-            return;
         }
     }
 

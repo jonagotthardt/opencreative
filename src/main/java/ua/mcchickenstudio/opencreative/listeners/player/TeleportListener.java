@@ -32,6 +32,8 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement.TeleportEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isPlanet;
+
 public final class TeleportListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -39,7 +41,9 @@ public final class TeleportListener implements Listener {
         if (event.getCause() == PlayerTeleportEvent.TeleportCause.END_PORTAL
                 || event.getCause() == PlayerTeleportEvent.TeleportCause.END_GATEWAY
                 || event.getCause() == PlayerTeleportEvent.TeleportCause.NETHER_PORTAL) {
-            event.setCancelled(true);
+            if (!isPlanet(event.getTo().getWorld())) {
+                event.setCancelled(true);
+            }
         }
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getFrom().getWorld());
         if (planet != null) {

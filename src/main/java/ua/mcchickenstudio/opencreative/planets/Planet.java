@@ -633,8 +633,23 @@ public class Planet {
                 player.teleportAsync(territory.getWorld().getSpawnLocation(), PlayerTeleportEvent.TeleportCause.END_PORTAL).thenAccept(success -> {
                     getConnectionProcess(player, wasLoaded, hidePlayer, success);
                 });
+            case BED -> {
+                Location bed = player.getLocation();
+                player.sendBlockChange(bed, Bukkit.createBlockData(Material.RED_BED));
+                player.sleep(bed, true);
+                player.teleportAsync(territory.getWorld().getSpawnLocation()).thenAccept(success -> {
+                    getConnectionProcess(player, wasLoaded, hidePlayer, success);
+                    player.wakeup(false);
+                });
+            }
+            case DARKNESS -> {
+                player.sendPotionEffectChange(player, new PotionEffect(PotionEffectType.DARKNESS, 100, 1));
+                player.teleportAsync(territory.getWorld().getSpawnLocation()).thenAccept(success -> {
+                    getConnectionProcess(player, wasLoaded, hidePlayer, success);
+                });
+            }
             case PERCENTS -> {
-                player.teleportAsync(territory.getWorld().getSpawnLocation(), PlayerTeleportEvent.TeleportCause.END_PORTAL).thenAccept(success -> {
+                player.teleportAsync(territory.getWorld().getSpawnLocation()).thenAccept(success -> {
                     getConnectionProcess(player, wasLoaded, hidePlayer, success);
                 });
 
