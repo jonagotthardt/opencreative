@@ -19,14 +19,17 @@
 package ua.mcchickenstudio.opencreative.planets;
 
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
 
@@ -34,6 +37,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.JoinEve
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.GamePlayEvent;
 import ua.mcchickenstudio.opencreative.coding.variables.WorldVariables;
+import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
+import ua.mcchickenstudio.opencreative.commands.experiments.NewWorldScreenExperiment;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetConnectPlayerEvent;
 import ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld;
 import ua.mcchickenstudio.opencreative.managers.stability.StabilityState;
@@ -46,6 +51,7 @@ import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
@@ -65,7 +71,7 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
  * <p>Planet files are stored in ./planets/planetID folder.</p>
  * @author McChicken Studio
  * @since 1.0
- * @version 5.0
+ * @version 5.8
  */
 public class Planet {
 
@@ -114,20 +120,260 @@ public class Planet {
         info.updateIconAsync();
     }
 
+    /**
+     * Returns information of planet, that stores
+     * display name, description, custom ID and icon.
+     * @return planet's info.
+     */
     public PlanetInfo getInformation() {
         return info;
     }
 
+    /**
+     * Returns players registry of planet, that stores
+     * builders, developers, whitelisted and banned players.
+     * @return planet's registry of players.
+     */
     public PlanetPlayers getWorldPlayers() {
         return worldPlayers;
     }
 
+    /**
+     * Checks whether world's coding is in debug mode.
+     * @return true - in debug mode, false - not.
+     */
+    public boolean isDebug() {
+        return debug;
+    }
+
+    /**
+     * Returns holder of global and saved variables in planet.
+     * @return planet's variables.
+     */
+    public WorldVariables getVariables() {
+        return variables;
+    }
+
+    /**
+     * Returns whether world is corrupted (doesn't have
+     * owner information) or not.
+     * @return true - corrupted, false - not.
+     */
+    public boolean isCorrupted() {
+        return corrupted;
+    }
+
+    /**
+     * Returns holder of planet's limits and modifiers.
+     * @return planet's limits.
+     */
+    public PlanetLimits getLimits() {
+        return limits;
+    }
+
+    /**
+     * Returns holder of planet's experiments.
+     * @return planet's experiments.
+     */
+    public PlanetExperiments getExperiments() {
+        return experiments;
+    }
+
+    /**
+     * Return group of planet's owner.
+     * <p>
+     * Useful to get limits and modifiers.
+     * @return group of owner.
+     */
+    public Group getGroup() {
+        return OpenCreative.getSettings().getGroups().getGroup(ownerGroup);
+    }
+
+    /**
+     * Returns sharing mode of planet.
+     * <p>Public - all players can connect to the world.</p>
+     * <p>Private - only world owner can connect to the world.</p>
+     * <p>Closed - no one can connect to the world, deleting mode.</p>
+     * @return sharing mode.
+     */
+    public Sharing getSharing() {
+        return sharing;
+    }
+
+    /**
+     * Returns world's name on server in the format:
+     * {@code ./planets/planetID}
+     * <p>
+     * Can be used for getting world from server.
+     * @return world's name on server.
+     */
+    public String getWorldName() {
+        return "./planets/planet" + id;
+    }
+
+    /**
+     * Returns numeric ID of world.
+     * @return numeric ID.
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * Returns developer's planet of world, that has
+     * coding platforms to create a code.
+     * @return developer's planet.
+     */
+    public DevPlanet getDevPlanet() {
+        return devPlanet;
+    }
+
+    /**
+     * Checks whether world is in a state of changing owner.
+     * @return true - owner requested to transfer world, false - not.
+     */
+    public boolean isChangingOwner() {
+        return changingOwner;
+    }
+
+    /**
+     * Checks whether the player is owner of planet.
+     * @param player player to check.
+     * @return true - is owner, false - not owner.
+     */
     public boolean isOwner(Player player) {
         return getOwner().equalsIgnoreCase(player.getName());
     }
 
+    /**
+     * Checks whether the owner's nickname same as specified.
+     * <p>
+     * Ignores caps consideration.
+     * @param nickname name to check.
+     * @return true - is owner, false - not owner.
+     */
     public boolean isOwner(String nickname) {
         return getOwner().equalsIgnoreCase(nickname);
+    }
+
+    /**
+     * Returns territory of planet, that contains planet's world,
+     * environment, flags, boss bars, scoreboards, code script
+     * and other temporary values.
+     * @return planet's territory.
+     */
+    public PlanetTerritory getTerritory() {
+        return territory;
+    }
+
+    /**
+     * Checks if loaded main world of planet.
+     * @return true - if loaded, false - unloaded.
+     */
+    public boolean isLoaded() {
+        return Bukkit.getWorld(getWorldName()) != null;
+    }
+
+    /**
+     * Returns world if planet is loaded, null - planet is unloaded.
+     * @return world, or null.
+     */
+    public World getWorld() {
+        return Bukkit.getWorld(getWorldName());
+    }
+
+    /**
+     * Returns current mode of planet.
+     * @return playing or build mode.
+     */
+    public Mode getMode() {
+        return mode;
+    }
+
+    /**
+     * Returns total players count in world.
+     * <p>
+     * Includes all players from build world and developer's world.
+     * @return online of planet.
+     */
+    public int getOnline() {
+        return this.getPlayers().size();
+    }
+
+    /**
+     * Returns creation time of world.
+     * <p>
+     * If value is unknown (0), will return {@code 1670573410000L}
+     * (publication of OpenCreative+).
+     * @return unix time, when world was created.
+     */
+    public long getCreationTime() {
+        if (creationTime == 0) {
+            return 1670573410000L;
+        }
+        return creationTime;
+    }
+
+    /**
+     * Returns last activity time of world.
+     * <p>
+     * If value is unknown (0), will return {@code 1670573410000L}
+     * (publication of OpenCreative+).
+     * @return unix last time, when someone joined the world.
+     */
+    public long getLastActivityTime() {
+        if (lastActivityTime == 0) {
+            return 1670573410000L;
+        }
+        return lastActivityTime;
+    }
+
+    /**
+     * Returns list of all players in world.
+     * <p>
+     * Includes all players from build world and developer's world.
+     * @return list of all online players in world.
+     */
+    public List<Player> getPlayers() {
+        List<Player> playerList = new ArrayList<>();
+        if (!isLoaded()) return playerList;
+        playerList.addAll(territory.getWorld().getPlayers());
+        if (getDevPlanet().isLoaded()) {
+            playerList.addAll(getDevPlanet().getWorld().getPlayers());
+        }
+        return playerList;
+    }
+
+    /**
+     * Returns audience of world, that contains
+     * players in world and players from developer's world.
+     * @return audience of world.
+     */
+    public Audience getAudience() {
+        Audience audience = Audience.empty();
+        if (isLoaded()) {
+            audience = Audience.audience(territory.getWorld());
+            if (devPlanet.isLoaded()) {
+                audience = Audience.audience(territory.getWorld(), devPlanet.getWorld());
+            }
+        }
+        return audience;
+    }
+
+    /**
+     * Returns owner's nickname of planet.
+     * @return owner's name.
+     */
+    public String getOwner() {
+        return owner;
+    }
+
+    /**
+     * Returns owner's group of planet.
+     * @return owner's group.
+     */
+    public String getOwnerGroup() {
+        return ownerGroup;
     }
 
     /**
@@ -216,16 +462,12 @@ public class Planet {
         this.mode = mode;
     }
 
-    public Sharing getSharing() {
-        return sharing;
-    }
-
     /**
      * Sharing is ability for players to connect to the world.
      * <p>Public - all players can connect to the world.</p>
      * <p>Private - only world owner can connect to the world.</p>
      * <p>Closed - no one can connect to the world, deleting mode.</p>
-     * @param sharing Sharing mode.
+     * @param sharing sharing mode.
      */
     public void setSharing(Sharing sharing) {
         if (this.sharing == sharing) return;
@@ -233,48 +475,375 @@ public class Planet {
         setPlanetConfigParameter(this,"sharing",sharing.name());
     }
 
+    /**
+     * Sets debug mode for coding in world.
+     * @param debug true - enabled, false - disabled.
+     */
     public void setDebug(boolean debug) {
         this.debug = debug;
     }
 
-    public String getWorldName() {
-        return "./planets/planet" + id;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public DevPlanet getDevPlanet() {
-        return devPlanet;
-    }
-
-    public boolean isChangingOwner() {
-        return changingOwner;
-    }
-
+    /**
+     * Sets state of changing world's owner.
+     * @param changingOwner true - owner requested to transfer world, false - not.
+     */
     public void setChangingOwner(boolean changingOwner) {
         this.changingOwner = changingOwner;
     }
 
-    public PlanetTerritory getTerritory() {
-        return territory;
+    /**
+     * Loads information of planet: owner, owner's group, mode,
+     * sharing, corrupted state, creation time, last activity time.
+     */
+    public void loadInfo() {
+        FileConfiguration config = getPlanetConfig(this);
+        String owner = "Unknown owner";
+        String ownerGroup = "default";
+        Mode mode = Mode.BUILD;
+        Sharing sharing = Sharing.PRIVATE;
+        if (config.getString("owner") != null) {
+            owner = config.getString("owner");
+        } else {
+            corrupted = true;
+        }
+        if (config.getString("owner-group") != null) {
+            ownerGroup = config.getString("owner-group");
+        }
+        if (config.getString("mode") != null && OpenCreative.getSettings().isEnabledCoding()) {
+            try {
+                mode = Mode.valueOf(config.getString("mode"));
+            } catch (Exception ignored) {}
+        }
+        if (config.getString("sharing") != null) {
+            try {
+                sharing = Sharing.valueOf(config.getString("sharing"));
+            } catch (Exception ignored) {}
+        }
+        if (config.get("creation-time") != null) {
+            try {
+                creationTime = Long.parseLong(String.valueOf(config.get("creation-time")));
+            } catch (Exception error) {
+                creationTime = 1670573410000L;
+            }
+        }
+        if (config.get("last-activity-time") != null) {
+            try {
+                lastActivityTime = Long.parseLong(String.valueOf(config.get("last-activity-time")));
+            } catch (Exception error) {
+                lastActivityTime = 1670573410000L;
+            }
+        }
+        if (corrupted) {
+            sendCriticalErrorMessage("Planet " + id + " lost it's config file, please check planet files in " + getWorldName());
+        }
+        this.owner = owner;
+        this.ownerGroup = ownerGroup;
+        this.mode = mode;
+        this.sharing = sharing;
     }
 
     /**
-     * Checks if loaded main world of planet.
-     * @return true - if loaded, false - unloaded.
+     * Returns byte value of flag.
+     * @param flag flag to get value.
+     * @return value of flag.
      */
-    public boolean isLoaded() {
-        return Bukkit.getWorld(getWorldName()) != null;
+    public byte getFlagValue(PlanetFlags.PlanetFlag flag) {
+        return territory.getFlags().getFlagValue(flag);
     }
 
     /**
-     * Returns world if planet is loaded, null - planet is unloaded.
-     * @return world, or null.
+     * Sets byte value of flag.
+     * @param flag flag to set value.
+     * @param value new value.
      */
-    public World getWorld() {
-        return Bukkit.getWorld(getWorldName());
+    public void setFlagValue(PlanetFlags.PlanetFlag flag, byte value) {
+        territory.getFlags().setFlag(flag,value);
+    }
+
+    /**
+     * Connects player to the planet.
+     * <p>
+     * May not connect player to the planet if some conditions are not met.
+     * <p>
+     * For example: stability is not good, world is private, player is banned in world,
+     * error while loading spawn location.
+     * @param player player to connect.
+     */
+    public void connectPlayer(@NotNull Player player) {
+        connectPlayer(player,false);
+    }
+
+    /**
+     * Connects player to the planet.
+     * <p>
+     * May not connect player to the planet if some conditions are not met.
+     * <p>
+     * For example: stability is not good, world is private, player is banned in world,
+     * error while loading spawn location.
+     * @param player player to connect.
+     * @param hidePlayer hide player's join message, and make him in spectator mode or not.
+     */
+    public void connectPlayer(@NotNull Player player, boolean hidePlayer) {
+        // If stability is not good, not connecting
+        if (OpenCreative.getStability().getState() != StabilityState.FINE && !isLoaded()) {
+            player.sendMessage(getLocaleMessage("creative.stability.cannot"));
+            Sounds.PLAYER_FAIL.play(player);
+            return;
+        }
+        // If world is private/player is banned, not connecting
+        if (!isOwner(player.getName())) {
+            if (getSharing() != Sharing.PUBLIC && !player.hasPermission("opencreative.world.private.bypass") && !worldPlayers.isWhitelisted(player.getName())) {
+                player.sendMessage(MessageUtils.getPlayerLocaleMessage("private-planet", player));
+                return;
+            }
+            if (worldPlayers.isBanned(player.getName()) && !player.hasPermission("opencreative.world.banned.bypass")) {
+                player.sendMessage(MessageUtils.getPlayerLocaleMessage("blacklisted-in-planet", player));
+                return;
+            }
+        }
+
+        player.showTitle(Title.title(
+            toComponent(getLocaleMessage("world.connecting.title")), toComponent(getLocaleMessage("world.connecting.subtitle")),
+            Title.Times.times(Duration.ofMillis(710), Duration.ofSeconds(30), Duration.ofMillis(130))
+        ));
+        Sounds.WORLD_CONNECTION.play(player);
+
+        boolean wasLoaded = isLoaded();
+        if (!isLoaded()) {
+            OpenCreative.getPlugin().getLogger().info("Loading planet " + id + " and teleporting " + player.getName());
+            if (!OpenCreative.getSettings().isEnabledCoding() && mode == Mode.PLAYING) mode = Mode.BUILD;
+            territory.load();
+        } else {
+            OpenCreative.getPlugin().getLogger().info("Planet " + id + " is already loaded, teleporting " + player.getName());
+        }
+
+        if (!Experiments.isEnabled("new_world_screen") || NewWorldScreenExperiment.getType() == NewWorldScreenExperiment.ScreenType.NORMAL) {
+            player.teleportAsync(territory.getWorld().getSpawnLocation()).thenAccept(success -> {
+                getConnectionProcess(player, wasLoaded, hidePlayer, success);
+            });
+            return;
+        }
+
+        switch (NewWorldScreenExperiment.getType()) {
+            case NETHER ->
+                player.teleportAsync(territory.getWorld().getSpawnLocation(), PlayerTeleportEvent.TeleportCause.NETHER_PORTAL).thenAccept(success -> {
+                    getConnectionProcess(player, wasLoaded, hidePlayer, success);
+                });
+            case THE_END ->
+                player.teleportAsync(territory.getWorld().getSpawnLocation(), PlayerTeleportEvent.TeleportCause.END_PORTAL).thenAccept(success -> {
+                    getConnectionProcess(player, wasLoaded, hidePlayer, success);
+                });
+            case PERCENTS -> {
+                player.teleportAsync(territory.getWorld().getSpawnLocation(), PlayerTeleportEvent.TeleportCause.END_PORTAL).thenAccept(success -> {
+                    getConnectionProcess(player, wasLoaded, hidePlayer, success);
+                });
+
+                int radius = 8;
+                AtomicInteger total = new AtomicInteger((radius * 2 + 1) * (radius * 2 + 1));
+                AtomicInteger done = new AtomicInteger(0);
+
+                for (int x = -radius; x <= radius; x++) {
+                    for (int z = -radius; z <= radius; z++) {
+                        if (!player.isOnline()) return;
+                        if (getWorld() == null) continue;
+                        getWorld().getChunkAtAsync(x, z, true, chunk -> {
+                            int progress = (int) ((done.incrementAndGet() * 100.0) / total.get());
+                            player.sendActionBar(Component.text("§7Loading world: " + progress + "%"));
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns process of player connection to planet.
+     * @param player player to connect.
+     * @param wasLoaded whether world was loaded before.
+     * @param hidePlayer whether player join message should be hidden.
+     * @param success chunks are loaded successfully to teleport or not.
+     */
+    private void getConnectionProcess(@NotNull Player player, boolean wasLoaded, boolean hidePlayer, boolean success) {
+        clearPlayer(player);
+        if (success) {
+            if (!hidePlayer && getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
+                for (Player onlinePlayer : getPlayers()) {
+                    onlinePlayer.sendMessage(MessageUtils.getPlayerLocaleMessage("world.joined", player));
+                }
+            }
+            clearPlayer(player);
+            Sounds.WORLD_CONNECTED.play(player);
+            mode.onPlayerConnect(player,this);
+            getWorldPlayers().getPlanetPlayer(player).load();
+            player.clearTitle();
+            territory.showBorders(player);
+            if (!getPlayersFromPlanetList(this, PlayersType.UNIQUE).contains(player.getName())) {
+                addPlayerInPlanetList(this,player.getName(), PlayersType.UNIQUE);
+                info.setUniques(info.getUniques()+1);
+                if (this.isOwner(player)) {
+                    player.showTitle(Title.title(
+                        toComponent(MessageUtils.getPlayerLocaleMessage("creating-world.welcome-title",player)), toComponent(MessageUtils.getPlayerLocaleMessage("creating-world.welcome-subtitle",player)),
+                        Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(9), Duration.ofSeconds(2))
+                    ));
+                    player.sendMessage(getLocaleMessage("creating-world.welcome"));
+                    Sounds.WELCOME_TO_NEW_WORLD.play(player);
+                    player.setGameMode(GameMode.CREATIVE);
+                    ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
+                    player.getInventory().setItem(8,worldSettingsItem);
+                }
+            } else {
+                if (isOwner(player) && getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
+                    player.sendMessage(MessageUtils.getPlayerLocaleMessage("world.connecting.owner-help",player));
+                }
+            }
+            if (this.isOwner(player.getName())) {
+                ownerGroup = OpenCreative.getSettings().getGroups().getGroup(player).getName().toLowerCase();
+                ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
+                player.getInventory().setItem(8,worldSettingsItem);
+                if (this.getDevPlanet().isLoaded() && OpenCreative.getStability().isFine()) {
+                    new CodingBlockParser(devPlanet).parseCode(this.getDevPlanet());
+                }
+            }
+            if (!territory.isAutoSave() && worldPlayers.canBuild(player)) {
+                player.sendMessage(getLocaleMessage("settings.autosave.warning"));
+            }
+            if (!wasLoaded) {
+                territory.getScript().loadCode();
+                new GamePlayEvent(this).callEvent();
+            }
+            if (mode == Mode.PLAYING && worldPlayers.canDevelop(player)) {
+                givePlayPermissions(player);
+            } else if (mode == Mode.BUILD && worldPlayers.canBuild(player)) {
+                giveBuildPermissions(player);
+            }
+            if (!hidePlayer) {
+                new JoinEvent(player).callEvent();
+            } else {
+                player.setGameMode(GameMode.SPECTATOR);
+                ChangedWorld.addPlayerWithLocation(player);
+                for (Player onlinePlayer : getPlayers()) {
+                    onlinePlayer.hidePlayer(OpenCreative.getPlugin(),player);
+                }
+            }
+            new PlanetConnectPlayerEvent(this,player).callEvent();
+            info.updateIconAsync();
+        } else {
+            sendPlayerErrorMessage(player,"Can't join planet. World is unloaded.");
+        }
+    }
+
+    /**
+     * Connects player to developer's world.
+     * @param player player to connect.
+     */
+    public void connectToDevPlanet(Player player) {
+        connectToDevPlanet(player,false);
+    }
+
+    /**
+     * Connects player to developer's planet.
+     * @param player player to connect.
+     * @param hidePlayer whether hide player's join message and make him in spectator mode or not.
+     */
+    public void connectToDevPlanet(Player player, boolean hidePlayer) {
+        player.showTitle(Title.title(
+                toComponent(getLocaleMessage("world.dev-mode.connecting.title")), toComponent(getLocaleMessage("world.dev-mode.connecting.subtitle")),
+                Title.Times.times(Duration.ofSeconds(15), Duration.ofSeconds(9999), Duration.ofSeconds(10))
+        ));
+        getDevPlanet().loadDevPlanetWorld();
+        getDevPlanet().getWorld().getSpawnLocation().getChunk().load(true);
+        Location lastLocation = this.getDevPlanet().getLastLocations().get(player);
+        if (!this.getDevPlanet().isLoaded()) {
+            return;
+        }
+        if (lastLocation == null || !devPlanet.isSaveLocation()) {
+            lastLocation = getDevPlanet().getWorld().getSpawnLocation();
+        }
+        player.teleportAsync(lastLocation).thenAccept(success -> {
+            if (success) {
+                if (!hidePlayer) {
+                    for (Player onlinePlayer : player.getWorld().getPlayers()) {
+                        onlinePlayer.sendMessage(MessageUtils.getPlayerLocaleMessage("world.dev-mode.joined", player));
+                    }
+                } else {
+                    player.setGameMode(GameMode.SPECTATOR);
+                    for (Player onlinePlayer : player.getWorld().getPlayers()) {
+                        onlinePlayer.hidePlayer(OpenCreative.getPlugin(),player);
+                    }
+                }
+                if (devPlanet.isSaveLocation()) devPlanet.getLastLocations().put(player,player.getLocation());
+                if (devPlanet.isNightVision()) player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,Integer.MAX_VALUE,0,false,false,false));
+                Sounds.DEV_CONNECTED.play(player);
+                Sounds.WORLD_MODE_DEV.play(player);
+                devPlanet.displayWorldBorders();
+                player.showTitle(Title.title(
+                        toComponent(getLocaleMessage("world.dev-mode.title")), toComponent(getLocaleMessage("world.dev-mode.subtitle")),
+                        Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(2), Duration.ofMillis(750))
+                ));
+                BukkitRunnable translation = new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if (getDevPlanet().getWorld() == null) return;
+                        getDevPlanet().translateCodingBlocks(player);
+                        territory.removeBukkitRunnable(this);
+                    }
+                };
+                territory.addBukkitRunnable(translation);
+                translation.runTaskLater(OpenCreative.getPlugin(),5L);
+            }
+        });
+    }
+
+    /**
+     * Connects player to developer's world, teleports next
+     * to block on specified coordinates.
+     * <p>
+     * Will make block glowing.
+     * @param player player to connect.
+     * @param x x coordinate of block.
+     * @param y y coordinate of block.
+     * @param z z coordinate of block.
+     */
+    public void connectToDevPlanet(Player player, double x, double y, double z) {
+        connectToDevPlanet(player);
+        if (x > 0 && y > 0 && z > 0 && y < 30 && !isOutOfBorders(new Location(devPlanet.getWorld(),x+1,y,z+2))) {
+            Location location = new Location(this.getDevPlanet().getWorld(), x+1,y,z+2,180,5);
+            player.teleportAsync(location).thenAccept(success -> {
+                if (success) {
+                    spawnGlowingBlock(player,new Location(this.getDevPlanet().getWorld(),x+0.5,y,z+0.5));
+                }
+            });
+        }
+    }
+
+    /**
+     * Sets last activity unix time in world.
+     * @param activityTime last activity time.
+     */
+    public void setLastActivityTime(long activityTime) {
+        this.lastActivityTime = activityTime;
+        FileUtils.setPlanetConfigParameter(this,"last-activity-time", activityTime);
+    }
+
+    /**
+     * Sets creation unix time of world.
+     * @param creationTime time, when world was created.
+     */
+    public void setCreationTime(long creationTime) {
+        this.creationTime = creationTime;
+        FileUtils.setPlanetConfigParameter(this,"creation-time", creationTime);
+        info.updateIconAsync();
+    }
+
+    /**
+     * Sets new owner of world.
+     * @param owner owner to set.
+     */
+    public void setOwner(String owner) {
+        this.owner = owner;
+        FileUtils.setPlanetConfigParameter(this,"owner",owner);
+        FileUtils.setPlanetConfigParameter(this,"owner-uuid",Bukkit.getOfflinePlayer(owner).getUniqueId().toString());
+        info.updateIconAsync();
     }
 
     public enum Mode {
@@ -328,322 +897,5 @@ public class Planet {
         public String getPath() {
             return path;
         }
-    }
-
-    public void loadInfo() {
-        FileConfiguration config = getPlanetConfig(this);
-        String owner = "Unknown owner";
-        String ownerGroup = "default";
-        Mode mode = Mode.BUILD;
-        Sharing sharing = Sharing.PRIVATE;
-        if (config.getString("owner") != null) {
-            owner = config.getString("owner");
-        } else {
-            corrupted = true;
-        }
-        if (config.getString("owner-group") != null) {
-            ownerGroup = config.getString("owner-group");
-        }
-        if (config.getString("mode") != null && OpenCreative.getSettings().isEnabledCoding()) {
-            try {
-                mode = Mode.valueOf(config.getString("mode"));
-            } catch (Exception ignored) {}
-        }
-        if (config.getString("sharing") != null) {
-            try {
-                sharing = Sharing.valueOf(config.getString("sharing"));
-            } catch (Exception ignored) {}
-        }
-        if (config.get("creation-time") != null) {
-            try {
-                creationTime = Long.parseLong(String.valueOf(config.get("creation-time")));
-            } catch (Exception error) {
-                creationTime = 1670573410000L;
-            }
-        }
-        if (config.get("last-activity-time") != null) {
-            try {
-                lastActivityTime = Long.parseLong(String.valueOf(config.get("last-activity-time")));
-            } catch (Exception error) {
-                lastActivityTime = 1670573410000L;
-            }
-        }
-        if (corrupted) {
-            sendCriticalErrorMessage("Planet " + id + " lost it's config file, please check planet files in " + getWorldName());
-        }
-        this.owner = owner;
-        this.ownerGroup = ownerGroup;
-        this.mode = mode;
-        this.sharing = sharing;
-    }
-
-    public byte getFlagValue(PlanetFlags.PlanetFlag flag) {
-        return territory.getFlags().getFlagValue(flag);
-    }
-
-    public void setFlagValue(PlanetFlags.PlanetFlag flag, byte value) {
-        territory.getFlags().setFlag(flag,value);
-    }
-
-    public Mode getMode() {
-        return mode;
-    }
-
-    public int getOnline() {
-        return this.getPlayers().size();
-    }
-
-    public long getCreationTime() {
-        if (creationTime == 0) {
-            return 1670573410000L;
-        }
-        return creationTime;
-    }
-
-    public long getLastActivityTime() {
-        if (lastActivityTime == 0) {
-            return 1670573410000L;
-        }
-        return lastActivityTime;
-    }
-
-    public List<Player> getPlayers() {
-        List<Player> playerList = new ArrayList<>();
-        if (!isLoaded()) return playerList;
-        playerList.addAll(territory.getWorld().getPlayers());
-        if (getDevPlanet().isLoaded()) {
-            playerList.addAll(getDevPlanet().getWorld().getPlayers());
-        }
-        return playerList;
-    }
-
-    public Audience getAudience() {
-        Audience audience = Audience.empty();
-        if (isLoaded()) {
-            audience = Audience.audience(territory.getWorld());
-            if (devPlanet.isLoaded()) {
-                audience = Audience.audience(territory.getWorld(), devPlanet.getWorld());
-            }
-        }
-        return audience;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public String getOwnerGroup() {
-        return ownerGroup;
-    }
-
-    public void connectPlayer(Player player) {
-        connectPlayer(player,false);
-    }
-
-    public void connectPlayer(Player player, boolean hidePlayer) {
-        if (OpenCreative.getStability().getState() != StabilityState.FINE && !isLoaded()) {
-            player.sendMessage(getLocaleMessage("creative.stability.cannot"));
-            Sounds.PLAYER_FAIL.play(player);
-            return;
-        }
-        if (!isOwner(player.getName())) {
-            if (getSharing() != Sharing.PUBLIC && !player.hasPermission("opencreative.world.private.bypass") && !worldPlayers.isWhitelisted(player.getName())) {
-                player.sendMessage(MessageUtils.getPlayerLocaleMessage("private-planet", player));
-                return;
-            }
-            if (worldPlayers.isBanned(player.getName()) && !player.hasPermission("opencreative.world.banned.bypass")) {
-                player.sendMessage(MessageUtils.getPlayerLocaleMessage("blacklisted-in-planet", player));
-                return;
-            }
-        }
-        player.showTitle(Title.title(
-                toComponent(getLocaleMessage("world.connecting.title")), toComponent(getLocaleMessage("world.connecting.subtitle")),
-                Title.Times.times(Duration.ofMillis(710), Duration.ofSeconds(30), Duration.ofMillis(130))
-        ));
-        Sounds.WORLD_CONNECTION.play(player);
-        boolean wasLoaded = isLoaded();
-        if (!isLoaded()) {
-            OpenCreative.getPlugin().getLogger().info("Loading planet " + id + " and teleporting " + player.getName());
-            if (!OpenCreative.getSettings().isEnabledCoding() && mode == Mode.PLAYING) mode = Mode.BUILD;
-            territory.load();
-        } else {
-            OpenCreative.getPlugin().getLogger().info("Planet " + id + " is already loaded, teleporting " + player.getName());
-        }
-        player.teleportAsync(territory.getWorld().getSpawnLocation()).thenAccept(success -> {
-            clearPlayer(player);
-            if (success) {
-                if (!hidePlayer && getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
-                    for (Player onlinePlayer : getPlayers()) {
-                        onlinePlayer.sendMessage(MessageUtils.getPlayerLocaleMessage("world.joined", player));
-                    }
-                }
-                clearPlayer(player);
-                Sounds.WORLD_CONNECTED.play(player);
-                mode.onPlayerConnect(player,this);
-                getWorldPlayers().getPlanetPlayer(player).load();
-                player.clearTitle();
-                territory.showBorders(player);
-                if (!getPlayersFromPlanetList(this, PlayersType.UNIQUE).contains(player.getName())) {
-                    addPlayerInPlanetList(this,player.getName(), PlayersType.UNIQUE);
-                    info.setUniques(info.getUniques()+1);
-                    if (this.isOwner(player)) {
-                        player.showTitle(Title.title(
-                                toComponent(MessageUtils.getPlayerLocaleMessage("creating-world.welcome-title",player)), toComponent(MessageUtils.getPlayerLocaleMessage("creating-world.welcome-subtitle",player)),
-                                Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(9), Duration.ofSeconds(2))
-                        ));
-                        player.sendMessage(getLocaleMessage("creating-world.welcome"));
-                        Sounds.WELCOME_TO_NEW_WORLD.play(player);
-                        player.setGameMode(GameMode.CREATIVE);
-                        ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
-                        player.getInventory().setItem(8,worldSettingsItem);
-                    }
-                } else {
-                    if (isOwner(player) && getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
-                        player.sendMessage(MessageUtils.getPlayerLocaleMessage("world.connecting.owner-help",player));
-                    }
-                }
-                if (this.isOwner(player.getName())) {
-                    ownerGroup = OpenCreative.getSettings().getGroups().getGroup(player).getName().toLowerCase();
-                    ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
-                    player.getInventory().setItem(8,worldSettingsItem);
-                    if (this.getDevPlanet().isLoaded() && OpenCreative.getStability().isFine()) {
-                        new CodingBlockParser(devPlanet).parseCode(this.getDevPlanet());
-                    }
-                }
-                if (!territory.isAutoSave() && worldPlayers.canBuild(player)) {
-                    player.sendMessage(getLocaleMessage("settings.autosave.warning"));
-                }
-                if (!wasLoaded) {
-                    territory.getScript().loadCode();
-                    new GamePlayEvent(this).callEvent();
-                }
-                if (mode == Mode.PLAYING && worldPlayers.canDevelop(player)) {
-                    givePlayPermissions(player);
-                } else if (mode == Mode.BUILD && worldPlayers.canBuild(player)) {
-                    giveBuildPermissions(player);
-                }
-                if (!hidePlayer) {
-                    new JoinEvent(player).callEvent();
-                } else {
-                    player.setGameMode(GameMode.SPECTATOR);
-                    ChangedWorld.addPlayerWithLocation(player);
-                    for (Player onlinePlayer : getPlayers()) {
-                        onlinePlayer.hidePlayer(OpenCreative.getPlugin(),player);
-                    }
-                }
-                new PlanetConnectPlayerEvent(this,player).callEvent();
-                info.updateIconAsync();
-            } else {
-                sendPlayerErrorMessage(player,"Can't join planet. World is unloaded.");
-            }
-        });
-
-    }
-
-    public void connectToDevPlanet(Player player) {
-        connectToDevPlanet(player,false);
-    }
-
-    public void connectToDevPlanet(Player player, boolean hidePlayer) {
-        player.showTitle(Title.title(
-                toComponent(getLocaleMessage("world.dev-mode.connecting.title")), toComponent(getLocaleMessage("world.dev-mode.connecting.subtitle")),
-                Title.Times.times(Duration.ofSeconds(15), Duration.ofSeconds(9999), Duration.ofSeconds(10))
-        ));
-        getDevPlanet().loadDevPlanetWorld();
-        getDevPlanet().getWorld().getSpawnLocation().getChunk().load(true);
-        Location lastLocation = this.getDevPlanet().getLastLocations().get(player);
-        if (!this.getDevPlanet().isLoaded()) {
-            return;
-        }
-        if (lastLocation == null || !devPlanet.isSaveLocation()) {
-            lastLocation = getDevPlanet().getWorld().getSpawnLocation();
-        }
-        player.teleportAsync(lastLocation).thenAccept(success -> {
-            if (success) {
-                if (!hidePlayer) {
-                    for (Player onlinePlayer : player.getWorld().getPlayers()) {
-                        onlinePlayer.sendMessage(MessageUtils.getPlayerLocaleMessage("world.dev-mode.joined", player));
-                    }
-                } else {
-                    player.setGameMode(GameMode.SPECTATOR);
-                    for (Player onlinePlayer : player.getWorld().getPlayers()) {
-                        onlinePlayer.hidePlayer(OpenCreative.getPlugin(),player);
-                    }
-                }
-                if (devPlanet.isSaveLocation()) devPlanet.getLastLocations().put(player,player.getLocation());
-                if (devPlanet.isNightVision()) player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,Integer.MAX_VALUE,0,false,false,false));
-                Sounds.DEV_CONNECTED.play(player);
-                Sounds.WORLD_MODE_DEV.play(player);
-                devPlanet.displayWorldBorders();
-                player.showTitle(Title.title(
-                        toComponent(getLocaleMessage("world.dev-mode.title")), toComponent(getLocaleMessage("world.dev-mode.subtitle")),
-                        Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(2), Duration.ofMillis(750))
-                ));
-                BukkitRunnable translation = new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        if (getDevPlanet().getWorld() == null) return;
-                        getDevPlanet().translateCodingBlocks(player);
-                        territory.removeBukkitRunnable(this);
-                    }
-                };
-                territory.addBukkitRunnable(translation);
-                translation.runTaskLater(OpenCreative.getPlugin(),5L);
-            }
-        });
-    }
-
-    public void connectToDevPlanet(Player player, double x, double y, double z) {
-        connectToDevPlanet(player);
-        if (x > 0 && y > 0 && z > 0 && y < 30 && !isOutOfBorders(new Location(devPlanet.getWorld(),x+1,y,z+2))) {
-            Location location = new Location(this.getDevPlanet().getWorld(), x+1,y,z+2,180,5);
-            player.teleportAsync(location).thenAccept(success -> {
-                if (success) {
-                    spawnGlowingBlock(player,new Location(this.getDevPlanet().getWorld(),x+0.5,y,z+0.5));
-                }
-            });
-        }
-    }
-
-    public void setLastActivityTime(long activityTime) {
-        this.lastActivityTime = activityTime;
-        FileUtils.setPlanetConfigParameter(this,"last-activity-time",activityTime);
-    }
-
-    public void setCreationTime(long creationTime) {
-        this.creationTime = creationTime;
-        FileUtils.setPlanetConfigParameter(this,"creation-time",creationTime);
-        info.updateIconAsync();
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-        FileUtils.setPlanetConfigParameter(this,"owner",owner);
-        FileUtils.setPlanetConfigParameter(this,"owner-uuid",Bukkit.getOfflinePlayer(owner).getUniqueId().toString());
-        info.updateIconAsync();
-    }
-
-    public boolean isDebug() {
-        return debug;
-    }
-
-    public WorldVariables getVariables() {
-        return variables;
-    }
-
-    public boolean isCorrupted() {
-        return corrupted;
-    }
-
-    public PlanetLimits getLimits() {
-        return limits;
-    }
-
-    public PlanetExperiments getExperiments() {
-        return experiments;
-    }
-
-    public Group getGroup() {
-        return OpenCreative.getSettings().getGroups().getGroup(ownerGroup);
     }
 }
