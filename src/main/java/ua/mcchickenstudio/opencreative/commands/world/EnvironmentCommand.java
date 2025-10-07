@@ -117,9 +117,7 @@ public class EnvironmentCommand extends CommandHandler {
                                         numberString = "3.1415926";
                                     }
                                     valueType = ValueType.NUMBER;
-                                    try {
-                                        value = parseTicks(numberString);
-                                    } catch (NumberFormatException ignored) {}
+                                    value = parseTicks(numberString, 0);
                                 }
                                 case "boolean", "bool", "b" -> {
                                     if (args.length == 5) return;

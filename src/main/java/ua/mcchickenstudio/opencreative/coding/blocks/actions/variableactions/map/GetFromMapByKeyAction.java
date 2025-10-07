@@ -36,7 +36,7 @@ public final class GetFromMapByKeyAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink variable = getArguments().getVariableLink("variable",this);
-        Map<Object,Object> map = getArguments().getMap("map",this);
+        Map<Object, Object> map = getArguments().getMap("map",this);
         Object key = getArguments().getValue("key",this);
         Object value = map.get(key);
         if (value != null) {

@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.managers.space;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetDeletionEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetRegisterEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
@@ -267,6 +268,19 @@ public final class Space implements PlanetsManager {
     public Planet getPlanetById(@NotNull String id) {
         for (Planet planet : planets) {
             if (id.equalsIgnoreCase(String.valueOf(planet.getId()))) {
+                return planet;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public @Nullable Planet getPlanetByAnyID(@NotNull String id) {
+        for (Planet planet : planets) {
+            if (id.equalsIgnoreCase(String.valueOf(planet.getId()))) {
+                return planet;
+            }
+            if (id.equalsIgnoreCase(planet.getInformation().getCustomID())) {
                 return planet;
             }
         }

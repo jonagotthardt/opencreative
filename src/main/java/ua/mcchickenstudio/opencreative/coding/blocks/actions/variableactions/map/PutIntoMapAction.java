@@ -27,7 +27,6 @@ import ua.mcchickenstudio.opencreative.coding.exceptions.CollectionWithCollectio
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import org.bukkit.entity.Entity;
 
-import java.util.Collection;
 import java.util.Map;
 
 public final class PutIntoMapAction extends VariableAction {

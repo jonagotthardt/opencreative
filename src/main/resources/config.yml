@@ -74,6 +74,7 @@
 #    /creative recommend [ID] - Adds world to recommended worlds (/worlds).                 (opencreative.world.recommend)
 #    /creative unrecommend [ID] - Removes world from recommended worlds (/worlds).          (opencreative.world.unrecommend)
 #    /creative setowner [ID] [player] - Sets new owner of world.                            (opencreative.world.setowner)
+#    /creative size [ID] [size] - Sets custom size of world. (0 to reset)                   (opencreative.world.setsize)
 #    /creative maintenance - Maintenance mode settings (start, end).                        (opencreative.maintenance)
 #    /creative creative-chat - Creative Chat settings (on, off)
 #    /creative sounds [theme] - Sets current sounds theme.                                  (opencreative.sounds.theme)
@@ -81,6 +82,11 @@
 #    /creative template [folder] - Creates a new world from Minecraft                       (opencreative.template)
 #                                  save in plugins/OpenCreative/templates
 #    /creative update - Check if new version is available                                   (opencreative.updates.check)
+#    /creative experiments list - Shows a list of all experimental not stable features      (opencreative.experiments.list)
+#    /creative experiments enable [id] - Enables an experiment                              (opencreative.experiments.enable)
+#    /creative experiments disable [id] - Disables an experiment                            (opencreative.experiments.disable)
+#    /creative experiments [id] - Use specified experiment command                          (opencreative.experiments.use,
+#                                                                                            opencreative.experiments.[experiment id])
 #
 # Permissions:
 #
@@ -162,6 +168,8 @@ coding:
   platforms-generator: "horizontal" # Default generator for coding platforms, if not exists will use default Horizontal.
     # Available: "horizontal", "vertical", "legacy". Please do not change platforms generator, if there's already existing worlds.
     # To test them, use /world platformer [ID].
+  cancel-chat-on-value-set: false # Cancels sending message to local chat, when player sets new value of text, number, vector,
+                                  # variable, potion, color while holding item in hand.
 
   #
   # You can disable some coding blocks,

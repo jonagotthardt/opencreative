@@ -75,7 +75,7 @@ public final class ChatListener implements Listener {
                 event.setCancelled(true);
                 return;
             }
-            checkDevItems(player,message);
+            checkDevItems(player, message, event);
             checkConfirmation(player,message);
             if (event.isCancelled()) return;
             event.setCancelled(true);
@@ -144,7 +144,7 @@ public final class ChatListener implements Listener {
         }
     }
 
-    private void checkDevItems(Player player, String message) {
+    private void checkDevItems(Player player, String message, AsyncChatEvent event) {
         if (isEntityInDevPlanet(player)) {
             ItemStack itemInHand = player.getInventory().getItemInMainHand();
             if (itemInHand.getType() == Material.BOOK) {
@@ -161,30 +161,35 @@ public final class ChatListener implements Listener {
                         Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
                 player.swingMainHand();
+                if (OpenCreative.getSettings().isCancelChatOnValueSet()) {
+                    event.setCancelled(true);
+                }
             } else if (itemInHand.getType() == Material.SLIME_BALL) {
                 String numberString = ChatColor.stripColor(message);
                 if (numberString.equalsIgnoreCase("p") || numberString.equalsIgnoreCase("pi")) {
                     numberString = "3.1415926";
                 }
-                try {
-                    Integer.parseInt(numberString);
-                    double number = parseTicks(numberString);
-                    ItemMeta meta = itemInHand.getItemMeta();
-                    meta.setDisplayName("§a" + number);
-                    itemInHand.setItemMeta(meta);
-                    setPersistentData(itemInHand,getCodingValueKey(),"NUMBER");
-                    Sounds.DEV_NUMBER_SET.play(player);
-                    player.setItemInHand(itemInHand);
+                Double number = parseTicks(numberString);
+                if (number == null) {
                     player.showTitle(Title.title(
-                            toComponent(getLocaleMessage("world.dev-mode.set-variable")), meta.displayName(),
-                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
+                        Component.empty(), toComponent(getLocaleMessage("world.dev-mode.set-variable-number-error")),
+                        Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                     ));
-                    player.swingMainHand();
-                } catch (NumberFormatException exception) {
-                    player.showTitle(Title.title(
-                            Component.empty(), toComponent(getLocaleMessage("world.dev-mode.set-variable-number-error")),
-                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
-                    ));
+                    return;
+                }
+                ItemMeta meta = itemInHand.getItemMeta();
+                meta.setDisplayName("§a" + number);
+                itemInHand.setItemMeta(meta);
+                setPersistentData(itemInHand,getCodingValueKey(),"NUMBER");
+                Sounds.DEV_NUMBER_SET.play(player);
+                player.setItemInHand(itemInHand);
+                player.showTitle(Title.title(
+                        toComponent(getLocaleMessage("world.dev-mode.set-variable")), meta.displayName(),
+                        Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
+                ));
+                player.swingMainHand();
+                if (OpenCreative.getSettings().isCancelChatOnValueSet()) {
+                    event.setCancelled(true);
                 }
             } else if (itemInHand.getType() == Material.MAGMA_CREAM) {
                 StringBuilder newValue = new StringBuilder(ChatColor.stripColor(message));
@@ -208,6 +213,9 @@ public final class ChatListener implements Listener {
                         Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
                 player.swingMainHand();
+                if (OpenCreative.getSettings().isCancelChatOnValueSet()) {
+                    event.setCancelled(true);
+                }
             } else if (itemInHand.getType() == Material.BLACK_DYE) {
                 int[] rgbColor = parseRGB(message);
                 int red = rgbColor[0];
@@ -226,6 +234,9 @@ public final class ChatListener implements Listener {
                 Sounds.DEV_VALUE_SET.play(player);
                 player.getInventory().setItemInMainHand(itemInHand);
                 player.swingMainHand();
+                if (OpenCreative.getSettings().isCancelChatOnValueSet()) {
+                    event.setCancelled(true);
+                }
             } else if (itemInHand.getType() == Material.POTION || itemInHand.getType() == Material.LINGERING_POTION || itemInHand.getType() == Material.SPLASH_POTION) {
                 if (!(itemInHand.getItemMeta() instanceof PotionMeta oldMeta)) {
                     return;
@@ -255,7 +266,7 @@ public final class ChatListener implements Listener {
                 }
                 if (potionDataList.length >= 1) {
                     try {
-                        duration = ((Double) parseTicks(potionDataList[0])).intValue();
+                        duration = ((Double) parseTicks(potionDataList[0], 0)).intValue();
                     } catch (NumberFormatException ignored) {}
                 }
                 if (potionDataList.length >= 2) {
@@ -281,6 +292,9 @@ public final class ChatListener implements Listener {
                 ));
                 Sounds.DEV_POTION_SET.play(player);
                 itemInHand.setItemMeta(newMeta);
+                if (OpenCreative.getSettings().isCancelChatOnValueSet()) {
+                    event.setCancelled(true);
+                }
             } else if (itemInHand.getType() == Material.PRISMARINE_SHARD) {
                 ItemMeta meta = itemInHand.getItemMeta();
                 if (meta == null) return;
@@ -318,6 +332,9 @@ public final class ChatListener implements Listener {
                 ));
                 Sounds.DEV_VECTOR_SET.play(player);
                 player.swingMainHand();
+                if (OpenCreative.getSettings().isCancelChatOnValueSet()) {
+                    event.setCancelled(true);
+                }
             }
         }
     }

@@ -80,11 +80,18 @@ public final class EntitiesBrowserMenu extends ListBrowserMenu<Entity> implement
         if (material == null && entity.getType().isAlive()) {
             material = Material.getMaterial(entity.getType().name()+"_SPAWN_EGG");
         } else if (entity instanceof Item item) {
-            return item.getItemStack().getType();
+            material = item.getItemStack().getType();
         } else if (entity instanceof ItemDisplay item) {
-            return item.getItemStack().getType();
+            material = item.getItemStack().getType();
+        } else if (entity instanceof TextDisplay) {
+            material = Material.JUNGLE_SIGN;
+        } else if (entity instanceof BlockDisplay) {
+            material = Material.GRASS_BLOCK;
         }
-        return material != null ? material : Material.HEAVY_CORE;
+        if (material != null && material.isItem()) {
+            return material;
+        }
+        return Material.HEAVY_CORE;
     }
 
     @Override

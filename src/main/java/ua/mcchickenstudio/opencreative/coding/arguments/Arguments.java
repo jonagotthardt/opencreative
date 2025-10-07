@@ -213,20 +213,22 @@ public class Arguments {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
-    public final <T> Map<T,T> getMap(String path, Action action) {
-        Map<T,T> map = new HashMap<>();
+    public final @NotNull Map<Object, Object> getMap(String path, Action action) {
+        Map<Object, Object> map = new HashMap<>();
         Argument arg = getArg(path);
-        if (arg != null) {
-            try {
-                if (arg.getType() == ValueType.VARIABLE) {
-                    return (Map<T,T>) arg.getValue(action);
-                }
-            } catch(ClassCastException e) {
-                return map;
-            }
+        if (arg == null) {
+            return new HashMap<>();
         }
-        sendCodingDebugVariable(planet,path,map);
+        try {
+            Object value = arg.getValue(action);
+            if (value instanceof Map<?, ?> rawMap) {
+                map.putAll(rawMap);
+            }
+        } catch(ClassCastException e) {
+            map = new HashMap<>();
+        }
+        sendCodingDebugVariable(planet, path, map);
+        System.out.println("returning " + map);
         return map;
     }
 

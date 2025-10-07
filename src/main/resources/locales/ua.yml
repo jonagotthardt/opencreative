@@ -527,6 +527,10 @@ world:
   already-unrecommended: "%prefix%&cЦей світ %id% і так не перебуває в рекомендаціях.. О_о"
   same-owner: "%prefix%&cУ цьому світі %id% власник той самий, що й вказаний.. О_о"
   set-owner: "%prefix%&fA new owner has been set for world %id%: &6%player%\n&7 %uuid%"
+  set-size: "%prefix%&fВстановлено новий розмір світу %id%: &6%size% на %size% блоків&f!"
+  same-size: "%prefix%&cСвіт уже має такий самий розмір &6%size% на %size% блоків.. О_о"
+  reset-size: "%prefix%&fВи &6скинули&f розмір світу %id%. Тепер його розмір відповідатиме розміру світу з групи власника."
+  bad-size: "%prefix%&cРозмір світу має бути більшим за 0.. О_о"
   platformer:
     set: "%prefix%&fУспішно &6замінено&f генератор платформ кодингу на: &6%id%&f."
     reset: "%prefix%&fУспішно &6замінено&f генератор платформ кодингу на серверний, за замовчуванням."

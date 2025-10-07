@@ -46,7 +46,8 @@ public final class Experiments {
         if (instance == null) {
             instance = new Experiments();
             instance.registerExperiments(new CodeDownloaderExperiment(),
-                    new WorldDownloaderExperiment(), new WandersExperiment());
+                    new WorldDownloaderExperiment(), new WandersExperiment(),
+                    new NewWorldScreenExperiment());
         }
         return instance;
     }
