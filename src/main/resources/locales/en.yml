@@ -441,6 +441,7 @@ world:
     message:
       players: "%prefix%The world is now running in &6play mode&f."
       owner: "%prefix%The world is now running in &6play mode&f, the developer's world code will be active."
+    cant-damage-near-spawn: "&cYou can't harm players near the spawn point."
   build-mode:
     name: "&6Build"
     message:

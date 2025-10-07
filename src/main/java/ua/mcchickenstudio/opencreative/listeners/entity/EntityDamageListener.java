@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.listeners.entity;
 import org.bukkit.World;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.*;
@@ -33,7 +34,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getPlayerLocaleComponent;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isLobbyWorld;
@@ -65,7 +65,9 @@ public final class EntityDamageListener implements Listener {
                     event.setCancelled(true);
                 }
 
-                if (victim.getLocation().distance(victim.getWorld().getSpawnLocation()) < 5) event.setCancelled(true);
+                if (isNearSpawn(victim)) {
+                    event.setCancelled(true);
+                }
 
                 byte playerDamageFlag = planet.getFlagValue(PlanetFlags.PlanetFlag.PLAYER_DAMAGE);
                 if (playerDamageFlag == 2) event.setCancelled(true);
@@ -102,6 +104,9 @@ public final class EntityDamageListener implements Listener {
                 if (planet != null) {
                     if (planet.getMode() == Planet.Mode.BUILD) {
                         damager.sendActionBar(getPlayerLocaleComponent("world.build-mode.cant-damage", damager));
+                    } else if (isNearSpawn(victim)) {
+                        damager.sendActionBar(getPlayerLocaleComponent("world.play-mode.cant-damage-near-spawn", damager));
+                        new PlayerDamagesPlayerEvent(damager,victim,event).callEvent();
                     } else {
                         new PlayerDamagesPlayerEvent(damager,victim,event).callEvent();
                     }
@@ -123,7 +128,7 @@ public final class EntityDamageListener implements Listener {
                     if (isEntityInLobby(damager) && OpenCreative.getSettings().isLobbyDisallowDamagingMobs()
                             && !damager.hasPermission("opencreative.lobby.damaging-mobs.bypass")) {
                         event.setCancelled(true);
-                        damager.sendActionBar(getLocaleMessage("not-for-lobby"));
+                        damager.sendActionBar(getPlayerLocaleComponent("not-for-lobby", damager));
                     }
                 }
             }
@@ -164,5 +169,9 @@ public final class EntityDamageListener implements Listener {
                 new HungerChangeEvent((Player) event.getEntity(),event).callEvent();
             }
         }
+    }
+
+    public boolean isNearSpawn(@NotNull Player player) {
+        return player.getLocation().distance(player.getWorld().getSpawnLocation()) < 5;
     }
 }
