@@ -940,7 +940,8 @@ public enum ActionType {
             // If player          Repeat
             // Is sitting         For numbers
             // Target
-            if (getSignLine(signBlock.getLocation(), (byte) 1) != null) {
+            String text = getSignLine(signBlock.getLocation(), (byte) 1);
+            if (text != null && !text.isEmpty()) {
                 signLine = getSignLine(signBlock.getLocation(), (byte) 1);
             }
         }

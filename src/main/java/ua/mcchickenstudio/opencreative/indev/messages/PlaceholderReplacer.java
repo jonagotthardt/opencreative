@@ -93,7 +93,6 @@ public class PlaceholderReplacer {
         text = text.replace(LegacyComponentSerializer.SECTION_CHAR,
                 LegacyComponentSerializer.AMPERSAND_CHAR);
         text = fromLegacyToMiniMessage(text).replace("\\","");
-        System.out.println(text);
 
         return MiniMessage.miniMessage().deserialize(text);
     }

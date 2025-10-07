@@ -26,7 +26,6 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.player.CreativeChatEvent;
@@ -40,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
@@ -137,6 +136,7 @@ public class ChatCommand extends CommandHandler {
     }
 
     private static @NotNull Component parseAdvertisementCommand(@NotNull Component component, @NotNull String commandLabel) {
+        AtomicBoolean alreadyReplaced = new AtomicBoolean(false);
         return component.replaceText(TextReplacementConfig.builder()
                 .match("(/" + commandLabel + ")\\s+(\\S+)")
                 .once()
@@ -146,6 +146,8 @@ public class ChatCommand extends CommandHandler {
                     if (planet == null) {
                         return PatternReplacementResult.CONTINUE;
                     }
+                    if (alreadyReplaced.get()) return PatternReplacementResult.STOP;
+                    alreadyReplaced.set(true);
                     return PatternReplacementResult.REPLACE;
                 })
                 .replacement((match, builder) -> {
