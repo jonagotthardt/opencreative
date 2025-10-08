@@ -28,6 +28,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import java.util.ArrayList;
@@ -207,9 +208,17 @@ public class PlanetInfo {
      * join world with short /join command.
      * @param customID new custom ID.
      */
-    public void setCustomID(String customID) {
+    public void setCustomID(@NotNull String customID) {
         this.customID = customID;
         setPlanetConfigParameter(planet,"customID",customID);
+    }
+
+    /**
+     * Removes custom ID from world.
+     */
+    public void resetCustomID() {
+        this.customID = String.valueOf(planet.getId());
+        removePlanetConfigParameter(planet,"customID");
     }
 
     /**

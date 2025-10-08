@@ -41,6 +41,7 @@ public final class WorldModerationMenu extends AbstractMenu implements WorldMenu
     private final ItemStack CLEAR_NAME = createItem(Material.NAME_TAG,1,"menus.world-moderation.items.clear-name","clear-name");
     private final ItemStack CLEAR_DESCRIPTION = createItem(Material.BOOK,1,"menus.world-moderation.items.clear-description","clear-description");
     private final ItemStack CLEAR_ICON = createItem(Material.DIAMOND,1,"menus.world-moderation.items.clear-icon","clear-icon");
+    private final ItemStack CLEAR_ID = createItem(Material.LEAD,1,"menus.world-moderation.items.clear-id","clear-id");
 
     private final ItemStack CONNECT_SILENT = createItem(Material.ENDER_EYE,1,"menus.world-moderation.items.connect-silent","connect-silent");
     private final ItemStack CONNECT_DEV_SILENT = createItem(Material.ENDER_PEARL,1,"menus.world-moderation.items.connect-dev-silent","connect-dev-silent");
@@ -62,6 +63,7 @@ public final class WorldModerationMenu extends AbstractMenu implements WorldMenu
         setItem(10,player.hasPermission("opencreative.moderation.clear-name") ? CLEAR_NAME : NO_PERMS_ITEM);
         setItem(11,player.hasPermission("opencreative.moderation.clear-description") ? CLEAR_DESCRIPTION : NO_PERMS_ITEM);
         setItem(12,player.hasPermission("opencreative.moderation.clear-icon") ? CLEAR_ICON : NO_PERMS_ITEM);
+        setItem(13,player.hasPermission("opencreative.moderation.clear-id") ? CLEAR_ID : NO_PERMS_ITEM);
         setItem(15,player.hasPermission("opencreative.moderation.connect-silent") ? (planet.isLoaded() ? CONNECT_SILENT : DECORATION_ITEM) : NO_PERMS_ITEM);
         setItem(16,player.hasPermission("opencreative.moderation.connect-dev-silent") ? (planet.isLoaded() ? CONNECT_DEV_SILENT : DECORATION_ITEM) : NO_PERMS_ITEM);
         setItem(27,planet.isLoaded() ? (player.hasPermission("opencreative.world.unload") ? UNLOAD : NO_PERMS_ITEM) : (player.hasPermission("opencreative.world.load") ? LOAD : NO_PERMS_ITEM));
@@ -127,6 +129,17 @@ public final class WorldModerationMenu extends AbstractMenu implements WorldMenu
                 }
                 player.setCooldown(item.getType(),20);
                 planet.getInformation().setIcon(new ItemStack(Material.DIAMOND));
+                Sounds.MENU_CLEAR_DATA.play(player);
+                planet.getInformation().updateIcon();
+                fillItems(player);
+            }
+            case "clear-id" -> {
+                if (player.hasCooldown(item.getType())) {
+                    Sounds.PLAYER_FAIL.play(player);
+                    return;
+                }
+                player.setCooldown(item.getType(),20);
+                planet.getInformation().resetCustomID();
                 Sounds.MENU_CLEAR_DATA.play(player);
                 planet.getInformation().updateIcon();
                 fillItems(player);

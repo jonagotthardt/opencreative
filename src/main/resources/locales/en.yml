@@ -12624,6 +12624,17 @@ menus:
           - ""
           - "&e Click to reset."
           - ""
+      clear-id:
+        name: " "
+        lore:
+          - "&6 🎣 Remove letter ID"
+          - "&7 Will replace the ID with the default numeric one"
+          - ""
+          - "&7  This will change the current letter"
+          - "&7  ID back to the original numeric one."
+          - ""
+          - "&e Click to reset."
+          - ""
       close-world:
         name: " "
         lore:
