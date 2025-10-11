@@ -363,7 +363,7 @@ public final class WorldVariables {
                 }
                 return newList;
             } else if (type == ValueType.MAP) {
-                Map<Object,Object> newMap = new HashMap<>();
+                Map<Object,Object> newMap = new LinkedHashMap<>();
                 Map<?,?> oldMap = (Map<?,?>) value;
                 for (Object key : oldMap.keySet()) {
                     Object newKey = key;

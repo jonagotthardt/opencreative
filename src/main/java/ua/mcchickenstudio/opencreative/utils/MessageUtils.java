@@ -820,6 +820,17 @@ public final class MessageUtils {
                     continue;
                 }
             }
+            if (current == '\\' && charIndex + 1 < input.length() && input.charAt(charIndex + 1) == 'n') {
+                if (hadStyle) {
+                    // If it's new line, then reset decorations,
+                    // like legacy behaviour
+                    result.append("<reset>");
+                    hadStyle = false;
+                }
+                result.append('\n');
+                charIndex++;
+                continue;
+            }
             result.append(current);
         }
         return result.toString();
