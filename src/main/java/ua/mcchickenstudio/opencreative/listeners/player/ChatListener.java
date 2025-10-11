@@ -70,7 +70,12 @@ public final class ChatListener implements Listener {
             Player player = event.getPlayer();
             if (message.startsWith("!")) {
                 if (event.isCancelled()) return;
-                String creativeChatCommand = "cc " + message.replaceFirst("!","");
+                String creativeChatCommand;
+                if (message.equals("!")) {
+                    creativeChatCommand = "cc";
+                } else {
+                    creativeChatCommand = "cc " + message.replaceFirst("!", "");
+                }
                 Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () -> player.performCommand(creativeChatCommand));
                 event.setCancelled(true);
                 return;

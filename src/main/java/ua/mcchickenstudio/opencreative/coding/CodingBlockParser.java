@@ -105,9 +105,10 @@ public class CodingBlockParser {
         for (DevPlatform platform : platforms) {
             // For coding executors
             Location begin = devPlanet.getDevPlatformer().getPlatformBeginLocation(platform);
+            Location end = devPlanet.getDevPlatformer().getPlatformEndLocation(platform);
             int y = begin.getBlockY() + 1;
             int x = begin.getBlockX() + 4;
-            for (int z = begin.getBlockZ() + 4; z <= platform.getEndCoordinate() - 4; z = z + 4) {
+            for (int z = begin.getBlockZ() + 4; z <= end.getBlockZ() - 4; z = z + 4) {
                 Block executorBlock = devPlanet.getWorld().getBlockAt(x, y, z);
                 locations.add(executorBlock.getLocation());
             }

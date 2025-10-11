@@ -805,7 +805,7 @@ public final class MessageUtils {
                 // for classic legacy colors and styles
                 char code = Character.toLowerCase(input.charAt(charIndex + 1));
                 String replacement = LEGACY_TO_MINI.get(code);
-                boolean isDecoration = code == 'k' || code == 'n' || code == 'm';
+                boolean isDecoration = code == 'k' || code == 'n' || code == 'm' || code == 'l' || code == 'o';
                 if (replacement != null) {
                     result.append(replacement);
                     if (hadStyle && !isDecoration) {
@@ -820,16 +820,13 @@ public final class MessageUtils {
                     continue;
                 }
             }
-            if (current == '\\' && charIndex + 1 < input.length() && input.charAt(charIndex + 1) == 'n') {
+            if (current == '\n') {
                 if (hadStyle) {
                     // If it's new line, then reset decorations,
                     // like legacy behaviour
                     result.append("<reset>");
                     hadStyle = false;
                 }
-                result.append('\n');
-                charIndex++;
-                continue;
             }
             result.append(current);
         }
