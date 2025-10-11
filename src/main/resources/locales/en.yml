@@ -9336,6 +9336,19 @@ items:
           - "&a Number &7- New amount"
           - " "
           - "&eClick to set action."
+      var-remove-item-lore-line:
+        name: "&cRemove Lore Line"
+        lore:
+          - "&7This will remove a lore line"
+          - "&7by the specified number. Numbering"
+          - "&7starts from 1."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- For saving"
+          - "&c Item &7- Item"
+          - "&a Number &7- Line number"
+          - " "
+          - "&eClick to set an action."
       var-set-item-lore:
         name: "&6Set item description"
         lore:
@@ -10265,6 +10278,25 @@ items:
         placeholders:
           list:
             name: "&eList of elements"
+      repeat-for-entry:
+        name: "&6Iterate Through Dictionary"
+        lore:
+          - "&7Executes an action and iterates"
+          - "&7through each key of the dictionary."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- For key"
+          - "&e Variable &7- For value"
+          - "&e Variable &7- Dictionary"
+          - " "
+          - "&eClick to set an action."
+        placeholders:
+          key:
+            name: "&eKey from dictionary"
+          value:
+            name: "&eValue from dictionary"
+          map:
+            name: "&eDictionary"
     conditions:
       if-world-is-in-debug-mode:
         name: "&eDebug Mode Enabled"
@@ -12621,6 +12653,17 @@ menus:
           - "&7  Current icon may be indecent"
           - "&7  because of head, banner or"
           - "&7  shield with banner."
+          - ""
+          - "&e Click to reset."
+          - ""
+      clear-id:
+        name: " "
+        lore:
+          - "&6 🎣 Remove letter ID"
+          - "&7 Will replace the ID with the default numeric one"
+          - ""
+          - "&7  This will change the current letter"
+          - "&7  ID back to the original numeric one."
           - ""
           - "&e Click to reset."
           - ""
@@ -16608,6 +16651,7 @@ blocks:
   repeat_for_blocks: "&eFor blocks"
   repeat_for_list: "&fFor list"
   repeat_always: "Always"
+  repeat_for_entry: "&6For dictionary"
   # Events
   player_join: "Joined world"
   player_quit: "Left world"
@@ -16972,6 +17016,7 @@ blocks:
   var_clone_list: "Clone List"
   var_merge_lists: "Merge Lists"
   var_set_item_skull_textures: "Set Texture"
+  var_remove_item_lore_line: "&cRemove line"
 
   controller_catch_error: "Catch error"
   controller_measure_time: "Measure time"

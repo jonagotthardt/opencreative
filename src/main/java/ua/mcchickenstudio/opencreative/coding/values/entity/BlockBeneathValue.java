@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.values.entity;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
@@ -38,7 +39,12 @@ public final class BlockBeneathValue extends LocationEventValue {
 
     @Override
     public @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
-        return entity != null ? entity.getLocation().getBlock().getRelative(BlockFace.DOWN).getLocation() : null;
+        if (entity == null) return null;
+        Block block = entity.getLocation().getBlock();
+        if (block.getType().isAir()) {
+            block = block.getRelative(BlockFace.DOWN);
+        }
+        return block.getLocation();
     }
 
     @Override

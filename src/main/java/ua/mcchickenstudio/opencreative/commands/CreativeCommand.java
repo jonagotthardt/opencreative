@@ -227,6 +227,7 @@ public class CreativeCommand extends CommandHandler {
                     }
                     planet.loadInfo();
                     planet.getInformation().loadInformation();
+                    planet.getInformation().updateIconAsync();
                     sender.sendMessage(getLocaleMessage("world.updated-info").replace("%id%",args[1]));
                 }
                 case "setowner" -> {

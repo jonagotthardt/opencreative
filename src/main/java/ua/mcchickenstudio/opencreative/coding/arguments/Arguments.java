@@ -42,10 +42,7 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
@@ -214,10 +211,10 @@ public class Arguments {
     }
 
     public final @NotNull Map<Object, Object> getMap(String path, Action action) {
-        Map<Object, Object> map = new HashMap<>();
+        Map<Object, Object> map = new LinkedHashMap<>();
         Argument arg = getArg(path);
         if (arg == null) {
-            return new HashMap<>();
+            return new LinkedHashMap<>();
         }
         try {
             Object value = arg.getValue(action);
@@ -225,10 +222,9 @@ public class Arguments {
                 map.putAll(rawMap);
             }
         } catch(ClassCastException e) {
-            map = new HashMap<>();
+            map = new LinkedHashMap<>();
         }
         sendCodingDebugVariable(planet, path, map);
-        System.out.println("returning " + map);
         return map;
     }
 

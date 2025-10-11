@@ -16,44 +16,51 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.map;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.item;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public final class CreateMapAction extends VariableAction {
-
-    public CreateMapAction(Executor executor, Target target, int x, Arguments args) {
+public final class RemoveItemLoreLineAction extends VariableAction {
+    public RemoveItemLoreLineAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     protected void execute(Entity entity) {
-        VariableLink variable = getArguments().getVariableLink("variable",this);
-        List<Object> keys = getArguments().getList("keys",this);
-        List<Object> values = getArguments().getList("values",this);
-        Map<Object,Object> map = new LinkedHashMap<>();
-        if (!keys.isEmpty() && !values.isEmpty()) {
-            for (int i = 0; i < keys.size(); i++) {
-                if (i != values.size()) {
-                    map.put(keys.get(i),values.get(i));
-                }
-            }
+        VariableLink link = getArguments().getVariableLink("variable",this);
+        ItemStack item = getArguments().getValue("item",getArguments().getValue("variable",new ItemStack(Material.APPLE),this),this);
+        int index = getArguments().getValue("index",1,this);
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) {
+            return;
         }
-        setVarValue(variable, map);
+        List<Component> newLore = meta.lore();
+        if (newLore == null) {
+            newLore = new ArrayList<>();
+        }
+        newLore.remove(index-1);
+        meta.lore(newLore);
+        item.setItemMeta(meta);
+        if (link == null) return;
+        setVarValue(link,item);
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.VAR_CREATE_MAP;
+        return ActionType.VAR_REMOVE_ITEM_LORE_LINE;
     }
 }
