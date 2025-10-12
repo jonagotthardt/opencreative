@@ -104,6 +104,9 @@ commands:
   module:
     description: 'Opens module`s browser menu.'
     aliases: [modules, ьщвгдуы, ьщвгдуі, ьщвгду]
+  jointo:
+    description: 'Connects player to specified one'
+    aliases: [ощштещ]
 #  favorite:
 #    description: 'Adds world to favorites list'
 #    aliases: [fav, афм, афмщкшеу, favourite]

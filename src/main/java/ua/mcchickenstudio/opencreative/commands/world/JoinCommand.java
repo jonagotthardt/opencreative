@@ -87,7 +87,7 @@ public class JoinCommand extends CommandHandler {
         }
     }
 
-    public static boolean handlePlayerConnection(Player player, String planetId) {
+    public static boolean handlePlayerConnection(@NotNull Player player, @NotNull String planetId) {
         Planet foundPlanet = findPlanet(planetId);
 
         if (foundPlanet == null) {
@@ -97,12 +97,16 @@ public class JoinCommand extends CommandHandler {
             return false;
         }
 
-        if (foundPlanet.equals(OpenCreative.getPlanetsManager().getPlanetByPlayer(player))) {
+        return handlePlayerConnection(player, foundPlanet);
+    }
+
+    public static boolean handlePlayerConnection(@NotNull Player player, @NotNull Planet planet) {
+        if (planet.equals(OpenCreative.getPlanetsManager().getPlanetByPlayer(player))) {
             player.sendMessage(MessageUtils.getPlayerLocaleMessage("same-world", player));
             return false;
         }
 
-        foundPlanet.connectPlayer(player);
+        planet.connectPlayer(player);
         return true;
     }
 

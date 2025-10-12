@@ -40,6 +40,8 @@ commands:
     help: "%prefix%&fTo connect to the world with ID, use: &6/join ID"
     connecting: "%prefix%Connecting &6%player%&f to world %id%..."
     failed: "%prefix%&cFailed to connect to this world O_o"
+  join-to:
+    help: "%prefix%&fTo connect to the world, where player is currently in, use: &6/jointo Username"
   give:
     help: "%prefix%To give an item to yourself or a player in your world, use:\n &6/give ID &7- Give an item to yourself\n &6/give Username ID &7- Give an item to a player\n &6/give Username ID Amount &7- Give an item with a specific amount to a player"
     wrong: "%prefix%&cThis item does not exist O_o"
