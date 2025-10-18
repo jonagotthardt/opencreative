@@ -103,8 +103,11 @@
 #  opencreative.lobby.spawning-mobs - Ability to spawn mobs in lobby.
 #  opencreative.lobby.damaging-mobs - Ability to damage mobs in lobby.
 #  opencreative.creative-chat.bypass - Allows player to use creative chat, even if it's disabled.
+#  opencreative.join.others - Ability to move specified player to specified world (/join [ID] [Player]).
+#  opencreative.join-to.others - Ability to move first specified player to second (/jointo [First Player] [Second Player]).
 #  opencreative.moderation.clear-name - Ability to clear world's display name in moderation menu.
 #  opencreative.moderation.clear-description - Ability to clear world's description in moderation menu.
+#  opencreative.moderation.clear-id - Ability to reset world's custom ID in moderation menu.
 #  opencreative.moderation.clear-icon - Ability to reset world's icon in moderation menu.
 #  opencreative.moderation.connect-silent - Ability to connect the world without join message.
 #  opencreative.moderation.connect-dev-silent - Ability to connect the developers world without join message.

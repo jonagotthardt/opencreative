@@ -141,7 +141,7 @@ public final class PlayerUtils {
     }
 
     /**
-     * Clears and removes displayed bossbars for player.
+     * Clears and removes displayed boss bars for player.
      * @param player player to clear boss bars.
      */
     public static void clearBossBars(Player player) {

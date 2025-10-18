@@ -14068,13 +14068,25 @@ menus:
             - ""
             - "&eClick to set."
         block-beneath:
-          name: "&dBlock Beneath"
+          name: "&5Block Beneath"
           lore:
             - "&7Type: &fLocation"
             - ""
             - "&7 Gets the location of the block"
             - "&7 that is beneath the entity's"
-            - "&7 feet."
+            - "&7 feet. Can be carpet, trapdoor,"
+            - "&7 plate or just floor block."
+            - ""
+            - "&eClick to set."
+        block-above:
+          name: "&dBlock Above"
+          lore:
+            - "&7Type: &fLocation"
+            - ""
+            - "&7 Gets the location of the block"
+            - "&7 that is above the entity's"
+            - "&7 head. Can be trapdoor, plate"
+            - "&7 or just ceiling block."
             - ""
             - "&eClick to set."
         projectile-owner:
