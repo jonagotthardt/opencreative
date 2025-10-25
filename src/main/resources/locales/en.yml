@@ -8781,6 +8781,87 @@ items:
           - " &a5.0 &7^ &a4.0 &7= &a625.0"
           - " "
           - "&eClick to set the action."
+      var-parse-json:
+        name: "&aParse JSON"
+        lore:
+          - "&7The variable will be set to a list"
+          - "&7or a map depending on the"
+          - "&7JSON text."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- For list"
+          - "&6 Text &7- JSON"
+          - ""
+          - "&fExamples:"
+          - " &6[\"Pear\", 1.0] &7-> &e[&6Pear&e, &a1.0&e]"
+          - " &6{\"Name\": \"Talker\"} &7-> &e{&6Name&e=&6Talker&e}"
+          - " "
+          - "&eClick to set the action."
+      var-convert-to-json:
+        name: "&6Convert to JSON"
+        lore:
+          - "&7The variable will be set to the text"
+          - "&7of JSON that stores the value."
+          - "&7JSON text."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- For list"
+          - "&6 Text &7- JSON"
+          - "&3 Parameter &7- Pretty print"
+          - "&7 output or not"
+          - ""
+          - "&fExamples:"
+          - " &ePlain text&7 -> &6\"Plain text\""
+          - " &e[&6Apple&e, &a5.8&e]&7 -> &6[\"Apple\", 5.8]"
+          - " &e{&6Century&e=&a21.0&e}&7 -> &6{\"Century\": 21.0}"
+          - " "
+          - "&eClick to set the action."
+        arguments:
+          pretty:
+            name: "&fPretty print or not"
+            lore:
+              - "&7If set to yes, the JSON will be"
+              - "&7more readable when shown"
+              - "&7in chat, but for saving"
+              - "&7it's better to use the"
+              - "&7compact version."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              true: "Yes, make it pretty"
+              false: "No, keep it compact"
+      var-format-unix-time:
+        name: "&eFormat UNIX time"
+        lore:
+          - "&7The variable will be set to a text"
+          - "&7with the UNIX time converted to"
+          - "&7a readable format."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- For saving"
+          - "&a Number &7- UNIX time"
+          - "&6 Text &7- Format"
+          - ""
+          - "&fExamples:"
+          - " &a0&7, &6dd/MM/yyyy &7-> &601/01/1970"
+          - " &a0&7, &6HH:mm:ss &7-> &600:00:00"
+          - " &a0&7, &6EEEE MMMM &7-> &6Thursday January"
+          - " "
+          - "&eClick to set the action."
+        placeholders:
+          time:
+            name: "&aUNIX time in milliseconds"
+          format:
+            name: "&6Time format"
+            lore:
+              - "&7Place a book item here"
+              - "&7with the text to set the format."
+              - ""
+              - "&7Default: &6dd/MM/yyyy HH:mm:ss"
       var-to-radians:
         name: "&dConvert Angle to Radians"
         lore:
@@ -17031,6 +17112,9 @@ blocks:
   var_merge_lists: "Merge Lists"
   var_set_item_skull_textures: "Set Texture"
   var_remove_item_lore_line: "&cRemove line"
+  var_convert_to_json: "Save as JSON"
+  var_parse_json: "Parse JSON"
+  var_format_unix_time: "Format time"
 
   controller_catch_error: "Catch error"
   controller_measure_time: "Measure time"
