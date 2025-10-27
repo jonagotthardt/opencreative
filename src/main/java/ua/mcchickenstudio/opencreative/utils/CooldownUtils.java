@@ -23,6 +23,7 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.settings.groups.Group;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
@@ -32,12 +33,12 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  */
 public final class CooldownUtils {
 
-    private static final HashMap<Player, Long> genericCommandCooldown = new HashMap<>();
-    private static final HashMap<Player, Long> advertisementCommandCooldown = new HashMap<>();
-    private static final HashMap<Player, Long> creativeChatCooldown = new HashMap<>();
-    private static final HashMap<Player, Long> worldChatCooldown = new HashMap<>();
-    private static final HashMap<Player, Long> modulesManipulationsCooldown = new HashMap<>();
-    private static final HashMap<Player, Long> blocksDuplicationCooldown = new HashMap<>();
+    private static final HashMap<UUID, Long> genericCommandCooldown = new HashMap<>();
+    private static final HashMap<UUID, Long> advertisementCommandCooldown = new HashMap<>();
+    private static final HashMap<UUID, Long> creativeChatCooldown = new HashMap<>();
+    private static final HashMap<UUID, Long> worldChatCooldown = new HashMap<>();
+    private static final HashMap<UUID, Long> modulesManipulationsCooldown = new HashMap<>();
+    private static final HashMap<UUID, Long> blocksDuplicationCooldown = new HashMap<>();
 
     /**
      * Represents type of cooldown.
@@ -71,10 +72,10 @@ public final class CooldownUtils {
 
     public static long getCooldownFromMap(Player player, CooldownType type) {
 
-        HashMap<Player, Long> cooldownMap = getCooldownMap(type);
+        HashMap<UUID, Long> cooldownMap = getCooldownMap(type);
 
-        if (!(cooldownMap.containsKey(player))) return 0L;
-        return cooldownMap.get(player);
+        if (!(cooldownMap.containsKey(player.getUniqueId()))) return 0L;
+        return cooldownMap.get(player.getUniqueId());
     }
 
     /**
@@ -89,8 +90,8 @@ public final class CooldownUtils {
         long currentTime = System.currentTimeMillis();
         long cooldownEndTime = currentTime + cooldownInMillis;
 
-        HashMap<Player, Long> cooldownMap = getCooldownMap(type);
-        cooldownMap.put(player, cooldownEndTime);
+        HashMap<UUID, Long> cooldownMap = getCooldownMap(type);
+        cooldownMap.put(player.getUniqueId(), cooldownEndTime);
 
     }
 
@@ -147,15 +148,15 @@ public final class CooldownUtils {
     }
 
     public static void clearPlayerCooldowns(Player player) {
-        genericCommandCooldown.remove(player);
-        advertisementCommandCooldown.remove(player);
-        creativeChatCooldown.remove(player);
-        worldChatCooldown.remove(player);
-        modulesManipulationsCooldown.remove(player);
-        blocksDuplicationCooldown.remove(player);
+        genericCommandCooldown.remove(player.getUniqueId());
+        advertisementCommandCooldown.remove(player.getUniqueId());
+        creativeChatCooldown.remove(player.getUniqueId());
+        worldChatCooldown.remove(player.getUniqueId());
+        modulesManipulationsCooldown.remove(player.getUniqueId());
+        blocksDuplicationCooldown.remove(player.getUniqueId());
     }
 
-    private static HashMap<Player, Long> getCooldownMap(CooldownType type) {
+    private static HashMap<UUID, Long> getCooldownMap(CooldownType type) {
         return switch (type) {
             case GENERIC_COMMAND -> genericCommandCooldown;
             case ADVERTISEMENT_COMMAND -> advertisementCommandCooldown;

@@ -152,7 +152,6 @@ recommended-worlds: # List of featured worlds in /games, type world's numeric ID
   - 5
 
 messages:
-
   # Supported: en, ru, ua
   #
   #   For english language - en
@@ -180,6 +179,7 @@ allowed-links:
   resource-pack:
     - "dropbox.com"
     - "drive.google.com"
+    - "cdn.modrinth.com"
 
 coding:
   enabled: true # Set false to disable entire coding: play mode, dev mode.

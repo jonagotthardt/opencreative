@@ -1153,17 +1153,18 @@ public class CreativeCommand extends CommandHandler {
             } else if (List.of("load","unload","moderate","moderation",
                     "updateworld","unregister","delete","setowner","setsize")
                     .contains(args[0].toLowerCase())) {
-                tabCompleter.addAll(OpenCreative.getPlanetsManager().getPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());
+                tabCompleter.addAll(OpenCreative.getPlanetsManager().getPlanets()
+                        .stream().map(planet -> String.valueOf(planet.getId()))
+                        .limit(10).toList());
             } else if ("recommend".equalsIgnoreCase(args[0])) {
                 tabCompleter.addAll(OpenCreative.getPlanetsManager().getPlanets().stream()
-                        .filter(planet -> !OpenCreative.getPlanetsManager().getRecommendedPlanets().contains(planet.getId()))
+                        .filter(planet -> !OpenCreative.getPlanetsManager().getRecommendedPlanets().contains(planet))
                         .map(planet -> String.valueOf(planet.getId()))
+                        .limit(10)
                         .toList());
             } else if ("unrecommend".equalsIgnoreCase(args[0])) {
-                tabCompleter.addAll(OpenCreative.getPlanetsManager().getPlanets().stream()
-                        .filter(planet -> OpenCreative.getPlanetsManager().getRecommendedPlanets().contains(planet.getId()))
-                        .map(planet -> String.valueOf(planet.getId()))
-                        .toList());
+                tabCompleter.addAll(OpenCreative.getPlanetsManager().getRecommendedPlanets()
+                        .stream().map(planet -> String.valueOf(planet.getId())).toList());
             } else if ("corrupted".equalsIgnoreCase(args[0])) {
                 tabCompleter.addAll(OpenCreative.getPlanetsManager().getCorruptedPlanets().stream().map(planet -> String.valueOf(planet.getId())).toList());
             } else if ("locale".equalsIgnoreCase(args[0])) {
