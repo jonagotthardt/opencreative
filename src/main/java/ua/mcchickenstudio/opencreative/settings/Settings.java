@@ -85,6 +85,8 @@ public final class Settings {
     private boolean itemsRemoveClickableBooks = true;
     private boolean itemsClearCommandBlocksData = true;
 
+    private boolean notifyNoPlayersAround = true;
+
     private boolean lobbyClearInventory = true;
     private boolean lobbyDisallowPlacingBlocks = true;
     private boolean lobbyDisallowDestroyingBlocks = true;
@@ -170,6 +172,7 @@ public final class Settings {
         legacySelectionMenu = config.getBoolean("coding.old-selection-menu",false);
         cancelChatOnValueSet = config.getBoolean("coding.cancel-chat-on-value-set", false);
         enabledCoding = config.getBoolean("coding.enabled",true);
+        notifyNoPlayersAround = config.getBoolean("messages.notify-no-players-around", true);
 
         worldCreationMinSeconds = config.getInt("requirements.world-creation.played-seconds",30);
         worldReputationMinSeconds = config.getInt("requirements.world-reputation.creation-seconds",300);
@@ -779,4 +782,9 @@ public final class Settings {
     public int getPrompterTimeout() {
         return prompterTimeout;
     }
+
+    public boolean isNotifyNoPlayersAround() {
+        return notifyNoPlayersAround;
+    }
+
 }

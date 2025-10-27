@@ -123,7 +123,7 @@ public final class ChatListener implements Listener {
                             event.setCancelled(true);
                             return;
                         }
-                        if (planet.getPlayers().size() == 1 && !chatEvent.isHandledByCode()) {
+                        if (planet.getPlayers().size() == 1 && !chatEvent.isHandledByCode() && OpenCreative.getSettings().isNotifyNoPlayersAround()) {
                             player.sendMessage(getPlayerLocaleComponent("chat-no-near-players", player)
                                     .clickEvent(ClickEvent.suggestCommand("!" + message)));
                         }
@@ -133,7 +133,7 @@ public final class ChatListener implements Listener {
                         OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + planet.getId() + "] " + player.getName() + ": " + message);
                     }
                 } else {
-                    if (player.getWorld().getPlayers().size() == 1) {
+                    if (player.getWorld().getPlayers().size() == 1 && OpenCreative.getSettings().isNotifyNoPlayersAround()) {
                         player.sendMessage(getPlayerLocaleComponent("chat-no-near-players", player)
                                 .clickEvent(ClickEvent.suggestCommand("!" + message)));
                     }
