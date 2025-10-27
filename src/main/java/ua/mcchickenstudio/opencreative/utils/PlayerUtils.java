@@ -18,11 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
+import net.kyori.adventure.resource.ResourcePackInfo;
+import net.kyori.adventure.resource.ResourcePackRequest;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.sign.Side;
 import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.packs.ResourcePack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -44,6 +47,7 @@ import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.net.URI;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -83,6 +87,7 @@ public final class PlayerUtils {
         resetAttributes(player);
         player.resetPlayerTime();
         player.resetPlayerWeather();
+        resetResourcePack(player);
         player.removeResourcePacks();
         player.releaseLeftShoulderEntity();
         player.releaseRightShoulderEntity();
@@ -152,6 +157,28 @@ public final class PlayerUtils {
             }
             player.activeBossBars().forEach(player::hideBossBar);
         } catch (Exception ignored) {}
+    }
+
+    /**
+     * Removes other resource packs and replaces with
+     * server's resource pack, or vanilla.
+     * @param player player to reset resource pack.
+     */
+    public static void resetResourcePack(Player player) {
+        ResourcePack serverPack = Bukkit.getServerResourcePack();
+        if (serverPack == null) {
+            player.removeResourcePacks();
+            return;
+        }
+        ResourcePackInfo serverPackInfo = ResourcePackInfo.resourcePackInfo()
+                .uri(URI.create(serverPack.getUrl()))
+                .hash(serverPack.getHash() == null ? "" : serverPack.getHash())
+                .build();
+        ResourcePackRequest request = ResourcePackRequest.resourcePackRequest()
+                .packs(serverPackInfo)
+                .required(Bukkit.isResourcePackRequired())
+                .build();
+        player.sendResourcePacks(request);
     }
 
     /**

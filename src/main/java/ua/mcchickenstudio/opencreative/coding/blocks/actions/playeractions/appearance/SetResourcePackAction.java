@@ -18,6 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.appearance;
 
+import net.kyori.adventure.resource.ResourcePackInfo;
+import net.kyori.adventure.resource.ResourcePackRequest;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.Bukkit;
+import org.bukkit.packs.ResourcePack;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -25,10 +31,16 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.coding.exceptions.TooLongTextException;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 public final class SetResourcePackAction extends PlayerAction {
+
     public SetResourcePackAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
@@ -36,7 +48,49 @@ public final class SetResourcePackAction extends PlayerAction {
     @Override
     public void executePlayer(Player player) {
         String url = getArguments().getValue("url","",this);
-        if (url.isEmpty()) return;
+        if (url.isEmpty() || !isAllowed(url)) return;
+
+        List<ResourcePackInfo> packs = new ArrayList<>();
+
+        // Checking server's resource pack
+        ResourcePack serverPack = Bukkit.getServerResourcePack();
+        if (serverPack != null) {
+            ResourcePackInfo serverPackInfo = ResourcePackInfo.resourcePackInfo()
+                    .uri(URI.create(serverPack.getUrl()))
+                    .hash(serverPack.getHash() == null ? "" : serverPack.getHash())
+                    .build();
+            packs.add(serverPackInfo);
+        }
+
+        Component prompt = getArguments().getValue("prompt", Component.empty(), this);
+        String plainText = PlainTextComponentSerializer.plainText().serialize(prompt);
+        if (plainText.length() > 256) {
+            throw new TooLongTextException(256);
+        }
+
+        CompletableFuture<ResourcePackInfo> info = ResourcePackInfo.resourcePackInfo()
+                .uri(URI.create(url))
+                .computeHashAndBuild();
+
+        info.thenAccept(pack -> {
+            List<ResourcePackInfo> finalPacks = new ArrayList<>(packs);
+            finalPacks.add(pack);
+            ResourcePackRequest request = ResourcePackRequest.resourcePackRequest()
+                    .packs(finalPacks)
+                    .prompt(prompt)
+                    .required(false)
+                    .build();
+            Bukkit.getScheduler().runTask(OpenCreative.getPlugin(),
+                () -> {
+                    if (player != null && player.isOnline() && player.getWorld().equals(getWorld())) {
+                        player.sendResourcePacks(request);
+                    }
+                }
+            );
+        });
+    }
+
+    private boolean isAllowed(String url) {
         /*
          * We check url, because some world owners
          * can use IP logger when player downloads
@@ -46,12 +100,10 @@ public final class SetResourcePackAction extends PlayerAction {
         Set<String> allowedLinks = OpenCreative.getSettings().getAllowedResourcePackLinks();
         for (String allowed : allowedLinks) {
             if (checkUrl.startsWith(allowed)) {
-                player.setResourcePack(url);
-                return;
+                return true;
             }
         }
         throw new RuntimeException("The requested url " + url + " is not trusted by server.");
-
     }
 
     @Override

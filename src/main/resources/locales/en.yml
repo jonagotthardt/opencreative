@@ -7179,11 +7179,18 @@ items:
           - "&fIn the chest:"
           - "&6 Text &7- Download link"
           - "&7 for the resource pack archive"
+          - "&6 Text &7- Message, that will"
+          - "&7 be shown on screen"
           - ""
           - "&7The link must be &nsecure&7 and"
           - "&7start with https://"
           - ""
           - "&eClick to set action."
+        placeholders:
+          url:
+            name: "&6Download link"
+          prompt:
+            name: "&6Text to be shown"
       player-send-sign-change:
         name: "&6Change Sign Line"
         lore:
