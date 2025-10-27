@@ -18,7 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.menus.world.settings;
 
-import org.apache.commons.lang.WordUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
@@ -67,7 +67,7 @@ public final class EntitiesBrowserMenu extends ListBrowserMenu<Entity> implement
     private ItemStack createEntityItem(Entity entity) {
         ItemStack item = createItem(getEntityMaterial(entity),1,"menus.entities-browser.items.entity");
         replacePlaceholderInLore(item,"%name%",entity.getName().substring(0,Math.min(20,entity.getName().length())));
-        replacePlaceholderInLore(item,"%type%", WordUtils.capitalize(entity.getType().name().toLowerCase().replace('_',' ')));
+        replacePlaceholderInLore(item,"%type%", StringUtils.capitalize(entity.getType().name().toLowerCase().replace('_',' ')));
         replacePlaceholderInLore(item,"%x%",entity.getLocation().getBlockX());
         replacePlaceholderInLore(item,"%y%",entity.getLocation().getBlockY());
         replacePlaceholderInLore(item,"%z%",entity.getLocation().getBlockZ());

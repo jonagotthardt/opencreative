@@ -77,7 +77,6 @@ public final class ChangedWorld implements Listener {
         Planet oldPlanet = OpenCreative.getPlanetsManager().getPlanetByWorld(oldWorld);
         Planet newPlanet = OpenCreative.getPlanetsManager().getPlanetByWorld(newWorld);
 
-
         for (Player oldWorldPlayer : oldWorld.getPlayers()) {
             hidePlayerInTab(player,oldWorldPlayer);
             hidePlayerInTab(oldWorldPlayer,player);
@@ -88,6 +87,7 @@ public final class ChangedWorld implements Listener {
         }
 
         if (oldPlanet != null && oldPlanet == newPlanet) {
+            // Player is in same planet
             if (isDevPlanet(newWorld)) {
                 // Player entered developers world
                 if (oldPlanet.getWorldPlayers().canDevelop(player)) {
@@ -112,12 +112,14 @@ public final class ChangedWorld implements Listener {
                 }
             }
         } else {
+            // Player is in different planets / not in planets
             if (!player.hasPermission("opencreative.ignore.world-change-clear")) {
                 clearPlayer(player);
             }
             player.setLastDeathLocation(null);
             removePlayerWithLocation(player);
             if (oldPlanet != null) {
+                // Player was in planet and left it
                 PlanetPlayer planetPlayer = oldPlanet.getWorldPlayers().getPlanetPlayer(player);
                 if (planetPlayer != null) planetPlayer.save();
                 oldPlanet.getWorldPlayers().unregisterPlayer(player);
@@ -159,6 +161,7 @@ public final class ChangedWorld implements Listener {
                 oldPlanet.getInformation().updateIconAsync();
             }
             if (newPlanet != null) {
+                // Player connected to other planet
                 newPlanet.getWorldPlayers().registerPlayer(player);
                 for (Player onlinePlayer : newPlanet.getPlayers()) {
                     showPlayerFromTab(onlinePlayer,player);

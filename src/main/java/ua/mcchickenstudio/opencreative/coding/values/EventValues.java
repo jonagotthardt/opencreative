@@ -145,7 +145,7 @@ public final class EventValues {
         registerEventValue(new EntityTargetValue(), new PassengersValue(), new EntityItemValue(), new EntityFacingValue(),
                 new EntityLocationDirectionValue(), new EntityLocationPitchValue(), new EntityLocationYawValue(),
                 new EntityLocationXValue(), new EntityLocationYValue(), new EntityLocationZValue(),
-                new BlockBeneathValue(), new ProjectileOwnerValue(), new EntityVehicleValue(), new EntitySpawnReasonValue(),
+                new BlockBeneathValue(), new BlockAboveValue(), new ProjectileOwnerValue(), new EntityVehicleValue(), new EntitySpawnReasonValue(),
                 new EntityPoseValue(), new EntityWidthZValue(), new EntityWidthXValue(), new EntityFuseTicksValue(),
                 new EntityHeightValue(), new EntityAgeValue(), new EntityTicksLivedValue(), new MerchantTradesCountValue(),
                 new LivingPotionsValue(), new HolderInventoryValue(), new TargetFluidValue(), new LivingBodyYawValue(),

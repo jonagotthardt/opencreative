@@ -16,43 +16,35 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.list;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.text;
 
+import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.coding.exceptions.CollectionWithCollectionException;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public final class CreateListAction extends VariableAction {
-    public CreateListAction(Executor executor, Target target, int x, Arguments args) {
+public final class FormatUnixTimeAction extends VariableAction {
+    public FormatUnixTimeAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     protected void execute(Entity entity) {
-        VariableLink variable = getArguments().getVariableLink("variable",this);
-        List<Object> elements = getArguments().getList("elements",this);
-        for (Object element : elements) {
-            if (element instanceof Collection<?> || element instanceof Map<?,?>) {
-                throw new CollectionWithCollectionException(elements.getClass(), element.getClass());
-            }
-        }
-        List<Object> newList = new ArrayList<>(elements);
-        setVarValue(variable, newList);
+        VariableLink link = getArguments().getVariableLink("variable",this);
+        long unixTime = getArguments().getValue("time", 0L,this);
+        String format = getArguments().getValue("format", "dd/MM/yyyy HH:mm:ss", this);
+        String result = new SimpleDateFormat(format).format(new Date(unixTime));
+        setVarValue(link, result);
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.VAR_CREATE_LIST;
+        return ActionType.VAR_FORMAT_UNIX_TIME;
     }
 }

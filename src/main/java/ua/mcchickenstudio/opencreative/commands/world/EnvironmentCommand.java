@@ -679,6 +679,7 @@ public class EnvironmentCommand extends CommandHandler {
                                                             .replace("%idea%", request));
                                                     Sounds.DEV_PROMPTER_DONE.play(player);
                                                     broadcastPrompter(planet, player, request, "success");
+                                                    planet.getDevPlanet().setCodeChanged(true);
                                                 } else {
                                                     broadcastPrompter(planet, player, request, "failed");
                                                 }
