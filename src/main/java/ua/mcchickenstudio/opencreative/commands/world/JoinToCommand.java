@@ -34,6 +34,7 @@ import java.util.List;
 import static ua.mcchickenstudio.opencreative.commands.world.JoinCommand.handlePlayerConnection;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getPlayerLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 
 /**
@@ -93,11 +94,17 @@ public class JoinToCommand extends CommandHandler {
 
         Planet foundPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(foundPlayer);
         if (foundPlanet == null) {
+            // If world is lobby
+            if (OpenCreative.getPlanetsManager().getPlanetByPlayer(playerToConnect) == null) {
+                // If player is in lobby already
+                playerToConnect.sendMessage(getPlayerLocaleMessage("same-world", playerToConnect));
+                return;
+            }
             new QuitEvent(playerToConnect).callEvent();
             teleportToLobby(playerToConnect);
             return;
         }
-
+        // If world is planet
         handlePlayerConnection(playerToConnect, foundPlanet);
     }
 

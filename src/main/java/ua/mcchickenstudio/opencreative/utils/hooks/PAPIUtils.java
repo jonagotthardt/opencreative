@@ -101,6 +101,7 @@ class Placeholder extends PlaceholderExpansion {
     }
     
     private String parsePlanet(@NotNull Planet planet, @NotNull String identifier) {
+        identifier = identifier.replace("planet_", "");
         switch (identifier) {
             case "id" -> {
                 return String.valueOf(planet.getId());
@@ -197,7 +198,16 @@ class Placeholder extends PlaceholderExpansion {
             if (limitType.isEmpty()) return null;
             try {
                 LimitType type = LimitType.valueOf(limitType.toUpperCase().replace("-", "_"));
-                return String.valueOf(planet.getGroup().getLimit(type));
+                return String.valueOf(planet.getGroup().getLimit(type).calculateLimit(planet.getPlayers().size()));
+            } catch (Exception ignored) {
+                return null;
+            }
+        } else if (identifier.startsWith("modifier_")) {
+            String limitType = identifier.replace("modifier_", "");
+            if (limitType.isEmpty()) return null;
+            try {
+                LimitType type = LimitType.valueOf(limitType.toUpperCase().replace("-", "_"));
+                return String.valueOf(planet.getGroup().getLimit(type).modifier());
             } catch (Exception ignored) {
                 return null;
             }
