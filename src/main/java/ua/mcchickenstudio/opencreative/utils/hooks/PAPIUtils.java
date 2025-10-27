@@ -25,6 +25,9 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.settings.groups.LimitType;
+
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 
 public final class PAPIUtils {
 
@@ -43,58 +46,160 @@ class Placeholder extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player player, String identifier) {
+        if (identifier.startsWith("planet:")) {
+            // For other planets: %opencreative_planet:123_online% (planet:123_online)
+            String identifierNoPlanet = identifier.replace("planet:", ""); // 123_online
+
+            int underscoreIndex = identifierNoPlanet.indexOf('_');
+            if (underscoreIndex == -1) return null;
+            String planetId = identifierNoPlanet.substring(0, underscoreIndex);
+
+            Planet planet = OpenCreative.getPlanetsManager().getPlanetByAnyID(planetId);
+            if (planet == null) return null;
+            identifier = identifierNoPlanet.substring(underscoreIndex + 1); // online
+            return parsePlanet(planet, identifier);
+        }
+        // For player's current planet: %opencreative_planet_online% (planet_online)
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+        return parsePlayer(player, identifier, planet);
+    }
+
+    private String parsePlayer(Player player, @NotNull String identifier, Planet currentPlanet) {
+        if (currentPlanet == null) {
+            if (identifier.equals("is_in_planet")) {
+                return "false";
+            }
+            return null;
+        }
         switch (identifier) {
-            case "planet_id" -> {
-                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-                if (planet != null) return String.valueOf(planet.getId());
-            }
-            case "planet_custom_id" -> {
-                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-                if (planet != null) return planet.getInformation().getCustomID();
-            }
-            case "planet_online" -> {
-                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-                if (planet != null) return String.valueOf(planet.getOnline());
-            }
-            case "planet_uniques" -> {
-                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-                if (planet != null) return String.valueOf(planet.getInformation().getUniques());
-            }
-            case "planet_reputation" -> {
-                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-                if (planet != null) return String.valueOf(planet.getInformation().getReputation());
-            }
             case "is_in_planet" -> {
-                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-                return String.valueOf((planet != null));
+                return "true";
             }
-            case "planet_name" -> {
-                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-                if (planet != null) return planet.getInformation().getDisplayName();
+            case "is_in_build_planet" -> {
+                return String.valueOf(!isDevPlanet(player.getWorld()));
             }
-            case "planet_description" -> {
-                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-                if (planet != null) return planet.getInformation().getDescription();
+            case "is_in_dev_planet" -> {
+                return String.valueOf(isDevPlanet(player.getWorld()));
             }
-            case "planet_owner" -> {
-                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-                if (planet != null) return planet.getOwner();
+            case "can_develop" -> {
+                return String.valueOf(currentPlanet.getWorldPlayers().canDevelop(player));
             }
-            case "planet_category" -> {
-                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-                if (planet != null) return String.valueOf(planet.getInformation().getCategory());
+            case "can_build" -> {
+                return String.valueOf(currentPlanet.getWorldPlayers().canBuild(player));
             }
-            case "planet_sharing" -> {
-                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-                if (planet != null) return String.valueOf(planet.getSharing());
+            case "is_whitelisted" -> {
+                return String.valueOf(currentPlanet.getWorldPlayers().isWhitelisted(player.getName()));
             }
-            case "planet_mode" -> {
-                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-                if (planet != null) return String.valueOf(planet.getMode());
+            case "is_banned" -> {
+                return String.valueOf(currentPlanet.getWorldPlayers().isBanned(player.getName()));
             }
-            case "planet_is_dev_planet_loaded" -> {
-                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-                if (planet != null) return String.valueOf(planet.getDevPlanet() != null && planet.getDevPlanet().isLoaded());
+            case "is_owner" -> {
+                return String.valueOf(currentPlanet.isOwner(player));
+            }
+        }
+        return parsePlanet(currentPlanet, identifier);
+    }
+    
+    private String parsePlanet(@NotNull Planet planet, @NotNull String identifier) {
+        switch (identifier) {
+            case "id" -> {
+                return String.valueOf(planet.getId());
+            }
+            case "custom_id" -> {
+                return planet.getInformation().getCustomID();
+            }
+            case "online" -> {
+                return String.valueOf(planet.getOnline());
+            }
+            case "uniques" -> {
+                return String.valueOf(planet.getInformation().getUniques());
+            }
+            case "reputation" -> {
+                return String.valueOf(planet.getInformation().getReputation());
+            }
+            case "name" -> {
+                return planet.getInformation().getDisplayName();
+            }
+            case "description" -> {
+                return planet.getInformation().getDescription();
+            }
+            case "icon_material" -> {
+                return planet.getInformation().getIcon().getType().name();
+            }
+            case "owner" -> {
+                return planet.getOwner();
+            }
+            case "category" -> {
+                return String.valueOf(planet.getInformation().getCategory());
+            }
+            case "sharing" -> {
+                return String.valueOf(planet.getSharing());
+            }
+            case "mode" -> {
+                return String.valueOf(planet.getMode());
+            }
+            case "is_loaded" -> {
+                return String.valueOf(planet.isLoaded());
+            }
+            case "variables_amount" -> {
+                return String.valueOf(planet.getVariables().getTotalVariablesAmount());
+            }
+            case "redstone_operations_amount" -> {
+                return String.valueOf(planet.getLimits().getLastRedstoneOperationsAmount());
+            }
+            case "modified_blocks_amount" -> {
+                return String.valueOf(planet.getLimits().getLastModifiedBlocksAmount());
+            }
+            case "elements_changes_amount" -> {
+                return String.valueOf(planet.getLimits().getLastVariableElementsChangesAmount());
+            }
+            case "whitelisted_players" -> {
+                return String.join(", ", planet.getWorldPlayers().getWhitelistedPlayers());
+            }
+            case "blacklisted_players", "banned_players" -> {
+                return String.join(", ", planet.getWorldPlayers().getBannedPlayers());
+            }
+            case "builders" -> {
+                return String.join(", ", planet.getWorldPlayers().getAllBuilders());
+            }
+            case "developers" -> {
+                return String.join(", ", planet.getWorldPlayers().getAllDevelopers());
+            }
+            case "trusted_developers" -> {
+                return String.join(", ", planet.getWorldPlayers().getDevelopersTrusted());
+            }
+            case "not_trusted_developers" -> {
+                return String.join(", ", planet.getWorldPlayers().getDevelopersNotTrusted());
+            }
+            case "guest_developers" -> {
+                return String.join(", ", planet.getWorldPlayers().getDevelopersGuests());
+            }
+            case "trusted_builders" -> {
+                return String.join(", ", planet.getWorldPlayers().getBuildersTrusted());
+            }
+            case "not_trusted_builders" -> {
+                return String.join(", ", planet.getWorldPlayers().getBuildersNotTrusted());
+            }
+            case "entities_amount" -> {
+                int entities = planet.getTerritory().getWorld().getEntityCount()
+                        + (planet.getDevPlanet().isLoaded() ? planet.getDevPlanet().getWorld().getEntityCount() : 0);
+                return String.valueOf(entities);
+            }
+            case "executors_amount" -> {
+                return String.valueOf(planet.getTerritory().getScript().getExecutors().getExecutorsList().size());
+            }
+            case "is_dev_planet_loaded" -> {
+                return String.valueOf(planet.getDevPlanet() != null && planet.getDevPlanet().isLoaded());
+            }
+        }
+        if (identifier.startsWith("limit_")) {
+            String limitType = identifier.replace("limit_", "");
+            if (limitType.isEmpty()) return null;
+            try {
+                LimitType type = LimitType.valueOf(limitType.toUpperCase().replace("-", "_"));
+                return String.valueOf(planet.getGroup().getLimit(type));
+            } catch (Exception ignored) {
+                return null;
             }
         }
         return null;
