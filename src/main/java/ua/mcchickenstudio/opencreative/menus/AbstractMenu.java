@@ -126,7 +126,7 @@ public abstract class AbstractMenu implements InventoryMenu {
 
     protected void setRows(int rows) {
         this.rows = rows;
-        if (inventory != null) {
+        if (inventory != null && inventory.getSize() != rows * 9) {
             ItemStack[] oldItems = inventory.getContents();
             inventory = Bukkit.createInventory(this, rows * 9, Component.text(this.title));
             for (int slot = 0; slot < oldItems.length; slot++) {
