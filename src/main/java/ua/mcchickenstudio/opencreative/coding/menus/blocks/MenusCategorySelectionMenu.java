@@ -78,7 +78,7 @@ public abstract class MenusCategorySelectionMenu extends AbstractMenu {
 
     @Override
     public void fillItems(Player player) {
-        this.contentMenu = getContentBrowserMenu(location, frequency);
+        if (contentMenu == null) this.contentMenu = getContentBrowserMenu(location, frequency);
         contentMenu.setCategoriesMenu(this);
         if (legacy) {
             fillLegacy();

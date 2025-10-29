@@ -36,7 +36,7 @@ public final class EntityTypeValue extends TextEventValue {
 
     @Override
     public @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
-        return entity != null ? entity.getUniqueId().toString() : null;
+        return entity != null ? entity.getType().name().toLowerCase() : null;
     }
 
     @Override
@@ -46,6 +46,6 @@ public final class EntityTypeValue extends TextEventValue {
 
     @Override
     public @NotNull String getDescription() {
-        return "Returns entity's unique ID";
+        return "Returns entity's type";
     }
 }
