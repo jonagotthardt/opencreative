@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.params;
 
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -41,6 +43,10 @@ public final class SetHealthAction extends PlayerAction {
         double health = getArguments().getValue("health",20.0d,this);
         if (add) {
             health = health + player.getHealth();
+        }
+        AttributeInstance maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        if (maxHealth != null && health > maxHealth.getValue()) {
+            health = maxHealth.getValue();
         }
         player.setHealth(health);
     }
