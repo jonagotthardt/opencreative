@@ -16,44 +16,35 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.list;
 
+import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.ControlAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Cycle;
-import org.bukkit.entity.Entity;
-import ua.mcchickenstudio.opencreative.coding.exceptions.UnknownCycleException;
+import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
 import java.util.List;
 
-public final class StopCyclesAction extends ControlAction {
-
-    public StopCyclesAction(Executor executor, Target target, int x, Arguments args) {
+public final class SublistAction extends VariableAction {
+    public SublistAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     protected void execute(Entity entity) {
-        List<String> list = getArguments().getTextList("names",this);
-        for (String name : list) {
-            boolean found = false;
-            for (Cycle cycle : getPlanet().getTerritory().getScript().getExecutors().getCyclesList()) {
-                if (cycle.getName().equalsIgnoreCase(name)) {
-                    found = true;
-                    cycle.stop();
-                }
-            }
-            if (!found) {
-                throw new UnknownCycleException(name);
-            }
-        }
+        VariableLink variable = getArguments().getVariableLink("variable",this);
+        List<Object> list = getArguments().getList("list",this);
+        int from = getArguments().getValue("from", 1, this);
+        int to = getArguments().getValue("to", list.size(), this);
+        List<Object> variableList = list.subList(from-1, to-1);
+        setVarValue(variable, variableList);
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.CONTROL_STOP_CYCLES;
+        return ActionType.VAR_SUBLIST_LIST;
     }
 }

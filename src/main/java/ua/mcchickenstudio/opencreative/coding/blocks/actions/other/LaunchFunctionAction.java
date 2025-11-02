@@ -43,11 +43,9 @@ public final class LaunchFunctionAction extends Action {
         String name = getArguments().getValue("name","",this);
         if (name.isEmpty()) return;
         List<Function> functions = new ArrayList<>();
-        for (Executor executor : getPlanet().getTerritory().getScript().getExecutors().getExecutorsList()) {
-            if (executor instanceof Function function) {
-                if (function.getName().equalsIgnoreCase(name)) {
-                    functions.add(function);
-                }
+        for (Function function : getPlanet().getTerritory().getScript().getExecutors().getFunctionsList()) {
+            if (function.getName().equalsIgnoreCase(name)) {
+                functions.add(function);
             }
         }
         if (functions.isEmpty()) {

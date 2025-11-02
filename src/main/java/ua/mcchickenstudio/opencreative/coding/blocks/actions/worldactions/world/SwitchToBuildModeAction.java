@@ -16,44 +16,35 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world;
 
+import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.ControlAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Cycle;
-import org.bukkit.entity.Entity;
-import ua.mcchickenstudio.opencreative.coding.exceptions.UnknownCycleException;
+import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
-import java.util.List;
-
-public final class StopCyclesAction extends ControlAction {
-
-    public StopCyclesAction(Executor executor, Target target, int x, Arguments args) {
+public final class SwitchToBuildModeAction extends WorldAction {
+    public SwitchToBuildModeAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     protected void execute(Entity entity) {
-        List<String> list = getArguments().getTextList("names",this);
-        for (String name : list) {
-            boolean found = false;
-            for (Cycle cycle : getPlanet().getTerritory().getScript().getExecutors().getCyclesList()) {
-                if (cycle.getName().equalsIgnoreCase(name)) {
-                    found = true;
-                    cycle.stop();
-                }
-            }
-            if (!found) {
-                throw new UnknownCycleException(name);
+        if (getPlanet().getMode() != Planet.Mode.BUILD) {
+            PlanetModeChangeEvent event = new PlanetModeChangeEvent(getPlanet(), getPlanet().getMode(), Planet.Mode.BUILD);
+            event.callEvent();
+            if (!event.isCancelled()) {
+                getPlanet().setMode(Planet.Mode.BUILD);
             }
         }
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.CONTROL_STOP_CYCLES;
+        return ActionType.WORLD_SWITCH_TO_BUILD_MODE;
     }
 }

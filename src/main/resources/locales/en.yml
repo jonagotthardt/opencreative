@@ -3995,7 +3995,7 @@ items:
               grindstone: "Grindstone"
               stonecutter: "Stonecutter"
               crafter: "Crafter"
-      player-set-bee-stingers:
+      player-set-bee-stingers-in-body:
         name: "&eSet number of stingers"
         lore:
           - "&7This sets the number of stingers"
@@ -4022,7 +4022,7 @@ items:
             choices:
               false: "Set"
               true: "Add"
-      entity-set-bee-stingers:
+      entity-set-bee-stingers-in-body:
         name: "&eSet number of stingers"
         lore:
           - "&7This sets the number of stingers"
@@ -4326,8 +4326,24 @@ items:
           - " "
           - "&fIn the chest:"
           - "&6 Text(s) &7- Message"
+          - "&3 Parameter &7- Separator"
           - " "
           - "&eClick to set action."
+        arguments:
+          type:
+            name: "&fMessage separator"
+            lore:
+              - "&7Choose how to join the texts"
+              - "&7and display them on hotbar."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              join: "Join text"
+              join-spaces: "Join text with spaces"
         placeholders:
           actionbar:
             name: "&6Text"
@@ -5006,6 +5022,24 @@ items:
             choices:
               false: "Extinguish"
               true: "Let it burn"
+      control-clear-local-variables:
+        name: "&cClear Local Variables"
+        lore:
+          - "&7Deletes local variables"
+          - "&7that were set in the line."
+          - " "
+          - "&eClick to set the action."
+      world-switch-to-build-mode:
+        name: "&cSwitch to Build Mode"
+        lore:
+          - "&7The world will be switched to"
+          - "&7build mode and the code will be"
+          - "&7completely &4&nhalted&7."
+          - " "
+          - "&7When the world is loaded next time,"
+          - "&7it will still be in build mode."
+          - " "
+          - "&eClick to set the action."
       world-spawn-item-display:
         name: "&eSpawn Item Display"
         lore:
@@ -5040,6 +5074,37 @@ items:
           - "&f Location &7- Where to spawn"
           - "&c Block &7- Displayed block"
           - "&6 Name &7- Display name"
+          - " "
+          - "&eClick to set the action."
+      world-spawn-falling-block:
+        name: "&eSpawn Falling Block"
+        lore:
+          - "&7Spawns a falling block in the world"
+          - "&7that lands on the ground."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location &7- Where to spawn"
+          - "&c Item &7- Block type"
+          - "&6 Text &7- Name for the entity"
+          - "&3 Parameter &7- Drop item"
+          - "&7 when hitting a slab"
+          - "&a Number &7- Damage amount"
+          - "&7 when hitting a player"
+          - " "
+          - "&eClick to set the action."
+      world-spawn-eye-of-ender:
+        name: "&3Spawn Flying Eye of Ender"
+        lore:
+          - "&7Spawns an Eye of Ender in the world"
+          - "&7that will fly a distance"
+          - "&7and then drop or shatter."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location &7- Where to spawn"
+          - "&6 Text &7- Name for the entity"
+          - "&a Number &7- Travel time"
+          - "&f Location &7- Target destination"
+          - "&3 Parameter &7- Whether to shatter"
           - " "
           - "&eClick to set the action."
       world-spawn-end-crystal:
@@ -9169,6 +9234,24 @@ items:
           - " &7[] &7= &e0.0"
           - " "
           - "&eClick to set action."
+      var-sublist-list:
+        name: "&6Trim List"
+        lore:
+          - "&7This will trim a list from one index to another"
+          - "&7and store it in a variable."
+          - "&7Indexing starts from 1."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- To store the result"
+          - "&e Variable &7- List"
+          - "&e Variable &7- From"
+          - "&e Variable &7- To"
+          - " "
+          - "&fExamples:"
+          - " &7[&6A&7, &6B&7, &6C&7], &a1.0&7, &a2.0 &7= &e[&6A&e,&6 B&e]"
+          - " &7[&6U&7, &6W&7, &6O&7], &a2.0 &7= &e[&6W&e,&6 O&e]"
+          - " "
+          - "&eClick to set action."
       var-add-to-list:
         name: "&aAdd Value to List"
         lore:
@@ -10388,6 +10471,33 @@ items:
           map:
             name: "&eDictionary"
     conditions:
+      if-world-cycle-is-running:
+        name: "&aCycle is running"
+        lore:
+          - "&7Checks whether a cycle"
+          - "&7is running in the game or not."
+          - " "
+          - "&fIn the chest:"
+          - "&6 Text(s) &7- Cycle names"
+          - "&3 Parameter &7- All or one of them"
+          - " "
+          - "&eClick to set the condition."
+        arguments:
+          all:
+            name: "&3Match All or Any"
+            lore:
+              - "&7Execute the code only when"
+              - "&7all cycles are running, or when"
+              - "&7any one of them is running."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Any"
+              true: "Require all"
       if-world-is-in-debug-mode:
         name: "&eDebug Mode Enabled"
         lore:
@@ -17131,6 +17241,7 @@ blocks:
   control_throw_error: "Trigger error"
   control_stop_code_line: "&4Stop code line"
   control_wait: "&eWait"
+  control_clear_local_variables: "&cClear local"
   control_launch_cycles: "&aLaunch cycle"
   control_stop_cycles: "&3Stop cycle"
 
@@ -17148,6 +17259,7 @@ blocks:
   var_get_list_size: "List size"
   var_add_to_list: "Add to list"
   var_set_in_list: "Set in list"
+  var_sublist_list: "Trim List"
   var_get_by_id_from_list: "&bGet from list"
   var_remove_by_value_from_list: "&cRemove values"
   var_remove_by_id_from_list: "&cRemove from list"
@@ -17251,6 +17363,7 @@ blocks:
   world_set_block_type: "Set block"
   world_set_blocks_area_type: "Block region"
   world_destroy_block: "Destroy block"
+  world_switch_to_build_mode: "&4Shut down"
   world_set_block_powered: "Power block"
   player_show_phantom_block: "Show phant. block"
   world_set_world_border: "Set world border"
@@ -17341,6 +17454,7 @@ blocks:
 
   if_world_is_in_debug_mode: "Debug Mode"
   if_world_is_public: "Public Entry"
+  if_world_cycle_is_running: "Cycle Running"
   if_world_is_thundering: "Thunderstorm Weather"
   if_world_is_day_time: "Daytime"
   if_world_is_bed_works: "Bed Usable"

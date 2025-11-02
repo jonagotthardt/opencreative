@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.params;
 
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
@@ -49,6 +51,10 @@ public final class EntitySetHealthAction extends EntityAction {
         double health = getArguments().getValue("health",20.0d,this);
         if (add) {
             health = health + livingEntity.getHealth();
+        }
+        AttributeInstance maxHealth = livingEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        if (maxHealth != null && health > maxHealth.getValue()) {
+            health = maxHealth.getValue();
         }
         livingEntity.setHealth(health);
     }

@@ -18,42 +18,26 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines;
 
+import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.ControlAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Cycle;
-import org.bukkit.entity.Entity;
-import ua.mcchickenstudio.opencreative.coding.exceptions.UnknownCycleException;
 
-import java.util.List;
+public final class ClearLocalVariablesAction extends ControlAction {
 
-public final class StopCyclesAction extends ControlAction {
-
-    public StopCyclesAction(Executor executor, Target target, int x, Arguments args) {
+    public ClearLocalVariablesAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     protected void execute(Entity entity) {
-        List<String> list = getArguments().getTextList("names",this);
-        for (String name : list) {
-            boolean found = false;
-            for (Cycle cycle : getPlanet().getTerritory().getScript().getExecutors().getCyclesList()) {
-                if (cycle.getName().equalsIgnoreCase(name)) {
-                    found = true;
-                    cycle.stop();
-                }
-            }
-            if (!found) {
-                throw new UnknownCycleException(name);
-            }
-        }
+        getPlanet().getVariables().garbageCollector(getHandler().getMainActionHandler());
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.CONTROL_STOP_CYCLES;
+        return ActionType.CONTROL_CLEAR_LOCAL_VARIABLES;
     }
 }

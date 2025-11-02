@@ -40,12 +40,10 @@ public final class LaunchCyclesAction extends ControlAction {
         List<String> list = getArguments().getTextList("names",this);
         for (String name : list) {
             boolean found = false;
-            for (Executor executor : getPlanet().getTerritory().getScript().getExecutors().getExecutorsList()) {
-                if (executor instanceof Cycle cycle) {
-                    if (cycle.getName().equalsIgnoreCase(name)) {
-                        found = true;
-                        cycle.run(getEvent());
-                    }
+            for (Cycle cycle : getPlanet().getTerritory().getScript().getExecutors().getCyclesList()) {
+                if (cycle.getName().equalsIgnoreCase(name)) {
+                    found = true;
+                    cycle.run(getEvent());
                 }
             }
             if (!found) {

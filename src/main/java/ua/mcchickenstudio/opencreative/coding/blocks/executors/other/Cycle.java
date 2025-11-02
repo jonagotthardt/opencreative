@@ -66,6 +66,10 @@ public class Cycle extends Executor {
         }
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
     public String getName() {
         return name;
     }

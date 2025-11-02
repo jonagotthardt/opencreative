@@ -97,9 +97,9 @@ public enum ActionType {
      */
 
     // Communication
-    PLAYER_SEND_MESSAGE(                ActionCategory.PLAYER_ACTION, MenusCategory.COMMUNICATION, SendMessageAction.class, Material.WRITABLE_BOOK, new ArgumentSlot("messages", ValueType.TEXT,(byte)18), new ParameterSlot("type",Arrays.asList("new-line","join-spaces","join"),Material.PAPER, Material.MAP, Material.FILLED_MAP)),
+    PLAYER_SEND_MESSAGE(                ActionCategory.PLAYER_ACTION, MenusCategory.COMMUNICATION, SendMessageAction.class, Material.WRITABLE_BOOK, new ArgumentSlot("messages", ValueType.TEXT,(byte)18), new ParameterSlot("type", Arrays.asList("new-line","join-spaces","join"), Material.PAPER, Material.MAP, Material.FILLED_MAP)),
     PLAYER_SEND_DIALOG(                 ActionCategory.PLAYER_ACTION, MenusCategory.COMMUNICATION, SendDialogAction.class, Material.GLOBE_BANNER_PATTERN,         new ArgumentSlot("messages", ValueType.TEXT, (byte) 18),new ArgumentSlot("cooldown", ValueType.NUMBER)),
-    PLAYER_SHOW_ACTIONBAR(              ActionCategory.PLAYER_ACTION, MenusCategory.COMMUNICATION, ShowActionbarAction.class, Material.BOOK,       new ArgumentSlot("actionbar", ValueType.TEXT, (byte) 18)),
+    PLAYER_SHOW_ACTIONBAR(              ActionCategory.PLAYER_ACTION, MenusCategory.COMMUNICATION, ShowActionbarAction.class, Material.BOOK,       new ArgumentSlot("actionbar", ValueType.TEXT, (byte) 18), new ParameterSlot("type", Arrays.asList("join","join-spaces"), Material.FILLED_MAP, Material.MAP)),
     PLAYER_SHOW_TITLE(                  ActionCategory.PLAYER_ACTION, MenusCategory.COMMUNICATION, ShowTitleAction.class, Material.OAK_SIGN, new ArgumentSlot("title", ValueType.TEXT),new ArgumentSlot("subtitle", ValueType.TEXT),new ArgumentSlot("fade-in", ValueType.NUMBER),new ArgumentSlot("stay", ValueType.NUMBER),new ArgumentSlot("fade-out", ValueType.NUMBER)),
     PLAYER_SHOW_ADVANCEMENT(            ActionCategory.PLAYER_ACTION, MenusCategory.COMMUNICATION, ShowAdvancementAction.class, Material.EMERALD, new ArgumentSlot("icon", ValueType.ITEM),new ParameterSlot("style",Arrays.asList("goal","task","challenge"),Material.EMERALD,Material.DIAMOND,Material.BEACON),new ArgumentSlot("title", ValueType.TEXT),new ArgumentSlot("message", ValueType.TEXT)),
     PLAYER_CLEAR_CHAT(                  ActionCategory.PLAYER_ACTION, MenusCategory.COMMUNICATION, ClearChatAction.class, Material.BUCKET         ),
@@ -266,25 +266,28 @@ public enum ActionType {
      */
 
     //ELSE(ActionCategory.ELSE_CONDITION,null,null,null),
-    CONTROL_THROW_ERROR(                 ActionCategory.CONTROL_ACTION, MenusCategory.LINES, ThrowErrorAction.class, Material.TNT_MINECART, new ArgumentSlot("message", ValueType.TEXT)),
-    CONTROL_STOP_CODE_LINE(                 ActionCategory.CONTROL_ACTION, MenusCategory.LINES, StopCodeLineAction.class, Material.STRUCTURE_VOID),
-    CONTROL_WAIT(                 ActionCategory.CONTROL_ACTION, MenusCategory.LINES, WaitAction.class, Material.CLOCK, new ArgumentSlot("time", ValueType.NUMBER)),
-    CONTROL_LAUNCH_CYCLES(                 ActionCategory.CONTROL_ACTION, MenusCategory.LINES, LaunchCyclesAction.class, Material.OXIDIZED_COPPER, new ArgumentSlot("names", ValueType.TEXT, (byte) 27)),
-    CONTROL_STOP_CYCLES(                 ActionCategory.CONTROL_ACTION, MenusCategory.LINES, StopCyclesAction.class, Material.WEATHERED_CUT_COPPER_STAIRS, new ArgumentSlot("names", ValueType.TEXT, (byte) 27)),
 
-    CONTROL_CANCEL_EVENT(                 ActionCategory.CONTROL_ACTION, MenusCategory.EVENTS, CancelEventAction.class, Material.BARRIER),
-    CONTROL_UNCANCEL_EVENT(                 ActionCategory.CONTROL_ACTION, MenusCategory.EVENTS, UncancelEventAction.class, Material.STRUCTURE_VOID),
+    CONTROL_THROW_ERROR(             ActionCategory.CONTROL_ACTION, MenusCategory.LINES, ThrowErrorAction.class, Material.TNT_MINECART, new ArgumentSlot("message", ValueType.TEXT)),
+    CONTROL_STOP_CODE_LINE(          ActionCategory.CONTROL_ACTION, MenusCategory.LINES, StopCodeLineAction.class, Material.STRUCTURE_VOID),
+    CONTROL_WAIT(                    ActionCategory.CONTROL_ACTION, MenusCategory.LINES, WaitAction.class, Material.CLOCK, new ArgumentSlot("time", ValueType.NUMBER)),
+    CONTROL_LAUNCH_CYCLES(           ActionCategory.CONTROL_ACTION, MenusCategory.LINES, LaunchCyclesAction.class, Material.OXIDIZED_COPPER, new ArgumentSlot("names", ValueType.TEXT, (byte) 27)),
+    CONTROL_STOP_CYCLES(             ActionCategory.CONTROL_ACTION, MenusCategory.LINES, StopCyclesAction.class, Material.WEATHERED_CUT_COPPER_STAIRS, new ArgumentSlot("names", ValueType.TEXT, (byte) 27)),
+    CONTROL_CLEAR_LOCAL_VARIABLES(   ActionCategory.CONTROL_ACTION, MenusCategory.EVENTS, ClearLocalVariablesAction.class, Material.MAGMA_CREAM),
+
+    CONTROL_CANCEL_EVENT(            ActionCategory.CONTROL_ACTION, MenusCategory.EVENTS, CancelEventAction.class, Material.BARRIER),
+    CONTROL_UNCANCEL_EVENT(          ActionCategory.CONTROL_ACTION, MenusCategory.EVENTS, UncancelEventAction.class, Material.STRUCTURE_VOID),
 
 
     /**
      * <h1>World Actions.</h1>
      */
 
-    WORLD_TRANSFER_VARIABLE(                 ActionCategory.WORLD_ACTION, MenusCategory.WORLD, TransferVariableAction.class, Material.CALIBRATED_SCULK_SENSOR, new ArgumentSlot("world", ValueType.TEXT), new ArgumentSlot("key", ValueType.TEXT), new ArgumentSlot("value", ValueType.ANY)),
-    WORLD_SEND_WEB_REQUEST(                 ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SendWebRequestAction.class, Material.BEACON, new ArgumentSlot("url", ValueType.TEXT), new ArgumentSlot("body", ValueType.TEXT), new ParameterSlot("request", List.of("get", "post"), Material.BOOK, Material.FEATHER), new ParameterSlot("media", List.of("text", "json"), Material.CHISELED_BOOKSHELF, Material.BOOKSHELF)),
+    WORLD_SWITCH_TO_BUILD_MODE(     ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SwitchToBuildModeAction.class, Material.BRICKS),
+    WORLD_TRANSFER_VARIABLE(        ActionCategory.WORLD_ACTION, MenusCategory.WORLD, TransferVariableAction.class, Material.CALIBRATED_SCULK_SENSOR, new ArgumentSlot("world", ValueType.TEXT), new ArgumentSlot("key", ValueType.TEXT), new ArgumentSlot("value", ValueType.ANY)),
+    WORLD_SEND_WEB_REQUEST(         ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SendWebRequestAction.class, Material.BEACON, new ArgumentSlot("url", ValueType.TEXT), new ArgumentSlot("body", ValueType.TEXT), new ParameterSlot("request", List.of("get", "post"), Material.BOOK, Material.FEATHER), new ParameterSlot("media", List.of("text", "json"), Material.CHISELED_BOOKSHELF, Material.BOOKSHELF)),
     WORLD_SET_TIME(                 ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SetTimeAction.class, Material.CLOCK, new ArgumentSlot("time", ValueType.NUMBER)),
-    WORLD_SET_WEATHER(                 ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SetWeatherAction.class, Material.WATER_BUCKET, new ParameterSlot("weather", Arrays.asList("clean","storm","thunder"), Material.SUNFLOWER, Material.WATER_BUCKET, Material.TRIDENT), new ArgumentSlot("duration", ValueType.NUMBER)),
-    WORLD_SET_WORLD_BORDER(            ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SetWorldBorderAction.class, Material.END_CRYSTAL, new ArgumentSlot("radius", ValueType.NUMBER), new ArgumentSlot("time", ValueType.NUMBER), new ArgumentSlot("damage", ValueType.NUMBER), new ArgumentSlot("warning-distance", ValueType.NUMBER), new ArgumentSlot("warning-time", ValueType.NUMBER), new ArgumentSlot("safe-distance", ValueType.NUMBER)),
+    WORLD_SET_WEATHER(              ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SetWeatherAction.class, Material.WATER_BUCKET, new ParameterSlot("weather", Arrays.asList("clean","storm","thunder"), Material.SUNFLOWER, Material.WATER_BUCKET, Material.TRIDENT), new ArgumentSlot("duration", ValueType.NUMBER)),
+    WORLD_SET_WORLD_BORDER(         ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SetWorldBorderAction.class, Material.END_CRYSTAL, new ArgumentSlot("radius", ValueType.NUMBER), new ArgumentSlot("time", ValueType.NUMBER), new ArgumentSlot("damage", ValueType.NUMBER), new ArgumentSlot("warning-distance", ValueType.NUMBER), new ArgumentSlot("warning-time", ValueType.NUMBER), new ArgumentSlot("safe-distance", ValueType.NUMBER)),
     WORLD_VISUAL_PARAM_PHYS_OBJECT(
                     ActionCategory.WORLD_ACTION, MenusCategory.WORLD, VisualParamPhysObjectAction.class,
                     Material.FIRE_CHARGE,
@@ -482,6 +485,7 @@ public enum ActionType {
 
     VAR_CREATE_LIST( ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, CreateListAction.class, Material.BOOKSHELF, new ArgumentSlot("elements",ValueType.ANY,(byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
     VAR_GET_LIST_SIZE( ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, GetListSizeAction.class, Material.SLIME_BALL, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE)),
+    VAR_SUBLIST_LIST( ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, SublistAction.class, Material.SHEARS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE), new ArgumentSlot("from", ValueType.NUMBER), new ArgumentSlot("to", ValueType.NUMBER)),
     VAR_CLONE_LIST( ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, CloneListAction.class, Material.COMPOSTER, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE)),
     VAR_MERGE_LISTS( ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, MergeListsAction.class, Material.LEAD, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE)),
     VAR_ADD_TO_LIST( ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, AddToListAction.class, Material.KNOWLEDGE_BOOK, new ArgumentSlot("elements",ValueType.ANY,(byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
@@ -806,6 +810,7 @@ public enum ActionType {
      * <h1>World Conditions.</h1>
      */
 
+    IF_WORLD_CYCLE_IS_RUNNING(ActionCategory.WORLD_CONDITION, MenusCategory.BLOCKS, IsWorldCycleEnabledCondition.class, Material.OXIDIZED_COPPER, new ArgumentSlot("names", ValueType.LOCATION, (byte) 18), new ParameterSlot("all")),
     IF_WORLD_IS_IN_DEBUG_MODE(ActionCategory.WORLD_CONDITION, MenusCategory.WORLD, IsWorldDebugModeCondition.class, Material.PUFFERFISH_BUCKET),
     IF_WORLD_IS_PUBLIC(ActionCategory.WORLD_CONDITION, MenusCategory.WORLD, IsWorldPublicCondition.class, Material.PLAYER_HEAD),
     IF_WORLD_IS_THUNDERING(ActionCategory.WORLD_CONDITION, MenusCategory.WORLD, IsWorldThunderingCondition.class, Material.TRIDENT),

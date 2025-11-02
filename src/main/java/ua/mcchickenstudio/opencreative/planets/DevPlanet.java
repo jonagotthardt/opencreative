@@ -320,6 +320,9 @@ public class DevPlanet {
         allowedBlocks.add(Material.LIGHT_BLUE_SHULKER_BOX);
         allowedBlocks.add(Material.LIGHT_GRAY_SHULKER_BOX);
         allowedBlocks.add(Material.PINK_SHULKER_BOX);
+        // 1.21+ Content:
+        Optional.ofNullable(Material.matchMaterial("PALE_SIGN"))
+                .ifPresent(allowedBlocks::add);
         return allowedBlocks;
     }
 
