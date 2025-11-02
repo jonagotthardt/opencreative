@@ -3995,7 +3995,7 @@ items:
               grindstone: "Grindstone"
               stonecutter: "Stonecutter"
               crafter: "Crafter"
-      player-set-bee-stingers:
+      player-set-bee-stingers-in-body:
         name: "&eSet number of stingers"
         lore:
           - "&7This sets the number of stingers"
@@ -4022,7 +4022,7 @@ items:
             choices:
               false: "Set"
               true: "Add"
-      entity-set-bee-stingers:
+      entity-set-bee-stingers-in-body:
         name: "&eSet number of stingers"
         lore:
           - "&7This sets the number of stingers"
@@ -5040,6 +5040,37 @@ items:
           - "&f Location &7- Where to spawn"
           - "&c Block &7- Displayed block"
           - "&6 Name &7- Display name"
+          - " "
+          - "&eClick to set the action."
+      world-spawn-falling-block:
+        name: "&eSpawn Falling Block"
+        lore:
+          - "&7Spawns a falling block in the world"
+          - "&7that lands on the ground."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location &7- Where to spawn"
+          - "&c Item &7- Block type"
+          - "&6 Text &7- Name for the entity"
+          - "&3 Parameter &7- Drop item"
+          - "&7 when hitting a slab"
+          - "&a Number &7- Damage amount"
+          - "&7 when hitting a player"
+          - " "
+          - "&eClick to set the action."
+      world-spawn-eye-of-ender:
+        name: "&3Spawn Flying Eye of Ender"
+        lore:
+          - "&7Spawns an Eye of Ender in the world"
+          - "&7that will fly a distance"
+          - "&7and then drop or shatter."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location &7- Where to spawn"
+          - "&6 Text &7- Name for the entity"
+          - "&a Number &7- Travel time"
+          - "&f Location &7- Target destination"
+          - "&3 Parameter &7- Whether to shatter"
           - " "
           - "&eClick to set the action."
       world-spawn-end-crystal:
@@ -9167,6 +9198,24 @@ items:
           - "&fExamples:"
           - " &7[&6Watermelon&7, &6Pear&7] &7= &e2.0"
           - " &7[] &7= &e0.0"
+          - " "
+          - "&eClick to set action."
+      var-sublist-list:
+        name: "&6Trim List"
+        lore:
+          - "&7This will trim a list from one index to another"
+          - "&7and store it in a variable."
+          - "&7Indexing starts from 1."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- To store the result"
+          - "&e Variable &7- List"
+          - "&e Variable &7- From"
+          - "&e Variable &7- To"
+          - " "
+          - "&fExamples:"
+          - " &7[&6A&7, &6B&7, &6C&7], &a1.0&7, &a2.0 &7= &e[&6A&e,&6 B&e]"
+          - " &7[&6U&7, &6W&7, &6O&7], &a2.0 &7= &e[&6W&e,&6 O&e]"
           - " "
           - "&eClick to set action."
       var-add-to-list:
@@ -17148,6 +17197,7 @@ blocks:
   var_get_list_size: "List size"
   var_add_to_list: "Add to list"
   var_set_in_list: "Set in list"
+  var_sublist_list: "Trim List"
   var_get_by_id_from_list: "&bGet from list"
   var_remove_by_value_from_list: "&cRemove values"
   var_remove_by_id_from_list: "&cRemove from list"
