@@ -4326,8 +4326,24 @@ items:
           - " "
           - "&fIn the chest:"
           - "&6 Text(s) &7- Message"
+          - "&3 Parameter &7- Separator"
           - " "
           - "&eClick to set action."
+        arguments:
+          type:
+            name: "&fMessage separator"
+            lore:
+              - "&7Choose how to join the texts"
+              - "&7and display them on hotbar."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              join: "Join text"
+              join-spaces: "Join text with spaces"
         placeholders:
           actionbar:
             name: "&6Text"
