@@ -810,6 +810,7 @@ public enum ActionType {
      * <h1>World Conditions.</h1>
      */
 
+    IF_WORLD_CYCLE_IS_RUNNING(ActionCategory.WORLD_CONDITION, MenusCategory.BLOCKS, IsWorldCycleEnabledCondition.class, Material.OXIDIZED_COPPER, new ArgumentSlot("names", ValueType.LOCATION, (byte) 18), new ParameterSlot("all")),
     IF_WORLD_IS_IN_DEBUG_MODE(ActionCategory.WORLD_CONDITION, MenusCategory.WORLD, IsWorldDebugModeCondition.class, Material.PUFFERFISH_BUCKET),
     IF_WORLD_IS_PUBLIC(ActionCategory.WORLD_CONDITION, MenusCategory.WORLD, IsWorldPublicCondition.class, Material.PLAYER_HEAD),
     IF_WORLD_IS_THUNDERING(ActionCategory.WORLD_CONDITION, MenusCategory.WORLD, IsWorldThunderingCondition.class, Material.TRIDENT),

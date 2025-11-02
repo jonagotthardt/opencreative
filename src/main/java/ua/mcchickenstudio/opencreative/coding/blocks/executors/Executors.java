@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
@@ -25,6 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Cycle;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Function;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Method;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
@@ -150,11 +152,29 @@ public class Executors {
         }
     }
 
-    public List<Executor> getExecutorsList() {
+    public @NotNull List<Executor> getExecutorsList() {
         return executorsList;
     }
 
-    public List<Function> getFunctionsList() {
+    /**
+     * Returns list of registered cycle executors.
+     * @return list of cycles.
+     */
+    public @NotNull List<Cycle> getCyclesList() {
+        List<Cycle> functions = new ArrayList<>();
+        for (Executor executor : executorsList) {
+            if (executor instanceof Cycle cycle) {
+                functions.add(cycle);
+            }
+        }
+        return functions;
+    }
+
+    /**
+     * Returns list of registered function executors.
+     * @return list of functions.
+     */
+    public @NotNull List<Function> getFunctionsList() {
         List<Function> functions = new ArrayList<>();
         for (Executor executor : executorsList) {
             if (executor instanceof Function function) {
@@ -164,7 +184,11 @@ public class Executors {
         return functions;
     }
 
-    public List<Method> getMethodsList() {
+    /**
+     * Returns list of registered method executors.
+     * @return list of methods.
+     */
+    public @NotNull List<Method> getMethodsList() {
         List<Method> methods = new ArrayList<>();
         for (Executor executor : executorsList) {
             if (executor instanceof Method method) {

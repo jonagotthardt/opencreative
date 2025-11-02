@@ -10471,6 +10471,33 @@ items:
           map:
             name: "&eDictionary"
     conditions:
+      if-world-cycle-is-running:
+        name: "&aCycle is running"
+        lore:
+          - "&7Checks whether a cycle"
+          - "&7is running in the game or not."
+          - " "
+          - "&fIn the chest:"
+          - "&6 Text(s) &7- Cycle names"
+          - "&3 Parameter &7- All or one of them"
+          - " "
+          - "&eClick to set the condition."
+        arguments:
+          all:
+            name: "&3Match All or Any"
+            lore:
+              - "&7Execute the code only when"
+              - "&7all cycles are running, or when"
+              - "&7any one of them is running."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Any"
+              true: "Require all"
       if-world-is-in-debug-mode:
         name: "&eDebug Mode Enabled"
         lore:
@@ -17427,6 +17454,7 @@ blocks:
 
   if_world_is_in_debug_mode: "Debug Mode"
   if_world_is_public: "Public Entry"
+  if_world_cycle_is_running: "Cycle Running"
   if_world_is_thundering: "Thunderstorm Weather"
   if_world_is_day_time: "Daytime"
   if_world_is_bed_works: "Bed Usable"

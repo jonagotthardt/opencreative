@@ -43,11 +43,9 @@ public final class LaunchMethodAction extends Action {
         String name = getArguments().getValue("name","",this);
         if (name.isEmpty()) return;
         List<Method> methods = new ArrayList<>();
-        for (Executor executor : getPlanet().getTerritory().getScript().getExecutors().getExecutorsList()) {
-            if (executor instanceof Method method) {
-                if (method.getName().equalsIgnoreCase(name)) {
-                    methods.add(method);
-                }
+        for (Method method : getPlanet().getTerritory().getScript().getExecutors().getMethodsList()) {
+            if (method.getName().equalsIgnoreCase(name)) {
+                methods.add(method);
             }
         }
         if (methods.isEmpty()) {

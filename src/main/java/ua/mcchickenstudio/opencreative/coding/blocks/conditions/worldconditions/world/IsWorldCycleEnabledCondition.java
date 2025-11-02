@@ -16,44 +16,49 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines;
+package ua.mcchickenstudio.opencreative.coding.blocks.conditions.worldconditions.world;
 
+import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.ControlAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.worldconditions.WorldCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Cycle;
-import org.bukkit.entity.Entity;
-import ua.mcchickenstudio.opencreative.coding.exceptions.UnknownCycleException;
 
 import java.util.List;
 
-public final class StopCyclesAction extends ControlAction {
+public class IsWorldCycleEnabledCondition extends WorldCondition {
 
-    public StopCyclesAction(Executor executor, Target target, int x, Arguments args) {
-        super(executor, target, x, args);
+    public IsWorldCycleEnabledCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
+        super(executor, target, x, args, actions, reactions, isOpposed);
     }
 
     @Override
-    protected void execute(Entity entity) {
+    public boolean check(Entity entity) {
         List<String> list = getArguments().getTextList("names",this);
+        boolean requireAll = getArguments().getValue("all",true,this);
+        boolean isEnabled = false;
         for (String name : list) {
-            boolean found = false;
             for (Cycle cycle : getPlanet().getTerritory().getScript().getExecutors().getCyclesList()) {
-                if (cycle.getName().equalsIgnoreCase(name)) {
-                    found = true;
-                    cycle.stop();
+                if (cycle.getName().equalsIgnoreCase(name) && cycle.isEnabled()) {
+                    if (!requireAll) {
+                        return true;
+                    }
+                    isEnabled = true;
+                } else {
+                    if (requireAll) {
+                        return false;
+                    }
                 }
             }
-            if (!found) {
-                throw new UnknownCycleException(name);
-            }
         }
+        return isEnabled;
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.CONTROL_STOP_CYCLES;
+        return ActionType.IF_WORLD_CYCLE_IS_RUNNING;
     }
 }
