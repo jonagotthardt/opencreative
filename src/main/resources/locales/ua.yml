@@ -4993,6 +4993,24 @@ items:
             choices:
               false: "Згасити"
               true: "Нехай горить"
+      control-clear-local-variables:
+        name: "&cОчистити локальні змінні"
+        lore:
+          - "&7Видалить локальні змінні,"
+          - "&7які були встановлені у рядку."
+          - " "
+          - "&eНатисни, щоб встановити дію."
+      world-switch-to-build-mode:
+        name: "&cПерейти в режим будівництва"
+        lore:
+          - "&7Світ буде переведено в режим"
+          - "&7будівництва, а код буде"
+          - "&7повністю &4&nзупинений&7."
+          - " "
+          - "&7Під час наступного завантаження світу"
+          - "&7він усе ще буде в режимі будівництва."
+          - " "
+          - "&eНатисни, щоб встановити дію."
       world-spawn-item-display:
         name: "&eСтворити візуалізатор предмета"
         lore:
@@ -17231,6 +17249,7 @@ blocks:
   control_throw_error: "Викликати помилку"
   control_stop_code_line: "&4Перервати код"
   control_wait: "&eПочекати"
+  control_clear_local_variables: "&cВидал. локал."
   control_launch_cycles: "&aЗапустити цикл"
   control_stop_cycles: "&3Зупинити цикл"
   var_set_value: "Присвоїти значення"
@@ -17349,6 +17368,7 @@ blocks:
   world_set_block_type: "Поставити блок"
   world_set_blocks_area_type: "Регіон блоків"
   world_copy_blocks: "Копіювати блоки"
+  world_switch_to_build_mode: "&4Зупин. гру"
   world_destroy_block: "Зруйнувати блок"
   world_set_block_powered: "Заживити блок"
   player_show_phantom_block: "Відобр. фант. блок"

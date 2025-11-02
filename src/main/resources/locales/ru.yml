@@ -5846,6 +5846,24 @@ items:
               - "&7следующего действия."
               - ""
               - "&7По умолчанию: &a20 (тиков)"
+      control-clear-local-variables:
+        name: "&cОчистить локальные переменные"
+        lore:
+          - "&7Удалит локальные переменные,"
+          - "&7которые были установлены в строке."
+          - " "
+          - "&eНажми, чтобы установить действие."
+      world-switch-to-build-mode:
+        name: "&cПерейти в режим строительства"
+        lore:
+          - "&7Мир будет переведён в режим "
+          - "&7строительства и код будет "
+          - "&7полностью &4&nостановлен&7."
+          - " "
+          - "&7При следующей загрузке мира мир всё"
+          - "&7ещё будет в режиме строительства."
+          - " "
+          - "&eНажми, чтобы установить действие."
       control-cancel-event:
         name: "&cОтменить событие"
         lore:
@@ -17455,6 +17473,7 @@ blocks:
   control_throw_error: "Вызвать ошибку"
   control_stop_code_line: "&4Прервать код"
   control_wait: "&eПодождать"
+  control_clear_local_variables: "&cУдал. локал."
   control_launch_cycles: "&aЗапустить цикл"
   control_stop_cycles: "&3Останов. цикл"
 
@@ -17575,6 +17594,7 @@ blocks:
   world_set_blocks_area_type: "Регион блоков"
   world_copy_blocks: "Копировать блоки"
   world_destroy_block: "Разрушить блок"
+  world_switch_to_build_mode: "&4Остан. игру"
   world_set_block_powered: "Запитать блок"
   player_show_phantom_block: "Отобр. фант. блок"
   world_set_world_border: "Граница мира"
