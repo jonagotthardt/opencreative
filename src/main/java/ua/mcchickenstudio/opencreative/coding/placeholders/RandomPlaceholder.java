@@ -35,7 +35,7 @@ public final class RandomPlaceholder extends KeyPlaceholder {
 
     @Override
     public @Nullable String parseKey(String key, ActionsHandler handler, Action action) {
-        Player randomPlayer = null;
+        Player randomPlayer;
         List<Player> playerList = handler.getExecutor().getPlanet().getTerritory().getWorld().getPlayers();
         if (playerList.isEmpty()) return null;
         Random r = new Random();

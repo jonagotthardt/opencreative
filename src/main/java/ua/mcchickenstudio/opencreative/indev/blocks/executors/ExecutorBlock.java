@@ -33,6 +33,7 @@ public abstract class ExecutorBlock extends CodingBlock {
         super(id, mainBlock, offBlock);
     }
 
+    @SuppressWarnings("EmptyMethod")
     public void execute(@NotNull WorldEvent event, @NotNull List<WrappedActionBlock> actions) {
     }
 

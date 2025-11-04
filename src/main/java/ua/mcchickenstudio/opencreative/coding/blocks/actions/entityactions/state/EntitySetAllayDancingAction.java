@@ -21,7 +21,6 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.stat
 import org.bukkit.Location;
 import org.bukkit.entity.Allay;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.PolarBear;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;

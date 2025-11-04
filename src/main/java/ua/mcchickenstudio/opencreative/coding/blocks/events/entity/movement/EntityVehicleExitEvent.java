@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.entity.movement;
 
-import com.destroystokyo.paper.event.entity.EntityJumpEvent;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.vehicle.VehicleExitEvent;

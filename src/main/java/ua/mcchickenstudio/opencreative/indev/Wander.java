@@ -19,16 +19,12 @@
 package ua.mcchickenstudio.opencreative.indev;
 
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-
-import java.util.UUID;
 
 /**
  * <h1>Wander</h1>

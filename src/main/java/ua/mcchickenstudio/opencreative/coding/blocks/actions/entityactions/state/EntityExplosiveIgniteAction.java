@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.state;
 
-import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.minecart.ExplosiveMinecart;

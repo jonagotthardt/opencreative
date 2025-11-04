@@ -297,10 +297,10 @@ public final class WorldSettingsFlagsMenu extends AbstractMenu {
         if (itemEquals(event.getCurrentItem(), DECORATION_PANE_ITEM)) return;
 
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer((Player) event.getWhoClicked());
+        if (planet == null) return;
         if (event.getCurrentItem().getType() == Material.SPECTRAL_ARROW) {
-            new WorldSettingsMenu(planet,(Player) event.getWhoClicked()).open((Player) event.getWhoClicked());
+            new WorldSettingsMenu(planet, (Player) event.getWhoClicked()).open((Player) event.getWhoClicked());
         } else if (event.getCurrentItem().getType() != Material.AIR) {
-            if (planet == null) return;
             RadioButton rd = RadioButton.getRadioButtonByItemStack(event.getCurrentItem());
             if (rd != null) {
                 rd.onChoice();

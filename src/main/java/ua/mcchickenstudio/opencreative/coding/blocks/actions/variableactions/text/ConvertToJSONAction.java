@@ -44,7 +44,7 @@ public final class ConvertToJSONAction extends VariableAction {
         Object value = getArguments().getValue("variable", this);
         boolean pretty = getArguments().getValue("pretty", false, this);
         Gson gson = pretty ? new GsonBuilder().setPrettyPrinting().create() : new GsonBuilder().create();
-        String text = "";
+        String text;
 
         if (value instanceof List<?> list) {
             JsonArray array = new JsonArray();

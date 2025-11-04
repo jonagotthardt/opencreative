@@ -21,7 +21,6 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.stat
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Panda;
 import org.bukkit.entity.Sittable;
-import org.bukkit.entity.Villager;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;

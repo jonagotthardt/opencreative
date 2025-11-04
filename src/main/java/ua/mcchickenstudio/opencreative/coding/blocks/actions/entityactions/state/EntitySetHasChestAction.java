@@ -18,10 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.state;
 
-import org.bukkit.entity.Cat;
 import org.bukkit.entity.ChestedHorse;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Llama;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;

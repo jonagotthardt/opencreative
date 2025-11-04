@@ -20,19 +20,14 @@ package ua.mcchickenstudio.opencreative.commands;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiment;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
 import ua.mcchickenstudio.opencreative.indev.Items;
-import ua.mcchickenstudio.opencreative.indev.Wander;
-import ua.mcchickenstudio.opencreative.managers.space.PlanetsManager;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
 import ua.mcchickenstudio.opencreative.menus.CreativeMenu;
 import ua.mcchickenstudio.opencreative.menus.world.WorldModerationMenu;
-import ua.mcchickenstudio.opencreative.menus.world.browsers.WorldsBrowserMenu;
-import ua.mcchickenstudio.opencreative.menus.world.browsers.WorldsPickerMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
@@ -48,13 +43,7 @@ import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
@@ -626,7 +615,7 @@ public class CreativeCommand extends CommandHandler {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return;
                     }
-                    Items itemType = null;
+                    Items itemType;
                     try {
                         itemType = Items.valueOf(args[2].toUpperCase());
                     } catch (Exception error) {

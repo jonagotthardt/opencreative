@@ -73,6 +73,7 @@ public abstract class Experiment {
     /**
      * Executes enable operations for experiment.
      */
+    @SuppressWarnings("EmptyMethod")
     public void onEnable() {}
 
     /**

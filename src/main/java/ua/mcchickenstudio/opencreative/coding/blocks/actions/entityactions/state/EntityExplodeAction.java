@@ -21,7 +21,6 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.stat
 import org.bukkit.entity.AbstractWindCharge;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Fireball;
 import org.bukkit.entity.minecart.ExplosiveMinecart;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
