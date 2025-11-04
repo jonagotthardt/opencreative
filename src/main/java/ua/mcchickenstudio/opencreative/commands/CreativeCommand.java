@@ -1198,6 +1198,8 @@ public class CreativeCommand extends CommandHandler {
             tabCompleter.add("unrecommend");
             tabCompleter.add("setowner");
             tabCompleter.add("setsize");
+            tabCompleter.add("ignoremessage");
+            tabCompleter.add("unignoremessage");
             tabCompleter.add("experiments");
         } else if (args.length == 2) {
             if ("maintenance".equalsIgnoreCase(args[0])) {
@@ -1254,6 +1256,21 @@ public class CreativeCommand extends CommandHandler {
                 for (Experiment experiment : experiments) {
                     if (!experiment.isEnabled()) continue;
                     tabCompleter.add(experiment.getId());
+                }
+            } else if (List.of("ignoremessage", "unignoremessage").contains(args[0].toLowerCase())) {
+                if (args[1].isEmpty()) {
+                    tabCompleter.add("creative.");
+                    tabCompleter.add("lobby.");
+                    tabCompleter.add("world.");
+                    tabCompleter.add("settings.");
+                    tabCompleter.add("creating-world.");
+                    tabCompleter.add("creative-chat.");
+                    tabCompleter.add("advertisement.");
+                    tabCompleter.add("commands.");
+                    tabCompleter.add("creative.");
+                    tabCompleter.add("modules.");
+                    tabCompleter.add("environment.");
+                    tabCompleter.add("items.");
                 }
             }
         } else if (args.length == 3) {

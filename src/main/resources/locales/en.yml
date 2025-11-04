@@ -94,10 +94,10 @@ commands:
     stopped-sound: "%prefix%&fStopped sound &6%sound%&f for player &6%player%&f."
     stopped-category: "%prefix%&fStopped sounds of category &6%category%&f for player &6%player%&f."
     stopped-all: "%prefix%&fStopped all sounds for player &6%player%&f."
-locate:
-  help: "%prefix%To find the world where a player is playing, type in the chat: &6/locate Username"
-  found: "%prefix%&fPlayer &6%player%&f is currently playing in the world: \n&f %planetName%\n &f\n&a &a &n[Click to join]&f\n &f"
-  offline: "%prefix%&cThe player is not currently playing in any worlds."
+  locate:
+    help: "%prefix%To find the world where a player is playing, type in the chat: &6/locate Username"
+    found: "%prefix%&fPlayer &6%player%&f is currently playing in the world: \n&f %planetName%\n &f\n&a &a &n[Click to join]&f\n &f"
+    offline: "%prefix%&cThe player is not currently playing in any worlds."
 modules:
   help: "%prefix%Module is prepared coding blocks lines, made by players, that add some features in your world. They can be inserted in developers world. To browse modules use &6/module&f command.\n&6 /module load ID &f- Loads module by specified ID"
   not-found: "%prefix%&cCan't find module with ID %id% O_o"

@@ -95,10 +95,10 @@ commands:
     stopped-sound: "%prefix%&fОстановлен звук &6%sound%&f игроку &6%player%&f."
     stopped-category: "%prefix%&fОстановлены звуки категории &6%category%&f игроку &6%player%&f."
     stopped-all: "%prefix%&fОстановлены все звуки игроку &6%player%&f."
-locate:
-  help: "%prefix%Чтобы найти мир, в котором играет игрок, напишите в чат: &6/locate Никнейм"
-  found: "%prefix%&fИгрок &6%player%&f сейчас играет в мире: \n&f %planetName%\n &f\n&a &a &n[Нажми, чтобы присоединиться]&f\n &f"
-  offline: "%prefix%&cИгрок сейчас не играет в мирах."
+  locate:
+    help: "%prefix%Чтобы найти мир, в котором играет игрок, напишите в чат: &6/locate Никнейм"
+    found: "%prefix%&fИгрок &6%player%&f сейчас играет в мире: \n&f %planetName%\n &f\n&a &a &n[Нажми, чтобы присоединиться]&f\n &f"
+    offline: "%prefix%&cИгрок сейчас не играет в мирах."
 modules:
   help: "%prefix%Модули это готовые строки блоков кодинга от игроков, которые добавляют различные функции в мир. Их устанавливают в мире для разработчиков. Для просмотра используйте &6/module&f.\n&6 /module load ID &f- Загрузить модуль по ID"
   not-found: "%prefix%&cМодуль с ID %id% не найдено.. O_o"
