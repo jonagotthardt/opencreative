@@ -49,7 +49,7 @@ public class LocateCommand extends CommandHandler {
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
         if (args.length == 0) {
-            sender.sendMessage(getLocaleMessage("locate.help"));
+            sender.sendMessage(getLocaleMessage("commands.locate.help"));
             return;
         }
 
@@ -61,14 +61,14 @@ public class LocateCommand extends CommandHandler {
         Player player = Bukkit.getPlayer(nickname);
 
         if (player == null) {
-            sender.sendMessage(getLocaleMessage("locate.offline"));
+            sender.sendMessage(getLocaleMessage("commands.locate.offline"));
             return;
         }
 
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
 
         if (planet == null) {
-            sender.sendMessage(getLocaleMessage("locate.offline"));
+            sender.sendMessage(getLocaleMessage("commands.locate.offline"));
             return;
         }
 
@@ -77,7 +77,7 @@ public class LocateCommand extends CommandHandler {
 
     private void sendLocateMessage(CommandSender sender, Player player, Planet planet) {
         String locateMessage = parsePlanetLines(planet, parsePAPI(player,
-                getLocaleMessage("locate.found").replace("%player%", player.getName())));
+                getLocaleMessage("commands.locate.found").replace("%player%", player.getName())));
         String hoverText = parsePlanetLines(planet, getLocaleMessage("advertisement.hover"));
         String clickCommand = "/ad " + planet.getId();
 

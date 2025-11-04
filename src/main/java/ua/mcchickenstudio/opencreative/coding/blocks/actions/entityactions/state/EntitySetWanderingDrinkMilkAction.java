@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.state;
 
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Piglin;
 import org.bukkit.entity.WanderingTrader;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;

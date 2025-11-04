@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.stat
 
 import org.bukkit.entity.Bee;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Snowman;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;

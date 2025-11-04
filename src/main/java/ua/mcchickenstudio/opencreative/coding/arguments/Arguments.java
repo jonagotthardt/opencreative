@@ -300,7 +300,6 @@ public class Arguments {
         return list;
     }
 
-    @SuppressWarnings("unchecked")
     public final List<Component> getComponentList(String path, Action action) {
         List<Component> list = new ArrayList<>();
         List<String> texts = getTextList(path,action);

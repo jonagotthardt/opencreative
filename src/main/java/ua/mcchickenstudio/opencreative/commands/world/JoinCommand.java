@@ -26,7 +26,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
-import ua.mcchickenstudio.opencreative.settings.groups.Group;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;

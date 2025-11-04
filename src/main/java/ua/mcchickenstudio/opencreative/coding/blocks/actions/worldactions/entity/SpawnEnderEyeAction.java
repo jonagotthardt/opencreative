@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.entit
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
-import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.EnderSignal;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;

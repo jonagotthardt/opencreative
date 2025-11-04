@@ -40,7 +40,7 @@ public final class ListPlaceholder extends KeyValuePlaceholder {
         String[] split = value.split(",");
         if (split.length < 2) return null;
         String listName = split[0].strip();
-        int listIndex = 1;
+        int listIndex;
         try {
             listIndex = Integer.parseInt(split[1].strip());
         } catch (Exception e) {

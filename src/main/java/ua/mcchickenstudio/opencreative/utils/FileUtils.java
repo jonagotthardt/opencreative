@@ -174,13 +174,27 @@ public final class FileUtils {
                 sendCriticalErrorMessage("Couldn't create directory for locales... " + folder.getPath());
             }
         }
+
+        Map<String, Object> oldMessages = new LinkedHashMap<>();
+        FileConfiguration oldLocalization = MessageUtils.getLocalization();
+        for (String path : OpenCreative.getSettings().getMessagesIgnoringReset()) {
+            Object oldMessage = oldLocalization.get(path);
+            if (oldMessage != null) oldMessages.put(path, oldMessage);
+        }
+
         String selectedLang = OpenCreative.getPlugin().getConfig().getString("messages.locale","en");
         File file = new File(folder.getPath() + File.separator + selectedLang + ".yml");
         if (file.exists()) {
             file.delete();
         }
+
         setDefaultLocales();
         MessageUtils.loadLocalizationFile();
+        for (Map.Entry<String, Object> entry : oldMessages.entrySet()) {
+            MessageUtils.setMessage(entry.getKey(), entry.getValue());
+        }
+        if (!oldMessages.isEmpty()) OpenCreative.getPlugin().getLogger().info(oldMessages.size() + " old messages (" + String.join(", ", oldMessages.keySet()) + ") will be not reset, because they're specified in messages.do-not-reset in config.yml.");
+
         OpenCreative.getPlugin().getLogger().info("Reset localization file!");
     }
 

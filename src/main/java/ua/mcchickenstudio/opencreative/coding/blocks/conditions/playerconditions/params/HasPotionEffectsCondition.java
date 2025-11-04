@@ -61,7 +61,6 @@ public class HasPotionEffectsCondition extends PlayerCondition {
                     if (requireAll) {
                         return false;
                     }
-                    hasEffect = false;
                 }
             }
         }

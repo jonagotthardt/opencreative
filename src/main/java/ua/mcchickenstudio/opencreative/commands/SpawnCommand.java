@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.commands;
 
 import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

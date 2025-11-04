@@ -131,6 +131,8 @@ public final class Settings {
     private int prompterMaxExecutors = 10;
     private int prompterTimeout = 120;
 
+    private final Set<String> messagesIgnoringReset = new HashSet<>();
+
     private final Map<Sounds,SettingsSound> sounds = new HashMap<>();
     private final Map<Items,SettingsItem> items = new HashMap<>();
 
@@ -147,11 +149,13 @@ public final class Settings {
 
         allowedResourcePackLinks.clear();
         recommendedWorldsIDs.clear();
+        messagesIgnoringReset.clear();
         sounds.clear();
 
         listChanger = PlayerListChanger.fromString(config.getString("hide-from-tab","full"));
         recommendedWorldsIDs.addAll(config.getIntegerList("recommended-worlds"));
         allowedResourcePackLinks.addAll(config.getStringList("allowed-links.resource-pack"));
+        messagesIgnoringReset.addAll(config.getStringList("messages.do-not-reset"));
 
         debug = config.getBoolean("debug",false);
         maintenance = config.getBoolean("maintenance",false);
@@ -463,6 +467,26 @@ public final class Settings {
         }
         recommendedWorldsIDs.remove(worldID);
         OpenCreative.getPlugin().getConfig().set("recommended-worlds", new ArrayList<>(recommendedWorldsIDs));
+        OpenCreative.getPlugin().saveConfig();
+        return true;
+    }
+
+    public boolean addMessageIgnoringReset(@NotNull String path) {
+        if (messagesIgnoringReset.contains(path)) {
+            return false;
+        }
+        messagesIgnoringReset.add(path);
+        OpenCreative.getPlugin().getConfig().set("messages.do-not-reset", new ArrayList<>(messagesIgnoringReset));
+        OpenCreative.getPlugin().saveConfig();
+        return true;
+    }
+
+    public boolean removeMessageIgnoringReset(@NotNull String path) {
+        if (!messagesIgnoringReset.contains(path)) {
+            return false;
+        }
+        messagesIgnoringReset.remove(path);
+        OpenCreative.getPlugin().getConfig().set("messages.do-not-reset", new ArrayList<>(messagesIgnoringReset));
         OpenCreative.getPlugin().saveConfig();
         return true;
     }
@@ -787,4 +811,7 @@ public final class Settings {
         return notifyNoPlayersAround;
     }
 
+    public Set<String> getMessagesIgnoringReset() {
+        return messagesIgnoringReset;
+    }
 }

@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.listeners.entity;
 
-import io.papermc.paper.command.CommandBlockHolder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.minecart.CommandMinecart;

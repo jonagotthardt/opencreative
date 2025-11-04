@@ -20,19 +20,14 @@ package ua.mcchickenstudio.opencreative.commands;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiment;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
 import ua.mcchickenstudio.opencreative.indev.Items;
-import ua.mcchickenstudio.opencreative.indev.Wander;
-import ua.mcchickenstudio.opencreative.managers.space.PlanetsManager;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
 import ua.mcchickenstudio.opencreative.menus.CreativeMenu;
 import ua.mcchickenstudio.opencreative.menus.world.WorldModerationMenu;
-import ua.mcchickenstudio.opencreative.menus.world.browsers.WorldsBrowserMenu;
-import ua.mcchickenstudio.opencreative.menus.world.browsers.WorldsPickerMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
@@ -48,13 +43,7 @@ import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
@@ -108,11 +97,11 @@ public class CreativeCommand extends CommandHandler {
                     }
                     int added = MessageUtils.addMissingMessageLines();
                     if (added == -1) {
-                        sender.sendMessage(getLocaleMessage("creative.cant-update-locale"));
+                        sender.sendMessage(getLocaleMessage("creative.locale.cant-update"));
                     } else if (added == 0) {
-                        sender.sendMessage(getLocaleMessage("creative.not-updated-locale"));
+                        sender.sendMessage(getLocaleMessage("creative.locale.not-updated"));
                     } else {
-                        sender.sendMessage(getLocaleMessage("creative.updated-locale")
+                        sender.sendMessage(getLocaleMessage("creative.locale.updated")
                                 .replace("%amount%", String.valueOf(added)));
                     }
                     if (player != null) {
@@ -124,12 +113,12 @@ public class CreativeCommand extends CommandHandler {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return;
                     }
-                    sender.sendMessage(getLocaleMessage("creative.resetting-locale"));
+                    sender.sendMessage(getLocaleMessage("creative.locale.resetting"));
                     if (player != null) {
                         Sounds.RELOADING.play(player);
                     }
                     FileUtils.resetLocales();
-                    sender.sendMessage(getLocaleMessage("creative.reset-locale"));
+                    sender.sendMessage(getLocaleMessage("creative.locale.reset"));
                     if (player != null) {
                         Sounds.RELOADED.play(player);
                     }
@@ -351,6 +340,54 @@ public class CreativeCommand extends CommandHandler {
                     } else {
                         sender.sendMessage(getLocaleMessage("world.already-recommended")
                                 .replace("%id%", id));
+                        Sounds.PLAYER_FAIL.play(sender);
+                    }
+                }
+                case "ignoremessage" -> {
+                    if (!sender.hasPermission("opencreative.resetlocale.add-ignored")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return;
+                    }
+                    String path = args[1];
+                    if (!MessageUtils.messageExists(path)) {
+                        sender.sendMessage(getLocaleMessage("creative.locale.unknown-message")
+                                .replace("%path%", path));
+                        return;
+                    }
+                    if (OpenCreative.getSettings().addMessageIgnoringReset(path)) {
+                        sender.sendMessage(getLocaleMessage("creative.locale.ignored-message")
+                                .replace("%path%", path));
+                    } else {
+                        sender.sendMessage(getLocaleMessage("creative.locale.already-ignored-message")
+                                .replace("%path%", path));
+                        Sounds.PLAYER_FAIL.play(sender);
+                    }
+                }
+                case "unignoremessage" -> {
+                    if (!sender.hasPermission("opencreative.resetlocale.remove-ignored")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return;
+                    }
+                    String path = args[1];
+                    if (OpenCreative.getSettings().removeMessageIgnoringReset(path)) {
+                        sender.sendMessage(getLocaleMessage("creative.locale.unignored-message")
+                                .replace("%path%", path));
+                    } else {
+                        if (!MessageUtils.messageExists(path)) {
+                            sender.sendMessage(getLocaleMessage("creative.locale.unknown-message")
+                                    .replace("%path%", path));
+                        } else {
+                            sender.sendMessage(getLocaleMessage("creative.locale.already-unignored-message")
+                                    .replace("%path%", path));
+                        }
                         Sounds.PLAYER_FAIL.play(sender);
                     }
                 }
@@ -578,7 +615,7 @@ public class CreativeCommand extends CommandHandler {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return;
                     }
-                    Items itemType = null;
+                    Items itemType;
                     try {
                         itemType = Items.valueOf(args[2].toUpperCase());
                     } catch (Exception error) {
@@ -667,7 +704,24 @@ public class CreativeCommand extends CommandHandler {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return;
                     }
-                    sender.sendMessage(getLocaleMessage(args[1]));
+                    String path = args[1];
+                    if (MessageUtils.getLocalization().isList(path)) {
+                        List<String> list = MessageUtils.getLocalization().getStringList(path);
+                        sender.sendMessage(toComponent(String.join(", ", list)));
+                    } else if (MessageUtils.getLocalization().isConfigurationSection(path)) {
+                        ConfigurationSection section = MessageUtils.getLocalization().getConfigurationSection(path);
+                        if (section == null) {
+                            sender.sendMessage("Section: " + path);
+                            return;
+                        }
+                        Set<String> insideKeys = section.getKeys(true);
+                        sender.sendMessage("Section: " + path + " (" + insideKeys.size() + " inside keys)");
+                        if (!insideKeys.isEmpty()) {
+                            sender.sendMessage(substring(String.join("\n", insideKeys), 100));
+                        }
+                    } else {
+                        sender.sendMessage(getLocaleMessage(path));
+                    }
                 }
                 case "minimsg" -> {
                     if (!sender.hasPermission("opencreative.print.minimessage")) {
@@ -1133,6 +1187,8 @@ public class CreativeCommand extends CommandHandler {
             tabCompleter.add("unrecommend");
             tabCompleter.add("setowner");
             tabCompleter.add("setsize");
+            tabCompleter.add("ignoremessage");
+            tabCompleter.add("unignoremessage");
             tabCompleter.add("experiments");
         } else if (args.length == 2) {
             if ("maintenance".equalsIgnoreCase(args[0])) {
@@ -1189,6 +1245,21 @@ public class CreativeCommand extends CommandHandler {
                 for (Experiment experiment : experiments) {
                     if (!experiment.isEnabled()) continue;
                     tabCompleter.add(experiment.getId());
+                }
+            } else if (List.of("ignoremessage", "unignoremessage").contains(args[0].toLowerCase())) {
+                if (args[1].isEmpty()) {
+                    tabCompleter.add("creative.");
+                    tabCompleter.add("lobby.");
+                    tabCompleter.add("world.");
+                    tabCompleter.add("settings.");
+                    tabCompleter.add("creating-world.");
+                    tabCompleter.add("creative-chat.");
+                    tabCompleter.add("advertisement.");
+                    tabCompleter.add("commands.");
+                    tabCompleter.add("creative.");
+                    tabCompleter.add("modules.");
+                    tabCompleter.add("environment.");
+                    tabCompleter.add("items.");
                 }
             }
         } else if (args.length == 3) {

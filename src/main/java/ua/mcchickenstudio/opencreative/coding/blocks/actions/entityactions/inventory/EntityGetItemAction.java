@@ -41,7 +41,7 @@ public final class EntityGetItemAction extends EntityAction {
     public void executeEntity(@NotNull Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
         int index = getArguments().getValue("slot",1,this);
-        ItemStack item = null;
+        ItemStack item;
         if (entity instanceof InventoryHolder holder) {
             item = holder.getInventory().getItem(index-1);
         } else if (entity instanceof LivingEntity living && living.getEquipment() != null) {

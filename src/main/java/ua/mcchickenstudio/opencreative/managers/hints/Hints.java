@@ -34,7 +34,6 @@ import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleComponent;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
 

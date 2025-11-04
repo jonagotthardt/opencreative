@@ -60,6 +60,9 @@
 #  /creative - Opens menu of plugin info.                                                   Permission nodes
 #    /creative reload - Reloads config.                                                     (opencreative.reload)
 #    /creative resetlocale - Removes current localization files and replaces with default.  (opencreative.resetlocale)
+#    /creative ignoremessage [path] - Saves message from resetting locale in the future.    (opencreative.resetlocale.add-ignored)
+#    /creative unignoremessage [path] - Makes message possible to be reset in the future.   (opencreative.resetlocale.remove-ignored)
+#    /creative print [path] - Prints message content from localization file to player.      (opencreative.print)
 #    /creative list - Displays list of loaded worlds.                                       (opencreative.list.loaded)
 #    /creative deprecated - Displays list of old worlds, which have owner,
 #                           that last joined server 1 month ago.                            (opencreative.list.deprecated)
@@ -173,6 +176,10 @@ messages:
   critical-errors: true # Will send critical errors in console
   warnings: true # Will send warning in console
   not-found: false # Will send not found message in console
+
+  do-not-reset: # These messages will be not changed, even after /oc resetlocale.
+    - "path.of-the-message"
+    #- "creating-world.welcome"
 
 allowed-links:
   # These links are allowed to use in Request Resource Pack action.

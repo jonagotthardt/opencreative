@@ -23,7 +23,6 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.title.Title;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -37,7 +36,6 @@ import ua.mcchickenstudio.opencreative.settings.Sounds;
 import java.time.Duration;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.setDisplayName;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 /**

@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting;
 
 import org.bukkit.event.Cancellable;
-import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;

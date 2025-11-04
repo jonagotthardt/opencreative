@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.indev.values;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
