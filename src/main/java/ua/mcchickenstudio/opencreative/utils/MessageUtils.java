@@ -162,6 +162,20 @@ public final class MessageUtils {
     }
 
     /**
+     * Sets message in localization file and saves changes.
+     * @param path path of message.
+     * @param object message.
+     */
+    public static void setMessage(@NotNull String path, @Nullable Object object) {
+        getLocalization().set(path, object);
+        try {
+            getLocalization().save(getLocalizationFile());
+        } catch (Exception error) {
+            sendCriticalErrorMessage("Failed to set message in localization file " + getLocalizationFile().getName(), error);
+        }
+    }
+
+    /**
      * Checks if localization file exists in locales directory.
      * @param languageName name of language, without ".yml".
      * @return true - exists, false - not exists.
@@ -253,7 +267,7 @@ public final class MessageUtils {
      * Returns translation stored in FileConfiguration.
      * @return translation config.
      */
-    private static FileConfiguration getLocalization() {
+    public static FileConfiguration getLocalization() {
         return localizationConfig;
     }
 

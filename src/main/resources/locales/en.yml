@@ -219,12 +219,20 @@ help:
 creative:
   reloading: "%prefix%Reloading configuration and localization files, please wait..."
   reloaded: "%prefix%Plugin has been &6successfully&f reloaded!"
-  resetting-locale: "%prefix%Loading default localization files, please wait..."
-  reset-locale: "%prefix%Plugin has &6successfully&f reset the localization files to defaults!"
-  updated-locale: "%prefix%Plugin has &6successfully&f added the missing &6%amount% message lines&f to localization file!"
-  cant-update-locale: "%prefix%Current localization file &6is not built in plugin &fby default."
-  not-updated-locale: "%prefix%Localization file is &6up to date&f, no missing lines :)"
   loaded-worlds-list: "%prefix%List of loaded worlds, total %amount%: &6"
+  locale:
+    changed: "%prefix%&fChanged language to &6English&f!"
+    not-found: "%prefix%&cNot found localization file for this language O_o"
+    resetting: "%prefix%Loading default localization files, please wait..."
+    reset: "%prefix%Plugin has &6successfully&f reset the localization files to defaults!"
+    updated: "%prefix%Plugin has &6successfully&f added the missing &6%amount% message lines&f to localization file!"
+    cant-update: "%prefix%Current localization file &6is not built in plugin &fby default."
+    not-updated: "%prefix%Localization file is &6up to date&f, no missing lines :)"
+    ignored-message: "%prefix%&fNow the message at path &6%path%&f will no longer reset when loading the original localization files :)"
+    unignored-message: "%prefix%&fNow the message at path &6%path%&f will &nreset&f when loading the original localization files.."
+    unknown-message: "%prefix%&cMessage at path %path% not found.. O_o"
+    already-ignored-message: "%prefix%&cThe message at path %path% is already in the ignore list for reset when loading the original localization files.."
+    already-unignored-message: "%prefix%&cThe message at path %path% was not in the ignore list for reset when loading the original localization files.."
   stability:
     cannot: "%prefix%&cServer experiences a stability problem, action cannot be done. Please try again later..."
     unload: "%prefix%Unloading worlds due to stability downfall..."
@@ -257,9 +265,6 @@ creative:
   debug:
     enabled: "%prefix%&fDebug mode is &6enabled&f, some experimental features will be able and console will get additional logs."
     disabled: "%prefix%&fDebug mode is &6disabled&f, goodbye experiments!"
-  locale:
-    changed: "%prefix%&fChanged language to &6English&f!"
-    not-found: "%prefix%&cNot found localization file for this language O_o"
   sounds:
     set: "%prefix%&fChanged sound theme to &6%theme%&f, have a good listening!"
     not-found: "%prefix%&cNot found this sound theme in configuration O_o"

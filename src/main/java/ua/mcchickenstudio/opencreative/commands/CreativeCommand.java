@@ -108,11 +108,11 @@ public class CreativeCommand extends CommandHandler {
                     }
                     int added = MessageUtils.addMissingMessageLines();
                     if (added == -1) {
-                        sender.sendMessage(getLocaleMessage("creative.cant-update-locale"));
+                        sender.sendMessage(getLocaleMessage("creative.locale.cant-update"));
                     } else if (added == 0) {
-                        sender.sendMessage(getLocaleMessage("creative.not-updated-locale"));
+                        sender.sendMessage(getLocaleMessage("creative.locale.not-updated"));
                     } else {
-                        sender.sendMessage(getLocaleMessage("creative.updated-locale")
+                        sender.sendMessage(getLocaleMessage("creative.locale.updated")
                                 .replace("%amount%", String.valueOf(added)));
                     }
                     if (player != null) {
@@ -124,12 +124,12 @@ public class CreativeCommand extends CommandHandler {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return;
                     }
-                    sender.sendMessage(getLocaleMessage("creative.resetting-locale"));
+                    sender.sendMessage(getLocaleMessage("creative.locale.resetting"));
                     if (player != null) {
                         Sounds.RELOADING.play(player);
                     }
                     FileUtils.resetLocales();
-                    sender.sendMessage(getLocaleMessage("creative.reset-locale"));
+                    sender.sendMessage(getLocaleMessage("creative.locale.reset"));
                     if (player != null) {
                         Sounds.RELOADED.play(player);
                     }
@@ -351,6 +351,54 @@ public class CreativeCommand extends CommandHandler {
                     } else {
                         sender.sendMessage(getLocaleMessage("world.already-recommended")
                                 .replace("%id%", id));
+                        Sounds.PLAYER_FAIL.play(sender);
+                    }
+                }
+                case "ignoremessage" -> {
+                    if (!sender.hasPermission("opencreative.resetlocale.add-ignored")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return;
+                    }
+                    String path = args[1];
+                    if (!MessageUtils.messageExists(path)) {
+                        sender.sendMessage(getLocaleMessage("creative.locale.unknown-message")
+                                .replace("%path%", path));
+                        return;
+                    }
+                    if (OpenCreative.getSettings().addMessageIgnoringReset(path)) {
+                        sender.sendMessage(getLocaleMessage("creative.locale.ignored-message")
+                                .replace("%path%", path));
+                    } else {
+                        sender.sendMessage(getLocaleMessage("creative.locale.already-ignored-message")
+                                .replace("%path%", path));
+                        Sounds.PLAYER_FAIL.play(sender);
+                    }
+                }
+                case "unignoremessage" -> {
+                    if (!sender.hasPermission("opencreative.resetlocale.remove-ignored")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return;
+                    }
+                    String path = args[1];
+                    if (OpenCreative.getSettings().removeMessageIgnoringReset(path)) {
+                        sender.sendMessage(getLocaleMessage("creative.locale.unignored-message")
+                                .replace("%path%", path));
+                    } else {
+                        if (!MessageUtils.messageExists(path)) {
+                            sender.sendMessage(getLocaleMessage("creative.locale.unknown-message")
+                                    .replace("%path%", path));
+                        } else {
+                            sender.sendMessage(getLocaleMessage("creative.locale.already-unignored-message")
+                                    .replace("%path%", path));
+                        }
                         Sounds.PLAYER_FAIL.play(sender);
                     }
                 }
@@ -667,7 +715,24 @@ public class CreativeCommand extends CommandHandler {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return;
                     }
-                    sender.sendMessage(getLocaleMessage(args[1]));
+                    String path = args[1];
+                    if (MessageUtils.getLocalization().isList(path)) {
+                        List<String> list = MessageUtils.getLocalization().getStringList(path);
+                        sender.sendMessage(toComponent(String.join(", ", list)));
+                    } else if (MessageUtils.getLocalization().isConfigurationSection(path)) {
+                        ConfigurationSection section = MessageUtils.getLocalization().getConfigurationSection(path);
+                        if (section == null) {
+                            sender.sendMessage("Section: " + path);
+                            return;
+                        }
+                        Set<String> insideKeys = section.getKeys(true);
+                        sender.sendMessage("Section: " + path + " (" + insideKeys.size() + " inside keys)");
+                        if (!insideKeys.isEmpty()) {
+                            sender.sendMessage(substring(String.join("\n", insideKeys), 100));
+                        }
+                    } else {
+                        sender.sendMessage(getLocaleMessage(path));
+                    }
                 }
                 case "minimsg" -> {
                     if (!sender.hasPermission("opencreative.print.minimessage")) {
