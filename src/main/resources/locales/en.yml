@@ -9313,8 +9313,8 @@ items:
           - " "
           - "&fExamples:"
           - " &7[&6A&7, &6A&7, &6B&7], &6A&7, &3All &7= &e[&6B&e]"
-          - " &7[&6B&7, &6B&7], &6A&7, &3First &7= &e[&6B&e]"
-          - " &7[&6S&7, &6O&7, &6S&7], &6C&7, &3Last &7= &e[&6S&e, &6O&e]"
+          - " &7[&6B&7, &6A&7, &6B&7], &6B&7, &3First &7= &e[&6A&e, &6B&e]"
+          - " &7[&6S&7, &6O&7, &6S&7], &6S&7, &3Last &7= &e[&6S&e, &6O&e]"
           - " "
           - "&eClick to set the action."
         arguments:
