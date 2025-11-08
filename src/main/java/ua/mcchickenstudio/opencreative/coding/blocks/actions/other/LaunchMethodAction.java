@@ -19,18 +19,16 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.other;
 
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
 import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Method;
 import ua.mcchickenstudio.opencreative.coding.exceptions.UnknownMethodException;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public final class LaunchMethodAction extends Action {
 
@@ -52,7 +50,15 @@ public final class LaunchMethodAction extends Action {
             throw new UnknownMethodException(name);
         }
         for (Method method : methods) {
-            Executors.activate(method, getEvent());
+            ActionsHandler handler = new ActionsHandler(this);
+            if (entity != null) {
+                Set<Entity> targets = new HashSet<>();
+                targets.add(entity);
+                handler.setSelectedTargets(targets);
+            } else {
+                handler.setSelectedTargets(new HashSet<>());
+            }
+            handler.executeActions(method.getActions());
         }
     }
 

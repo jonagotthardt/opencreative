@@ -391,6 +391,20 @@ public class CreativeCommand extends CommandHandler {
                         Sounds.PLAYER_FAIL.play(sender);
                     }
                 }
+                case "setmessage" -> {
+                    if (!sender.hasPermission("opencreative.set-message")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    if (args.length < 3) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return;
+                    }
+                    String path = args[1];
+                    String newContent = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+                    MessageUtils.setMessage(path, newContent);
+                    printMessage(sender, path);
+                }
                 case "unrecommend" -> {
                     if (!sender.hasPermission("opencreative.world.unrecommend")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
@@ -704,24 +718,7 @@ public class CreativeCommand extends CommandHandler {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return;
                     }
-                    String path = args[1];
-                    if (MessageUtils.getLocalization().isList(path)) {
-                        List<String> list = MessageUtils.getLocalization().getStringList(path);
-                        sender.sendMessage(toComponent(String.join(", ", list)));
-                    } else if (MessageUtils.getLocalization().isConfigurationSection(path)) {
-                        ConfigurationSection section = MessageUtils.getLocalization().getConfigurationSection(path);
-                        if (section == null) {
-                            sender.sendMessage("Section: " + path);
-                            return;
-                        }
-                        Set<String> insideKeys = section.getKeys(true);
-                        sender.sendMessage("Section: " + path + " (" + insideKeys.size() + " inside keys)");
-                        if (!insideKeys.isEmpty()) {
-                            sender.sendMessage(substring(String.join("\n", insideKeys), 100));
-                        }
-                    } else {
-                        sender.sendMessage(getLocaleMessage(path));
-                    }
+                    printMessage(sender, args[1]);
                 }
                 case "minimsg" -> {
                     if (!sender.hasPermission("opencreative.print.minimessage")) {
@@ -1299,5 +1296,30 @@ public class CreativeCommand extends CommandHandler {
             }
         }
         return tabCompleter;
+    }
+
+    private void printMessage(@NotNull CommandSender sender, @NotNull String path) {
+        if (MessageUtils.getLocalization().isList(path)) {
+            List<String> list = MessageUtils.getLocalization().getStringList(path);
+            for (String message : list) {
+                sender.sendMessage(toComponent(message)
+                        .clickEvent(ClickEvent.suggestCommand(message)));
+            }
+        } else if (MessageUtils.getLocalization().isConfigurationSection(path)) {
+            ConfigurationSection section = MessageUtils.getLocalization().getConfigurationSection(path);
+            if (section == null) {
+                sender.sendMessage("Section: " + path);
+                return;
+            }
+            Set<String> insideKeys = section.getKeys(true);
+            sender.sendMessage("Section: " + path + " (" + insideKeys.size() + " inside keys)");
+            if (!insideKeys.isEmpty()) {
+                sender.sendMessage(substring(String.join("\n", insideKeys), 100));
+            }
+        } else {
+            sender.sendMessage(getLocaleComponent(path).clickEvent(ClickEvent.suggestCommand(
+                    MessageUtils.getLocalization().getString(path, "").replace("\n", "\\n")
+            )));
+        }
     }
 }
