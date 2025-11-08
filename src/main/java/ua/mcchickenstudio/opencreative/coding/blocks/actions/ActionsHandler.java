@@ -23,6 +23,10 @@ import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines.WaitAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlleractions.other.MeasureTimeAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.other.LaunchFunctionAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.other.LaunchMethodAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.RepeatAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.Condition;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.exceptions.*;
@@ -121,7 +125,7 @@ public class ActionsHandler {
     /**
      * Executes next action from queue.
      */
-    private void executeNextAction() {
+    public void executeNextAction() {
         if (executor.getPlanet().getMode() != Planet.Mode.PLAYING) {
             actionsQueue.clear();
             return;
@@ -132,6 +136,13 @@ public class ActionsHandler {
             }
             if (getMainActionHandler() == this) {
                 executor.getPlanet().getVariables().garbageCollector(this);
+            }
+            ActionsHandler parent = getParentActionHandler();
+            if (parent != null && parent != this && !(action instanceof RepeatAction || action instanceof LaunchMethodAction)) {
+                /*
+                 * Executes next action in parent actions handler.
+                 */
+                parent.executeNextAction();
             }
             return;
         }
@@ -193,7 +204,9 @@ public class ActionsHandler {
         } else {
             setWaitDelay(0);
         }
-        executeNextAction();
+        if (!(action instanceof MultiAction || action instanceof Condition || action instanceof LaunchFunctionAction)) {
+            executeNextAction();
+        }
     }
 
     /**
@@ -363,6 +376,15 @@ public class ActionsHandler {
      */
     public Set<Entity> getSelectedTargets() {
         return selectedTargets;
+    }
+
+    /**
+     * Sets selected targets for actions with "selection" target.
+     * @param targets new targets.
+     */
+    public void setSelectedTargets(@NotNull Set<Entity> targets) {
+        selectedTargets.clear();
+        selectedTargets.addAll(targets);
     }
 
     @Override
