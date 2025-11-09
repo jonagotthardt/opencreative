@@ -274,6 +274,30 @@ public class Arguments {
     }
 
     @SuppressWarnings("unchecked")
+    public final List<Boolean> getBooleanList(String path, Action action) {
+        List<Boolean> list = new ArrayList<>();
+        Argument arg = getArg(path);
+        if (arg != null && arg.isList()) {
+            try {
+                List<Argument> args = (List<Argument>) arg.getValue(action);
+                for (Argument textArg : args) {
+                    Object textObject = textArg.getValue(action);
+                    if (textObject instanceof Boolean bool) {
+                        list.add(bool);
+                    } else {
+                        String textString = textObject.toString();
+                        list.add(Boolean.parseBoolean(textString));
+                    }
+                }
+            } catch (ClassCastException e) {
+                return list;
+            }
+        }
+        sendCodingDebugVariable(planet,path,list);
+        return list;
+    }
+
+    @SuppressWarnings("unchecked")
     public final List<String> getTextList(String path, Action action) {
         List<String> list = new ArrayList<>();
         Argument arg = getArg(path);

@@ -40,18 +40,21 @@ public class TextEqualsCondition extends VariableCondition {
             return false;
         }
         String text = getArguments().getValue("text","",this);
-        String content = getArguments().getValue("content","",this);
+        List<String> contents = getArguments().getTextList("content", this);
         boolean ignoreColors = getArguments().getValue("ignore-colors",false,this);
         boolean ignoreCaps = getArguments().getValue("ignore-caps",false,this);
-        if (ignoreColors) {
-            text = ChatColor.stripColor(text);
-            content = ChatColor.stripColor(content);
+        if (ignoreColors) text = ChatColor.stripColor(text);
+        for (String content : contents) {
+            if (ignoreColors) {
+                content = ChatColor.stripColor(content);
+            }
+            if (ignoreCaps) {
+                if (text.equalsIgnoreCase(content)) return true;
+            } else {
+                if (text.equals(content)) return true;
+            }
         }
-        if (ignoreCaps) {
-            return text.equalsIgnoreCase(content);
-        } else {
-            return text.equals(content);
-        }
+        return false;
     }
 
     @Override

@@ -16,49 +16,43 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.text;
+package ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.other;
 
+import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.VariableCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Entity;
 
 import java.util.List;
 
-public class TextContainsCondition extends VariableCondition {
-    public TextContainsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
+public class BooleanIsTrueCondition extends VariableCondition {
+    public BooleanIsTrueCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
         super(executor, target, x, args, actions, reactions, isOpposed);
     }
 
     @Override
     public boolean check(Entity entity) {
-        if (!getArguments().pathExists("text") || !getArguments().pathExists("contains")) {
+        List<Boolean> booleans = getArguments().getBooleanList("booleans",this);
+        if (booleans.isEmpty()) {
             return false;
         }
-        String text = getArguments().getValue("text","",this);
-        List<String> contains = getArguments().getTextList("contains", this);
-        boolean ignoreColors = getArguments().getValue("ignore-colors",false,this);
-        boolean ignoreCaps = getArguments().getValue("ignore-caps",false,this);
-        if (ignoreColors) text = ChatColor.stripColor(text);
-        if (ignoreCaps) text = text.toLowerCase();
-        for (String contain : contains) {
-            if (ignoreColors) {
-                contain = ChatColor.stripColor(contain);
+        boolean requireAll = getArguments().getValue("all", true, this);
+        boolean isTrue = false;
+        for (Boolean bool : booleans) {
+            if (bool) {
+                isTrue = true;
+            } else if (requireAll) {
+                return false;
             }
-            if (ignoreCaps) {
-                contain = contain.toLowerCase();
-            }
-            if (text.contains(contain)) return true;
         }
-        return false;
+        return isTrue;
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.IF_VAR_TEXT_CONTAINS;
+        return ActionType.IF_VAR_BOOLEAN_IS_TRUE;
     }
 }

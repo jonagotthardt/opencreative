@@ -102,6 +102,7 @@ public class CodeScript {
         Map<String, Object> newCode = section.getValues(false);
         scriptConfig.set("old-code.blocks", newCode);
         scriptConfig.set("code.blocks", null);
+        scriptConfig.set("last-activity-time", System.currentTimeMillis());
         try {
             scriptConfig.save(getPlanetScriptFile(planet));
         } catch (IOException exception) {
