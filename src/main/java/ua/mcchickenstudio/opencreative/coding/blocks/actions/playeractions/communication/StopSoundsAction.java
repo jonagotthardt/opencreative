@@ -18,12 +18,17 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.communication;
 
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.sound.SoundStop;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.settings.SettingsSound;
 
 import java.util.List;
 
@@ -39,7 +44,12 @@ public final class StopSoundsAction extends PlayerAction {
             player.stopAllSounds();
         } else {
             for (String sound : sounds) {
-                player.stopSound(sound);
+                String nameSpace = "minecraft";
+                if (sound.contains(":")) {
+                    nameSpace = sound.split(":")[0];
+                    sound = sound.split(":")[1];
+                }
+                player.stopSound(SoundStop.named(Key.key(nameSpace, sound)));
             }
         }
     }

@@ -24,6 +24,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -100,11 +101,20 @@ public class PlanetInfo {
         if (config.get("icon") != null) {
             try {
                 if (config.isString("icon")) {
-                    icon = new ItemStack(Material.valueOf(config.getString("icon")));
-                } else {
-                    icon = ItemStack.deserialize(config.getConfigurationSection("icon").getValues(true));
+                    Material material = Material.matchMaterial(config.getString("icon", ""));
+                    if (material != null && material.isItem()) {
+                        icon = new ItemStack(material, 1);
+                    }
+                } else if (config.isConfigurationSection("icon")) {
+                    icon = config.getItemStack("icon");
+                    ConfigurationSection section = config.getConfigurationSection("icon");
+                    if (icon == null && section != null) {
+                        icon = ItemStack.deserialize(section.getValues(true));
+                    }
                 }
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+                icon = new ItemStack(Material.REDSTONE, 1);
+            }
         }
         if (config.getString("downloadable") != null) {
             downloadable = config.getBoolean("downloadable");
@@ -198,7 +208,7 @@ public class PlanetInfo {
     public void setIcon(ItemStack itemStack) {
         ItemStack newIcon = clearItemMeta(itemStack.clone());
         newIcon.setAmount(1);
-        setPlanetConfigParameter(planet,"icon",newIcon.serialize());
+        setPlanetConfigParameter(planet,"icon", newIcon);
         this.icon = newIcon;
         updateIcon();
     }

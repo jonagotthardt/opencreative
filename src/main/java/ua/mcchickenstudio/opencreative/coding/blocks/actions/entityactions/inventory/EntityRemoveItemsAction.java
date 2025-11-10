@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.inve
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +31,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.Entit
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
+
 public final class EntityRemoveItemsAction extends EntityAction {
     public EntityRemoveItemsAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
@@ -39,7 +42,7 @@ public final class EntityRemoveItemsAction extends EntityAction {
     public void executeEntity(@NotNull Entity entity) {
         if (entity instanceof InventoryHolder holder) {
             for (ItemStack item : getArguments().getItemList("items",this)) {
-                holder.getInventory().removeItemAnySlot(item);
+                removeItems(holder, item);
             }
         } else if (entity instanceof LivingEntity living && living.getEquipment() != null) {
             ItemStack[] armor = living.getEquipment().getArmorContents();
@@ -55,6 +58,29 @@ public final class EntityRemoveItemsAction extends EntityAction {
             throw new UnsupportedEntityException(InventoryHolder.class, entity);
         }
 
+    }
+
+    public static void removeItems(@NotNull InventoryHolder holder, ItemStack item) {
+        ItemStack[] contents = holder.getInventory().getContents();
+        int amount = item.getAmount();
+
+        for (int i = 0; i < contents.length; i++) {
+            ItemStack stack = contents[i];
+            if (stack == null) continue;
+            if (!itemEquals(stack, item)) continue;
+
+            int take = Math.min(amount, stack.getAmount());
+            stack.setAmount(stack.getAmount() - take);
+            amount -= take;
+
+            if (stack.getAmount() <= 0) {
+                contents[i] = null;
+            }
+
+            if (amount <= 0) break;
+        }
+
+        holder.getInventory().setContents(contents);
     }
 
     @Override
