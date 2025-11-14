@@ -458,6 +458,7 @@ world:
     subtitle: "&fBuild the &6map&f for your world"
     cant-build-when-offline: "%prefix%&cYou cannot build while the world owner is offline."
     cant-damage: "&cYou cannot deal damage while in build mode."
+    changed-because-of-code: "%prefix%&fCoding block &7(%x%, %y%, %z%) &fswitched world's mode to &6Build&f."
   dev-mode:
     connecting:
       title: "&eConnecting... ⌘"
@@ -650,7 +651,8 @@ items:
         - "&4⛏ New actions\n \n&8- &2Ignite creeper&0, &2Bat sleep&0, &2Hook lure&0, &2Make axolotl play dead&0, &2Raise bear on two legs&0,"
         - "&4⛏ New actions\n \n&8- &2Make Allay dance&0, &2Villager nod head&0, &2Turn villager into zombie&0, &2Make mob sitting&0, &2Toggle saddle presence&0,"
         - "&4⛏ New actions\n \n&8- &2Set block in minecart&0, &2Charge crossbow for piglin&0, &2Mob celebration&0, &2Make wanderer drink milk&0, &2potion&0."
-        - "&5🏹 New condition\n \n&8- &0World: &2If world cycle is running&0. \n \n&4⌘ New values\n \n&8- &0World: &4Number of modified blocks&0, &4Block change limit&0."
+        - "&5🏹 New conditions\n \n&8- &0World: &4If world cycle is running&0, &4If player is in world&0.\n&8- &0Variable: &3If boolean is true&0.\n&8- &0Entity: &2UUID Equals&0."
+        - "&4⌘ New values\n \n&8- &0World: &4Number of modified blocks&0, &4Block change limit&0."
         - "&3🔥 New target for selection\n \n&0You can now select &3the last summoned mob&0 after mob summoning actions."
         - "&3🎣 Other changes\n \n&8- &0Fixed saving dictionary values&0.\n&8- &0Fixed /edit bugs.\n&8- &0Fixed /playsound bugs."
         - "&8- &0Some action parameters translated.\n&8- &0New player management menu in world.\n&8- &0Fixed selectors in functions and methods."
@@ -10494,6 +10496,90 @@ items:
           map:
             name: "&eDictionary"
     conditions:
+      if-world-is-player-in:
+        name: "&6Player is in world"
+        lore:
+          - "&7Checks whether the player with"
+          - "&7specified nickname is in world."
+          - " "
+          - "&fIn the chest:"
+          - "&6 Text(s) &7- Player nicknames"
+          - "&3 Parameter &7- All or one of them"
+          - "&3 Parameter &7- In any world, or only in"
+          - "&7 the build or code world"
+          - " "
+          - "&eClick to set the condition."
+        arguments:
+          all:
+            name: "&3Require all or any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all players are in the world, or when"
+              - "&7any one of them is."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Any"
+              true: "Require all"
+          consider:
+            name: "&bWhere the player must be"
+            lore:
+              - "&7If any world is chosen, this will"
+              - "&7execute the condition if the player"
+              - "&7is in the build world or in"
+              - "&7the coding world."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+            choices:
+              all: "In any world"
+              build: "Only in the build world"
+              dev: "Only in the coding world"
+      if-entity-uuid-equals:
+        name: "&aEntity UUID matches"
+        lore:
+          - "&7Checks whether the unique"
+          - "&7ID of entity matches specified one."
+          - " "
+          - "&fIn the chest:"
+          - "&6 Text(s) &7- Identifier"
+          - " "
+          - "&eClick to set the condition."
+      if-var-boolean-is-true:
+        name: "&aBoolean value is true"
+        lore:
+          - "&7Checks whether the boolean"
+          - "&7value is true."
+          - " "
+          - "&fIn the chest:"
+          - "&e Boolean values &7- For checking"
+          - "&3 Parameter &7- All or one of them"
+          - " "
+          - "&eClick to set the condition."
+        arguments:
+          all:
+            name: "&3Require all or any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all values are true, or when"
+              - "&7any one of them is."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Any"
+              true: "Require all"
       if-world-cycle-is-running:
         name: "&aCycle is running"
         lore:
@@ -11144,8 +11230,8 @@ items:
           - "&7is equal to the given text."
           - " "
           - "&fIn the chest:"
+          - "&6 Text(s) &7- Content"
           - "&6 Text &7- For checking"
-          - "&6 Text &7- Content"
           - "&3 Option &7- Ignore color"
           - "&3 Option &7- Ignore case"
           - " "
@@ -11189,8 +11275,8 @@ items:
           - "&7contains the given second text."
           - " "
           - "&fIn the chest:"
+          - "&6 Text(s) &7- Content"
           - "&6 Text &7- For checking"
-          - "&6 Text &7- Content"
           - "&3 Option &7- Ignore color"
           - "&3 Option &7- Ignore case"
           - " "
@@ -11234,8 +11320,8 @@ items:
           - "&7ends with the given text."
           - " "
           - "&fIn the chest:"
+          - "&6 Text(s) &7- End"
           - "&6 Text &7- For checking"
-          - "&6 Text &7- End"
           - "&3 Option &7- Ignore color"
           - "&3 Option &7- Ignore case"
           - " "
@@ -11279,8 +11365,8 @@ items:
           - "&7starts with the given text."
           - " "
           - "&fIn the chest:"
+          - "&6 Text(s) &7- Start"
           - "&6 Text &7- For checking"
-          - "&6 Text &7- Start"
           - "&3 Option &7- Ignore color"
           - "&3 Option &7- Ignore case"
           - " "
@@ -17494,6 +17580,7 @@ blocks:
   if_world_block_is_collidable: "Block Collidable"
   if_world_block_is_preferred_tool: "Preferred Tool"
   if_world_block_is_valid_tool: "Tool Mineable"
+  if_world_is_player_in: "Player Online"
 
   if_entity_name_equals: "Name equals"
   if_entity_is_player: "Is Player"
@@ -17518,7 +17605,7 @@ blocks:
   if_entity_is_inside_vehicle: "Inside Vehicle"
   if_entity_has_no_physics: "No Physics"
   if_entity_is_invulnerable: "Invulnerable"
-
+  if_entity_uuid_equals: "UUID Equals"
   if_var_equals: "&bEquals value"
   if_var_is_null: "&cIs null"
   if_var_exists: "&6Exists"
@@ -17532,6 +17619,7 @@ blocks:
   if_var_number_less: "&cNumber less <"
   if_var_number_in_range: "&fNumber in range"
   if_var_item_has_enchantments: "Has enchants"
+  if_var_boolean_is_true: "&aIs True"
   else_condition: "&eElse"
   selection_action: "&5Select target"
   selection_set: "&dSet target"

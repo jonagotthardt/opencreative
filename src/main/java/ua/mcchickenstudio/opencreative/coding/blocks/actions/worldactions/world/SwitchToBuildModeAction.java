@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -26,6 +27,10 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldA
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
+
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.notifyBuildModeByCode;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getComponentWithPlaceholders;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getPlayerLocaleMessage;
 
 public final class SwitchToBuildModeAction extends WorldAction {
     public SwitchToBuildModeAction(Executor executor, Target target, int x, Arguments args) {
@@ -39,6 +44,7 @@ public final class SwitchToBuildModeAction extends WorldAction {
             event.callEvent();
             if (!event.isCancelled()) {
                 getPlanet().setMode(Planet.Mode.BUILD);
+                notifyBuildModeByCode(getExecutor(), this);
             }
         }
     }

@@ -40,18 +40,21 @@ public class TextEndsWithCondition extends VariableCondition {
             return false;
         }
         String text = getArguments().getValue("text","",this);
-        String ending = getArguments().getValue("ending","",this);
+        List<String> endings = getArguments().getTextList("ending", this);
         boolean ignoreColors = getArguments().getValue("ignore-colors",false,this);
         boolean ignoreCaps = getArguments().getValue("ignore-caps",false,this);
-        if (ignoreColors) {
-            text = ChatColor.stripColor(text);
-            ending = ChatColor.stripColor(ending);
+        if (ignoreColors) text = ChatColor.stripColor(text);
+        if (ignoreCaps) text = text.toLowerCase();
+        for (String ending : endings) {
+            if (ignoreColors) {
+                ending = ChatColor.stripColor(ending);
+            }
+            if (ignoreCaps) {
+                ending = ending.toLowerCase();
+            }
+            if (text.endsWith(ending)) return true;
         }
-        if (ignoreCaps) {
-            text = text.toLowerCase();
-            ending = ending.toLowerCase();
-        }
-        return text.endsWith(ending);
+        return false;
     }
 
     @Override

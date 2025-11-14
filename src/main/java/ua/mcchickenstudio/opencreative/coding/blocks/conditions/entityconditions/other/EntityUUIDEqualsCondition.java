@@ -16,49 +16,38 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.text;
+package ua.mcchickenstudio.opencreative.coding.blocks.conditions.entityconditions.other;
 
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.VariableCondition;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.entityconditions.EntityCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Entity;
 
 import java.util.List;
 
-public class TextContainsCondition extends VariableCondition {
-    public TextContainsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
+public class EntityUUIDEqualsCondition extends EntityCondition {
+    public EntityUUIDEqualsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
         super(executor, target, x, args, actions, reactions, isOpposed);
     }
 
     @Override
     public boolean check(Entity entity) {
-        if (!getArguments().pathExists("text") || !getArguments().pathExists("contains")) {
-            return false;
-        }
-        String text = getArguments().getValue("text","",this);
-        List<String> contains = getArguments().getTextList("contains", this);
-        boolean ignoreColors = getArguments().getValue("ignore-colors",false,this);
-        boolean ignoreCaps = getArguments().getValue("ignore-caps",false,this);
-        if (ignoreColors) text = ChatColor.stripColor(text);
-        if (ignoreCaps) text = text.toLowerCase();
-        for (String contain : contains) {
-            if (ignoreColors) {
-                contain = ChatColor.stripColor(contain);
+        List<String> uuids = getArguments().getTextList("uuids",this);
+        String entityUUID = entity.getUniqueId().toString();
+        for (String uuid : uuids) {
+            if (entityUUID.equals(uuid)) {
+                return true;
             }
-            if (ignoreCaps) {
-                contain = contain.toLowerCase();
-            }
-            if (text.contains(contain)) return true;
         }
         return false;
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.IF_VAR_TEXT_CONTAINS;
+        return ActionType.IF_ENTITY_UUID_EQUALS;
     }
 }

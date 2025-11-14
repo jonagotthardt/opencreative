@@ -57,6 +57,7 @@ public final class SelectionActionsMenu extends AbstractMenu {
     private final ItemStack randomPlayer = createItem(Target.RANDOM_PLAYER.getIcon(),1,"menus.developer.selection.items.random-player");
     private final ItemStack victim = createItem(Target.VICTIM.getIcon(),1,"menus.developer.selection.items.victim");
     private final ItemStack killer = createItem(Target.KILLER.getIcon(),1,"menus.developer.selection.items.killer");
+    private final ItemStack lastSpawned = createItem(Target.LAST_SPAWNED.getIcon(),1,"menus.developer.selection.items.last-spawned");
 
     public SelectionActionsMenu(Player player, Location location) {
         super(5, getLocaleMessage("blocks.selection_action",false));
@@ -72,6 +73,7 @@ public final class SelectionActionsMenu extends AbstractMenu {
         setItem(16,playerCondition);
 
         setItem(19,allPlayers);
+        setItem(24,lastSpawned);
         setItem(25,entityCondition);
 
         setItem(28,allEntities);
@@ -126,6 +128,11 @@ public final class SelectionActionsMenu extends AbstractMenu {
             player.closeInventory();
         } else if (itemEquals(currentItem, defaultItem)) {
             setLine("default");
+            Sounds.DEV_SET_TARGET.play(player);
+            event.getWhoClicked().swingMainHand();
+            player.closeInventory();
+        } else if (itemEquals(currentItem, lastSpawned)) {
+            setLine("last_spawned");
             Sounds.DEV_SET_TARGET.play(player);
             event.getWhoClicked().swingMainHand();
             player.closeInventory();

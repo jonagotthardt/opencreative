@@ -40,18 +40,21 @@ public class TextStartsWithCondition extends VariableCondition {
             return false;
         }
         String text = getArguments().getValue("text","",this);
-        String start = getArguments().getValue("start","",this);
+        List<String> starts = getArguments().getTextList("start", this);
         boolean ignoreColors = getArguments().getValue("ignore-colors",false,this);
         boolean ignoreCaps = getArguments().getValue("ignore-caps",false,this);
-        if (ignoreColors) {
-            text = ChatColor.stripColor(text);
-            start = ChatColor.stripColor(start);
+        if (ignoreColors) text = ChatColor.stripColor(text);
+        if (ignoreCaps) text = text.toLowerCase();
+        for (String start : starts) {
+            if (ignoreColors) {
+                start = ChatColor.stripColor(start);
+            }
+            if (ignoreCaps) {
+                start = start.toLowerCase();
+            }
+            if (text.startsWith(start)) return true;
         }
-        if (ignoreCaps) {
-            text = text.toLowerCase();
-            start = start.toLowerCase();
-        }
-        return text.startsWith(start);
+        return false;
     }
 
     @Override
