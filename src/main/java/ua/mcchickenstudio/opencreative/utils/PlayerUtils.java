@@ -188,6 +188,7 @@ public final class PlayerUtils {
     public static void teleportToLobby(Player player) {
         World lobbyWorld = getLobbyWorld();
         Location location = lobbyWorld != null ? lobbyWorld.getSpawnLocation() : player.getLocation();
+        player.eject();
         player.teleport(location);
         clearPlayer(player);
         player.showTitle(Title.title(

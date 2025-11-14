@@ -159,7 +159,7 @@ public class PlanetTerritory {
         World world = creator.createWorld();
         if (world == null) return;
         world.setAutoSave(autoSave);
-        world.setGameRule(GameRule.SPAWN_CHUNK_RADIUS,1);
+        setDeprecatedGameRule();
         world.setGameRule(GameRule.GLOBAL_SOUND_EVENTS, false);
         if (world.getEnvironment() == World.Environment.THE_END) {
             if (world.getEnderDragonBattle() != null) {
@@ -320,7 +320,7 @@ public class PlanetTerritory {
 
         if (world != null) {
             world.setAutoSave(true);
-            world.setGameRule(GameRule.SPAWN_CHUNK_RADIUS, 1);
+            setDeprecatedGameRule();
             world.getWorldBorder().setSize(getWorldSize());
 
             world.setGameRule(GameRule.DO_MOB_LOOT, true);
@@ -358,6 +358,12 @@ public class PlanetTerritory {
             return world;
         }
         return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public void setDeprecatedGameRule() {
+        GameRule<?> spawnRadius = GameRule.getByName("SPAWN_CHUNK_RADIUS");
+        if (spawnRadius != null) getWorld().setGameRule((GameRule<? super Integer>) spawnRadius, 1);
     }
 
     /**
