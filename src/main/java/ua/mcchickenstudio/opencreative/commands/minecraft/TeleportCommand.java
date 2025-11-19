@@ -110,7 +110,11 @@ public class TeleportCommand extends CommandHandler {
                 }
                 Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                 if (planet == null || !planet.equals(teleportPlanet)) {
-                    teleportPlanet.connectPlayer(player);
+                    if (teleportPlanet != null) {
+                        teleportPlanet.connectPlayer(player);
+                    } else {
+                        player.teleport(teleportToPlayer.getLocation());
+                    }
                 } else {
                     player.teleport(teleportToPlayer.getLocation());
                 }

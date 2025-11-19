@@ -34,6 +34,7 @@ cooldown: "%prefix%&cPlease wait %cooldown% seconds before using this command ag
 maintenance: "%prefix%&cOops, it seems there's a maintenance break: this action is unavailable as maintenance is underway. Please wait until the maintenance is over!"
 not-found-player: "&c Player is offline."
 only-players: "&c This command can be used only as player."
+only-alive: "%prefix%&cThis cannot be accessed by dead players, you need to respawn!"
 only-debug: "&c This experimental feature cannot be accessed, because debug mode of OpenCreative+ is not activated. Caution: Some experimental features aren't stable and they can corrupt your worlds!"
 commands:
   join:

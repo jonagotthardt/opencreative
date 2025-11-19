@@ -105,6 +105,10 @@ public class WorldCommand extends CommandHandler {
                     Sounds.PLAYER_FAIL.play(player);
                     return;
                 }
+                if (player.isDead()) {
+                    player.sendMessage(getLocaleMessage("only-alive"));
+                    return;
+                }
                 player.teleport(player.getWorld().getSpawnLocation());
                 Sounds.WORLD_SETTINGS_SPAWN_TELEPORT.play(player);
             }

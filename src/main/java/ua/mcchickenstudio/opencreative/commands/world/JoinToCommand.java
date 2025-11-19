@@ -49,6 +49,10 @@ public class JoinToCommand extends CommandHandler {
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
             if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
+            if (player.isDead()) {
+                player.sendMessage(getLocaleMessage("only-alive"));
+                return;
+            }
         } else if (args.length == 1) {
             sender.sendMessage(getLocaleMessage("only-players"));
         }

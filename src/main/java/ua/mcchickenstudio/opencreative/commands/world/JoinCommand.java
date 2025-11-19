@@ -80,6 +80,10 @@ public class JoinCommand extends CommandHandler {
         } else if (args.length != 1) {
             sender.sendMessage(getLocaleMessage("commands.join.help"));
         } else if (sender instanceof Player player) {
+            if (player.isDead()) {
+                player.sendMessage(getLocaleMessage("only-alive"));
+                return;
+            }
             handlePlayerConnection(player, args[0]);
         } else {
             sender.sendMessage(getLocaleMessage("only-players"));

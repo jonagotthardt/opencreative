@@ -72,9 +72,6 @@ public final class PlayerUtils {
      * @param player player to clear.
      */
     public static void clearPlayer(Player player) {
-        if (player.isDead()) {
-            player.spigot().respawn();
-        }
         player.setGameMode(GameMode.ADVENTURE);
         clearWorldModePermissions(player);
         player.closeInventory();
