@@ -111,7 +111,7 @@ public final class ProtocolLibManager implements PacketManager {
     @Override
     public void removeSpectatorName(@NotNull Player player, @NotNull Player receiver) {
         if (player.getGameMode() == GameMode.SPECTATOR) return;
-        PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.PLAYER_INFO);
+        PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PLAYER_INFO);
         packet.getPlayerInfoActions().write(0, EnumSet.of(UPDATE_GAME_MODE));
         packet.getPlayerInfoDataLists().write(1, Collections.singletonList(new PlayerInfoData(
                 new WrappedGameProfile(player.getUniqueId(), player.getName()),
