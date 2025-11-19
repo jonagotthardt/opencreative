@@ -186,6 +186,10 @@ public final class PlayerUtils {
         World lobbyWorld = getLobbyWorld();
         Location location = lobbyWorld != null ? lobbyWorld.getSpawnLocation() : player.getLocation();
         player.eject();
+        if (player.isDead()) {
+            player.setRespawnLocation(location);
+            player.spigot().respawn();
+        }
         player.teleport(location);
         clearPlayer(player);
         player.showTitle(Title.title(
