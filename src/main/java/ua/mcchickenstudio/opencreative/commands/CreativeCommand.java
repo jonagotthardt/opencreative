@@ -1291,7 +1291,7 @@ public class CreativeCommand extends CommandHandler {
                     if (experiment == null || !experiment.isEnabled()) {
                         return null;
                     }
-                    return experiment.tabCommand(sender, Arrays.copyOfRange(args, 2, args.length));
+                    return experiment.tabCommand(sender, Arrays.copyOfRange(args, 3, args.length));
                 }
             }
         }

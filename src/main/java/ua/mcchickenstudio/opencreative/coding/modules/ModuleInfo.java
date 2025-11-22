@@ -24,6 +24,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -32,6 +33,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,19 +107,25 @@ public class ModuleInfo {
         displayName = config.getString("name","Unknown name");
         description = config.getString("description","Unknown description");
         isPublic = config.getBoolean("public",true);
-        if (config.get("icon") != null) {
-            try {
-                if (config.isString("icon")) {
-                    icon = new ItemStack(Material.valueOf(config.getString("icon")));
+        icon = new ItemStack(Material.BARREL, 1);
+        try {
+            if (config.isString("icon")) {
+                Material material = Material.matchMaterial(config.getString("icon", ""));
+                if (material != null && material.isItem()) {
+                    icon = new ItemStack(material, 1);
                 } else {
-                    icon = ItemStack.deserialize(config.getConfigurationSection("icon").getValues(true));
+                    icon = ItemUtils.loadItemFromByteArray(config.getString("icon", ""));
                 }
-            } catch (Exception ignored) {
-                icon = new ItemStack(Material.BARREL);
+            } else if (config.isConfigurationSection("icon")) {
+                ConfigurationSection section = config.getConfigurationSection("icon");
+                if (section != null) {
+                    icon = ItemStack.deserialize(section.getValues(true));
+                }
             }
-        } else {
-            icon = new ItemStack(Material.BARREL);
+        } catch (Exception ignored) {
+            icon = new ItemStack(Material.BARREL, 1);
         }
+        if (icon.isEmpty()) icon = new ItemStack(Material.BARREL, 1);
         setPersistentData(icon, getItemIdKey(), String.valueOf(module.getId()));
         creationTime = config.getLong("creation-time",1670573410000L);
         reputation = config.getStringList("players.liked").size()-config.getStringList("players.disliked").size();
@@ -159,7 +167,11 @@ public class ModuleInfo {
     public void setIcon(ItemStack itemStack) {
         ItemStack newIcon = clearItemMeta(itemStack.clone());
         newIcon.setAmount(1);
-        setModuleConfigParameter(module,"icon",newIcon.serialize());
+        if (ItemUtils.doesItemRequireSpecialData(newIcon)) {
+            setModuleConfigParameter(module,"icon", ItemUtils.saveItemAsByteArray(newIcon));
+        } else {
+            setModuleConfigParameter(module,"icon", newIcon.getType().name());
+        }
         this.icon = newIcon;
         updateIcon();
     }

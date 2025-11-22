@@ -31,6 +31,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,17 +105,19 @@ public class PlanetInfo {
                     Material material = Material.matchMaterial(config.getString("icon", ""));
                     if (material != null && material.isItem()) {
                         icon = new ItemStack(material, 1);
+                    } else {
+                        icon = ItemUtils.loadItemFromByteArray(config.getString("icon", ""));
                     }
                 } else if (config.isConfigurationSection("icon")) {
-                    icon = config.getItemStack("icon");
                     ConfigurationSection section = config.getConfigurationSection("icon");
-                    if (icon == null && section != null) {
+                    if (section != null) {
                         icon = ItemStack.deserialize(section.getValues(true));
                     }
                 }
             } catch (Exception ignored) {
                 icon = new ItemStack(Material.REDSTONE, 1);
             }
+            if (icon.isEmpty()) icon = new ItemStack(Material.REDSTONE, 1);
         }
         if (config.getString("downloadable") != null) {
             downloadable = config.getBoolean("downloadable");
@@ -208,7 +211,11 @@ public class PlanetInfo {
     public void setIcon(ItemStack itemStack) {
         ItemStack newIcon = clearItemMeta(itemStack.clone());
         newIcon.setAmount(1);
-        setPlanetConfigParameter(planet,"icon", newIcon);
+        if (ItemUtils.doesItemRequireSpecialData(newIcon)) {
+            setPlanetConfigParameter(planet,"icon", ItemUtils.saveItemAsByteArray(newIcon));
+        } else {
+            setPlanetConfigParameter(planet,"icon", newIcon.getType().name());
+        }
         this.icon = newIcon;
         updateIcon();
     }
