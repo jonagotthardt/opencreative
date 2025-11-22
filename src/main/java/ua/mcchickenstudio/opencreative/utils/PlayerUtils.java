@@ -72,9 +72,6 @@ public final class PlayerUtils {
      * @param player player to clear.
      */
     public static void clearPlayer(Player player) {
-        if (player.isDead()) {
-            player.spigot().respawn();
-        }
         player.setGameMode(GameMode.ADVENTURE);
         clearWorldModePermissions(player);
         player.closeInventory();
@@ -189,6 +186,10 @@ public final class PlayerUtils {
         World lobbyWorld = getLobbyWorld();
         Location location = lobbyWorld != null ? lobbyWorld.getSpawnLocation() : player.getLocation();
         player.eject();
+        if (player.isDead()) {
+            player.setRespawnLocation(location);
+            player.spigot().respawn();
+        }
         player.teleport(location);
         clearPlayer(player);
         player.showTitle(Title.title(

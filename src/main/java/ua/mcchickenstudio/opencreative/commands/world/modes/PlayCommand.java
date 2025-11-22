@@ -68,6 +68,11 @@ public class PlayCommand extends CommandHandler {
 
         if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
 
+        if (player.isDead()) {
+            sender.sendMessage(getLocaleMessage("only-alive"));
+            return;
+        }
+        
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet == null) {
             player.sendMessage(getLocaleMessage("only-in-world"));

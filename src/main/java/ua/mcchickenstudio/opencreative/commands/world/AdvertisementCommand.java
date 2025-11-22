@@ -79,6 +79,10 @@ public class AdvertisementCommand extends CommandHandler {
                 break;
             case 1:  // /ad [planet id]
                 if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
+                if (player.isDead()) {
+                    player.sendMessage(getLocaleMessage("only-alive"));
+                    return;
+                }
                 handlePlayerConnection(player, args[0]);
                 break;
             case 2:  // /ad [planet id] [player]

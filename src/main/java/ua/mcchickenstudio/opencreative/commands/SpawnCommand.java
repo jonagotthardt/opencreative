@@ -46,6 +46,10 @@ public class SpawnCommand extends CommandHandler {
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
             if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
+            if (player.isDead()) {
+                sender.sendMessage(getLocaleMessage("only-alive"));
+                return;
+            }
         }
         if (args.length == 0) {
             if (!(sender instanceof Player player)) {

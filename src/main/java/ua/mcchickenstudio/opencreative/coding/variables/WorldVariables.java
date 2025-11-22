@@ -33,12 +33,10 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.io.BukkitObjectInputStream;
-import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
+import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import java.io.*;
 import java.util.*;
@@ -245,11 +243,8 @@ public final class WorldVariables {
 
     private Object serializeObject(Object value) {
         try {
-            if (value instanceof ItemStack) {
-                final ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
-                final BukkitObjectOutputStream objectOutputStream = new BukkitObjectOutputStream(arrayOutputStream);
-                objectOutputStream.writeObject(value);
-                value = Base64Coder.encodeLines(arrayOutputStream.toByteArray());
+            if (value instanceof ItemStack item) {
+                value = ItemUtils.saveItemAsByteArray(item);
             } else if (value instanceof Location location) {
                 Map<String,Number> locationMap = new HashMap<>();
                 locationMap.put("x",location.getX());
@@ -328,9 +323,7 @@ public final class WorldVariables {
     private Object deserializeObject(Object value, ValueType type) {
         try {
             if (type == ValueType.ITEM) {
-                final ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(Base64Coder.decodeLines((String) value));
-                final BukkitObjectInputStream objectInputStream = new BukkitObjectInputStream(arrayInputStream);
-                value = objectInputStream.readObject();
+                value = ItemUtils.loadItemFromByteArray((String) value);
             } else if (type == ValueType.LOCATION) {
                 double x, y, z;
                 float yaw, pitch;

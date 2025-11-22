@@ -61,6 +61,7 @@ public final class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
         this.planets = new ArrayList<>(OpenCreative.getPlanetsManager().getPlanetsByOwner(player));
         Comparator<Planet> sortByOnline = (planet1, planet2) -> Integer.compare(planet2.getOnline(), planet1.getOnline());
         this.planets.sort(sortByOnline);
+        CREATE_WORLD.setAmount(Math.min(64, getAvailableAmount()));
     }
 
     @Override
@@ -200,6 +201,12 @@ public final class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
     @Override
     public void onOpen(@NotNull InventoryOpenEvent event) {
         Sounds.MENU_OPEN_OWN_WORLDS_BROWSER.play(event.getPlayer());
+    }
+
+    private int getAvailableAmount() {
+        int planetsAmount = OpenCreative.getPlanetsManager().getPlanetsByOwner(getPlayer()).size();
+        int planetsLimit = OpenCreative.getSettings().getGroups().getGroup(getPlayer()).getWorldsLimit();
+        return Math.max(1, planetsLimit-planetsAmount);
     }
 
     private boolean isNotLimitReached() {

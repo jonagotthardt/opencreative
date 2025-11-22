@@ -26,7 +26,11 @@ import org.bukkit.block.EntityBlockStorage;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.meta.*;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import net.kyori.adventure.text.Component;
@@ -40,6 +44,8 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -655,4 +661,64 @@ public final class ItemUtils {
         }
         return length;
     }
+
+    /**
+     * Saves item as byte array in text.
+     * @param item item to serialize.
+     * @return string of byte array, that can be used in configs, or empty text "".
+     */
+    public static @NotNull String saveItemAsByteArray(@NotNull ItemStack item) {
+        try {
+            ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+            BukkitObjectOutputStream objectOutputStream = new BukkitObjectOutputStream(arrayOutputStream);
+            objectOutputStream.writeObject(item);
+            return Base64Coder.encodeLines(arrayOutputStream.toByteArray());
+        } catch (Exception error) {
+            sendDebugError("Failed to serialize item to bytes string: " + item, error);
+            return "";
+        }
+    }
+
+    /**
+     * Loads item from byte array in text.
+     * @param text text with item's byte array to deserialize.
+     * @return item from byte array, or empty (air x0) item.
+     */
+    public static @NotNull ItemStack loadItemFromByteArray(@NotNull String text) {
+        try {
+            if (text.isEmpty()) return ItemStack.empty();
+            ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(Base64Coder.decodeLines(text));
+            BukkitObjectInputStream objectInputStream = new BukkitObjectInputStream(arrayInputStream);
+            return (ItemStack) objectInputStream.readObject();
+        } catch (Exception error) {
+            sendDebugError("Failed to deserialize item from bytes string: " + text, error);
+            return ItemStack.empty();
+        }
+    }
+
+    /**
+     * Checks whether item should be saved as bytes array instead of just material.
+     * @param item item to check.
+     * @return true - item can have special data, so it should be saved as bytes array
+     * to contain all information, false - can be saved as material.
+     */
+    public static boolean doesItemRequireSpecialData(@NotNull ItemStack item) {
+        Material type = item.getType();
+        String material = item.getType().name().toLowerCase();
+        if (material.endsWith("banner") || type == Material.SHIELD) return true;
+        if (item.getItemMeta() instanceof SkullMeta) {
+            return true;
+        }
+        if (item.getItemMeta() instanceof LeatherArmorMeta armor) {
+            if (armor.isDyed()) return true;
+        }
+        if (item.getItemMeta() instanceof ArmorMeta armor) {
+            if (armor.hasTrim()) return true;
+        }
+        if (item.getItemMeta() instanceof PotionMeta potion) {
+            return potion.hasColor();
+        }
+        return false;
+    }
+
 }

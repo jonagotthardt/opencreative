@@ -21,13 +21,11 @@ package ua.mcchickenstudio.opencreative.planets;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.io.BukkitObjectInputStream;
-import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
+import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import java.io.*;
 import java.util.*;
@@ -135,9 +133,7 @@ public class PlanetPlayer {
             if (savedInventory instanceof JSONArray array) {
                 List<ItemStack> items = new ArrayList<>();
                 for (Object object : array) {
-                    ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(Base64Coder.decodeLines((String) object));
-                    BukkitObjectInputStream objectInputStream = new BukkitObjectInputStream(arrayInputStream);
-                    items.add((ItemStack) objectInputStream.readObject());
+                    items.add(ItemUtils.loadItemFromByteArray((String) object));
                 }
                 saveInventory(items.toArray(new ItemStack[]{}));
             }
@@ -145,9 +141,7 @@ public class PlanetPlayer {
             if (savedEnderChest instanceof JSONArray array) {
                 List<ItemStack> items = new ArrayList<>();
                 for (Object object : array) {
-                    ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(Base64Coder.decodeLines((String) object));
-                    BukkitObjectInputStream objectInputStream = new BukkitObjectInputStream(arrayInputStream);
-                    items.add((ItemStack) objectInputStream.readObject());
+                    items.add(ItemUtils.loadItemFromByteArray((String) object));
                 }
                 saveEnderChest(items.toArray(new ItemStack[]{}));
             }
@@ -192,17 +186,13 @@ public class PlanetPlayer {
     }
 
     @SuppressWarnings("unchecked")
-    private JSONArray serializeItems(ItemStack[] items) throws IOException {
+    private JSONArray serializeItems(ItemStack[] items) {
         JSONArray json = new JSONArray();
         if (items == null) {
             return json;
         }
         for (ItemStack item : items) {
-            try (ByteArrayOutputStream out = new ByteArrayOutputStream();
-                 BukkitObjectOutputStream dataOut = new BukkitObjectOutputStream(out)) {
-                 dataOut.writeObject(item);
-                 json.add(Base64Coder.encodeLines(out.toByteArray()));
-            }
+            json.add(ItemUtils.saveItemAsByteArray(item));
         }
         return json;
     }
