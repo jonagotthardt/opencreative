@@ -703,11 +703,14 @@ public final class ItemUtils {
      * to contain all information, false - can be saved as material.
      */
     public static boolean doesItemRequireSpecialData(@NotNull ItemStack item) {
-        Material type = item.getType();
-        String material = item.getType().name().toLowerCase();
-        if (material.endsWith("banner") || type == Material.SHIELD) return true;
         if (item.getItemMeta() instanceof SkullMeta) {
             return true;
+        }
+        if (item.getItemMeta() instanceof BannerMeta banner) {
+            if (!banner.getPatterns().isEmpty()) return true;
+        }
+        if (item.getItemMeta() instanceof ShieldMeta shield) {
+            if (shield.getBaseColor() != null) return true;
         }
         if (item.getItemMeta() instanceof LeatherArmorMeta armor) {
             if (armor.isDyed()) return true;
