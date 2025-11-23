@@ -667,8 +667,9 @@ public final class ItemUtils {
      * @param item item to serialize.
      * @return string of byte array, that can be used in configs, or empty text "".
      */
-    public static @NotNull String saveItemAsByteArray(@NotNull ItemStack item) {
+    public static @NotNull String saveItemAsByteArray(@Nullable ItemStack item) {
         try {
+            if (item == null || item.isEmpty()) return "";
             ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
             BukkitObjectOutputStream objectOutputStream = new BukkitObjectOutputStream(arrayOutputStream);
             objectOutputStream.writeObject(item);
