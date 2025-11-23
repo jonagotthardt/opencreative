@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.planets;
 
 import org.bukkit.entity.*;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodeScript;
@@ -35,7 +36,6 @@ import net.kyori.adventure.util.TriState;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,9 +57,9 @@ public class PlanetTerritory {
 
     private final Planet planet;
     private final PlanetFlags flags;
+    private final PlanetScoreboards scoreboards;
 
     private final Map<String, BossBar> bossBars = new HashMap<>();
-    private final Map<String, Scoreboard> scoreboards = new HashMap<>();
     private final List<BukkitRunnable> runningBukkitRunnables = new ArrayList<>();
 
     private final CodeScript script;
@@ -71,6 +71,7 @@ public class PlanetTerritory {
     public PlanetTerritory(Planet planet) {
         this.planet = planet;
         flags = new PlanetFlags(planet);
+        scoreboards = new PlanetScoreboards(planet);
         script = new CodeScript(planet);
         loadInformation();
     }
@@ -277,10 +278,6 @@ public class PlanetTerritory {
         return flags;
     }
 
-    public Map<String, Scoreboard> getScoreboards() {
-        return scoreboards;
-    }
-
     public Map<String, BossBar> getBossBars() {
         return bossBars;
     }
@@ -289,7 +286,7 @@ public class PlanetTerritory {
         return environment;
     }
 
-    public World getWorld() {
+    public @Nullable World getWorld() {
         return Bukkit.getWorld(planet.getWorldName());
     }
 
@@ -370,7 +367,7 @@ public class PlanetTerritory {
      * Shows custom world borders for player.
      * @param player player to show.
      */
-    public void showBorders(Player player) {
+    public void showBorders(@NotNull Player player) {
         if (isEntityInDevPlanet(player)) return;
         WorldBorder border = Bukkit.createWorldBorder();
         border.setSize(player.getWorld().getWorldBorder().getSize());
@@ -387,6 +384,14 @@ public class PlanetTerritory {
             case 4 -> border.setSize(border.getMaxSize());
         }
         player.setWorldBorder(border);
+    }
+
+    /**
+     * Returns scoreboards of planet.
+     * @return planet's scoreboards.
+     */
+    public @NotNull PlanetScoreboards getScoreboards() {
+        return scoreboards;
     }
 
     public boolean isAutoSave() {

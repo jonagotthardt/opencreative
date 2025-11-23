@@ -18,40 +18,49 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appearance;
 
+import io.papermc.paper.scoreboard.numbers.NumberFormat;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.Style;
 import org.bukkit.entity.Entity;
+import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
-public final class TeamSetCollisionRuleAction extends WorldAction {
-    public TeamSetCollisionRuleAction(Executor executor, Target target, int x, Arguments args) {
+import java.util.List;
+
+public final class SetScoreNumberStyleAction extends WorldAction {
+    public SetScoreNumberStyleAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     protected void execute(Entity entity) {
-        if (!getArguments().pathExists("scoreboard") || !getArguments().pathExists("team")) {
+        if (!getArguments().pathExists("scoreboards")) {
             return;
         }
-        String scoreboardName = getArguments().getValue("scoreboard","board",this);
-        String teamName = getArguments().getValue("team","team",this);
-        Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(scoreboardName.toLowerCase());
-        if (scoreboard == null) {
-            return;
+        Component style = getArguments().getValue("style", Component.empty(), this);
+        List<String> scoreboards = getArguments().getTextList("scoreboards",this);
+        for (String name : scoreboards) {
+            Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(name.toLowerCase());
+            if (scoreboard != null) {
+                NumberFormat format = NumberFormat.blank();
+                if (getArguments().pathExists("style")) {
+                    format = NumberFormat.styled(style.style());
+                }
+                Objective objective = scoreboard.getObjective("score");
+                if (objective != null) {
+                    objective.numberFormat(format);
+                }
+            }
         }
-        Team team = scoreboard.getTeam(teamName);
-        if (team == null) return;
-        String statusString = getArguments().getValue("option","always",this);
-        Team.OptionStatus optionStatus = statusString.equalsIgnoreCase("never") ? Team.OptionStatus.NEVER : statusString.equalsIgnoreCase("for-own-team") ? Team.OptionStatus.FOR_OWN_TEAM : statusString.equalsIgnoreCase("for-other-teams") ? Team.OptionStatus.FOR_OTHER_TEAMS : Team.OptionStatus.ALWAYS;
-        team.setOption(Team.Option.COLLISION_RULE,optionStatus);
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.WORLD_TEAM_SET_COLLISION_RULE;
+        return ActionType.WORLD_SCOREBOARD_SET_NUMBER_STYLE;
     }
 }

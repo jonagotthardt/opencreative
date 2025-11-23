@@ -39,14 +39,14 @@ public final class ScoreboardSetDisplayNameAction extends WorldAction {
             return;
         }
         String name = getArguments().getValue("name","board",this);
-        String displayName = getArguments().getValue("display-name","Scoreboard",this);
-        Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().get(name.toLowerCase());
+        Component displayName = getArguments().getValue("display-name", Component.text("Scoreboard"), this);
+        Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(name.toLowerCase());
         if (scoreboard == null) {
             return;
         }
         Objective objective = scoreboard.getObjective("score");
         if (objective != null) {
-            objective.displayName(Component.text(displayName));
+            objective.displayName(displayName);
         }
     }
 

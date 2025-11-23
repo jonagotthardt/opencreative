@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appearance;
 
+import io.papermc.paper.scoreboard.numbers.NumberFormat;
+import org.bukkit.scoreboard.RenderType;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -38,8 +40,8 @@ public final class ScoreboardResetScoreAction extends WorldAction {
             return;
         }
         String name = getArguments().getValue("name","board",this);
-        String object = getArguments().getValue("object","board",this);
-        Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().get(name.toLowerCase());
+        String object = getArguments().getValue("object","object",this);
+        Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(name.toLowerCase());
         if (scoreboard == null) {
             return;
         }

@@ -6896,6 +6896,37 @@ items:
           - "&6 Текст(ы) &7- Имя скорборда"
           - ""
           - "&eНажми, чтобы установить действие."
+      world-scoreboard-clear-scores:
+        name: "&cУбрать все очки скорборда"
+        lore:
+          - "&7Это удалит все очки скорборда"
+          - "&7и позволит вам заново заполнить"
+          - "&7его новыми очками."
+          - ""
+          - "&fВ сундуке:"
+          - "&6 Текст(ы) &7- Имя скорборда"
+          - ""
+          - "&eНажми, чтобы установить действие."
+      world-scoreboard-set-number-style:
+        name: "&aСменить стиль чисел очков"
+        lore:
+          - "&7Установит стиль для отображения"
+          - "&7очков, которые находятся правее"
+          - "&7текста."
+          - ""
+          - "&7Если в сундуке не будет текста"
+          - "&7со стилем, то оно скроет числа."
+          - ""
+          - "&fВ сундуке:"
+          - "&6 Текст(ы) &7- Имя скорборда"
+          - "&6 Текст &7- Текст с цветами и стилем"
+          - ""
+          - "&eНажми, чтобы установить действие."
+        placeholders:
+          scoreboards:
+            name: "&6Имя скорборда"
+          style:
+            name: "&6Стилизованный текст"
       world-create-boss-bar:
         name: "&aСоздать боссбар"
         lore:
@@ -17455,6 +17486,7 @@ blocks:
   player_give_potion_effects: "Выдать эффекты"
   player_remove_potion_effects: "Убрать эффекты"
   player_set_cursor_item: "Уст. курсор"
+  player_set_item_in_hand: "Уст. предмет"
   player_swing_hand: "Махнуть рукой"
   player_close_inventory: "Закрыть инвен."
   player_firework_boost: "Ускор. фейерверка"
@@ -17501,8 +17533,9 @@ blocks:
   entity_path_move_to_location: "Цель локации"
   entity_set_armor_stand_pose: "Поза стойки"
   entity_set_velocity: "Пуск вектором"
-  entity_set_items: "Установ. предм."
-  entity_set_armor: "Установ. броню"
+  entity_set_items: "Уст. предметы"
+  entity_set_item_in_hand: "Уст. предмет"
+  entity_set_armor: "Пост. броню"
   entity_set_slot: "Установ. слот"
   entity_clear_inventory: "Очистить инвент."
   entity_get_item_by_slot: "Получ. предмет"
@@ -17741,6 +17774,8 @@ blocks:
   world_drop_item: "Бросить предмет"
   world_create_scoreboard: "&aСозд. скорборд"
   world_create_boss_bar: "&aСозд. боссбар"
+  world_scoreboard_set_number_style: "Стиль очков"
+  world_scoreboard_clear_scores: "&cУбрать все очки"
   world_scoreboard_set_score: "&eОчки скорборда"
   world_scoreboard_reset_score: "&cСбросить очки"
   world_scoreboard_set_display_name: "Назв. скорборда"

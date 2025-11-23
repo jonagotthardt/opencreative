@@ -44,27 +44,26 @@ public final class CreateScoreboardAction extends WorldAction {
             return;
         }
         String name = getArguments().getValue("name","board",this);
-        String displayName = getArguments().getValue("display-name","Scoreboard",this);
+        Component displayName = getArguments().getValue("display-name",Component.text("Scoreboard"),this);
         try {
-            if (getPlanet().getTerritory().getScoreboards().size() >= getPlanet().getLimits().getScoreboardsLimit()) {
+            if (getPlanet().getTerritory().getScoreboards().getAmount() >= getPlanet().getLimits().getScoreboardsLimit()) {
                 // FIXME: Replace with hard-coded message, sendMessageOnce()
                 sendCodingDebugLog(getPlanet(),"Limit of " + getPlanet().getLimits().getScoreboardsLimit() + " scoreboards reached.");
                 return;
             }
-            Scoreboard scoreboard;
-            if (getPlanet().getTerritory().getScoreboards().containsKey(name.toLowerCase())) {
-                scoreboard = getPlanet().getTerritory().getScoreboards().get(name.toLowerCase());
+            Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(name.toLowerCase());
+            if (scoreboard != null) {
                 Objective objective = scoreboard.getObjective("score");
                 if (objective == null) {
                     objective = scoreboard.registerNewObjective("score",Criteria.DUMMY,displayName);
                 }
-                objective.displayName(Component.text(displayName));
+                objective.displayName(displayName);
             } else {
                 scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
                 Objective objective = scoreboard.registerNewObjective("score",Criteria.DUMMY,displayName);
                 objective.setDisplaySlot(DisplaySlot.SIDEBAR);
             }
-            getPlanet().getTerritory().getScoreboards().put(name.toLowerCase(),scoreboard);
+            getPlanet().getTerritory().getScoreboards().registerScoreboard(name.toLowerCase(), scoreboard);
         } catch (Exception ignored) {}
     }
 
