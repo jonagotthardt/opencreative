@@ -40,7 +40,7 @@ public final class CreateBossBarAction extends WorldAction {
             return;
         }
         String name = getArguments().getValue("name","boss",this);
-        String displayName = getArguments().getValue("display-name"," ",this);
+        Component displayName = getArguments().getValue("display-name",Component.text(" "),this);
         float progress = getArguments().getValue("progress",100.0f,this)/100;
 
         String overlayString = getArguments().getValue("overlay","progress",this);
@@ -61,9 +61,9 @@ public final class CreateBossBarAction extends WorldAction {
         }
         BossBar bossBar = getPlanet().getTerritory().getBossBars().get(name.toLowerCase());
         if (bossBar == null) {
-            bossBar = BossBar.bossBar(Component.text(displayName), progress, color, overlay);
+            bossBar = BossBar.bossBar(displayName, progress, color, overlay);
         } else {
-            bossBar.name(Component.text(displayName));
+            bossBar.name(displayName);
             bossBar.progress(progress);
             bossBar.overlay(overlay);
             bossBar.color(color);

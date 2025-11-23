@@ -6790,7 +6790,37 @@ items:
           - "&6 Text &7- Display name"
           - ""
           - "&eClick to set the action."
-
+      world-scoreboard-clear-scores:
+        name: "&cClear All Scores in Scoreboard"
+        lore:
+          - "&7This will delete all scores from"
+          - "&7scoreboard and allow you to fill"
+          - "&7it again with new scores."
+          - ""
+          - "&fIn the chest:"
+          - "&6 Text(s) &7- Scoreboard name"
+          - ""
+          - "&eClick to set the action."
+      world-scoreboard-set-number-style:
+        name: "&aChange the score number style"
+        lore:
+          - "&7Sets the style for displaying"
+          - "&7the scores that appear to the right"
+          - "&7of the text."
+          - ""
+          - "&7If there is no text with style in"
+          - "&7the chest, it will hide the numbers."
+          - ""
+          - "&fIn the chest:"
+          - "&6 Text(s) &7- Scoreboard name"
+          - "&6 Text &7- Text with colors and style"
+          - ""
+          - "&eClick to set the action."
+        placeholders:
+          scoreboards:
+            name: "&6Scoreboard name"
+          style:
+            name: "&6Styled text"
       world-scoreboard-set-score:
         name: "&6Set Score in Scoreboard"
         lore:
@@ -17243,6 +17273,7 @@ blocks:
   entity_set_velocity: "Set Velocity"
   entity_set_items: "Set Items"
   entity_set_armor: "Set Armor"
+  entity_set_item_in_hand: "Set Item in hand"
   entity_set_slot: "Set Slot"
   entity_clear_inventory: "Clear Inventory"
   entity_get_item_by_slot: "Get Item"
@@ -17483,8 +17514,10 @@ blocks:
   world_drop_item: "Drop item"
   world_create_scoreboard: "&aCreate scoreboard"
   world_create_boss_bar: "&aCreate boss bar"
-  world_scoreboard_set_score: "&eSet scoreboard points"
-  world_scoreboard_reset_score: "&cReset scoreboard points"
+  world_scoreboard_set_number_style: "Score Style"
+  world_scoreboard_clear_scores: "&cRemove all scores"
+  world_scoreboard_set_score: "&eSet Score"
+  world_scoreboard_reset_score: "&cReset score"
   world_scoreboard_set_display_name: "Scoreboard name"
   world_delete_score_board: "&cDelete scoreboard"
   world_delete_boss_bar: "&cDelete boss bar"

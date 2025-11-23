@@ -38,10 +38,10 @@ public final class BossBarDisplayNameAction extends WorldAction {
             return;
         }
         String name = getArguments().getValue("name","boss",this);
-        String displayName = getArguments().getValue("display-name"," ",this);
+        Component displayName = getArguments().getValue("display-name",Component.text(" "),this);
         BossBar bossBar = getPlanet().getTerritory().getBossBars().get(name.toLowerCase());
         if (bossBar != null) {
-            bossBar.name(Component.text(displayName));
+            bossBar.name(displayName);
         }
         getPlanet().getTerritory().getBossBars().put(name.toLowerCase(),bossBar);
     }

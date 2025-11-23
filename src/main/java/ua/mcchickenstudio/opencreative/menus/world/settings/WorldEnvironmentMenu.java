@@ -85,7 +85,7 @@ public final class WorldEnvironmentMenu extends AbstractMenu implements WorldMen
     private ItemStack createInfoItem() {
         ItemStack info = createItem(Material.AMETHYST_CLUSTER,1,"menus.developer.environment.items.info");
         replacePlaceholderInLore(info,"%executors%", devPlanet.getPlanet().getTerritory().getScript().getExecutors().getExecutorsList().size());
-        replacePlaceholderInLore(info,"%scoreboards%", devPlanet.getPlanet().getTerritory().getScoreboards().size());
+        replacePlaceholderInLore(info,"%scoreboards%", devPlanet.getPlanet().getTerritory().getScoreboards().getAmount());
         replacePlaceholderInLore(info,"%scoreboards-limit%", devPlanet.getPlanet().getLimits().getScoreboardsLimit());
         replacePlaceholderInLore(info,"%bossbars%", devPlanet.getPlanet().getTerritory().getBossBars().size());
         replacePlaceholderInLore(info,"%bossbars-limit%", devPlanet.getPlanet().getLimits().getBossBarsLimit());

@@ -23,11 +23,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.List;
 
@@ -43,22 +39,8 @@ public final class DeleteScoreboardAction extends WorldAction {
         }
         List<String> scoreboards = getArguments().getTextList("scoreboards",this);
         for (String name : scoreboards) {
-            Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().get(name.toLowerCase());
-            if (scoreboard != null) {
-                Objective objective = scoreboard.getObjective("score");
-                if (objective != null) {
-                    objective.unregister();
-                }
-                for (Player player : getPlanet().getPlayers()) {
-                    if (player.getScoreboard().equals(scoreboard)) {
-                        player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
-                    }
-                }
-                getPlanet().getTerritory().getScoreboards().remove(name.toLowerCase());
-            }
+            getPlanet().getTerritory().getScoreboards().unregisterScoreboard(name.toLowerCase());
         }
-
-
     }
 
     @Override
