@@ -1309,13 +1309,30 @@ items:
             - " "
             - "&eClick to choose category."
         entity_state:
-          name: "&3Entity State"
+          name: "&3Mob State"
           lore:
-            - "&7Set glowing, change text"
-            - "&7of display entity, change"
-            - "&7color of sheep or dog's collar."
+            - "&7Set glow, text for"
+            - "&7visualizer, free"
+            - "&7shoulders, change aggression,"
+            - "&7mute the mob."
             - " "
-            - "&eClick to choose category."
+            - "&eClick to choose a category."
+        entity_inventory:
+          name: "&6Mob Equipment"
+          lore:
+            - "&7Set mob armor, give"
+            - "&7items and clear inventory."
+            - " "
+            - "&eClick to choose a category."
+        entity_appearance:
+          name: "&6Mob Appearance"
+          lore:
+            - "&7Change size, make glowing,"
+            - "&7apply visual fire, change"
+            - "&7wool or collar color, remove"
+            - "&7the pumpkin from a snow golem."
+            - " "
+            - "&eClick to choose a category."
         blocks:
           name: "&cBlock Manipulation"
           lore:
@@ -5194,7 +5211,7 @@ items:
           - "&7have a pumpkin head."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-bee-nectar:
@@ -5204,7 +5221,7 @@ items:
           - "&7nectar while flying."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-bee-stung:
@@ -5214,7 +5231,7 @@ items:
           - "&7a stinger."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-cat-lying-down:
@@ -5224,7 +5241,7 @@ items:
           - "&7lie on the ground."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-carrying-chest:
@@ -5234,7 +5251,7 @@ items:
           - "&7will have a chest."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-despawning:
@@ -5244,7 +5261,7 @@ items:
           - "&7removed when far away."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-aggressive:
@@ -5255,7 +5272,7 @@ items:
           - "&7Use also &bSet Mob Target&7."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-aware:
@@ -5265,7 +5282,7 @@ items:
           - "&7by itself."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-camel-dashing:
@@ -5275,7 +5292,7 @@ items:
           - "&7show dash animation."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-charged:
@@ -5286,7 +5303,7 @@ items:
           - "&7wither skulls."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-screaming:
@@ -5297,7 +5314,7 @@ items:
           - "&7enderman."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-goat-horns:
@@ -5318,7 +5335,7 @@ items:
           - "&7face in ground."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-fox-defending:
@@ -5328,7 +5345,7 @@ items:
           - "&7defend itself."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-fox-crouching:
@@ -5338,7 +5355,7 @@ items:
           - "&7or just walk."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-breed:
@@ -5348,7 +5365,7 @@ items:
           - "&7with another mob."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-age:
@@ -5369,7 +5386,7 @@ items:
           - "&7lie on back."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-hand:
@@ -5389,7 +5406,7 @@ items:
           - "&7attack laser."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-enderman-teleport:
@@ -5407,7 +5424,7 @@ items:
           - "&7Works on horse, panda."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-interested:
@@ -5419,7 +5436,7 @@ items:
           - "&7and foxes."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-horse-rearing:
@@ -5429,7 +5446,7 @@ items:
           - "&7on two legs."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-explosive-ignite:
@@ -5453,7 +5470,7 @@ items:
           - "&7hang and sleep."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-hook-apply-lure:
@@ -5463,7 +5480,7 @@ items:
           - "&7applies lure."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-axolotl-playing-dead:
@@ -5473,7 +5490,7 @@ items:
           - "&7play dead."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-bear-standing:
@@ -5483,7 +5500,7 @@ items:
           - "&7stand on 2 legs."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-allay-dancing:
@@ -5493,7 +5510,7 @@ items:
           - "&7near jukebox."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - "&f Pos &7- Jukebox place"
           - " "
           - "&eClick to set action."
@@ -5519,7 +5536,7 @@ items:
           - "&7and pandas."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-saddle:
@@ -5529,7 +5546,7 @@ items:
           - "&7saddle to ride."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-minecart-block:
@@ -5549,7 +5566,7 @@ items:
           - "&7charge crossbow."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-piglin-dancing:
@@ -5558,7 +5575,7 @@ items:
           - "&7Shows piglin dancing."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - "&a Num &7- Dance time"
           - " "
           - "&eClick to set action."
@@ -5570,7 +5587,7 @@ items:
           - "&7raiders."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-wandering-drink-milk:
@@ -5580,7 +5597,7 @@ items:
           - "&7trader drinks milk."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       entity-set-wandering-drink-potion:
@@ -5590,7 +5607,7 @@ items:
           - "&7trader drinks potion."
           - " "
           - "&fIn chest:"
-          - "&3 Param &7- Yes/No"
+          - "&3 Param &7- Yes or No"
           - " "
           - "&eClick to set action."
       player-set-gamemode:
@@ -6977,7 +6994,7 @@ items:
           - ""
           - "&fIn the chest:"
           - "&f Location &7- Where to strike"
-          - "&3 Option &7- Deal damage?"
+          - "&3 Option &7- Deal damage or not"
           - ""
           - "&eClick to set the action."
         arguments:
@@ -15854,7 +15871,7 @@ menus:
           private: "Prohibit downloading the module"
         lore:
           - "&a ⚓ Module Access "
-          - "&7 Can players download the module?"
+          - "&7 Can players download module or not"
           - " "
           - "&7 If this is your module for"
           - "&7 private usage, then prohibit"
