@@ -199,7 +199,7 @@ public class PlanetPlayer {
 
     /**
      * Returns set of saved purchases IDs.
-     * @return Set of saved purchases IDs.
+     * @return set of saved purchases IDs.
      */
     public Set<String> getPurchases() {
         return purchases;

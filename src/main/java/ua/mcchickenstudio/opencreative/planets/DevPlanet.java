@@ -321,7 +321,7 @@ public class DevPlanet {
         allowedBlocks.add(Material.LIGHT_GRAY_SHULKER_BOX);
         allowedBlocks.add(Material.PINK_SHULKER_BOX);
         // 1.21+ Content:
-        Optional.ofNullable(Material.matchMaterial("PALE_SIGN"))
+        Optional.ofNullable(Material.matchMaterial("PALE_OAK_SIGN"))
                 .ifPresent(allowedBlocks::add);
         return allowedBlocks;
     }
@@ -438,7 +438,12 @@ public class DevPlanet {
     }
 
     public boolean setSignMaterial(Material signMaterial) {
-        if (signMaterial == Material.OAK_WALL_SIGN || signMaterial == Material.ACACIA_WALL_SIGN || signMaterial == Material.BAMBOO_WALL_SIGN || signMaterial == Material.CHERRY_WALL_SIGN || signMaterial == Material.BIRCH_WALL_SIGN || signMaterial == Material.JUNGLE_WALL_SIGN) {
+        // 1.21+ Content:
+        Material paleSign = Material.matchMaterial("PALE_OAK_SIGN");
+        if (signMaterial == Material.OAK_WALL_SIGN || signMaterial == Material.ACACIA_WALL_SIGN ||
+                signMaterial == Material.BAMBOO_WALL_SIGN || signMaterial == Material.CHERRY_WALL_SIGN ||
+                signMaterial == Material.BIRCH_WALL_SIGN || signMaterial == Material.JUNGLE_WALL_SIGN ||
+                (paleSign != null && signMaterial == paleSign)) {
             this.signMaterial = signMaterial;
             setPlanetConfigParameter(planet,"dev.sign",signMaterial.name());
             return true;

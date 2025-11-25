@@ -7,7 +7,7 @@
 
     <groupId>mcchickenstudio</groupId>
     <artifactId>opencreative</artifactId>
-    <version>5.8.0-release-candidate-1</version>
+    <version>5.8.0-release-candidate-2</version>
     <!-- For Beta versions: semver-build-${CI_PIPELINE_IID} -->
     <packaging>jar</packaging>
     <name>opencreative</name>
