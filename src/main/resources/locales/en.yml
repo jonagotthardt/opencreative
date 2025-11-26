@@ -658,7 +658,7 @@ items:
         - "&3🎣 Other changes\n \n&8- &0Fixed saving dictionary values&0.\n&8- &0Fixed /edit bugs.\n&8- &0Fixed /playsound bugs."
         - "&8- &0Some action parameters translated.\n&8- &0New player management menu in world.\n&8- &0Fixed selectors in functions and methods."
         - "&8- &0Fixed Set Health for mob/player.\n&8- &0Added message text for Set Resource Pack action."
-        - "&8- &0Added text merge parameter in Show Text Above Hotbar action."
+        - "&8- &0Added text merge parameter in Show Text Above Hotbar action. \n \n&0Trailer:&2 https://www.youtube.com/watch?v=epZJQ8Go6bw"
   developer:
     turned-on: "&a ● "
     turned-off: "&7 ○ "
