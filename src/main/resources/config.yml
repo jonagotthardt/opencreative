@@ -77,7 +77,7 @@
 #    /creative recommend [ID] - Adds world to recommended worlds (/worlds).                 (opencreative.world.recommend)
 #    /creative unrecommend [ID] - Removes world from recommended worlds (/worlds).          (opencreative.world.unrecommend)
 #    /creative setowner [ID] [player] - Sets new owner of world.                            (opencreative.world.setowner)
-#    /creative size [ID] [size] - Sets custom size of world. (0 to reset)                   (opencreative.world.setsize)
+#    /creative setsize [ID] [size] - Sets custom size of world. (0 to reset)                   (opencreative.world.setsize)
 #    /creative maintenance - Maintenance mode settings (start, end).                        (opencreative.maintenance)
 #    /creative creative-chat - Creative Chat settings (on, off)
 #    /creative sounds [theme] - Sets current sounds theme.                                  (opencreative.sounds.theme)
