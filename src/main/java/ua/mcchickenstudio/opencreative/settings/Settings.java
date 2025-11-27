@@ -259,6 +259,7 @@ public final class Settings {
         } else {
             switch (type.toLowerCase()) {
                 case "chatgpt", "openai" -> OpenCreative.setCodingPrompter(new OpenAIPrompter());
+                case "openrouter", "openrouterai" -> OpenCreative.setCodingPrompter(new OpenRouterPrompter());
                 case "gemini", "google" -> OpenCreative.setCodingPrompter(new GeminiPrompter());
                 default -> {
                     sendWarningErrorMessage("[CODING PROMPT] Unknown prompter: " + type + ", using disabled prompt handler.");

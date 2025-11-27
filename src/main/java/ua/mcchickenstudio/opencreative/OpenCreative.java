@@ -93,7 +93,7 @@ public final class OpenCreative extends JavaPlugin {
     private DevPlatformer devPlatformer;
     private CodingPrompter prompter;
 
-    private static final String version = "5.8.0";
+    private static final String version = "5.8.1 Preview";
     private static final String codename = "Well, it's possible";
 
     /**
@@ -441,7 +441,8 @@ public final class OpenCreative extends JavaPlugin {
     @SuppressWarnings("unused")
     public static void setCodingPrompter(@NotNull CodingPrompter codingPrompter) {
         if (!(codingPrompter instanceof DisabledCodingPrompter
-                || codingPrompter instanceof OpenAIPrompter || codingPrompter instanceof GeminiPrompter)) {
+                || codingPrompter instanceof OpenAIPrompter || codingPrompter instanceof GeminiPrompter
+                || codingPrompter instanceof OpenRouterPrompter)) {
             getPlugin().getLogger().info("Now using coding prompter: " + codingPrompter.getName());
         }
         getPlugin().prompter = codingPrompter;
