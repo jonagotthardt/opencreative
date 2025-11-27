@@ -47,7 +47,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebugError;
 public final class OpenRouterPrompter implements CodingPrompter, PrompterModelCapable {
 
     private char[] token = new char[200];
-    private String model = "openai/o4-mini";
+    private String model = "google/gemini-2.5-flash";
 
     @Override
     public @NotNull CompletableFuture<String> generateCode(@NotNull String nickname,

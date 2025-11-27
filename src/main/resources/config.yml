@@ -228,7 +228,7 @@ coding:
   #                   magma block it gives random item
   prompt-handler:
     type: "none" # Set to "none" to disable. Available: "gemini", "chatgpt", "openrouter"
-    model: "gemini-2.5-flash" # Set model of LLM. For ChatGPT: "gpt-4o-mini", for OpenRouter: "openai/o4-mini"
+    model: "gemini-2.5-flash" # Set model of LLM. For ChatGPT: "gpt-4o-mini", for OpenRouter: "google/gemini-2.5-flash"
     token: "insert-secret-api-key-here-but-do-not-share-it-with-others"
     timeout: 120 # Maximum time amount for thinking in seconds.
     executors-limit: 10 # Maximum amount of executors.
