@@ -219,7 +219,7 @@ coding:
   # Prompter requires token to work.
   # For ChatGPT    - https://platform.openai.com/api-keys
   # For Gemini     - https://aistudio.google.com/app/apikey
-  # For OpenRouter - https://openrouter.ai/settings/keys
+  # For OpenRouter - https://openrouter.ai/settings/keys (not free, requires credits for 64000 tokens)
   # Note: Services give you free trial, but
   #       for general usage you can be forced
   #       to pay services for using prompter.
