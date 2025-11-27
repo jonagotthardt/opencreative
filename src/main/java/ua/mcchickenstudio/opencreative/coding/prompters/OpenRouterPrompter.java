@@ -75,7 +75,7 @@ public final class OpenRouterPrompter implements CodingPrompter, PrompterModelCa
                     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
                     if (response.statusCode() == 401) {
                         future.completeExceptionally(new UnauthorizedPrompterException());
-                    } else if (response.statusCode() == 429) {
+                    } else if (response.statusCode() == 429 || response.statusCode() == 402) {
                         future.completeExceptionally(new PrompterLimitedException());
                     } else if (response.statusCode() != 200) {
                         future.completeExceptionally(new PrompterDownException());
