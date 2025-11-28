@@ -435,7 +435,7 @@ public final class Settings {
                 try {
                     slot = Math.clamp(Integer.parseInt(slotString), 1, 36);
                 } catch (Exception ignored) {
-                    sendWarningErrorMessage("Unknown slot, not a number: " + slotString + " (from " + groupId + ")");
+                    sendWarningErrorMessage("Unknown slot, not a number: " + slotString + " (kit: " + groupId + ")");
                     continue;
                 }
                 SettingsItem item = loadItem(slots, slotString);
@@ -444,7 +444,7 @@ public final class Settings {
             }
         }
         if (!itemsGroups.isEmpty()) {
-            OpenCreative.getPlugin().getLogger().info("Changed " + itemsGroups.size() + " item groups");
+            OpenCreative.getPlugin().getLogger().info("Changed " + itemsGroups.size() + " item kits");
         }
     }
 
@@ -479,10 +479,24 @@ public final class Settings {
                 item.setData(section.getString("data", ""));
             }
 
+            // Overrides material
+            if (section.isString("material")) {
+                String materialString = section.getString("material", "");
+                Material material = Material.matchMaterial(materialString);
+                if (material == null) {
+                    sendWarningErrorMessage("Unknown material " + materialString + " for item (kit: " + section.getName() + " in slot: " + slot  + ")");
+                } else if (!material.isItem()) {
+                    sendWarningErrorMessage("Material " + materialString + " is not an obtainable item (kit: " + section.getName() + " in slot: " + slot  + ")");
+                } else {
+                    item.setMaterial(material);
+                }
+            }
             if (section.isString("translation")) {
                 // Overrides name and lore.
                 item.setTranslationKey(section.getString("translation", ""));
             }
+
+
             // Overrides name
             if (section.isString("name")) item.setName(section.getString("name", ""));
             // Overrides lore
