@@ -18,22 +18,18 @@
 
 package ua.mcchickenstudio.opencreative.settings;
 
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * <h1>SettingsItem</h1>
- * This interface is made for item, that will be created
- * to give it to player.
- */
-public interface SettingsItem {
+public class SettingsItemsGroup {
 
-    /**
-     * Returns item, that will be given to player.
-     * @param player player for parsing item translation, if required.
-     * @return item to give.
-     */
-    @NotNull ItemStack getItem(@NotNull Player player);
+    private final Map<Integer, SettingsItem> items = new HashMap<>();
 
+    public void setItem(int slot, SettingsItem item) {
+        items.put(slot, item);
+    }
+
+    public Map<Integer, SettingsItem> getItems() {
+        return items;
+    }
 }

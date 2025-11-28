@@ -269,6 +269,12 @@ creative:
   sounds:
     set: "%prefix%&fChanged sound theme to &6%theme%&f, have a good listening!"
     not-found: "%prefix%&cNot found this sound theme in configuration O_o"
+  items:
+    changed: "%prefix%&fYou have set the item in kit &6%kit%&f that will appear in slot &6%slot%&f."
+    given: "%prefix%&fYou received the item from kit &6%kit%&f in slot &6%slot%&f."
+    received-kit: "%prefix%&fYou have received the item kit &6%kit%&f."
+    wrong-kit: "%prefix%&cItem kit %kit% not found O_o"
+    empty-slot: "%prefix%&cSlot %slot% in kit %kit% does not contain an item."
   experiments:
     enabled: "%prefix%&fYou have &6enabled &fexperiment &6%name% &7(%description%)&f, now its features will be available to you :)\n &cWarning: Experiments may break world data!"
     already-enabled: "%prefix%&cThis experiment %name% is already enabled.."

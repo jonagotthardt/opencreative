@@ -24,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiment;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
 import ua.mcchickenstudio.opencreative.indev.Items;
+import ua.mcchickenstudio.opencreative.settings.ItemsGroup;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
 import ua.mcchickenstudio.opencreative.menus.CreativeMenu;
@@ -618,34 +619,65 @@ public class CreativeCommand extends CommandHandler {
                     } catch (Exception ignored) {}
                 }
                 case "item", "items" -> {
-                    if (!sender.hasPermission("opencreative.items.get") && !sender.hasPermission("opencreative.items.set")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
+                    if (player == null) {
+                        sender.sendMessage(getLocaleMessage("only-players"));
                         return;
                     }
-                    if (player == null) {
+                    if (!sender.hasPermission("opencreative.items")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
                         return;
                     }
                     if (args.length < 3) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return;
                     }
-                    Items itemType;
-                    try {
-                        itemType = Items.valueOf(args[2].toUpperCase());
-                    } catch (Exception error) {
+                    // /oc items set lobby 1
+                    // /oc items get lobby
+                    //      0     1   2    3
+                    String groupId = args[2];
+                    ItemsGroup group = ItemsGroup.getById(groupId);
+                    if (group == null) {
+                        sender.sendMessage(getLocaleMessage("creative.items.wrong-kit")
+                                .replace("%kit%", groupId));
                         Sounds.PLAYER_FAIL.play(player);
                         return;
                     }
-                    switch (args[1].toLowerCase()) {
-                        case "get" -> player.getInventory().addItem(itemType.get());
-                        case "set" -> {
-                            ItemStack item = player.getInventory().getItemInMainHand();
-                            if (item.isEmpty()) {
+                    if (args[1].equalsIgnoreCase("get")) {
+                        if (args.length == 3) {
+                            // /oc items get lobby
+                            sender.sendMessage(getLocaleMessage("creative.items.received-kit")
+                                    .replace("%kit%", groupId));
+                            group.setItems(player);
+                        } else {
+                            // /oc items get lobby slot
+                            int slot = 1;
+                            try {
+                                slot = Math.clamp(Integer.parseInt(args[3]), 1, 36);
+                            } catch (Exception ignored) {}
+                            if (group.giveItem(player, slot)) {
+                                sender.sendMessage(getLocaleMessage("creative.items.given")
+                                        .replace("%kit%", groupId)
+                                        .replace("%slot%", String.valueOf(slot)));
+                            } else {
+                                sender.sendMessage(getLocaleMessage("creative.items.empty-slot")
+                                        .replace("%kit%", groupId)
+                                        .replace("%slot%", String.valueOf(slot)));
                                 Sounds.PLAYER_FAIL.play(player);
-                                return;
                             }
-                            OpenCreative.getSettings().setCustomItem(itemType,item);
                         }
+                    } else if (args[1].equalsIgnoreCase("set")) {
+                        if (args.length == 3) {
+                            sender.sendMessage(getLocaleMessage("too-few-args"));
+                            return;
+                        }
+                        int slot = 1;
+                        try {
+                            slot = Math.clamp(Integer.parseInt(args[3]), 1, 36);
+                        } catch (Exception ignored) {}
+                        sender.sendMessage(getLocaleMessage("creative.items.changed")
+                                .replace("%kit%", groupId)
+                                .replace("%slot%", String.valueOf(slot)));
+                        OpenCreative.getSettings().setCustomItem(group, slot, player.getInventory().getItemInMainHand());
                     }
                 }
                 case "kick-all" -> {

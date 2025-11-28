@@ -20,49 +20,136 @@ package ua.mcchickenstudio.opencreative.indev;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.settings.SettingsItem;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 
+/**
+ * <h1>Items</h1>
+ * This enum represents main items, that will be given to players
+ * by doing something: joining the lobby, connecting to world
+ * or entering to the coding world.
+ * <p>
+ * To get item, use {@link #get()} method.
+ */
 public enum Items {
 
-    LOBBY_WORLDS_BROWSER(Material.COMPASS),
-    LOBBY_MY_WORLDS(Material.NETHER_STAR),
-    WORLD_SETTINGS(Material.COMPASS),
-    DEV_EVENT_PLAYER(Material.DIAMOND_BLOCK),
-    DEV_EVENT_WORLD(Material.REDSTONE_BLOCK),
-    DEV_EVENT_ENTITY(Material.GOLD_BLOCK),
-    DEV_CYCLE(Material.OXIDIZED_COPPER),
-    DEV_METHOD(Material.EMERALD_BLOCK),
-    DEV_FUNCTION(Material.LAPIS_BLOCK),
-    DEV_ACTION_PLAYER(Material.COBBLESTONE),
-    DEV_ACTION_WORLD(Material.NETHER_BRICKS),
-    DEV_ACTION_ENTITY(Material.MOSSY_COBBLESTONE),
-    DEV_ACTION_VAR(Material.IRON_BLOCK),
-    DEV_CONDITION_PLAYER(Material.OAK_PLANKS),
-    DEV_CONDITION_WORLD(Material.RED_NETHER_BRICKS),
-    DEV_CONDITION_ENTITY(Material.BRICKS),
-    DEV_CONDITION_VAR(Material.OBSIDIAN),
-    DEV_LAUNCH_FUNCTION(Material.LAPIS_ORE),
-    DEV_LAUNCH_METHOD(Material.EMERALD_ORE),
-    DEV_CONDITION_ELSE(Material.END_STONE);
+    /**
+     * For opening Worlds Browser menu in lobby.
+     */
+    WORLDS(Material.COMPASS, "lobby"),
+    /**
+     * For opening Own Worlds Browser menu in lobby.
+     */
+    OWN_WORLDS(Material.NETHER_STAR, "lobby"),
+    /**
+     * For viewing Changelogs in lobby.
+     */
+    CHANGELOGS(Material.WRITTEN_BOOK, "lobby"),
+
+    /**
+     * For opening World Settings menu in world, as its owner.
+     */
+    WORLD_SETTINGS(Material.COMPASS, "developer"),
+    /**
+     * For changing speed of flight in coding world.
+     */
+    FLY_SPEED_CHANGER(Material.FEATHER, "developer"),
+    /**
+     * For moving lines and marking them in coding world.
+     */
+    LINES_CONTROLLER(Material.COMPARATOR, "developer"),
+    /**
+     * For viewing coding tutorial in coding world.
+     */
+    CODING_BOOK(Material.WRITTEN_BOOK, "developer"),
+    /**
+     * For viewing values list in coding world.
+     */
+    VARIABLES(Material.IRON_INGOT, "developer"),
+
+    EVENT_PLAYER(ExecutorCategory.EVENT_PLAYER),
+    EVENT_WORLD(ExecutorCategory.EVENT_WORLD),
+    EVENT_ENTITY(ExecutorCategory.EVENT_ENTITY),
+    CYCLE(ExecutorCategory.CYCLE),
+    METHOD(ExecutorCategory.METHOD),
+    FUNCTION(ExecutorCategory.FUNCTION),
+
+    PLAYER_ACTION(ActionCategory.PLAYER_ACTION),
+    WORLD_ACTION(ActionCategory.WORLD_ACTION),
+    ENTITY_ACTION(ActionCategory.ENTITY_ACTION),
+    VARIABLE_ACTION(ActionCategory.VARIABLE_ACTION),
+    REPEAT_ACTION(ActionCategory.REPEAT_ACTION),
+    CONTROLLER_ACTION(ActionCategory.CONTROLLER_ACTION),
+    CONTROL_ACTION(ActionCategory.CONTROL_ACTION),
+    SELECTION_ACTION(ActionCategory.SELECTION_ACTION),
+
+    LAUNCH_FUNCTION_ACTION(ActionCategory.LAUNCH_FUNCTION_ACTION),
+    LAUNCH_METHOD_ACTION(ActionCategory.LAUNCH_METHOD_ACTION),
+
+    PLAYER_CONDITION(ActionCategory.PLAYER_CONDITION),
+    WORLD_CONDITION(ActionCategory.WORLD_CONDITION),
+    ENTITY_CONDITION(ActionCategory.ENTITY_CONDITION),
+    ELSE_CONDITION(ActionCategory.ELSE_CONDITION),
+    VARIABLE_CONDITION(ActionCategory.VARIABLE_CONDITION);
 
     private final Material material;
+    private final String group;
 
-    Items(Material material) {
+    /**
+     * Creates main item with material and prefix group in localization file.
+     * @param material material of item.
+     * @param group group in localization file (lobby, developer).
+     */
+    Items(@NotNull Material material, @NotNull String group) {
         this.material = material;
+        this.group = group;
     }
 
+    /**
+     * Creates main item by action block.
+     * @param group group of action.
+     */
+    Items(@NotNull ActionCategory group) {
+        this.material = group.getBlock();
+        this.group = "developer";
+    }
+
+    /**
+     * Creates main item by executor block.
+     * @param group group of executor.
+     */
+    Items(@NotNull ExecutorCategory group) {
+        this.material = group.getBlock();
+        this.group = "developer";
+    }
+
+    /**
+     * Returns material of main item.
+     * @return material.
+     */
     public Material getMaterial() {
         return material;
     }
 
+    /**
+     * Creates and returns item, that can be given to player.
+     * @return item to give to player.
+     */
     public ItemStack get() {
-        SettingsItem item = OpenCreative.getSettings().getItems().get(this);
-        if (item == null) {
-            return createItem(material,1);
+        return createItem(material,1, "items." + group + "." + name()
+                .toLowerCase().replace("_","-"));
+    }
+
+    public static @Nullable Items getById(@NotNull String id) {
+        for (Items type : Items.values()) {
+            if (type.name().equals(id)) {
+                return type;
+            }
         }
-        return item.item();
+        return null;
     }
 }

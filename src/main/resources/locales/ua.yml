@@ -251,6 +251,12 @@ creative:
   sounds:
     set: "%prefix%&fЗмінено тему звуків на &6%theme%&f, приємного звучання!"
     not-found: "%prefix%&cТакої теми звуків не знайдено О_о"
+  items:
+    changed: "%prefix%&fВи встановили предмет у наборі &6%kit%&f, який з'являтиметься в слоті &6%slot%&f."
+    given: "%prefix%&fВи отримали предмет з набору &6%kit%&f у слоті &6%slot%&f."
+    received-kit: "%prefix%&fВи отримали набір предметів &6%kit%&f."
+    wrong-kit: "%prefix%&cНабір предметів %kit% не знайдено О_о"
+    empty-slot: "%prefix%&cСлот %slot% у наборі %kit% не містить предмета."
   experiments:
     enabled: "%prefix%&fВи &6увімкнули &fексперимент &6%name% &7(%description%)&f, тепер його функції будуть доступні вам :)\n &cОбережно: Експерименти можуть зламати дані світів!"
     already-enabled: "%prefix%&cЦей експеримент %name% уже увімкнено.."

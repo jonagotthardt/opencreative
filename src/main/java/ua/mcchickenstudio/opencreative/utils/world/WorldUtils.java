@@ -37,6 +37,17 @@ import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
  */
 public final class WorldUtils {
 
+    private final static NamespacedKey DO_NOT_HURT_ANYONE = new NamespacedKey(OpenCreative.getPlugin(), "oc_do_not_damage");
+
+    /**
+     * Returns key, that will be used in entities, that
+     * mustn't damage any entity.
+     * @return namespaced key of not hurting anyone.
+     */
+    public static NamespacedKey getDoNotHurtAnyoneKey() {
+        return DO_NOT_HURT_ANYONE;
+    }
+
     /**
      * Returns planet id from world's name
      * by splitting it and removing path to

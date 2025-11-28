@@ -18,22 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.settings;
 
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.indev.Items;
 
-/**
- * <h1>SettingsItem</h1>
- * This interface is made for item, that will be created
- * to give it to player.
- */
-public interface SettingsItem {
-
-    /**
-     * Returns item, that will be given to player.
-     * @param player player for parsing item translation, if required.
-     * @return item to give.
-     */
-    @NotNull ItemStack getItem(@NotNull Player player);
-
-}
+public record ItemPair(int slot, Items item) {}

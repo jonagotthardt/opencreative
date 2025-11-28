@@ -33,6 +33,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getPlayerLocaleComponent;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
@@ -96,6 +97,10 @@ public final class EntityDamageListener implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageByEntityEvent event) {
+
+        if (event.getEntity().getPersistentDataContainer().has(WorldUtils.getDoNotHurtAnyoneKey())) {
+            event.setCancelled(true);
+        }
 
         if (event.getEntity() instanceof Player victim) {
             // Player damages player
