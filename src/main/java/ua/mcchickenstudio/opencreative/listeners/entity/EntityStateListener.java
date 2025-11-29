@@ -38,6 +38,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.state.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement.EnteredVehicleEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement.PlayerVehicleExitEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 public final class EntityStateListener implements Listener {
 
@@ -192,7 +193,7 @@ public final class EntityStateListener implements Listener {
     }
 
     @EventHandler
-    public void onTurtleLayEGg(TurtleLayEggEvent event) {
+    public void onTurtleLayEgg(TurtleLayEggEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getEntity().getWorld());
         if (planet != null) new TurtleLaysEggEvent(event).callEvent();
     }
@@ -200,6 +201,7 @@ public final class EntityStateListener implements Listener {
     @EventHandler
     public void onFireworkExplode(FireworkExplodeEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getEntity().getWorld());
+        if (event.getEntity().getPersistentDataContainer().has(WorldUtils.getDoNotHurtAnyoneKey())) return;
         if (planet != null) new FireworkExplodedEvent(event).callEvent();
     }
 

@@ -18,6 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.utils.world;
 
+import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -26,6 +29,7 @@ import org.bukkit.entity.*;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
 import java.io.File;
+import java.util.Random;
 
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 
@@ -46,6 +50,70 @@ public final class WorldUtils {
      */
     public static NamespacedKey getDoNotHurtAnyoneKey() {
         return DO_NOT_HURT_ANYONE;
+    }
+
+    /**
+     * Summons fireworks around players in world.
+     * They won't damage players or entities.
+     * @param world world to summon.
+     * @param amount amount of fireworks.
+     */
+    public static void summonFireworks(@NotNull World world, int amount) {
+        Random random = new Random();
+        for (int i = 0; i < amount; i++) {
+            for (Player player : world.getPlayers()) {
+                int randomOffsetX = random.nextInt(-5, 6);
+                int randomOffsetZ = random.nextInt(-5, 6);
+                int detonateTicks = random.nextInt(30, 51);
+                Color color = Color.fromRGB(random.nextInt(256), random.nextInt(256), random.nextInt(256));
+                Color fadeColor = Color.fromRGB(random.nextInt(256), random.nextInt(256), random.nextInt(256));
+                FireworkEffect.Type type = FireworkEffect.Type.values()[random.nextInt(FireworkEffect.Type.values().length)];
+                FireworkEffect effect = FireworkEffect.builder()
+                        .flicker(true)
+                        .withColor(color)
+                        .withFade(fadeColor)
+                        .with(type)
+                        .trail(true)
+                        .build();
+                Location location = player.getLocation();
+                location.add(randomOffsetX, 1, randomOffsetZ);
+                if (!location.getBlock().isPassable()) {
+                    location = location.getWorld().getHighestBlockAt(location).getLocation();
+                }
+                Firework firework = world.spawn(location, Firework.class);
+                firework.getPersistentDataContainer().set(DO_NOT_HURT_ANYONE, PersistentDataType.BYTE, (byte) 1);
+                FireworkMeta meta = firework.getFireworkMeta();
+                meta.addEffect(effect);
+                firework.setFireworkMeta(meta);
+                firework.setTicksToDetonate(detonateTicks);
+            }
+        }
+    }
+
+    /**
+     * Summons fireworks around players in world.
+     * They won't damage players or entities.
+     * @param times how many times summon fireworks.
+     * @param period period of time, that should pass before every time.
+     */
+    public static void summonFireworks(int times, int period) {
+        final int[] summoned = {0};
+        Bukkit.getScheduler().runTaskTimer(OpenCreative.getPlugin(), (task) -> {
+            if (summoned[0] >= times) {
+                task.cancel();
+                return;
+            }
+            for (World world : Bukkit.getWorlds()) {
+                if (isLobbyWorld(world)) {
+                    summonFireworks(world, 5);
+                } else if (isDevPlanet(world)) {
+                    summonFireworks(world, 4);
+                } else if (isPlanet(world)) {
+                    summonFireworks(world, 3);
+                }
+            }
+            summoned[0]++;
+        }, 0L, period);
     }
 
     /**

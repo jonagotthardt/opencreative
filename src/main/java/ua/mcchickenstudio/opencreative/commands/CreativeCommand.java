@@ -617,6 +617,27 @@ public class CreativeCommand extends CommandHandler {
                         sound.play(sender);
                     } catch (Exception ignored) {}
                 }
+                case "firework", "fireworks" -> {
+                    if (!sender.hasPermission("opencreative.fireworks")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    if (args.length == 1) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return;
+                    }
+                    int times = 3;
+                    try {
+                        times = Math.clamp(Integer.parseInt(args[1]), 1, 10);
+                    } catch (Exception ignored) {}
+                    int seconds = 20;
+                    if (args.length >= 3) {
+                        try {
+                            seconds =  Math.clamp(Integer.parseInt(args[2]), 1, 10);
+                        } catch (Exception ignored) {}
+                    }
+                    WorldUtils.summonFireworks(times, seconds * 20);
+                }
                 case "items" -> {
                     if (player == null) {
                         sender.sendMessage(getLocaleMessage("only-players"));
