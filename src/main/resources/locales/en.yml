@@ -269,6 +269,13 @@ creative:
   sounds:
     set: "%prefix%&fChanged sound theme to &6%theme%&f, have a good listening!"
     not-found: "%prefix%&cNot found this sound theme in configuration O_o"
+  items:
+    changed: "%prefix%&fYou have set the item in kit &6%kit%&f that will appear in slot &6%slot%&f."
+    given: "%prefix%&fYou received the system item &6%item%&f."
+    received-from-kit: "%prefix%&fYou received the item from kit &6%kit%&f in slot &6%slot%&f."
+    received-kit: "%prefix%&fYou have received the item kit &6%kit%&f."
+    wrong-kit: "%prefix%&cItem kit %kit% not found O_o"
+    empty-slot: "%prefix%&cSlot %slot% in kit %kit% does not contain an item."
   experiments:
     enabled: "%prefix%&fYou have &6enabled &fexperiment &6%name% &7(%description%)&f, now its features will be available to you :)\n &cWarning: Experiments may break world data!"
     already-enabled: "%prefix%&cThis experiment %name% is already enabled.."
@@ -469,9 +476,9 @@ world:
     help: "%prefix%You have entered the &bdevelopment&f world. \n &f\n&f Check out the blocks in your inventory: &bEvents&f, &7Actions&f, &6Conditions&f. The platform consists of glass blocks where you need to place these blocks.\n&f\n&f Form your code on the glass line. Some &7actions&f and &6conditions&f place a chest where you need to put the specified values. Values can be &anumber&f, &6text&f, &eitem&f, &flocation&f.\n&f"
     joined: "%prefix%&6%player% &fhas joined the coding world."
     left: "%prefix%&6%player% &fhas left the coding world."
-    cant-place-on-floor: "%prefix%&cOnly chests, shulker boxes, and anvils can be placed on the platform."
-    cant-place-event-on-action: "%prefix%&cThis block must be placed with &7ACTIONS&c or &6CONDITIONS&c."
-    cant-place-action-on-event: "%prefix%&cThis block must be placed with &bEVENTS&c, &aCYCLES&c, or &9FUNCTIONS&c."
+    cant-place-on-floor: "&cOnly chests, shulker boxes, and anvils can be placed on the platform."
+    cant-place-event-on-action: "&cThis block must be placed with &7ACTIONS&c or &6CONDITIONS&c."
+    cant-place-action-on-event: "&cThis block must be placed with &bEVENTS&c, &aCYCLES&c, or &9FUNCTIONS&c."
     click-to-copy: "&eClick to copy."
     set-variable: "&aValue set:"
     set-target: "&dTarget set:"

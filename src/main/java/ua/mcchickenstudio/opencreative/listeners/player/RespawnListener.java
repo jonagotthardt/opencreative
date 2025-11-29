@@ -24,16 +24,12 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerTotemRespawnEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityResurrectEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
-
-
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
+import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
 
 public final class RespawnListener implements Listener {
 
@@ -47,9 +43,10 @@ public final class RespawnListener implements Listener {
         if (planet != null) {
             Sounds.PLAYER_RESPAWN.play(event.getPlayer());
             if (planet.isOwner(event.getPlayer())) {
-                ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
-                if (!event.getPlayer().getInventory().contains(worldSettingsItem)) {
-                    event.getPlayer().getInventory().setItem(8,worldSettingsItem);
+                if (planet.getMode() == Planet.Mode.BUILD) {
+                    ItemsGroup.BUILD_OWNER.setItemsIfAbsent(event.getPlayer());
+                } else {
+                    ItemsGroup.PLAY_OWNER.setItemsIfAbsent(event.getPlayer());
                 }
             }
             new ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerRespawnEvent(event.getPlayer()).callEvent();

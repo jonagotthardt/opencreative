@@ -37,9 +37,11 @@ import ua.mcchickenstudio.opencreative.commands.experiments.Experiment;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceEndEvent;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceStartEvent;
-import ua.mcchickenstudio.opencreative.indev.Items;
+import ua.mcchickenstudio.opencreative.settings.items.Items;
 import ua.mcchickenstudio.opencreative.managers.stability.DisabledWatchdog;
 import ua.mcchickenstudio.opencreative.managers.stability.Watchdog;
+import ua.mcchickenstudio.opencreative.settings.items.*;
+import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformer;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformers;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.HorizontalPlatformer;
@@ -133,8 +135,8 @@ public final class Settings {
 
     private final Set<String> messagesIgnoringReset = new HashSet<>();
 
-    private final Map<Sounds,SettingsSound> sounds = new HashMap<>();
-    private final Map<Items,SettingsItem> items = new HashMap<>();
+    private final Map<Sounds, SettingsSound> sounds = new HashMap<>();
+    private final Map<ItemsGroup, SettingsItemsGroup> itemsGroups = new HashMap<>();
 
     public Settings() {
         groups = new Groups();
@@ -218,7 +220,6 @@ public final class Settings {
 
         String soundsTheme = config.getString("sounds.theme","default");
         loadSounds(config, soundsTheme);
-        loadItems(config);
         loadDisabledBlocks(config);
         loadWorldGenerators(config);
 
@@ -240,6 +241,8 @@ public final class Settings {
         setupPromptHandler(config);
         loadExperiments(config);
         checkDebugAnnouncer();
+
+        loadItems(config);
     }
 
     private void setupPromptHandler(FileConfiguration config) {
@@ -411,34 +414,117 @@ public final class Settings {
     }
 
     private void loadItems(FileConfiguration config) {
-        items.clear();
-        ConfigurationSection itemsSection = config.getConfigurationSection("items");
-        if (itemsSection != null) {
-            for (String key : itemsSection.getKeys(false)) {
+        itemsGroups.clear();
+        ConfigurationSection groupsSection = config.getConfigurationSection("items");
+        if (groupsSection == null) {
+            return;
+        }
+        for (String groupId : groupsSection.getKeys(false)) {
+            ItemsGroup group = ItemsGroup.getById(groupId.toUpperCase().replace("-", "_"));
+            if (group == null) {
+                sendWarningErrorMessage("Unknown items kit in config: " + groupId);
+                continue;
+            }
+            if (groupsSection.isString(groupId)) {
+                continue;
+            }
+            ConfigurationSection slots = groupsSection.getConfigurationSection(groupId);
+            if (slots == null) continue;
+            SettingsItemsGroup settingsItemsGroup = new SettingsItemsGroup();
+            for (String slotString : slots.getKeys(false)) {
+                int slot;
                 try {
-                    Items type = Items.valueOf(key.toUpperCase().replace("-","_"));
-                    ItemStack item = null;
-                    if (itemsSection.isString(key)) {
-                        // Get item only from material
-                        Material material = Material.getMaterial(itemsSection.getString(key,"").toUpperCase());
-                        if (material != null) {
-                            item = new ItemStack(material);
-                        }
-                    } else {
-                        // Get custom item with data
-                        item = itemsSection.getItemStack(key);
-                    }
-                    if (item != null) {
-                        items.put(type,new SettingsItem(item));
-                    }
+                    slot = Math.clamp(Integer.parseInt(slotString), 1, 36);
                 } catch (Exception ignored) {
-                    sendWarningErrorMessage("Item " + key.toLowerCase() + " doesn't exist.");
+                    sendWarningErrorMessage("Unknown slot, not a number: " + slotString + " (kit: " + groupId + ")");
+                    continue;
                 }
+                SettingsItem item = loadItem(slots, slotString);
+                if (item == null) continue;
+                settingsItemsGroup.setItem(slot, item);
+            }
+            itemsGroups.put(group, settingsItemsGroup);
+        }
+        if (!itemsGroups.isEmpty()) {
+            OpenCreative.getPlugin().getLogger().info("Changed " + itemsGroups.size() + " item kits");
+        }
+    }
+
+    private @Nullable SettingsItem loadItem(@NotNull ConfigurationSection section, @NotNull String slot) {
+        if (section.isString(slot)) {
+            // 1: "own-worlds"
+            String typeString = section.getString(slot, "");
+            Items itemType = Items.getById(typeString.toUpperCase().replace("-", "_"));
+            if (itemType == null) {
+                sendWarningErrorMessage("Unknown system item type " + typeString + " for item (kit: " + section.getName() + " in slot: " + slot  + ")");
+                return null;
+            } else {
+                return new SettingsPresetItem(itemType);
             }
         }
-        if (!items.isEmpty()) {
-            OpenCreative.getPlugin().getLogger().info("Added " + items.size() + " custom items");
+        if (section.isConfigurationSection(slot)) {
+            section = section.getConfigurationSection(slot);
+            if (section == null) return null;
+            SettingsCustomItem item = new SettingsCustomItem();
+            /*
+             * 1:
+             *   type: "own-worlds"
+             *   material: "nether_star"
+             *   name: "Create your worlds"
+             *   lore:
+             *     - "Use right click"
+             *   amount: 1
+             *   glowing: true
+             */
+            if (section.isString("type")) {
+                // Preset will copy material, name, lore from Items enum.
+                String typeString = section.getString("type", "");
+                Items itemType = Items.getById(typeString.toUpperCase().replace("-", "_"));
+                if (itemType == null) {
+                    sendWarningErrorMessage("Unknown system item type " + typeString + " for item (kit: " + section.getName() + " in slot: " + slot  + ")");
+                } else {
+                    item.setPreset(itemType);
+                }
+
+            }
+            if (section.isString("data")) {
+                // Data will copy all item content from specified text.
+                item.setData(section.getString("data", ""));
+            }
+
+            // Overrides material
+            if (section.isString("material")) {
+                String materialString = section.getString("material", "");
+                Material material = Material.matchMaterial(materialString);
+                if (material == null) {
+                    sendWarningErrorMessage("Unknown material " + materialString + " for item (kit: " + section.getName() + " in slot: " + slot  + ")");
+                } else if (!material.isItem()) {
+                    sendWarningErrorMessage("Material " + materialString + " is not an obtainable item (kit: " + section.getName() + " in slot: " + slot  + ")");
+                } else {
+                    item.setMaterial(material);
+                }
+            }
+            if (section.isString("translation")) {
+                // Overrides name and lore.
+                item.setTranslationKey(section.getString("translation", ""));
+            }
+
+
+            // Overrides name
+            if (section.isString("name")) item.setName(section.getString("name", ""));
+            // Overrides lore
+            if (section.isList("lore")) {
+                List<String> list = section.getStringList("lore");
+                item.setDescription(section.getString("lore", String.join("\n", list)));
+            }
+
+            // Overrides glowing
+            if (section.isBoolean("glowing")) item.setGlowing(section.getBoolean("glowing", false));
+            // Overrides amount
+            if (section.isInt("amount")) item.setAmount(section.getInt("amount", 1));
+            return item;
         }
+        return null;
     }
 
     public boolean setSoundsTheme(String theme) {
@@ -492,12 +578,33 @@ public final class Settings {
         return true;
     }
 
-    public boolean setCustomItem(Items type, ItemStack item) {
-        FileConfiguration config = OpenCreative.getPlugin().getConfig();
-        OpenCreative.getPlugin().getConfig().set("items."+type.name().toLowerCase().replace("_","-"),item.serialize());
+    public void setCustomItem(ItemsGroup group, int slot, @NotNull ItemStack item) {
+        String path = "items." + group.name().toLowerCase().replace("_","-") + "." + slot;
+        SettingsItemsGroup settingsGroup = itemsGroups.getOrDefault(group, new SettingsItemsGroup());
+        if (item.isEmpty()) {
+            OpenCreative.getPlugin().getConfig().set(path, null);
+            settingsGroup.removeItem(slot);
+        } else {
+            Map<String, String> itemInfo = new HashMap<>();
+            String data = ItemUtils.saveItemAsByteArray(item);
+            itemInfo.put("data", data);
+            OpenCreative.getPlugin().getConfig().set(path, itemInfo);
+            SettingsCustomItem customItem = new SettingsCustomItem();
+            customItem.setData(data);
+            settingsGroup.setItem(slot, customItem);
+        }
         OpenCreative.getPlugin().saveConfig();
-        loadItems(config);
-        return true;
+        itemsGroups.put(group, settingsGroup);
+    }
+
+    public void setCustomItem(ItemsGroup group, int slot, @NotNull Items item) {
+        String path = "items." + group.name().toLowerCase().replace("_","-") + "." + slot;
+        SettingsItemsGroup settingsGroup = itemsGroups.getOrDefault(group, new SettingsItemsGroup());
+        OpenCreative.getPlugin().getConfig().set(path, item.name().toLowerCase().replace("_", "-"));
+        SettingsPresetItem customItem = new SettingsPresetItem(item);
+        settingsGroup.setItem(slot, customItem);
+        OpenCreative.getPlugin().saveConfig();
+        itemsGroups.put(group, settingsGroup);
     }
 
     public boolean isDebug() {
@@ -684,8 +791,8 @@ public final class Settings {
         return sounds;
     }
 
-    public Map<Items, SettingsItem> getItems() {
-        return items;
+    public Map<ItemsGroup, SettingsItemsGroup> getItemsGroups() {
+        return itemsGroups;
     }
 
     public int getItemsContainerBigItemsLimit() {

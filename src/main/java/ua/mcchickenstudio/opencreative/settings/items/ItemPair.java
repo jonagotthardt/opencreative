@@ -16,8 +16,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.settings;
+package ua.mcchickenstudio.opencreative.settings.items;
 
-import org.bukkit.inventory.ItemStack;
-
-public record SettingsItem(ItemStack item) {}
+/**
+ * <h1>ItemPair</h1>
+ * This record represents pair of slot and item.
+ * @param slot slot of item.
+ * @param item item, that will be in slot.
+ */
+public record ItemPair(int slot, Items item) {}

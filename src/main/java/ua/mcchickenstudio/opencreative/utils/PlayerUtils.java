@@ -32,6 +32,7 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.player.PlayerLobbyEvent;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
+import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
 import ua.mcchickenstudio.opencreative.utils.async.AsyncScheduler;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 import net.kyori.adventure.text.Component;
@@ -199,18 +200,8 @@ public final class PlayerUtils {
         player.sendMessage(toComponent(getLocaleMessage("lobby.message")));
         Sounds.LOBBY.play(player);
         Sounds.LOBBY_MUSIC.play(player);
-        ItemStack gamesItem = createItem(Material.COMPASS, 1, "items.lobby.games", "worlds");
-        player.getInventory().setItem(3, gamesItem);
 
-        ItemStack myWorldsItem = createItem(Material.NETHER_STAR, 1, "items.lobby.own", "own_worlds");
-        player.getInventory().setItem(5, myWorldsItem);
-
-        ItemStack changelogsItems = createItem(Material.WRITTEN_BOOK, 1, "items.lobby.changelogs", "changelogs");
-        if (changelogsItems.getItemMeta() instanceof BookMeta bookMeta) {
-            bookMeta.setPages(getBookPages("items.lobby.changelogs.pages"));
-            changelogsItems.setItemMeta(bookMeta);
-        }
-        player.getInventory().setItem(0, changelogsItems);
+        ItemsGroup.LOBBY.setItems(player);
         player.getInventory().setHeldItemSlot(4);
 
         giveLobbyPermissions(player);

@@ -20,10 +20,10 @@ package ua.mcchickenstudio.opencreative.commands;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiment;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
-import ua.mcchickenstudio.opencreative.indev.Items;
+import ua.mcchickenstudio.opencreative.settings.items.Items;
+import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
 import ua.mcchickenstudio.opencreative.menus.CreativeMenu;
@@ -617,36 +617,142 @@ public class CreativeCommand extends CommandHandler {
                         sound.play(sender);
                     } catch (Exception ignored) {}
                 }
-                case "item", "items" -> {
-                    if (!sender.hasPermission("opencreative.items.get") && !sender.hasPermission("opencreative.items.set")) {
+                case "firework", "fireworks" -> {
+                    if (!sender.hasPermission("opencreative.fireworks")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return;
                     }
+                    if (args.length == 1) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return;
+                    }
+                    int times = 3;
+                    try {
+                        times = Math.clamp(Integer.parseInt(args[1]), 1, 10);
+                    } catch (Exception ignored) {}
+                    int seconds = 20;
+                    if (args.length >= 3) {
+                        try {
+                            seconds =  Math.clamp(Integer.parseInt(args[2]), 1, 10);
+                        } catch (Exception ignored) {}
+                    }
+                    WorldUtils.summonFireworks(times, seconds * 20);
+                }
+                case "items" -> {
                     if (player == null) {
+                        sender.sendMessage(getLocaleMessage("only-players"));
+                        return;
+                    }
+                    if (!sender.hasPermission("opencreative.items.get-kit")
+                            && !sender.hasPermission("opencreative.items.set")
+                            && !sender.hasPermission("opencreative.items.get-slot")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
                         return;
                     }
                     if (args.length < 3) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return;
                     }
-                    Items itemType;
-                    try {
-                        itemType = Items.valueOf(args[2].toUpperCase());
-                    } catch (Exception error) {
+                    // /oc items set lobby 1
+                    // /oc items get lobby
+                    //      0     1   2    3
+                    String groupId = args[2];
+                    ItemsGroup group = ItemsGroup.getById(groupId.toUpperCase().replace("-", "_"));
+                    if (group == null) {
+                        sender.sendMessage(getLocaleMessage("creative.items.wrong-kit")
+                                .replace("%kit%", groupId));
                         Sounds.PLAYER_FAIL.play(player);
                         return;
                     }
-                    switch (args[1].toLowerCase()) {
-                        case "get" -> player.getInventory().addItem(itemType.get());
-                        case "set" -> {
-                            ItemStack item = player.getInventory().getItemInMainHand();
-                            if (item.isEmpty()) {
+                    if (args[1].equalsIgnoreCase("get")) {
+                        if (args.length == 3) {
+                            // /oc items get lobby
+                            if (!sender.hasPermission("opencreative.items.get-kit")) {
+                                sender.sendMessage(getLocaleMessage("no-perms"));
+                                return;
+                            }
+                            sender.sendMessage(getLocaleMessage("creative.items.received-kit")
+                                    .replace("%kit%", groupId));
+                            player.getInventory().clear();
+                            group.setItems(player);
+                        } else {
+                            // /oc items get lobby slot
+                            if (!sender.hasPermission("opencreative.items.get-slot")) {
+                                sender.sendMessage(getLocaleMessage("no-perms"));
+                                return;
+                            }
+                            int slot = 1;
+                            try {
+                                slot = Math.clamp(Integer.parseInt(args[3]), 1, 36);
+                            } catch (Exception ignored) {}
+                            if (group.giveItem(player, slot)) {
+                                sender.sendMessage(getLocaleMessage("creative.items.received-from-kit")
+                                        .replace("%kit%", groupId)
+                                        .replace("%slot%", String.valueOf(slot)));
+                            } else {
+                                sender.sendMessage(getLocaleMessage("creative.items.empty-slot")
+                                        .replace("%kit%", groupId)
+                                        .replace("%slot%", String.valueOf(slot)));
+                                Sounds.PLAYER_FAIL.play(player);
+                            }
+                        }
+                    } else if (args[1].equalsIgnoreCase("set")) {
+                        if (!sender.hasPermission("opencreative.items.set")) {
+                            sender.sendMessage(getLocaleMessage("no-perms"));
+                            return;
+                        }
+                        if (args.length == 3) {
+                            sender.sendMessage(getLocaleMessage("too-few-args"));
+                            return;
+                        }
+                        int slot = 1;
+                        try {
+                            slot = Math.clamp(Integer.parseInt(args[3]), 1, 36);
+                        } catch (Exception ignored) {}
+                        if (args.length == 4) {
+                            sender.sendMessage(getLocaleMessage("creative.items.changed")
+                                    .replace("%kit%", groupId)
+                                    .replace("%slot%", String.valueOf(slot)));
+                            OpenCreative.getSettings().setCustomItem(group, slot, player.getInventory().getItemInMainHand());
+                        } else {
+                            Items item = Items.getById(args[4].toUpperCase().replace("-", "_"));
+                            if (item == null) {
+                                sender.sendMessage(getLocaleMessage("creative.items.wrong-preset")
+                                        .replace("%preset%", args[4]));
                                 Sounds.PLAYER_FAIL.play(player);
                                 return;
                             }
-                            OpenCreative.getSettings().setCustomItem(itemType,item);
+                            sender.sendMessage(getLocaleMessage("creative.items.changed")
+                                    .replace("%kit%", groupId)
+                                    .replace("%slot%", String.valueOf(slot)));
+                            OpenCreative.getSettings().setCustomItem(group, slot, item);
                         }
                     }
+                }
+                case "item" -> {
+                    if (player == null) {
+                        sender.sendMessage(getLocaleMessage("only-players"));
+                        return;
+                    }
+                    if (!sender.hasPermission("opencreative.items.get")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    if (args.length == 1) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return;
+                    }
+                    String itemId = args[1].toUpperCase().replace("-", "_");
+                    Items item = Items.getById(itemId);
+                    if (item == null) {
+                        sender.sendMessage(getLocaleMessage("creative.items.wrong-preset")
+                                .replace("%preset%", args[1]));
+                        Sounds.PLAYER_FAIL.play(player);
+                        return;
+                    }
+                    sender.sendMessage(getLocaleMessage("creative.items.given")
+                            .replace("%item%", itemId.toLowerCase()));
+                    player.getInventory().addItem(item.get());
                 }
                 case "kick-all" -> {
                     if (!sender.hasPermission("opencreative.kick-all")) {
@@ -661,19 +767,25 @@ public class CreativeCommand extends CommandHandler {
                     if ("starts".equalsIgnoreCase(args[1])) {
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                             if (onlinePlayer.getName().toLowerCase().startsWith(nickname.toLowerCase())) {
-                                onlinePlayer.kick();
+                                if (!onlinePlayer.equals(player)) {
+                                    onlinePlayer.kick();
+                                }
                             }
                         }
                     } else if ("ends".equalsIgnoreCase(args[1])) {
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                             if (onlinePlayer.getName().toLowerCase().endsWith(nickname.toLowerCase())) {
-                                onlinePlayer.kick();
+                                if (!onlinePlayer.equals(player)) {
+                                    onlinePlayer.kick();
+                                }
                             }
                         }
                     } else if ("contains".equalsIgnoreCase(args[1])) {
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                             if (onlinePlayer.getName().toLowerCase().contains(nickname.toLowerCase())) {
-                                onlinePlayer.kick();
+                                if (!onlinePlayer.equals(player)) {
+                                    onlinePlayer.kick();
+                                }
                             }
                         }
                     } else if ("ignore".equalsIgnoreCase(args[1])) {
@@ -1176,6 +1288,7 @@ public class CreativeCommand extends CommandHandler {
             tabCompleter.add("corrupted");
             tabCompleter.add("sound");
             tabCompleter.add("sounds");
+            tabCompleter.add("items");
             tabCompleter.add("register");
             tabCompleter.add("unregister");
             tabCompleter.add("updateworld");
@@ -1200,7 +1313,10 @@ public class CreativeCommand extends CommandHandler {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");
                 tabCompleter.add("clear");
-            }  else if ("debug".equalsIgnoreCase(args[0])) {
+            } else if ("items".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("get");
+                tabCompleter.add("set");
+            } else if ("debug".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");
             } else if (List.of("load","unload","moderate","moderation",
@@ -1231,8 +1347,6 @@ public class CreativeCommand extends CommandHandler {
                 tabCompleter.remove("theme");
             } else if ("sound".equalsIgnoreCase(args[0]) || "playsound".equalsIgnoreCase(args[0])) {
                 tabCompleter.addAll(Arrays.stream(Sounds.values()).map(s -> s.name().toLowerCase()).filter(s -> s.startsWith(args[1].toLowerCase())).toList());
-            } else if ("item".equalsIgnoreCase(args[0]) || "items".equalsIgnoreCase(args[0])) {
-                tabCompleter.addAll(Arrays.stream(Items.values()).map(s -> s.name().toLowerCase()).filter(s -> s.startsWith(args[1].toLowerCase())).toList());
             } else if ("experiments".equalsIgnoreCase(args[0])) {
                 List<Experiment> experiments = Experiments.getInstance().getExperiments();
                 if (experiments.isEmpty()) return List.of();
@@ -1258,6 +1372,8 @@ public class CreativeCommand extends CommandHandler {
                     tabCompleter.add("environment.");
                     tabCompleter.add("items.");
                 }
+            } else if ("item".equalsIgnoreCase(args[0])) {
+                tabCompleter.addAll(Arrays.stream(Items.values()).map(i -> i.name().toLowerCase()).toList());
             }
         } else if (args.length == 3) {
             if ("start".equalsIgnoreCase(args[1])) {
@@ -1292,6 +1408,18 @@ public class CreativeCommand extends CommandHandler {
                         return null;
                     }
                     return experiment.tabCommand(sender, Arrays.copyOfRange(args, 3, args.length));
+                }
+            } else if ("items".equalsIgnoreCase(args[0])) {
+                tabCompleter.addAll(Arrays.stream(ItemsGroup.values()).map(g -> g.name().toLowerCase()).toList());
+            }
+        } else if (args.length == 4) {
+            if ("items".equalsIgnoreCase(args[0])) {
+                tabCompleter.addAll(List.of("1", "2", "3", "4", "5", "6", "7", "8", "9"));
+            }
+        } else if (args.length == 5) {
+            if ("items".equalsIgnoreCase(args[0])) {
+                if (args[1].equalsIgnoreCase("set")) {
+                    tabCompleter.addAll(Arrays.stream(Items.values()).map(i -> i.name().toLowerCase()).toList());
                 }
             }
         }

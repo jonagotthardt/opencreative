@@ -77,9 +77,9 @@
 #    /creative recommend [ID] - Adds world to recommended worlds (/worlds).                 (opencreative.world.recommend)
 #    /creative unrecommend [ID] - Removes world from recommended worlds (/worlds).          (opencreative.world.unrecommend)
 #    /creative setowner [ID] [player] - Sets new owner of world.                            (opencreative.world.setowner)
-#    /creative setsize [ID] [size] - Sets custom size of world. (0 to reset)                   (opencreative.world.setsize)
+#    /creative setsize [ID] [size] - Sets custom size of world. (0 to reset)                (opencreative.world.setsize)
 #    /creative maintenance - Maintenance mode settings (start, end).                        (opencreative.maintenance)
-#    /creative creative-chat - Creative Chat settings (on, off)
+#    /creative creative-chat - Creative Chat settings (on, off, clear)                      (opencreative.creative-chat)
 #    /creative sounds [theme] - Sets current sounds theme.                                  (opencreative.sounds.theme)
 #    /creative sound [sound] - Plays specified sound.                                       (opencreative.sounds.play)
 #    /creative template [folder] - Creates a new world from Minecraft                       (opencreative.template)
@@ -219,7 +219,7 @@ coding:
   # Prompter requires token to work.
   # For ChatGPT    - https://platform.openai.com/api-keys
   # For Gemini     - https://aistudio.google.com/app/apikey
-  # For OpenRouter - https://openrouter.ai/settings/keys (not free, requires credits for 64000 tokens)
+  # For OpenRouter - https://openrouter.ai/settings/keys
   # Note: Services give you free trial, but
   #       for general usage you can be forced
   #       to pay services for using prompter.
@@ -228,7 +228,7 @@ coding:
   #                   magma block it gives random item
   prompt-handler:
     type: "none" # Set to "none" to disable. Available: "gemini", "chatgpt", "openrouter"
-    model: "gemini-2.5-flash" # Set model of LLM. For ChatGPT: "gpt-4o-mini", for OpenRouter: "openai/o4-mini"
+    model: "gemini-2.5-flash" # Set model of LLM. For ChatGPT: "gpt-4o-mini", for OpenRouter: "google/gemini-2.5-flash"
     token: "insert-secret-api-key-here-but-do-not-share-it-with-others"
     timeout: 120 # Maximum time amount for thinking in seconds.
     executors-limit: 10 # Maximum amount of executors.
@@ -455,6 +455,10 @@ sounds:
   # To add sound from resource pack use
   # name: "resource_pack_name:sound.id"
   #
+  # To disable sound set name of sound to empty text
+  # lobby-music:
+  #   name: " "
+  #
   # lobby, lobby-music, opencreative, reloading, reloaded, menu-next-page, menu-previous-page, menu-open-world-access,
   # menu-next-choice, menu-open-generation, menu-open-environment, menu-open-world-settings, menu-open-world-moderation,
   # menu-open-recommendations, menu-open-own-worlds-browser, menu-open-worlds-browser, menu-open-entities-browser,
@@ -519,6 +523,124 @@ generators:
     #  enabled: true
     #  icon: "DIAMOND_SWORD"
     #  folder: pvp
+
+items:
+  #
+  # Items are given, when player enters the lobby,
+  # joins the world as its owner, teleports to
+  # coding world and gets all coding blocks and
+  # items. You can change slots and items to give.
+  #
+  # You can add custom items by specifying them here,
+  # or with /oc items set lobby [slot] while holding
+  # your item in the main hand.
+  #
+  # If list will be empty, it will give default prepared items.
+  # If you don't want to give any item, then set it like:
+  # lobby: "none" or lobby: "nothing" (not recommended and
+  # not player-friendly, you have to tell players about commands!)
+  #
+  lobby:
+    1: "changelogs" # To return default prepared by our plugin item, without any changes, use this.
+    4: # To return item, prepared by our plugin, but modified by you, use this:
+      #
+      # Type stands for plugin's internal item type,
+      # that contains prepared material (if missing)
+      # and guaranteed translation in localization file.
+      type: "own-worlds"
+      material: "nether_star" # Here you can change material of item.
+    6:
+      type: "worlds"
+      material: "compass"
+    # Example of custom item
+    #9:
+    #  translation: "player-settings" # Translation is a key in localization file
+    #                                 # that you have to write by yourself: name
+    #                                 # and description of item.
+    #                                 # To prevent its removing by /oc resetlocale
+    #                                 # add this path: "items.lobby.[your-item-id]"
+    #                                 # in messages.do-not-reset (above in config) or
+    #                                 # with /oc ignoremessage [path]
+    #  material: "player_head"
+    #10:
+    #  # Or, if you don't want to write translation in localization files,
+    #  # then you can just specify name and lore. It will never disappear.
+    #  name: "&aRanks &3[Right-click]"
+    #  lore:
+    #    - "&7See all available ranks"
+    #    - "&7on our server."
+    #  material: "emerald"
+    #  amount: 1
+    #  glowing: true
+  build-owner:
+    9:
+      type: "world-settings"
+      material: "compass"
+  play-owner:
+    9:
+      type: "world-settings"
+      material: "compass"
+  coding:
+    #
+    # 1: "event-player"
+    # is shorter version of
+    # 1:
+    #  type: "event-player"
+    #
+    1: "event-player"
+    2: "player-action"
+    3: "player-condition"
+    4: "else-condition"
+    8: "coding-book"
+    9: "variables"
+    10: "cycle"
+    11: "repeat-action"
+    12: "controller-action"
+    13: "control-action"
+    14: "variable-action"
+    15: "variable-condition"
+    18: "fly-speed-changer"
+    19: "event-world"
+    20: "world-condition"
+    21: "world-action"
+    22: "method"
+    23: "launch-method-action"
+    24: "selection-action"
+    27: "lines-controller"
+    28: "event-entity"
+    29: "entity-condition"
+    30: "entity-action"
+    31: "function"
+    32: "launch-function-action"
+    36: "arrow-not"
+  coding-owner:
+    1: "event-player"
+    2: "player-action"
+    3: "player-condition"
+    4: "else-condition"
+    8: "variables"
+    9: "world-settings"
+    10: "cycle"
+    11: "repeat-action"
+    12: "controller-action"
+    13: "control-action"
+    14: "variable-action"
+    15: "variable-condition"
+    17: "fly-speed-changer"
+    18: "coding-book"
+    19: "event-world"
+    20: "world-condition"
+    21: "world-action"
+    22: "method"
+    23: "launch-method-action"
+    24: "selection-action"
+    27: "lines-controller"
+    28: "event-entity"
+    29: "entity-condition"
+    30: "entity-action"
+    31: "function"
+    32: "launch-function-action"
+    36: "arrow-not"
 
 experiments:
   #
