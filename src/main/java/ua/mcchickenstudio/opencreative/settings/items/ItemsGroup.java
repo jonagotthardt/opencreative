@@ -16,27 +16,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/*
- * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
- *
- * OpenCreative+ is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * OpenCreative+ is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- */
-
 package ua.mcchickenstudio.opencreative.settings.items;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -81,7 +65,7 @@ public enum ItemsGroup {
             new ItemPair(4, Items.ELSE_CONDITION),          new ItemPair(8, Items.CODING_BOOK),       new ItemPair(9, Items.VARIABLES),
             new ItemPair(10, Items.CYCLE),                  new ItemPair(11, Items.REPEAT_ACTION),    new ItemPair(12, Items.CONTROLLER_ACTION),
             new ItemPair(13, Items.CONTROL_ACTION),         new ItemPair(14, Items.VARIABLE_ACTION),  new ItemPair(15, Items.VARIABLE_CONDITION),
-            new ItemPair(17, Items.FLY_SPEED_CHANGER),      new ItemPair(19, Items.EVENT_WORLD),      new ItemPair(20, Items.WORLD_CONDITION),
+            new ItemPair(18, Items.FLY_SPEED_CHANGER),      new ItemPair(19, Items.EVENT_WORLD),      new ItemPair(20, Items.WORLD_CONDITION),
             new ItemPair(21, Items.WORLD_ACTION),           new ItemPair(22, Items.METHOD),           new ItemPair(23, Items.LAUNCH_METHOD_ACTION),
             new ItemPair(24, Items.SELECTION_ACTION),       new ItemPair(27, Items.LINES_CONTROLLER), new ItemPair(28, Items.EVENT_ENTITY),
             new ItemPair(29, Items.ENTITY_CONDITION),       new ItemPair(30, Items.ENTITY_ACTION),    new ItemPair(31, Items.FUNCTION),
@@ -142,6 +126,48 @@ public enum ItemsGroup {
         Map<Integer, SettingsItem> items = group.getItems();
         for (int slot : items.keySet()) {
             player.getInventory().setItem(slot-1, items.get(slot).getItem(player));
+        }
+    }
+
+    /**
+     * Sets items in player inventory, if player doesn't have them.
+     * <p>
+     * Recommended to clear player's inventory before doing this.
+     * @param player player to set items.
+     */
+    public void setItemsIfAbsent(@NotNull Player player) {
+        SettingsItemsGroup group = OpenCreative.getSettings().getItemsGroups().get(this);
+        if (group == null) {
+            for (ItemPair pair : pairs) {
+                ItemStack item = pair.item().get();
+                if (!player.getInventory().contains(item, 1)) player.getInventory().setItem(pair.slot()-1, item);
+            }
+            return;
+        }
+        Map<Integer, SettingsItem> items = group.getItems();
+        for (int slot : items.keySet()) {
+            ItemStack item = items.get(slot).getItem(player);
+            if (!player.getInventory().contains(item, 1)) player.getInventory().setItem(slot-1, item);
+        }
+    }
+
+    /**
+     * Removes items from player inventory, if player has them.
+     * @param player player to remove items.
+     */
+    public void removeItems(@NotNull Player player) {
+        SettingsItemsGroup group = OpenCreative.getSettings().getItemsGroups().get(this);
+        if (group == null) {
+            for (ItemPair pair : pairs) {
+                ItemStack item = pair.item().get();
+                player.getInventory().removeItemAnySlot(item);
+            }
+            return;
+        }
+        Map<Integer, SettingsItem> items = group.getItems();
+        for (int slot : items.keySet()) {
+            ItemStack item = items.get(slot).getItem(player);
+            player.getInventory().removeItemAnySlot(item);
         }
     }
 

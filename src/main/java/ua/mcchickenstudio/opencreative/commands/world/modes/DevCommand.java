@@ -33,6 +33,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEve
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.inventory.meta.BookMeta;
 import org.jetbrains.annotations.NotNull;
@@ -123,11 +124,12 @@ public class DevCommand extends CommandHandler {
                     player.setAllowFlight(true);
                     player.setFlying(true);
                 }
-                ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
                 if (planet.isOwner(player)) {
-                    player.getInventory().setItem(8, worldSettingsItem);
+                    ItemsGroup.CODING_OWNER.setItemsIfAbsent(player);
+                } else {
+                    ItemsGroup.CODING.setItemsIfAbsent(player);
                 }
-                giveItems(player);
+                ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
                 for (ItemStack item : playerInventoryItems) {
                     if (item != null && !itemEquals(item,worldSettingsItem) && !player.getInventory().containsAtLeast(item,1)) {
                         player.getInventory().addItem(item);
@@ -186,68 +188,6 @@ public class DevCommand extends CommandHandler {
             } else {
                 sender.sendMessage(getLocaleMessage("no-player-found"));
             }
-        }
-    }
-
-    private void giveItems(Player player) {
-
-        PlayerInventory inventory = player.getInventory();
-        inventory.setHeldItemSlot(0);
-
-        setItemIfAbsent(inventory, 0,  ExecutorCategory.EVENT_PLAYER.getItem());
-        setItemIfAbsent(inventory, 1,  ActionCategory.PLAYER_ACTION.getItem());
-        setItemIfAbsent(inventory, 2,  ActionCategory.PLAYER_CONDITION.getItem());
-        setItemIfAbsent(inventory, 3,  ActionCategory.ELSE_CONDITION.getItem());
-
-        setItemIfAbsent(inventory, 9, ExecutorCategory.CYCLE.getItem());
-        setItemIfAbsent(inventory, 10, ActionCategory.REPEAT_ACTION.getItem());
-        setItemIfAbsent(inventory, 11, ActionCategory.CONTROLLER_ACTION.getItem());
-        setItemIfAbsent(inventory, 12, ActionCategory.CONTROL_ACTION.getItem());
-        setItemIfAbsent(inventory, 13, ActionCategory.VARIABLE_ACTION.getItem());
-        setItemIfAbsent(inventory, 14, ActionCategory.VARIABLE_CONDITION.getItem());
-
-        setItemIfAbsent(inventory, 18, ExecutorCategory.EVENT_WORLD.getItem());
-        setItemIfAbsent(inventory, 19, ActionCategory.WORLD_CONDITION.getItem());
-        setItemIfAbsent(inventory, 20, ActionCategory.WORLD_ACTION.getItem());
-        setItemIfAbsent(inventory, 21, ExecutorCategory.METHOD.getItem());
-        setItemIfAbsent(inventory, 22, ActionCategory.LAUNCH_METHOD_ACTION.getItem());
-        setItemIfAbsent(inventory, 23, ActionCategory.SELECTION_ACTION.getItem());
-
-        setItemIfAbsent(inventory, 27, ExecutorCategory.EVENT_ENTITY.getItem());
-        setItemIfAbsent(inventory, 28, ActionCategory.ENTITY_CONDITION.getItem());
-        setItemIfAbsent(inventory, 29, ActionCategory.ENTITY_ACTION.getItem());
-        setItemIfAbsent(inventory, 30,  ExecutorCategory.FUNCTION.getItem());
-        setItemIfAbsent(inventory, 31, ActionCategory.LAUNCH_FUNCTION_ACTION.getItem());
-
-        ItemStack linesControllerItem = createItem(Material.COMPARATOR,1,"items.developer.lines-controller");
-        setItemIfAbsent(inventory, 26, linesControllerItem);
-
-        ItemStack arrowNotItem = createItem(Material.ARROW,1,"items.developer.arrow-not");
-        setItemIfAbsent(inventory, 35, arrowNotItem);
-
-        int slot = 8;
-        if (inventory.getItem(8) != null) {
-            slot = 7;
-        }
-
-        ItemStack bookHelperItem = createItem(Material.WRITTEN_BOOK,1,"items.developer.coding-book");
-        BookMeta bookMeta = (BookMeta) bookHelperItem.getItemMeta();
-        bookMeta.setTitle("Coding");
-        bookMeta.setAuthor("OpenCreative+");
-        bookMeta.setPages(getBookPages("items.developer.coding-book.pages"));
-        bookHelperItem.setItemMeta(bookMeta);
-        setItemIfAbsent(inventory, slot == 8 ? slot-1 : 17, bookHelperItem);
-
-        ItemStack flySpeedChangerItem = createItem(Material.FEATHER,1,"items.developer.fly-speed-changer");
-        setItemIfAbsent(inventory, slot == 8 ? 17 : 16, flySpeedChangerItem);
-
-        setItemIfAbsent(inventory, slot, createItem(Material.IRON_INGOT,1,"items.developer.variables"));
-
-    }
-
-    private void setItemIfAbsent(@NotNull Inventory inventory, int slot, @NotNull ItemStack item) {
-        if (!inventory.contains(item,1)) {
-            inventory.setItem(slot, item);
         }
     }
 

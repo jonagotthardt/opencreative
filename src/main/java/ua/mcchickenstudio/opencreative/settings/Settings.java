@@ -454,9 +454,13 @@ public final class Settings {
         if (section.isString(slot)) {
             // 1: "own-worlds"
             String typeString = section.getString(slot, "");
-            Items type = Items.getById(typeString);
-            if (type == null) return null;
-            return new SettingsPresetItem(type);
+            Items itemType = Items.getById(typeString.toUpperCase().replace("-", "_"));
+            if (itemType == null) {
+                sendWarningErrorMessage("Unknown system item type " + typeString + " for item (kit: " + section.getName() + " in slot: " + slot  + ")");
+                return null;
+            } else {
+                return new SettingsPresetItem(itemType);
+            }
         }
         if (section.isConfigurationSection(slot)) {
             section = section.getConfigurationSection(slot);

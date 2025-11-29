@@ -32,6 +32,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
+import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -135,8 +136,7 @@ public class BuildCommand extends CommandHandler {
                         }
                     }
                     if (planet.isOwner(sender.getName())) {
-                        ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
-                        player.getInventory().setItem(8,worldSettingsItem);
+                        ItemsGroup.BUILD_OWNER.setItems(player);
                     }
                     player.setGameMode(GameMode.CREATIVE);
                     planet.getTerritory().showBorders(player);

@@ -43,6 +43,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
+import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
@@ -477,10 +478,15 @@ public final class ChatListener implements Listener {
                             planet.setOwner(player.getName());
                             planet.getWorldPlayers().removeBuilder(player.getName());
                             planet.getWorldPlayers().removeDeveloper(player.getName());
-                            Sounds.WORLD_SETTINGS_OWNER_SET.play(player);
-                            ItemStack compass = createItem(Material.COMPASS,1,"items.developer.world-settings");
-                            player.getInventory().setItem(8,compass);
-                            oldOwner.getInventory().remove(compass);
+
+                            if (planet.getMode() == Planet.Mode.BUILD) {
+                                ItemsGroup.BUILD_OWNER.setItems(player);
+                                ItemsGroup.BUILD_OWNER.removeItems(oldOwner);
+                            } else {
+                                ItemsGroup.PLAY_OWNER.setItems(player);
+                                ItemsGroup.PLAY_OWNER.removeItems(oldOwner);
+                            }
+
                             oldOwner.setGameMode(GameMode.ADVENTURE);
                         });
                     } else {

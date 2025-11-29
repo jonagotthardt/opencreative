@@ -44,6 +44,7 @@ import ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld;
 import ua.mcchickenstudio.opencreative.managers.stability.StabilityState;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.groups.Group;
+import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
@@ -703,8 +704,7 @@ public class Planet {
                     player.sendMessage(getLocaleMessage("creating-world.welcome"));
                     Sounds.WELCOME_TO_NEW_WORLD.play(player);
                     player.setGameMode(GameMode.CREATIVE);
-                    ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
-                    player.getInventory().setItem(8,worldSettingsItem);
+                    ItemsGroup.BUILD_OWNER.setItems(player);
                 }
             } else {
                 if (isOwner(player) && getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
@@ -713,8 +713,11 @@ public class Planet {
             }
             if (this.isOwner(player.getName())) {
                 ownerGroup = OpenCreative.getSettings().getGroups().getGroup(player).getName().toLowerCase();
-                ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
-                player.getInventory().setItem(8,worldSettingsItem);
+                if (mode == Mode.BUILD) {
+                    ItemsGroup.BUILD_OWNER.setItems(player);
+                } else if (mode == Mode.PLAYING) {
+                    ItemsGroup.PLAY_OWNER.setItems(player);
+                }
                 if (this.getDevPlanet().isLoaded() && OpenCreative.getStability().isFine()) {
                     new CodingBlockParser(devPlanet).parseCode(this.getDevPlanet());
                 }
