@@ -442,6 +442,7 @@ public final class Settings {
                 if (item == null) continue;
                 settingsItemsGroup.setItem(slot, item);
             }
+            itemsGroups.put(group, settingsItemsGroup);
         }
         if (!itemsGroups.isEmpty()) {
             OpenCreative.getPlugin().getLogger().info("Changed " + itemsGroups.size() + " item kits");
@@ -566,17 +567,32 @@ public final class Settings {
     }
 
     public void setCustomItem(ItemsGroup group, int slot, @NotNull ItemStack item) {
-        FileConfiguration config = OpenCreative.getPlugin().getConfig();
         String path = "items." + group.name().toLowerCase().replace("_","-") + "." + slot;
+        SettingsItemsGroup settingsGroup = itemsGroups.getOrDefault(group, new SettingsItemsGroup());
         if (item.isEmpty()) {
             OpenCreative.getPlugin().getConfig().set(path, null);
+            settingsGroup.removeItem(slot);
         } else {
             Map<String, String> itemInfo = new HashMap<>();
-            itemInfo.put("data", ItemUtils.saveItemAsByteArray(item));
+            String data = ItemUtils.saveItemAsByteArray(item);
+            itemInfo.put("data", data);
             OpenCreative.getPlugin().getConfig().set(path, itemInfo);
+            SettingsCustomItem customItem = new SettingsCustomItem();
+            customItem.setData(data);
+            settingsGroup.setItem(slot, customItem);
         }
         OpenCreative.getPlugin().saveConfig();
-        loadItems(config);
+        itemsGroups.put(group, settingsGroup);
+    }
+
+    public void setCustomItem(ItemsGroup group, int slot, @NotNull Items item) {
+        String path = "items." + group.name().toLowerCase().replace("_","-") + "." + slot;
+        SettingsItemsGroup settingsGroup = itemsGroups.getOrDefault(group, new SettingsItemsGroup());
+        OpenCreative.getPlugin().getConfig().set(path, item.name().toLowerCase().replace("_", "-"));
+        SettingsPresetItem customItem = new SettingsPresetItem(item);
+        settingsGroup.setItem(slot, customItem);
+        OpenCreative.getPlugin().saveConfig();
+        itemsGroups.put(group, settingsGroup);
     }
 
     public boolean isDebug() {

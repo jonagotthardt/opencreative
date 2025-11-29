@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.commands;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiment;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
 import ua.mcchickenstudio.opencreative.indev.Items;
@@ -618,12 +617,14 @@ public class CreativeCommand extends CommandHandler {
                         sound.play(sender);
                     } catch (Exception ignored) {}
                 }
-                case "item", "items" -> {
+                case "items" -> {
                     if (player == null) {
                         sender.sendMessage(getLocaleMessage("only-players"));
                         return;
                     }
-                    if (!sender.hasPermission("opencreative.items")) {
+                    if (!sender.hasPermission("opencreative.items.get-kit")
+                            && !sender.hasPermission("opencreative.items.set")
+                            && !sender.hasPermission("opencreative.items.get-slot")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return;
                     }
@@ -635,7 +636,7 @@ public class CreativeCommand extends CommandHandler {
                     // /oc items get lobby
                     //      0     1   2    3
                     String groupId = args[2];
-                    ItemsGroup group = ItemsGroup.getById(groupId);
+                    ItemsGroup group = ItemsGroup.getById(groupId.toUpperCase().replace("-", "_"));
                     if (group == null) {
                         sender.sendMessage(getLocaleMessage("creative.items.wrong-kit")
                                 .replace("%kit%", groupId));
@@ -645,17 +646,26 @@ public class CreativeCommand extends CommandHandler {
                     if (args[1].equalsIgnoreCase("get")) {
                         if (args.length == 3) {
                             // /oc items get lobby
+                            if (!sender.hasPermission("opencreative.items.get-kit")) {
+                                sender.sendMessage(getLocaleMessage("no-perms"));
+                                return;
+                            }
                             sender.sendMessage(getLocaleMessage("creative.items.received-kit")
                                     .replace("%kit%", groupId));
+                            player.getInventory().clear();
                             group.setItems(player);
                         } else {
                             // /oc items get lobby slot
+                            if (!sender.hasPermission("opencreative.items.get-slot")) {
+                                sender.sendMessage(getLocaleMessage("no-perms"));
+                                return;
+                            }
                             int slot = 1;
                             try {
                                 slot = Math.clamp(Integer.parseInt(args[3]), 1, 36);
                             } catch (Exception ignored) {}
                             if (group.giveItem(player, slot)) {
-                                sender.sendMessage(getLocaleMessage("creative.items.given")
+                                sender.sendMessage(getLocaleMessage("creative.items.received-from-kit")
                                         .replace("%kit%", groupId)
                                         .replace("%slot%", String.valueOf(slot)));
                             } else {
@@ -666,6 +676,10 @@ public class CreativeCommand extends CommandHandler {
                             }
                         }
                     } else if (args[1].equalsIgnoreCase("set")) {
+                        if (!sender.hasPermission("opencreative.items.set")) {
+                            sender.sendMessage(getLocaleMessage("no-perms"));
+                            return;
+                        }
                         if (args.length == 3) {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
                             return;
@@ -674,11 +688,50 @@ public class CreativeCommand extends CommandHandler {
                         try {
                             slot = Math.clamp(Integer.parseInt(args[3]), 1, 36);
                         } catch (Exception ignored) {}
-                        sender.sendMessage(getLocaleMessage("creative.items.changed")
-                                .replace("%kit%", groupId)
-                                .replace("%slot%", String.valueOf(slot)));
-                        OpenCreative.getSettings().setCustomItem(group, slot, player.getInventory().getItemInMainHand());
+                        if (args.length == 4) {
+                            sender.sendMessage(getLocaleMessage("creative.items.changed")
+                                    .replace("%kit%", groupId)
+                                    .replace("%slot%", String.valueOf(slot)));
+                            OpenCreative.getSettings().setCustomItem(group, slot, player.getInventory().getItemInMainHand());
+                        } else {
+                            Items item = Items.getById(args[4].toUpperCase().replace("-", "_"));
+                            if (item == null) {
+                                sender.sendMessage(getLocaleMessage("creative.items.wrong-preset")
+                                        .replace("%preset%", args[4]));
+                                Sounds.PLAYER_FAIL.play(player);
+                                return;
+                            }
+                            sender.sendMessage(getLocaleMessage("creative.items.changed")
+                                    .replace("%kit%", groupId)
+                                    .replace("%slot%", String.valueOf(slot)));
+                            OpenCreative.getSettings().setCustomItem(group, slot, item);
+                        }
                     }
+                }
+                case "item" -> {
+                    if (player == null) {
+                        sender.sendMessage(getLocaleMessage("only-players"));
+                        return;
+                    }
+                    if (!sender.hasPermission("opencreative.items.get")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    if (args.length == 1) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return;
+                    }
+                    String itemId = args[1].toUpperCase().replace("-", "_");
+                    Items item = Items.getById(itemId);
+                    if (item == null) {
+                        sender.sendMessage(getLocaleMessage("creative.items.wrong-preset")
+                                .replace("%preset%", args[1]));
+                        Sounds.PLAYER_FAIL.play(player);
+                        return;
+                    }
+                    sender.sendMessage(getLocaleMessage("creative.items.given")
+                            .replace("%item%", itemId.toLowerCase()));
+                    player.getInventory().addItem(item.get());
                 }
                 case "kick-all" -> {
                     if (!sender.hasPermission("opencreative.kick-all")) {
@@ -1208,6 +1261,7 @@ public class CreativeCommand extends CommandHandler {
             tabCompleter.add("corrupted");
             tabCompleter.add("sound");
             tabCompleter.add("sounds");
+            tabCompleter.add("items");
             tabCompleter.add("register");
             tabCompleter.add("unregister");
             tabCompleter.add("updateworld");
@@ -1232,7 +1286,10 @@ public class CreativeCommand extends CommandHandler {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");
                 tabCompleter.add("clear");
-            }  else if ("debug".equalsIgnoreCase(args[0])) {
+            } else if ("items".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("get");
+                tabCompleter.add("set");
+            } else if ("debug".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");
             } else if (List.of("load","unload","moderate","moderation",
@@ -1263,8 +1320,6 @@ public class CreativeCommand extends CommandHandler {
                 tabCompleter.remove("theme");
             } else if ("sound".equalsIgnoreCase(args[0]) || "playsound".equalsIgnoreCase(args[0])) {
                 tabCompleter.addAll(Arrays.stream(Sounds.values()).map(s -> s.name().toLowerCase()).filter(s -> s.startsWith(args[1].toLowerCase())).toList());
-            } else if ("item".equalsIgnoreCase(args[0]) || "items".equalsIgnoreCase(args[0])) {
-                tabCompleter.addAll(Arrays.stream(Items.values()).map(s -> s.name().toLowerCase()).filter(s -> s.startsWith(args[1].toLowerCase())).toList());
             } else if ("experiments".equalsIgnoreCase(args[0])) {
                 List<Experiment> experiments = Experiments.getInstance().getExperiments();
                 if (experiments.isEmpty()) return List.of();
@@ -1290,6 +1345,8 @@ public class CreativeCommand extends CommandHandler {
                     tabCompleter.add("environment.");
                     tabCompleter.add("items.");
                 }
+            } else if ("item".equalsIgnoreCase(args[0])) {
+                tabCompleter.addAll(Arrays.stream(Items.values()).map(i -> i.name().toLowerCase()).toList());
             }
         } else if (args.length == 3) {
             if ("start".equalsIgnoreCase(args[1])) {
@@ -1324,6 +1381,18 @@ public class CreativeCommand extends CommandHandler {
                         return null;
                     }
                     return experiment.tabCommand(sender, Arrays.copyOfRange(args, 3, args.length));
+                }
+            } else if ("items".equalsIgnoreCase(args[0])) {
+                tabCompleter.addAll(Arrays.stream(ItemsGroup.values()).map(g -> g.name().toLowerCase()).toList());
+            }
+        } else if (args.length == 4) {
+            if ("items".equalsIgnoreCase(args[0])) {
+                tabCompleter.addAll(List.of("1", "2", "3", "4", "5", "6", "7", "8", "9"));
+            }
+        } else if (args.length == 5) {
+            if ("items".equalsIgnoreCase(args[0])) {
+                if (args[1].equalsIgnoreCase("set")) {
+                    tabCompleter.addAll(Arrays.stream(Items.values()).map(i -> i.name().toLowerCase()).toList());
                 }
             }
         }

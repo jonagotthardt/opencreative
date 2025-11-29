@@ -31,7 +31,7 @@ import java.util.Map;
 
 public enum ItemsGroup {
 
-    LOBBY(new ItemPair(1, Items.CHANGELOGS), new ItemPair(4, Items.WORLDS), new ItemPair(6, Items.OWN_WORLDS)),
+    LOBBY(new ItemPair(1, Items.CHANGELOGS), new ItemPair(4, Items.GAMES), new ItemPair(6, Items.OWN)),
     BUILD_OWNER,
     PLAY_OWNER,
     CODING,

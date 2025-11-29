@@ -20,12 +20,16 @@ package ua.mcchickenstudio.opencreative.indev;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
+import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.setPersistentData;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getBookPages;
 
 /**
  * <h1>Items</h1>
@@ -40,11 +44,11 @@ public enum Items {
     /**
      * For opening Worlds Browser menu in lobby.
      */
-    WORLDS(Material.COMPASS, "lobby"),
+    GAMES(Material.COMPASS, "lobby", "worlds"),
     /**
      * For opening Own Worlds Browser menu in lobby.
      */
-    OWN_WORLDS(Material.NETHER_STAR, "lobby"),
+    OWN(Material.NETHER_STAR, "lobby", "own_worlds"),
     /**
      * For viewing Changelogs in lobby.
      */
@@ -97,7 +101,19 @@ public enum Items {
     VARIABLE_CONDITION(ActionCategory.VARIABLE_CONDITION);
 
     private final Material material;
+    private final String persistentData;
     private final String group;
+
+    /**
+     * Creates main item with material and prefix group in localization file.
+     * @param material material of item.
+     * @param group group in localization file (lobby, developer).
+     */
+    Items(@NotNull Material material, @NotNull String group, @NotNull String persistentData) {
+        this.material = material;
+        this.group = group;
+        this.persistentData = persistentData;
+    }
 
     /**
      * Creates main item with material and prefix group in localization file.
@@ -107,6 +123,7 @@ public enum Items {
     Items(@NotNull Material material, @NotNull String group) {
         this.material = material;
         this.group = group;
+        this.persistentData = null;
     }
 
     /**
@@ -116,6 +133,7 @@ public enum Items {
     Items(@NotNull ActionCategory group) {
         this.material = group.getBlock();
         this.group = "developer";
+        this.persistentData = null;
     }
 
     /**
@@ -125,6 +143,7 @@ public enum Items {
     Items(@NotNull ExecutorCategory group) {
         this.material = group.getBlock();
         this.group = "developer";
+        this.persistentData = null;
     }
 
     /**
@@ -140,8 +159,16 @@ public enum Items {
      * @return item to give to player.
      */
     public ItemStack get() {
-        return createItem(material,1, "items." + group + "." + name()
-                .toLowerCase().replace("_","-"));
+        String path = "items." + group + "." + name().toLowerCase().replace("_","-");
+        ItemStack item = createItem(material, 1, path);
+        if (item.getItemMeta() instanceof BookMeta bookMeta) {
+            bookMeta.setPages(getBookPages(path + ".pages"));
+            item.setItemMeta(bookMeta);
+        }
+        if (persistentData != null) {
+            setPersistentData(item, ItemUtils.getItemTypeKey(), persistentData);
+        }
+        return item;
     }
 
     public static @Nullable Items getById(@NotNull String id) {

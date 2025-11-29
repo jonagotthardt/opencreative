@@ -32,4 +32,8 @@ public class SettingsItemsGroup {
     public Map<Integer, SettingsItem> getItems() {
         return items;
     }
+
+    public void removeItem(int slot) {
+        items.remove(slot);
+    }
 }

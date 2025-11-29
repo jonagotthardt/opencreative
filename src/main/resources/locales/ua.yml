@@ -253,7 +253,8 @@ creative:
     not-found: "%prefix%&cТакої теми звуків не знайдено О_о"
   items:
     changed: "%prefix%&fВи встановили предмет у наборі &6%kit%&f, який з'являтиметься в слоті &6%slot%&f."
-    given: "%prefix%&fВи отримали предмет з набору &6%kit%&f у слоті &6%slot%&f."
+    given: "%prefix%&fВи отримали системний предмет &6%item%&f."
+    received-from-kit: "%prefix%&fВи отримали предмет з набору &6%kit%&f у слоті &6%slot%&f."
     received-kit: "%prefix%&fВи отримали набір предметів &6%kit%&f."
     wrong-kit: "%prefix%&cНабір предметів %kit% не знайдено О_о"
     empty-slot: "%prefix%&cСлот %slot% у наборі %kit% не містить предмета."

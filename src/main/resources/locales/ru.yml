@@ -284,9 +284,11 @@ creative:
     not-found: "%prefix%&cТакой темы звуков не найдено О_о"
   items:
     changed: "%prefix%&fВы установили предмет в наборе &6%kit%&f, который будет появляться в слоте &6%slot%&f."
-    given: "%prefix%&fВы получили предмет из набора &6%kit%&f со слота &6%slot%&f."
+    given: "%prefix%&fВы получили системный предмет &6%item%&f."
+    received-from-kit: "%prefix%&fВы получили предмет из набора &6%kit%&f со слота &6%slot%&f."
     received-kit: "%prefix%&fВы получили набор предметов &6%kit%&f."
     wrong-kit: "%prefix%&cНабора предметов %kit% не найдено О_о"
+    wrong-preset: "%prefix%&cТакого предмета %preset% не найдено О_о"
     empty-slot: "%prefix%&cСлот %slot% в наборе %kit% не имеет предмета."
 not-owner: "%prefix%&cТы не владелец этого мира."
 not-developer: "%prefix%&cТы не разработчик этого мира."

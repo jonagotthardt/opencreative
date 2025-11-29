@@ -105,7 +105,7 @@ public class SettingsCustomItem implements SettingsItem {
             return new ItemStack(Material.AIR);
         }
 
-        if (amount != 0) item.setAmount(Math.clamp(amount, 1, 64));
+        if (amount != null) item.setAmount(Math.clamp(amount, 1, 64));
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             if (translationKey != null) {
@@ -122,8 +122,8 @@ public class SettingsCustomItem implements SettingsItem {
                 }
                 meta.lore(lore);
             }
-            if (glowing) {
-                item.getItemMeta().setEnchantmentGlintOverride(true);
+            if (glowing != null) {
+                item.getItemMeta().setEnchantmentGlintOverride(glowing);
             }
         }
         return item;
