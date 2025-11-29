@@ -22,8 +22,8 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.ConfigurationSection;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiment;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
-import ua.mcchickenstudio.opencreative.indev.Items;
-import ua.mcchickenstudio.opencreative.settings.ItemsGroup;
+import ua.mcchickenstudio.opencreative.settings.items.Items;
+import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
 import ua.mcchickenstudio.opencreative.menus.CreativeMenu;
@@ -746,19 +746,25 @@ public class CreativeCommand extends CommandHandler {
                     if ("starts".equalsIgnoreCase(args[1])) {
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                             if (onlinePlayer.getName().toLowerCase().startsWith(nickname.toLowerCase())) {
-                                onlinePlayer.kick();
+                                if (!onlinePlayer.equals(player)) {
+                                    onlinePlayer.kick();
+                                }
                             }
                         }
                     } else if ("ends".equalsIgnoreCase(args[1])) {
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                             if (onlinePlayer.getName().toLowerCase().endsWith(nickname.toLowerCase())) {
-                                onlinePlayer.kick();
+                                if (!onlinePlayer.equals(player)) {
+                                    onlinePlayer.kick();
+                                }
                             }
                         }
                     } else if ("contains".equalsIgnoreCase(args[1])) {
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                             if (onlinePlayer.getName().toLowerCase().contains(nickname.toLowerCase())) {
-                                onlinePlayer.kick();
+                                if (!onlinePlayer.equals(player)) {
+                                    onlinePlayer.kick();
+                                }
                             }
                         }
                     } else if ("ignore".equalsIgnoreCase(args[1])) {

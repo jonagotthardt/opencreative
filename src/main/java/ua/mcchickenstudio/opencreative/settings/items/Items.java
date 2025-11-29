@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.indev;
+package ua.mcchickenstudio.opencreative.settings.items;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -66,6 +66,10 @@ public enum Items {
      * For moving lines and marking them in coding world.
      */
     LINES_CONTROLLER(Material.COMPARATOR, "developer"),
+    /**
+     * For marking or unmarking condition as opposed.
+     */
+    ARROW_NOT(Material.ARROW, "developer"),
     /**
      * For viewing coding tutorial in coding world.
      */
@@ -171,6 +175,11 @@ public enum Items {
         return item;
     }
 
+    /**
+     * Returns items enum by text.
+     * @param id id to get items enum.
+     * @return items type, or null - if not exists.
+     */
     public static @Nullable Items getById(@NotNull String id) {
         for (Items type : Items.values()) {
             if (type.name().equals(id)) {

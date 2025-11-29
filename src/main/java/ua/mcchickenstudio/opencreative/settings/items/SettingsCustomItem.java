@@ -16,7 +16,25 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.settings;
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package ua.mcchickenstudio.opencreative.settings.items;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
@@ -24,7 +42,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.indev.Items;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import java.util.ArrayList;
@@ -35,11 +52,13 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 /**
  * <h1>SettingsCustomItem</h1>
- * This class represents item
+ * This class represents item, that will be changed
+ * by modifiers: preset, data, translation, name, lore,
+ * material, amount, glowing.
  */
 public class SettingsCustomItem implements SettingsItem {
 
-    private String preset;
+    private Items preset;
     private String data;
     private String translationKey;
 
@@ -50,35 +69,70 @@ public class SettingsCustomItem implements SettingsItem {
     private Integer amount;
     private Boolean glowing;
 
+    /**
+     * Sets bytes array data of item, that will be used for
+     * recovering saved item.
+     * @param data bytes array of item.
+     */
     public void setData(String data) {
         this.data = data;
     }
 
-    public void setPreset(String preset) {
+    /**
+     * Sets preset of item, that will be used for
+     * recovering prepared system item.
+     * @param preset type of system item.
+     */
+    public void setPreset(@NotNull Items preset) {
         this.preset = preset;
     }
 
+    /**
+     * Sets amount of item.
+     * @param amount amount of item.
+     */
     public void setAmount(int amount) {
         this.amount = amount;
     }
 
+    /**
+     * Sets whether item should be glowing or not.
+     * @param glowing true - will glow, false - not.
+     */
     public void setGlowing(boolean glowing) {
         this.glowing = glowing;
     }
 
+    /**
+     * Sets material of item.
+     * @param material material of item.
+     */
     public void setMaterial(@NotNull Material material) {
         this.material = material;
     }
 
-    public void setName(String name) {
+    /**
+     * Sets display name of item.
+     * @param name display name of item.
+     */
+    public void setName(@NotNull String name) {
         this.name = name;
     }
 
-    public void setDescription(String description) {
+    /**
+     * Sets description of item.
+     * @param description lore of item.
+     */
+    public void setDescription(@NotNull String description) {
         this.description = description;
     }
 
-    public void setTranslationKey(String translationKey) {
+    /**
+     * Sets translation key from localization file (without "items."),
+     * that will be used to set display name and description.
+     * @param translationKey translation key.
+     */
+    public void setTranslationKey(@NotNull String translationKey) {
         this.translationKey = translationKey;
     }
 
@@ -86,12 +140,7 @@ public class SettingsCustomItem implements SettingsItem {
     public @NotNull ItemStack getItem(@NotNull Player player) {
         ItemStack item = null;
         if (preset != null) {
-            Items itemType = Items.getById(preset.toUpperCase().replace("-", "_"));
-            if (itemType == null) {
-                item = new ItemStack(Material.AIR);
-            } else {
-                item = itemType.get();
-            }
+            item = preset.get();
         } else if (data != null) {
             item = ItemUtils.loadItemFromByteArray(data);
         }

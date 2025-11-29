@@ -37,9 +37,10 @@ import ua.mcchickenstudio.opencreative.commands.experiments.Experiment;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceEndEvent;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceStartEvent;
-import ua.mcchickenstudio.opencreative.indev.Items;
+import ua.mcchickenstudio.opencreative.settings.items.Items;
 import ua.mcchickenstudio.opencreative.managers.stability.DisabledWatchdog;
 import ua.mcchickenstudio.opencreative.managers.stability.Watchdog;
+import ua.mcchickenstudio.opencreative.settings.items.*;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformer;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformers;
@@ -473,7 +474,14 @@ public final class Settings {
              */
             if (section.isString("type")) {
                 // Preset will copy material, name, lore from Items enum.
-                item.setPreset(section.getString("type", ""));
+                String typeString = section.getString("type", "");
+                Items itemType = Items.getById(typeString.toUpperCase().replace("-", "_"));
+                if (itemType == null) {
+                    sendWarningErrorMessage("Unknown system item type " + typeString + " for item (kit: " + section.getName() + " in slot: " + slot  + ")");
+                } else {
+                    item.setPreset(itemType);
+                }
+
             }
             if (section.isString("data")) {
                 // Data will copy all item content from specified text.

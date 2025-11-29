@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.settings;
+package ua.mcchickenstudio.opencreative.settings.items;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
