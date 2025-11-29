@@ -154,8 +154,9 @@ public class SettingsCustomItem implements SettingsItem {
                 meta.lore(lore);
             }
             if (glowing != null) {
-                item.getItemMeta().setEnchantmentGlintOverride(glowing);
+                meta.setEnchantmentGlintOverride(glowing);
             }
+            item.setItemMeta(meta);
         }
         return item;
     }
