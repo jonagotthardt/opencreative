@@ -57,7 +57,7 @@ public enum Items {
     /**
      * For opening World Settings menu in world, as its owner.
      */
-    WORLD_SETTINGS(Material.COMPASS, "developer"),
+    WORLD_SETTINGS(Material.COMPASS, "developer", "world_settings"),
     /**
      * For changing speed of flight in coding world.
      */

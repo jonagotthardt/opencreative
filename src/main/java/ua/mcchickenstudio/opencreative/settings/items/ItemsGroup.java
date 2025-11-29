@@ -28,6 +28,9 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import java.util.List;
 import java.util.Map;
 
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.getCodingDoNotDropMeKey;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.setPersistentData;
+
 /**
  * <h1>ItemsGroup</h1>
  * This enum represents OpenCreative+ items, that will be given
@@ -119,13 +122,21 @@ public enum ItemsGroup {
         SettingsItemsGroup group = OpenCreative.getSettings().getItemsGroups().get(this);
         if (group == null) {
             for (ItemPair pair : pairs) {
-                player.getInventory().setItem(pair.slot()-1, pair.item().get());
+                ItemStack item = pair.item().get();
+                if (this == LOBBY) {
+                    setPersistentData(item, getCodingDoNotDropMeKey(), "1");
+                }
+                player.getInventory().setItem(pair.slot()-1, item);
             }
             return;
         }
         Map<Integer, SettingsItem> items = group.getItems();
         for (int slot : items.keySet()) {
-            player.getInventory().setItem(slot-1, items.get(slot).getItem(player));
+            ItemStack item = items.get(slot).getItem(player);
+            if (this == LOBBY) {
+                setPersistentData(item, getCodingDoNotDropMeKey(), "1");
+            }
+            player.getInventory().setItem(slot-1, item);
         }
     }
 

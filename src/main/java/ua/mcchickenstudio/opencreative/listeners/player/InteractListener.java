@@ -743,7 +743,7 @@ public final class InteractListener implements Listener {
                 player.setCooldown(Material.NETHER_STAR,60);
                 new OwnWorldsBrowserMenu(player).open(player);
             }
-        } else if (planet != null && currentItem.getType() == Material.COMPASS) {
+        } else if (planet != null && getItemType(currentItem).equals("world_settings")) {
             // Opens world settings menus.
             if (OpenCreative.getSettings().isMaintenance() && !player.hasPermission("opencreative.maintenance.bypass")) {
                 player.sendMessage(getLocaleMessage("maintenance"));

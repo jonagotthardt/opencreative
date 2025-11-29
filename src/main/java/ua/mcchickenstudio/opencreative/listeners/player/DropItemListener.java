@@ -35,7 +35,6 @@ import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemName;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 public final class DropItemListener implements Listener {
 
@@ -47,8 +46,8 @@ public final class DropItemListener implements Listener {
             Component name = item.getItemMeta().displayName();
             if (name != null) {
                 String displayName = item.getItemMeta().getDisplayName();
-                if (!WorldUtils.isPlanet(player.getWorld())) {
-                    if (displayName.equals(getLocaleItemName("items.lobby.games.name")) || displayName.equals(getLocaleMessage("items.lobby.own.name"))) {
+                if (WorldUtils.isLobbyWorld(player.getWorld())) {
+                    if (item.getPersistentDataContainer().has(ItemUtils.getCodingDoNotDropMeKey())) {
                         event.setCancelled(true);
                     }
                 } else {
