@@ -11628,6 +11628,22 @@ items:
           - "&7 must be empty or any"
           - " "
           - "&eClick to set condition."
+        arguments:
+          all:
+            name: "&3Match All or Any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all variables are empty, or when"
+              - "&7at least one of them is empty."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Match Any"
+              true: "Require All"
       if-var-exists:
         name: "&6Variable exists"
         lore:
@@ -11640,6 +11656,22 @@ items:
           - "&7 must exist or any"
           - " "
           - "&eClick to set condition."
+        arguments:
+          all:
+            name: "&3Match All or Any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all variables exist, or when"
+              - "&7at least one of them exists."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Match Any"
+              true: "Require All"
       if-player-is-inventory-full:
         name: "&6Inventory is full"
         lore:
