@@ -26,6 +26,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -58,8 +59,8 @@ import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
 /**
@@ -777,11 +778,24 @@ public class Planet {
         if (lastLocation == null || !devPlanet.isSaveLocation()) {
             lastLocation = getDevPlanet().getWorld().getSpawnLocation();
         }
+        PlayerInventory playerInventory = player.getInventory();
+        ItemStack[] playerInventoryItems = (OpenCreative.getPlanetsManager().getDevPlanet(player) == null ?  playerInventory.getContents() : new ItemStack[]{});
+        clearPlayer(player);
         player.teleportAsync(lastLocation).thenAccept(success -> {
             if (success) {
+                player.setAllowFlight(true);
+                player.setFlying(true);
                 if (!hidePlayer) {
+                    if (getWorldPlayers().canDevelop(player)) {
+                        player.sendMessage(getPlayerLocaleMessage("world.dev-mode.help", player));
+                        player.setGameMode(GameMode.CREATIVE);
+                    } else {
+                        player.setGameMode(GameMode.ADVENTURE);
+                    }
                     for (Player onlinePlayer : player.getWorld().getPlayers()) {
-                        onlinePlayer.sendMessage(MessageUtils.getPlayerLocaleMessage("world.dev-mode.joined", player));
+                        if (!onlinePlayer.equals(player)) {
+                            onlinePlayer.sendMessage(MessageUtils.getPlayerLocaleMessage("world.dev-mode.joined", player));
+                        }
                     }
                 } else {
                     player.setGameMode(GameMode.SPECTATOR);
@@ -798,6 +812,17 @@ public class Planet {
                         toComponent(getLocaleMessage("world.dev-mode.title")), toComponent(getLocaleMessage("world.dev-mode.subtitle")),
                         Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
+                if (isOwner(player)) {
+                    ItemsGroup.CODING_OWNER.setItemsIfAbsent(player);
+                } else {
+                    ItemsGroup.CODING.setItemsIfAbsent(player);
+                }
+                ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
+                for (ItemStack item : playerInventoryItems) {
+                    if (item != null && !itemEquals(item,worldSettingsItem) && !player.getInventory().containsAtLeast(item,1)) {
+                        player.getInventory().addItem(item);
+                    }
+                }
                 BukkitRunnable translation = new BukkitRunnable() {
                     @Override
                     public void run() {

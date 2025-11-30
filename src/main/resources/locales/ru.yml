@@ -287,6 +287,7 @@ creative:
     given: "%prefix%&fВы получили системный предмет &6%item%&f."
     received-from-kit: "%prefix%&fВы получили предмет из набора &6%kit%&f со слота &6%slot%&f."
     received-kit: "%prefix%&fВы получили набор предметов &6%kit%&f."
+    reset-kit: "%prefix%&fВы сбросили набор предметов &6%kit%&f, теперь выдаются &6предметы по умолчанию&f :)"
     wrong-kit: "%prefix%&cНабора предметов %kit% не найдено О_о"
     wrong-preset: "%prefix%&cТакого предмета %preset% не найдено О_о"
     empty-slot: "%prefix%&cСлот %slot% в наборе %kit% не имеет предмета."

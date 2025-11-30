@@ -560,6 +560,7 @@ public final class InteractListener implements Listener {
             if (planet != null) {
                 addPlayerWithLocation(player);
                 player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
+                player.getInventory().setItemInMainHand(currentItem); // Fix for Multi-Verse Inventories
                 Sounds.DEV_LOCATION_TELEPORT.play(player);
                 player.setCooldown(currentItem.getType(),60);
             }
@@ -680,6 +681,7 @@ public final class InteractListener implements Listener {
                 player.setCooldown(currentItem.getType(),60);
                 player.teleportAsync(getOldLocationPlayerWithLocation(player)).thenAccept(success -> {
                     Sounds.DEV_LOCATION_TELEPORT_BACK.play(player);
+                    player.getInventory().setItemInMainHand(currentItem); // Fix for Multi-Verse Inventories
                     for (Player developer : planet.getDevPlanet().getWorld().getPlayers()) {
                         WorldBorder border = Bukkit.createWorldBorder();
                         border.setCenter(planet.getDevPlanet().getWorld().getWorldBorder().getCenter());

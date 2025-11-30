@@ -607,6 +607,22 @@ public final class Settings {
         itemsGroups.put(group, settingsGroup);
     }
 
+    public void resetItemsGroup(ItemsGroup group) {
+        String path = "items." + group.name().toLowerCase();
+        // Removes duplicate with under score if exists
+        OpenCreative.getPlugin().getConfig().set(path, null);
+        path = path.replace("_","-");
+        OpenCreative.getPlugin().getConfig().set(path, null);
+
+        itemsGroups.remove(group);
+        for (ItemPair pair : group.getPairs()) {
+            OpenCreative.getPlugin().getConfig().set(path + "." + pair.slot(),
+                    pair.item().name().toLowerCase().replace("_", "-"));
+        }
+
+        OpenCreative.getPlugin().saveConfig();
+    }
+
     public boolean isDebug() {
         return debug;
     }

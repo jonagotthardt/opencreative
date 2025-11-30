@@ -655,6 +655,7 @@ public class CreativeCommand extends CommandHandler {
                     }
                     // /oc items set lobby 1
                     // /oc items get lobby
+                    // /oc items reset lobby
                     //      0     1   2    3
                     String groupId = args[2];
                     ItemsGroup group = ItemsGroup.getById(groupId.toUpperCase().replace("-", "_"));
@@ -696,6 +697,14 @@ public class CreativeCommand extends CommandHandler {
                                 Sounds.PLAYER_FAIL.play(player);
                             }
                         }
+                    } if (args[1].equalsIgnoreCase("reset")) {
+                        if (!sender.hasPermission("opencreative.items.reset")) {
+                            sender.sendMessage(getLocaleMessage("no-perms"));
+                            return;
+                        }
+                        OpenCreative.getSettings().resetItemsGroup(group);
+                        sender.sendMessage(getLocaleMessage("creative.items.reset-kit")
+                                .replace("%kit%", groupId));
                     } else if (args[1].equalsIgnoreCase("set")) {
                         if (!sender.hasPermission("opencreative.items.set")) {
                             sender.sendMessage(getLocaleMessage("no-perms"));
@@ -1316,6 +1325,7 @@ public class CreativeCommand extends CommandHandler {
             } else if ("items".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("get");
                 tabCompleter.add("set");
+                tabCompleter.add("reset");
             } else if ("debug".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");

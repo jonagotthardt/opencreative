@@ -275,6 +275,7 @@ creative:
     received-from-kit: "%prefix%&fYou received the item from kit &6%kit%&f in slot &6%slot%&f."
     received-kit: "%prefix%&fYou have received the item kit &6%kit%&f."
     wrong-kit: "%prefix%&cItem kit %kit% not found O_o"
+    reset-kit: "%prefix%&fYou have reset the items kit &6%kit%&f, now players will get &6default items&f :)"
     empty-slot: "%prefix%&cSlot %slot% in kit %kit% does not contain an item."
   experiments:
     enabled: "%prefix%&fYou have &6enabled &fexperiment &6%name% &7(%description%)&f, now its features will be available to you :)\n &cWarning: Experiments may break world data!"
