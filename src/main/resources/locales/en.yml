@@ -275,6 +275,7 @@ creative:
     received-from-kit: "%prefix%&fYou received the item from kit &6%kit%&f in slot &6%slot%&f."
     received-kit: "%prefix%&fYou have received the item kit &6%kit%&f."
     wrong-kit: "%prefix%&cItem kit %kit% not found O_o"
+    reset-kit: "%prefix%&fYou have reset the items kit &6%kit%&f, now players will get &6default items&f :)"
     empty-slot: "%prefix%&cSlot %slot% in kit %kit% does not contain an item."
   experiments:
     enabled: "%prefix%&fYou have &6enabled &fexperiment &6%name% &7(%description%)&f, now its features will be available to you :)\n &cWarning: Experiments may break world data!"
@@ -11628,6 +11629,22 @@ items:
           - "&7 must be empty or any"
           - " "
           - "&eClick to set condition."
+        arguments:
+          all:
+            name: "&3Match All or Any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all variables are empty, or when"
+              - "&7at least one of them is empty."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Match Any"
+              true: "Require All"
       if-var-exists:
         name: "&6Variable exists"
         lore:
@@ -11640,6 +11657,22 @@ items:
           - "&7 must exist or any"
           - " "
           - "&eClick to set condition."
+        arguments:
+          all:
+            name: "&3Match All or Any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all variables exist, or when"
+              - "&7at least one of them exists."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Match Any"
+              true: "Require All"
       if-player-is-inventory-full:
         name: "&6Inventory is full"
         lore:

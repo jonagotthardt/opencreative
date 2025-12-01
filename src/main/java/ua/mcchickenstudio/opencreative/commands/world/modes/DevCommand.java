@@ -99,10 +99,6 @@ public class DevCommand extends CommandHandler {
                     }
                 }
                 new QuitEvent(player).callEvent();
-                PlayerInventory playerInventory = player.getInventory();
-                ItemStack[] playerInventoryItems = (OpenCreative.getPlanetsManager().getDevPlanet(player) == null ?  playerInventory.getContents() : new ItemStack[]{});
-                clearPlayer(player);
-                sender.sendMessage(getPlayerLocaleMessage("world.dev-mode.help", player));
                 if (args.length == 3) {
                     try {
                         double x = Double.parseDouble(args[0]);
@@ -114,26 +110,6 @@ public class DevCommand extends CommandHandler {
                     }
                 } else {
                     planet.connectToDevPlanet(player);
-                }
-                if (planet.getWorldPlayers().isDeveloperGuest(player)) {
-                    player.setGameMode(GameMode.ADVENTURE);
-                    player.setAllowFlight(true);
-                    player.setFlying(true);
-                } else {
-                    player.setGameMode(GameMode.CREATIVE);
-                    player.setAllowFlight(true);
-                    player.setFlying(true);
-                }
-                if (planet.isOwner(player)) {
-                    ItemsGroup.CODING_OWNER.setItemsIfAbsent(player);
-                } else {
-                    ItemsGroup.CODING.setItemsIfAbsent(player);
-                }
-                ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
-                for (ItemStack item : playerInventoryItems) {
-                    if (item != null && !itemEquals(item,worldSettingsItem) && !player.getInventory().containsAtLeast(item,1)) {
-                        player.getInventory().addItem(item);
-                    }
                 }
             } else {
                 sender.sendMessage(getPlayerLocaleMessage("not-owner", player));

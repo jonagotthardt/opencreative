@@ -113,6 +113,14 @@ public enum ItemsGroup {
     }
 
     /**
+     * Returns list of pairs with slots and items.
+     * @return pairs of items.
+     */
+    public @NotNull List<ItemPair> getPairs() {
+        return pairs;
+    }
+
+    /**
      * Sets items in player inventory.
      * <p>
      * Recommended to clear player's inventory before doing this.
