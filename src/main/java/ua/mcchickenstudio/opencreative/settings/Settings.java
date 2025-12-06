@@ -454,7 +454,7 @@ public final class Settings {
         if (section.isString(slot)) {
             // 1: "own-worlds"
             String typeString = section.getString(slot, "");
-            Items itemType = Items.getById(typeString.toUpperCase().replace("-", "_"));
+            Items itemType = Items.getById(typeString);
             if (itemType == null) {
                 sendWarningErrorMessage("Unknown system item type " + typeString + " for item (kit: " + section.getName() + " in slot: " + slot  + ")");
                 return null;
@@ -479,7 +479,7 @@ public final class Settings {
             if (section.isString("type")) {
                 // Preset will copy material, name, lore from Items enum.
                 String typeString = section.getString("type", "");
-                Items itemType = Items.getById(typeString.toUpperCase().replace("-", "_"));
+                Items itemType = Items.getById(typeString);
                 if (itemType == null) {
                     sendWarningErrorMessage("Unknown system item type " + typeString + " for item (kit: " + section.getName() + " in slot: " + slot  + ")");
                 } else {

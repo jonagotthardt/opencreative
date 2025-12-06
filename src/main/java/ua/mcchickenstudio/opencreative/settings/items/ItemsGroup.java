@@ -130,7 +130,7 @@ public enum ItemsGroup {
         SettingsItemsGroup group = OpenCreative.getSettings().getItemsGroups().get(this);
         if (group == null) {
             for (ItemPair pair : pairs) {
-                ItemStack item = pair.item().get();
+                ItemStack item = pair.item().get(player);
                 if (this == LOBBY) {
                     setPersistentData(item, getCodingDoNotDropMeKey(), "1");
                 }
@@ -158,7 +158,7 @@ public enum ItemsGroup {
         SettingsItemsGroup group = OpenCreative.getSettings().getItemsGroups().get(this);
         if (group == null) {
             for (ItemPair pair : pairs) {
-                ItemStack item = pair.item().get();
+                ItemStack item = pair.item().get(player);
                 if (!player.getInventory().contains(item, 1)) player.getInventory().setItem(pair.slot()-1, item);
             }
             return;
@@ -178,7 +178,7 @@ public enum ItemsGroup {
         SettingsItemsGroup group = OpenCreative.getSettings().getItemsGroups().get(this);
         if (group == null) {
             for (ItemPair pair : pairs) {
-                ItemStack item = pair.item().get();
+                ItemStack item = pair.item().get(player);
                 player.getInventory().removeItemAnySlot(item);
             }
             return;
@@ -201,7 +201,7 @@ public enum ItemsGroup {
         if (group == null) {
             for (ItemPair pair : pairs) {
                 if (pair.slot() == slot) {
-                    player.getInventory().addItem(pair.item().get());
+                    player.getInventory().addItem(pair.item().get(player));
                     return true;
                 }
             }

@@ -444,18 +444,19 @@ public final class MessageUtils {
      * @param localizationID id of message.
      * @return translated book pages, or "Not found pages...", if message was not found.
      */
-    public static @NotNull List<String> getBookPages(@NotNull String localizationID) {
+    @SuppressWarnings("unused")
+    public static @NotNull List<Component> getBookPages(@NotNull Player player, @NotNull String localizationID) {
         List<String> foundPages = getLocalization().getStringList(localizationID);
-        List<String> pages = new ArrayList<>();
+        List<Component> pages = new ArrayList<>();
         if (foundPages.isEmpty()) {
             if (OpenCreative.getSettings().isConsoleNotFoundMessage()) ErrorUtils.sendWarningErrorMessage("Not found book pages " + localizationID);
-            pages.add("§4Not found pages: §0" + localizationID + " \nPlease report server administration, they need to fill this line in locales" + File.separator + getLanguage() + ".yml");
+            pages.add(Component.text("§4Not found pages: §0" + localizationID + " \nPlease report server administration, they need to fill this line in locales" + File.separator + getLanguage() + ".yml"));
         } else {
             for (String page : foundPages) {
-                pages.add(ChatColor.translateAlternateColorCodes('&', page
-                        .replace("%prefix%",getPrefix())
-                        .replace("%cc-prefix%",getCreativeChatPrefix())
-                        .replace("%version%",OpenCreative.getVersion())
+                pages.add(MiniMessage.miniMessage().deserialize(fromLegacyToMiniMessageBook(page)
+                    .replace("%prefix%",getPrefix())
+                    .replace("%cc-prefix%",getCreativeChatPrefix())
+                    .replace("%version%",OpenCreative.getVersion())
                 ));
             }
         }
@@ -840,6 +841,94 @@ public final class MessageUtils {
                     // like legacy behaviour
                     result.append("<reset>");
                     hadStyle = false;
+                }
+            }
+            result.append(current);
+        }
+        return result.toString();
+    }
+
+    /**
+     * Converts legacy text with § or & to book's MiniMessage format,
+     * so this text can be deserialized to MiniMessage and used
+     * in written books.
+     * <pre>
+     * {@code
+     * fromLegacyToMiniMessage("&4Hello"); // "<red>Hello"
+     * fromLegacyToMiniMessage("&nHello"); // "<underlined>Hello"
+     * fromLegacyToMiniMessage("&rHello<red>"); // "<reset>Hello<red>"
+     * }
+     * </pre>
+     * @param input text to convert.
+     * @return text, that can be used as MiniMessage in books.
+     */
+    public static @NotNull String fromLegacyToMiniMessageBook(@NotNull String input) {
+        if (input.contains("§")) {
+            input = input.replace('§','&');
+        }
+        if (!input.contains("&")) return input;
+        StringBuilder result = new StringBuilder();
+        boolean hadStyle = false;
+        for (int charIndex = 0; charIndex < input.length(); charIndex++) {
+            // for characters in text
+            char current = input.charAt(charIndex);
+            if (current == '&' && charIndex + 7 < input.length() && input.charAt(charIndex + 1) == '#') {
+                // for legacy gradient format &#ffffff
+                String hex = input.substring(charIndex + 2, charIndex + 8); // "ffffff"
+                if (hex.matches("[0-9A-Fa-f]{6}")) {
+                    result.append("<#").append(hex).append(">");
+                    charIndex += 7;
+                    if (hadStyle) result.append("<reset><black>");
+                    continue;
+                }
+            }
+            if (current == '&' && charIndex + 13 < input.length() && input.charAt(charIndex + 1) == 'x') {
+                // for legacy gradient format &x&f&f&f&f&f&f
+                StringBuilder gradientColor = new StringBuilder(); // ffffff
+                boolean isValidFormat = true;
+                for (int colorIndex = 0; colorIndex < 6; colorIndex++) {
+                    //
+                    // &x&a&b&c&d&e&j
+                    // charIndex = 0 -> current = &
+                    //   &f
+                    //   23
+                    // j = 0 a, 1 b, 2 c, 3 d, 4 e, 5 j
+                    //
+                    int ampersandIndex = charIndex + 2 + colorIndex * 2; // f
+                    if (input.charAt(ampersandIndex) == '&' && ampersandIndex + 1 < input.length()) {
+                        gradientColor.append(input.charAt(ampersandIndex + 1));
+                    } else {
+                        isValidFormat = false;
+                        break;
+                    }
+                }
+                if (isValidFormat) {
+                    result.append("<#").append(gradientColor).append(">");
+                    charIndex += 13;
+                    if (hadStyle) result.append("<reset><black>");
+                    continue;
+                }
+            }
+            if (current == '&' && charIndex + 1 < input.length()) {
+                // for classic legacy colors and styles
+                char code = Character.toLowerCase(input.charAt(charIndex + 1));
+                String replacement = LEGACY_TO_MINI.get(code);
+                boolean isDecoration = code == 'k' || code == 'n' || code == 'm' || code == 'l' || code == 'o';
+                if (replacement != null) {
+                    result.append(replacement);
+                    if (code == 'r') {
+                        result.append("<black>");
+                    }
+                    if (hadStyle && !isDecoration) {
+                        // If it's color, then reset decorations,
+                        // like legacy behaviour
+                        result.append("<reset><black>");
+                        hadStyle = false;
+                    } else if (isDecoration) {
+                        hadStyle = true;
+                    }
+                    charIndex++;
+                    continue;
                 }
             }
             result.append(current);

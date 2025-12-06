@@ -18,8 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.commands;
 
+import net.kyori.adventure.inventory.Book;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiment;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
 import ua.mcchickenstudio.opencreative.settings.items.Items;
@@ -48,6 +52,7 @@ import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.getUUIDFromText;
 
@@ -264,7 +269,7 @@ public class CreativeCommand extends CommandHandler {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return;
                     }
-                    if (args.length < 2) {
+                    if (args.length < 3) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return;
                     }
@@ -341,6 +346,40 @@ public class CreativeCommand extends CommandHandler {
                         sender.sendMessage(getLocaleMessage("world.already-recommended")
                                 .replace("%id%", id));
                         Sounds.PLAYER_FAIL.play(sender);
+                    }
+                }
+                case "editbook" -> {
+                    if (player == null) {
+                        sender.sendMessage(getLocaleMessage("only-players"));
+                        return;
+                    }
+                    if (!sender.hasPermission("opencreative.locale.editbook")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return;
+                    }
+                    String path = switch (args[1].toLowerCase()) {
+                        case "lobby", "changelogs", "updates", "changelog" -> "items.lobby.changelogs";
+                        case "coding-book", "codingbook", "devbook", "dev", "coding" -> "items.developer.coding-book";
+                        default -> "";
+                    };
+                    if (path.isEmpty()) {
+                        return;
+                    }
+                    ItemStack currentItem = player.getInventory().getItemInMainHand();
+                    if (currentItem.getItemMeta() instanceof BookMeta book) {
+                        MessageUtils.setMessage(path + ".pages", book.getPages());
+                        player.getInventory().setItemInMainHand(null);
+                    } else {
+                        currentItem = createItem(Material.WRITABLE_BOOK, 1, path);
+                        if (currentItem.getItemMeta() instanceof BookMeta book) {
+                            book.pages(getBookPages(player, path + ".pages"));
+                            currentItem.setItemMeta(book);
+                        }
+                        player.getInventory().setItemInMainHand(currentItem);
                     }
                 }
                 case "ignoremessage" -> {
@@ -724,7 +763,7 @@ public class CreativeCommand extends CommandHandler {
                                     .replace("%slot%", String.valueOf(slot)));
                             OpenCreative.getSettings().setCustomItem(group, slot, player.getInventory().getItemInMainHand());
                         } else {
-                            Items item = Items.getById(args[4].toUpperCase().replace("-", "_"));
+                            Items item = Items.getById(args[4]);
                             if (item == null) {
                                 sender.sendMessage(getLocaleMessage("creative.items.wrong-preset")
                                         .replace("%preset%", args[4]));
@@ -761,7 +800,7 @@ public class CreativeCommand extends CommandHandler {
                     }
                     sender.sendMessage(getLocaleMessage("creative.items.given")
                             .replace("%item%", itemId.toLowerCase()));
-                    player.getInventory().addItem(item.get());
+                    player.getInventory().addItem(item.get(player));
                 }
                 case "kick-all" -> {
                     if (!sender.hasPermission("opencreative.kick-all")) {
@@ -1326,6 +1365,9 @@ public class CreativeCommand extends CommandHandler {
                 tabCompleter.add("get");
                 tabCompleter.add("set");
                 tabCompleter.add("reset");
+            } else if ("editbook".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("changelogs");
+                tabCompleter.add("coding");
             } else if ("debug".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");

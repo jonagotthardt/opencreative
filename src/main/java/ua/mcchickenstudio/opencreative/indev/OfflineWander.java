@@ -58,6 +58,8 @@ public class OfflineWander {
     @Since(5.6)
     protected boolean hideHints;
     @Since(5.8)
+    protected @Nullable List<UUID> friends;
+    @Since(5.8)
     protected Location lastLocation;
 
     public OfflineWander(@NotNull UUID uuid) {
@@ -110,6 +112,10 @@ public class OfflineWander {
         return favoriteWorlds != null ? favoriteWorlds : List.of();
     }
 
+    public @NotNull List<UUID> getFriends() {
+        return friends != null ? friends : List.of();
+    }
+
     public void setLastPlayedWorldId(int lastPlayedWorldId) {
         this.lastPlayedWorldId = lastPlayedWorldId;
         saveData();
@@ -125,17 +131,43 @@ public class OfflineWander {
         saveData();
     }
 
+    public boolean addFriend(@NotNull UUID friendUUID) {
+        if (uuid.equals(friendUUID)) {
+            return false;
+        }
+        if (getFriends().contains(friendUUID)) {
+            return false;
+        }
+        if (friends == null) friends = new ArrayList<>();
+        friends.add(friendUUID);
+        saveData();
+        return true;
+    }
+
+    public boolean removeFriend(@NotNull UUID friendUUID) {
+        if (uuid.equals(friendUUID)) {
+            return false;
+        }
+        if (friends == null || !getFriends().contains(friendUUID)) {
+            return false;
+        }
+        friends.remove(friendUUID);
+        saveData();
+        return true;
+    }
+
     public boolean addFavoriteWorld(int worldId) {
         if (getFavoriteWorlds().contains(worldId)) {
             return false;
         }
-        getFavoriteWorlds().add(worldId);
+        if (favoriteWorlds == null) favoriteWorlds = new ArrayList<>();
+        favoriteWorlds.add(worldId);
         saveData();
         return true;
     }
 
     public boolean removeFavoriteWorld(int worldId) {
-        if (!getFavoriteWorlds().contains(worldId)) {
+        if (favoriteWorlds == null || !getFavoriteWorlds().contains(worldId)) {
             return false;
         }
         getFavoriteWorlds().remove(worldId);
@@ -197,6 +229,17 @@ public class OfflineWander {
                 this.favoriteWorlds = new ArrayList<>();
                 for (JsonElement el : arr) {
                     this.favoriteWorlds.add(el.getAsInt());
+                }
+            }
+
+            if (json.has("friends")) {
+                JsonArray arr = json.getAsJsonArray("friends");
+                this.friends = new ArrayList<>();
+                for (JsonElement el : arr) {
+                    try {
+                        UUID friend = UUID.fromString(el.getAsString());
+                        this.friends.add(friend);
+                    } catch (Exception ignored) {}
                 }
             }
 

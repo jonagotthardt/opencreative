@@ -40,6 +40,6 @@ public class SettingsPresetItem implements SettingsItem {
 
     @Override
     public @NotNull ItemStack getItem(@NotNull Player player) {
-        return type.get();
+        return type.get(player);
     }
 }

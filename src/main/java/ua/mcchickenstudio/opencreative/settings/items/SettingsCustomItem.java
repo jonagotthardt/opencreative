@@ -122,7 +122,7 @@ public class SettingsCustomItem implements SettingsItem {
     public @NotNull ItemStack getItem(@NotNull Player player) {
         ItemStack item = null;
         if (preset != null) {
-            item = preset.get();
+            item = preset.get(player);
         } else if (data != null) {
             item = ItemUtils.loadItemFromByteArray(data);
         }
