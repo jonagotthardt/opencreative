@@ -41,11 +41,13 @@ import ua.mcchickenstudio.opencreative.coding.variables.WorldVariables;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
 import ua.mcchickenstudio.opencreative.commands.experiments.NewWorldScreenExperiment;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetConnectPlayerEvent;
+import ua.mcchickenstudio.opencreative.indev.Wander;
 import ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld;
 import ua.mcchickenstudio.opencreative.managers.stability.StabilityState;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.groups.Group;
 import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
+import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
@@ -604,6 +606,12 @@ public class Planet {
             }
         }
 
+        Wander wander = OpenCreative.getWander(player);
+        if (wander.isConnectingToPlanet()) {
+            player.sendMessage(getLocaleMessage("world.connecting.busy"));
+            return;
+        }
+        wander.setConnectingToPlanet(true);
         player.showTitle(Title.title(
             toComponent(getLocaleMessage("world.connecting.title")), toComponent(getLocaleMessage("world.connecting.subtitle")),
             Title.Times.times(Duration.ofMillis(710), Duration.ofSeconds(30), Duration.ofMillis(130))
@@ -622,37 +630,35 @@ public class Planet {
         if (!Experiments.isEnabled("new_world_screen") || NewWorldScreenExperiment.getType() == NewWorldScreenExperiment.ScreenType.NORMAL) {
             player.teleportAsync(territory.getWorld().getSpawnLocation()).thenAccept(success -> {
                 getConnectionProcess(player, wasLoaded, hidePlayer, success);
+            }).exceptionally(error -> {
+                sendPlayerErrorMessage(player, "Failed to connect to the world " + this.getId() +
+                        (error.getMessage() == null ? "." : ": " + error.getMessage()));
+                wander.setConnectingToPlanet(false);
+                return null;
             });
             return;
         }
 
         switch (NewWorldScreenExperiment.getType()) {
-            case NETHER ->
-                player.teleportAsync(territory.getWorld().getSpawnLocation(), PlayerTeleportEvent.TeleportCause.NETHER_PORTAL).thenAccept(success -> {
-                    getConnectionProcess(player, wasLoaded, hidePlayer, success);
-                });
-            case THE_END ->
-                player.teleportAsync(territory.getWorld().getSpawnLocation(), PlayerTeleportEvent.TeleportCause.END_PORTAL).thenAccept(success -> {
-                    getConnectionProcess(player, wasLoaded, hidePlayer, success);
-                });
-            case BED -> {
-                Location bed = player.getLocation();
-                player.sendBlockChange(bed, Bukkit.createBlockData(Material.RED_BED));
-                player.sleep(bed, true);
-                player.teleportAsync(territory.getWorld().getSpawnLocation()).thenAccept(success -> {
-                    getConnectionProcess(player, wasLoaded, hidePlayer, success);
-                    player.wakeup(false);
-                });
-            }
             case DARKNESS -> {
                 player.sendPotionEffectChange(player, new PotionEffect(PotionEffectType.DARKNESS, 100, 1));
                 player.teleportAsync(territory.getWorld().getSpawnLocation()).thenAccept(success -> {
                     getConnectionProcess(player, wasLoaded, hidePlayer, success);
+                }).exceptionally(error -> {
+                    sendPlayerErrorMessage(player, "Failed to connect to the world " + this.getId() +
+                            (error.getMessage() == null ? "." : ": " + error.getMessage()));
+                    wander.setConnectingToPlanet(false);
+                    return null;
                 });
             }
             case PERCENTS -> {
                 player.teleportAsync(territory.getWorld().getSpawnLocation()).thenAccept(success -> {
                     getConnectionProcess(player, wasLoaded, hidePlayer, success);
+                }).exceptionally(error -> {
+                    sendPlayerErrorMessage(player, "Failed to connect to the world " + this.getId() +
+                            (error.getMessage() == null ? "." : ": " + error.getMessage()));
+                    wander.setConnectingToPlanet(false);
+                    return null;
                 });
 
                 int radius = 8;
@@ -683,6 +689,7 @@ public class Planet {
     private void getConnectionProcess(@NotNull Player player, boolean wasLoaded, boolean hidePlayer, boolean success) {
         clearPlayer(player);
         if (success) {
+            OpenCreative.getWander(player).setConnectingToPlanet(false);
             if (!hidePlayer && getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
                 for (Player onlinePlayer : getPlayers()) {
                     onlinePlayer.sendMessage(MessageUtils.getPlayerLocaleMessage("world.joined", player));
@@ -748,6 +755,7 @@ public class Planet {
             info.updateIconAsync();
         } else {
             sendPlayerErrorMessage(player,"Can't join planet. World is unloaded.");
+            OpenCreative.getWander(player).setConnectingToPlanet(false);
         }
     }
 
