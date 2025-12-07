@@ -76,7 +76,7 @@ public abstract class CommandHandler implements CommandExecutor, TabCompleter {
     public final @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         List<String> tabCompleter = onTab(sender, command, alias, args);
         if (tabCompleter == null) return null;
-        return tabCompleter.stream().filter(s -> s.startsWith(args[args.length-1])).toList();
+        return tabCompleter.stream().filter(s -> s.toLowerCase().startsWith(args[args.length-1].toLowerCase())).toList();
     }
 
 }

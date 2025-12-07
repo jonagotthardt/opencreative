@@ -18,9 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.commands;
 
-import net.kyori.adventure.inventory.Book;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
