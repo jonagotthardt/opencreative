@@ -170,7 +170,7 @@ public class OfflineWander {
         if (favoriteWorlds == null || !getFavoriteWorlds().contains(worldId)) {
             return false;
         }
-        getFavoriteWorlds().remove(worldId);
+        favoriteWorlds.remove(worldId);
         saveData();
         return true;
     }

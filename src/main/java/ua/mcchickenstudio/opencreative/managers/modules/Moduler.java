@@ -45,24 +45,20 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 
 public final class Moduler implements ModuleManager {
     
-    private final Set<Module> modules = new HashSet<>();
+    private final Map<Integer, Module> modules = new HashMap<>();
 
     public @Nullable Module getModuleById(@NotNull String id) {
-        for (Module module : modules) {
-            if (String.valueOf(module.getId()).equals(id)) {
-                return module;
-            }
-        }
-        return null;
+        int moduleID = Integer.parseInt(id);
+        return modules.get(moduleID);
     }
 
     public @NotNull Set<Module> getModules() {
-        return new HashSet<>(modules);
+        return new HashSet<>(modules.values());
     }
 
     public @NotNull Set<Module> getPlayerModules(@NotNull UUID uuid) {
         Set<Module> playerModules = new HashSet<>();
-        for (Module module : modules) {
+        for (Module module : modules.values()) {
             if (module.getOwner().equals(uuid)) {
                 playerModules.add(module);
             }
@@ -71,7 +67,7 @@ public final class Moduler implements ModuleManager {
     }
 
     public void registerModule(@NotNull Module module) {
-        modules.add(module);
+        modules.put(module.getId(), module);
         ModuleRegisterEvent event = new ModuleRegisterEvent(module);
         event.callEvent();
     }
@@ -110,7 +106,7 @@ public final class Moduler implements ModuleManager {
         ModuleDeletionEvent event = new ModuleDeletionEvent(module);
         event.callEvent();
         ModuleSettingsMenu.removeFromCurrentEditing(module);
-        modules.remove(module);
+        modules.remove(module.getId());
         File file = getModuleConfigFile(module.getId());
         try {
             if (file.exists()) {

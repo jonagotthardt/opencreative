@@ -730,7 +730,7 @@ public final class InteractListener implements Listener {
                     player.sendMessage(getLocaleMessage("creative.stability.cannot"));
                     return;
                 }
-                player.setCooldown(Material.COMPASS,60);
+                player.setCooldown(currentItem.getType(),60);
                 new RecommendedWorldsMenu().open(player);
             } else if (getItemType(currentItem).equals("own_worlds")) {
                 // Opens player's worlds menus.
@@ -742,7 +742,7 @@ public final class InteractListener implements Listener {
                     player.sendMessage(getLocaleMessage("creative.stability.cannot"));
                     return;
                 }
-                player.setCooldown(Material.NETHER_STAR,60);
+                player.setCooldown(currentItem.getType(),60);
                 new OwnWorldsBrowserMenu(player).open(player);
             }
         } else if (planet != null && getItemType(currentItem).equals("world_settings")) {
@@ -756,7 +756,7 @@ public final class InteractListener implements Listener {
                 return;
             }
             if (planet.isOwner(player)) {
-                player.setCooldown(Material.COMPASS,60);
+                player.setCooldown(currentItem.getType(),60);
                 new WorldSettingsMenu(planet,player).open(player);
             }
         }

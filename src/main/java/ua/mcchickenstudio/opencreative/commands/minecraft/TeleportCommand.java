@@ -162,7 +162,7 @@ public class TeleportCommand extends CommandHandler {
                     .replace("%first%", firstPlayer.getName())
                     .replace("%second%", secondPlayer.getName()));
             firstPlayer.sendMessage(getLocaleMessage("commands.teleport.teleported")
-                    .replace("%player%", firstPlayer.getName()));
+                    .replace("%player%", secondPlayer.getName()));
             Sounds.PLAYER_TELEPORT.play(firstPlayer);
             if (!firstPlayer.getWorld().equals(secondPlayer.getWorld()) && !firstPlayer.hasPermission("opencreative.teleport.clear-bypass")) {
                 clearPlayer(firstPlayer);

@@ -46,6 +46,7 @@ import ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld;
 import ua.mcchickenstudio.opencreative.managers.stability.StabilityState;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.groups.Group;
+import ua.mcchickenstudio.opencreative.settings.items.Items;
 import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
@@ -411,7 +412,7 @@ public class Planet {
                         Sounds.WORLD_MODE_BUILD.play(player);
                         territory.showBorders(player);
                         if (isOwner(player)) {
-                            player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
+                            ItemsGroup.BUILD_OWNER.setItems(player);
                         }
                         if (worldPlayers.canBuild(player)) {
                             player.setGameMode(GameMode.CREATIVE);
@@ -824,12 +825,6 @@ public class Planet {
                     ItemsGroup.CODING_OWNER.setItemsIfAbsent(player);
                 } else {
                     ItemsGroup.CODING.setItemsIfAbsent(player);
-                }
-                ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
-                for (ItemStack item : playerInventoryItems) {
-                    if (item != null && !itemEquals(item,worldSettingsItem) && !player.getInventory().containsAtLeast(item,1)) {
-                        player.getInventory().addItem(item);
-                    }
                 }
                 BukkitRunnable translation = new BukkitRunnable() {
                     @Override

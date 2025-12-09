@@ -441,6 +441,12 @@ settings:
   module-sharing:
     enabled: "%prefix%Players &6can&f now download your module."
     disabled: "%prefix%You have &6disabled&f players from downloading your module."
+  profile-description:
+    title: "&fEnter in chat"
+    subtitle: "&fnew &6profile description&f."
+    usage: "%prefix%Enter a new &6profile description&f, for example &aCreating beautiful worlds&f.\n&f - The description must not violate the server rules."
+    error: "%prefix%The profile description violates one of the requirements:\n&f- The description must not be shorter than %min% characters or longer than %max%."
+    changed: "%prefix%You have set a new &6profile description&f: %description%"
 deleting-world:
   title: "&cDeleting ◌"
   subtitle: "&fPlease wait a few seconds..."
@@ -512,6 +518,8 @@ world:
   favorites:
     added: "%prefix%You marked this world &7%id% &fas &6favorite&f :)"
     removed: "%prefix%You removed world &7%id%&f from favorites.."
+    already-added: "%prefix%&cThis world %id% is already not in the favorites list.."
+    already-removed: "%prefix%&cThis world %id% is already in the favorites list.."
     limit: "%prefix%&cYou reached maximum amount of favorite worlds (%limit%)! To add new favorite worlds remove old ones."
   categories:
     sandbox: "&e&lSANDBOX"

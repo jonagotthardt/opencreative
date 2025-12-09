@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.indev.OfflineWander;
 import ua.mcchickenstudio.opencreative.indev.Wander;
+import ua.mcchickenstudio.opencreative.indev.WanderMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.util.List;
@@ -61,14 +62,14 @@ public final class WandersExperiment extends Experiment {
             player.sendMessage(getLocaleMessage("too-few-args"));
             return;
         }
-        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-        if (planet == null) {
-            player.sendMessage(getLocaleMessage("only-in-world"));
-            return;
-        }
         Wander wander = OpenCreative.getWander(player);
         switch (args[0].toLowerCase()) {
             case "favorite" -> {
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+                if (planet == null) {
+                    player.sendMessage(getLocaleMessage("only-in-world"));
+                    return;
+                }
                 if (wander.addFavoriteWorld(planet.getId())) {
                     wander.getPlayer().sendMessage(getLocaleMessage("world.favorites.added")
                             .replace("%id%", String.valueOf(planet.getId())));
@@ -85,6 +86,11 @@ public final class WandersExperiment extends Experiment {
                 }
             }
             case "unfavorite" -> {
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+                if (planet == null) {
+                    player.sendMessage(getLocaleMessage("only-in-world"));
+                    return;
+                }
                 if (wander.removeFavoriteWorld(planet.getId())) {
                     wander.getPlayer().sendMessage(getLocaleMessage("world.favorites.removed")
                             .replace("%id%", String.valueOf(planet.getId())));
@@ -111,6 +117,9 @@ public final class WandersExperiment extends Experiment {
                 } else {
                     sender.sendMessage("Already with gender " + gender.name());
                 }
+            }
+            case "menu" -> {
+                new WanderMenu(player.getName()).open(player);
             }
             case "info" -> {
                 if (args.length == 1) {
@@ -147,7 +156,7 @@ public final class WandersExperiment extends Experiment {
     @Override
     public @Nullable List<String> tabCommand(@NotNull CommandSender sender, @NotNull String[] args) {
         if (args.length == 0) {
-            return List.of("favorite", "unfavorite", "info", "gender");
+            return List.of("favorite", "unfavorite", "info", "gender", "menu");
         }
         if (args.length == 1) {
             if (args[0].equalsIgnoreCase("gender")) {

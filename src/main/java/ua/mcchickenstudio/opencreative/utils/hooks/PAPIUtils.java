@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.utils.hooks;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -26,6 +28,9 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.settings.groups.LimitType;
+import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
+
+import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 
@@ -46,6 +51,8 @@ class Placeholder extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player player, String identifier) {
+        String result = parseSystem(identifier);
+        if (result != null) return result;
         if (identifier.startsWith("planet:")) {
             // For other planets: %opencreative_planet:123_online% (planet:123_online)
             String identifierNoPlanet = identifier.replace("planet:", ""); // 123_online
@@ -64,10 +71,34 @@ class Placeholder extends PlaceholderExpansion {
         return parsePlayer(player, identifier, planet);
     }
 
+    private String parseSystem(@NotNull String identifier) {
+        switch (identifier) {
+            case "all_planets_amount" -> {
+                return String.valueOf(OpenCreative.getPlanetsManager().getPlanets().size());
+            }
+            case "corrupted_planets_amount" -> {
+                return String.valueOf(OpenCreative.getPlanetsManager().getCorruptedPlanets().size());
+            }
+            case "online_planets_amount" -> {
+                List<World> worlds = Bukkit.getServer().getWorlds().stream()
+                        .filter(WorldUtils::isPlanet)
+                        .filter(w -> !isDevPlanet(w))
+                        .toList();
+                return String.valueOf(worlds.size());
+            }
+            default -> {
+                return null;
+            }
+        }
+    }
+
     private String parsePlayer(Player player, @NotNull String identifier, Planet currentPlanet) {
         if (currentPlanet == null) {
             if (identifier.equals("is_in_planet")) {
                 return "false";
+            }
+            if (identifier.equals("own_planets_amount")) {
+                return String.valueOf(OpenCreative.getPlanetsManager().getPlanetsByOwner(player));
             }
             return null;
         }
@@ -95,6 +126,9 @@ class Placeholder extends PlaceholderExpansion {
             }
             case "is_owner" -> {
                 return String.valueOf(currentPlanet.isOwner(player));
+            }
+            case "own_planets_amount" -> {
+                return String.valueOf(OpenCreative.getPlanetsManager().getPlanetsByOwner(player));
             }
         }
         return parsePlanet(currentPlanet, identifier);

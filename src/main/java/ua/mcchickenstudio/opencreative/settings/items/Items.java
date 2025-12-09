@@ -38,7 +38,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getBookPages;
  * by doing something: joining the lobby, connecting to world
  * or entering to the coding world.
  * <p>
- * To get item, use {@link #get()} method.
+ * To get item, use {@link #get(Player)} ()} method.
  */
 public enum Items {
 

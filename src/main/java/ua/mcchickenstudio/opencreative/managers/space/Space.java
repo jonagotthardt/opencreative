@@ -49,12 +49,12 @@ import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isPlanet;
 
 public final class Space implements PlanetsManager {
 
-    private final Set<Planet> planets = new HashSet<>();
+    private final Map<Integer, Planet> planets = new HashMap<>();
     private final Set<Planet> corruptedPlanets = new HashSet<>();
     
     @Override
     public @NotNull Set<Planet> getPlanets() {
-        return planets;
+        return new HashSet<>(planets.values());
     }
 
     @Override
@@ -67,14 +67,14 @@ public final class Space implements PlanetsManager {
         if (planet.isCorrupted()) {
             corruptedPlanets.add(planet);
         } else {
-            planets.add(planet);
+            planets.put(planet.getId(), planet);
         }
         new PlanetRegisterEvent(planet).callEvent();
     }
 
     @Override
     public void unregisterPlanet(@NotNull Planet planet) {
-        planets.remove(planet);
+        planets.remove(planet.getId());
         corruptedPlanets.remove(planet);
     }
 
@@ -177,7 +177,7 @@ public final class Space implements PlanetsManager {
 
     public @NotNull Set<Planet> getPlanetsContainingName(@NotNull String worldName) {
         Set<Planet> foundPlanets = new HashSet<>();
-        for (Planet planet : planets) {
+        for (Planet planet : planets.values()) {
             if (planet.getInformation().getDisplayName().toLowerCase().contains(worldName.toLowerCase())) {
                 foundPlanets.add(planet);
             }
@@ -188,7 +188,7 @@ public final class Space implements PlanetsManager {
     @Override
     public @NotNull Set<Planet> getPlanetsContainingID(@NotNull String worldID) {
         Set<Planet> foundPlanets = new HashSet<>();
-        for (Planet planet : planets) {
+        for (Planet planet : planets.values()) {
             if (planet.getInformation().getCustomID().toLowerCase().contains(worldID.toLowerCase())) {
                 foundPlanets.add(planet);
             }
@@ -199,7 +199,7 @@ public final class Space implements PlanetsManager {
     @Override
     public @NotNull Set<Planet> getPlanetsByOwner(@NotNull String owner) {
         Set<Planet> foundPlanets = new HashSet<>();
-        for (Planet planet : planets) {
+        for (Planet planet : planets.values()) {
             if (planet.isOwner(owner)) {
                 foundPlanets.add(planet);
             }
@@ -211,15 +211,11 @@ public final class Space implements PlanetsManager {
     public Planet getPlanetByPlayer(@NotNull Player player) {
         World world = player.getWorld();
         if (!isPlanet(world)) return null;
-        String id = world.getName()
+        String worldID = world.getName()
                 .replace("./planets/planet","")
                 .replace("dev","");
-        for (Planet planet : planets) {
-            if (id.equals(String.valueOf(planet.getId()))) {
-                return planet;
-            }
-        }
-        return null;
+        int id = Integer.parseInt(worldID);
+        return planets.get(id);
     }
 
     @Override
@@ -232,64 +228,50 @@ public final class Space implements PlanetsManager {
     @Override
     public DevPlanet getDevPlanet(@NotNull World world) {
         if (!isDevPlanet(world)) return null;
-        for (Planet planet : planets) {
-            if (world.equals(planet.getDevPlanet().getWorld())) {
-                return planet.getDevPlanet();
-            }
-        }
-        return null;
+        String worldID = world.getName()
+                .replace("./planets/planet","")
+                .replace("dev","");
+        int id = Integer.parseInt(worldID);
+        Planet planet = planets.get(id);
+        if (planet == null) return null;
+        return planet.getDevPlanet();
     }
 
     @Override
     public Planet getPlanetByWorld(@NotNull World world) {
         if (!isPlanet(world) && !isDevPlanet(world)) return null;
-        String id = world.getName()
+        String worldID = world.getName()
                 .replace("./planets/planet","")
                 .replace("dev","");
-        for (Planet planet : planets) {
-            if (id.equals(String.valueOf(planet.getId()))) {
-                return planet;
-            }
-        }
-        return null;
+        int id = Integer.parseInt(worldID);
+        return planets.get(id);
     }
 
     @Override
     public Planet getPlanetByWorldName(@NotNull String worldName) {
-        for (Planet planet : planets) {
-            if (planet.getWorldName().equalsIgnoreCase(worldName)) {
-                return planet;
-            }
-        }
-        return null;
+        String worldID = worldName
+                .replace("./planets/planet","")
+                .replace("dev","");
+        int id = Integer.parseInt(worldID);
+        return planets.get(id);
     }
 
     @Override
     public Planet getPlanetById(@NotNull String id) {
-        for (Planet planet : planets) {
-            if (id.equalsIgnoreCase(String.valueOf(planet.getId()))) {
-                return planet;
-            }
-        }
-        return null;
+        int planetId = Integer.parseInt(id);
+        return planets.get(planetId);
     }
 
     @Override
     public @Nullable Planet getPlanetByAnyID(@NotNull String id) {
-        for (Planet planet : planets) {
-            if (id.equalsIgnoreCase(String.valueOf(planet.getId()))) {
-                return planet;
-            }
-            if (id.equalsIgnoreCase(planet.getInformation().getCustomID())) {
-                return planet;
-            }
-        }
-        return null;
+        Planet found = getPlanetById(id);
+        if (found != null) return found;
+        return getPlanetByCustomID(id);
     }
 
     @Override
     public Planet getPlanetByCustomID(@NotNull String customID) {
-        for (Planet planet : planets) {
+        for (Planet planet : planets.values()) {
             if (planet.getInformation().getCustomID().equalsIgnoreCase(customID)) {
                 return planet;
             }
