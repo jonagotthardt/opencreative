@@ -387,7 +387,7 @@ public class Planet {
      * <p>In the Play mode code script will work, player damaging is enabled.</p>
      * @param mode Mode to set.
      */
-    public void setMode(Mode mode) {
+    public void setMode(@NotNull Mode mode) {
         if (this.mode == mode) return;
         setPlanetConfigParameter(this,"mode",mode.name());
         if (!isLoaded()) {
@@ -703,9 +703,16 @@ public class Planet {
             player.clearTitle();
             territory.showBorders(player);
             if (!getPlayersFromPlanetList(this, PlayersType.UNIQUE).contains(player.getName())) {
+                /*
+                 * When player joins connects to the world for first time.
+                 */
                 addPlayerInPlanetList(this,player.getName(), PlayersType.UNIQUE);
                 info.setUniques(info.getUniques()+1);
                 if (this.isOwner(player)) {
+                    /*
+                     * When world's owner connects to the world for first time
+                     * (after world's creation).
+                     */
                     player.showTitle(Title.title(
                         toComponent(MessageUtils.getPlayerLocaleMessage("creating-world.welcome-title",player)), toComponent(MessageUtils.getPlayerLocaleMessage("creating-world.welcome-subtitle",player)),
                         Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(9), Duration.ofSeconds(2))
@@ -795,6 +802,9 @@ public class Planet {
                 player.setAllowFlight(true);
                 player.setFlying(true);
                 if (!hidePlayer) {
+                    /*
+                     * If player is visiting world normally.
+                     */
                     if (getWorldPlayers().canDevelop(player)) {
                         player.sendMessage(getPlayerLocaleMessage("world.dev-mode.help", player));
                         player.setGameMode(GameMode.CREATIVE);
@@ -807,6 +817,9 @@ public class Planet {
                         }
                     }
                 } else {
+                    /*
+                     * If player is moderator and should be hidden.
+                     */
                     player.setGameMode(GameMode.SPECTATOR);
                     for (Player onlinePlayer : player.getWorld().getPlayers()) {
                         onlinePlayer.hidePlayer(OpenCreative.getPlugin(),player);
@@ -821,10 +834,12 @@ public class Planet {
                         toComponent(getLocaleMessage("world.dev-mode.title")), toComponent(getLocaleMessage("world.dev-mode.subtitle")),
                         Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
-                if (isOwner(player)) {
-                    ItemsGroup.CODING_OWNER.setItemsIfAbsent(player);
-                } else {
-                    ItemsGroup.CODING.setItemsIfAbsent(player);
+                ItemsGroup itemsGroup = isOwner(player) ? ItemsGroup.CODING_OWNER : ItemsGroup.CODING;
+                List<ItemStack> codingItems = itemsGroup.getItems(player);
+                for (ItemStack item : playerInventoryItems) {
+                    if (!codingItems.contains(item)) {
+                        player.getInventory().addItem(item);
+                    }
                 }
                 BukkitRunnable translation = new BukkitRunnable() {
                     @Override
@@ -899,7 +914,8 @@ public class Planet {
             }
         }, BUILD() {
             public void onPlayerConnect(Player player, Planet planet) {
-                if (planet.getWorldPlayers().canBuild(player)) {
+                // Removes build permissions for admins on world join (to prevent accidental griefs)
+                if (planet.getWorldPlayers().canBuild(player) && (!player.hasPermission("opencreative.world.build.others") || planet.isOwner(player))) {
                     player.setGameMode(GameMode.CREATIVE);
                     giveBuildPermissions(player);
                 }

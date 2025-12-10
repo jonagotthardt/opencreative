@@ -265,6 +265,10 @@ public abstract class Action {
         }
         entities.removeIf(entity -> entity instanceof Player player && ChangedWorld.isPlayerWithLocation(player));
         entities.removeIf(entity -> !entity.getWorld().equals(getPlanet().getWorld()));
+        int selectionLimit = getPlanet().getLimits().getEntitiesLimit() + getPlanet().getPlayers().size(); // adding players count if entities limit is set to 0
+        if (entities.size() > selectionLimit) {
+            entities = entities.subList(0, selectionLimit);
+        }
         return entities;
     }
 

@@ -30,7 +30,6 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;

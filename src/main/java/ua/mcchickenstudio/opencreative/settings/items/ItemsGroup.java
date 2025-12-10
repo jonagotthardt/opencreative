@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -117,6 +118,38 @@ public enum ItemsGroup {
      */
     public @NotNull List<ItemPair> getPairs() {
         return pairs;
+    }
+
+    /**
+     * Returns list of items, created for player to give manually.
+     * Empty items are not included.
+     * @param player player to get items.
+     * @return list of items.
+     */
+    public @NotNull List<ItemStack> getItems(@NotNull Player player) {
+        List<ItemStack> list = new ArrayList<>();
+        SettingsItemsGroup group = OpenCreative.getSettings().getItemsGroups().get(this);
+        if (group == null) {
+            for (ItemPair pair : pairs) {
+                ItemStack item = pair.item().get(player);
+                if (this == LOBBY) {
+                    setPersistentData(item, getCodingDoNotDropMeKey(), "1");
+                }
+                if (item.isEmpty()) continue;
+                list.add(item);
+            }
+            return list;
+        }
+        Map<Integer, SettingsItem> items = group.getItems();
+        for (int slot : items.keySet()) {
+            ItemStack item = items.get(slot).getItem(player);
+            if (this == LOBBY) {
+                setPersistentData(item, getCodingDoNotDropMeKey(), "1");
+            }
+            if (item.isEmpty()) continue;
+            list.add(item);
+        }
+        return list;
     }
 
     /**

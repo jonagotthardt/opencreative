@@ -265,6 +265,9 @@ public class PlanetTerritory {
         runningBukkitRunnables.remove(runnable);
     }
 
+    /**
+     * Stops all running bukkit runnables and tasks in world.
+     */
     public void stopBukkitRunnables() {
         for (BukkitRunnable runnable : runningBukkitRunnables) {
             try {
@@ -274,10 +277,18 @@ public class PlanetTerritory {
         runningBukkitRunnables.clear();
     }
 
+    /**
+     * Returns flags of planet, that store additional settings.
+     * @return planet's flags.
+     */
     public PlanetFlags getFlags() {
         return flags;
     }
 
+    /**
+     * Returns map of IDs and boss bars.
+     * @return map of IDs and boss bars.
+     */
     public Map<String, BossBar> getBossBars() {
         return bossBars;
     }
@@ -286,15 +297,30 @@ public class PlanetTerritory {
         return environment;
     }
 
+    /**
+     * Returns world of planet for buildings.
+     * If world is unloaded, returns null.
+     * @return planet's world, or null - if world is unloaded.
+     */
     public @Nullable World getWorld() {
         return Bukkit.getWorld(planet.getWorldName());
     }
 
+    /**
+     * Returns size of world, that will be used
+     * to set world borders.
+     * @return size of world.
+     */
     public int getWorldSize() {
         return worldSize;
     }
 
-    public CodeScript getScript() {
+    /**
+     * Returns code script of world, that stores
+     * executors and actions.
+     * @return code script.
+     */
+    public @NotNull CodeScript getScript() {
         return script;
     }
 
@@ -305,7 +331,7 @@ public class PlanetTerritory {
             worldCreator.generateStructures(generateStructures);
         }
         worldCreator.type(WorldType.FLAT);
-        if (generator instanceof EnvironmentCapable capable) {
+        if (generator instanceof EnvironmentCapable) {
             worldCreator.environment(environment);
         }
         worldCreator.seed(seed);
@@ -359,8 +385,12 @@ public class PlanetTerritory {
 
     @SuppressWarnings("unchecked")
     public void setDeprecatedGameRule() {
-        GameRule<?> spawnRadius = GameRule.getByName("SPAWN_CHUNK_RADIUS");
-        if (spawnRadius != null) getWorld().setGameRule((GameRule<? super Integer>) spawnRadius, 1);
+        try {
+            GameRule<?> spawnRadius = GameRule.getByName("SPAWN_CHUNK_RADIUS");
+            if (spawnRadius != null && getWorld() != null) {
+                getWorld().setGameRule((GameRule<? super Integer>) spawnRadius, 1);
+            }
+        } catch (Exception ignored) {}
     }
 
     /**

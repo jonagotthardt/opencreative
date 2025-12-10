@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.commands.world.modes;
 
-import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
@@ -26,25 +25,16 @@ import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
-import org.bukkit.inventory.meta.BookMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.clearPlayer;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 

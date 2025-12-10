@@ -319,8 +319,7 @@ public class PlanetLimits {
     }
 
     /**
-     * Checks whether coding encountered too many errors in
-     * the last 3 seconds.
+     * Checks whether coding encountered too many errors in the last 3 seconds.
      * @return true - must stop the code, false - few or no errors.
      */
     public boolean isTooManyCodingErrors() {
@@ -333,10 +332,10 @@ public class PlanetLimits {
         }
 
         if (lastCodingErrors.size() >= getCodingErrorsLimit()) {
-            return false;
+            return true;
         } else {
             lastCodingErrors.add(now);
-            return true;
+            return false;
         }
 
     }
