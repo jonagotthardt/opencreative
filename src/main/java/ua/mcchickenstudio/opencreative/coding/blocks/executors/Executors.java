@@ -87,16 +87,9 @@ public class Executors {
         Planet planet = executor.getPlanet();
         if (planet == null) return;
         Executors executors = planet.getTerritory().getScript().getExecutors();
-        if (planet.getLimits().isTooManyCodingErrors()) {
-            executors.clearExecutionsAmount(executor);
-            stopPlanetCode(planet);
-            sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("coding-error.errors-limit",false)
-                    .replace("%limit%",String.valueOf(planet.getLimits().getCodingErrorsLimit())));
-            return;
-        }
         if (executors.getLastExecutorCallsAmount(executor) > planet.getLimits().getCodeOperationsLimit()) {
             executors.clearExecutionsAmount(executor);
-            stopPlanetCode(planet);
+            stopPlanetCode(planet, "operations limit");
             sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("coding-error.operations-limit",false)
                     .replace("%limit%",String.valueOf(planet.getLimits().getCodeOperationsLimit())));
         } else {
@@ -116,7 +109,7 @@ public class Executors {
         Executors executors = planet.getTerritory().getScript().getExecutors();
         if (executors.getLastExecutorCallsAmount(executor) > planet.getLimits().getCodeOperationsLimit()) {
             executors.clearExecutionsAmount(executor);
-            stopPlanetCode(planet);
+            stopPlanetCode(planet, "operations limit");
             sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("coding-error.operations-limit",false).replace("%limit%",String.valueOf(planet.getLimits().getCodeOperationsLimit())));
         } else {
             executors.increaseCallsAmount(executor);

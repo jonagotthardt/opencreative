@@ -36,7 +36,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetCodeErrorMessage;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 /**
@@ -197,6 +197,12 @@ public class ActionsHandler {
             } catch (Exception error) {
                 sendErrorMessage(action, error);
                 removeAllActions();
+                if (action.getPlanet().getLimits().isTooManyCodingErrors()) {
+                    stopPlanetCode(action.getPlanet(), "errors limit");
+                    sendPlanetCodeCriticalErrorMessage(action.getPlanet(),executor,getLocaleMessage("coding-error.errors-limit",false)
+                            .replace("%limit%",String.valueOf(action.getPlanet().getLimits().getCodingErrorsLimit())));
+                    return;
+                }
             }
         }
         if (action instanceof WaitAction wait) {

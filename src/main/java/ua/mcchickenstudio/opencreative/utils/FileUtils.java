@@ -32,6 +32,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
@@ -273,6 +274,14 @@ public final class FileUtils {
         } catch (Exception error) {
             sendCriticalErrorMessage("An error has occurred while loading modules...",error);
         }
+    }
+
+    public static @NotNull YamlConfiguration getDefaultConfig() {
+        InputStream input = OpenCreative.getPlugin().getResource("config.yml");
+        if (input == null) {
+            return new YamlConfiguration();
+        }
+        return YamlConfiguration.loadConfiguration(new InputStreamReader(input, StandardCharsets.UTF_8));
     }
 
     /**

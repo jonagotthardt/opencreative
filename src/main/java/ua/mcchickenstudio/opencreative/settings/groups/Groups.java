@@ -28,6 +28,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
+import static ua.mcchickenstudio.opencreative.utils.FileUtils.getDefaultConfig;
 
 /**
  * <h1>Groups</h1>
@@ -50,6 +51,21 @@ public final class Groups {
         for (String group : section.getKeys(false)) {
             registerGroup(new Group(group, config));
         }
+    }
+
+    public void fillDefaults(@NotNull String group) {
+        FileConfiguration config = OpenCreative.getPlugin().getConfig();
+        FileConfiguration defaultConfig = getDefaultConfig();
+        String defaultPath = "groups." + (group.equalsIgnoreCase("default") ? "default" : "premium");
+        ConfigurationSection defaultSection = defaultConfig.getConfigurationSection(defaultPath);
+        if (defaultSection == null) return;
+        for (String key : defaultSection.getKeys(true)) {
+            String path = "groups." + group + key.substring(14);
+            if (config.contains(path)) continue;
+            config.set(path, defaultSection.get(key));
+        }
+        OpenCreative.getPlugin().saveConfig();
+        OpenCreative.getPlugin().reloadConfig();
     }
 
     public @NotNull Group getDefaultGroup() {
