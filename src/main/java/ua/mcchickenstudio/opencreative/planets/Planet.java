@@ -835,6 +835,7 @@ public class Planet {
                         Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
                 ItemsGroup itemsGroup = isOwner(player) ? ItemsGroup.CODING_OWNER : ItemsGroup.CODING;
+                itemsGroup.setItemsIfAbsent(player);
                 List<ItemStack> codingItems = itemsGroup.getItems(player);
                 for (ItemStack item : playerInventoryItems) {
                     if (!codingItems.contains(item)) {
