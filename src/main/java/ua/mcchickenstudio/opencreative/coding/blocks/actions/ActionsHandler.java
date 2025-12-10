@@ -230,7 +230,7 @@ public class ActionsHandler {
             case UnknownFunctionException exception -> localizedMessage = localizedMessage.replace("%name%", exception.getName());
             case UnsupportedEntityException exception -> {
                 String localizedRequired = toKebabCase(exception.getRequired().getSimpleName());
-                String localizedCurrent = toKebabCase(exception.getCurrent().getSimpleName());
+                String localizedCurrent = toKebabCase(exception.getCurrent().getSimpleName()).replace("craft_", "");
 
                 if (messageExists("entities." + localizedRequired)) {
                     localizedRequired = getLocaleMessage("entities." + localizedRequired);

@@ -28,6 +28,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+
 public final class SpawnArrowAction extends WorldAction {
     public SpawnArrowAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
@@ -35,6 +37,10 @@ public final class SpawnArrowAction extends WorldAction {
 
     @Override
     protected void execute(Entity entity) {
+        if (getWorld().getEntities().size() >= getPlanet().getLimits().getEntitiesLimit()) {
+            sendCodingDebugLog(getPlanet(), "Too many entities: spawn entity action is cancelled.");
+            return;
+        }
         ItemStack arrowItem = getArguments().getValue("arrow",new ItemStack(Material.ARROW,1),this);
         for (Location location : getArguments().getLocationList("locations",this)) {
             if (arrowItem.getType() == Material.ARROW) {

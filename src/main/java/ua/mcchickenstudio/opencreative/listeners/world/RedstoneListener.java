@@ -28,9 +28,9 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedRedstoneEvent;
+import ua.mcchickenstudio.opencreative.indev.messages.PlaceholderReplacer;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.sendMessageOnce;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 
@@ -43,7 +43,9 @@ public final class RedstoneListener implements Listener {
         if (planet != null) {
             planet.getLimits().setLastRedstoneOperationsAmount(planet.getLimits().getLastRedstoneOperationsAmount()+1);
             if (planet.getLimits().getLastRedstoneOperationsAmount() > planet.getLimits().getRedstoneOperationsLimit()) {
-                    sendMessageOnce(planet,getLocaleMessage("world.redstone-limit").replace("%count%",String.valueOf(planet.getLimits().getRedstoneOperationsLimit())),5);
+                    sendMessageOnce(planet, "world.redstone-limit",
+                        new PlaceholderReplacer("count", planet.getLimits().getRedstoneOperationsLimit()),
+                        null, 5);
                     if (location.getBlock().getType() == Material.OBSERVER) {
                         new BukkitRunnable() {
                             @Override

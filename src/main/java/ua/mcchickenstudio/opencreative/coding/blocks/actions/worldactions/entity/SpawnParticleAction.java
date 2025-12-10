@@ -27,6 +27,8 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+
 public final class SpawnParticleAction extends WorldAction {
     public SpawnParticleAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
@@ -34,6 +36,10 @@ public final class SpawnParticleAction extends WorldAction {
 
     @Override
     protected void execute(Entity entity) {
+        if (getWorld().getEntities().size() >= getPlanet().getLimits().getEntitiesLimit()) {
+            sendCodingDebugLog(getPlanet(), "Too many entities: spawn particles action is cancelled.");
+            return;
+        }
         Particle particle = getArguments().getValue("particle",Particle.HEART,this);
         int count = Math.min(30,getArguments().getValue("count",1,this));
         double offsetX = getArguments().getValue("offset-x",0.0d,this);

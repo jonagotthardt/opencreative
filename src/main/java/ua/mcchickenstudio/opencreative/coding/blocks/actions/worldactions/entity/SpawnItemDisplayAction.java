@@ -31,6 +31,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+
 public final class SpawnItemDisplayAction extends WorldAction {
 
     public SpawnItemDisplayAction(Executor executor, Target target, int x, Arguments args) {
@@ -41,6 +43,11 @@ public final class SpawnItemDisplayAction extends WorldAction {
     protected void execute(Entity entity) {
 
         if (!getArguments().pathExists("item")) {
+            return;
+        }
+
+        if (getWorld().getEntities().size() >= getPlanet().getLimits().getEntitiesLimit()) {
+            sendCodingDebugLog(getPlanet(), "Too many entities: spawn entity action is cancelled.");
             return;
         }
 

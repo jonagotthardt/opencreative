@@ -68,7 +68,7 @@ public class PlanetTerritory {
     private World.Environment environment;
     private boolean autoSave = true;
 
-    public PlanetTerritory(Planet planet) {
+    public PlanetTerritory(@NotNull Planet planet) {
         this.planet = planet;
         flags = new PlanetFlags(planet);
         scoreboards = new PlanetScoreboards(planet);

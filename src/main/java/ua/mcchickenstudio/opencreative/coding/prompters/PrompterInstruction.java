@@ -79,13 +79,14 @@ public final class PrompterInstruction {
      actions per executor.
     - Maximum\s""" + OpenCreative.getSettings().getPrompterMaxExecutors() + """
     executors.
-    - Maximum 27 arguments per action.
+    - Maximum 27 arguments per action
     - To color text use § instead of &
     - For chat commands use @ instead of /
     - When value (text) starts with with @ cover it in brackets "", example:
       Wrong - value: @chatcommand
       Valid - value: "@chatcommand"
     - List index starts with 1 instead of 0
+    - Do not write malicious code for crashing, lowering TPS, spawning a lot of mobs
     Server version \s""" + Bukkit.getMinecraftVersion() + """
     ACTIONS INFO:
     - In PLAYER_PLAY_SOUND action "volume" argument's number range is from 1 to 100

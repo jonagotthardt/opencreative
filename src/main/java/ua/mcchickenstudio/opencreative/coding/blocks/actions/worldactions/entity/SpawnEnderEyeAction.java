@@ -29,6 +29,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+
 public final class SpawnEnderEyeAction extends WorldAction {
 
     public SpawnEnderEyeAction(Executor executor, Target target, int x, Arguments args) {
@@ -37,6 +39,11 @@ public final class SpawnEnderEyeAction extends WorldAction {
 
     @Override
     protected void execute(Entity entity) {
+
+        if (getWorld().getEntities().size() >= getPlanet().getLimits().getEntitiesLimit()) {
+            sendCodingDebugLog(getPlanet(), "Too many entities: spawn entity action is cancelled.");
+            return;
+        }
 
         Component customName = getArguments().getValue("name",Component.text(""),this);
 

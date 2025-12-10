@@ -42,8 +42,7 @@ import java.util.*;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isPlanet;
 
@@ -76,6 +75,7 @@ public final class Space implements PlanetsManager {
     public void unregisterPlanet(@NotNull Planet planet) {
         planets.remove(planet.getId());
         corruptedPlanets.remove(planet);
+        clearOnceMessages(planet);
     }
 
     @Override
@@ -214,8 +214,7 @@ public final class Space implements PlanetsManager {
         String worldID = world.getName()
                 .replace("./planets/planet","")
                 .replace("dev","");
-        int id = Integer.parseInt(worldID);
-        return planets.get(id);
+        return getPlanetById(worldID);
     }
 
     @Override
@@ -231,8 +230,7 @@ public final class Space implements PlanetsManager {
         String worldID = world.getName()
                 .replace("./planets/planet","")
                 .replace("dev","");
-        int id = Integer.parseInt(worldID);
-        Planet planet = planets.get(id);
+        Planet planet =  getPlanetById(worldID);
         if (planet == null) return null;
         return planet.getDevPlanet();
     }
@@ -243,23 +241,26 @@ public final class Space implements PlanetsManager {
         String worldID = world.getName()
                 .replace("./planets/planet","")
                 .replace("dev","");
-        int id = Integer.parseInt(worldID);
-        return planets.get(id);
+        return getPlanetById(worldID);
     }
 
     @Override
     public Planet getPlanetByWorldName(@NotNull String worldName) {
+        if (!isPlanet(worldName) && !isDevPlanet(worldName)) return null;
         String worldID = worldName
                 .replace("./planets/planet","")
                 .replace("dev","");
-        int id = Integer.parseInt(worldID);
-        return planets.get(id);
+        return getPlanetById(worldID);
     }
 
     @Override
     public Planet getPlanetById(@NotNull String id) {
-        int planetId = Integer.parseInt(id);
-        return planets.get(planetId);
+        try {
+            int planetId = Integer.parseInt(id);
+            return planets.get(planetId);
+        } catch (NumberFormatException ignored) {
+            return null;
+        }
     }
 
     @Override

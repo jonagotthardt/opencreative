@@ -238,9 +238,14 @@ public abstract class Action {
             }
             case SELECTED -> entities.addAll(getHandler().getSelectedTargets());
             case ALL_ENTITIES -> {
+                int amount = 0;
                 for (Entity entity : getWorld().getEntities()) {
+                    if (amount > getPlanet().getLimits().getEntitiesLimit()) {
+                        break;
+                    }
                     if (!(entity instanceof Player)) {
                         entities.add(entity);
+                        amount++;
                     }
                 }
             }

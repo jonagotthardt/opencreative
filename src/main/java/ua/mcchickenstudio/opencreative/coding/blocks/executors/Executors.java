@@ -21,10 +21,8 @@ package ua.mcchickenstudio.opencreative.coding.blocks.executors;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.Condition;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Cycle;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Function;
@@ -88,10 +86,18 @@ public class Executors {
         Planet planet = executor.getPlanet();
         if (planet == null || planet.getTerritory().getScript() == null || planet.getTerritory().getScript().getExecutors() == null) return;
         Executors executors = planet.getTerritory().getScript().getExecutors();
+        if (planet.getLimits().isTooManyCodingErrors()) {
+            executors.clearExecutionsAmount(executor);
+            stopPlanetCode(planet);
+            sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("coding-error.errors-limit",false)
+                    .replace("%limit%",String.valueOf(planet.getLimits().getCodingErrorsLimit())));
+            return;
+        }
         if (executors.getLastExecutorCallsAmount(executor) > planet.getLimits().getCodeOperationsLimit()) {
             executors.clearExecutionsAmount(executor);
             stopPlanetCode(planet);
-            sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("coding-error.operations-limit",false).replace("%limit%",String.valueOf(planet.getLimits().getCodeOperationsLimit())));
+            sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("coding-error.operations-limit",false)
+                    .replace("%limit%",String.valueOf(planet.getLimits().getCodeOperationsLimit())));
         } else {
             executors.increaseCallsAmount(executor);
             executor.run(event);
@@ -154,6 +160,46 @@ public class Executors {
 
     public @NotNull List<Executor> getExecutorsList() {
         return executorsList;
+    }
+
+    public @NotNull List<Action> getActionsList() {
+        List<Action> actions = new ArrayList<>();
+        for (Executor executor : executorsList) {
+            for (Action action : executor.getActions()) {
+                actions.addAll(getInsideActionsList(action));
+            }
+        }
+        return actions;
+    }
+
+    public @NotNull List<Condition> getConditionsList() {
+        List<Condition> conditions = new ArrayList<>();
+        for (Executor executor : executorsList) {
+            for (Action action : getActionsList()) {
+                if (action instanceof Condition condition) {
+                    conditions.add(condition);
+                }
+            }
+        }
+        return conditions;
+    }
+
+    public @NotNull List<Action> getInsideActionsList(@NotNull Action action) {
+        List<Action> actions = new ArrayList<>();
+        actions.add(action);
+        if (action instanceof Condition condition) {
+            for (Action inside : condition.getActions()) {
+                actions.addAll(getInsideActionsList(inside));
+            }
+            for (Action inside : condition.getElseActions()) {
+                actions.addAll(getInsideActionsList(inside));
+            }
+        } else if (action instanceof MultiAction multiAction) {
+            for (Action inside : multiAction.getActions()) {
+                actions.addAll(getInsideActionsList(inside));
+            }
+        }
+        return actions;
     }
 
     /**

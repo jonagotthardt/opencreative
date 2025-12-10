@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding;
 
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
 import org.bukkit.configuration.ConfigurationSection;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -44,7 +45,7 @@ public class CodeScript {
     private final Executors executors;
     private CodeConfiguration scriptConfig;
 
-    public CodeScript(Planet planet) {
+    public CodeScript(@NotNull Planet planet) {
         this.planet = planet;
         this.executors = new Executors(planet);
         this.scriptConfig = new CodeConfiguration();
@@ -110,20 +111,31 @@ public class CodeScript {
         }
     }
 
-    public CodeConfiguration getConfig() {
-        return scriptConfig;
-    }
-
+    /**
+     * Clears temporary data: config and executors.
+     */
     public void unload() {
         scriptConfig = new CodeConfiguration();
         executors.clear();
     }
 
-    public Executors getExecutors() {
+    /**
+     * Returns config, that stores code script.
+     * @return code script config.
+     */
+    public @NotNull CodeConfiguration getConfig() {
+        return scriptConfig;
+    }
+
+    /**
+     * Returns instance of executors.
+     * @return executors of script.
+     */
+    public @NotNull Executors getExecutors() {
         return executors;
     }
 
-    public Planet getPlanet() {
+    public @NotNull Planet getPlanet() {
         return planet;
     }
 }

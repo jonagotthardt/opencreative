@@ -40,6 +40,7 @@ public class PlanetLimits {
     private final LinkedList<Long> lastWebRequests = new LinkedList<>();
     private final LinkedList<Long> lastLightningsStrikes = new LinkedList<>();
     private final LinkedList<Long> lastBeesSpawns = new LinkedList<>();
+    private final LinkedList<Long> lastCodingErrors = new LinkedList<>();
 
     private final Map<UUID, Deque<Long>> lastPlayerMenuOpens = new HashMap<>();
 
@@ -119,6 +120,14 @@ public class PlanetLimits {
      */
     public int getCodeOperationsLimit() {
         return planet.getGroup().getLimit(LimitType.CODE_OPERATIONS).calculateLimit(planet.getPlayers().size());
+    }
+
+    /**
+     * Returns maximum coding errors amount in the planet.
+     * @return limit of errors amount.
+     */
+    public int getCodingErrorsLimit() {
+        return planet.getGroup().getLimit(LimitType.CODING_ERRORS).calculateLimit(planet.getPlayers().size());
     }
 
     /**
@@ -310,6 +319,29 @@ public class PlanetLimits {
     }
 
     /**
+     * Checks whether coding encountered too many errors in
+     * the last 3 seconds.
+     * @return true - must stop the code, false - few or no errors.
+     */
+    public boolean isTooManyCodingErrors() {
+
+        long now = System.currentTimeMillis();
+
+        // Removes time from list, if it's more than 3 seconds.
+        while (!lastCodingErrors.isEmpty() && (now - lastCodingErrors.peek()) > 3000) {
+            lastCodingErrors.poll();
+        }
+
+        if (lastCodingErrors.size() >= getCodingErrorsLimit()) {
+            return false;
+        } else {
+            lastCodingErrors.add(now);
+            return true;
+        }
+
+    }
+
+    /**
      * Checks if world can open custom menu for player.
      * Used to prevent unavailability of leaving game.
      * Checks if the amount of player's opened menus
@@ -362,6 +394,7 @@ public class PlanetLimits {
         lastBeesSpawns.clear();
         lastPlayerMenuOpens.clear();
         lastWebRequests.clear();
+        lastCodingErrors.clear();
     }
 
 }

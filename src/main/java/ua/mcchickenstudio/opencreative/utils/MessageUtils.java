@@ -19,16 +19,17 @@
 package ua.mcchickenstudio.opencreative.utils;
 
 import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.modules.Module;
+import ua.mcchickenstudio.opencreative.indev.messages.PlaceholderReplacer;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.PAPIUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -55,6 +56,8 @@ public final class MessageUtils {
     
     private static File localizationFile;
     private static FileConfiguration localizationConfig;
+
+    private static final Map<Integer, Long> recentPlanetMessages = new HashMap<>();
 
     /**
      * Converts text into component by deserializing it with
@@ -526,52 +529,40 @@ public final class MessageUtils {
 
     }
 
-
-    static final Map<Planet,Long> messagesOnce = new HashMap<>();
     /**
-     Sends message to planet players once. If cool down is not ended, it will not send message.
-     **/
-    public static void sendMessageOnce(Planet planet, String message, int onceInSeconds) {
+     * Sends message by path for every player in planet, if it was not sent recently.
+     * @param planet planet to send message.
+     * @param path path of message.
+     * @param placeholder placeholder for message.
+     * @param clickCommand command for click.
+     * @param onceInSeconds cooldown of messages.
+     */
+    public static void sendMessageOnce(@NotNull Planet planet, @NotNull String path,
+                                       @NotNull PlaceholderReplacer placeholder, @Nullable String clickCommand,
+                                       int onceInSeconds) {
 
         long currentTime = System.currentTimeMillis();
 
-        if (messagesOnce.containsKey(planet)) {
-            long timeInMap = messagesOnce.get(planet);
+        if (recentPlanetMessages.get(planet) != null) {
+            long timeInMap = recentPlanetMessages.get(planet);
             long elapsedTime = currentTime-timeInMap;
-            long elapsedSeconds = elapsedTime/1000;
+            long elapsedSeconds = elapsedTime / 1000;
             if (elapsedSeconds < onceInSeconds) return;
         }
 
         for (Player player : planet.getPlayers()) {
-            player.sendMessage(message);
+            Component text = getPlayerLocaleComponent(path, player).replaceText(placeholder.get());
+            if (clickCommand != null) {
+                text = text.clickEvent(ClickEvent.runCommand(clickCommand));
+            }
+            player.sendMessage(text);
         }
-        messagesOnce.put(planet,currentTime);
-
-    }
-
-    /**
-     Sends TextComponent message to planet players once. If cool down is not ended, it will not send message.
-     **/
-    public static void sendMessageOnce(Planet planet, TextComponent message, int onceInSeconds) {
-
-        long currentTime = System.currentTimeMillis();
-
-        if (messagesOnce.get(planet) != null) {
-            long timeInMap = messagesOnce.get(planet);
-            long elapsedTime = currentTime-timeInMap;
-            long elapsedSeconds = elapsedTime/1000;
-            if (elapsedSeconds < onceInSeconds) return;
-        }
-
-        for (Player player : planet.getPlayers()) {
-            player.sendMessage(message);
-        }
-        messagesOnce.put(planet,currentTime);
+        recentPlanetMessages.put(planet.getId(), currentTime);
 
     }
 
     public static void clearOnceMessages(Planet planet) {
-        messagesOnce.remove(planet);
+        recentPlanetMessages.remove(planet.getId());
     }
 
     /**

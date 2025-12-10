@@ -355,6 +355,7 @@ groups:
         whitelisted-amount: 10 # limit of whitelisted players
         physical-objects: 140 # limit of special physical objects (it's not sand, gravels; they can be spawned with code)
         selected-lines-amount: 3 # limit of selected lines with manipulator
+        errors-amount: 10 # limit for amount of serious errors per 3 seconds for preventing crashes
         script-size: 10 # maximum size of script file in megabytes
       per-player-limit-modifiers:
         #
@@ -425,6 +426,7 @@ groups:
         whitelisted-amount: 10
         physical-objects: 140
         selected-lines-amount: 3
+        errors-amount: 10
         script-size: 10
       per-player-limit-modifiers:
         executor-calls: 30

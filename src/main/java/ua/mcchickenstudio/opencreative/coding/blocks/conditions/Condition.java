@@ -95,6 +95,10 @@ public abstract class Condition extends Action {
         return actions;
     }
 
+    public List<Action> getElseActions() {
+        return reactions;
+    }
+
     public boolean isOpposed() {
         return isOpposed;
     }
