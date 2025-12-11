@@ -355,21 +355,25 @@ public class Executors {
                 }
             }
             if (actionType.getCategory().isMultiAction()) {
-                if (config.getConfigurationSection(path+".actions") != null) {
-                    if (actionType.getCategory().isCondition()) {
-                        boolean isOpposed = config.getBoolean(path+".opposed",false);
-                        return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class,List.class,boolean.class).newInstance(executor,target,config.getInt(path+".location.x"),args,createActionList(executor,path+".actions",config),createActionList(executor,path+".else",config),isOpposed);
-                    } else if (actionType == ActionType.REPEAT_WHILE || actionType == ActionType.REPEAT_WHILE_NOT) {
-                        if (config.getConfigurationSection(path+".condition") != null) {
-                            ActionType conditionType = ActionType.valueOf(config.getString(path+".condition.type"));
-                            return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,
-                                    Arguments.class, List.class, ActionType.class).newInstance(executor,
-                                    target, config.getInt(path+".location.x"),
-                                    args, createActionList(executor,path+".actions",config), conditionType);
-                        }
-                    } else {
-                        return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class).newInstance(executor,target,config.getInt(path+".location.x"),args,createActionList(executor,path+".actions",config));
+                if (actionType.getCategory().isCondition()) {
+                    boolean isOpposed = config.getBoolean(path+".opposed",false);
+                    return actionType.getActionClass()
+                            .getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class,List.class,boolean.class)
+                            .newInstance(executor, target, config.getInt(path + ".location.x"),
+                                    args, createActionList(executor,path + ".actions",config),
+                                    createActionList(executor,path + ".else",config),isOpposed);
+                } else if (actionType == ActionType.REPEAT_WHILE || actionType == ActionType.REPEAT_WHILE_NOT) {
+                    if (config.getConfigurationSection(path+".condition") != null) {
+                        ActionType conditionType = ActionType.valueOf(config.getString(path+".condition.type"));
+                        return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,
+                                Arguments.class, List.class, ActionType.class).newInstance(executor,
+                                target, config.getInt(path+".location.x"),
+                                args, createActionList(executor,path+".actions",config), conditionType);
                     }
+                } else {
+                    return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class)
+                            .newInstance(executor, target, config.getInt(path + ".location.x"),
+                                    args, createActionList(executor,path+".actions",config));
                 }
             }
             return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class).newInstance(executor,target,config.getInt(path+".location.x"),args);

@@ -41,7 +41,7 @@ public final class EntitySetAllayDancingAction extends EntityAction {
         }
         boolean value = getArguments().getValue("boolean", true, this);
         Location jukebox = getArguments().getValue("jukebox",
-                getPlanet().getTerritory().getWorld().getSpawnLocation(), this);
+                getPlanet().getTerritory().getSpawnLocation(), this);
         if (value) {
             if (getArguments().pathExists("jukebox")) {
                 allay.startDancing(jukebox);

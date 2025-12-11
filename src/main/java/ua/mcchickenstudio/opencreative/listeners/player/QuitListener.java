@@ -76,6 +76,7 @@ public final class QuitListener implements Listener {
         ModuleSettingsMenu.removeFromCurrentEditing(player);
         removeFromPermissionsMap(player);
         CooldownUtils.clearPlayerCooldowns(player);
+        disableSpying(player);
         if (Experiments.isEnabled("wanders")) {
             OpenCreative.getPlugin().unregisterWander(player);
         }

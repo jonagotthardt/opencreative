@@ -49,11 +49,10 @@ public final class SpawnEnderEyeAction extends WorldAction {
 
         String dropType  = getArguments().getValue("drop","random",this);
         int despawnTimer = getArguments().getValue("despawn-time", 80, this);
-        Location targetLocation = getArguments().getValue("target",getPlanet().getTerritory().getWorld().getSpawnLocation(),this);
+        Location targetLocation = getArguments().getValue("target",getPlanet().getTerritory().getSpawnLocation(),this);
 
         for (Location location : getArguments().getLocationList("locations",this)) {
-            Entity spawnedEntity = getPlanet().getTerritory()
-                    .getWorld().spawnEntity(location, EntityType.EYE_OF_ENDER);
+            Entity spawnedEntity = getWorld().spawnEntity(location, EntityType.EYE_OF_ENDER);
 
             if (spawnedEntity instanceof EnderSignal eye) {
                 if (getArguments().pathExists("name")) {

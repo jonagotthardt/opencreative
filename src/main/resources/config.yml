@@ -96,6 +96,7 @@
 #                                  save in plugins/OpenCreative/templates
 #    /creative update - Check if new version is available                                   (opencreative.updates.check)
 #    /creative fireworks [times] [delay in seconds] - Summons fireworks for all players.    (opencreative.fireworks)
+#    /creative spy [on/off] - Enables or disables seeing messages from other worlds.        (opencreative.spy)
 #    /creative experiments list - Shows a list of all experimental not stable features      (opencreative.experiments.list)
 #    /creative experiments enable [id] - Enables an experiment                              (opencreative.experiments.enable)
 #    /creative experiments disable [id] - Disables an experiment                            (opencreative.experiments.disable)
@@ -181,6 +182,7 @@ messages:
   cc-prefix: "&6 Creative Chat &8| &7" # Creative Chat is global chat, accessed by ! in the beginning of message, or with /cc.
   cc-chat: "%cc-prefix%&7%player%&7: %message%" # You can use PAPI placeholders and MiniMessage here
   world-chat: "&7 %player% &8» &f%message%" # and here.
+  world-chat-spy: "&8 (%world%) &7%player% &8» &f%message%" # To see messages from other worlds, use /oc spy enable.
 
   notify-no-players-around: true # Will send notification to player, when he texts in local chat in world without other players
 

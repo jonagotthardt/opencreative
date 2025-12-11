@@ -105,7 +105,7 @@ public class PlayCommand extends CommandHandler {
                 planet.setMode(Planet.Mode.PLAYING);
                 if (isEntityInDevPlanet(player)) {
                     clearPlayer(player);
-                    player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
+                    player.teleport(planet.getTerritory().getSpawnLocation());
                     planet.getTerritory().showBorders(player);
                     if (planet.isOwner(sender.getName())) {
                         player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
@@ -135,7 +135,7 @@ public class PlayCommand extends CommandHandler {
                 } else {
                     player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
                 }
-                planet.getTerritory().getWorld().getSpawnLocation().getChunk().load(true);
+                planet.getTerritory().getSpawnLocation().getChunk().load(true);
                 DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                 if (devPlanet != null) {
                     clearPlayer(player);
@@ -143,7 +143,7 @@ public class PlayCommand extends CommandHandler {
                     new QuitEvent(player).callEvent();
                 }
                 clearPlayer(player);
-                player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
+                player.teleport(planet.getTerritory().getSpawnLocation());
                 planet.getTerritory().showBorders(player);
                 if (planet.isOwner(sender.getName())) {
                     player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));

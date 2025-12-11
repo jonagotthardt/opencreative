@@ -559,7 +559,7 @@ public final class InteractListener implements Listener {
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet != null) {
                 addPlayerWithLocation(player);
-                player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
+                player.teleport(planet.getTerritory().getSpawnLocation());
                 player.getInventory().setItemInMainHand(currentItem); // Fix for Multi-Verse Inventories
                 Sounds.DEV_LOCATION_TELEPORT.play(player);
                 player.setCooldown(currentItem.getType(),60);

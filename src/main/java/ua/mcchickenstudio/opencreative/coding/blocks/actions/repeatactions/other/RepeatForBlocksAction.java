@@ -45,8 +45,8 @@ public final class RepeatForBlocksAction extends RepeatAction {
             return false;
         }
 
-        Location first = getArguments().getValue("first",getWorld().getSpawnLocation(),this);
-        Location second = getArguments().getValue("second",getWorld().getSpawnLocation(),this);
+        Location first = getArguments().getValue("first",getPlanet().getTerritory().getSpawnLocation(),this);
+        Location second = getArguments().getValue("second",getPlanet().getTerritory().getSpawnLocation(),this);
 
         int minX = Math.min(first.getBlockX(), second.getBlockX());
         int minY = Math.min(first.getBlockY(), second.getBlockY());

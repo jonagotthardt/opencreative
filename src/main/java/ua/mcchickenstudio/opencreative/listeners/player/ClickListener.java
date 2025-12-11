@@ -166,15 +166,15 @@ public final class ClickListener implements Listener {
                                     yaw = Float.parseFloat(locCoords[3]);
                                     pitch = Float.parseFloat(locCoords[4]);
                                     Location location = new Location(planet.getTerritory().getWorld(),x,y,z,yaw,pitch);
-                                    if (isOutOfBorders(location)) location = planet.getTerritory().getWorld().getSpawnLocation();
+                                    if (isOutOfBorders(location)) location = planet.getTerritory().getSpawnLocation();
                                     player.teleport(location);
                                     spawnGlowingBlock(player,location);
                                 } catch (Exception error) {
-                                    player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
+                                    player.teleport(planet.getTerritory().getSpawnLocation());
                                 }
                             }
                         } else {
-                            player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
+                            player.teleport(planet.getTerritory().getSpawnLocation());
                         }
                         Sounds.DEV_LOCATION_TELEPORT.play(player);
                         player.setCooldown(currentItem.getType(),60);
@@ -217,10 +217,10 @@ public final class ClickListener implements Listener {
                                     pitch = Float.parseFloat(locCoords[4]);
                                     player.teleport(new Location(planet.getTerritory().getWorld(),x,y,z,yaw,pitch));
                                 } catch (Exception error) {
-                                    player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
+                                    player.teleport(planet.getTerritory().getSpawnLocation());
                                 }
                             } else {
-                                player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
+                                player.teleport(planet.getTerritory().getSpawnLocation());
                             }
                         Sounds.DEV_LOCATION_TELEPORT.play(player);
                         player.setCooldown(currentItem.getType(),60);

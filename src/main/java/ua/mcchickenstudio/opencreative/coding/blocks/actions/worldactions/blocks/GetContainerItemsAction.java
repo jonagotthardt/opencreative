@@ -43,7 +43,7 @@ public final class GetContainerItemsAction extends WorldAction {
     protected void execute(Entity entity) {
         List<ItemStack> items = new ArrayList<>();
         VariableLink link = getArguments().getVariableLink("variable",this);
-        Location location = getArguments().getValue("location",getWorld().getSpawnLocation(),this);
+        Location location = getArguments().getValue("location",getPlanet().getTerritory().getSpawnLocation(),this);
         if (location.getBlock().getState() instanceof InventoryHolder container) {
             for (ItemStack item : container.getInventory().getContents()) {
                 items.add(Objects.requireNonNullElseGet(item, () -> new ItemStack(Material.AIR)));

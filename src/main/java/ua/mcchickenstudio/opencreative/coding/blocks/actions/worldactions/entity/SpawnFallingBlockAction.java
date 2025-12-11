@@ -56,8 +56,7 @@ public final class SpawnFallingBlockAction extends WorldAction {
         boolean cancelDrop = !getArguments().getValue("drop",true,this);
 
         for (Location location : getArguments().getLocationList("locations",this)) {
-            Entity spawnedEntity = getPlanet().getTerritory()
-                    .getWorld().spawnEntity(location, EntityType.FALLING_BLOCK);
+            Entity spawnedEntity = getWorld().spawnEntity(location, EntityType.FALLING_BLOCK);
 
             if (spawnedEntity instanceof FallingBlock falling) {
                 if (getArguments().pathExists("name")) {

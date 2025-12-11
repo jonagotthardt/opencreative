@@ -261,7 +261,7 @@ public class PlanetPlayers {
                 }
                 if (isEntityInDevPlanet(player)) {
                     clearPlayer(player);
-                    player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
+                    player.teleport(planet.getTerritory().getSpawnLocation());
                 }
             }
         }

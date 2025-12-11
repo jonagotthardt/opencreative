@@ -55,8 +55,7 @@ public final class SpawnItemDisplayAction extends WorldAction {
         ItemStack item = getArguments().getValue("item", new ItemStack(Material.AIR),this);
 
         for (Location location : getArguments().getLocationList("locations",this)) {
-            Entity spawnedEntity = getPlanet().getTerritory()
-                    .getWorld().spawnEntity(location, EntityType.ITEM_DISPLAY);
+            Entity spawnedEntity = getWorld().spawnEntity(location, EntityType.ITEM_DISPLAY);
 
             if (spawnedEntity instanceof ItemDisplay display) {
                 if (getArguments().pathExists("name")) {

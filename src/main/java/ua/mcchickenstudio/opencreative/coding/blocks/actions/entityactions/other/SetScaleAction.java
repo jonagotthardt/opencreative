@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.other;
 
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
@@ -40,9 +41,11 @@ public final class SetScaleAction extends EntityAction {
             throw new UnsupportedEntityException(LivingEntity.class, entity);
         }
         boolean add = getArguments().getValue("add",false,this);
-        double scale = getArguments().getValue("scale",1,this);
-        if (add) scale += livingEntity.getAttribute(Attribute.GENERIC_SCALE).getBaseValue();
-        livingEntity.getAttribute(Attribute.GENERIC_SCALE).setBaseValue(scale);
+        double scale = getArguments().getValue("scale",1.0d,this);
+        AttributeInstance instance = livingEntity.getAttribute(Attribute.GENERIC_SCALE);
+        if (instance == null) return;
+        if (add) scale += instance.getBaseValue();
+        instance.setBaseValue(scale);
     }
 
     @Override

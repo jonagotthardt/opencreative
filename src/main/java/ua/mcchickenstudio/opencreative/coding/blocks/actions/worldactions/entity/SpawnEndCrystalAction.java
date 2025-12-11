@@ -46,12 +46,11 @@ public final class SpawnEndCrystalAction extends WorldAction {
         }
 
         Component customName = getArguments().getValue("name",Component.text(""),this);
-        Location beamLocation = getArguments().getValue("beam",getPlanet().getTerritory().getWorld().getSpawnLocation(),this);
+        Location beamLocation = getArguments().getValue("beam",getPlanet().getTerritory().getSpawnLocation(),this);
         boolean bottom = getArguments().getValue("bottom",true,this);
 
         for (Location location : getArguments().getLocationList("locations",this)) {
-            Entity spawnedEntity = getPlanet().getTerritory()
-                    .getWorld().spawnEntity(location, EntityType.END_CRYSTAL);
+            Entity spawnedEntity = getWorld().spawnEntity(location, EntityType.END_CRYSTAL);
 
             if (spawnedEntity instanceof EnderCrystal crystal) {
                 if (getArguments().pathExists("name")) {

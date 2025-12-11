@@ -23,6 +23,8 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.ChatEvent;
@@ -48,6 +50,7 @@ import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import ua.mcchickenstudio.opencreative.utils.PlayerConfirmation;
+import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 import java.time.Duration;
 import java.util.*;
@@ -58,7 +61,7 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
 public final class ChatListener implements Listener {
 
@@ -115,6 +118,7 @@ public final class ChatListener implements Listener {
                                 p.sendMessage(finalMessage);
                             }
                         }
+                        sendLocalChatForSpying(player, message, planet);
                         OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + planet.getId() + "dev] " + player.getName() + ": " + message);
                     } else {
                         // If player in build world
@@ -131,6 +135,7 @@ public final class ChatListener implements Listener {
                         for (Player p : planet.getPlayers()) {
                             p.sendMessage(finalMessage);
                         }
+                        sendLocalChatForSpying(player, message, planet);
                         OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + planet.getId() + "] " + player.getName() + ": " + message);
                     }
                 } else {
@@ -141,6 +146,7 @@ public final class ChatListener implements Listener {
                     for (Player p : player.getWorld().getPlayers()) {
                         p.sendMessage(finalMessage);
                     }
+                    sendLocalChatForSpying(player, message, planet);
                     OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + player.getWorld().getName() + "] " + player.getName() + ": " + message);
                 }
             },1L);
@@ -574,5 +580,33 @@ public final class ChatListener implements Listener {
             setDescriptionWords.add(newLine.toString().trim());
         }
         return setDescriptionWords;
+    }
+
+    private static void sendLocalChatForSpying(@NotNull Player player, @NotNull String message, @Nullable Planet planet) {
+        Set<Player> playersWithEnabledSpying = getPlayersWithEnabledSpying();
+        if (playersWithEnabledSpying.isEmpty()) return;
+        String worldName = player.getWorld().getName();
+        if (planet != null) {
+            if (isEntityInDevPlanet(player)) {
+                worldName = planet.getId() + "dev";
+            } else {
+                worldName = String.valueOf(planet.getId());
+            }
+        }
+        if (isEntityInLobby(player)) {
+            worldName = "Lobby";
+        }
+        String format = OpenCreative.getPlugin().getConfig().getString("messages.world-chat-spy", "&8 (%world%) &7%player%&8: &f%message%");
+        Component formatted = toComponent(parsePAPI(player, format)
+                .replace("%world%", worldName)
+                .replace("%player%", player.getName())
+                .replace("%message%", MiniMessage.miniMessage().escapeTags(message)));
+        if (formatted.clickEvent() == null) formatted = formatted.clickEvent(ClickEvent.suggestCommand(message));
+        for (Player spy : playersWithEnabledSpying) {
+            if (spy.getWorld().equals(player.getWorld())) continue;
+            Planet spyPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(spy);
+            if (spyPlanet != null && spyPlanet.equals(planet)) continue;
+            spy.sendMessage(formatted);
+        }
     }
 }

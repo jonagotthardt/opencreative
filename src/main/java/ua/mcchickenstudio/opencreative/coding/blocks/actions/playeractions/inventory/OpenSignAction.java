@@ -37,7 +37,7 @@ public final class OpenSignAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        Location location = getArguments().getValue("location",getWorld().getSpawnLocation(),this);
+        Location location = getArguments().getValue("location",getPlanet().getTerritory().getSpawnLocation(),this);
         Block block = location.getBlock();
         if (!(block.getState() instanceof Sign sign)) return;
         String sideString = getArguments().getValue("side","front",this);

@@ -36,7 +36,7 @@ public final class GetDistanceAction extends VariableAction {
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
         Location first = getArguments().getValue("first",entity.getLocation(),this);
-        Location second = getArguments().getValue("second",entity.getWorld().getSpawnLocation(),this);
+        Location second = getArguments().getValue("second",getPlanet().getTerritory().getSpawnLocation(),this);
         setVarValue(link,first.distance(second));
     }
 

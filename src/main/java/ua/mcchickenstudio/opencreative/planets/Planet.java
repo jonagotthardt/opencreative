@@ -24,7 +24,6 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
@@ -46,9 +45,7 @@ import ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld;
 import ua.mcchickenstudio.opencreative.managers.stability.StabilityState;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.groups.Group;
-import ua.mcchickenstudio.opencreative.settings.items.Items;
 import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
-import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
@@ -61,8 +58,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
@@ -398,7 +393,7 @@ public class Planet {
             mode = Mode.BUILD;
         }
         try {
-            territory.getWorld().getSpawnLocation().getChunk().load(true);
+            territory.getSpawnLocation().getChunk().load(true);
             if (mode == Mode.BUILD) {
                 for (Player player : getPlayers()) {
                     if (!isEntityInDevPlanet(player)) {
@@ -408,7 +403,7 @@ public class Planet {
                                 Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(2), Duration.ofMillis(130))
                         ));
                         clearPlayer(player);
-                        player.teleport(territory.getWorld().getSpawnLocation());
+                        player.teleport(territory.getSpawnLocation());
                         Sounds.WORLD_MODE_BUILD.play(player);
                         territory.showBorders(player);
                         if (isOwner(player)) {
@@ -438,7 +433,7 @@ public class Planet {
                     if (!isEntityInDevPlanet(player)) {
                         clearPlayer(player);
                         player.clearTitle();
-                        player.teleport(territory.getWorld().getSpawnLocation());
+                        player.teleport(territory.getSpawnLocation());
                         territory.showBorders(player);
                         if (worldPlayers.canDevelop(player)) {
                             player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
@@ -629,7 +624,7 @@ public class Planet {
         }
 
         if (!Experiments.isEnabled("new_world_screen") || NewWorldScreenExperiment.getType() == NewWorldScreenExperiment.ScreenType.NORMAL) {
-            player.teleportAsync(territory.getWorld().getSpawnLocation()).thenAccept(success -> {
+            player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
                 getConnectionProcess(player, wasLoaded, hidePlayer, success);
             }).exceptionally(error -> {
                 sendPlayerErrorMessage(player, "Failed to connect to the world " + this.getId() +
@@ -643,7 +638,7 @@ public class Planet {
         switch (NewWorldScreenExperiment.getType()) {
             case DARKNESS -> {
                 player.sendPotionEffectChange(player, new PotionEffect(PotionEffectType.DARKNESS, 100, 1));
-                player.teleportAsync(territory.getWorld().getSpawnLocation()).thenAccept(success -> {
+                player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
                     getConnectionProcess(player, wasLoaded, hidePlayer, success);
                 }).exceptionally(error -> {
                     sendPlayerErrorMessage(player, "Failed to connect to the world " + this.getId() +
@@ -653,7 +648,7 @@ public class Planet {
                 });
             }
             case PERCENTS -> {
-                player.teleportAsync(territory.getWorld().getSpawnLocation()).thenAccept(success -> {
+                player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
                     getConnectionProcess(player, wasLoaded, hidePlayer, success);
                 }).exceptionally(error -> {
                     sendPlayerErrorMessage(player, "Failed to connect to the world " + this.getId() +

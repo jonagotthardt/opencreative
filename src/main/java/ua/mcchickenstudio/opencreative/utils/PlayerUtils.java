@@ -22,10 +22,8 @@ import net.kyori.adventure.resource.ResourcePackInfo;
 import net.kyori.adventure.resource.ResourcePackRequest;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.block.sign.Side;
 import org.bukkit.boss.KeyedBossBar;
-import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.packs.ResourcePack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,7 +42,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -55,7 +52,6 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 
@@ -66,6 +62,7 @@ import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet
  */
 public final class PlayerUtils {
 
+    private final static Set<UUID> enabledSpying = new HashSet<>();
     private final static Map<UUID, PermissionAttachment> permissionAttachmentMap = new HashMap<>();
 
     /**
@@ -138,7 +135,9 @@ public final class PlayerUtils {
         if (movementSpeed != null) movementSpeed.setBaseValue(0.1f);
 
         AttributeInstance scale = player.getAttribute(Attribute.GENERIC_SCALE);
-        if (scale != null) scale.setBaseValue(1);
+        if (scale != null) {
+            scale.setBaseValue(1);
+        }
 
         AttributeInstance stepHeight = player.getAttribute(Attribute.GENERIC_STEP_HEIGHT);
         if (stepHeight != null) stepHeight.setBaseValue(0.6f);
@@ -268,6 +267,50 @@ public final class PlayerUtils {
     public static void removeFromPermissionsMap(@NotNull Player player) {
         clearWorldModePermissions(player);
         permissionAttachmentMap.remove(player.getUniqueId());
+    }
+
+    /**
+     * Allows player to see local chat message from other worlds.
+     * @param player player, that will see messages.
+     */
+    public static boolean enableSpying(@NotNull Player player) {
+        return enabledSpying.add(player.getUniqueId());
+    }
+
+    /**
+     * Disallows player to see local chat message from other worlds.
+     * @param player player, that won't see messages anymore.
+     */
+    public static boolean disableSpying(@NotNull Player player) {
+        return enabledSpying.remove(player.getUniqueId());
+    }
+
+    /**
+     * Checks whether player can see local chat messages from other worlds.
+     * @param player player to check.
+     * @return true - can see, false - not.
+     */
+    public static boolean isSpying(@NotNull Player player) {
+        return enabledSpying.contains(player.getUniqueId());
+    }
+
+    /**
+     * Returns set of players, who can see local chat messages
+     * from other worlds.
+     * @return set of players, who can see local chat.
+     */
+    public static Set<Player> getPlayersWithEnabledSpying() {
+        Set<Player> players = new HashSet<>();
+        if (enabledSpying.isEmpty()) return players;
+        for (UUID uuid : new HashSet<>(enabledSpying)) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player == null) {
+                enabledSpying.remove(uuid);
+                continue;
+            }
+            players.add(player);
+        }
+        return players;
     }
 
     /**

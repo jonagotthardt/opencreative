@@ -266,6 +266,11 @@ creative:
   debug:
     enabled: "%prefix%&fDebug mode is &6enabled&f, some experimental features will be able and console will get additional logs."
     disabled: "%prefix%&fDebug mode is &6disabled&f, goodbye experiments!"
+  spy:
+    enabled: "%prefix%&fYou can &6now see&f messages from players in other worlds. Get ready for having too many messages!"
+    already-enabled: "%prefix%&cYou are already spying on chats from other worlds."
+    disabled: "%prefix%&fYou have &6disabled&f seeing messages from players in other worlds."
+    already-disabled: "%prefix%&cYou are already not spying on chats from other worlds."
   sounds:
     set: "%prefix%&fChanged sound theme to &6%theme%&f, have a good listening!"
     not-found: "%prefix%&cNot found this sound theme in configuration O_o"

@@ -30,6 +30,7 @@ import ua.mcchickenstudio.opencreative.settings.groups.LimitType;
 import ua.mcchickenstudio.opencreative.settings.items.Items;
 import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
+import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
 import ua.mcchickenstudio.opencreative.menus.CreativeMenu;
 import ua.mcchickenstudio.opencreative.menus.world.WorldModerationMenu;
@@ -608,6 +609,33 @@ public class CreativeCommand extends CommandHandler {
                     } else if ("enable".equalsIgnoreCase(args[1]) || "on".equalsIgnoreCase(args[1])) {
                         OpenCreative.getSettings().setDebug(true);
                         sender.sendMessage(getLocaleMessage("creative.debug.enabled").replace("%player%",sender.getName()));
+                    }
+                }
+                case "spy" -> {
+                    if (!sender.hasPermission("opencreative.spy")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    if (player == null) {
+                        sender.sendMessage(getLocaleMessage("only-players"));
+                        return;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return;
+                    }
+                    if ("disable".equalsIgnoreCase(args[1]) || "off".equalsIgnoreCase(args[1])) {
+                        if (PlayerUtils.disableSpying(player)) {
+                            sender.sendMessage(getLocaleMessage("creative.spy.disabled"));
+                        } else {
+                            sender.sendMessage(getLocaleMessage("creative.spy.already-disabled"));
+                        }
+                    } else if ("enable".equalsIgnoreCase(args[1]) || "on".equalsIgnoreCase(args[1])) {
+                        if (PlayerUtils.enableSpying(player)) {
+                            sender.sendMessage(getLocaleMessage("creative.spy.enabled"));
+                        } else {
+                            sender.sendMessage(getLocaleMessage("creative.spy.already-anabled"));
+                        }
                     }
                 }
                 case "locale", "lang", "language" -> {
@@ -1453,6 +1481,7 @@ public class CreativeCommand extends CommandHandler {
             tabCompleter.add("setsize");
             tabCompleter.add("ignoremessage");
             tabCompleter.add("unignoremessage");
+            tabCompleter.add("spy");
             tabCompleter.add("experiments");
             tabCompleter.add("groups");
         } else if (args.length == 2) {
@@ -1475,7 +1504,7 @@ public class CreativeCommand extends CommandHandler {
             } else if ("editbook".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("changelogs");
                 tabCompleter.add("coding");
-            } else if ("debug".equalsIgnoreCase(args[0])) {
+            } else if ("debug".equalsIgnoreCase(args[0]) || "spy".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");
             } else if ("groups".equalsIgnoreCase(args[0])) {

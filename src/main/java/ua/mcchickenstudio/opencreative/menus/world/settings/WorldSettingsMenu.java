@@ -187,14 +187,14 @@ public final class WorldSettingsMenu extends AbstractMenu implements WorldMenu {
             }
             player.closeInventory();
             if (event.getClick().isLeftClick()) {
-                player.getWorld().setSpawnLocation(player.getLocation());
+                planet.getTerritory().setSpawnLocation(player.getLocation());
                 player.showTitle(Title.title(
                         toComponent(getLocaleMessage("settings.world-spawn.title")), toComponent(getLocaleMessage("settings.world-spawn.subtitle")),
                         Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(2), Duration.ofMillis(130))
                 ));
                 Sounds.WORLD_SETTINGS_SPAWN_SET.play(player);
             } else {
-                player.teleport(player.getWorld().getSpawnLocation());
+                player.teleport(planet.getTerritory().getSpawnLocation());
                 Sounds.WORLD_SETTINGS_SPAWN_TELEPORT.play(player);
             }
         } else if (itemEquals(currentItem,category)) {

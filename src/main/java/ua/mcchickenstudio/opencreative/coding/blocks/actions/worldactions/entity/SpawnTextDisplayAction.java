@@ -53,8 +53,7 @@ public final class SpawnTextDisplayAction extends WorldAction {
         Component text = getArguments().getValue("text",Component.text(""),this);
 
         for (Location location : getArguments().getLocationList("locations",this)) {
-            Entity spawnedEntity = getPlanet().getTerritory()
-                    .getWorld().spawnEntity(location, EntityType.TEXT_DISPLAY);
+            Entity spawnedEntity = getWorld().spawnEntity(location, EntityType.TEXT_DISPLAY);
 
             if (spawnedEntity instanceof TextDisplay display) {
                 if (getArguments().pathExists("name")) {

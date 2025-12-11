@@ -54,8 +54,7 @@ public final class SpawnBlockDisplayAction extends WorldAction {
         Material block = getArguments().getValue("block",Material.GRASS_BLOCK,this);
 
         for (Location location : getArguments().getLocationList("locations",this)) {
-            Entity spawnedEntity = getPlanet().getTerritory()
-                    .getWorld().spawnEntity(location, EntityType.BLOCK_DISPLAY);
+            Entity spawnedEntity = getWorld().spawnEntity(location, EntityType.BLOCK_DISPLAY);
 
             if (spawnedEntity instanceof BlockDisplay display) {
                 if (getArguments().pathExists("name")) {

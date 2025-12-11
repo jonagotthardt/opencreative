@@ -42,7 +42,7 @@ public final class GiveItemsToContainerAction extends WorldAction {
     @Override
     protected void execute(Entity entity) {
         List<ItemStack> items = getArguments().getItemList("items",this);
-        Location location = getArguments().getValue("location",getWorld().getSpawnLocation(),this);
+        Location location = getArguments().getValue("location",getPlanet().getTerritory().getSpawnLocation(),this);
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
