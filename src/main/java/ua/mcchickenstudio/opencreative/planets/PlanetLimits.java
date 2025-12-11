@@ -35,6 +35,7 @@ public class PlanetLimits {
 
     private int lastModifiedBlocksAmount;
     private int lastRedstoneOperationsAmount;
+    private int lastModifiedTargetsAmount;
     private int lastListElementsChangesAmount;
 
     private final LinkedList<Long> lastWebRequests = new LinkedList<>();
@@ -104,6 +105,14 @@ public class PlanetLimits {
      */
     public int getRedstoneOperationsLimit() {
         return planet.getGroup().getLimit(LimitType.REDSTONE_OPERATIONS).calculateLimit(planet.getPlayers().size());
+    }
+
+    /**
+     * Returns maximum targets changes per 1 second amount in the planet.
+     * @return limit of changed targets.
+     */
+    public int getTargetsChangesLimit() {
+        return planet.getGroup().getLimit(LimitType.TARGETS_CHANGES).calculateLimit(planet.getPlayers().size());
     }
 
     /**
@@ -206,6 +215,14 @@ public class PlanetLimits {
     }
 
     /**
+     * Sets last modified targets amount.
+     * @param lastModifiedTargetsAmount number of changed targets.
+     */
+    public void setLastModifiedTargetsAmount(int lastModifiedTargetsAmount) {
+        this.lastModifiedTargetsAmount = lastModifiedTargetsAmount;
+    }
+
+    /**
      * Sets last redstone operations amount.
      * @param lastRedstoneOperationsAmount number of redstone operations.
      */
@@ -219,6 +236,22 @@ public class PlanetLimits {
      */
     public int getLastModifiedBlocksAmount() {
         return lastModifiedBlocksAmount;
+    }
+
+    /**
+     * Returns last coding errors amount from last 3 seconds.
+     * @return amount of coding errors in last 3 seconds.
+     */
+    public int getLastCodingErrorsAmount() {
+        return lastCodingErrors.size();
+    }
+
+    /**
+     * Returns last modified targets amount.
+     * @return number of changed targets.
+     */
+    public int getLastModifiedTargetsAmount() {
+        return lastModifiedTargetsAmount;
     }
 
     /**

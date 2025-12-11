@@ -65,7 +65,7 @@ public class Group {
 
         this.name = name;
         String path = "groups." + name + ".";
-        this.permission = config.getString(path + "permission","default");
+        this.permission = config.getString(path + "permission", "default");
 
         /*
          * Registering constant values.
@@ -101,22 +101,26 @@ public class Group {
         devPermissions.addAll(config.getStringList(path + "world.dev-permissions"));
         lobbyPermissions.addAll(config.getStringList(path + "lobby-permissions"));
 
+        boolean changedConfig = false;
         for (LimitType type : LimitType.values()) {
             String limitPath = path + "world.limits." + type.getPath();
             String modifierPath = path + "world.per-player-limit-modifiers." + type.getPath();
             limits.put(type,
                 new LimitModifier(
-                    config.getInt(limitPath, 0),
-                    config.getInt(modifierPath, 0)
+                    config.getInt(limitPath, type.getDefaultLimit()),
+                    config.getInt(modifierPath, type.getDefaultModifier())
             ));
-            if (config.get(limitPath) == null) {
-                OpenCreative.getPlugin().getConfig().set(limitPath, 0);
+
+            if (!config.contains(limitPath)) {
+                OpenCreative.getPlugin().getConfig().set(limitPath, type.getDefaultLimit());
+                changedConfig = true;
             }
-            if (config.get(modifierPath) == null) {
-                OpenCreative.getPlugin().getConfig().set(modifierPath, 0);
+            if (!config.contains(modifierPath)) {
+                OpenCreative.getPlugin().getConfig().set(modifierPath, type.getDefaultModifier());
+                changedConfig = true;
             }
-            OpenCreative.getPlugin().saveConfig();
         }
+        if (changedConfig) OpenCreative.getPlugin().saveConfig();
     }
 
     /**
@@ -211,7 +215,7 @@ public class Group {
 
     /**
      * Returns set of permissions, that will be given when player is
-     * a developer of world and they entered coding world.
+     * a developer of world, and they entered coding world.
      * @return set of coding permissions.
      */
     public Set<String> getDevPermissions() {

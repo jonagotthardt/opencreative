@@ -12,9 +12,10 @@
 # Commands:
 #
 #  /spawn - Teleports to spawn world.
-#  /locate [Player] - Displays world info, where player currently plays.
+#  /locate [Player] - Displays world info, where specified player currently plays.
 #  /join [ID] - Connects player to world with specified ID.
-#  /games - Opens worlds browser
+#  /jointo [Player] - Connects player to the world, where specified player currently plays.
+#  /games - Opens worlds browser.
 #  /cc    - Sends message to creative (global) chat for all players.
 #    /cc off - Turns off creative chat for player.
 #    /cc on  - Turns on creative chat for player.
@@ -28,7 +29,7 @@
 #    /world unban [Player] - Unbans player in world.
 #    /world whitelist [Player] - Allows player to visit world, if it's closed.
 #    /world unwhitelist [Player] - Removes player from whitelist.
-#    /world size - Displays size of world folder.       (opencreative.world.size)
+#    /world size - Displays size of world folder.                   (opencreative.world.size)
 #    /world platformer [ID] - Changes coding platforms generator.   (opencreative.world.set-platformer)
 #
 #  /ad - Advertises world in chat for all players.
@@ -86,6 +87,9 @@
 #              items set [Kit] [Slot] [Type] - Sets item by slot in kit to system item.     (opencreative.items.set)
 #              items reset [Kit] - Resets items kit to default.                             (opencreative.items.reset)
 #    /creative item [Type] - Gives system item.                                             (opencreative.items.get)
+#    /creative groups info [group] - Prints information about player group.                 (opencreative.groups.info)
+#              groups edit [group] [limit/modifier] [type] [value] - Edits group's limits.  (opencreative.groups.edit)
+#              groups remove [group] - Deletes group.                                       (opencreative.groups.remove)
 #    /creative sounds [theme] - Sets current sounds theme.                                  (opencreative.sounds.theme)
 #    /creative sound [sound] - Plays specified sound.                                       (opencreative.sounds.play)
 #    /creative template [folder] - Creates a new world from Minecraft                       (opencreative.template)
@@ -349,6 +353,7 @@ groups:
         bossbars-amount: 10 # limit for amount of all bossbars
         coding-platforms: 4 # limit for coding platforms
         changing-list-elements: 50 # limit of changing elements in lists and maps per second
+        changing-targets: 500 # limit of changing targets (setting, adding, removing) with Selection Action
         builders-amount: 10 # limit of added builders
         developers-amount: 10 # limit of added developers
         blacklisted-amount: 10 # limit of banned players
@@ -370,6 +375,7 @@ groups:
         scoreboards-amount: 3
         repeats-amount: 10
         changing-list-elements: 10
+        changing-targets: 100
         bossbars-amount: 3
         physical-objects: 5
       build-permissions: # Permissions will be given when player types /build command
@@ -420,6 +426,7 @@ groups:
         coding-platforms: 4
         repeats-amount: 100
         changing-list-elements: 50
+        changing-targets: 500
         builders-amount: 10
         developers-amount: 10
         blacklisted-amount: 10
@@ -435,6 +442,7 @@ groups:
         redstone-changes: 20
         repeats-amount: 10
         changing-list-elements: 10
+        changing-targets: 100
         variables-amount: 50
         scoreboards-amount: 10
         bossbars-amount: 10

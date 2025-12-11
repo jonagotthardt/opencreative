@@ -24,6 +24,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiment;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
+import ua.mcchickenstudio.opencreative.settings.groups.Group;
+import ua.mcchickenstudio.opencreative.settings.groups.Groups;
+import ua.mcchickenstudio.opencreative.settings.groups.LimitType;
 import ua.mcchickenstudio.opencreative.settings.items.Items;
 import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
@@ -146,6 +149,9 @@ public class CreativeCommand extends CommandHandler {
                             .replace("%activity-time%",getElapsedTime(now, planet.getLastActivityTime())).replace("%online%",String.valueOf(planet.getOnline()))
                             .replace("%builders%", planet.getWorldPlayers().getBuilders()).replace("%coders%", planet.getWorldPlayers().getDevelopers()).replace("%owner%", planet.getOwner())
                             .replace("%sharing%", planet.getSharing().getName()).replace("%mode%", planet.getMode().getName()).replace("%description%", planet.getInformation().getDescription()));
+                }
+                case "groups" -> {
+                    handleGroupsCommand(sender, args);
                 }
                 case "register" -> {
                     if (!sender.hasPermission("opencreative.world.register")) {
@@ -1033,6 +1039,108 @@ public class CreativeCommand extends CommandHandler {
         OpenCreative.getPlanetsManager().createPlanet(player, id, new FlatGenerator());
     }
 
+    public void handleGroupsCommand(@NotNull CommandSender sender, String[] args) {
+        if (!sender.hasPermission("opencreative.groups.edit")
+                && !sender.hasPermission("opencreative.groups.remove")
+                && !sender.hasPermission("opencreative.groups.info")) {
+            sender.sendMessage(getLocaleMessage("no-perms"));
+            return;
+        }
+        if (args.length == 2) {
+            sender.sendMessage(getLocaleMessage("too-few-args"));
+            return;
+        }
+        // /oc groups edit
+        String groupName = args[2];
+        switch (args[1].toLowerCase()) {
+            // /oc groups edit Name limit type 1
+            case "edit" -> {
+                if (!sender.hasPermission("opencreative.groups.edit")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length == 5) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                if (args[3].equalsIgnoreCase("limit")) {
+                    LimitType type = LimitType.getByPath(args[4]);
+                    if (type == null) {
+                        sender.sendMessage("Unknown limit type: " + args[4]);
+                        return;
+                    }
+                    int value = 0;
+                    try {
+                        value = Integer.parseInt(args[5]);
+                    } catch (Exception ignored) {}
+                    if (OpenCreative.getSettings().getGroups().setLimit(groupName, type, value)) {
+                        sender.sendMessage("Changed " + type.getPath() +  " limit for group " + groupName + " to: " + value);
+                    } else {
+                        sender.sendMessage("Unknown group: " + groupName);
+                    }
+                } else if (args[3].equalsIgnoreCase("modifier")) {
+                    LimitType type = LimitType.getByPath(args[4]);
+                    if (type == null) {
+                        sender.sendMessage("Unknown limit modifier: " + args[4]);
+                        return;
+                    }
+                    int value = 0;
+                    try {
+                        value = Integer.parseInt(args[5]);
+                    } catch (Exception ignored) {}
+                    if (OpenCreative.getSettings().getGroups().setLimitModifier(groupName, type, value)) {
+                        sender.sendMessage("Changed " + type.getPath() +  " modifier for group " + groupName + " to: " + value);
+                    } else {
+                        sender.sendMessage("Unknown group: " + groupName);
+                    }
+                }
+
+            }
+            // /oc groups remove name
+            case "remove", "delete" -> {
+                if (!sender.hasPermission("opencreative.groups.remove")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (OpenCreative.getSettings().getGroups().deleteGroup(groupName)) {
+                    sender.sendMessage("Removed group " + groupName);
+                } else {
+                    sender.sendMessage("Unknown group: " + groupName);
+                }
+            }
+            // /oc groups info name
+            case "info" -> {
+                if (!sender.hasPermission("opencreative.groups.info")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                Group group = OpenCreative.getSettings().getGroups().getGroupOrNull(groupName);
+                if (group == null) {
+                    sender.sendMessage("Unknown group: " + groupName);
+                    return;
+                }
+                sender.sendMessage("--- Group: " + group.getName());
+                sender.sendMessage("Cooldowns: ");
+                sender.sendMessage("  Generic Commands: " + group.getGenericCommandCooldown());
+                sender.sendMessage("  World Chat: " + group.getChatCooldown());
+                sender.sendMessage("  Creative Chat: " + group.getCreativeChatCooldown());
+                sender.sendMessage("  World Advertisement: " + group.getAdvertisementCooldown());
+                sender.sendMessage("  Blocks Duplication: " + group.getBlocksDuplicationCooldown());
+                sender.sendMessage("  Modules Manipulation: " + group.getModuleManipulationCooldown());
+                sender.sendMessage("Limits: ");
+                for (LimitType type : LimitType.values()) {
+                    sender.sendMessage("  " + type.getPath() + " - " + group.getLimit(type).limit() + " * "
+                            + group.getLimit(type).modifier());
+                }
+                sender.sendMessage("Permission: " + group.getPermission());
+                sender.sendMessage("Worlds Limit: " + group.getWorldsLimit());
+                sender.sendMessage("Modules Limit: " + group.getModulesLimit());
+                sender.sendMessage("Can use prompter: " + group.canUsePrompter());
+                sender.sendMessage("--- Group: " + group.getName());
+            }
+        }
+    }
+
     public void handleUpdateCommand(@NotNull CommandSender sender) {
         if (!sender.hasPermission("opencreative.update")) {
             sender.sendMessage(getLocaleMessage("no-perms"));
@@ -1346,6 +1454,7 @@ public class CreativeCommand extends CommandHandler {
             tabCompleter.add("ignoremessage");
             tabCompleter.add("unignoremessage");
             tabCompleter.add("experiments");
+            tabCompleter.add("groups");
         } else if (args.length == 2) {
             if ("maintenance".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("start");
@@ -1369,6 +1478,10 @@ public class CreativeCommand extends CommandHandler {
             } else if ("debug".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");
+            } else if ("groups".equalsIgnoreCase(args[0])) {
+                tabCompleter.add("remove");
+                tabCompleter.add("edit");
+                tabCompleter.add("info");
             } else if (List.of("load","unload","moderate","moderation",
                     "updateworld","unregister","delete","setowner","setsize")
                     .contains(args[0].toLowerCase())) {
@@ -1461,16 +1574,27 @@ public class CreativeCommand extends CommandHandler {
                 }
             } else if ("items".equalsIgnoreCase(args[0])) {
                 tabCompleter.addAll(Arrays.stream(ItemsGroup.values()).map(g -> g.name().toLowerCase()).toList());
+            } else if ("groups".equalsIgnoreCase(args[0])) {
+                tabCompleter.addAll(OpenCreative.getSettings().getGroups().getNames());
             }
         } else if (args.length == 4) {
             if ("items".equalsIgnoreCase(args[0])) {
                 tabCompleter.addAll(List.of("1", "2", "3", "4", "5", "6", "7", "8", "9"));
+            } else if ("groups".equalsIgnoreCase(args[0]) && "edit".equalsIgnoreCase(args[1])) {
+                tabCompleter.add("limit");
+                tabCompleter.add("modifier");
             }
         } else if (args.length == 5) {
             if ("items".equalsIgnoreCase(args[0])) {
                 if (args[1].equalsIgnoreCase("set")) {
                     tabCompleter.addAll(Arrays.stream(Items.values()).map(i -> i.name().toLowerCase()).toList());
                 }
+            } else if ("groups".equalsIgnoreCase(args[0])) {
+                tabCompleter.addAll(Arrays.stream(LimitType.values()).map(LimitType::getPath).toList());
+            }
+        } else if (args.length == 6) {
+            if ("groups".equalsIgnoreCase(args[0]) && "edit".equalsIgnoreCase(args[1])) {
+                tabCompleter.addAll(List.of("100", "200", "300", "50", "0"));
             }
         }
         return tabCompleter;

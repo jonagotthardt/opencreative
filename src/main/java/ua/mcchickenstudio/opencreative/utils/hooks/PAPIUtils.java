@@ -94,13 +94,12 @@ class Placeholder extends PlaceholderExpansion {
 
     private String parsePlayer(Player player, @NotNull String identifier, Planet currentPlanet) {
         if (currentPlanet == null) {
-            if (identifier.equals("is_in_planet")) {
-                return "false";
-            }
-            if (identifier.equals("own_planets_amount")) {
-                return String.valueOf(OpenCreative.getPlanetsManager().getPlanetsByOwner(player));
-            }
-            return null;
+            return switch (identifier) {
+                case "is_in_planet", "has_planet_scoreboard" -> "false";
+                case "own_planets_amount" ->
+                        String.valueOf(OpenCreative.getPlanetsManager().getPlanetsByOwner(player).size());
+                default -> null;
+            };
         }
         switch (identifier) {
             case "is_in_planet" -> {
@@ -128,7 +127,10 @@ class Placeholder extends PlaceholderExpansion {
                 return String.valueOf(currentPlanet.isOwner(player));
             }
             case "own_planets_amount" -> {
-                return String.valueOf(OpenCreative.getPlanetsManager().getPlanetsByOwner(player));
+                return String.valueOf(OpenCreative.getPlanetsManager().getPlanetsByOwner(player).size());
+            }
+            case "has_planet_scoreboard" -> {
+                return String.valueOf(currentPlanet.getTerritory().getScoreboards().hasActiveScoreboard(player));
             }
         }
         return parsePlanet(currentPlanet, identifier);
@@ -187,6 +189,12 @@ class Placeholder extends PlaceholderExpansion {
             }
             case "elements_changes_amount" -> {
                 return String.valueOf(planet.getLimits().getLastVariableElementsChangesAmount());
+            }
+            case "targets_changes_amount" -> {
+                return String.valueOf(planet.getLimits().getLastModifiedTargetsAmount());
+            }
+            case "errors_amount" -> {
+                return String.valueOf(planet.getLimits().getLastCodingErrorsAmount());
             }
             case "whitelisted_players" -> {
                 return String.join(", ", planet.getWorldPlayers().getWhitelistedPlayers());

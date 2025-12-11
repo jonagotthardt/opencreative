@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.settings.groups;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public enum LimitType {
 
@@ -34,6 +35,7 @@ public enum LimitType {
     CODING_ERRORS("errors-amount", 10),
     CODING_PLATFORMS("coding-platforms", 4),
     LIST_ELEMENTS_CHANGES("changing-list-elements", 50, 10),
+    TARGETS_CHANGES("changing-targets", 500, 100),
     REPEATS_AMOUNT("repeats-amount", 100, 10),
     MODIFYING_BLOCKS("modifying-blocks", 5000),
     BUILDERS_AMOUNT("builders-amount", 10),
@@ -54,6 +56,15 @@ public enum LimitType {
 
     LimitType(@NotNull String path, int defaultLimit) {
         this(path, defaultLimit, 0);
+    }
+
+    public static @Nullable LimitType getByPath(@NotNull String id) {
+        for (LimitType type : LimitType.values()) {
+            if (type.getPath().equalsIgnoreCase(id.replace("_", "-"))) {
+                return type;
+            }
+        }
+        return null;
     }
 
     /**

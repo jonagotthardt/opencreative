@@ -22,8 +22,10 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -78,12 +80,18 @@ public final class Groups {
     }
 
     public @NotNull Group getGroup(String name) {
+        Group group = getGroupOrNull(name);
+        if (group != null) return group;
+        return getDefaultGroup();
+    }
+
+    public @Nullable Group getGroupOrNull(String name) {
         for (Group group : groups) {
             if (group.getName().equalsIgnoreCase(name)) {
                 return group;
             }
         }
-        return getDefaultGroup();
+        return null;
     }
 
     public @NotNull Group getGroup(Player player) {
@@ -99,6 +107,44 @@ public final class Groups {
     public void registerGroup(Group group) {
         OpenCreative.getPlugin().getLogger().info("Registered player group " + group.getName());
         groups.add(group);
+    }
+
+    public @NotNull Set<String> getNames() {
+        Set<String> names = new LinkedHashSet<>();
+        for (Group group : groups) {
+            names.add(group.getName());
+        }
+        return names;
+    }
+
+    public boolean deleteGroup(@NotNull String groupName) {
+        Group found = getGroupOrNull(groupName);
+        if (found == null) return false;
+        OpenCreative.getPlugin().getLogger().info("Removed player group " + groupName);
+        groups.remove(found);
+        OpenCreative.getPlugin().getConfig().set("groups." + groupName, null);
+        OpenCreative.getPlugin().saveConfig();
+        return true;
+    }
+
+    public boolean setLimit(@NotNull String groupName, @NotNull LimitType type, int value) {
+        Group found = getGroupOrNull(groupName);
+        if (found == null) return false;
+        OpenCreative.getPlugin().getLogger().info("Changed limit " + type.getPath() +  "  in player group " + groupName + " to: " + value);
+        groups.remove(found);
+        OpenCreative.getPlugin().getConfig().set("groups." + groupName + ".world.limits." + type.getPath(), value);
+        OpenCreative.getPlugin().saveConfig();
+        return true;
+    }
+
+    public boolean setLimitModifier(@NotNull String groupName, @NotNull LimitType type, int value) {
+        Group found = getGroupOrNull(groupName);
+        if (found == null) return false;
+        OpenCreative.getPlugin().getLogger().info("Changed limit " + type.getPath() +  "  in player group " + groupName + " to: " + value);
+        groups.remove(found);
+        OpenCreative.getPlugin().getConfig().set("groups." + groupName + ".world.per-player-limit-modifiers." + type.getPath(), value);
+        OpenCreative.getPlugin().saveConfig();
+        return true;
     }
 
 }

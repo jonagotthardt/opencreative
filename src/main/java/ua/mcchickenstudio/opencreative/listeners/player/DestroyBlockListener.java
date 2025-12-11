@@ -113,9 +113,15 @@ public final class DestroyBlockListener implements Listener {
                 event.setCancelled(true);
             }
         } else if (planet != null) {
-            if (ChangedWorld.isPlayerWithLocation(player) && !planet.getWorldPlayers().canBuild(player)) {
-                player.sendActionBar(getPlayerLocaleComponent("not-builder", player));
-                event.setCancelled(true);
+            if (ChangedWorld.isPlayerWithLocation(player)) {
+                if (!planet.getWorldPlayers().canBuild(player)) {
+                    player.sendActionBar(getPlayerLocaleComponent("not-builder", player));
+                    event.setCancelled(true);
+                    return;
+                }
+                if (player.getInventory().getItemInMainHand().getType() == Material.PAPER) {
+                    event.setCancelled(true);
+                }
                 return;
             }
             new DestroyBlockEvent(event.getPlayer(),event).callEvent();

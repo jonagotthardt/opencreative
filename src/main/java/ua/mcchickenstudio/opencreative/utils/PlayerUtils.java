@@ -22,6 +22,7 @@ import net.kyori.adventure.resource.ResourcePackInfo;
 import net.kyori.adventure.resource.ResourcePackRequest;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.sign.Side;
 import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.inventory.meta.BookMeta;
@@ -386,7 +387,7 @@ public final class PlayerUtils {
             public void run() {
                 player.sendSignChange(block.getLocation(), newLines);
             }
-        }.runTaskLater(OpenCreative.getPlugin(),5L);
+        }.runTaskLater(OpenCreative.getPlugin(),10L);
     }
 
     public static void translateSigns(Player player, int radius) {

@@ -96,19 +96,29 @@ public class ChatCommand extends CommandHandler {
             }
         }
         OpenCreative.getPlugin().getLogger().info("[CREATIVE-CHAT] " + sender.getName()
-                + ": "+String.join(" ",args));
+                + ": " + String.join(" ",args));
 
         String text = String.join(" ", args);
         String prefix = OpenCreative.getPlugin().getConfig().getString("messages.cc-prefix","&6 Chat &8| &7");
-        String format = OpenCreative.getPlugin().getConfig().getString("messages.cc-chat","&6%cc-prefix% &7%player%: %message%")
-                .replace("%player%", sender.getName())
-                .replace("%cc-prefix%", prefix);
+        if (!(sender instanceof Player player)) {
+            // If sender is console
+            Component formatted = toComponent(prefix + sender.getName() + text);
 
-        if (sender instanceof Player player) {
-            format = parsePAPI(player, format);
-        } else {
-            format = parsePAPI(Bukkit.getOfflinePlayer(sender.getName()), format);
+            CreativeChatEvent event = new CreativeChatEvent(sender, text, formatted);
+            event.callEvent();
+            if (event.isCancelled()) return;
+
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                if (!(creativeChatOff.contains(onlinePlayer))) {
+                    onlinePlayer.sendMessage(formatted);
+                }
+            }
+            return;
         }
+        String format = OpenCreative.getPlugin().getConfig().getString("messages.cc-chat","&6%cc-prefix% &7%player%: %message%")
+            .replace("%player%", sender.getName())
+            .replace("%cc-prefix%", prefix);
+        format = parsePAPI(player, format);
         Component formatted = toComponent(format
                 .replace("%message%", MiniMessage.miniMessage().escapeTags(text)));
         if (formatted.clickEvent() == null) formatted = formatted.clickEvent(ClickEvent.suggestCommand(text));

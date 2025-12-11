@@ -135,7 +135,8 @@ public final class ErrorUtils {
                 "Error the Troublemaker..", "Knocks off worlds like a terminator", "Gotta hate it cause' you just can't like it",
                 "We had something to learn from that experience", "Bug toy, bug toy, bug toy...",
                 "Jester thinks there is a solution to this bug?", "Get your bug toy, get a little opposite of joy",
-                "I could say I'm sorry, but it's not that kind of party"
+                "I could say I'm sorry, but it's not that kind of party", "The right error in the wrong place",
+                "Raise and shine, Mr. Error!"
         };
         return phrases[new Random().nextInt(phrases.length)];
     }

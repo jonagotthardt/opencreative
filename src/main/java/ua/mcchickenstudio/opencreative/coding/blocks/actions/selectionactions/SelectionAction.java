@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.selectionactions;
 
+import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
@@ -26,6 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.Condition;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.planets.PlanetRunnable;
 import ua.mcchickenstudio.opencreative.utils.ErrorUtils;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -33,6 +36,10 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetCodeCriticalErrorMessage;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.stopPlanetCode;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 public abstract class SelectionAction extends Action {
 
@@ -91,6 +98,24 @@ public abstract class SelectionAction extends Action {
         } else if (target != null) {
             entities.addAll(getTargets());
         }
+        int selectionLimit = getPlanet().getLimits().getEntitiesLimit() + getPlanet().getPlayers().size(); // adding players count if entities limit is set to 0
+        int size = entities.size();
+        if (size > selectionLimit) {
+            entities = entities.subList(0, selectionLimit);
+        }
+        getPlanet().getLimits().setLastModifiedTargetsAmount(getPlanet().getLimits().getLastRedstoneOperationsAmount() + size);
+        if (getPlanet().getLimits().getLastModifiedTargetsAmount() > getPlanet().getLimits().getTargetsChangesLimit()) {
+            stopPlanetCode(getPlanet(), "targets changes limit");
+            sendPlanetCodeCriticalErrorMessage(getPlanet(),getExecutor(),getLocaleMessage("coding-error.targets-changes-limit",false)
+                    .replace("%limit%",String.valueOf(getPlanet().getLimits().getTargetsChangesLimit())));
+            return;
+        }
+        getPlanet().getTerritory().scheduleAsyncRunnable(new PlanetRunnable(getPlanet()) {
+            @Override
+            public void execute() {
+                getPlanet().getLimits().setLastModifiedTargetsAmount(planet.getLimits().getLastRedstoneOperationsAmount() - size);
+            }
+        }, 20L);
         modifyTargets(entities, getHandler().getSelectedTargets());
     }
 

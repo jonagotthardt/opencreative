@@ -128,6 +128,11 @@ public final class RecommendedWorldsMenu extends AbstractMenu {
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(worldID);
             if (planet != null) {
                 player.closeInventory();
+                if (planet.equals(OpenCreative.getPlanetsManager().getPlanetByPlayer(player))) {
+                    player.sendMessage(MessageUtils.getPlayerLocaleMessage("same-world", player));
+                    Sounds.PLAYER_FAIL.play(player);
+                    return;
+                }
                 planet.connectPlayer(player);
             }
         }

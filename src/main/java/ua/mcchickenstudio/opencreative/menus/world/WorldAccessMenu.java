@@ -101,6 +101,12 @@ public final class WorldAccessMenu extends AbstractMenu implements WorldMenu {
                 planet.connectPlayer(player);
             }
             case "play" -> {
+                if (planet.equals(OpenCreative.getPlanetsManager().getPlanetByPlayer(player))) {
+                    player.closeInventory();
+                    player.sendMessage(MessageUtils.getPlayerLocaleMessage("same-world", player));
+                    Sounds.PLAYER_FAIL.play(player);
+                    return;
+                }
                 if (player.hasCooldown(item.getType()) || getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
                     Sounds.PLAYER_FAIL.play(player);
                     return;
