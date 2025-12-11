@@ -353,7 +353,7 @@ groups:
         bossbars-amount: 10 # limit for amount of all bossbars
         coding-platforms: 4 # limit for coding platforms
         changing-list-elements: 50 # limit of changing elements in lists and maps per second
-        changing-targets: 500 # limit of changing targets (setting, adding, removing) with Selection Action
+        changing-targets: 200 # limit of changing targets (setting, adding, removing) with Selection Action
         builders-amount: 10 # limit of added builders
         developers-amount: 10 # limit of added developers
         blacklisted-amount: 10 # limit of banned players
@@ -426,7 +426,7 @@ groups:
         coding-platforms: 4
         repeats-amount: 100
         changing-list-elements: 50
-        changing-targets: 500
+        changing-targets: 200
         builders-amount: 10
         developers-amount: 10
         blacklisted-amount: 10
