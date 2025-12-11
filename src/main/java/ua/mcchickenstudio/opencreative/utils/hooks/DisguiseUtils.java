@@ -45,9 +45,13 @@ public final class DisguiseUtils {
     }
 
     public static void disguiseAsPlayer(Entity entity, String name, String skin) {
-        PlayerDisguise disguise = new PlayerDisguise(name,skin);
-        disguise.setEntity(entity);
-        disguise.startDisguise();
+        try {
+            PlayerDisguise disguise = PlayerDisguise.class
+                    .getDeclaredConstructor(String.class, String.class)
+                    .newInstance(name, skin);
+            disguise.setEntity(entity);
+            disguise.startDisguise();
+        } catch (Exception ignored) {}
     }
 
     public static void disguiseAsMob(Entity entity, EntityType type) {

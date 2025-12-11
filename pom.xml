@@ -101,6 +101,10 @@
             <url>https://maven.enginehub.org/repo/</url>
         </repository>
         <repository>
+            <id>libsdisguises-public</id>
+            <url>https://mvn.lib.co.nz/public</url>
+        </repository>
+        <repository>
             <!-- For deploying on Gitlab -->
             <id>gitlab-maven</id>
             <!--suppress UnresolvedMavenProperty -->
@@ -196,9 +200,9 @@
         </dependency>
         <dependency>
             <!-- Addon: Adds mob disguises -->
-            <groupId>LibsDisguises</groupId>
-            <artifactId>LibsDisguises</artifactId>
-            <version>10.0.44</version>
+            <groupId>me.libraryaddict.disguises</groupId>
+            <artifactId>libsdisguises</artifactId>
+            <version>11.0.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
