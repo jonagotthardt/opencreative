@@ -26,6 +26,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+
 public final class CreateExplosionAction extends WorldAction {
     public CreateExplosionAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
@@ -33,6 +35,10 @@ public final class CreateExplosionAction extends WorldAction {
 
     @Override
     protected void execute(Entity entity) {
+        if (getWorld().getEntities().size() >= getPlanet().getLimits().getEntitiesLimit()) {
+            sendCodingDebugLog(getPlanet(), "Too many entities: create explosion action is cancelled.");
+            return;
+        }
         float power = Math.min(10f,getArguments().getValue("power",0f,this));
         boolean setFire = getArguments().getValue("fire",false,this);
         boolean breakBlocks = getArguments().getValue("damage",false,this);

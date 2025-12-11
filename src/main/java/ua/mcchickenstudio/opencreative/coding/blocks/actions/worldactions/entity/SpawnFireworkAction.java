@@ -30,6 +30,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.inventory.ItemStack;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+
 public final class SpawnFireworkAction extends WorldAction {
     public SpawnFireworkAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
@@ -37,6 +39,10 @@ public final class SpawnFireworkAction extends WorldAction {
 
     @Override
     protected void execute(Entity entity) {
+        if (getWorld().getEntities().size() >= getPlanet().getLimits().getEntitiesLimit()) {
+            sendCodingDebugLog(getPlanet(), "Too many entities: spawn entity action is cancelled.");
+            return;
+        }
         ItemStack firework = getArguments().getValue("firework",new ItemStack(Material.FIREWORK_ROCKET,1),this);
         for (Location location : getArguments().getLocationList("locations",this)) {
             Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location,EntityType.FIREWORK_ROCKET);

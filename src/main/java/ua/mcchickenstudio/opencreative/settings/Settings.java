@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.settings;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -454,7 +455,7 @@ public final class Settings {
         if (section.isString(slot)) {
             // 1: "own-worlds"
             String typeString = section.getString(slot, "");
-            Items itemType = Items.getById(typeString.toUpperCase().replace("-", "_"));
+            Items itemType = Items.getById(typeString);
             if (itemType == null) {
                 sendWarningErrorMessage("Unknown system item type " + typeString + " for item (kit: " + section.getName() + " in slot: " + slot  + ")");
                 return null;
@@ -479,7 +480,7 @@ public final class Settings {
             if (section.isString("type")) {
                 // Preset will copy material, name, lore from Items enum.
                 String typeString = section.getString("type", "");
-                Items itemType = Items.getById(typeString.toUpperCase().replace("-", "_"));
+                Items itemType = Items.getById(typeString);
                 if (itemType == null) {
                     sendWarningErrorMessage("Unknown system item type " + typeString + " for item (kit: " + section.getName() + " in slot: " + slot  + ")");
                 } else {
@@ -688,9 +689,16 @@ public final class Settings {
         }
         if (debug) {
             announcer = new BukkitRunnable() {
+                private final Component actionbar = MiniMessage.miniMessage()
+                        .deserialize("<white>Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+ <white>" + OpenCreative.getVersion() + "<gray> Debug Mode. <white>Shhh, let's not leak our hard work...");
+
                 @Override
                 public void run() {
-                    Bukkit.getServer().sendActionBar(Component.text("§fOpen§7Creative§b+ §3" + OpenCreative.getVersion() + "§7 Debug Mode. §fShhh, let's not leak our hard work..."));
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        if (player.hasPermission("opencreative.debug")) {
+                            Bukkit.getServer().sendActionBar(actionbar);
+                        }
+                    }
                 }
             };
             announcer.runTaskTimer(OpenCreative.getPlugin(),20L,20L);

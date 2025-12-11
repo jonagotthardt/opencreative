@@ -21,10 +21,8 @@ package ua.mcchickenstudio.opencreative.coding.blocks.executors;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.Condition;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Cycle;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Function;
@@ -70,7 +68,8 @@ public class Executors {
      */
     public static void activate(WorldEvent event) {
         Planet planet = event.getPlanet();
-        if (planet == null || planet.getTerritory().getScript() == null || planet.getTerritory().getScript().getExecutors() == null) return;
+        if (!OpenCreative.getSettings().isEnabledCoding()) return;
+        if (planet == null) return;
         Executors executors = planet.getTerritory().getScript().getExecutors();
         for (Executor executor : executors.executorsList) {
             if (executor.getExecutorType().getEventClass() == event.getClass()) {
@@ -86,12 +85,13 @@ public class Executors {
      */
     public static void activate(Executor executor, WorldEvent event) {
         Planet planet = executor.getPlanet();
-        if (planet == null || planet.getTerritory().getScript() == null || planet.getTerritory().getScript().getExecutors() == null) return;
+        if (planet == null) return;
         Executors executors = planet.getTerritory().getScript().getExecutors();
         if (executors.getLastExecutorCallsAmount(executor) > planet.getLimits().getCodeOperationsLimit()) {
             executors.clearExecutionsAmount(executor);
-            stopPlanetCode(planet);
-            sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("coding-error.operations-limit",false).replace("%limit%",String.valueOf(planet.getLimits().getCodeOperationsLimit())));
+            stopPlanetCode(planet, "operations limit");
+            sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("coding-error.operations-limit",false)
+                    .replace("%limit%",String.valueOf(planet.getLimits().getCodeOperationsLimit())));
         } else {
             executors.increaseCallsAmount(executor);
             executor.run(event);
@@ -109,7 +109,7 @@ public class Executors {
         Executors executors = planet.getTerritory().getScript().getExecutors();
         if (executors.getLastExecutorCallsAmount(executor) > planet.getLimits().getCodeOperationsLimit()) {
             executors.clearExecutionsAmount(executor);
-            stopPlanetCode(planet);
+            stopPlanetCode(planet, "operations limit");
             sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("coding-error.operations-limit",false).replace("%limit%",String.valueOf(planet.getLimits().getCodeOperationsLimit())));
         } else {
             executors.increaseCallsAmount(executor);
@@ -154,6 +154,46 @@ public class Executors {
 
     public @NotNull List<Executor> getExecutorsList() {
         return executorsList;
+    }
+
+    public @NotNull List<Action> getActionsList() {
+        List<Action> actions = new ArrayList<>();
+        for (Executor executor : executorsList) {
+            for (Action action : executor.getActions()) {
+                actions.addAll(getInsideActionsList(action));
+            }
+        }
+        return actions;
+    }
+
+    public @NotNull List<Condition> getConditionsList() {
+        List<Condition> conditions = new ArrayList<>();
+        for (Executor executor : executorsList) {
+            for (Action action : getActionsList()) {
+                if (action instanceof Condition condition) {
+                    conditions.add(condition);
+                }
+            }
+        }
+        return conditions;
+    }
+
+    public @NotNull List<Action> getInsideActionsList(@NotNull Action action) {
+        List<Action> actions = new ArrayList<>();
+        actions.add(action);
+        if (action instanceof Condition condition) {
+            for (Action inside : condition.getActions()) {
+                actions.addAll(getInsideActionsList(inside));
+            }
+            for (Action inside : condition.getElseActions()) {
+                actions.addAll(getInsideActionsList(inside));
+            }
+        } else if (action instanceof MultiAction multiAction) {
+            for (Action inside : multiAction.getActions()) {
+                actions.addAll(getInsideActionsList(inside));
+            }
+        }
+        return actions;
     }
 
     /**
@@ -315,21 +355,25 @@ public class Executors {
                 }
             }
             if (actionType.getCategory().isMultiAction()) {
-                if (config.getConfigurationSection(path+".actions") != null) {
-                    if (actionType.getCategory().isCondition()) {
-                        boolean isOpposed = config.getBoolean(path+".opposed",false);
-                        return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class,List.class,boolean.class).newInstance(executor,target,config.getInt(path+".location.x"),args,createActionList(executor,path+".actions",config),createActionList(executor,path+".else",config),isOpposed);
-                    } else if (actionType == ActionType.REPEAT_WHILE || actionType == ActionType.REPEAT_WHILE_NOT) {
-                        if (config.getConfigurationSection(path+".condition") != null) {
-                            ActionType conditionType = ActionType.valueOf(config.getString(path+".condition.type"));
-                            return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,
-                                    Arguments.class, List.class, ActionType.class).newInstance(executor,
-                                    target, config.getInt(path+".location.x"),
-                                    args, createActionList(executor,path+".actions",config), conditionType);
-                        }
-                    } else {
-                        return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class).newInstance(executor,target,config.getInt(path+".location.x"),args,createActionList(executor,path+".actions",config));
+                if (actionType.getCategory().isCondition()) {
+                    boolean isOpposed = config.getBoolean(path+".opposed",false);
+                    return actionType.getActionClass()
+                            .getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class,List.class,boolean.class)
+                            .newInstance(executor, target, config.getInt(path + ".location.x"),
+                                    args, createActionList(executor,path + ".actions",config),
+                                    createActionList(executor,path + ".else",config),isOpposed);
+                } else if (actionType == ActionType.REPEAT_WHILE || actionType == ActionType.REPEAT_WHILE_NOT) {
+                    if (config.getConfigurationSection(path+".condition") != null) {
+                        ActionType conditionType = ActionType.valueOf(config.getString(path+".condition.type"));
+                        return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,
+                                Arguments.class, List.class, ActionType.class).newInstance(executor,
+                                target, config.getInt(path+".location.x"),
+                                args, createActionList(executor,path+".actions",config), conditionType);
                     }
+                } else {
+                    return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class)
+                            .newInstance(executor, target, config.getInt(path + ".location.x"),
+                                    args, createActionList(executor,path+".actions",config));
                 }
             }
             return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class).newInstance(executor,target,config.getInt(path+".location.x"),args);

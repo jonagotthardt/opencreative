@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.planets;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -63,12 +64,13 @@ public class PlanetTerritory {
     private final List<BukkitRunnable> runningBukkitRunnables = new ArrayList<>();
 
     private final CodeScript script;
+    private Location spawnLocation = null;
     private String generator = "";
     private int worldSize = 25;
     private World.Environment environment;
     private boolean autoSave = true;
 
-    public PlanetTerritory(Planet planet) {
+    public PlanetTerritory(@NotNull Planet planet) {
         this.planet = planet;
         flags = new PlanetFlags(planet);
         scoreboards = new PlanetScoreboards(planet);
@@ -150,6 +152,17 @@ public class PlanetTerritory {
         loadInformation();
         flags.loadFlags();
         planet.getWorldPlayers().loadPlayers();
+
+        ConfigurationSection spawnSection = getPlanetConfig(planet).getConfigurationSection("spawn");
+        if (spawnSection != null) {
+            double x = spawnSection.getDouble("x", 0);
+            double y = spawnSection.getDouble("y", 0);
+            double z = spawnSection.getDouble("z", 0);
+            float yaw = (float) spawnSection.getDouble("yaw", 0);
+            float pitch = (float) spawnSection.getDouble("pitch", 0);
+            spawnLocation = new Location(null, x, y, z, yaw, pitch);
+        }
+
         WorldGenerator worldGenerator = WorldGenerators.getInstance().getById(generator);
         WorldCreator creator = new WorldCreator(planet.getWorldName())
                 .environment(planet.getTerritory().getEnvironment())
@@ -244,6 +257,7 @@ public class PlanetTerritory {
         planet.getWorldPlayers().clear();
         planet.getLimits().clear();
         script.unload();
+        spawnLocation = null;
         clearOnceMessages(planet);
     }
 
@@ -265,6 +279,9 @@ public class PlanetTerritory {
         runningBukkitRunnables.remove(runnable);
     }
 
+    /**
+     * Stops all running bukkit runnables and tasks in world.
+     */
     public void stopBukkitRunnables() {
         for (BukkitRunnable runnable : runningBukkitRunnables) {
             try {
@@ -274,10 +291,18 @@ public class PlanetTerritory {
         runningBukkitRunnables.clear();
     }
 
+    /**
+     * Returns flags of planet, that store additional settings.
+     * @return planet's flags.
+     */
     public PlanetFlags getFlags() {
         return flags;
     }
 
+    /**
+     * Returns map of IDs and boss bars.
+     * @return map of IDs and boss bars.
+     */
     public Map<String, BossBar> getBossBars() {
         return bossBars;
     }
@@ -286,15 +311,30 @@ public class PlanetTerritory {
         return environment;
     }
 
+    /**
+     * Returns world of planet for buildings.
+     * If world is unloaded, returns null.
+     * @return planet's world, or null - if world is unloaded.
+     */
     public @Nullable World getWorld() {
         return Bukkit.getWorld(planet.getWorldName());
     }
 
+    /**
+     * Returns size of world, that will be used
+     * to set world borders.
+     * @return size of world.
+     */
     public int getWorldSize() {
         return worldSize;
     }
 
-    public CodeScript getScript() {
+    /**
+     * Returns code script of world, that stores
+     * executors and actions.
+     * @return code script.
+     */
+    public @NotNull CodeScript getScript() {
         return script;
     }
 
@@ -305,7 +345,7 @@ public class PlanetTerritory {
             worldCreator.generateStructures(generateStructures);
         }
         worldCreator.type(WorldType.FLAT);
-        if (generator instanceof EnvironmentCapable capable) {
+        if (generator instanceof EnvironmentCapable) {
             worldCreator.environment(environment);
         }
         worldCreator.seed(seed);
@@ -359,8 +399,12 @@ public class PlanetTerritory {
 
     @SuppressWarnings("unchecked")
     public void setDeprecatedGameRule() {
-        GameRule<?> spawnRadius = GameRule.getByName("SPAWN_CHUNK_RADIUS");
-        if (spawnRadius != null) getWorld().setGameRule((GameRule<? super Integer>) spawnRadius, 1);
+        try {
+            GameRule<?> spawnRadius = GameRule.getByName("SPAWN_CHUNK_RADIUS");
+            if (spawnRadius != null && getWorld() != null) {
+                getWorld().setGameRule((GameRule<? super Integer>) spawnRadius, 1);
+            }
+        } catch (Exception ignored) {}
     }
 
     /**
@@ -392,6 +436,52 @@ public class PlanetTerritory {
      */
     public @NotNull PlanetScoreboards getScoreboards() {
         return scoreboards;
+    }
+
+    /**
+     * Returns spawn location, where players should appear
+     * after connecting to planet.
+     * @return spawn location of planet
+     */
+    public @NotNull Location getSpawnLocation() {
+        World world = getWorld();
+        if (world == null) return spawnLocation;
+        if (spawnLocation != null) {
+            spawnLocation.setWorld(world);
+            return spawnLocation;
+        }
+        return world.getSpawnLocation();
+    }
+
+    /**
+     * Sets new spawn location for planet, where player
+     * will appear after joining to planet.
+     * @param spawnLocation new spawn location.
+     */
+    public void setSpawnLocation(@NotNull Location spawnLocation) {
+
+        double x = Math.round(spawnLocation.getX() * 100.0) / 100.0;
+        double y = Math.round(spawnLocation.getY() * 100.0) / 100.0;
+        double z = Math.round(spawnLocation.getZ() * 100.0) / 100.0;
+        float yaw = (float) (Math.round(spawnLocation.getYaw() * 100.0) / 100.0);
+        float pitch = (float) (Math.round(spawnLocation.getPitch() * 100.0) / 100.0);
+        spawnLocation.set(x, y, z);
+        spawnLocation.setYaw(yaw);
+        spawnLocation.setPitch(pitch);
+
+        this.spawnLocation = spawnLocation;
+        World world = getWorld();
+        this.spawnLocation.setWorld(world);
+        if (world != null) world.setSpawnLocation(spawnLocation);
+
+        Map<String, Object> configLocation = new HashMap<>();
+        configLocation.put("x", x);
+        configLocation.put("y", y);
+        configLocation.put("z", z);
+        configLocation.put("yaw", yaw);
+        configLocation.put("pitch", pitch);
+        FileUtils.setPlanetConfigParameter(planet,"spawn", configLocation);
+
     }
 
     public boolean isAutoSave() {

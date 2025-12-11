@@ -24,7 +24,6 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
@@ -41,6 +40,7 @@ import ua.mcchickenstudio.opencreative.coding.variables.WorldVariables;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
 import ua.mcchickenstudio.opencreative.commands.experiments.NewWorldScreenExperiment;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetConnectPlayerEvent;
+import ua.mcchickenstudio.opencreative.indev.Wander;
 import ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld;
 import ua.mcchickenstudio.opencreative.managers.stability.StabilityState;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
@@ -58,8 +58,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
@@ -384,7 +382,7 @@ public class Planet {
      * <p>In the Play mode code script will work, player damaging is enabled.</p>
      * @param mode Mode to set.
      */
-    public void setMode(Mode mode) {
+    public void setMode(@NotNull Mode mode) {
         if (this.mode == mode) return;
         setPlanetConfigParameter(this,"mode",mode.name());
         if (!isLoaded()) {
@@ -395,7 +393,7 @@ public class Planet {
             mode = Mode.BUILD;
         }
         try {
-            territory.getWorld().getSpawnLocation().getChunk().load(true);
+            territory.getSpawnLocation().getChunk().load(true);
             if (mode == Mode.BUILD) {
                 for (Player player : getPlayers()) {
                     if (!isEntityInDevPlanet(player)) {
@@ -405,11 +403,11 @@ public class Planet {
                                 Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(2), Duration.ofMillis(130))
                         ));
                         clearPlayer(player);
-                        player.teleport(territory.getWorld().getSpawnLocation());
+                        player.teleport(territory.getSpawnLocation());
                         Sounds.WORLD_MODE_BUILD.play(player);
                         territory.showBorders(player);
                         if (isOwner(player)) {
-                            player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
+                            ItemsGroup.BUILD_OWNER.setItems(player);
                         }
                         if (worldPlayers.canBuild(player)) {
                             player.setGameMode(GameMode.CREATIVE);
@@ -435,7 +433,7 @@ public class Planet {
                     if (!isEntityInDevPlanet(player)) {
                         clearPlayer(player);
                         player.clearTitle();
-                        player.teleport(territory.getWorld().getSpawnLocation());
+                        player.teleport(territory.getSpawnLocation());
                         territory.showBorders(player);
                         if (worldPlayers.canDevelop(player)) {
                             player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
@@ -604,6 +602,12 @@ public class Planet {
             }
         }
 
+        Wander wander = OpenCreative.getWander(player);
+        if (wander.isConnectingToPlanet()) {
+            player.sendMessage(getLocaleMessage("world.connecting.busy"));
+            return;
+        }
+        wander.setConnectingToPlanet(true);
         player.showTitle(Title.title(
             toComponent(getLocaleMessage("world.connecting.title")), toComponent(getLocaleMessage("world.connecting.subtitle")),
             Title.Times.times(Duration.ofMillis(710), Duration.ofSeconds(30), Duration.ofMillis(130))
@@ -620,39 +624,37 @@ public class Planet {
         }
 
         if (!Experiments.isEnabled("new_world_screen") || NewWorldScreenExperiment.getType() == NewWorldScreenExperiment.ScreenType.NORMAL) {
-            player.teleportAsync(territory.getWorld().getSpawnLocation()).thenAccept(success -> {
+            player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
                 getConnectionProcess(player, wasLoaded, hidePlayer, success);
+            }).exceptionally(error -> {
+                sendPlayerErrorMessage(player, "Failed to connect to the world " + this.getId() +
+                        (error.getMessage() == null ? "." : ": " + error.getMessage()));
+                wander.setConnectingToPlanet(false);
+                return null;
             });
             return;
         }
 
         switch (NewWorldScreenExperiment.getType()) {
-            case NETHER ->
-                player.teleportAsync(territory.getWorld().getSpawnLocation(), PlayerTeleportEvent.TeleportCause.NETHER_PORTAL).thenAccept(success -> {
-                    getConnectionProcess(player, wasLoaded, hidePlayer, success);
-                });
-            case THE_END ->
-                player.teleportAsync(territory.getWorld().getSpawnLocation(), PlayerTeleportEvent.TeleportCause.END_PORTAL).thenAccept(success -> {
-                    getConnectionProcess(player, wasLoaded, hidePlayer, success);
-                });
-            case BED -> {
-                Location bed = player.getLocation();
-                player.sendBlockChange(bed, Bukkit.createBlockData(Material.RED_BED));
-                player.sleep(bed, true);
-                player.teleportAsync(territory.getWorld().getSpawnLocation()).thenAccept(success -> {
-                    getConnectionProcess(player, wasLoaded, hidePlayer, success);
-                    player.wakeup(false);
-                });
-            }
             case DARKNESS -> {
                 player.sendPotionEffectChange(player, new PotionEffect(PotionEffectType.DARKNESS, 100, 1));
-                player.teleportAsync(territory.getWorld().getSpawnLocation()).thenAccept(success -> {
+                player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
                     getConnectionProcess(player, wasLoaded, hidePlayer, success);
+                }).exceptionally(error -> {
+                    sendPlayerErrorMessage(player, "Failed to connect to the world " + this.getId() +
+                            (error.getMessage() == null ? "." : ": " + error.getMessage()));
+                    wander.setConnectingToPlanet(false);
+                    return null;
                 });
             }
             case PERCENTS -> {
-                player.teleportAsync(territory.getWorld().getSpawnLocation()).thenAccept(success -> {
+                player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
                     getConnectionProcess(player, wasLoaded, hidePlayer, success);
+                }).exceptionally(error -> {
+                    sendPlayerErrorMessage(player, "Failed to connect to the world " + this.getId() +
+                            (error.getMessage() == null ? "." : ": " + error.getMessage()));
+                    wander.setConnectingToPlanet(false);
+                    return null;
                 });
 
                 int radius = 8;
@@ -683,6 +685,7 @@ public class Planet {
     private void getConnectionProcess(@NotNull Player player, boolean wasLoaded, boolean hidePlayer, boolean success) {
         clearPlayer(player);
         if (success) {
+            OpenCreative.getWander(player).setConnectingToPlanet(false);
             if (!hidePlayer && getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
                 for (Player onlinePlayer : getPlayers()) {
                     onlinePlayer.sendMessage(MessageUtils.getPlayerLocaleMessage("world.joined", player));
@@ -695,9 +698,16 @@ public class Planet {
             player.clearTitle();
             territory.showBorders(player);
             if (!getPlayersFromPlanetList(this, PlayersType.UNIQUE).contains(player.getName())) {
+                /*
+                 * When player joins connects to the world for first time.
+                 */
                 addPlayerInPlanetList(this,player.getName(), PlayersType.UNIQUE);
                 info.setUniques(info.getUniques()+1);
                 if (this.isOwner(player)) {
+                    /*
+                     * When world's owner connects to the world for first time
+                     * (after world's creation).
+                     */
                     player.showTitle(Title.title(
                         toComponent(MessageUtils.getPlayerLocaleMessage("creating-world.welcome-title",player)), toComponent(MessageUtils.getPlayerLocaleMessage("creating-world.welcome-subtitle",player)),
                         Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(9), Duration.ofSeconds(2))
@@ -748,6 +758,7 @@ public class Planet {
             info.updateIconAsync();
         } else {
             sendPlayerErrorMessage(player,"Can't join planet. World is unloaded.");
+            OpenCreative.getWander(player).setConnectingToPlanet(false);
         }
     }
 
@@ -786,6 +797,9 @@ public class Planet {
                 player.setAllowFlight(true);
                 player.setFlying(true);
                 if (!hidePlayer) {
+                    /*
+                     * If player is visiting world normally.
+                     */
                     if (getWorldPlayers().canDevelop(player)) {
                         player.sendMessage(getPlayerLocaleMessage("world.dev-mode.help", player));
                         player.setGameMode(GameMode.CREATIVE);
@@ -798,6 +812,9 @@ public class Planet {
                         }
                     }
                 } else {
+                    /*
+                     * If player is moderator and should be hidden.
+                     */
                     player.setGameMode(GameMode.SPECTATOR);
                     for (Player onlinePlayer : player.getWorld().getPlayers()) {
                         onlinePlayer.hidePlayer(OpenCreative.getPlugin(),player);
@@ -812,14 +829,11 @@ public class Planet {
                         toComponent(getLocaleMessage("world.dev-mode.title")), toComponent(getLocaleMessage("world.dev-mode.subtitle")),
                         Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
-                if (isOwner(player)) {
-                    ItemsGroup.CODING_OWNER.setItemsIfAbsent(player);
-                } else {
-                    ItemsGroup.CODING.setItemsIfAbsent(player);
-                }
-                ItemStack worldSettingsItem = createItem(Material.COMPASS,1,"items.developer.world-settings");
+                ItemsGroup itemsGroup = isOwner(player) ? ItemsGroup.CODING_OWNER : ItemsGroup.CODING;
+                itemsGroup.setItemsIfAbsent(player);
+                List<ItemStack> codingItems = itemsGroup.getItems(player);
                 for (ItemStack item : playerInventoryItems) {
-                    if (item != null && !itemEquals(item,worldSettingsItem) && !player.getInventory().containsAtLeast(item,1)) {
+                    if (!codingItems.contains(item)) {
                         player.getInventory().addItem(item);
                     }
                 }
@@ -853,7 +867,8 @@ public class Planet {
             Location location = new Location(this.getDevPlanet().getWorld(), x+1,y,z+2,180,5);
             player.teleportAsync(location).thenAccept(success -> {
                 if (success) {
-                    spawnGlowingBlock(player,new Location(this.getDevPlanet().getWorld(),x+0.5,y,z+0.5));
+                    spawnGlowingBlock(player, new Location(this.getDevPlanet().getWorld(),x+0.5,y,z+0.5));
+                    translateSigns(player, 5);
                 }
             });
         }
@@ -896,7 +911,8 @@ public class Planet {
             }
         }, BUILD() {
             public void onPlayerConnect(Player player, Planet planet) {
-                if (planet.getWorldPlayers().canBuild(player)) {
+                // Removes build permissions for admins on world join (to prevent accidental griefs)
+                if (planet.getWorldPlayers().canBuild(player) && (!player.hasPermission("opencreative.world.build.others") || planet.isOwner(player))) {
                     player.setGameMode(GameMode.CREATIVE);
                     giveBuildPermissions(player);
                 }

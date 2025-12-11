@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.menus.world.browsers;
 
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menus.ListBrowserMenu;
@@ -219,5 +220,4 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
     public void onOpen(@NotNull InventoryOpenEvent event) {
         Sounds.MENU_OPEN_WORLDS_BROWSER.play(event.getPlayer());
     }
-
 }

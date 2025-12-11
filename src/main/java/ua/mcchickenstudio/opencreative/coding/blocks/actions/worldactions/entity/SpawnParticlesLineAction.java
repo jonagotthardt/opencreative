@@ -28,6 +28,8 @@ import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+
 public final class SpawnParticlesLineAction extends WorldAction {
     public SpawnParticlesLineAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
@@ -35,13 +37,17 @@ public final class SpawnParticlesLineAction extends WorldAction {
 
     @Override
     protected void execute(Entity entity) {
+        if (getWorld().getEntities().size() >= getPlanet().getLimits().getEntitiesLimit()) {
+            sendCodingDebugLog(getPlanet(), "Too many entities: spawn particles action is cancelled.");
+            return;
+        }
         Particle particle = getArguments().getValue("particle",Particle.HEART,this);
         int count = Math.min(30,getArguments().getValue("count",1,this));
         double offsetX = getArguments().getValue("offset-x",0.0d,this);
         double offsetY = getArguments().getValue("offset-y",0.0d,this);
         double offsetZ = getArguments().getValue("offset-z",0.0d,this);
-        Location first = getArguments().getValue("first",getWorld().getSpawnLocation(),this);
-        Location second = getArguments().getValue("second",getWorld().getSpawnLocation(),this);
+        Location first = getArguments().getValue("first",getPlanet().getTerritory().getSpawnLocation(),this);
+        Location second = getArguments().getValue("second",getPlanet().getTerritory().getSpawnLocation(),this);
         Vector firstVector = first.toVector();
         Vector secondVector = second.toVector();
         Vector locationVector = secondVector.subtract(firstVector);

@@ -16,30 +16,18 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.settings.items;
+package ua.mcchickenstudio.opencreative.indev.messenger;
 
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.managers.Manager;
 
-/**
- * <h1>SettingsSimpleItem</h1>
- * This class represents system item, that will be not modified.
- */
-public class SettingsPresetItem implements SettingsItem {
+import java.util.UUID;
 
-    private final Items type;
+public interface Messenger extends Manager {
 
-    /**
-     * Creates instance of preset item.
-     * @param type type of system item.
-     */
-    public SettingsPresetItem(@NotNull Items type) {
-        this.type = type;
-    }
+    @Nullable Integer getPlanetToConnectPlayerOnJoin(@NotNull UUID uuid);
 
-    @Override
-    public @NotNull ItemStack getItem(@NotNull Player player) {
-        return type.get(player);
-    }
+    void clearRequestsOfPlayer(@NotNull UUID uuid);
+
 }

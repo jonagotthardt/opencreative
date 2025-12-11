@@ -22,6 +22,11 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.MultiAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.Condition;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
 import ua.mcchickenstudio.opencreative.menus.world.settings.EntitiesBrowserMenu;
@@ -89,7 +94,7 @@ public class WorldCommand extends CommandHandler {
                     Sounds.PLAYER_FAIL.play(player);
                     return;
                 }
-                player.getWorld().setSpawnLocation(player.getLocation());
+                planet.getTerritory().setSpawnLocation(player.getLocation());
                 player.showTitle(Title.title(
                         toComponent(getLocaleMessage("settings.world-spawn.title")), toComponent(getLocaleMessage("settings.world-spawn.subtitle")),
                         Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(2), Duration.ofMillis(130))
@@ -109,7 +114,7 @@ public class WorldCommand extends CommandHandler {
                     player.sendMessage(getLocaleMessage("only-alive"));
                     return;
                 }
-                player.teleport(player.getWorld().getSpawnLocation());
+                player.teleport(planet.getTerritory().getSpawnLocation());
                 Sounds.WORLD_SETTINGS_SPAWN_TELEPORT.play(player);
             }
             case "close" -> {

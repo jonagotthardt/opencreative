@@ -103,7 +103,7 @@ public class Arguments {
                 double x,y,z;
                 float yaw,pitch;
                 if (listSection == null) {
-                    return planet.getTerritory().getWorld().getSpawnLocation();
+                    return planet.getTerritory().getSpawnLocation();
                 }
                 x = listSection.getDouble("x");
                 y = listSection.getDouble("y");

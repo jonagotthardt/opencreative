@@ -28,6 +28,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+
 public final class SpawnExperienceOrbAction extends WorldAction {
     public SpawnExperienceOrbAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
@@ -35,6 +37,10 @@ public final class SpawnExperienceOrbAction extends WorldAction {
 
     @Override
     protected void execute(Entity entity) {
+        if (getWorld().getEntities().size() >= getPlanet().getLimits().getEntitiesLimit()) {
+            sendCodingDebugLog(getPlanet(), "Too many entities: spawn entity action is cancelled.");
+            return;
+        }
         int amount = getArguments().getValue("amount",1,this);
         for (Location location : getArguments().getLocationList("locations",this)) {
             Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location,EntityType.EXPERIENCE_ORB);

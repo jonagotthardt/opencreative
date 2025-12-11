@@ -183,7 +183,7 @@ public class CodingBlockParser {
                     }
                     /*
                      * Checking condition's piston. If it is beginning piston,
-                     * we already added condition in conditions list..
+                     * we already added condition in conditions list.
                      */
                     if (world.getBlockAt(x+1,y,z).getType() == Material.PISTON) {
                         if (!multiActions.isEmpty()) {

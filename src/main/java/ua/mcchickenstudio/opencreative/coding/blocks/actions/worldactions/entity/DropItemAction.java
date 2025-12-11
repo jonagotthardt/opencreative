@@ -28,6 +28,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+
 public final class DropItemAction extends WorldAction {
     public DropItemAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
@@ -35,6 +37,10 @@ public final class DropItemAction extends WorldAction {
 
     @Override
     protected void execute(Entity entity) {
+        if (getWorld().getEntities().size() >= getPlanet().getLimits().getEntitiesLimit()) {
+            sendCodingDebugLog(getPlanet(), "Too many entities: spawn entity action is cancelled.");
+            return;
+        }
         ItemStack item = getArguments().getValue("item",new ItemStack(Material.BREAD,1),this);
         boolean naturally = getArguments().getValue("naturally",true,this);
         for (Location location : getArguments().getLocationList("locations",this)) {

@@ -18,15 +18,20 @@
 
 package ua.mcchickenstudio.opencreative.commands.experiments;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.indev.OfflineWander;
 import ua.mcchickenstudio.opencreative.indev.Wander;
+import ua.mcchickenstudio.opencreative.indev.WanderMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.util.List;
+import java.util.UUID;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
@@ -57,16 +62,17 @@ public final class WandersExperiment extends Experiment {
             player.sendMessage(getLocaleMessage("too-few-args"));
             return;
         }
-        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-        if (planet == null) {
-            player.sendMessage(getLocaleMessage("only-in-world"));
-            return;
-        }
+        Wander wander = OpenCreative.getWander(player);
         switch (args[0].toLowerCase()) {
             case "favorite" -> {
-                Wander wander = OpenCreative.getWander(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+                if (planet == null) {
+                    player.sendMessage(getLocaleMessage("only-in-world"));
+                    return;
+                }
                 if (wander.addFavoriteWorld(planet.getId())) {
-                    wander.getPlayer().sendMessage(":) Favorited " + planet.getId());
+                    wander.getPlayer().sendMessage(getLocaleMessage("world.favorites.added")
+                            .replace("%id%", String.valueOf(planet.getId())));
                 } else {
                     wander.getPlayer().sendMessage("Already in favorites!");
                 }
@@ -80,9 +86,14 @@ public final class WandersExperiment extends Experiment {
                 }
             }
             case "unfavorite" -> {
-                Wander wander = OpenCreative.getWander(player);
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+                if (planet == null) {
+                    player.sendMessage(getLocaleMessage("only-in-world"));
+                    return;
+                }
                 if (wander.removeFavoriteWorld(planet.getId())) {
-                    wander.getPlayer().sendMessage(":) Unfavorited " + planet.getId());
+                    wander.getPlayer().sendMessage(getLocaleMessage("world.favorites.removed")
+                            .replace("%id%", String.valueOf(planet.getId())));
                 } else {
                     wander.getPlayer().sendMessage("Not in favorites!");
                 }
@@ -95,13 +106,62 @@ public final class WandersExperiment extends Experiment {
                     wander.getPlayer().sendMessage(" - " + world);
                 }
             }
+            case "gender" -> {
+                if (args.length == 1) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                OfflineWander.Gender gender = OfflineWander.Gender.getGender(args[1]);
+                if (wander.setGender(gender)) {
+                    sender.sendMessage("Set gender: " + gender.name());
+                } else {
+                    sender.sendMessage("Already with gender " + gender.name());
+                }
+            }
+            case "menu" -> {
+                new WanderMenu(player.getName()).open(player);
+            }
+            case "info" -> {
+                if (args.length == 1) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                Player found = Bukkit.getPlayer(args[1]);
+                if (found == null) {
+                    sender.sendMessage(getLocaleMessage("not-found-player"));
+                    return;
+                }
+                wander = OpenCreative.getWander(found);
+                sender.sendMessage("Wander " + found.getName());
+                sender.sendMessage("   Gender: " + (wander.getGender() == null ? "None" : wander.getGender().name()));
+                sender.sendMessage("   Description: " + (wander.getDescription() == null ? "None" : wander.getDescription()));
+                sender.sendMessage("   Last World: " + (wander.getLastPlayedWorldId() == -1 ? "None" : wander.getLastPlayedWorldId()));
+
+                List<Integer> favorites = wander.getFavoriteWorlds();
+                sender.sendMessage("   Favorite Worlds (" + favorites.size() + "): " +
+                        String.join(", ", favorites.stream().map(Object::toString).toList()));
+
+                List<UUID> friends = wander.getFriends();
+                sender.sendMessage("   Friends (" + friends.size() + "): " +
+                        String.join(", ", friends.stream().map(uuid -> Bukkit.getOfflinePlayer(uuid).getName()).toList()));
+
+                Location lastLocation = wander.getLastLocation();
+                sender.sendMessage("   Last Location: " + (lastLocation == null ? "None" :
+                        lastLocation.getBlockX() + " " + lastLocation.getBlockX() + " " + lastLocation.getBlockZ()));
+
+            }
         }
     }
 
     @Override
     public @Nullable List<String> tabCommand(@NotNull CommandSender sender, @NotNull String[] args) {
         if (args.length == 0) {
-            return List.of("favorite", "unfavorite");
+            return List.of("favorite", "unfavorite", "info", "gender", "menu");
+        }
+        if (args.length == 1) {
+            if (args[0].equalsIgnoreCase("gender")) {
+                return List.of("male", "female", "other");
+            }
         }
         return null;
     }

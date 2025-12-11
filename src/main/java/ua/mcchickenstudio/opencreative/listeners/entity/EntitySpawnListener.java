@@ -26,12 +26,9 @@ import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedEntitiesEvent;
+import ua.mcchickenstudio.opencreative.indev.messages.PlaceholderReplacer;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.World;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -44,8 +41,7 @@ import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.sendMessageOnce;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.*;
 
@@ -102,10 +98,9 @@ public final class EntitySpawnListener implements Listener {
             if (count > limit) {
                 event.setCancelled(true);
                 if (planet.getOnline() < 1) return;
-                TextComponent warning = new TextComponent(getLocaleMessage("world.entity-limit").replace("%count%",String.valueOf(limit)));
-                warning.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(getLocaleMessage("world.entity-limit-hover"))));
-                warning.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/world deletemobs"));
-                sendMessageOnce(planet,warning,3);
+                sendMessageOnce(planet, "world.entity-limit",
+                        new PlaceholderReplacer("count", limit),
+                        "/world deletemobs", 3);
                 new LimitReachedEntitiesEvent(planet).callEvent();
             } else {
                 new ua.mcchickenstudio.opencreative.coding.blocks.events.entity.entities.EntitySpawnEvent(event).callEvent();
@@ -122,10 +117,9 @@ public final class EntitySpawnListener implements Listener {
             if (world.getEntityCount() > limit) {
                 event.setCancelled(true);
                 if (planet.getOnline() < 1) return;
-                TextComponent warning = new TextComponent(getLocaleMessage("world.entity-limit").replace("%count%",String.valueOf(limit)));
-                warning.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(getLocaleMessage("world.entity-limit-hover"))));
-                warning.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/world deletemobs"));
-                sendMessageOnce(planet,warning,3);
+                sendMessageOnce(planet, "world.entity-limit",
+                        new PlaceholderReplacer("count", limit),
+                        "/world deletemobs", 3);
                 new LimitReachedEntitiesEvent(planet).callEvent();
             }
         } else if (isDevPlanet(world)) {

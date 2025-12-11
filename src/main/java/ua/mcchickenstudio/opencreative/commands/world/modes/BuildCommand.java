@@ -30,7 +30,6 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
@@ -103,7 +102,7 @@ public class BuildCommand extends CommandHandler {
                     planet.setMode(Planet.Mode.BUILD);
                     if (isEntityInDevPlanet(player)) {
                         clearPlayer(player);
-                        player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
+                        player.teleport(planet.getTerritory().getSpawnLocation());
                         if (planet.isOwner(sender.getName())) {
                             player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
                         }
@@ -120,7 +119,7 @@ public class BuildCommand extends CommandHandler {
                         toComponent(getLocaleMessage("world.build-mode.title")), toComponent(getLocaleMessage("world.build-mode.subtitle")),
                         Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
-                player.teleport(planet.getTerritory().getWorld().getSpawnLocation());
+                player.teleport(planet.getTerritory().getSpawnLocation());
                 Sounds.WORLD_MODE_BUILD.play(player);
                 if (planet.getWorldPlayers().canBuild(player)) {
                     Player planetOwner = Bukkit.getPlayer(planet.getOwner());

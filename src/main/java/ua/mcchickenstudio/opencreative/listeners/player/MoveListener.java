@@ -56,6 +56,9 @@ public final class MoveListener implements Listener {
             new ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement.PlayerMoveEvent(event.getPlayer(),event).callEvent();
             if (isEntityInDevPlanet(player)) {
                 translateSigns(player,10);
+                if (player.getY() < -20) {
+                    player.teleport(player.getWorld().getSpawnLocation());
+                }
             }
             if (isOutOfBorders(event.getTo())) {
                 if (isOutOfBorders(event.getFrom())) {

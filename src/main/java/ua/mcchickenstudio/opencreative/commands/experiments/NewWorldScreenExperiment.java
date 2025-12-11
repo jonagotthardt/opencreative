@@ -53,11 +53,11 @@ public final class NewWorldScreenExperiment extends Experiment {
         }
         String typeString = args[0].toLowerCase();
         switch (typeString) {
-            case "normal", "nether", "the_end", "percents", "bed", "darkness" -> {
+            case "normal", "percents", "darkness" -> {
                 type = ScreenType.valueOf(typeString.toUpperCase());
                 sender.sendMessage(":) Changed to: " + typeString);
             }
-            default -> sender.sendMessage("Unknown screen. Available: normal, nether, the_end, percents, bed, darkness");
+            default -> sender.sendMessage("Unknown screen. Available: normal, percents, darkness");
         }
     }
 
@@ -68,7 +68,7 @@ public final class NewWorldScreenExperiment extends Experiment {
 
     @Override
     public @NotNull List<String> tabCommand(@NotNull CommandSender sender, @NotNull String[] args) {
-        return List.of("normal", "nether", "the_end", "percents", "bed", "darkness");
+        return List.of("normal", "percents", "darkness");
     }
 
     public static ScreenType getType() {
@@ -77,10 +77,7 @@ public final class NewWorldScreenExperiment extends Experiment {
 
     public enum ScreenType {
         NORMAL,
-        NETHER,
-        THE_END,
         PERCENTS,
-        BED,
         DARKNESS,
     }
 

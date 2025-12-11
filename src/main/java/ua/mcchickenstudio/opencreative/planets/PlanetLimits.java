@@ -35,11 +35,13 @@ public class PlanetLimits {
 
     private int lastModifiedBlocksAmount;
     private int lastRedstoneOperationsAmount;
+    private int lastModifiedTargetsAmount;
     private int lastListElementsChangesAmount;
 
     private final LinkedList<Long> lastWebRequests = new LinkedList<>();
     private final LinkedList<Long> lastLightningsStrikes = new LinkedList<>();
     private final LinkedList<Long> lastBeesSpawns = new LinkedList<>();
+    private final LinkedList<Long> lastCodingErrors = new LinkedList<>();
 
     private final Map<UUID, Deque<Long>> lastPlayerMenuOpens = new HashMap<>();
 
@@ -106,6 +108,14 @@ public class PlanetLimits {
     }
 
     /**
+     * Returns maximum targets changes per 1 second amount in the planet.
+     * @return limit of changed targets.
+     */
+    public int getTargetsChangesLimit() {
+        return planet.getGroup().getLimit(LimitType.TARGETS_CHANGES).calculateLimit(planet.getPlayers().size());
+    }
+
+    /**
      * Returns maximum repeats activations per 1 second amount in the planet.
      * @return limit of repeats.
      */
@@ -119,6 +129,14 @@ public class PlanetLimits {
      */
     public int getCodeOperationsLimit() {
         return planet.getGroup().getLimit(LimitType.CODE_OPERATIONS).calculateLimit(planet.getPlayers().size());
+    }
+
+    /**
+     * Returns maximum coding errors amount in the planet.
+     * @return limit of errors amount.
+     */
+    public int getCodingErrorsLimit() {
+        return planet.getGroup().getLimit(LimitType.CODING_ERRORS).calculateLimit(planet.getPlayers().size());
     }
 
     /**
@@ -197,6 +215,14 @@ public class PlanetLimits {
     }
 
     /**
+     * Sets last modified targets amount.
+     * @param lastModifiedTargetsAmount number of changed targets.
+     */
+    public void setLastModifiedTargetsAmount(int lastModifiedTargetsAmount) {
+        this.lastModifiedTargetsAmount = lastModifiedTargetsAmount;
+    }
+
+    /**
      * Sets last redstone operations amount.
      * @param lastRedstoneOperationsAmount number of redstone operations.
      */
@@ -210,6 +236,22 @@ public class PlanetLimits {
      */
     public int getLastModifiedBlocksAmount() {
         return lastModifiedBlocksAmount;
+    }
+
+    /**
+     * Returns last coding errors amount from last 3 seconds.
+     * @return amount of coding errors in last 3 seconds.
+     */
+    public int getLastCodingErrorsAmount() {
+        return lastCodingErrors.size();
+    }
+
+    /**
+     * Returns last modified targets amount.
+     * @return number of changed targets.
+     */
+    public int getLastModifiedTargetsAmount() {
+        return lastModifiedTargetsAmount;
     }
 
     /**
@@ -310,6 +352,28 @@ public class PlanetLimits {
     }
 
     /**
+     * Checks whether coding encountered too many errors in the last 3 seconds.
+     * @return true - must stop the code, false - few or no errors.
+     */
+    public boolean isTooManyCodingErrors() {
+
+        long now = System.currentTimeMillis();
+
+        // Removes time from list, if it's more than 3 seconds.
+        while (!lastCodingErrors.isEmpty() && (now - lastCodingErrors.peek()) > 3000) {
+            lastCodingErrors.poll();
+        }
+
+        if (lastCodingErrors.size() >= getCodingErrorsLimit()) {
+            return true;
+        } else {
+            lastCodingErrors.add(now);
+            return false;
+        }
+
+    }
+
+    /**
      * Checks if world can open custom menu for player.
      * Used to prevent unavailability of leaving game.
      * Checks if the amount of player's opened menus
@@ -362,6 +426,7 @@ public class PlanetLimits {
         lastBeesSpawns.clear();
         lastPlayerMenuOpens.clear();
         lastWebRequests.clear();
+        lastCodingErrors.clear();
     }
 
 }

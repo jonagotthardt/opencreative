@@ -41,7 +41,7 @@ public final class SimplexNoiseAction extends VariableAction {
         if (link == null) return;
 
         long seed = getArguments().getValue("seed",1L,this);
-        Location location = getArguments().getValue("location",getWorld().getSpawnLocation(),this);
+        Location location = getArguments().getValue("location",getPlanet().getTerritory().getSpawnLocation(),this);
         double lacunarity = getArguments().getValue("lacunarity",1.0d,this);
         int octaves = getArguments().getValue("octaves",7,this);
         double frequency = getArguments().getValue("frequency",0.5d,this);

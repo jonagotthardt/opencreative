@@ -26,6 +26,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+
 public final class StrikeLightningAction extends WorldAction {
     public StrikeLightningAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
@@ -34,6 +36,10 @@ public final class StrikeLightningAction extends WorldAction {
     @Override
     protected void execute(Entity entity) {
         if (!getPlanet().getLimits().canLightningStrike()) {
+            return;
+        }
+        if (getWorld().getEntities().size() >= getPlanet().getLimits().getEntitiesLimit()) {
+            sendCodingDebugLog(getPlanet(), "Too many entities: spawn entity action is cancelled.");
             return;
         }
         boolean damage = getArguments().getValue("damage",true,this);

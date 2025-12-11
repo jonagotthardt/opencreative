@@ -19,16 +19,17 @@
 package ua.mcchickenstudio.opencreative.utils;
 
 import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.modules.Module;
+import ua.mcchickenstudio.opencreative.indev.messages.PlaceholderReplacer;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 import ua.mcchickenstudio.opencreative.utils.hooks.PAPIUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -55,6 +56,8 @@ public final class MessageUtils {
     
     private static File localizationFile;
     private static FileConfiguration localizationConfig;
+
+    private static final Map<Integer, Long> recentPlanetMessages = new HashMap<>();
 
     /**
      * Converts text into component by deserializing it with
@@ -444,18 +447,19 @@ public final class MessageUtils {
      * @param localizationID id of message.
      * @return translated book pages, or "Not found pages...", if message was not found.
      */
-    public static @NotNull List<String> getBookPages(@NotNull String localizationID) {
+    @SuppressWarnings("unused")
+    public static @NotNull List<Component> getBookPages(@NotNull Player player, @NotNull String localizationID) {
         List<String> foundPages = getLocalization().getStringList(localizationID);
-        List<String> pages = new ArrayList<>();
+        List<Component> pages = new ArrayList<>();
         if (foundPages.isEmpty()) {
             if (OpenCreative.getSettings().isConsoleNotFoundMessage()) ErrorUtils.sendWarningErrorMessage("Not found book pages " + localizationID);
-            pages.add("§4Not found pages: §0" + localizationID + " \nPlease report server administration, they need to fill this line in locales" + File.separator + getLanguage() + ".yml");
+            pages.add(Component.text("§4Not found pages: §0" + localizationID + " \nPlease report server administration, they need to fill this line in locales" + File.separator + getLanguage() + ".yml"));
         } else {
             for (String page : foundPages) {
-                pages.add(ChatColor.translateAlternateColorCodes('&', page
-                        .replace("%prefix%",getPrefix())
-                        .replace("%cc-prefix%",getCreativeChatPrefix())
-                        .replace("%version%",OpenCreative.getVersion())
+                pages.add(MiniMessage.miniMessage().deserialize(fromLegacyToMiniMessageBook(page)
+                    .replace("%prefix%",getPrefix())
+                    .replace("%cc-prefix%",getCreativeChatPrefix())
+                    .replace("%version%",OpenCreative.getVersion())
                 ));
             }
         }
@@ -525,52 +529,40 @@ public final class MessageUtils {
 
     }
 
-
-    static final Map<Planet,Long> messagesOnce = new HashMap<>();
     /**
-     Sends message to planet players once. If cool down is not ended, it will not send message.
-     **/
-    public static void sendMessageOnce(Planet planet, String message, int onceInSeconds) {
+     * Sends message by path for every player in planet, if it was not sent recently.
+     * @param planet planet to send message.
+     * @param path path of message.
+     * @param placeholder placeholder for message.
+     * @param clickCommand command for click.
+     * @param onceInSeconds cooldown of messages.
+     */
+    public static void sendMessageOnce(@NotNull Planet planet, @NotNull String path,
+                                       @NotNull PlaceholderReplacer placeholder, @Nullable String clickCommand,
+                                       int onceInSeconds) {
 
         long currentTime = System.currentTimeMillis();
 
-        if (messagesOnce.containsKey(planet)) {
-            long timeInMap = messagesOnce.get(planet);
+        if (recentPlanetMessages.get(planet) != null) {
+            long timeInMap = recentPlanetMessages.get(planet);
             long elapsedTime = currentTime-timeInMap;
-            long elapsedSeconds = elapsedTime/1000;
+            long elapsedSeconds = elapsedTime / 1000;
             if (elapsedSeconds < onceInSeconds) return;
         }
 
         for (Player player : planet.getPlayers()) {
-            player.sendMessage(message);
+            Component text = getPlayerLocaleComponent(path, player).replaceText(placeholder.get());
+            if (clickCommand != null) {
+                text = text.clickEvent(ClickEvent.runCommand(clickCommand));
+            }
+            player.sendMessage(text);
         }
-        messagesOnce.put(planet,currentTime);
-
-    }
-
-    /**
-     Sends TextComponent message to planet players once. If cool down is not ended, it will not send message.
-     **/
-    public static void sendMessageOnce(Planet planet, TextComponent message, int onceInSeconds) {
-
-        long currentTime = System.currentTimeMillis();
-
-        if (messagesOnce.get(planet) != null) {
-            long timeInMap = messagesOnce.get(planet);
-            long elapsedTime = currentTime-timeInMap;
-            long elapsedSeconds = elapsedTime/1000;
-            if (elapsedSeconds < onceInSeconds) return;
-        }
-
-        for (Player player : planet.getPlayers()) {
-            player.sendMessage(message);
-        }
-        messagesOnce.put(planet,currentTime);
+        recentPlanetMessages.put(planet.getId(), currentTime);
 
     }
 
     public static void clearOnceMessages(Planet planet) {
-        messagesOnce.remove(planet);
+        recentPlanetMessages.remove(planet.getId());
     }
 
     /**
@@ -840,6 +832,94 @@ public final class MessageUtils {
                     // like legacy behaviour
                     result.append("<reset>");
                     hadStyle = false;
+                }
+            }
+            result.append(current);
+        }
+        return result.toString();
+    }
+
+    /**
+     * Converts legacy text with § or & to book's MiniMessage format,
+     * so this text can be deserialized to MiniMessage and used
+     * in written books.
+     * <pre>
+     * {@code
+     * fromLegacyToMiniMessage("&4Hello"); // "<red>Hello"
+     * fromLegacyToMiniMessage("&nHello"); // "<underlined>Hello"
+     * fromLegacyToMiniMessage("&rHello<red>"); // "<reset>Hello<red>"
+     * }
+     * </pre>
+     * @param input text to convert.
+     * @return text, that can be used as MiniMessage in books.
+     */
+    public static @NotNull String fromLegacyToMiniMessageBook(@NotNull String input) {
+        if (input.contains("§")) {
+            input = input.replace('§','&');
+        }
+        if (!input.contains("&")) return input;
+        StringBuilder result = new StringBuilder();
+        boolean hadStyle = false;
+        for (int charIndex = 0; charIndex < input.length(); charIndex++) {
+            // for characters in text
+            char current = input.charAt(charIndex);
+            if (current == '&' && charIndex + 7 < input.length() && input.charAt(charIndex + 1) == '#') {
+                // for legacy gradient format &#ffffff
+                String hex = input.substring(charIndex + 2, charIndex + 8); // "ffffff"
+                if (hex.matches("[0-9A-Fa-f]{6}")) {
+                    result.append("<#").append(hex).append(">");
+                    charIndex += 7;
+                    if (hadStyle) result.append("<reset><black>");
+                    continue;
+                }
+            }
+            if (current == '&' && charIndex + 13 < input.length() && input.charAt(charIndex + 1) == 'x') {
+                // for legacy gradient format &x&f&f&f&f&f&f
+                StringBuilder gradientColor = new StringBuilder(); // ffffff
+                boolean isValidFormat = true;
+                for (int colorIndex = 0; colorIndex < 6; colorIndex++) {
+                    //
+                    // &x&a&b&c&d&e&j
+                    // charIndex = 0 -> current = &
+                    //   &f
+                    //   23
+                    // j = 0 a, 1 b, 2 c, 3 d, 4 e, 5 j
+                    //
+                    int ampersandIndex = charIndex + 2 + colorIndex * 2; // f
+                    if (input.charAt(ampersandIndex) == '&' && ampersandIndex + 1 < input.length()) {
+                        gradientColor.append(input.charAt(ampersandIndex + 1));
+                    } else {
+                        isValidFormat = false;
+                        break;
+                    }
+                }
+                if (isValidFormat) {
+                    result.append("<#").append(gradientColor).append(">");
+                    charIndex += 13;
+                    if (hadStyle) result.append("<reset><black>");
+                    continue;
+                }
+            }
+            if (current == '&' && charIndex + 1 < input.length()) {
+                // for classic legacy colors and styles
+                char code = Character.toLowerCase(input.charAt(charIndex + 1));
+                String replacement = LEGACY_TO_MINI.get(code);
+                boolean isDecoration = code == 'k' || code == 'n' || code == 'm' || code == 'l' || code == 'o';
+                if (replacement != null) {
+                    result.append(replacement);
+                    if (code == 'r') {
+                        result.append("<black>");
+                    }
+                    if (hadStyle && !isDecoration) {
+                        // If it's color, then reset decorations,
+                        // like legacy behaviour
+                        result.append("<reset><black>");
+                        hadStyle = false;
+                    } else if (isDecoration) {
+                        hadStyle = true;
+                    }
+                    charIndex++;
+                    continue;
                 }
             }
             result.append(current);

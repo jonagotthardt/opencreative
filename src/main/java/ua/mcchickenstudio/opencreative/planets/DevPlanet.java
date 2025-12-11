@@ -43,6 +43,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalError
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateSigns;
 
 /**
  * <h1>DevPlanet</h1>
@@ -193,16 +194,9 @@ public class DevPlanet {
      * Translates coding blocks for player.
      * @param player player to translate coding blocks.
      */
-    public void translateCodingBlocks(Player player) {
+    public void translateCodingBlocks(@NotNull Player player) {
         if (!isLoaded()) return;
-        for (byte z = 4; z < 96; z = (byte) (z + 4)) {
-            Block executorBlock = getWorld().getBlockAt(4, 1, z);
-            PlayerUtils.translateBlockSign(executorBlock.getRelative(BlockFace.SOUTH),player);
-            for (byte x = 6; x < 96; x = (byte) (x + 2)) {
-                Block actionBlock = getWorld().getBlockAt(x,1,z);
-                PlayerUtils.translateBlockSign(actionBlock.getRelative(BlockFace.SOUTH),player);
-            }
-        }
+        translateSigns(player, 50);
     }
 
     public Set<Material> getAllCodingBlocksForPlacing() {

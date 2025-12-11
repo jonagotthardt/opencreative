@@ -137,7 +137,29 @@ public final class WorldUtils {
      * @return true - should be a planet, false - not a planet.
      */
     public static boolean isPlanet(@NotNull World world) {
-        return world.getName().contains("planets/planet");
+        return isPlanet(world.getName());
+    }
+
+    /**
+     * Checks if the world is a planet by
+     * checking whether it's name contains
+     * a typical planets folder path.
+     * @param worldName name of world to check.
+     * @return true - should be a planet, false - not a planet.
+     */
+    public static boolean isPlanet(@NotNull String worldName) {
+        return worldName.contains("planets/planet");
+    }
+
+    /**
+     * Checks if the world is a dev planet
+     * by checking whether it's name ends
+     * with "dev" word.
+     * @param worldName world to check.
+     * @return true - should be a dev planet, false - not a dev planet.
+     */
+    public static boolean isDevPlanet(@NotNull String worldName) {
+        return worldName.contains("planets/planet") && worldName.endsWith("dev");
     }
 
     /**
@@ -167,8 +189,8 @@ public final class WorldUtils {
      * @param world world to check.
      * @return true - should be a dev planet, false - not a dev planet.
      */
-    public static boolean isDevPlanet(World world) {
-        return world.getName().endsWith("dev");
+    public static boolean isDevPlanet(@NotNull World world) {
+        return isDevPlanet(world.getName());
     }
 
     /**

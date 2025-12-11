@@ -19,6 +19,8 @@
 package ua.mcchickenstudio.opencreative.indev;
 
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +38,7 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 public final class Wander extends OfflineWander implements Audience {
 
     private final Player player;
+    private boolean connectingToPlanet;
 
     public Wander(@NotNull Player player) {
         super(player);
@@ -54,5 +57,36 @@ public final class Wander extends OfflineWander implements Audience {
         Player player = Bukkit.getPlayer(uuid);
         if (player == null) return null;
         return OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+    }
+
+    @Override
+    public void sendMessage(@NotNull Component message) {
+        player.sendMessage(message);
+    }
+
+    @Override
+    public void sendActionBar(@NotNull Component message) {
+        player.sendActionBar(message);
+    }
+
+    @Override
+    public void showTitle(@NotNull Title title) {
+        player.showTitle(title);
+    }
+
+    /**
+     * Sets whether wander is currently connecting to planet.
+     * @param connectingToPlanet whether wander is connecting to planet or not.
+     */
+    public void setConnectingToPlanet(boolean connectingToPlanet) {
+        this.connectingToPlanet = connectingToPlanet;
+    }
+
+    /**
+     * Checks whether wander is trying to connect to some planet.
+     * @return true - is connecting, false - not connecting.
+     */
+    public boolean isConnectingToPlanet() {
+        return connectingToPlanet;
     }
 }

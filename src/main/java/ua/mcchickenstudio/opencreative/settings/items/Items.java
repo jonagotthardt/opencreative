@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.settings.items;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +38,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getBookPages;
  * by doing something: joining the lobby, connecting to world
  * or entering to the coding world.
  * <p>
- * To get item, use {@link #get()} method.
+ * To get item, use {@link #get(Player)} ()} method.
  */
 public enum Items {
 
@@ -162,11 +163,12 @@ public enum Items {
      * Creates and returns item, that can be given to player.
      * @return item to give to player.
      */
-    public ItemStack get() {
+    @SuppressWarnings({"unused", "ResultOfMethodCallIgnored"})
+    public ItemStack get(@NotNull Player player) {
         String path = "items." + group + "." + name().toLowerCase().replace("_","-");
         ItemStack item = createItem(material, 1, path);
         if (item.getItemMeta() instanceof BookMeta bookMeta) {
-            bookMeta.setPages(getBookPages(path + ".pages"));
+            bookMeta.pages(getBookPages(player, path + ".pages"));
             item.setItemMeta(bookMeta);
         }
         if (persistentData != null) {
@@ -181,6 +183,19 @@ public enum Items {
      * @return items type, or null - if not exists.
      */
     public static @Nullable Items getById(@NotNull String id) {
+        id = id.toUpperCase().replace("-", "_");
+        switch (id) {
+            // Aliases
+            case "OWN_WORLDS", "OWN_GAMES", "OWN_WORLD", "MY_WORLDS" -> {
+                return OWN;
+            }
+            case "WORLDS", "ALL_WORLDS", "ALL_GAMES" -> {
+                return GAMES;
+            }
+            case "SETTINGS" -> {
+                return WORLD_SETTINGS;
+            }
+        }
         for (Items type : Items.values()) {
             if (type.name().equals(id)) {
                 return type;

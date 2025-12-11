@@ -19,12 +19,12 @@
 package ua.mcchickenstudio.opencreative.settings.items;
 
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -121,6 +121,38 @@ public enum ItemsGroup {
     }
 
     /**
+     * Returns list of items, created for player to give manually.
+     * Empty items are not included.
+     * @param player player to get items.
+     * @return list of items.
+     */
+    public @NotNull List<ItemStack> getItems(@NotNull Player player) {
+        List<ItemStack> list = new ArrayList<>();
+        SettingsItemsGroup group = OpenCreative.getSettings().getItemsGroups().get(this);
+        if (group == null) {
+            for (ItemPair pair : pairs) {
+                ItemStack item = pair.item().get(player);
+                if (this == LOBBY) {
+                    setPersistentData(item, getCodingDoNotDropMeKey(), "1");
+                }
+                if (item.isEmpty()) continue;
+                list.add(item);
+            }
+            return list;
+        }
+        Map<Integer, SettingsItem> items = group.getItems();
+        for (int slot : items.keySet()) {
+            ItemStack item = items.get(slot).getItem(player);
+            if (this == LOBBY) {
+                setPersistentData(item, getCodingDoNotDropMeKey(), "1");
+            }
+            if (item.isEmpty()) continue;
+            list.add(item);
+        }
+        return list;
+    }
+
+    /**
      * Sets items in player inventory.
      * <p>
      * Recommended to clear player's inventory before doing this.
@@ -130,7 +162,7 @@ public enum ItemsGroup {
         SettingsItemsGroup group = OpenCreative.getSettings().getItemsGroups().get(this);
         if (group == null) {
             for (ItemPair pair : pairs) {
-                ItemStack item = pair.item().get();
+                ItemStack item = pair.item().get(player);
                 if (this == LOBBY) {
                     setPersistentData(item, getCodingDoNotDropMeKey(), "1");
                 }
@@ -158,7 +190,7 @@ public enum ItemsGroup {
         SettingsItemsGroup group = OpenCreative.getSettings().getItemsGroups().get(this);
         if (group == null) {
             for (ItemPair pair : pairs) {
-                ItemStack item = pair.item().get();
+                ItemStack item = pair.item().get(player);
                 if (!player.getInventory().contains(item, 1)) player.getInventory().setItem(pair.slot()-1, item);
             }
             return;
@@ -178,7 +210,7 @@ public enum ItemsGroup {
         SettingsItemsGroup group = OpenCreative.getSettings().getItemsGroups().get(this);
         if (group == null) {
             for (ItemPair pair : pairs) {
-                ItemStack item = pair.item().get();
+                ItemStack item = pair.item().get(player);
                 player.getInventory().removeItemAnySlot(item);
             }
             return;
@@ -201,7 +233,7 @@ public enum ItemsGroup {
         if (group == null) {
             for (ItemPair pair : pairs) {
                 if (pair.slot() == slot) {
-                    player.getInventory().addItem(pair.item().get());
+                    player.getInventory().addItem(pair.item().get(player));
                     return true;
                 }
             }

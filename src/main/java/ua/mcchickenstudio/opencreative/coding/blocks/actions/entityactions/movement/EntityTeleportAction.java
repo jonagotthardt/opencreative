@@ -34,7 +34,7 @@ public final class EntityTeleportAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        Location location = getArguments().getValue("location",getWorld().getSpawnLocation(),this);
+        Location location = getArguments().getValue("location",getPlanet().getTerritory().getSpawnLocation(),this);
         String consider = getArguments().getValue("consider","all",this);
         if (consider.equals("only-coordinates")) {
             location.setYaw(entity.getYaw());

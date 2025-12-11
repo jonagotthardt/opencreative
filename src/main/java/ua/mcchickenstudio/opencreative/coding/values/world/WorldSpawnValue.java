@@ -37,7 +37,7 @@ public final class WorldSpawnValue extends LocationEventValue {
 
     @Override
     public @NotNull Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
-        return action.getExecutor().getPlanet().getTerritory().getWorld().getSpawnLocation();
+        return action.getExecutor().getPlanet().getTerritory().getSpawnLocation();
     }
 
     @Override

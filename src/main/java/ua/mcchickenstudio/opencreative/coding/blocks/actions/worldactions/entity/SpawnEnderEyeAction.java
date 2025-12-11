@@ -29,6 +29,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+
 public final class SpawnEnderEyeAction extends WorldAction {
 
     public SpawnEnderEyeAction(Executor executor, Target target, int x, Arguments args) {
@@ -38,15 +40,19 @@ public final class SpawnEnderEyeAction extends WorldAction {
     @Override
     protected void execute(Entity entity) {
 
+        if (getWorld().getEntities().size() >= getPlanet().getLimits().getEntitiesLimit()) {
+            sendCodingDebugLog(getPlanet(), "Too many entities: spawn entity action is cancelled.");
+            return;
+        }
+
         Component customName = getArguments().getValue("name",Component.text(""),this);
 
         String dropType  = getArguments().getValue("drop","random",this);
         int despawnTimer = getArguments().getValue("despawn-time", 80, this);
-        Location targetLocation = getArguments().getValue("target",getPlanet().getTerritory().getWorld().getSpawnLocation(),this);
+        Location targetLocation = getArguments().getValue("target",getPlanet().getTerritory().getSpawnLocation(),this);
 
         for (Location location : getArguments().getLocationList("locations",this)) {
-            Entity spawnedEntity = getPlanet().getTerritory()
-                    .getWorld().spawnEntity(location, EntityType.EYE_OF_ENDER);
+            Entity spawnedEntity = getWorld().spawnEntity(location, EntityType.EYE_OF_ENDER);
 
             if (spawnedEntity instanceof EnderSignal eye) {
                 if (getArguments().pathExists("name")) {

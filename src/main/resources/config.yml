@@ -12,9 +12,10 @@
 # Commands:
 #
 #  /spawn - Teleports to spawn world.
-#  /locate [Player] - Displays world info, where player currently plays.
+#  /locate [Player] - Displays world info, where specified player currently plays.
 #  /join [ID] - Connects player to world with specified ID.
-#  /games - Opens worlds browser
+#  /jointo [Player] - Connects player to the world, where specified player currently plays.
+#  /games - Opens worlds browser.
 #  /cc    - Sends message to creative (global) chat for all players.
 #    /cc off - Turns off creative chat for player.
 #    /cc on  - Turns on creative chat for player.
@@ -28,7 +29,7 @@
 #    /world unban [Player] - Unbans player in world.
 #    /world whitelist [Player] - Allows player to visit world, if it's closed.
 #    /world unwhitelist [Player] - Removes player from whitelist.
-#    /world size - Displays size of world folder.       (opencreative.world.size)
+#    /world size - Displays size of world folder.                   (opencreative.world.size)
 #    /world platformer [ID] - Changes coding platforms generator.   (opencreative.world.set-platformer)
 #
 #  /ad - Advertises world in chat for all players.
@@ -86,12 +87,16 @@
 #              items set [Kit] [Slot] [Type] - Sets item by slot in kit to system item.     (opencreative.items.set)
 #              items reset [Kit] - Resets items kit to default.                             (opencreative.items.reset)
 #    /creative item [Type] - Gives system item.                                             (opencreative.items.get)
+#    /creative groups info [group] - Prints information about player group.                 (opencreative.groups.info)
+#              groups edit [group] [limit/modifier] [type] [value] - Edits group's limits.  (opencreative.groups.edit)
+#              groups remove [group] - Deletes group.                                       (opencreative.groups.remove)
 #    /creative sounds [theme] - Sets current sounds theme.                                  (opencreative.sounds.theme)
 #    /creative sound [sound] - Plays specified sound.                                       (opencreative.sounds.play)
 #    /creative template [folder] - Creates a new world from Minecraft                       (opencreative.template)
 #                                  save in plugins/OpenCreative/templates
 #    /creative update - Check if new version is available                                   (opencreative.updates.check)
 #    /creative fireworks [times] [delay in seconds] - Summons fireworks for all players.    (opencreative.fireworks)
+#    /creative spy [on/off] - Enables or disables seeing messages from other worlds.        (opencreative.spy)
 #    /creative experiments list - Shows a list of all experimental not stable features      (opencreative.experiments.list)
 #    /creative experiments enable [id] - Enables an experiment                              (opencreative.experiments.enable)
 #    /creative experiments disable [id] - Disables an experiment                            (opencreative.experiments.disable)
@@ -177,6 +182,7 @@ messages:
   cc-prefix: "&6 Creative Chat &8| &7" # Creative Chat is global chat, accessed by ! in the beginning of message, or with /cc.
   cc-chat: "%cc-prefix%&7%player%&7: %message%" # You can use PAPI placeholders and MiniMessage here
   world-chat: "&7 %player% &8» &f%message%" # and here.
+  world-chat-spy: "&8 (%world%) &7%player% &8» &f%message%" # To see messages from other worlds, use /oc spy enable.
 
   notify-no-players-around: true # Will send notification to player, when he texts in local chat in world without other players
 
@@ -349,12 +355,14 @@ groups:
         bossbars-amount: 10 # limit for amount of all bossbars
         coding-platforms: 4 # limit for coding platforms
         changing-list-elements: 50 # limit of changing elements in lists and maps per second
+        changing-targets: 200 # limit of changing targets (setting, adding, removing) with Selection Action
         builders-amount: 10 # limit of added builders
         developers-amount: 10 # limit of added developers
         blacklisted-amount: 10 # limit of banned players
         whitelisted-amount: 10 # limit of whitelisted players
         physical-objects: 140 # limit of special physical objects (it's not sand, gravels; they can be spawned with code)
         selected-lines-amount: 3 # limit of selected lines with manipulator
+        errors-amount: 10 # limit for amount of serious errors per 3 seconds for preventing crashes
         script-size: 10 # maximum size of script file in megabytes
       per-player-limit-modifiers:
         #
@@ -369,6 +377,7 @@ groups:
         scoreboards-amount: 3
         repeats-amount: 10
         changing-list-elements: 10
+        changing-targets: 100
         bossbars-amount: 3
         physical-objects: 5
       build-permissions: # Permissions will be given when player types /build command
@@ -419,12 +428,14 @@ groups:
         coding-platforms: 4
         repeats-amount: 100
         changing-list-elements: 50
+        changing-targets: 200
         builders-amount: 10
         developers-amount: 10
         blacklisted-amount: 10
         whitelisted-amount: 10
         physical-objects: 140
         selected-lines-amount: 3
+        errors-amount: 10
         script-size: 10
       per-player-limit-modifiers:
         executor-calls: 30
@@ -433,6 +444,7 @@ groups:
         redstone-changes: 20
         repeats-amount: 10
         changing-list-elements: 10
+        changing-targets: 100
         variables-amount: 50
         scoreboards-amount: 10
         bossbars-amount: 10

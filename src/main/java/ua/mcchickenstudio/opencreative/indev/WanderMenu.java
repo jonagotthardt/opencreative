@@ -58,6 +58,7 @@ public class WanderMenu extends AbstractMenu {
             skullMeta.setPlayerProfile(profile);
             item.setItemMeta(skullMeta);
         }
+
         return item;
     }
 

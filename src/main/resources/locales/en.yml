@@ -266,6 +266,11 @@ creative:
   debug:
     enabled: "%prefix%&fDebug mode is &6enabled&f, some experimental features will be able and console will get additional logs."
     disabled: "%prefix%&fDebug mode is &6disabled&f, goodbye experiments!"
+  spy:
+    enabled: "%prefix%&fYou can &6now see&f messages from players in other worlds. Get ready for having too many messages!"
+    already-enabled: "%prefix%&cYou are already spying on chats from other worlds."
+    disabled: "%prefix%&fYou have &6disabled&f seeing messages from players in other worlds."
+    already-disabled: "%prefix%&cYou are already not spying on chats from other worlds."
   sounds:
     set: "%prefix%&fChanged sound theme to &6%theme%&f, have a good listening!"
     not-found: "%prefix%&cNot found this sound theme in configuration O_o"
@@ -325,6 +330,8 @@ coding-error:
   bad-piston: "An extra piston was detected, which needs to be removed. If it’s not extra, select the condition type."
   indexoutofboundsexception: "Values were expected in the chest, but they are either missing or insufficient. Check the items in the chest for this action!"
   operations-limit: "The code line was called multiple times in a row and reached the limit of %limit% calls. It seems there's a line that calls itself repeatedly. Find it and fix it. This line's execution has been stopped."
+  errors-limit: "Coding encountered too many errors in short time, please fix them."
+  targets-changes-limit: "Too many entities (%limit%) was added or removed in targets list with Select Target action. Reduce amount of selection or remove the mobs."
   unknown: "Oops... It seems this is an unknown error, details: "
   unknown-block-detected: "&f\n&6 Error &8| &fWhile saving coding blocks, some were found that were removed in updates. Click their sign and remove unnecessary chest contents (SHIFT+Right-click)."
   unknown-block-coords: " Block %category% &8-&7 %type%: &7(%x%, %y%, %z%)"
@@ -441,6 +448,12 @@ settings:
   module-sharing:
     enabled: "%prefix%Players &6can&f now download your module."
     disabled: "%prefix%You have &6disabled&f players from downloading your module."
+  profile-description:
+    title: "&fEnter in chat"
+    subtitle: "&fnew &6profile description&f."
+    usage: "%prefix%Enter a new &6profile description&f, for example &aCreating beautiful worlds&f.\n&f - The description must not violate the server rules."
+    error: "%prefix%The profile description violates one of the requirements:\n&f- The description must not be shorter than %min% characters or longer than %max%."
+    changed: "%prefix%You have set a new &6profile description&f: %description%"
 deleting-world:
   title: "&cDeleting ◌"
   subtitle: "&fPlease wait a few seconds..."
@@ -452,6 +465,7 @@ world:
     title: "&aConnecting... ⌚"
     subtitle: "&fPlease wait..."
     owner-help: "%prefix%Welcome back to &6your world&f! Use the compass to manage your world, or use the command &6/world&f."
+    busy: "%prefix%&cYou're already connecting to the world, please wait..."
   play-mode:
     name: "&3Play"
     message:
@@ -511,6 +525,8 @@ world:
   favorites:
     added: "%prefix%You marked this world &7%id% &fas &6favorite&f :)"
     removed: "%prefix%You removed world &7%id%&f from favorites.."
+    already-added: "%prefix%&cThis world %id% is already not in the favorites list.."
+    already-removed: "%prefix%&cThis world %id% is already in the favorites list.."
     limit: "%prefix%&cYou reached maximum amount of favorite worlds (%limit%)! To add new favorite worlds remove old ones."
   categories:
     sandbox: "&e&lSANDBOX"

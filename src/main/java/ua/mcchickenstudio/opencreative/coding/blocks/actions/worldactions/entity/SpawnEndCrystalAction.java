@@ -29,6 +29,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+
 public final class SpawnEndCrystalAction extends WorldAction {
 
     public SpawnEndCrystalAction(Executor executor, Target target, int x, Arguments args) {
@@ -38,13 +40,17 @@ public final class SpawnEndCrystalAction extends WorldAction {
     @Override
     protected void execute(Entity entity) {
 
+        if (getWorld().getEntities().size() >= getPlanet().getLimits().getEntitiesLimit()) {
+            sendCodingDebugLog(getPlanet(), "Too many entities: spawn entity action is cancelled.");
+            return;
+        }
+
         Component customName = getArguments().getValue("name",Component.text(""),this);
-        Location beamLocation = getArguments().getValue("beam",getPlanet().getTerritory().getWorld().getSpawnLocation(),this);
+        Location beamLocation = getArguments().getValue("beam",getPlanet().getTerritory().getSpawnLocation(),this);
         boolean bottom = getArguments().getValue("bottom",true,this);
 
         for (Location location : getArguments().getLocationList("locations",this)) {
-            Entity spawnedEntity = getPlanet().getTerritory()
-                    .getWorld().spawnEntity(location, EntityType.END_CRYSTAL);
+            Entity spawnedEntity = getWorld().spawnEntity(location, EntityType.END_CRYSTAL);
 
             if (spawnedEntity instanceof EnderCrystal crystal) {
                 if (getArguments().pathExists("name")) {

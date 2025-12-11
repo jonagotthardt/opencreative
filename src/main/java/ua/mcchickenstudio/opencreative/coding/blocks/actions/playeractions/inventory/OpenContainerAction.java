@@ -41,7 +41,7 @@ public final class OpenContainerAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        Location location = getArguments().getValue("location", getWorld().getSpawnLocation(),this);
+        Location location = getArguments().getValue("location", getPlanet().getTerritory().getSpawnLocation(),this);
         boolean save = getArguments().getValue("save", true,this);
 
         Block block = location.getBlock();

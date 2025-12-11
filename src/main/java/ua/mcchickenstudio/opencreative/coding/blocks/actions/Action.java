@@ -238,9 +238,14 @@ public abstract class Action {
             }
             case SELECTED -> entities.addAll(getHandler().getSelectedTargets());
             case ALL_ENTITIES -> {
+                int amount = 0;
                 for (Entity entity : getWorld().getEntities()) {
+                    if (amount > getPlanet().getLimits().getEntitiesLimit()) {
+                        break;
+                    }
                     if (!(entity instanceof Player)) {
                         entities.add(entity);
+                        amount++;
                     }
                 }
             }
@@ -260,6 +265,10 @@ public abstract class Action {
         }
         entities.removeIf(entity -> entity instanceof Player player && ChangedWorld.isPlayerWithLocation(player));
         entities.removeIf(entity -> !entity.getWorld().equals(getPlanet().getWorld()));
+        int selectionLimit = getPlanet().getLimits().getEntitiesLimit() + getPlanet().getPlayers().size(); // adding players count if entities limit is set to 0
+        if (entities.size() > selectionLimit) {
+            entities = entities.subList(0, selectionLimit);
+        }
         return entities;
     }
 

@@ -56,7 +56,7 @@ public final class DeathListener implements Listener {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet != null) {
             event.deathMessage(null);
-            deathLocations.put(player, planet.getTerritory().getWorld().getSpawnLocation());
+            deathLocations.put(player, planet.getTerritory().getSpawnLocation());
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.DEATH_MESSAGES) == 1) {
                 for (Player p : planet.getPlayers()) {
                     p.sendMessage("§7 " + player.getName() + "§f " + translateDeathMessage(player));

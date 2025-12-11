@@ -149,6 +149,21 @@ public class PlanetScoreboards {
     }
 
     /**
+     * Checks whether player sees any active scoreboard from this planet.
+     * @param player player to check.
+     * @return true - player sees world's scoreboard, false - doesn't see.
+     */
+    public boolean hasActiveScoreboard(@NotNull Player player) {
+        if (player.getScoreboard().equals(Bukkit.getScoreboardManager().getMainScoreboard())) return false;
+        for (Scoreboard scoreboard : scoreboards.values()) {
+            if (player.getScoreboard().equals(scoreboard)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Removes and unregisters all scoreboards.
      */
     public void clear() {

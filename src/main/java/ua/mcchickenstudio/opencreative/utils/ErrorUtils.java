@@ -135,7 +135,8 @@ public final class ErrorUtils {
                 "Error the Troublemaker..", "Knocks off worlds like a terminator", "Gotta hate it cause' you just can't like it",
                 "We had something to learn from that experience", "Bug toy, bug toy, bug toy...",
                 "Jester thinks there is a solution to this bug?", "Get your bug toy, get a little opposite of joy",
-                "I could say I'm sorry, but it's not that kind of party"
+                "I could say I'm sorry, but it's not that kind of party", "The right error in the wrong place",
+                "Raise and shine, Mr. Error!"
         };
         return phrases[new Random().nextInt(phrases.length)];
     }
@@ -442,8 +443,8 @@ public final class ErrorUtils {
      * and sends log in console.
      * @param planet planet to stop the code.
      */
-    public static void stopPlanetCode(Planet planet) {
-        OpenCreative.getPlugin().getLogger().info("Planet code has been stopped in " + planet.getWorldName() + " because of operations limit.");
+    public static void stopPlanetCode(@NotNull Planet planet, @NotNull String reason) {
+        OpenCreative.getPlugin().getLogger().info("Planet code has been stopped in " + planet.getWorldName() + " because of " + reason + ".");
         if (planet.getMode() != Planet.Mode.BUILD) {
             PlanetModeChangeEvent event = new PlanetModeChangeEvent(planet, planet.getMode(), Planet.Mode.BUILD);
             event.callEvent();

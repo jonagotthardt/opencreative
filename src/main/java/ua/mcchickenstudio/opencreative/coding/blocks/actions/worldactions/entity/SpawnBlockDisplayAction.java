@@ -30,6 +30,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+
 public final class SpawnBlockDisplayAction extends WorldAction {
 
     public SpawnBlockDisplayAction(Executor executor, Target target, int x, Arguments args) {
@@ -43,12 +45,16 @@ public final class SpawnBlockDisplayAction extends WorldAction {
             return;
         }
 
+        if (getWorld().getEntities().size() >= getPlanet().getLimits().getEntitiesLimit()) {
+            sendCodingDebugLog(getPlanet(), "Too many entities: spawn entity action is cancelled.");
+            return;
+        }
+
         Component customName = getArguments().getValue("name",Component.text(""),this);
         Material block = getArguments().getValue("block",Material.GRASS_BLOCK,this);
 
         for (Location location : getArguments().getLocationList("locations",this)) {
-            Entity spawnedEntity = getPlanet().getTerritory()
-                    .getWorld().spawnEntity(location, EntityType.BLOCK_DISPLAY);
+            Entity spawnedEntity = getWorld().spawnEntity(location, EntityType.BLOCK_DISPLAY);
 
             if (spawnedEntity instanceof BlockDisplay display) {
                 if (getArguments().pathExists("name")) {
