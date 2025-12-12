@@ -634,7 +634,7 @@ public class CreativeCommand extends CommandHandler {
                         if (PlayerUtils.enableSpying(player)) {
                             sender.sendMessage(getLocaleMessage("creative.spy.enabled"));
                         } else {
-                            sender.sendMessage(getLocaleMessage("creative.spy.already-anabled"));
+                            sender.sendMessage(getLocaleMessage("creative.spy.already-enabled"));
                         }
                     }
                 }

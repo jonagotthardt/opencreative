@@ -5921,6 +5921,16 @@ items:
           - "&7которые были установлены в строке."
           - " "
           - "&eНажми, чтобы установить действие."
+      control-clear-global-variables:
+        name: "&cОчистить глобальные переменные"
+        lore:
+          - "&7Удалит глобальные переменные,"
+          - "&7которые были установлены в мире."
+          - ""
+          - "&7Они очищаются сами после"
+          - "&7отгрузки мира."
+          - " "
+          - "&eНажми, чтобы установить действие."
       world-switch-to-build-mode:
         name: "&cПерейти в режим строительства"
         lore:
@@ -17718,6 +17728,7 @@ blocks:
   control_stop_code_line: "&4Прервать код"
   control_wait: "&eПодождать"
   control_clear_local_variables: "&cУдал. локал."
+  control_clear_global_variables: "&cУдал. глобал."
   control_launch_cycles: "&aЗапустить цикл"
   control_stop_cycles: "&3Останов. цикл"
 

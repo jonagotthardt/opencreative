@@ -5096,6 +5096,16 @@ items:
           - "&7that were set in the line."
           - " "
           - "&eClick to set the action."
+      control-clear-global-variables:
+        name: "&cClear Global Variables"
+        lore:
+          - "&7Deletes the global variables"
+          - "&7that were set in the world."
+          - ""
+          - "&7They are cleared automatically"
+          - "&7after the world is unloaded."
+          - " "
+          - "&eClick to set the action."
       world-switch-to-build-mode:
         name: "&cSwitch to Build Mode"
         lore:
@@ -17456,6 +17466,7 @@ blocks:
   control_stop_code_line: "&4Stop code line"
   control_wait: "&eWait"
   control_clear_local_variables: "&cClear local"
+  control_clear_global_variables: "&cClear Global"
   control_launch_cycles: "&aLaunch cycle"
   control_stop_cycles: "&3Stop cycle"
 

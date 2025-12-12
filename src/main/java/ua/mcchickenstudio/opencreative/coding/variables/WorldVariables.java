@@ -426,4 +426,11 @@ public final class WorldVariables {
     public void garbageCollector(ActionsHandler actionsHandler) {
         variables.removeIf(var -> var.getVarType() == VariableLink.VariableType.LOCAL && var.getHandler() != null && var.getHandler().equals(actionsHandler));
     }
+
+    /**
+     * Clears all global variables in world.
+     */
+    public void clearGlobalVariables() {
+        variables.removeIf(var -> var.getVarType() == VariableLink.VariableType.GLOBAL);
+    }
 }
