@@ -16722,6 +16722,22 @@ menus:
           - "&fOptions:"
           - "%1%"
           - "%2%"
+      location-bar:
+        choices:
+          1: "Let it be visible"
+          2: "Hide the bar completely"
+        name: "&7Locator Bar"
+        lore:
+          - " "
+          - "&7This is the strip that shows"
+          - "&7the points with players’ locations."
+          - "&7For hide-and-seek it's better to hide."
+          - ""
+          - "&eClick to change."
+          - ""
+          - "&fOptions:"
+          - "%1%"
+          - "%2%"
       mob-loot:
         choices:
           1: "Allow items to drop from mobs"

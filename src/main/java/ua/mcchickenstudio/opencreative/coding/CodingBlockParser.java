@@ -77,6 +77,7 @@ public class CodingBlockParser {
             sendCodingDebugLog(devPlanet.getPlanet(),"Not parsing code, nothing was changed.");
             return;
         }
+        devPlanet.setCodeChanged(false);
         long time = System.currentTimeMillis();
         sendCodingDebugLog(devPlanet.getPlanet(),"Shutting down executors and clearing...");
         devPlanet.getPlanet().getTerritory().stopBukkitRunnables();

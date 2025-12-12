@@ -251,7 +251,8 @@ public class CodingBlockPlacer {
      * @param type type of action.
      */
     private void buildContainerBlock(@NotNull Location location, @NotNull ConfigurationSection data,
-                                     @NotNull ActionType type) {
+                                     @Nullable ActionType type) {
+        if (type == null) return;
         ConfigurationSection arguments = data.getConfigurationSection("arguments");
         if (arguments != null && type.isChestRequired()) {
             Block containerBlock = location.getBlock().getRelative(BlockFace.UP);

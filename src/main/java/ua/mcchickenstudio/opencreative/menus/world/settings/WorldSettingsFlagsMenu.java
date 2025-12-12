@@ -124,6 +124,21 @@ public final class WorldSettingsFlagsMenu extends AbstractMenu {
         return new RadioButton(Material.SKELETON_SKULL, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.immediate-respawn.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.immediate-respawn.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.IMMEDIATE_RESPAWN),2, choicesActions, "menus.world-settings-flags.items.immediate-respawn.choices", "menus.world-settings-flags");
     }
 
+    public static RadioButton getLocationBarButton(Planet planet) {
+        List<Runnable> choicesActions = new ArrayList<>();
+        choicesActions.add(() -> {
+            planet.getTerritory().setGameRuleIfExists("LOCATION_BAR", true);
+            planet.setFlagValue(PlanetFlags.PlanetFlag.LOCATION_BAR, (byte) 1);
+        });
+        choicesActions.add(() -> {
+            planet.getTerritory().setGameRuleIfExists("LOCATION_BAR", false);
+            planet.setFlagValue(PlanetFlags.PlanetFlag.LOCATION_BAR, (byte) 2);
+        });
+        return new RadioButton(Material.ENDER_EYE, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.location-bar.name"),
+                MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.location-bar.lore"),
+                planet.getFlagValue(PlanetFlags.PlanetFlag.LOCATION_BAR),2, choicesActions, "menus.world-settings-flags.items.location-bar.choices", "menus.world-settings-flags");
+    }
+
     public static RadioButton getDeathMessagesFlagButton(Planet planet) {
         List<Runnable> choicesActions = new ArrayList<>();
         choicesActions.add(() -> planet.setFlagValue(PlanetFlags.PlanetFlag.DEATH_MESSAGES, (byte)1));
@@ -265,8 +280,8 @@ public final class WorldSettingsFlagsMenu extends AbstractMenu {
     @Override
     public void fillItems(Player player) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-        setItem(46,BACK_ITEM);
-        setItem(DECORATION_PANE_ITEM,45,47,48,49,50,51,52,53);
+        setItem(46, BACK_ITEM);
+        setItem(DECORATION_PANE_ITEM, 45, 47, 48, 49, 50, 51, 52, 53);
         if (planet == null) return;
         if (!planet.isOwner(player.getName())) return;
         setItem(10, getPlayerDamageFlagButton(planet).getButtonItem());
@@ -285,6 +300,9 @@ public final class WorldSettingsFlagsMenu extends AbstractMenu {
         setItem(25, getNaturalRegenerationFlagButton(planet).getButtonItem());
         setItem(28, getMobLootFlagButton(planet).getButtonItem());
         setItem(29, getWorldBordersButton(planet).getButtonItem());
+        if (GameRule.getByName("LOCATION_BAR") != null) {
+            setItem(30, getLocationBarButton(planet).getButtonItem());
+        }
     }
 
     @Override

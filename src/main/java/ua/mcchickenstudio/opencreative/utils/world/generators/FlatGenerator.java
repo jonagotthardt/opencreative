@@ -22,8 +22,11 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
+import org.bukkit.generator.WorldInfo;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Random;
 
 public final class FlatGenerator extends WorldGenerator implements EnvironmentCapable, StructuresCapable {
 
@@ -38,6 +41,27 @@ public final class FlatGenerator extends WorldGenerator implements EnvironmentCa
 
     @Override
     public void afterCreation(@NotNull World world) {}
+
+    @Override
+    public void generateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
+        Material customFlatTerrainBlock = null;
+        if (worldInfo.getEnvironment() == World.Environment.NETHER) customFlatTerrainBlock = Material.NETHERRACK;
+        if (worldInfo.getEnvironment() == World.Environment.THE_END) customFlatTerrainBlock = Material.END_STONE;
+        if (customFlatTerrainBlock == null) {
+            super.generateSurface(worldInfo, random, chunkX, chunkZ, chunkData);
+            return;
+        }
+        if (worldInfo.getEnvironment() == World.Environment.NETHER) {
+            for (int i = 0; i < 16; i++) {
+                for (int j = 0; j < 16; j++) {
+                    chunkData.setBlock(i, -64, j, Material.BEDROCK);
+                    chunkData.setBlock(i, -63, j, customFlatTerrainBlock);
+                    chunkData.setBlock(i, -62, j, customFlatTerrainBlock);
+                    chunkData.setBlock(i, -61, j, customFlatTerrainBlock);
+                }
+            }
+        }
+    }
 
     @Override
     public @NotNull String getExtensionId() {
