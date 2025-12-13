@@ -140,7 +140,6 @@
 #
 
 version: 5.8.1
-last-world-id: 0
 hide-from-tab: spectator # Hides players, that aren't in same world: spectator - Transparent nickname (requires ProtocolLib), full - Full hide from tab list, none - Not hide.
 
 lobby:
@@ -321,7 +320,7 @@ groups:
   # like world size, world limits, worlds amount.
   #
   default: # default - by default for any player, no permissions required
-    cooldowns:
+    cooldowns: # In seconds
       generic-command: 5 # /play, /build, /games
       advertisement: 120 # /ad
       creative-chat: 10 # /cc
@@ -625,6 +624,7 @@ items:
     22: "method"
     23: "launch-method-action"
     24: "selection-action"
+    26: "debug-torch"
     27: "lines-controller"
     28: "event-entity"
     29: "entity-condition"
@@ -653,6 +653,7 @@ items:
     22: "method"
     23: "launch-method-action"
     24: "selection-action"
+    26: "debug-torch"
     27: "lines-controller"
     28: "event-entity"
     29: "entity-condition"
@@ -704,3 +705,10 @@ maintenance: false
 # Not useful, if you're not developing OC+.
 #
 debug: false
+#
+# The most recent world's ID. It's used
+# to create a new world by adding 1
+# to current value.
+#
+last-world-id: 0 # Not
+

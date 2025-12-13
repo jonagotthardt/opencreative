@@ -734,6 +734,20 @@ items:
         - "&fIn hand:"
         - "&e Right-click on a condition sign:"
         - "&7  Toggle NOT on or off"
+    debug-torch:
+      name: "&cDebug Marker &a[Right-click]"
+      lore:
+        - "&7Marks events and executors"
+        - "&7so that they can send"
+        - "&7debug messages."
+        - ""
+        - "&7Debug messages will be visible"
+        - "&7only in debug mode:"
+        - "&a/env debug on"
+        - ""
+        - "&fIn hand:"
+        - "&e Click on an event sign:"
+        - "&7  Set or unset debug"
     variable:
       saved:  "&aSaved"
       global: "&eGlobal"
@@ -16722,7 +16736,7 @@ menus:
           - "&fOptions:"
           - "%1%"
           - "%2%"
-      location-bar:
+      locator-bar:
         choices:
           1: "Let it be visible"
           2: "Hide the bar completely"

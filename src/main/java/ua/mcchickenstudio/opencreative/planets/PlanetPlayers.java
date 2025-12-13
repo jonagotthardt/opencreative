@@ -365,7 +365,7 @@ public class PlanetPlayers {
     public void banPlayer(String nickname) {
         if (planet.isOwner(nickname)) return;
         if (getBannedPlayers().size() > planet.getLimits().getBlacklistedLimit()) return;
-        Player player = Bukkit.getPlayerExact(nickname);
+        Player player = Bukkit.getPlayer(nickname);
         if (player != null && !player.hasPermission("opencreative.world.ban.bypass")) {
             Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet.equals(playerPlanet)) {
@@ -383,7 +383,7 @@ public class PlanetPlayers {
     public void whitelistPlayer(String nickname) {
         if (planet.isOwner(nickname)) return;
         if (getWhitelistedPlayers().size() > planet.getLimits().getWhitelistedLimit()) return;
-        Player player = Bukkit.getPlayerExact(nickname);
+        Player player = Bukkit.getPlayer(nickname);
         if (player != null) {
             Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet.equals(playerPlanet)) {

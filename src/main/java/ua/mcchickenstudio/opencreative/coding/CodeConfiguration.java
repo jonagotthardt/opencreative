@@ -75,8 +75,10 @@ public class CodeConfiguration extends YamlConfiguration {
      * @param block executor coding block.
      * @param category category of executor.
      * @param type type of executor.
+     * @param debug should print debug logs or not.
      */
-    public void saveExecutorBlock(Block block, boolean notDependsOnHeight, ExecutorCategory category, ExecutorType type) {
+    public void saveExecutorBlock(Block block, boolean notDependsOnHeight, ExecutorCategory category,
+                                  ExecutorType type, boolean debug) {
         int x = block.getX();
         int y = block.getY();
         int z = block.getZ();
@@ -85,6 +87,7 @@ public class CodeConfiguration extends YamlConfiguration {
                 (notDependsOnHeight ? z : y) + "_" + x;
         set(path + ".category", category.name());
         set(path + ".type", type.name());
+        if (debug) set(path + ".debug", debug);
 
         String firstSignLine = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 1);
         String thirdSignLine = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
@@ -105,6 +108,16 @@ public class CodeConfiguration extends YamlConfiguration {
         set(path + ".location.x", x);
         set(path + ".location.y", y);
         set(path + ".location.z", z);
+    }
+
+    /**
+     * Saves executor block data in configuration file.
+     * @param block executor coding block.
+     * @param category category of executor.
+     * @param type type of executor.
+     */
+    public void saveExecutorBlock(Block block, boolean notDependsOnHeight, ExecutorCategory category, ExecutorType type) {
+        saveExecutorBlock(block, notDependsOnHeight, category, type, false);
     }
 
     /**

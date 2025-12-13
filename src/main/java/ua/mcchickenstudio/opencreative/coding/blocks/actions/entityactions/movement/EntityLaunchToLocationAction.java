@@ -36,8 +36,8 @@ public final class EntityLaunchToLocationAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         Location location = getArguments().getValue("location",entity.getLocation(),this);
-        entity.setVelocity(entity.getVelocity().add(
-                new Vector(location.getX(),location.getY(),location.getZ()))
+        entity.setVelocity(
+                new Vector(location.getX(),location.getY(),location.getZ())
         );
     }
 

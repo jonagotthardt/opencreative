@@ -80,6 +80,7 @@ import java.util.Set;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.*;
 import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.move;
+import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.placeDebugTorch;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
@@ -327,6 +328,14 @@ public final class InteractListener implements Listener {
                 } else {
                     return false;
                 }
+            }
+        } else if (currentItem.getType() == Material.REDSTONE_TORCH && event.getHand() == EquipmentSlot.HAND) {
+            if (mainBlockCategory == null) return false;
+            Block torchBlock = mainBlock.getRelative(BlockFace.WEST);
+            if (torchBlock.getType() == Material.REDSTONE_WALL_TORCH) {
+                torchBlock.setType(Material.AIR);
+            } else {
+                placeDebugTorch(torchBlock.getLocation());
             }
         } else if (player.isSneaking() && actionBlockCategory != null) {
             if (actionBlockCategory == ActionCategory.SELECTION_ACTION) {

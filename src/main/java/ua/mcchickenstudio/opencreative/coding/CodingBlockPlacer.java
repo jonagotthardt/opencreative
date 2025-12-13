@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.placeDebugTorch;
 import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.placeDevBlock;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.setSignLine;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebugError;
@@ -219,6 +220,9 @@ public class CodingBlockPlacer {
                         wallSign, type.getCategory().name().toLowerCase());
                 setSignLine(signLocation,3, type.name().toLowerCase());
             }
+        }
+        if (data.getBoolean("debug", false)) {
+            placeDebugTorch(location.getBlock().getRelative(BlockFace.WEST).getLocation());
         }
     }
 

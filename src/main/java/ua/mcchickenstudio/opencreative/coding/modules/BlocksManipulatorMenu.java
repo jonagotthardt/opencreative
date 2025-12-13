@@ -103,7 +103,7 @@ public final class BlocksManipulatorMenu extends AbstractMenu {
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getBlocksDuplicationCooldown(), CooldownUtils.CooldownType.BLOCKS_DUPLICATION);
             player.closeInventory();
             CodeConfiguration temporary = new CodeConfiguration();
-            new CodingBlockParser(devPlanet).parseExecutors(devPlanet, temporary, new LinkedList<>(devPlanet.getMarkedExecutors(player)));
+            new CodingBlockParser(devPlanet, true).parseExecutors(devPlanet, temporary, new LinkedList<>(devPlanet.getMarkedExecutors(player)));
             devPlanet.clearMarkedExecutors(player);
             ConfigurationSection section = temporary.getConfigurationSection("code.blocks");
             if (section == null) return;

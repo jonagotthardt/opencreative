@@ -124,19 +124,19 @@ public final class WorldSettingsFlagsMenu extends AbstractMenu {
         return new RadioButton(Material.SKELETON_SKULL, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.immediate-respawn.name"), MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.immediate-respawn.lore"), planet.getFlagValue(PlanetFlags.PlanetFlag.IMMEDIATE_RESPAWN),2, choicesActions, "menus.world-settings-flags.items.immediate-respawn.choices", "menus.world-settings-flags");
     }
 
-    public static RadioButton getLocationBarButton(Planet planet) {
+    public static RadioButton getLocatorBarButton(Planet planet) {
         List<Runnable> choicesActions = new ArrayList<>();
         choicesActions.add(() -> {
-            planet.getTerritory().setGameRuleIfExists("LOCATION_BAR", true);
-            planet.setFlagValue(PlanetFlags.PlanetFlag.LOCATION_BAR, (byte) 1);
+            planet.getTerritory().setGameRuleIfExists("LOCATOR_BAR", true);
+            planet.setFlagValue(PlanetFlags.PlanetFlag.LOCATOR_BAR, (byte) 1);
         });
         choicesActions.add(() -> {
-            planet.getTerritory().setGameRuleIfExists("LOCATION_BAR", false);
-            planet.setFlagValue(PlanetFlags.PlanetFlag.LOCATION_BAR, (byte) 2);
+            planet.getTerritory().setGameRuleIfExists("LOCATOR_BAR", false);
+            planet.setFlagValue(PlanetFlags.PlanetFlag.LOCATOR_BAR, (byte) 2);
         });
-        return new RadioButton(Material.ENDER_EYE, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.location-bar.name"),
-                MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.location-bar.lore"),
-                planet.getFlagValue(PlanetFlags.PlanetFlag.LOCATION_BAR),2, choicesActions, "menus.world-settings-flags.items.location-bar.choices", "menus.world-settings-flags");
+        return new RadioButton(Material.ENDER_EYE, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.locator-bar.name"),
+                MessageUtils.getLocaleItemDescription("menus.world-settings-flags.items.locator-bar.lore"),
+                planet.getFlagValue(PlanetFlags.PlanetFlag.LOCATOR_BAR),2, choicesActions, "menus.world-settings-flags.items.locator-bar.choices", "menus.world-settings-flags");
     }
 
     public static RadioButton getDeathMessagesFlagButton(Planet planet) {
@@ -300,8 +300,8 @@ public final class WorldSettingsFlagsMenu extends AbstractMenu {
         setItem(25, getNaturalRegenerationFlagButton(planet).getButtonItem());
         setItem(28, getMobLootFlagButton(planet).getButtonItem());
         setItem(29, getWorldBordersButton(planet).getButtonItem());
-        if (GameRule.getByName("LOCATION_BAR") != null) {
-            setItem(30, getLocationBarButton(planet).getButtonItem());
+        if (GameRule.getByName("LOCATOR_BAR") != null) {
+            setItem(30, getLocatorBarButton(planet).getButtonItem());
         }
     }
 

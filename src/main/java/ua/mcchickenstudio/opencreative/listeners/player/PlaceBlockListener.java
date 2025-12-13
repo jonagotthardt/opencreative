@@ -18,7 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
+import org.bukkit.block.data.Powerable;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 
@@ -139,6 +141,17 @@ public final class PlaceBlockListener implements Listener {
                     Sounds.DEV_NOT_ALLOWED.play(player);
                     event.setCancelled(true);
                 }
+            } else if (block.getType() == Material.REDSTONE_WALL_TORCH) {
+                if (block.getRelative(BlockFace.EAST)
+                        .getRelative(BlockFace.DOWN).getType() != platform.getEventMaterial()) {
+                    Sounds.DEV_NOT_ALLOWED.play(player);
+                    event.setCancelled(true);
+                } else {
+                    if (block.getState() instanceof Powerable powerable) {
+                        powerable.setPowered(true);
+                        block.setBlockData(powerable);
+                    }
+                }
             } else {
                 if (block.getType() != Material.COMPARATOR) {
                     Sounds.DEV_NOT_ALLOWED.play(player);
@@ -195,6 +208,19 @@ public final class PlaceBlockListener implements Listener {
         Directional data = (Directional) wallSign.getBlockData();
         data.setFacing(BlockFace.SOUTH);
         wallSign.setBlockData(data);
+    }
+
+    public static void placeDebugTorch(@NotNull Location location) {
+        Block block = location.getBlock();
+        block.setType(Material.REDSTONE_WALL_TORCH);
+        if (block.getState() instanceof Directional directional) {
+            directional.setFacing(BlockFace.WEST);
+            block.setBlockData(directional);
+        }
+        if (block.getState() instanceof Powerable powerable) {
+            powerable.setPowered(true);
+            block.setBlockData(powerable);
+        }
     }
 
     public static boolean move(Location location, BlockFace face) {

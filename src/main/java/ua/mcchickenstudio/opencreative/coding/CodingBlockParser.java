@@ -58,13 +58,23 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 public class CodingBlockParser {
 
     private final long maxScriptSize;
+    private final boolean saveEmptyArguments;
 
     public CodingBlockParser(@NotNull DevPlanet devPlanet) {
         this(devPlanet.getPlanet().getGroup().getScriptSizeLimit());
     }
 
-    public CodingBlockParser(int scriptSizeLimit) {
+    public CodingBlockParser(@NotNull DevPlanet devPlanet, boolean saveEmptyArguments) {
+        this(devPlanet.getPlanet().getGroup().getScriptSizeLimit(), saveEmptyArguments);
+    }
+
+    public CodingBlockParser(int scriptSizeLimit, boolean saveEmptyArguments) {
         this.maxScriptSize = scriptSizeLimit * 1024L * 1024L;
+        this.saveEmptyArguments = saveEmptyArguments;
+    }
+
+    public CodingBlockParser(int scriptSizeLimit) {
+        this(scriptSizeLimit, false);
     }
 
     /**
@@ -147,6 +157,7 @@ public class CodingBlockParser {
             Block executorBlock = world.getBlockAt(executorX, y, z);
             ExecutorCategory executorCategory = ExecutorCategory.getByMaterial(executorBlock.getType());
             ExecutorType executorType = ExecutorType.getType(executorBlock);
+            boolean debug = executorBlock.getRelative(BlockFace.WEST).getType() == Material.REDSTONE_WALL_TORCH;
 
             /*
              * Checking executor. If executor is not detected,
@@ -159,7 +170,7 @@ public class CodingBlockParser {
                 }
                 continue;
             }
-            config.saveExecutorBlock(executorBlock,notDependsOnHeight,executorCategory,executorType);
+            config.saveExecutorBlock(executorBlock,notDependsOnHeight,executorCategory,executorType,debug);
 
             // For coding actions
             List<String> multiActions = new ArrayList<>();
@@ -228,7 +239,7 @@ public class CodingBlockParser {
                             if (slot < content.length) {
                                 item = content[slot];
                                 if (item == null) {
-                                    if (argSlot.acceptEmptyItems()) {
+                                    if (argSlot.acceptEmptyItems() || saveEmptyArguments) {
                                         item = new ItemStack(Material.AIR);
                                         Object value = parseItemValue(item);
                                         argumentsSize += value.toString().getBytes(StandardCharsets.UTF_8).length;
@@ -255,7 +266,7 @@ public class CodingBlockParser {
                             slot++;
                         }
                     } else {
-                        if (item != null) {
+                        if (item != null || saveEmptyArguments) {
                             Object value = parseItemValue(item);
                             argumentsSize += value.toString().getBytes(StandardCharsets.UTF_8).length;
                             if (argumentsSize > maxScriptSize) {
@@ -305,6 +316,9 @@ public class CodingBlockParser {
     public static Object parseItemValue(ItemStack item) {
         ValueType valueType = parseItemType(item);
         if (valueType == ValueType.ITEM) {
+            if (item.isEmpty()) {
+                return "EMPTY";
+            }
             return item.serialize();
         }
         ItemMeta itemMeta = item.getItemMeta();

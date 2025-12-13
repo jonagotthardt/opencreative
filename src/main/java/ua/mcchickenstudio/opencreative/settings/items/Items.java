@@ -72,6 +72,10 @@ public enum Items {
      */
     ARROW_NOT(Material.ARROW, "developer"),
     /**
+     * For marking or unmarking executor whether it should send debug messages.
+     */
+    DEBUG_TORCH(Material.REDSTONE_TORCH, "developer"),
+    /**
      * For viewing coding tutorial in coding world.
      */
     CODING_BOOK(Material.WRITTEN_BOOK, "developer"),

@@ -46,6 +46,7 @@ public abstract class Executor {
     private final List<Action> actions = new ArrayList<>();
     private WorldEvent event;
     private ActionsHandler handler;
+    private boolean debug;
 
     /**
      * Creates an Executor with specified planet and block's location in developers planet.
@@ -117,6 +118,14 @@ public abstract class Executor {
 
     public final Planet getPlanet() {
         return planet;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
+    public boolean isDebug() {
+        return debug;
     }
 
     public WorldEvent getEvent() {
