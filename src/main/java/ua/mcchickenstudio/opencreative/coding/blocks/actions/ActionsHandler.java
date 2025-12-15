@@ -47,7 +47,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
  * @see Executor
  * @see ua.mcchickenstudio.opencreative.coding.blocks.conditions.Condition
  * @since 5.0
- * @version 5.8
+ * @version 5.9
  * @author McChicken Studio
  */
 public class ActionsHandler {
